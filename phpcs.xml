@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<ruleset name="Locomotion">
+    <description>Locomotion coding standard based on PSR-2.</description>
+
+    <arg name="tab-width" value="4"/>
+    <rule ref="PSR2">
+        <exclude name="Squiz.Functions.MultiLineFunctionDeclaration.BraceOnSameLine"/>
+    </rule>
+
+    <!-- The soft limit on line length MUST be 100 characters; automated style checkers MUST warn but MUST NOT error at the soft limit. -->
+    <rule ref="Generic.Files.LineLength">
+        <properties>
+            <property name="lineLimit" value="100"/>
+            <property name="absoluteLineLimit" value="0"/>
+        </properties>
+    </rule>
+
+    <!-- K&R style -->
+    <rule ref="Generic.Functions.OpeningFunctionBraceKernighanRitchie"/>
+</ruleset>
