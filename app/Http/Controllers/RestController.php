@@ -24,7 +24,7 @@ class RestController extends Controller
             return $this->respondWithErrors($e->getErrors(), $e->getMessage());
         }
 
-        $transformer = new $this->model->getTransformer();
+        $transformer = new $this->model::$transformer;
         $results = $items->map(function ($item) use ($transformer, $request) {
             return $transformer->transform($item, [
                 'fields' => $request->getFields(),
@@ -47,7 +47,7 @@ class RestController extends Controller
     public function retrieve(Request $request, $id) {
         $item = $this->repo->find($request, $id);
 
-        $transformer = new $this->model::$transformer();
+        $transformer = new $this->model::$transformer;
         $result = $transformer->transform($item, [
             'fields' => $request->getFields(),
         ]);
