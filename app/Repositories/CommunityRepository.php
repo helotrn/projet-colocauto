@@ -7,7 +7,7 @@ use App\Models\Community;
 
 class CommunityRepository extends RestRepository
 {
-    public function __construct(Community $user) {
-        $this->model = $user;
+    public function __construct(Community $model) {
+        $this->model = $model;
     }
 }
