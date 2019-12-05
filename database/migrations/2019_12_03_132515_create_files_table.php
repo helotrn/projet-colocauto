@@ -6,32 +6,22 @@ use Illuminate\Database\Migrations\Migration;
 
 class CreateFilesTable extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
-    public function up()
-    {
+    public function up() {
         Schema::create('files', function (Blueprint $table) {
             $table->bigIncrements('id');
-            // Nom d’origine : obligatoire
-            // Fonction : la fonction du fichier, obligatoire
-            // Cible (​Utilisateur​ ou ​Action​ ou ​Objet)​ : L’entité possédant le fichier
-            //$table->unsignedBigInteger('target_id');
-            //$table->foreign('target_id')->references('id')->on('communities');
+            $table->string('fileable_type')->nullable();
+            $table->integer('fileable_id')->unsigned()->nullable();
+            $table->string('path');
+            $table->string('filename');
+            $table->string('original_filename');
+            $table->string('filesize');
+            $table->string('field')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
-    {
+    public function down() {
         Schema::dropIfExists('files');
     }
 }

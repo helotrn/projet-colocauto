@@ -15,8 +15,8 @@ class CreateCreditcardsTable extends Migration
     {
         Schema::create('credit_cards', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('id_external'); // Un lien vers une carte de crédit stockée sur une plateforme de paiement externe
-            $table->unsignedSmallInteger('four_last_digits')->nullable();
+            $table->string('external_id'); // Un lien vers une carte de crédit stockée sur une plateforme de paiement externe
+            $table->unsignedInteger('four_last_digits')->nullable();
             $table->string('type');
             $table->timestamps();
             $table->softDeletes();

@@ -17,9 +17,6 @@ class CreateBillsTable extends Migration
             $table->bigIncrements('id');
             // Période : Période de la facture, obligatoire
             // Méthode de paiement : Une représentation textuelle de la méthode de paiement utilisée par ex. “Carte de crédit Visa” ou “Par chèque”, obligatoire
-            // Création : Date de création
-            // Modification : Date de modification
-            // Annulation : Date d’annulation
             // Paiement : Date de paiement
             // Total : Somme du montant des items facturables
             // Items facturables (​Item facturable​) : Tous les items facturables sur la facture

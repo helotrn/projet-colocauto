@@ -14,20 +14,6 @@ class CreateCommunitiesTable extends Migration
             $table->polygon('territory')->nullable();
             $table->timestamps();
             $table->softDeletes();
-
-            /*
-             Membres (​Utilisateurs​), optionnels
-                ○ Propriétaires (​Utilisateurs​ ayant un ​Propriétaire​)
-                ○ Emprunteurs (​Utilisateurs​ ayant un ​Emprunteur​)
-                ○ Ambassadeurs (​Utilisateurs​ dont le membership est qualifié comme tel)
-                ○ Modérateurs (​Utilisateurs​ dont le membership est qualifié comme tel)
-                ○ Administrateurs (​Utilisateurs​ dont le membership est qualifié comme
-                tel)
-
-            ➢ Objets (​Objets​) : Les objets de la communauté, optionnel
-            ➢ Tarifications (​Tarifications​) : Les tarifications associées à cette communauté,
-            obligatoire
-            */
         });
     }
 
