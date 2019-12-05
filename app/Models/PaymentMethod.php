@@ -2,19 +2,20 @@
 
 namespace App\Models;
 
-use App\Models\Community;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
-class Pricing extends BaseModel
+class PaymentMethod extends BaseModel
 {
     protected $fillable = [
         'name', 'object_type', 'variable', 'rule',
     ];
 
-    public $belongsTo = ['community'];
+    public $belongsTo = ['user'];
 
-    public function community() {
-        return $this->belongsTo(Community::class);
+    public function user() {
+        return $this->belongsTo(User::class);
     }
+
 }

@@ -5,6 +5,12 @@ namespace App\Models;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Laravel\Passport\HasApiTokens;
+use App\Models\PaymentMethod;
+use App\Models\Bill;
+use App\Models\File;
+use App\Models\Action;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 
 class User extends BaseModel
 {
@@ -20,8 +26,6 @@ class User extends BaseModel
         'email_verified_at' => 'datetime',
     ];
 
-    public $collections = [];
-
     public function getAuthIdentifierName() {
         return 'id';
     }
@@ -32,5 +36,25 @@ class User extends BaseModel
 
     public function getAuthPassword() {
         return $this->password;
+    }
+
+    protected $with = ['paymentMethods', 'bills', 'files', 'actions'];
+
+    public $collections = ['paymentMethods', 'bills', 'files', 'actions'];
+
+    public function paymentMethods() {
+        return $this->hasMany(PaymentMethod::class);
+    }
+
+    public function bills() {
+        return $this->hasMany(Bill::class);
+    }
+
+    public function files() {
+        return $this->hasMany(File::class);
+    }
+
+    public function actions() {
+        return $this->hasMany(Action::class);
     }
 }

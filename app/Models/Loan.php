@@ -2,19 +2,19 @@
 
 namespace App\Models;
 
-use App\Models\Community;
+use App\Models\Borrower;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
-class Pricing extends BaseModel
+class Loan extends BaseModel
 {
     protected $fillable = [
         'name', 'object_type', 'variable', 'rule',
     ];
 
-    public $belongsTo = ['community'];
+    public $belongsTo = ['borrower'];
 
-    public function community() {
-        return $this->belongsTo(Community::class);
+    public function borrower() {
+        return $this->belongsTo(Borrower::class);
     }
 }

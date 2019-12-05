@@ -2,19 +2,12 @@
 
 namespace App\Models;
 
-use App\Models\Community;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
-class Pricing extends BaseModel
+class Extension extends BaseModel
 {
     protected $fillable = [
         'name', 'object_type', 'variable', 'rule',
     ];
-
-    public $belongsTo = ['community'];
-
-    public function community() {
-        return $this->belongsTo(Community::class);
-    }
 }

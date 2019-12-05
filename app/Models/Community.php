@@ -2,6 +2,10 @@
 
 namespace App\Models;
 
+use App\Models\Pricing;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
+
 class Community extends BaseModel
 {
     public static $rules = [
