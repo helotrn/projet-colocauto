@@ -14,18 +14,24 @@ Prérequis
 Configuration
 -------------
 
-Pour créer l'utilisateur :
+Créez l'utilisateur :
 
 ```
 locomotion@localhost $ createuser --interactive --pwprompt
 ```
 
-Utilisez par exemple `locomotion:locomotion` , les valeurs par défaut dans `.env.example` .
+Utilisez par exemple `locomotion:locomotion` , les valeurs par défaut sont dans `.env.example` .
+
+Créez la base de données :
 
 ```
 locomotion@localhost $ psql
 postgres=# CREATE DATABASE locomotion OWNER locomotion;
 CREATE DATABASE
+postgres=# \q
+locomotion@localhost $ psql locomotion
+postgres=# CREATE EXTENSION postgis;
+CREATE EXTENSION
 postgres=# \q
 ```
 
