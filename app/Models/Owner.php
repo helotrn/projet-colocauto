@@ -17,6 +17,14 @@ class Owner extends BaseModel
     public $collections = ['objects'];
 
     public function objects() {
-        return $this->hasMany(Object::class);
+        return $this->hasMany(Loanable::class);
+    }
+
+    public function cars() {
+        return $this->hasMany(Car::class);
+    }
+
+    public function tools() {
+        return $this->hasMany(Tool::class);
     }
 }

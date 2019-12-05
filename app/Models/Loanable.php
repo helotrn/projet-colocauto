@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Loanable extends BaseModel
 {
+    protected $table = ['loanables'];
+
     protected $fillable = [
         'name', 'object_type', 'variable', 'rule',
     ];
