@@ -5,12 +5,27 @@ namespace App\Models;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use App\Transformers\PaymentMethodTransformer;
 
 class PaymentMethod extends BaseModel
 {
-    protected $fillable = [
-        'name', 'object_type', 'variable', 'rule',
+    public static $rules = [
+        'name' => 'required',
+        'external_id' => 'required',
+        'type' => 'required',
+        'four_last_digits' => 'digits:4|nullable',
+        'credit_card_type' => 'nullable|string',
     ];
+    
+    protected $fillable = [
+        'name',
+        'external_id',
+        'type',
+        'four_last_digits',
+        'credit_card_type',
+    ];
+
+    public static $transformer = PaymentMethodTransformer::class;
 
     public $belongsTo = ['user'];
 

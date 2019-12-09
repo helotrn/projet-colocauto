@@ -11,7 +11,6 @@ class Loanable extends BaseModel
     protected $table = ['loanables'];
 
     protected $fillable = [
-        'name', 'object_type', 'variable', 'rule',
     ];
 
     public $belongsTo = ['owner'];

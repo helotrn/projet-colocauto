@@ -2,15 +2,23 @@
 
 namespace App\Models;
 
+use App\Models\Action;
 use App\Models\BillableItem;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use App\Transformers\PaymentTransformer;
 
-class Payment extends BaseModel
+class Payment extends Action
 {
-    protected $fillable = [
-        'name', 'object_type', 'variable', 'rule',
+    public static $rules = [
+        'status' => 'required',
     ];
+    
+    protected $fillable = [
+        'status',
+    ];
+
+    public static $transformer = PaymentTransformer::class;
 
     public $belongsTo = ['billableItem'];
 

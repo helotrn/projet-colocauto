@@ -5,12 +5,21 @@ namespace App\Models;
 use App\Models\Borrower;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use App\Transformers\LoanTransformer;
 
 class Loan extends BaseModel
 {
-    protected $fillable = [
-        'name', 'object_type', 'variable', 'rule',
+    public static $rules = [
+        'departure_at' => 'required|date',
+        'duration' => 'required',
     ];
+    
+    protected $fillable = [
+        'departure_at',
+        'duration',
+    ];
+
+    public static $transformer = LoanTransformer::class;
 
     public $belongsTo = ['borrower'];
 

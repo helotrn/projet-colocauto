@@ -2,21 +2,28 @@
 
 namespace App\Models;
 
-use App\Models\Object;
+use App\Models\Loanable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use App\Transformers\OwnerTransformer;
 
 class Owner extends BaseModel
 {
+    public static $rules = [
+        'submitted_at' => 'required|date',
+        'approved_at' => 'required|date',
+    ];
+    
     protected $fillable = [
-        'name', 'object_type', 'variable', 'rule',
+        'submitted_at',
+        'approved_at',
     ];
 
-    protected $with = ['objects'];
+    public static $transformer = OwnerTransformer::class;
 
-    public $collections = ['objects'];
+    public $collections = ['loanables'];
 
-    public function objects() {
+    public function loanables() {
         return $this->hasMany(Loanable::class);
     }
 
@@ -24,7 +31,11 @@ class Owner extends BaseModel
         return $this->hasMany(Car::class);
     }
 
-    public function tools() {
-        return $this->hasMany(Tool::class);
+    public function bikes() {
+        return $this->hasMany(Bike::class);
+    }
+
+    public function trailers() {
+        return $this->hasMany(Trailer::class);
     }
 }

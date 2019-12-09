@@ -11,14 +11,45 @@ use App\Models\File;
 use App\Models\Action;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use App\Transformers\UserTransformer;
 
 class User extends BaseModel
 {
     use HasApiTokens, Notifiable;
 
-    protected $fillable = [
-        'name', 'email', 'password',
+    public static $rules = [
+        'name' => 'required',
+        'last_name' => 'required',
+        'email' => 'required|email|unique:users,email',
+        'password' => 'required',
+        'google_id' => 'nullable',
+        'description' => 'nullable',
+        'date_of_birth' => 'date',
+        'address' => 'required',
+        'postal_code' => 'required',
+        'phone' => 'required',
+        'is_smart_phone' => 'boolean',
+        'other_phone' => 'required',
+        'approved_at' => 'nullable|date',
     ];
+    
+    protected $fillable = [
+        'name',
+        'last_name',
+        'email',
+        'password',
+        'google_id',
+        'description',
+        'date_of_birth',
+        'address',
+        'postal_code',
+        'phone',
+        'is_smart_phone',
+        'other_phone',
+        'approved_at',
+    ];
+
+    public static $transformer = UserTransformer::class;
 
     protected $hidden = ['password'];
 
@@ -38,7 +69,6 @@ class User extends BaseModel
         return $this->password;
     }
 
-    protected $with = ['paymentMethods', 'bills', 'files', 'actions'];
 
     public $collections = ['paymentMethods', 'bills', 'files', 'actions'];
 

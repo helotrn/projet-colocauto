@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 class Action extends BaseModel
 {
     protected $fillable = [
-        'name', 'object_type', 'variable', 'rule',
+        'name',
     ];
 
     public $belongsTo = ['loan'];
