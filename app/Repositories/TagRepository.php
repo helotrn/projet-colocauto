@@ -3,11 +3,11 @@
 namespace App\Repositories;
 
 use App\Http\Requests\BaseRequest as Request;
-use App\Models\Keyword;
+use App\Models\Tag;
 
-class KeywordRepository extends RestRepository
+class TagRepository extends RestRepository
 {
-    public function __construct(Keyword $model) {
+    public function __construct(Tag $model) {
         $this->model = $model;
     }
 }
