@@ -16,7 +16,7 @@ class CreatePaymentMethodsTable extends Migration
             $table->bigIncrements('id');
             $table->string('name');
             $table->string('external_id');
-            $table->enum('type', ['credit_cart', 'bank_account']);
+            $table->enum('type', ['credit_card', 'bank_account']);
             $table->unsignedInteger('four_last_digits')->nullable();
             $table->string('credit_card_type')->nullable();
             $table->timestamps();
