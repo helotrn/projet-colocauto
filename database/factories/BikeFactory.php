@@ -1,0 +1,19 @@
+<?php
+
+use App\Models\Bike;
+use Illuminate\Support\Str;
+use Faker\Generator as Faker;
+use Phaza\LaravelPostgis\Geometries\Point;
+
+$factory->define(App\Bike::class, function (Faker $faker) {
+    return [
+        'name' => $faker->name,
+        'position' => new Point($faker->latitude, $faker->longitude),
+        'location_description' => $faker->sentence,
+        'comments' => $faker->paragraph,
+        'instructions' => $faker->paragraph,
+        'model' => $faker->sentence,
+        'type' => $faker->randomElement(['regular' ,'electric', 'fixed_wheel']),
+        'size' => $faker->randomElement(['big' ,'medium', 'small', 'kid']),
+    ];
+});
