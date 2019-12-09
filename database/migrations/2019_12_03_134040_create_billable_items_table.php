@@ -11,18 +11,12 @@ class CreateBillableItemsTable extends Migration
      *
      * @return void
      */
-    public function up()
-    {
+    public function up() {
         Schema::create('billable_items', function (Blueprint $table) {
             $table->bigIncrements('id');
-            // Libellé : Obligatoire
-            // Montant : Obligatoire
-            // Date : La date où l’item facturable est effectif, obligatoire
-            // Création : Date de création
-            // Modification : Date de modification
-            // Annulation : Date d’annulation
-            // Item (​Paiement​) : L’item sur lequel porte le montant indiqué, optionnel
-
+            $table->string('label');
+            $table->double('amount', 8, 2);
+            $table->date('effective_at');
             $table->timestamps();
             $table->softDeletes();
         });
@@ -33,8 +27,7 @@ class CreateBillableItemsTable extends Migration
      *
      * @return void
      */
-    public function down()
-    {
+    public function down() {
         Schema::dropIfExists('billable_items');
     }
 }

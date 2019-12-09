@@ -11,14 +11,16 @@ class CreateIncidentsTable extends Migration
      *
      * @return void
      */
-    public function up()
-    {
-        /*
-        ● Incident​ : Un type d’​Action​ sur un ​Emprunt​, contenant les données relatives à un incident
-        */
+    public function up() {
         Schema::create('incidents', function (Blueprint $table) {
             $table->bigIncrements('id');
-            // Type d’incident : Un parmi “Accident”, obligatoire
+            // Action fields
+            $table->dateTimeTz('executed_at');
+            $table->enum('status', ['in_process', 'canceled', 'completed']);
+            
+            //Incident-specific fields
+            $table->enum('incident_type', ['accident']);
+
             $table->timestamps();
             $table->softDeletes();
         });
@@ -29,8 +31,7 @@ class CreateIncidentsTable extends Migration
      *
      * @return void
      */
-    public function down()
-    {
+    public function down() {
         Schema::dropIfExists('incidents');
     }
 }

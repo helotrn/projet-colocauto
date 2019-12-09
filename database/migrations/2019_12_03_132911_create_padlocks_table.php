@@ -10,7 +10,6 @@ class CreatePadlocksTable extends Migration
         Schema::create('padlocks', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('mac_address');
-            // MAC : Adresse unique associée au cadenas ➢ Objet (​Objet)​ : L’objet barré par le cadenas
             $table->timestamps();
             $table->softDeletes();
         });

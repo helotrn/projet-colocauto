@@ -11,17 +11,19 @@ class CreateExtensionsTable extends Migration
      *
      * @return void
      */
-    public function up()
-    {
-        /*
-        Rallonge​ : Un type d’​Action​ sur un ​Emprunt​, contenant les données relatives à la rallonge d’une réservation
-        */
+    public function up() {
         Schema::create('extensions', function (Blueprint $table) {
             $table->bigIncrements('id');
-            // Nouvelle durée : Obligatoire
-            // Commentaire sur la rallonge : Obligatoire
-            // Contestation : Date de contestation
-            // Commentaire sur la contestation : Optionnel
+            // Action fields
+            $table->dateTimeTz('executed_at');
+            $table->enum('status', ['in_process', 'canceled', 'completed']);
+
+            // Extension-specific fields
+            $table->unsignedInteger('new_duration');//in minutes
+            $table->text('comments_on_extension');
+            $table->date('contested_at')->nullable();
+            $table->text('comments_on_contestation')->nullable();
+            
             $table->timestamps();
             $table->softDeletes();
         });
@@ -32,8 +34,7 @@ class CreateExtensionsTable extends Migration
      *
      * @return void
      */
-    public function down()
-    {
+    public function down() {
         Schema::dropIfExists('extensions');
     }
 }

@@ -11,13 +11,13 @@ class CreateIntentionsTable extends Migration
      *
      * @return void
      */
-    public function up()
-    {
-        /*
-        ● Intention​ : Un type d’​Action​ sur un ​Emprunt​, indiquant qu’une demande de réservation a été faite et doit être confirmée par le propriétaire de l’​Objet
-        */
+    public function up() {
         Schema::create('intentions', function (Blueprint $table) {
             $table->bigIncrements('id');
+            // Action fields
+            $table->dateTimeTz('executed_at');
+            $table->enum('status', ['in_process', 'canceled', 'completed']);
+
             $table->timestamps();
             $table->softDeletes();
         });
@@ -28,8 +28,7 @@ class CreateIntentionsTable extends Migration
      *
      * @return void
      */
-    public function down()
-    {
+    public function down() {
         Schema::dropIfExists('intentions');
     }
 }

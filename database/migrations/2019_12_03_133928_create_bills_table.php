@@ -15,12 +15,10 @@ class CreateBillsTable extends Migration
     {
         Schema::create('bills', function (Blueprint $table) {
             $table->bigIncrements('id');
-            // Période : Période de la facture, obligatoire
-            // Méthode de paiement : Une représentation textuelle de la méthode de paiement utilisée par ex. “Carte de crédit Visa” ou “Par chèque”, obligatoire
-            // Paiement : Date de paiement
-            // Total : Somme du montant des items facturables
-            // Items facturables (​Item facturable​) : Tous les items facturables sur la facture
-            // Méthode de paiement (​Méthode de paiement​) : La méthode de paiement utilisée pour cette facture, optionnel
+            $table->string('period');
+            $table->string('payment_method');
+            $table->double('total', 8, 2);
+            $table->date('paid_at');
             $table->timestamps();
             $table->softDeletes();
         });

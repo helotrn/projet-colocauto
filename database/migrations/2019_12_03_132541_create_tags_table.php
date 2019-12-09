@@ -10,7 +10,7 @@ class CreateTagsTable extends Migration
         Schema::create('tags', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('name');
-            // Type : Une liste déterminée d’avance de types disponibles, obligatoire
+            $table->enum('types', ['type1']); //todo : add types
             $table->timestamps();
             $table->softDeletes();
         });

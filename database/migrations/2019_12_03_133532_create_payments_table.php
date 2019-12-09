@@ -11,13 +11,13 @@ class CreatePaymentsTable extends Migration
      *
      * @return void
      */
-    public function up()
-    {
-        /*
-        ● Paiement​ : Un type d’​Action​ sur un ​Emprunt​, indiquant qu’un paiement doit être fait
-        */
+    public function up() {
         Schema::create('payments', function (Blueprint $table) {
             $table->bigIncrements('id');
+            // Action fields
+            $table->dateTimeTz('executed_at');
+            $table->enum('status', ['in_process', 'canceled', 'completed']);
+            
             $table->timestamps();
             $table->softDeletes();
         });
@@ -28,8 +28,7 @@ class CreatePaymentsTable extends Migration
      *
      * @return void
      */
-    public function down()
-    {
+    public function down() {
         Schema::dropIfExists('payments');
     }
 }

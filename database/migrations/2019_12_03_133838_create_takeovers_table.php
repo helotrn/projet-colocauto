@@ -11,19 +11,19 @@ class CreateTakeoversTable extends Migration
      *
      * @return void
      */
-    public function up()
-    {
-        /*
-        Prise de possession​ : Un type d’​Action​ sur un ​Emprunt​, contenant les données relatives à la prise de possession d’une voiture
-        */
+    public function up() {
         Schema::create('takeovers', function (Blueprint $table) {
             $table->bigIncrements('id');
-            // Km au début : Obligatoire
-            // Essence au début : Obligatoire
-            // Commentaires sur l’état du véhicule : Optionnel
-            // Contestation : Date de contestation
-            // Commentaire sur la contestation : Optionnel
-            // Photos (​Image​) : Preuves photographiques, optionnel
+            // Action fields
+            $table->dateTimeTz('executed_at');
+            $table->enum('status', ['in_process', 'canceled', 'completed']);
+
+            // Takeover-specific fields
+            $table->string('mileage_beginning');
+            $table->string('fuel_beginning');
+            $table->text('comments_on_vehicle')->nullable();
+            $table->date('contested_at')->nullable();
+            $table->text('comments_on_contestation')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
@@ -34,8 +34,7 @@ class CreateTakeoversTable extends Migration
      *
      * @return void
      */
-    public function down()
-    {
+    public function down() {
         Schema::dropIfExists('takeovers');
     }
 }

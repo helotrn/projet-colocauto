@@ -11,15 +11,14 @@ class CreatePaymentMethodsTable extends Migration
      *
      * @return void
      */
-    public function up()
-    {
+    public function up() {
         Schema::create('payment_methods', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('name');
-
-            $table->unsignedBigInteger('user_id');
-            $table->foreign('user_id')->references('id')->on('users');
-
+            $table->string('external_id');
+            $table->enum('type', ['credit_cart', 'bank_account']);
+            $table->unsignedInteger('four_last_digits')->nullable();
+            $table->string('credit_card_type')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
@@ -30,8 +29,7 @@ class CreatePaymentMethodsTable extends Migration
      *
      * @return void
      */
-    public function down()
-    {
+    public function down() {
         Schema::dropIfExists('payment_methods');
     }
 }

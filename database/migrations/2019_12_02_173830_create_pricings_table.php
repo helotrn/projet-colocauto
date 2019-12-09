@@ -11,12 +11,8 @@ class CreatePricingsTable extends Migration
             $table->bigIncrements('id');
             $table->string('name');
             $table->string('object_type');
-            $table->enum('variable', ['Temps', 'Kilométrage']);
+            $table->enum('variable', ['time', 'distance']);
             $table->text('rule');
-
-            $table->unsignedBigInteger('community_id');
-            $table->foreign('community_id')->references('id')->on('communities');
-
             $table->timestamps();
             $table->softDeletes();
         });

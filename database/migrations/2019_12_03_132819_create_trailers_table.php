@@ -18,10 +18,17 @@ class CreateTrailersTable extends Migration
         */
         Schema::create('trailers', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->enum('type', ['Régulier', 'Électrique', 'Roue fixe']);
-            $table->string('maximum_charge'); //units ?
-            // Comment récupérer la clé : Obligatoire
-            // Accessoires (​Mots-clés​ de type Accessoire) : Les accessoires pour la remorque
+
+            //Loanable fields
+            $table->string('name');
+            $table->point('position');
+            $table->text('location_description');
+            $table->text('comments');
+            $table->text('instructions');
+
+            //Trailer-specific fields
+            $table->enum('type', ['regular', 'electric', 'fixed_wheel']);
+            $table->string('maximum_charge');
             $table->timestamps();
             $table->softDeletes();
         });

@@ -11,21 +11,22 @@ class CreateHandoversTable extends Migration
      *
      * @return void
      */
-    public function up()
-    {
-        /*
-        Remise​ : Un type d’​Action​ sur un ​Emprunt​, contenant les données relatives à la remise d’une voiture
-        */
+    public function up() {
         Schema::create('handovers', function (Blueprint $table) {
             $table->bigIncrements('id');
-            // Km à la fin: Obligatoire
-            // Essence à la fin : Obligatoire
-            // Message de l’emprunteur : Optionnel
-            // Message du propriétaire : Optionnel
-            // Montant des achats : Optionnel
-            // Contestation : Date de contestation
-            // Commentaire sur la contestation : Optionnel
-            // Photos (​Image​) : Preuves photographique, optionnel
+            // Action fields
+            $table->dateTimeTz('executed_at');
+            $table->enum('status', ['in_process', 'canceled', 'completed']);
+
+            // Takeover-specific fields
+            $table->string('mileage_end');
+            $table->string('fuel_end');
+            $table->text('comments_by_borrower')->nullable();
+            $table->text('comments_by_owner')->nullable();
+            $table->decimal('purchases_amount', 8, 2);
+            $table->date('contested_at')->nullable();
+            $table->text('comments_on_contestation')->nullable();
+            
             $table->timestamps();
             $table->softDeletes();
         });
@@ -36,8 +37,7 @@ class CreateHandoversTable extends Migration
      *
      * @return void
      */
-    public function down()
-    {
+    public function down() {
         Schema::dropIfExists('handovers');
     }
 }

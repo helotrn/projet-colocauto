@@ -10,14 +10,17 @@ class CreateBikesTable extends Migration
         Schema::create('bikes', function (Blueprint $table) {
             $table->bigIncrements('id');
 
+            //Loanable fields
             $table->string('name');
+            $table->point('position');
             $table->text('location_description');
             $table->text('comments');
             $table->text('instructions');
 
+            //Bike-specific fields
             $table->string('model');
-            $table->enum('type', ['Régulier', 'Électrique', 'Roue fixe']);
-            $table->enum('size', ['Grand', 'Moyen', 'Petit', 'Enfant']);
+            $table->enum('type', ['regular', 'electric', 'fixed_wheel']);
+            $table->enum('size', ['big', 'medium', 'small', 'kid']);
             $table->timestamps();
             $table->softDeletes();
         });
