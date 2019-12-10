@@ -4,9 +4,9 @@ namespace App\Models;
 
 use App\Transformers\BaseTransformer;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class BaseModel extends Model
+class AuthenticatableBaseModel extends Authenticatable
 {
     use BaseModelTrait;
 }

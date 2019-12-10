@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use App\Transformers\UserTransformer;
 
-class User extends BaseModel
+class User extends AuthenticatableBaseModel
 {
     use HasApiTokens, Notifiable;
 
@@ -32,7 +32,7 @@ class User extends BaseModel
         'other_phone' => 'required',
         'approved_at' => 'nullable|date',
     ];
-    
+
     protected $fillable = [
         'name',
         'last_name',
@@ -68,7 +68,6 @@ class User extends BaseModel
     public function getAuthPassword() {
         return $this->password;
     }
-
 
     public $collections = ['paymentMethods', 'bills', 'files', 'actions'];
 
