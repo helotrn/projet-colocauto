@@ -6,16 +6,7 @@ use Illuminate\Database\Migrations\Migration;
 
 class CreateTrailersTable extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
-    public function up()
-    {
-        /*
-        ● Remorque​ : Un type d’​Objet
-        */
+    public function up() {
         Schema::create('trailers', function (Blueprint $table) {
             $table->bigIncrements('id');
 
