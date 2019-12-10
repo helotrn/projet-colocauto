@@ -10,7 +10,7 @@ class BikeTest extends TestCase
     public function testCreateBikes() {
         $data = [
             'name' => $this->faker->name,
-            'position' => new Point($this->faker->latitude, $this->faker->longitude),
+            'position' => "{$this->faker->latitude} {$this->faker->longitude}",
             'location_description' => $this->faker->sentence,
             'comments' => $this->faker->paragraph,
             'instructions' => $this->faker->paragraph,
@@ -18,9 +18,10 @@ class BikeTest extends TestCase
             'type' => $this->faker->randomElement(['regular' ,'electric', 'fixed_wheel']),
             'size' => $this->faker->randomElement(['big' ,'medium', 'small', 'kid']),
         ];
-        $this->post(route('bikes.store'), $data)
-            ->assertStatus(201)
-            ->assertJson($data);
+
+        $response = $this->json('POST', route('bikes.create'), $data);
+
+        $response->assertStatus(201)->assertJson($data);
     }
 
     public function testUpdateBikes() {
@@ -35,7 +36,7 @@ class BikeTest extends TestCase
 
     public function testShowBikes() {
         $post = factory(Bike::class)->create();
-        $this->get(route('bikes.show', $post->id))
+        $this->get(route('bikes.retrieve', $post->id))
             ->assertStatus(200);
     }
 
@@ -59,6 +60,7 @@ class BikeTest extends TestCase
                 'size',
             ]);
         });
+
         $this->get(route('bikes'))
             ->assertStatus(200)
             ->assertJson($bikes->toArray())
