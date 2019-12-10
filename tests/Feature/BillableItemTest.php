@@ -1,5 +1,5 @@
 <?php
-namespace Tests\Unit;
+namespace Tests\Feature;
 
 use App\BillableItem;
 use Tests\TestCase;

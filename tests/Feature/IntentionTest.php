@@ -1,5 +1,6 @@
 <?php
-namespace Tests\Unit;
+
+namespace Tests\Feature;
 
 use App\Intention;
 use Tests\TestCase;
