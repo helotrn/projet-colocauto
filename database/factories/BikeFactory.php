@@ -5,7 +5,7 @@ use Illuminate\Support\Str;
 use Faker\Generator as Faker;
 use Phaza\LaravelPostgis\Geometries\Point;
 
-$factory->define(App\Bike::class, function (Faker $faker) {
+$factory->define(Bike::class, function (Faker $faker) {
     return [
         'name' => $faker->name,
         'position' => new Point($faker->latitude, $faker->longitude),

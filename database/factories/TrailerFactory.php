@@ -4,7 +4,7 @@ use App\Models\Trailer;
 use Illuminate\Support\Str;
 use Faker\Generator as Faker;
 
-$factory->define(App\Trailer::class, function (Faker $faker) {
+$factory->define(Trailer::class, function (Faker $faker) {
     return [
         'name' => $faker->name,
         'position' => new Point($faker->latitude, $faker->longitude),
