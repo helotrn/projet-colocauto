@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\Extension;
+use App\Models\Extension;
 use Tests\TestCase;
 
 class ExtensionTest extends TestCase
@@ -13,9 +13,18 @@ class ExtensionTest extends TestCase
             'new_duration' => $this->faker->randomNumber($nbDigits = null, $strict = false),
             'comments_on_extension' => $this->faker->paragraph,
         ];
-        $this->post(route('extensions.store'), $data)
-            ->assertStatus(201)
-            ->assertJson($data);
+
+        $response = $this->json('POST', route('extensions.create'), $data);
+
+        $response->assertStatus(201)->assertJson($data);
+    }
+
+    public function testShowExtensions() {
+        $post = factory(Extension::class)->create();
+        
+        $response = $this->json('GET', route('extensions.retrieve', $post->id), $data);
+
+        $response->assertStatus(200)->assertJson($data);
     }
 
     public function testUpdateExtensions() {
@@ -23,21 +32,18 @@ class ExtensionTest extends TestCase
         $data = [
             'comments_on_extension' => $this->faker->paragraph,
         ];
-        $this->put(route('extensions.update', $post->id), $data)
-            ->assertStatus(200)
-            ->assertJson($data);
-    }
+        
+        $response = $this->json('PUT', route('extensions.update', $post->id), $data);
 
-    public function testShowExtensions() {
-        $post = factory(Extension::class)->create();
-        $this->get(route('extensions.show', $post->id))
-            ->assertStatus(200);
+        $response->assertStatus(200)->assertJson($data);
     }
 
     public function testDeleteExtensions() {
         $post = factory(Extension::class)->create();
-        $this->delete(route('extensions.delete', $post->id))
-            ->assertStatus(204);
+        
+        $response = $this->json('DELETE', route('extensions.delete', $post->id), $data);
+
+        $response->assertStatus(204)->assertJson($data);
     }
 
     public function testListExtensions() {
@@ -49,16 +55,18 @@ class ExtensionTest extends TestCase
                 'comments_on_extension'
             ]);
         });
-        $this->get(route('extensions'))
-            ->assertStatus(200)
-            ->assertJson($extensions->toArray())
-            ->assertJsonStructure([
-                '*' => [
-                    'id',
-                    'status',
-                    'new_duration',
-                    'comments_on_extension'
-                ],
-            ]);
+
+        $response = $this->json('GET', route('extensions.index'));
+
+        $response->assertStatus(200)
+                ->assertJson($extensions->toArray())
+                ->assertJsonStructure([
+                    '*' => [
+                        'id',
+                        'status',
+                        'new_duration',
+                        'comments_on_extension'
+                    ],
+                ]);
     }
 }

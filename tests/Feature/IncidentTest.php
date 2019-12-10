@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\Incident;
+use App\Models\Incident;
 use Tests\TestCase;
 
 class IncidentTest extends TestCase
@@ -12,9 +12,18 @@ class IncidentTest extends TestCase
             'status' => $this->faker->randomElement(['in_process', 'canceled', 'completed']),
             'incident_type' => $this->faker->randomElement(['accident']),
         ];
-        $this->post(route('incidents.store'), $data)
-            ->assertStatus(201)
-            ->assertJson($data);
+
+        $response = $this->json('POST', route('incidents.create'), $data);
+
+        $response->assertStatus(201)->assertJson($data);
+    }
+
+    public function testShowIncidents() {
+        $post = factory(Incident::class)->create();
+        
+        $response = $this->json('GET', route('incidents.retrieve', $post->id), $data);
+
+        $response->assertStatus(200)->assertJson($data);
     }
 
     public function testUpdateIncidents() {
@@ -22,32 +31,35 @@ class IncidentTest extends TestCase
         $data = [
             'status' => $this->faker->randomElement(['in_process', 'canceled', 'completed']),
         ];
-        $this->put(route('incidents.update', $post->id), $data)
-            ->assertStatus(200)
-            ->assertJson($data);
-    }
 
-    public function testShowIncidents() {
-        $post = factory(Incident::class)->create();
-        $this->get(route('incidents.show', $post->id))
-            ->assertStatus(200);
+        $response = $this->json('PUT', route('incidents.update', $post->id), $data);
+
+        $response->assertStatus(200)->assertJson($data);
     }
 
     public function testDeleteIncidents() {
         $post = factory(Incident::class)->create();
-        $this->delete(route('incidents.delete', $post->id))
-            ->assertStatus(204);
+        
+        $response = $this->json('DELETE', route('incidents.delete', $post->id), $data);
+
+        $response->assertStatus(204)->assertJson($data);
     }
 
     public function testListIncidents() {
         $incidents = factory(Incident::class, 2)->create()->map(function ($post) {
             return $post->only(['id', 'status', 'incident_type']);
         });
-        $this->get(route('incidents'))
-            ->assertStatus(200)
-            ->assertJson($incidents->toArray())
-            ->assertJsonStructure([
-                '*' => [ 'id', 'status', 'incident_type' ],
-            ]);
+
+        $response = $this->json('GET', route('incidents.index'));
+
+        $response->assertStatus(200)
+                ->assertJson($incidents->toArray())
+                ->assertJsonStructure([
+                    '*' => [
+                        'id',
+                        'status',
+                        'incident_type',
+                    ],
+                ]);
     }
 }

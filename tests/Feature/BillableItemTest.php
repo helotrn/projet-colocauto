@@ -1,7 +1,7 @@
 <?php
 namespace Tests\Feature;
 
-use App\BillableItem;
+use App\Models\BillableItem;
 use Tests\TestCase;
 
 class BillableItemTest extends TestCase
@@ -11,9 +11,18 @@ class BillableItemTest extends TestCase
             'label' => $this->faker->word,
             'amount' => $this->faker->numberBetween($min = 0, $max = 300000),
         ];
-        $this->post(route('billable-items.store'), $data)
-            ->assertStatus(201)
-            ->assertJson($data);
+
+        $response = $this->json('POST', route('billable-items.create'), $data);
+
+        $response->assertStatus(201)->assertJson($data);
+    }
+
+    public function testShowBillableItems() {
+        $post = factory(BillableItem::class)->create();
+        
+        $response = $this->json('GET', route('billable-items.retrieve', $post->id), $data);
+
+        $response->assertStatus(200)->assertJson($data);
     }
 
     public function testUpdateBillableItems() {
@@ -21,21 +30,18 @@ class BillableItemTest extends TestCase
         $data = [
             'label' => $this->faker->word,
         ];
-        $this->put(route('billable-items.update', $post->id), $data)
-            ->assertStatus(200)
-            ->assertJson($data);
-    }
+        
+        $response = $this->json('PUT', route('billable-items.update', $post->id), $data);
 
-    public function testShowBillableItems() {
-        $post = factory(BillableItem::class)->create();
-        $this->get(route('billable-items.show', $post->id))
-            ->assertStatus(200);
+        $response->assertStatus(200)->assertJson($data);
     }
 
     public function testDeleteBillableItems() {
         $post = factory(BillableItem::class)->create();
-        $this->delete(route('billable-items.delete', $post->id))
-            ->assertStatus(204);
+        
+        $response = $this->json('DELETE', route('billable-items.delete', $post->id), $data);
+
+        $response->assertStatus(204)->assertJson($data);
     }
 
     public function testListBillableItems() {
@@ -46,15 +52,17 @@ class BillableItemTest extends TestCase
                 'amount'
             ]);
         });
-        $this->get(route('billable-items'))
-            ->assertStatus(200)
-            ->assertJson($billable_items->toArray())
-            ->assertJsonStructure([
-                '*' => [
-                    'id',
-                    'label',
-                    'amount',
-                ],
-            ]);
+
+        $response = $this->json('GET', route('billable-items.index'));
+
+        $response->assertStatus(200)
+                ->assertJson($billable_items->toArray())
+                ->assertJsonStructure([
+                    '*' => [
+                        'id',
+                        'label',
+                        'amount',
+                    ],
+                ]);
     }
 }

@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\Loan;
+use App\Models\Loan;
 use Tests\TestCase;
 
 class LoanTest extends TestCase
@@ -11,9 +11,18 @@ class LoanTest extends TestCase
         $data = [
             'duration' => $this->faker->randomNumber($nbDigits = null, $strict = false),
         ];
-        $this->post(route('loans.store'), $data)
-            ->assertStatus(201)
-            ->assertJson($data);
+
+        $response = $this->json('POST', route('loans.create'), $data);
+
+        $response->assertStatus(201)->assertJson($data);
+    }
+
+    public function testShowLoans() {
+        $post = factory(Loan::class)->create();
+        
+        $response = $this->json('GET', route('loans.retrieve', $post->id), $data);
+
+        $response->assertStatus(200)->assertJson($data);
     }
 
     public function testUpdateLoans() {
@@ -21,32 +30,34 @@ class LoanTest extends TestCase
         $data = [
             'duration' => $this->faker->randomNumber($nbDigits = null, $strict = false),
         ];
-        $this->put(route('loans.update', $post->id), $data)
-            ->assertStatus(200)
-            ->assertJson($data);
-    }
+        
+        $response = $this->json('PUT', route('loans.update', $post->id), $data);
 
-    public function testShowLoans() {
-        $post = factory(Loan::class)->create();
-        $this->get(route('loans.show', $post->id))
-            ->assertStatus(200);
+        $response->assertStatus(200)->assertJson($data);
     }
 
     public function testDeleteLoans() {
         $post = factory(Loan::class)->create();
-        $this->delete(route('loans.delete', $post->id))
-            ->assertStatus(204);
+        
+        $response = $this->json('DELETE', route('loans.delete', $post->id), $data);
+
+        $response->assertStatus(204)->assertJson($data);
     }
 
     public function testListLoans() {
         $loans = factory(Loan::class, 2)->create()->map(function ($post) {
             return $post->only(['id', 'duration']);
         });
-        $this->get(route('loans'))
-            ->assertStatus(200)
-            ->assertJson($loans->toArray())
-            ->assertJsonStructure([
-                '*' => [ 'id', 'duration' ],
-            ]);
+
+        $response = $this->json('GET', route('loans.index'));
+
+        $response->assertStatus(200)
+                ->assertJson($loans->toArray())
+                ->assertJsonStructure([
+                    '*' => [
+                        'id',
+                        'duration',
+                    ],
+                ]);
     }
 }

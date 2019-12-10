@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\PaymentMethod;
+use App\Models\PaymentMethod;
 use Tests\TestCase;
 
 class PaymentMethodTest extends TestCase
@@ -15,9 +15,18 @@ class PaymentMethodTest extends TestCase
             'four_last_digits' => $this->faker->randomNumber($nbDigits = 4, $strict = true),
             'credit_card_type' => $this->faker->creditCardType,
         ];
-        $this->post(route('payment-methods.store'), $data)
-            ->assertStatus(201)
-            ->assertJson($data);
+
+        $response = $this->json('POST', route('payment-methods.create'), $data);
+
+        $response->assertStatus(201)->assertJson($data);
+    }
+
+    public function testShowPaymentMethods() {
+        $post = factory(PaymentMethod::class)->create();
+        
+        $response = $this->json('GET', route('payment-methods.retrieve', $post->id), $data);
+
+        $response->assertStatus(200)->assertJson($data);
     }
 
     public function testUpdatePaymentMethods() {
@@ -25,21 +34,18 @@ class PaymentMethodTest extends TestCase
         $data = [
             'name' => $this->faker->name,
         ];
-        $this->put(route('payment-methods.update', $post->id), $data)
-            ->assertStatus(200)
-            ->assertJson($data);
-    }
+        
+        $response = $this->json('PUT', route('payment-methods.update', $post->id), $data);
 
-    public function testShowPaymentMethods() {
-        $post = factory(PaymentMethod::class)->create();
-        $this->get(route('payment-methods.show', $post->id))
-            ->assertStatus(200);
+        $response->assertStatus(200)->assertJson($data);
     }
 
     public function testDeletePaymentMethods() {
         $post = factory(PaymentMethod::class)->create();
-        $this->delete(route('payment-methods.delete', $post->id))
-            ->assertStatus(204);
+        
+        $response = $this->json('DELETE', route('payment-methods.delete', $post->id), $data);
+
+        $response->assertStatus(204)->assertJson($data);
     }
 
     public function testListPaymentMethods() {
@@ -53,18 +59,20 @@ class PaymentMethodTest extends TestCase
                 'credit_card_type',
             ]);
         });
-        $this->get(route('payment-methods'))
-            ->assertStatus(200)
-            ->assertJson($payment_methods->toArray())
-            ->assertJsonStructure([
-                '*' => [
-                    'id',
-                    'name',
-                    'external_id',
-                    'type',
-                    'four_last_digits',
-                    'credit_card_type',
-                ],
-            ]);
+
+        $response = $this->json('GET', route('payment-methods.index'));
+
+        $response->assertStatus(200)
+                ->assertJson($payment_methods->toArray())
+                ->assertJsonStructure([
+                    '*' => [
+                        'id',
+                        'name',
+                        'external_id',
+                        'type',
+                        'four_last_digits',
+                        'credit_card_type',
+                    ],
+                ]);
     }
 }

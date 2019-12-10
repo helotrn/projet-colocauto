@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\Takeover;
+use App\Models\Takeover;
 use Tests\TestCase;
 
 class TakeoverTest extends TestCase
@@ -14,9 +14,18 @@ class TakeoverTest extends TestCase
             'fuel_beginning' => $this->faker->numberBetween($min = 0, $max = 100),
             'comments_on_vehicle' => $this->faker->sentence,
         ];
-        $this->post(route('takeovers.store'), $data)
-            ->assertStatus(201)
-            ->assertJson($data);
+
+        $response = $this->json('POST', route('takeovers.create'), $data);
+
+        $response->assertStatus(201)->assertJson($data);
+    }
+
+    public function testShowTakeovers() {
+        $post = factory(Takeover::class)->create();
+        
+        $response = $this->json('GET', route('takeovers.retrieve', $post->id), $data);
+
+        $response->assertStatus(200)->assertJson($data);
     }
 
     public function testUpdateTakeovers() {
@@ -24,21 +33,18 @@ class TakeoverTest extends TestCase
         $data = [
             'comments_on_vehicle' => $this->faker->sentence,
         ];
-        $this->put(route('takeovers.update', $post->id), $data)
-            ->assertStatus(200)
-            ->assertJson($data);
-    }
+        
+        $response = $this->json('PUT', route('takeovers.update', $post->id), $data);
 
-    public function testShowTakeovers() {
-        $post = factory(Takeover::class)->create();
-        $this->get(route('takeovers.show', $post->id))
-            ->assertStatus(200);
+        $response->assertStatus(200)->assertJson($data);
     }
 
     public function testDeleteTakeovers() {
         $post = factory(Takeover::class)->create();
-        $this->delete(route('takeovers.delete', $post->id))
-            ->assertStatus(204);
+        
+        $response = $this->json('DELETE', route('takeovers.delete', $post->id), $data);
+
+        $response->assertStatus(204)->assertJson($data);
     }
 
     public function testListTakeovers() {
@@ -51,17 +57,19 @@ class TakeoverTest extends TestCase
                 'comments_on_vehicle',
             ]);
         });
-        $this->get(route('takeovers'))
-            ->assertStatus(200)
-            ->assertJson($takeovers->toArray())
-            ->assertJsonStructure([
-                '*' => [
-                    'id',
-                    'status',
-                    'mileage_beginning',
-                    'fuel_beginning',
-                    'comments_on_vehicle',
-                ],
-            ]);
+
+        $response = $this->json('GET', route('takeovers.index'));
+
+        $response->assertStatus(200)
+                ->assertJson($takeovers->toArray())
+                ->assertJsonStructure([
+                    '*' => [
+                        'id',
+                        'status',
+                        'mileage_beginning',
+                        'fuel_beginning',
+                        'comments_on_vehicle',
+                    ],
+                ]);
     }
 }

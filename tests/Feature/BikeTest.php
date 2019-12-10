@@ -1,9 +1,8 @@
 <?php
 namespace Tests\Feature;
 
-use App\Bike;
+use App\Models\Bike;
 use Tests\TestCase;
-use Phaza\LaravelPostgis\Geometries\Point;
 
 class BikeTest extends TestCase
 {
@@ -24,26 +23,31 @@ class BikeTest extends TestCase
         $response->assertStatus(201)->assertJson($data);
     }
 
+    public function testShowBikes() {
+        $post = factory(Bike::class)->create();
+
+        $response = $this->json('GET', route('bikes.retrieve', $post->id), $data);
+
+        $response->assertStatus(200)->assertJson($data);
+    }
+
     public function testUpdateBikes() {
         $post = factory(Bike::class)->create();
         $data = [
             'name' => $this->faker->name,
         ];
-        $this->put(route('bikes.update', $post->id), $data)
-            ->assertStatus(200)
-            ->assertJson($data);
-    }
+        
+        $response = $this->json('PUT', route('bikes.update', $post->id), $data);
 
-    public function testShowBikes() {
-        $post = factory(Bike::class)->create();
-        $this->get(route('bikes.retrieve', $post->id))
-            ->assertStatus(200);
+        $response->assertStatus(200)->assertJson($data);
     }
 
     public function testDeleteBikes() {
         $post = factory(Bike::class)->create();
-        $this->delete(route('bikes.delete', $post->id))
-            ->assertStatus(204);
+
+        $response = $this->json('DELETE', route('bikes.delete', $post->id), $data);
+
+        $response->assertStatus(204)->assertJson($data);
     }
 
     public function testListBikes() {
@@ -61,21 +65,22 @@ class BikeTest extends TestCase
             ]);
         });
 
-        $this->get(route('bikes'))
-            ->assertStatus(200)
-            ->assertJson($bikes->toArray())
-            ->assertJsonStructure([
-                '*' => [
-                    'id',
-                    'name',
-                    'position',
-                    'location_description',
-                    'comments',
-                    'instructions',
-                    'model',
-                    'type',
-                    'size',
-                ],
-            ]);
+        $response = $this->json('GET', route('bikes.index'));
+
+        $response->assertStatus(200)
+                ->assertJson($bikes->toArray())
+                ->assertJsonStructure([
+                    '*' => [
+                        'id',
+                        'name',
+                        'position',
+                        'location_description',
+                        'comments',
+                        'instructions',
+                        'model',
+                        'type',
+                        'size',
+                    ],
+                ]);
     }
 }

@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\Pricing;
+use App\Models\Pricing;
 use Tests\TestCase;
 
 class PricingTest extends TestCase
@@ -14,9 +14,18 @@ class PricingTest extends TestCase
             'variable' => $this->faker->randomElement(['time' ,'distance']),
             'rule' => $this->faker->sentence,
         ];
-        $this->post(route('pricings.store'), $data)
-            ->assertStatus(201)
-            ->assertJson($data);
+
+        $response = $this->json('POST', route('pricings.create'), $data);
+
+        $response->assertStatus(201)->assertJson($data);
+    }
+
+    public function testShowPricings() {
+        $post = factory(Pricing::class)->create();
+        
+        $response = $this->json('GET', route('pricings.retrieve', $post->id), $data);
+
+        $response->assertStatus(200)->assertJson($data);
     }
 
     public function testUpdatePricings() {
@@ -24,21 +33,18 @@ class PricingTest extends TestCase
         $data = [
             'name' => $this->faker->name,
         ];
-        $this->put(route('pricings.update', $post->id), $data)
-            ->assertStatus(200)
-            ->assertJson($data);
-    }
+        
+        $response = $this->json('PUT', route('pricings.update', $post->id), $data);
 
-    public function testShowPricings() {
-        $post = factory(Pricing::class)->create();
-        $this->get(route('pricings.show', $post->id))
-            ->assertStatus(200);
+        $response->assertStatus(200)->assertJson($data);
     }
 
     public function testDeletePricings() {
         $post = factory(Pricing::class)->create();
-        $this->delete(route('pricings.delete', $post->id))
-            ->assertStatus(204);
+        
+        $response = $this->json('DELETE', route('pricings.delete', $post->id), $data);
+
+        $response->assertStatus(204)->assertJson($data);
     }
 
     public function testListPricings() {
@@ -51,17 +57,19 @@ class PricingTest extends TestCase
                 'rule',
             ]);
         });
-        $this->get(route('pricings'))
-            ->assertStatus(200)
-            ->assertJson($pricings->toArray())
-            ->assertJsonStructure([
-                '*' => [
-                    'id',
-                    'name',
-                    'object_type',
-                    'variable',
-                    'rule',
-                ],
-            ]);
+
+        $response = $this->json('GET', route('pricings.index'));
+
+        $response->assertStatus(200)
+                ->assertJson($pricings->toArray())
+                ->assertJsonStructure([
+                    '*' => [
+                        'id',
+                        'name',
+                        'object_type',
+                        'variable',
+                        'rule',
+                    ],
+                ]);
     }
 }

@@ -1,7 +1,7 @@
 <?php
 namespace Tests\Feature;
 
-use App\Bill;
+use App\Models\Bill;
 use Tests\TestCase;
 
 class BillTest extends TestCase
@@ -12,9 +12,18 @@ class BillTest extends TestCase
             'payment_method' => $this->faker->word,
             'total' => $this->faker->numberBetween($min = 0, $max = 300000),
         ];
-        $this->post(route('bills.store'), $data)
-            ->assertStatus(201)
-            ->assertJson($data);
+
+        $response = $this->json('POST', route('bills.create'), $data);
+
+        $response->assertStatus(201)->assertJson($data);
+    }
+
+    public function testShowBills() {
+        $post = factory(Bill::class)->create();
+        
+        $response = $this->json('GET', route('bills.retrieve', $post->id), $data);
+
+        $response->assertStatus(200)->assertJson($data);
     }
 
     public function testUpdateBills() {
@@ -22,21 +31,18 @@ class BillTest extends TestCase
         $data = [
             'period' => $this->faker->word,
         ];
-        $this->put(route('bills.update', $post->id), $data)
-            ->assertStatus(200)
-            ->assertJson($data);
-    }
+        
+        $response = $this->json('PUT', route('bills.update', $post->id), $data);
 
-    public function testShowBills() {
-        $post = factory(Bill::class)->create();
-        $this->get(route('bills.show', $post->id))
-            ->assertStatus(200);
+        $response->assertStatus(200)->assertJson($data);
     }
 
     public function testDeleteBills() {
         $post = factory(Bill::class)->create();
-        $this->delete(route('bills.delete', $post->id))
-            ->assertStatus(204);
+        
+        $response = $this->json('DELETE', route('bills.delete', $post->id), $data);
+
+        $response->assertStatus(204)->assertJson($data);
     }
 
     public function testListBills() {
@@ -48,16 +54,18 @@ class BillTest extends TestCase
                 'total',
             ]);
         });
-        $this->get(route('bills'))
-            ->assertStatus(200)
-            ->assertJson($bills->toArray())
-            ->assertJsonStructure([
-                '*' => [
-                    'id',
-                    'period',
-                    'payment_method',
-                    'total',
-                ],
-            ]);
+
+        $response = $this->json('GET', route('bills.index'));
+
+        $response->assertStatus(200)
+                ->assertJson($bills->toArray())
+                ->assertJsonStructure([
+                    '*' => [
+                        'id',
+                        'period',
+                        'payment_method',
+                        'total',
+                    ],
+                ]);
     }
 }

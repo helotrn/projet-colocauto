@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\Tag;
+use App\Models\Tag;
 use Tests\TestCase;
 
 class TagTest extends TestCase
@@ -12,9 +12,18 @@ class TagTest extends TestCase
             'name' => $this->faker->name,
             'type' => $this->faker->randomElement(['type1']),
         ];
-        $this->post(route('tags.store'), $data)
-            ->assertStatus(201)
-            ->assertJson($data);
+
+        $response = $this->json('POST', route('tags.create'), $data);
+
+        $response->assertStatus(201)->assertJson($data);
+    }
+
+    public function testShowTags() {
+        $post = factory(Tag::class)->create();
+
+        $response = $this->json('GET', route('tags.retrieve', $post->id), $data);
+
+        $response->assertStatus(200)->assertJson($data);
     }
 
     public function testUpdateTags() {
@@ -22,32 +31,35 @@ class TagTest extends TestCase
         $data = [
             'name' => $this->faker->name,
         ];
-        $this->put(route('tags.update', $post->id), $data)
-            ->assertStatus(200)
-            ->assertJson($data);
-    }
+        
+        $response = $this->json('PUT', route('tags.update', $post->id), $data);
 
-    public function testShowTags() {
-        $post = factory(Tag::class)->create();
-        $this->get(route('tags.show', $post->id))
-            ->assertStatus(200);
+        $response->assertStatus(200)->assertJson($data);
     }
 
     public function testDeleteTags() {
         $post = factory(Tag::class)->create();
-        $this->delete(route('tags.delete', $post->id))
-            ->assertStatus(204);
+        
+        $response = $this->json('DELETE', route('tags.delete', $post->id), $data);
+
+        $response->assertStatus(204)->assertJson($data);
     }
 
     public function testListTags() {
         $tags = factory(Tag::class, 2)->create()->map(function ($post) {
             return $post->only(['id', 'name', 'type']);
         });
-        $this->get(route('tags'))
-            ->assertStatus(200)
-            ->assertJson($tags->toArray())
-            ->assertJsonStructure([
-                '*' => [ 'id', 'name', 'type' ],
-            ]);
+
+        $response = $this->json('GET', route('tags.index'));
+
+        $response->assertStatus(200)
+                ->assertJson($tags->toArray())
+                ->assertJsonStructure([
+                    '*' => [
+                        'id',
+                        'name',
+                        'type',
+                    ],
+                ]);
     }
 }

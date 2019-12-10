@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\Intention;
+use App\Models\Intention;
 use Tests\TestCase;
 
 class IntentionTest extends TestCase
@@ -11,9 +11,18 @@ class IntentionTest extends TestCase
         $data = [
             'status' => $this->faker->randomElement(['in_process', 'canceled', 'completed']),
         ];
-        $this->post(route('intentions.store'), $data)
-            ->assertStatus(201)
-            ->assertJson($data);
+
+        $response = $this->json('POST', route('intentions.create'), $data);
+
+        $response->assertStatus(201)->assertJson($data);
+    }
+
+    public function testShowIntentions() {
+        $post = factory(Intention::class)->create();
+        
+        $response = $this->json('GET', route('intentions.retrieve', $post->id), $data);
+
+        $response->assertStatus(200)->assertJson($data);
     }
 
     public function testUpdateIntentions() {
@@ -21,32 +30,34 @@ class IntentionTest extends TestCase
         $data = [
             'status' => $this->faker->randomElement(['in_process', 'canceled', 'completed']),
         ];
-        $this->put(route('intentions.update', $post->id), $data)
-            ->assertStatus(200)
-            ->assertJson($data);
-    }
+        
+        $response = $this->json('PUT', route('intentions.update', $post->id), $data);
 
-    public function testShowIntentions() {
-        $post = factory(Intention::class)->create();
-        $this->get(route('intentions.show', $post->id))
-            ->assertStatus(200);
+        $response->assertStatus(200)->assertJson($data);
     }
 
     public function testDeleteIntentions() {
         $post = factory(Intention::class)->create();
-        $this->delete(route('intentions.delete', $post->id))
-            ->assertStatus(204);
+        
+        $response = $this->json('DELETE', route('intentions.delete', $post->id), $data);
+
+        $response->assertStatus(204)->assertJson($data);
     }
 
     public function testListIntentions() {
         $intentions = factory(Intention::class, 2)->create()->map(function ($post) {
             return $post->only(['id', 'status']);
         });
-        $this->get(route('intentions'))
-            ->assertStatus(200)
-            ->assertJson($intentions->toArray())
-            ->assertJsonStructure([
-                '*' => [ 'id', 'status' ],
-            ]);
+
+        $response = $this->json('GET', route('intentions.index'));
+
+        $response->assertStatus(200)
+                ->assertJson($intentions->toArray())
+                ->assertJsonStructure([
+                    '*' => [
+                        'id',
+                        'status',
+                    ],
+                ]);
     }
 }

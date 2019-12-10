@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\Payment;
+use App\Models\Payment;
 use Tests\TestCase;
 
 class PaymentTest extends TestCase
@@ -11,9 +11,18 @@ class PaymentTest extends TestCase
         $data = [
             'status' => $this->faker->randomElement(['in_process', 'canceled', 'completed']),
         ];
-        $this->post(route('payments.store'), $data)
-            ->assertStatus(201)
-            ->assertJson($data);
+
+        $response = $this->json('POST', route('payments.create'), $data);
+
+        $response->assertStatus(201)->assertJson($data);
+    }
+
+    public function testShowPayments() {
+        $post = factory(Payment::class)->create();
+        
+        $response = $this->json('GET', route('payments.retrieve', $post->id), $data);
+
+        $response->assertStatus(200)->assertJson($data);
     }
 
     public function testUpdatePayments() {
@@ -21,32 +30,34 @@ class PaymentTest extends TestCase
         $data = [
             'status' => $this->faker->randomElement(['in_process', 'canceled', 'completed']),
         ];
-        $this->put(route('payments.update', $post->id), $data)
-            ->assertStatus(200)
-            ->assertJson($data);
-    }
+        
+        $response = $this->json('PUT', route('payments.update', $post->id), $data);
 
-    public function testShowPayments() {
-        $post = factory(Payment::class)->create();
-        $this->get(route('payments.show', $post->id))
-            ->assertStatus(200);
+        $response->assertStatus(200)->assertJson($data);
     }
 
     public function testDeletePayments() {
         $post = factory(Payment::class)->create();
-        $this->delete(route('payments.delete', $post->id))
-            ->assertStatus(204);
+        
+        $response = $this->json('DELETE', route('payments.delete', $post->id), $data);
+
+        $response->assertStatus(204)->assertJson($data);
     }
 
     public function testListPayments() {
         $payments = factory(Payment::class, 2)->create()->map(function ($post) {
             return $post->only(['id', 'status']);
         });
-        $this->get(route('payments'))
-            ->assertStatus(200)
-            ->assertJson($payments->toArray())
-            ->assertJsonStructure([
-                '*' => [ 'id', 'status' ],
-            ]);
+
+        $response = $this->json('GET', route('payments.index'));
+
+        $response->assertStatus(200)
+                ->assertJson($payments->toArray())
+                ->assertJsonStructure([
+                    '*' => [
+                        'id',
+                        'status',
+                    ],
+                ]);
     }
 }

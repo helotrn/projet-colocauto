@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\Handover;
+use App\Models\Handover;
 use Tests\TestCase;
 
 class HandoverTest extends TestCase
@@ -16,9 +16,18 @@ class HandoverTest extends TestCase
             'comments_by_owner' => $this->faker->sentence,
             'purchases_amount' => $this->faker->randomFloat($nbMaxDecimals = 2, $min = 0, $max = 100000),
         ];
-        $this->post(route('handovers.store'), $data)
-            ->assertStatus(201)
-            ->assertJson($data);
+
+        $response = $this->json('POST', route('handovers.create'), $data);
+
+        $response->assertStatus(201)->assertJson($data);
+    }
+
+    public function testShowHandovers() {
+        $post = factory(Handover::class)->create();
+        
+        $response = $this->json('GET', route('handovers.retrieve', $post->id), $data);
+
+        $response->assertStatus(200)->assertJson($data);
     }
 
     public function testUpdateHandovers() {
@@ -26,21 +35,18 @@ class HandoverTest extends TestCase
         $data = [
             'comments_by_borrower' => $this->faker->sentence,
         ];
-        $this->put(route('handovers.update', $post->id), $data)
-            ->assertStatus(200)
-            ->assertJson($data);
-    }
+        
+        $response = $this->json('PUT', route('handovers.update', $post->id), $data);
 
-    public function testShowHandovers() {
-        $post = factory(Handover::class)->create();
-        $this->get(route('handovers.show', $post->id))
-            ->assertStatus(200);
+        $response->assertStatus(200)->assertJson($data);
     }
 
     public function testDeleteHandovers() {
         $post = factory(Handover::class)->create();
-        $this->delete(route('handovers.delete', $post->id))
-            ->assertStatus(204);
+        
+        $response = $this->json('DELETE', route('handovers.delete', $post->id), $data);
+
+        $response->assertStatus(204)->assertJson($data);
     }
 
     public function testListHandovers() {
@@ -55,19 +61,21 @@ class HandoverTest extends TestCase
                 'purchases_amount',
             ]);
         });
-        $this->get(route('handovers'))
-            ->assertStatus(200)
-            ->assertJson($handovers->toArray())
-            ->assertJsonStructure([
-                '*' => [
-                    'id',
-                    'status',
-                    'mileage_end',
-                    'fuel_end',
-                    'comments_by_borrower',
-                    'comments_by_owner',
-                    'purchases_amount',
-                ],
-            ]);
+
+        $response = $this->json('GET', route('handovers.index'));
+
+        $response->assertStatus(200)
+                ->assertJson($handovers->toArray())
+                ->assertJsonStructure([
+                    '*' => [
+                        'id',
+                        'status',
+                        'mileage_end',
+                        'fuel_end',
+                        'comments_by_borrower',
+                        'comments_by_owner',
+                        'purchases_amount',
+                    ],
+                ]);
     }
 }

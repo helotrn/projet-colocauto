@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\Car;
+use App\Models\Car;
 use Tests\TestCase;
 use Phaza\LaravelPostgis\Geometries\Point;
 
@@ -28,9 +28,18 @@ class CarTest extends TestCase
             'insurer' => $this->faker->word,
             'has_informed_insurer' => $this->faker->boolean,
         ];
-        $this->post(route('cars.store'), $data)
-            ->assertStatus(201)
-            ->assertJson($data);
+
+        $response = $this->json('POST', route('cars.create'), $data);
+
+        $response->assertStatus(201)->assertJson($data);
+    }
+
+    public function testShowCars() {
+        $post = factory(Car::class)->create();
+        
+        $response = $this->json('GET', route('cars.retrieve', $post->id), $data);
+
+        $response->assertStatus(200)->assertJson($data);
     }
 
     public function testUpdateCars() {
@@ -38,21 +47,18 @@ class CarTest extends TestCase
         $data = [
             'name' => $this->faker->name,
         ];
-        $this->put(route('cars.update', $post->id), $data)
-            ->assertStatus(200)
-            ->assertJson($data);
-    }
+        
+        $response = $this->json('PUT', route('cars.update', $post->id), $data);
 
-    public function testShowCars() {
-        $post = factory(Car::class)->create();
-        $this->get(route('cars.show', $post->id))
-            ->assertStatus(200);
+        $response->assertStatus(200)->assertJson($data);
     }
 
     public function testDeleteCars() {
         $post = factory(Car::class)->create();
-        $this->delete(route('cars.delete', $post->id))
-            ->assertStatus(204);
+        
+        $response = $this->json('DELETE', route('cars.delete', $post->id), $data);
+
+        $response->assertStatus(204)->assertJson($data);
     }
 
     public function testListCars() {
@@ -78,30 +84,32 @@ class CarTest extends TestCase
                 'has_informed_insurer',
             ]);
         });
-        $this->get(route('cars'))
-            ->assertStatus(200)
-            ->assertJson($cars->toArray())
-            ->assertJsonStructure([
-                '*' => [
-                    'id',
-                    'name',
-                    'position',
-                    'location_description',
-                    'comments',
-                    'instructions',
-                    'brand',
-                    'model',
-                    'year_of_circulation',
-                    'transmission_mode',
-                    'fuel',
-                    'plate_number',
-                    'is_value_over_fifty_thousand',
-                    'owners',
-                    'papers_location',
-                    'has_accident_report',
-                    'insurer',
-                    'has_informed_insurer',
-                ],
-            ]);
+
+        $response = $this->json('GET', route('cars.index'));
+
+        $response->assertStatus(200)
+                ->assertJson($cars->toArray())
+                ->assertJsonStructure([
+                    '*' => [
+                        'id',
+                        'name',
+                        'position',
+                        'location_description',
+                        'comments',
+                        'instructions',
+                        'brand',
+                        'model',
+                        'year_of_circulation',
+                        'transmission_mode',
+                        'fuel',
+                        'plate_number',
+                        'is_value_over_fifty_thousand',
+                        'owners',
+                        'papers_location',
+                        'has_accident_report',
+                        'insurer',
+                        'has_informed_insurer',
+                    ],
+                ]);
     }
 }

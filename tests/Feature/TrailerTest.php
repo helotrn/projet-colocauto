@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\Trailer;
+use App\Models\Trailer;
 use Tests\TestCase;
 use Phaza\LaravelPostgis\Geometries\Point;
 
@@ -18,9 +18,18 @@ class TrailerTest extends TestCase
             'type' => $this->faker->randomElement(['regular' ,'electric', 'fixed_wheel']),
             'maximum_charge' => $this->faker->numberBetween($min = 1000, $max = 9000),
         ];
-        $this->post(route('trailers.store'), $data)
-            ->assertStatus(201)
-            ->assertJson($data);
+
+        $response = $this->json('POST', route('trailers.create'), $data);
+
+        $response->assertStatus(201)->assertJson($data);
+    }
+
+    public function testShowTrailers() {
+        $post = factory(Trailer::class)->create();
+        
+        $response = $this->json('GET', route('trailers.retrieve', $post->id), $data);
+
+        $response->assertStatus(200)->assertJson($data);
     }
 
     public function testUpdateTrailers() {
@@ -28,21 +37,18 @@ class TrailerTest extends TestCase
         $data = [
             'name' => $this->faker->name,
         ];
-        $this->put(route('trailers.update', $post->id), $data)
-            ->assertStatus(200)
-            ->assertJson($data);
-    }
+        
+        $response = $this->json('PUT', route('trailers.update', $post->id), $data);
 
-    public function testShowTrailers() {
-        $post = factory(Trailer::class)->create();
-        $this->get(route('trailers.show', $post->id))
-            ->assertStatus(200);
+        $response->assertStatus(200)->assertJson($data);
     }
 
     public function testDeleteTrailers() {
         $post = factory(Trailer::class)->create();
-        $this->delete(route('trailers.delete', $post->id))
-            ->assertStatus(204);
+        
+        $response = $this->json('DELETE', route('trailers.delete', $post->id), $data);
+
+        $response->assertStatus(204)->assertJson($data);
     }
 
     public function testListTrailers() {
@@ -58,20 +64,22 @@ class TrailerTest extends TestCase
                 'maximum_charge',
             ]);
         });
-        $this->get(route('trailers'))
-            ->assertStatus(200)
-            ->assertJson($trailers->toArray())
-            ->assertJsonStructure([
-                '*' => [
-                    'id',
-                    'name',
-                    'position',
-                    'location_description',
-                    'comments',
-                    'instructions',
-                    'type',
-                    'maximum_charge',
-                ],
-            ]);
+
+        $response = $this->json('GET', route('trailers.index'));
+
+        $response->assertStatus(200)
+                ->assertJson($trailers->toArray())
+                ->assertJsonStructure([
+                    '*' => [
+                        'id',
+                        'name',
+                        'position',
+                        'location_description',
+                        'comments',
+                        'instructions',
+                        'type',
+                        'maximum_charge',
+                    ],
+                ]);
     }
 }
