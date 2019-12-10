@@ -9,6 +9,8 @@ use App\Transformers\CarTransformer;
 
 class Car extends Loanable
 {
+    protected $table = 'cars';
+
     public static $rules = [
         'name' => 'required',
         'position' => 'required',
@@ -28,7 +30,7 @@ class Car extends Loanable
         'insurer' => 'required',
         'has_informed_insurer' => 'accepted',
     ];
-    
+
     protected $fillable = [
         'name',
         'position',

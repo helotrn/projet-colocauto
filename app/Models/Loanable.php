@@ -3,17 +3,36 @@
 namespace App\Models;
 
 use App\Models\Owner;
+use App\Utils\PointCast;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Phaza\LaravelPostgis\Eloquent\PostgisTrait;
+use Vkovic\LaravelCustomCasts\HasCustomCasts;
 
 class Loanable extends BaseModel
 {
-    protected $table = ['loanables'];
+    use HasCustomCasts, PostgisTrait;
+
+    protected $table = 'loanables';
 
     protected $fillable = [
     ];
 
     public $belongsTo = ['owner'];
+
+    protected $postgisFields = [
+        'position',
+    ];
+
+    protected $postgisTypes = [
+        'location' => [
+            'geomtype' => 'geography',
+        ],
+    ];
+
+    protected $casts = [
+        'position' => PointCast::class
+    ];
 
     public function owner() {
         return $this->belongsTo(Owner::class);

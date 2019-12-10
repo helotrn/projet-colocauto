@@ -9,6 +9,8 @@ use App\Transformers\TrailerTransformer;
 
 class Trailer extends Loanable
 {
+    protected $table = 'trailers';
+
     public static $rules = [
         'name' => 'required',
         'position' => 'required',
@@ -18,7 +20,7 @@ class Trailer extends Loanable
         'type' => 'required',
         'maximum_charge' => 'required',
     ];
-    
+
     protected $fillable = [
         'name',
         'position',

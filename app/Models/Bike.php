@@ -9,6 +9,8 @@ use App\Transformers\BikeTransformer;
 
 class Bike extends Loanable
 {
+    protected $table = 'bikes';
+
     public static $rules = [
         'name' => 'required',
         'position' => 'required',
@@ -19,7 +21,7 @@ class Bike extends Loanable
         'type' => 'required',
         'size' => 'required',
     ];
-    
+
     protected $fillable = [
         'name',
         'position',
@@ -27,6 +29,8 @@ class Bike extends Loanable
         'comments',
         'instructions',
         'model',
+        'type',
+        'size',
     ];
 
     public static $transformer = BikeTransformer::class;
