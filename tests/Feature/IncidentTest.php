@@ -21,7 +21,7 @@ class IncidentTest extends TestCase
 
     public function testShowIncidents() {
         $post = factory(Incident::class)->create();
-        
+
         $response = $this->json('GET', route('incidents.retrieve', $post->id), $data);
 
         $response->assertStatus(200)->assertJson($data);
@@ -40,7 +40,7 @@ class IncidentTest extends TestCase
 
     public function testDeleteIncidents() {
         $post = factory(Incident::class)->create();
-        
+
         $response = $this->json('DELETE', route('incidents.delete', $post->id), $data);
 
         $response->assertStatus(204)->assertJson($data);
@@ -63,7 +63,7 @@ class IncidentTest extends TestCase
                 ->assertJsonStructure([
                     '*' => [
                         'id',
-                        'executed_at'
+                        'executed_at',
                         'status',
                         'incident_type',
                     ],
