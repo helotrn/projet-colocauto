@@ -9,9 +9,12 @@ class ExtensionTest extends TestCase
 {
     public function testCreateExtensions() {
         $data = [
+            'executed_at' => $this->faker->dateTime($format = 'Y-m-d H:i:sO', $max = 'now'),
             'status' => $this->faker->randomElement(['in_process', 'canceled', 'completed']),
             'new_duration' => $this->faker->randomNumber($nbDigits = null, $strict = false),
             'comments_on_extension' => $this->faker->paragraph,
+            'contested_at' => null,
+            'commments_on_contestation' => null,
         ];
 
         $response = $this->json('POST', route('extensions.create'), $data);
@@ -50,9 +53,12 @@ class ExtensionTest extends TestCase
         $extensions = factory(Extension::class, 2)->create()->map(function ($post) {
             return $post->only([
                 'id',
+                'executed_at',
                 'status',
                 'new_duration',
-                'comments_on_extension'
+                'comments_on_extension',
+                'contested_at',
+                'commments_on_contestation',
             ]);
         });
 
@@ -63,9 +69,12 @@ class ExtensionTest extends TestCase
                 ->assertJsonStructure([
                     '*' => [
                         'id',
+                        'executed_at',
                         'status',
                         'new_duration',
-                        'comments_on_extension'
+                        'comments_on_extension',
+                        'contested_at',
+                        'commments_on_contestation',
                     ],
                 ]);
     }

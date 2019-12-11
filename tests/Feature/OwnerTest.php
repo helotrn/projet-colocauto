@@ -9,6 +9,8 @@ class OwnerTest extends TestCase
 {
     public function testCreateOwners() {
         $data = [
+            'submitted_at' => $this->faker->date($format = 'Y-m-d', $max = 'now'),
+            'approved_at' => $this->faker->date($format = 'Y-m-d', $max = 'now'),
         ];
 
         $response = $this->json('POST', route('owners.create'), $data);
@@ -44,7 +46,11 @@ class OwnerTest extends TestCase
 
     public function testListOwners() {
         $owners = factory(Owner::class, 2)->create()->map(function ($post) {
-            return $post->only(['id']);
+            return $post->only([
+                'id',
+                'submitted_at',
+                'approved_at',
+            ]);
         });
 
         $response = $this->json('GET', route('owners.index'));
@@ -54,6 +60,8 @@ class OwnerTest extends TestCase
                 ->assertJsonStructure([
                     '*' => [
                         'id',
+                        'submitted_at',
+                        'approved_at',
                     ],
                 ]);
     }

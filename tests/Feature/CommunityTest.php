@@ -11,6 +11,7 @@ class CommunityTest extends TestCase
         $data = [
             'name' => $this->faker->name,
             'description' => $this->faker->sentence,
+            'territory' => null,
         ];
 
         $response = $this->json('POST', route('communities.create'), $data);
@@ -47,7 +48,12 @@ class CommunityTest extends TestCase
 
     public function testListCommunities() {
         $communities = factory(Community::class, 2)->create()->map(function ($post) {
-            return $post->only(['id', 'name', 'description']);
+            return $post->only([
+                'id',
+                'name',
+                'description',
+                'territory',
+            ]);
         });
 
         $response = $this->json('GET', route('communities.index'));
@@ -59,6 +65,7 @@ class CommunityTest extends TestCase
                         'id',
                         'name',
                         'description',
+                        'territory',
                     ],
                 ]);
     }

@@ -10,6 +10,7 @@ class BillableItemTest extends TestCase
         $data = [
             'label' => $this->faker->word,
             'amount' => $this->faker->numberBetween($min = 0, $max = 300000),
+            'effective_at' => $this->faker->date($format = 'Y-m-d', $max = 'now'),
         ];
 
         $response = $this->json('POST', route('billable-items.create'), $data);
@@ -49,7 +50,8 @@ class BillableItemTest extends TestCase
             return $post->only([
                 'id',
                 'label',
-                'amount'
+                'amount',
+                'effective_at',
             ]);
         });
 
@@ -62,6 +64,7 @@ class BillableItemTest extends TestCase
                         'id',
                         'label',
                         'amount',
+                        'effective_at'
                     ],
                 ]);
     }

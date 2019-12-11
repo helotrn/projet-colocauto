@@ -11,6 +11,7 @@ class BillTest extends TestCase
             'period' => $this->faker->word,
             'payment_method' => $this->faker->word,
             'total' => $this->faker->numberBetween($min = 0, $max = 300000),
+            'paid_at' => $this->faker->date($format = 'Y-m-d', $max = 'now'),
         ];
 
         $response = $this->json('POST', route('bills.create'), $data);
@@ -52,6 +53,7 @@ class BillTest extends TestCase
                 'period',
                 'payment_method',
                 'total',
+                'paid_at',
             ]);
         });
 
@@ -65,6 +67,7 @@ class BillTest extends TestCase
                         'period',
                         'payment_method',
                         'total',
+                        'paid_at',
                     ],
                 ]);
     }

@@ -9,10 +9,13 @@ class TakeoverTest extends TestCase
 {
     public function testCreateTakeovers() {
         $data = [
+            'executed_at' => $this->faker->dateTime($format = 'Y-m-d H:i:sO', $max = 'now'),
             'status' => $this->faker->randomElement(['in_process' ,'canceled', 'completed']),
             'mileage_beginning' => $this->faker->numberBetween($min = 0, $max = 300000),
             'fuel_beginning' => $this->faker->numberBetween($min = 0, $max = 100),
             'comments_on_vehicle' => $this->faker->sentence,
+            'contested_at' => null,
+            'comments_on_contestation' => null,
         ];
 
         $response = $this->json('POST', route('takeovers.create'), $data);
@@ -51,10 +54,13 @@ class TakeoverTest extends TestCase
         $takeovers = factory(Takeover::class, 2)->create()->map(function ($post) {
             return $post->only([
                 'id',
+                'executed_at',
                 'status',
                 'mileage_beginning',
                 'fuel_beginning',
                 'comments_on_vehicle',
+                'contested_at',
+                'comments_on_contestation',
             ]);
         });
 
@@ -65,10 +71,13 @@ class TakeoverTest extends TestCase
                 ->assertJsonStructure([
                     '*' => [
                         'id',
+                        'executed_at',
                         'status',
                         'mileage_beginning',
                         'fuel_beginning',
                         'comments_on_vehicle',
+                        'contested_at',
+                        'comments_on_contestation',
                     ],
                 ]);
     }

@@ -9,6 +9,7 @@ class LoanTest extends TestCase
 {
     public function testCreateLoans() {
         $data = [
+            'departure_at' => $this->faker->dateTime($format = 'Y-m-d H:i:sO', $max = 'now'),
             'duration' => $this->faker->randomNumber($nbDigits = null, $strict = false),
         ];
 
@@ -46,7 +47,11 @@ class LoanTest extends TestCase
 
     public function testListLoans() {
         $loans = factory(Loan::class, 2)->create()->map(function ($post) {
-            return $post->only(['id', 'duration']);
+            return $post->only([
+                'id',
+                'departure_at',
+                'duration'
+            ]);
         });
 
         $response = $this->json('GET', route('loans.index'));
@@ -56,6 +61,7 @@ class LoanTest extends TestCase
                 ->assertJsonStructure([
                     '*' => [
                         'id',
+                        'departure_at',
                         'duration',
                     ],
                 ]);

@@ -10,9 +10,19 @@ class UserTest extends TestCase
     public function testCreateUsers() {
         $data = [
             'name' => $this->faker->name,
+            'last_name' => $this->faker->name,
             'email' => $this->faker->unique()->safeEmail,
             'email_verified_at' => now(),
-            'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
+            'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',
+            'google_id' => null,
+            'description' => null,
+            'date_of_birth' => null,
+            'address' => '',
+            'postal_code' => '',
+            'phone' => '',
+            'is_smart_phone' => false,
+            'other_phone' => '',
+            'approved_at' => null,
             'remember_token' => Str::random(10),
         ];
 
@@ -32,7 +42,7 @@ class UserTest extends TestCase
     public function testUpdateUsers() {
         $post = factory(User::class)->create();
         $data = [
-            'mac_address' => $this->faker->macAddress,
+            'name' => $this->faker->name,
         ];
 
         $response = $this->json('PUT', route('users.update', $post->id), $data);
@@ -55,6 +65,15 @@ class UserTest extends TestCase
                 'name',
                 'email',
                 'email_verified_at',
+                'google_id',
+                'description',
+                'date_of_birth',
+                'address',
+                'postal_code',
+                'phone',
+                'is_smart_phone',
+                'other_phone',
+                'approved_at',
             ]);
         });
 
@@ -68,6 +87,15 @@ class UserTest extends TestCase
                         'name',
                         'email',
                         'email_verified_at',
+                        'google_id',
+                        'description',
+                        'date_of_birth',
+                        'address',
+                        'postal_code',
+                        'phone',
+                        'is_smart_phone',
+                        'other_phone',
+                        'approved_at',
                     ],
                 ]);
     }

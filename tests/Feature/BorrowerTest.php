@@ -12,6 +12,8 @@ class BorrowerTest extends TestCase
             'drivers_license_number' => $this->faker->numberBetween($min = 1111111111, $max = 999999999),
             'has_been_sued_last_ten_years' => $this->faker->boolean,
             'noke_id' => $this->faker->numberBetween($min = 000000000, $max = 999999999),
+            'submitted_at' => $this->faker->date($format = 'Y-m-d', $max = 'now'),
+            'approved_at' => $this->faker->date($format = 'Y-m-d', $max = 'now'),
         ];
 
         $response = $this->json('POST', route('borrowers.create'), $data);
@@ -53,6 +55,7 @@ class BorrowerTest extends TestCase
                 'drivers_license_number',
                 'has_been_sued_last_ten_years',
                 'noke_id',
+                'submitted_at',
             ]);
         });
 
@@ -66,6 +69,8 @@ class BorrowerTest extends TestCase
                         'drivers_license_number',
                         'has_been_sued_last_ten_years',
                         'noke_id',
+                        'submitted_at',
+                        'approved_at',
                     ],
                 ]);
     }

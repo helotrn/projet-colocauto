@@ -9,12 +9,15 @@ class HandoverTest extends TestCase
 {
     public function testCreateHandovers() {
         $data = [
+            'executed_at' => $this->faker->dateTime($format = 'Y-m-d H:i:sO', $max = 'now'),
             'status' => $this->faker->randomElement(['in_process', 'canceled', 'completed']),
             'mileage_end' => $this->faker->numberBetween($min = 0, $max = 300000),
             'fuel_end' => $this->faker->numberBetween($min = 0, $max = 100),
             'comments_by_borrower' => $this->faker->sentence,
             'comments_by_owner' => $this->faker->sentence,
             'purchases_amount' => $this->faker->randomFloat($nbMaxDecimals = 2, $min = 0, $max = 100000),
+            'contested_at' => null,
+            'comments_on_contestation' => null,
         ];
 
         $response = $this->json('POST', route('handovers.create'), $data);
@@ -53,12 +56,15 @@ class HandoverTest extends TestCase
         $handovers = factory(Handover::class, 2)->create()->map(function ($post) {
             return $post->only([
                 'id',
+                'executed_at',
                 'status',
                 'mileage_end',
                 'fuel_end',
                 'comments_by_borrower',
                 'comments_by_owner',
                 'purchases_amount',
+                'contested_at',
+                'comments_on_contestation',
             ]);
         });
 
@@ -69,12 +75,15 @@ class HandoverTest extends TestCase
                 ->assertJsonStructure([
                     '*' => [
                         'id',
+                        'executed_at',
                         'status',
                         'mileage_end',
                         'fuel_end',
                         'comments_by_borrower',
                         'comments_by_owner',
                         'purchases_amount',
+                        'contested_at',
+                        'comments_on_contestation',
                     ],
                 ]);
     }

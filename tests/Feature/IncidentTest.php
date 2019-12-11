@@ -9,6 +9,7 @@ class IncidentTest extends TestCase
 {
     public function testCreateIncidents() {
         $data = [
+            'executed_at' => $this->faker->dateTime($format = 'Y-m-d H:i:sO', $max = 'now'),
             'status' => $this->faker->randomElement(['in_process', 'canceled', 'completed']),
             'incident_type' => $this->faker->randomElement(['accident']),
         ];
@@ -47,7 +48,12 @@ class IncidentTest extends TestCase
 
     public function testListIncidents() {
         $incidents = factory(Incident::class, 2)->create()->map(function ($post) {
-            return $post->only(['id', 'status', 'incident_type']);
+            return $post->only([
+                'id',
+                'executed_at',
+                'status',
+                'incident_type'
+            ]);
         });
 
         $response = $this->json('GET', route('incidents.index'));
@@ -57,6 +63,7 @@ class IncidentTest extends TestCase
                 ->assertJsonStructure([
                     '*' => [
                         'id',
+                        'executed_at'
                         'status',
                         'incident_type',
                     ],

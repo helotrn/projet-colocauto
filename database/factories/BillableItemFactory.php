@@ -8,5 +8,6 @@ $factory->define(BillableItem::class, function (Faker $faker) {
     return [
         'label' => $faker->word,
         'amount' => $faker->numberBetween($min = 0, $max = 300000),
+        'effective_at' => $faker->date($format = 'Y-m-d', $max = 'now'),
     ];
 });

@@ -9,6 +9,7 @@ class PaymentTest extends TestCase
 {
     public function testCreatePayments() {
         $data = [
+            'executed_at' => $this->faker->dateTime($format = 'Y-m-d H:i:sO', $max = 'now'),
             'status' => $this->faker->randomElement(['in_process', 'canceled', 'completed']),
         ];
 
@@ -46,7 +47,11 @@ class PaymentTest extends TestCase
 
     public function testListPayments() {
         $payments = factory(Payment::class, 2)->create()->map(function ($post) {
-            return $post->only(['id', 'status']);
+            return $post->only([
+                'id',
+                'executed_at',
+                'status',
+            ]);
         });
 
         $response = $this->json('GET', route('payments.index'));
@@ -56,6 +61,7 @@ class PaymentTest extends TestCase
                 ->assertJsonStructure([
                     '*' => [
                         'id',
+                        'executed_at',
                         'status',
                     ],
                 ]);
