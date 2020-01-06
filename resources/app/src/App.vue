@@ -1,6 +1,6 @@
 <template>
   <div id="locomotion">
-    <router-view/>
+    <router-view />
   </div>
 </template>
 
