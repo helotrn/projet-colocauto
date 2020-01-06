@@ -1,8 +1,6 @@
 export default {
   namespaced: true,
   state: {
-    ajax: null,
-    error: null,
     email: '',
     loading: false,
     rememberMe: false,
@@ -10,6 +8,9 @@ export default {
   mutations: {
     email(state, value) {
       state.email = value;
+    },
+    loading(state, value) {
+      state.loading = value;
     },
     rememberMe(state, value) {
       state.rememberMe = value;

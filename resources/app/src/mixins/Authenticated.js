@@ -1,7 +1,7 @@
 export default {
   computed: {
     loggedIn() {
-      return !!this.$store.user;
+      return !!this.$store.state.user;
     },
   },
 };

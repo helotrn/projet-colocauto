@@ -29,7 +29,7 @@ export default {
   mixins: [Authenticated],
   computed: {
     hasCommunity() {
-      return this.loggedIn && this.$store.user.communities.length;
+      return this.loggedIn;
     },
     pageTitle() {
       return this.$route.meta && this.$route.meta.title;

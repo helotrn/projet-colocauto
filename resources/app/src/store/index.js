@@ -17,11 +17,25 @@ const initialState = {
   error: null,
   user: null,
   token: null,
+  refreshToken: null,
 };
 
 const actions = {
-  async login({ state, commit }, { email, password }) {
+  async login({ commit, state }, { email, password }) {
+    const { data } = await Vue.axios.post('/auth/login', {
+      email,
+      password,
+      rememberMe: state.login.rememberMe,
+    });
 
+    commit('token', data.access_token);
+    commit('refreshToken', data.refresh_token);
+
+    const { data: user } = await Vue.axios.get('/auth/user');
+
+    commit('user', user);
+
+    this.$router.push('/app');
   },
   logout({ commit }) {
     commit('initialized', true);
@@ -34,8 +48,16 @@ const mutations = {
   initialized(state, value) {
     state.initialized = value;
   },
+  refreshToken(state, refreshToken) {
+    state.refreshToken = refreshToken;
+  },
   token(state, token) {
     state.token = token;
+    if (token) {
+      Vue.axios.defaults.headers.common.Authorization = `Bearer ${token}`;
+    } else {
+      delete Vue.axios.defaults.headers.common;
+    }
   },
   user(state, user) {
     state.user = user;
