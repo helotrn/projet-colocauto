@@ -49,11 +49,13 @@ Développement
 -------------
 
 - `php artisan serve`
+- `yarn serve` dans `resources/app`
 
 Tests
 -----
 
-- Une fois: `./vendor/bin/phpunit tests`
+- `./vendor/bin/phpunit tests`
+- `yarn lint`
 
 Déploiement
 -----------
