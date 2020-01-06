@@ -1,3 +1,29 @@
 $one-tick: 0.25s;
 
-$primary: #246aea;
+$black: #000;
+$white: #fff;
+$eggshell: #fafafa;
+
+$locomotion-green: #16a59e;
+
+$primary: #245aea;
+$secondary: #576194;
+$success: #4fb999;
+$warning: #f9ca51;
+$danger: #e2738a;
+$info: #576194;
+$light: #f8f9fa;
+$dark: #343a40;
+
+$layout-navbar-height: 86px;
+$molotov-footer-height: 44px;
+
+// font-size is defined in _typography.scss
+$line-height-base: 1.2;
+
+// Keep sorted below this line
+$navbar-brand-font-size: 1.6rem;
+$navbar-light-active-color: $black;
+$navbar-light-brand-color: $locomotion-green;
+$navbar-light-brand-hover-color: $locomotion-green;
+$navbar-light-hover-color: $locomotion-green;

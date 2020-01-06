@@ -28,6 +28,7 @@ export default {
 <style lang="scss">
 @import "~bootstrap/scss/bootstrap-grid";
 
+$molotov-footer-height: 44px !default;
 $molotov-footer-color: #fff;
 $molotov-footer-hover-color: #fff;
 $molotov-footer-background-color: #000;
@@ -61,6 +62,7 @@ $molotov-footer-heart-fill-hover: $molotov-footer-heart-fill !default;
 
 .molotov-footer {
   background-color: $molotov-footer-background-color;
+  height: $molotov-footer-height;
 
   font-size: 14px;
   line-height: 16px;
