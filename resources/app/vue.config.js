@@ -13,10 +13,21 @@ module.exports = {
       .use('vue-svg-loader')
       .loader('vue-svg-loader');
   },
+
   css: {
     loaderOptions: {
       sass: {
         prependData: `@import "@/assets/scss/_variables.scss";`
+      },
+    },
+  },
+
+  devServer: {
+    proxy: {
+      '^/api': {
+        target: 'http://localhost:8000',
+        ws: true,
+        changeOrigin: true,
       },
     },
   },
@@ -26,5 +37,5 @@ module.exports = {
   pluginOptions: {
     lintStyleOnBuild: true,
     stylelint: {}
-  }
+  },
 };
