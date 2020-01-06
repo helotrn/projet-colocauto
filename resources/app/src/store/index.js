@@ -14,7 +14,8 @@ Vue.use(Vuex);
 
 const initialState = {
   initialized: false,
-  error: null,
+  notification: null,
+  notifications: [],
   user: null,
   token: null,
   refreshToken: null,
@@ -45,6 +46,10 @@ const actions = {
 };
 
 const mutations = {
+  notification(state, notification) {
+    state.notification = notification;
+    state.notifications.push(notification);
+  },
   initialized(state, value) {
     state.initialized = value;
   },
