@@ -8,5 +8,11 @@ module.exports = {
       },
     },
   },
+
   assetsDir: 'app/',
+
+  pluginOptions: {
+    lintStyleOnBuild: true,
+    stylelint: {}
+  }
 };
