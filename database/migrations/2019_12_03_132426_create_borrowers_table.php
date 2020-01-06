@@ -9,13 +9,21 @@ class CreateBorrowersTable extends Migration
     public function up() {
         Schema::create('borrowers', function (Blueprint $table) {
             $table->bigIncrements('id');
+
             $table->string('drivers_license_number')->nullable();
             $table->boolean('has_been_sued_last_ten_years')->default(false);
             $table->string('noke_id')->nullable();
-            $table->date('submitted_at');
-            $table->date('approved_at');
+
+            $table->unsignedBigInteger('user_id')->nullable();
+
+            $table->dateTimeTz('submitted_at')->nullable();
+            $table->dateTimeTz('approved_at')->nullable();
             $table->timestamps();
             $table->softDeletes();
+
+            $table->foreign('user_id')
+                ->references('id')->on('users')
+                ->onDelete('cascade');
         });
     }
 

@@ -6,28 +6,28 @@ use Illuminate\Database\Migrations\Migration;
 
 class CreatePaymentsTable extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
     public function up() {
         Schema::create('payments', function (Blueprint $table) {
             $table->bigIncrements('id');
-            // Action fields
+
             $table->dateTimeTz('executed_at');
             $table->enum('status', ['in_process', 'canceled', 'completed']);
-            
+            $table->unsignedBigInteger('loan_id');
+
+            $table->unsignedBigInteger('billable_item_id');
+
             $table->timestamps();
             $table->softDeletes();
+
+            $table->foreign('loan_id')
+                ->references('id')->on('loans')
+                ->onDelete('cascade');
+            $table->foreign('billable_item_id')
+                ->references('id')->on('billable_items')
+                ->onDelete('cascade');
         });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
     public function down() {
         Schema::dropIfExists('payments');
     }

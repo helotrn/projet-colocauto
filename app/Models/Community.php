@@ -12,9 +12,9 @@ class Community extends BaseModel
     public static $rules = [
         'name' => 'required',
         'description' => 'nullable',
-        'territory' => 'nullable',
+        'area' => 'nullable',
     ];
-    
+
     protected $fillable = [
         'name',
         'description',

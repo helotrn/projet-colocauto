@@ -9,15 +9,7 @@ use App\Transformers\OwnerTransformer;
 
 class Owner extends BaseModel
 {
-    public static $rules = [
-        'submitted_at' => 'required|date',
-        'approved_at' => 'required|date',
-    ];
-    
-    protected $fillable = [
-        'submitted_at',
-        'approved_at',
-    ];
+    protected $fillable = [];
 
     public static $transformer = OwnerTransformer::class;
 

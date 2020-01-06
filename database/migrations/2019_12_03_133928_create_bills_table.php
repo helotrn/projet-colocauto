@@ -6,31 +6,30 @@ use Illuminate\Database\Migrations\Migration;
 
 class CreateBillsTable extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
-    public function up()
-    {
+    public function up() {
         Schema::create('bills', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('period');
             $table->string('payment_method');
             $table->double('total', 8, 2);
-            $table->date('paid_at');
+            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('payment_method_id')->nullable();
+
+            $table->dateTimeTz('paid_at');
             $table->timestamps();
             $table->softDeletes();
+
+            $table->foreign('user_id')
+                ->references('id')->on('users')
+                ->onDelete('cascade');
+
+            $table->foreign('payment_method_id')
+                ->references('id')->on('payment_methods')
+                ->onDelete('cascade');
         });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
-    {
+    public function down() {
         Schema::dropIfExists('bills');
     }
 }

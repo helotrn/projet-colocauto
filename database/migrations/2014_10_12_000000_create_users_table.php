@@ -9,6 +9,7 @@ class CreateUsersTable extends Migration
     public function up() {
         Schema::create('users', function (Blueprint $table) {
             $table->bigIncrements('id');
+
             $table->string('name');
             $table->string('last_name')->default('');
             $table->string('email')->unique();
@@ -22,6 +23,7 @@ class CreateUsersTable extends Migration
             $table->string('phone')->default('');
             $table->boolean('is_smart_phone')->default(false);
             $table->string('other_phone')->default('');
+
             $table->date('approved_at')->nullable();
             $table->rememberToken();
             $table->timestamps();

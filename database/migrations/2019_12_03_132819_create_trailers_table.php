@@ -16,22 +16,27 @@ class CreateTrailersTable extends Migration
             $table->text('location_description');
             $table->text('comments');
             $table->text('instructions');
+            $table->text('availability_ics');
+            $table->unsignedBigInteger('owner_id')->nullable();
+            $table->unsignedBigInteger('community_id')->nullable();
 
             //Trailer-specific fields
             $table->enum('type', ['regular', 'electric', 'fixed_wheel']);
             $table->string('maximum_charge');
+
             $table->timestamps();
             $table->softDeletes();
+
+            $table->foreign('owner_id')
+                ->references('id')->on('owners')
+                ->onDelete('cascade');
+            $table->foreign('community_id')
+                ->references('id')->on('communities')
+                ->onDelete('cascade');
         });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
-    {
+    public function down() {
         Schema::dropIfExists('trailers');
     }
 }

@@ -12,7 +12,7 @@ class Tag extends BaseModel
         'name' => 'required|string',
         'type' => 'required',
     ];
-    
+
     protected $fillable = [
         'name',
         'type',

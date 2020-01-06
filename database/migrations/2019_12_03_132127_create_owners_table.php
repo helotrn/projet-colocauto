@@ -9,10 +9,17 @@ class CreateOwnersTable extends Migration
     public function up() {
         Schema::create('owners', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->date('submitted_at');
-            $table->date('approved_at');
+
+            $table->unsignedBigInteger('user_id');
+
+            $table->dateTimeTz('submitted_at')->nullable();
+            $table->dateTimeTz('approved_at')->nullable();
             $table->timestamps();
             $table->softDeletes();
+
+            $table->foreign('user_id')
+                ->references('id')->on('users')
+                ->onDelete('cascade');
         });
     }
 

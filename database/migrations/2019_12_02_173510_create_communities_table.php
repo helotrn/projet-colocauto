@@ -9,9 +9,11 @@ class CreateCommunitiesTable extends Migration
     public function up() {
         Schema::create('communities', function (Blueprint $table) {
             $table->bigIncrements('id');
+
             $table->string('name');
             $table->text('description')->nullable();
-            $table->polygon('territory')->nullable();
+            $table->polygon('area')->nullable();
+
             $table->timestamps();
             $table->softDeletes();
         });

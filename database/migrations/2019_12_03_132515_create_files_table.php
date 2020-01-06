@@ -16,8 +16,15 @@ class CreateFilesTable extends Migration
             $table->string('original_filename');
             $table->string('filesize');
             $table->string('field')->nullable();
+
+            $table->unsignedBigInteger('user_id')->nullable();
+
             $table->timestamps();
             $table->softDeletes();
+
+            $table->foreign('user_id')
+                ->references('id')->on('users')
+                ->onDelete('cascade');
         });
     }
 

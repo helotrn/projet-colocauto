@@ -14,9 +14,10 @@ class CreateHandoversTable extends Migration
     public function up() {
         Schema::create('handovers', function (Blueprint $table) {
             $table->bigIncrements('id');
-            // Action fields
+
             $table->dateTimeTz('executed_at');
             $table->enum('status', ['in_process', 'canceled', 'completed']);
+            $table->unsignedBigInteger('loan_id');
 
             // Takeover-specific fields
             $table->string('mileage_end');
@@ -24,11 +25,15 @@ class CreateHandoversTable extends Migration
             $table->text('comments_by_borrower')->nullable();
             $table->text('comments_by_owner')->nullable();
             $table->decimal('purchases_amount', 8, 2);
-            $table->date('contested_at')->nullable();
+            $table->dateTimeTz('contested_at')->nullable();
             $table->text('comments_on_contestation')->nullable();
-            
+
             $table->timestamps();
             $table->softDeletes();
+
+            $table->foreign('loan_id')
+                ->references('id')->on('loans')
+                ->onDelete('cascade');
         });
     }
 
