@@ -12,9 +12,7 @@ class UserTest extends TestCase
             'name' => $this->faker->name,
             'last_name' => $this->faker->name,
             'email' => $this->faker->unique()->safeEmail,
-            'email_verified_at' => now(),
             'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',
-            'google_id' => null,
             'description' => null,
             'date_of_birth' => null,
             'address' => '',
@@ -22,7 +20,6 @@ class UserTest extends TestCase
             'phone' => '',
             'is_smart_phone' => false,
             'other_phone' => '',
-            'approved_at' => null,
             'remember_token' => Str::random(10),
         ];
 
@@ -33,7 +30,7 @@ class UserTest extends TestCase
 
     public function testShowUsers() {
         $post = factory(User::class)->create();
-        
+
         $response = $this->json('GET', route('users.retrieve', $post->id), $data);
 
         $response->assertStatus(200)->assertJson($data);
@@ -52,7 +49,7 @@ class UserTest extends TestCase
 
     public function testDeleteUsers() {
         $post = factory(User::class)->create();
-        
+
         $response = $this->json('DELETE', route('users.delete', $post->id), $data);
 
         $response->assertStatus(204)->assertJson($data);
