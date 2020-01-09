@@ -2,18 +2,19 @@ import { mapState } from 'vuex';
 
 export default {
   watch: {
-    notification(notification, _) {
-      if (notification) {
-        const toast = this.$bvToast.toast(notification.content, {
-          solid: true,
-          title: notification.title,
-          toaster: 'b-toaster-top-center',
-          variant: notification.variant,
-          toastClass: notification.type,
+    notifications(notifications, _) {
+      notifications.filter(n => !n.displayed)
+        .forEach((notification) => {
+          this.$bvToast.toast(notification.content, {
+            solid: true,
+            title: notification.title,
+            toaster: 'b-toaster-top-right',
+            variant: notification.variant,
+            toastClass: notification.type,
+          });
+          this.$store.commit('removeNotification', notification);
         });
-      }
-      this.$store.commit('notification', null);
     },
   },
-  computed: mapState(['notification']),
+  computed: mapState(['notifications']),
 };

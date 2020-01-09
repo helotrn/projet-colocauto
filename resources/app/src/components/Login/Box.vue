@@ -65,7 +65,7 @@ export default {
         switch (e.request.status) {
           case 401:
           default:
-            this.$store.commit('notification', {
+            this.$store.commit('addNotification', {
               content: "Nom d'utilisateur ou mot de passe invalide.",
               title: 'Erreur de connexion.',
               variant: 'danger',

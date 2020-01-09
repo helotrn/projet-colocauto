@@ -14,7 +14,6 @@ Vue.use(Vuex);
 
 const initialState = {
   initialized: false,
-  notification: null,
   notifications: [],
   user: null,
   token: null,
@@ -46,9 +45,17 @@ const actions = {
 };
 
 const mutations = {
-  notification(state, notification) {
-    state.notification = notification;
+  addNotification(state, notification) {
     state.notifications.push(notification);
+  },
+  removeNotification(state, notification) {
+    const index = state.notifications.indexOf(
+      state.notifications.find(n => n.id === notification.id)
+    );
+
+    if (index > -1) {
+      state.notifications.splice(index, 1);
+    }
   },
   initialized(state, value) {
     state.initialized = value;
