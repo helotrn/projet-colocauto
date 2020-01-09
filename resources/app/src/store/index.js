@@ -27,12 +27,6 @@ const initialState = {
 
 const actions = {
   async loadUser({ commit, dispatch, state }) {
-    if (state.token) {
-      Vue.axios.defaults.headers.common.Authorization = `Bearer ${state.token}`;
-    } else {
-      delete Vue.axios.defaults.headers.common;
-    }
-
     try {
       const { data: user } = await Vue.axios.get('/auth/user');
 
@@ -56,6 +50,7 @@ const actions = {
   logout({ commit }) {
     commit('initialized', true);
     commit('token', null);
+    commit('refreshToken', null);
     commit('user', null);
   },
 };
@@ -81,11 +76,6 @@ const mutations = {
   },
   token(state, token) {
     state.token = token;
-    if (token) {
-      Vue.axios.defaults.headers.common.Authorization = `Bearer ${token}`;
-    } else {
-      delete Vue.axios.defaults.headers.common;
-    }
   },
   user(state, user) {
     state.user = user;

@@ -20,6 +20,13 @@ Vue.component('layout-footer', LayoutFooter);
 Vue.component('layout-header', LayoutHeader);
 
 axios.defaults.baseURL = `${process.env.VUE_APP_API_URL}/v1`;
+axios.interceptors.request.use((config) => {
+  if (store.state.token) {
+    // eslint-disable-next-line
+    config.headers.Authorization = `Bearer ${store.state.token}`;
+  }
+  return config;
+});
 Vue.use(VueAxios, axios);
 
 new Vue({

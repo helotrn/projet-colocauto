@@ -26,7 +26,7 @@
           <b-dropdown-item href="#">Compte</b-dropdown-item>
           <b-dropdown-item href="#">Aide</b-dropdown-item>
           <b-dropdown-divider />
-          <b-dropdown-item href="#">Déconnexion</b-dropdown-item>
+          <b-dropdown-item @click="logout">Déconnexion</b-dropdown-item>
         </b-nav-item-dropdown>
       </b-navbar-nav>
       <b-navbar-nav class="ml-auto" v-else>
