@@ -2,9 +2,12 @@
   <div :class="`page ${name}`">
     <layout-header class="page__header" />
 
-    <b-container :fluid="wide" tag="main" class="page__content">
+    <b-container :fluid="fluid" tag="main" class="page__content" v-if="!wide">
       <slot></slot>
     </b-container>
+    <div v-else>
+      <slot></slot>
+    </div>
 
     <layout-footer class="page__footer" />
   </div>
@@ -18,11 +21,16 @@ export default {
       type: String,
       required: true,
     },
-    wide: {
+    fluid: {
       type: Boolean,
       required: false,
       default: false,
     },
+    wide: {
+      type: Boolean,
+      required: false,
+      default: false,
+    }
   },
 };
 </script>
