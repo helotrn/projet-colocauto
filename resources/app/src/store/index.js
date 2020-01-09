@@ -60,9 +60,7 @@ const mutations = {
     state.notifications.push(notification);
   },
   removeNotification(state, notification) {
-    const index = state.notifications.indexOf(
-      state.notifications.find(n => n.id === notification.id)
-    );
+    const index = state.notifications.indexOf(notification);
 
     if (index > -1) {
       state.notifications.splice(index, 1);
