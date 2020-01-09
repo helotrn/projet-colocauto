@@ -1,14 +1,12 @@
 <template>
-  <div class="page login">
+  <div class="login page">
     <layout-header class="page__header" />
 
     <main class="page__content">
       <login-box />
     </main>
 
-    <footer class="page__footer">
-      <molotov-footer />
-    </footer>
+    <layout-footer class="page__footer" />
   </div>
 </template>
 
@@ -16,9 +14,7 @@
 import Authenticated from '@/mixins/Authenticated';
 import Notification from '@/mixins/Notification';
 
-import LayoutHeader from '@/components/Layout/Header.vue';
 import LoginBox from '@/components/Login/Box.vue';
-import MolotovFooter from '@/components/Molotov/Footer.vue';
 
 export default {
   name: 'Login',
@@ -28,11 +24,7 @@ export default {
       this.$router.replace('/app');
     }
   },
-  components: {
-    LayoutHeader,
-    LoginBox,
-    MolotovFooter,
-  },
+  components: { LoginBox },
 };
 </script>
 

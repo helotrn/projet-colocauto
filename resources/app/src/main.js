@@ -7,11 +7,17 @@ import App from './App.vue';
 import router from './router';
 import store from './store';
 
+import LayoutHeader from './components/Layout/Header.vue';
+import LayoutFooter from './components/Layout/Footer.vue';
+
 import '@/assets/scss/main.scss';
 
 Vue.config.productionTip = false;
 
 Vue.use(BootstrapVue);
+
+Vue.component('layout-footer', LayoutFooter);
+Vue.component('layout-header', LayoutHeader);
 
 axios.defaults.baseURL = `${process.env.VUE_APP_API_URL}/v1`;
 Vue.use(VueAxios, axios);

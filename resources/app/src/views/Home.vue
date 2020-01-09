@@ -1,8 +1,7 @@
 <template>
   <div class="home page">
-    <header>
-      <h1>Locomotion</h1>
-    </header>
+    <layout-header class="page__header" />
+
     <b-container tag="main" class="page__content">
       <b-row tag="section">
         <b-col>
@@ -27,18 +26,14 @@
         </b-col>
       </b-row>
     </b-container>
-    <footer class="page__footer">
-      <molotov-footer />
-    </footer>
+
+    <layout-footer class="page__footer" />
   </div>
 </template>
 
 <script>
-import MolotovFooter from '@/components/Molotov/Footer.vue';
-
 export default {
   name: 'Home',
-  components: { MolotovFooter },
 };
 </script>
 
