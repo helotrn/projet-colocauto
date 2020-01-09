@@ -2,7 +2,7 @@
   <b-navbar class="layout-navbar" toggleable="lg" variant="transparent" type="light">
     <div class="layout-navbar__brand-wrapper">
       <b-navbar-brand to="/">
-        <img class="layout-navbar__logo" src="@/assets/img/logo.png">
+        <img class="layout-navbar__logo" src="/logo.png">
       </b-navbar-brand>
       <b-navbar-brand class="layout-navbar__separator" v-if="pageTitle"/>
         <b-navbar-brand>{{ pageTitle }}</b-navbar-brand>
