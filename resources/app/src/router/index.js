@@ -2,6 +2,7 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 
 import Dashboard from '../views/Dashboard.vue';
+import Help from '../views/Help.vue';
 import Home from '../views/Home.vue';
 import Login from '../views/Login.vue';
 import RegistrationMap from '../views/registration/Map.vue';
@@ -44,6 +45,14 @@ const routes = [
     component: RegistrationMap,
     meta: {
       title: 'Trouver une communauté',
+    },
+  },
+  {
+    path: '/help',
+    name: 'help',
+    component: Help,
+    meta: {
+      title: 'Aide de Locomotion',
     },
   },
 ];

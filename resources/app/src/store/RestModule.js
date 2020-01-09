@@ -6,9 +6,11 @@ export default function RestModule(slug, initialState) {
       ajax: null,
       data: [],
       dataById: {},
+      lastLoadedAt: null,
       loaded: false,
       loading: false,
       search: [],
+      lastSearchQuery: '',
       slug,
       total: undefined,
     },
@@ -38,6 +40,21 @@ export default function RestModule(slug, initialState) {
     actions: {
       load({ state, commit }) {
         console.log('load');
+      },
+      search(state, search) {
+        console.log('search');
+      },
+      create(state, data) {
+        console.log('create');
+      },
+      retrieve({ state, commit }, { params }) {
+        console.log('retrieve', params);
+      },
+      update(state, data) {
+        console.log('create');
+      },
+      delete(state, data) {
+        console.log('create');
       },
     },
   };

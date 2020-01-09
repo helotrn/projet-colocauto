@@ -1,0 +1,5 @@
+.navbar-light .navbar-nav .nav-link {
+  &.router-link-exact-active {
+    color: $locomotion-green;
+  }
+}
