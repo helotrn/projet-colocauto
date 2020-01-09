@@ -66,15 +66,19 @@ export default {
 
         this.$router.replace('/app');
       } catch (e) {
-        switch (e.request.status) {
-          case 401:
-          default:
-            this.$store.commit('addNotification', {
-              content: "Nom d'utilisateur ou mot de passe invalide.",
-              title: 'Erreur de connexion.',
-              variant: 'danger',
-              type: 'login',
-            });
+        console.error(e);
+
+        if (e.request) {
+          switch (e.request.status) {
+            case 401:
+            default:
+              this.$store.commit('addNotification', {
+                content: "Nom d'utilisateur ou mot de passe invalide.",
+                title: 'Erreur de connexion.',
+                variant: 'danger',
+                type: 'login',
+              });
+          }
         }
       }
 

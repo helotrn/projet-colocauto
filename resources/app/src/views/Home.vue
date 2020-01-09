@@ -3,7 +3,7 @@
     <layout-header class="page__header" />
 
     <b-container tag="main" class="page__content">
-      <b-row tag="section">
+      <b-row tag="section" class="page__section">
         <b-col>
           <h2 class="page__section__title">
             La page d'accueil
@@ -13,7 +13,7 @@
           </div>
         </b-col>
       </b-row>
-      <b-row tag="section">
+      <b-row tag="section" class="page__section">
         <b-col>
           <h2 class="page__section__title">
             Se connecter

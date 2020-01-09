@@ -13,9 +13,9 @@
     <b-collapse id="nav-collapse" is-nav>
       <b-navbar-nav class="ml-auto" v-if="loggedIn">
         <b-nav-item to="/app">Tableau de bord</b-nav-item>
-        <b-nav-item href="/map" v-if="hasCommunity">Trouver un véhicule</b-nav-item>
+        <b-nav-item to="/community/map" v-if="hasCommunity">Trouver un véhicule</b-nav-item>
         <b-nav-item to="/community" v-if="hasCommunity">Communauté</b-nav-item>
-        <b-nav-item href="/map" v-if="!hasCommunity">Trouver une communauté</b-nav-item>
+        <b-nav-item to="/register/map" v-if="!hasCommunity">Trouver une communauté</b-nav-item>
 
         <b-nav-item-dropdown class="layout-navbar__dropdown" text="" right>
           <template v-slot:button-content>
@@ -49,7 +49,7 @@ export default {
   },
   computed: {
     hasCommunity() {
-      return this.loggedIn;
+      return this.loggedIn && this.user.communities.length > 0;
     },
     pageTitle() {
       return this.$route.meta && this.$route.meta.title;

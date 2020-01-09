@@ -1,6 +1,6 @@
 export default {
   async beforeMount() {
-    if (!this.loggedIn && this.auth.token) {
+    if (this.auth.token && !this.loaded && !this.loading) {
       await this.$store.dispatch('loadUser');
     }
   },

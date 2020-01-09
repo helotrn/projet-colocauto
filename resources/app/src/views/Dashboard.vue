@@ -2,9 +2,16 @@
   <div class="dashboard page" v-if="user">
     <layout-header class="page__header" />
 
-    <main class="page__content">
-      <h1>Bienvenue, {{ user.full_name }}</h1>
-    </main>
+    <b-container tag="main" class="page__content">
+      <b-row tag="section" class="page__sectin">
+        <b-col class="page__content__main" lg="9">
+          <h1>Bienvenue, {{ user.full_name }}</h1>
+        </b-col>
+
+        <b-col class="page__content__sidebar" lg="3">
+        </b-col>
+      </b-row>
+    </b-container>
 
     <layout-footer class="page__footer" />
   </div>

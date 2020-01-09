@@ -12,13 +12,18 @@ const vuexPersist = new VuexPersist({
     token: state.token,
     refreshToken: state.refreshToken,
     user: state.user,
+    login: {
+      email: state.login.email,
+      rememberMe: state.login.rememberMe,
+    },
   }),
 });
 
 Vue.use(Vuex);
 
 const initialState = {
-  initialized: false,
+  loaded: false,
+  loading: false,
   notifications: [],
   user: null,
   token: null,
@@ -27,10 +32,19 @@ const initialState = {
 
 const actions = {
   async loadUser({ commit, dispatch, state }) {
+    commit('loading', true);
+
     try {
-      const { data: user } = await Vue.axios.get('/auth/user');
+      const { data: user } = await Vue.axios.get('/auth/user', {
+        params: {
+          fields: 'id,full_name,communities.id,role',
+        }
+      });
 
       commit('user', user);
+
+      commit('loaded', true);
+      commit('loading', false);
     } catch (e) {
       dispatch('logout');
     }
@@ -45,13 +59,19 @@ const actions = {
     commit('token', data.access_token);
     commit('refreshToken', data.refresh_token);
 
+    if (!state.login.rememberMe) {
+      commit('login/email', '');
+    }
+
     await dispatch('loadUser');
   },
   logout({ commit }) {
-    commit('initialized', true);
     commit('token', null);
     commit('refreshToken', null);
     commit('user', null);
+
+    commit('loaded', true);
+    commit('loading', false);
   },
 };
 
@@ -66,8 +86,11 @@ const mutations = {
       state.notifications.splice(index, 1);
     }
   },
-  initialized(state, value) {
-    state.initialized = value;
+  loaded(state, value) {
+    state.loaded = value;
+  },
+  loading(state, value) {
+    state.loading = value;
   },
   refreshToken(state, refreshToken) {
     state.refreshToken = refreshToken;
