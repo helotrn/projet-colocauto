@@ -285,6 +285,10 @@ class RestRepository
                 continue;
             }
 
+            if (!is_array($fields[$field])) {
+                continue;
+            }
+
             switch (count($fields[$field])) {
                 case 2:
                     $query = $query->with($field);
