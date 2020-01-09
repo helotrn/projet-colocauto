@@ -7,7 +7,8 @@ use App\Models\User;
 
 class UserRepository extends RestRepository
 {
-    public function __construct(User $user) {
-        $this->model = $user;
+    public function __construct(User $model) {
+        $this->model = $model;
+        $this->columnsDefinition = $model::getColumnsDefinition();
     }
 }

@@ -49,6 +49,23 @@ class User extends AuthenticatableBaseModel
 
     public static $transformer = UserTransformer::class;
 
+    public static function getColumnsDefinition() {
+        return [
+            '*' => function ($query = null) {
+                return $query->selectRaw('users.*');
+            },
+            'full_name' => function ($query = null) {
+                $sql = "CONCAT(users.name, ' ', users.last_name)";
+
+                if (!$query) {
+                    return \DB::raw($sql);
+                }
+
+                return $query->selectRaw("$sql AS full_name");
+            }
+        ];
+    }
+
     protected $hidden = ['password'];
 
     protected $casts = [
