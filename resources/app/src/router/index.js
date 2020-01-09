@@ -1,8 +1,10 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
+
+import Dashboard from '../views/Dashboard.vue';
 import Home from '../views/Home.vue';
 import Login from '../views/Login.vue';
-import Dashboard from '../views/Dashboard.vue';
+import RegistrationMap from '../views/registration/Map.vue';
 
 Vue.use(VueRouter);
 
@@ -17,7 +19,6 @@ const routes = [
     name: 'login',
     component: Login,
     meta: {
-      auth: false,
       title: 'Se connecter',
     },
   },
@@ -26,8 +27,23 @@ const routes = [
     name: 'dashboard',
     component: Dashboard,
     meta: {
-      auth: false,
       title: 'Tableau de bord',
+    },
+  },
+//  {
+//    path: '/community/map',
+//    name: 'map',
+//    component: CommunityMap,
+//    meta: {
+//      title: 'Trouver un véhicule',
+//    },
+//  },
+  {
+    path: '/register/map',
+    name: 'map',
+    component: RegistrationMap,
+    meta: {
+      title: 'Trouver une communauté',
     },
   },
 ];

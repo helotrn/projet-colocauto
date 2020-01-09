@@ -1,6 +1,10 @@
 .page {
   &__content {
     min-height: calc(100vh - #{$layout-navbar-height + $molotov-footer-height});
+
+    h1, &__section {
+      margin-bottom: 60px;
+    }
   }
 }
 

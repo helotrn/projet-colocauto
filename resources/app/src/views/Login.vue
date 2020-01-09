@@ -1,13 +1,7 @@
 <template>
-  <div class="login page">
-    <layout-header class="page__header" />
-
-    <main class="page__content">
-      <login-box />
-    </main>
-
-    <layout-footer class="page__footer" />
-  </div>
+  <layout-page name="login" wide>
+    <login-box />
+  </layout-page>
 </template>
 
 <script>
