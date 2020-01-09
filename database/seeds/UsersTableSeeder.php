@@ -18,6 +18,11 @@ class UsersTableSeeder extends Seeder
                 'name' => 'Émile',
                 'last_name' => 'Plourde-Lavoie',
             ],
+            'ariane@molotov.ca' => [
+                'password' => 'molotov',
+                'name' => 'Ariane',
+                'last_name' => 'Mercier',
+            ],
         ];
 
         $memberships = [
