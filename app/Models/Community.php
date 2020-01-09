@@ -23,7 +23,13 @@ class Community extends BaseModel
 
     public static $transformer = CommunityTransformer::class;
 
-    public $collections = ['pricings'];
+    public $collections = ['users', 'pricings'];
+
+    public function users() {
+        return $this->belongsToMany(User::class)
+            ->withTimestamps()
+            ->withPivot(['role', 'created_at', 'updated_at']);
+    }
 
     public function pricings() {
         return $this->hasMany(Pricing::class);

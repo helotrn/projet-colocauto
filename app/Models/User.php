@@ -9,8 +9,6 @@ use App\Models\PaymentMethod;
 use App\Models\Bill;
 use App\Models\File;
 use App\Models\Action;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
 use App\Transformers\UserTransformer;
 
 class User extends AuthenticatableBaseModel
@@ -57,33 +55,33 @@ class User extends AuthenticatableBaseModel
         'email_verified_at' => 'datetime',
     ];
 
-    public function getAuthIdentifierName() {
-        return 'id';
-    }
+    public $collections = [
+      'actions',
+      'bills',
+      'communities',
+      'files',
+      'paymentMethods',
+    ];
 
-    public function getAuthIdentifier() {
-        return $this->{$this->getAuthIdentifierName()};
-    }
-
-    public function getAuthPassword() {
-        return $this->password;
-    }
-
-    public $collections = ['paymentMethods', 'bills', 'files', 'actions'];
-
-    public function paymentMethods() {
-        return $this->hasMany(PaymentMethod::class);
+    public function actions() {
+        return $this->hasMany(Action::class);
     }
 
     public function bills() {
         return $this->hasMany(Bill::class);
     }
 
+    public function communities() {
+        return $this->belongsToMany(Community::class)
+            ->withTimestamps()
+            ->withPivot(['role', 'created_at', 'updated_at']);
+    }
+
     public function files() {
         return $this->hasMany(File::class);
     }
 
-    public function actions() {
-        return $this->hasMany(Action::class);
+    public function paymentMethods() {
+        return $this->hasMany(PaymentMethod::class);
     }
 }
