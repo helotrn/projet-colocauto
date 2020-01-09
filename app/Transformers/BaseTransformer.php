@@ -29,8 +29,7 @@ class BaseTransformer
 
     protected function addCollections(&$output, &$item, &$options) {
         foreach ($item->collections as $relation) {
-            if (!isset($options['fields']) ||
-                in_array($relation, wrap_array_keys($options['fields']), true)) {
+            if ($this->shouldIncludeField($relation, $options)) {
                 $className = get_class($item->{$relation}()->getRelated());
                 $transformer = new $className::$transformer();
 
@@ -41,20 +40,14 @@ class BaseTransformer
                     $target = $item->{$relation};
                 }
 
-                $output[$relation] = $target->map(function ($p) use ($transformer, $options, $relation) {
-                    return $transformer->transform($p, [
-                        'fields' => isset($options['fields'][$relation])
-                        ? $options['fields'][$relation]
-                        : null,
-                    ]);
-                });
+                $output[$relation] = $this->addCollection('communities', $target, $transformer, $options);
             }
         }
     }
 
     protected function addBelongsTo(&$output, &$item, &$options) {
         foreach ($item->belongsTo as $relation) {
-            if (!isset($options['fields']) || in_array($relation, wrap_array_keys($options['fields']), true)) {
+            if ($this->shouldIncludeField($relation, $options)) {
                 if (!$item->{$relation}) {
                     continue;
                 }
@@ -68,6 +61,21 @@ class BaseTransformer
                 ]);
             }
         }
+    }
+
+    protected function shouldIncludeField($relation, $options) {
+        return !isset($options['fields']) ||
+            in_array($relation, wrap_array_keys($options['fields']), true);
+    }
+
+    protected function addCollection($relation, $target, $transformer, $options) {
+        return $target->map(function ($p) use ($relation, $transformer, $options) {
+            return $transformer->transform($p, [
+                'fields' => isset($options['fields'][$relation])
+                ? $options['fields'][$relation]
+                : null,
+            ]);
+        });
     }
 
     private function applyFieldsOption($options) {
