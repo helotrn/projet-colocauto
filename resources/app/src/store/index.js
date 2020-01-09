@@ -8,6 +8,11 @@ import login from './pages/login';
 const vuexPersist = new VuexPersist({
   key: 'locomotion',
   storage: window.localStorage,
+  reducer: state => ({
+    token: state.token,
+    refreshToken: state.refreshToken,
+    user: state.user,
+  }),
 });
 
 Vue.use(Vuex);
@@ -21,7 +26,22 @@ const initialState = {
 };
 
 const actions = {
-  async login({ commit, state }, { email, password }) {
+  async loadUser({ commit, dispatch, state }) {
+    if (state.token) {
+      Vue.axios.defaults.headers.common.Authorization = `Bearer ${state.token}`;
+    } else {
+      delete Vue.axios.defaults.headers.common;
+    }
+
+    try {
+      const { data: user } = await Vue.axios.get('/auth/user');
+
+      commit('user', user);
+    } catch (e) {
+      dispatch('logout');
+    }
+  },
+  async login({ commit, dispatch, state }, { email, password }) {
     const { data } = await Vue.axios.post('/auth/login', {
       email,
       password,
@@ -31,11 +51,7 @@ const actions = {
     commit('token', data.access_token);
     commit('refreshToken', data.refresh_token);
 
-    const { data: user } = await Vue.axios.get('/auth/user');
-
-    commit('user', user);
-
-    this.$router.push('/app');
+    await dispatch('loadUser');
   },
   logout({ commit }) {
     commit('initialized', true);

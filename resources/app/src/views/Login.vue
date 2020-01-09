@@ -21,7 +21,7 @@ export default {
   mixins: [Authenticated, Notification],
   mounted() {
     if (this.loggedIn) {
-      this.$router.replace('/app');
+      this.skipToApp();
     }
   },
   components: { LoginBox },

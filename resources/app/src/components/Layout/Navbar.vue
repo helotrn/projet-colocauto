@@ -11,11 +11,14 @@
     <b-navbar-toggle target="nav-collapse" />
 
     <b-collapse id="nav-collapse" is-nav>
-      <b-navbar-nav class="ml-auto">
+      <b-navbar-nav class="ml-auto" v-if="loggedIn">
         <b-nav-item to="/app">Tableau de bord</b-nav-item>
         <b-nav-item href="/map" v-if="hasCommunity">Trouver un véhicule</b-nav-item>
         <b-nav-item to="/community" v-if="hasCommunity">Communauté</b-nav-item>
         <b-nav-item href="/map" v-if="!hasCommunity">Trouver une communauté</b-nav-item>
+      </b-navbar-nav>
+      <b-navbar-nav class="ml-auto" v-else>
+        <b-nav-item to="/login">Se connecter</b-nav-item>
       </b-navbar-nav>
     </b-collapse>
   </b-navbar>
