@@ -29,7 +29,6 @@ trait BaseModelTrait
     public $belongsTo = [];
 
     public function belongsTo($related, $foreignKey = null, $ownerKey = null, $relation = null) {
-
         if (is_null($relation)) {
             $relation = $this->guessBelongsToRelation();
         }
@@ -42,6 +41,37 @@ trait BaseModelTrait
         }
 
         return $query;
+    }
+
+    // FIXME Doesn't add the custom keys on the resulting object
+    public function belongsToMany($related, $table = null, $foreignPivotKey = null, $relatedPivotKey = null, $parentKey = null, $relatedKey = null, $relation = null) {
+        $instance = $this->newRelatedInstance($related);
+
+        $foreignPivotKey = $foreignPivotKey ?: $this->getForeignKey();
+
+        $relatedPivotKey = $relatedPivotKey ?: $instance->getForeignKey();
+
+        if (is_null($table)) {
+            $table = $this->joiningTable($related, $instance);
+        }
+
+        $query = $instance->newQuery();
+
+        $columns = $related::getColumnsDefinition();
+        foreach ($columns as $column) {
+            $query = $column($query);
+        }
+
+        return $this->newBelongsToMany(
+            $query,
+            $this,
+            $table,
+            $foreignPivotKey,
+            $relatedPivotKey,
+            $parentKey ?: $this->getKeyName(),
+            $relatedKey ?: $instance->getKeyName(),
+            $relation
+        );
     }
 
     public function scopeSearch(Builder $query, $q) {
