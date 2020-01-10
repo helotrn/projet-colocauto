@@ -38,22 +38,28 @@ export default function RestModule(slug, initialState) {
       }
     },
     actions: {
-      load({ state, commit }) {
+      load({ state, dispatch }) {
+        // dispatch retrieve
         console.log('load');
       },
       search(state, search) {
+        // dispatch retrieve with param "q"
         console.log('search');
       },
       create(state, data) {
+        // call API POST
         console.log('create');
       },
       retrieve({ state, commit }, { params }) {
+        // call API GET
         console.log('retrieve', params);
       },
       update(state, data) {
+        // call API POST
         console.log('create');
       },
       delete(state, data) {
+        // call API DELETE
         console.log('create');
       },
     },
