@@ -5,9 +5,9 @@
     <b-container :fluid="fluid" tag="main" class="page__content" v-if="!wide">
       <slot></slot>
     </b-container>
-    <div v-else>
+    <main class="page__content" v-else>
       <slot></slot>
-    </div>
+    </main>
 
     <layout-footer class="page__footer" />
   </div>
