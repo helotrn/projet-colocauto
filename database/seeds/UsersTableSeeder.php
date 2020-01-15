@@ -43,7 +43,7 @@ class UsersTableSeeder extends Seeder
             if (!User::where('email', $email)->exists()) {
                 User::create($data);
             } else {
-                User::where('email', $email)->update($data);
+                User::where('email', $email)->first()->update($data);
             }
         }
 

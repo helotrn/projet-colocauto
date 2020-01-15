@@ -31,6 +31,7 @@ class Bike extends Loanable
         'model',
         'type',
         'size',
+        'availability_ics'
     ];
 
     public static $transformer = BikeTransformer::class;

@@ -25,7 +25,7 @@ class BikesTableSeeder extends Seeder
             if (!Bike::where('id', $bike['id'])->exists()) {
                 Bike::create($bike);
             } else {
-                Bike::where('id', $bike['id'])->update($bike);
+                Bike::where('id', $bike['id'])->first()->update($bike);
             }
         }
     }
