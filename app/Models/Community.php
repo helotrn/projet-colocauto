@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Pricing;
 use App\Utils\PointCast;
+use App\Utils\PolygonCast;
 use App\Transformers\CommunityTransformer;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -42,6 +43,7 @@ class Community extends BaseModel
 
     protected $casts = [
         'center' => PointCast::class,
+        'area' => PolygonCast::class,
     ];
 
     public static $transformer = CommunityTransformer::class;
