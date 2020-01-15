@@ -3,12 +3,17 @@
 namespace App\Models;
 
 use App\Models\Pricing;
+use App\Utils\PointCast;
+use App\Transformers\CommunityTransformer;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use App\Transformers\CommunityTransformer;
+use Phaza\LaravelPostgis\Eloquent\PostgisTrait;
+use Vkovic\LaravelCustomCasts\HasCustomCasts;
 
 class Community extends BaseModel
 {
+    use HasCustomCasts, PostgisTrait;
+
     public static $rules = [
         'name' => 'required',
         'description' => 'nullable',
@@ -18,7 +23,25 @@ class Community extends BaseModel
     protected $fillable = [
         'name',
         'description',
-        'territory',
+        'area',
+    ];
+
+    protected $postgisFields = [
+        'center',
+        'area',
+    ];
+
+    protected $postgisTypes = [
+        'center' => [
+            'geomtype' => 'point',
+        ],
+        'area' => [
+            'geomtype' => 'geography',
+        ],
+    ];
+
+    protected $casts = [
+        'center' => PointCast::class,
     ];
 
     public static $transformer = CommunityTransformer::class;
@@ -27,17 +50,17 @@ class Community extends BaseModel
         return [
             '*' => function ($query = null) {
                 if (!$query) {
-                    return 'communities.id';
+                    return 'ST_Centroid(communities.area::geometry)';
                 }
 
                 return $query->selectRaw('communities.*');
             },
-            'area_json' => function ($query = null) {
+            'center' => function ($query = null) {
                 if (!$query) {
                     return 'communities.area';
                 }
 
-                return $query->selectRaw('ST_AsGeoJSON(communities.area) AS area_json');
+                return $query->selectRaw('ST_Centroid(communities.area::geometry) AS center');
             }
         ];
     }

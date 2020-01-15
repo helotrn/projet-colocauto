@@ -15,9 +15,6 @@ class Loanable extends BaseModel
 
     protected $table = 'loanables';
 
-    protected $fillable = [
-    ];
-
     public $belongsTo = ['owner'];
 
     protected $postgisFields = [
@@ -25,13 +22,13 @@ class Loanable extends BaseModel
     ];
 
     protected $postgisTypes = [
-        'location' => [
+        'position' => [
             'geomtype' => 'geography',
         ],
     ];
 
     protected $casts = [
-        'position' => PointCast::class
+        'position' => PointCast::class,
     ];
 
     public function owner() {
