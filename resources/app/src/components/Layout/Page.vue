@@ -3,10 +3,10 @@
     <layout-header class="page__header" />
 
     <b-container :fluid="fluid" tag="main" class="page__content" v-if="!wide">
-      <slot></slot>
+      <slot />
     </b-container>
     <main class="page__content" v-else>
-      <slot></slot>
+      <slot />
     </main>
 
     <layout-footer class="page__footer" />
