@@ -40,15 +40,7 @@
 
         <location-history />
 
-          <div class="page__sidebar__resources">
-            <h3>Ressources</h3>
-
-            <ul>
-              <li class="page__content__sidebar__resources__resource">
-                Foire aux questions (FAQ)
-              </li>
-            </ul>
-          </div>
+        <resources-list />
       </b-col>
     </b-row>
   </layout-page>
@@ -58,9 +50,18 @@
 import Authenticated from '@/mixins/Authenticated';
 import Notification from '@/mixins/Notification';
 
+import AccountStatus from '@/components/Dashboard/AccountStatus.vue';
+import LocationHistory from '@/components/Dashboard/LocationHistory.vue';
+import ResourcesList from '@/components/Dashboard/ResourcesList.vue';
+
 export default {
   name: 'Dashboard',
   mixins: [Authenticated, Notification],
+  components: {
+    AccountStatus,
+    LocationHistory,
+    ResourcesList,
+  },
   beforeMount() {
     if (!this.loggedIn) {
       this.skipToLogin('app');
