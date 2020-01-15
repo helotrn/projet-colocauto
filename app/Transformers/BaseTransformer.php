@@ -7,6 +7,8 @@ class BaseTransformer
     public static $context = [];
 
     public function transform($item, $options = []) {
+        $computedFields = array_intersect(array_keys(dig($options, 'fields', [])), $item->computed);
+        $item->append($computedFields);
         $output = $item->toArray();
 
         $reflect = new \ReflectionClass($item);

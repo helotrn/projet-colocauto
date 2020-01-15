@@ -18,9 +18,13 @@ trait BaseModelTrait
 
     public static $validationMessages = [];
 
+    protected $appends = [];
+
     public $hasOne = [];
 
     public $collections = [];
+
+    public $computed = [];
 
     public $morphOne = [];
 

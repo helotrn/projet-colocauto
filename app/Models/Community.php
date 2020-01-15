@@ -50,14 +50,14 @@ class Community extends BaseModel
         return [
             '*' => function ($query = null) {
                 if (!$query) {
-                    return 'ST_Centroid(communities.area::geometry)';
+                    return 'communities.*';
                 }
 
                 return $query->selectRaw('communities.*');
             },
             'center' => function ($query = null) {
                 if (!$query) {
-                    return 'communities.area';
+                    return 'ST_Centroid(communities.area::geometry)';
                 }
 
                 return $query->selectRaw('ST_Centroid(communities.area::geometry) AS center');
@@ -67,6 +67,8 @@ class Community extends BaseModel
 
     public $collections = ['users', 'pricings'];
 
+    public $computed =  ['area_google'];
+
     public function users() {
         return $this->belongsToMany(User::class)
             ->withTimestamps()
@@ -75,5 +77,14 @@ class Community extends BaseModel
 
     public function pricings() {
         return $this->hasMany(Pricing::class);
+    }
+
+    public function getAreaGoogleAttribute() {
+        return array_map(function ($point) {
+            return [
+                'lat' => $point[0],
+                'lng' => $point[1],
+            ];
+        }, $this->area);
     }
 }
