@@ -14,7 +14,7 @@ export default {
             )));
 
             return acc;
-          }, [])
+          }, []),
       )
         .then(next)
         .catch((e) => {

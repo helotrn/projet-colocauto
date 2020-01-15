@@ -49,7 +49,7 @@ const routes = [
           retrieve: {
             params: {
               fields: 'id,name,description,center,area_google,center_google',
-            }
+            },
           },
         },
       },

@@ -33,23 +33,12 @@
       ref="map"
       :center="center"
       :zoom="14"
-      :options="{
-        streetViewControl: false,
-        mapTypeControl: false,
-        styles: [
-          {
-            featureType: 'poi',
-            stylers: [
-              { visibility: 'off' }
-            ]
-          }
-        ]
-      }"
+      :options="mapOptions"
       map-type-id="terrain">
       <gmap-polygon v-for="c in communities" :key="`polygon-${c.id}`"
         :path="c.area_google"
         :label="c.name"
-        :options="{ fillColor: '#16a59e', fillOpacity: 0.5, strokeOpacity: 0, label: 'machin' }"
+        :options="polygonOptions"
         @click="community = c" />
       <gmap-marker v-for="c in communities" :key="`marker-${c.id}`"
         :label="{
@@ -79,6 +68,24 @@ export default {
       mapIcon: {
         url: 'perdu.com',
       },
+      mapOptions: {
+        streetViewControl: false,
+        fullscreenControl: false,
+        mapTypeControl: false,
+        styles: [
+          {
+            featureType: 'poi',
+            stylers: [
+              { visibility: 'off' },
+            ],
+          },
+        ],
+      },
+      polygonOptions: {
+        fillColor: '#16a59e',
+        fillOpacity: 0.5,
+        strokeOpacity: 0,
+      },
     };
   },
   computed: {
@@ -87,7 +94,7 @@ export default {
       const center = communities.reduce((acc, c) => [
         (acc[0] + c.center[0]) / 2,
         (acc[1] + c.center[1]) / 2,
-      ], communities[0].center)
+      ], communities[0].center);
       return {
         lat: center[0],
         lng: center[1],
@@ -149,7 +156,7 @@ export default {
           const { LatLngBounds } = this.google.maps;
           const bounds = new LatLngBounds();
 
-          for (let i = 0, len = this.communities.length; i < len; i++) {
+          for (let i = 0, len = this.communities.length; i < len; i += 1) {
             const community = this.communities[i];
             community.area_google.forEach(p => bounds.extend(p));
             if (bounds.contains(location)) {
@@ -162,6 +169,8 @@ export default {
           this.center = results[0].geometry.location;
           this.community = null;
         }
+
+        return true;
       });
     },
   },
@@ -171,8 +180,8 @@ export default {
       const bounds = new LatLngBounds();
 
       if (!value) {
-          this.communities.forEach(c => bounds.extend(c.center_google));
-          this.$refs.map.fitBounds(bounds);
+        this.communities.forEach(c => bounds.extend(c.center_google));
+        this.$refs.map.fitBounds(bounds);
       } else {
         value.area_google.forEach(p => bounds.extend(p));
         this.$refs.map.fitBounds(bounds);

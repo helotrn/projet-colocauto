@@ -24,7 +24,7 @@ export default {
       this.$store.dispatch('logout');
 
       this.$store.commit('addNotification', {
-        content: "Vous n'êtes plus connecté à Locmotion. À bientôt!",
+        content: "Vous n'êtes plus connecté à Locomotion. À bientôt!",
         title: 'Déconnexion réussie.',
         variant: 'success',
         type: 'logout',

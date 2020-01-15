@@ -66,8 +66,6 @@ export default {
 
         this.$router.replace('/app');
       } catch (e) {
-        console.error(e);
-
         if (e.request) {
           switch (e.request.status) {
             case 401:
