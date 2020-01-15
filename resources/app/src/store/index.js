@@ -4,6 +4,7 @@ import VuexPersist from 'vuex-persist';
 
 import communities from './communities';
 import login from './pages/login';
+import RegistrationMap from './pages/registration/map';
 
 const vuexPersist = new VuexPersist({
   key: 'locomotion',
@@ -110,6 +111,7 @@ export default new Vuex.Store({
   modules: {
     communities,
     login,
+    'registration.map': RegistrationMap,
   },
   plugins: [vuexPersist.plugin],
 });

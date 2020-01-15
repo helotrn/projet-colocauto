@@ -1,0 +1,14 @@
+.card {
+  &-title {
+    color: $locomotion-green;
+    font-weight: bold;
+  }
+
+  &-body {
+    .form-group {
+      legend {
+        font-weight: bold;
+      }
+    }
+  }
+}

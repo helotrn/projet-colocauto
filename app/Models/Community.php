@@ -69,7 +69,7 @@ class Community extends BaseModel
 
     public $collections = ['users', 'pricings'];
 
-    public $computed =  ['area_google'];
+    public $computed =  ['area_google', 'center_google'];
 
     public function users() {
         return $this->belongsToMany(User::class)
@@ -88,5 +88,12 @@ class Community extends BaseModel
                 'lng' => $point[1],
             ];
         }, $this->area);
+    }
+
+    public function getCenterGoogleAttribute() {
+        return [
+            'lat' => $this->center[0],
+            'lng' => $this->center[1],
+        ];
     }
 }
