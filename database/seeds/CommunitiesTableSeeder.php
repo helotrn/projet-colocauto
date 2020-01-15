@@ -2,7 +2,6 @@
 
 use App\Models\Community;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Hash;
 
 class CommunitiesTableSeeder extends Seeder
 {
