@@ -44,6 +44,15 @@ const routes = [
     name: 'map',
     component: RegistrationMap,
     meta: {
+      data: {
+        communities: {
+          retrieve: {
+            params: {
+              fields: 'id,name,description,center,area_google',
+            }
+          },
+        },
+      },
       title: 'Trouver une communauté',
     },
   },

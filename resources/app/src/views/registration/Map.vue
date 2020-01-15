@@ -1,20 +1,45 @@
 <template>
   <layout-page name="registration" wide>
     <gmap-map class="registration-page__map"
-      :center="{ lat:10, lng:10 }"
-      :zoom="7"
-      map-type-id="terrain" />
+      :center="averageCommunitiesCenter"
+      :zoom="14"
+      map-type-id="terrain">
+      <gmap-polygon v-for="community in communities" :key="community.id"
+        :path="community.area_google"
+        @click="showModal(community.id)" />
+    </gmap-map>
   </layout-page>
 </template>
 
 <script>
+import DataRouteGuards from '@/mixins/DataRouteGuards';
+
 export default {
   name: 'Map',
-  async beforeMount() {
-    const { loaded } = this.$store.state.communities;
-    if (!loaded) {
-      this.$store.dispatch('communities/load');
+  mixins: [DataRouteGuards],
+  computed: {
+    averageCommunitiesCenter() {
+      const { data: communities } = this.$store.state.communities;
+      const center = communities.reduce((acc, c) => [
+        (acc[0] + c.center[0]) / 2,
+        (acc[1] + c.center[1]) / 2,
+      ], communities[0].center)
+      return {
+        lat: center[0],
+        lng: center[1],
+      };
+    },
+    communities() {
+      return this.$store.state.communities.data;
+    },
+    paths() {
+      return this.communities.map(c => c);
     }
+  },
+  methods: {
+    showModal(community) {
+
+    },
   },
 };
 </script>

@@ -66,7 +66,7 @@ export default {
     if (!this.loggedIn) {
       this.skipToLogin('app');
     }
-  }
+  },
 };
 </script>
 
