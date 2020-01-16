@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 
+import CommunityMap from '../views/community/Map.vue';
 import Dashboard from '../views/Dashboard.vue';
 import Help from '../views/Help.vue';
 import Home from '../views/Home.vue';
@@ -31,17 +32,17 @@ const routes = [
       title: 'Tableau de bord',
     },
   },
-//  {
-//    path: '/community/map',
-//    name: 'map',
-//    component: CommunityMap,
-//    meta: {
-//      title: 'Trouver un véhicule',
-//    },
-//  },
+  {
+    path: '/community/map',
+    name: 'community-map',
+    component: CommunityMap,
+    meta: {
+      title: 'Trouver un véhicule',
+    },
+  },
   {
     path: '/register/map',
-    name: 'map',
+    name: 'registration-map',
     component: RegistrationMap,
     meta: {
       data: {
