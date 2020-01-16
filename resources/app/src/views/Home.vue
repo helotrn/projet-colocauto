@@ -11,7 +11,7 @@
       </b-col>
     </b-row>
 
-    <b-row tag="section" class="page__section">
+    <b-row tag="section" class="page__section" v-if="!loggedIn">
       <b-col>
         <h2 class="page__section__title">
           Se connecter
