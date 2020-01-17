@@ -7,10 +7,13 @@ use App\Http\Requests\BaseRequest as Request;
 use App\Transformers\BaseTransformer;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Symfony\Component\HttpFoundation\StreamedResponse;
+use App\Utils\Traits\ErrorResponseTrait;
 use Validator;
 
 class RestController extends Controller
 {
+    use ErrorResponseTrait;
+
     protected $repo;
     protected $model;
 
@@ -72,12 +75,5 @@ class RestController extends Controller
     protected function streamFile($callback, $headers) {
         $response = new StreamedResponse($callback, 200, $headers);
         $response->send();
-    }
-
-    protected function respondWithErrors($errors, $message = null) {
-        return response()->json([
-            'message' => $message ?: 'Validation error',
-            'errors' => $errors,
-        ], 422);
     }
 }

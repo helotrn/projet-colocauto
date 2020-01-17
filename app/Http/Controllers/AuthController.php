@@ -11,9 +11,12 @@ use App\Models\User;
 use Illuminate\Contracts\Auth\Factory as Auth;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Passport\TokenRepository;
+use App\Utils\Traits\ErrorResponseTrait;
 
 class AuthController extends Controller
 {
+    use ErrorResponseTrait;
+
     protected $user;
     protected $tokens;
     protected $auth;
