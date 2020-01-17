@@ -1,5 +1,3 @@
-const path = require('path');
-
 module.exports = {
   chainWebpack: (config) => {
     const svgRule = config.module.rule('svg');
@@ -17,7 +15,7 @@ module.exports = {
   css: {
     loaderOptions: {
       sass: {
-        prependData: `@import "@/assets/scss/_variables.scss";`
+        prependData: '@import "@/assets/scss/_variables.scss";',
       },
     },
   },
@@ -36,6 +34,6 @@ module.exports = {
 
   pluginOptions: {
     lintStyleOnBuild: true,
-    stylelint: {}
+    stylelint: {},
   },
 };

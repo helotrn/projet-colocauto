@@ -53,17 +53,14 @@ export default function RestModule(slug, initialState) {
       },
     },
     actions: {
-      load({ state, dispatch }) {
+      load() { // { state, dispatch }) {
         // dispatch retrieve
-        console.log('load');
       },
-      search(state, search) {
+      search() { // state, search) {
         // dispatch retrieve with param "q"
-        console.log('search');
       },
-      create(state, data) {
+      create() { // state, data) {
         // call API POST
-        console.log('create');
       },
       async retrieve({ state, commit }, params) {
         try {
@@ -78,7 +75,7 @@ export default function RestModule(slug, initialState) {
             data: {
               data,
               total,
-            }
+            },
           } = await ajax;
 
           commit('data', data);
@@ -98,13 +95,11 @@ export default function RestModule(slug, initialState) {
           throw e;
         }
       },
-      update(state, data) {
+      update() { // state, data) {
         // call API POST
-        console.log('create');
       },
-      delete(state, data) {
+      delete() { // state, data) {
         // call API DELETE
-        console.log('create');
       },
     },
   };

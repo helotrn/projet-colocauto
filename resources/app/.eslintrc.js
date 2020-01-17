@@ -13,8 +13,8 @@ module.exports = {
     'no-debugger': reportPolicy,
     'no-unreachable': reportPolicy,
     'comma-dangle': reportPolicy,
-    'semi': reportPolicy,
-    'indent': reportPolicy,
+    semi: reportPolicy,
+    indent: reportPolicy,
     'spaced-comment': reportPolicy,
     'no-unused-vars': reportPolicy,
     'vue/no-unused-components': reportPolicy,
@@ -26,40 +26,40 @@ module.exports = {
     'max-len': 'warn',
     'vue/html-closing-bracket-newline': 'off',
     'no-multiple-empty-lines': ['warn', {
-      'max': 2,
+      max: 2,
     }],
     'prefer-destructuring': ['error', {
-      'VariableDeclarator': {
-        'array': false,
-        'object': true
+      VariableDeclarator: {
+        array: false,
+        object: true,
       },
-      'AssignmentExpression': {
-        'array': false,
-        'object': false
-      }
+      AssignmentExpression: {
+        array: false,
+        object: false,
+      },
     }, {
-      'enforceForRenamedProperties': false
+      enforceForRenamedProperties: false,
     }],
     'vue/html-self-closing': 'warn',
-    'vue/no-parsing-error': [ 2, {
-      'x-invalid-end-tag': false
+    'vue/no-parsing-error': [2, {
+      'x-invalid-end-tag': false,
     }],
     'vue/html-end-tags': 'off',
     'vue/valid-template-root': 'off',
     'vue/max-attributes-per-line': ['warn', {
-      'singleline': 6,
-      'multiline': {
-        'max': 3,
-        'allowFirstLine': true
-      }
+      singleline: 6,
+      multiline: {
+        max: 3,
+        allowFirstLine: true,
+      },
     }],
     'vue/singleline-html-element-content-newline': 'off',
     'vue/html-indent': ['warn', 2, {
-      'attribute': 1,
-      'baseIndent': 1,
-      'closeBracket': 0,
-      'alignAttributesVertically': false,
-      'ignores': []
+      attribute: 1,
+      baseIndent: 1,
+      closeBracket: 0,
+      alignAttributesVertically: false,
+      ignores: [],
     }],
   },
   parserOptions: {
