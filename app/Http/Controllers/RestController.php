@@ -17,16 +17,7 @@ class RestController extends Controller
     protected $repo;
     protected $model;
 
-    public function index(Request $request) {
-        $perPage = $request->get('per_page') ?: 10;
-        $page = $request->get('page') ?: 1;
-
-        try {
-            [$items, $total] = $this->repo->get($request);
-        } catch (ValidationException $e) {
-            return $this->respondWithErrors($e->getErrors(), $e->getMessage());
-        }
-
+    protected function respondWithCollection(Request $request) {
         $transformer = new $this->model::$transformer;
         $results = $items->map(function ($item) use ($transformer, $request) {
             return $transformer->transform($item, [
@@ -37,7 +28,7 @@ class RestController extends Controller
         return new LengthAwarePaginator($results, $total, $perPage, $page);
     }
 
-    public function create(Request $request) {
+    protected function validateAndCreate(Request $request) {
         $validator = Validator::make(
             $request->all(),
             $this->model::getRules('create', $request->user()),
@@ -51,9 +42,7 @@ class RestController extends Controller
         return $this->repo->create($request->input());
     }
 
-    public function retrieve(Request $request, $id) {
-        $item = $this->repo->find($request, $id);
-
+    protected function respondWithItem(Request $request, $item) {
         $transformer = new $this->model::$transformer;
         $result = $transformer->transform($item, [
             'fields' => $request->getFields(),
@@ -62,7 +51,7 @@ class RestController extends Controller
         return $result;
     }
 
-    public function update(Request $request, $id) {
+    protected function validateAndUpdate(Request $request, $id) {
         $validator = Validator::make(
             $request->all(),
             $this->model::getRules('update', $request->user()),
@@ -74,10 +63,6 @@ class RestController extends Controller
         }
 
         return $this->repo->update($id, $request->input());
-    }
-
-    public function delete(Request $request, $id) {
-        return $this->repo->delete($id);
     }
 
     protected function streamFile($callback, $headers) {

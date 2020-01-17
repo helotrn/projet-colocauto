@@ -12,18 +12,19 @@ class UpdateRequest extends BaseRequest
 
     public function rules() {
         $rules = [
-            'email' => 'required|email',
-            'password' => 'required',
+            'email' => 'email',
         ];
 
-        if ($user = Auth::user()) {
-            $rules['email'] = "required|email|unique:users,email,$user->id";
+        if ($user = $this->user()) {
+            $rules['email'] = "email|unique:users,email,$user->id";
         }
 
         return $rules;
     }
 
     public function messages() {
-        return [];
+        return [
+            'name.required' => 'Le nom est requis.'
+        ];
     }
 }

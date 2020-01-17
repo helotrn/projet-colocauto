@@ -32,24 +32,6 @@ class User extends AuthenticatableBaseModel
 
     public static $transformer = UserTransformer::class;
 
-    public static function getRules($action, $user = null) {
-        $rules = static::$rules;
-
-        if (!$user) {
-            return $rules;
-        }
-
-        switch ($action) {
-            case 'update':
-                $id = $user->id;
-                return array_merge($rules, [
-                    'email' => "email|unique:users,email,$id",
-                ]);
-            default:
-                return $rules;
-        }
-    }
-
     public static function getColumnsDefinition() {
         return [
             '*' => function ($query = null) {

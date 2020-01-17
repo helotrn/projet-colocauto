@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\UserController;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\Auth\RegisterRequest;
-use App\Http\Requests\Auth\UpdateRequest;
+use App\Http\Requests\User\UpdateRequest;
 use App\Http\Requests\BaseRequest as Request;
 use App\Models\User;
 use Illuminate\Contracts\Auth\Factory as Auth;
@@ -88,7 +88,7 @@ class AuthController extends Controller
         return $this->userController->retrieve($request, $this->auth->user()->id);
     }
 
-    public function updateUser(Request $request) {
+    public function updateUser(UpdateRequest $request) {
         $id = $this->auth->user()->id;
         $user = User::findOrFail($id);
 
