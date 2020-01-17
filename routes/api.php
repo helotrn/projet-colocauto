@@ -6,11 +6,14 @@ use App\Utils\RouteHelper;
 Route::prefix('v1')->group(function () {
     Route::get('/', 'StaticController@blank');
     Route::get('/status', 'StaticController@status');
+
     Route::post('auth/login', 'AuthController@login');
+    Route::post('auth/register', 'AuthController@register');
 
     Route::middleware('auth:api')->group(function () {
         Route::prefix('auth')->group(function () {
             Route::get('user', 'UserController@getUser');
+            Route::put('user', 'AuthController@updateUser');
             Route::put('logout', 'AuthController@logout');
         });
 
