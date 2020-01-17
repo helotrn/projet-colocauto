@@ -49,3 +49,9 @@ task('deploy:build', function () {
     run('cd {{release_path}}/resources/app && yarn && yarn build');
 });
 before('deploy:symlink', 'deploy:build');
+
+desc('Copy assets');
+task('deploy:copy', function () {
+    run('rsync -rv {{release_path}}/resources/app/public/* {{release_path}}/public/ --exclude=index.html');
+});
+before('deploy:symlink', 'deploy:copy');
