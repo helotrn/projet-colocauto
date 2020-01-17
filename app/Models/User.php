@@ -17,9 +17,8 @@ class User extends AuthenticatableBaseModel
 
     public static $rules = [
         'name' => 'nullable',
+        'email' => 'email',
         'last_name' => 'nullable',
-        'email' => 'required|email|unique:users,email',
-        'password' => 'required',
         'google_id' => 'nullable',
         'description' => 'nullable',
         'date_of_birth' => 'nullable|date',
@@ -27,15 +26,13 @@ class User extends AuthenticatableBaseModel
         'postal_code' => 'nullable',
         'phone' => 'nullable',
         'is_smart_phone' => 'nullable|boolean',
-        'other_phone' => 'nullable|required',
+        'other_phone' => 'nullable',
         'approved_at' => 'nullable|date',
     ];
 
     protected $fillable = [
         'name',
         'last_name',
-        'email',
-        'password',
         'google_id',
         'description',
         'date_of_birth',
