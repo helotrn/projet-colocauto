@@ -17,7 +17,10 @@ class RestController extends Controller
     protected $repo;
     protected $model;
 
-    protected function respondWithCollection(Request $request) {
+    protected function respondWithCollection(Request $request, $items, $total) {
+        $perPage = $request->get('per_page') ?: 10;
+        $page = $request->get('page') ?: 1;
+
         $transformer = new $this->model::$transformer;
         $results = $items->map(function ($item) use ($transformer, $request) {
             return $transformer->transform($item, [
