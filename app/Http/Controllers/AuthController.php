@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\UserController;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\Auth\RegisterRequest;
 use App\Http\Requests\Auth\UpdateRequest;
-use App\Http\Requests\Auth\DeleteRequest;
 use App\Http\Requests\BaseRequest as Request;
 use App\Models\User;
 use Illuminate\Contracts\Auth\Factory as Auth;
@@ -21,10 +21,11 @@ class AuthController extends Controller
     protected $tokens;
     protected $auth;
 
-    public function __construct(User $user, TokenRepository $tokens, Auth $auth) {
+    public function __construct(User $user, TokenRepository $tokens, Auth $auth, UserController $userController) {
         $this->user = $user;
         $this->tokens = $tokens;
         $this->auth = $auth;
+        $this->userController = $userController;
     }
 
     public function login(LoginRequest $request) {
@@ -73,33 +74,19 @@ class AuthController extends Controller
         $user = User::create($data);
 
         if ($user) {
-            return response('user registration succesfull', 200);
-        } else {
-            return $this->sendError("Sorry! Registration failed.", 401);
+            $loginRequest = new LoginRequest();
+            $loginRequest->setMethod('POST');
+            $loginRequest->request->add([
+                'email' => $email,
+                'password' => $password,
+            ]);
+            return $this->login($loginRequest);
         }
+
+        return $this->respondWithErrors('Registration error.', 400);
     }
 
-    public function update(UpdateRequest $request, $id) {
-
-        $email = $request->get('email');
-        $password = $request->get('password');
-
-        $data = [
-            'email' => $email,
-            'password' => Hash::make($password),
-        ];
-
-        $user = User::findOrFail($id);
-        $user->fill($data);
-        $user->save();
-
-        return response('user update succesfull', 200);
-    }
-
-    public function delete(DeleteRequest $request, $id) {
-
-        $user = User::findOrFail($id);
-        $user->delete();
-        return response('user delete succesfull', 200);
+    public function updateUser(Request $request) {
+        return $this->userController->update($request, $this->auth->user()->id);
     }
 }
