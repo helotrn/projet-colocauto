@@ -16,18 +16,18 @@ class User extends AuthenticatableBaseModel
     use HasApiTokens, Notifiable;
 
     public static $rules = [
-        'name' => 'required',
-        'last_name' => 'required',
+        'name' => 'nullable',
+        'last_name' => 'nullable',
         'email' => 'required|email|unique:users,email',
         'password' => 'required',
         'google_id' => 'nullable',
         'description' => 'nullable',
-        'date_of_birth' => 'date',
-        'address' => 'required',
-        'postal_code' => 'required',
-        'phone' => 'required',
-        'is_smart_phone' => 'boolean',
-        'other_phone' => 'required',
+        'date_of_birth' => 'nullable|date',
+        'address' => 'nullable',
+        'postal_code' => 'nullable',
+        'phone' => 'nullable',
+        'is_smart_phone' => 'nullable|boolean',
+        'other_phone' => 'nullable|required',
         'approved_at' => 'nullable|date',
     ];
 
