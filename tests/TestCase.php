@@ -12,6 +12,11 @@ abstract class TestCase extends BaseTestCase
 {
     use CreatesApplication, DatabaseMigrations;
 
+    public static $validationErrorStructure = [
+        'message',
+        'errors' => []
+    ];
+
     protected $faker;
     protected $user;
 
