@@ -19,12 +19,14 @@ class Community extends BaseModel
         'name' => 'required',
         'description' => 'nullable',
         'area' => 'nullable',
+        'type' => 'required|in:private,neighborhood,borough'
     ];
 
     protected $fillable = [
         'name',
         'description',
         'area',
+        'type',
     ];
 
     protected $postgisFields = [
