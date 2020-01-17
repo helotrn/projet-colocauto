@@ -30,21 +30,25 @@ class User extends AuthenticatableBaseModel
         'approved_at' => 'nullable|date',
     ];
 
-    protected $fillable = [
-        'name',
-        'last_name',
-        'google_id',
-        'description',
-        'date_of_birth',
-        'address',
-        'postal_code',
-        'phone',
-        'is_smart_phone',
-        'other_phone',
-        'approved_at',
-    ];
-
     public static $transformer = UserTransformer::class;
+
+    public static function getRules($action, $user = null) {
+        $rules = static::$rules;
+
+        if (!$user) {
+            return $rules;
+        }
+
+        switch ($action) {
+            case 'update':
+                $id = $user->id;
+                return array_merge($rules, [
+                    'email' => "email|unique:users,email,$id",
+                ]);
+            default:
+                return $rules;
+        }
+    }
 
     public static function getColumnsDefinition() {
         return [
@@ -62,6 +66,20 @@ class User extends AuthenticatableBaseModel
             }
         ];
     }
+
+    protected $fillable = [
+        'name',
+        'last_name',
+        'google_id',
+        'description',
+        'date_of_birth',
+        'address',
+        'postal_code',
+        'phone',
+        'is_smart_phone',
+        'other_phone',
+        'approved_at',
+    ];
 
     protected $hidden = ['password'];
 

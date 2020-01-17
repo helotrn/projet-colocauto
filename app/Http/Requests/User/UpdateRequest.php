@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Auth;
+namespace App\Http\Requests\User;
 
 use App\Http\Requests\BaseRequest;
 
@@ -11,10 +11,16 @@ class UpdateRequest extends BaseRequest
     }
 
     public function rules() {
-        return [
+        $rules = [
             'email' => 'required|email',
             'password' => 'required',
         ];
+
+        if ($user = Auth::user()) {
+            $rules['email'] = "required|email|unique:users,email,$user->id";
+        }
+
+        return $rules;
     }
 
     public function messages() {

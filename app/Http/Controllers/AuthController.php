@@ -66,12 +66,10 @@ class AuthController extends Controller
         $email = $request->get('email');
         $password = $request->get('password');
 
-        $data = [
-            'email' => $email,
-            'password' => Hash::make($password),
-        ];
-
-        $user = User::create($data);
+        $user = new User();
+        $user->email = $email;
+        $user->password = Hash::make($password);
+        $user->save();
 
         if ($user) {
             $loginRequest = new LoginRequest();
@@ -86,7 +84,16 @@ class AuthController extends Controller
         return $this->respondWithErrors('Registration error.', 400);
     }
 
+    public function getUser(Request $request) {
+        return $this->userController->retrieve($request, $this->auth->user()->id);
+    }
+
     public function updateUser(Request $request) {
-        return $this->userController->update($request, $this->auth->user()->id);
+        $id = $this->auth->user()->id;
+        $user = User::findOrFail($id);
+
+        $request->merge([ 'email' => $user->email ]);
+
+        return $this->userController->update($request, $user->id);
     }
 }

@@ -38,7 +38,11 @@ class RestController extends Controller
     }
 
     public function create(Request $request) {
-        $validator = Validator::make($request->all(), $this->model::getRules(), $this->model::$validationMessages);
+        $validator = Validator::make(
+            $request->all(),
+            $this->model::getRules('create', $request->user()),
+            $this->model::$validationMessages
+        );
 
         if ($validator->fails()) {
             return $this->respondWithErrors($validator->errors());
@@ -59,7 +63,11 @@ class RestController extends Controller
     }
 
     public function update(Request $request, $id) {
-        $validator = Validator::make($request->all(), $this->model::getRules(), $this->model::$validationMessages);
+        $validator = Validator::make(
+            $request->all(),
+            $this->model::getRules('update', $request->user()),
+            $this->model::$validationMessages
+        );
 
         if ($validator->fails()) {
             return $this->respondWithErrors($validator->errors());

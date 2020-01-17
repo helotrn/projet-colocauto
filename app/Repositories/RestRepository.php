@@ -74,7 +74,7 @@ class RestRepository
             return [$query->take($perPage)->skip($perPage * ($page - 1))->get(), $total];
         } catch (RelationNotFoundException $e) {
             throw new ValidationException([
-                'includes' => "relationship does not exist",
+                'includes' => 'relationship does not exist',
             ]);
         }
     }
