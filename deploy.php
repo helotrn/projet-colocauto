@@ -9,7 +9,7 @@ set('repository', 'git@git.molotov.ca:molotov/locomotion.app.git');
 
 set('git_tty', true);
 
-add('shared_files', []);
+add('shared_files', ['resources/app/.env']);
 add('shared_dirs', ['resources/app/node_modules']);
 
 add('writable_dirs', []);
