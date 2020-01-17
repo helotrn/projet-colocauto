@@ -8,7 +8,7 @@ use Vkovic\LaravelCustomCasts\CustomCastBase;
 class PolygonCast extends CustomCastBase
 {
     public function setAttribute($polygon) {
-        throw new \Exception('invalid'); // TODO
+        return $polygon; // TODO
     }
 
     public function castAttribute($polygon) {

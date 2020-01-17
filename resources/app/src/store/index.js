@@ -32,14 +32,14 @@ const initialState = {
 };
 
 const actions = {
-  async loadUser({ commit, dispatch, state }) {
+  async loadUser({ commit, dispatch }) {
     commit('loading', true);
 
     try {
       const { data: user } = await Vue.axios.get('/auth/user', {
         params: {
           fields: 'id,full_name,communities.id,role',
-        }
+        },
       });
 
       commit('user', user);

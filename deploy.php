@@ -9,8 +9,8 @@ set('repository', 'git@git.molotov.ca:molotov/locomotion.app.git');
 
 set('git_tty', true);
 
-add('shared_files', []);
-add('shared_dirs', []);
+add('shared_files', ['resources/app/.env']);
+add('shared_dirs', ['resources/app/node_modules']);
 
 add('writable_dirs', []);
 
@@ -19,9 +19,10 @@ host('locomotion.app')
     ->user('locomotion')
     ->set('deploy_path', '/var/www/locomotion.app');
 
-task('build', function () {
-    run('cd {{release_path}} && build');
-});
+host('staging.locomotion.app')
+    ->stage('staging')
+    ->user('locomotion')
+    ->set('deploy_path', '/var/www/staging.locomotion.app');
 
 after('deploy:failed', 'deploy:unlock');
 
@@ -42,3 +43,15 @@ task('deploy:reload:php-fpm', function () {
     run('sudo /usr/sbin/service php7.3-fpm reload');
 });
 after('deploy:reload', 'deploy:reload:php-fpm');
+
+desc('Build frontend application');
+task('deploy:build', function () {
+    run('cd {{release_path}}/resources/app && yarn && yarn build');
+});
+before('deploy:symlink', 'deploy:build');
+
+desc('Copy assets');
+task('deploy:copy', function () {
+    run('rsync -rv {{release_path}}/resources/app/public/* {{release_path}}/public/ --exclude=index.html');
+});
+before('deploy:symlink', 'deploy:copy');

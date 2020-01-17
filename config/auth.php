@@ -100,4 +100,9 @@ return [
         ],
     ],
 
+    'client' => [
+        'id' => env('PASSWORD_CLIENT_ID'),
+        'secret' => env('PASSWORD_CLIENT_SECRET'),
+    ],
+
 ];
