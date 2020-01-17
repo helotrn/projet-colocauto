@@ -54,6 +54,9 @@ Développement
 Tests
 -----
 
+Créez la base de données de test en suivant les mêmes instructions que la section Configuration
+avec le nom `locomotion_test` .
+
 - `./vendor/bin/phpunit tests`
 - `yarn lint`
 
