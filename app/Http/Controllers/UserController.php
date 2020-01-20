@@ -25,7 +25,7 @@ class UserController extends RestController
         } catch (ValidationException $e) {
             return $this->respondWithErrors($e->getErrors(), $e->getMessage());
         }
-        return $this->respondWithCollection($request, $items);
+        return $this->respondWithCollection($request, $items, $total);
     }
 
     public function create(CreateRequest $request) {
@@ -62,7 +62,7 @@ class UserController extends RestController
 
         try {
             if ($item->delete()) {
-                return parent::validateAndDestroy($request, $item);
+                $response = parent::validateAndDestroy($request, $item);
             }
         } catch (ValidationException $e) {
             return $this->respondWithErrors($e->getErrors(), $e->getMessage());
