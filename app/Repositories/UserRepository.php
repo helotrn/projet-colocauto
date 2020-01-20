@@ -11,4 +11,24 @@ class UserRepository extends RestRepository
         $this->model = $model;
         $this->columnsDefinition = $model::getColumnsDefinition();
     }
+
+    public function create($data) {
+        $this->model->fill($data);
+        if ($email = dig($data, 'email')) {
+            $this->model->email = $email;
+        }
+        if ($password = dig($data, 'password')) {
+            $this->model->password = $password;
+        }
+
+        $this->addBelongsTo($data);
+
+        $this->model->save();
+
+        $this->saveRelations($data);
+
+        $this->model->save();
+
+        return $this->model;
+    }
 }
