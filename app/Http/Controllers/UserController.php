@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\BaseRequest as Request;
+use App\Http\Requests\User\CreateRequest;
 use App\Http\Requests\User\UpdateRequest;
+use App\Http\Requests\User\DestroyRequest;
 use App\Models\User;
 use App\Repositories\UserRepository;
 
@@ -23,31 +25,48 @@ class UserController extends RestController
         } catch (ValidationException $e) {
             return $this->respondWithErrors($e->getErrors(), $e->getMessage());
         }
-
         return $this->respondWithCollection($request, $items);
     }
 
-    public function create(Request $request) {
-        return $this->validateAndCreate($request);
+    public function create(CreateRequest $request) {
+        try {
+            $response = parent::validateAndCreate($request);
+        } catch (ValidationException $e) {
+            return $this->respondWithErrors($e->getErrors(), $e->getMessage());
+        }
+        return $response;
     }
 
     public function update(UpdateRequest $request, $id) {
-        return parent::validateAndUpdate($request, $id);
+        try {
+            $response = parent::validateAndUpdate($request, $id);
+        } catch (ValidationException $e) {
+            return $this->respondWithErrors($e->getErrors(), $e->getMessage());
+        }
+        return $response;
     }
 
     public function retrieve(Request $request, $id) {
         $item = $this->repo->find($request, $id);
 
-        return $this->respondWithItem($request, $item);
+        try {
+            $response = $this->respondWithItem($request, $item);
+        } catch (ValidationException $e) {
+            return $this->respondWithErrors($e->getErrors(), $e->getMessage());
+        }
+        return $response;
     }
 
-    public function delete(Request $request, $id) {
+    public function destroy(DestroyRequest $request, $id) {
         $item = $this->repo->find($request, $id);
 
-        if ($item->delete()) {
-            return $this->respondWithItem($request, $item);
+        try {
+            if ($item->delete()) {
+                return parent::validateAndDestroy($request, $item);
+            }
+        } catch (ValidationException $e) {
+            return $this->respondWithErrors($e->getErrors(), $e->getMessage());
         }
-
-        return $this->respondWithErrors('Error deleting', 400);
+        return $response;
     }
 }

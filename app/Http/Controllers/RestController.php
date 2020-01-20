@@ -68,6 +68,20 @@ class RestController extends Controller
         return $this->repo->update($id, $request->input());
     }
 
+    protected function validateAndDestroy(Request $request, $id) {
+        $validator = Validator::make(
+            $request->all(),
+            $this->model::getRules('destroy', $request->user()),
+            $this->model::$validationMessages
+        );
+
+        if ($validator->fails()) {
+            return $this->respondWithErrors($validator->errors());
+        }
+
+        return $this->repo->delete($id);
+    }
+
     protected function streamFile($callback, $headers) {
         $response = new StreamedResponse($callback, 200, $headers);
         $response->send();

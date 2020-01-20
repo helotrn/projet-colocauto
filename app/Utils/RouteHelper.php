@@ -19,7 +19,7 @@ class RouteHelper
             Route::post('/', "$controller@create")->name("$pluralSlug.create");
             Route::get('/{id}', "$controller@retrieve")->name("$pluralSlug.retrieve");
             Route::put('/{id}', "$controller@update")->name("$pluralSlug.update");
-            Route::delete('/{id}', "$controller@delete")->name("$pluralSlug.delete");
+            Route::delete('/{id}', "$controller@destroy")->name("$pluralSlug.destroy");
         });
     }
 }
