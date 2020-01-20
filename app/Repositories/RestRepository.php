@@ -146,7 +146,7 @@ class RestRepository
         return $result;
     }
 
-    private function orderBy($query, $def) {
+    protected function orderBy($query, $def) {
         $columns = explode(',', $def);
 
         foreach ($columns as $column) {
@@ -167,7 +167,7 @@ class RestRepository
         return $query;
     }
 
-    private function addBelongsTo($data) {
+    protected function addBelongsTo($data) {
         foreach (array_diff(array_keys($data), $this->model->getFillable()) as $field) {
             if ($field === 'id') {
                 continue;
@@ -183,7 +183,7 @@ class RestRepository
         }
     }
 
-    private function saveRelations($data) {
+    protected function saveRelations($data) {
         foreach (array_diff(array_keys($data), $this->model->getFillable()) as $field) {
             if ($field === 'id') {
                 continue;
@@ -249,7 +249,7 @@ class RestRepository
         }
     }
 
-    private function applyFilter($param, $value, $query) {
+    protected function applyFilter($param, $value, $query) {
         if (strpos($value, '.') !== false) {
             throw new \Exception('Not implemented');
         } elseif (in_array($param, $this->model->hasOne)) {
@@ -279,7 +279,7 @@ class RestRepository
         return $query;
     }
 
-    private function applyWithFromQuery($fields, &$query) {
+    protected function applyWithFromQuery($fields, &$query) {
         foreach (array_keys($fields) as $field) {
             if (is_numeric($field)) {
                 continue;
