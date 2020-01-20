@@ -17,8 +17,8 @@ class AuthTest extends TestCase
 
     public function testRegister() {
         $data = [
-            'email' => 'machin@molotov.ca',
-            'password' => 'machin'
+            'email' => $this->faker->unique()->safeEmail,
+            'password' => 'molotov'
         ];
         $response = $this->json('POST', '/api/v1/auth/register', $data);
         $response->assertStatus(200)
