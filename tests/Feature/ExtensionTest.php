@@ -8,6 +8,7 @@ use Tests\TestCase;
 class ExtensionTest extends TestCase
 {
     public function testCreateExtensions() {
+        $this->markTestIncomplete();
         $data = [
             'executed_at' => $this->faker->dateTime($format = 'Y-m-d H:i:sO', $max = 'now'),
             'status' => $this->faker->randomElement(['in_process', 'canceled', 'completed']),
@@ -23,33 +24,37 @@ class ExtensionTest extends TestCase
     }
 
     public function testShowExtensions() {
+        $this->markTestIncomplete();
         $post = factory(Extension::class)->create();
-        
+
         $response = $this->json('GET', route('extensions.retrieve', $post->id), $data);
 
         $response->assertStatus(200)->assertJson($data);
     }
 
     public function testUpdateExtensions() {
+        $this->markTestIncomplete();
         $post = factory(Extension::class)->create();
         $data = [
             'comments_on_extension' => $this->faker->paragraph,
         ];
-        
+
         $response = $this->json('PUT', route('extensions.update', $post->id), $data);
 
         $response->assertStatus(200)->assertJson($data);
     }
 
     public function testDeleteExtensions() {
+        $this->markTestIncomplete();
         $post = factory(Extension::class)->create();
-        
+
         $response = $this->json('DELETE', route('extensions.delete', $post->id), $data);
 
         $response->assertStatus(204)->assertJson($data);
     }
 
     public function testListExtensions() {
+        $this->markTestIncomplete();
         $extensions = factory(Extension::class, 2)->create()->map(function ($post) {
             return $post->only([
                 'id',

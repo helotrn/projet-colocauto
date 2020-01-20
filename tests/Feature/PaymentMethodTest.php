@@ -8,6 +8,7 @@ use Tests\TestCase;
 class PaymentMethodTest extends TestCase
 {
     public function testCreatePaymentMethods() {
+        $this->markTestIncomplete();
         $data = [
             'name' => $this->faker->name,
             'external_id' => $this->faker->sentence,
@@ -22,33 +23,37 @@ class PaymentMethodTest extends TestCase
     }
 
     public function testShowPaymentMethods() {
+        $this->markTestIncomplete();
         $post = factory(PaymentMethod::class)->create();
-        
+
         $response = $this->json('GET', route('payment-methods.retrieve', $post->id), $data);
 
         $response->assertStatus(200)->assertJson($data);
     }
 
     public function testUpdatePaymentMethods() {
+        $this->markTestIncomplete();
         $post = factory(PaymentMethod::class)->create();
         $data = [
             'name' => $this->faker->name,
         ];
-        
+
         $response = $this->json('PUT', route('payment-methods.update', $post->id), $data);
 
         $response->assertStatus(200)->assertJson($data);
     }
 
     public function testDeletePaymentMethods() {
+        $this->markTestIncomplete();
         $post = factory(PaymentMethod::class)->create();
-        
+
         $response = $this->json('DELETE', route('payment-methods.delete', $post->id), $data);
 
         $response->assertStatus(204)->assertJson($data);
     }
 
     public function testListPaymentMethods() {
+        $this->markTestIncomplete();
         $payment_methods = factory(PaymentMethod::class, 2)->create()->map(function ($post) {
             return $post->only([
                 'id',

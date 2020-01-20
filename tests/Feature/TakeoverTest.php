@@ -8,6 +8,7 @@ use Tests\TestCase;
 class TakeoverTest extends TestCase
 {
     public function testCreateTakeovers() {
+        $this->markTestIncomplete();
         $data = [
             'executed_at' => $this->faker->dateTime($format = 'Y-m-d H:i:sO', $max = 'now'),
             'status' => $this->faker->randomElement(['in_process' ,'canceled', 'completed']),
@@ -24,33 +25,37 @@ class TakeoverTest extends TestCase
     }
 
     public function testShowTakeovers() {
+        $this->markTestIncomplete();
         $post = factory(Takeover::class)->create();
-        
+
         $response = $this->json('GET', route('takeovers.retrieve', $post->id), $data);
 
         $response->assertStatus(200)->assertJson($data);
     }
 
     public function testUpdateTakeovers() {
+        $this->markTestIncomplete();
         $post = factory(Takeover::class)->create();
         $data = [
             'comments_on_vehicle' => $this->faker->sentence,
         ];
-        
+
         $response = $this->json('PUT', route('takeovers.update', $post->id), $data);
 
         $response->assertStatus(200)->assertJson($data);
     }
 
     public function testDeleteTakeovers() {
+        $this->markTestIncomplete();
         $post = factory(Takeover::class)->create();
-        
+
         $response = $this->json('DELETE', route('takeovers.delete', $post->id), $data);
 
         $response->assertStatus(204)->assertJson($data);
     }
 
     public function testListTakeovers() {
+        $this->markTestIncomplete();
         $takeovers = factory(Takeover::class, 2)->create()->map(function ($post) {
             return $post->only([
                 'id',

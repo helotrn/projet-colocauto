@@ -9,6 +9,7 @@ use Phaza\LaravelPostgis\Geometries\Point;
 class CarTest extends TestCase
 {
     public function testCreateCars() {
+        $this->markTestIncomplete();
         $data = [
             'name' => $this->faker->name,
             'position' => new Point($this->faker->latitude, $this->faker->longitude),
@@ -35,33 +36,37 @@ class CarTest extends TestCase
     }
 
     public function testShowCars() {
+        $this->markTestIncomplete();
         $post = factory(Car::class)->create();
-        
+
         $response = $this->json('GET', route('cars.retrieve', $post->id), $data);
 
         $response->assertStatus(200)->assertJson($data);
     }
 
     public function testUpdateCars() {
+        $this->markTestIncomplete();
         $post = factory(Car::class)->create();
         $data = [
             'name' => $this->faker->name,
         ];
-        
+
         $response = $this->json('PUT', route('cars.update', $post->id), $data);
 
         $response->assertStatus(200)->assertJson($data);
     }
 
     public function testDeleteCars() {
+        $this->markTestIncomplete();
         $post = factory(Car::class)->create();
-        
+
         $response = $this->json('DELETE', route('cars.delete', $post->id), $data);
 
         $response->assertStatus(204)->assertJson($data);
     }
 
     public function testListCars() {
+        $this->markTestIncomplete();
         $cars = factory(Car::class, 2)->create()->map(function ($post) {
             return $post->only([
                 'id',

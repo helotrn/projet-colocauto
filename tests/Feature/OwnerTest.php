@@ -8,6 +8,7 @@ use Tests\TestCase;
 class OwnerTest extends TestCase
 {
     public function testCreateOwners() {
+        $this->markTestIncomplete();
         $data = [
             'submitted_at' => $this->faker->date($format = 'Y-m-d', $max = 'now'),
             'approved_at' => $this->faker->date($format = 'Y-m-d', $max = 'now'),
@@ -19,32 +20,36 @@ class OwnerTest extends TestCase
     }
 
     public function testShowOwners() {
+        $this->markTestIncomplete();
         $post = factory(Owner::class)->create();
-        
+
         $response = $this->json('GET', route('owners.retrieve', $post->id), $data);
 
         $response->assertStatus(200)->assertJson($data);
     }
 
     public function testUpdateOwners() {
+        $this->markTestIncomplete();
         $post = factory(Owner::class)->create();
         $data = [
         ];
-        
+
         $response = $this->json('PUT', route('owners.update', $post->id), $data);
 
         $response->assertStatus(200)->assertJson($data);
     }
 
     public function testDeleteOwners() {
+        $this->markTestIncomplete();
         $post = factory(Owner::class)->create();
-        
+
         $response = $this->json('DELETE', route('owners.delete', $post->id), $data);
 
         $response->assertStatus(204)->assertJson($data);
     }
 
     public function testListOwners() {
+        $this->markTestIncomplete();
         $owners = factory(Owner::class, 2)->create()->map(function ($post) {
             return $post->only([
                 'id',
