@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\User;
 use Tests\TestCase;
+use Illuminate\Support\Str;
 
 class UserTest extends TestCase
 {
@@ -23,17 +24,54 @@ class UserTest extends TestCase
             'remember_token' => Str::random(10),
         ];
 
-        $response = $this->json('POST', route('users.create'), $data);
+        $response = $this->json('POST', "/api/v1/users", $data);
 
-        $response->assertStatus(201)->assertJson($data);
+        $response->assertStatus(201)
+            ->assertJsonStructure([
+                'id',
+                'name',
+                'last_name',
+                'email',
+                'description',
+                'date_of_birth',
+                'address',
+                'postal_code',
+                'phone',
+                'is_smart_phone',
+                'other_phone',
+                'created_at',
+                'updated_at'
+            ]);
     }
 
     public function testShowUsers() {
         $post = factory(User::class)->create();
+        $data = [];
 
-        $response = $this->json('GET', route('users.retrieve', $post->id), $data);
+        $response = $this->json('GET', "/api/v1/users/$post->id", $data);
 
-        $response->assertStatus(200)->assertJson($data);
+        $response->assertStatus(200)
+            ->assertJsonStructure([
+                'id',
+                'name',
+                'last_name',
+                'email',
+                'email_verified_at',
+                'google_id',
+                'description',
+                'date_of_birth',
+                'address',
+                'postal_code',
+                'phone',
+                'is_smart_phone',
+                'other_phone',
+                'approved_at',
+                'remember_token',
+                'created_at',
+                'updated_at',
+                'role',
+                'full_name'
+            ]);
     }
 
     public function testUpdateUsers() {
@@ -42,17 +80,19 @@ class UserTest extends TestCase
             'name' => $this->faker->name,
         ];
 
-        $response = $this->json('PUT', route('users.update', $post->id), $data);
+        $response = $this->json('PUT', "/api/v1/users/$post->id", $data);
 
-        $response->assertStatus(200)->assertJson($data);
+        $response->assertStatus(200)
+        ->assertJson($data);
     }
 
     public function testDeleteUsers() {
         $post = factory(User::class)->create();
+        $data = [];
 
-        $response = $this->json('DELETE', route('users.delete', $post->id), $data);
+        $response = $this->json('DELETE', "/api/v1/users/$post->id", $data);
 
-        $response->assertStatus(204)->assertJson($data);
+        $response->assertStatus(204);
     }
 
     public function testListUsers() {
@@ -74,7 +114,7 @@ class UserTest extends TestCase
             ]);
         });
 
-        $response = $this->json('GET', route('users.index'));
+        $response = $this->json('GET', "/api/v1/users");
 
         $response->assertStatus(200)
                 ->assertJson($users->toArray())
