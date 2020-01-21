@@ -80,7 +80,7 @@ class BaseTransformer
         });
     }
 
-    private function applyFieldsOption($options) {
+    protected function applyFieldsOption($options) {
         return array_key_exists('fields', $options) &&
             is_array($options['fields']) &&
             !empty($options['fields']) &&
