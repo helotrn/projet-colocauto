@@ -86,14 +86,61 @@ class UserTest extends TestCase
         ->assertJson($data);
     }
 
-    public function testDeleteUsers() {
+    public function testUpdateUsersWithNoId() {
+        $post = factory(User::class)->create();
+        $data = [
+            'name' => $this->faker->name,
+        ];
+
+        $response = $this->json('PUT', "/api/v1/users/", $data);
+
+        $response->assertStatus(405);
+    }
+
+    public function testUpdateUsersWithNonexistentId() {
+        $post = factory(User::class)->create();
+        $data = [
+            'name' => $this->faker->name,
+        ];
+
+        $response = $this->json('PUT', "/api/v1/users/208084082084", $data);
+
+        $response->assertStatus(404);
+    }
+
+    public function testUpdateUsersWithNoData() {
         $post = factory(User::class)->create();
         $data = [];
 
-        $response = $this->json('DELETE', "/api/v1/users/$post->id", $data);
+        $response = $this->json('PUT', "/api/v1/users/", $data);
 
-        $response->assertStatus(204);
+        $response->assertStatus(405);
     }
+
+    public function testDeleteUsers() {
+        $post = factory(User::class)->create();
+
+        $response = $this->json('DELETE', "/api/v1/users/$post->id");
+
+        $response->assertStatus(200);
+    }
+
+    public function testDeleteUsersWithNoId() {
+        $post = factory(User::class)->create();
+
+        $response = $this->json('DELETE', "/api/v1/users/");
+
+        $response->assertStatus(405);
+    }
+
+    public function testDeleteUsersWithNonexistentId() {
+        $post = factory(User::class)->create();
+
+        $response = $this->json('DELETE', "/api/v1/users/0280398420384");
+
+        $response->assertStatus(404);
+    }
+
 
     public function testListUsers() {
         $users = factory(User::class, 2)->create()->map(function ($post) {
