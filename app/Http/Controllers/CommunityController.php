@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\BaseRequest as Request;
+use App\Http\Requests\Community\CreateRequest;
 use App\Models\Community;
 use App\Repositories\CommunityRepository;
 
@@ -21,5 +22,14 @@ class CommunityController extends RestController
         }
 
         return $this->respondWithCollection($request, $items, $total);
+    }
+
+    public function create(CreateRequest $request) {
+        try {
+            $response = parent::validateAndCreate($request);
+        } catch (ValidationException $e) {
+            return $this->respondWithErrors($e->getErrors(), $e->getMessage());
+        }
+        return $response;
     }
 }

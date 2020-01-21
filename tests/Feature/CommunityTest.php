@@ -8,16 +8,33 @@ use Tests\TestCase;
 class CommunityTest extends TestCase
 {
     public function testCreateCommunities() {
-        $this->markTestIncomplete();
         $data = [
             'name' => $this->faker->name,
             'description' => $this->faker->sentence,
-            'territory' => null,
+            'area' => null,
         ];
 
-        $response = $this->json('POST', route('communities.create'), $data);
+        $response = $this->json('POST', "/api/v1/communities/", $data);
+        $response->assertStatus(201)
+            ->assertJsonStructure([
+                'id',
+                'name',
+                'description',
+                'area',
+                'updated_at',
+                'created_at'
+            ]);
+    }
 
-        $response->assertStatus(201)->assertJson($data);
+    public function testCreateCommunitiesWithNullName() {
+        $data = [
+            'name' => null,
+            'description' => $this->faker->sentence,
+            'area' => null,
+        ];
+
+        $response = $this->json('POST', "/api/v1/communities/", $data);
+        $response->assertStatus(422);
     }
 
     public function testShowCommunities() {

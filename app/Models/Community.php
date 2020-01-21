@@ -16,10 +16,10 @@ class Community extends BaseModel
     use HasCustomCasts, PostgisTrait;
 
     public static $rules = [
-        'name' => 'required',
+        'name' => 'nullable',
         'description' => 'nullable',
         'area' => 'nullable',
-        'type' => 'required|in:private,neighborhood,borough'
+        'type' => 'nullable|in:private,neighborhood,borough'
     ];
 
     protected $fillable = [
