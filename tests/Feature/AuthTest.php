@@ -6,14 +6,55 @@ use Tests\TestCase;
 
 class AuthTest extends TestCase
 {
-    public function testRegisterWithInvalidData() {
-        $response = $this->json('POST', '/api/v1/auth/register', [
-            'machin' => 'chouette',
-        ]);
+    public function testLogin() {
+        $data = [
+            'email' => 'emile@molotov.ca',
+            'password' => 'molotov'
+        ];
+        $response = $this->json('POST', '/api/v1/auth/login', $data);
+
+        $response->assertStatus(200)
+            ->assertJsonStructure([
+                'token_type',
+                'expires_in',
+                'access_token',
+                'refresh_token'
+            ]);
+    }
+
+    public function testLoginWithNonExistentUser() {
+        $data = [
+            'email' => 'asdf@molotov.ca',
+            'password' => 'molotov'
+        ];
+        $response = $this->json('POST', '/api/v1/auth/login', $data);
+
+        $response->assertStatus(401)
+            ->assertJsonStructure(TestCase::$validationErrorStructure);
+    }
+
+    public function testLoginWithInvalidData() {
+        $data = [
+            'email' => 'emile@molotov.ca',
+            'password' => 'laskjdflaksd'
+        ];
+        $response = $this->json('POST', '/api/v1/auth/login', $data);
+
+        $response->assertStatus(401)
+            ->assertJsonStructure(TestCase::$validationErrorStructure);
+    }
+
+    public function testLoginWithInvalidJson() {
+        $data = [
+            'email' => 'emile@molotov.ca',
+            'password' => 'molotov','',
+        ];
+        $response = $this->json('POST', '/api/v1/auth/login', $data);
 
         $response->assertStatus(422)
             ->assertJsonStructure(TestCase::$validationErrorStructure);
     }
+
 
     public function testRegister() {
         $data = [
@@ -29,6 +70,16 @@ class AuthTest extends TestCase
                 'refresh_token'
             ]);
     }
+
+    public function testRegisterWithInvalidData() {
+        $response = $this->json('POST', '/api/v1/auth/register', [
+            'machin' => 'chouette',
+        ]);
+
+        $response->assertStatus(422)
+            ->assertJsonStructure(TestCase::$validationErrorStructure);
+    }
+
 
     public function testUpdateFromAuthEndpoint() {
         $response = $this->json('GET', '/api/v1/auth/user');
