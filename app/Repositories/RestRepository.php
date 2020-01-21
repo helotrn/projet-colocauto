@@ -115,7 +115,7 @@ class RestRepository
             $query = $query->accessibleBy(\Auth::user());
         }
 
-        $this->model = $query->find($id);
+        $this->model = $query->findOrFail($id);
 
         $this->model->fill($data);
 
@@ -130,7 +130,7 @@ class RestRepository
         return $this->model->find($id);
     }
 
-    public function delete($id) {
+    public function destroy($id) {
         $query = $this->model;
 
         if (method_exists($query, 'scopeAccessibleBy')) {
@@ -139,11 +139,7 @@ class RestRepository
 
         $model = $query->findOrFail($id);
 
-        if ($result = $this->model->destroy($id)) {
-            return $model;
-        }
-
-        return $result;
+        return $this->model->destroy($id);
     }
 
     protected function orderBy($query, $def) {

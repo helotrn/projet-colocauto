@@ -47,10 +47,8 @@ class UserController extends RestController
     }
 
     public function retrieve(Request $request, $id) {
-        $item = $this->repo->find($request, $id);
-
         try {
-            $response = $this->respondWithItem($request, $item);
+            $response = $this->respondWithItem($request, $id);
         } catch (ValidationException $e) {
             return $this->respondWithErrors($e->getErrors(), $e->getMessage());
         }
@@ -58,12 +56,8 @@ class UserController extends RestController
     }
 
     public function destroy(DestroyRequest $request, $id) {
-        $item = $this->repo->find($request, $id);
-
         try {
-            if ($item->delete()) {
-                $response = parent::validateAndDestroy($request, $item);
-            }
+            $response = parent::validateAndDestroy($request, $id);
         } catch (ValidationException $e) {
             return $this->respondWithErrors($e->getErrors(), $e->getMessage());
         }

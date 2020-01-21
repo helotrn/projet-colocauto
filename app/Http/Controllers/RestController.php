@@ -79,7 +79,7 @@ class RestController extends Controller
             return $this->respondWithErrors($validator->errors());
         }
 
-        return $this->repo->delete($id);
+        return $this->repo->destroy($id);
     }
 
     protected function streamFile($callback, $headers) {
