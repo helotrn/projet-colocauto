@@ -1,8 +1,8 @@
 <template>
-  <div class="login-box">
-    <h1 class="login-box__title">Connexion</h1>
+  <div class="register-box">
+    <h1 class="register-box__title">Inscription</h1>
 
-    <b-form class="login-box__form" @submit.prevent="login">
+    <b-form class="register-box__form" @submit.prevent="register">
       <b-form-group label="Courriel">
         <b-form-input
           type="email"
@@ -21,85 +21,86 @@
         />
       </b-form-group>
 
-      <b-form-group>
-        <b-form-checkbox inline v-model="rememberMe">
-          Se souvenir de moi
-        </b-form-checkbox>
+      <b-form-group label="Répéter mot de passe">
+        <b-form-input
+          type="password"
+          required
+          placeholder="Répéter mot de passe"
+          v-model="passwordRepeat"
+        />
       </b-form-group>
 
-      <b-form-group>
-        <b-button type="submit" :disabled="loading">Se connecter</b-button>
-        <b-link to="register">Pas de compte ? S'inscrire</b-link>
-      </b-form-group>
+      <b-button type="submit" :disabled="loading">S'inscrire</b-button>
     </b-form>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'LoginBox',
+  name: 'registerBox',
   data() {
     return {
       password: '',
+      passwordRepeat: '',
     };
   },
   computed: {
     loading() {
-      return this.$store.state.login.loading;
+      return this.$store.state.register.loading;
     },
     email: {
       get() {
-        return this.$store.state.login.email;
+        return this.$store.state.register.email;
       },
       set(value) {
-        return this.$store.commit('login/email', value);
-      },
-    },
-    rememberMe: {
-      get() {
-        return this.$store.state.login.rememberMe;
-      },
-      set(value) {
-        return this.$store.commit('login/rememberMe', value);
+        return this.$store.commit('register/email', value);
       },
     },
   },
   methods: {
-    async login() {
-      this.$store.commit('login/loading', true);
+    async register() {
+      this.$store.commit('register/loading', true);
 
       try {
+        await this.$store.dispatch('register', {
+          email: this.email,
+          password: this.password,
+        });
+
         await this.$store.dispatch('login', {
           email: this.email,
           password: this.password,
         });
 
-        this.$store.commit('login/loading', false);
+        this.$store.commit('register/loading', false);
 
         this.$router.replace('/app');
+
+        // this.$router.replace('/app');
       } catch (e) {
         if (e.request) {
           switch (e.request.status) {
             case 401:
             default:
+              console.log(e.request);
               this.$store.commit('addNotification', {
-                content: "Nom d'utilisateur ou mot de passe invalide.",
-                title: 'Erreur de connexion.',
+                content: 'Courriel déjà utilisé',
+                title: "Erreur d'inscription",
                 variant: 'danger',
-                type: 'login',
+                type: 'register',
               });
           }
         }
       }
 
-      this.$store.commit('login/loading', false);
+      this.$store.commit('register/loading', false);
     },
   },
 };
 </script>
 
 <style lang="scss">
-.login-box {
+.register-box {
   background-color: $white;
   padding: 73px 102px;
   width: 590px;
@@ -108,12 +109,6 @@ export default {
 
   &__title {
     text-align: center;
-  }
-
-  .form-group:last-child > div {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
   }
 }
 </style>

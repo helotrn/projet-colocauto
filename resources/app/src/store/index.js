@@ -4,6 +4,8 @@ import VuexPersist from 'vuex-persist';
 
 import communities from './communities';
 import login from './pages/login';
+import register from './pages/register';
+
 import RegistrationMap from './pages/registration/map';
 
 const vuexPersist = new VuexPersist({
@@ -66,6 +68,23 @@ const actions = {
 
     await dispatch('loadUser');
   },
+  async register({ commit, dispatch, state }, { email, password }) {
+    const { data } = await Vue.axios.post('/auth/register', {
+      email,
+      password,
+    });
+
+    console.log(data);
+
+    // commit('token', data.access_token);
+    // commit('refreshToken', data.refresh_token);
+
+    // if (!state.login.rememberMe) {
+    //   commit('login/email', '');
+    // }
+
+    // await dispatch('loadUser');
+  },
   logout({ commit }) {
     commit('token', null);
     commit('refreshToken', null);
@@ -111,6 +130,7 @@ export default new Vuex.Store({
   modules: {
     communities,
     login,
+    register,
     'registration.map': RegistrationMap,
   },
   plugins: [vuexPersist.plugin],

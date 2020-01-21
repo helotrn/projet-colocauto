@@ -20,6 +20,7 @@
           <p>Je suis convaincu, je veux essayer.</p>
 
           <b-btn variant="primary" to="login">Se connecter</b-btn>
+          <b-btn variant="primary" to="register">S'inscrire</b-btn>
         </div>
       </b-col>
     </b-row>
@@ -37,4 +38,7 @@ export default {
 </script>
 
 <style lang="scss">
+.page__section__content a {
+  margin-right: 10px;
+}
 </style>

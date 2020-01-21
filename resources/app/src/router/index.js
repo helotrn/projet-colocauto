@@ -6,6 +6,8 @@ import Dashboard from '../views/Dashboard.vue';
 import Help from '../views/Help.vue';
 import Home from '../views/Home.vue';
 import Login from '../views/Login.vue';
+import Register from '../views/Register.vue';
+
 import RegistrationMap from '../views/registration/Map.vue';
 
 Vue.use(VueRouter);
@@ -22,6 +24,14 @@ const routes = [
     component: Login,
     meta: {
       title: 'Se connecter',
+    },
+  },
+  {
+    path: '/register',
+    name: 'register',
+    component: Register,
+    meta: {
+      title: "S'inscrire",
     },
   },
   {
