@@ -1,5 +1,6 @@
 <?php
-namespace Tests\Feature;
+
+namespace Tests\Integration;
 
 use App\Models\BillableItem;
 use Tests\TestCase;

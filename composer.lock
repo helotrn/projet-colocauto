@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "7727121a12db5d16f4fecbeb370b9e21",
-    "content-hash": "cdac3e411b7537e3845e394f767a2d4d",
+    "hash": "762fbe4a967ef8bb70b774e39ef1b4f8",
+    "content-hash": "d11447f529aa8ae3b2f418d83c793b45",
     "packages": [
         {
             "name": "bosnadev/database",
@@ -4422,6 +4422,7 @@
                 "psr",
                 "psr-7"
             ],
+            "abandoned": "laminas/laminas-diactoros",
             "time": "2019-11-13 19:16:13"
         }
     ],
@@ -4807,6 +4808,42 @@
                 "test"
             ],
             "time": "2016-01-20 08:20:44"
+        },
+        {
+            "name": "limedeck/phpunit-detailed-printer",
+            "version": "4.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/LimeDeck/phpunit-detailed-printer.git",
+                "reference": "b35aae5f632518a6e413761f077a188b2c088f24"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/LimeDeck/phpunit-detailed-printer/zipball/b35aae5f632518a6e413761f077a188b2c088f24",
+                "reference": "b35aae5f632518a6e413761f077a188b2c088f24",
+                "shasum": ""
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~7.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "LimeDeck\\Testing\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "ISC"
+            ],
+            "authors": [
+                {
+                    "name": "LimeDeck",
+                    "email": "mail@limedeck.io"
+                }
+            ],
+            "description": "Formatter for the detailed output of PHPUnit tests.",
+            "time": "2019-02-20 10:28:19"
         },
         {
             "name": "mockery/mockery",

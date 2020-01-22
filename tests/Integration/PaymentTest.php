@@ -1,76 +1,73 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Integration;
 
-use App\Models\Incident;
+use App\Models\Payment;
 use Tests\TestCase;
 
-class IncidentTest extends TestCase
+class PaymentTest extends TestCase
 {
-    public function testCreateIncidents() {
+    public function testCreatePayments() {
         $this->markTestIncomplete();
         $data = [
             'executed_at' => $this->faker->dateTime($format = 'Y-m-d H:i:sO', $max = 'now'),
             'status' => $this->faker->randomElement(['in_process', 'canceled', 'completed']),
-            'incident_type' => $this->faker->randomElement(['accident']),
         ];
 
-        $response = $this->json('POST', route('incidents.create'), $data);
+        $response = $this->json('POST', route('payments.create'), $data);
 
         $response->assertStatus(201)->assertJson($data);
     }
 
-    public function testShowIncidents() {
+    public function testShowPayments() {
         $this->markTestIncomplete();
-        $post = factory(Incident::class)->create();
+        $post = factory(Payment::class)->create();
 
-        $response = $this->json('GET', route('incidents.retrieve', $post->id), $data);
+        $response = $this->json('GET', route('payments.retrieve', $post->id), $data);
 
         $response->assertStatus(200)->assertJson($data);
     }
 
-    public function testUpdateIncidents() {
+    public function testUpdatePayments() {
         $this->markTestIncomplete();
-        $post = factory(Incident::class)->create();
+        $post = factory(Payment::class)->create();
         $data = [
             'status' => $this->faker->randomElement(['in_process', 'canceled', 'completed']),
         ];
 
-        $response = $this->json('PUT', route('incidents.update', $post->id), $data);
+        $response = $this->json('PUT', route('payments.update', $post->id), $data);
 
         $response->assertStatus(200)->assertJson($data);
     }
 
-    public function testDeleteIncidents() {
+    public function testDeletePayments() {
         $this->markTestIncomplete();
-        $post = factory(Incident::class)->create();
+        $post = factory(Payment::class)->create();
 
-        $response = $this->json('DELETE', route('incidents.delete', $post->id), $data);
+        $response = $this->json('DELETE', route('payments.delete', $post->id), $data);
 
         $response->assertStatus(204)->assertJson($data);
     }
 
-    public function testListIncidents() {
+    public function testListPayments() {
         $this->markTestIncomplete();
-        $incidents = factory(Incident::class, 2)->create()->map(function ($post) {
+        $payments = factory(Payment::class, 2)->create()->map(function ($post) {
             return $post->only([
                 'id',
                 'executed_at',
                 'status',
-                'incident_type'
             ]);
         });
 
-        $response = $this->json('GET', route('incidents.index'));
+        $response = $this->json('GET', route('payments.index'));
 
         $response->assertStatus(200)
-                ->assertJson($incidents->toArray())
+                ->assertJson($payments->toArray())
                 ->assertJsonStructure([
                     '*' => [
                         'id',
                         'executed_at',
                         'status',
-                        'incident_type',
                     ],
                 ]);
     }
