@@ -25,6 +25,7 @@ class RouteHelper
 
     public static function subResource($slug, $prefix, $controller = null) {
         $camelSlug = Str::camel(str_replace('-', '_', $slug));
+        $pluralSlug = Pluralizer::plural($slug);
 
         $controller = $controller ?: ucfirst("{$camelSlug}Controller");
 
