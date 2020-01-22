@@ -1,10 +1,10 @@
 <?php
 
-namespace Tests\Integration;
+namespace Tests\Integration\Controllers;
 
 use Tests\TestCase;
 
-class AuthTest extends TestCase
+class AuthControllerTest extends TestCase
 {
     public function testLogin() {
         $data = [
