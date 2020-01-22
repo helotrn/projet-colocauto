@@ -2,11 +2,15 @@
 
 namespace Tests\Integration\Controllers;
 
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
 
 class AuthControllerTest extends TestCase
 {
-    public function testLogin() {
+    public function testBasicLogin() {
+        $this->createTestUser();
+
         $data = [
             'email' => 'emile@molotov.ca',
             'password' => 'molotov'
@@ -34,6 +38,8 @@ class AuthControllerTest extends TestCase
     }
 
     public function testLoginWithInvalidData() {
+        $this->createTestUser();
+
         $data = [
             'email' => 'emile@molotov.ca',
             'password' => 'laskjdflaksd'
@@ -45,9 +51,12 @@ class AuthControllerTest extends TestCase
     }
 
     public function testLoginWithInvalidJson() {
+        $this->createTestUser();
+
         $data = [
             'email' => 'emile@molotov.ca',
-            'password' => 'molotov','',
+            'password' => 'molotov',
+            'what' => 'asdfsdaf',
         ];
         $response = $this->json('POST', '/api/v1/auth/login', $data);
 
@@ -95,5 +104,14 @@ class AuthControllerTest extends TestCase
 
         $response = $this->json('GET', '/api/v1/auth/user');
         $response->assertStatus(200)->assertJson($data);
+    }
+
+    private function createTestUser() {
+        $user = new User();
+        $user->email = 'emile@molotov.ca';
+        $user->password = Hash::make('molotov');
+        $user->save();
+
+        return $user;
     }
 }
