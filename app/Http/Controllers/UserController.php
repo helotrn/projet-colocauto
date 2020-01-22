@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\BaseRequest as Request;
 use App\Http\Requests\User\CreateRequest;
-use App\Http\Requests\User\UpdateRequest;
 use App\Http\Requests\User\DestroyRequest;
+use App\Http\Requests\User\IndexRequest;
+use App\Http\Requests\User\RetrieveRequest;
+use App\Http\Requests\User\UpdateRequest;
 use App\Models\User;
 use App\Repositories\UserRepository;
 
@@ -16,7 +18,7 @@ class UserController extends RestController
         $this->model = $model;
     }
 
-    public function index(Request $request) {
+    public function index(IndexRequest $request) {
         $perPage = $request->get('per_page') ?: 10;
         $page = $request->get('page') ?: 1;
 
@@ -46,7 +48,7 @@ class UserController extends RestController
         return $response;
     }
 
-    public function retrieve(Request $request, $id) {
+    public function retrieve(RetrieveRequest $request, $id) {
         try {
             $response = $this->respondWithItem($request, $id);
         } catch (ValidationException $e) {
