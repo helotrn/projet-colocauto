@@ -44,10 +44,13 @@ Route::prefix('v1')->group(function () {
             RouteHelper::resource($entity);
         }
 
-        foreach ([
-            'user-community' => 'users/{id}/communities'
-        ] as $entity => $prefix) {
-            RouteHelper::subResource($entity, $prefix);
-        }
+        Route::get('users/{id}/communities', "UserController@getCommunities")
+            ->name("users.getCommunities");
+
+        Route::post('users/{id}/communities/{sub_id}', "UserController@associateToCommunity")
+            ->name("users.associateToCommunity");
+
+        Route::post('users/{id}/communities/{sub_id}', "UserController@dissociateFromCommunity")
+            ->name("users.dissociateFromCommunity");
     });
 });
