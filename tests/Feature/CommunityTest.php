@@ -74,7 +74,7 @@ class CommunityTest extends TestCase
                 'id',
                 'name',
                 'description',
-                'territory',
+                'area',
             ]);
         });
 
@@ -87,7 +87,7 @@ class CommunityTest extends TestCase
                         'id',
                         'name',
                         'description',
-                        'territory',
+                        'area',
                     ],
                 ]);
     }
