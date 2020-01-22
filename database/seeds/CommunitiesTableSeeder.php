@@ -31,7 +31,7 @@ class CommunitiesTableSeeder extends Seeder
             if (!Community::where('id', $community['id'])->exists()) {
                 Community::create($community);
             } else {
-                Community::where('id', $community['id'])->first()->update($community);
+                Community::where('id', $community['id'])->update($community);
             }
         }
     }
