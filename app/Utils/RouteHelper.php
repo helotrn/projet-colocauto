@@ -22,4 +22,18 @@ class RouteHelper
             Route::delete('/{id}', "$controller@destroy")->name("$pluralSlug.destroy");
         });
     }
+
+    public static function subResource($slug, $prefix, $controller = null) {
+        $camelSlug = Str::camel(str_replace('-', '_', $slug));
+
+        $controller = $controller ?: ucfirst("{$camelSlug}Controller");
+
+        Route::prefix($prefix)->group(function () use ($controller, $pluralSlug) {
+            Route::get('/', "$controller@index")->name("$pluralSlug.index");
+            Route::post('/', "$controller@create")->name("$pluralSlug.create");
+            Route::get('/{sub_id}', "$controller@retrieve")->name("$pluralSlug.retrieve");
+            Route::put('/{sub_id}', "$controller@update")->name("$pluralSlug.update");
+            Route::delete('/{sub_id}', "$controller@destroy")->name("$pluralSlug.destroy");
+        });
+    }
 }

@@ -43,5 +43,11 @@ Route::prefix('v1')->group(function () {
         ] as $entity) {
             RouteHelper::resource($entity);
         }
+
+        foreach ([
+            'user-community' => '/users/{id}/communities'
+        ] as $entity => $prefix) {
+            RouteHelper::subResource($entity, $prefix);
+        }
     });
 });
