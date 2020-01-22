@@ -5,13 +5,14 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\UserController;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\Auth\RegisterRequest;
-use App\Http\Requests\User\UpdateRequest;
-use App\Http\Requests\BaseRequest as Request;
+use App\Http\Requests\BaseRequest;
+use App\Http\Requests\User\RetrieveRequest as UserRetrieveRequest;
+use App\Http\Requests\User\UpdateRequest as UserUpdateRequest;
 use App\Models\User;
+use App\Utils\Traits\ErrorResponseTrait;
 use Illuminate\Contracts\Auth\Factory as Auth;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Passport\TokenRepository;
-use App\Utils\Traits\ErrorResponseTrait;
 
 class AuthController extends Controller
 {
@@ -40,11 +41,11 @@ class AuthController extends Controller
             'grant_type' => 'password'
         ];
 
-        $req = Request::create('/oauth/token', 'POST', $data);
+        $req = BaseRequest::create('/oauth/token', 'POST', $data);
         return app()->handle($req);
     }
 
-    public function logout(Request $request) {
+    public function logout(BaseRequest $request) {
         $user = $this->auth->user();
 
         if (!$user) {
@@ -84,13 +85,12 @@ class AuthController extends Controller
         return $this->respondWithErrors('Registration error.', 400);
     }
 
-    public function getUser(Request $request) {
+    public function getUser(UserRetrieveRequest $request) {
         return $this->userController->retrieve($request, $this->auth->user()->id);
     }
 
-    public function updateUser(UpdateRequest $request) {
-        $id = $this->auth->user()->id;
-        $user = User::findOrFail($id);
+    public function updateUser(UserUpdateRequest $request) {
+        $user = $this->auth()->user();
 
         $request->merge([ 'email' => $user->email ]);
 

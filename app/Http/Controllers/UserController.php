@@ -49,8 +49,10 @@ class UserController extends RestController
     }
 
     public function retrieve(RetrieveRequest $request, $id) {
+        $item = $this->repo->find($request, $id);
+
         try {
-            $response = $this->respondWithItem($request, $id);
+            $response = $this->respondWithItem($request, $item);
         } catch (ValidationException $e) {
             return $this->respondWithErrors($e->getErrors(), $e->getMessage());
         }
