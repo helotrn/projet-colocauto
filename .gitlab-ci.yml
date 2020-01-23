@@ -1,5 +1,5 @@
 services:
-  - postgres:11
+  - mdillon/postgis:10
   - redis:latest
 
 variables:
@@ -15,8 +15,6 @@ stages:
 before_script:
   - apt-get update -yqq
   - apt-get install curl git wget unzip -yqq
-  - apt-get install postgresql-client libpq-dev postgis -yqq
-  - PGPASSWORD=locomotion psql -h postgres -U locomotion locomotion_test -c 'CREATE EXTENSION postgis;';
   - curl -sL https://deb.nodesource.com/setup_10.x | bash
   - apt-get install -yqq nodejs
   - wget https://composer.github.io/installer.sig -O - -q | tr -d '\n' > installer.sig
