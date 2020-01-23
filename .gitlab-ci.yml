@@ -1,0 +1,34 @@
+services:
+  - postgres:latest
+
+variables:
+  POSTGRES_DB: locomotion_test
+  POSTGRES_USER: locomotion
+  POSTGRES_PASSWORD: locomotion
+
+image: php:7.3
+
+stages:
+  - test
+
+before_script:
+  - apt-get update -yqq --allow-downgrades --allow-remove-essential --allow-change-held-packages
+  - apt-get install nodejs -yqq --allow-downgrades --allow-remove-essential --allow-change-held-packages
+  - curl -o- -L https://yarnpkg.com/install.sh | bash
+  - export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
+
+cache:
+  paths:
+    - node_modules/
+    - .yarn
+
+locomotion:test:
+  stage: test
+  script:
+    - composer install
+    - php artisan key:generate
+    - php artisan migrate --env testing
+    - vendor/bin/phpunit
+    - cd resources/app && yarn
+    - cd resources/app && yarn lint
+    
