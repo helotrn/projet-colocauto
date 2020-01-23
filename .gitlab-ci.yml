@@ -35,6 +35,7 @@ locomotion:test:
       - node_modules/
       - vendor/
       - .yarn
+      - .cache/
   script:
     - php composer.phar install
     - php artisan migrate --env testing

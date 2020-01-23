@@ -56,8 +56,12 @@ Tests
 -----
 
 Créez la base de données de test en suivant les mêmes instructions que la section Configuration
-avec le nom `locomotion_test` . Migrez la base de données de test comme la base de donnée
+avec le nom `locomotion_test` .
+
+Migrez la base de données de test comme la base de donnée
 de développement : `php artisan migration --env testing` .
+
+Ajustez les noms d'hôtes des bases de données, en particulier `postgres` et `redis` .
 
 - `./vendor/bin/phpunit`
 - `yarn lint` dans `resources/app`
