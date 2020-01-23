@@ -10,6 +10,7 @@ Prérequis
 - Node 10
 - Postgresql 11
 - composer, npm
+- Redis
 
 Configuration
 -------------
