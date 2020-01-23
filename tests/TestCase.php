@@ -4,13 +4,13 @@ namespace Tests;
 
 use App\Models\User;
 use Faker\Factory;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 use Laravel\Passport\Passport;
 
 abstract class TestCase extends BaseTestCase
 {
-    use CreatesApplication, DatabaseMigrations;
+    use CreatesApplication, DatabaseTransactions;
 
     public static $validationErrorStructure = [
         'message',
@@ -23,10 +23,10 @@ abstract class TestCase extends BaseTestCase
     public function setUp(): void {
         parent::setUp();
 
-        $this->user = factory(User::class)->create();
-
-        Passport::actingAs($this->user);
         $this->faker = Factory::create();
+
+        $this->user = factory(User::class)->create();
+        Passport::actingAs($this->user);
 
         \DB::statement(<<<SQL
 INSERT INTO oauth_clients
@@ -45,5 +45,24 @@ VALUES (
 )
 SQL
         );
+    }
+
+    protected function buildCollectionStructure(array $template) {
+        return [
+            'current_page',
+            'data' => [
+                '*' => $template,
+            ],
+            'first_page_url',
+            'from',
+            'last_page',
+            'last_page_url',
+            'next_page_url',
+            'path',
+            'per_page',
+            'prev_page_url',
+            'to',
+            'total',
+        ];
     }
 }

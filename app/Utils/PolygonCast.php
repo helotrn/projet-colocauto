@@ -12,6 +12,10 @@ class PolygonCast extends CustomCastBase
     }
 
     public function castAttribute($polygon) {
+        if (!$polygon) {
+            return null;
+        }
+
         $points = [];
 
         foreach ($polygon->getLineStrings() as $lineString) {

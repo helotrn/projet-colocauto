@@ -1,13 +1,26 @@
 <?php
 
-namespace Tests\Integration\Controllers;
+namespace Tests\Integration;
 
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
 
-class AuthControllerTest extends TestCase
+class AuthTest extends TestCase
 {
+    private static $authErrorStructure = [
+        'message',
+        'error',
+        'error_description',
+    ];
+
+    private static $loginResponseStructure = [
+        'token_type',
+        'expires_in',
+        'access_token',
+        'refresh_token'
+    ];
+
     public function testBasicLogin() {
         $this->createTestUser();
 
@@ -17,13 +30,7 @@ class AuthControllerTest extends TestCase
         ];
         $response = $this->json('POST', '/api/v1/auth/login', $data);
 
-        $response->assertStatus(200)
-            ->assertJsonStructure([
-                'token_type',
-                'expires_in',
-                'access_token',
-                'refresh_token'
-            ]);
+        $response->assertStatus(200)->assertJsonStructure(static::$loginResponseStructure);
     }
 
     public function testLoginWithNonExistentUser() {
@@ -34,10 +41,10 @@ class AuthControllerTest extends TestCase
         $response = $this->json('POST', '/api/v1/auth/login', $data);
 
         $response->assertStatus(401)
-            ->assertJsonStructure(TestCase::$validationErrorStructure);
+            ->assertJsonStructure(static::$authErrorStructure);
     }
 
-    public function testLoginWithInvalidData() {
+    public function testLoginWithInvalidPassword() {
         $this->createTestUser();
 
         $data = [
@@ -47,23 +54,8 @@ class AuthControllerTest extends TestCase
         $response = $this->json('POST', '/api/v1/auth/login', $data);
 
         $response->assertStatus(401)
-            ->assertJsonStructure(TestCase::$validationErrorStructure);
+            ->assertJsonStructure(static::$authErrorStructure);
     }
-
-    public function testLoginWithInvalidJson() {
-        $this->createTestUser();
-
-        $data = [
-            'email' => 'emile@molotov.ca',
-            'password' => 'molotov',
-            'what' => 'asdfsdaf',
-        ];
-        $response = $this->json('POST', '/api/v1/auth/login', $data);
-
-        $response->assertStatus(422)
-            ->assertJsonStructure(TestCase::$validationErrorStructure);
-    }
-
 
     public function testRegister() {
         $data = [
@@ -71,18 +63,26 @@ class AuthControllerTest extends TestCase
             'password' => 'molotov'
         ];
         $response = $this->json('POST', '/api/v1/auth/register', $data);
-        $response->assertStatus(200)
-            ->assertJsonStructure([
-                'token_type',
-                'expires_in',
-                'access_token',
-                'refresh_token'
-            ]);
+        $response->assertStatus(200)->assertJsonStructure(static::$loginResponseStructure);
     }
 
-    public function testRegisterWithInvalidData() {
+    public function testRegisterWithMissingFields() {
         $response = $this->json('POST', '/api/v1/auth/register', [
             'machin' => 'chouette',
+        ]);
+
+        $response->assertStatus(422)
+            ->assertJsonStructure(TestCase::$validationErrorStructure);
+
+        $response = $this->json('POST', '/api/v1/auth/register', [
+            'email' => 'chouette@machin.com',
+        ]);
+
+        $response->assertStatus(422)
+            ->assertJsonStructure(TestCase::$validationErrorStructure);
+
+        $response = $this->json('POST', '/api/v1/auth/register', [
+            'password' => 'asdfsdaf',
         ]);
 
         $response->assertStatus(422)

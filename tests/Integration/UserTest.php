@@ -45,10 +45,10 @@ class UserTest extends TestCase
     }
 
     public function testShowUsers() {
-        $post = factory(User::class)->create();
+        $user = factory(User::class)->create();
         $data = [];
 
-        $response = $this->json('GET', "/api/v1/users/$post->id", $data);
+        $response = $this->json('GET', "/api/v1/users/$user->id", $data);
 
         $response->assertStatus(200)
             ->assertJsonStructure([
@@ -75,19 +75,19 @@ class UserTest extends TestCase
     }
 
     public function testUpdateUsers() {
-        $post = factory(User::class)->create();
+        $user = factory(User::class)->create();
         $data = [
             'name' => $this->faker->name,
         ];
 
-        $response = $this->json('PUT', "/api/v1/users/$post->id", $data);
+        $response = $this->json('PUT', "/api/v1/users/$user->id", $data);
 
         $response->assertStatus(200)
         ->assertJson($data);
     }
 
     public function testUpdateUsersWithNoId() {
-        $post = factory(User::class)->create();
+        $user = factory(User::class)->create();
         $data = [
             'name' => $this->faker->name,
         ];
@@ -98,7 +98,7 @@ class UserTest extends TestCase
     }
 
     public function testUpdateUsersWithNonexistentId() {
-        $post = factory(User::class)->create();
+        $user = factory(User::class)->create();
         $data = [
             'name' => $this->faker->name,
         ];
@@ -109,7 +109,7 @@ class UserTest extends TestCase
     }
 
     public function testUpdateUsersWithNoData() {
-        $post = factory(User::class)->create();
+        $user = factory(User::class)->create();
         $data = [];
 
         $response = $this->json('PUT', "/api/v1/users/", $data);
@@ -118,15 +118,15 @@ class UserTest extends TestCase
     }
 
     public function testDeleteUsers() {
-        $post = factory(User::class)->create();
+        $user = factory(User::class)->create();
 
-        $response = $this->json('DELETE', "/api/v1/users/$post->id");
+        $response = $this->json('DELETE', "/api/v1/users/$user->id");
 
         $response->assertStatus(200);
     }
 
     public function testDeleteUsersWithNoId() {
-        $post = factory(User::class)->create();
+        $user = factory(User::class)->create();
 
         $response = $this->json('DELETE', "/api/v1/users/");
 
@@ -134,7 +134,7 @@ class UserTest extends TestCase
     }
 
     public function testDeleteUsersWithNonexistentId() {
-        $post = factory(User::class)->create();
+        $user = factory(User::class)->create();
 
         $response = $this->json('DELETE', "/api/v1/users/0280398420384");
 
@@ -143,8 +143,8 @@ class UserTest extends TestCase
 
 
     public function testListUsers() {
-        $users = factory(User::class, 2)->create()->map(function ($post) {
-            return $post->only([
+        $users = factory(User::class, 2)->create()->map(function ($user) {
+            return $user->only([
                 'id',
                 'name',
                 'email',
@@ -164,23 +164,10 @@ class UserTest extends TestCase
         $response = $this->json('GET', "/api/v1/users");
 
         $response->assertStatus(200)
-                ->assertJson($users->toArray())
-                ->assertJsonStructure([
-                    '*' => [
-                        'id',
-                        'name',
-                        'email',
-                        'email_verified_at',
-                        'google_id',
-                        'description',
-                        'date_of_birth',
-                        'address',
-                        'postal_code',
-                        'phone',
-                        'is_smart_phone',
-                        'other_phone',
-                        'approved_at',
-                    ],
-                ]);
+            ->assertJsonStructure($this->buildCollectionStructure([
+                'id', 'name', 'email', 'email_verified_at', 'google_id', 'description',
+                'date_of_birth', 'address', 'postal_code', 'phone', 'is_smart_phone',
+                'other_phone', 'approved_at',
+            ]));
     }
 }

@@ -90,7 +90,7 @@ class AuthController extends Controller
     }
 
     public function updateUser(UserUpdateRequest $request) {
-        $user = $this->auth()->user();
+        $user = $this->auth->user();
 
         $request->merge([ 'email' => $user->email ]);
 
