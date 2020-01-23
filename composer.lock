@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "762fbe4a967ef8bb70b774e39ef1b4f8",
-    "content-hash": "d11447f529aa8ae3b2f418d83c793b45",
+    "hash": "a9206f802b967f8ac69600f12d808475",
+    "content-hash": "e4575d15859b50595161a06cdf5b571f",
     "packages": [
         {
             "name": "bosnadev/database",
@@ -6445,7 +6445,8 @@
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
-        "php": "^7.1.3"
+        "php": "^7.1.3",
+        "ext-pdo_pgsql": "^7.2"
     },
     "platform-dev": []
 }
