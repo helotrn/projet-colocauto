@@ -1,5 +1,6 @@
 services:
   - postgres:latest
+  - redis:latest
 
 variables:
   POSTGRES_DB: locomotion_test
@@ -13,7 +14,8 @@ stages:
 
 before_script:
   - apt-get update -yqq
-  - apt-get install curl git wget unzip redis-server -yqq
+  - apt-get install curl git wget unzip -yqq
+  - apt-get install libpq-dev -yqq
   - curl -sL https://deb.nodesource.com/setup_10.x | bash
   - apt-get install -yqq nodejs
   - wget https://composer.github.io/installer.sig -O - -q | tr -d '\n' > installer.sig
