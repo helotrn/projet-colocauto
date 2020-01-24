@@ -29,7 +29,6 @@ class AuthTest extends TestCase
             'password' => 'molotov'
         ];
         $response = $this->json('POST', '/api/v1/auth/login', $data);
-        var_dump($response->getContent());
 
         $response->assertStatus(200)->assertJsonStructure(static::$loginResponseStructure);
     }
@@ -39,6 +38,7 @@ class AuthTest extends TestCase
             'email' => 'asdf@molotov.ca',
             'password' => 'molotov'
         ];
+
         $response = $this->json('POST', '/api/v1/auth/login', $data);
 
         $response->assertStatus(401)
@@ -64,7 +64,6 @@ class AuthTest extends TestCase
             'password' => 'molotov'
         ];
         $response = $this->json('POST', '/api/v1/auth/register', $data);
-        var_dump($response->getContent());
         $response->assertStatus(200)->assertJsonStructure(static::$loginResponseStructure);
     }
 
