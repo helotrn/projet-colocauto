@@ -13,18 +13,15 @@ stages:
   - test
 
 before_script:
-  - apt-get update -yqq
-  - apt-get install curl git wget unzip libpq-dev -yqq
   - curl -sL https://deb.nodesource.com/setup_10.x | bash
-  - apt-get install -yqq nodejs
+  - curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
+  - apt-get install curl git wget unzip libpq-dev nodejs yarn -yqq
   - wget https://composer.github.io/installer.sig -O - -q | tr -d '\n' > installer.sig
   - php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
   - php -r "if (hash_file('SHA384', 'composer-setup.php') === file_get_contents('installer.sig')) { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
   - php composer-setup.php
   - php -r "unlink('composer-setup.php'); unlink('installer.sig');"
   - docker-php-ext-install pdo_pgsql
-  - curl -o- -L https://yarnpkg.com/install.sh | bash
-  - export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
 
 cache:
   paths:
