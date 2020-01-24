@@ -13,11 +13,9 @@ stages:
   - test
 
 before_script:
-  - apt-get remove cmdtest
-  - curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
-  - echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
   - curl -sL https://deb.nodesource.com/setup_10.x | bash
-  - apt-get install curl git wget unzip libpq-dev nodejs yarn -yqq
+  - apt-get install curl git wget unzip libpq-dev nodejs -yqq
+  - npm install -g yarn
   - wget https://composer.github.io/installer.sig -O - -q | tr -d '\n' > installer.sig
   - php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
   - php -r "if (hash_file('SHA384', 'composer-setup.php') === file_get_contents('installer.sig')) { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
