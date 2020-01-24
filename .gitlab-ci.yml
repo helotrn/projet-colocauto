@@ -35,5 +35,4 @@ locomotion:test:
     - php artisan migrate --env testing
     - php artisan passport:install --env testing
     - vendor/bin/phpunit
-    - cd resources/app && yarn
-    - cd resources/app && yarn lint
+    - cd resources/app && yarn && yarn lint
