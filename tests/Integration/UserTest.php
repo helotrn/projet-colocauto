@@ -3,6 +3,7 @@
 namespace Tests\Integration;
 
 use App\Models\User;
+use App\Models\Community;
 use Tests\TestCase;
 use Illuminate\Support\Str;
 
@@ -83,18 +84,7 @@ class UserTest extends TestCase
         $response = $this->json('PUT', "/api/v1/users/$user->id", $data);
 
         $response->assertStatus(200)
-        ->assertJson($data);
-    }
-
-    public function testUpdateUsersWithNoId() {
-        $user = factory(User::class)->create();
-        $data = [
-            'name' => $this->faker->name,
-        ];
-
-        $response = $this->json('PUT', "/api/v1/users/", $data);
-
-        $response->assertStatus(405);
+            ->assertJson($data);
     }
 
     public function testUpdateUsersWithNonexistentId() {
@@ -108,15 +98,6 @@ class UserTest extends TestCase
         $response->assertStatus(404);
     }
 
-    public function testUpdateUsersWithNoData() {
-        $user = factory(User::class)->create();
-        $data = [];
-
-        $response = $this->json('PUT', "/api/v1/users/", $data);
-
-        $response->assertStatus(405);
-    }
-
     public function testDeleteUsers() {
         $user = factory(User::class)->create();
 
@@ -125,13 +106,6 @@ class UserTest extends TestCase
         $response->assertStatus(200);
     }
 
-    public function testDeleteUsersWithNoId() {
-        $user = factory(User::class)->create();
-
-        $response = $this->json('DELETE', "/api/v1/users/");
-
-        $response->assertStatus(405);
-    }
 
     public function testDeleteUsersWithNonexistentId() {
         $user = factory(User::class)->create();
@@ -169,5 +143,32 @@ class UserTest extends TestCase
                 'date_of_birth', 'address', 'postal_code', 'phone', 'is_smart_phone',
                 'other_phone', 'approved_at',
             ]));
+    }
+
+    public function testAssociateToCommunity() {
+        $user = factory(User::class)->create();
+        $community = factory(Community::class)->create();
+
+        if ($user->id && $community->id) {
+            $response = $this->json('PUT', "/api/v1/users/{$user->id}/communities/{$community->id}");
+            $response->dump();
+            print_r($response);
+            $response->assertStatus(200);
+        }
+    }
+
+    public function testUpdateWithCommunity() {
+        $user = factory(User::class)->create();
+        $community = factory(Community::class)->create();
+        if ($user->id && $community->id) {
+            $data = [
+                'communities' => [['id' => $community->id]]
+            ];
+
+            $response = $this->json('PUT', "/api/v1/users/$user->id", $data);
+            $response->dump();
+            print_r($response);
+            $response->assertStatus(200);
+        }
     }
 }
