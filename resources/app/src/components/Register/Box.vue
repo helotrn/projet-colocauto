@@ -36,6 +36,8 @@
 </template>
 
 <script>
+import { extractErrors } from '@/helpers';
+
 export default {
   name: 'registerBox',
   data() {
@@ -75,16 +77,13 @@ export default {
         this.$store.commit('register/loading', false);
 
         this.$router.replace('/app');
-
-        // this.$router.replace('/app');
       } catch (e) {
         if (e.request) {
           switch (e.request.status) {
-            case 401:
+            case 422:
             default:
-              console.log(e.request);
               this.$store.commit('addNotification', {
-                content: 'Courriel déjà utilisé',
+                content: extractErrors(e.response.data).join(', '),
                 title: "Erreur d'inscription",
                 variant: 'danger',
                 type: 'register',
