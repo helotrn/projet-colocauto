@@ -12,10 +12,14 @@
 
     <b-collapse id="nav-collapse" is-nav>
       <b-navbar-nav class="ml-auto" v-if="loggedIn">
-        <b-nav-item to="/app" :active="true">Tableau de bord</b-nav-item>
+        <b-nav-item to="/app">Tableau de bord</b-nav-item>
         <b-nav-item to="/community/map" v-if="hasCommunity">Trouver un véhicule</b-nav-item>
         <b-nav-item to="/community" v-if="hasCommunity">Communauté</b-nav-item>
         <b-nav-item to="/register/map" v-if="!hasCommunity">Trouver une communauté</b-nav-item>
+
+        <b-nav-item-dropdown class="layout-navbar__admin" text="Admin" right v-if="isAdmin">
+          <admin-menu />
+        </b-nav-item-dropdown>
 
         <b-nav-item-dropdown class="layout-navbar__dropdown" text="" right>
           <template v-slot:button-content>
@@ -39,12 +43,15 @@
 <script>
 import Authenticated from '@/mixins/Authenticated';
 
+import AdminMenu from '@/components/Admin/Menu.vue';
+
 import Profile from '@/assets/svg/profile.svg';
 
 export default {
   name: 'Navbar',
   mixins: [Authenticated],
   components: {
+    AdminMenu,
     'svg-profile': Profile,
   },
   computed: {

@@ -7,6 +7,7 @@ import Help from '../views/Help.vue';
 import Home from '../views/Home.vue';
 import Login from '../views/Login.vue';
 import Register from '../views/Register.vue';
+import Admin from '../views/Admin.vue';
 
 import RegistrationMap from '../views/registration/Map.vue';
 
@@ -74,6 +75,10 @@ const routes = [
     meta: {
       title: 'Aide de Locomotion',
     },
+  },
+  {
+    path: '/admin',
+    component: Admin,
   },
 ];
 
