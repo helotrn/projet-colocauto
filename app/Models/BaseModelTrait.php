@@ -2,6 +2,9 @@
 
 namespace App\Models;
 
+use App\Transformers\BaseTransformer;
+use Illuminate\Database\Eloquent\Builder;
+
 trait BaseModelTrait
 {
     public static $transformer = BaseTransformer::class;
