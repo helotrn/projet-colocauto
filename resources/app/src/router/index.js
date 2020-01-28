@@ -8,6 +8,10 @@ import Home from '../views/Home.vue';
 import Login from '../views/Login.vue';
 import Register from '../views/Register.vue';
 import Admin from '../views/Admin.vue';
+import AdminDashboard from '../views/admin/Dashboard.vue';
+import AdminCommunities from '../views/admin/Communities.vue';
+import AdminCommunity from '../views/admin/Community.vue';
+
 
 import RegistrationMap from '../views/registration/Map.vue';
 
@@ -59,9 +63,7 @@ const routes = [
       data: {
         communities: {
           retrieve: {
-            params: {
-              fields: 'id,name,description,center,area_google,center_google',
-            },
+            fields: 'id,name,description,center,area_google,center_google',
           },
         },
       },
@@ -79,6 +81,30 @@ const routes = [
   {
     path: '/admin',
     component: Admin,
+    children: [
+      {
+        path: '',
+        component: AdminDashboard,
+      },
+      {
+        path: 'communities',
+        component: AdminCommunities,
+        meta: {
+          data: {
+            communities: {
+              retrieve: {
+                fields: 'id,name',
+              },
+            },
+          },
+          title: 'Communautés',
+        },
+      },
+      {
+        path: 'communities/:id',
+        component: AdminCommunity,
+      },
+    ],
   },
 ];
 
