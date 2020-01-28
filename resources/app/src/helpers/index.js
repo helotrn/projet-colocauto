@@ -1,5 +1,5 @@
-import extractErrors from './extractErrors.js';
+import extractErrors from './extractErrors';
 
-export {
-    extractErrors,
+export default {
+  extractErrors,
 };

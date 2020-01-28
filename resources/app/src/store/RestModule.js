@@ -81,8 +81,8 @@ export default function RestModule(slug, initialState) {
           const ajax = Vue.axios.get(`/${state.slug}`, {
             params: {
               ...state.params,
-                ...params,
-            }
+              ...params,
+            },
           });
 
           commit('ajax', ajax);
