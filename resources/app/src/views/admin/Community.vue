@@ -18,13 +18,14 @@
           <div class="form__section">
             <h2>Zone géographique</h2>
             <b-form-group
-              description="Zone géographique sous la forme d'une liste de tuples (latitude, longitude), un par ligne."
+              :description="`Zone géographique sous la forme d'une liste de tuples ` +
+                '(latitude, longitude), un par ligne.'"
               label-for="area">
               <b-form-textarea
                 id="area" name="area"
                 v-model="area"
                 rows="6" max-rows="12" />
-              </b-form-group>
+            </b-form-group>
           </div>
 
           <div class="form__buttons">
@@ -40,7 +41,7 @@
 </template>
 
 <script>
-import AdminForm from '@/components/Admin/Form.vue'
+import AdminForm from '@/components/Admin/Form.vue';
 
 import FormMixin from '@/mixins/FormMixin';
 
@@ -59,10 +60,10 @@ export default {
         const newItem = {
           ...this.item,
           area: area.split('\n'),
-        }
+        };
         this.$store.commit(`${this.slug}/item`, newItem);
       },
-    }
+    },
   },
 };
 </script>

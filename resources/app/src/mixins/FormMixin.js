@@ -8,12 +8,12 @@ export default {
     next();
   },
   async mounted() {
-    const { commit, dispatch } = this.$store;
+    const { dispatch } = this.$store;
 
     if (this.id === 'new') {
-      await this.$store.dispatch(`${this.slug}/loadEmpty`);
+      await dispatch(`${this.slug}/loadEmpty`);
     } else {
-      await this.$store.dispatch(`${this.slug}/retrieveOne`, {
+      await dispatch(`${this.slug}/retrieveOne`, {
         id: this.id,
         params: this.$route.meta.params,
       });

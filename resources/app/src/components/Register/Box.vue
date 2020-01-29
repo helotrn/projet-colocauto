@@ -83,7 +83,7 @@ export default {
     return {
       password: '',
       passwordRepeat: '',
-      currentPage: this.$route.params.step
+      currentPage: this.$route.params.step,
     };
   },
   computed: {
@@ -101,7 +101,7 @@ export default {
   },
   methods: {
     paginationLinks(pageNum) {
-      return pageNum > 1 ? '/register/' + pageNum : '/register'
+      return pageNum > 1 ? `/register/${pageNum}` : '/register';
     },
     async register() {
       this.$store.commit('register/loading', true);

@@ -222,8 +222,7 @@ export default {
           lng: results[0].geometry.location.lng(),
         };
         kmAway.lat += 0.003;
-        console.log(kmAway);
-        bounds.extend(kmAway)
+        bounds.extend(kmAway);
         this.$refs.map.fitBounds(bounds);
 
         return true;
@@ -241,7 +240,7 @@ export default {
     },
     postalCode(val) {
       if (val.match(/[a-z][0-9][a-z]\s*[0-9][a-z][0-9]/i)) {
-        return this.searchPostalCode();
+        this.searchPostalCode();
       }
 
       this.resetCenter();

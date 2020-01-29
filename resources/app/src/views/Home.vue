@@ -21,7 +21,10 @@
         <div class="page__section__content">
           <svg-clouds class="d-lg-none" />
           <svg-clouds-desktop class="d-none d-lg-block" />
-          <p>Partager avec ses voisin-e-s des voitures, des vélos électriques et des remorques à vélo de manière sécuritaire et conviviale.</p>
+          <p>
+            Partager avec ses voisin-e-s des voitures, des vélos électriques et des remorques à
+            vélo de manière sécuritaire et conviviale.
+          </p>
           <svg-city class="d-lg-none" />
           <svg-city-desktop class="d-none d-lg-block" />
         </div>
@@ -90,7 +93,12 @@
             <h2 class="page__section__title">
               Plus de 200 participant.e.s!
             </h2>
-            <p>Aujourd’hui, 3 quartiers montréalais et 1 quartier sherbrookois, soit plus de 100 participant•e•s expérimentent cette solution collective.</p>
+
+            <p>
+              Aujourd’hui, 3 quartiers montréalais et 1 quartier sherbrookois, soit plus de
+              100 participant•e•s expérimentent cette solution collective.
+            </p>
+
             <b-btn variant="outline-light" to="zones">Situer les voisinnages</b-btn>
           </b-col>
         </b-row>
@@ -108,7 +116,10 @@
             <h2 class="page__section__title">
               Rejoins ta communauté
             </h2>
-            <p>Des citoyen-ne-s en mouvement qui transforment leur quartier par la connexion avec l'autre et la possibilité de se déplacer autrement.</p>
+            <p>
+              Des citoyen-ne-s en mouvement qui transforment leur quartier par la connexion avec
+              l'autre et la possibilité de se déplacer autrement.
+            </p>
             <b-btn variant="warning" to="register">S'inscrire</b-btn>
           </b-col>
         </b-row>
@@ -129,31 +140,47 @@
               <div role="tablist">
                 <b-card no-body>
                   <b-card-header header-tag="header" role="tab">
-                    <b-button block href="#" v-b-toggle.accordion-1 variant="white-secondary">Qu'est-ce qui arrive en cas d'accident ?</b-button>
+                    <b-button block href="#" v-b-toggle.accordion-1 variant="white-secondary">
+                      Qu'est-ce qui arrive en cas d'accident ?
+                    </b-button>
                   </b-card-header>
                   <b-collapse id="accordion-1" accordion="my-accordion" role="tabpanel">
                     <b-card-body>
-                      <b-card-text>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eos, tenetur.</b-card-text>
+                      <b-card-text>
+                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eos, tenetur.
+                      </b-card-text>
                     </b-card-body>
                   </b-collapse>
                 </b-card>
                 <b-card no-body>
                   <b-card-header header-tag="header" role="tab">
-                    <b-button block href="#" v-b-toggle.accordion-2 variant="white-secondary">Pourquoi ferais-je confiance à des personnes inconnues pour leur prêter mon auto ?</b-button>
+                    <b-button block href="#" v-b-toggle.accordion-2 variant="white-secondary">
+                      Pourquoi ferais-je confiance à des personnes inconnues
+                      pour leur prêter mon auto ?
+                    </b-button>
                   </b-card-header>
                   <b-collapse id="accordion-2" accordion="my-accordion" role="tabpanel">
                     <b-card-body>
-                      <b-card-text>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Obcaecati illo, dicta. Voluptate reiciendis amet laborum quod, alias quisquam excepturi culpa?</b-card-text>
+                      <b-card-text>
+                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Obcaecati illo,
+                        dicta. Voluptate reiciendis amet laborum quod, alias quisquam excepturi
+                        culpa?
+                      </b-card-text>
                     </b-card-body>
                   </b-collapse>
                 </b-card>
                 <b-card no-body>
                   <b-card-header header-tag="header" role="tab">
-                    <b-button block href="#" v-b-toggle.accordion-3 variant="white-secondary">Est-ce que c’est juste du partage de voitures ?</b-button>
+                    <b-button block href="#" v-b-toggle.accordion-3 variant="white-secondary">
+                      Est-ce que c’est juste du partage de voitures ?
+                    </b-button>
                   </b-card-header>
                   <b-collapse id="accordion-3" accordion="my-accordion" role="tabpanel">
                     <b-card-body>
-                      <b-card-text>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Mollitia incidunt iste eos at qui veritatis.</b-card-text>
+                      <b-card-text>
+                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Mollitia
+                        incidunt iste eos at qui veritatis.
+                      </b-card-text>
                     </b-card-body>
                   </b-collapse>
                 </b-card>

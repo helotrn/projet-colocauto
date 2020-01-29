@@ -163,9 +163,9 @@ const routes = [
                   text: 'Quartier',
                   value: 'borough',
                 },
-              ]
+              ],
             },
-          }
+          },
         },
       },
     ],

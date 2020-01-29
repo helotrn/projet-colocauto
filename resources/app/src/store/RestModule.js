@@ -76,7 +76,7 @@ export default function RestModule(slug, initialState) {
       },
       async loadEmpty({ commit, state }) {
         try {
-          const ajax = Vue.axios.options(`/${state.slug}`)
+          const ajax = Vue.axios.options(`/${state.slug}`);
 
           commit('ajax', ajax);
 
