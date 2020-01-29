@@ -98,4 +98,8 @@ class User extends AuthenticatableBaseModel
     public function paymentMethods() {
         return $this->hasMany(PaymentMethod::class);
     }
+
+    public function isAdmin() {
+        return $this->role === 'admin';
+    }
 }

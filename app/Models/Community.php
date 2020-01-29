@@ -108,4 +108,16 @@ class Community extends BaseModel
             'lng' => $this->center[1],
         ];
     }
+
+    public function scopeAccessibleBy(Builder $query, $user) {
+        if ($user->isAdmin()) {
+            return $query;
+        }
+
+        return $query->where(function ($q) use ($user) {
+            return $q->whereHas('users', function ($q2) use ($user) {
+                return $q2->where('users.id', $user->id);
+            })->orWhere('type', '!=', 'private');
+        });
+    }
 }
