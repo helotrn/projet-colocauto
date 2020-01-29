@@ -3,13 +3,20 @@ import helpers from '@/helpers';
 const { extractErrors } = helpers;
 
 export default {
+  beforeRouteLeave(to, from, next) {
+    this.$store.commit(`${this.slug}/item`, null);
+    next();
+  },
   async mounted() {
     const { commit, dispatch } = this.$store;
 
     if (this.id === 'new') {
       await this.$store.dispatch(`${this.slug}/loadEmpty`);
     } else {
-      await this.$store.dispatch(`${this.slug}/loadOne`, this.id);
+      await this.$store.dispatch(`${this.slug}/retrieveOne`, {
+        id: this.id,
+        params: this.$route.meta.params,
+      });
     }
   },
   computed: {

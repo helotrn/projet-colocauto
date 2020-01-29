@@ -22,12 +22,7 @@ export default {
             switch (e.request.status) {
               case 401:
               default:
-                this.$store.commit('addNotification', {
-                  content: 'Veuillez vous connecter pour accéder à cette page.',
-                  title: 'Non connecté.',
-                  variant: 'danger',
-                  type: 'not_logged_in',
-                });
+                next('/login');
             }
           }
         });

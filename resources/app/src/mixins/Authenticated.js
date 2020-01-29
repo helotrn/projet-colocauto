@@ -1,7 +1,11 @@
 export default {
   async beforeMount() {
-    if (this.auth.token && !this.$store.state.loaded && !this.$store.state.loading) {
-      await this.$store.dispatch('loadUser');
+    if (this.auth.token) {
+      if (!this.$store.state.loaded && !this.$store.state.loading) {
+        await this.$store.dispatch('loadUser');
+      }
+    } else if (this.$route.meta.auth) {
+      this.$router.push('/login');
     }
   },
   computed: {

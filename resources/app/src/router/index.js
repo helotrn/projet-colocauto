@@ -44,6 +44,7 @@ const routes = [
     name: 'dashboard',
     component: Dashboard,
     meta: {
+      auth: true,
       title: 'Tableau de bord',
     },
   },
@@ -52,6 +53,7 @@ const routes = [
     name: 'community-map',
     component: CommunityMap,
     meta: {
+      auth: true,
       title: 'Trouver un véhicule',
     },
   },
@@ -60,6 +62,7 @@ const routes = [
     name: 'registration-map',
     component: RegistrationMap,
     meta: {
+      auth: true,
       data: {
         communities: {
           retrieve: {
@@ -81,15 +84,22 @@ const routes = [
   {
     path: '/admin',
     component: Admin,
+    meta: {
+      auth: true,
+    },
     children: [
       {
         path: '',
         component: AdminDashboard,
+        meta: {
+          auth: true,
+        },
       },
       {
         path: 'communities',
         component: AdminCommunities,
         meta: {
+          auth: true,
           creatable: true,
           slug: 'communities',
           data: {
@@ -107,7 +117,11 @@ const routes = [
         component: AdminCommunity,
         props: true,
         meta: {
+          auth: true,
           slug: 'communities',
+          params: {
+            fields: '*,users.*',
+          },
           form: {
             id: {
               type: 'number',
