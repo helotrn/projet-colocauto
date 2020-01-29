@@ -36,7 +36,7 @@
 </template>
 
 <script>
-import { extractErrors } from '@/helpers';
+import extractErrors from '@/helpers';
 
 export default {
   name: 'registerBox',
