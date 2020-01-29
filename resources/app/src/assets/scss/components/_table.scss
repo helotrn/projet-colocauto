@@ -2,5 +2,13 @@
   &__cell__actions {
     width: 1px;
     white-space: nowrap;
+
+    .btn {
+      margin-right: 10px;
+
+      &:last-child {
+        margin-right: 0;
+      }
+    }
   }
 }
