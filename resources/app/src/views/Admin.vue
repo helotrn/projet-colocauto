@@ -34,6 +34,11 @@ export default {
     margin-bottom: 10px;
   }
 
+  &__selection {
+    margin-bottom: 10px;
+    min-height: 19px;
+  }
+
   .page__content {
     .admin__menu.col {
       flex: 0 1 12vw;

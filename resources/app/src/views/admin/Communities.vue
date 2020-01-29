@@ -10,6 +10,14 @@
     </b-row>
 
     <b-row>
+      <b-col class="admin__selection">
+        <div v-if="selected.length > 0">
+          {{ selected.length }} sélectionnés.
+        </div>
+      </b-col>
+    </b-row>
+
+    <b-row>
       <b-col>
         <b-table
           striped hover :items="data"
