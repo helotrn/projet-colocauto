@@ -2,7 +2,7 @@ export default {
   namespaced: true,
   state: {
     email: '',
-    loading: false
+    loading: false,
   },
   mutations: {
     email(state, value) {
@@ -10,6 +10,6 @@ export default {
     },
     loading(state, value) {
       state.loading = value;
-    }
-  }
+    },
+  },
 };

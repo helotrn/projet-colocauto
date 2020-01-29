@@ -26,7 +26,7 @@
     <b-collapse id="nav-collapse" is-nav>
       <div class="illustration" />
       <b-navbar-nav class="ml-auto" v-if="loggedIn">
-        <b-nav-item to="/app" :active="true">
+        <b-nav-item to="/app">
           <span class="nav-link__icon">
             <svg-dashboard />
           </span>
@@ -68,7 +68,10 @@
           </span>
           <span class="nav-link__text">Déconnexion</span>
         </b-nav-item>
-        <b-nav-item-dropdown class="d-none d-lg-block layout-navbar__dropdown" text="" right>
+        <b-nav-item-dropdown class="layout-navbar__admin" text="Admin" right v-if="isAdmin">
+          <admin-menu />
+        </b-nav-item-dropdown>
+        <b-nav-item-dropdown class="layout-navbar__dropdown" text="" right>
           <template v-slot:button-content>
             <b-badge
               pill
@@ -103,6 +106,8 @@ import Profile from '@/assets/svg/profile.svg';
 import Help from '@/assets/svg/help.svg';
 import Logout from '@/assets/svg/logout.svg';
 
+import AdminMenu from '@/components/Admin/Menu.vue';
+
 export default {
   name: 'Navbar',
   mixins: [Authenticated],
@@ -114,6 +119,7 @@ export default {
     'svg-profile': Profile,
     'svg-help': Help,
     'svg-logout': Logout,
+    AdminMenu,
   },
   computed: {
     hasCommunity() {

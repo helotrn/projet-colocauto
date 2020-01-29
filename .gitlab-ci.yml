@@ -1,5 +1,5 @@
 services:
-  - mdillon/postgis:latest
+  - mdillon/postgis:10
   - redis:latest
 
 variables:
@@ -13,19 +13,15 @@ stages:
   - test
 
 before_script:
-  - apt-get update -yqq
-  - apt-get install curl git wget unzip -yqq
-  - apt-get install libpq-dev -yqq
   - curl -sL https://deb.nodesource.com/setup_10.x | bash
-  - apt-get install -yqq nodejs
+  - apt-get install curl git wget unzip libpq-dev nodejs -yqq
+  - npm install -g yarn
   - wget https://composer.github.io/installer.sig -O - -q | tr -d '\n' > installer.sig
   - php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
   - php -r "if (hash_file('SHA384', 'composer-setup.php') === file_get_contents('installer.sig')) { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
   - php composer-setup.php
   - php -r "unlink('composer-setup.php'); unlink('installer.sig');"
   - docker-php-ext-install pdo_pgsql
-  - curl -o- -L https://yarnpkg.com/install.sh | bash
-  - export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
 
 cache:
   paths:
@@ -37,7 +33,6 @@ locomotion:test:
   script:
     - php composer.phar install
     - php artisan migrate --env testing
+    - php artisan passport:install --env testing
     - vendor/bin/phpunit
-    - cd resources/app && yarn
-    - cd resources/app && yarn lint
-    
+    - cd resources/app && yarn && yarn lint

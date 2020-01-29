@@ -8,7 +8,7 @@ Prérequis
 
 - \>= PHP 7.3
 - Node 10
-- Postgresql 11
+- Postgresql 10
 - composer, npm
 - Redis
 

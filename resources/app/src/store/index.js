@@ -74,16 +74,14 @@ const actions = {
       password,
     });
 
-    console.log(data);
+    commit('token', data.access_token);
+    commit('refreshToken', data.refresh_token);
 
-    // commit('token', data.access_token);
-    // commit('refreshToken', data.refresh_token);
+    if (!state.login.rememberMe) {
+      commit('login/email', '');
+    }
 
-    // if (!state.login.rememberMe) {
-    //   commit('login/email', '');
-    // }
-
-    // await dispatch('loadUser');
+    await dispatch('loadUser');
   },
   logout({ commit }) {
     commit('token', null);

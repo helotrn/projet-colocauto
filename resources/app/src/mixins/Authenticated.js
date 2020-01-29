@@ -12,6 +12,9 @@ export default {
         refreshToken,
       };
     },
+    isAdmin() {
+      return this.user.role === 'admin';
+    },
     loggedIn() {
       return !!this.user;
     },

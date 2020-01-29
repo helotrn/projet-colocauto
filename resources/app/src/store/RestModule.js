@@ -45,16 +45,30 @@ export default function RestModule(slug, initialState) {
       loading(state, loading) {
         state.loading = loading;
       },
+      setParam(state, { name, value }) {
+        Vue.set(state.params, name, value);
+      },
       setSearch(state, search) {
         state.search.splice(0, state.search, search);
+      },
+      setOrder(state, { field, direction }) {
+        switch (direction) {
+          case 'desc':
+            state.params.order = `-${field}`;
+            break;
+          case 'asc':
+          default:
+            state.params.order = `${field}`;
+            break;
+        }
       },
       total(state, total) {
         state.total = total;
       },
     },
     actions: {
-      load() { // { state, dispatch }) {
-        // dispatch retrieve
+      async load({ dispatch, state }) {
+        await dispatch('retrieve', state.params);
       },
       search() { // state, search) {
         // dispatch retrieve with param "q"
@@ -65,8 +79,10 @@ export default function RestModule(slug, initialState) {
       async retrieve({ state, commit }, params) {
         try {
           const ajax = Vue.axios.get(`/${state.slug}`, {
-            ...state.params,
-            ...params,
+            params: {
+              ...state.params,
+              ...params,
+            },
           });
 
           commit('ajax', ajax);

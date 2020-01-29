@@ -2,8 +2,6 @@
 
 namespace App\Models;
 
-use App\Transformers\BaseTransformer;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 class BaseModel extends Model

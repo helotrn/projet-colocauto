@@ -38,6 +38,7 @@ class AuthTest extends TestCase
             'email' => 'asdf@molotov.ca',
             'password' => 'molotov'
         ];
+
         $response = $this->json('POST', '/api/v1/auth/login', $data);
 
         $response->assertStatus(401)
