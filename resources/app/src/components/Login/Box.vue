@@ -2,6 +2,15 @@
   <div class="login-box">
     <h1 class="login-box__title">Connexion</h1>
 
+    <div class="google-login">
+      <b-button :disabled="loading" variant="primary" class="btn-google">
+        <div class="btn-google__icon">
+          <svg-google />
+        </div>
+        Connexion Google
+      </b-button>
+    </div>
+
     <b-form class="login-box__form" @submit.prevent="login">
       <b-form-group label="Courriel">
         <b-form-input
@@ -28,16 +37,20 @@
       </b-form-group>
 
       <b-form-group>
-        <b-button type="submit" :disabled="loading">Se connecter</b-button>
-        <b-link to="register">Pas de compte ? S'inscrire</b-link>
+        <b-button type="submit" :disabled="loading" variant="primary" block>Se connecter</b-button>
       </b-form-group>
     </b-form>
   </div>
 </template>
 
 <script>
+import Google from '@/assets/svg/google.svg';
+
 export default {
   name: 'LoginBox',
+  components: {
+    'svg-google': Google,
+  },
   data() {
     return {
       password: '',
@@ -101,19 +114,24 @@ export default {
 <style lang="scss">
 .login-box {
   background-color: $white;
-  padding: 73px 102px;
+  padding: 53px $grid-gutter-width / 2 45px;
   width: 590px;
   max-width: 100%;
   margin: 0 auto;
 
-  &__title {
-    text-align: center;
+  .login-box__form {
+    margin-top: 32px;
   }
 
-  .form-group:last-child > div {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  .login-box__title {
+    text-align: center;
+    color: $black;
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+
+  .google-login {
+    text-align: center;
   }
 }
 </style>

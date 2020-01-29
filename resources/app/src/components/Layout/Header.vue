@@ -18,13 +18,7 @@ export default {
 </script>
 
 <style lang="scss">
-.layout-header {
-  &__navbar {
-    height: $layout-navbar-height;
+  .layout-header__navbar {
     background-color: $eggshell;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
   }
-}
 </style>

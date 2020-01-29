@@ -1,14 +1,22 @@
 .card {
-  &-title {
+  border: 0;
+  margin-bottom: 10px;
+
+  .card-title {
     color: $locomotion-green;
     font-weight: bold;
   }
 
-  &-body {
+  .card-body {
     .form-group {
       legend {
         font-weight: bold;
       }
     }
+  }
+
+  .card-header {
+    padding: 0;
+    border: 0;
   }
 }

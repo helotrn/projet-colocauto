@@ -35,6 +35,14 @@ const routes = [
     },
   },
   {
+    path: '/register/:step',
+    name: 'register',
+    component: Register,
+    meta: {
+      title: "S'inscrire",
+    },
+  },
+  {
     path: '/app',
     name: 'dashboard',
     component: Dashboard,

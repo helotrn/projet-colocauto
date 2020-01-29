@@ -23,7 +23,7 @@ module.exports = {
     'prefer-template': reportPolicy,
     'no-nested-ternary': reportPolicy,
     'no-plusplus': reportPolicy,
-    'max-len': 'warn',
+    'max-len': ['warn', { 'code': 200 }],
     'vue/html-closing-bracket-newline': 'off',
     'no-multiple-empty-lines': ['warn', {
       max: 2,
