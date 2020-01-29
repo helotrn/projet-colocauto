@@ -3,6 +3,15 @@ import helpers from '@/helpers';
 const { extractErrors } = helpers;
 
 export default {
+  async mounted() {
+    const { commit, dispatch } = this.$store;
+
+    if (this.id === 'new') {
+      await this.$store.dispatch(`${this.slug}/loadEmpty`);
+    } else {
+      await this.$store.dispatch(`${this.slug}/loadOne`, this.id);
+    }
+  },
   computed: {
     changed() {
       return this.initialItem !== JSON.stringify(this.item);

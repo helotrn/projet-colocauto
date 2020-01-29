@@ -74,6 +74,28 @@ export default function RestModule(slug, initialState) {
       async load({ dispatch, state }) {
         await dispatch('retrieve', state.params);
       },
+      async loadEmpty({ commit, state }) {
+        try {
+          const ajax = Vue.axios.options(`/${state.slug}`)
+
+          commit('ajax', ajax);
+
+          const { data } = await ajax;
+
+          commit('item', data);
+          commit('initialItem', data);
+
+          commit('ajax', null);
+        } catch (e) {
+          commit('loaded', false);
+
+          commit('ajax', null);
+
+          commit('error', e.response.data);
+
+          throw e;
+        }
+      },
       async loadOne({ dispatch }, id) {
         await dispatch('retrieveOne', { id });
       },
@@ -101,6 +123,7 @@ export default function RestModule(slug, initialState) {
           commit('ajax', null);
         } catch (e) {
           commit('loaded', false);
+
           commit('ajax', null);
 
           commit('error', e.response.data);

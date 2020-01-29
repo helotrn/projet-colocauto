@@ -65,4 +65,13 @@ class CommunityController extends RestController
         }
         return $response;
     }
+
+    public function template(Request $request) {
+        return [
+            'name' => '',
+            'description' => '',
+            'area' => [],
+            'type' => 'neighborhood',
+        ];
+    }
 }

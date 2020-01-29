@@ -28,6 +28,12 @@ export default {
 
 <style lang="scss">
 .admin {
+  &__buttons {
+    text-align: right;
+    line-height: 48px;
+    margin-bottom: 10px;
+  }
+
   .page__content {
     .admin__menu.col {
       flex: 0 1 12vw;

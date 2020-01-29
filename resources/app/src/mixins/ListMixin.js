@@ -3,6 +3,9 @@ export default {
     context() {
       return this.$store.state[this.slug];
     },
+    creatable() {
+      return this.$route.meta.creatable;
+    },
     data() {
       return this.context.data;
     },

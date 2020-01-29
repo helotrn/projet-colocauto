@@ -4,6 +4,9 @@
       <b-col>
         <h1>Communautés</h1>
       </b-col>
+      <b-col class="admin__buttons">
+        <b-btn v-if="creatable" :to="`/admin/${slug}/new`">Créer une communauté</b-btn>
+      </b-col>
     </b-row>
 
     <b-row>

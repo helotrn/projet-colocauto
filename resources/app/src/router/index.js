@@ -90,6 +90,7 @@ const routes = [
         path: 'communities',
         component: AdminCommunities,
         meta: {
+          creatable: true,
           slug: 'communities',
           data: {
             communities: {

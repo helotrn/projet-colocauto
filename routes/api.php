@@ -44,6 +44,8 @@ Route::prefix('v1')->group(function () {
             RouteHelper::resource($entity);
         }
 
+        Route::options('communities', 'CommunityController@template');
+
         Route::get('users/{id}/communities', "UserController@getCommunities")
             ->name("users.getCommunities");
 
