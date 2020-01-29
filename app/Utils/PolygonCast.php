@@ -21,6 +21,10 @@ class PolygonCast extends CustomCastBase
             return new Polygon([$lineString]);
         }
 
+        if (is_null($value)) {
+            return $value;
+        }
+
         throw new \Exception('invalid'); // TODO
     }
 
