@@ -20,7 +20,7 @@ export default {
     color: $black;
 
     &.disabled {
-      color: rgba(0, 0, 0, 0.3);
+      color: $grey;
     }
 
     &.router-link-exact-active, &:hover {

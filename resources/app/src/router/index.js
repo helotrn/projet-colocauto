@@ -90,6 +90,7 @@ const routes = [
         path: 'communities',
         component: AdminCommunities,
         meta: {
+          slug: 'communities',
           data: {
             communities: {
               retrieve: {
@@ -103,6 +104,46 @@ const routes = [
       {
         path: 'communities/:id',
         component: AdminCommunity,
+        props: true,
+        meta: {
+          slug: 'communities',
+          form: {
+            id: {
+              type: 'number',
+              disabled: true,
+              required: true,
+              label: 'ID',
+            },
+            name: {
+              type: 'text',
+              required: true,
+              label: 'Nom',
+            },
+            description: {
+              type: 'textarea',
+              required: true,
+              label: 'Description',
+            },
+            type: {
+              type: 'select',
+              label: 'Type',
+              options: [
+                {
+                  text: 'Privée',
+                  value: 'private',
+                },
+                {
+                  text: 'Voisinage',
+                  value: 'neighborhood',
+                },
+                {
+                  text: 'Quartier',
+                  value: 'borough',
+                },
+              ]
+            },
+          }
+        },
       },
     ],
   },

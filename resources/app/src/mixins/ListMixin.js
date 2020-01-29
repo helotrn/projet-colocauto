@@ -13,7 +13,10 @@ export default {
       return JSON.stringify(this.params);
     },
     loading() {
-      return this.context.loading;
+      return !!this.context.ajax;
+    },
+    slug() {
+      return this.$route.meta.slug;
     },
     sortDesc: {
       get() {

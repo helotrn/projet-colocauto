@@ -38,7 +38,6 @@ export default {
   data() {
     return {
       selected: [],
-      slug: 'communities',
       fields: [
         { key: 'id', label: 'ID', sortable: true },
         { key: 'name', label: 'Nom', sortable: true },

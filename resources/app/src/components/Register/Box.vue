@@ -36,7 +36,9 @@
 </template>
 
 <script>
-import extractErrors from '@/helpers';
+import helpers from '@/helpers';
+
+const { extractErrors } = helpers;
 
 export default {
   name: 'registerBox',
