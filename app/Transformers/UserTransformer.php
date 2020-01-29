@@ -21,6 +21,10 @@ class UserTransformer extends BaseTransformer
             }
         }
 
+        if (isset($options['context']['Community']) && $options['pivot']) {
+            $output['role'] = $options['pivot']['role'];
+        }
+
         return $output;
     }
 }

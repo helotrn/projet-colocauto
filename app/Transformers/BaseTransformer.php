@@ -26,6 +26,8 @@ class BaseTransformer
 
         static::$context = [];
 
+        unset($output['pivot']);
+
         return $output;
     }
 
