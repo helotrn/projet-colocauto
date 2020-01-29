@@ -6,6 +6,7 @@ $eggshell: #fafafa;
 $grey: rgba(0, 0, 0, 0.3);
 
 $locomotion-green: #16a59e;
+$locomotion-grey: #b6b6b6;
 
 $primary: #245aea;
 $secondary: #576194;
@@ -13,10 +14,12 @@ $success: #4fb999;
 $warning: #f9ca51;
 $danger: #e2738a;
 $info: #576194;
-$light: #f8f9fa;
+$light: #cbe8e7;
 $dark: #343a40;
 
 $base-font-size: 16px;
+$h1-font-size: 36px;
+$h2-font-size: 28px;
 
 $layout-navbar-height: 86px;
 $molotov-footer-height: 46px;
@@ -36,10 +39,18 @@ $enable-shadows: true;
 $dropdown-box-shadow: 2px 2px 4px rgba($black, 0.12);
 $dropdown-link-hover-bg: rgba($locomotion-green, 0.08);
 $dropdown-link-active-bg: $locomotion-green;
-$font-family-sans-serif: BrandonText, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+$font-family-sans-serif: "BrandonText", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 $navbar-brand-font-size: 1.6rem;
 $navbar-light-color: $black;
 $navbar-light-active-color: $black;
 $navbar-light-brand-color: $locomotion-green;
 $navbar-light-brand-hover-color: $locomotion-green;
 $navbar-light-hover-color: $locomotion-green;
+
+$container-max-widths: (
+  sm: 1300px,
+);
+
+$grid-gutter-width: 60px;
+
+$form-group-margin-bottom: 20px;

@@ -26,7 +26,6 @@ export default {
 .page.register {
   main {
     background-color: $locomotion-green;
-
     display: flex;
     flex-direction: column;
     justify-content: space-around;

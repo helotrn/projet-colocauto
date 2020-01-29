@@ -3,11 +3,14 @@
 @import "~bootstrap";
 @import "~bootstrap-vue";
 
+@import "tools";
 @import "layout";
 @import "typography";
 
 @import "components/navbar";
 @import "components/badge";
 @import "components/card";
+@import "components/buttons";
+@import "components/pagination";
 @import "components/table";
 @import "components/form";

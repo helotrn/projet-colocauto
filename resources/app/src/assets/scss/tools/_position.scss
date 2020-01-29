@@ -1,0 +1,69 @@
+/**
+ * Responsive position for various media query breakpoints
+ *
+ * Usage:
+ * @include size('t', 10px, 20px, 30px, 40px, 50px);
+ * @include size('top', xs, sm, md, lg, xl);
+
+ * If you want to omit specific breakpoint please use ''
+ * e.g. @include size('t', 10px, '', '', 40px, 50px);
+
+   Type:
+
+   t : top,
+   b : bottom,
+   l : left,
+   r : right,
+ */
+
+@mixin position(
+  $type: null,
+  $position-xs: null,
+  $position-sm: null,
+  $position-md: null,
+  $position-lg: null,
+  $position-xl: null,
+  $position-xxl: null
+) {
+  @if ($type == "t") {
+    $type: "top";
+  }
+  @if ($type == "b") {
+    $type: "bottom";
+  }
+  @if ($type == "l") {
+    $type: "left";
+  }
+  @if ($type == "r") {
+    $type: "right";
+  }
+
+  @if ($position-xs != "") {
+    #{$type}: $position-xs;
+  }
+  @if ($position-sm != "") {
+    @include media-breakpoint-up(sm) {
+      #{$type}: $position-sm;
+    }
+  }
+  @if ($position-md != "") {
+    @include media-breakpoint-up(md) {
+      #{$type}: $position-md;
+    }
+  }
+  @if ($position-lg != "") {
+    @include media-breakpoint-up(lg) {
+      #{$type}: $position-lg;
+    }
+  }
+  @if ($position-xl != "") {
+    @include media-breakpoint-up(xl) {
+      #{$type}: $position-xl;
+    }
+  }
+  @if ($position-xxl != "") {
+    @include media-breakpoint-up(xxl) {
+      #{$type}: $position-xxl;
+    }
+  }
+}

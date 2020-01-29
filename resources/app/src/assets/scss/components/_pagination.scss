@@ -1,0 +1,64 @@
+.b-pagination-pills {
+  .page-item:first-child,
+  .page-item:last-child {
+    display: none;
+  }
+
+  .page-item {
+    display: flex;
+    align-items: center;
+  }
+
+  .page-item::after {
+    display: inline-block;
+    background: #c4c4c4;
+    content: "";
+    width: 56px;
+    height: 1px;
+    margin: 0 15px;
+  }
+
+  .page-item:nth-last-child(2)::after {
+    display: none;
+  }
+
+  .page-item .page-link {
+    padding: 0;
+
+    span {
+      width: 29px;
+      height: 29px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 50%;
+    }
+
+    span.checked {
+      background: $locomotion-green;
+    }
+
+    svg {
+      fill: $white;
+    }
+  }
+
+  .page-item.active span {
+    background: $primary;
+  }
+
+  .page-item span {
+    background: #5a6268;
+    color: $white;
+  }
+
+  .page-item.disabled .page-link {
+    border: 0;
+  }
+
+}
+
+.pagination__text {
+  text-align: center;
+  margin-bottom: 2rem;
+}

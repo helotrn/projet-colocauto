@@ -26,10 +26,10 @@ export default {
 .page.login {
   main {
     background-color: $locomotion-green;
-
     display: flex;
     flex-direction: column;
     justify-content: space-around;
+    padding: $grid-gutter-width / 2;
   }
 }
 </style>

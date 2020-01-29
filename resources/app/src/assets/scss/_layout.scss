@@ -1,6 +1,7 @@
 .page {
   &__content {
     min-height: calc(100vh - #{$layout-navbar-height + $molotov-footer-height});
+    overflow: hidden;
 
     h1, .page__section {
       margin-bottom: 60px;
