@@ -79,11 +79,16 @@ export default {
   components: {
     'svg-google': Google,
   },
+  props: {
+    currentPage: {
+      type: Number,
+      required: true,
+    },
+  },
   data() {
     return {
       password: '',
       passwordRepeat: '',
-      currentPage: this.$route.params.step,
     };
   },
   computed: {
@@ -118,6 +123,7 @@ export default {
         });
 
         this.$store.commit('register/loading', false);
+
         this.$router.replace('/register/2');
       } catch (e) {
         if (e.request) {
@@ -168,6 +174,5 @@ export default {
     padding: 0 20px;
     background: $white;
   }
-
 }
 </style>
