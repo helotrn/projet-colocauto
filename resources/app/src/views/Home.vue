@@ -145,7 +145,8 @@
               <div role="tablist">
                 <b-card no-body>
                   <b-card-header header-tag="header" role="tab">
-                    <b-button size="lg" block href="#" v-b-toggle.accordion-1 variant="white-secondary">
+                    <b-button size="lg" block href="#"
+                      v-b-toggle.accordion-1 variant="white-secondary">
                       Qu'est-ce qui arrive en cas d'accident ?
                     </b-button>
                   </b-card-header>
@@ -159,7 +160,8 @@
                 </b-card>
                 <b-card no-body>
                   <b-card-header header-tag="header" role="tab">
-                    <b-button size="lg" block href="#" v-b-toggle.accordion-2 variant="white-secondary">
+                    <b-button size="lg" block href="#"
+                      v-b-toggle.accordion-2 variant="white-secondary">
                       Pourquoi ferais-je confiance à des personnes inconnues
                       pour leur prêter mon auto ?
                     </b-button>
@@ -176,7 +178,8 @@
                 </b-card>
                 <b-card no-body>
                   <b-card-header header-tag="header" role="tab">
-                    <b-button size="lg" block href="#" v-b-toggle.accordion-3 variant="white-secondary">
+                    <b-button size="lg" block href="#"
+                      v-b-toggle.accordion-3 variant="white-secondary">
                       Est-ce que c’est juste du partage de voitures ?
                     </b-button>
                   </b-card-header>

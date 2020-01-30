@@ -63,7 +63,7 @@ const routes = [
           title: "S'inscrire",
         },
       },
-    ]
+    ],
   },
   {
     path: '/app',
