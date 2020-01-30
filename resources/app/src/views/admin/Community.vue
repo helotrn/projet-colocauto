@@ -29,10 +29,14 @@
           </div>
 
           <div class="form__buttons">
-            <b-btn-group>
-              <b-btn variant="success" type="submit" :disabled="!changed">Sauvegarder</b-btn>
-              <b-btn type="reset" :disabled="!changed" @click="reset">Réinitialiser</b-btn>
-            </b-btn-group>
+            <b-button-group>
+              <b-button variant="success" type="submit" :disabled="!changed">
+                Sauvegarder
+              </b-button>
+              <b-button type="reset" :disabled="!changed" @click="reset">
+                Réinitialiser
+              </b-button>
+            </b-button-group>
           </div>
         </b-form>
       </b-col>

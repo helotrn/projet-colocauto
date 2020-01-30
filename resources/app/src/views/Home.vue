@@ -7,8 +7,8 @@
         </h1>
 
         <div class="page__section__content">
-          <b-btn variant="warning" to="register">S'inscrire</b-btn>
-          <b-btn variant="outline-light" to="login">Se connecter</b-btn>
+          <b-button size="lg" variant="warning" to="register">S'inscrire</b-button>
+          <b-button size="lg" variant="outline-light" to="login">Se connecter</b-button>
         </div>
       </b-container>
 
@@ -104,7 +104,7 @@
               100 participant•e•s expérimentent cette solution collective.
             </p>
 
-            <b-btn variant="outline-light" to="zones">Situer les voisinnages</b-btn>
+            <b-button size="lg" variant="outline-light" to="zones">Situer les voisinnages</b-button>
           </b-col>
         </b-row>
       </b-container>
@@ -125,7 +125,7 @@
               Des citoyen-ne-s en mouvement qui transforment leur quartier par la connexion avec
               l'autre et la possibilité de se déplacer autrement.
             </p>
-            <b-btn variant="warning" to="register">S'inscrire</b-btn>
+            <b-button size="lg" variant="warning" to="register">S'inscrire</b-button>
           </b-col>
         </b-row>
       </b-container>
@@ -139,13 +139,13 @@
               <h2 class="page__section__title">
                 FAQ
               </h2>
-              <b-btn variant="outline-secondary" to="faq">Visiter la FAQ</b-btn>
+              <b-button size="lg" variant="outline-secondary" to="faq">Visiter la FAQ</b-button>
             </div>
             <div class="page__section--faq__questions">
               <div role="tablist">
                 <b-card no-body>
                   <b-card-header header-tag="header" role="tab">
-                    <b-button block href="#" v-b-toggle.accordion-1 variant="white-secondary">
+                    <b-button size="lg" block href="#" v-b-toggle.accordion-1 variant="white-secondary">
                       Qu'est-ce qui arrive en cas d'accident ?
                     </b-button>
                   </b-card-header>
@@ -159,7 +159,7 @@
                 </b-card>
                 <b-card no-body>
                   <b-card-header header-tag="header" role="tab">
-                    <b-button block href="#" v-b-toggle.accordion-2 variant="white-secondary">
+                    <b-button size="lg" block href="#" v-b-toggle.accordion-2 variant="white-secondary">
                       Pourquoi ferais-je confiance à des personnes inconnues
                       pour leur prêter mon auto ?
                     </b-button>
@@ -176,7 +176,7 @@
                 </b-card>
                 <b-card no-body>
                   <b-card-header header-tag="header" role="tab">
-                    <b-button block href="#" v-b-toggle.accordion-3 variant="white-secondary">
+                    <b-button size="lg" block href="#" v-b-toggle.accordion-3 variant="white-secondary">
                       Est-ce que c’est juste du partage de voitures ?
                     </b-button>
                   </b-card-header>
