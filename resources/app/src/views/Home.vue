@@ -240,7 +240,12 @@ export default {
 </script>
 
 <style lang="scss">
-@import "~bootstrap";
+
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins/breakpoints";
+@import "~bootstrap/scss/utilities/display";
+
 @import "../assets/scss/tools";
 
 .page.home {
