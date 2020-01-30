@@ -5,11 +5,13 @@
         <h1 class="page__section__title">
           Communautés <br class="d-lg-none">mobiles <br>et solidaires
         </h1>
+
         <div class="page__section__content">
           <b-btn variant="warning" to="register">S'inscrire</b-btn>
           <b-btn variant="outline-light" to="login">Se connecter</b-btn>
         </div>
       </b-container>
+
       <svg-dot class="wave-dot d-lg-none" />
       <svg-dot-desktop class="wave-dot d-none d-lg-block" />
       <svg-wave class="wave-svg d-lg-none" />
@@ -36,6 +38,7 @@
         <h2 class="page__section__title">
           C’est quoi LocoMotion?
         </h2>
+
         <div class="page__section__content">
           <b-row align-v="end">
             <b-col md="4">
@@ -48,6 +51,7 @@
                 </b-col>
               </b-row>
             </b-col>
+
             <b-col md="4">
               <b-row align-v="center">
                 <b-col cols="6" md="12" order="2" order-md="1" >
@@ -58,6 +62,7 @@
                 </b-col>
               </b-row>
             </b-col>
+
             <b-col md="4">
               <b-row align-v="center">
                 <b-col cols="6" md="12">
@@ -436,6 +441,11 @@ export default {
       right: 10vw;
       bottom: 0;
     }
+
+    .card-header {
+      margin: 0;
+      padding: 0;
+    }
   }
 
   .page__section--footer {
@@ -453,5 +463,4 @@ export default {
   }
 
 }
-
 </style>

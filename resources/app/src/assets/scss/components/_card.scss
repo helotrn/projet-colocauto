@@ -2,21 +2,16 @@
   border: 0;
   margin-bottom: 10px;
 
-  .card-title {
+  &-title {
     color: $locomotion-green;
     font-weight: bold;
   }
 
-  .card-body {
+  &-body {
     .form-group {
       legend {
         font-weight: bold;
       }
     }
-  }
-
-  .card-header {
-    padding: 0;
-    border: 0;
   }
 }

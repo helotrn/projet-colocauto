@@ -40,6 +40,22 @@ const routes = [
     },
   },
   {
+    path: '/register/map',
+    name: 'registration-map',
+    component: RegistrationMap,
+    meta: {
+      auth: true,
+      data: {
+        communities: {
+          retrieve: {
+            fields: 'id,name,description,center,area_google,center_google',
+          },
+        },
+      },
+      title: 'Trouver une communauté',
+    },
+  },
+  {
     path: '/register/:step',
     name: 'register',
     component: Register,
@@ -63,22 +79,6 @@ const routes = [
     meta: {
       auth: true,
       title: 'Trouver un véhicule',
-    },
-  },
-  {
-    path: '/register/map',
-    name: 'registration-map',
-    component: RegistrationMap,
-    meta: {
-      auth: true,
-      data: {
-        communities: {
-          retrieve: {
-            fields: 'id,name,description,center,area_google,center_google',
-          },
-        },
-      },
-      title: 'Trouver une communauté',
     },
   },
   {

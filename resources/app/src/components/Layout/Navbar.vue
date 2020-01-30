@@ -3,81 +3,85 @@
     class="layout-navbar"
     toggleable="lg"
     variant="transparent"
-    type="light"
-  >
+    type="light">
     <div class="layout-navbar__brand-wrapper">
       <b-navbar-brand to="/">
         <svg-logo class="layout-navbar__logo" />
       </b-navbar-brand>
+
       <b-navbar-brand class="layout-navbar__separator" v-if="pageTitle" />
       <b-navbar-brand class="navbar-brand--title" v-if="pageTitle">{{ pageTitle }}</b-navbar-brand>
     </div>
 
-    <div
-      class="navbar-toggle-wrapper"
-      v-bind:class="{ 'navbar-toggle-wrapper--active': toggleMenu }"
-    >
+    <div :class="{
+      'navbar-toggle-wrapper': true,
+      'navbar-toggle-wrapper--active': toggleMenu ,
+      'd-lg-none': true,
+    }">
       <b-navbar-toggle
         target="nav-collapse"
-        @click="toggleMenu = !toggleMenu"
-      />
+        @click="toggleMenu = !toggleMenu" />
     </div>
 
-    <b-collapse id="nav-collapse" is-nav>
-      <div class="illustration" />
+    <b-collapse id="nav-collapse" class="layout-navbar__collapse" is-nav>
+      <div class="layout-navbar__collapse__illustration d-md-none" />
       <b-navbar-nav class="ml-auto" v-if="loggedIn">
         <b-nav-item to="/app">
-          <span class="nav-link__icon">
+          <span class="nav-link__icon d-lg-none">
             <svg-dashboard />
           </span>
           <span class="nav-link__text">Tableau de bord</span>
         </b-nav-item>
+
         <b-nav-item to="/community/map" v-if="hasCommunity">
-          <span class="nav-link__icon">
+          <span class="nav-link__icon d-lg-none">
             <svg-location />
           </span>
           <span class="nav-link__text">Trouver un véhicule</span>
         </b-nav-item>
+
         <b-nav-item to="/community" v-if="hasCommunity">
-          <span class="nav-link__icon">
+          <span class="nav-link__icon d-lg-none">
             <svg-hand />
           </span>
           <span class="nav-link__text">Communauté</span>
         </b-nav-item>
+
         <b-nav-item to="/register/map" v-if="!hasCommunity">
-          <span class="nav-link__icon">
+          <span class="nav-link__icon d-lg-none">
             <svg-hand />
           </span>
           <span class="nav-link__text">Trouver une communauté</span>
         </b-nav-item>
+
         <b-nav-item to="/account" class="d-block d-lg-none" >
           <span class="nav-link__icon">
             <svg-profile />
           </span>
           <span class="nav-link__text">Profil</span>
         </b-nav-item>
+
         <b-nav-item to="/help" class="d-block d-lg-none" >
           <span class="nav-link__icon">
             <svg-help />
           </span>
           <span class="nav-link__text">Aide</span>
         </b-nav-item>
+
         <b-nav-item @click="logout" class="d-block d-lg-none">
           <span class="nav-link__icon">
             <svg-logout />
           </span>
           <span class="nav-link__text">Déconnexion</span>
         </b-nav-item>
+
         <b-nav-item-dropdown class="layout-navbar__admin" text="Admin" right v-if="isAdmin">
           <admin-menu />
         </b-nav-item-dropdown>
-        <b-nav-item-dropdown class="layout-navbar__dropdown" text="" right>
+
+        <b-nav-item-dropdown class="layout-navbar__dropdown d-none d-lg-block" text="" right>
           <template v-slot:button-content>
-            <b-badge
-              pill
-              variant="locomotion"
-              class="layout-navbar__dropdown__icon"
-            >
+            <b-badge pill variant="locomotion" class="layout-navbar__dropdown__icon">
               <svg-profile />
             </b-badge>
           </template>
@@ -138,12 +142,11 @@ export default {
 </script>
 
 <style lang="scss">
-@import "~bootstrap";
+@import "@/assets/scss/tools";
 
 .navbar.layout-navbar {
   flex-direction: row-reverse;
   justify-content: flex-end;
-  padding: 0.5rem 0 0;
 
   @include media-breakpoint-up(lg) {
     flex-direction: row;
@@ -152,16 +155,28 @@ export default {
     padding-right: $grid-gutter-width / 2;
   }
 
-  .illustration {
-    @extend .d-md-none;
-    background: url("/mobile-menu-illustration.png") center no-repeat;
-    background-size: cover;
-    height: 44vw;
-    margin-bottom: 52px;
-  }
+  .layout-navbar {
+    &__collapse {
+      @include media-breakpoint-down(md) {
+        position: absolute;
+        top: #{$layout-navbar-height-mobile - 13};
+        left: 0;
+        width: 100vw;
+        z-index: 1000;
+        background: $white;
+      }
 
-  .illustration svg {
-    width: 100vw;
+      &__illustration {
+        background: url("/mobile-menu-illustration.png") center no-repeat;
+        background-size: cover;
+        height: 44vw;
+        margin-bottom: 52px;
+
+        svg {
+          width: 100vw;
+        }
+      }
+    }
   }
 
   .nav-link__icon path {
@@ -175,7 +190,6 @@ export default {
   .layout-navbar__brand-wrapper {
     display: flex;
     align-items: flex-end;
-    padding-bottom: 12px;
   }
 
   .layout-navbar__separator {
@@ -186,8 +200,20 @@ export default {
     top: 5px;
   }
 
-  .navbar-brand--title {
-    padding-bottom: 0;
+  .navbar-brand {
+    font-size: 1rem;
+
+    @include media-breakpoint-up(lg) {
+      font-size: 1.6rem;
+    }
+
+    &--title {
+      padding-bottom: 0;
+    }
+  }
+
+  .nav-item {
+    margin-left: 10px;
   }
 
   .nav-link {
@@ -196,10 +222,11 @@ export default {
     border-bottom: 1px solid rgba(0, 0, 0, 0.1);
     display: flex;
     align-items: center;
+
     @include media-breakpoint-up(lg) {
-      font-size: 14px;
+      padding: 0.5rem 1.5rem;
+      font-size: $base-font-size;
       border-bottom: 0;
-      margin-right: 10px;
     }
   }
 
@@ -207,7 +234,6 @@ export default {
     width: 40px;
     display: flex;
     align-items: center;
-    @extend .d-lg-none;
   }
 
   .navbar-nav .nav-link.router-link-exact-active,
@@ -237,7 +263,6 @@ export default {
   }
 
   .navbar-toggle-wrapper {
-    @extend .d-lg-none;
     margin-left: -12px;
     margin-right: 27px;
     padding-left: $grid-gutter-width / 2;
