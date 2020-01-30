@@ -1,6 +1,6 @@
 <template>
   <layout-page name="registration-map" wide>
-    <b-card title="Trouver une communauté" class="registration-map-page__form" v-if="!community">
+    <b-card title="Trouver une communauté" class="registration-map__form" v-if="!community">
       <b-card-text>
         <b-form @submit.prevent="searchPostalCode">
           <b-form-group label="Code postal">
@@ -11,9 +11,9 @@
       </b-card-text>
     </b-card>
 
-    <b-card class="registration-map-page__community" v-if="community">
+    <b-card class="registration-map__community" v-if="community">
       <template v-slot:header>
-        <div class="registration-map-page__community__buttons">
+        <div class="registration-map__community__buttons">
           <b-button @click="previousCommunity">Précédente</b-button>
           <b-button @click="nextCommunity">Suivante</b-button>
         </div>
@@ -23,13 +23,13 @@
         </h4>
       </template>
       <b-card-text>
-        <div class="registration-map-page__community__description">
+        <div class="registration-map__community__description">
           <p v-if="community">
             {{ community.description }}
           </p>
         </div>
 
-        <b-form class="registration-map-page__community__buttons"
+        <b-form class="registration-map__community__buttons"
           @submit.prevent="completeRegistration" @reset.prevent="resetCommunity">
           <b-button type="submit" variant="primary">Poursuivre l'inscription</b-button>
           <b-button type="reset" variant="warning">Revenir aux communautés</b-button>
@@ -37,7 +37,7 @@
       </b-card-text>
     </b-card>
 
-    <gmap-map class="registration-map-page__map"
+    <gmap-map class="registration-map__map"
       ref="map"
       :zoom="zoom"
       :center="center"
@@ -251,7 +251,7 @@ export default {
 
 <style lang="scss">
 .registration-map.page {
-  .registration-map-page {
+  .registration-map {
     position: relative;
 
     &__map {
@@ -286,7 +286,7 @@ export default {
         display: flex;
         flex-direction: column;
 
-        .registration-map-page__community__description {
+        .registration-map__community__description {
           flex-grow: 1;
           max-height: 120px;
         }
