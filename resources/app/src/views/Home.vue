@@ -240,13 +240,7 @@ export default {
 </script>
 
 <style lang="scss">
-
-@import "~bootstrap/scss/functions";
-@import "~bootstrap/scss/variables";
-@import "~bootstrap/scss/mixins/breakpoints";
-@import "~bootstrap/scss/utilities/display";
-
-@import "../assets/scss/tools";
+@import "@/assets/scss/_tools";
 
 .page.home {
   .page__section {
