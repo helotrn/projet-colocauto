@@ -18,7 +18,7 @@ class BikesTableSeeder extends Seeder
                 'type' => 'regular',
                 'size' => 'big',
                 'availability_ics' => '',
-                'owner_id' => 2,
+                'owner_id' => 1,
             ],
         ];
 
