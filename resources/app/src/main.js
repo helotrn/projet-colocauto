@@ -7,10 +7,13 @@ import * as VueGoogleMaps from 'vue2-google-maps';
 import App from './App.vue';
 import router from './router';
 import store from './store';
+import i18n from './i18n';
 
 import LayoutHeader from './components/Layout/Header.vue';
 import LayoutFooter from './components/Layout/Footer.vue';
 import LayoutPage from './components/Layout/Page.vue';
+
+import filters from './helpers/filters';
 
 import '@/assets/scss/main.scss';
 
@@ -18,7 +21,6 @@ Vue.config.productionTip = false;
 
 Vue.use(BootstrapVue);
 Vue.use(BootstrapVueIcons);
-
 
 Vue.use(VueGoogleMaps, {
   load: {
@@ -31,6 +33,8 @@ Vue.component('layout-footer', LayoutFooter);
 Vue.component('layout-header', LayoutHeader);
 Vue.component('layout-page', LayoutPage);
 
+Object.keys(filters).forEach(f => Vue.filter(f, filters[f]));
+
 axios.defaults.baseURL = `${process.env.VUE_APP_API_URL}/v1`;
 axios.interceptors.request.use((config) => {
   if (store.state.token) {
@@ -42,7 +46,8 @@ axios.interceptors.request.use((config) => {
 Vue.use(VueAxios, axios);
 
 new Vue({
+  i18n,
+  render: h => h(App),
   router,
   store,
-  render: h => h(App),
 }).$mount('#app');

@@ -1,6 +1,6 @@
 import RestModule from './RestModule';
 
-export default new RestModule('communities', {
+export default new RestModule('loanables', {
   params: {
     page: 1,
     per_page: 10,

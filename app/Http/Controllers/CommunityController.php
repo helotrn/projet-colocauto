@@ -68,10 +68,13 @@ class CommunityController extends RestController
 
     public function template(Request $request) {
         return [
+          'item' => [
             'name' => '',
             'description' => '',
             'area' => [],
             'type' => 'neighborhood',
+          ],
+          'filters' => $this->model::$filterTypes,
         ];
     }
 }

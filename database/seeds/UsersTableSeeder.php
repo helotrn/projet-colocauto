@@ -9,16 +9,19 @@ class UsersTableSeeder extends Seeder
     public function run() {
         $users = [
             'soutien@molotov.ca' => [
+                'id' => 1,
                 'password' => 'molotov',
                 'role' => 'admin',
                 'name' => 'Molotov Communications',
             ],
             'emile@molotov.ca' => [
+                'id' => 2,
                 'password' => 'molotov',
                 'name' => 'Émile',
                 'last_name' => 'Plourde-Lavoie',
             ],
             'ariane@molotov.ca' => [
+                'id' => 3,
                 'password' => 'molotov',
                 'name' => 'Ariane',
                 'last_name' => 'Mercier',

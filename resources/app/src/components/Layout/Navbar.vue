@@ -30,7 +30,7 @@
           <span class="nav-link__icon d-lg-none">
             <svg-dashboard />
           </span>
-          <span class="nav-link__text">Tableau de bord</span>
+          <span class="nav-link__text">{{ $t('tableau de bord') | capitalize }}</span>
         </b-nav-item>
 
         <b-nav-item to="/community/map" v-if="hasCommunity">
@@ -79,6 +79,8 @@
           <admin-menu />
         </b-nav-item-dropdown>
 
+        <locale-switcher />
+
         <b-nav-item-dropdown class="layout-navbar__dropdown d-none d-lg-block" text="" right>
           <template v-slot:button-content>
             <b-badge pill variant="locomotion" class="layout-navbar__dropdown__icon">
@@ -94,6 +96,8 @@
       <b-navbar-nav class="ml-auto" v-else>
         <b-nav-item to="/register">S'inscrire</b-nav-item>
         <b-nav-item to="/login">Se connecter</b-nav-item>
+
+        <locale-switcher />
       </b-navbar-nav>
     </b-collapse>
   </b-navbar>
@@ -111,11 +115,18 @@ import Help from '@/assets/svg/help.svg';
 import Logout from '@/assets/svg/logout.svg';
 
 import AdminMenu from '@/components/Admin/Menu.vue';
+import LocaleSwitcher from '@/components/LocaleSwitcher.vue';
+
+import filters from '@/helpers/filters';
+
+const { capitalize } = filters;
 
 export default {
   name: 'Navbar',
   mixins: [Authenticated],
   components: {
+    AdminMenu,
+    LocaleSwitcher,
     'svg-logo': Logo,
     'svg-dashboard': Dashboard,
     'svg-location': Location,
@@ -123,14 +134,17 @@ export default {
     'svg-profile': Profile,
     'svg-help': Help,
     'svg-logout': Logout,
-    AdminMenu,
   },
   computed: {
     hasCommunity() {
       return this.loggedIn && this.user.communities.length > 0;
     },
     pageTitle() {
-      return this.$route.meta && this.$route.meta.title;
+      if (this.$route.meta && this.$route.meta.title) {
+        return capitalize(this.$i18n.tc(this.$route.meta.title, 2));
+      }
+
+      return '';
     },
   },
   data() {

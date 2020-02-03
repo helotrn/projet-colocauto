@@ -2,7 +2,7 @@
   <layout-page name="dashboard">
     <b-row class="page__section">
       <b-col class="page__content__main" lg="9">
-        <h1>Bienvenue, {{ user.full_name }}</h1>
+        <h1>{{ $t('Bienvenue, {name}', { name: user.full_name })}}</h1>
 
         <section class="page__section">
           <h2>Pour commencer</h2>
@@ -45,6 +45,13 @@
     </b-row>
   </layout-page>
 </template>
+
+<i18n>
+fr:
+  'Bienvenue, {name}': Bienvenue, {name}
+en:
+  'Bienvenue, {name}': Welcome, {name}
+</i18n>
 
 <script>
 import Authenticated from '@/mixins/Authenticated';

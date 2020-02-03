@@ -38,6 +38,7 @@ export default {
   &__selection {
     margin-bottom: 10px;
     min-height: 19px;
+    text-align: right;
   }
 
   .page__content {

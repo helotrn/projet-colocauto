@@ -82,7 +82,8 @@ class BaseTransformer
 
     protected function shouldIncludeField($relation, $options) {
         return !isset($options['fields']) ||
-            in_array($relation, wrap_array_keys($options['fields']), true);
+            in_array($relation, wrap_array_keys($options['fields']), true) ||
+            in_array('*', wrap_array_keys($options['fields']), true);
     }
 
     protected function addCollection($relation, $target, $transformer, $options) {

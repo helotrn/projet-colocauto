@@ -10,18 +10,8 @@ class UserTransformer extends BaseTransformer
     public function transform($item, $options = []) {
         $output = parent::transform($item, $options);
 
-        if (Auth::user()->role === 'admin') {
-            if ($this->shouldIncludeField('communities', $options)) {
-                $output['communities'] = $this->addCollection(
-                    'communities',
-                    Community::all(),
-                    new Community::$transformer(),
-                    $options
-                );
-            }
-        }
-
-        if (isset($options['context']['Community']) && $options['pivot']) {
+        if (isset($options['context']['Community']) && $options['pivot']
+          && $this->shouldIncludeField('role', $options)) {
             $output['role'] = $options['pivot']['role'];
         }
 

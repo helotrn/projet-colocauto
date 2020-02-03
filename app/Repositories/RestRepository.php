@@ -246,30 +246,88 @@ class RestRepository
     }
 
     protected function applyFilter($param, $value, $query) {
-        if (strpos($value, '.') !== false) {
-            throw new \Exception('Not implemented');
-        } elseif (in_array($param, $this->model->hasOne)) {
-            if ($value) {
-                $query = $query->whereHas($param);
-            } else {
-                $query = $query->doesntHave($param);
+        $negative = $param[0] === '!';
+        $paramName = str_replace('!', '', $param);
+
+        if (strpos($paramName, '_') !== false) {
+            [$relation, $field] = explode('_', $paramName, 2);
+
+            if (in_array($relation, $this->model->hasOne)
+                || in_array($relation, $this->model->belongsTo)) {
             }
-        } else {
-            if (in_array($param, array_keys($this->columnsDefinition))) {
-                $query = $query->having($param, $value);
-            } else {
-                $scopedParam = "{$this->model->getTable()}.$param";
-                if (isset($this->model::$filterTypes[$param])) {
-                    if (is_bool($this->model::$filterTypes[$param])) {
-                        $query = $query->where(
-                            $scopedParam,
-                            $value === 'true' || $value === '1'
-                        );
-                    }
-                } else {
-                    $query = $query->where($scopedParam, $value);
+
+            if (in_array($relation, $this->model->collections)) {
+                return $query->whereHas($relation, function ($q) use ($field, $value, $negative) {
+                    $fieldQuery = $negative ? "!$field" : $field;
+                    return $this->applyFilter($field, $value, $q);
+                });
+            }
+
+            return $query;
+        }
+
+        if (in_array($paramName, $this->model->hasOne)
+            || in_array($paramName, $this->model->belongsTo)) {
+            if ($negative) {
+                return $query->doesntHave($paramName);
+            }
+
+            return $query->whereHas($paramName);
+        }
+
+        if (in_array($paramName, array_keys($this->columnsDefinition))) {
+            return $query->having($paramName, $value);
+        }
+
+        $scopedParam = "{$query->getModel()->getTable()}.$paramName";
+
+        // If a type is defined for this filter, use the query
+        // language, otherwise fallback to default Laravel filtering
+        switch (dig($this->model::$filterTypes, $paramName, 'default')) {
+            case 'boolean':
+                return $query->where(
+                    $scopedParam,
+                    $value === 'true' || $value === '1' || !$negative
+                );
+            case 'number':
+                if ($value === '') {
+                    return $query;
                 }
-            }
+
+                if (strpos($value, ':') !== false) {
+                    [$start, $end] = array_map('trim', (explode(':', $value)));
+                    if (!$start && !$end) {
+                        return $query;
+                    } elseif (!$start) {
+                        return $query->where($scopedParam, '<=', $end);
+                    } elseif (!$end) {
+                        return $query->where($scopedParam, '>=', $start);
+                    }
+
+                    return $query->whereBetween($scopedParam, [$start, $end]);
+                }
+
+                $values = array_map(
+                    'trim',
+                    array_filter(
+                        explode(',', $value),
+                        function ($i) {
+                            return !!$i;
+                        }
+                    )
+                );
+                if ($negative) {
+                    return $query->whereNotIn($scopedParam, $values);
+                }
+
+                return $query->whereIn($scopedParam, $values);
+                break;
+            case 'text':
+                return $query->where($scopedParam, 'ILIKE', "%$value%");
+                break;
+            default:
+                return $query->where($scopedParam, $value);
+                break;
         }
 
         return $query;

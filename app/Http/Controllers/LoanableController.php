@@ -12,4 +12,14 @@ class LoanableController extends RestController
         $this->repo = $repository;
         $this->model = $model;
     }
+
+    public function index(Request $request) {
+        try {
+            [$items, $total] = $this->repo->get($request);
+        } catch (ValidationException $e) {
+            return $this->respondWithErrors($e->getErrors(), $e->getMessage());
+        }
+
+        return $this->respondWithCollection($request, $items, $total);
+    }
 }

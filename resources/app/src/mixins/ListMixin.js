@@ -12,11 +12,17 @@ export default {
     fieldsList() {
       return this.fields.map(f => f.key);
     },
+    filters() {
+      return this.context.filters;
+    },
     jsonParams() {
       return JSON.stringify(this.params);
     },
     loading() {
       return !!this.context.ajax;
+    },
+    params() {
+      return this.context.params;
     },
     slug() {
       return this.$route.meta.slug;
@@ -43,8 +49,8 @@ export default {
         });
       },
     },
-    params() {
-      return this.context.params;
+    total() {
+      return this.context.total;
     },
   },
   methods: {

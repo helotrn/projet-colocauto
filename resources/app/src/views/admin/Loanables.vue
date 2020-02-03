@@ -2,24 +2,24 @@
   <b-container fluid>
     <b-row>
       <b-col>
-        <h1>{{ $tc('communauté', 2) | capitalize }}</h1>
+        <h1>{{ $tc('véhicule', 2) | capitalize }}</h1>
       </b-col>
       <b-col class="admin__buttons">
         <b-btn v-if="creatable" :to="`/admin/${slug}/new`">
-          {{ $t('créer une communauté') | capitalize }}
+          {{ $t('créer un véhicule') | capitalize }}
         </b-btn>
       </b-col>
     </b-row>
 
     <b-row>
       <b-col class="admin__filters">
-        <admin-filters entity="communities" :filters="filters" :params="params" />
+        <admin-filters entity="loanables" :filters="filters" :params="params" />
       </b-col>
 
       <b-col class="admin__selection">
         <div v-if="selected.length > 0">
           {{ $tc(
-            '{count} communauté sélectionnée',
+            '{count} véhicule sélectionné',
             selected.length,
             { count: selected.length }
           ) }}
@@ -34,7 +34,7 @@
           selectable select-mode="multi" @row-selected="rowSelected"
           :busy="loading" :fields="fields" no-local-sorting
           :sort-by.sync="sortBy" :sort-desc.sync="sortDesc" no-sort-reset
-          :show-empty="true" empty-text="Pas de communauté">
+          :show-empty="true" empty-text="Pas de véhicule">
           <template v-slot:cell(type)="row">
             {{ $t(`types.${row.item.type}`) | capitalize }}
           </template>
@@ -66,7 +66,7 @@ import ListMixin from '@/mixins/ListMixin';
 import locales from '@/locales';
 
 export default {
-  name: 'AdminCommunities',
+  name: 'AdminLoanables',
   mixins: [DataRouteGuards, ListMixin],
   components: { AdminFilters },
   data() {
@@ -83,11 +83,11 @@ export default {
   i18n: {
     messages: {
       en: {
-        ...locales.en.communities,
+        ...locales.en.loanables,
         ...locales.en.forms,
       },
       fr: {
-        ...locales.fr.communities,
+        ...locales.fr.loanables,
         ...locales.fr.forms,
       },
     },
