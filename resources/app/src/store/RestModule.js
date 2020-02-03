@@ -8,6 +8,7 @@ export default function RestModule(slug, initialState) {
       data: [],
       dataById: {},
       error: null,
+      filters: [],
       initialItem: null,
       item: null,
       lastLoadedAt: null,
@@ -29,13 +30,16 @@ export default function RestModule(slug, initialState) {
         state.ajax = ajax;
       },
       data(state, data) {
-        state.data.splice(0, data.length, ...data);
+        state.data = data;
       },
       addData(state, data) {
         state.data.push(...data);
       },
       error(state, error) {
         state.error = error;
+      },
+      filters(state, filters) {
+        state.filters = filters;
       },
       item(state, item) {
         state.item = item;
@@ -80,10 +84,14 @@ export default function RestModule(slug, initialState) {
 
           commit('ajax', ajax);
 
-          const { data } = await ajax;
+          const {
+            data: {
+              item,
+            },
+          } = await ajax;
 
-          commit('item', data);
-          commit('initialItem', data);
+          commit('item', item);
+          commit('initialItem', item);
 
           commit('ajax', null);
         } catch (e) {
@@ -140,6 +148,8 @@ export default function RestModule(slug, initialState) {
             },
           });
 
+          const options = Vue.axios.options(`/${state.slug}`);
+
           commit('ajax', ajax);
 
           const {
@@ -149,7 +159,14 @@ export default function RestModule(slug, initialState) {
             },
           } = await ajax;
 
+          const {
+            data: {
+              filters,
+            },
+          } = await options;
+
           commit('data', data);
+          commit('filters', filters);
           commit('total', total);
           commit('lastLoadedAt', Date.now());
 
