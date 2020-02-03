@@ -2,14 +2,16 @@
 
 namespace App\Models;
 
-use Illuminate\Notifications\Notifiable;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Laravel\Passport\HasApiTokens;
-use App\Models\PaymentMethod;
 use App\Models\Bill;
+use App\Models\Borrower;
 use App\Models\File;
-use App\Models\Action;
+use App\Models\Loan;
+use App\Models\PaymentMethod;
 use App\Transformers\UserTransformer;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Notifications\Notifiable;
+use Laravel\Passport\HasApiTokens;
 
 class User extends AuthenticatableBaseModel
 {
@@ -70,15 +72,23 @@ class User extends AuthenticatableBaseModel
     ];
 
     public $collections = [
-      'actions',
+      'loans',
       'bills',
       'communities',
       'files',
       'paymentMethods',
     ];
 
-    public function actions() {
-        return $this->hasMany(Action::class);
+    public $belongsTo = [
+      'borrower',
+    ];
+
+    public function borrower() {
+        return $this->belongsTo(Borrower::class);
+    }
+
+    public function loans() {
+        return $this->hasManyThrough(Loan::class, Borrower::class);
     }
 
     public function bills() {
@@ -97,5 +107,9 @@ class User extends AuthenticatableBaseModel
 
     public function paymentMethods() {
         return $this->hasMany(PaymentMethod::class);
+    }
+
+    public function isAdmin() {
+        return $this->role === 'admin';
     }
 }

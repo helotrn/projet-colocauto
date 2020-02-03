@@ -1,0 +1,93 @@
+/**
+ * Responsive spacing for various media query breakpoints
+ *
+ * Usage
+ * @include space('mb', 10px, 20px, 30px, 40px, 50px);
+ * @include space('type', xs, sm, md, lg, xl);
+
+ * If you want to omit specific breakpoint please use ''
+ * e.g. @include space('mb', 10px, '', '', 40px, 50px);
+
+   Type:
+
+   m  : margin
+   mt : margin-top
+   mr : margin-right
+   mb : margin-bottom
+   ml : margin-left
+   p  : padding
+   pt : padding-top
+   pr : padding-right
+   pb : padding-bottom
+   pl : padding-left
+ */
+
+@mixin space(
+  $type: null,
+  $space-xs: null,
+  $space-sm: null,
+  $space-md: null,
+  $space-lg: null,
+  $space-xl: null,
+  $space-xxl: null
+) {
+  @if ($type == "m") {
+    $type: "margin";
+  }
+  @if ($type == "mt") {
+    $type: "margin-top";
+  }
+  @if ($type == "mr") {
+    $type: "margin-right";
+  }
+  @if ($type == "mb") {
+    $type: "margin-bottom";
+  }
+  @if ($type == "ml") {
+    $type: "margin-left";
+  }
+  @if ($type == "p") {
+    $type: "padding";
+  }
+  @if ($type == "pt") {
+    $type: "padding-top";
+  }
+  @if ($type == "pr") {
+    $type: "padding-right";
+  }
+  @if ($type == "pb") {
+    $type: "padding-bottom";
+  }
+  @if ($type == "pl") {
+    $type: "padding-left";
+  }
+
+  @if ($space-xs != "") {
+    #{$type}: $space-xs;
+  }
+  @if ($space-sm != "") {
+    @include media-breakpoint-up(sm) {
+      #{$type}: $space-sm;
+    }
+  }
+  @if ($space-md != "") {
+    @include media-breakpoint-up(md) {
+      #{$type}: $space-md;
+    }
+  }
+  @if ($space-lg != "") {
+    @include media-breakpoint-up(lg) {
+      #{$type}: $space-lg;
+    }
+  }
+  @if ($space-xl != "") {
+    @include media-breakpoint-up(xl) {
+      #{$type}: $space-xl;
+    }
+  }
+  @if ($space-xxl != "") {
+    @include media-breakpoint-up(xxl) {
+      #{$type}: $space-xxl;
+    }
+  }
+}

@@ -18,9 +18,12 @@ export default {
 </script>
 
 <style lang="scss">
+@import "@/assets/scss/tools";
+
 .layout-header {
   &__navbar {
-    height: $layout-navbar-height;
+    @include size("height", $layout-navbar-height-mobile, "", "", $layout-navbar-height);
+
     background-color: $eggshell;
     display: flex;
     flex-direction: column;

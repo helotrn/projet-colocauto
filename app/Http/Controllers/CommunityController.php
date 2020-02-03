@@ -47,8 +47,10 @@ class CommunityController extends RestController
     }
 
     public function retrieve(RetrieveRequest $request, $id) {
+        $item = $this->repo->find($request, $id);
+
         try {
-            $response = $this->respondWithItem($request, $id);
+            $response = $this->respondWithItem($request, $item);
         } catch (ValidationException $e) {
             return $this->respondWithErrors($e->getErrors(), $e->getMessage());
         }
@@ -62,5 +64,14 @@ class CommunityController extends RestController
             return $this->respondWithErrors($e->getErrors(), $e->getMessage());
         }
         return $response;
+    }
+
+    public function template(Request $request) {
+        return [
+            'name' => '',
+            'description' => '',
+            'area' => [],
+            'type' => 'neighborhood',
+        ];
     }
 }

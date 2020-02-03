@@ -1,38 +1,46 @@
 <template>
   <layout-page name="registration-map" wide>
-    <b-card title="Trouver une communauté" class="registration-map-page__form">
+    <b-card title="Trouver une communauté" class="registration-map__form" v-if="!community">
       <b-card-text>
         <b-form @submit.prevent="searchPostalCode">
           <b-form-group label="Code postal">
             <b-form-input type="text" required placeholder="Code postal"
               v-model="postalCode" />
           </b-form-group>
-
-          <b-button type="submit" variant="primary">Rechercher</b-button>
         </b-form>
       </b-card-text>
     </b-card>
 
-    <b-card :title="`Rejoindre la communauté ${community ? community.name : ''}`"
-      :class="`registration-map-page__community ${community ? 'visible' : 'hidden'}`">
+    <b-card class="registration-map__community" v-if="community">
+      <template v-slot:header>
+        <div class="registration-map__community__buttons">
+          <b-button @click="previousCommunity">Précédente</b-button>
+          <b-button @click="nextCommunity">Suivante</b-button>
+        </div>
+
+        <h4 class="card-title">
+          {{ `Rejoindre la communauté ${community ? community.name : ''}` }}
+        </h4>
+      </template>
       <b-card-text>
-        <div class="registration-map-page__community__description">
+        <div class="registration-map__community__description">
           <p v-if="community">
             {{ community.description }}
           </p>
         </div>
 
-        <b-form @submit.prevent="completeRegistration" @reset.prevent="resetPostalCode">
-          <b-button type="submit" variant="primary">Poursuivre l'inscription</b-button><br>
+        <b-form class="registration-map__community__buttons"
+          @submit.prevent="completeRegistration" @reset.prevent="resetCommunity">
+          <b-button type="submit" variant="primary">Poursuivre l'inscription</b-button>
           <b-button type="reset" variant="warning">Revenir aux communautés</b-button>
         </b-form>
       </b-card-text>
     </b-card>
 
-    <gmap-map class="registration-map-page__map"
+    <gmap-map class="registration-map__map"
       ref="map"
+      :zoom="zoom"
       :center="center"
-      :zoom="14"
       :options="mapOptions"
       map-type-id="terrain">
       <gmap-polygon v-for="c in communities" :key="`polygon-${c.id}`"
@@ -41,13 +49,13 @@
         :options="polygonOptions"
         @click="community = c" />
       <gmap-marker v-for="c in communities" :key="`marker-${c.id}`"
-        :label="{
+        :label="zoom > 14 ? {
           text: c.name,
           color: '#ffffff',
           fontWeight: '600',
           fontFamily: 'BrandonText',
           fontSize: '40px'
-        }"
+        } : null"
         :clickable="false"
         :icon="mapIcon"
         :position="c.center_google" />
@@ -63,6 +71,15 @@ import DataRouteGuards from '@/mixins/DataRouteGuards';
 export default {
   name: 'Map',
   mixins: [DataRouteGuards],
+  mounted() {
+    this.$refs.map.$mapPromise.then(() => {
+      if (!this.community) {
+        this.resetCenter();
+      } else {
+        this.centerOnCommunity(this.community);
+      }
+    });
+  },
   data() {
     return {
       mapIcon: {
@@ -86,6 +103,7 @@ export default {
         fillOpacity: 0.5,
         strokeOpacity: 0,
       },
+      zoom: 1,
     };
   },
   computed: {
@@ -137,38 +155,75 @@ export default {
       },
       set(value) {
         this.$store.commit('registration.map/postalCode', value);
-        this.center = null;
       },
     },
   },
   methods: {
-    resetPostalCode() {
-      this.center = null;
+    centerOnCommunity(community) {
+      const { LatLngBounds } = this.google.maps;
+      const bounds = new LatLngBounds();
+
+      community.area_google.forEach(p => bounds.extend(p));
+      this.$refs.map.fitBounds(bounds);
+    },
+    nextCommunity() {
+      const index = this.communities.indexOf(this.community);
+
+      if (index + 1 >= this.communities.length) {
+        this.community = this.communities[0];
+      } else {
+        this.community = this.communities[index + 1];
+      }
+    },
+    previousCommunity() {
+      const index = this.communities.indexOf(this.community);
+
+      if (index - 1 < 0) {
+        this.community = this.communities[this.communities.length - 1];
+      } else {
+        this.community = this.communities[index - 1];
+      }
+    },
+    resetCenter() {
+      const { LatLngBounds } = this.google.maps;
+      const bounds = new LatLngBounds();
+
+      this.communities.forEach(c => bounds.extend(c.center_google));
+      this.$refs.map.fitBounds(bounds);
+    },
+    resetCommunity() {
       this.community = null;
     },
     searchPostalCode() {
-      const { Geocoder } = this.google.maps;
+      const { Geocoder, LatLngBounds } = this.google.maps;
       const geocoder = new Geocoder();
 
       geocoder.geocode({ address: this.postalCode }, (results, status) => {
         if (status === 'OK' && results.length > 0) {
           const { location } = results[0].geometry;
-          const { LatLngBounds } = this.google.maps;
-          const bounds = new LatLngBounds();
 
           for (let i = 0, len = this.communities.length; i < len; i += 1) {
             const community = this.communities[i];
+            const bounds = new LatLngBounds();
+
             community.area_google.forEach(p => bounds.extend(p));
             if (bounds.contains(location)) {
-              this.community = community;
               this.center = null;
+              this.community = community;
               return true;
             }
           }
-
-          this.center = results[0].geometry.location;
-          this.community = null;
         }
+
+        const bounds = new LatLngBounds();
+        bounds.extend(results[0].geometry.location);
+        const kmAway = {
+          lat: results[0].geometry.location.lat(),
+          lng: results[0].geometry.location.lng(),
+        };
+        kmAway.lat += 0.003;
+        bounds.extend(kmAway);
+        this.$refs.map.fitBounds(bounds);
 
         return true;
       });
@@ -176,16 +231,19 @@ export default {
   },
   watch: {
     community(value) {
-      const { LatLngBounds } = this.google.maps;
-      const bounds = new LatLngBounds();
-
       if (!value) {
-        this.communities.forEach(c => bounds.extend(c.center_google));
-        this.$refs.map.fitBounds(bounds);
-      } else {
-        value.area_google.forEach(p => bounds.extend(p));
-        this.$refs.map.fitBounds(bounds);
+        return this.resetCenter();
       }
+
+      this.postalCode = '';
+      return this.centerOnCommunity(value);
+    },
+    postalCode(val) {
+      if (val.match(/[a-z][0-9][a-z]\s*[0-9][a-z][0-9]/i)) {
+        this.searchPostalCode();
+      }
+
+      this.resetCenter();
     },
   },
 };
@@ -193,7 +251,7 @@ export default {
 
 <style lang="scss">
 .registration-map.page {
-  .registration-map-page {
+  .registration-map {
     position: relative;
 
     &__map {
@@ -215,10 +273,37 @@ export default {
 
     &__community {
       margin-top: 50px;
-      margin-right: 30px;
-      right: 0;
+      margin-left: 30px;
       position: absolute;
       z-index: 100;
+      max-width: 50vw;
+
+      .card-header {
+        margin-bottom: 0;
+      }
+
+      .card-text {
+        display: flex;
+        flex-direction: column;
+
+        .registration-map__community__description {
+          flex-grow: 1;
+          max-height: 120px;
+        }
+      }
+
+      &__buttons {
+        text-align: left;
+
+        .btn {
+          margin-right: 10px;
+          margin-bottom: 10px;
+        }
+
+        .btn:last-child {
+          margin-right: 0;
+        }
+      }
 
       &.hidden {
         opacity: 0;

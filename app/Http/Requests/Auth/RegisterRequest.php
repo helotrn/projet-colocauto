@@ -18,6 +18,9 @@ class RegisterRequest extends BaseRequest
     }
 
     public function messages() {
-        return [];
+        return [
+            'email.required' => 'Le courriel est requis.',
+            'email.unique' => 'Le courriel est déjà pris.',
+        ];
     }
 }

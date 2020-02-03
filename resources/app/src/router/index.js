@@ -1,14 +1,17 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 
-import CommunityMap from '../views/community/Map.vue';
 import Dashboard from '../views/Dashboard.vue';
 import Help from '../views/Help.vue';
 import Home from '../views/Home.vue';
 import Login from '../views/Login.vue';
-import Register from '../views/Register.vue';
 
+import CommunityMap from '../views/community/Map.vue';
+
+import Register from '../views/Register.vue';
 import RegistrationMap from '../views/registration/Map.vue';
+
+import adminRoutes from './admin';
 
 Vue.use(VueRouter);
 
@@ -30,15 +33,44 @@ const routes = [
     path: '/register',
     name: 'register',
     component: Register,
+    props: true,
     meta: {
       title: "S'inscrire",
     },
+    children: [
+      {
+        path: 'map',
+        name: 'register-map',
+        component: RegistrationMap,
+        meta: {
+          auth: true,
+          data: {
+            communities: {
+              retrieve: {
+                fields: 'id,name,description,center,area_google,center_google',
+              },
+            },
+          },
+          title: 'Trouver une communauté',
+        },
+      },
+      {
+        path: ':step',
+        name: 'register-step',
+        component: Register,
+        props: true,
+        meta: {
+          title: "S'inscrire",
+        },
+      },
+    ],
   },
   {
     path: '/app',
     name: 'dashboard',
     component: Dashboard,
     meta: {
+      auth: true,
       title: 'Tableau de bord',
     },
   },
@@ -47,24 +79,8 @@ const routes = [
     name: 'community-map',
     component: CommunityMap,
     meta: {
+      auth: true,
       title: 'Trouver un véhicule',
-    },
-  },
-  {
-    path: '/register/map',
-    name: 'registration-map',
-    component: RegistrationMap,
-    meta: {
-      data: {
-        communities: {
-          retrieve: {
-            params: {
-              fields: 'id,name,description,center,area_google,center_google',
-            },
-          },
-        },
-      },
-      title: 'Trouver une communauté',
     },
   },
   {
@@ -75,6 +91,7 @@ const routes = [
       title: 'Aide de Locomotion',
     },
   },
+  adminRoutes,
 ];
 
 const router = new VueRouter({

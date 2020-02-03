@@ -1,0 +1,22 @@
+.btn-google {
+  padding: 3px 18px 3px 3px;
+
+  &__icon {
+    padding: 7px;
+    background: $white;
+    border-radius: 4px;
+    display: inline-block;
+    margin-right: 13px;
+  }
+}
+
+.btn-outline-light {
+  border-color: $white;
+  color: $white;
+}
+
+.btn-white-secondary {
+  color: $secondary;
+  background: $white;
+  border: 0;
+}

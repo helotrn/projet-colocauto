@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Pricing;
+use App\Rules\Polygon;
 use App\Utils\PointCast;
 use App\Utils\PolygonCast;
 use App\Transformers\CommunityTransformer;
@@ -49,6 +50,15 @@ class Community extends BaseModel
     ];
 
     public static $transformer = CommunityTransformer::class;
+
+    public static function getRules($action, $auth = null) {
+        return array_merge(
+            static::$rules,
+            [
+                'area' => ['nullable', new Polygon]
+            ]
+        );
+    }
 
     public static function getColumnsDefinition() {
         return [
@@ -97,5 +107,17 @@ class Community extends BaseModel
             'lat' => $this->center[0],
             'lng' => $this->center[1],
         ];
+    }
+
+    public function scopeAccessibleBy(Builder $query, $user) {
+        if ($user->isAdmin()) {
+            return $query;
+        }
+
+        return $query->where(function ($q) use ($user) {
+            return $q->whereHas('users', function ($q2) use ($user) {
+                return $q2->where('users.id', $user->id);
+            })->orWhere('type', '!=', 'private');
+        });
     }
 }

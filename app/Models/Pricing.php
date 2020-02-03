@@ -15,7 +15,7 @@ class Pricing extends BaseModel
         'variable' => 'required',
         'rule' => 'required',
     ];
-    
+
     protected $fillable = [
         'name',
         'object_type',

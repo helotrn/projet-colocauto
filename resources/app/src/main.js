@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import BootstrapVue from 'bootstrap-vue';
+import { BootstrapVue, BootstrapVueIcons } from 'bootstrap-vue';
 import axios from 'axios';
 import VueAxios from 'vue-axios';
 import * as VueGoogleMaps from 'vue2-google-maps';
@@ -17,6 +17,8 @@ import '@/assets/scss/main.scss';
 Vue.config.productionTip = false;
 
 Vue.use(BootstrapVue);
+Vue.use(BootstrapVueIcons);
+
 
 Vue.use(VueGoogleMaps, {
   load: {
