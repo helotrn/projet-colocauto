@@ -13,13 +13,14 @@ import LayoutHeader from './components/Layout/Header.vue';
 import LayoutFooter from './components/Layout/Footer.vue';
 import LayoutPage from './components/Layout/Page.vue';
 
+import filters from './helpers/filters';
+
 import '@/assets/scss/main.scss';
 
 Vue.config.productionTip = false;
 
 Vue.use(BootstrapVue);
 Vue.use(BootstrapVueIcons);
-
 
 Vue.use(VueGoogleMaps, {
   load: {
@@ -31,6 +32,8 @@ Vue.use(VueGoogleMaps, {
 Vue.component('layout-footer', LayoutFooter);
 Vue.component('layout-header', LayoutHeader);
 Vue.component('layout-page', LayoutPage);
+
+Object.keys(filters).forEach(f => Vue.filter(f, filters[f]));
 
 axios.defaults.baseURL = `${process.env.VUE_APP_API_URL}/v1`;
 axios.interceptors.request.use((config) => {
