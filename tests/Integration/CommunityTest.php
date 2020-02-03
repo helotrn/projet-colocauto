@@ -37,6 +37,18 @@ class CommunityTest extends TestCase
         $response->assertStatus(422);
     }
 
+    public function testCreateCommunitiesWithInvalidType() {
+        $data = [
+            'name' => $this->faker->name,
+            'description' => $this->faker->sentence,
+            'area' => null,
+            'type' => 'something',
+        ];
+
+        $response = $this->json('POST', "/api/v1/communities/", $data);
+        $response->assertStatus(422);
+    }
+
     public function testShowCommunities() {
         $this->markTestIncomplete();
         $post = factory(Community::class)->create();

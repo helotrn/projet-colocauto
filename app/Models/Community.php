@@ -20,7 +20,16 @@ class Community extends BaseModel
         'name' => 'nullable',
         'description' => 'nullable',
         'area' => 'nullable',
-        'type' => 'nullable|in:private,neighborhood,borough'
+        'type' => [
+            'nullable',
+            'in:private,neighborhood,borough',
+        ],
+    ];
+
+    public static $filterTypes = [
+        'id' => 'number',
+        'name' => 'text',
+        'type' => ['neighborhood', 'borough', 'private'],
     ];
 
     protected $fillable = [
