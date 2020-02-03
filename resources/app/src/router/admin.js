@@ -27,7 +27,7 @@ export default {
         data: {
           communities: {
             retrieve: {
-              fields: 'id,name',
+              fields: 'id,name,type',
             },
           },
         },

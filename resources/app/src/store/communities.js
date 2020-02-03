@@ -6,5 +6,6 @@ export default new RestModule('communities', {
     per_page: 10,
     q: '',
     order: 'name',
+    type: null,
   },
 });
