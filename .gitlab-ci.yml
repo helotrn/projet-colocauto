@@ -30,6 +30,9 @@ cache:
 
 locomotion:test:
   stage: test
+  only:
+    refs:
+      - master
   script:
     - php composer.phar install
     - php artisan migrate --env testing
