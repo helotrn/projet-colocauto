@@ -2,6 +2,7 @@ import Admin from '../views/Admin.vue';
 import AdminDashboard from '../views/admin/Dashboard.vue';
 import AdminCommunities from '../views/admin/Communities.vue';
 import AdminCommunity from '../views/admin/Community.vue';
+import AdminLoanables from '../views/admin/Loanables.vue';
 
 export default {
   path: '/admin',
@@ -31,7 +32,7 @@ export default {
             },
           },
         },
-        title: 'titles.communauté',
+        title: 'titles.community',
       },
     },
     {
@@ -80,6 +81,23 @@ export default {
             ],
           },
         },
+      },
+    },
+    {
+      path: 'loanables',
+      component: AdminLoanables,
+      meta: {
+        auth: true,
+        creatable: true,
+        slug: 'loanables',
+        data: {
+          loanables: {
+            retrieve: {
+              fields: 'id,name,type,owner.id,owner.full_name',
+            },
+          },
+        },
+        title: 'titles.loanable',
       },
     },
   ],

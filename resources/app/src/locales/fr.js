@@ -16,6 +16,14 @@ export default {
       private: 'privée',
     },
   },
+  loanables: {
+    types: {
+      bike: 'vélo',
+      car: 'voiture',
+      null: "n'importe quel type",
+      trailer: 'remorque',
+    },
+  },
   forms: {
     actions: 'actions',
     modifier: 'modifier',
@@ -26,7 +34,7 @@ export default {
     fr: 'Français',
   },
   titles: {
-    communauté: 'communauté | communautés',
+    community: 'communauté | communautés',
     login: 'se connecter',
   },
 };

@@ -31,6 +31,7 @@ Route::prefix('v1')->group(function () {
             'incident',
             'intention',
             'loan',
+            'loanable',
             'owner',
             'padlock',
             'payment',

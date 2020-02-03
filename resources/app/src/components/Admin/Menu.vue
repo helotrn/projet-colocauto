@@ -3,7 +3,7 @@
     <b-nav-item to="/admin">{{ $t('tableau de bord') | capitalize }}</b-nav-item>
     <b-nav-item to="/admin/communities">Communautés</b-nav-item>
     <b-nav-item disabled>Membres</b-nav-item>
-    <b-nav-item disabled>Véhicules</b-nav-item>
+    <b-nav-item to="/admin/loanables">Véhicules</b-nav-item>
     <b-nav-item disabled>Réservations</b-nav-item>
   </div>
 </template>

@@ -26,7 +26,7 @@ export default {
     fr: 'Français',
   },
   titles: {
-    communauté: 'community | communities',
+    community: 'community | communities',
     login: 'login',
   },
 };
