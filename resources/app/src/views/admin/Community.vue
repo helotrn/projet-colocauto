@@ -3,7 +3,7 @@
     <b-row>
       <b-col>
         <h1 v-if="item.name">{{ item.name }}</h1>
-        <h1 v-else><em>Communauté</em></h1>
+        <h1 v-else><em>{{ $tc('communauté', 1) | capitalize }}</em></h1>
       </b-col>
     </b-row>
 

@@ -1,5 +1,5 @@
 export default {
-  'Tableau de bord': 'Tableau de bord',
+  'tableau de bord': 'tableau de bord',
   communities: {
     communauté: 'communauté | communautés',
     'créer une communauté': 'créer une communauté',

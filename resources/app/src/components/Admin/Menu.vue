@@ -1,6 +1,6 @@
 <template>
   <div class="admin-menu">
-    <b-nav-item to="/admin">Tableau de bord</b-nav-item>
+    <b-nav-item to="/admin">{{ $t('tableau de bord') | capitalize }}</b-nav-item>
     <b-nav-item to="/admin/communities">Communautés</b-nav-item>
     <b-nav-item disabled>Membres</b-nav-item>
     <b-nav-item disabled>Véhicules</b-nav-item>

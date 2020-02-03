@@ -2,17 +2,23 @@
   <b-container fluid>
     <b-row>
       <b-col>
-        <h1>Communautés</h1>
+        <h1>{{ $tc('communauté', 2) | capitalize }}</h1>
       </b-col>
       <b-col class="admin__buttons">
-        <b-btn v-if="creatable" :to="`/admin/${slug}/new`">Créer une communauté</b-btn>
+        <b-btn v-if="creatable" :to="`/admin/${slug}/new`">
+          {{ $t('créer une communauté') | capitalize }}
+        </b-btn>
       </b-col>
     </b-row>
 
     <b-row>
       <b-col class="admin__selection">
         <div v-if="selected.length > 0">
-          {{ selected.length }} sélectionnés.
+          {{ $tc(
+            '{count} communauté sélectionnée',
+            selected.length,
+            { count: selected.length }
+          ) }}
         </div>
       </b-col>
     </b-row>
@@ -42,6 +48,7 @@
 <script>
 import DataRouteGuards from '@/mixins/DataRouteGuards';
 import ListMixin from '@/mixins/ListMixin';
+import locales from '@/locales';
 
 export default {
   name: 'AdminCommunities',
@@ -55,6 +62,12 @@ export default {
         { key: 'actions', label: 'Actions', tdClass: 'table__cell__actions' },
       ],
     };
+  },
+  i18n: {
+    messages: {
+      en: locales.en.communities,
+      fr: locales.fr.communities,
+    },
   },
 };
 </script>
