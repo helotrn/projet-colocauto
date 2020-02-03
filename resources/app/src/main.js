@@ -7,6 +7,7 @@ import * as VueGoogleMaps from 'vue2-google-maps';
 import App from './App.vue';
 import router from './router';
 import store from './store';
+import i18n from './i18n';
 
 import LayoutHeader from './components/Layout/Header.vue';
 import LayoutFooter from './components/Layout/Footer.vue';
@@ -42,7 +43,8 @@ axios.interceptors.request.use((config) => {
 Vue.use(VueAxios, axios);
 
 new Vue({
+  i18n,
+  render: h => h(App),
   router,
   store,
-  render: h => h(App),
 }).$mount('#app');

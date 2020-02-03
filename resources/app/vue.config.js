@@ -10,6 +10,13 @@ module.exports = {
       .end()
       .use('vue-svg-loader')
       .loader('vue-svg-loader');
+
+    config.module
+      .rule('i18n')
+      .resourceQuery(/blockType=i18n/)
+      .type('javascript/auto')
+      .use('i18n').loader('@kazupon/vue-i18n-loader').end()
+      .use('yaml').loader('yaml-loader').end()
   },
 
   css: {
