@@ -246,15 +246,28 @@ class RestRepository
     }
 
     protected function applyFilter($param, $value, $query) {
-        if (strpos($value, '.') !== false) {
-            throw new \Exception('Not implemented');
-        }
-
         $negative = $param[0] === '!';
         $paramName = str_replace('!', '', $param);
 
+        if (strpos($paramName, '_') !== false) {
+            [$relation, $field] = explode('_', $paramName, 2);
+
+            if (in_array($relation, $this->model->hasOne)
+                || in_array($relation, $this->model->belongsTo)) {
+            }
+
+            if (in_array($relation, $this->model->collections)) {
+                return $query->whereHas($relation, function ($q) use ($field, $value, $negative) {
+                    $fieldQuery = $negative ? "!$field" : $field;
+                    return $this->applyFilter($field, $value, $q);
+                });
+            }
+
+            return $query;
+        }
+
         if (in_array($paramName, $this->model->hasOne)
-          || in_array($paramName, $this->model->belongsTo)) {
+            || in_array($paramName, $this->model->belongsTo)) {
             if ($negative) {
                 return $query->doesntHave($paramName);
             }
@@ -266,7 +279,7 @@ class RestRepository
             return $query->having($paramName, $value);
         }
 
-        $scopedParam = "{$this->model->getTable()}.$paramName";
+        $scopedParam = "{$query->getModel()->getTable()}.$paramName";
 
         // If a type is defined for this filter, use the query
         // language, otherwise fallback to default Laravel filtering
