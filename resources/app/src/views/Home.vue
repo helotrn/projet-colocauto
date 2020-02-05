@@ -251,6 +251,24 @@ export default {
 @import "@/assets/scss/tools";
 
 .page.home {
+  .card {
+    border: 0;
+    margin-bottom: 10px;
+
+    &-title {
+      color: $locomotion-green;
+      font-weight: bold;
+    }
+
+    &-body {
+      .form-group {
+        legend {
+          font-weight: bold;
+        }
+      }
+    }
+  }
+
   .page__section {
     @include space("padding-top", 36px, "", "", 65px);
     @include space("padding-bottom", 36px, "", "", 65px);
