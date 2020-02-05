@@ -53,7 +53,10 @@
     </b-row>
 
     <b-row>
-      {{ total }}
+      <b-col>
+        <b-pagination align="right" v-model="params.page"
+          :total-rows="total" :per-page="params.per_page" />
+      </b-col>
     </b-row>
   </b-container>
 </template>
