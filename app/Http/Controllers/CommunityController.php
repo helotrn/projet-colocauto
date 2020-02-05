@@ -34,6 +34,7 @@ class CommunityController extends RestController
         } catch (ValidationException $e) {
             return $this->respondWithErrors($e->getErrors(), $e->getMessage());
         }
+
         return $response;
     }
 
@@ -43,6 +44,7 @@ class CommunityController extends RestController
         } catch (ValidationException $e) {
             return $this->respondWithErrors($e->getErrors(), $e->getMessage());
         }
+
         return $response;
     }
 
@@ -54,6 +56,7 @@ class CommunityController extends RestController
         } catch (ValidationException $e) {
             return $this->respondWithErrors($e->getErrors(), $e->getMessage());
         }
+
         return $response;
     }
 
@@ -63,6 +66,7 @@ class CommunityController extends RestController
         } catch (ValidationException $e) {
             return $this->respondWithErrors($e->getErrors(), $e->getMessage());
         }
+
         return $response;
     }
 
