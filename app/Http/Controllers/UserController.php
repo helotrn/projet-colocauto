@@ -3,16 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\BaseRequest as Request;
-use App\Http\Requests\Community\IndexRequest as CommunityIndexRequest;
 use App\Http\Requests\User\CreateRequest;
 use App\Http\Requests\User\DestroyRequest;
-use App\Http\Requests\User\IndexRequest;
-use App\Http\Requests\User\RetrieveRequest;
 use App\Http\Requests\User\UpdateRequest;
 use App\Http\Requests\UserCommunity\AssociateRequest as AssociateCommunityRequest;
 use App\Http\Requests\UserCommunity\DissociateRequest as DissociateCommunityRequest;
-use App\Http\Requests\UserCommunity\IndexRequest as IndexCommunityRequest;
-use App\Http\Requests\UserCommunity\RetrieveRequest as RetrieveCommunityRequest;
 use App\Models\User;
 use App\Repositories\UserRepository;
 use App\Repositories\CommunityRepository;
@@ -24,7 +19,7 @@ class UserController extends RestController
         $this->model = $model;
     }
 
-    public function index(IndexRequest $request) {
+    public function index(Request $request) {
         $perPage = $request->get('per_page') ?: 10;
         $page = $request->get('page') ?: 1;
 
@@ -54,7 +49,7 @@ class UserController extends RestController
         return $response;
     }
 
-    public function retrieve(RetrieveRequest $request, $id) {
+    public function retrieve(Request $request, $id) {
         $item = $this->repo->find($request, $id);
 
         try {
@@ -75,15 +70,15 @@ class UserController extends RestController
         return $response;
     }
 
-    public function getCommunities(IndexCommunityRequest $request, $userId, CommunityRepository $communityRepo) {
-        $user = $this->repo->find($userId);
+    public function getCommunities(Request $request, $userId, CommunityRepository $communityRepo) {
+        $user = $this->repo->find($request, $userId);
         if ($user) {
-            $request->merge(['user_id' => $userId]);
+            $request->merge(['users.id' => $userId]);
             return $communityRepo->get($request);
         }
     }
 
-    public function retrieveCommunity(RetrieveCommunityRequest $request, $userId, $communityId) {
+    public function retrieveCommunity(Request $request, $userId, $communityId, CommunityRepository $communityRepo) {
         $user = $this->repo->find($request, $userId);
         $community = $communityRepo->find($request, $communityId);
 
@@ -99,7 +94,7 @@ class UserController extends RestController
         return "";
     }
 
-    public function associateToCommunity(AssociateCommunityRequest $request, $userId, $communityId) {
+    public function associateToCommunity(AssociateRequest $request, $userId, $communityId, CommunityRepository $communityRepo) {
         $user = $this->repo->find($request, $userId);
         $community = $communityRepo->find($request, $communityId);
 
@@ -115,7 +110,7 @@ class UserController extends RestController
         return "";
     }
 
-    public function dissociateFromCommunity(DissociateCommunityRequest $request, $userId, $communityId) {
+    public function dissociateFromCommunity(DissociateRequest $request, $userId, $communityId, CommunityRepository $communityRepo) {
         return "";
     }
 }

@@ -5,8 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Requests\BaseRequest as Request;
 use App\Http\Requests\Community\CreateRequest;
 use App\Http\Requests\Community\DestroyRequest;
-use App\Http\Requests\Community\IndexRequest;
-use App\Http\Requests\Community\RetrieveRequest;
 use App\Http\Requests\Community\UpdateRequest;
 use App\Models\Community;
 use App\Repositories\CommunityRepository;
@@ -18,7 +16,7 @@ class CommunityController extends RestController
         $this->model = $model;
     }
 
-    public function index(IndexRequest $request) {
+    public function index(Request $request) {
         try {
             [$items, $total] = $this->repo->get($request);
         } catch (ValidationException $e) {
@@ -46,7 +44,7 @@ class CommunityController extends RestController
         return $response;
     }
 
-    public function retrieve(RetrieveRequest $request, $id) {
+    public function retrieve(Request $request, $id) {
         $item = $this->repo->find($request, $id);
 
         try {

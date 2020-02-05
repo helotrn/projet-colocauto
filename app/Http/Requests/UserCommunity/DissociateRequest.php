@@ -7,7 +7,8 @@ use App\Http\Requests\BaseRequest;
 class DissociateRequest extends BaseRequest
 {
     public function authorize() {
-        return true;
+        $communityId = $this->route('community_id');
+        return $this->user()->isAdmin() || $this->user()->isAdminOfCommunity($communityId);
     }
 
     public function rules() {
