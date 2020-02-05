@@ -12,27 +12,46 @@ class Bike extends Loanable
     protected $table = 'bikes';
 
     public static $rules = [
-        'name' => 'required',
-        'position' => 'required',
-        'location_description' => 'required',
+        'bike_type' => 'required',
         'comments' => 'required',
         'instructions' => 'required',
+        'location_description' => 'required',
         'model' => 'required',
-        'type' => 'required',
+        'name' => 'required',
+        'position' => 'required',
         'size' => 'required',
     ];
 
     protected $fillable = [
-        'name',
-        'position',
-        'location_description',
+        'availability_ics',
+        'bike_type',
         'comments',
         'instructions',
+        'location_description',
         'model',
-        'type',
+        'name',
+        'position',
         'size',
-        'availability_ics'
     ];
 
     public static $transformer = BikeTransformer::class;
+
+    public static function getColumnsDefinition() {
+        return [
+            '*' => function ($query = null) {
+                if (!$query) {
+                    return 'bikes.*';
+                }
+
+                return $query->selectRaw('bikes.*');
+            },
+            'type' => function ($query = null) {
+                if (!$query) {
+                    return "'bike' AS type";
+                }
+
+                return $query->selectRaw("'bike' AS type");
+            }
+        ];
+    }
 }

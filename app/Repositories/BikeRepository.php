@@ -9,5 +9,6 @@ class BikeRepository extends RestRepository
 {
     public function __construct(Bike $model) {
         $this->model = $model;
+        $this->columnsDefinition = $model::getColumnsDefinition();
     }
 }

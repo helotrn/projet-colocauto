@@ -13,9 +13,13 @@ class Loanable extends BaseModel
 {
     use HasCustomCasts, PostgisTrait;
 
-    protected $table = 'loanables';
+    public static $filterTypes = [
+        'id' => 'number',
+        'name' => 'text',
+        'type' => ['bike', 'car', 'trailer'],
+    ];
 
-    public $belongsTo = ['owner'];
+    protected $table = 'loanables';
 
     protected $postgisFields = [
         'position',
@@ -30,6 +34,8 @@ class Loanable extends BaseModel
     protected $casts = [
         'position' => PointCast::class,
     ];
+
+    public $belongsTo = ['owner'];
 
     public function owner() {
         return $this->belongsTo(Owner::class);
