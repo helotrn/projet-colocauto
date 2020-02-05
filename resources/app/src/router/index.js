@@ -11,9 +11,9 @@ import CommunityMap from '../views/community/Map.vue';
 import Register from '../views/Register.vue';
 import RegistrationMap from '../views/registration/Map.vue';
 
-import i18n from '../i18n';
-
 import adminRoutes from './admin';
+
+import helpers from '../helpers';
 
 Vue.use(VueRouter);
 
@@ -100,16 +100,6 @@ const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
   routes,
-});
-
-router.beforeEach((to, from, next) => {
-  if (to.meta && to.meta.title) {
-    document.title = `LocoMotion | ${i18n.t(to.meta.title)}`;
-  } else {
-    document.title = 'LocoMotion';
-  }
-
-  next();
 });
 
 export default router;

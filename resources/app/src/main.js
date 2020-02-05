@@ -3,6 +3,7 @@ import { BootstrapVue, BootstrapVueIcons } from 'bootstrap-vue';
 import axios from 'axios';
 import VueAxios from 'vue-axios';
 import * as VueGoogleMaps from 'vue2-google-maps';
+import vueHeadful from 'vue-headful';
 
 import App from './App.vue';
 import router from './router';
@@ -32,6 +33,8 @@ Vue.use(VueGoogleMaps, {
 Vue.component('layout-footer', LayoutFooter);
 Vue.component('layout-header', LayoutHeader);
 Vue.component('layout-page', LayoutPage);
+
+Vue.component('vue-headful', vueHeadful);
 
 Object.keys(filters).forEach(f => Vue.filter(f, filters[f]));
 

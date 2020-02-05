@@ -9,6 +9,7 @@ export default {
   component: Admin,
   meta: {
     auth: true,
+    title: 'titles.admin',
   },
   children: [
     {
@@ -16,6 +17,7 @@ export default {
       component: AdminDashboard,
       meta: {
         auth: true,
+        title: 'tableau de bord',
       },
     },
     {
@@ -32,7 +34,7 @@ export default {
             },
           },
         },
-        title: 'titles.community',
+        title: 'titles.communities',
       },
     },
     {
@@ -97,7 +99,7 @@ export default {
             },
           },
         },
-        title: 'titles.loanable',
+        title: 'titles.loanables',
       },
     },
   ],

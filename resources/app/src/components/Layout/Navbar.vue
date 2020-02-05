@@ -9,8 +9,8 @@
         <svg-logo class="layout-navbar__logo" />
       </b-navbar-brand>
 
-      <b-navbar-brand class="layout-navbar__separator" v-if="pageTitle" />
-      <b-navbar-brand class="navbar-brand--title" v-if="pageTitle">{{ pageTitle }}</b-navbar-brand>
+      <b-navbar-brand class="layout-navbar__separator" v-if="title" />
+      <b-navbar-brand class="navbar-brand--title" v-if="title">{{ title }}</b-navbar-brand>
     </div>
 
     <div :class="{
@@ -117,10 +117,6 @@ import Logout from '@/assets/svg/logout.svg';
 import AdminMenu from '@/components/Admin/Menu.vue';
 import LocaleSwitcher from '@/components/LocaleSwitcher.vue';
 
-import filters from '@/helpers/filters';
-
-const { capitalize } = filters;
-
 export default {
   name: 'Navbar',
   mixins: [Authenticated],
@@ -135,16 +131,16 @@ export default {
     'svg-help': Help,
     'svg-logout': Logout,
   },
+  props: {
+    title: {
+      type: String,
+      required: false,
+      default: '',
+    },
+  },
   computed: {
     hasCommunity() {
       return this.loggedIn && this.user.communities.length > 0;
-    },
-    pageTitle() {
-      if (this.$route.meta && this.$route.meta.title) {
-        return capitalize(this.$i18n.tc(this.$route.meta.title, 2));
-      }
-
-      return '';
     },
   },
   data() {

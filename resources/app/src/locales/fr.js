@@ -34,7 +34,10 @@ export default {
     fr: 'Français',
   },
   titles: {
-    community: 'communauté | communautés',
+    admin: 'administration',
+    community: 'communauté',
+    communities: 'communautés',
+    loanables: 'véhicules',
     login: 'se connecter',
   },
 };
