@@ -13,8 +13,6 @@ import RegistrationMap from '../views/registration/Map.vue';
 
 import adminRoutes from './admin';
 
-import helpers from '../helpers';
-
 Vue.use(VueRouter);
 
 const routes = [

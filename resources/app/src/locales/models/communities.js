@@ -15,5 +15,5 @@ export default {
       borough: 'quartier',
       private: 'privée',
     },
-  }
-}
+  },
+};

@@ -21,5 +21,5 @@ export default {
       trailer: 'remorque',
     },
     véhicule: 'véhicule | véhicules',
-  }
+  },
 };

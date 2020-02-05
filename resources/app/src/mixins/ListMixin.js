@@ -74,7 +74,7 @@ export default {
           `${this.slug}/retrieve`,
           {
             fields: this.fieldsList.join(','),
-          }
+          },
         );
         this.listDebounce = null;
       }, 250);

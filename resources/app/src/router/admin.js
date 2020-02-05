@@ -117,49 +117,49 @@ export default {
           general: {
             id: {
               type: 'number',
-                disabled: true,
-                required: true,
+              disabled: true,
+              required: true,
             },
-              name: {
-                type: 'text',
-                  required: true,
-              },
-              position: {
-                type: 'point',
-                  required: true,
-              },
-              location_description: {
-                type: 'textarea',
-                  required: true,
-              },
-              comments: {
-                type: 'textarea',
-                  required: true,
-              },
-              instructions: {
-                type: 'textarea',
-                  required: true,
-              },
-              type: {
-                type: 'select',
-                  options: [
-                    {
-                      text: 'Voiture',
-                      value: 'car',
-                    },
-                    {
-                      text: 'Vélo',
-                      value: 'bike',
-                    },
-                    {
-                      text: 'Remorque',
-                      value: 'trailer',
-                    },
-                  ],
-              },
-              //$table->text('availability_ics');
-              //$table->unsignedBigInteger('owner_id')->nullable();
-              //$table->unsignedBigInteger('community_id')->nullable();
+            name: {
+              type: 'text',
+              required: true,
+            },
+            position: {
+              type: 'point',
+              required: true,
+            },
+            location_description: {
+              type: 'textarea',
+              required: true,
+            },
+            comments: {
+              type: 'textarea',
+              required: true,
+            },
+            instructions: {
+              type: 'textarea',
+              required: true,
+            },
+            type: {
+              type: 'select',
+              options: [
+                {
+                  text: 'Voiture',
+                  value: 'car',
+                },
+                {
+                  text: 'Vélo',
+                  value: 'bike',
+                },
+                {
+                  text: 'Remorque',
+                  value: 'trailer',
+                },
+              ],
+            },
+            // $table->text('availability_ics');
+            // $table->unsignedBigInteger('owner_id')->nullable();
+            // $table->unsignedBigInteger('community_id')->nullable();
           },
           bike: {
             model: {
