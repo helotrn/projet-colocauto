@@ -431,6 +431,7 @@ export default {
 
     .svg-community {
       position: relative;
+      pointer-events: none;
       @include size("width", 283px, "", "", 820px);
       @include space("margin-top", -150px, "", "", -260px);
       @include position("left", 0, "", "", -10vw );
