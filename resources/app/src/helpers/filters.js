@@ -2,7 +2,7 @@ const capitalize = (value) => {
   if (!value) {
     return '';
   }
-  const string = value.toString()
+  const string = value.toString();
   return string.charAt(0).toUpperCase() + string.slice(1);
 };
 export default {
@@ -15,5 +15,5 @@ export default {
     const parts = value.toString().split(/ /);
 
     return parts.map(capitalize).join(' ');
-  }
+  },
 };
