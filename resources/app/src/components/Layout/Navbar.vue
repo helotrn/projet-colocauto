@@ -219,6 +219,8 @@ export default {
 
     &--title {
       padding-bottom: 0;
+      position: relative;
+      top: 3px;
     }
   }
 
