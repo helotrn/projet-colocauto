@@ -26,11 +26,29 @@ class UsersTableSeeder extends Seeder
                 'name' => 'Ariane',
                 'last_name' => 'Mercier',
             ],
+            'alexandre@molotov.ca' => [
+                'id' => 4,
+                'password' => 'molotov',
+                'name' => 'Alexandre',
+                'last_name' => 'Chouinard',
+                'role' => 'admin',
+            ],
+            'achouinard31@gmail.com' => [
+                'id' => 5,
+                'password' => 'molotov',
+                'name' => 'Alexandre',
+                'last_name' => 'Chouinard',
+            ],
         ];
 
         $memberships = [
             'soutien@molotov.ca' => [],
             'emile@molotov.ca' => [
+                1 => [
+                    'role' => 'admin',
+                ],
+            ],
+            'achouinard31@gmail.com' => [
                 1 => [
                     'role' => 'admin',
                 ],
