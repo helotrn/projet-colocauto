@@ -72,7 +72,9 @@ export default {
       this.listDebounce = setTimeout(() => {
         this.$store.dispatch(
           `${this.slug}/retrieve`,
-          { fields: this.fieldsList.join(',') }
+          {
+            fields: this.fieldsList.join(','),
+          }
         );
         this.listDebounce = null;
       }, 250);

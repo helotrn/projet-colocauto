@@ -52,12 +52,19 @@ export default {
       return 'LocoMotion';
     },
     treeTitle() {
-      return this.$route.matched.reduce((acc, r) => {
+      const firstMatchedParts = this.$route.matched.slice(0, this.$route.matched.length - 1);
+      const parts = firstMatchedParts.reduce((acc, r) => {
         if (r.meta && r.meta.title) {
           acc.push(capitalize(this.$i18n.t(r.meta.title)));
         }
         return acc;
-      }, []).reverse().join(' | ');
+      }, []);
+
+      if (this.pageTitle) {
+        parts.push(this.pageTitle);
+      }
+
+      return parts.reverse().join(' | ');
     },
     pageTitle() {
       if (this.title) {

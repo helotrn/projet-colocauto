@@ -1,23 +1,9 @@
 import AdminFilters from './components/Admin/Filters';
+import loanables from '@/locales/models/loanables';
 
 export default {
   'tableau de bord': 'tableau de bord',
-  communities: {
-    communauté: 'communauté | communautés',
-    'créer une communauté': 'créer une communauté',
-    '{count} communauté sélectionnée': 'aucune communauté sélectionnée | {count} communauté sélectionnée | {count} communautés sélectionnées',
-    fields: {
-      id: 'ID',
-      name: 'nom',
-      type: 'type',
-    },
-    types: {
-      neighborhood: 'voisinage',
-      null: "n'importe quel type",
-      borough: 'quartier',
-      private: 'privée',
-    },
-  },
+  communities: communities.fr,
   components: {
     admin: {
       filters: AdminFilters.fr,

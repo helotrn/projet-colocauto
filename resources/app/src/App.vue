@@ -7,9 +7,6 @@
 <script>
 export default {
   name: 'Locomotion',
-  head: {
-    title: 'Locomotion',
-  },
 };
 </script>
 
