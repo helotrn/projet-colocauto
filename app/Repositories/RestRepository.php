@@ -308,12 +308,15 @@ class RestRepository
                 }
 
                 $values = array_map(
-                    'trim',
-                    array_filter(
-                        explode(',', $value),
-                        function ($i) {
-                            return !!$i;
-                        }
+                    'intval',
+                    array_map(
+                        'trim',
+                        array_filter(
+                            explode(',', $value),
+                            function ($i) {
+                                return !!$i;
+                            }
+                        )
                     )
                 );
                 if ($negative) {

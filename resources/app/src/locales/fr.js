@@ -1,3 +1,5 @@
+import AdminFilters from './components/Admin/Filters';
+
 export default {
   'tableau de bord': 'tableau de bord',
   communities: {
@@ -14,6 +16,11 @@ export default {
       null: "n'importe quel type",
       borough: 'quartier',
       private: 'privée',
+    },
+  },
+  components: {
+    admin: {
+      filters: AdminFilters.fr,
     },
   },
   loanables: {
