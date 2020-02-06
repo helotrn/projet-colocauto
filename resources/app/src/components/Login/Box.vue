@@ -37,7 +37,9 @@
       </b-form-group>
 
       <b-form-group>
-        <b-button type="submit" :disabled="loading" variant="primary" block>{{ $t('login-submit') }}</b-button>
+        <b-button type="submit" :disabled="loading" variant="primary" block>
+          {{ $t('login-submit') }}
+        </b-button>
       </b-form-group>
     </b-form>
   </div>

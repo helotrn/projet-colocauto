@@ -15,19 +15,18 @@
     </div>
 
     <validation-observer ref="observer" v-slot="{ passes }">
-      <b-form :novalidate="true" class="register-form__form" @submit.stop.prevent="passes(register)">
+      <b-form :novalidate="true" class="register-form__form"
+        @submit.stop.prevent="passes(register)">
         <validation-provider
           :name="$t('email')"
           :rules="{ required: true, email: true }"
-          v-slot="validationContext"
-        >
+          v-slot="validationContext">
           <b-form-group :label="$t('email')">
             <b-form-input
               type="email"
               :placeholder="$t('email')"
               :state="getValidationState(validationContext)"
-              v-model="email"
-            />
+              v-model="email" />
             <b-form-invalid-feedback>
               {{ validationContext.errors[0] }}
             </b-form-invalid-feedback>
@@ -37,8 +36,7 @@
         <validation-provider
           :name="$t('password')"
           :rules="{ required: true, min: 8 }"
-          v-slot="validationContext"
-        >
+          v-slot="validationContext">
           <b-form-group :label="$t('password')">
             <b-form-input
               type="password"

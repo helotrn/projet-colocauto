@@ -29,6 +29,6 @@ export default {
     loanable: 'véhicule',
     loanables: 'véhicules',
     login: 'se connecter',
-    account: 'Compte'
+    account: 'Compte',
   },
 };
