@@ -1,3 +1,7 @@
+body {
+  padding: 0;
+}
+
 .page {
   &__content {
     min-height: calc(100vh - #{$layout-navbar-height + $molotov-footer-height});

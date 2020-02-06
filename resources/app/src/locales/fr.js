@@ -36,5 +36,6 @@ export default {
   titles: {
     community: 'communauté | communautés',
     login: 'se connecter',
+    account: 'Compte'
   },
 };

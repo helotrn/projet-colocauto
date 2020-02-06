@@ -28,5 +28,6 @@ export default {
   titles: {
     community: 'community | communities',
     login: 'login',
+    account: 'Account'
   },
 };

@@ -6,6 +6,11 @@ import Help from '../views/Help.vue';
 import Home from '../views/Home.vue';
 import Login from '../views/Login.vue';
 
+import Account from '../views/Account.vue';
+import Payments from '../views/account/Payments.vue';
+import Reservations from '../views/account/Reservations.vue';
+import Vehicles from '../views/account/Vehicles.vue';
+
 import CommunityMap from '../views/community/Map.vue';
 
 import Register from '../views/Register.vue';
@@ -30,6 +35,31 @@ const routes = [
     meta: {
       title: 'titles.login',
     },
+  },
+  {
+    path: '/account',
+    name: 'account',
+    component: Account,
+    meta: {
+      title: 'titles.account',
+    },
+    children: [
+      {
+        path: '/payments',
+        name: 'payments',
+        component: Payments,
+      },
+      {
+        path: '/reservations',
+        name: 'reservations',
+        component: Reservations,
+      },
+      {
+        path: '/vehicles',
+        name: 'vehicles',
+        component: Vehicles,
+      },
+    ],
   },
   {
     path: '/register',

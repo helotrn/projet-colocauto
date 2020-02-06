@@ -4,6 +4,16 @@ import axios from 'axios';
 import VueAxios from 'vue-axios';
 import * as VueGoogleMaps from 'vue2-google-maps';
 
+import {
+  ValidationObserver,
+  ValidationProvider,
+  extend,
+  localize,
+} from 'vee-validate';
+
+import fr from 'vee-validate/dist/locale/fr.json';
+import * as rules from 'vee-validate/dist/rules';
+
 import App from './App.vue';
 import router from './router';
 import store from './store';
@@ -32,6 +42,19 @@ Vue.use(VueGoogleMaps, {
 Vue.component('layout-footer', LayoutFooter);
 Vue.component('layout-header', LayoutHeader);
 Vue.component('layout-page', LayoutPage);
+
+
+// Install VeeValidate rules and localization
+Object.keys(rules).forEach((rule) => {
+  extend(rule, rules[rule]);
+});
+
+localize('fr', fr);
+
+
+Vue.component('ValidationObserver', ValidationObserver);
+Vue.component('ValidationProvider', ValidationProvider);
+
 
 Object.keys(filters).forEach(f => Vue.filter(f, filters[f]));
 
