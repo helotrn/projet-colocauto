@@ -7,8 +7,7 @@
       align="center"
       use-router
       :hide-goto-end-buttons="true"
-      :disabled="true"
-    >
+      :disabled="true">
       <template v-slot:page="{ page, active }">
         <span v-if="page < currentPage" class="checked">
           <b-icon icon="check" font-scale="2" />
@@ -25,10 +24,10 @@
 <script>
 
 import RegisterForm from '@/components/Register/Form.vue';
-import ProfileForm from '@/components/Account/ProfileForm.vue';
+import ProfileForm from '@/components/Profile/Form.vue';
 
 export default {
-  name: 'registerBox',
+  name: 'RegisterBox',
   components: {
     RegisterForm,
     ProfileForm,

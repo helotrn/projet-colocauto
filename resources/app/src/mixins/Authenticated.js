@@ -17,10 +17,24 @@ export default {
       };
     },
     isAdmin() {
-      return this.user.role === 'admin';
+      return this.isLoggedIn && this.user.role === 'admin';
     },
-    loggedIn() {
+    isLoggedIn() {
       return !!this.user;
+    },
+    isRegistered() {
+      const requiredFields = [
+        'name', 'first_name', 'date_of_birth',
+        'address', 'postal_code', 'phone',
+      ];
+
+      for (let i = 0, len = requiredFields.length; i < len; i += 1) {
+        if (!this.user[requiredFields[i]]) {
+          return false;
+        }
+      }
+
+      return true;
     },
     user() {
       return this.$store.state.user;

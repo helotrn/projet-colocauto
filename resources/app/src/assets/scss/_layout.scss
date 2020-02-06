@@ -9,6 +9,11 @@ body {
     h1, .page__section {
       margin-bottom: 60px;
     }
+
+    &.padded {
+      padding-top: 1em;
+      padding-bottom: 50px;
+    }
   }
 }
 

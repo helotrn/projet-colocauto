@@ -70,7 +70,7 @@ export default {
     ResourcesList,
   },
   beforeMount() {
-    if (!this.loggedIn) {
+    if (!this.isLoggedIn) {
       this.skipToLogin('app');
     }
   },

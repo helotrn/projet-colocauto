@@ -53,8 +53,7 @@
         <validation-provider
           :name="$t('password-repeat')"
           :rules="{ required: true, is: password }"
-          v-slot="validationContext"
-        >
+          v-slot="validationContext">
           <b-form-group :label="$t('password-repeat')">
             <b-form-input
               type="password"
@@ -102,12 +101,6 @@ export default {
   name: 'registerBox',
   components: {
     'svg-google': Google,
-  },
-  props: {
-    currentPage: {
-      type: Number,
-      required: true,
-    },
   },
   data() {
     return {

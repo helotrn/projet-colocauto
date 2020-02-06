@@ -1,6 +1,6 @@
 <template>
   <layout-page name="register" wide>
-    <register-box :current-page="stepIndex" />
+    <router-view />
   </layout-page>
 </template>
 
@@ -8,39 +8,19 @@
 import Authenticated from '@/mixins/Authenticated';
 import Notification from '@/mixins/Notification';
 
-import RegisterBox from '@/components/Register/Box.vue';
+const routeGuard = (to, from, next) => {
+  if (to.name === 'register') {
+    return next('/register/1');
+  }
+
+  return next();
+};
 
 export default {
-  name: 'Signup',
+  name: 'Register',
   mixins: [Authenticated, Notification],
-  components: { RegisterBox },
-  mounted() {
-    if (this.loggedIn) {
-      if (!this.registered) {
-        this.$router.replace('/register/2');
-      } else {
-        this.$router.replace('/app');
-      }
-    }
-  },
-  props: {
-    step: {
-      type: String,
-      required: false,
-      default: '1',
-    },
-  },
-  computed: {
-    stepIndex() {
-      const stepIndex = parseInt(this.step, 10);
-
-      if (Number.isNaN(stepIndex)) {
-        return 1;
-      }
-
-      return stepIndex;
-    },
-  },
+  beforeRouteEnter: routeGuard,
+  beforeRouteUpdate: routeGuard,
 };
 </script>
 

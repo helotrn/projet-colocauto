@@ -16,4 +16,21 @@ export default {
       private: 'privée',
     },
   },
+  en: {
+    communauté: 'community | communities',
+    'créer une communauté': 'create a community',
+    '{count} communauté sélectionnée': 'no community selected | {count} community selected | {count} communities selected',
+    fields: {
+      description: 'description',
+      id: 'ID',
+      name: 'name',
+      type: 'type',
+    },
+    types: {
+      neighborhood: 'neighborhood',
+      null: 'any type',
+      borough: 'borough',
+      private: 'private',
+    },
+  },
 };

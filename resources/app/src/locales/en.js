@@ -1,23 +1,8 @@
 import AdminFilters from './components/Admin/Filters';
+import communities from '@/locales/models/communities';
 
 export default {
-  'tableau de bord': 'dashboard',
-  communities: {
-    communauté: 'community | communities',
-    'créer une communauté': 'create a community',
-    '{count} communauté sélectionnée': 'no community selected | {count} community selected | {count} communities selected',
-    fields: {
-      id: 'ID',
-      name: 'name',
-      type: 'type',
-    },
-    types: {
-      neighborhood: 'neighborhood',
-      null: 'any type',
-      borough: 'borough',
-      private: 'private',
-    },
-  },
+  communities: communities.fr,
   components: {
     admin: {
       filters: AdminFilters.en,
@@ -32,8 +17,17 @@ export default {
     en: 'English',
     fr: 'Français',
   },
+  profile: {
+    titles: {
+      account: 'Account informations',
+      payment: 'Payment',
+      reservations: 'Reservations',
+      vehicles: 'Vehicles',
+    },
+  },
   titles: {
     community: 'community | communities',
+    dashboard: 'dashboard',
     login: 'login',
     account: 'Account',
   },
