@@ -1,9 +1,17 @@
 <template>
   <ul class="profile-sidebar">
-    <b-nav-item to="/profile/account">{{ $t('profile.titles.account') }}</b-nav-item>
-    <b-nav-item to="/profile/payments" :disabled="!user.approved_at">{{ $t('profile.titles.payment') }}</b-nav-item>
-    <b-nav-item to="/profile/reservations" :disabled="!user.approved_at">{{ $t('profile.titles.reservations') }}</b-nav-item>
-    <b-nav-item to="/profile/vehicles" :disabled="!user.approved_at">{{ $t('profile.titles.vehicles') }}</b-nav-item>
+    <b-nav-item to="/profile/account">
+      {{ $t('profile.titles.account') }}
+    </b-nav-item>
+    <b-nav-item to="/profile/payments" :disabled="!user.approved_at">
+      {{ $t('profile.titles.payment') }}
+    </b-nav-item>
+    <b-nav-item to="/profile/reservations" :disabled="!user.approved_at">
+      {{ $t('profile.titles.reservations') }}
+    </b-nav-item>
+    <b-nav-item to="/profile/vehicles" :disabled="!user.approved_at">
+      {{ $t('profile.titles.vehicles') }}
+    </b-nav-item>
   </ul>
 </template>
 

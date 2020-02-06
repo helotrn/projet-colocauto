@@ -47,7 +47,7 @@ const routes = [
         component: ProfileAccount,
         meta: {
           title: 'titles.account',
-        }
+        },
       },
       //      {
       //        path: 'payments',

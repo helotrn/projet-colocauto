@@ -47,8 +47,8 @@ export default {
         default:
           return this.$i18n.t('profile.titles.account');
       }
-    }
-  }
+    },
+  },
 };
 </script>
 
