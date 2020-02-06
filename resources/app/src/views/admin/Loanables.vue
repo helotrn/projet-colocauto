@@ -12,10 +12,6 @@
     </b-row>
 
     <b-row>
-      <b-col class="admin__filters">
-        <admin-filters entity="loanables" :filters="filters" :params="params" />
-      </b-col>
-
       <b-col class="admin__selection">
         <div v-if="selected.length > 0">
           {{ $tc(
@@ -24,6 +20,10 @@
             { count: selected.length }
           ) }}
         </div>
+      </b-col>
+
+      <b-col class="admin__filters">
+        <admin-filters entity="loanables" :filters="filters" :params="params" />
       </b-col>
     </b-row>
 
@@ -37,6 +37,9 @@
           :show-empty="true" empty-text="Pas de véhicule">
           <template v-slot:cell(type)="row">
             {{ $t(`types.${row.item.type}`) | capitalize }}
+          </template>
+          <template v-slot:cell(owner)="row">
+            {{ row.item.owner.user.full_name }}
           </template>
           <template v-slot:cell(actions)="row">
             <div class="text-right">
@@ -53,7 +56,10 @@
     </b-row>
 
     <b-row>
-      {{ total }}
+      <b-col>
+        <b-pagination align="right" v-model="params.page"
+          :total-rows="total" :per-page="params.per_page" />
+      </b-col>
     </b-row>
   </b-container>
 </template>
@@ -64,6 +70,9 @@ import AdminFilters from '@/components/Admin/Filters.vue';
 import DataRouteGuards from '@/mixins/DataRouteGuards';
 import ListMixin from '@/mixins/ListMixin';
 import locales from '@/locales';
+import filters from '@/helpers/filters';
+
+const { capitalize } = filters;
 
 export default {
   name: 'AdminLoanables',
@@ -76,6 +85,7 @@ export default {
         { key: 'id', label: 'ID', sortable: true },
         { key: 'name', label: 'Nom', sortable: true },
         { key: 'type', label: 'Type', sortable: false },
+        { key: 'owner', label: capitalize(this.$i18n.t('propriétaire')), sortable: false },
         { key: 'actions', label: 'Actions', tdClass: 'table__cell__actions' },
       ],
     };

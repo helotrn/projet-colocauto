@@ -12,7 +12,7 @@
         <b-form class="form" @submit.prevent="submit">
           <div class="form__section">
             <h2>Informations générales</h2>
-            <admin-form :definition="form" :item="item" />
+            <admin-form :definition="form" :item="item" entity="communities" />
           </div>
 
           <div class="form__section">

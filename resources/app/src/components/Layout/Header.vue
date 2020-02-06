@@ -1,7 +1,7 @@
 <template>
   <header class="layout-header">
     <div class="layout-header__navbar">
-      <layout-navbar />
+      <layout-navbar :title="title" />
     </div>
   </header>
 </template>
@@ -13,6 +13,13 @@ export default {
   name: 'Header',
   components: {
     LayoutNavbar,
+  },
+  props: {
+    title: {
+      type: String,
+      require: false,
+      default: '',
+    },
   },
 };
 </script>

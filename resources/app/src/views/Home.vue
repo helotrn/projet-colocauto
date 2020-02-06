@@ -251,6 +251,24 @@ export default {
 @import "@/assets/scss/tools";
 
 .page.home {
+  .card {
+    border: 0;
+    margin-bottom: 10px;
+
+    &-title {
+      color: $locomotion-green;
+      font-weight: bold;
+    }
+
+    &-body {
+      .form-group {
+        legend {
+          font-weight: bold;
+        }
+      }
+    }
+  }
+
   .page__content {
     overflow: hidden;
   }
@@ -422,6 +440,7 @@ export default {
 
     .svg-community {
       position: relative;
+      pointer-events: none;
       @include size("width", 283px, "", "", 820px);
       @include space("margin-top", -150px, "", "", -260px);
       @include position("left", 0, "", "", -10vw );

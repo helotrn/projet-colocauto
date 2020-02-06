@@ -1,3 +1,5 @@
+import AdminFilters from './components/Admin/Filters';
+
 export default {
   'tableau de bord': 'dashboard',
   communities: {
@@ -14,6 +16,11 @@ export default {
       null: 'any type',
       borough: 'borough',
       private: 'private',
+    },
+  },
+  components: {
+    admin: {
+      filters: AdminFilters.en,
     },
   },
   forms: {

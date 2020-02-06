@@ -54,4 +54,23 @@ class Car extends Loanable
     ];
 
     public static $transformer = CarTransformer::class;
+
+    public static function getColumnsDefinition() {
+        return [
+            '*' => function ($query = null) {
+                if (!$query) {
+                    return 'cars.*';
+                }
+
+                return $query->selectRaw('cars.*');
+            },
+            'type' => function ($query = null) {
+                if (!$query) {
+                    return "'car' AS type";
+                }
+
+                return $query->selectRaw("'car' AS type");
+            }
+        ];
+    }
 }

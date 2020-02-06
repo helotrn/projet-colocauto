@@ -35,10 +35,14 @@ export default {
     margin-bottom: 10px;
   }
 
+  &__filters {
+    text-align: right;
+  }
+
   &__selection {
     margin-bottom: 10px;
     min-height: 19px;
-    text-align: right;
+    text-align: left;
   }
 
   .page__content {
