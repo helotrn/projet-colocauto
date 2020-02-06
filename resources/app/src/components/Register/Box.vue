@@ -7,9 +7,7 @@
       align="center"
       use-router
       :hide-goto-end-buttons="true"
-      :link-gen="paginationLinks"
-      :disabled="true"
-    >
+      :disabled="true">
       <template v-slot:page="{ page, active }">
         <span v-if="page < currentPage" class="checked">
           <b-icon icon="check" font-scale="2" />
@@ -18,129 +16,26 @@
       </template>
     </b-pagination-nav>
 
-    <div class="pagination__text">
-      Inscription
-    </div>
-
-    <div class="register-box__google">
-      <b-button :disabled="loading" variant="primary" class="btn-google">
-        <div class="btn-google__icon">
-          <svg-google />
-        </div>
-        Inscription Google
-      </b-button>
-    </div>
-
-    <div class="register-box__separator">
-      <span class="register-box__separator__text">OU</span>
-    </div>
-
-    <b-form class="register-box__form" @submit.prevent="register">
-      <b-form-group label="Courriel">
-        <b-form-input
-          type="email"
-          required
-          placeholder="Courriel"
-          v-model="email"
-        />
-      </b-form-group>
-
-      <b-form-group label="Mot de passe">
-        <b-form-input
-          type="password"
-          required
-          placeholder="Mot de passe"
-          v-model="password"
-        />
-      </b-form-group>
-
-      <b-form-group label="Mot de passe (confirmation)">
-        <b-form-input
-          type="password"
-          required
-          placeholder="Mot de passe (confirmation)"
-          v-model="passwordRepeat"
-        />
-      </b-form-group>
-
-      <b-button type="submit" :disabled="loading" variant="primary" block>S'inscrire</b-button>
-    </b-form>
+    <register-form v-if="currentPage == 1"/>
+    <profile-form v-if="currentPage == 2"/>
   </div>
 </template>
 
 <script>
-import helpers from '@/helpers';
-import Google from '@/assets/svg/google.svg';
 
-const { extractErrors } = helpers;
+import RegisterForm from '@/components/Register/Form.vue';
+import ProfileForm from '@/components/Profile/Form.vue';
 
 export default {
-  name: 'registerBox',
+  name: 'RegisterBox',
   components: {
-    'svg-google': Google,
+    RegisterForm,
+    ProfileForm,
   },
   props: {
     currentPage: {
       type: Number,
       required: true,
-    },
-  },
-  data() {
-    return {
-      password: '',
-      passwordRepeat: '',
-    };
-  },
-  computed: {
-    loading() {
-      return this.$store.state.register.loading;
-    },
-    email: {
-      get() {
-        return this.$store.state.register.email;
-      },
-      set(value) {
-        return this.$store.commit('register/email', value);
-      },
-    },
-  },
-  methods: {
-    paginationLinks(pageNum) {
-      return pageNum > 1 ? `/register/${pageNum}` : '/register';
-    },
-    async register() {
-      this.$store.commit('register/loading', true);
-
-      try {
-        await this.$store.dispatch('register', {
-          email: this.email,
-          password: this.password,
-        });
-
-        await this.$store.dispatch('login', {
-          email: this.email,
-          password: this.password,
-        });
-
-        this.$store.commit('register/loading', false);
-
-        this.$router.replace('/register/2');
-      } catch (e) {
-        if (e.request) {
-          switch (e.request.status) {
-            case 422:
-            default:
-              this.$store.commit('addNotification', {
-                content: extractErrors(e.response.data).join(', '),
-                title: "Erreur d'inscription",
-                variant: 'danger',
-                type: 'register',
-              });
-          }
-        }
-      }
-
-      this.$store.commit('register/loading', false);
     },
   },
 };
@@ -158,21 +53,10 @@ export default {
     text-align: center;
   }
 
-  .register-box__google {
+  h2 {
     text-align: center;
-  }
-
-  .register-box__separator {
-    text-align: center;
-    margin: 24px 0;
-    border-bottom: 1px solid $black;
-  }
-
-  .register-box__separator__text {
-    position: relative;
-    top: 11px;
-    padding: 0 20px;
-    background: $white;
+    margin-bottom: 2rem;
+    font-size: 16px;
   }
 }
 </style>

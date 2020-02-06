@@ -1,6 +1,6 @@
 <template>
-  <layout-page name="registration-map" wide>
-    <b-card title="Trouver une communauté" class="registration-map__form" v-if="!community">
+  <div name="register-map">
+    <b-card title="Trouver une communauté" class="register-map__form" v-if="!community">
       <b-card-text>
         <b-form @submit.prevent="searchPostalCode">
           <b-form-group label="Code postal">
@@ -11,9 +11,9 @@
       </b-card-text>
     </b-card>
 
-    <b-card class="registration-map__community" v-if="community">
+    <b-card class="register-map__community" v-if="community">
       <template v-slot:header>
-        <div class="registration-map__community__buttons">
+        <div class="register-map__community__buttons">
           <b-button @click="previousCommunity">Précédente</b-button>
           <b-button @click="nextCommunity">Suivante</b-button>
         </div>
@@ -23,13 +23,13 @@
         </h4>
       </template>
       <b-card-text>
-        <div class="registration-map__community__description">
+        <div class="register-map__community__description">
           <p v-if="community">
             {{ community.description }}
           </p>
         </div>
 
-        <b-form class="registration-map__community__buttons"
+        <b-form class="register-map__community__buttons"
           @submit.prevent="completeRegistration" @reset.prevent="resetCommunity">
           <b-button type="submit" variant="primary">Poursuivre l'inscription</b-button>
           <b-button type="reset" variant="warning">Revenir aux communautés</b-button>
@@ -37,7 +37,7 @@
       </b-card-text>
     </b-card>
 
-    <gmap-map class="registration-map__map"
+    <gmap-map class="register-map__map"
       ref="map"
       :zoom="zoom"
       :center="center"
@@ -60,7 +60,7 @@
         :icon="mapIcon"
         :position="c.center_google" />
     </gmap-map>
-  </layout-page>
+  </div>
 </template>
 
 <script>
@@ -120,8 +120,8 @@ export default {
     },
     center: {
       get() {
-        if (this.$store.state['registration.map'].center) {
-          return this.$store.state['registration.map'].center;
+        if (this.$store.state['register.map'].center) {
+          return this.$store.state['register.map'].center;
         }
 
         if (this.community) {
@@ -131,15 +131,15 @@ export default {
         return this.averageCommunitiesCenter;
       },
       set(center) {
-        this.$store.commit('registration.map/center', center);
+        this.$store.commit('register.map/center', center);
       },
     },
     community: {
       get() {
-        return this.$store.state['registration.map'].community;
+        return this.$store.state['register.map'].community;
       },
       set(community) {
-        this.$store.commit('registration.map/community', community);
+        this.$store.commit('register.map/community', community);
       },
     },
     communities() {
@@ -151,10 +151,10 @@ export default {
     },
     postalCode: {
       get() {
-        return this.$store.state['registration.map'].postalCode;
+        return this.$store.state['register.map'].postalCode;
       },
       set(value) {
-        this.$store.commit('registration.map/postalCode', value);
+        this.$store.commit('register.map/postalCode', value);
       },
     },
   },
@@ -250,70 +250,68 @@ export default {
 </script>
 
 <style lang="scss">
-.registration-map.page {
-  .registration-map {
-    position: relative;
+.register-map {
+  position: relative;
 
-    &__map {
-      width: 100vw;
-      height: calc(100vh - #{$layout-navbar-height + $molotov-footer-height});
-      z-index: 10;
+  &__map {
+    width: 100vw;
+    height: calc(100vh - #{$layout-navbar-height + $molotov-footer-height});
+    z-index: 10;
+  }
+
+  .card {
+    width: 190px;
+  }
+
+  &__form.card {
+    margin-top: 50px;
+    margin-left: 30px;
+    position: absolute;
+    z-index: 100;
+  }
+
+  &__community.card {
+    margin-top: 50px;
+    margin-left: 30px;
+    position: absolute;
+    z-index: 100;
+    max-width: 50vw;
+
+    .card-header {
+      margin-bottom: 0;
     }
 
-    .card {
-      width: 190px;
+    .card-text {
+      display: flex;
+      flex-direction: column;
+
+      .register-map__community__description {
+        flex-grow: 1;
+        max-height: 120px;
+      }
     }
 
-    &__form {
-      margin-top: 50px;
-      margin-left: 30px;
-      position: absolute;
-      z-index: 100;
+    &__buttons {
+      text-align: left;
+
+      .btn {
+        margin-right: 10px;
+        margin-bottom: 10px;
+      }
+
+      .btn:last-child {
+        margin-right: 0;
+      }
     }
 
-    &__community {
-      margin-top: 50px;
-      margin-left: 30px;
-      position: absolute;
-      z-index: 100;
-      max-width: 50vw;
+    &.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
 
-      .card-header {
-        margin-bottom: 0;
-      }
-
-      .card-text {
-        display: flex;
-        flex-direction: column;
-
-        .registration-map__community__description {
-          flex-grow: 1;
-          max-height: 120px;
-        }
-      }
-
-      &__buttons {
-        text-align: left;
-
-        .btn {
-          margin-right: 10px;
-          margin-bottom: 10px;
-        }
-
-        .btn:last-child {
-          margin-right: 0;
-        }
-      }
-
-      &.hidden {
-        opacity: 0;
-        pointer-events: none;
-      }
-
-      &.visible {
-        opacity: 1;
-        pointer-events: normal;
-      }
+    &.visible {
+      opacity: 1;
+      pointer-events: normal;
     }
   }
 }

@@ -14,7 +14,7 @@ export default {
   name: 'Login',
   mixins: [Authenticated, Notification],
   mounted() {
-    if (this.loggedIn) {
+    if (this.isLoggedIn) {
       this.skipToApp();
     }
   },

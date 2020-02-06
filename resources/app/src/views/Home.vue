@@ -269,6 +269,10 @@ export default {
     }
   }
 
+  .page__content {
+    overflow: hidden;
+  }
+
   .page__section {
     @include space("padding-top", 36px, "", "", 65px);
     @include space("padding-bottom", 36px, "", "", 65px);
@@ -391,6 +395,11 @@ export default {
     text-align: center;
     @include space("padding-top", 65px, "", "", 100px);
     @include space("padding-bottom", 90px, "", "", 100px);
+
+    .container {
+      position: relative;
+      z-index: 2;
+    }
 
     .page__section__title {
       color: $white;

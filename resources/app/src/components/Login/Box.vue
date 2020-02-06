@@ -1,47 +1,66 @@
 <template>
   <div class="login-box">
-    <h1 class="login-box__title">Connexion</h1>
+    <h1 class="login-box__title">{{ $t('login') }}</h1>
 
     <div class="google-login">
       <b-button :disabled="loading" variant="primary" class="btn-google">
         <div class="btn-google__icon">
           <svg-google />
         </div>
-        Connexion Google
+        {{ $t('google') }}
       </b-button>
     </div>
 
     <b-form class="login-box__form" @submit.prevent="login">
-      <b-form-group label="Courriel">
+      <b-form-group :label="$t('email')">
         <b-form-input
           type="email"
           required
-          placeholder="Courriel"
+          :placeholder="$t('email')"
           v-model="email"
         />
       </b-form-group>
 
-      <b-form-group label="Mot de passe">
+      <b-form-group :label="$t('password')">
         <b-form-input
           type="password"
           required
-          placeholder="Mot de passe"
+          :placeholder="$t('password')"
           v-model="password"
         />
       </b-form-group>
 
       <b-form-group>
         <b-form-checkbox inline v-model="rememberMe">
-          Se souvenir de moi
+          {{ $t('remember-me') }}
         </b-form-checkbox>
       </b-form-group>
 
       <b-form-group>
-        <b-button type="submit" :disabled="loading" variant="primary" block>Se connecter</b-button>
+        <b-button type="submit" :disabled="loading" variant="primary" block>
+          {{ $t('login-submit') }}
+        </b-button>
       </b-form-group>
     </b-form>
   </div>
 </template>
+
+<i18n>
+fr:
+  'login': Connexion
+  'google': Connexion Google
+  'email': Courriel
+  'password': Mot de passe
+  'remember-me': Se souvenir de moi
+  'login-submit': Se connecter
+en:
+  'login': Login
+  'google': Sign in with Google
+  'email': Email
+  'password': Password
+  'remember-me': Remember me
+  'login-submit': Login
+</i18n>
 
 <script>
 import Google from '@/assets/svg/google.svg';

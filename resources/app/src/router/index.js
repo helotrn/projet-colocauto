@@ -6,10 +6,14 @@ import Help from '../views/Help.vue';
 import Home from '../views/Home.vue';
 import Login from '../views/Login.vue';
 
+import Profile from '../views/Profile.vue';
+import ProfileAccount from '../views/profile/Account.vue';
+
 import CommunityMap from '../views/community/Map.vue';
 
 import Register from '../views/Register.vue';
-import RegistrationMap from '../views/registration/Map.vue';
+import RegisterStep from '../views/register/Step.vue';
+import RegisterMap from '../views/register/Map.vue';
 
 import adminRoutes from './admin';
 
@@ -30,18 +34,53 @@ const routes = [
     },
   },
   {
+    path: '/profile',
+    name: 'profile',
+    component: Profile,
+    meta: {
+      title: 'titles.profile',
+    },
+    children: [
+      {
+        path: 'account',
+        name: 'account',
+        component: ProfileAccount,
+        meta: {
+          title: 'titles.account',
+        }
+      },
+      //      {
+      //        path: 'payments',
+      //        name: 'payments',
+      //        component: ProfilePayments,
+      //        title: 'titles.profile.payments',
+      //      },
+      //      {
+      //        path: 'reservations',
+      //        name: 'reservations',
+      //        component: ProfileReservations,
+      //        title: 'titles.profile.reservations',
+      //      },
+      //      {
+      //        path: 'vehicles',
+      //        name: 'vehicles',
+      //        component: ProfileVehicles,
+      //        title: 'titles.profile.vehicles',
+      //      },
+    ],
+  },
+  {
     path: '/register',
     name: 'register',
     component: Register,
-    props: true,
     meta: {
-      title: "S'inscrire",
+      title: 'titles.register',
     },
     children: [
       {
         path: 'map',
         name: 'register-map',
-        component: RegistrationMap,
+        component: RegisterMap,
         meta: {
           auth: true,
           data: {
@@ -57,11 +96,8 @@ const routes = [
       {
         path: ':step',
         name: 'register-step',
-        component: Register,
+        component: RegisterStep,
         props: true,
-        meta: {
-          title: "S'inscrire",
-        },
       },
     ],
   },
@@ -71,7 +107,7 @@ const routes = [
     component: Dashboard,
     meta: {
       auth: true,
-      title: 'tableau de bord',
+      title: 'titles.dashboard',
     },
   },
   {

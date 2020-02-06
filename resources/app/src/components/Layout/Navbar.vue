@@ -25,12 +25,12 @@
 
     <b-collapse id="nav-collapse" class="layout-navbar__collapse" is-nav>
       <div class="layout-navbar__collapse__illustration d-md-none" />
-      <b-navbar-nav class="ml-auto" v-if="loggedIn">
+      <b-navbar-nav class="ml-auto" v-if="isLoggedIn">
         <b-nav-item to="/app">
           <span class="nav-link__icon d-lg-none">
             <svg-dashboard />
           </span>
-          <span class="nav-link__text">{{ $t('tableau de bord') | capitalize }}</span>
+          <span class="nav-link__text">{{ $t('titles.dashboard') | capitalize }}</span>
         </b-nav-item>
 
         <b-nav-item to="/community/map" v-if="hasCommunity">
@@ -47,14 +47,14 @@
           <span class="nav-link__text">Communauté</span>
         </b-nav-item>
 
-        <b-nav-item to="/register/map" v-if="!hasCommunity">
+        <b-nav-item to="/register" v-if="!isAdmin && !hasCommunity">
           <span class="nav-link__icon d-lg-none">
             <svg-hand />
           </span>
-          <span class="nav-link__text">Trouver une communauté</span>
+          <span class="nav-link__text">Inscription</span>
         </b-nav-item>
 
-        <b-nav-item to="/account" class="d-block d-lg-none" >
+        <b-nav-item to="/profile" class="d-block d-lg-none" >
           <span class="nav-link__icon">
             <svg-profile />
           </span>
@@ -87,7 +87,7 @@
               <svg-profile />
             </b-badge>
           </template>
-          <b-dropdown-item to="/account">Profil</b-dropdown-item>
+          <b-dropdown-item to="/profile">Profil</b-dropdown-item>
           <b-dropdown-item to="/help">Aide</b-dropdown-item>
           <b-dropdown-divider />
           <b-dropdown-item @click="logout">Déconnexion</b-dropdown-item>
@@ -140,7 +140,7 @@ export default {
   },
   computed: {
     hasCommunity() {
-      return this.loggedIn && this.user.communities.length > 0;
+      return this.isLoggedIn && this.user.communities.length > 0;
     },
   },
   data() {
@@ -249,6 +249,7 @@ export default {
   }
 
   .navbar-nav .nav-link.router-link-exact-active,
+  .navbar-nav .nav-link.router-link-active,
   .navbar-nav .nav-link:hover {
     color: $locomotion-green;
   }

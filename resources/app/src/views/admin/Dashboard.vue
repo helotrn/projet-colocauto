@@ -1,5 +1,5 @@
 <template>
-  <h1>{{ $t('tableau de bord') | capitalize }}</h1>
+  <h1>{{ $t('titles.dashboard') | capitalize }}</h1>
 </template>
 
 <script>

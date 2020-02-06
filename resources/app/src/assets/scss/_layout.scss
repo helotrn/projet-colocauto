@@ -1,9 +1,18 @@
+body {
+  padding: 0;
+}
+
 .page {
   &__content {
     min-height: calc(100vh - #{$layout-navbar-height + $molotov-footer-height});
 
     h1, .page__section {
       margin-bottom: 60px;
+    }
+
+    &.padded {
+      padding-top: 1em;
+      padding-bottom: 50px;
     }
   }
 }
