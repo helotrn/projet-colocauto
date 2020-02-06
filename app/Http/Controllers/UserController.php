@@ -73,7 +73,7 @@ class UserController extends RestController
     public function getCommunities(Request $request, $userId, CommunityRepository $communityRepo) {
         $user = $this->repo->find($request, $userId);
         if ($user) {
-            $request->merge(['users.id' => $userId]);
+            $request->merge(['user_id' => $userId]);
             return $communityRepo->get($request);
         }
     }
@@ -89,7 +89,7 @@ class UserController extends RestController
             $request->merge(['user_id' => $userId]);
             $request->merge(['community_id' => $communityId]);
 
-            return $this->repo->update($user->id, $data);
+            return $this->repo->get($user->id, $data);
         }
         return "";
     }

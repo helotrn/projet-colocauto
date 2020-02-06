@@ -8,6 +8,33 @@ use Tests\TestCase;
 
 class CommunityTest extends TestCase
 {
+    private static $getUserResponseStructure = [
+        'id',
+        'name',
+        'email',
+        'email_verified_at',
+        'google_id',
+        'description',
+        'date_of_birth',
+        'address',
+        'postal_code',
+        'phone',
+        'is_smart_phone',
+        'other_phone',
+        'approved_at',
+    ];
+    private static $getCommunityResponseStructure = [
+        'id',
+        'name',
+        'description',
+        'area',
+        'created_at',
+        'updated_at',
+        'deleted_at',
+        'type',
+        'center',
+    ];
+
     public function testCreateCommunities() {
         $data = [
             'name' => $this->faker->name,
@@ -133,5 +160,22 @@ class CommunityTest extends TestCase
                 ->assertJsonStructure($this->buildCollectionStructure([
                     'id', 'name', 'description', 'area',
                 ]));
+    }
+
+
+    public function testShowCommunitiesUsers() {
+        $user = factory(User::class)->create();
+        $community = factory(Community::class)->create();
+        $data = [
+            'users' => [['id' => $user['id']]]
+        ];
+        $response = $this->json('PUT', "/api/v1/communities/$community->id", $data);
+
+        $data = [
+            'community_id' => $community->id,
+        ];
+        $response = $this->json('GET', "/api/v1/users", $data);
+        $response->assertStatus(200)
+                ->assertJsonStructure($this->buildCollectionStructure(static::$getUserResponseStructure));
     }
 }

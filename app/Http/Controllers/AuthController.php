@@ -6,7 +6,6 @@ use App\Http\Controllers\UserController;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\Auth\RegisterRequest;
 use App\Http\Requests\BaseRequest;
-use App\Http\Requests\User\RetrieveRequest as UserRetrieveRequest;
 use App\Http\Requests\User\UpdateRequest as UserUpdateRequest;
 use App\Models\User;
 use App\Utils\Traits\ErrorResponseTrait;
@@ -85,7 +84,7 @@ class AuthController extends Controller
         return $this->respondWithErrors('Registration error.', 400);
     }
 
-    public function getUser(UserRetrieveRequest $request) {
+    public function getUser(BaseRequest $request) {
         return $this->userController->retrieve($request, $this->auth->user()->id);
     }
 
