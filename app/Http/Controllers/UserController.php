@@ -49,6 +49,10 @@ class UserController extends RestController
     }
 
     public function retrieve(RetrieveRequest $request, $id) {
+        if ($id === 'me') {
+            $id = $request->user()->id;
+        }
+
         $item = $this->repo->find($request, $id);
 
         try {
