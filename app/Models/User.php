@@ -27,12 +27,20 @@ class User extends AuthenticatableBaseModel
         'is_smart_phone' => 'nullable|boolean',
         'last_name' => 'nullable',
         'name' => 'nullable',
-        'other_phone' => 'nullable',
-        'password' => 'size:8',
-        'phone' => 'nullable',
+        'other_phone' => [
+          'nullable',
+          'regex:/^$|^[-1-9][-0-9]*$/',
+        ],
+        'password' => [
+          'min:8',
+        ],
+        'phone' => [
+          'nullable',
+          'regex:/^$|^[-1-9][-0-9]*$/',
+        ],
         'postal_code' => [
           'nullable',
-          'regex:/^[a-zA-Z][0-9][a-zA-Z]\s*[0-9][a-zA-Z][0-9]$/',
+          'regex:/^$|^[a-zA-Z][0-9][a-zA-Z]\s*[0-9][a-zA-Z][0-9]$/',
         ],
     ];
 
