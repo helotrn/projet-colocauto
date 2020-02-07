@@ -1,29 +1,17 @@
+import AdminFilters from './components/Admin/Filters';
+import bikes from '@/locales/models/bikes';
+import communities from '@/locales/models/communities';
+import loanables from '@/locales/models/loanables';
+
 export default {
-  'tableau de bord': 'tableau de bord',
-  communities: {
-    communauté: 'communauté | communautés',
-    'créer une communauté': 'créer une communauté',
-    '{count} communauté sélectionnée': 'aucune communauté sélectionnée | {count} communauté sélectionnée | {count} communautés sélectionnées',
-    fields: {
-      id: 'ID',
-      name: 'nom',
-      type: 'type',
-    },
-    types: {
-      neighborhood: 'voisinage',
-      null: "n'importe quel type",
-      borough: 'quartier',
-      private: 'privée',
+  bikes: bikes.fr,
+  communities: communities.fr,
+  components: {
+    admin: {
+      filters: AdminFilters.fr,
     },
   },
-  loanables: {
-    types: {
-      bike: 'vélo',
-      car: 'voiture',
-      null: "n'importe quel type",
-      trailer: 'remorque',
-    },
-  },
+  loanables: loanables.fr,
   forms: {
     actions: 'actions',
     modifier: 'modifier',
@@ -33,8 +21,24 @@ export default {
     en: 'English',
     fr: 'Français',
   },
+  profile: {
+    titles: {
+      account: 'Informations du compte',
+      payment: 'Paiement',
+      reservations: 'Historique des réservations',
+      vehicles: 'Mes véhicules',
+    },
+  },
   titles: {
-    community: 'communauté | communautés',
+    account: 'compte',
+    admin: 'administration',
+    communities: 'communautés',
+    community: 'communauté',
+    dashboard: 'tableau de bord',
+    loanable: 'véhicule',
+    loanables: 'véhicules',
     login: 'se connecter',
+    profile: 'Profil',
+    register: "s'inscrire",
   },
 };

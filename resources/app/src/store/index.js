@@ -7,7 +7,7 @@ import loanables from './loanables';
 import login from './pages/login';
 import register from './pages/register';
 
-import RegistrationMap from './pages/registration/map';
+import RegisterMap from './pages/register/map';
 
 const vuexPersist = new VuexPersist({
   key: 'locomotion',
@@ -131,7 +131,7 @@ export default new Vuex.Store({
     loanables,
     login,
     register,
-    'registration.map': RegistrationMap,
+    'register.map': RegisterMap,
   },
   plugins: [vuexPersist.plugin],
 });

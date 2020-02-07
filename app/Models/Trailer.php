@@ -32,4 +32,23 @@ class Trailer extends Loanable
     ];
 
     public static $transformer = TrailerTransformer::class;
+
+    public static function getColumnsDefinition() {
+        return [
+            '*' => function ($query = null) {
+                if (!$query) {
+                    return 'trailers.*';
+                }
+
+                return $query->selectRaw('trailers.*');
+            },
+            'type' => function ($query = null) {
+                if (!$query) {
+                    return "'trailer' AS type";
+                }
+
+                return $query->selectRaw("'trailer' AS type");
+            }
+        ];
+    }
 }

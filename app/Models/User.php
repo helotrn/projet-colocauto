@@ -18,18 +18,19 @@ class User extends AuthenticatableBaseModel
     use HasApiTokens, Notifiable;
 
     public static $rules = [
-        'name' => 'nullable',
-        'email' => 'email',
-        'last_name' => 'nullable',
-        'google_id' => 'nullable',
-        'description' => 'nullable',
-        'date_of_birth' => 'nullable|date',
         'address' => 'nullable',
-        'postal_code' => 'nullable',
-        'phone' => 'nullable',
-        'is_smart_phone' => 'nullable|boolean',
-        'other_phone' => 'nullable',
         'approved_at' => 'nullable|date',
+        'date_of_birth' => 'nullable|date',
+        'description' => 'nullable',
+        'email' => 'email',
+        'google_id' => 'nullable',
+        'is_smart_phone' => 'nullable|boolean',
+        'last_name' => 'nullable',
+        'name' => 'nullable',
+        'other_phone' => 'nullable',
+        'password' => 'size:8',
+        'phone' => 'nullable',
+        'postal_code' => 'nullable',
     ];
 
     public static $transformer = UserTransformer::class;

@@ -53,6 +53,11 @@ export default {
       return this.context.total;
     },
   },
+  data() {
+    return {
+      listDebounce: null,
+    };
+  },
   methods: {
     rowSelected(items) {
       this.selected = items;
@@ -60,7 +65,19 @@ export default {
   },
   watch: {
     jsonParams() {
-      this.$store.dispatch(`${this.slug}/retrieve`, { fields: this.fieldsList.join(',') });
+      if (this.listDebounce) {
+        clearTimeout(this.listDebounce);
+      }
+
+      this.listDebounce = setTimeout(() => {
+        this.$store.dispatch(
+          `${this.slug}/retrieve`,
+          {
+            fields: this.fieldsList.join(','),
+          },
+        );
+        this.listDebounce = null;
+      }, 250);
     },
   },
 };

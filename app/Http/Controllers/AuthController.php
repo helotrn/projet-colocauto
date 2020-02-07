@@ -17,9 +17,10 @@ class AuthController extends Controller
 {
     use ErrorResponseTrait;
 
-    protected $user;
-    protected $tokens;
     protected $auth;
+    protected $tokens;
+    protected $user;
+    protected $userController;
 
     public function __construct(User $user, TokenRepository $tokens, Auth $auth, UserController $userController) {
         $this->user = $user;

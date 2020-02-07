@@ -15,6 +15,12 @@ class Owner extends BaseModel
 
     public $collections = ['loanables'];
 
+    public $belongsTo = ['user'];
+
+    public function user() {
+        return $this->belongsTo(User::class);
+    }
+
     public function loanables() {
         return $this->hasMany(Loanable::class);
     }

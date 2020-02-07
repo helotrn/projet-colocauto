@@ -12,4 +12,27 @@ class BikeController extends RestController
         $this->repo = $repository;
         $this->model = $model;
     }
+
+    public function retrieve(Request $request, $id) {
+        $item = $this->repo->find($request, $id);
+
+        try {
+            $response = $this->respondWithItem($request, $item);
+        } catch (ValidationException $e) {
+            return $this->respondWithErrors($e->getErrors(), $e->getMessage());
+        }
+
+        return $response;
+    }
+
+
+    public function update(Request $request, $id) {
+        try {
+            $response = parent::validateAndUpdate($request, $id);
+        } catch (ValidationException $e) {
+            return $this->respondWithErrors($e->getErrors(), $e->getMessage());
+        }
+
+        return $response;
+    }
 }

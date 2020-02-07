@@ -46,6 +46,7 @@ Route::prefix('v1')->group(function () {
         }
 
         Route::options('communities', 'CommunityController@template');
+        Route::options('loanables', 'LoanableController@template');
 
         Route::get('users/{user_id}/communities', "UserController@getCommunities")
             ->name("users.getCommunities");

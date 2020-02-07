@@ -12,10 +12,6 @@
     </b-row>
 
     <b-row>
-      <b-col class="admin__filters">
-        <admin-filters entity="communities" :filters="filters" :params="params" />
-      </b-col>
-
       <b-col class="admin__selection">
         <div v-if="selected.length > 0">
           {{ $tc(
@@ -24,6 +20,10 @@
             { count: selected.length }
           ) }}
         </div>
+      </b-col>
+
+      <b-col class="admin__filters">
+        <admin-filters entity="communities" :filters="filters" :params="params" />
       </b-col>
     </b-row>
 
@@ -53,7 +53,10 @@
     </b-row>
 
     <b-row>
-      {{ total }}
+      <b-col>
+        <b-pagination align="right" v-model="params.page"
+          :total-rows="total" :per-page="params.per_page" />
+      </b-col>
     </b-row>
   </b-container>
 </template>

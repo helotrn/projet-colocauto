@@ -40,8 +40,8 @@ export default {
   computed: {
     center: {
       get() {
-        if (this.$store.state['registration.map'].center) {
-          return this.$store.state['registration.map'].center;
+        if (this.$store.state['register.map'].center) {
+          return this.$store.state['register.map'].center;
         }
 
         if (this.community) {
@@ -51,7 +51,7 @@ export default {
         return this.averageCommunitiesCenter;
       },
       set(center) {
-        this.$store.commit('registration.map/center', center);
+        this.$store.commit('register.map/center', center);
       },
     },
     google: gmapApi,
@@ -60,8 +60,8 @@ export default {
 </script>
 
 <style lang="scss">
-.registration-map.page {
-  .registration-map-page {
+.register-map.page {
+  .register-map-page {
     position: relative;
 
     &__map {
