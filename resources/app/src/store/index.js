@@ -6,6 +6,7 @@ import communities from './communities';
 import loanables from './loanables';
 import login from './pages/login';
 import register from './pages/register';
+import users from './users';
 
 import RegisterMap from './pages/register/map';
 
@@ -41,7 +42,7 @@ const actions = {
     try {
       const { data: user } = await Vue.axios.get('/auth/user', {
         params: {
-          fields: 'id,full_name,communities.id,role',
+          fields: '*,communities.id,communities.name,communities.role',
         },
       });
 
@@ -132,6 +133,7 @@ export default new Vuex.Store({
     login,
     register,
     'register.map': RegisterMap,
+    users,
   },
   plugins: [vuexPersist.plugin],
 });

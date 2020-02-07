@@ -24,7 +24,7 @@ export default {
     },
     isRegistered() {
       const requiredFields = [
-        'name', 'first_name', 'date_of_birth',
+        'name', 'last_name', 'date_of_birth',
         'address', 'postal_code', 'phone',
       ];
 

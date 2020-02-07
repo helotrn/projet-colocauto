@@ -8,16 +8,7 @@ export default {
     next();
   },
   async mounted() {
-    const { dispatch } = this.$store;
-
-    if (this.id === 'new') {
-      await dispatch(`${this.slug}/loadEmpty`);
-    } else {
-      await dispatch(`${this.slug}/retrieveOne`, {
-        id: this.id,
-        params: this.$route.meta.params,
-      });
-    }
+    await this.loadItem();
   },
   computed: {
     changed() {
@@ -40,17 +31,32 @@ export default {
         this.$store.commit(`${this.slug}/item`, item);
       },
     },
+    loading() {
+      return this.context.loading;
+    },
     slug() {
       return this.$route.meta.slug;
     },
   },
   methods: {
+    async loadItem() {
+      const { dispatch } = this.$store;
+
+      if (this.id === 'new') {
+        await dispatch(`${this.slug}/loadEmpty`);
+      } else {
+        await dispatch(`${this.slug}/retrieveOne`, {
+          id: this.id,
+          params: this.$route.meta.params,
+        });
+      }
+    },
     reset() {
       this.$store.commit(`${this.slug}/item`, JSON.parse(this.initialItem));
     },
     async submit() {
       try {
-        await this.$store.dispatch(`${this.slug}/updateItem`);
+        await this.$store.dispatch(`${this.slug}/updateItem`, this.$route.meta.params);
       } catch (e) {
         switch (e.request.status) {
           case 422:

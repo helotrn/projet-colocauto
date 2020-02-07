@@ -1,11 +1,160 @@
 <template>
   <div class="profile-form">
-    profile form
+    <validation-observer ref="observer" v-slot="{ passes }">
+      <b-form :novalidate="true" class="profile-form__form"
+        @submit.stop.prevent="passes(submit)">
+        <b-row>
+          <b-col>
+            <forms-validated-input name="name" :label="$t('fields.name') | capitalize"
+              :rules="{ required: true }" type="text"
+              :placeholder="placeholderOrLabel('name') | capitalize"
+              v-model="user.name" />
+          </b-col>
+
+          <b-col md="6">
+            <forms-validated-input name="last_name"
+              :label="$t('fields.last_name') | capitalize"
+              :rules="{ required: true }" type="text"
+              :placeholder="placeholderOrLabel('last_name') | capitalize"
+              v-model="user.last_name" />
+          </b-col>
+        </b-row>
+
+        <b-row>
+          <b-col>
+            <forms-validated-input name="description"
+              :description="$t('descriptions.description')"
+              :label="$t('fields.description') | capitalize" type="textarea"
+              :placeholder="placeholderOrLabel('description') | capitalize"
+              v-model="user.description" />
+          </b-col>
+        </b-row>
+
+        <p>À partir d'ici, les données que vous entrez sont strictement confidentielles. Consultez notre <a href="#">politique de confidentialité</a>.</p>
+
+        <hr>
+
+        <b-row>
+          <b-col>
+            <forms-validated-input name="date_of_birth"
+              :label="$t('fields.date_of_birth') | capitalize"
+              :rules="{ required: true }" type="date"
+              :placeholder="placeholderOrLabel('date_of_birth') | capitalize"
+              v-model="user.date_of_birth" />
+          </b-col>
+        </b-row>
+
+        <b-row>
+          <b-col>
+            <forms-validated-input name="address" :label="$t('fields.address') | capitalize"
+              :rules="{ required: true }" type="text"
+              :placeholder="placeholderOrLabel('address') | capitalize"
+              v-model="user.address" />
+          </b-col>
+        </b-row>
+
+        <b-row>
+          <b-col>
+            <forms-validated-input name="postal_code"
+              :label="$t('fields.postal_code') | capitalize"
+              :rules="{
+                required: true,
+                regex: /^[a-zA-Z][0-9][a-zA-Z]\s*[0-9][a-zA-Z][0-9]$/
+              }" type="text"
+              :placeholder="placeholderOrLabel('postal_code') | capitalize"
+              v-model="user.postal_code" />
+          </b-col>
+        </b-row>
+
+        <b-row>
+          <b-col md="8">
+            <forms-validated-input name="phone" :label="$t('fields.phone') | capitalize"
+              :rules="{ required: true, regex:/^[-1-9][-0-9]*$/  }" type="text"
+              :placeholder="placeholderOrLabel('phone') | capitalize"
+              v-model="user.phone" />
+          </b-col>
+
+          <b-col md="4">
+            <forms-validated-input name="is_smart_phone"
+              :label="$t('fields.is_smart_phone') | capitalize" type="checkbox"
+              :placeholder="placeholderOrLabel('is_smart_phone') | capitalize"
+              v-model="user.is_smart_phone" />
+          </b-col>
+        </b-row>
+
+        <b-row>
+          <b-col>
+            <forms-validated-input name="other_phone"
+              :label="$t('fields.other_phone') | capitalize"
+              :rules="{ regex:/^[-1-9][-0-9]*$/  }" type="text"
+              :placeholder="placeholderOrLabel('other_phone') | capitalize"
+              v-model="user.other_phone" />
+          </b-col>
+        </b-row>
+
+        <b-button type="submit" :disabled="loading" variant="primary" block>
+          {{ $t('enregistrer') | capitalize }}
+        </b-button>
+      </b-form>
+    </validation-observer>
   </div>
 </template>
 
 <script>
+import FormsValidatedInput from '@/components/Forms/ValidatedInput.vue';
+
+import locales from '@/locales';
+
 export default {
   name: 'ProfileForm',
+  components: { FormsValidatedInput },
+  props: {
+    loading: {
+      type: Boolean,
+      require: true,
+    },
+    user: {
+      type: Object,
+      required: true,
+    },
+  },
+  i18n: {
+    messages: {
+      en: {
+        ...locales.en.users,
+        ...locales.en.forms,
+      },
+      fr: {
+        ...locales.fr.users,
+        ...locales.fr.forms,
+      },
+    },
+  },
+  methods: {
+    placeholderOrLabel(key) {
+      if (this.$i18n.te(`placeholders.${key}`)) {
+        return this.$i18n.t(`placeholders.${key}`);
+      }
+
+      return this.label(key);
+    },
+    label(key) {
+      return this.$i18n.t(`fields.${key}`);
+    },
+    getValidationState({ dirty, validated, valid = null }) {
+      return dirty || validated ? valid : null;
+    },
+    submit(...params) {
+      this.$emit('submit', ...params);
+    }
+  },
+  watch: {
+    user: {
+      deep: true,
+      handler(newValue) {
+        this.$store.commit('users/item', this.user);
+      },
+    }
+  }
 };
 </script>

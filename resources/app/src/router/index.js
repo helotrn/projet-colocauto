@@ -12,6 +12,7 @@ import ProfileAccount from '../views/profile/Account.vue';
 import CommunityMap from '../views/community/Map.vue';
 
 import Register from '../views/Register.vue';
+import RegisterIntro from '../views/register/Intro.vue';
 import RegisterStep from '../views/register/Step.vue';
 import RegisterMap from '../views/register/Map.vue';
 
@@ -78,6 +79,11 @@ const routes = [
     },
     children: [
       {
+        path: '1',
+        name: 'register-intro',
+        component: RegisterIntro,
+      },
+      {
         path: 'map',
         name: 'register-map',
         component: RegisterMap,
@@ -98,6 +104,10 @@ const routes = [
         name: 'register-step',
         component: RegisterStep,
         props: true,
+        meta: {
+          slug: 'users',
+          fields: '*,communities.id,communities.name,communities.role',
+        },
       },
     ],
   },

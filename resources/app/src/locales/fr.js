@@ -2,6 +2,7 @@ import AdminFilters from './components/Admin/Filters';
 import bikes from '@/locales/models/bikes';
 import communities from '@/locales/models/communities';
 import loanables from '@/locales/models/loanables';
+import users from '@/locales/models/users';
 
 export default {
   bikes: bikes.fr,
@@ -14,6 +15,7 @@ export default {
   loanables: loanables.fr,
   forms: {
     actions: 'actions',
+    enregistrer: 'enregistrer',
     modifier: 'modifier',
     supprimer: 'supprimer',
   },
@@ -41,4 +43,5 @@ export default {
     profile: 'Profil',
     register: "s'inscrire",
   },
+  users: users.fr,
 };

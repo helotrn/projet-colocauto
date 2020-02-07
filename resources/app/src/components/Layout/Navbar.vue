@@ -140,7 +140,7 @@ export default {
   },
   computed: {
     hasCommunity() {
-      return this.isLoggedIn && this.user.communities.length > 0;
+      return this.isLoggedIn && this.user.communities && this.user.communities.length > 0;
     },
   },
   data() {

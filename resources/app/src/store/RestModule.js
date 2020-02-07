@@ -181,12 +181,17 @@ export default function RestModule(slug, initialState) {
           throw e;
         }
       },
-      async updateItem({ dispatch, state }) {
-        await dispatch('update', { id: state.item.id, data: state.item });
+      async updateItem({ dispatch, state }, params) {
+        debugger
+        await dispatch('update', { id: state.item.id, data: state.item, params, });
       },
-      async update({ commit, state }, { id, data }) {
+      async update({ commit, state }, { id, data, params }) {
         try {
-          const ajax = Vue.axios.put(`/${state.slug}/${id}`, data);
+          const ajax = Vue.axios.put(`/${state.slug}/${id}`, data, {
+            params: {
+              ...params,
+            },
+          });
 
           commit('ajax', ajax);
 
