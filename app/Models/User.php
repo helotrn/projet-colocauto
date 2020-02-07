@@ -63,6 +63,12 @@ class User extends AuthenticatableBaseModel
         ];
     }
 
+    public static $sizes = [
+        'thumbnail' => '256x@fit',
+    ];
+
+    public static $sizesByField = [];
+
     protected $fillable = [
         'name',
         'last_name',
@@ -83,6 +89,8 @@ class User extends AuthenticatableBaseModel
         'email_verified_at' => 'datetime',
     ];
 
+    protected $with = ['avatar'];
+
     public $collections = [
       'loans',
       'bills',
@@ -94,6 +102,18 @@ class User extends AuthenticatableBaseModel
     public $belongsTo = [
       'borrower',
     ];
+
+    public $morphOneField = [
+        'avatar' => 'imageable',
+    ];
+
+    public function images() {
+        return $this->morphMany(Image::class, 'imageable');
+    }
+
+    public function avatar() {
+        return $this->morphOne(Image::class, 'imageable')->where('field', 'avatar');
+    }
 
     public function borrower() {
         return $this->belongsTo(Borrower::class);
