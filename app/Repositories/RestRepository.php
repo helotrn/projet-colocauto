@@ -80,6 +80,10 @@ class RestRepository
     }
 
     public function find(Request $request, $id) {
+        if (!intval($id)) {
+            return abort(422, 'Numeric ids.');
+        }
+
         $query = $this->model;
 
         if (method_exists($query, 'scopeAccessibleBy')) {
