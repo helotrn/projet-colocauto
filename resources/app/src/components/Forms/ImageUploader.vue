@@ -2,15 +2,14 @@
   <b-form-group :label="label" :label-for="field">
     <div class="mb-3" v-if="!value">
       <b-form-file v-bind:value="value" :state="Boolean(value)" :id="field"
-                   :ref="`${field}fileinput`" :placeholder="placeholder"
-                   :name="field" :accept="accept.join(',')"
-                   @change="uploadImage($event.target.name, $event.target.files)">
-      </b-form-file>
+        :ref="`${field}fileinput`" :placeholder="placeholder"
+        :name="field" :accept="accept.join(',')"
+        @change="uploadImage($event.target.name, $event.target.files)"/>
     </div>
     <div v-else>
       <figure class="preview">
-        <img v-if="value.sizes" :src="value.sizes.thumbnail" />
-        <img v-else src="/loading.gif" />
+        <img v-if="value.sizes" :src="value.sizes.thumbnail" >
+        <img v-else src="/loading.gif" >
 
         <figcaption>{{ value.original_filename }}</figcaption>
       </figure>
@@ -54,7 +53,7 @@ export default {
       type: Object,
       require: false,
       default: null,
-    }
+    },
   },
   methods: {
     removeImage() {
@@ -80,6 +79,8 @@ export default {
       const image = await this.$store.dispatch('images/upload', formData);
 
       this.$emit('input', image);
+
+      return image;
     },
   },
 };
