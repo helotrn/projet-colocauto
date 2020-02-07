@@ -24,8 +24,10 @@ class PointCast extends CustomCastBase
     }
 
     public function castAttribute($point) {
-        $latitude = $point->getLat();
-        $longitude = $point->getLng();
-        return [$latitude, $longitude];
+        if ($point) {
+            $latitude = $point->getLat();
+            $longitude = $point->getLng();
+            return [$latitude, $longitude];
+        }
     }
 }

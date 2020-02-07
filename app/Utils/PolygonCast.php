@@ -36,6 +36,10 @@ class PolygonCast extends CustomCastBase
             return $polygon;
         }
 
+        if (is_string($polygon)) {
+            return $polygon;
+        }
+
         $points = [];
 
         foreach ($polygon->getLineStrings() as $lineString) {
