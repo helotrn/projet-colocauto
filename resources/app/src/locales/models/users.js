@@ -2,7 +2,7 @@ export default {
   fr: {
     descriptions: {
       description: 'Décrivez-vous en quelques mots. Cette description personnelle sera affichée '
-        + 'sur votre profil de membre Locomotion.'
+        + 'sur votre profil de membre Locomotion.',
     },
     fields: {
       address: 'adresse',

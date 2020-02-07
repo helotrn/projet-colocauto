@@ -23,10 +23,6 @@ import Notification from '@/mixins/Notification';
 
 import RegisterForm from '@/components/Register/Form.vue';
 
-import helpers from '@/helpers';
-
-const { extractErrors } = helpers;
-
 export default {
   name: 'RegisterIntro',
   mixins: [Authenticated, Notification],
@@ -41,7 +37,7 @@ export default {
             return vm.$router.replace('/register/2');
           }
 
-          return;
+          return null;
         }
 
         if (vm.user.communities.length === 0) {
@@ -49,7 +45,7 @@ export default {
             return vm.$router.replace('/register/map');
           }
 
-          return;
+          return null;
         }
 
         return vm.$router.replace('/register/3');
@@ -58,13 +54,15 @@ export default {
       if (vm.$route.path !== '/register/1') {
         return vm.$router.replace('/register/1');
       }
+
+      return null;
     });
   },
   data() {
     return {
       currentPage: 1,
     };
-  }
+  },
 };
 </script>
 

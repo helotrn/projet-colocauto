@@ -182,8 +182,7 @@ export default function RestModule(slug, initialState) {
         }
       },
       async updateItem({ dispatch, state }, params) {
-        debugger
-        await dispatch('update', { id: state.item.id, data: state.item, params, });
+        await dispatch('update', { id: state.item.id, data: state.item, params });
       },
       async update({ commit, state }, { id, data, params }) {
         try {

@@ -30,7 +30,10 @@
           </b-col>
         </b-row>
 
-        <p>À partir d'ici, les données que vous entrez sont strictement confidentielles. Consultez notre <a href="#">politique de confidentialité</a>.</p>
+        <p>
+          À partir d'ici, les données que vous entrez sont strictement confidentielles.
+          Consultez notre <a href="#">politique de confidentialité</a>.
+        </p>
 
         <hr>
 
@@ -166,16 +169,16 @@ export default {
     },
     submit(...params) {
       this.$emit('submit', ...params);
-    }
+    },
   },
   watch: {
     user: {
       deep: true,
-      handler(newValue) {
+      handler() {
         this.$store.commit('users/item', this.user);
       },
-    }
-  }
+    },
+  },
 };
 </script>
 
