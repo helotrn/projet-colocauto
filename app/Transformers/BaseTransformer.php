@@ -33,7 +33,7 @@ class BaseTransformer
 
     protected function addCollections(&$output, &$item, &$options) {
         foreach ($item->collections as $relation) {
-            if ($this->shouldIncludeField($relation, $options)) {
+            if ($this->shouldIncludeRelation($relation, $item, $options)) {
                 $className = get_class($item->{$relation}()->getRelated());
                 $transformer = new $className::$transformer();
 
@@ -64,7 +64,7 @@ class BaseTransformer
 
     protected function addBelongsTo(&$output, &$item, &$options) {
         foreach ($item->belongsTo as $relation) {
-            if ($this->shouldIncludeField($relation, $options)) {
+            if ($this->shouldIncludeRelation($relation, $item, $options)) {
                 if (!$item->{$relation}) {
                     continue;
                 }
@@ -80,9 +80,15 @@ class BaseTransformer
         }
     }
 
-    protected function shouldIncludeField($relation, $options) {
-        return !isset($options['fields']) ||
+    protected function shouldIncludeRelation($relation, &$item, $options) {
+        return isset($options['fields']) &&
             in_array($relation, wrap_array_keys($options['fields']), true) ||
+            in_array($relation, $item->getWith(), true);
+    }
+
+    protected function shouldIncludeField($field, $options) {
+        return !isset($options['fields']) ||
+            in_array($field, wrap_array_keys($options['fields']), true) ||
             in_array('*', wrap_array_keys($options['fields']), true);
     }
 

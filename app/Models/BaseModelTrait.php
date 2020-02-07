@@ -35,6 +35,10 @@ trait BaseModelTrait
 
     public $belongsTo = [];
 
+    public function getWith() {
+        return $this->with;
+    }
+
     public function belongsTo($related, $foreignKey = null, $ownerKey = null, $relation = null) {
         if (is_null($relation)) {
             $relation = $this->guessBelongsToRelation();
