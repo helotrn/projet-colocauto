@@ -10,6 +10,7 @@ use App\Http\Requests\Community\RetrieveRequest;
 use App\Http\Requests\Community\UpdateRequest;
 use App\Models\Community;
 use App\Repositories\CommunityRepository;
+use Illuminate\Validation\ValidationException;
 
 class CommunityController extends RestController
 {
@@ -30,12 +31,12 @@ class CommunityController extends RestController
 
     public function create(CreateRequest $request) {
         try {
-            $response = parent::validateAndCreate($request);
+            $item = parent::validateAndCreate($request);
         } catch (ValidationException $e) {
             return $this->respondWithErrors($e->getErrors(), $e->getMessage());
         }
 
-        return $response;
+        return $this->respondWithItem($request, $item);
     }
 
     public function update(UpdateRequest $request, $id) {

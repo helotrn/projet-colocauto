@@ -2,9 +2,9 @@
 
 namespace App\Repositories;
 
-use App\Exceptions\ValidationException;
 use App\Http\Requests\BaseRequest as Request;
 use Illuminate\Database\Eloquent\RelationNotFoundException;
+use Illuminate\Validation\ValidationException;
 
 class RestRepository
 {

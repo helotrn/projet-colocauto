@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\BaseRequest as Request;
 use App\Models\Bike;
 use App\Repositories\BikeRepository;
+use Illuminate\Validation\ValidationException;
 
 class BikeController extends RestController
 {

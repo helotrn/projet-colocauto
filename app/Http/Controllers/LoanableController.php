@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\BaseRequest as Request;
 use App\Models\Loanable;
 use App\Repositories\LoanableRepository;
+use Illuminate\Validation\ValidationException;
 use Validator;
 
 class LoanableController extends RestController

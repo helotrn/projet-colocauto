@@ -10,6 +10,7 @@ use App\Http\Requests\User\RetrieveRequest;
 use App\Http\Requests\User\UpdateRequest;
 use App\Models\User;
 use App\Repositories\UserRepository;
+use Illuminate\Validation\ValidationException;
 
 class UserController extends RestController
 {

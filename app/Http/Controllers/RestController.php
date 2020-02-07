@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Exceptions\ValidationException;
 use App\Http\Requests\BaseRequest as Request;
 use App\Transformers\BaseTransformer;
-use Illuminate\Pagination\LengthAwarePaginator;
-use Symfony\Component\HttpFoundation\StreamedResponse;
 use App\Utils\Traits\ErrorResponseTrait;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use Validator;
 
 class RestController extends Controller
@@ -39,7 +39,7 @@ class RestController extends Controller
         );
 
         if ($validator->fails()) {
-            return $this->respondWithErrors($validator->errors());
+            throw new ValidationException($validator);
         }
 
         return $this->repo->create($request->input());
@@ -62,7 +62,7 @@ class RestController extends Controller
         );
 
         if ($validator->fails()) {
-            return $this->respondWithErrors($validator->errors());
+            throw new ValidationException($validator);
         }
 
         return $this->repo->update($id, $request->input());
@@ -76,7 +76,7 @@ class RestController extends Controller
         );
 
         if ($validator->fails()) {
-            return $this->respondWithErrors($validator->errors());
+            throw new ValidationException($validator);
         }
 
         return $this->repo->destroy($id);
