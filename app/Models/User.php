@@ -30,7 +30,10 @@ class User extends AuthenticatableBaseModel
         'other_phone' => 'nullable',
         'password' => 'size:8',
         'phone' => 'nullable',
-        'postal_code' => 'nullable',
+        'postal_code' => [
+          'nullable',
+          'regex:/^[a-zA-Z][0-9][a-zA-Z]\s*[0-9][a-zA-Z][0-9]$/',
+        ],
     ];
 
     public static $transformer = UserTransformer::class;
