@@ -53,7 +53,7 @@ Route::prefix('v1')->group(function () {
         Route::get('users/{user_id}/communities/{community_id}', "UserController@retrieveCommunity")
             ->name("users.getCommunities");
 
-        Route::post('users/{user_id}/communities/{community_id}', "UserController@associateToCommunity")
+        Route::put('users/{user_id}/communities/{community_id}', "UserController@associateToCommunity")
             ->name("users.associateToCommunity");
 
         Route::delete('users/{user_id}/communities/{community_id}', "UserController@dissociateFromCommunity")
