@@ -9,7 +9,7 @@ export default function RestModule(slug, initialState) {
       dataById: {},
       error: null,
       filters: [],
-      initialItem: null,
+      initialItem: '',
       item: null,
       lastLoadedAt: null,
       loaded: false,

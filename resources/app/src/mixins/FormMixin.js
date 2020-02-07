@@ -5,6 +5,7 @@ const { extractErrors } = helpers;
 export default {
   beforeRouteLeave(to, from, next) {
     this.$store.commit(`${this.slug}/item`, null);
+    this.$store.commit(`${this.slug}/initialItem`, '');
     next();
   },
   async mounted() {
