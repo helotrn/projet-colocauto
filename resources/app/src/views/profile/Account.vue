@@ -2,7 +2,7 @@
   <div class="profile-account">
     <profile-form :loading="loading" :user="item"
       @reset="reset" :changed="changed" show-reset
-      v-if="item" />
+      @submit="submit" v-if="item" />
   </div>
 </template>
 

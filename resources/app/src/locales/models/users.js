@@ -6,6 +6,7 @@ export default {
     },
     fields: {
       address: 'adresse',
+      avatar: 'image de profil',
       date_of_birth: 'date de naissance',
       description: 'description',
       is_smart_phone: 'téléphone intelligent?',

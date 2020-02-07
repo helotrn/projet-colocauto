@@ -194,10 +194,13 @@ export default function RestModule(slug, initialState) {
 
           commit('ajax', ajax);
 
-          await ajax;
+          const { data: item } = await ajax;
 
           commit('loaded', false);
-          commit('total', undefined);
+
+          commit('item', item);
+          commit('initialItem', item);
+
           commit('ajax', null);
         } catch (e) {
           commit('loaded', false);

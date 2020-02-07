@@ -3,6 +3,7 @@ import Vuex from 'vuex';
 import VuexPersist from 'vuex-persist';
 
 import communities from './communities';
+import images from './images';
 import loanables from './loanables';
 import login from './pages/login';
 import register from './pages/register';
@@ -129,6 +130,7 @@ export default new Vuex.Store({
   actions,
   modules: {
     communities,
+    images,
     loanables,
     login,
     register,

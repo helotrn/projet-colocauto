@@ -33,7 +33,7 @@ export default {
       },
     },
     loading() {
-      return this.context.loading;
+      return !!this.context.ajax;
     },
     slug() {
       return this.$route.meta.slug;

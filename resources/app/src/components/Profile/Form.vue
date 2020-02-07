@@ -4,38 +4,47 @@
       <b-form :novalidate="true" class="profile-form__form"
         @submit.stop.prevent="passes(submit)">
         <b-row>
-          <b-col>
-            <forms-validated-input name="name" :label="$t('fields.name') | capitalize"
-              :rules="{ required: true }" type="text"
-              :placeholder="placeholderOrLabel('name') | capitalize"
-              v-model="user.name" />
+          <b-col lg="4">
+            <forms-image-uploader field="avatar"
+              :label="$t('fields.avatar') | capitalize"
+              v-model="user.avatar" />
           </b-col>
+          <b-col>
+            <b-row>
+              <b-col lg="6">
+                <forms-validated-input name="name" :label="$t('fields.name') | capitalize"
+                  :rules="{ required: true }" type="text"
+                  :placeholder="placeholderOrLabel('name') | capitalize"
+                  v-model="user.name" />
+              </b-col>
 
-          <b-col md="6">
-            <forms-validated-input name="last_name"
-              :label="$t('fields.last_name') | capitalize"
-              :rules="{ required: true }" type="text"
-              :placeholder="placeholderOrLabel('last_name') | capitalize"
-              v-model="user.last_name" />
+              <b-col lg="6">
+                <forms-validated-input name="last_name"
+                  :label="$t('fields.last_name') | capitalize"
+                  :rules="{ required: true }" type="text"
+                  :placeholder="placeholderOrLabel('last_name') | capitalize"
+                  v-model="user.last_name" />
+              </b-col>
+            </b-row>
+
+            <b-row>
+              <b-col>
+                <forms-validated-input name="description"
+                  :description="$t('descriptions.description')"
+                  :label="$t('fields.description') | capitalize" type="textarea"
+                  :placeholder="placeholderOrLabel('description') | capitalize"
+                  v-model="user.description" />
+              </b-col>
+            </b-row>
           </b-col>
         </b-row>
 
-        <b-row>
-          <b-col>
-            <forms-validated-input name="description"
-              :description="$t('descriptions.description')"
-              :label="$t('fields.description') | capitalize" type="textarea"
-              :placeholder="placeholderOrLabel('description') | capitalize"
-              v-model="user.description" />
-          </b-col>
-        </b-row>
+        <hr>
 
         <p>
           À partir d'ici, les données que vous entrez sont strictement confidentielles.
           Consultez notre <a href="#">politique de confidentialité</a>.
         </p>
-
-        <hr>
 
         <b-row>
           <b-col>
@@ -115,12 +124,16 @@
 
 <script>
 import FormsValidatedInput from '@/components/Forms/ValidatedInput.vue';
+import FormsImageUploader from '@/components/Forms/ImageUploader.vue';
 
 import locales from '@/locales';
 
 export default {
   name: 'ProfileForm',
-  components: { FormsValidatedInput },
+  components: {
+    FormsImageUploader,
+    FormsValidatedInput,
+  },
   props: {
     changed: {
       type: Boolean,
