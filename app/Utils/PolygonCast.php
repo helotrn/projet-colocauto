@@ -14,7 +14,7 @@ class PolygonCast extends CustomCastBase
         if (is_array($value)) {
             $lineString = new LineString(
                 array_map(function ($point) {
-                    [$latitude, $longitude] = explode(',', $point);
+                    [$latitude, $longitude] = $point;
                     return new Point($latitude, $longitude);
                 }, $value)
             );

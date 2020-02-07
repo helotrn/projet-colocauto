@@ -63,7 +63,7 @@ export default {
       set(area) {
         const newItem = {
           ...this.item,
-          area: area.split('\n'),
+          area: area.split('\n').map(t => t.split(',')),
         };
         this.$store.commit(`${this.slug}/item`, newItem);
       },
