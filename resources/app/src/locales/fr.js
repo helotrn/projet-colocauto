@@ -17,6 +17,7 @@ export default {
     actions: 'actions',
     enregistrer: 'enregistrer',
     modifier: 'modifier',
+    réinitialiser: 'réinitialiser',
     supprimer: 'supprimer',
   },
   locales: {

@@ -92,9 +92,19 @@
           </b-col>
         </b-row>
 
-        <b-button type="submit" :disabled="loading" variant="primary" block>
-          {{ $t('enregistrer') | capitalize }}
-        </b-button>
+        <div class="form__buttons">
+          <b-button-group v-if="showReset">
+            <b-button variant="success" type="submit" :disabled="!changed">
+              {{ $t('enregistrer') | capitalize }}
+            </b-button>
+            <b-button type="reset" :disabled="!changed" @click="$emit('reset')">
+              {{ $t('réinitialiser') | capitalize }}
+            </b-button>
+          </b-button-group>
+          <b-button variant="success" type="submit" v-else>
+            {{ $t('enregistrer') | capitalize }}
+          </b-button>
+        </div>
       </b-form>
     </validation-observer>
   </div>
@@ -109,9 +119,19 @@ export default {
   name: 'ProfileForm',
   components: { FormsValidatedInput },
   props: {
+    changed: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
     loading: {
       type: Boolean,
-      require: true,
+      required: true,
+    },
+    showReset: {
+      type: Boolean,
+      required: false,
+      default: false,
     },
     user: {
       type: Object,
@@ -158,3 +178,6 @@ export default {
   }
 };
 </script>
+
+<style lang="scss">
+</style>

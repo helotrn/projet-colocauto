@@ -48,6 +48,8 @@ const routes = [
         component: ProfileAccount,
         meta: {
           title: 'titles.account',
+          slug: 'users',
+          fields: '*,communities.id,communities.name,communities.role,payments.*,loanables.*',
         },
       },
       //      {
