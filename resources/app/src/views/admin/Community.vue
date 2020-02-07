@@ -12,7 +12,8 @@
         <b-form class="form" @submit.prevent="submit">
           <div class="form__section">
             <h2>Informations générales</h2>
-            <admin-form :definition="form" :item="item" entity="communities" />
+
+            <forms-builder :definition="form" :item="item" entity="communities" />
           </div>
 
           <div class="form__section">
@@ -45,7 +46,7 @@
 </template>
 
 <script>
-import AdminForm from '@/components/Admin/Form.vue';
+import FormsBuilder from '@/components/Forms/Builder.vue';
 
 import FormMixin from '@/mixins/FormMixin';
 
@@ -53,7 +54,7 @@ export default {
   name: 'AdminCommunity',
   mixins: [FormMixin],
   components: {
-    AdminForm,
+    FormsBuilder,
   },
   computed: {
     area: {

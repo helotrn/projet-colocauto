@@ -15,23 +15,23 @@
           <div class="form__section">
             <h2>Informations</h2>
 
-            <admin-form :definition="form.general" :item="item" entity="loanables" />
+            <forms-builder :definition="form.general" :item="item" entity="loanables" />
           </div>
 
           <div class="form__section" v-if="item.type === 'bike'">
             <h2>Détails du vélo</h2>
 
-            <admin-form :definition="form.bike" :item="item" entity="bikes" />
+            <forms-builder :definition="form.bike" :item="item" entity="bikes" />
           </div>
           <div class="form__section" v-else-if="item.type === 'car'">
             <h2>Détails de la voiture</h2>
 
-            <admin-form :definition="form.car" :item="item" entity="cars" />
+            <forms-builder :definition="form.car" :item="item" entity="cars" />
           </div>
           <div class="form__section" v-else-if="item.type === 'trailer'">
             <h2>Détails de la remorque</h2>
 
-            <admin-form :definition="form.trailer" :item="item" entity="trailers" />
+            <forms-builder :definition="form.trailer" :item="item" entity="trailers" />
           </div>
 
           <div class="form__buttons">
@@ -51,7 +51,7 @@
 </template>
 
 <script>
-import AdminForm from '@/components/Admin/Form.vue';
+import FormsBuilder from '@/components/Forms/Builder.vue';
 
 import FormMixin from '@/mixins/FormMixin';
 
@@ -65,7 +65,7 @@ export default {
   name: 'AdminLoanable',
   mixins: [FormMixin],
   components: {
-    AdminForm,
+    FormsBuilder,
   },
   computed: {
     fullTitle() {

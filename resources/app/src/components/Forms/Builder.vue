@@ -1,22 +1,29 @@
 <template>
-  <div class="admin-form">
+  <div class="forms-builder">
     <b-form-group v-for="(def, key) in definition" :key="key"
       :description="def.description"
       :label="$t(`${entity}.fields.${key}`) | capitalize"
       :label-for="key">
-      <b-form-select v-if="def.type === 'select'" v-model="item[key]"
+      <b-form-select v-if="def.type === 'select'"
+        v-bind:value="item[key]"
+        v-on:input="commitChange(key, $event)"
         :id="key" :name="key"
         :options="def.options" />
       <b-form-input v-else-if="def.type === 'number'" :type="def.type"
-        v-model="item[key]" :name="key" :id="key"
+        :name="key" :id="key"
+        v-bind:value="item[key]"
+        v-on:input="commitChange(key, $event)"
         :placeholder="placeholderOrLabel(key) | capitalize"
         :disabled="def.disabled" />
       <b-form-input v-else-if="def.type === 'text'" :type="def.type"
-        v-model="item[key]" :name="key" :id="key"
+        :name="key" :id="key"
+        v-bind:value="item[key]"
+        v-on:input="commitChange(key, $event)"
         :placeholder="placeholderOrLabel(key) | capitalize" :disabled="def.disabled" />
       <b-form-textarea v-else-if="def.type === 'textarea'"
         :id="key" :name="key"
-        v-model="item[key]"
+        v-bind:value="item[key]"
+        v-on:input="commitChange(key, $event)"
         :placeholder="placeholderOrLabel(key) | capitalize"
         :rows="def.rows || 3" :max-rows="def.maxRows || 6" />
       <div v-else>Non supporté : {{ def.type }}</div>
@@ -26,7 +33,7 @@
 
 <script>
 export default {
-  name: 'Form',
+  name: 'FormsBuilder',
   props: {
     definition: {
       type: Object,
@@ -42,6 +49,12 @@ export default {
     },
   },
   methods: {
+    commitChange(key, value) {
+      this.$store.commit(`${this.entity}/item`, {
+        ...this.item,
+        [key]: value,
+      });
+    },
     placeholderOrLabel(key) {
       if (this.$i18n.te(`${this.entity}.placeholders.${key}`)) {
         return this.$i18n.t(`${this.entity}.placeholders.${key}`);
