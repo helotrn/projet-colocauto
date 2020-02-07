@@ -4,7 +4,6 @@ namespace App\Models;
 
 use App\Models\Bill;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
 use App\Transformers\BillableItemTransformer;
 
 class BillableItem extends BaseModel
@@ -13,7 +12,7 @@ class BillableItem extends BaseModel
         'label' => 'required',
         'amount' => 'required|numeric',
     ];
-    
+
     protected $fillable = [
         'label',
         'amount',

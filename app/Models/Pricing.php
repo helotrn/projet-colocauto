@@ -3,8 +3,6 @@
 namespace App\Models;
 
 use App\Models\Community;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
 use App\Transformers\PricingTransformer;
 
 class Pricing extends BaseModel

@@ -5,7 +5,6 @@ namespace App\Models;
 use App\Models\Owner;
 use App\Utils\PointCast;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
 use Phaza\LaravelPostgis\Eloquent\PostgisTrait;
 use Vkovic\LaravelCustomCasts\HasCustomCasts;
 

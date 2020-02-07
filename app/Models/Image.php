@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
 use App\Transformers\ImageTransformer;
 
 class Image extends BaseModel
@@ -19,7 +18,7 @@ class Image extends BaseModel
         'height' => 'required',
         'orientation' => 'required',
     ];
-    
+
     protected $fillable = [
         'imageable_type',
         'imageable_id',

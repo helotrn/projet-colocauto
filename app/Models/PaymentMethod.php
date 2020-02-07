@@ -4,7 +4,6 @@ namespace App\Models;
 
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
 use App\Transformers\PaymentMethodTransformer;
 
 class PaymentMethod extends BaseModel
@@ -16,7 +15,7 @@ class PaymentMethod extends BaseModel
         'four_last_digits' => 'digits:4|nullable',
         'credit_card_type' => 'nullable|string',
     ];
-    
+
     protected $fillable = [
         'name',
         'external_id',

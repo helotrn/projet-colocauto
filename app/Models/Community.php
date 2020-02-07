@@ -8,7 +8,6 @@ use App\Utils\PointCast;
 use App\Utils\PolygonCast;
 use App\Transformers\CommunityTransformer;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
 use Phaza\LaravelPostgis\Eloquent\PostgisTrait;
 use Vkovic\LaravelCustomCasts\HasCustomCasts;
 

@@ -3,8 +3,6 @@
 namespace App\Models;
 
 use App\Models\Action;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
 use App\Transformers\ExtensionTransformer;
 
 class Extension extends Action
@@ -14,7 +12,7 @@ class Extension extends Action
         'new_duration' => 'required',//add validation
         'comments_on_extension' => 'required|string',
     ];
-    
+
     protected $fillable = [
         'status',
         'new_duration',

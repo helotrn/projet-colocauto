@@ -4,8 +4,6 @@ namespace App\Models;
 
 use App\Models\BillableItem;
 use App\Models\User;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
 use App\Transformers\BillTransformer;
 
 class Bill extends BaseModel
@@ -15,7 +13,7 @@ class Bill extends BaseModel
         'payment_method' => 'required',
         'total' => 'required|numeric',
     ];
-    
+
     protected $fillable = [
         'period',
         'payment_method',
@@ -29,7 +27,7 @@ class Bill extends BaseModel
     public function user() {
         return $this->belongsTo(User::class);
     }
-    
+
 
     public $collections = ['billableItems'];
 

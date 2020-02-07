@@ -3,8 +3,6 @@
 namespace App\Models;
 
 use App\Models\Loanable;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
 use App\Transformers\BikeTransformer;
 
 class Bike extends Loanable

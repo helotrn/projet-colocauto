@@ -4,7 +4,6 @@ namespace App\Models;
 
 use App\Models\Action;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
 use App\Transformers\HandoverTransformer;
 
 class Handover extends Action
@@ -17,7 +16,7 @@ class Handover extends Action
         'comments_by_owner' => 'nullable',
         'purchases_amount' => 'required',//add validation
     ];
-    
+
     protected $fillable = [
         'status',
         'mileage_end',

@@ -4,7 +4,6 @@ namespace App\Models;
 
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
 use App\Transformers\FileTransformer;
 
 class File extends BaseModel
@@ -18,7 +17,7 @@ class File extends BaseModel
         'filesize' => 'required',
         'field' => 'nullable',
     ];
-    
+
     protected $fillable = [
         'fileable_type',
         'fileable_id',

@@ -4,7 +4,6 @@ namespace App\Models;
 
 use App\Models\Action;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
 use App\Transformers\TakeoverTransformer;
 
 class Takeover extends Action
@@ -15,7 +14,7 @@ class Takeover extends Action
         'fuel_beginning' => 'required',
         'comments_on_vehicle' => 'nullable',
     ];
-    
+
     protected $fillable = [
         'status',
         'mileage_beginning',
