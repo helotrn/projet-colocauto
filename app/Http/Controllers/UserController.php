@@ -14,9 +14,10 @@ use App\Repositories\CommunityRepository;
 
 class UserController extends RestController
 {
-    public function __construct(UserRepository $repository, User $model) {
+    public function __construct(UserRepository $repository, User $model, CommunityRepository $communityRepo) {
         $this->repo = $repository;
         $this->model = $model;
+        $this->communityRepo = $communityRepo;
     }
 
     public function index(Request $request) {
@@ -70,17 +71,17 @@ class UserController extends RestController
         return $response;
     }
 
-    public function getCommunities(Request $request, $userId, CommunityRepository $communityRepo) {
+    public function getCommunities(Request $request, $userId) {
         $user = $this->repo->find($request, $userId);
         if ($user) {
             $request->merge(['user_id' => $userId]);
-            return $communityRepo->get($request);
+            return $this->communityRepo->get($request);
         }
     }
 
-    public function retrieveCommunity(Request $request, $userId, $communityId, CommunityRepository $communityRepo) {
+    public function retrieveCommunity(Request $request, $userId, $communityId) {
         $user = $this->repo->find($request, $userId);
-        $community = $communityRepo->find($request, $communityId);
+        $community = $this->communityRepo->find($request, $communityId);
 
         if ($user->id && $community->id) {
             $data = [
@@ -94,23 +95,53 @@ class UserController extends RestController
         return "";
     }
 
-    public function associateToCommunity(AssociateRequest $request, $userId, $communityId, CommunityRepository $communityRepo) {
+    public function associateToCommunity(AssociateCommunityRequest $request, $userId, $communityId) {
+        $community = $this->communityRepo->find($request, $communityId);
         $user = $this->repo->find($request, $userId);
-        $community = $communityRepo->find($request, $communityId);
+        $user_communities = $user->communities->pluck('id')->ToArray();
 
-        if ($user->id && $community->id) {
-            $data = [
-                'communities' => ['id' => $community->id]
-            ];
-            $request->merge(['user_id' => $userId]);
-            $request->merge(['community_id' => $communityId]);
+        if ($community->id) {
+            try {
+                $data = [
+                    'communities' => [['id' => $community->id]]
+                ];
+                foreach ($user_communities as $user_community) {
+                    array_push($data['communities'], ['id' => $user_community]);
+                }
 
-            return $this->repo->update($user->id, $data);
+                $request->merge($data);
+                $response = parent::validateAndUpdate($request, $userId);
+            } catch (ValidationException $e) {
+                return $this->respondWithErrors($e->getErrors(), $e->getMessage());
+            }
+            return $response;
+        } else {
+            return $this->respondWithErrors('Non-existent ID', 'community id does not exist');
         }
-        return "";
     }
 
-    public function dissociateFromCommunity(DissociateRequest $request, $userId, $communityId, CommunityRepository $communityRepo) {
-        return "";
+    public function dissociateFromCommunity(DissociateCommunityRequest $request, $userId, $communityId) {
+        $community = $this->communityRepo->find($request, $communityId);
+        $user = $this->repo->find($request, $userId);
+        $user_communities = $user->communities->pluck('id')->ToArray();
+
+        if ($community->id) {
+            try {
+                $data = [
+                    'communities' => [['id' => $community->id]]
+                ];
+                foreach ($user_communities as $user_community) {
+                    array_push($data['communities'], ['id' => $user_community]);
+                }
+
+                $request->merge($data);
+                $response = parent::validateAndUpdate($request, $userId);
+            } catch (ValidationException $e) {
+                return $this->respondWithErrors($e->getErrors(), $e->getMessage());
+            }
+            return $response;
+        } else {
+            return $this->respondWithErrors('Non-existent ID', 'community id does not exist');
+        }
     }
 }
