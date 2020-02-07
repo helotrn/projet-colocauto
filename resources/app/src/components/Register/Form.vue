@@ -1,6 +1,7 @@
 <template>
   <div class="register-form">
     <h2>{{ $t('register') }}</h2>
+
     <div class="register-form__google">
       <b-button :disabled="loading" variant="primary" class="btn-google">
         <div class="btn-google__icon">
@@ -17,52 +18,20 @@
     <validation-observer ref="observer" v-slot="{ passes }">
       <b-form :novalidate="true" class="register-form__form"
         @submit.stop.prevent="passes(register)">
-        <validation-provider
-          :name="$t('email')"
-          :rules="{ required: true, email: true }"
-          v-slot="validationContext">
-          <b-form-group :label="$t('email')">
-            <b-form-input
-              type="email"
-              :placeholder="$t('email')"
-              :state="getValidationState(validationContext)"
-              v-model="email" />
-            <b-form-invalid-feedback>
-              {{ validationContext.errors[0] }}
-            </b-form-invalid-feedback>
-          </b-form-group>
-        </validation-provider>
+        <forms-validated-input name="email" :label="$t('email')"
+          :rules="{ required: true, email: true }" type="email"
+          :placeholder="$t('email')"
+          v-model="email" />
 
-        <validation-provider
-          :name="$t('password')"
-          :rules="{ required: true, min: 8 }"
-          v-slot="validationContext">
-          <b-form-group :label="$t('password')">
-            <b-form-input
-              type="password"
-              :placeholder="$t('password')"
-              :state="getValidationState(validationContext)"
-              v-model="password"
-            />
-            <b-form-invalid-feedback>
-              {{ validationContext.errors[0] }}
-            </b-form-invalid-feedback>
-          </b-form-group>
-        </validation-provider>
+        <forms-validated-input name="password" :label="$t('password')"
+          :rules="{ required: true, min: 8 }" type="password"
+          :placeholder="$t('password')"
+          v-model="password" />
 
-        <validation-provider
-          :name="$t('password-repeat')"
-          :rules="{ required: true, is: password }"
-          v-slot="validationContext">
-          <b-form-group :label="$t('password-repeat')">
-            <b-form-input
-              type="password"
-              :placeholder="$t('password-repeat')"
-              :state="getValidationState(validationContext)"
-              v-model="passwordRepeat"
-            />
-          </b-form-group>
-        </validation-provider>
+        <forms-validated-input name="password_repeat" :label="$t('password-repeat')"
+          :rules="{ required: true, is: password }" type="password"
+          :placeholder="$t('password-repeat')"
+          v-model="passwordRepeat" />
 
         <b-button type="submit" :disabled="loading" variant="primary" block>
           {{ $t('register-submit') }}
@@ -92,6 +61,8 @@ en:
 </i18n>
 
 <script>
+import FormsValidatedInput from '@/components/Forms/ValidatedInput.vue';
+
 import helpers from '@/helpers';
 import Google from '@/assets/svg/google.svg';
 
@@ -100,6 +71,7 @@ const { extractErrors } = helpers;
 export default {
   name: 'registerBox',
   components: {
+    FormsValidatedInput,
     'svg-google': Google,
   },
   data() {
