@@ -28,11 +28,11 @@ class BikeController extends RestController
 
     public function update(Request $request, $id) {
         try {
-            $response = parent::validateAndUpdate($request, $id);
+            $item = parent::validateAndUpdate($request, $id);
         } catch (ValidationException $e) {
             return $this->respondWithErrors($e->getErrors(), $e->getMessage());
         }
 
-        return $response;
+        return $this->respondWithItem($request, $item);
     }
 }
