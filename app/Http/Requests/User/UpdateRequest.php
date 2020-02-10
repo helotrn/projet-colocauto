@@ -8,7 +8,7 @@ class UpdateRequest extends BaseRequest
 {
     public function authorize() {
         $id = $this->route('id');
-        return $this->user()->isAdmin() || ($this->user()->id == $id);
+        return $this->user()->isAdmin() || ($this->user()->id === $id);
     }
 
     public function rules() {

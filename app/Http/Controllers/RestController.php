@@ -45,13 +45,14 @@ class RestController extends Controller
         return $this->repo->create($request->input());
     }
 
-    protected function respondWithItem(Request $request, $item) {
+    protected function respondWithItem(Request $request, $item, $status = 200) {
         $transformer = new $this->model::$transformer;
+
         $result = $transformer->transform($item, [
             'fields' => $request->getFields(),
         ]);
 
-        return $result;
+        return response($result, $status);
     }
 
     protected function validateAndUpdate(Request $request, $id) {
