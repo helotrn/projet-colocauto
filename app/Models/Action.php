@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Loan;
+use App\Models\User;
 
 class Action extends BaseModel
 {
@@ -10,9 +11,13 @@ class Action extends BaseModel
         'name',
     ];
 
-    public $belongsTo = ['loan'];
+    public $belongsTo = ['loan', 'user'];
 
     public function loan() {
         return $this->belongsTo(Loan::class);
+    }
+
+    public function user() {
+        return $this->belongsTo(User::class);
     }
 }
