@@ -1,6 +1,7 @@
 import Vue from 'vue';
+import merge from 'deepmerge';
 
-export default function RestModule(slug, initialState) {
+export default function RestModule(slug, initialState, actions = {}, mutations = {}) {
   return {
     namespaced: true,
     state: {
@@ -53,6 +54,9 @@ export default function RestModule(slug, initialState) {
       loaded(state, loaded) {
         state.loaded = loaded;
       },
+      mergeItem(state, partial) {
+        state.item = merge(state.item, partial);
+      },
       setParam(state, { name, value }) {
         Vue.set(state.params, name, value);
       },
@@ -73,6 +77,7 @@ export default function RestModule(slug, initialState) {
       total(state, total) {
         state.total = total;
       },
+      ...mutations,
     },
     actions: {
       async load({ dispatch, state }) {
@@ -214,6 +219,7 @@ export default function RestModule(slug, initialState) {
       delete() { // state, data) {
         // call API DELETE
       },
+      ...actions,
     },
   };
 }

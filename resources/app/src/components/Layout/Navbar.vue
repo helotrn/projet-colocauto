@@ -47,7 +47,7 @@
           <span class="nav-link__text">Communauté</span>
         </b-nav-item>
 
-        <b-nav-item to="/register" v-if="!isAdmin && !hasCommunity">
+        <b-nav-item to="/register" v-if="!isAdmin && !hasCompletedRegistration">
           <span class="nav-link__icon d-lg-none">
             <svg-hand />
           </span>

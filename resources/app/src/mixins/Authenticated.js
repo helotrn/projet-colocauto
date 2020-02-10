@@ -16,6 +16,9 @@ export default {
         refreshToken,
       };
     },
+    hasCompletedRegistration() {
+      return !!this.user.approved_at;
+    },
     isAdmin() {
       return this.isLoggedIn && this.user.role === 'admin';
     },

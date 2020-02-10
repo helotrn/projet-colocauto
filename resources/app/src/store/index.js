@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import VuexPersist from 'vuex-persist';
+import merge from 'deepmerge';
 
 import communities from './communities';
 import images from './images';
@@ -43,7 +44,7 @@ const actions = {
     try {
       const { data: user } = await Vue.axios.get('/auth/user', {
         params: {
-          fields: '*,communities.id,communities.name,communities.role',
+          fields: '*,avatar.*,communities.id,communities.name,communities.role',
         },
       });
 
@@ -112,6 +113,9 @@ const mutations = {
   },
   loading(state, value) {
     state.loading = value;
+  },
+  mergeUser(state, user) {
+    state.user = merge(state.user, user);
   },
   refreshToken(state, refreshToken) {
     state.refreshToken = refreshToken;
