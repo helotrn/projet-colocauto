@@ -12,4 +12,56 @@ class PaymentController extends RestController
         $this->repo = $repository;
         $this->model = $model;
     }
+
+    public function create(Request $request) {
+        try {
+            $response = parent::validateAndCreate($request);
+        } catch (ValidationException $e) {
+            return $this->respondWithErrors($e->getErrors(), $e->getMessage());
+        }
+
+        return $response;
+    }
+
+    public function retrieve(Request $request, $id) {
+        $item = $this->repo->find($request, $id);
+
+        try {
+            $response = $this->respondWithItem($request, $item);
+        } catch (ValidationException $e) {
+            return $this->respondWithErrors($e->getErrors(), $e->getMessage());
+        }
+
+        return $response;
+    }
+
+    public function index(Request $request) {
+        try {
+            [$items, $total] = $this->repo->get($request);
+        } catch (ValidationException $e) {
+            return $this->respondWithErrors($e->getErrors(), $e->getMessage());
+        }
+
+        return $this->respondWithCollection($request, $items, $total);
+    }
+
+    public function update(Request $request, $id) {
+        try {
+            $response = parent::validateAndUpdate($request, $id);
+        } catch (ValidationException $e) {
+            return $this->respondWithErrors($e->getErrors(), $e->getMessage());
+        }
+
+        return $response;
+    }
+
+    public function destroy(Request $request, $id) {
+        try {
+            $response = parent::validateAndDestroy($request, $id);
+        } catch (ValidationException $e) {
+            return $this->respondWithErrors($e->getErrors(), $e->getMessage());
+        }
+
+        return $response;
+    }
 }
