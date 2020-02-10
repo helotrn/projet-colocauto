@@ -15,7 +15,7 @@ class BikesTableSeeder extends Seeder
                 'comments' => 'Rien à dire de particulier.',
                 'instructions' => 'Le guidon est lousse un petit peu...',
                 'model' => 'Minelli Ferrari De Vinci',
-                'type' => 'regular',
+                'bike_type' => 'regular',
                 'size' => 'big',
                 'availability_ics' => '',
                 'owner_id' => 1,
