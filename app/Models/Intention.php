@@ -7,6 +7,8 @@ use App\Transformers\IntentionTransformer;
 
 class Intention extends Action
 {
+    protected $table = 'intentions';
+
     public static $rules = [
         'status' => 'required',
     ];
@@ -16,4 +18,23 @@ class Intention extends Action
     ];
 
     public static $transformer = IntentionTransformer::class;
+
+    public static function getColumnsDefinition() {
+        return [
+            '*' => function ($query = null) {
+                if (!$query) {
+                    return 'intentions.*';
+                }
+
+                return $query->selectRaw('intentions.*');
+            },
+            'type' => function ($query = null) {
+                if (!$query) {
+                    return "'intention' AS type";
+                }
+
+                return $query->selectRaw("'intention' AS type");
+            }
+        ];
+    }
 }

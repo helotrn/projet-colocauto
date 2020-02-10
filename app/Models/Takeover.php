@@ -8,6 +8,8 @@ use App\Transformers\TakeoverTransformer;
 
 class Takeover extends Action
 {
+    protected $table = 'takovers';
+
     public static $rules = [
         'status' => 'required',
         'mileage_beginning' => 'required',
@@ -23,4 +25,23 @@ class Takeover extends Action
     ];
 
     public static $transformer = TakeoverTransformer::class;
+
+    public static function getColumnsDefinition() {
+        return [
+            '*' => function ($query = null) {
+                if (!$query) {
+                    return 'takeovers.*';
+                }
+
+                return $query->selectRaw('takeovers.*');
+            },
+            'type' => function ($query = null) {
+                if (!$query) {
+                    return "'takeover' AS type";
+                }
+
+                return $query->selectRaw("'takeover' AS type");
+            }
+        ];
+    }
 }

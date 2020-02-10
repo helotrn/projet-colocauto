@@ -8,6 +8,8 @@ use App\Transformers\HandoverTransformer;
 
 class Handover extends Action
 {
+    protected $table = 'handovers';
+
     public static $rules = [
         'status' => 'required',
         'mileage_end' => 'required',
@@ -27,4 +29,23 @@ class Handover extends Action
     ];
 
     public static $transformer = HandoverTransformer::class;
+
+    public static function getColumnsDefinition() {
+        return [
+            '*' => function ($query = null) {
+                if (!$query) {
+                    return 'handovers.*';
+                }
+
+                return $query->selectRaw('handovers.*');
+            },
+            'type' => function ($query = null) {
+                if (!$query) {
+                    return "'handover' AS type";
+                }
+
+                return $query->selectRaw("'handover' AS type");
+            }
+        ];
+    }
 }

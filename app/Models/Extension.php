@@ -7,6 +7,8 @@ use App\Transformers\ExtensionTransformer;
 
 class Extension extends Action
 {
+    protected $table = 'extensions';
+
     public static $rules = [
         'status' => 'required',
         'new_duration' => 'required',//add validation
@@ -20,4 +22,23 @@ class Extension extends Action
     ];
 
     public static $transformer = ExtensionTransformer::class;
+
+    public static function getColumnsDefinition() {
+        return [
+            '*' => function ($query = null) {
+                if (!$query) {
+                    return 'extensions.*';
+                }
+
+                return $query->selectRaw('extensions.*');
+            },
+            'type' => function ($query = null) {
+                if (!$query) {
+                    return "'extension' AS type";
+                }
+
+                return $query->selectRaw("'extension' AS type");
+            }
+        ];
+    }
 }

@@ -9,6 +9,8 @@ use App\Transformers\PaymentTransformer;
 
 class Payment extends Action
 {
+    protected $table = 'payments';
+
     public static $rules = [
         'status' => 'required',
     ];
@@ -23,5 +25,24 @@ class Payment extends Action
 
     public function billableItem() {
         return $this->belongsTo(BillableItem::class);
+    }
+
+    public static function getColumnsDefinition() {
+        return [
+            '*' => function ($query = null) {
+                if (!$query) {
+                    return 'payments.*';
+                }
+
+                return $query->selectRaw('payments.*');
+            },
+            'type' => function ($query = null) {
+                if (!$query) {
+                    return "'payment' AS type";
+                }
+
+                return $query->selectRaw("'payment' AS type");
+            }
+        ];
     }
 }
