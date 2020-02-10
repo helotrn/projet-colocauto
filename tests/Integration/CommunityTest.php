@@ -3,10 +3,38 @@
 namespace Tests\Integration;
 
 use App\Models\Community;
+use App\Models\User;
 use Tests\TestCase;
 
 class CommunityTest extends TestCase
 {
+    private static $getUserResponseStructure = [
+        'id',
+        'name',
+        'email',
+        'email_verified_at',
+        'google_id',
+        'description',
+        'date_of_birth',
+        'address',
+        'postal_code',
+        'phone',
+        'is_smart_phone',
+        'other_phone',
+        'approved_at',
+    ];
+    private static $getCommunityResponseStructure = [
+        'id',
+        'name',
+        'description',
+        'area',
+        'created_at',
+        'updated_at',
+        'deleted_at',
+        'type',
+        'center',
+    ];
+
     public function testCreateCommunities() {
         $data = [
             'name' => $this->faker->name,
@@ -50,37 +78,74 @@ class CommunityTest extends TestCase
     }
 
     public function testShowCommunities() {
-        $this->markTestIncomplete();
-        $post = factory(Community::class)->create();
+        $community = factory(Community::class)->create();
 
-        $response = $this->json('GET', route('communities.retrieve', $post->id), $data);
-
-        $response->assertStatus(200)->assertJson($data);
+        $response = $this->json('GET', "/api/v1/communities/$community->id", []);
+        $response->assertStatus(200);
     }
 
     public function testUpdateCommunities() {
-        $this->markTestIncomplete();
-        $post = factory(Community::class)->create();
+        $community = factory(Community::class)->create();
         $data = [
             'name' => $this->faker->name,
         ];
 
-        $response = $this->json('PUT', route('communities.update', $post->id), $data);
-
+        $response = $this->json('PUT', "/api/v1/communities/$community->id", $data);
         $response->assertStatus(200)->assertJson($data);
     }
 
+    public function testUpdateCommunitiesByAdminOfCommunity() {
+        $this->user->role = "";
+        $community = factory(Community::class)->create();
+        $communities = [
+            $community->id => [
+            'role' => 'admin',
+            ],
+        ];
+        $this->user->communities()->sync($communities);
+
+        $data = [
+            'name' => $this->faker->name,
+        ];
+        $response = $this->json('PUT', route('communities.update', $community->id), $data);
+
+        $response->assertStatus(200);
+
+        $this->user->role = "admin";
+    }
+
+    public function testUpdateCommunitiesByNonAdmin() {
+        $this->user->role = "";
+        $community = factory(Community::class)->create();
+        $data = [
+            'name' => $this->faker->name,
+        ];
+
+        $response = $this->json('PUT', route('communities.update', $community->id), $data);
+
+        $response->assertStatus(403);
+        $this->user->role = "admin";
+    }
+
     public function testDeleteCommunities() {
-        $this->markTestIncomplete();
-        $post = factory(Community::class)->create();
+        $community = factory(Community::class)->create();
 
-        $response = $this->json('DELETE', route('communities.delete', $post->id), $data);
+        $response = $this->json('DELETE', route('communities.destroy', $community->id));
 
-        $response->assertStatus(204)->assertJson($data);
+        $response->assertStatus(200);
+    }
+
+    public function testDeleteCommunitiesByNonAdmin() {
+        $this->user->role = "";
+        $community = factory(Community::class)->create();
+
+        $response = $this->json('DELETE', route('communities.destroy', $community->id));
+
+        $response->assertStatus(403);
+        $this->user->role = "admin";
     }
 
     public function testListCommunities() {
-        $this->markTestIncomplete();
         $communities = factory(Community::class, 2)->create()->map(function ($post) {
             return $post->only([
                 'id',
@@ -90,17 +155,27 @@ class CommunityTest extends TestCase
             ]);
         });
 
-        $response = $this->json('GET', route('communities.index'));
-
+        $response = $this->json('GET', "/api/v1/communities", []);
         $response->assertStatus(200)
-                ->assertJson($communities->toArray())
-                ->assertJsonStructure([
-                    '*' => [
-                        'id',
-                        'name',
-                        'description',
-                        'area',
-                    ],
-                ]);
+                ->assertJsonStructure($this->buildCollectionStructure([
+                    'id', 'name', 'description', 'area',
+                ]));
+    }
+
+
+    public function testShowCommunitiesUsers() {
+        $user = factory(User::class)->create();
+        $community = factory(Community::class)->create();
+        $data = [
+            'users' => [['id' => $user['id']]]
+        ];
+        $response = $this->json('PUT', "/api/v1/communities/$community->id", $data);
+
+        $data = [
+            'community_id' => $community->id,
+        ];
+        $response = $this->json('GET', "/api/v1/users", $data);
+        $response->assertStatus(200)
+                ->assertJsonStructure($this->buildCollectionStructure(static::$getUserResponseStructure));
     }
 }

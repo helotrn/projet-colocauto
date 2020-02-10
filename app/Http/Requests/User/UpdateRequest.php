@@ -7,7 +7,8 @@ use App\Http\Requests\BaseRequest;
 class UpdateRequest extends BaseRequest
 {
     public function authorize() {
-        return true;
+        $id = $this->route('id');
+        return $this->user()->isAdmin() || ($this->user()->id == $id);
     }
 
     public function rules() {

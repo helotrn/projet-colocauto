@@ -26,6 +26,7 @@ abstract class TestCase extends BaseTestCase
         $this->faker = Factory::create();
 
         $this->user = factory(User::class)->create();
+        $this->user->role = "admin";
         Passport::actingAs($this->user);
 
         \DB::statement(<<<SQL

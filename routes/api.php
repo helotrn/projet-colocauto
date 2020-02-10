@@ -48,13 +48,16 @@ Route::prefix('v1')->group(function () {
         Route::options('communities', 'CommunityController@template');
         Route::options('loanables', 'LoanableController@template');
 
-        Route::get('users/{id}/communities', "UserController@getCommunities")
+        Route::get('users/{user_id}/communities', "UserController@getCommunities")
             ->name("users.getCommunities");
 
-        Route::post('users/{id}/communities/{sub_id}', "UserController@associateToCommunity")
+        Route::get('users/{user_id}/communities/{community_id}', "UserController@retrieveCommunity")
+            ->name("users.getCommunities");
+
+        Route::put('users/{user_id}/communities/{community_id}', "UserController@associateToCommunity")
             ->name("users.associateToCommunity");
 
-        Route::post('users/{id}/communities/{sub_id}', "UserController@dissociateFromCommunity")
+        Route::delete('users/{user_id}/communities/{community_id}', "UserController@dissociateFromCommunity")
             ->name("users.dissociateFromCommunity");
     });
 });
