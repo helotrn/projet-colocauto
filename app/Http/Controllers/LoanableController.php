@@ -22,7 +22,7 @@ class LoanableController extends RestController
         try {
             [$items, $total] = $this->repo->get($request);
         } catch (ValidationException $e) {
-            return $this->respondWithErrors($e->getErrors(), $e->getMessage());
+            return $this->respondWithErrors($e->errors(), $e->getMessage());
         }
 
         return $this->respondWithCollection($request, $items, $total);

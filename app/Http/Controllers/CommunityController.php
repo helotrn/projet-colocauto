@@ -21,7 +21,7 @@ class CommunityController extends RestController
         try {
             [$items, $total] = $this->repo->get($request);
         } catch (ValidationException $e) {
-            return $this->respondWithErrors($e->getErrors(), $e->getMessage());
+            return $this->respondWithErrors($e->errors(), $e->getMessage());
         }
 
         return $this->respondWithCollection($request, $items, $total);
@@ -31,7 +31,7 @@ class CommunityController extends RestController
         try {
             $item = parent::validateAndCreate($request);
         } catch (ValidationException $e) {
-            return $this->respondWithErrors($e->getErrors(), $e->getMessage());
+            return $this->respondWithErrors($e->errors(), $e->getMessage());
         }
 
         return $this->respondWithItem($request, $item);
@@ -41,7 +41,7 @@ class CommunityController extends RestController
         try {
             $item = parent::validateAndUpdate($request, $id);
         } catch (ValidationException $e) {
-            return $this->respondWithErrors($e->getErrors(), $e->getMessage());
+            return $this->respondWithErrors($e->errors(), $e->getMessage());
         }
 
         return $this->respondWithItem($request, $item);
@@ -53,7 +53,7 @@ class CommunityController extends RestController
         try {
             $response = $this->respondWithItem($request, $item);
         } catch (ValidationException $e) {
-            return $this->respondWithErrors($e->getErrors(), $e->getMessage());
+            return $this->respondWithErrors($e->errors(), $e->getMessage());
         }
 
         return $response;
@@ -63,7 +63,7 @@ class CommunityController extends RestController
         try {
             $response = parent::validateAndDestroy($request, $id);
         } catch (ValidationException $e) {
-            return $this->respondWithErrors($e->getErrors(), $e->getMessage());
+            return $this->respondWithErrors($e->errors(), $e->getMessage());
         }
 
         return $response;

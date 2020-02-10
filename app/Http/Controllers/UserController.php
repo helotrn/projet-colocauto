@@ -28,8 +28,9 @@ class UserController extends RestController
         try {
             [$items, $total] = $this->repo->get($request);
         } catch (ValidationException $e) {
-            return $this->respondWithErrors($e->getErrors(), $e->getMessage());
+            return $this->respondWithErrors($e->errors(), $e->getMessage());
         }
+
         return $this->respondWithCollection($request, $items, $total);
     }
 
@@ -37,8 +38,9 @@ class UserController extends RestController
         try {
             $response = parent::validateAndCreate($request);
         } catch (ValidationException $e) {
-            return $this->respondWithErrors($e->getErrors(), $e->getMessage());
+            return $this->respondWithErrors($e->errors(), $e->getMessage());
         }
+
         return $response;
     }
 
@@ -46,7 +48,7 @@ class UserController extends RestController
         try {
             $item = parent::validateAndUpdate($request, $id);
         } catch (ValidationException $e) {
-            return $this->respondWithErrors($e->getErrors(), $e->getMessage());
+            return $this->respondWithErrors($e->errors(), $e->getMessage());
         }
 
         return $this->respondWithItem($request, $item);
@@ -63,8 +65,9 @@ class UserController extends RestController
             $item = $this->repo->find($request, $id);
             $response = $this->respondWithItem($request, $item);
         } catch (ValidationException $e) {
-            return $this->respondWithErrors($e->getErrors(), $e->getMessage());
+            return $this->respondWithErrors($e->errors(), $e->getMessage());
         }
+
         return $response;
     }
 
@@ -72,7 +75,7 @@ class UserController extends RestController
         try {
             $response = parent::validateAndDestroy($request, $id);
         } catch (ValidationException $e) {
-            return $this->respondWithErrors($e->getErrors(), $e->getMessage());
+            return $this->respondWithErrors($e->errors(), $e->getMessage());
         }
         return $response;
     }
@@ -118,8 +121,9 @@ class UserController extends RestController
                 $request->merge($data);
                 $response = parent::validateAndUpdate($request, $userId);
             } catch (ValidationException $e) {
-                return $this->respondWithErrors($e->getErrors(), $e->getMessage());
+                return $this->respondWithErrors($e->errors(), $e->getMessage());
             }
+
             return $response;
         } else {
             return $this->respondWithErrors('Non-existent ID', 'community id does not exist');
@@ -143,7 +147,7 @@ class UserController extends RestController
                 $request->merge($data);
                 $response = parent::validateAndUpdate($request, $userId);
             } catch (ValidationException $e) {
-                return $this->respondWithErrors($e->getErrors(), $e->getMessage());
+                return $this->respondWithErrors($e->errors(), $e->getMessage());
             }
             return $response;
         } else {

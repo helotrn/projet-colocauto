@@ -20,7 +20,7 @@ class BikeController extends RestController
         try {
             $response = $this->respondWithItem($request, $item);
         } catch (ValidationException $e) {
-            return $this->respondWithErrors($e->getErrors(), $e->getMessage());
+            return $this->respondWithErrors($e->errors(), $e->getMessage());
         }
 
         return $response;
@@ -31,7 +31,7 @@ class BikeController extends RestController
         try {
             $item = parent::validateAndUpdate($request, $id);
         } catch (ValidationException $e) {
-            return $this->respondWithErrors($e->getErrors(), $e->getMessage());
+            return $this->respondWithErrors($e->errors(), $e->getMessage());
         }
 
         return $this->respondWithItem($request, $item);
