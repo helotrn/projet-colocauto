@@ -24,7 +24,7 @@ class BaseTransformer
             );
         }
 
-        static::$context = [];
+        unset(static::$context[$reflect->getShortName()]);
 
         unset($output['pivot']);
 
