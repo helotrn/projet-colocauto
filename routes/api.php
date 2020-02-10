@@ -48,16 +48,19 @@ Route::prefix('v1')->group(function () {
         Route::options('communities', 'CommunityController@template');
         Route::options('loanables', 'LoanableController@template');
 
-        Route::get('users/{user_id}/communities', "UserController@getCommunities")
-            ->name("users.getCommunities");
+        Route::get('users/{user_id}/communities', 'UserController@getCommunities')
+            ->name('users.getCommunities');
 
-        Route::get('users/{user_id}/communities/{community_id}', "UserController@retrieveCommunity")
-            ->name("users.getCommunities");
+        Route::get('users/{user_id}/communities/{community_id}', 'UserController@retrieveCommunity')
+            ->name('users.retrieveCommunity');
 
-        Route::put('users/{user_id}/communities/{community_id}', "UserController@associateToCommunity")
-            ->name("users.associateToCommunity");
+        Route::post(
+            'users/{user_id}/communities/{community_id}',
+            'UserController@createUserCommunity'
+        )
+            ->name('users.createUserCommunity');
 
-        Route::delete('users/{user_id}/communities/{community_id}', "UserController@dissociateFromCommunity")
-            ->name("users.dissociateFromCommunity");
+        Route::delete('users/{user_id}/communities/{community_id}', 'UserController@deleteUserCommunity')
+            ->name("users.deleteUserCommunity");
     });
 });
