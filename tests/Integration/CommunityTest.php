@@ -95,23 +95,27 @@ class CommunityTest extends TestCase
     }
 
     public function testUpdateCommunitiesByAdminOfCommunity() {
-        $this->user->role = "";
         $community = factory(Community::class)->create();
-        $communities = [
-            $community->id => [
-            'role' => 'admin',
-            ],
-        ];
-        $this->user->communities()->sync($communities);
+
+        $this->user->role = '';
+        $this->user->save();
 
         $data = [
             'name' => $this->faker->name,
         ];
+
         $response = $this->json('PUT', route('communities.update', $community->id), $data);
+        $response->assertStatus(403);
 
+        $communities = [
+            $community->id => [
+                'role' => 'admin',
+            ],
+        ];
+        $this->user->communities()->sync($communities);
+
+        $response = $this->json('PUT', route('communities.update', $community->id), $data);
         $response->assertStatus(200);
-
-        $this->user->role = "admin";
     }
 
     public function testUpdateCommunitiesByNonAdmin() {

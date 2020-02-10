@@ -146,6 +146,10 @@ class User extends AuthenticatableBaseModel
     }
 
     public function isAdminOfCommunity($communityId) {
-        return $this->communities->where('pivot.role', 'admin')->where('id', $communityId)->isNotEmpty();
+        return $this->communities()->where('communities.id', $communityId)
+            ->whereHas('users', function ($q) {
+                return $q->where('community_user.role', 'admin');
+            })
+            ->exists();
     }
 }

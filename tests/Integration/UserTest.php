@@ -170,14 +170,13 @@ class UserTest extends TestCase
     public function testUpdateUserWithCommunity() {
         $user = factory(User::class)->create();
         $community = factory(Community::class)->create();
-        if ($user->id && $community->id) {
-            $data = [
-                'communities' => [['id' => $community->id]]
-            ];
 
-            $response = $this->json('PUT', "/api/v1/users/$user->id", $data);
-            $response->assertStatus(200)->assertJsonStructure(static::$getUserResponseStructure);
-        }
+        $data = [
+            'communities' => [['id' => $community->id]]
+        ];
+
+        $response = $this->json('PUT', "/api/v1/users/$user->id", $data);
+        $response->assertStatus(200)->assertJsonStructure(static::$getUserResponseStructure);
     }
 
     public function testShowUsersCommunities() {
