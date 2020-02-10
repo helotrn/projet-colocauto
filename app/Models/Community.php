@@ -91,10 +91,15 @@ class Community extends BaseModel
 
     public $computed =  ['area_google', 'center_google'];
 
+    public function memberships() {
+        return $this->hasMany(Membership::class);
+    }
+
     public function users() {
         return $this->belongsToMany(User::class)
+            ->using(Pivots\CommunityUser::class)
             ->withTimestamps()
-            ->withPivot(['role', 'created_at', 'updated_at']);
+            ->withPivot(['id', 'approved_at', 'created_at', 'role', 'suspended_at', 'updated_at']);
     }
 
     public function pricings() {

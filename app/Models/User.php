@@ -129,8 +129,9 @@ class User extends AuthenticatableBaseModel
 
     public function communities() {
         return $this->belongsToMany(Community::class)
+            ->using(Pivots\CommunityUser::class)
             ->withTimestamps()
-            ->withPivot(['role', 'created_at', 'updated_at']);
+            ->withPivot(['id', 'approved_at', 'created_at', 'role', 'suspended_at', 'updated_at']);
     }
 
     public function files() {
