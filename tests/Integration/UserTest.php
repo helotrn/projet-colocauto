@@ -24,6 +24,7 @@ class UserTest extends TestCase
         'other_phone',
         'approved_at',
     ];
+
     private static $getCommunityResponseStructure = [
         'id',
         'name',
@@ -182,16 +183,22 @@ class UserTest extends TestCase
     public function testShowUsersCommunities() {
         $user = factory(User::class)->create();
         $community = factory(Community::class)->create();
+        $otherCommunity = factory(Community::class)->create();
+
         $data = [
             'communities' => [['id' => $community['id']]]
         ];
         $response = $this->json('PUT', "/api/v1/users/$user->id", $data);
 
         $data = [
-            'user_id' => $user->id,
+            'users_id' => $user->id,
         ];
+
+        $response = $this->json('GET', "/api/v1/communities/$otherCommunity->id", $data);
+        $response->assertStatus(404);
+
         $response = $this->json('GET', "/api/v1/communities/$community->id", $data);
-        $response->assertStatus(200)->assertJsonStructure(static::$getCommunityResponseStructure);
+        $response->assertStatus(200);
     }
 
     public function testListUsersCommunities() {
@@ -210,6 +217,8 @@ class UserTest extends TestCase
         ];
         $response = $this->json('GET', "/api/v1/communities", $data);
 
-        $response->assertStatus(200)->assertJsonStructure($this->buildCollectionStructure(static::$getCommunityResponseStructure));
+        $response->assertStatus(200)
+            ->assertJson([ 'total' => 2 ])
+            ->assertJsonStructure($this->buildCollectionStructure(static::$getCommunityResponseStructure));
     }
 }

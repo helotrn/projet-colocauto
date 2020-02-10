@@ -90,6 +90,19 @@ class RestRepository
             $query = $query->accessibleBy(\Auth::user());
         }
 
+        $params = $request->all();
+        foreach ($params as $param => $value) {
+            if (in_array($param, $this->reserved)) {
+                continue;
+            }
+
+            $query = $this->applyFilter($param, $value, $query);
+        }
+
+        if ($fields = $request->getFields()) {
+            $this->applyWithFromQuery($fields, $query);
+        }
+
         $columns = $this->columnsDefinition;
         foreach ($columns as $column) {
             $query = $column($query);
@@ -198,42 +211,62 @@ class RestRepository
                     $this->model->{str_replace('_id', '', $field)}()->dissociate();
                 }
             } elseif (array_key_exists($field, $data)) {
-                if (is_array($data[$field])
-                    && array_key_exists('id', $data[$field])
-                    && $data[$field]['id']) {
-                    if (in_array($field, $this->model->hasOne)) {
-                        $this->model->{$field}()->associate($data[$field]['id']);
-                    } elseif (in_array($field, array_keys($this->model->morphOne))) {
-                        if ($this->model->{$field}
-                            && $this->model->{$field}->id !== $data[$field]['id']) {
-                            $this->model->{$field}->where('id', '!=', $data[$field]['id'])->delete();
+                if (is_array($data[$field])) {
+                    if (array_key_exists('id', $data[$field]) && $data[$field]['id']) {
+                        if (in_array($field, $this->model->hasOne)) {
+                            $this->model->{$field}()->associate($data[$field]['id']);
+                        } elseif (in_array($field, array_keys($this->model->morphOne))) {
+                            if ($this->model->{$field}
+                                && $this->model->{$field}->id !== $data[$field]['id']) {
+                                $this->model->{$field}->where('id', '!=', $data[$field]['id'])->delete();
+                            }
+                            $newRelation = $this->model->{$field}()
+                                ->getRelated()->find($data[$field]['id']);
+
+                            $morphId = $this->model->morphOne[$field] . '_id';
+                            $morphType = $this->model->morphOne[$field] . '_type';
+
+                            $newRelation->{$morphId} = $this->model->id;
+                            $newRelation->{$morphType} = get_class($this->model);
+
+                            $newRelation->save();
+                        } elseif (in_array($field, array_keys($this->model->morphOneField))) {
+                            if ($this->model->{$field}
+                                && $this->model->{$field}->count() > 0
+                                && $this->model->{$field}->first()->id !== $data[$field]['id']) {
+                                $this->model->{$field}()->where('id', '!=', $data[$field]['id'])->delete();
+                            }
+                            $newRelation = $this->model->{$field}()
+                                ->getRelated()->find($data[$field]['id']);
+
+                            $morphId = $this->model->morphOneField[$field] . '_id';
+                            $morphType = $this->model->morphOneField[$field] . '_type';
+
+                            $newRelation->{$morphId} = $this->model->id;
+                            $newRelation->{$morphType} = get_class($this->model);
+
+                            $newRelation->save();
+                        } elseif (in_array($field, array_keys($this->model->collections))) {
+                            $newRelation = $this->model->{$field}();
+
+                            $morphId = $this->model->morphOneField[$field] . '_id';
+                            $morphType = $this->model->morphOneField[$field] . '_type';
+
+                            $newRelation->{$morphId} = $this->model->id;
+                            $newRelation->{$morphType} = get_class($this->model);
+
+                            $newRelation->save();
                         }
-                        $newRelation = $this->model->{$field}()
-                            ->getRelated()->find($data[$field]['id']);
+                    } else {
+                        $newCollection = [];
 
-                        $morphId = $this->model->morphOne[$field] . '_id';
-                        $morphType = $this->model->morphOne[$field] . '_type';
-
-                        $newRelation->{$morphId} = $this->model->id;
-                        $newRelation->{$morphType} = get_class($this->model);
-
-                        $newRelation->save();
-                    } elseif (in_array($field, array_keys($this->model->morphOneField))) {
-                        if ($this->model->{$field}
-                            && $this->model->{$field}->count() > 0
-                            && $this->model->{$field}->first()->id !== $data[$field]['id']) {
-                            $this->model->{$field}()->where('id', '!=', $data[$field]['id'])->delete();
+                        foreach ($data[$field] as $element) {
+                            if (array_key_exists('id', $element) && $element['id']) {
+                                $newCollection[] = $element['id'];
+                            }
                         }
-                        $newRelation = $this->model->{$field}()
-                            ->getRelated()->find($data[$field]['id']);
 
-                        $morphId = $this->model->morphOneField[$field] . '_id';
-                        $morphType = $this->model->morphOneField[$field] . '_type';
-
-                        $newRelation->{$morphId} = $this->model->id;
-                        $newRelation->{$morphType} = get_class($this->model);
-
-                        $newRelation->save();
+                        $this->model->{$field}()->sync($newCollection);
                     }
                 } elseif (!is_array($data[$field]) || !array_key_exists('id', $data[$field])
                     || !$data[$field]['id']) {
