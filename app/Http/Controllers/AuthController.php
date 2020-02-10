@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\UserController;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\Auth\RegisterRequest;
-use App\Http\Requests\BaseRequest;
+use App\Http\Requests\BaseRequest as Request;
 use App\Http\Requests\User\UpdateRequest as UserUpdateRequest;
 use App\Models\User;
 use App\Utils\Traits\ErrorResponseTrait;
@@ -41,11 +41,11 @@ class AuthController extends Controller
             'grant_type' => 'password'
         ];
 
-        $req = BaseRequest::create('/oauth/token', 'POST', $data);
+        $req = Request::create('/oauth/token', 'POST', $data);
         return app()->handle($req);
     }
 
-    public function logout(BaseRequest $request) {
+    public function logout(Request $request) {
         $user = $this->auth->user();
 
         if (!$user) {
@@ -85,7 +85,7 @@ class AuthController extends Controller
         return $this->respondWithErrors('Registration error.', 400);
     }
 
-    public function getUser(BaseRequest $request) {
+    public function getUser(Request $request) {
         return $this->userController->retrieve($request, $this->auth->user()->id);
     }
 
