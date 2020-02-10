@@ -19,7 +19,7 @@ class Loan extends BaseModel
 
     public static $transformer = LoanTransformer::class;
 
-    public $belongsTo = ['borrower'];
+    public $items = ['borrower'];
 
     public function borrower() {
         return $this->belongsTo(Borrower::class);

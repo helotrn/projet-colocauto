@@ -89,7 +89,7 @@ class User extends AuthenticatableBaseModel
         'email_verified_at' => 'datetime',
     ];
 
-    protected $with = ['avatar'];
+    protected $with = [];
 
     public $collections = [
       'loans',
@@ -99,7 +99,8 @@ class User extends AuthenticatableBaseModel
       'paymentMethods',
     ];
 
-    public $belongsTo = [
+    public $items = [
+      'avatar',
       'borrower',
     ];
 

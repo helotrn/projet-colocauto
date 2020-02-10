@@ -10,7 +10,7 @@ class Action extends BaseModel
         'name',
     ];
 
-    public $belongsTo = ['loan'];
+    public $items = ['loan'];
 
     public function loan() {
         return $this->belongsTo(Loan::class);

@@ -14,7 +14,7 @@ class BaseTransformer
         $reflect = new \ReflectionClass($item);
         static::$context[$reflect->getShortName()] = $item->id;
 
-        $this->addBelongsTo($output, $item, $options);
+        $this->addItems($output, $item, $options);
         $this->addCollections($output, $item, $options);
 
         if ($this->applyFieldsOption($options)) {
@@ -62,8 +62,8 @@ class BaseTransformer
         }
     }
 
-    protected function addBelongsTo(&$output, &$item, &$options) {
-        foreach ($item->belongsTo as $relation) {
+    protected function addItems(&$output, &$item, &$options) {
+        foreach ($item->items as $relation) {
             if ($this->shouldIncludeRelation($relation, $item, $options)) {
                 if (!$item->{$relation}) {
                     continue;

@@ -22,7 +22,7 @@ class Bill extends BaseModel
 
     public static $transformer = BillTransformer::class;
 
-    public $belongsTo = ['user'];
+    public $items = ['user'];
 
     public function user() {
         return $this->belongsTo(User::class);

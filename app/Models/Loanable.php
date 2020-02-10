@@ -34,7 +34,7 @@ class Loanable extends BaseModel
         'position' => PointCast::class,
     ];
 
-    public $belongsTo = ['owner'];
+    public $items = ['owner'];
 
     public function owner() {
         return $this->belongsTo(Owner::class);

@@ -23,7 +23,7 @@ class Pricing extends BaseModel
 
     public static $transformer = PricingTransformer::class;
 
-    public $belongsTo = ['community'];
+    public $items = ['community'];
 
     public function community() {
         return $this->belongsTo(Community::class);

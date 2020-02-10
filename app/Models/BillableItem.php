@@ -20,7 +20,7 @@ class BillableItem extends BaseModel
 
     public static $transformer = BillableItemTransformer::class;
 
-    public $belongsTo = ['bill'];
+    public $items = ['bill'];
 
     public function bill() {
         return $this->belongsTo(Bill::class);
