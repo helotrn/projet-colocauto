@@ -21,7 +21,7 @@ class UserRepository extends RestRepository
             $this->model->password = $password;
         }
 
-        $this->addBelongsTo($data);
+        $this->addItems($data);
 
         $this->model->save();
 
