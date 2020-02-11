@@ -3,6 +3,7 @@
 use App\Models\Loan;
 use Illuminate\Database\Seeder;
 use Faker\Generator as Faker;
+use Carbon\Carbon;
 
 class LoansTableSeeder extends Seeder
 {
@@ -10,8 +11,8 @@ class LoansTableSeeder extends Seeder
         $loans = [
             [
                 'id' => 1,
-                'departure_at' => $faker->dateTime($format = 'Y-m-d H:i:sO'),
-                'duration_in_minutes' => $faker->randomNumber($nbDigits = 4, $strict = false),
+                'departure_at' => now(),
+                'duration' => $faker->randomNumber($nbDigits = 4, $strict = false),
                 'borrower_id' => 1,
                 'loanable_type' => 'bike',
                 'loanable_id' => 1,

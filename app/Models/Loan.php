@@ -16,13 +16,17 @@ use App\Transformers\LoanTransformer;
 class Loan extends BaseModel
 {
     public static $rules = [
-        'departure_at' => 'required|date',
-        'duration' => 'required',
+        'departure_at' => 'nullable|timestamptz',
+        'duration' => 'nullable',
     ];
 
     protected $fillable = [
         'departure_at',
         'duration',
+    ];
+
+    protected $casts = [
+        'departure_at' => 'timestamptz',
     ];
 
     public static $transformer = LoanTransformer::class;
