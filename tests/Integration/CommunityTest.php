@@ -128,7 +128,6 @@ class CommunityTest extends TestCase
         $response = $this->json('PUT', route('communities.update', $community->id), $data);
 
         $response->assertStatus(403);
-        $this->user->role = "admin";
     }
 
     public function testDeleteCommunities() {
@@ -146,7 +145,6 @@ class CommunityTest extends TestCase
         $response = $this->json('DELETE', route('communities.destroy', $community->id));
 
         $response->assertStatus(403);
-        $this->user->role = "admin";
     }
 
     public function testListCommunities() {
