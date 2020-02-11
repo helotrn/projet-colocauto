@@ -57,7 +57,7 @@ class Loan extends BaseModel
         return $this->hasMany(Extension::class);
     }
 
-    public $belongsTo = ['borrower', 'loanable'];
+    public $items = ['borrower', 'loanable'];
 
     public function borrower() {
         return $this->belongsTo(Borrower::class);

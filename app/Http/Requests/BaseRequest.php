@@ -26,7 +26,7 @@ class BaseRequest extends FormRequest
         }
 
         if (!$this->get('fields')) {
-            return $this->fieldsMemo = [];
+            return $this->fieldsMemo = ['*' => '*'];
         }
 
         return $this->fieldsMemo = $this->parseFields(

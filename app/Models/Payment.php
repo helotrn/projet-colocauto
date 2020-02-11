@@ -21,7 +21,7 @@ class Payment extends Action
 
     public static $transformer = PaymentTransformer::class;
 
-    public $belongsTo = ['billableItem'];
+    public $items = ['billableItem'];
 
     public function billableItem() {
         return $this->belongsTo(BillableItem::class);

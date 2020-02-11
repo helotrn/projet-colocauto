@@ -14,8 +14,10 @@
     <b-card class="register-map__community" v-if="community">
       <template v-slot:header>
         <div class="register-map__community__buttons">
-          <b-button @click="previousCommunity">Précédente</b-button>
-          <b-button @click="nextCommunity">Suivante</b-button>
+          <b-button-group>
+            <b-button @click="previousCommunity">Précédente</b-button>
+            <b-button @click="nextCommunity">Suivante</b-button>
+          </b-button-group>
         </div>
 
         <h4 class="card-title">
@@ -29,10 +31,12 @@
           </p>
         </div>
 
-        <b-form class="register-map__community__buttons"
-          @submit.prevent="completeRegistration" @reset.prevent="resetCommunity">
-          <b-button type="submit" variant="primary">Poursuivre l'inscription</b-button>
-          <b-button type="reset" variant="warning">Revenir aux communautés</b-button>
+        <b-form class="register-map__community__submit"
+          @submit.prevent="joinCommunity" @reset.prevent="resetCommunity">
+          <b-button-group>
+            <b-button type="submit" variant="primary">Poursuivre l'inscription</b-button>
+            <b-button type="reset" variant="warning">Revenir aux communautés</b-button>
+          </b-button-group>
         </b-form>
       </b-card-text>
     </b-card>
@@ -166,6 +170,16 @@ export default {
       community.area_google.forEach(p => bounds.extend(p));
       this.$refs.map.fitBounds(bounds);
     },
+    async joinCommunity() {
+      const { commit, dispatch } = this.$store;
+
+      await dispatch('users/joinCommunity', {
+        userId: this.$store.state.user.id,
+        communityId: this.community.id,
+      });
+
+      this.$router.push('/register/3');
+    },
     nextCommunity() {
       const index = this.communities.indexOf(this.community);
 
@@ -291,19 +305,6 @@ export default {
       }
     }
 
-    &__buttons {
-      text-align: left;
-
-      .btn {
-        margin-right: 10px;
-        margin-bottom: 10px;
-      }
-
-      .btn:last-child {
-        margin-right: 0;
-      }
-    }
-
     &.hidden {
       opacity: 0;
       pointer-events: none;
@@ -313,6 +314,15 @@ export default {
       opacity: 1;
       pointer-events: normal;
     }
+  }
+
+  &__community__buttons {
+    margin-bottom: 10px;
+  }
+
+  &__community__buttons,
+  &__community__submit {
+    text-align: left;
   }
 }
 </style>

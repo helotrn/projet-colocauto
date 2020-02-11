@@ -11,7 +11,7 @@ class Action extends BaseModel
         'name',
     ];
 
-    public $belongsTo = ['loan', 'user'];
+    public $items = ['loan', 'user'];
 
     public function loan() {
         return $this->belongsTo(Loan::class);

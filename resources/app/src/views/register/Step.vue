@@ -22,6 +22,14 @@
 
       <profile-form v-if="item" :user="item" :loading="loading" @submit="submitAndReload" />
     </div>
+
+    <div v-if="currentPage == 3" class="register-step__community">
+      <h2>Preuve de résidence</h2>
+
+      <p class="register-step__community__text">
+        Pour rejoindre une communauté LocoMotion, vous devez fournir une preuve de résidence.
+      </p>
+    </div>
   </div>
 </template>
 
@@ -60,11 +68,9 @@ export default {
           return null;
         }
 
-        return vm.$router.replace('/register/3');
-      }
-
-      if (vm.$route.path !== '/register/1') {
-        return vm.$router.replace('/register/1');
+        if (vm.$route.path !== '/register/3') {
+          return vm.$router.replace('/register/3');
+        }
       }
 
       return null;

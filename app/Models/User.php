@@ -91,7 +91,7 @@ class User extends AuthenticatableBaseModel
         'email_verified_at' => 'datetime',
     ];
 
-    protected $with = ['avatar'];
+    protected $with = [];
 
     public $collections = [
       'actions',
@@ -100,6 +100,11 @@ class User extends AuthenticatableBaseModel
       'files',
       'loans',
       'paymentMethods',
+    ];
+
+    public $items = [
+      'avatar',
+      'borrower',
     ];
 
     public $morphOneField = [
@@ -128,8 +133,9 @@ class User extends AuthenticatableBaseModel
 
     public function communities() {
         return $this->belongsToMany(Community::class)
+            ->using(Pivots\CommunityUser::class)
             ->withTimestamps()
-            ->withPivot(['role', 'created_at', 'updated_at']);
+            ->withPivot(['id', 'approved_at', 'created_at', 'role', 'suspended_at', 'updated_at']);
     }
 
     public function files() {

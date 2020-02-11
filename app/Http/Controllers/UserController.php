@@ -6,8 +6,6 @@ use App\Http\Requests\BaseRequest as Request;
 use App\Http\Requests\User\CreateRequest;
 use App\Http\Requests\User\DestroyRequest;
 use App\Http\Requests\User\UpdateRequest;
-use App\Http\Requests\UserCommunity\AssociateRequest as AssociateCommunityRequest;
-use App\Http\Requests\UserCommunity\DissociateRequest as DissociateCommunityRequest;
 use App\Models\User;
 use App\Repositories\CommunityRepository;
 use App\Repositories\UserRepository;
@@ -104,54 +102,33 @@ class UserController extends RestController
         return "";
     }
 
-    public function associateToCommunity(AssociateCommunityRequest $request, $userId, $communityId) {
-        $community = $this->communityRepo->find($request, $communityId);
+    public function createUserCommunity(Request $request, $userId, $communityId) {
         $user = $this->repo->find($request, $userId);
-        $user_communities = $user->communities->pluck('id')->ToArray();
+        $community = $this->communityRepo->find($request, $communityId);
 
-        if ($community->id) {
-            try {
-                $data = [
-                    'communities' => [['id' => $community->id]]
-                ];
-                foreach ($user_communities as $user_community) {
-                    array_push($data['communities'], ['id' => $user_community]);
-                }
+        if ($user->communities->where('id', $communityId)->isEmpty()) {
+            $user->communities()->attach($community);
 
-                $request->merge($data);
-                $response = parent::validateAndUpdate($request, $userId);
-            } catch (ValidationException $e) {
-                return $this->respondWithErrors($e->errors(), $e->getMessage());
-            }
-
-            return $response;
-        } else {
-            return $this->respondWithErrors('Non-existent ID', 'community id does not exist');
+            return $this->respondWithItem(
+                $request,
+                $user->communities()->where('id', $communityId)->first()
+            );
         }
+
+        return $this->respondWithItem(
+            $request,
+            $user->communities->where('id', $communityId)->first()
+        );
     }
 
-    public function dissociateFromCommunity(DissociateCommunityRequest $request, $userId, $communityId) {
+    public function deleteCommunity(Request $request, $userId, $communityId) {
         $community = $this->communityRepo->find($request, $communityId);
         $user = $this->repo->find($request, $userId);
-        $user_communities = $user->communities->pluck('id')->ToArray();
 
-        if ($community->id) {
-            try {
-                $data = [
-                    'communities' => [['id' => $community->id]]
-                ];
-                foreach ($user_communities as $user_community) {
-                    array_push($data['communities'], ['id' => $user_community]);
-                }
-
-                $request->merge($data);
-                $response = parent::validateAndUpdate($request, $userId);
-            } catch (ValidationException $e) {
-                return $this->respondWithErrors($e->errors(), $e->getMessage());
-            }
-            return $response;
-        } else {
-            return $this->respondWithErrors('Non-existent ID', 'community id does not exist');
+        if ($user->communities->where('id', $communityId)->isNotEmpty()) {
+            $user->communities()->detach($community);
         }
+
+        return $community;
     }
 }

@@ -21,7 +21,7 @@ class RestController extends Controller
         $perPage = $request->get('per_page') ?: 10;
         $page = $request->get('page') ?: 1;
 
-        $transformer = new $this->model::$transformer;
+        $transformer = new $items[0]::$transformer;
         $results = $items->map(function ($item) use ($transformer, $request) {
             return $transformer->transform($item, [
                 'fields' => $request->getFields(),
@@ -46,10 +46,17 @@ class RestController extends Controller
     }
 
     protected function respondWithItem(Request $request, $item, $status = 200) {
-        $transformer = new $this->model::$transformer;
+        $transformer = new $item::$transformer;
+
+        $reflect = new \ReflectionClass($this->model);
+        $shortName = $reflect->getShortName();
+        $context = [];
+        $context[$shortName] = true;
 
         $result = $transformer->transform($item, [
             'fields' => $request->getFields(),
+            'pivot' => isset($item->pivot) ? $item->pivot->toArray() : null,
+            'context' => $context,
         ]);
 
         return response($result, $status);

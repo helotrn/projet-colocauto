@@ -114,7 +114,7 @@ class RestRepository
     public function create($data) {
         $this->model->fill($data);
 
-        $this->addBelongsTo($data);
+        $this->addItems($data);
 
         $this->model->save();
 
@@ -136,7 +136,7 @@ class RestRepository
 
         $this->model->fill($data);
 
-        $this->addBelongsTo($data);
+        $this->addItems($data);
 
         $this->model->save();
 
@@ -180,13 +180,13 @@ class RestRepository
         return $query;
     }
 
-    protected function addBelongsTo($data) {
+    protected function addItems($data) {
         foreach (array_diff(array_keys($data), $this->model->getFillable()) as $field) {
             if ($field === 'id') {
                 continue;
             }
 
-            if (in_array($field, $this->model->belongsTo)) {
+            if (in_array($field, $this->model->items)) {
                 if (preg_match('/_id$/', $field)) {
                     $this->model->{$field} = $data[$field];
                 } elseif (is_array($data[$field]) && array_key_exists('id', $data[$field])) {
@@ -203,7 +203,7 @@ class RestRepository
             }
 
             if (preg_match('/_id$/', $field) &&
-                (in_array($field, $this->model->hasOne) || in_array($field, array_keys($this->model->morphOne)))) {
+                (in_array($field, $this->model->items) || in_array($field, array_keys($this->model->morphOne)))) {
                 $newAssoc = $data[$field];
                 if ($newAssoc) {
                     $this->model->{str_replace('_id', '', $field)}()->associate($data[$field]);
@@ -213,7 +213,7 @@ class RestRepository
             } elseif (array_key_exists($field, $data)) {
                 if (is_array($data[$field])) {
                     if (array_key_exists('id', $data[$field]) && $data[$field]['id']) {
-                        if (in_array($field, $this->model->hasOne)) {
+                        if (in_array($field, $this->model->items)) {
                             $this->model->{$field}()->associate($data[$field]['id']);
                         } elseif (in_array($field, array_keys($this->model->morphOne))) {
                             if ($this->model->{$field}
@@ -270,7 +270,7 @@ class RestRepository
                     }
                 } elseif (!is_array($data[$field]) || !array_key_exists('id', $data[$field])
                     || !$data[$field]['id']) {
-                    if (in_array($field, $this->model->hasOne)) {
+                    if (in_array($field, $this->model->items)) {
                         $this->model->{$field}()->dissociate();
                     } elseif (in_array($field, array_keys($this->model->morphOne)) && $this->model->{$field}()->count()) {
                         $this->model->{$field}->delete();
@@ -289,10 +289,6 @@ class RestRepository
         if (strpos($paramName, '_') !== false) {
             [$relation, $field] = explode('_', $paramName, 2);
 
-            if (in_array($relation, $this->model->hasOne)
-                || in_array($relation, $this->model->belongsTo)) {
-            }
-
             if (in_array($relation, $this->model->collections)) {
                 return $query->whereHas($relation, function ($q) use ($field, $value, $negative) {
                     $fieldQuery = $negative ? "!$field" : $field;
@@ -303,8 +299,7 @@ class RestRepository
             return $query;
         }
 
-        if (in_array($paramName, $this->model->hasOne)
-            || in_array($paramName, $this->model->belongsTo)) {
+        if (in_array($paramName, $this->model->items)) {
             if ($negative) {
                 return $query->doesntHave($paramName);
             }

@@ -49,7 +49,9 @@ const routes = [
         meta: {
           title: 'titles.account',
           slug: 'users',
-          fields: '*,communities.id,communities.name,communities.role,payments.*,loanables.*',
+          params: {
+            fields: '*,avatar.*,communities.id,communities.name,communities.role,payments.*,loanables.*',
+          },
         },
       },
       //      {
@@ -108,7 +110,9 @@ const routes = [
         props: true,
         meta: {
           slug: 'users',
-          fields: '*,communities.id,communities.name,communities.role',
+          params: {
+            fields: '*,avatar.*,communities.id,communities.name,communities.role',
+          },
         },
       },
     ],

@@ -23,7 +23,7 @@ trait BaseModelTrait
 
     protected $appends = [];
 
-    public $hasOne = [];
+    public $items = [];
 
     public $collections = [];
 
@@ -32,8 +32,6 @@ trait BaseModelTrait
     public $morphOne = [];
 
     public $morphOneField = [];
-
-    public $belongsTo = [];
 
     public function getWith() {
         return $this->with;

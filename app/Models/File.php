@@ -80,7 +80,7 @@ class File extends BaseModel
         });
     }
 
-    public $belongsTo = ['user'];
+    public $items = ['user'];
 
     public function fileable() {
         return $this->morphTo();
