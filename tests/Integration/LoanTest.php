@@ -2,73 +2,76 @@
 
 namespace Tests\Integration;
 
+use App\Models\Borrower;
 use App\Models\Loan;
 use Tests\TestCase;
 
 class LoanTest extends TestCase
 {
+    private static $getLoanResponseStructure = [
+        'id',
+        'departure_at',
+        'duration',
+        'borrower_id',
+        'loanable_type',
+        'loanable_id',
+    ];
+
     public function testCreateLoans() {
-        $this->markTestIncomplete();
+        $borrower = factory(Borrower::class)->create(['user_id' => $this->user->id]);
         $data = [
-            'departure_at' => $this->faker->dateTime($format = 'Y-m-d H:i:sO', $max = 'now'),
+            'departure_at' => now(),
             'duration' => $this->faker->randomNumber($nbDigits = null, $strict = false),
+            'borrower_id' => $borrower->id,
         ];
 
-        $response = $this->json('POST', route('loans.create'), $data);
+        $response = $this->json('POST', "/api/v1/loans", $data);
 
-        $response->assertStatus(201)->assertJson($data);
+        $response->assertStatus(201)
+                ->assertJsonStructure(static::$getLoanResponseStructure);
     }
 
     public function testShowLoans() {
-        $this->markTestIncomplete();
-        $post = factory(Loan::class)->create();
+        $borrower = factory(Borrower::class)->create(['user_id' => $this->user->id]);
+        $loan = factory(Loan::class)->create(['borrower_id' => $borrower->id]);
 
-        $response = $this->json('GET', route('loans.retrieve', $post->id), $data);
+        $response = $this->json('GET', "/api/v1/loans/$loan->id");
 
-        $response->assertStatus(200)->assertJson($data);
+        $response->assertStatus(200)->assertJson(['id' => $loan->id]);
     }
 
     public function testUpdateLoans() {
-        $this->markTestIncomplete();
-        $post = factory(Loan::class)->create();
+        $borrower = factory(Borrower::class)->create(['user_id' => $this->user->id]);
+        $loan = factory(Loan::class)->create(['borrower_id' => $borrower->id]);
         $data = [
-            'duration' => $this->faker->randomNumber($nbDigits = null, $strict = false),
+            'duration' => $this->faker->randomNumber($nbDigits = 4, $strict = false),
         ];
 
-        $response = $this->json('PUT', route('loans.update', $post->id), $data);
+        $response = $this->json('PUT', "/api/v1/loans/$loan->id", $data);
 
         $response->assertStatus(200)->assertJson($data);
     }
 
     public function testDeleteLoans() {
-        $this->markTestIncomplete();
-        $post = factory(Loan::class)->create();
+        $borrower = factory(Borrower::class)->create(['user_id' => $this->user->id]);
+        $loan = factory(Loan::class)->create(['borrower_id' => $borrower->id]);
 
-        $response = $this->json('DELETE', route('loans.delete', $post->id), $data);
+        $response = $this->json('DELETE', "/api/v1/loans/$loan->id");
 
-        $response->assertStatus(204)->assertJson($data);
+        $response->assertStatus(200);
     }
 
     public function testListLoans() {
-        $this->markTestIncomplete();
-        $loans = factory(Loan::class, 2)->create()->map(function ($post) {
-            return $post->only([
-                'id',
-                'departure_at',
-                'duration'
-            ]);
-        });
+        $borrower = factory(Borrower::class)->create(['user_id' => $this->user->id]);
+        $loans = factory(Loan::class, 2)->create(['borrower_id' => $borrower->id])
+            ->map(function ($loan) {
+                return $loan->only(static::$getLoanResponseStructure);
+            });
 
-        $response = $this->json('GET', route('loans.index'));
+        $response = $this->json('GET', "/api/v1/loans");
 
         $response->assertStatus(200)
-                ->assertJson($loans->toArray())
-                ->assertJsonStructure([
-                    '*' => [
-                        'id',
-                        'departure_at',
-                        'duration',
-                    ],
-                ]);
+            ->assertJson([ 'total' => 2 ])
+            ->assertJsonStructure($this->buildCollectionStructure(static::$getLoanResponseStructure));
     }
 }
