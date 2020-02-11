@@ -13,14 +13,34 @@ class PaymentController extends RestController
         $this->model = $model;
     }
 
-    public function create(Request $request) {
+    public function index(Request $request) {
         try {
-            $response = parent::validateAndCreate($request);
+            [$items, $total] = $this->repo->get($request);
         } catch (ValidationException $e) {
-            return $this->respondWithErrors($e->getErrors(), $e->getMessage());
+            return $this->respondWithErrors($e->errors(), $e->getMessage());
         }
 
-        return $response;
+        return $this->respondWithCollection($request, $items, $total);
+    }
+
+    public function create(Request $request) {
+        try {
+            $item = parent::validateAndCreate($request);
+        } catch (ValidationException $e) {
+            return $this->respondWithErrors($e->errors(), $e->getMessage());
+        }
+
+        return $this->respondWithItem($request, $item, 201);
+    }
+
+    public function update(Request $request, $id) {
+        try {
+            $item = parent::validateAndUpdate($request, $id);
+        } catch (ValidationException $e) {
+            return $this->respondWithErrors($e->errors(), $e->getMessage());
+        }
+
+        return $this->respondWithItem($request, $item);
     }
 
     public function retrieve(Request $request, $id) {
@@ -29,27 +49,7 @@ class PaymentController extends RestController
         try {
             $response = $this->respondWithItem($request, $item);
         } catch (ValidationException $e) {
-            return $this->respondWithErrors($e->getErrors(), $e->getMessage());
-        }
-
-        return $response;
-    }
-
-    public function index(Request $request) {
-        try {
-            [$items, $total] = $this->repo->get($request);
-        } catch (ValidationException $e) {
-            return $this->respondWithErrors($e->getErrors(), $e->getMessage());
-        }
-
-        return $this->respondWithCollection($request, $items, $total);
-    }
-
-    public function update(Request $request, $id) {
-        try {
-            $response = parent::validateAndUpdate($request, $id);
-        } catch (ValidationException $e) {
-            return $this->respondWithErrors($e->getErrors(), $e->getMessage());
+            return $this->respondWithErrors($e->errors(), $e->getMessage());
         }
 
         return $response;
@@ -59,7 +59,7 @@ class PaymentController extends RestController
         try {
             $response = parent::validateAndDestroy($request, $id);
         } catch (ValidationException $e) {
-            return $this->respondWithErrors($e->getErrors(), $e->getMessage());
+            return $this->respondWithErrors($e->errors(), $e->getMessage());
         }
 
         return $response;
