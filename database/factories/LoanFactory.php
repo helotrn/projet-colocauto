@@ -2,7 +2,7 @@
 
 use App\Models\Loan;
 use Illuminate\Support\Str;
-use Faker\Generator as Faker; // $faker->dateTime($min = 'now', $timezone='UTC'),//$format = 'Y-m-d H:i:sO'
+use Faker\Generator as Faker;
 
 $factory->define(Loan::class, function (Faker $faker) {
     return [
