@@ -34,12 +34,12 @@ class UserController extends RestController
 
     public function create(CreateRequest $request) {
         try {
-            $response = parent::validateAndCreate($request);
+            $item = parent::validateAndCreate($request);
         } catch (ValidationException $e) {
             return $this->respondWithErrors($e->errors(), $e->getMessage());
         }
 
-        return $response;
+        return $this->respondWithItem($request, $item, 201);
     }
 
     public function update(UpdateRequest $request, $id) {
