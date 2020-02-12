@@ -2,73 +2,86 @@
 
 namespace Tests\Integration;
 
+use App\Models\Borrower;
 use App\Models\Intention;
+use App\Models\Loan;
 use Tests\TestCase;
 
 class IntentionTest extends TestCase
 {
+    private static $getIntentionResponseStructure = [
+        'id',
+        'executed_at',
+        'status',
+        'loan_id',
+    ];
+
     public function testCreateIntentions() {
-        $this->markTestIncomplete();
+        $borrower = factory(Borrower::class)->create(['user_id' => $this->user->id]);
+        $loan = factory(Loan::class)->create(['borrower_id' => $borrower->id]);
+
         $data = [
-            'executed_at' => $this->faker->dateTime($format = 'Y-m-d H:i:sO', $max = 'now'),
+            'executed_at' => now(),
             'status' => $this->faker->randomElement(['in_process', 'canceled', 'completed']),
+            'loan_id' => $loan->id,
         ];
 
-        $response = $this->json('POST', route('intentions.create'), $data);
-
-        $response->assertStatus(201)->assertJson($data);
+        $response = $this->json('POST', "/api/v1/intentions", $data);
+        $response->assertStatus(201)
+            ->assertJson(['loan_id' => $loan->id])
+            ->assertJsonStructure(static::$getIntentionResponseStructure);
     }
 
     public function testShowIntentions() {
-        $this->markTestIncomplete();
-        $post = factory(Intention::class)->create();
+        $borrower = factory(Borrower::class)->create(['user_id' => $this->user->id]);
+        $loan = factory(Loan::class)->create(['borrower_id' => $borrower->id]);
+        $intention = factory(Intention::class)->create(['loan_id' => $loan->id]);
 
-        $response = $this->json('GET', route('intentions.retrieve', $post->id), $data);
+        $response = $this->json('GET', "/api/v1/intentions/$intention->id");
 
-        $response->assertStatus(200)->assertJson($data);
+        $response->assertStatus(200)
+            ->assertJson(['id' => $intention->id])
+            ->assertJsonStructure(static::$getIntentionResponseStructure);
     }
 
     public function testUpdateIntentions() {
-        $this->markTestIncomplete();
-        $post = factory(Intention::class)->create();
+        $borrower = factory(Borrower::class)->create(['user_id' => $this->user->id]);
+        $loan = factory(Loan::class)->create(['borrower_id' => $borrower->id]);
+        $intention = factory(Intention::class)->create(['loan_id' => $loan->id]);
+
         $data = [
             'status' => $this->faker->randomElement(['in_process', 'canceled', 'completed']),
         ];
 
-        $response = $this->json('PUT', route('intentions.update', $post->id), $data);
+        $response = $this->json('PUT', "/api/v1/intentions/$intention->id", $data);
 
         $response->assertStatus(200)->assertJson($data);
     }
 
     public function testDeleteIntentions() {
-        $this->markTestIncomplete();
-        $post = factory(Intention::class)->create();
+        $borrower = factory(Borrower::class)->create(['user_id' => $this->user->id]);
+        $loan = factory(Loan::class)->create(['borrower_id' => $borrower->id]);
+        $intention = factory(Intention::class)->create(['loan_id' => $loan->id]);
 
-        $response = $this->json('DELETE', route('intentions.delete', $post->id), $data);
+        $response = $this->json('DELETE', "/api/v1/intentions/$intention->id");
+        $response->assertStatus(200);
 
-        $response->assertStatus(204)->assertJson($data);
+        $response = $this->json('GET', "/api/v1/intentions/$intention->id");
+        $response->assertStatus(404);
     }
 
     public function testListIntentions() {
-        $this->markTestIncomplete();
-        $intentions = factory(Intention::class, 2)->create()->map(function ($post) {
-            return $post->only([
-                'id',
-                'executed_at',
-                'status',
-            ]);
+        $borrower = factory(Borrower::class)->create(['user_id' => $this->user->id]);
+        $loan = factory(Loan::class)->create(['borrower_id' => $borrower->id]);
+
+        $intentions = factory(Intention::class, 2)->create(['loan_id' => $loan->id])->map(function ($intention) {
+            return $intention->only(static::$getIntentionResponseStructure);
         });
 
-        $response = $this->json('GET', route('intentions.index'));
+        $response = $this->json('GET', "/api/v1/intentions");
 
         $response->assertStatus(200)
-                ->assertJson($intentions->toArray())
-                ->assertJsonStructure([
-                    '*' => [
-                        'id',
-                        'executed_at',
-                        'status',
-                    ],
-                ]);
+            ->assertJson([ 'total' => 2 ])
+            ->assertJsonStructure($this->buildCollectionStructure(static::$getIntentionResponseStructure));
     }
 }
