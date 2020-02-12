@@ -12,7 +12,7 @@ class LoansTableSeeder extends Seeder
             [
                 'id' => 1,
                 'departure_at' => now(),
-                'duration' => $faker->randomNumber($nbDigits = 4, $strict = false),
+                'duration_in_minutes' => $faker->randomNumber($nbDigits = 4, $strict = false),
                 'borrower_id' => 1,
                 'loanable_type' => 'bike',
                 'loanable_id' => 1,

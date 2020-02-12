@@ -14,7 +14,7 @@ class LoanTest extends TestCase
     private static $getLoanResponseStructure = [
         'id',
         'departure_at',
-        'duration',
+        'duration_in_minutes',
         'borrower_id',
         'loanable_type',
         'loanable_id',
@@ -28,7 +28,7 @@ class LoanTest extends TestCase
 
         $data = [
             'departure_at' => now()->toDateTimeString(),
-            'duration' => $this->faker->randomNumber($nbDigits = null, $strict = false),
+            'duration_in_minutes' => $this->faker->randomNumber($nbDigits = null, $strict = false),
             'borrower_id' => $borrower->id,
             'loanable_type' => 'bike',
             'loanable_id' => $loanable->id,
@@ -55,7 +55,7 @@ class LoanTest extends TestCase
         $borrower = factory(Borrower::class)->create(['user_id' => $this->user->id]);
         $loan = factory(Loan::class)->create(['borrower_id' => $borrower->id]);
         $data = [
-            'duration' => $this->faker->randomNumber($nbDigits = 4, $strict = false),
+            'duration_in_minutes' => $this->faker->randomNumber($nbDigits = 4, $strict = false),
         ];
 
         $response = $this->json('PUT', "/api/v1/loans/$loan->id", $data);

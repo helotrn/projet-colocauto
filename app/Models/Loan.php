@@ -17,12 +17,12 @@ class Loan extends BaseModel
 {
     public static $rules = [
         'departure_at' => 'nullable|date_format:"Y-m-d H:i:s"',
-        'duration' => 'nullable',
+        'duration_in_minutes' => 'nullable',
     ];
 
     protected $fillable = [
         'departure_at',
-        'duration',
+        'duration_in_minutes',
         'borrower_id',
     ];
 
