@@ -35,11 +35,11 @@ class ActionController extends RestController
         $item = $this->repo->find($request, $id);
 
         switch ($item->type) {
-            case 'payment':
-                $paymentRequest = new Request();
-                $paymentRequest->setMethod('GET');
-                $paymentRequest->request->add($request->all());
-                return $this->paymentController->retrieve($paymentRequest, $id);
+            case 'intention':
+                $intentionRequest = new Request();
+                $intentionRequest->setMethod('GET');
+                $intentionRequest->request->add($request->all());
+                return $this->intentionController->retrieve($intentionRequest, $id);
             default:
                 throw new \Exception('invalid action type');
         }
@@ -58,11 +58,11 @@ class ActionController extends RestController
         }
 
         switch ($request->get('type')) {
-            case 'payment':
-                $paymentRequest = new Request();
-                $paymentRequest->setMethod('POST');
-                $paymentRequest->request->add($request->all());
-                return $this->paymentController->update($paymentRequest, $id);
+            case 'intention':
+                $intentionRequest = new Request();
+                $intentionRequest->setMethod('POST');
+                $intentionRequest->request->add($request->all());
+                return $this->intentionController->update($intentionRequest, $id);
             default:
                 throw new \Exception('invalid action type');
         }
@@ -71,7 +71,7 @@ class ActionController extends RestController
     public function template(Request $request) {
         return [
           'item' => [
-            'name' => '',
+            'status' => '',
             'type' => null,
           ],
           'filters' => $this->model::$filterTypes,
