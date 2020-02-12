@@ -65,6 +65,6 @@ class Loan extends BaseModel
     }
 
     public function loanable() {
-        return $this->belongsTo(Loanable::class);
+        return $this->morphTo(Loanable::class);
     }
 }
