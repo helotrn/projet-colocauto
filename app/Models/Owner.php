@@ -15,6 +15,7 @@ class Owner extends BaseModel
     protected $fillable = [
         'approved_at',
         'submitted_at',
+        'user_id',
     ];
 
     public static $transformer = OwnerTransformer::class;
