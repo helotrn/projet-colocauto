@@ -64,5 +64,10 @@ Route::prefix('v1')->group(function () {
 
         Route::delete('users/{user_id}/communities/{community_id}', 'UserController@deleteUserCommunity')
             ->name("users.deleteUserCommunity");
+
+        Route::put('/loans/{loan_id}/actions/{action_id}/complete');
+        Route::put('/loans/{loan_id}/actions/{action_id}/cancel');
+
+        Route::put('/borrowers/{id}/approve', 'BorrowerController@approve');
     });
 });
