@@ -16,7 +16,7 @@ use App\Transformers\LoanTransformer;
 class Loan extends BaseModel
 {
     public static $rules = [
-        'departure_at' => 'nullable|date_format:"Y-m-d H:i:s"',
+        'departure_at' => 'nullable|date',
         'duration_in_minutes' => 'nullable',
     ];
 
