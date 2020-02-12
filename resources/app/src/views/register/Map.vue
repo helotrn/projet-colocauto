@@ -171,9 +171,7 @@ export default {
       this.$refs.map.fitBounds(bounds);
     },
     async joinCommunity() {
-      const { commit, dispatch } = this.$store;
-
-      await dispatch('users/joinCommunity', {
+      await this.$store.dispatch('users/joinCommunity', {
         userId: this.$store.state.user.id,
         communityId: this.community.id,
       });
