@@ -6,7 +6,7 @@ use Faker\Generator as Faker;
 
 $factory->define(Intention::class, function (Faker $faker) {
     return [
-        'executed_at' => $faker->dateTime($format = 'Y-m-d H:i:sO', $max = 'now'),
+        'executed_at' => now(),
         'status' => $faker->randomElement(['in_process', 'canceled', 'completed']),
     ];
 });
