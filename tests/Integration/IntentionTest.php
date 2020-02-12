@@ -21,7 +21,7 @@ class IntentionTest extends TestCase
         $loan = factory(Loan::class)->create(['borrower_id' => $borrower->id]);
 
         $data = [
-            'executed_at' => now(),
+            'executed_at' => now()->toDateTimeString(),
             'status' => $this->faker->randomElement(['in_process', 'canceled', 'completed']),
             'loan_id' => $loan->id,
         ];

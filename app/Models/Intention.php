@@ -10,11 +10,14 @@ class Intention extends Action
     protected $table = 'intentions';
 
     public static $rules = [
+        'executed_at' => 'date_format:"Y-m-d H:i:s"',
         'status' => 'required',
     ];
 
     protected $fillable = [
+        'executed_at',
         'status',
+        'loan_id',
     ];
 
     public static $transformer = IntentionTransformer::class;
