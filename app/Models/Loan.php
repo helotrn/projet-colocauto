@@ -23,6 +23,7 @@ class Loan extends BaseModel
     protected $fillable = [
         'departure_at',
         'duration',
+        'borrower_id',
     ];
 
     public static $transformer = LoanTransformer::class;
