@@ -18,6 +18,17 @@ class LoanableController extends RestController
         $this->bikeController = $bikeController;
     }
 
+    public function create(Request $request) {
+
+        try {
+            $item = parent::validateAndCreate($request);
+        } catch (ValidationException $e) {
+            return $this->respondWithErrors($e->errors(), $e->getMessage());
+        }
+
+        return $this->respondWithItem($request, $item, 201);
+    }
+
     public function index(Request $request) {
         try {
             [$items, $total] = $this->repo->get($request);
