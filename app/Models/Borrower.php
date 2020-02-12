@@ -23,6 +23,7 @@ class Borrower extends BaseModel
         'noke_id',
         'approved_at',
         'submitted_at',
+        'user_id',
     ];
 
     public static $transformer = BorrowerTransformer::class;

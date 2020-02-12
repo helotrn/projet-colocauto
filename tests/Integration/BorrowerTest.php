@@ -24,16 +24,18 @@ class BorrowerTest extends TestCase
             'noke_id' => $this->faker->numberBetween($min = 000000000, $max = 999999999),
             'submitted_at' => $this->faker->date($format = 'Y-m-d', $max = 'now'),
             'approved_at' => $this->faker->date($format = 'Y-m-d', $max = 'now'),
+            'user_id' => $this->user->id,
         ];
 
         $response = $this->json('POST', "/api/v1/borrowers", $data);
 
         $response->assertStatus(201)
+            ->assertJson(['user_id' => $this->user->id])
             ->assertJsonStructure(static::$getBorrowerResponseStructure);
     }
 
     public function testShowBorrowers() {
-        $borrower = factory(Borrower::class)->create();
+        $borrower = factory(Borrower::class)->create(['user_id' => $this->user->id]);
 
         $response = $this->json('GET', "/api/v1/borrowers/$borrower->id");
 
@@ -43,7 +45,7 @@ class BorrowerTest extends TestCase
     }
 
     public function testUpdateBorrowers() {
-        $borrower = factory(Borrower::class)->create();
+        $borrower = factory(Borrower::class)->create(['user_id' => $this->user->id]);
         $data = [
             'drivers_license_number' => $this->faker->numberBetween($min = 1111111111, $max = 999999999),
         ];
@@ -54,7 +56,7 @@ class BorrowerTest extends TestCase
     }
 
     public function testDeleteBorrowers() {
-        $borrower = factory(Borrower::class)->create();
+        $borrower = factory(Borrower::class)->create(['user_id' => $this->user->id]);
 
         $response = $this->json('DELETE', "/api/v1/borrowers/$borrower->id");
         $response->assertStatus(200);
@@ -64,7 +66,7 @@ class BorrowerTest extends TestCase
     }
 
     public function testListBorrowers() {
-        $borrowers = factory(Borrower::class, 2)->create()->map(function ($borrower) {
+        $borrowers = factory(Borrower::class, 2)->create(['user_id' => $this->user->id])->map(function ($borrower) {
             return $borrower->only(static::$getBorrowerResponseStructure);
         });
 
@@ -75,28 +77,4 @@ class BorrowerTest extends TestCase
             ->assertJsonStructure($this->buildCollectionStructure(static::$getBorrowerResponseStructure));
     }
 
-    public function testCreateBorrowerWithUser() {
-        $user = factory(User::class)->create();
-        $borrower = factory(Borrower::class)->create(['user_id' => $user->id]);
-
-        $response = $this->json('PUT', "/api/v1/borrowers/$borrower->id");
-
-        $response->assertStatus(200)
-            ->assertJson(['user_id' => $user->id])
-            ->assertJsonStructure(static::$getBorrowerResponseStructure);
-    }
-
-    public function testUpdateBorrowerWithUser() {
-        $user = factory(User::class)->create();
-        $borrower = factory(Borrower::class)->create(['user_id' => $user->id]);
-
-        $data = [
-            'user' => $user->id
-        ];
-
-        $response = $this->json('PUT', "/api/v1/borrowers/$borrower->id", $data);
-        $response->assertStatus(200)
-            ->assertJson(['user_id' => $user->id])
-            ->assertJsonStructure(static::$getBorrowerResponseStructure);
-    }
 }
