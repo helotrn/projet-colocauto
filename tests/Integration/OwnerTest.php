@@ -3,71 +3,72 @@
 namespace Tests\Integration;
 
 use App\Models\Owner;
+use App\Models\User;
 use Tests\TestCase;
 
 class OwnerTest extends TestCase
 {
+    private static $getOwnerResponseStructure = [
+        'id',
+        'submitted_at',
+        'approved_at',
+    ];
+
     public function testCreateOwners() {
-        $this->markTestIncomplete();
         $data = [
-            'submitted_at' => $this->faker->date($format = 'Y-m-d', $max = 'now'),
-            'approved_at' => $this->faker->date($format = 'Y-m-d', $max = 'now'),
+            'submitted_at' => now()->toDateTimeString(),
+            'approved_at' => now()->toDateTimeString(),
+            'user_id' => $this->user->id,
         ];
 
-        $response = $this->json('POST', route('owners.create'), $data);
+        $response = $this->json('POST', "/api/v1/owners", $data);
 
-        $response->assertStatus(201)->assertJson($data);
+        $response->assertStatus(201)
+            ->assertJson(['user_id' => $this->user->id])
+            ->assertJsonStructure(static::$getOwnerResponseStructure);
     }
 
     public function testShowOwners() {
-        $this->markTestIncomplete();
-        $post = factory(Owner::class)->create();
+        $owner = factory(Owner::class)->create(['user_id' => $this->user->id]);
 
-        $response = $this->json('GET', route('owners.retrieve', $post->id), $data);
+        $response = $this->json('GET', "/api/v1/owners/$owner->id");
 
-        $response->assertStatus(200)->assertJson($data);
+        $response->assertStatus(200)
+            ->assertJson(['id' => $owner->id])
+            ->assertJsonStructure(static::$getOwnerResponseStructure);
     }
 
     public function testUpdateOwners() {
-        $this->markTestIncomplete();
-        $post = factory(Owner::class)->create();
+        $owner = factory(Owner::class)->create(['user_id' => $this->user->id]);
+        $approvedAt = now()->toDateTimeString();
         $data = [
+            'approved_at' => $approvedAt,
         ];
 
-        $response = $this->json('PUT', route('owners.update', $post->id), $data);
+        $response = $this->json('PUT', "/api/v1/owners/$owner->id", $data);
 
         $response->assertStatus(200)->assertJson($data);
     }
 
     public function testDeleteOwners() {
-        $this->markTestIncomplete();
-        $post = factory(Owner::class)->create();
+        $owner = factory(Owner::class)->create(['user_id' => $this->user->id]);
 
-        $response = $this->json('DELETE', route('owners.delete', $post->id), $data);
+        $response = $this->json('DELETE', "/api/v1/owners/$owner->id");
+        $response->assertStatus(200);
 
-        $response->assertStatus(204)->assertJson($data);
+        $response = $this->json('GET', "/api/v1/owners/$owner->id");
+        $response->assertStatus(404);
     }
 
     public function testListOwners() {
-        $this->markTestIncomplete();
-        $owners = factory(Owner::class, 2)->create()->map(function ($post) {
-            return $post->only([
-                'id',
-                'submitted_at',
-                'approved_at',
-            ]);
+        $owners = factory(Owner::class, 2)->create(['user_id' => $this->user->id])->map(function ($owner) {
+            return $owner->only(static::$getOwnerResponseStructure);
         });
 
-        $response = $this->json('GET', route('owners.index'));
+        $response = $this->json('GET', "/api/v1/owners");
 
         $response->assertStatus(200)
-                ->assertJson($owners->toArray())
-                ->assertJsonStructure([
-                    '*' => [
-                        'id',
-                        'submitted_at',
-                        'approved_at',
-                    ],
-                ]);
+            ->assertJson([ 'total' => 2 ])
+            ->assertJsonStructure($this->buildCollectionStructure(static::$getOwnerResponseStructure));
     }
 }
