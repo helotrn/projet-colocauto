@@ -6,6 +6,7 @@ use App\Http\Requests\BaseRequest as Request;
 use App\Http\Requests\Borrower\ApproveRequest as ApproveRequest;
 use App\Models\Borrower;
 use App\Repositories\BorrowerRepository;
+use Carbon\Carbon;
 
 class BorrowerController extends RestController
 {
@@ -70,7 +71,7 @@ class BorrowerController extends RestController
         $item = $this->repo->find($request, $id);
 
         if (!$item->approved_at) {
-            $item->approved_at = now()->toIsoString();
+            $item->approved_at = Carbon::now()->toIsoString();
             $item->save();
         }
     }

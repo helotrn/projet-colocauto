@@ -5,6 +5,7 @@ namespace Tests\Integration;
 use App\Models\Borrower;
 use App\Models\User;
 use Tests\TestCase;
+use Carbon\Carbon;
 
 class BorrowerTest extends TestCase
 {
@@ -23,7 +24,7 @@ class BorrowerTest extends TestCase
             'has_been_sued_last_ten_years' => $this->faker->boolean,
             'noke_id' => $this->faker->numberBetween($min = 000000000, $max = 999999999),
             'submitted_at' => $this->faker->date($format = 'Y-m-d', $max = 'now'),
-            'approved_at' => $this->faker->date($format = 'Y-m-d', $max = 'now'),
+            'approved_at' => null,
             'user_id' => $this->user->id,
         ];
 
@@ -77,4 +78,21 @@ class BorrowerTest extends TestCase
             ->assertJsonStructure($this->buildCollectionStructure(static::$getBorrowerResponseStructure));
     }
 
+    public function testApproveBorrowers() {
+        $borrower = factory(Borrower::class)->create(['user_id' => $this->user->id]);
+
+        $response = $this->json('GET', "/api/v1/borrowers/$borrower->id");
+        $response->assertStatus(200)->assertJson(['approved_at' => null]);
+
+        $approvedAtDate = Carbon::now()->toIsoString();
+        Carbon::setTestNow($approvedAtDate);
+
+        $response = $this->json('PUT', "/api/v1/borrowers/$borrower->id/approve");
+        $response->assertStatus(200);
+
+        $response = $this->json('GET', "/api/v1/borrowers/$borrower->id");
+        $response->assertStatus(200)->assertJson(['approved_at' => $approvedAtDate]);
+
+        Carbon::setTestNow();
+    }
 }
