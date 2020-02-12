@@ -27,7 +27,7 @@ class Borrower extends BaseModel
 
     public static $transformer = BorrowerTransformer::class;
 
-    public $belongsTo = ['user'];
+    public $items = ['user'];
 
     public function user() {
         return $this->belongsTo(User::class);
