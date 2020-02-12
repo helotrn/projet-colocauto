@@ -105,6 +105,7 @@ class User extends AuthenticatableBaseModel
     public $items = [
       'avatar',
       'borrower',
+      'owner',
     ];
 
     public $morphOneField = [
