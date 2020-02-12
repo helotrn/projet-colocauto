@@ -7,9 +7,6 @@ use App\Models\User;
 
 class Action extends BaseModel
 {
-    protected $fillable = [
-        'name',
-    ];
 
     public $items = ['loan', 'user'];
 
