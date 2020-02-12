@@ -7,8 +7,6 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
 
 class CommunityUser extends Pivot
 {
-    public $incrementing = true;
-
     public static $sizes = [
         'thumbnail' => '256x@fit',
     ];

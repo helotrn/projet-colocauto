@@ -54,7 +54,6 @@ class UserTest extends TestCase
         ];
 
         $response = $this->json('POST', "/api/v1/users", $data);
-
         $response->assertStatus(201)
             ->assertJsonStructure([
                 'id',
