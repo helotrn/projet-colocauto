@@ -37,7 +37,9 @@ class BorrowerTest extends TestCase
 
         $response = $this->json('GET', "/api/v1/borrowers/$borrower->id");
 
-        $response->assertStatus(200);
+        $response->assertStatus(200)
+            ->assertJson(['id' => $borrower->id])
+            ->assertJsonStructure(static::$getBorrowerResponseStructure);
     }
 
     public function testUpdateBorrowers() {
@@ -55,8 +57,10 @@ class BorrowerTest extends TestCase
         $borrower = factory(Borrower::class)->create();
 
         $response = $this->json('DELETE', "/api/v1/borrowers/$borrower->id");
-
         $response->assertStatus(200);
+
+        $response = $this->json('GET', "/api/v1/borrowers/$borrower->id");
+        $response->assertStatus(404);
     }
 
     public function testListBorrowers() {
