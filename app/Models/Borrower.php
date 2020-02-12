@@ -40,13 +40,7 @@ class Borrower extends BaseModel
         return $this->hasMany(Loan::class);
     }
 
-    public function isApproved() {
-        return $this->approved_at !== null;
-    }
-
-    public function approve($user) {
-        if ($user->isAdmin()) {
-            $this->approved_at = now();
-        }
+    public function getApprovedAttribute() {
+        return !!$this->approved_at;
     }
 }

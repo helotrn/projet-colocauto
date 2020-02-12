@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\BaseRequest as Request;
+use App\Http\Requests\Borrower\ApproveRequest as ApproveRequest;
 use App\Models\Borrower;
 use App\Repositories\BorrowerRepository;
 
@@ -63,5 +64,14 @@ class BorrowerController extends RestController
         }
 
         return $response;
+    }
+
+    public function approve(ApproveRequest $request, $id) {
+        $item = $this->repo->find($request, $id);
+
+        if (!$item->approved_at) {
+            $item->approved_at = now()->toIsoString();
+            $item->save();
+        }
     }
 }
