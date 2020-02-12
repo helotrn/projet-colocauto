@@ -2,8 +2,11 @@
 
 namespace Tests\Integration;
 
+use App\Models\Bike;
 use App\Models\Borrower;
 use App\Models\Loan;
+use App\Models\Owner;
+use App\Models\User;
 use Tests\TestCase;
 
 class LoanTest extends TestCase
@@ -19,10 +22,16 @@ class LoanTest extends TestCase
 
     public function testCreateLoans() {
         $borrower = factory(Borrower::class)->create(['user_id' => $this->user->id]);
+        $user = factory(User::class)->create();
+        $owner = factory(Owner::class)->create(['user_id' => $user->id]);
+        $loanable = factory(Bike::class)->create(['owner_id' => $owner->id]);
+
         $data = [
-            'departure_at' => now(),
+            'departure_at' => now()->toDateTimeString(),
             'duration' => $this->faker->randomNumber($nbDigits = null, $strict = false),
             'borrower_id' => $borrower->id,
+            'loanable_type' => 'bike',
+            'loanable_id' => $loanable->id,
         ];
 
         $response = $this->json('POST', "/api/v1/loans", $data);
@@ -37,7 +46,9 @@ class LoanTest extends TestCase
 
         $response = $this->json('GET', "/api/v1/loans/$loan->id");
 
-        $response->assertStatus(200)->assertJson(['id' => $loan->id]);
+        $response->assertStatus(200)
+            ->assertJson(['id' => $loan->id])
+            ->assertJsonStructure(static::$getLoanResponseStructure);
     }
 
     public function testUpdateLoans() {
@@ -57,8 +68,10 @@ class LoanTest extends TestCase
         $loan = factory(Loan::class)->create(['borrower_id' => $borrower->id]);
 
         $response = $this->json('DELETE', "/api/v1/loans/$loan->id");
-
         $response->assertStatus(200);
+
+        $response = $this->json('GET', "/api/v1/loans/$loan->id");
+        $response->assertStatus(404);
     }
 
     public function testListLoans() {
