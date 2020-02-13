@@ -107,6 +107,10 @@ class User extends AuthenticatableBaseModel
         'avatar' => 'imageable',
     ];
 
+    public $morphManys = [
+        'tags' => 'taggable',
+    ];
+
     public function images() {
         return $this->morphMany(Image::class, 'imageable');
     }
@@ -136,6 +140,10 @@ class User extends AuthenticatableBaseModel
 
     public function files() {
         return $this->hasMany(File::class);
+    }
+
+    public function tags() {
+        return $this->morphMany(Tag::class, 'taggable');
     }
 
     public function paymentMethods() {

@@ -15,6 +15,18 @@ class Owner extends BaseModel
 
     public $items = ['user'];
 
+    public $morphOnes = [
+        'licence' => 'imageable',
+    ];
+
+    public function licence() {
+        return $this->morphOne(Image::class, 'imageable')->where('field', 'licence');
+    }
+
+    public function insurance() {
+        return $this->morphOne(Image::class, 'imageable')->where('field', 'insurance');
+    }
+
     public function user() {
         return $this->belongsTo(User::class);
     }
