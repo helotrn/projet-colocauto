@@ -92,10 +92,10 @@ class User extends AuthenticatableBaseModel
     protected $with = [];
 
     public $collections = [
-      'loans',
       'bills',
       'communities',
       'files',
+      'loans',
       'paymentMethods',
     ];
 
@@ -103,7 +103,7 @@ class User extends AuthenticatableBaseModel
       'borrower',
     ];
 
-    public $morphOne = [
+    public $morphOnes = [
         'avatar' => 'imageable',
     ];
 

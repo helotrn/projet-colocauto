@@ -2,10 +2,9 @@
 
 namespace App\Models\Pivots;
 
-use App\Models\Image;
-use Illuminate\Database\Eloquent\Relations\Pivot;
+use App\Models\File;
 
-class CommunityUser extends Pivot
+class CommunityUser extends BasePivot
 {
     public static $sizes = [
         'thumbnail' => '256x@fit',
@@ -21,8 +20,8 @@ class CommunityUser extends Pivot
 
     protected $with = ['proof'];
 
-    public $morphOne = [
-        'proof' => 'imageable',
+    public $morphOnes = [
+        'proof' => 'fileable',
     ];
 
     public function user() {
@@ -34,6 +33,6 @@ class CommunityUser extends Pivot
     }
 
     public function proof() {
-        return $this->morphOne(Image::class, 'imageable')->where('field', 'proof');
+        return $this->morphOne(File::class, 'fileable')->where('field', 'proof');
     }
 }

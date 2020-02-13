@@ -32,9 +32,9 @@ class Community extends BaseModel
     ];
 
     protected $fillable = [
-        'name',
-        'description',
         'area',
+        'description',
+        'name',
         'type',
     ];
 

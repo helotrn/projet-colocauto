@@ -201,16 +201,7 @@ class RestRepository
                         $this->model->{$field}->delete();
                     }
 
-                    $newRelation = $this->model->{$field}()
-                        ->getRelated()->find($data[$field]['id']);
-
-                    $morphId = $this->model->morphOnes[$field] . '_id';
-                    $morphType = $this->model->morphOnes[$field] . '_type';
-
-                    $newRelation->{$morphId} = $this->model->id;
-                    $newRelation->{$morphType} = get_class($this->model);
-
-                    $newRelation->save();
+                    $this->savePolymorphicRelation($this->model, $field, $data);
                 }
             }
         }
@@ -222,18 +213,10 @@ class RestRepository
                 continue;
             }
 
-            if (preg_match('/_id$/', $field) &&
-                (in_array($field, $this->model->items) || in_array($field, array_keys($this->model->morphManys)))) {
-                $newAssoc = $data[$field];
-                if ($newAssoc) {
-                    $this->model->{str_replace('_id', '', $field)}()->associate($data[$field]);
-                } else {
-                    $this->model->{str_replace('_id', '', $field)}()->dissociate();
-                }
-            } elseif (array_key_exists($field, $data)) {
+            if (array_key_exists($field, $data)) {
                 if (is_array($data[$field])) {
                     if (array_key_exists('id', $data[$field]) && $data[$field]['id']) {
-                        if (in_array($field, $this->model->items)) {
+                        if (in_array($field, $this->model->collections)) {
                             $this->model->{$field}()->associate($data[$field]['id']);
                         } elseif (in_array($field, array_keys($this->model->morphManys))) {
                             if ($this->model->{$field}
@@ -241,31 +224,61 @@ class RestRepository
                                 && $this->model->{$field}->first()->id !== $data[$field]['id']) {
                                 $this->model->{$field}()->where('id', '!=', $data[$field]['id'])->delete();
                             }
-                            $newRelation = $this->model->{$field}()
-                                ->getRelated()->find($data[$field]['id']);
 
-                            $morphId = $this->model->morphManys[$field] . '_id';
-                            $morphType = $this->model->morphManys[$field] . '_type';
-
-                            $newRelation->{$morphId} = $this->model->id;
-                            $newRelation->{$morphType} = get_class($this->model);
-
-                            $newRelation->save();
+                            $this->savePolymorphicRelation($this->model, $field, $data);
                         }
                     } elseif (in_array($field, array_keys($this->model->collections))) {
-                        $newCollection = [];
+                        $relation = $this->model->{$field}();
+                        $elements = [];
+
+                        $pivotClass = $relation->getPivotClass();
+                        $pivot = new $pivotClass;
+                        $pivotAttributes = $pivot->getFillable();
+                        $pivotItems = array_merge($pivot->items, array_keys($pivot->morphOnes));
 
                         foreach ($data[$field] as $element) {
+                            $pivotData = [];
+                            $pivotItemData = [];
+
+                            foreach ($pivotAttributes as $pivotAttribute) {
+                                if (!array_key_exists($pivotAttribute, $element)) {
+                                    continue;
+                                }
+
+                                $pivotData[$pivotAttribute] = $element[$pivotAttribute];
+                                unset($element[$pivotAttribute]);
+                            }
+
+                            foreach ($pivotItems as $pivotItem) {
+                                if (!array_key_exists($pivotItem, $element)) {
+                                    continue;
+                                }
+
+                                $pivotItemData[$pivotItem] = $element[$pivotItem];
+                                unset($element[$pivotItem]);
+                            }
+
                             if (array_key_exists('id', $element) && $element['id']) {
-                                $newCollection[] = $element['id'];
+                                $sync = [];
+                                $sync[$element['id']] = $pivotData;
+                                $relation->syncWithoutDetaching($sync);
+
+                                $targetPivot = $this->model->{$field}()->find($element['id'])->pivot;
+                                foreach ($pivotItems as $pivotItem) {
+                                    if (array_key_exists($pivotItem, $pivotItemData)) {
+                                        $this->savePolymorphicRelation($targetPivot, $pivotItem, $pivotItemData);
+                                    }
+                                }
+
+                                $ids[] = $element['id'];
                             }
                         }
 
-                        $this->model->{$field}()->sync($newCollection);
+                        $relation->sync($ids);
                     }
                 } elseif (!is_array($data[$field]) || !array_key_exists('id', $data[$field])
                     || !$data[$field]['id']) {
-                    if (in_array($field, $this->model->items)) {
+                    if (in_array($field, $this->model->collections)) {
                         $this->model->{$field}()->dissociate();
                     } elseif (in_array($field, array_keys($this->model->morphOnes)) && $this->model->{$field}()->count()) {
                         $this->model->{$field}->delete();
@@ -379,5 +392,18 @@ class RestRepository
                     // Noop for now
             }
         }
+    }
+
+    protected function savePolymorphicRelation(&$model, $field, &$data) {
+        $newRelation = $model->{$field}()
+            ->getRelated()->find($data[$field]['id']);
+
+        $morphId = $model->morphOnes[$field] . '_id';
+        $morphType = $model->morphOnes[$field] . '_type';
+
+        $newRelation->{$morphId} = $model->id;
+        $newRelation->{$morphType} = get_class($model);
+
+        $newRelation->save();
     }
 }
