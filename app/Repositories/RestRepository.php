@@ -229,7 +229,7 @@ class RestRepository
                         }
                     } elseif (in_array($field, array_keys($this->model->collections))) {
                         $relation = $this->model->{$field}();
-                        $elements = [];
+                        $ids = [];
 
                         $pivotClass = $relation->getPivotClass();
                         $pivot = new $pivotClass;
