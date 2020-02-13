@@ -55,6 +55,8 @@ const actions = {
       commit('loading', false);
     } catch (e) {
       dispatch('logout');
+
+      throw e;
     }
   },
   async login({ commit, dispatch, state }, { email, password }) {
