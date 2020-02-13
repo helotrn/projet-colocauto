@@ -4,6 +4,7 @@ import VuexPersist from 'vuex-persist';
 import merge from 'deepmerge';
 
 import communities from './communities';
+import files from './files';
 import images from './images';
 import loanables from './loanables';
 import login from './pages/login';
@@ -134,6 +135,7 @@ export default new Vuex.Store({
   actions,
   modules: {
     communities,
+    files,
     images,
     loanables,
     login,
