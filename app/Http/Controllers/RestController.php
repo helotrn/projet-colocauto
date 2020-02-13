@@ -32,8 +32,10 @@ class RestController extends Controller
     }
 
     protected function validateAndCreate(Request $request) {
+        $input = $request->json()->all();
+
         $validator = Validator::make(
-            $request->all(),
+            $input,
             $this->model::getRules('create', $request->user()),
             $this->model::$validationMessages
         );
@@ -42,7 +44,7 @@ class RestController extends Controller
             throw new ValidationException($validator);
         }
 
-        return $this->repo->create($request->input());
+        return $this->repo->create($input);
     }
 
     protected function respondWithItem(Request $request, $item, $status = 200) {
@@ -63,8 +65,10 @@ class RestController extends Controller
     }
 
     protected function validateAndUpdate(Request $request, $id) {
+        $input = $request->json()->all();
+
         $validator = Validator::make(
-            $request->all(),
+            $input,
             $this->model::getRules('update', $request->user()),
             $this->model::$validationMessages
         );
@@ -73,12 +77,14 @@ class RestController extends Controller
             throw new ValidationException($validator);
         }
 
-        return $this->repo->update($id, $request->input());
+        return $this->repo->update($id, $input);
     }
 
     protected function validateAndDestroy(Request $request, $id) {
+        $input = $request->json()->all();
+
         $validator = Validator::make(
-            $request->all(),
+            $input,
             $this->model::getRules('destroy', $request->user()),
             $this->model::$validationMessages
         );
