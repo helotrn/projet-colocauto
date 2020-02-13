@@ -109,10 +109,7 @@ class UserController extends RestController
         if ($user->communities->where('id', $communityId)->isEmpty()) {
             $user->communities()->attach($community);
 
-            return $this->respondWithItem(
-                $request,
-                $user->communities()->where('id', $communityId)->first()
-            );
+            return $this->respondWithItem($request, $community);
         }
 
         return $this->respondWithItem(
