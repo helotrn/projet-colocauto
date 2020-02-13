@@ -31,11 +31,30 @@
       </p>
 
       <div v-if="item && item.communities">
-        <community-proof-form v-for="community in user.communities"
+        <community-proof-form v-for="community in item.communities"
           :key="community.id" :community="community"
           @submit="submitCommunityProof" />
       </div>
     </div>
+
+    <div v-if="currentPage == 4" class="register-step__intents">
+      <h2>Utilisation désirée</h2>
+
+      <div class="register-step__intents__text">
+        <p>
+          Vous avez presque terminé! Indiquez ci-dessous les fonctionnalités de la
+          plateforme que vous désirez utiliser. Ceci vous permettra d'accéder plus
+          rapidement au partage de voiture, par exemple.
+        </p>
+
+        <p>Vous pouvez aussi passer cette étape pour utiliser le partage de vélos.</p>
+      </div>
+
+      <register-intent-form :user="item" v-if="item" />
+    </div>
+
+    <div v-if="currentPage == 5" class="register-step__completed">
+      <h2>Inscription complétée!</h2>
     </div>
   </div>
 </template>
@@ -46,6 +65,7 @@ import Notification from '@/mixins/Notification';
 
 import CommunityProofForm from '@/components/Community/ProofForm.vue';
 import ProfileForm from '@/components/Profile/Form.vue';
+import RegisterIntentForm from '@/components/Register/IntentForm.vue';
 
 import FormMixin from '@/mixins/FormMixin';
 
@@ -58,6 +78,7 @@ export default {
   mixins: [Authenticated, FormMixin, Notification],
   components: {
     CommunityProofForm,
+    RegisterIntentForm,
     ProfileForm,
   },
   beforeRouteEnter(to, from, next) {
