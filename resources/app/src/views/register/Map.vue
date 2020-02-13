@@ -4,8 +4,14 @@
       <b-card-text>
         <b-form @submit.prevent="searchPostalCode">
           <b-form-group label="Code postal">
-            <b-form-input type="text" required placeholder="Code postal"
-              v-model="postalCode" />
+            <b-input-group>
+              <b-form-input type="text" required placeholder="Code postal"
+                v-model="postalCode" />
+
+              <b-input-group-append>
+                <b-button variant="outline-success" type="submit">OK</b-button>
+              </b-input-group-append>
+            </b-input-group>
           </b-form-group>
         </b-form>
       </b-card-text>
@@ -83,6 +89,8 @@ export default {
         this.centerOnCommunity(this.community);
       }
     });
+
+    this.$store.commit('register.map/postalCode', this.$store.state.user.postal_code);
   },
   data() {
     return {
