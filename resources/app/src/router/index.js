@@ -111,7 +111,7 @@ const routes = [
         meta: {
           slug: 'users',
           params: {
-            fields: '*,avatar.*,communities.id,communities.name,communities.role',
+            fields: '*,avatar.*,communities.id,communities.name,communities.role,communities.proof',
           },
         },
       },

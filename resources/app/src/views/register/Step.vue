@@ -29,6 +29,13 @@
       <p class="register-step__community__text">
         Pour rejoindre une communauté LocoMotion, vous devez fournir une preuve de résidence.
       </p>
+
+      <div v-if="item && item.communities">
+        <community-proof-form v-for="community in user.communities"
+          :key="community.id" :community="community"
+          @submit="submitCommunityProof" />
+      </div>
+    </div>
     </div>
   </div>
 </template>
@@ -37,6 +44,7 @@
 import Authenticated from '@/mixins/Authenticated';
 import Notification from '@/mixins/Notification';
 
+import CommunityProofForm from '@/components/Community/ProofForm.vue';
 import ProfileForm from '@/components/Profile/Form.vue';
 
 import FormMixin from '@/mixins/FormMixin';
@@ -48,32 +56,29 @@ const { extractErrors } = helpers;
 export default {
   name: 'RegisterStep',
   mixins: [Authenticated, FormMixin, Notification],
-  components: { ProfileForm },
+  components: {
+    CommunityProofForm,
+    ProfileForm,
+  },
   beforeRouteEnter(to, from, next) {
     next((vm) => {
       if (vm.isLoggedIn) {
         if (!vm.isRegistered) {
           if (vm.$route.path !== '/register/2') {
-            return vm.$router.replace('/register/2');
+            vm.$router.replace('/register/2');
           }
-
-          return null;
-        }
-
-        if (vm.user.communities.length === 0) {
+        } else if (vm.user.communities.length === 0) {
           if (vm.$route.path !== '/register/map') {
-            return vm.$router.replace('/register/map');
+            vm.$router.replace('/register/map');
           }
-
-          return null;
-        }
-
-        if (vm.$route.path !== '/register/3') {
-          return vm.$router.replace('/register/3');
+        } else if (!vm.user.communities.reduce((acc, c) => acc && !!c.proof, true)) {
+          if (vm.$route.path !== '/register/3') {
+            vm.$router.replace('/register/3');
+          }
+        } else if (vm.$route.path !== '/register/4') {
+          vm.$router.replace('/register/4');
         }
       }
-
-      return null;
     });
   },
   props: {
@@ -127,6 +132,33 @@ export default {
         }
       }
     },
+    async submitCommunityProof() {
+      if (!this.item.communities.reduce((acc, c) => acc && !!c.proof, true)) {
+          this.$store.commit('addNotification', {
+            content: 'Fournissez toutes les preuves requises.',
+            title: 'Données incomplètes',
+            variant: 'warning',
+            type: 'register',
+          });
+      } else {
+        try {
+          await this.submit();
+        } catch (e) {
+          if (e.request) {
+            switch (e.request.status) {
+              case 422:
+              default:
+                this.$store.commit('addNotification', {
+                  content: extractErrors(e.response.data).join(', '),
+                  title: "Erreur d'inscription",
+                  variant: 'danger',
+                  type: 'register',
+                });
+            }
+          }
+        }
+      }
+    },
   },
 };
 </script>
@@ -137,7 +169,7 @@ export default {
   padding: 53px $grid-gutter-width / 2 45px;
   width: 590px;
   max-width: 100%;
-  margin: 0 auto;
+  margin: 50px auto;
 
   .register-step__title {
     text-align: center;
@@ -145,6 +177,10 @@ export default {
 
   h2 {
     text-align: center;
+  }
+
+  .community-proof-form {
+    margin-bottom: 2em;
   }
 }
 </style>
