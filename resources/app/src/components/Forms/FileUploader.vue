@@ -1,20 +1,19 @@
 <template>
-  <b-form-group class="forms-image-uploader" :label="label" :label-for="field">
+  <b-form-group class="forms-file-uploader" :label="label" :label-for="field">
     <div class="mb-3" v-if="!value">
       <b-form-file v-bind:value="value" :state="Boolean(value)" :id="field"
         :ref="`${field}fileinput`" :placeholder="placeholder"
         :name="field" :accept="accept.join(',')"
-        @change="uploadImage($event.target.name, $event.target.files)"/>
+        @change="uploadFile($event.target.name, $event.target.files)"/>
     </div>
     <div v-else>
       <figure class="preview">
-        <img v-if="value.sizes" :src="value.sizes.thumbnail" >
-        <img v-else src="/loading.gif" >
+        <img v-if="!value" src="/loading.gif" >
 
         <figcaption>{{ value.original_filename }}</figcaption>
       </figure>
-      <b-button variant="warning" @click="removeImage">
-        <small>{{ removeImageText }}</small>
+      <b-button variant="warning" @click="removeFile">
+        <small>{{ removeFileText }}</small>
       </b-button>
     </div>
   </b-form-group>
@@ -22,7 +21,7 @@
 
 <script>
 export default {
-  name: 'FormsImageUploader',
+  name: 'FormsFileUploader',
   data() {
     return {
       errors: [],
@@ -30,7 +29,7 @@ export default {
   },
   props: {
     accept: {
-      default: () => ['image/png', 'image/jpg', 'image/jpeg'],
+      default: () => ['application/pdf'],
       type: Array,
     },
     field: {
@@ -38,15 +37,16 @@ export default {
       type: String,
     },
     label: {
-      required: true,
+      required: false,
       type: String,
+      default: '',
     },
     placeholder: {
-      default: 'Envoyer une image...',
+      default: 'Envoyer un fichier...',
       type: String,
     },
-    removeImageText: {
-      default: "Retirer l'image",
+    removeFileText: {
+      default: 'Retirer le fichier',
       type: String,
     },
     value: {
@@ -56,14 +56,14 @@ export default {
     },
   },
   methods: {
-    removeImage() {
+    removeFile() {
       this.$emit('input', null);
 
       if (this.$refs[`${this.field}fileinput`]) {
         this.$refs[`${this.field}fileinput`].reset();
       }
     },
-    async uploadImage(fieldName, fileList) {
+    async uploadFile(fieldName, fileList) {
       const formData = new FormData();
 
       if (!fileList.length) {
@@ -76,11 +76,11 @@ export default {
 
       formData.append('field', fieldName);
 
-      const image = await this.$store.dispatch('images/upload', formData);
+      const file = await this.$store.dispatch('files/upload', formData);
 
-      this.$emit('input', image);
+      this.$emit('input', file);
 
-      return image;
+      return file;
     },
   },
 };
