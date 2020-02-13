@@ -59,5 +59,7 @@ class CommunitiesTableSeeder extends Seeder
                 Community::where('id', $community['id'])->update($community);
             }
         }
+
+        \DB::statement("SELECT setval('bikes_id_seq'::regclass, 8)");
     }
 }
