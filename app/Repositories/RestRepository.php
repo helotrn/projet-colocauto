@@ -186,11 +186,31 @@ class RestRepository
                 continue;
             }
 
-            if (in_array($field, $this->model->items)) {
+            if (in_array($field, $this->model->items)
+                || in_array($field, array_keys($this->model->morphOnes))) {
                 if (preg_match('/_id$/', $field)) {
-                    $this->model->{$field} = $data[$field];
+                    $newAssoc = $data[$field];
+                    if ($newAssoc) {
+                        $this->model->{str_replace('_id', '', $field)}()->make($data[$field]);
+                    } else {
+                        $this->model->{str_replace('_id', '', $field)}()->delete();
+                    }
                 } elseif (is_array($data[$field]) && array_key_exists('id', $data[$field])) {
-                    $this->model->{"{$field}_id"} = $data[$field]['id'];
+                    if ($this->model->{$field}
+                        && $this->model->{$field}->id !== $data[$field]['id']) {
+                        $this->model->{$field}->delete();
+                    }
+
+                    $newRelation = $this->model->{$field}()
+                        ->getRelated()->find($data[$field]['id']);
+
+                    $morphId = $this->model->morphOnes[$field] . '_id';
+                    $morphType = $this->model->morphOnes[$field] . '_type';
+
+                    $newRelation->{$morphId} = $this->model->id;
+                    $newRelation->{$morphType} = get_class($this->model);
+
+                    $newRelation->save();
                 }
             }
         }
@@ -203,7 +223,7 @@ class RestRepository
             }
 
             if (preg_match('/_id$/', $field) &&
-                (in_array($field, $this->model->items) || in_array($field, array_keys($this->model->morphOne)))) {
+                (in_array($field, $this->model->items) || in_array($field, array_keys($this->model->morphManys)))) {
                 $newAssoc = $data[$field];
                 if ($newAssoc) {
                     $this->model->{str_replace('_id', '', $field)}()->associate($data[$field]);
@@ -215,22 +235,7 @@ class RestRepository
                     if (array_key_exists('id', $data[$field]) && $data[$field]['id']) {
                         if (in_array($field, $this->model->items)) {
                             $this->model->{$field}()->associate($data[$field]['id']);
-                        } elseif (in_array($field, array_keys($this->model->morphOne))) {
-                            if ($this->model->{$field}
-                                && $this->model->{$field}->id !== $data[$field]['id']) {
-                                $this->model->{$field}->where('id', '!=', $data[$field]['id'])->delete();
-                            }
-                            $newRelation = $this->model->{$field}()
-                                ->getRelated()->find($data[$field]['id']);
-
-                            $morphId = $this->model->morphOne[$field] . '_id';
-                            $morphType = $this->model->morphOne[$field] . '_type';
-
-                            $newRelation->{$morphId} = $this->model->id;
-                            $newRelation->{$morphType} = get_class($this->model);
-
-                            $newRelation->save();
-                        } elseif (in_array($field, array_keys($this->model->morphOneField))) {
+                        } elseif (in_array($field, array_keys($this->model->morphManys))) {
                             if ($this->model->{$field}
                                 && $this->model->{$field}->count() > 0
                                 && $this->model->{$field}->first()->id !== $data[$field]['id']) {
@@ -239,25 +244,15 @@ class RestRepository
                             $newRelation = $this->model->{$field}()
                                 ->getRelated()->find($data[$field]['id']);
 
-                            $morphId = $this->model->morphOneField[$field] . '_id';
-                            $morphType = $this->model->morphOneField[$field] . '_type';
-
-                            $newRelation->{$morphId} = $this->model->id;
-                            $newRelation->{$morphType} = get_class($this->model);
-
-                            $newRelation->save();
-                        } elseif (in_array($field, array_keys($this->model->collections))) {
-                            $newRelation = $this->model->{$field}();
-
-                            $morphId = $this->model->morphOneField[$field] . '_id';
-                            $morphType = $this->model->morphOneField[$field] . '_type';
+                            $morphId = $this->model->morphManys[$field] . '_id';
+                            $morphType = $this->model->morphManys[$field] . '_type';
 
                             $newRelation->{$morphId} = $this->model->id;
                             $newRelation->{$morphType} = get_class($this->model);
 
                             $newRelation->save();
                         }
-                    } else {
+                    } elseif (in_array($field, array_keys($this->model->collections))) {
                         $newCollection = [];
 
                         foreach ($data[$field] as $element) {
@@ -272,9 +267,7 @@ class RestRepository
                     || !$data[$field]['id']) {
                     if (in_array($field, $this->model->items)) {
                         $this->model->{$field}()->dissociate();
-                    } elseif (in_array($field, array_keys($this->model->morphOne)) && $this->model->{$field}()->count()) {
-                        $this->model->{$field}->delete();
-                    } elseif (in_array($field, array_keys($this->model->morphOneField)) && $this->model->{$field}()->count()) {
+                    } elseif (in_array($field, array_keys($this->model->morphOnes)) && $this->model->{$field}()->count()) {
                         $this->model->{$field}->delete();
                     }
                 }
