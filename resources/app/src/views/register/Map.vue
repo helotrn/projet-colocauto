@@ -184,6 +184,13 @@ export default {
         communityId: this.community.id,
       });
 
+      this.$store.commit('user', {
+        ...this.user,
+        communities: {
+
+        },
+      })
+
       this.$router.push('/register/3');
     },
     nextCommunity() {
@@ -215,6 +222,10 @@ export default {
       this.community = null;
     },
     searchPostalCode() {
+      if (!this.postalCode.match(/[a-z][0-9][a-z]\s*[0-9][a-z][0-9]/i)) {
+        return false;
+      }
+
       const { Geocoder, LatLngBounds } = this.google.maps;
       const geocoder = new Geocoder();
 
@@ -247,6 +258,8 @@ export default {
 
         return true;
       });
+
+      return true;
     },
   },
   watch: {
@@ -257,13 +270,6 @@ export default {
 
       this.postalCode = '';
       return this.centerOnCommunity(value);
-    },
-    postalCode(val) {
-      if (val.match(/[a-z][0-9][a-z]\s*[0-9][a-z][0-9]/i)) {
-        this.searchPostalCode();
-      }
-
-      this.resetCenter();
     },
   },
 };

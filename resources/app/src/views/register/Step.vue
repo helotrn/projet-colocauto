@@ -50,7 +50,8 @@
         <p>Vous pouvez aussi passer cette étape pour utiliser le partage de vélos.</p>
       </div>
 
-      <register-intent-form :user="item" v-if="item" />
+      <register-intent-form :user="item" v-if="item"
+        @submit="submitOwnerDocumentsAndTags" />
     </div>
 
     <div v-if="currentPage == 5" class="register-step__completed">
@@ -155,15 +156,17 @@ export default {
     },
     async submitCommunityProof() {
       if (!this.item.communities.reduce((acc, c) => acc && !!c.proof, true)) {
-          this.$store.commit('addNotification', {
-            content: 'Fournissez toutes les preuves requises.',
-            title: 'Données incomplètes',
-            variant: 'warning',
-            type: 'register',
-          });
+        this.$store.commit('addNotification', {
+          content: 'Fournissez toutes les preuves requises.',
+          title: 'Données incomplètes',
+          variant: 'warning',
+          type: 'register',
+        });
       } else {
         try {
           await this.submit();
+
+          this.$router.push('/register/4');
         } catch (e) {
           if (e.request) {
             switch (e.request.status) {
@@ -179,6 +182,9 @@ export default {
           }
         }
       }
+    },
+    async submitOwnerDocumentsAndTags() {
+      await this.submit();
     },
   },
 };

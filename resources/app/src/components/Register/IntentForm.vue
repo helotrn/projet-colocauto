@@ -1,7 +1,7 @@
 <template>
   <div class="register-intent-form">
     <b-form :novalidate="true" class="register-intent-form__form"
-      @submit.stop.prevent="completeRegistration">
+      @submit.stop.prevent="$emit('submit')">
       <div class="form__section">
         <b-form-checkbox
           id="car_intent" name="car_intent"
@@ -61,11 +61,6 @@ export default {
   },
   computed: {
     ...buildComputed('register.intent', ['carIntent', 'ownerIntent']),
-  },
-  methods: {
-    completeRegistration() {
-      console.log('complete');
-    },
   },
 };
 </script>

@@ -19,9 +19,6 @@ export default new RestModule('users', {
       const { data } = await ajax;
 
       commit('ajax', null);
-
-      commit('mergeUser', data, { root: true });
-      commit('mergeItem', data);
     } catch (e) {
       commit('ajax', null);
 
