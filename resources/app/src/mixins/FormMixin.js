@@ -86,4 +86,12 @@ export default {
       required: true,
     },
   },
+  watch: {
+    item: {
+      deep: true,
+      handler() {
+        this.$store.commit(`${this.slug}/item`, this.item);
+      },
+    },
+  },
 };

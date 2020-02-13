@@ -184,14 +184,6 @@ export default {
       this.$emit('submit', ...params);
     },
   },
-  watch: {
-    user: {
-      deep: true,
-      handler() {
-        this.$store.commit('users/item', this.user);
-      },
-    },
-  },
 };
 </script>
 
