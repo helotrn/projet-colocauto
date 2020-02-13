@@ -11,6 +11,7 @@ import login from './pages/login';
 import register from './pages/register';
 import users from './users';
 
+import RegisterIntent from './pages/register/intent';
 import RegisterMap from './pages/register/map';
 
 const vuexPersist = new VuexPersist({
@@ -143,6 +144,7 @@ export default new Vuex.Store({
     login,
     register,
     'register.map': RegisterMap,
+    'register.intent': RegisterIntent,
     users,
   },
   plugins: [vuexPersist.plugin],
