@@ -63,7 +63,7 @@ class BaseTransformer
     }
 
     protected function addItems(&$output, &$item, &$options) {
-        foreach ($item->items as $relation) {
+        foreach (array_merge($item->items, array_keys($item->morphOnes)) as $relation) {
             if ($this->shouldIncludeRelation($relation, $item, $options)) {
                 if (!$item->{$relation}) {
                     continue;

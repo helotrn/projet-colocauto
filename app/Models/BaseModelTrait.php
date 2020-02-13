@@ -29,9 +29,9 @@ trait BaseModelTrait
 
     public $computed = [];
 
-    public $morphOne = [];
+    public $morphOnes = [];
 
-    public $morphOneField = [];
+    public $morphManys = [];
 
     public function getWith() {
         return $this->with;

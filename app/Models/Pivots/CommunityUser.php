@@ -21,7 +21,7 @@ class CommunityUser extends Pivot
 
     protected $with = ['proof'];
 
-    public $morphOneField = [
+    public $morphOne = [
         'proof' => 'imageable',
     ];
 

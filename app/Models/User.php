@@ -100,11 +100,10 @@ class User extends AuthenticatableBaseModel
     ];
 
     public $items = [
-      'avatar',
       'borrower',
     ];
 
-    public $morphOneField = [
+    public $morphOne = [
         'avatar' => 'imageable',
     ];
 
