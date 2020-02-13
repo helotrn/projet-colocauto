@@ -33,7 +33,7 @@
           <span class="nav-link__text">{{ $t('titles.dashboard') | capitalize }}</span>
         </b-nav-item>
 
-        <b-nav-item to="/community/map" v-if="hasCommunity">
+        <b-nav-item to="/community/map" v-if="canLoanVehicle">
           <span class="nav-link__icon d-lg-none">
             <svg-location />
           </span>
@@ -136,11 +136,6 @@ export default {
       type: String,
       required: false,
       default: '',
-    },
-  },
-  computed: {
-    hasCommunity() {
-      return this.isLoggedIn && this.user.communities && this.user.communities.length > 0;
     },
   },
   data() {

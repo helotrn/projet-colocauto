@@ -16,6 +16,12 @@ export default {
         refreshToken,
       };
     },
+    canLoanVehicle() {
+      return false;
+    },
+    hasCommunity() {
+      return this.isLoggedIn && this.user.communities && this.user.communities.length > 0;
+    },
     hasCompletedRegistration() {
       return !!this.user.approved_at;
     },
