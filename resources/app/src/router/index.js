@@ -9,6 +9,7 @@ import Login from '../views/Login.vue';
 import Profile from '../views/Profile.vue';
 import ProfileAccount from '../views/profile/Account.vue';
 
+import Community from '../views/Community.vue';
 import CommunityMap from '../views/community/Map.vue';
 
 import Register from '../views/Register.vue';
@@ -118,6 +119,15 @@ const routes = [
     ],
   },
   {
+    path: '/community',
+    name: 'community',
+    component: Community,
+    meta: {
+      auth: true,
+      title: 'titles.community',
+    },
+  },
+  {
     path: '/app',
     name: 'dashboard',
     component: Dashboard,
@@ -126,6 +136,7 @@ const routes = [
       title: 'titles.dashboard',
     },
   },
+
   {
     path: '/community/map',
     name: 'community-map',
