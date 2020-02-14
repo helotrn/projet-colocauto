@@ -23,6 +23,6 @@ class OwnersTableSeeder extends Seeder
             }
         }
 
-        \DB::statement("SELECT setval('bikes_id_seq'::regclass, 2)");
+        \DB::statement("SELECT setval('owners_id_seq'::regclass, 2)");
     }
 }
