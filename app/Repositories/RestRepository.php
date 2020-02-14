@@ -232,18 +232,7 @@ class RestRepository
 
             if (array_key_exists($field, $data)) {
                 if (is_array($data[$field])) {
-                    if (in_array($field, $this->model->collections)) {
-                        $collection = [];
-
-                        foreach ($data[$field] as $item) {
-                            if (array_key_exists('id', $item)) {
-                                $related = $this->saveRelatedItem($this->model, $field, $item);
-                                $collection[] = $related->id;
-                            }
-                        }
-
-                        $this->model->{$field}()->sync($collection);
-                    } elseif (in_array($field, array_keys($this->model->morphManys))) {
+                    if (in_array($field, array_merge($this->model->collections, array_keys($this->model->morphManys)))) {
                         $relation = $this->model->{$field}();
                         $ids = [];
 
