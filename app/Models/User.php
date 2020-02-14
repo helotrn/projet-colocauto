@@ -101,6 +101,7 @@ class User extends AuthenticatableBaseModel
 
     public $items = [
       'borrower',
+      'owner',
     ];
 
     public $morphOnes = [
@@ -111,16 +112,16 @@ class User extends AuthenticatableBaseModel
         'tags' => 'taggable',
     ];
 
-    public function images() {
-        return $this->morphMany(Image::class, 'imageable');
-    }
-
     public function avatar() {
         return $this->morphOne(Image::class, 'imageable')->where('field', 'avatar');
     }
 
     public function borrower() {
-        return $this->belongsTo(Borrower::class);
+        return $this->hasOne(Borrower::class);
+    }
+
+    public function owner() {
+        return $this->hasOne(Owner::class);
     }
 
     public function loans() {

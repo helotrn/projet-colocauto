@@ -14,7 +14,7 @@ class CreateBorrowersTable extends Migration
             $table->boolean('has_been_sued_last_ten_years')->default(false);
             $table->string('noke_id')->nullable();
 
-            $table->unsignedBigInteger('user_id')->nullable();
+            $table->unsignedBigInteger('user_id');
 
             $table->dateTimeTz('submitted_at')->nullable();
             $table->dateTimeTz('approved_at')->nullable();
