@@ -107,6 +107,10 @@ class Community extends BaseModel
     }
 
     public function getAreaGoogleAttribute() {
+        if (!$this->area) {
+            return null;
+        }
+
         return array_map(function ($point) {
             return [
                 'lat' => $point[0],
