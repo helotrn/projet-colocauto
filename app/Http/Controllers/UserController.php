@@ -78,6 +78,18 @@ class UserController extends RestController
         return $response;
     }
 
+    public function submit(Request $request, $id) {
+        $user = $this->repo->find($request, $id);
+
+        if (!!$user->approved_at) {
+            return $this->respondWithMessage('Already submitted.', 400);
+        }
+
+        $user->submit();
+
+        return $this->respondWithItem($request, $user);
+    }
+
     public function getCommunities(Request $request, $userId) {
         $user = $this->repo->find($request, $userId);
         if ($user) {

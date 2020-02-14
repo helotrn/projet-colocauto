@@ -14,6 +14,7 @@ Route::prefix('v1')->group(function () {
         Route::prefix('auth')->group(function () {
             Route::get('user', 'AuthController@getUser');
             Route::put('user', 'AuthController@updateUser');
+            Route::put('user/submit', 'AuthController@submitUser');
             Route::put('logout', 'AuthController@logout');
         });
 

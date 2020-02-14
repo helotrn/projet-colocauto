@@ -151,6 +151,11 @@ class User extends AuthenticatableBaseModel
         return $this->hasMany(PaymentMethod::class);
     }
 
+    public function submit() {
+        $this->submitted_at = new \DateTime;
+        $this->save();
+    }
+
     public function isAdmin() {
         return $this->role === 'admin';
     }
