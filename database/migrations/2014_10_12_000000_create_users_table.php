@@ -24,7 +24,8 @@ class CreateUsersTable extends Migration
             $table->boolean('is_smart_phone')->default(false);
             $table->string('other_phone')->default('');
 
-            $table->date('approved_at')->nullable();
+            $table->date('submitted_at')->nullable();
+            $table->date('suspended_at')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });
