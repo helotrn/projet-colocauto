@@ -86,20 +86,20 @@ export default {
       deep: true,
       handler(borrower) {
         if (this.carBorrowerIntent) {
-          this.$store.commit('users/mergeItem', { borrower, });
+          this.$store.commit('users/mergeItem', { borrower });
         }
       },
     },
     carBorrowerIntent(val) {
       if (val) {
-        this.$store.commit('users/mergeItem', { borrower: this.borrower, });
+        this.$store.commit('users/mergeItem', { borrower: this.borrower });
       } else {
-        this.$store.commit('users/mergeItem', { borrower: null, });
+        this.$store.commit('users/mergeItem', { borrower: null });
       }
     },
     ownerIntent(val) {
       if (val) {
-        this.$store.commit('users/mergeItem', { owner: {}, });
+        this.$store.commit('users/mergeItem', { owner: {} });
       } else {
         this.$store.commit('users/mergeItem', { owner: null });
       }

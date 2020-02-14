@@ -271,7 +271,7 @@ export default {
       this.postalCode = '';
       return this.centerOnCommunity(value);
     },
-    'item.postal_code': function (val) {
+    'item.postal_code': function syncPostalCode(val) {
       this.$store.commit('register.map/postalCode', val);
     },
   },

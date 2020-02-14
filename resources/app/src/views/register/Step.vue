@@ -63,7 +63,9 @@
           toutes les fonctionnalités de LocoMotion.
         </p>
 
-        <p v-if="!!item.owner">En attendant, vous pouvez commencer à entrer les informations sur vos véhicules.</p>
+        <p v-if="!!item.owner">
+          En attendant, vous pouvez commencer à entrer les informations sur vos véhicules.
+        </p>
 
         <div class="register-step__completed__button">
           <b-button variant="primary" to="/">Revenir à l'accueil</b-button>
