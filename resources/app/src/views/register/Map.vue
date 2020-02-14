@@ -77,10 +77,11 @@
 import { gmapApi } from 'vue2-google-maps';
 
 import DataRouteGuards from '@/mixins/DataRouteGuards';
+import FormMixin from '@/mixins/FormMixin';
 
 export default {
   name: 'Map',
-  mixins: [DataRouteGuards],
+  mixins: [DataRouteGuards, FormMixin],
   mounted() {
     this.$refs.map.$mapPromise.then(() => {
       if (!this.community) {
@@ -89,8 +90,12 @@ export default {
         this.centerOnCommunity(this.community);
       }
     });
-
-    this.$store.commit('register.map/postalCode', this.$store.state.user.postal_code);
+  },
+  props: {
+    id: {
+      required: false,
+      default: 'me',
+    },
   },
   data() {
     return {
@@ -184,12 +189,7 @@ export default {
         communityId: this.community.id,
       });
 
-      this.$store.commit('user', {
-        ...this.user,
-        communities: {
-
-        },
-      })
+      this.$store.commit('user', this.item);
 
       this.$router.push('/register/3');
     },
@@ -270,6 +270,9 @@ export default {
 
       this.postalCode = '';
       return this.centerOnCommunity(value);
+    },
+    'item.postal_code': function (val) {
+      this.$store.commit('register.map/postalCode', val);
     },
   },
 };

@@ -131,16 +131,20 @@ export default {
       try {
         await this.submit();
 
-        this.$store.commit('user', this.$store.state.users.item);
+        this.$store.commit('user', this.item);
 
-        this.$store.commit('addNotification', {
-          content: 'Il est temps de choisir une première communauté!',
-          title: 'Profil mis-à-jour',
-          variant: 'success',
-          type: 'register',
-        });
+        if (this.item.communities.length === 0) {
+          this.$store.commit('addNotification', {
+            content: 'Il est temps de choisir une première communauté!',
+            title: 'Profil mis-à-jour',
+            variant: 'success',
+            type: 'register',
+          });
 
-        this.$router.push('/register/map');
+          this.$router.push('/register/map');
+        } else {
+          this.$router.push('/register/3');
+        }
       } catch (e) {
         if (e.request) {
           switch (e.request.status) {

@@ -18,6 +18,8 @@ export default new RestModule('users', {
 
       const { data } = await ajax;
 
+      commit('mergeItem', { communities: [data] });
+
       commit('ajax', null);
     } catch (e) {
       commit('ajax', null);

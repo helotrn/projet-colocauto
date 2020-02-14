@@ -94,6 +94,8 @@ const routes = [
         component: RegisterMap,
         meta: {
           auth: true,
+          slug: 'users',
+          skipCleanup: true,
           data: {
             communities: {
               retrieve: {

@@ -12,7 +12,7 @@
         </b-form-checkbox>
 
         <b-collapse role="tabpanel" v-model="carBorrowerIntent">
-          <borrower-form :borrower="borrower" :loading="loading" />
+          <borrower-form v-if="borrower" :borrower="borrower" :loading="loading" />
         </b-collapse>
       </div>
 
@@ -63,8 +63,8 @@ export default {
     BorrowerForm,
   },
   mounted() {
-    this.borrower = this.user.borrower;
-    if (this.user.borrower.id) {
+    if (this.user.borrower && this.user.borrower.id) {
+      this.borrower = this.user.borrower;
       this.carBorrowerIntent = true;
     }
   },
@@ -94,14 +94,14 @@ export default {
       if (val) {
         this.$store.commit('users/mergeItem', { borrower: this.borrower, });
       } else {
-        this.$store.commit('users/mergeItem', { borrower: {} });
+        this.$store.commit('users/mergeItem', { borrower: null, });
       }
     },
     ownerIntent(val) {
       if (val) {
         this.$store.commit('users/mergeItem', { owner: {}, });
       } else {
-        this.$store.commit('users/mergeItem', { borrower: null });
+        this.$store.commit('users/mergeItem', { owner: null });
       }
     },
   },
