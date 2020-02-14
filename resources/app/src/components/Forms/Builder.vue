@@ -2,13 +2,19 @@
   <div class="forms-builder">
     <b-form-group v-for="(def, key) in definition" :key="key"
       :description="def.description"
-      :label="$t(`${entity}.fields.${key}`) | capitalize"
+      :label="def.type !== 'checkbox' ? $t(`${entity}.fields.${key}`) : '' | capitalize"
       :label-for="key">
       <b-form-select v-if="def.type === 'select'"
+        :id="key" :name="key"
         v-bind:value="item[key]"
         v-on:input="commitChange(key, $event)"
-        :id="key" :name="key"
         :options="def.options" />
+      <b-form-checkbox v-else-if="type === 'checkbox'"
+        :name="key" :id="key"
+        v-bind:checked="item[key]"
+        v-on:change="commitChange(key, $event)">
+        {{ $t(`${entity}.fields.${key}`) | capitalize }}
+      </b-form-checkbox>
       <b-form-input v-else-if="def.type === 'number'" :type="def.type"
         :name="key" :id="key"
         v-bind:value="item[key]"
@@ -19,7 +25,8 @@
         :name="key" :id="key"
         v-bind:value="item[key]"
         v-on:input="commitChange(key, $event)"
-        :placeholder="placeholderOrLabel(key) | capitalize" :disabled="def.disabled" />
+        :placeholder="placeholderOrLabel(key) | capitalize"
+        :disabled="def.disabled" />
       <b-form-textarea v-else-if="def.type === 'textarea'"
         :id="key" :name="key"
         v-bind:value="item[key]"
