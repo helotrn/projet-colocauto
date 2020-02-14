@@ -7,7 +7,16 @@ class BaseTransformer
     public static $context = [];
 
     public function transform($item, $options = []) {
-        $computedFields = array_intersect(array_keys(dig($options, 'fields', [])), $item->computed);
+        $fields = dig($options, 'fields', []);
+        if (is_string($fields)) {
+            $fields = ['*' => '*'];
+        }
+
+        if (in_array('*', array_keys($fields))) {
+            $computedFields = $item->computed;
+        } else {
+            $computedFields = array_intersect(array_keys($fields), $item->computed);
+        }
         $item->append($computedFields);
         $output = $item->toArray();
 
@@ -66,6 +75,7 @@ class BaseTransformer
         foreach (array_merge($item->items, array_keys($item->morphOnes)) as $relation) {
             if ($this->shouldIncludeRelation($relation, $item, $options)) {
                 if (!$item->{$relation}) {
+                    $output[$relation] = null;
                     continue;
                 }
 
@@ -82,8 +92,9 @@ class BaseTransformer
 
     protected function shouldIncludeRelation($relation, &$item, $options) {
         return isset($options['fields']) &&
-            in_array($relation, wrap_array_keys($options['fields']), true) ||
-            in_array($relation, $item->getWith(), true);
+            (in_array($relation, wrap_array_keys($options['fields']), true) ||
+            isset($options['fields']['*']['*']) ||
+            in_array($relation, $item->getWith(), true));
     }
 
     protected function shouldIncludeField($field, $options) {
@@ -110,6 +121,6 @@ class BaseTransformer
         return array_key_exists('fields', $options) &&
             is_array($options['fields']) &&
             !empty($options['fields']) &&
-            !in_array('*', $options['fields']);
+            !in_array('*', array_keys($options['fields']));
     }
 }
