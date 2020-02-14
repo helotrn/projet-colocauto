@@ -436,7 +436,7 @@ class RestRepository
         }
         $relatedData = array_intersect_key(
             $data,
-            array_flip(array_keys($related->getFillable()))
+            array_flip($related->getFillable())
         );
         $related->fill($relatedData);
 
