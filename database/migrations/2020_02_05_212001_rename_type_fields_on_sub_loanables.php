@@ -12,7 +12,7 @@ class RenameTypeFieldsOnSubLoanables extends Migration
         });
 
         Schema::table('trailers', function (Blueprint $table) {
-            $table->removeColumn('type');
+            $table->dropColumn('type');
         });
     }
 
