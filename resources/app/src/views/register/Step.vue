@@ -50,7 +50,7 @@
         <p>Vous pouvez aussi passer cette étape pour utiliser le partage de vélos.</p>
       </div>
 
-      <register-intent-form :user="item" v-if="item"
+      <register-intent-form :user="item" v-if="item" :loading="loading"
         @submit="submitOwnerDocumentsAndTags" />
     </div>
 
@@ -97,8 +97,10 @@ export default {
           if (vm.$route.path !== '/register/3') {
             vm.$router.replace('/register/3');
           }
-        } else if (vm.$route.path !== '/register/4') {
+        } else if (!vm.isSubmitted) {
           vm.$router.replace('/register/4');
+        } else if (vm.$route.path !== '/register/5') {
+          vm.$router.replace('/register/5');
         }
       }
     });
@@ -185,6 +187,8 @@ export default {
     },
     async submitOwnerDocumentsAndTags() {
       await this.submit();
+      await this.$store.dispatch('submitUser');
+      this.$router.push('/register/5');
     },
   },
 };

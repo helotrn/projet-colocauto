@@ -1,12 +1,16 @@
 export default {
   namespaced: true,
   state: {
-    carIntent: false,
+    borrower: {},
+    carBorrowerIntent: false,
     ownerIntent: false,
   },
   mutations: {
-    carIntent(state, value) {
-      state.carIntent = value;
+    borrower(state, borrower) {
+      state.borrower = borrower;
+    },
+    carBorrowerIntent(state, value) {
+      state.carBorrowerIntent = value;
     },
     ownerIntent(state, value) {
       state.ownerIntent = value;

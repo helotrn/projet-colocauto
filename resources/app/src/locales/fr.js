@@ -1,11 +1,13 @@
 import AdminFilters from './components/Admin/Filters';
 import bikes from '@/locales/models/bikes';
+import borrowers from '@/locales/models/borrowers';
 import communities from '@/locales/models/communities';
 import loanables from '@/locales/models/loanables';
 import users from '@/locales/models/users';
 
 export default {
   bikes: bikes.fr,
+  borrowers: borrowers.fr,
   communities: communities.fr,
   components: {
     admin: {

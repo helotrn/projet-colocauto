@@ -46,7 +46,7 @@ const actions = {
     try {
       const { data: user } = await Vue.axios.get('/auth/user', {
         params: {
-          fields: '*,avatar.*,communities.id,communities.name,communities.role,communities.proof',
+          fields: '*,avatar.*,owner.*,borrower.*.*,communities.id,communities.name,communities.role,communities.proof',
         },
       });
 
@@ -75,6 +75,24 @@ const actions = {
     }
 
     await dispatch('loadUser');
+  },
+  async submitUser({ commit, dispatch }) {
+    commit('loading', true);
+
+    try {
+      const { data: user } = await Vue.axios.put('/auth/user/submit', {
+        params: {
+          fields: '*,avatar.*,owner.*,borrower.*.*,communities.id,communities.name,communities.role,communities.proof',
+        },
+      });
+
+      commit('user', user);
+
+      commit('loaded', true);
+      commit('loading', false);
+    } catch (e) {
+      throw e;
+    }
   },
   async register({ commit, dispatch, state }, { email, password }) {
     const { data } = await Vue.axios.post('/auth/register', {

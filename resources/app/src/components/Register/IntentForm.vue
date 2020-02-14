@@ -4,15 +4,15 @@
       @submit.stop.prevent="$emit('submit')">
       <div class="form__section">
         <b-form-checkbox
-          id="car_intent" name="car_intent"
+          id="car_borrower_intent" name="car_borrower_intent"
           :value="true"
           :unchecked-value="false"
-          v-model="carIntent">
-          {{ $t('car-intent') }}
+          v-model="carBorrowerIntent">
+          {{ $t('car_borrower_intent') }}
         </b-form-checkbox>
 
-        <b-collapse id="car-intent-section" role="tabpanel" v-model="carIntent">
-          Form
+        <b-collapse role="tabpanel" v-model="carBorrowerIntent">
+          <borrower-form :borrower="borrower" :loading="loading" />
         </b-collapse>
       </div>
 
@@ -26,7 +26,11 @@
         </b-form-checkbox>
 
         <b-collapse id="owner-intent-section" role="tabpanel" v-model="ownerIntent">
-          Form
+          <div class="register-intent-form__owner__text">
+            <p>
+              Bonne nouvelle! Sur votre tableau de bord, vous serez invités à ajouter votre voiture.
+            </p>
+          </div>
         </b-collapse>
       </div>
 
@@ -41,29 +45,75 @@
 
 <i18n>
 fr:
-  car-intent: Je désire emprunter une voiture
+  car_borrower_intent: Je désire emprunter une voiture
   continue: Continuer
   owner-intent: Je désire mettre un véhicule à disposition de la communauté
 </i18n>
 
 <script>
+import BorrowerForm from '@/components/Borrower/Form.vue';
+
 import helpers from '@/helpers';
 
 const { buildComputed } = helpers;
 
 export default {
   name: 'RegisterIntentForm',
+  components: {
+    BorrowerForm,
+  },
+  mounted() {
+    this.borrower = this.user.borrower;
+    if (this.user.borrower.id) {
+      this.carBorrowerIntent = true;
+    }
+  },
   props: {
     user: {
       type: Object,
       required: true,
     },
+    loading: {
+      type: Boolean,
+      required: true,
+    },
   },
   computed: {
-    ...buildComputed('register.intent', ['carIntent', 'ownerIntent']),
+    ...buildComputed('register.intent', ['borrower', 'carBorrowerIntent', 'ownerIntent']),
+  },
+  watch: {
+    borrower: {
+      deep: true,
+      handler(borrower) {
+        if (this.carBorrowerIntent) {
+          this.$store.commit('users/mergeItem', { borrower, });
+        }
+      },
+    },
+    carBorrowerIntent(val) {
+      if (val) {
+        this.$store.commit('users/mergeItem', { borrower: this.borrower, });
+      } else {
+        this.$store.commit('users/mergeItem', { borrower: {} });
+      }
+    },
+    ownerIntent(val) {
+      if (val) {
+        this.$store.commit('users/mergeItem', { owner: {}, });
+      } else {
+        this.$store.commit('users/mergeItem', { borrower: null });
+      }
+    },
   },
 };
 </script>
 
 <style lang="scss">
+.register-intent-form {
+  .form__section {
+    > .custom-checkbox + .collapse {
+      margin-top: 20px;
+    }
+  }
+}
 </style>

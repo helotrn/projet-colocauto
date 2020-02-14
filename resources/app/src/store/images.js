@@ -10,14 +10,9 @@ export default {
     ajax(state, ajax) {
       state.ajax = ajax;
     },
-    loading(state, loading) {
-      state.loading = loading;
-    },
   },
   actions: {
     async upload({ commit }, formData) {
-      commit('loading', true);
-
       const ajax = Vue.axios.post('/images', formData);
 
       commit('ajax', ajax);

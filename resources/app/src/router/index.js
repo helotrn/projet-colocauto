@@ -51,7 +51,7 @@ const routes = [
           title: 'titles.account',
           slug: 'users',
           params: {
-            fields: '*,avatar.*,communities.id,communities.name,communities.role,payments.*,loanables.*',
+            fields: '*,avatar.*,owner.*,borrower.*.*,communities.id,communities.name,communities.role,payments.*,loanables.*',
           },
         },
       },
@@ -112,7 +112,7 @@ const routes = [
         meta: {
           slug: 'users',
           params: {
-            fields: '*,avatar.*,communities.id,communities.name,communities.role,communities.proof',
+            fields: '*,avatar.*,owner.*,borrower.*.*,communities.id,communities.name,communities.role,communities.proof',
           },
         },
       },
