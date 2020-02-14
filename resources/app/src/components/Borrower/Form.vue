@@ -54,8 +54,16 @@
           </b-col>
         </b-row>
 
-        <div class="form__buttons" v-if="showButton">
-          <b-button variant="success" type="submit" :disabled="loading">
+        <div class="form__buttons" v-if="!hideButtons">
+          <b-button-group v-if="showReset">
+            <b-button variant="success" type="submit" :disabled="!changed">
+              {{ $t('enregistrer') | capitalize }}
+            </b-button>
+            <b-button type="reset" :disabled="!changed" @click="$emit('reset')">
+              {{ $t('réinitialiser') | capitalize }}
+            </b-button>
+          </b-button-group>
+          <b-button variant="success" type="submit" v-else>
             {{ $t('enregistrer') | capitalize }}
           </b-button>
         </div>
@@ -77,22 +85,27 @@ export default {
     FormsValidatedInput,
   },
   props: {
+    borrower: {
+      type: Object,
+      required: true,
+    },
     changed: {
       type: Boolean,
       required: false,
       default: false,
     },
+    hideButtons: {
+      type: Boolean,
+      required: false,
+    },
     loading: {
       type: Boolean,
       required: true,
     },
-    showButton: {
+    showReset: {
       type: Boolean,
       required: false,
-    },
-    borrower: {
-      type: Object,
-      required: true,
+      default: false,
     },
   },
   i18n: {

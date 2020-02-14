@@ -104,7 +104,7 @@
           </b-col>
         </b-row>
 
-        <div class="form__buttons">
+        <div class="form__buttons" v-if="!hideButtons">
           <b-button-group v-if="showReset">
             <b-button variant="success" type="submit" :disabled="!changed">
               {{ $t('enregistrer') | capitalize }}
@@ -139,6 +139,10 @@ export default {
       type: Boolean,
       required: false,
       default: false,
+    },
+    hideButtons: {
+      type: Boolean,
+      required: false,
     },
     loading: {
       type: Boolean,

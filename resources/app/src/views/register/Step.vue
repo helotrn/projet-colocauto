@@ -56,6 +56,19 @@
 
     <div v-if="currentPage == 5" class="register-step__completed">
       <h2>Inscription complétée!</h2>
+
+      <div class="register-step__completed__text">
+        <p>
+          Votre inscrition sera validée par un membre de l'équipe et vous aurez alors accès à
+          toutes les fonctionnalités de LocoMotion.
+        </p>
+
+        <p v-if="!!item.owner">En attendant, vous pouvez commencer à entrer les informations sur vos véhicules.</p>
+
+        <div class="register-step__completed__button">
+          <b-button variant="primary" to="/">Revenir à l'accueil</b-button>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -97,7 +110,7 @@ export default {
           if (vm.$route.path !== '/register/3') {
             vm.$router.replace('/register/3');
           }
-        } else if (!vm.isSubmitted) {
+        } else if (!vm.hasCompletedRegistration) {
           vm.$router.replace('/register/4');
         } else if (vm.$route.path !== '/register/5') {
           vm.$router.replace('/register/5');
@@ -216,6 +229,10 @@ export default {
 
   .community-proof-form {
     margin-bottom: 2em;
+  }
+
+  &__completed__button {
+    text-align: center;
   }
 }
 </style>

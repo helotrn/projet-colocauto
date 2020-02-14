@@ -12,7 +12,7 @@
         </b-form-checkbox>
 
         <b-collapse role="tabpanel" v-model="carBorrowerIntent">
-          <borrower-form v-if="borrower" :borrower="borrower" :loading="loading" />
+          <borrower-form v-if="borrower" :borrower="borrower" :loading="loading" hide-buttons />
         </b-collapse>
       </div>
 
