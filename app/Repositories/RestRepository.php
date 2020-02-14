@@ -114,8 +114,6 @@ class RestRepository
     public function create($data) {
         $this->model->fill($data);
 
-        $this->addItems($data);
-
         $this->model->save();
 
         $this->saveRelations($data);
@@ -135,8 +133,6 @@ class RestRepository
         $this->model = $query->findOrFail($id);
 
         $this->model->fill($data);
-
-        $this->addItems($data);
 
         $this->model->save();
 
@@ -180,34 +176,55 @@ class RestRepository
         return $query;
     }
 
-    protected function addItems($data) {
+    protected function saveRelations($data) {
+        $this->saveItems($data);
+        $this->saveCollections($data);
+    }
+
+    protected function saveItems($data) {
         foreach (array_diff(array_keys($data), $this->model->getFillable()) as $field) {
             if ($field === 'id') {
                 continue;
             }
 
-            if (in_array($field, $this->model->items)
-                || in_array($field, array_keys($this->model->morphOnes))) {
+            if (in_array($field, $this->model->items)) {
                 if (preg_match('/_id$/', $field)) {
                     $newAssoc = $data[$field];
                     if ($newAssoc) {
-                        $this->model->{str_replace('_id', '', $field)}()->make($data[$field]);
+                        $this->model->{str_replace('_id', '', $field)}()->attach($data[$field]);
                     } else {
                         $this->model->{str_replace('_id', '', $field)}()->delete();
                     }
-                } elseif (is_array($data[$field]) && array_key_exists('id', $data[$field])) {
+                } elseif (is_array($data[$field])) {
+                    $related = $this->saveRelatedItem($this->model, $field, $data[$field]);
+
                     if ($this->model->{$field}
-                        && $this->model->{$field}->id !== $data[$field]['id']) {
+                        && $this->model->{$field}->id !== $related->id) {
                         $this->model->{$field}->delete();
                     }
 
-                    $this->savePolymorphicRelation($this->model, $field, $data);
+                    foreach (array_keys($related->morphOnes) as $morphOne) {
+                        $this->savePolymorphicRelation($related, $morphOne, $data[$field]);
+                    }
+
+                    $this->model->{$field}()->save($related);
+                }
+            } elseif (in_array($field, array_keys($this->model->morphOnes))) {
+                if (is_array($data[$field])) {
+                    if (array_key_exists('id', $data[$field])) {
+                        if ($this->model->{$field}
+                            && $this->model->{$field}->id !== $data[$field]['id']) {
+                            $this->model->{$field}->delete();
+                        }
+
+                        $this->savePolymorphicRelation($this->model, $field, $data);
+                    }
                 }
             }
         }
     }
 
-    protected function saveRelations($data) {
+    protected function saveCollections($data) {
         foreach (array_diff(array_keys($data), $this->model->getFillable()) as $field) {
             if ($field === 'id') {
                 continue;
@@ -215,19 +232,18 @@ class RestRepository
 
             if (array_key_exists($field, $data)) {
                 if (is_array($data[$field])) {
-                    if (array_key_exists('id', $data[$field]) && $data[$field]['id']) {
-                        if (in_array($field, $this->model->collections)) {
-                            $this->model->{$field}()->associate($data[$field]['id']);
-                        } elseif (in_array($field, array_keys($this->model->morphManys))) {
-                            if ($this->model->{$field}
-                                && $this->model->{$field}->count() > 0
-                                && $this->model->{$field}->first()->id !== $data[$field]['id']) {
-                                $this->model->{$field}()->where('id', '!=', $data[$field]['id'])->delete();
-                            }
+                    if (in_array($field, $this->model->collections)) {
+                        $collection = [];
 
-                            $this->savePolymorphicRelation($this->model, $field, $data);
+                        foreach ($data[$field] as $item) {
+                            if (array_key_exists('id', $item)) {
+                                $related = $this->saveRelatedItem($this->model, $field, $item);
+                                $collection[] = $related->id;
+                            }
                         }
-                    } elseif (in_array($field, array_keys($this->model->collections))) {
+
+                        $this->model->{$field}()->sync($collection);
+                    } elseif (in_array($field, array_keys($this->model->morphManys))) {
                         $relation = $this->model->{$field}();
                         $ids = [];
 
@@ -265,9 +281,7 @@ class RestRepository
 
                                 $targetPivot = $this->model->{$field}()->find($element['id'])->pivot;
                                 foreach ($pivotItems as $pivotItem) {
-                                    if (array_key_exists($pivotItem, $pivotItemData)) {
-                                        $this->savePolymorphicRelation($targetPivot, $pivotItem, $pivotItemData);
-                                    }
+                                    $this->savePolymorphicRelation($targetPivot, $pivotItem, $pivotItemData);
                                 }
 
                                 $ids[] = $element['id'];
@@ -275,13 +289,6 @@ class RestRepository
                         }
 
                         $relation->sync($ids);
-                    }
-                } elseif (!is_array($data[$field]) || !array_key_exists('id', $data[$field])
-                    || !$data[$field]['id']) {
-                    if (in_array($field, $this->model->collections)) {
-                        $this->model->{$field}()->dissociate();
-                    } elseif (in_array($field, array_keys($this->model->morphOnes)) && $this->model->{$field}()->count()) {
-                        $this->model->{$field}->delete();
                     }
                 }
             }
@@ -395,8 +402,30 @@ class RestRepository
     }
 
     protected function savePolymorphicRelation(&$model, $field, &$data) {
-        $newRelation = $model->{$field}()
-            ->getRelated()->find($data[$field]['id']);
+        if (!array_key_exists($field, $data)) {
+            return $model->{$field};
+        }
+
+        if (array_key_exists($field, $data)) {
+            if (!$data[$field]) {
+                if ($model->{$field}) {
+                    $model->{$field}->delete();
+                }
+
+                return null;
+            }
+        }
+
+        if (array_key_exists('id', $data[$field])) {
+            $newRelation = $model->{$field}()
+                ->getRelated()->find($data[$field]['id']);
+        } else {
+            $newRelation = $model->{$field}()->getRelated();
+        }
+
+        if (!$newRelation) {
+            return null;
+        }
 
         $morphId = $model->morphOnes[$field] . '_id';
         $morphType = $model->morphOnes[$field] . '_type';
@@ -405,5 +434,28 @@ class RestRepository
         $newRelation->{$morphType} = get_class($model);
 
         $newRelation->save();
+
+        return $newRelation;
+    }
+
+    protected function saveRelatedItem(&$model, $field, &$data) {
+        $relation = $model->{$field}();
+        if (!array_key_exists('id', $data)) {
+            $related = $relation->getRelated();
+        } else {
+            $related = $relation->getRelated()->find($data['id']);
+        }
+        $relatedData = array_intersect_key(
+            $data,
+            array_flip(array_keys($related->getFillable()))
+        );
+        $related->fill($relatedData);
+
+        if (method_exists($relation, 'getForeignKeyName')) {
+            $related->{$relation->getForeignKeyName()} = $model->id;
+        }
+        $related->save();
+
+        return $related;
     }
 }
