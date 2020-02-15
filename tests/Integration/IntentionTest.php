@@ -5,28 +5,27 @@ namespace Tests\Integration;
 use App\Models\Borrower;
 use App\Models\Intention;
 use App\Models\Loan;
+use Carbon\Carbon;
 use Tests\TestCase;
 
 class IntentionTest extends TestCase
 {
     private static $getIntentionResponseStructure = [
         'id',
-        'executed_at',
-        'status',
         'loan_id',
     ];
 
     public function testCreateIntentions() {
         $borrower = factory(Borrower::class)->create(['user_id' => $this->user->id]);
         $loan = factory(Loan::class)->create(['borrower_id' => $borrower->id]);
+        $intention = $loan->intentions()->first();
 
         $data = [
-            'executed_at' => now()->toDateTimeString(),
-            'status' => $this->faker->randomElement(['in_process', 'canceled', 'completed']),
             'loan_id' => $loan->id,
         ];
 
         $response = $this->json('POST', "/api/v1/intentions", $data);
+
         $response->assertStatus(201)
             ->assertJson(['loan_id' => $loan->id])
             ->assertJsonStructure(static::$getIntentionResponseStructure);
@@ -35,9 +34,9 @@ class IntentionTest extends TestCase
     public function testShowIntentions() {
         $borrower = factory(Borrower::class)->create(['user_id' => $this->user->id]);
         $loan = factory(Loan::class)->create(['borrower_id' => $borrower->id]);
-        $intention = factory(Intention::class)->create(['loan_id' => $loan->id]);
+        $intention = $loan->intentions()->first();
 
-        $response = $this->json('GET', "/api/v1/intentions/$intention->id");
+        $response = $this->json('GET', "/api/v1/intentions/$intention->id?loan.id=$loan->id");
 
         $response->assertStatus(200)
             ->assertJson(['id' => $intention->id])
@@ -47,10 +46,9 @@ class IntentionTest extends TestCase
     public function testUpdateIntentions() {
         $borrower = factory(Borrower::class)->create(['user_id' => $this->user->id]);
         $loan = factory(Loan::class)->create(['borrower_id' => $borrower->id]);
-        $intention = factory(Intention::class)->create(['loan_id' => $loan->id]);
+        $intention = $loan->intentions()->first();
 
         $data = [
-            'status' => $this->faker->randomElement(['in_process', 'canceled', 'completed']),
         ];
 
         $response = $this->json('PUT', "/api/v1/intentions/$intention->id", $data);
@@ -61,27 +59,43 @@ class IntentionTest extends TestCase
     public function testDeleteIntentions() {
         $borrower = factory(Borrower::class)->create(['user_id' => $this->user->id]);
         $loan = factory(Loan::class)->create(['borrower_id' => $borrower->id]);
-        $intention = factory(Intention::class)->create(['loan_id' => $loan->id]);
+        $intention = $loan->intentions()->first();
 
         $response = $this->json('DELETE', "/api/v1/intentions/$intention->id");
         $response->assertStatus(200);
 
         $response = $this->json('GET', "/api/v1/intentions/$intention->id");
         $response->assertStatus(404);
+
+        //$response = $this->json('GET', "/api/v1/intentions?loan.id=$loan->id");
+        //$response->assertStatus(404);
     }
 
-    public function testListIntentions() {
+    public function testCompleteIntentions() {
+        $this->markTestIncomplete();
         $borrower = factory(Borrower::class)->create(['user_id' => $this->user->id]);
         $loan = factory(Loan::class)->create(['borrower_id' => $borrower->id]);
+        $intention = $loan->intentions()->first();
+        if ($loan->intentions()->count() > 0) {
+            $executedAtDate = Carbon::now()->toIsoString();
+            Carbon::setTestNow($executedAtDate);
 
-        $intentions = factory(Intention::class, 2)->create(['loan_id' => $loan->id])->map(function ($intention) {
-            return $intention->only(static::$getIntentionResponseStructure);
-        });
+            $response = $this->json('PUT', "/api/v1/loans/$loan->id/actions/$intention->id/complete");
+            $response->assertStatus(200);
 
-        $response = $this->json('GET', "/api/v1/intentions");
+            $response = $this->json('GET', "/api/v1/intentions/$intention->id?loan.id=$loan->id");
+            $response->assertStatus(200)
+                ->assertJson(['status' => 'completed'])
+                ->assertJson(['executed_at' => $executedAtDate]);
+            //TODO fix date formatting
+            Carbon::setTestNow();
+        } else {
+            $response = 'intention error';
+        }
+    }
 
-        $response->assertStatus(200)
-            ->assertJson([ 'total' => 2 ])
-            ->assertJsonStructure($this->buildCollectionStructure(static::$getIntentionResponseStructure));
+    public function testCancelIntentions() {
+        $this->markTestIncomplete();
+        // Route::put('/loans/{loan_id}/actions/{action_id}/cancel');
     }
 }
