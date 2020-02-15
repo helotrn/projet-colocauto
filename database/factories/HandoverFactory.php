@@ -1,12 +1,13 @@
 <?php
 
 use App\Models\Handover;
-use Illuminate\Support\Str;
+use Carbon\Carbon;
 use Faker\Generator as Faker;
+use Illuminate\Support\Str;
 
 $factory->define(Handover::class, function (Faker $faker) {
     return [
-        'executed_at' => $faker->dateTime($format = 'Y-m-d H:i:sO', $max = 'now'),
+        'executed_at' => Carbon::now(),
         'status' => $faker->randomElement(['in_process', 'canceled', 'completed']),
         'mileage_end' => $faker->numberBetween($min = 0, $max = 300000),
         'fuel_end' => $faker->numberBetween($min = 0, $max = 100),
