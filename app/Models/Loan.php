@@ -28,6 +28,18 @@ class Loan extends BaseModel
 
     public static $transformer = LoanTransformer::class;
 
+    public static function boot() {
+        parent::boot();
+
+        self::created(function ($model) {
+            if ($model->intentions()->count() == 0) {
+                $intention = Intention::create(['loan_id' => $model->id]);
+
+                $model->intentions()->save($intention);
+            }
+        });
+    }
+
     public $collections = ['actions'];
 
     public function actions() {
