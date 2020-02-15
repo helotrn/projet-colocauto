@@ -16,8 +16,6 @@ class LoanTest extends TestCase
         'departure_at',
         'duration_in_minutes',
         'borrower_id',
-        'loanable_type',
-        'loanable_id',
     ];
 
     public function testCreateLoans() {
