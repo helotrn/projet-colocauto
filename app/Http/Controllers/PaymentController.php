@@ -4,13 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\BaseRequest as Request;
 use App\Models\Payment;
+use App\Repositories\LoanRepository;
 use App\Repositories\PaymentRepository;
 
 class PaymentController extends RestController
 {
-    public function __construct(PaymentRepository $repository, Payment $model) {
+    public function __construct(PaymentRepository $repository, Payment $model, LoanRepository $loanRepository) {
         $this->repo = $repository;
         $this->model = $model;
+        $this->loanRepo = $loanRepository;
     }
 
     public function index(Request $request) {
@@ -63,5 +65,14 @@ class PaymentController extends RestController
         }
 
         return $response;
+    }
+
+    public function complete(Request $request, $actionId, $loanId) {
+        $item = $this->repo->find($request, $actionId);
+        $loan = $this->loanRepo->find($request, $loanId);
+        if ($item->id && $loan->id) {
+            $item->status = 'completed';
+            $item->save();
+        }
     }
 }
