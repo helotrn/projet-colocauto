@@ -5,12 +5,14 @@ namespace App\Http\Controllers;
 use App\Http\Requests\BaseRequest as Request;
 use App\Models\Intention;
 use App\Repositories\IntentionRepository;
+use App\Repositories\LoanRepository;
 
 class IntentionController extends RestController
 {
-    public function __construct(IntentionRepository $repository, Intention $model) {
+    public function __construct(IntentionRepository $repository, Intention $model, LoanRepository $loanRepository) {
         $this->repo = $repository;
         $this->model = $model;
+        $this->loanRepo = $loanRepository;
     }
 
     public function index(Request $request) {
@@ -63,5 +65,14 @@ class IntentionController extends RestController
         }
 
         return $response;
+    }
+
+    public function complete(Request $request, $actionId, $loanId) {
+        $item = $this->repo->find($request, $actionId);
+        $loan = $this->loanRepo->find($request, $loanId);
+        if ($item->id && $loan->id) {
+            $item->status = 'completed';
+            $item->save();
+        }
     }
 }

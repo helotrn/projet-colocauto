@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\BaseRequest as Request;
 use App\Models\Action;
 use App\Repositories\ActionRepository;
+use App\Repositories\LoanRepository;
 use Validator;
 
 class ActionController extends RestController
@@ -40,6 +41,11 @@ class ActionController extends RestController
                 $intentionRequest->setMethod('GET');
                 $intentionRequest->request->add($request->all());
                 return $this->intentionController->retrieve($intentionRequest, $id);
+            case 'payment':
+                $paymentRequest = new Request();
+                $paymentRequest->setMethod('GET');
+                $paymentRequest->request->add($request->all());
+                return $this->paymentController->retrieve($paymentRequest, $id);
             default:
                 throw new \Exception('invalid action type');
         }
@@ -63,6 +69,25 @@ class ActionController extends RestController
                 $intentionRequest->setMethod('POST');
                 $intentionRequest->request->add($request->all());
                 return $this->intentionController->update($intentionRequest, $id);
+            case 'payment':
+                $paymentRequest = new Request();
+                $paymentRequest->setMethod('POST');
+                $paymentRequest->request->add($request->all());
+                return $this->paymentController->update($paymentRequest, $id);
+            default:
+                throw new \Exception('invalid action type');
+        }
+    }
+
+    public function complete(Request $request, $loanId, $actionId) {
+        $item = $this->repo->find($request, $actionId);
+
+        switch ($item->type) {
+            case 'intention':
+                $intentionRequest = new Request();
+                $intentionRequest->setMethod('PUT');
+                $intentionRequest->request->add($request->all());
+                return $this->intentionController->complete($intentionRequest, $actionId, $loanId);
             default:
                 throw new \Exception('invalid action type');
         }

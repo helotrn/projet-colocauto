@@ -6,6 +6,7 @@ use App\Models\Action;
 use App\Models\Loan;
 use App\Models\Payment;
 use App\Transformers\IntentionTransformer;
+use Carbon\Carbon;
 
 class Intention extends Action
 {
@@ -13,11 +14,9 @@ class Intention extends Action
 
     public static $rules = [
         'executed_at' => 'date',
-        'status' => 'required',
     ];
 
     protected $fillable = [
-        'status',
         'loan_id',
     ];
 
@@ -27,6 +26,23 @@ class Intention extends Action
 
     public function loan() {
         return $this->belongsTo(Loan::class);
+    }
+
+    public static function boot() {
+        parent::boot();
+
+        self::saved(function ($model) {
+            if (!$model->executed_at && $model->status === 'completed') {
+                $loanId = $model->loan->id;
+
+                //TODO payment creation
+                //$payment = Payment::create(['loan_id' => $loanId]);;
+                //$model->loan->payments()->save($payment);
+
+                $model->executed_at = Carbon::now();
+                $model->save();
+            }
+        });
     }
 
     public static function getColumnsDefinition() {
