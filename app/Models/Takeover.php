@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Action;
+use App\Models\Loan;
 use Illuminate\Database\Eloquent\Builder;
 use App\Transformers\TakeoverTransformer;
 
@@ -25,6 +26,10 @@ class Takeover extends Action
     ];
 
     public static $transformer = TakeoverTransformer::class;
+
+    public function loan() {
+        return $this->belongsTo(Loan::class);
+    }
 
     public static function getColumnsDefinition() {
         return [

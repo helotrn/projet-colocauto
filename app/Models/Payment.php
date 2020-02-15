@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Action;
 use App\Models\BillableItem;
+use App\Models\Loan;
 use Illuminate\Database\Eloquent\Builder;
 use App\Transformers\PaymentTransformer;
 
@@ -25,6 +26,10 @@ class Payment extends Action
 
     public function billableItem() {
         return $this->belongsTo(BillableItem::class);
+    }
+
+    public function loan() {
+        return $this->belongsTo(Loan::class);
     }
 
     public static function getColumnsDefinition() {
