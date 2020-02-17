@@ -103,18 +103,17 @@ class User extends AuthenticatableBaseModel
     ];
 
     public $items = [
-      'avatar',
       'borrower',
       'owner',
     ];
 
-    public $morphOneField = [
+    public $morphOnes = [
         'avatar' => 'imageable',
     ];
 
-    public function images() {
-        return $this->morphMany(Image::class, 'imageable');
-    }
+    public $morphManys = [
+        'tags' => 'taggable',
+    ];
 
     public function avatar() {
         return $this->morphOne(Image::class, 'imageable')->where('field', 'avatar');
@@ -153,6 +152,15 @@ class User extends AuthenticatableBaseModel
 
     public function paymentMethods() {
         return $this->hasMany(PaymentMethod::class);
+    }
+
+    public function submit() {
+        $this->submitted_at = new \DateTime;
+        $this->save();
+    }
+
+    public function tags() {
+        return $this->morphMany(Tag::class, 'taggable');
     }
 
     public function isAdmin() {

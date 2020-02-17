@@ -32,9 +32,9 @@ class Community extends BaseModel
     ];
 
     protected $fillable = [
-        'name',
-        'description',
         'area',
+        'description',
+        'name',
         'type',
     ];
 
@@ -107,6 +107,10 @@ class Community extends BaseModel
     }
 
     public function getAreaGoogleAttribute() {
+        if (!$this->area) {
+            return null;
+        }
+
         return array_map(function ($point) {
             return [
                 'lat' => $point[0],

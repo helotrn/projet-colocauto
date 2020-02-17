@@ -9,6 +9,7 @@ import Login from '../views/Login.vue';
 import Profile from '../views/Profile.vue';
 import ProfileAccount from '../views/profile/Account.vue';
 
+import Community from '../views/Community.vue';
 import CommunityMap from '../views/community/Map.vue';
 
 import Register from '../views/Register.vue';
@@ -50,7 +51,7 @@ const routes = [
           title: 'titles.account',
           slug: 'users',
           params: {
-            fields: '*,avatar.*,communities.id,communities.name,communities.role,payments.*,loanables.*',
+            fields: '*,avatar.*,owner.*,borrower.*.*,communities.id,communities.name,communities.role,payments.*,loanables.*',
           },
         },
       },
@@ -93,6 +94,8 @@ const routes = [
         component: RegisterMap,
         meta: {
           auth: true,
+          slug: 'users',
+          skipCleanup: true,
           data: {
             communities: {
               retrieve: {
@@ -111,11 +114,20 @@ const routes = [
         meta: {
           slug: 'users',
           params: {
-            fields: '*,avatar.*,communities.id,communities.name,communities.role',
+            fields: '*,avatar.*,owner.*,borrower.*.*,communities.id,communities.name,communities.role,communities.proof',
           },
         },
       },
     ],
+  },
+  {
+    path: '/community',
+    name: 'community',
+    component: Community,
+    meta: {
+      auth: true,
+      title: 'titles.community',
+    },
   },
   {
     path: '/app',
@@ -126,6 +138,7 @@ const routes = [
       title: 'titles.dashboard',
     },
   },
+
   {
     path: '/community/map',
     name: 'community-map',

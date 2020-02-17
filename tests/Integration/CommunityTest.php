@@ -168,6 +168,7 @@ class CommunityTest extends TestCase
     public function testShowCommunitiesUsers() {
         $user = factory(User::class)->create();
         $community = factory(Community::class)->create();
+
         $data = [
             'users' => [['id' => $user['id']]]
         ];

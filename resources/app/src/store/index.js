@@ -4,12 +4,14 @@ import VuexPersist from 'vuex-persist';
 import merge from 'deepmerge';
 
 import communities from './communities';
+import files from './files';
 import images from './images';
 import loanables from './loanables';
 import login from './pages/login';
 import register from './pages/register';
 import users from './users';
 
+import RegisterIntent from './pages/register/intent';
 import RegisterMap from './pages/register/map';
 
 const vuexPersist = new VuexPersist({
@@ -44,7 +46,7 @@ const actions = {
     try {
       const { data: user } = await Vue.axios.get('/auth/user', {
         params: {
-          fields: '*,avatar.*,communities.id,communities.name,communities.role',
+          fields: '*,avatar.*,owner.*,borrower.*.*,communities.id,communities.name,communities.role,communities.proof',
         },
       });
 
@@ -54,6 +56,8 @@ const actions = {
       commit('loading', false);
     } catch (e) {
       dispatch('logout');
+
+      throw e;
     }
   },
   async login({ commit, dispatch, state }, { email, password }) {
@@ -86,6 +90,24 @@ const actions = {
     }
 
     await dispatch('loadUser');
+  },
+  async submitUser({ commit }) {
+    commit('loading', true);
+
+    try {
+      const { data: user } = await Vue.axios.put('/auth/user/submit', {}, {
+        params: {
+          fields: '*,avatar.*,owner.*,borrower.*.*,communities.id,communities.name,communities.role,communities.proof',
+        },
+      });
+
+      commit('user', user);
+
+      commit('loaded', true);
+      commit('loading', false);
+    } catch (e) {
+      throw e;
+    }
   },
   logout({ commit }) {
     commit('token', null);
@@ -134,11 +156,13 @@ export default new Vuex.Store({
   actions,
   modules: {
     communities,
+    files,
     images,
     loanables,
     login,
     register,
     'register.map': RegisterMap,
+    'register.intent': RegisterIntent,
     users,
   },
   plugins: [vuexPersist.plugin],

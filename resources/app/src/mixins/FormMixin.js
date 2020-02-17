@@ -4,8 +4,11 @@ const { extractErrors } = helpers;
 
 export default {
   beforeRouteLeave(to, from, next) {
-    this.$store.commit(`${this.slug}/item`, null);
-    this.$store.commit(`${this.slug}/initialItem`, '');
+    if (!from.meta.skipCleanup) {
+      this.$store.commit(`${this.slug}/item`, null);
+      this.$store.commit(`${this.slug}/initialItem`, '');
+    }
+
     next();
   },
   async mounted() {
@@ -43,13 +46,35 @@ export default {
     async loadItem() {
       const { dispatch } = this.$store;
 
-      if (this.id === 'new') {
-        await dispatch(`${this.slug}/loadEmpty`);
-      } else {
-        await dispatch(`${this.slug}/retrieveOne`, {
-          id: this.id,
-          params: this.$route.meta.params,
-        });
+      try {
+        if (this.id === 'new') {
+          await dispatch(`${this.slug}/loadEmpty`);
+        } else {
+          await dispatch(`${this.slug}/retrieveOne`, {
+            id: this.id,
+            params: this.$route.meta.params,
+          });
+        }
+      } catch (e) {
+        switch (e.request.status) {
+          case 401:
+            this.$store.commit('addNotification', {
+              content: "Vous n'êtes pas connecté.",
+              title: 'Non connecté',
+              variant: 'warning',
+              type: 'login',
+            });
+            this.$router.push('/login');
+            break;
+          default:
+            this.$store.commit('addNotification', {
+              content: 'Erreur fatale',
+              title: 'Erreur fatale',
+              variant: 'danger',
+              type: 'form',
+            });
+            break;
+        }
       }
     },
     reset() {
@@ -84,6 +109,14 @@ export default {
     id: {
       type: String,
       required: true,
+    },
+  },
+  watch: {
+    item: {
+      deep: true,
+      handler() {
+        this.$store.commit(`${this.slug}/item`, this.item);
+      },
     },
   },
 };

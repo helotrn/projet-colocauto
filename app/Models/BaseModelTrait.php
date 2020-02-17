@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Builder;
 
 trait BaseModelTrait
 {
+    public static $filterTypes = [];
+
     public static $transformer = BaseTransformer::class;
 
     public static function getColumnsDefinition() {
@@ -29,9 +31,9 @@ trait BaseModelTrait
 
     public $computed = [];
 
-    public $morphOne = [];
+    public $morphOnes = [];
 
-    public $morphOneField = [];
+    public $morphManys = [];
 
     public function getWith() {
         return $this->with;

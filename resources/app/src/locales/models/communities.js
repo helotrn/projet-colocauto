@@ -7,6 +7,7 @@ export default {
       description: 'description',
       id: 'ID',
       name: 'nom',
+      proof: 'preuve de résidence',
       type: 'type',
     },
     types: {

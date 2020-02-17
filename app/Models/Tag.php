@@ -17,4 +17,8 @@ class Tag extends BaseModel
     ];
 
     public static $transformer = TagTransformer::class;
+
+    public function taggable() {
+        return $this->morphTo();
+    }
 }

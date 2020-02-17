@@ -3,15 +3,23 @@
     :name="name"
     :rules="rules"
     v-slot="validationContext">
-    <b-form-group :label="label" :label-for="name"
+    <b-form-group :label="type !== 'checkbox' ? label : ''" :label-for="name"
       :description="description">
-      <b-form-checkbox v-if="type === 'checkbox'"
+      <b-form-select v-if="type === 'select'"
+        :id="name" :name="name"
+        :state="getValidationState(validationContext)"
+        :options="options"
+        v-bind:value="value"
+        v-on:change="emitChange" />
+      <b-form-checkbox v-else-if="type === 'checkbox'"
         :id="name" :name="name"
         :value="true"
         :unchecked-value="false"
         :state="getValidationState(validationContext)"
         v-bind:checked="value"
-        v-on:change="emitChange" />
+        v-on:change="emitChange">
+        {{ label }}
+      </b-form-checkbox>
       <b-form-textarea v-else-if="type === 'textarea'"
         :id="name" :name="name"
         :placeholder="placeholder"
@@ -53,6 +61,13 @@ export default {
     name: {
       type: String,
       required: true,
+    },
+    options: {
+      type: Array,
+      required: false,
+      default() {
+        return [];
+      },
     },
     placeholder: {
       type: String,

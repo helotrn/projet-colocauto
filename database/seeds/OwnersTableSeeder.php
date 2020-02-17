@@ -22,5 +22,7 @@ class OwnersTableSeeder extends Seeder
                 Owner::where('id', $owner['id'])->update($owner);
             }
         }
+
+        \DB::statement("SELECT setval('owners_id_seq'::regclass, 2)");
     }
 }

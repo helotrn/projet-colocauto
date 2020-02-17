@@ -30,6 +30,12 @@ class Borrower extends BaseModel
 
     public $items = ['user'];
 
+    public $morphOnes = [
+      'insurance' => 'fileable',
+      'gaa' => 'fileable',
+      'saaq' => 'fileable',
+    ];
+
     public function user() {
         return $this->belongsTo(User::class);
     }
@@ -42,5 +48,17 @@ class Borrower extends BaseModel
 
     public function getApprovedAttribute() {
         return !!$this->approved_at;
+    }
+
+    public function gaa() {
+        return $this->morphOne(File::class, 'fileable')->where('field', 'gaa');
+    }
+
+    public function insurance() {
+        return $this->morphOne(File::class, 'fileable')->where('field', 'insurance');
+    }
+
+    public function saaq() {
+        return $this->morphOne(File::class, 'fileable')->where('field', 'saaq');
     }
 }

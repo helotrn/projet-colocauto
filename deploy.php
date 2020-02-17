@@ -52,6 +52,6 @@ before('deploy:symlink', 'deploy:build');
 
 desc('Copy assets');
 task('deploy:copy', function () {
-    run('rsync -rv {{release_path}}/resources/app/public/* {{release_path}}/public/ --exclude=index.html');
+    run('rsync -rv {{release_path}}/resources/app/dist/* {{release_path}}/public/ --exclude=index.html');
 });
-before('deploy:symlink', 'deploy:copy');
+after('deploy:build', 'deploy:copy');

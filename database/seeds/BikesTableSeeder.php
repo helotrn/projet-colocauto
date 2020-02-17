@@ -29,5 +29,7 @@ class BikesTableSeeder extends Seeder
                 Bike::where('id', $bike['id'])->first()->update($bike);
             }
         }
+
+        \DB::statement("SELECT setval('bikes_id_seq'::regclass, 6)");
     }
 }

@@ -73,5 +73,7 @@ class UsersTableSeeder extends Seeder
 
             $user->communities()->sync($communities);
         }
+
+        \DB::statement("SELECT setval('users_id_seq'::regclass, 6)");
     }
 }

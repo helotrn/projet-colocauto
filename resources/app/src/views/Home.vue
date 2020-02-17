@@ -150,7 +150,7 @@
                       Qu'est-ce qui arrive en cas d'accident ?
                     </b-button>
                   </b-card-header>
-                  <b-collapse id="accordion-1" accordion="my-accordion" role="tabpanel">
+                  <b-collapse id="accordion-1" role="tabpanel">
                     <b-card-body>
                       <b-card-text>
                         Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eos, tenetur.
@@ -166,7 +166,7 @@
                       pour leur prêter mon auto ?
                     </b-button>
                   </b-card-header>
-                  <b-collapse id="accordion-2" accordion="my-accordion" role="tabpanel">
+                  <b-collapse id="accordion-2" role="tabpanel">
                     <b-card-body>
                       <b-card-text>
                         Lorem ipsum dolor sit amet, consectetur adipisicing elit. Obcaecati illo,
@@ -183,7 +183,7 @@
                       Est-ce que c’est juste du partage de voitures ?
                     </b-button>
                   </b-card-header>
-                  <b-collapse id="accordion-3" accordion="my-accordion" role="tabpanel">
+                  <b-collapse id="accordion-3" role="tabpanel">
                     <b-card-body>
                       <b-card-text>
                         Lorem ipsum dolor sit amet, consectetur adipisicing elit. Mollitia

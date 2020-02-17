@@ -6,6 +6,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\Auth\RegisterRequest;
 use App\Http\Requests\BaseRequest as Request;
+use App\Http\Requests\User\SubmitRequest as UserSubmitRequest;
 use App\Http\Requests\User\UpdateRequest as UserUpdateRequest;
 use App\Models\User;
 use App\Utils\Traits\ErrorResponseTrait;
@@ -87,6 +88,10 @@ class AuthController extends Controller
 
     public function getUser(Request $request) {
         return $this->userController->retrieve($request, $this->auth->user()->id);
+    }
+
+    public function submitUser(Request $request) {
+        return $this->userController->submit($request, $this->auth->user()->id);
     }
 
     public function updateUser(UserUpdateRequest $request) {

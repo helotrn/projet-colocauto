@@ -13,7 +13,7 @@ export default {
   },
   actions: {
     async upload({ commit }, formData) {
-      const ajax = Vue.axios.post('/images', formData);
+      const ajax = Vue.axios.post('/files', formData);
 
       commit('ajax', ajax);
 

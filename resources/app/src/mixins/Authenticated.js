@@ -2,7 +2,11 @@ export default {
   async beforeMount() {
     if (this.auth.token) {
       if (!this.$store.state.loaded && !this.$store.state.loading) {
-        await this.$store.dispatch('loadUser');
+        try {
+          await this.$store.dispatch('loadUser');
+        } catch (e) {
+          this.$router.push('/login');
+        }
       }
     } else if (this.$route.meta.auth) {
       this.$router.push('/login');
@@ -16,8 +20,14 @@ export default {
         refreshToken,
       };
     },
+    canLoanVehicle() {
+      return false;
+    },
+    hasCommunity() {
+      return this.isLoggedIn && this.user.communities && this.user.communities.length > 0;
+    },
     hasCompletedRegistration() {
-      return !!this.user.approved_at;
+      return !!this.user.submitted_at;
     },
     isAdmin() {
       return this.isLoggedIn && this.user.role === 'admin';

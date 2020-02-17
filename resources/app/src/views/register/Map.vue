@@ -4,8 +4,14 @@
       <b-card-text>
         <b-form @submit.prevent="searchPostalCode">
           <b-form-group label="Code postal">
-            <b-form-input type="text" required placeholder="Code postal"
-              v-model="postalCode" />
+            <b-input-group>
+              <b-form-input type="text" required placeholder="Code postal"
+                v-model="postalCode" />
+
+              <b-input-group-append>
+                <b-button variant="outline-success" type="submit">OK</b-button>
+              </b-input-group-append>
+            </b-input-group>
           </b-form-group>
         </b-form>
       </b-card-text>
@@ -71,10 +77,11 @@
 import { gmapApi } from 'vue2-google-maps';
 
 import DataRouteGuards from '@/mixins/DataRouteGuards';
+import FormMixin from '@/mixins/FormMixin';
 
 export default {
   name: 'Map',
-  mixins: [DataRouteGuards],
+  mixins: [DataRouteGuards, FormMixin],
   mounted() {
     this.$refs.map.$mapPromise.then(() => {
       if (!this.community) {
@@ -83,6 +90,12 @@ export default {
         this.centerOnCommunity(this.community);
       }
     });
+  },
+  props: {
+    id: {
+      required: false,
+      default: 'me',
+    },
   },
   data() {
     return {
@@ -171,12 +184,12 @@ export default {
       this.$refs.map.fitBounds(bounds);
     },
     async joinCommunity() {
-      const { commit, dispatch } = this.$store;
-
-      await dispatch('users/joinCommunity', {
+      await this.$store.dispatch('users/joinCommunity', {
         userId: this.$store.state.user.id,
         communityId: this.community.id,
       });
+
+      this.$store.commit('user', this.item);
 
       this.$router.push('/register/3');
     },
@@ -209,6 +222,10 @@ export default {
       this.community = null;
     },
     searchPostalCode() {
+      if (!this.postalCode.match(/[a-z][0-9][a-z]\s*[0-9][a-z][0-9]/i)) {
+        return false;
+      }
+
       const { Geocoder, LatLngBounds } = this.google.maps;
       const geocoder = new Geocoder();
 
@@ -241,6 +258,8 @@ export default {
 
         return true;
       });
+
+      return true;
     },
   },
   watch: {
@@ -252,12 +271,8 @@ export default {
       this.postalCode = '';
       return this.centerOnCommunity(value);
     },
-    postalCode(val) {
-      if (val.match(/[a-z][0-9][a-z]\s*[0-9][a-z][0-9]/i)) {
-        this.searchPostalCode();
-      }
-
-      this.resetCenter();
+    'item.postal_code': function syncPostalCode(val) {
+      this.$store.commit('register.map/postalCode', val);
     },
   },
 };
