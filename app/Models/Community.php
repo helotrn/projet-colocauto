@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Loanable;
 use App\Models\Pricing;
 use App\Rules\Polygon;
 use App\Utils\PointCast;
@@ -87,7 +88,7 @@ class Community extends BaseModel
         ];
     }
 
-    public $collections = ['users', 'pricings'];
+    public $collections = ['users', 'pricings', 'loanables'];
 
     public $computed =  ['area_google', 'center_google'];
 
@@ -104,6 +105,10 @@ class Community extends BaseModel
 
     public function pricings() {
         return $this->hasMany(Pricing::class);
+    }
+
+    public function loanables() {
+        return $this->hasMany(Loanable::class);
     }
 
     public function getAreaGoogleAttribute() {

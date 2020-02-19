@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Community;
 use App\Models\Owner;
 use App\Models\Loan;
 use App\Utils\PointCast;
@@ -35,7 +36,11 @@ class Loanable extends BaseModel
         'position' => PointCast::class,
     ];
 
-    public $items = ['owner'];
+    public $items = ['owner', 'community'];
+
+    public function community() {
+        return $this->belongsTo(Community::class);
+    }
 
     public function owner() {
         return $this->belongsTo(Owner::class);
