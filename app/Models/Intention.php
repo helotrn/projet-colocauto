@@ -32,15 +32,24 @@ class Intention extends Action
         parent::boot();
 
         self::saved(function ($model) {
-            if (!$model->executed_at && $model->status === 'completed') {
-                $loanId = $model->loan->id;
+            if (!$model->executed_at) {
+                switch ($model->status) {
+                    case 'completed':
+                        $loanId = $model->loan->id;
 
-                //TODO payment creation
-                //$payment = Payment::create(['loan_id' => $loanId]);;
-                //$model->loan->payments()->save($payment);
+                        //TODO payment creation
+                        //$payment = Payment::create(['loan_id' => $loanId]);
+                        //$model->loan->payments()->save($payment);
 
-                $model->executed_at = Carbon::now();
-                $model->save();
+                        $model->executed_at = Carbon::now();
+                        $model->save();
+                        break;
+                    case 'canceled':
+                        $model->executed_at = Carbon::now();
+                        $model->save();
+                        $model->loan->setCanceled();
+                        break;
+                }
             }
         });
     }

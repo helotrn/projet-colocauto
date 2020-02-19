@@ -5,24 +5,25 @@ namespace App\Models;
 use App\Models\Action;
 use App\Models\BillableItem;
 use App\Models\Loan;
-use Illuminate\Database\Eloquent\Builder;
 use App\Transformers\PaymentTransformer;
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 
 class Payment extends Action
 {
     protected $table = 'payments';
 
     public static $rules = [
-        'status' => 'required',
     ];
 
     protected $fillable = [
-        'status',
+        'loan_id',
+        'billable_item_id',
     ];
 
     public static $transformer = PaymentTransformer::class;
 
-    public $items = ['billableItem'];
+    public $items = ['billableItem', 'loan'];
 
     public function billableItem() {
         return $this->belongsTo(BillableItem::class);
@@ -30,6 +31,30 @@ class Payment extends Action
 
     public function loan() {
         return $this->belongsTo(Loan::class);
+    }
+
+    public static function boot() {
+        parent::boot();
+
+        self::saved(function ($model) {
+            if (!$model->executed_at) {
+                switch ($model->status) {
+                    case 'completed':
+                        //$model->loan->actions->create(new Takeover);
+                        //TODO Takeover creation
+
+                        $model->executed_at = Carbon::now();
+
+                        $model->save();
+                        break;
+                    case 'canceled':
+                        $model->executed_at = Carbon::now();
+                        $model->save();
+                        $model->loan->setCanceled;
+                        break;
+                }
+            }
+        });
     }
 
     public static function getColumnsDefinition() {
