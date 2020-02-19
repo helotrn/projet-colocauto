@@ -6,6 +6,7 @@ use App\Http\Requests\BaseRequest as Request;
 use App\Models\Intention;
 use App\Repositories\IntentionRepository;
 use App\Repositories\LoanRepository;
+use Illuminate\Validation\ValidationException;
 
 class IntentionController extends RestController
 {

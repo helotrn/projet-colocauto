@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\BaseRequest as Request;
 use App\Models\Handover;
 use App\Repositories\HandoverRepository;
+use Illuminate\Validation\ValidationException;
 
 class HandoverController extends RestController
 {

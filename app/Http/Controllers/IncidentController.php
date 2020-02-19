@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\BaseRequest as Request;
 use App\Models\Incident;
 use App\Repositories\IncidentRepository;
+use Illuminate\Validation\ValidationException;
 
 class IncidentController extends RestController
 {

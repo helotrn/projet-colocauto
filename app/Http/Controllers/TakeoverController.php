@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\BaseRequest as Request;
 use App\Models\Takeover;
 use App\Repositories\TakeoverRepository;
+use Illuminate\Validation\ValidationException;
 
 class TakeoverController extends RestController
 {

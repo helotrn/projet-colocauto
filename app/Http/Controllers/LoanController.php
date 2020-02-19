@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\BaseRequest as Request;
 use App\Models\Loan;
 use App\Repositories\LoanRepository;
+use Illuminate\Validation\ValidationException;
 
 class LoanController extends RestController
 {

@@ -14,6 +14,36 @@ class BikeController extends RestController
         $this->model = $model;
     }
 
+    public function index(Request $request) {
+        try {
+            [$items, $total] = $this->repo->get($request);
+        } catch (ValidationException $e) {
+            return $this->respondWithErrors($e->errors(), $e->getMessage());
+        }
+
+        return $this->respondWithCollection($request, $items, $total);
+    }
+
+    public function create(Request $request) {
+        try {
+            $item = parent::validateAndCreate($request);
+        } catch (ValidationException $e) {
+            return $this->respondWithErrors($e->errors(), $e->getMessage());
+        }
+
+        return $this->respondWithItem($request, $item, 201);
+    }
+
+    public function update(Request $request, $id) {
+        try {
+            $item = parent::validateAndUpdate($request, $id);
+        } catch (ValidationException $e) {
+            return $this->respondWithErrors($e->errors(), $e->getMessage());
+        }
+
+        return $this->respondWithItem($request, $item);
+    }
+
     public function retrieve(Request $request, $id) {
         $item = $this->repo->find($request, $id);
 
@@ -26,14 +56,13 @@ class BikeController extends RestController
         return $response;
     }
 
-
-    public function update(Request $request, $id) {
+    public function destroy(Request $request, $id) {
         try {
-            $item = parent::validateAndUpdate($request, $id);
+            $response = parent::validateAndDestroy($request, $id);
         } catch (ValidationException $e) {
             return $this->respondWithErrors($e->errors(), $e->getMessage());
         }
 
-        return $this->respondWithItem($request, $item);
+        return $response;
     }
 }
