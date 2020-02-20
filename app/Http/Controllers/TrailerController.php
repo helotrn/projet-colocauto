@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\BaseRequest as Request;
+use App\Http\Requests\Trailer\CreateRequest;
+use App\Http\Requests\Trailer\UpdateRequest;
 use App\Models\Trailer;
 use App\Repositories\TrailerRepository;
 use Illuminate\Validation\ValidationException;
@@ -24,7 +26,7 @@ class TrailerController extends RestController
         return $this->respondWithCollection($request, $items, $total);
     }
 
-    public function create(Request $request) {
+    public function create(CreateRequest $request) {
         try {
             $item = parent::validateAndCreate($request);
         } catch (ValidationException $e) {
@@ -34,7 +36,7 @@ class TrailerController extends RestController
         return $this->respondWithItem($request, $item, 201);
     }
 
-    public function update(Request $request, $id) {
+    public function update(UpdateRequest $request, $id) {
         try {
             $item = parent::validateAndUpdate($request, $id);
         } catch (ValidationException $e) {

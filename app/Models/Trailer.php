@@ -10,13 +10,6 @@ class Trailer extends Loanable
     protected $table = 'trailers';
 
     public static $rules = [
-        'name' => 'required',
-        'position' => 'required',
-        'location_description' => 'required|string',
-        'comments' => 'required|string',
-        'instructions' => 'required|string',
-        'type' => 'required',
-        'maximum_charge' => 'required',
     ];
 
     protected $fillable = [
@@ -25,7 +18,6 @@ class Trailer extends Loanable
         'location_description',
         'comments',
         'instructions',
-        'type',
         'maximum_charge',
     ];
 
