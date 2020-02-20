@@ -3,6 +3,7 @@
 use App\Models\Trailer;
 use Illuminate\Support\Str;
 use Faker\Generator as Faker;
+use Phaza\LaravelPostgis\Geometries\Point;
 
 $factory->define(Trailer::class, function (Faker $faker) {
     return [
@@ -13,5 +14,6 @@ $factory->define(Trailer::class, function (Faker $faker) {
         'instructions' => $faker->paragraph,
         'type' => $faker->randomElement(['regular' ,'electric', 'fixed_wheel']),
         'maximum_charge' => $faker->numberBetween($min = 1000, $max = 9000),
+        'availability_ics' => $faker->sentence,
     ];
 });

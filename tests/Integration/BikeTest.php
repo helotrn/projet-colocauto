@@ -3,90 +3,89 @@
 namespace Tests\Integration;
 
 use App\Models\Bike;
+use App\Models\Community;
+use App\Models\Owner;
+use Phaza\LaravelPostgis\Geometries\Point;
 use Tests\TestCase;
 
 class BikeTest extends TestCase
 {
+    private static $getBikeResponseStructure = [
+        'id',
+        'name',
+        'bike_type',
+        'model',
+        'size',
+        'position',
+        'location_description',
+        'instructions',
+        'comments',
+        'availability_ics',
+    ];
+
     public function testCreateBikes() {
-        $this->markTestIncomplete();
         $data = [
             'name' => $this->faker->name,
-            'position' => "{$this->faker->latitude} {$this->faker->longitude}",
+            'position' => new Point($this->faker->latitude, $this->faker->longitude),
             'location_description' => $this->faker->sentence,
             'comments' => $this->faker->paragraph,
             'instructions' => $this->faker->paragraph,
             'model' => $this->faker->sentence,
-            'type' => $this->faker->randomElement(['regular' ,'electric', 'fixed_wheel']),
+            'bike_type' => $this->faker->randomElement(['regular' ,'electric', 'fixed_wheel']),
             'size' => $this->faker->randomElement(['big' ,'medium', 'small', 'kid']),
+            'availability_ics' => $this->faker->sentence,
         ];
 
-        $response = $this->json('POST', route('bikes.create'), $data);
-
-        $response->assertStatus(201)->assertJson($data);
+        $response = $this->json('POST', "/api/v1/bikes", $data);
+        //TODO fix Pointcast bug
+        $response->assertStatus(201)
+            ->assertJsonStructure(static::$getBikeResponseStructure);
     }
 
     public function testShowBikes() {
-        $this->markTestIncomplete();
-        $post = factory(Bike::class)->create();
+        $owner = factory(Owner::class)->create(['user_id' => $this->user->id]);
+        $bike = factory(Bike::class)->create(['owner_id' => $owner->id]);
 
-        $response = $this->json('GET', route('bikes.retrieve', $post->id), $data);
+        $response = $this->json('GET', "/api/v1/bikes/$bike->id");
 
-        $response->assertStatus(200)->assertJson($data);
+        $response->assertStatus(200)
+            ->assertJsonStructure(static::$getBikeResponseStructure);
     }
 
     public function testUpdateBikes() {
-        $this->markTestIncomplete();
-        $post = factory(Bike::class)->create();
+        $owner = factory(Owner::class)->create(['user_id' => $this->user->id]);
+        $bike = factory(Bike::class)->create(['owner_id' => $owner->id]);
         $data = [
             'name' => $this->faker->name,
         ];
 
-        $response = $this->json('PUT', route('bikes.update', $post->id), $data);
+        $response = $this->json('PUT', "/api/v1/bikes/$bike->id", $data);
 
         $response->assertStatus(200)->assertJson($data);
     }
 
     public function testDeleteBikes() {
-        $this->markTestIncomplete();
-        $post = factory(Bike::class)->create();
+        $owner = factory(Owner::class)->create(['user_id' => $this->user->id]);
+        $bike = factory(Bike::class)->create(['owner_id' => $owner->id]);
 
-        $response = $this->json('DELETE', route('bikes.delete', $post->id), $data);
+        $response = $this->json('DELETE', "/api/v1/bikes/$bike->id");
+        $response->assertStatus(200);
 
-        $response->assertStatus(204)->assertJson($data);
+        $response = $this->json('GET', "/api/v1/bikes/$bike->id");
+        $response->assertStatus(404);
     }
 
     public function testListBikes() {
-        $this->markTestIncomplete();
-        $bikes = factory(Bike::class, 2)->create()->map(function ($post) {
-            return $post->only([
-                'id',
-                'name',
-                'position',
-                'location_description',
-                'comments',
-                'instructions',
-                'model',
-                'type',
-                'size',
-            ]);
-        });
+        $owner = factory(Owner::class)->create(['user_id' => $this->user->id]);
+        $bikes = factory(Bike::class, 2)->create(['owner_id' => $owner->id])
+            ->map(function ($bike) {
+                return $bike->only(static::$getBikeResponseStructure);
+            });
 
-        $response = $this->json('GET', route('bikes.index'));
+        $response = $this->json('GET', "/api/v1/bikes");
 
         $response->assertStatus(200)
-                ->assertJson($bikes->toArray())
-                ->assertJsonStructure([
-                    '*' => [
-                        'id',
-                        'name',
-                        'position',
-                        'location_description',
-                        'comments',
-                        'instructions',
-                        'model',
-                        'type',
-                        'size',
-                    ],
-                ]);
+            ->assertJson([ 'total' => 2 ])
+            ->assertJsonStructure($this->buildCollectionStructure(static::$getBikeResponseStructure));
     }
 }
