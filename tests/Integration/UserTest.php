@@ -212,9 +212,10 @@ class UserTest extends TestCase
         }
 
         $data = [
-            'users_id' => $user->id,
+            'user_id' => $user->id,
         ];
         $response = $this->json('GET', "/api/v1/communities", $data);
+
         $response->assertStatus(200)
             ->assertJson([ 'total' => 2 ])
             ->assertJsonStructure($this->buildCollectionStructure(static::$getCommunityResponseStructure));
