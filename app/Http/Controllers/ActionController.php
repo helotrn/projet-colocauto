@@ -93,6 +93,20 @@ class ActionController extends RestController
         }
     }
 
+    public function cancel(Request $request, $loanId, $actionId) {
+        $item = $this->repo->find($request, $actionId);
+
+        switch ($item->type) {
+            case 'intention':
+                $intentionRequest = new Request();
+                $intentionRequest->setMethod('PUT');
+                $intentionRequest->request->add($request->all());
+                return $this->intentionController->cancel($intentionRequest, $actionId, $loanId);
+            default:
+                throw new \Exception('invalid action type');
+        }
+    }
+
     public function template(Request $request) {
         return [
           'item' => [

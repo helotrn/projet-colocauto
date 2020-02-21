@@ -72,12 +72,11 @@ class IntentionTest extends TestCase
     }
 
     public function testCompleteIntentions() {
-        $this->markTestIncomplete();
         $borrower = factory(Borrower::class)->create(['user_id' => $this->user->id]);
         $loan = factory(Loan::class)->create(['borrower_id' => $borrower->id]);
         $intention = $loan->intentions()->first();
         if ($loan->intentions()->count() > 0) {
-            $executedAtDate = Carbon::now()->toIsoString();
+            $executedAtDate = substr(Carbon::now('-5')->format("Y-m-d h:m:sO"), 0, -2);
             Carbon::setTestNow($executedAtDate);
 
             $response = $this->json('PUT', "/api/v1/loans/$loan->id/actions/$intention->id/complete");
@@ -87,7 +86,7 @@ class IntentionTest extends TestCase
             $response->assertStatus(200)
                 ->assertJson(['status' => 'completed'])
                 ->assertJson(['executed_at' => $executedAtDate]);
-            //TODO fix date formatting
+
             Carbon::setTestNow();
         } else {
             $response = 'intention error';
@@ -95,7 +94,25 @@ class IntentionTest extends TestCase
     }
 
     public function testCancelIntentions() {
-        $this->markTestIncomplete();
-        // Route::put('/loans/{loan_id}/actions/{action_id}/cancel');
+        $borrower = factory(Borrower::class)->create(['user_id' => $this->user->id]);
+        $loan = factory(Loan::class)->create(['borrower_id' => $borrower->id]);
+        $intention = $loan->intentions()->first();
+        if ($loan->intentions()->count() > 0) {
+            $executedAtDate = substr(Carbon::now('-5')->format("Y-m-d h:m:sO"), 0, -2);
+            Carbon::setTestNow($executedAtDate);
+
+            $response = $this->json('PUT', "/api/v1/loans/$loan->id/actions/$intention->id/cancel");
+            $response->dump();
+            $response->assertStatus(200);
+
+            $response = $this->json('GET', "/api/v1/intentions/$intention->id?loan.id=$loan->id");
+            $response->assertStatus(200)
+                ->assertJson(['status' => 'canceled'])
+                ->assertJson(['executed_at' => $executedAtDate]);
+
+            Carbon::setTestNow();
+        } else {
+            $response = 'intention error';
+        }
     }
 }
