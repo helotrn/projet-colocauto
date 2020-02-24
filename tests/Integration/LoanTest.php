@@ -85,4 +85,30 @@ class LoanTest extends TestCase
             ->assertJson([ 'total' => 2 ])
             ->assertJsonStructure($this->buildCollectionStructure(static::$getLoanResponseStructure));
     }
+
+    public function testShowLoansBorrower() {
+        $borrower = factory(Borrower::class)->create(['user_id' => $this->user->id]);
+        $loan = factory(Loan::class)->create(['borrower_id' => $borrower->id]);
+
+        $data = [
+            'loan_id' => $loan->id,
+        ];
+        $response = $this->json('GET', "/api/v1/borrowers/$borrower->id", $data);
+
+        $response->assertStatus(200)
+            ->assertJson([ 'id' => $borrower->id ]);
+    }
+
+    public function testShowLoansLoanable() {
+        $borrower = factory(Borrower::class)->create(['user_id' => $this->user->id]);
+        $loan = factory(Loan::class)->create(['borrower_id' => $borrower->id]);
+
+        $data = [
+            'loan_id' => $loan->id,
+        ];
+        $response = $this->json('GET', "/api/v1/borrowers/$borrower->id", $data);
+
+        $response->assertStatus(200)
+            ->assertJson([ 'id' => $borrower->id ]);
+    }
 }
