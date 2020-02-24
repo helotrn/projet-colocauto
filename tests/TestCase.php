@@ -3,6 +3,7 @@
 namespace Tests;
 
 use App\Models\User;
+use Carbon\Carbon;
 use Faker\Factory;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
@@ -46,6 +47,8 @@ VALUES (
 )
 SQL
         );
+
+        Carbon::setTestNow();
     }
 
     protected function buildCollectionStructure(array $template) {

@@ -94,7 +94,5 @@ class BorrowerTest extends TestCase
         $response = $this->json('GET', "/api/v1/borrowers/$borrower->id");
         $response->assertStatus(200)->assertJson(['approved_at' => $approvedAtDate]);
         //TODO fix date formatting
-
-        Carbon::setTestNow();
     }
 }

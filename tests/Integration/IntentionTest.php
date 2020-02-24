@@ -109,8 +109,6 @@ class IntentionTest extends TestCase
             $response->assertStatus(200)
                 ->assertJson(['status' => 'canceled'])
                 ->assertJson(['executed_at' => $executedAtDate]);
-
-            Carbon::setTestNow();
         } else {
             $response = 'intention error';
         }
