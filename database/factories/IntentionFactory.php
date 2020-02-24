@@ -1,12 +1,13 @@
 <?php
 
 use App\Models\Intention;
-use Illuminate\Support\Str;
+use Carbon\Carbon;
 use Faker\Generator as Faker;
+use Illuminate\Support\Str;
 
 $factory->define(Intention::class, function (Faker $faker) {
     return [
-        'executed_at' => $faker->dateTime($format = 'Y-m-d H:i:sO', $max = 'now'),
+        'executed_at' => Carbon::now(),
         'status' => $faker->randomElement(['in_process', 'canceled', 'completed']),
     ];
 });

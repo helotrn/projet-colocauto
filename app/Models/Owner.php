@@ -2,12 +2,24 @@
 
 namespace App\Models;
 
+use App\Models\Bike;
+use App\Models\Car;
 use App\Models\Loanable;
+use App\Models\Trailer;
 use App\Transformers\OwnerTransformer;
 
 class Owner extends BaseModel
 {
-    protected $fillable = [];
+    public static $rules = [
+        'approved_at' => 'nullable|date',
+        'submitted_at' => 'nullable|date',
+    ];
+
+    protected $fillable = [
+        'approved_at',
+        'submitted_at',
+        'user_id',
+    ];
 
     public static $transformer = OwnerTransformer::class;
 

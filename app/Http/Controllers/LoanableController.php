@@ -11,11 +11,26 @@ use Validator;
 class LoanableController extends RestController
 {
     protected $bikeController;
+    protected $carController;
+    protected $trailerController;
 
-    public function __construct(LoanableRepository $repository, Loanable $model, BikeController $bikeController) {
+    public function __construct(LoanableRepository $repository, Loanable $model, BikeController $bikeController, CarController $carController, TrailerController $trailerController) {
         $this->repo = $repository;
         $this->model = $model;
         $this->bikeController = $bikeController;
+        $this->carController = $carController;
+        $this->trailerController = $trailerController;
+    }
+
+    public function create(Request $request) {
+
+        try {
+            $item = parent::validateAndCreate($request);
+        } catch (ValidationException $e) {
+            return $this->respondWithErrors($e->errors(), $e->getMessage());
+        }
+
+        return $this->respondWithItem($request, $item, 201);
     }
 
     public function index(Request $request) {
@@ -37,6 +52,16 @@ class LoanableController extends RestController
                 $bikeRequest->setMethod('GET');
                 $bikeRequest->request->add($request->all());
                 return $this->bikeController->retrieve($bikeRequest, $id);
+            case 'car':
+                $carRequest = new Request();
+                $carRequest->setMethod('GET');
+                $carRequest->request->add($request->all());
+                return $this->carController->retrieve($carRequest, $id);
+            case 'trailer':
+                $trailerRequest = new Request();
+                $trailerRequest->setMethod('GET');
+                $trailerRequest->request->add($request->all());
+                return $this->trailerController->retrieve($trailerRequest, $id);
             default:
                 throw new \Exception('invalid loanable type');
         }
@@ -60,6 +85,16 @@ class LoanableController extends RestController
                 $bikeRequest->setMethod('POST');
                 $bikeRequest->request->add($request->all());
                 return $this->bikeController->update($bikeRequest, $id);
+            case 'car':
+                $carRequest = new Request();
+                $carRequest->setMethod('POST');
+                $carRequest->request->add($request->all());
+                return $this->carController->update($carRequest, $id);
+            case 'trailer':
+                $trailerRequest = new Request();
+                $trailerRequest->setMethod('POST');
+                $trailerRequest->request->add($request->all());
+                return $this->trailerController->update($trailerRequest, $id);
             default:
                 throw new \Exception('invalid loanable type');
         }

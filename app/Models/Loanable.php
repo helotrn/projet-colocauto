@@ -2,7 +2,9 @@
 
 namespace App\Models;
 
+use App\Models\Community;
 use App\Models\Owner;
+use App\Models\Loan;
 use App\Utils\PointCast;
 use Illuminate\Database\Eloquent\Builder;
 use Phaza\LaravelPostgis\Eloquent\PostgisTrait;
@@ -34,9 +36,19 @@ class Loanable extends BaseModel
         'position' => PointCast::class,
     ];
 
-    public $items = ['owner'];
+    public $items = ['owner', 'community'];
+
+    public function community() {
+        return $this->belongsTo(Community::class);
+    }
 
     public function owner() {
         return $this->belongsTo(Owner::class);
+    }
+
+    public $collections = ['loans'];
+
+    public function loans() {
+        return $this->hasMany(Loan::class);
     }
 }

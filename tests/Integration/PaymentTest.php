@@ -2,73 +2,114 @@
 
 namespace Tests\Integration;
 
+use App\Models\Bill;
+use App\Models\BillableItem;
+use App\Models\Borrower;
+use App\Models\Loan;
 use App\Models\Payment;
+use App\Models\PaymentMethod;
+use Carbon\Carbon;
 use Tests\TestCase;
 
 class PaymentTest extends TestCase
 {
+    private static $getPaymentResponseStructure = [
+        'id',
+        'loan_id',
+        'billable_item_id',
+    ];
+
     public function testCreatePayments() {
-        $this->markTestIncomplete();
+        $borrower = factory(Borrower::class)->create(['user_id' => $this->user->id]);
+        $loan = factory(Loan::class)->create(['borrower_id' => $borrower->id]);
+        $bill = factory(Bill::class)->create(['user_id' => $this->user->id]);
+        $billableItem = factory(BillableItem::class)->create(['bill_id' => $bill->id]);
+
         $data = [
-            'executed_at' => $this->faker->dateTime($format = 'Y-m-d H:i:sO', $max = 'now'),
-            'status' => $this->faker->randomElement(['in_process', 'canceled', 'completed']),
+            'loan_id' => $loan->id,
+            'billable_item_id' => $billableItem->id,
         ];
 
-        $response = $this->json('POST', route('payments.create'), $data);
+        $response = $this->json('POST', "/api/v1/payments", $data);
 
-        $response->assertStatus(201)->assertJson($data);
+        $response->assertStatus(201)
+            ->assertJson(['loan_id' => $loan->id])
+            ->assertJson(['billable_item_id' => $billableItem->id])
+            ->assertJsonStructure(static::$getPaymentResponseStructure);
     }
 
     public function testShowPayments() {
-        $this->markTestIncomplete();
-        $post = factory(Payment::class)->create();
+        $borrower = factory(Borrower::class)->create(['user_id' => $this->user->id]);
+        $loan = factory(Loan::class)->create(['borrower_id' => $borrower->id]);
+        $paymentMethod = factory(PaymentMethod::class)->create(['user_id' => $this->user->id]);
+        $bill = factory(Bill::class)->create(['user_id' => $this->user->id, 'payment_method_id' => $paymentMethod->id]);
+        $billableItem = factory(BillableItem::class)->create(['bill_id' => $bill->id]);
+        $payment = factory(Payment::class)->create(['loan_id' => $loan->id, 'billable_item_id' => $billableItem->id]);
 
-        $response = $this->json('GET', route('payments.retrieve', $post->id), $data);
-
-        $response->assertStatus(200)->assertJson($data);
-    }
-
-    public function testUpdatePayments() {
-        $this->markTestIncomplete();
-        $post = factory(Payment::class)->create();
-        $data = [
-            'status' => $this->faker->randomElement(['in_process', 'canceled', 'completed']),
-        ];
-
-        $response = $this->json('PUT', route('payments.update', $post->id), $data);
-
-        $response->assertStatus(200)->assertJson($data);
-    }
-
-    public function testDeletePayments() {
-        $this->markTestIncomplete();
-        $post = factory(Payment::class)->create();
-
-        $response = $this->json('DELETE', route('payments.delete', $post->id), $data);
-
-        $response->assertStatus(204)->assertJson($data);
-    }
-
-    public function testListPayments() {
-        $this->markTestIncomplete();
-        $payments = factory(Payment::class, 2)->create()->map(function ($post) {
-            return $post->only([
-                'id',
-                'executed_at',
-                'status',
-            ]);
-        });
-
-        $response = $this->json('GET', route('payments.index'));
+        $response = $this->json('GET', "/api/v1/payments/$payment->id?loan.id=$loan->id");
 
         $response->assertStatus(200)
-                ->assertJson($payments->toArray())
-                ->assertJsonStructure([
-                    '*' => [
-                        'id',
-                        'executed_at',
-                        'status',
-                    ],
-                ]);
+            ->assertJson(['id' => $payment->id])
+            ->assertJsonStructure(static::$getPaymentResponseStructure);
+    }
+
+    public function testCreatePaymentsWithActionsFlow() {
+        $borrower = factory(Borrower::class)->create(['user_id' => $this->user->id]);
+        $loan = factory(Loan::class)->create(['borrower_id' => $borrower->id]);
+        $intention = $loan->intentions()->first();
+        dd($intention->id);
+        $response = $this->json('PUT', "/api/v1/loans/$loan->id/actions/$intention->id/complete");
+        dd($response);
+        $response = $this->json('GET', "/api/v1/payments?loan.id=$loan->id");
+        dd($response);
+        $response->assertStatus(200)
+            ->assertJson(['id' => $payment->id])
+            ->assertJsonStructure(static::$getPaymentResponseStructure);
+    }
+
+    public function testCompletePayments() {
+        $borrower = factory(Borrower::class)->create(['user_id' => $this->user->id]);
+        $loan = factory(Loan::class)->create(['borrower_id' => $borrower->id]);
+        $intention = $loan->intentions()->first();
+        if ($loan->intentions()->count() > 0) {
+            $executedAtDate = substr(Carbon::now('-5')->format("Y-m-d h:m:sO"), 0, -2);
+            Carbon::setTestNow($executedAtDate);
+
+            $response = $this->json('PUT', "/api/v1/loans/$loan->id/actions/$intention->id/complete");
+            $response->dump();
+            $response->assertStatus(200);
+
+            $response = $this->json('GET', "/api/v1/intentions/$intention->id?loan.id=$loan->id");
+            $response->assertStatus(200)
+                ->assertJson(['status' => 'completed'])
+                ->assertJson(['executed_at' => $executedAtDate]);
+
+            Carbon::setTestNow();
+        } else {
+            $response = 'intention error';
+        }
+    }
+
+    public function testCancelPayments() {
+        $borrower = factory(Borrower::class)->create(['user_id' => $this->user->id]);
+        $loan = factory(Loan::class)->create(['borrower_id' => $borrower->id]);
+        $intention = $loan->intentions()->first();
+        if ($loan->intentions()->count() > 0) {
+            $executedAtDate = substr(Carbon::now('-5')->format("Y-m-d h:m:sO"), 0, -2);
+            Carbon::setTestNow($executedAtDate);
+
+            $response = $this->json('PUT', "/api/v1/loans/$loan->id/actions/$intention->id/cancel");
+            $response->dump();
+            $response->assertStatus(200);
+
+            $response = $this->json('GET', "/api/v1/intentions/$intention->id?loan.id=$loan->id");
+            $response->assertStatus(200)
+                ->assertJson(['status' => 'canceled'])
+                ->assertJson(['executed_at' => $executedAtDate]);
+
+            Carbon::setTestNow();
+        } else {
+            $response = 'intention error';
+        }
     }
 }

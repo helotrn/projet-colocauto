@@ -1,12 +1,13 @@
 <?php
 
 use App\Models\Owner;
-use Illuminate\Support\Str;
+use Carbon\Carbon;
 use Faker\Generator as Faker;
+use Illuminate\Support\Str;
 
 $factory->define(Owner::class, function (Faker $faker) {
     return [
-        'submitted_at' => $faker->date($format = 'Y-m-d', $max = 'now'),
-        'approved_at' => $faker->date($format = 'Y-m-d', $max = 'now'),
+        'submitted_at' => Carbon::now(),
+        'approved_at' => Carbon::now(),
     ];
 });

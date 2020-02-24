@@ -183,7 +183,7 @@ class UserTest extends TestCase
         $otherCommunity = factory(Community::class)->create();
 
         $data = [
-            'communities' => [['id' => $community['id']]]
+            'communities' => [['id' => $community->id]]
         ];
         $response = $this->json('PUT', "/api/v1/users/$user->id", $data);
 
@@ -204,7 +204,7 @@ class UserTest extends TestCase
 
         foreach ($communities as $community) {
             $data = [
-                'communities' => [['id' => $community['id']]]
+                'communities' => [['id' => $community->id]]
             ];
             $response = $this->json('PUT', "/api/v1/users/$user->id", $data);
         }

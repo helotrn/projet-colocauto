@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Models\Loan;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use App\Transformers\BorrowerTransformer;
 
@@ -11,15 +13,22 @@ class Borrower extends BaseModel
         'drivers_license_number' => 'nullable',
         'has_been_sued_last_ten_years' => 'boolean',
         'noke_id' => 'nullable',
+        'approved_at' => 'nullable|date',
+        'submitted_at' => 'nullable|date',
     ];
 
     protected $fillable = [
         'drivers_license_number',
         'has_been_sued_last_ten_years',
         'noke_id',
+        'approved_at',
+        'submitted_at',
+        'user_id',
     ];
 
     public static $transformer = BorrowerTransformer::class;
+
+    public $items = ['user'];
 
     public $morphOnes = [
       'insurance' => 'fileable',
@@ -29,6 +38,16 @@ class Borrower extends BaseModel
 
     public function user() {
         return $this->belongsTo(User::class);
+    }
+
+    public $collections = ['loans'];
+
+    public function loans() {
+        return $this->hasMany(Loan::class);
+    }
+
+    public function getApprovedAttribute() {
+        return !!$this->approved_at;
     }
 
     public function gaa() {

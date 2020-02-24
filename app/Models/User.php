@@ -2,10 +2,12 @@
 
 namespace App\Models;
 
+use App\Models\Action;
 use App\Models\Bill;
 use App\Models\Borrower;
 use App\Models\File;
 use App\Models\Loan;
+use App\Models\Owner;
 use App\Models\PaymentMethod;
 use App\Transformers\UserTransformer;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -90,6 +92,7 @@ class User extends AuthenticatableBaseModel
     protected $with = [];
 
     public $collections = [
+      'actions',
       'bills',
       'communities',
       'files',
@@ -114,20 +117,16 @@ class User extends AuthenticatableBaseModel
         return $this->morphOne(Image::class, 'imageable')->where('field', 'avatar');
     }
 
-    public function borrower() {
-        return $this->hasOne(Borrower::class);
-    }
-
-    public function owner() {
-        return $this->hasOne(Owner::class);
-    }
-
-    public function loans() {
-        return $this->hasManyThrough(Loan::class, Borrower::class);
+    public function actions() {
+        return $this->hasMany(Action::class);
     }
 
     public function bills() {
         return $this->hasMany(Bill::class);
+    }
+
+    public function borrower() {
+        return $this->hasOne(Borrower::class);
     }
 
     public function communities() {
@@ -141,8 +140,12 @@ class User extends AuthenticatableBaseModel
         return $this->hasMany(File::class);
     }
 
-    public function tags() {
-        return $this->morphMany(Tag::class, 'taggable');
+    public function loans() {
+        return $this->hasManyThrough(Loan::class, Borrower::class);
+    }
+
+    public function owner() {
+        return $this->hasOne(Owner::class);
     }
 
     public function paymentMethods() {
@@ -152,6 +155,10 @@ class User extends AuthenticatableBaseModel
     public function submit() {
         $this->submitted_at = new \DateTime;
         $this->save();
+    }
+
+    public function tags() {
+        return $this->morphMany(Tag::class, 'taggable');
     }
 
     public function isAdmin() {

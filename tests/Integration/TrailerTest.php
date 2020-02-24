@@ -2,14 +2,27 @@
 
 namespace Tests\Integration;
 
+use App\Models\Community;
+use App\Models\Owner;
 use App\Models\Trailer;
-use Tests\TestCase;
 use Phaza\LaravelPostgis\Geometries\Point;
+use Tests\TestCase;
 
 class TrailerTest extends TestCase
 {
+    private static $getTrailerResponseStructure = [
+        'id',
+        'name',
+        'comments',
+        'availability_ics',
+        'instructions',
+        'location_description',
+        'maximum_charge',
+        'position',
+        'type',
+    ];
+
     public function testCreateTrailers() {
-        $this->markTestIncomplete();
         $data = [
             'name' => $this->faker->name,
             'position' => new Point($this->faker->latitude, $this->faker->longitude),
@@ -18,73 +31,59 @@ class TrailerTest extends TestCase
             'instructions' => $this->faker->paragraph,
             'type' => $this->faker->randomElement(['regular' ,'electric', 'fixed_wheel']),
             'maximum_charge' => $this->faker->numberBetween($min = 1000, $max = 9000),
+            'availability_ics' => $this->faker->sentence,
         ];
 
-        $response = $this->json('POST', route('trailers.create'), $data);
-
-        $response->assertStatus(201)->assertJson($data);
+        $response = $this->json('POST', "/api/v1/trailers", $data);
+        //TODO fix Pointcast bug
+        $response->assertStatus(201)
+            ->assertJsonStructure(static::$getTrailerResponseStructure);
     }
 
     public function testShowTrailers() {
-        $this->markTestIncomplete();
-        $post = factory(Trailer::class)->create();
+        $owner = factory(Owner::class)->create(['user_id' => $this->user->id]);
+        $trailer = factory(Trailer::class)->create(['owner_id' => $owner->id]);
 
-        $response = $this->json('GET', route('trailers.retrieve', $post->id), $data);
+        $response = $this->json('GET', "/api/v1/trailers/$trailer->id");
 
-        $response->assertStatus(200)->assertJson($data);
+        $response->assertStatus(200)
+            ->assertJsonStructure(static::$getTrailerResponseStructure);
     }
 
     public function testUpdateTrailers() {
-        $this->markTestIncomplete();
-        $post = factory(Trailer::class)->create();
+        $owner = factory(Owner::class)->create(['user_id' => $this->user->id]);
+        $trailer = factory(Trailer::class)->create(['owner_id' => $owner->id]);
         $data = [
             'name' => $this->faker->name,
         ];
 
-        $response = $this->json('PUT', route('trailers.update', $post->id), $data);
+        $response = $this->json('PUT', "/api/v1/trailers/$trailer->id", $data);
 
         $response->assertStatus(200)->assertJson($data);
     }
 
     public function testDeleteTrailers() {
-        $this->markTestIncomplete();
-        $post = factory(Trailer::class)->create();
+        $owner = factory(Owner::class)->create(['user_id' => $this->user->id]);
+        $trailer = factory(Trailer::class)->create(['owner_id' => $owner->id]);
 
-        $response = $this->json('DELETE', route('trailers.delete', $post->id), $data);
+        $response = $this->json('DELETE', "/api/v1/trailers/$trailer->id");
+        $response->assertStatus(200);
 
-        $response->assertStatus(204)->assertJson($data);
+        $response = $this->json('GET', "/api/v1/trailers/$trailer->id");
+        $response->assertStatus(404);
     }
 
     public function testListTrailers() {
-        $this->markTestIncomplete();
-        $trailers = factory(Trailer::class, 2)->create()->map(function ($post) {
-            return $post->only([
-                'id',
-                'name',
-                'position',
-                'location_description',
-                'comments',
-                'instructions',
-                'type',
-                'maximum_charge',
-            ]);
-        });
+        $owner = factory(Owner::class)->create(['user_id' => $this->user->id]);
+        $trailers = factory(Trailer::class, 2)->create(['owner_id' => $owner->id])
+            ->map(function ($trailer) {
+                return $trailer->only(static::$getTrailerResponseStructure);
+            });
 
-        $response = $this->json('GET', route('trailers.index'));
+        $response = $this->json('GET', "/api/v1/trailers");
 
         $response->assertStatus(200)
-                ->assertJson($trailers->toArray())
-                ->assertJsonStructure([
-                    '*' => [
-                        'id',
-                        'name',
-                        'position',
-                        'location_description',
-                        'comments',
-                        'instructions',
-                        'type',
-                        'maximum_charge',
-                    ],
-                ]);
+            ->assertJson([ 'total' => 2 ])
+            ->assertJsonStructure($this->buildCollectionStructure(static::$getTrailerResponseStructure));
     }
 }

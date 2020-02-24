@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\BaseRequest as Request;
+use App\Http\Requests\Bike\CreateRequest;
+use App\Http\Requests\Bike\UpdateRequest;
 use App\Models\Bike;
 use App\Repositories\BikeRepository;
 use Illuminate\Validation\ValidationException;
@@ -12,6 +14,36 @@ class BikeController extends RestController
     public function __construct(BikeRepository $repository, Bike $model) {
         $this->repo = $repository;
         $this->model = $model;
+    }
+
+    public function index(Request $request) {
+        try {
+            [$items, $total] = $this->repo->get($request);
+        } catch (ValidationException $e) {
+            return $this->respondWithErrors($e->errors(), $e->getMessage());
+        }
+
+        return $this->respondWithCollection($request, $items, $total);
+    }
+
+    public function create(CreateRequest $request) {
+        try {
+            $item = parent::validateAndCreate($request);
+        } catch (ValidationException $e) {
+            return $this->respondWithErrors($e->errors(), $e->getMessage());
+        }
+
+        return $this->respondWithItem($request, $item, 201);
+    }
+
+    public function update(UpdateRequest $request, $id) {
+        try {
+            $item = parent::validateAndUpdate($request, $id);
+        } catch (ValidationException $e) {
+            return $this->respondWithErrors($e->errors(), $e->getMessage());
+        }
+
+        return $this->respondWithItem($request, $item);
     }
 
     public function retrieve(Request $request, $id) {
@@ -26,14 +58,13 @@ class BikeController extends RestController
         return $response;
     }
 
-
-    public function update(Request $request, $id) {
+    public function destroy(Request $request, $id) {
         try {
-            $item = parent::validateAndUpdate($request, $id);
+            $response = parent::validateAndDestroy($request, $id);
         } catch (ValidationException $e) {
             return $this->respondWithErrors($e->errors(), $e->getMessage());
         }
 
-        return $this->respondWithItem($request, $item);
+        return $response;
     }
 }
