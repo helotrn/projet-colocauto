@@ -16,8 +16,6 @@ class CreateRequest extends BaseRequest
             'brand' => 'required',
             'comments' => 'required',
             'engine' => 'required',
-            'has_accident_report' => 'accepted',
-            'has_informed_insurer' => 'accepted',
             'instructions' => 'required',
             'insurer' => 'required',
             'is_value_over_fifty_thousand' => 'boolean',

@@ -57,11 +57,13 @@ class PaymentTest extends TestCase
         $borrower = factory(Borrower::class)->create(['user_id' => $this->user->id]);
         $loan = factory(Loan::class)->create(['borrower_id' => $borrower->id]);
         $intention = $loan->intentions()->first();
-        dd($intention->id);
+
         $response = $this->json('PUT', "/api/v1/loans/$loan->id/actions/$intention->id/complete");
-        dd($response);
+
+        $response->assertStatus(200);
+
         $response = $this->json('GET', "/api/v1/payments?loan.id=$loan->id");
-        dd($response);
+
         $response->assertStatus(200)
             ->assertJson(['id' => $payment->id])
             ->assertJsonStructure(static::$getPaymentResponseStructure);
@@ -71,45 +73,37 @@ class PaymentTest extends TestCase
         $borrower = factory(Borrower::class)->create(['user_id' => $this->user->id]);
         $loan = factory(Loan::class)->create(['borrower_id' => $borrower->id]);
         $intention = $loan->intentions()->first();
-        if ($loan->intentions()->count() > 0) {
-            $executedAtDate = substr(Carbon::now('-5')->format("Y-m-d h:m:sO"), 0, -2);
-            Carbon::setTestNow($executedAtDate);
 
-            $response = $this->json('PUT', "/api/v1/loans/$loan->id/actions/$intention->id/complete");
-            $response->dump();
-            $response->assertStatus(200);
+        $this->assertTrue($loan->intentions()->count() > 0);
 
-            $response = $this->json('GET', "/api/v1/intentions/$intention->id?loan.id=$loan->id");
-            $response->assertStatus(200)
-                ->assertJson(['status' => 'completed'])
-                ->assertJson(['executed_at' => $executedAtDate]);
+        $executedAtDate = substr(Carbon::now('-5')->format("Y-m-d h:m:sO"), 0, -2);
+        Carbon::setTestNow($executedAtDate);
 
-            Carbon::setTestNow();
-        } else {
-            $response = 'intention error';
-        }
+        $response = $this->json('PUT', "/api/v1/loans/$loan->id/actions/$intention->id/complete");
+        $response->assertStatus(200);
+
+        $response = $this->json('GET', "/api/v1/intentions/$intention->id?loan.id=$loan->id");
+        $response->assertStatus(200)
+            ->assertJson(['status' => 'completed'])
+            ->assertJson(['executed_at' => $executedAtDate]);
     }
 
     public function testCancelPayments() {
         $borrower = factory(Borrower::class)->create(['user_id' => $this->user->id]);
         $loan = factory(Loan::class)->create(['borrower_id' => $borrower->id]);
         $intention = $loan->intentions()->first();
-        if ($loan->intentions()->count() > 0) {
-            $executedAtDate = substr(Carbon::now('-5')->format("Y-m-d h:m:sO"), 0, -2);
-            Carbon::setTestNow($executedAtDate);
 
-            $response = $this->json('PUT', "/api/v1/loans/$loan->id/actions/$intention->id/cancel");
-            $response->dump();
-            $response->assertStatus(200);
+        $this->assertTrue($loan->intentions()->count() > 0);
 
-            $response = $this->json('GET', "/api/v1/intentions/$intention->id?loan.id=$loan->id");
-            $response->assertStatus(200)
-                ->assertJson(['status' => 'canceled'])
-                ->assertJson(['executed_at' => $executedAtDate]);
+        $executedAtDate = substr(Carbon::now('-5')->format("Y-m-d h:m:sO"), 0, -2);
+        Carbon::setTestNow($executedAtDate);
 
-            Carbon::setTestNow();
-        } else {
-            $response = 'intention error';
-        }
+        $response = $this->json('PUT', "/api/v1/loans/$loan->id/actions/$intention->id/cancel");
+        $response->assertStatus(200);
+
+        $response = $this->json('GET', "/api/v1/intentions/$intention->id?loan.id=$loan->id");
+        $response->assertStatus(200)
+            ->assertJson(['status' => 'canceled'])
+            ->assertJson(['executed_at' => $executedAtDate]);
     }
 }

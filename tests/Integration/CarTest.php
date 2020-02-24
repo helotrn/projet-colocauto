@@ -34,7 +34,7 @@ class CarTest extends TestCase
         $owner = factory(Owner::class)->create(['user_id' => $this->user->id]);
         $data = [
             'name' => $this->faker->name,
-            'position' => new Point($this->faker->latitude, $this->faker->longitude),
+            'position' => [$this->faker->latitude, $this->faker->longitude],
             'location_description' => $this->faker->sentence,
             'comments' => $this->faker->paragraph,
             'instructions' => $this->faker->paragraph,
@@ -47,15 +47,14 @@ class CarTest extends TestCase
             'is_value_over_fifty_thousand' => $this->faker->boolean,
             'ownership' => $this->faker->randomElement(['self', 'rental']),
             'papers_location' => $this->faker->randomElement(['in_the_car', 'to_request_with_car']),
-            'has_accident_report' => $this->faker->boolean,
+            'has_accident_report' => false,
             'insurer' => $this->faker->word,
             'has_informed_insurer' => true,
             'availability_ics' => $this->faker->sentence,
             'owner_id' => $owner->id,
         ];
 
-        $response = $this->json('POST', "/api/v1/cars", $data);
-        //TODO fix Pointcast bug
+        $response = $this->json('POST', '/api/v1/cars', $data);
         $response->assertStatus(201)
             ->assertJsonStructure(static::$getCarResponseStructure);
     }

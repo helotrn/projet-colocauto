@@ -26,7 +26,7 @@ class BikeTest extends TestCase
     public function testCreateBikes() {
         $data = [
             'name' => $this->faker->name,
-            'position' => new Point($this->faker->latitude, $this->faker->longitude),
+            'position' => [$this->faker->latitude, $this->faker->longitude],
             'location_description' => $this->faker->sentence,
             'comments' => $this->faker->paragraph,
             'instructions' => $this->faker->paragraph,
@@ -36,8 +36,7 @@ class BikeTest extends TestCase
             'availability_ics' => $this->faker->sentence,
         ];
 
-        $response = $this->json('POST', "/api/v1/bikes", $data);
-        //TODO fix Pointcast bug
+        $response = $this->json('POST', '/api/v1/bikes', $data);
         $response->assertStatus(201)
             ->assertJsonStructure(static::$getBikeResponseStructure);
     }

@@ -9,8 +9,7 @@ class Car extends Loanable
 {
     protected $table = 'cars';
 
-    public static $rules = [
-    ];
+    public static $rules = [];
 
     protected $fillable = [
         'availability_ics',
