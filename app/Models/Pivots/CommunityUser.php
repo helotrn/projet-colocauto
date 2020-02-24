@@ -2,7 +2,7 @@
 
 namespace App\Models\Pivots;
 
-use App\Models\File;
+use App\Models\Image;
 
 class CommunityUser extends BasePivot
 {
@@ -21,7 +21,7 @@ class CommunityUser extends BasePivot
     protected $with = ['proof'];
 
     public $morphOnes = [
-        'proof' => 'fileable',
+        'proof' => 'imageable',
     ];
 
     public function user() {
@@ -33,6 +33,6 @@ class CommunityUser extends BasePivot
     }
 
     public function proof() {
-        return $this->morphOne(File::class, 'fileable')->where('field', 'proof');
+        return $this->morphOne(Image::class, 'imageable')->where('field', 'proof');
     }
 }

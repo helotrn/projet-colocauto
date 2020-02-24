@@ -8,7 +8,7 @@ class BaseTransformer
 
     public function transform($item, $options = []) {
         $fields = array_get($options, 'fields', []);
-        if (is_string($fields)) {
+        if (!$fields || is_string($fields)) {
             $fields = ['*' => '*'];
         }
 
