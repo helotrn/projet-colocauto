@@ -12,12 +12,8 @@ import ProfileAccount from '../views/profile/Account.vue';
 import Community from '../views/Community.vue';
 import CommunityMap from '../views/community/Map.vue';
 
-import Register from '../views/Register.vue';
-import RegisterIntro from '../views/register/Intro.vue';
-import RegisterStep from '../views/register/Step.vue';
-import RegisterMap from '../views/register/Map.vue';
-
 import adminRoutes from './admin';
+import registerRoutes from './register';
 
 Vue.use(VueRouter);
 
@@ -76,51 +72,6 @@ const routes = [
     ],
   },
   {
-    path: '/register',
-    name: 'register',
-    component: Register,
-    meta: {
-      title: 'titles.register',
-    },
-    children: [
-      {
-        path: '1',
-        name: 'register-intro',
-        component: RegisterIntro,
-      },
-      {
-        path: 'map',
-        name: 'register-map',
-        component: RegisterMap,
-        meta: {
-          auth: true,
-          slug: 'users',
-          skipCleanup: true,
-          data: {
-            communities: {
-              retrieve: {
-                fields: 'id,name,description,center,area_google,center_google',
-              },
-            },
-          },
-          title: 'Trouver une communauté',
-        },
-      },
-      {
-        path: ':step',
-        name: 'register-step',
-        component: RegisterStep,
-        props: true,
-        meta: {
-          slug: 'users',
-          params: {
-            fields: '*,avatar.*,owner.*,borrower.*.*,communities.id,communities.name,communities.role,communities.proof',
-          },
-        },
-      },
-    ],
-  },
-  {
     path: '/community',
     name: 'community',
     component: Community,
@@ -157,6 +108,7 @@ const routes = [
     },
   },
   adminRoutes,
+  registerRoutes,
 ];
 
 const router = new VueRouter({
