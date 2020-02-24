@@ -19,7 +19,6 @@ class TrailerTest extends TestCase
         'location_description',
         'maximum_charge',
         'position',
-        'type',
     ];
 
     public function testCreateTrailers() {
