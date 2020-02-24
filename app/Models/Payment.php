@@ -40,9 +40,6 @@ class Payment extends Action
             if (!$model->executed_at) {
                 switch ($model->status) {
                     case 'completed':
-                        //$model->loan->actions->create(new Takeover);
-                        //TODO Takeover creation
-
                         $model->executed_at = Carbon::now();
 
                         $model->save();
