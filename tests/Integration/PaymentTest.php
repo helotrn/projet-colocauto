@@ -62,11 +62,13 @@ class PaymentTest extends TestCase
 
         $response->assertStatus(200);
 
+        $payment = $loan->payments->first();
         $response = $this->json('GET', "/api/v1/payments?loan.id=$loan->id");
 
-        $response->assertStatus(200)
-            ->assertJson(['id' => $payment->id])
-            ->assertJsonStructure(static::$getPaymentResponseStructure);
+        $response->assertStatus(200);
+
+        $json = $response->json();
+        $this->assertEquals($payment->id, array_get($json, 'data.0.id'));
     }
 
     public function testCompletePayments() {

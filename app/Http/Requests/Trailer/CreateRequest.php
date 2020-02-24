@@ -18,7 +18,6 @@ class CreateRequest extends BaseRequest
             'comments' => 'required|string',
             'instructions' => 'required|string',
             'maximum_charge' => 'required',
-            'type' => 'required',
         ];
 
         return $rules;

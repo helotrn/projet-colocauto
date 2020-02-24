@@ -14,7 +14,9 @@ class PointCast extends CustomCastBase
             $longitude = $point['longitude'];
         } elseif (is_array($point) && count(array_filter($point, 'is_numeric')) === 2) {
             [$latitude, $longitude] = $point;
-        } elseif (preg_match('/-?\d+\.\d+[, ]-?\d+.\d+/', $point)) {
+        } elseif ($point instanceof Point) {
+            return $point;
+        } elseif (is_string($point) && preg_match('/-?\d+\.\d+[, ]-?\d+.\d+/', $point)) {
             [$latitude, $longitude] = preg_split('/[, ]/', $point);
         } else {
             throw new \Exception('invalid');

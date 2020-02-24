@@ -85,7 +85,6 @@ class IntentionTest extends TestCase
             'PUT',
             "/api/v1/loans/$loan->id/actions/$intention->id/complete"
         );
-        $response->dump();
         $response->assertStatus(200);
 
         $response = $this->json('GET', "/api/v1/intentions/$intention->id?loan.id=$loan->id");
@@ -103,7 +102,6 @@ class IntentionTest extends TestCase
             Carbon::setTestNow($executedAtDate);
 
             $response = $this->json('PUT', "/api/v1/loans/$loan->id/actions/$intention->id/cancel");
-            $response->dump();
             $response->assertStatus(200);
 
             $response = $this->json('GET', "/api/v1/intentions/$intention->id?loan.id=$loan->id");

@@ -25,17 +25,15 @@ class TrailerTest extends TestCase
     public function testCreateTrailers() {
         $data = [
             'name' => $this->faker->name,
-            'position' => new Point($this->faker->latitude, $this->faker->longitude),
+            'position' => [$this->faker->latitude, $this->faker->longitude],
             'location_description' => $this->faker->sentence,
             'comments' => $this->faker->paragraph,
             'instructions' => $this->faker->paragraph,
-            'type' => $this->faker->randomElement(['regular' ,'electric', 'fixed_wheel']),
             'maximum_charge' => $this->faker->numberBetween($min = 1000, $max = 9000),
             'availability_ics' => $this->faker->sentence,
         ];
 
-        $response = $this->json('POST', "/api/v1/trailers", $data);
-        //TODO fix Pointcast bug
+        $response = $this->json('POST', '/api/v1/trailers', $data);
         $response->assertStatus(201)
             ->assertJsonStructure(static::$getTrailerResponseStructure);
     }
