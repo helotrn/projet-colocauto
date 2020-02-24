@@ -22,7 +22,6 @@ class UserTest extends TestCase
         'phone',
         'is_smart_phone',
         'other_phone',
-        'approved_at',
     ];
 
     private static $getCommunityResponseStructure = [
@@ -93,7 +92,6 @@ class UserTest extends TestCase
                 'phone',
                 'is_smart_phone',
                 'other_phone',
-                'approved_at',
                 'remember_token',
                 'created_at',
                 'updated_at',

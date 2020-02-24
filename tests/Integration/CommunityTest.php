@@ -21,8 +21,8 @@ class CommunityTest extends TestCase
         'phone',
         'is_smart_phone',
         'other_phone',
-        'approved_at',
     ];
+
     private static $getCommunityResponseStructure = [
         'id',
         'name',

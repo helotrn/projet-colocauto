@@ -81,7 +81,7 @@ class UserController extends RestController
     public function submit(Request $request, $id) {
         $user = $this->repo->find($request, $id);
 
-        if (!!$user->approved_at) {
+        if (!!$user->submitted_at) {
             return $this->respondWithMessage('Already submitted.', 400);
         }
 

@@ -19,7 +19,6 @@ class User extends AuthenticatableBaseModel
 
     public static $rules = [
         'address' => 'nullable',
-        'approved_at' => 'nullable|date',
         'date_of_birth' => 'nullable|date',
         'description' => 'nullable',
         'email' => 'email',
@@ -80,7 +79,6 @@ class User extends AuthenticatableBaseModel
         'phone',
         'is_smart_phone',
         'other_phone',
-        'approved_at',
     ];
 
     protected $hidden = ['password'];

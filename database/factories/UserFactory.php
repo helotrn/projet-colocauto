@@ -19,7 +19,6 @@ $factory->define(User::class, function (Faker $faker) {
         'phone' => '',
         'is_smart_phone' => false,
         'other_phone' => '',
-        'approved_at' => null,
         'remember_token' => Str::random(10),
     ];
 });
