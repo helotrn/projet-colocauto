@@ -48,7 +48,7 @@ VALUES (
 SQL
         );
 
-        ini_set('date.timezone', 'America/Toronto');
+        date_default_timezone_set('America/Toronto');
         Carbon::setTestNow();
     }
 
