@@ -9,7 +9,9 @@ use Doctrine\DBAL\Types\Type;
 class AddDefaultToTagType extends Migration
 {
     public function __construct() {
-        Type::addType('enum', StringType::class);
+        if (!Type::hasType('enum')) {
+            Type::addType('enum', StringType::class);
+        }
     }
 
     public function up() {
