@@ -35,11 +35,12 @@ class Intention extends Action
             if (!$model->executed_at) {
                 switch ($model->status) {
                     case 'completed':
-                        $loanId = $model->loan->id;
+                        $user = $model->loan()->borrower()->user();
+                        $bill = Bill::create(['user_id' => $this->$user->id]);
+                        $billableItem = BillableItem::create(['bill_id' => $bill->id]);
 
-                        //TODO payment creation
-                        //$payment = Payment::create(['loan_id' => $loanId]);
-                        //$model->loan->payments()->save($payment);
+                        $payment = Payment::create(['loan_id' => $loanId, 'billable_item_id' => $billableItem->id]);
+                        $model->loan->payments()->save($payment);
 
                         $model->executed_at = Carbon::now();
                         $model->save();
