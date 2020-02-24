@@ -1,8 +1,8 @@
 import buildComputed from './buildComputed';
 import extractErrors from './extractErrors';
-import filters from './filters';
+import * as filters from './filters';
 
-export default {
+export {
   buildComputed,
   extractErrors,
   filters,

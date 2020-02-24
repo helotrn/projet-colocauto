@@ -53,9 +53,7 @@ fr:
 <script>
 import BorrowerForm from '@/components/Borrower/Form.vue';
 
-import helpers from '@/helpers';
-
-const { buildComputed } = helpers;
+import { buildComputed } from '@/helpers';
 
 export default {
   name: 'RegisterIntentForm',

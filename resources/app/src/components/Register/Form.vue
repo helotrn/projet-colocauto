@@ -63,10 +63,8 @@ en:
 <script>
 import FormsValidatedInput from '@/components/Forms/ValidatedInput.vue';
 
-import helpers from '@/helpers';
+import { extractErrors } from '@/helpers';
 import Google from '@/assets/svg/google.svg';
-
-const { extractErrors } = helpers;
 
 export default {
   name: 'registerBox',

@@ -57,9 +57,7 @@ import FormMixin from '@/mixins/FormMixin';
 
 import locales from '@/locales';
 
-import filters from '@/helpers/filters';
-
-const { capitalize } = filters;
+import { capitalize } from '@/helpers/filters';
 
 export default {
   name: 'AdminLoanable',

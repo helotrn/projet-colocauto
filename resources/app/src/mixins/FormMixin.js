@@ -1,6 +1,4 @@
-import helpers from '@/helpers';
-
-const { extractErrors } = helpers;
+import { extractErrors } from '@/helpers';
 
 export default {
   beforeRouteLeave(to, from, next) {

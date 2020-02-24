@@ -24,7 +24,7 @@ import LayoutHeader from './components/Layout/Header.vue';
 import LayoutFooter from './components/Layout/Footer.vue';
 import LayoutPage from './components/Layout/Page.vue';
 
-import filters from './helpers/filters';
+import { filters } from './helpers';
 
 import '@/assets/scss/main.scss';
 

@@ -85,9 +85,7 @@ import RegisterIntentForm from '@/components/Register/IntentForm.vue';
 
 import FormMixin from '@/mixins/FormMixin';
 
-import helpers from '@/helpers';
-
-const { extractErrors } = helpers;
+import { extractErrors } from '@/helpers';
 
 export default {
   name: 'RegisterStep',

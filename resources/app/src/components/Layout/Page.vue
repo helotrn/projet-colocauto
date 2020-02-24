@@ -16,9 +16,7 @@
 </template>
 
 <script>
-import filters from '@/helpers/filters';
-
-const { capitalize } = filters;
+import { capitalize } from '@/helpers/filters';
 
 export default {
   name: 'LayoutPage',
