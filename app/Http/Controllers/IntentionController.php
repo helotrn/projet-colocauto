@@ -71,10 +71,11 @@ class IntentionController extends RestController
     public function complete(Request $request, $actionId, $loanId) {
         $item = $this->repo->find($request, $actionId);
         $loan = $this->loanRepo->find($request, $loanId);
-        if ($item->id && $loan->id) {
-            $item->status = 'completed';
-            $item->save();
-        }
+
+        $item->status = 'completed';
+        $item->save();
+
+        return $item;
     }
 
     public function cancel(Request $request, $actionId, $loanId) {

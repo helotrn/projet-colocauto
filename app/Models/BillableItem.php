@@ -19,6 +19,7 @@ class BillableItem extends BaseModel
         'amount',
         'bill_id',
         'payment_id',
+        'item_date',
     ];
 
     public static $transformer = BillableItemTransformer::class;

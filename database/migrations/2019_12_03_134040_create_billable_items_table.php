@@ -10,7 +10,7 @@ class CreateBillableItemsTable extends Migration
         Schema::create('billable_items', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('label');
-            $table->double('amount', 8, 2);
+            $table->decimal('amount', 8, 2);
             $table->unsignedBigInteger('bill_id');
             $table->date('item_date');
 

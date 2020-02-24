@@ -17,7 +17,7 @@ class PointCast extends CustomCastBase
         } elseif (preg_match('/-?\d+\.\d+[, ]-?\d+.\d+/', $point)) {
             [$latitude, $longitude] = preg_split('/[, ]/', $point);
         } else {
-            throw new \Exception('invalid'); // TODO
+            throw new \Exception('invalid');
         }
 
         return new Point($latitude, $longitude);

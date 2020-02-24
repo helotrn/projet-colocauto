@@ -83,4 +83,8 @@ class Loan extends BaseModel
     public function setCanceled() {
         //TODO
     }
+
+    public function getPrice() {
+        return 12.22; // FIXME
+    }
 }

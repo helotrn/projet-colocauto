@@ -83,7 +83,7 @@ class User extends AuthenticatableBaseModel
         'other_phone',
     ];
 
-    protected $hidden = ['password'];
+    protected $hidden = ['password', 'current_bill'];
 
     protected $casts = [
         'email_verified_at' => 'datetime',
@@ -123,6 +123,12 @@ class User extends AuthenticatableBaseModel
 
     public function bills() {
         return $this->hasMany(Bill::class);
+    }
+
+    public function currentBill() {
+        return $this->hasOne(Bill::class)
+            ->orderBy('created_at', 'desc')
+            ->whereNull('paid_at');
     }
 
     public function borrower() {
@@ -171,5 +177,17 @@ class User extends AuthenticatableBaseModel
                 return $q->where('community_user.role', 'admin');
             })
             ->exists();
+    }
+
+    public function getLastBillOrCreate() {
+        if ($this->currentBill) {
+            return $this->currenBill;
+        }
+
+        $bill = new Bill;
+        $bill->user_id = $this->id;
+        $bill->save();
+
+        return $bill;
     }
 }

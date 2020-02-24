@@ -11,7 +11,7 @@ class CreateBillsTable extends Migration
             $table->bigIncrements('id');
             $table->string('period');
             $table->string('payment_method');
-            $table->double('total', 8, 2);
+            $table->decimal('total', 8, 2);
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('payment_method_id')->nullable();
 

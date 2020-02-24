@@ -5,22 +5,19 @@ namespace App\Models;
 use App\Models\BillableItem;
 use App\Models\User;
 use App\Transformers\BillTransformer;
+use Carbon\Carbon;
 
 class Bill extends BaseModel
 {
     public static $rules = [
         'period' => 'required',
-        'payment_method' => 'required',
-        'total' => 'required|numeric',
-    ];
-
-    protected $fillable = [
-        'period',
-        'payment_method',
-        'total',
     ];
 
     public static $transformer = BillTransformer::class;
+
+    protected $fillable = [
+        'period',
+    ];
 
     public $items = ['user'];
 
