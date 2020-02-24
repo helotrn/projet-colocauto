@@ -11,7 +11,7 @@ trait ErrorResponseTrait
 
     protected function respondWithMessage($message = null, $status = 400) {
         return response()->json([
-            'message' => $message ?: dig(static::$errorMessages, $status, 'Error'),
+            'message' => $message ?: array_get(static::$errorMessages, $status, 'Error'),
         ], $status);
     }
 

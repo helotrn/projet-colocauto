@@ -317,7 +317,7 @@ class RestRepository
 
         // If a type is defined for this filter, use the query
         // language, otherwise fallback to default Laravel filtering
-        switch (dig($this->model::$filterTypes, $paramName, 'default')) {
+        switch (array_get($this->model::$filterTypes, $paramName, 'default')) {
             case 'boolean':
                 return $query->where(
                     $scopedParam,

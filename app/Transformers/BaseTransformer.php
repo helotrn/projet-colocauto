@@ -7,7 +7,7 @@ class BaseTransformer
     public static $context = [];
 
     public function transform($item, $options = []) {
-        $fields = dig($options, 'fields', []);
+        $fields = array_get($options, 'fields', []);
         if (is_string($fields)) {
             $fields = ['*' => '*'];
         }

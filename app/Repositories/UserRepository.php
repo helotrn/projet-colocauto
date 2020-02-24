@@ -14,10 +14,10 @@ class UserRepository extends RestRepository
 
     public function create($data) {
         $this->model->fill($data);
-        if ($email = dig($data, 'email')) {
+        if ($email = array_get($data, 'email')) {
             $this->model->email = $email;
         }
-        if ($password = dig($data, 'password')) {
+        if ($password = array_get($data, 'password')) {
             $this->model->password = $password;
         }
 

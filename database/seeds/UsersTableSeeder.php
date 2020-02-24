@@ -58,7 +58,7 @@ class UsersTableSeeder extends Seeder
         foreach ($users as $email => $data) {
             $data = array_merge($data, [
                 'email' => $email,
-                'password' => Hash::make(dig($data, 'password', 'password')),
+                'password' => Hash::make(array_get($data, 'password', 'password')),
             ]);
 
             if (!User::where('email', $email)->exists()) {
