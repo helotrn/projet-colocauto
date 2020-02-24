@@ -5,7 +5,8 @@ namespace App\Utils;
 use Phaza\LaravelPostgis\Geometries\Point;
 use Vkovic\LaravelCustomCasts\CustomCastBase;
 
-// Because of https://stackoverflow.com/questions/7309121/preferred-order-of-writing-latitude-longitude-tuples
+// Because of
+// https://stackoverflow.com/questions/7309121/preferred-order-of-writing-latitude-longitude-tuples
 class PointCast extends CustomCastBase
 {
     public function setAttribute($point) {

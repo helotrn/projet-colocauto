@@ -9,7 +9,11 @@ use App\Repositories\PaymentRepository;
 
 class PaymentController extends RestController
 {
-    public function __construct(PaymentRepository $repository, Payment $model, LoanRepository $loanRepository) {
+    public function __construct(
+        PaymentRepository $repository,
+        Payment $model,
+        LoanRepository $loanRepository
+    ) {
         $this->repo = $repository;
         $this->model = $model;
         $this->loanRepo = $loanRepository;

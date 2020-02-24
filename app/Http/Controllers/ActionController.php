@@ -11,7 +11,16 @@ use Validator;
 class ActionController extends RestController
 {
 
-    public function __construct(ActionRepository $repository, Action $model, PaymentController $paymentController, TakeoverController $takeoverController, HandoverController $handoverController, IncidentController $incidentController, IntentionController $intentionController, ExtensionController $extensionController) {
+    public function __construct(
+        ActionRepository $repository,
+        Action $model,
+        PaymentController $paymentController,
+        TakeoverController $takeoverController,
+        HandoverController $handoverController,
+        IncidentController $incidentController,
+        IntentionController $intentionController,
+        ExtensionController $extensionController
+    ) {
         $this->repo = $repository;
         $this->model = $model;
         $this->paymentController = $paymentController;

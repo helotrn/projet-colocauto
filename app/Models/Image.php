@@ -147,8 +147,12 @@ class Image extends BaseModel
                         }
                     }
 
-                    if ($model->imageable && method_exists($model->imageable, 'insertImageWatermark')) {
-                        $canvas = $model->imageable->insertImageWatermark($canvas, $model->imageable);
+                    if ($model->imageable
+                        && method_exists($model->imageable, 'insertImageWatermark')) {
+                        $canvas = $model->imageable->insertImageWatermark(
+                            $canvas,
+                            $model->imageable
+                        );
                     }
                 };
 
@@ -186,7 +190,10 @@ class Image extends BaseModel
 
         if ($this->imageable) {
             if ($this->imageable && isset($this->imageable::$sizesByField[$this->field])) {
-                $sizes = array_merge($this->imageable::$sizesByField[$this->field], $this->imageable::$sizes);
+                $sizes = array_merge(
+                    $this->imageable::$sizesByField[$this->field],
+                    $this->imageable::$sizes
+                );
             } else {
                 $sizes = $this->imageable::$sizes;
             }

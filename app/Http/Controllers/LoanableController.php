@@ -14,7 +14,13 @@ class LoanableController extends RestController
     protected $carController;
     protected $trailerController;
 
-    public function __construct(LoanableRepository $repository, Loanable $model, BikeController $bikeController, CarController $carController, TrailerController $trailerController) {
+    public function __construct(
+        LoanableRepository $repository,
+        Loanable $model,
+        BikeController $bikeController,
+        CarController $carController,
+        TrailerController $trailerController
+    ) {
         $this->repo = $repository;
         $this->model = $model;
         $this->bikeController = $bikeController;

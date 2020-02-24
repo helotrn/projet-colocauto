@@ -49,24 +49,30 @@ class BaseTransformer
                 $parentClassName = get_class($item);
 
                 if (method_exists($parentClassName, "{$relation}Conditions")) {
-                    $target = call_user_func("$parentClassName::{$relation}Conditions", $item->{$relation}, static::$context);
+                    $target = call_user_func(
+                        "$parentClassName::{$relation}Conditions",
+                        $item->{$relation},
+                        static::$context
+                    );
                 } else {
                     $target = $item->{$relation};
                 }
 
-                $output[$relation] = $target->map(function ($p) use ($transformer, $options, $relation) {
-                    $relationFields = [];
-                    if (isset($options['fields'][$relation])
-                        && $relation !== $options['fields'][$relation]) {
-                        $relationFields = $options['fields'][$relation];
-                    }
+                $output[$relation] = $target->map(
+                    function ($p) use ($transformer, $options, $relation) {
+                        $relationFields = [];
+                        if (isset($options['fields'][$relation])
+                            && $relation !== $options['fields'][$relation]) {
+                            $relationFields = $options['fields'][$relation];
+                        }
 
-                    return $transformer->transform($p, [
-                        'fields' => $relationFields,
-                        'pivot' => $p->pivot,
-                        'context' => static::$context,
-                    ]);
-                });
+                        return $transformer->transform($p, [
+                            'fields' => $relationFields,
+                            'pivot' => $p->pivot,
+                            'context' => static::$context,
+                        ]);
+                    }
+                );
             }
         }
     }

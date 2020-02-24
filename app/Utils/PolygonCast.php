@@ -7,7 +7,8 @@ use Phaza\LaravelPostgis\Geometries\Point;
 use Phaza\LaravelPostgis\Geometries\Polygon;
 use Vkovic\LaravelCustomCasts\CustomCastBase;
 
-// Because of https://stackoverflow.com/questions/7309121/preferred-order-of-writing-latitude-longitude-tuples
+// Because of
+// https://stackoverflow.com/questions/7309121/preferred-order-of-writing-latitude-longitude-tuples
 class PolygonCast extends CustomCastBase
 {
     public function setAttribute($value) {

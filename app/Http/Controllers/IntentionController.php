@@ -10,7 +10,11 @@ use Illuminate\Validation\ValidationException;
 
 class IntentionController extends RestController
 {
-    public function __construct(IntentionRepository $repository, Intention $model, LoanRepository $loanRepository) {
+    public function __construct(
+        IntentionRepository $repository,
+        Intention $model,
+        LoanRepository $loanRepository
+    ) {
         $this->repo = $repository;
         $this->model = $model;
         $this->loanRepo = $loanRepository;

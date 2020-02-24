@@ -67,7 +67,9 @@ class RestRepository
 
             $sql = str_replace('?', '%s', $sql);
             $subquery = vsprintf($sql, $bindings);
-            $total = \DB::select(\DB::raw("SELECT COUNT(*) AS cnt FROM ($subquery) AS query"))[0]->cnt;
+            $total = \DB::select(
+                \DB::raw("SELECT COUNT(*) AS cnt FROM ($subquery) AS query")
+            )[0]->cnt;
         }
 
         try {
@@ -232,7 +234,11 @@ class RestRepository
 
             if (array_key_exists($field, $data)) {
                 if (is_array($data[$field])) {
-                    if (in_array($field, array_merge($this->model->collections, array_keys($this->model->morphManys)))) {
+                    $allowedRelations = array_merge(
+                        $this->model->collections,
+                        array_keys($this->model->morphManys)
+                    );
+                    if (in_array($field, $allowedRelations)) {
                         $relation = $this->model->{$field}();
                         $ids = [];
 
@@ -268,9 +274,15 @@ class RestRepository
                                 $sync[$element['id']] = $pivotData;
                                 $relation->syncWithoutDetaching($sync);
 
-                                $targetPivot = $this->model->{$field}()->find($element['id'])->pivot;
+                                $targetPivot = $this->model->{$field}()
+                                    ->find($element['id'])
+                                    ->pivot;
                                 foreach ($pivotItems as $pivotItem) {
-                                    $this->savePolymorphicRelation($targetPivot, $pivotItem, $pivotItemData);
+                                    $this->savePolymorphicRelation(
+                                        $targetPivot,
+                                        $pivotItem,
+                                        $pivotItemData
+                                    );
                                 }
 
                                 $ids[] = $element['id'];

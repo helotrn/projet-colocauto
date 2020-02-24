@@ -23,7 +23,12 @@ class AuthController extends Controller
     protected $user;
     protected $userController;
 
-    public function __construct(User $user, TokenRepository $tokens, Auth $auth, UserController $userController) {
+    public function __construct(
+        User $user,
+        TokenRepository $tokens,
+        Auth $auth,
+        UserController $userController
+    ) {
         $this->user = $user;
         $this->tokens = $tokens;
         $this->auth = $auth;

@@ -13,7 +13,11 @@ use Illuminate\Validation\ValidationException;
 
 class UserController extends RestController
 {
-    public function __construct(UserRepository $repository, User $model, CommunityRepository $communityRepo) {
+    public function __construct(
+        UserRepository $repository,
+        User $model,
+        CommunityRepository $communityRepo
+    ) {
         $this->repo = $repository;
         $this->model = $model;
         $this->communityRepo = $communityRepo;
