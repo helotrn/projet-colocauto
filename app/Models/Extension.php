@@ -28,6 +28,28 @@ class Extension extends Action
         return $this->belongsTo(Loan::class);
     }
 
+    public static function boot() {
+        parent::boot();
+
+        self::saved(function ($model) {
+            if (!$model->executed_at) {
+                switch ($model->status) {
+                    case 'completed':
+                        $loanId = $model->loan->id;
+
+                        $model->executed_at = Carbon::now();
+                        $model->save();
+                        break;
+                    case 'canceled':
+                        $model->executed_at = Carbon::now();
+                        $model->save();
+                        $model->loan->setCanceled();
+                        break;
+                }
+            }
+        });
+    }
+
     public static function getColumnsDefinition() {
         return [
             '*' => function ($query = null) {

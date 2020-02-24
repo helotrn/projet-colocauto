@@ -46,6 +46,26 @@ class ActionController extends RestController
                 $paymentRequest->setMethod('GET');
                 $paymentRequest->request->add($request->all());
                 return $this->paymentController->retrieve($paymentRequest, $id);
+            case 'takeover':
+                $takeoverRequest = new Request();
+                $takeoverRequest->setMethod('GET');
+                $takeoverRequest->request->add($request->all());
+                return $this->takeoverController->retrieve($takeoverRequest, $id);
+            case 'extension':
+                $extensionRequest = new Request();
+                $extensionRequest->setMethod('GET');
+                $extensionRequest->request->add($request->all());
+                return $this->extensionController->retrieve($extensionRequest, $id);
+            case 'intention':
+                $intentionRequest = new Request();
+                $intentionRequest->setMethod('GET');
+                $intentionRequest->request->add($request->all());
+                return $this->intentionController->retrieve($intentionRequest, $id);
+            case 'incident':
+                $incidentRequest = new Request();
+                $incidentRequest->setMethod('GET');
+                $incidentRequest->request->add($request->all());
+                return $this->incidentController->retrieve($incidentRequest, $id);
             default:
                 throw new \Exception('invalid action type');
         }
@@ -74,6 +94,26 @@ class ActionController extends RestController
                 $paymentRequest->setMethod('POST');
                 $paymentRequest->request->add($request->all());
                 return $this->paymentController->update($paymentRequest, $id);
+            case 'takeover':
+                $takeoverRequest = new Request();
+                $takeoverRequest->setMethod('POST');
+                $takeoverRequest->request->add($request->all());
+                return $this->takeoverController->update($takeoverRequest, $id);
+            case 'extension':
+                $extensionRequest = new Request();
+                $extensionRequest->setMethod('POST');
+                $extensionRequest->request->add($request->all());
+                return $this->extensionController->update($extensionRequest, $id);
+            case 'handover':
+                $handoverRequest = new Request();
+                $handoverRequest->setMethod('POST');
+                $handoverRequest->request->add($request->all());
+                return $this->handoverController->update($handoverRequest, $id);
+            case 'incident':
+                $incidentRequest = new Request();
+                $incidentRequest->setMethod('POST');
+                $incidentRequest->request->add($request->all());
+                return $this->incidentController->update($incidentRequest, $id);
             default:
                 throw new \Exception('invalid action type');
         }
@@ -88,6 +128,31 @@ class ActionController extends RestController
                 $intentionRequest->setMethod('PUT');
                 $intentionRequest->request->add($request->all());
                 return $this->intentionController->complete($intentionRequest, $actionId, $loanId);
+            case 'payment':
+                $paymentRequest = new Request();
+                $paymentRequest->setMethod('PUT');
+                $paymentRequest->request->add($request->all());
+                return $this->paymentController->complete($paymentRequest, $actionId, $loanId);
+            case 'takeover':
+                $takeoverRequest = new Request();
+                $takeoverRequest->setMethod('PUT');
+                $takeoverRequest->request->add($request->all());
+                return $this->takeoverController->complete($takeoverRequest, $actionId, $loanId);
+            case 'extension':
+                $extensionRequest = new Request();
+                $extensionRequest->setMethod('PUT');
+                $extensionRequest->request->add($request->all());
+                return $this->extensionController->complete($extensionRequest, $actionId, $loanId);
+            case 'handover':
+                $handoverRequest = new Request();
+                $handoverRequest->setMethod('PUT');
+                $handoverRequest->request->add($request->all());
+                return $this->handoverController->complete($handoverRequest, $actionId, $loanId);
+            case 'incident':
+                $incidentRequest = new Request();
+                $incidentRequest->setMethod('PUT');
+                $incidentRequest->request->add($request->all());
+                return $this->incidentController->complete($incidentRequest, $actionId, $loanId);
             default:
                 throw new \Exception('invalid action type');
         }
@@ -102,6 +167,31 @@ class ActionController extends RestController
                 $intentionRequest->setMethod('PUT');
                 $intentionRequest->request->add($request->all());
                 return $this->intentionController->cancel($intentionRequest, $actionId, $loanId);
+            case 'payment':
+                $paymentRequest = new Request();
+                $paymentRequest->setMethod('PUT');
+                $paymentRequest->request->add($request->all());
+                return $this->paymentController->complete($paymentRequest, $actionId, $loanId);
+            case 'takeover':
+                $takeoverRequest = new Request();
+                $takeoverRequest->setMethod('PUT');
+                $takeoverRequest->request->add($request->all());
+                return $this->takeoverController->complete($takeoverRequest, $actionId, $loanId);
+            case 'extension':
+                $extensionRequest = new Request();
+                $extensionRequest->setMethod('PUT');
+                $extensionRequest->request->add($request->all());
+                return $this->extensionController->complete($extensionRequest, $actionId, $loanId);
+            case 'handover':
+                $handoverRequest = new Request();
+                $handoverRequest->setMethod('PUT');
+                $handoverRequest->request->add($request->all());
+                return $this->handoverController->complete($handoverRequest, $actionId, $loanId);
+            case 'incident':
+                $incidentRequest = new Request();
+                $incidentRequest->setMethod('PUT');
+                $incidentRequest->request->add($request->all());
+                return $this->incidentController->complete($incidentRequest, $actionId, $loanId);
             default:
                 throw new \Exception('invalid action type');
         }
