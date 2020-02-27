@@ -19,6 +19,7 @@ export default {
     actions: 'actions',
     enregistrer: 'enregistrer',
     modifier: 'modifier',
+    nouveau: 'nouveau',
     réinitialiser: 'réinitialiser',
     supprimer: 'supprimer',
   },
@@ -29,10 +30,12 @@ export default {
   profile: {
     titles: {
       account: 'Informations du compte',
+      borrower: "Mon profil d'emprunteur",
       communities: 'Mes communautés',
       payment: 'Paiement',
       reservations: 'Historique des réservations',
-      vehicles: 'Mes véhicules',
+      loanable: 'Mon véhicule',
+      loanables: 'Mes véhicules',
     },
   },
   titles: {

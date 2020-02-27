@@ -7,29 +7,42 @@ use App\Transformers\CarTransformer;
 
 class Car extends Loanable
 {
-    protected $table = 'cars';
-
-    public static $rules = [];
-
-    protected $fillable = [
-        'availability_ics',
-        'brand',
-        'comments',
-        'engine',
-        'has_accident_report',
-        'has_informed_insurer',
-        'instructions',
-        'insurer',
-        'is_value_over_fifty_thousand',
-        'location_description',
-        'model',
-        'name',
-        'ownership',
-        'papers_location',
-        'plate_number',
-        'position',
-        'transmission_mode',
-        'year_of_circulation',
+    public static $rules = [
+        'name' => [ 'required' ],
+        'position' => [ 'required' ],
+        'type' => [
+            'required',
+            'in:car'
+        ],
+        'location_description' => [ 'present' ],
+        'instructions' => [ 'present' ],
+        'comments' => [ 'present' ],
+        'availability_ics' => [ 'present' ],
+        'model' => [ 'required' ],
+        'brand' => [ 'required' ],
+        'engine' => [
+            'required',
+            'in:fuel,diesel,electric,hybrid',
+        ],
+        'insurer' => [ 'required' ],
+        'is_value_over_fifty_thousand' => [ 'boolean' ],
+        'ownership' => [
+            'required',
+            'in:self,rental',
+        ],
+        'papers_location' => [
+            'required' ,
+            'in:in_the_car,to_request_with_car'
+        ],
+        'plate_number' => [ 'required' ],
+        'transmission_mode' => [
+            'required' ,
+            'in:manual,automatic',
+        ],
+        'year_of_circulation' => [
+            'required',
+            'digits:4',
+        ],
     ];
 
     public static $transformer = CarTransformer::class;
@@ -52,4 +65,27 @@ class Car extends Loanable
             }
         ];
     }
+
+    protected $table = 'cars';
+
+    protected $fillable = [
+        'availability_ics',
+        'brand',
+        'comments',
+        'engine',
+        'has_accident_report',
+        'has_informed_insurer',
+        'instructions',
+        'insurer',
+        'is_value_over_fifty_thousand',
+        'location_description',
+        'model',
+        'name',
+        'ownership',
+        'papers_location',
+        'plate_number',
+        'position',
+        'transmission_mode',
+        'year_of_circulation',
+    ];
 }

@@ -21,28 +21,16 @@ class Loanable extends BaseModel
     ];
 
     public static $rules = [
-        'name' => [
-            'required',
-        ],
-        'position' => [
-            'required',
-        ],
+        'name' => [ 'required' ],
+        'position' => [ 'required' ],
         'type' => [
             'required',
             'in:car,bike,trailer',
         ],
-        'location' => [
-            'required',
-        ],
-        'instructions' => [
-            'required',
-        ],
-        'comments' => [
-            'required',
-        ],
-        'availability_ics' => [
-            'required',
-        ],
+        'location_description' => [ 'present' ],
+        'instructions' => [ 'present' ],
+        'comments' => [ 'present' ],
+        'availability_ics' => [ 'present' ],
     ];
 
     protected $table = 'loanables';

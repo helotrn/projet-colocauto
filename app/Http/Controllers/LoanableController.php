@@ -5,7 +5,10 @@ namespace App\Http\Controllers;
 use App\Http\Requests\BaseRequest as Request;
 use App\Http\Requests\Bike\CreateRequest as BikeCreateRequest;
 use App\Http\Requests\Bike\UpdateRequest as BikeUpdateRequest;
+use App\Http\Requests\Car\CreateRequest as CarCreateRequest;
+use App\Http\Requests\Car\UpdateRequest as CarUpdateRequest;
 use App\Models\Bike;
+use App\Models\Car;
 use App\Models\Loanable;
 use App\Repositories\LoanableRepository;
 use Illuminate\Validation\ValidationException;
@@ -35,7 +38,7 @@ class LoanableController extends RestController
         $validator = Validator::make(
             $request->all(),
             [
-                'rule' => 'one_of:bike,car,trailer',
+                'type' => 'in:bike,car,trailer',
             ]
         );
 
@@ -50,10 +53,12 @@ class LoanableController extends RestController
                 $bikeRequest->request->add($request->all());
                 return $this->bikeController->create($bikeRequest);
                 break;
-            default:
-                return $this->respondWithErrors([
-                    'type' => 'Type invalide.',
-                ]);
+            case 'car':
+                $bikeRequest = new CarCreateRequest();
+                $bikeRequest->setMethod('GET');
+                $bikeRequest->request->add($request->all());
+                return $this->carController->create($bikeRequest);
+                break;
         }
     }
 
@@ -95,7 +100,7 @@ class LoanableController extends RestController
         $validator = Validator::make(
             $request->all(),
             [
-                'rule' => 'one_of:bike,car,trailer',
+                'type' => 'in:bike,car,trailer',
             ]
         );
 
@@ -110,7 +115,7 @@ class LoanableController extends RestController
                 $bikeRequest->request->add($request->all());
                 return $this->bikeController->update($bikeRequest, $id);
             case 'car':
-                $carRequest = new Request();
+                $carRequest = new CarUpdateRequest();
                 $carRequest->setMethod('POST');
                 $carRequest->request->add($request->all());
                 return $this->carController->update($carRequest, $id);
@@ -133,6 +138,8 @@ class LoanableController extends RestController
                 'instructions' => '',
                 'comments' => '',
                 'availability_ics' => '',
+                'model' => '',
+                'brand' => '',
             ],
             'form' => [
                 'general' => [
@@ -286,7 +293,17 @@ class LoanableController extends RestController
                         ],
                     ],
                     'papers_location' => [
-                        'type' => 'text',
+                        'type' => 'select',
+                        'options' => [
+                            [
+                                'text' => 'Dans la voiture',
+                                'value' => 'in_the_car',
+                            ],
+                            [
+                                'text' => 'À récupérer avec la voiture',
+                                'value' => 'to_request_with_car',
+                            ]
+                        ],
                     ],
                     'has_accident_report' => [
                         'type' => 'checkbox',
@@ -298,19 +315,35 @@ class LoanableController extends RestController
                         'type' => 'checkbox',
                     ],
                 ],
-                'trailer' => [],
+                'trailer' => [
+                    'maximum_charge' => [
+                        'type' => 'text',
+                    ],
+                ],
             ],
             'filters' => $this->model::$filterTypes,
         ];
 
-        $rules = $this->model->getRules();
-        foreach (['name', 'position', 'type'] as $field) {
-            $template['form']['general'][$field]['rules'] = $this->formatRules($rules[$field]);
+        $generalRules = $this->model->getRules();
+        $generalRulesKeys = array_keys($generalRules);
+        foreach ($generalRules as $field => $rules) {
+            $template['form']['general'][$field]['rules'] = $this->formatRules($rules);
         }
 
         $bikeRules = Bike::getRules();
-        foreach (['model', 'bike_type', 'size'] as $field) {
-            $template['form']['bike'][$field]['rules'] = $this->formatRules($bikeRules[$field]);
+        foreach ($bikeRules as $field => $rules) {
+            if (in_array($field, $generalRulesKeys)) {
+                continue;
+            }
+            $template['form']['bike'][$field]['rules'] = $this->formatRules($rules);
+        }
+
+        $carRules = Car::getRules();
+        foreach ($carRules as $field => $rules) {
+            if (in_array($field, $generalRulesKeys)) {
+                continue;
+            }
+            $template['form']['car'][$field]['rules'] = $this->formatRules($rules);
         }
 
         return $template;

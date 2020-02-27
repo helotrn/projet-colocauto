@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Http\Requests\BaseRequest as Request;
+use Auth;
 use Illuminate\Database\Eloquent\RelationNotFoundException;
 use Illuminate\Validation\ValidationException;
 
@@ -32,7 +33,7 @@ class RestRepository
                 continue;
             }
 
-            $query = $this->applyFilter($param, $value, $query);
+            $query = $this->applyFilter($this->model, $param, $value, $query);
         }
 
         if (isset($params['q'])) {
@@ -98,7 +99,7 @@ class RestRepository
                 continue;
             }
 
-            $query = $this->applyFilter($param, $value, $query);
+            $query = $this->applyFilter($this->model, $param, $value, $query);
         }
 
         if ($fields = $request->getFields()) {
@@ -202,14 +203,14 @@ class RestRepository
 
                     if ($this->model->{$field}
                         && $this->model->{$field}->id !== $related->id) {
-                        $this->model->{$field}->delete();
+                        $this->model->{$field}()->dissociate();
                     }
 
                     foreach (array_keys($related->morphOnes) as $morphOne) {
                         $this->savePolymorphicRelation($related, $morphOne, $data[$field]);
                     }
 
-                    $this->model->{$field}()->save($related);
+                    $this->model->{$field}()->associate($related);
                 }
             } elseif (in_array($field, array_keys($this->model->morphOnes))) {
                 if (is_array($data[$field])) {
@@ -242,72 +243,93 @@ class RestRepository
                         $relation = $this->model->{$field}();
                         $ids = [];
 
-                        $pivotClass = $relation->getPivotClass();
-                        $pivot = new $pivotClass;
-                        $pivotAttributes = $pivot->getFillable();
-                        $pivotItems = array_merge($pivot->items, array_keys($pivot->morphOnes));
+                        if (method_exists($relation, 'getPivotClass')) {
+                            $pivotClass = $relation->getPivotClass();
+                            $pivot = new $pivotClass;
+                            $pivotAttributes = $pivot->getFillable();
+                            $pivotItems = array_merge($pivot->items, array_keys($pivot->morphOnes));
 
-                        foreach ($data[$field] as $element) {
-                            $pivotData = [];
-                            $pivotItemData = [];
+                            foreach ($data[$field] as $element) {
+                                $pivotData = [];
+                                $pivotItemData = [];
 
-                            foreach ($pivotAttributes as $pivotAttribute) {
-                                if (!array_key_exists($pivotAttribute, $element)) {
-                                    continue;
+                                foreach ($pivotAttributes as $pivotAttribute) {
+                                    if (!array_key_exists($pivotAttribute, $element)) {
+                                        continue;
+                                    }
+
+                                    $pivotData[$pivotAttribute] = $element[$pivotAttribute];
+                                    unset($element[$pivotAttribute]);
                                 }
 
-                                $pivotData[$pivotAttribute] = $element[$pivotAttribute];
-                                unset($element[$pivotAttribute]);
-                            }
-
-                            foreach ($pivotItems as $pivotItem) {
-                                if (!array_key_exists($pivotItem, $element)) {
-                                    continue;
-                                }
-
-                                $pivotItemData[$pivotItem] = $element[$pivotItem];
-                                unset($element[$pivotItem]);
-                            }
-
-                            if (array_key_exists('id', $element) && $element['id']) {
-                                $sync = [];
-                                $sync[$element['id']] = $pivotData;
-                                $relation->syncWithoutDetaching($sync);
-
-                                $targetPivot = $this->model->{$field}()
-                                    ->find($element['id'])
-                                    ->pivot;
                                 foreach ($pivotItems as $pivotItem) {
-                                    $this->savePolymorphicRelation(
-                                        $targetPivot,
-                                        $pivotItem,
-                                        $pivotItemData
-                                    );
+                                    if (!array_key_exists($pivotItem, $element)) {
+                                        continue;
+                                    }
+
+                                    $pivotItemData[$pivotItem] = $element[$pivotItem];
+                                    unset($element[$pivotItem]);
                                 }
 
-                                $ids[] = $element['id'];
+                                if (array_key_exists('id', $element) && $element['id']) {
+                                    $sync = [];
+                                    $sync[$element['id']] = $pivotData;
+                                    $relation->syncWithoutDetaching($sync);
+
+                                    $targetPivot = $this->model->{$field}()
+                                        ->find($element['id'])
+                                        ->pivot;
+                                    foreach ($pivotItems as $pivotItem) {
+                                        $this->savePolymorphicRelation(
+                                            $targetPivot,
+                                            $pivotItem,
+                                            $pivotItemData
+                                        );
+                                    }
+
+                                    $ids[] = $element['id'];
+                                }
+                            }
+                        } else {
+                            foreach ($data[$field] as $element) {
+                                if (array_key_exists('id', $element) && $element['id']) {
+                                    $ids[] = $element['id'];
+                                }
                             }
                         }
 
-                        $relation->sync($ids);
+                        if (is_a($relation, 'Illuminate\Database\Eloquent\Relations\MorphMany')) {
+                            $relatedClass = $relation->getRelated();
+
+                            foreach ($ids as $id) {
+                                $item = $relatedClass->find($id);
+                                $relation->save($id);
+                            }
+                        } else {
+                            $relation->sync($ids);
+                        }
                     }
                 }
             }
         }
     }
 
-    protected function applyFilter($param, $value, $query) {
+    protected function applyFilter(&$model, $param, $value, $query) {
         $negative = $param[0] === '!';
         $paramName = str_replace('!', '', $param);
 
         if (strpos($paramName, '_') !== false) {
             [$relation, $field] = explode('_', $paramName, 2);
 
-            if (in_array($relation, $this->model->collections)) {
-                return $query->whereHas($relation, function ($q) use ($field, $value, $negative) {
-                    $fieldQuery = $negative ? "!$field" : $field;
-                    return $this->applyFilter($field, $value, $q);
-                });
+            if (in_array($relation, array_merge($model->collections, $model->items))) {
+                return $query->whereHas(
+                    $relation,
+                    function ($q) use ($model, $relation, $field, $value, $negative) {
+                        $fieldQuery = $negative ? "!$field" : $field;
+                        $targetModel = $model->{$relation}()->getRelated();
+                        return $this->applyFilter($targetModel, $field, $value, $q);
+                    }
+                );
             }
 
             return $query;
@@ -326,6 +348,10 @@ class RestRepository
         }
 
         $scopedParam = "{$query->getModel()->getTable()}.$paramName";
+
+        if ($paramName === 'id' && $value === 'me') {
+            $value = Auth::user()->id;
+        }
 
         // If a type is defined for this filter, use the query
         // language, otherwise fallback to default Laravel filtering
@@ -451,10 +477,6 @@ class RestRepository
             array_flip($related->getFillable())
         );
         $related->fill($relatedData);
-
-        if (method_exists($relation, 'getForeignKeyName')) {
-            $related->{$relation->getForeignKeyName()} = $model->id;
-        }
         $related->save();
 
         return $related;

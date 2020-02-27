@@ -48,6 +48,8 @@ Vue.component('layout-page', LayoutPage);
 Object.keys(rules).forEach((rule) => {
   extend(rule, rules[rule]);
 });
+extend('present', v => v !== null && v !== undefined);
+extend('boolean', v => typeof v === 'boolean');
 
 localize('fr', fr);
 

@@ -113,6 +113,10 @@ class RestController extends Controller
                 unset($flipRules[$key]);
                 [$_, $values] = explode(':', $key);
                 $flipRules['oneOf'] = explode(',', $values);
+            } elseif (strpos($key, ':')) {
+                unset($flipRules[$key]);
+                [$rule, $values] = explode(':', $key);
+                $flipRules[$rule] = explode(',', $values);
             } else {
                 $flipRules[$key] = true;
             }

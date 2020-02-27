@@ -45,6 +45,21 @@ class User extends AuthenticatableBaseModel
         ],
     ];
 
+    public static function getRules($action = '', $auth = null) {
+        if ($action === 'submit') {
+            return array_merge(static::$rules, [
+                'address' => 'required',
+                'date_of_birth' => 'required',
+                'first_name' => 'required',
+                'last_name' => 'required',
+                'postal_code' => 'required',
+                'telephone' => 'required',
+            ]);
+        }
+
+        return parent::getRules($action, $auth);
+    }
+
     public static $transformer = UserTransformer::class;
 
     public static function getColumnsDefinition() {
