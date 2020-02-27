@@ -97,6 +97,7 @@ class User extends AuthenticatableBaseModel
       'communities',
       'files',
       'loans',
+      'loanables',
       'paymentMethods',
     ];
 
@@ -148,6 +149,10 @@ class User extends AuthenticatableBaseModel
 
     public function loans() {
         return $this->hasManyThrough(Loan::class, Borrower::class);
+    }
+
+    public function loanables() {
+        return $this->hasManyThrough(Loanable::class, Owner::class);
     }
 
     public function owner() {
