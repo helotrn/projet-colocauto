@@ -84,7 +84,7 @@ class ActionController extends RestController
         $validator = Validator::make(
             $request->all(),
             [
-                'rule' => 'one_of:payment,takeover,handover,incident,intention,extension',
+                'rule' => 'in:payment,takeover,handover,incident,intention,extension',
             ]
         );
 
