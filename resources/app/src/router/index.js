@@ -9,6 +9,8 @@ import Login from '../views/Login.vue';
 import Profile from '../views/Profile.vue';
 import ProfileAccount from '../views/profile/Account.vue';
 import ProfileCommunities from '../views/profile/Communities.vue';
+import ProfileLoanables from '../views/profile/Loanables.vue';
+import ProfileLoanable from '../views/profile/Loanable.vue';
 
 import Community from '../views/Community.vue';
 import CommunityMap from '../views/community/Map.vue';
@@ -64,6 +66,37 @@ const routes = [
           },
         },
       },
+      {
+        path: 'loanables',
+        name: 'loanables',
+        component: ProfileLoanables,
+        meta: {
+          creatable: true,
+          title: 'titles.loanables',
+          slug: 'loanables',
+          data: {
+            loanables: {
+              retrieve: {
+                fields: 'id,name,type',
+                'owner.user.id': 'me',
+              },
+            },
+          },
+        },
+      },
+      {
+        path: 'loanables/:id',
+        component: ProfileLoanable,
+        props: true,
+        meta: {
+          auth: true,
+          slug: 'loanables',
+          params: {
+            fields: '*,owner.id,owner.full_name',
+          },
+          title: 'titles.loanable',
+        },
+      },
       //      {
       //        path: 'payments',
       //        name: 'payments',
@@ -75,12 +108,6 @@ const routes = [
       //        name: 'reservations',
       //        component: ProfileReservations,
       //        title: 'titles.profile.reservations',
-      //      },
-      //      {
-      //        path: 'vehicles',
-      //        name: 'vehicles',
-      //        component: ProfileVehicles,
-      //        title: 'titles.profile.vehicles',
       //      },
     ],
   },

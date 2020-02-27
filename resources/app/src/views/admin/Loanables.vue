@@ -70,6 +70,7 @@ import AdminFilters from '@/components/Admin/Filters.vue';
 import DataRouteGuards from '@/mixins/DataRouteGuards';
 import ListMixin from '@/mixins/ListMixin';
 import locales from '@/locales';
+
 import { capitalize } from '@/helpers/filters';
 
 export default {

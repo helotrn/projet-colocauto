@@ -1,6 +1,6 @@
 <template>
   <div class="profile-communities">
-    <div class="profile-communities__communities">
+    <div class="profile-communities__communities" v-if="item">
       <div class="profile-communities__communities__community"
         v-for="community in item.communities" :key="community.id">
         <h3>{{ community.name }}</h3>

@@ -1,5 +1,5 @@
 <template>
-  <div class="profile-account">
+  <div class="profile-account" v-if="item">
     <b-tabs content-class="mt-3" fill no-fade @activate-tab="checkChanges">
       <b-tab title="Profil" class="profile-account__profile">
         <profile-form :loading="loading" :user="item"
@@ -7,7 +7,7 @@
           @submit="submit" v-if="item" />
       </b-tab>
 
-      <b-tab title="Emprunteur" class="profile-account__borrower">
+      <b-tab title="Emprunteur" class="profile-account__borrower" v-if="item.borrower">
         <borrower-form :loading="loading" :borrower="item.borrower"
           @reset="reset" :changed="changed" show-reset
           @submit="submit" v-if="item" />

@@ -3,14 +3,17 @@
     <b-nav-item to="/profile/account">
       {{ $t('profile.titles.account') }}
     </b-nav-item>
-    <b-nav-item to="/profile/communities">
-      {{ $t('profile.titles.communities') }}
+    <b-nav-item to="/profile/borrower" :disabled="!user.borrower">
+      {{ $t('profile.titles.borrower') }}
     </b-nav-item>
     <b-nav-item to="/profile/reservations" :disabled="!user.borrower">
       {{ $t('profile.titles.reservations') }}
     </b-nav-item>
-    <b-nav-item to="/profile/vehicles" :disabled="!user.owner">
-      {{ $t('profile.titles.vehicles') }}
+    <b-nav-item to="/profile/communities">
+      {{ $t('profile.titles.communities') }}
+    </b-nav-item>
+    <b-nav-item to="/profile/loanables" :disabled="!user.owner">
+      {{ $t('profile.titles.loanables') }}
     </b-nav-item>
     <b-nav-item to="/profile/payments" :disabled="!user.submitted_at">
       {{ $t('profile.titles.payment') }}
