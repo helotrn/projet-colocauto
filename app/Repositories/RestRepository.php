@@ -320,7 +320,7 @@ class RestRepository
         $negative = $param[0] === '!';
         $paramName = str_replace('!', '', $param);
 
-        if (strpos($paramName, '_') !== false) {
+        if (strpos($paramName, '_at') === false && strpos($paramName, '_') !== false) {
             [$relation, $field] = explode('_', $paramName, 2);
 
             if (in_array($relation, array_merge($model->collections, $model->items))) {
@@ -355,6 +355,10 @@ class RestRepository
             $value = Auth::user()->id;
         }
 
+        if ($paramName === 'deleted_at' && !!$value) {
+            $query = $query->withTrashed();
+        }
+
         // If a type is defined for this filter, use the query
         // language, otherwise fallback to default Laravel filtering
         switch (array_get($this->model::$filterTypes, $paramName, 'default')) {
@@ -369,16 +373,7 @@ class RestRepository
                 }
 
                 if (strpos($value, ':') !== false) {
-                    [$start, $end] = array_map('trim', (explode(':', $value)));
-                    if (!$start && !$end) {
-                        return $query;
-                    } elseif (!$start) {
-                        return $query->where($scopedParam, '<=', $end);
-                    } elseif (!$end) {
-                        return $query->where($scopedParam, '>=', $start);
-                    }
-
-                    return $query->whereBetween($scopedParam, [$start, $end]);
+                    return $this->parseRangeFilter($scopedParam, $value, $query);
                 }
 
                 $values = array_map(
@@ -401,6 +396,17 @@ class RestRepository
                 break;
             case 'text':
                 return $query->where($scopedParam, 'ILIKE', "%$value%");
+                break;
+            case 'date':
+                if ($value === '') {
+                    return $query;
+                }
+
+                if (strpos($value, ':') !== false) {
+                    return $this->parseRangeFilter($scopedParam, $value, $query);
+                }
+
+                return $query->where($scopedParam, '>=', $value);
                 break;
             default:
                 return $query->where($scopedParam, $value);
@@ -482,5 +488,18 @@ class RestRepository
         $related->save();
 
         return $related;
+    }
+
+    protected function parseRangeFilter($scopedParam, $value, &$query) {
+        [$start, $end] = array_map('trim', (explode(':', $value)));
+        if (!$start && !$end) {
+            return $query;
+        } elseif (!$start) {
+            return $query->where($scopedParam, '<=', $end);
+        } elseif (!$end) {
+            return $query->where($scopedParam, '>=', $start);
+        }
+
+        return $query->whereBetween($scopedParam, [$start, $end]);
     }
 }

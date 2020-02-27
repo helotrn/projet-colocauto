@@ -7,6 +7,7 @@ export default {
       bike_type: 'type de vélo',
       brand: 'marque',
       comments: 'commentaires',
+      deleted_at: 'supprimé',
       engine: 'moteur',
       has_accident_report: "un rapport d'accident exists-t-il?",
       has_informed_insurer: "l'assureur a-t-il été informé?",

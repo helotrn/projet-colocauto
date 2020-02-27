@@ -8,6 +8,7 @@ export default new RestModule('loanables', {
     per_page: 10,
     q: '',
     type: null,
+    deleted_at: null,
   },
 }, {
   async disable({ commit, dispatch, state }, id) {

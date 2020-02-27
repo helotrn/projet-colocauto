@@ -32,14 +32,16 @@
         <b-table
           striped hover :items="data"
           selectable select-mode="multi" @row-selected="rowSelected"
-          :busy="loading" :fields="fields" no-local-sorting
+          :busy="loading" :fields="table" no-local-sorting
           :sort-by.sync="sortBy" :sort-desc.sync="sortDesc" no-sort-reset
           :show-empty="true" empty-text="Pas de véhicule">
           <template v-slot:cell(type)="row">
             {{ $t(`types.${row.item.type}`) | capitalize }}
           </template>
           <template v-slot:cell(owner)="row">
-            {{ row.item.owner.user.full_name }}
+            <span v-if="row.item.owner">
+              {{ row.item.owner.user.full_name }}
+            </span>
           </template>
           <template v-slot:cell(actions)="row">
             <div class="text-right">
@@ -80,7 +82,7 @@ export default {
   data() {
     return {
       selected: [],
-      fields: [
+      table: [
         { key: 'id', label: 'ID', sortable: true },
         { key: 'name', label: 'Nom', sortable: true },
         { key: 'type', label: 'Type', sortable: false },

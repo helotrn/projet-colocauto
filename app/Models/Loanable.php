@@ -19,6 +19,7 @@ class Loanable extends BaseModel
         'id' => 'number',
         'name' => 'text',
         'type' => ['bike', 'car', 'trailer'],
+        'deleted_at' => 'date',
     ];
 
     public static $rules = [

@@ -10,7 +10,9 @@ export default {
       return this.context.data;
     },
     fieldsList() {
-      return this.fields.map(f => f.key);
+      return this.fields
+        ? this.fields.map(f => f.key)
+        : this.$route.meta.data[this.slug].retrieve.fields.split(',');
     },
     filters() {
       return this.context.filters;
