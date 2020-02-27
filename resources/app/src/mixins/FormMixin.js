@@ -9,6 +9,9 @@ export default {
 
     next();
   },
+  async mounted() {
+    await this.loadItem();
+  },
   beforeRouteEnter(to, from, next) {
     next((vm) => {
       vm.loadItem();
@@ -82,7 +85,11 @@ export default {
     },
     async submit() {
       try {
-        await this.$store.dispatch(`${this.slug}/updateItem`, this.$route.meta.params);
+        if (!this.item.id) {
+          await this.$store.dispatch(`${this.slug}/createItem`, this.$route.meta.params);
+        } else {
+          await this.$store.dispatch(`${this.slug}/updateItem`, this.$route.meta.params);
+        }
       } catch (e) {
         switch (e.request.status) {
           case 422:

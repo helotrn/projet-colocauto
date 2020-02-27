@@ -8,8 +8,10 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
       ajax: null,
       data: [],
       dataById: {},
+      empty: null,
       error: null,
       filters: [],
+      form: null,
       initialItem: '',
       item: null,
       lastLoadedAt: null,
@@ -36,11 +38,17 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
       addData(state, data) {
         state.data.push(...data);
       },
+      empty(state, empty) {
+        state.empty = empty;
+      },
       error(state, error) {
         state.error = error;
       },
       filters(state, filters) {
         state.filters = filters;
+      },
+      form(state, form) {
+        state.form = form;
       },
       item(state, item) {
         state.item = item;
@@ -83,20 +91,12 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
       async load({ dispatch, state }) {
         await dispatch('retrieve', state.params);
       },
-      async loadEmpty({ commit, state }) {
+      async loadEmpty({ commit, dispatch, state }) {
         try {
-          const ajax = Vue.axios.options(`/${state.slug}`);
+          await dispatch('options');
 
-          commit('ajax', ajax);
-
-          const {
-            data: {
-              item,
-            },
-          } = await ajax;
-
-          commit('item', item);
-          commit('initialItem', item);
+          commit('item', { ...state.empty });
+          commit('initialItem', state.item);
 
           commit('ajax', null);
         } catch (e) {
@@ -115,11 +115,59 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
       search() { // state, search) {
         // dispatch retrieve with param "q"
       },
-      create() { // state, data) {
-        // call API POST
+      async createItem({ dispatch, state }, params) {
+        await dispatch('create', { data: state.item, params });
       },
-      async retrieveOne({ state, commit }, { params, id }) {
+      async create({ commit, dispatch, state }, { data, params }) {
         try {
+          const ajax = Vue.axios.post(`/${state.slug}`, data, {
+            params: {
+              ...params,
+            },
+          });
+
+          commit('ajax', ajax);
+
+          const { data: item } = await ajax;
+
+          commit('loaded', false);
+
+          commit('item', item);
+          commit('initialItem', item);
+
+          commit('ajax', null);
+
+          await dispatch('retrieve', state.params);
+        } catch (e) {
+          commit('loaded', false);
+          commit('ajax', null);
+
+          commit('error', e.response.data);
+
+          throw e;
+        }
+      },
+      async options({ state, commit }) {
+        if (!this.form || !this.filters) {
+          const options = Vue.axios.options(`/${state.slug}`);
+
+          const {
+            data: {
+              item: empty,
+              filters,
+              form,
+            },
+          } = await options;
+
+          commit('empty', empty);
+          commit('filters', filters);
+          commit('form', form);
+        }
+      },
+      async retrieveOne({ dispatch, commit, state }, { params, id }) {
+        try {
+          await dispatch('options');
+
           const ajax = Vue.axios.get(`/${state.slug}/${id}`, {
             params: {
               ...params,
@@ -144,16 +192,16 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
           throw e;
         }
       },
-      async retrieve({ state, commit }, params) {
+      async retrieve({ dispatch, state, commit }, params) {
         try {
+          await dispatch('options');
+
           const ajax = Vue.axios.get(`/${state.slug}`, {
             params: {
               ...state.params,
               ...params,
             },
           });
-
-          const options = Vue.axios.options(`/${state.slug}`);
 
           commit('ajax', ajax);
 
@@ -164,14 +212,7 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
             },
           } = await ajax;
 
-          const {
-            data: {
-              filters,
-            },
-          } = await options;
-
           commit('data', data);
-          commit('filters', filters);
           commit('total', total);
           commit('lastLoadedAt', Date.now());
 
@@ -189,7 +230,7 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
       async updateItem({ dispatch, state }, params) {
         await dispatch('update', { id: state.item.id, data: state.item, params });
       },
-      async update({ commit, state }, { id, data, params }) {
+      async update({ commit, dispatch, state }, { id, data, params }) {
         try {
           const ajax = Vue.axios.put(`/${state.slug}/${id}`, data, {
             params: {
@@ -207,6 +248,8 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
           commit('initialItem', item);
 
           commit('ajax', null);
+
+          await dispatch('retrieve', state.params);
         } catch (e) {
           commit('loaded', false);
           commit('ajax', null);
