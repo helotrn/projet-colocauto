@@ -15,7 +15,7 @@ trait BaseModelTrait
         return [];
     }
 
-    public static function getRules($action, $auth = null) {
+    public static function getRules($action = '', $auth = null) {
         return static::$rules;
     }
 
