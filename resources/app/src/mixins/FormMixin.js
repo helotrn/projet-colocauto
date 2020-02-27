@@ -25,7 +25,7 @@ export default {
       return this.$store.state[this.slug];
     },
     form() {
-      return this.$route.meta.form;
+      return this.context.form || this.$route.meta.form;
     },
     initialItem() {
       return this.context.initialItem;

@@ -104,4 +104,20 @@ class RestController extends Controller
         $response = new StreamedResponse($callback, 200, $headers);
         $response->send();
     }
+
+    protected function formatRules($rules) {
+        $flipRules = array_flip($rules);
+
+        foreach ($flipRules as $key => $rule) {
+            if (strpos($key, 'in') !== false) {
+                unset($flipRules[$key]);
+                [$_, $values] = explode(':', $key);
+                $flipRules['oneOf'] = explode(',', $values);
+            } else {
+                $flipRules[$key] = true;
+            }
+        }
+
+        return $flipRules;
+    }
 }

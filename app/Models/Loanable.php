@@ -20,6 +20,31 @@ class Loanable extends BaseModel
         'type' => ['bike', 'car', 'trailer'],
     ];
 
+    public static $rules = [
+        'name' => [
+            'required',
+        ],
+        'position' => [
+            'required',
+        ],
+        'type' => [
+            'required',
+            'in:car,bike,trailer',
+        ],
+        'location' => [
+            'required',
+        ],
+        'instructions' => [
+            'required',
+        ],
+        'comments' => [
+            'required',
+        ],
+        'availability_ics' => [
+            'required',
+        ],
+    ];
+
     protected $table = 'loanables';
 
     protected $postgisFields = [

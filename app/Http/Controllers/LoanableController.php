@@ -107,12 +107,194 @@ class LoanableController extends RestController
     }
 
     public function template(Request $request) {
-        return [
-          'item' => [
-            'name' => '',
-            'type' => null,
-          ],
-          'filters' => $this->model::$filterTypes,
+        $template = [
+            'item' => [
+                'name' => '',
+                'type' => null,
+                'location_description' => '',
+                'instructions' => '',
+                'comments' => '',
+                'availability_ics' => '',
+            ],
+            'form' => [
+                'general' => [
+                    'name' => [
+                        'type' => 'text',
+                    ],
+                    'position' => [
+                        'type' => 'point',
+                    ],
+                    'location_description' => [
+                        'type' => 'textarea',
+                    ],
+                    'comments' => [
+                        'type' => 'textarea',
+                    ],
+                    'instructions' => [
+                        'type' => 'textarea',
+                    ],
+                    'type' => [
+                        'type' => 'select',
+                        'options' => [
+                            [
+                                'text' => 'Voiture',
+                                'value' => 'car',
+                            ],
+                            [
+                                'text' => 'Vélo',
+                                'value' => 'bike',
+                            ],
+                            [
+                                'text' => 'Remorque',
+                                'value' => 'trailer',
+                            ],
+                        ],
+                    ],
+                    'availability_ics' => [
+                        'type' => 'text',
+                    ],
+                    'owner_id' => [
+                        'type' => 'relation',
+                    ],
+                    'community_id' => [
+                        'type' => 'relation',
+                    ],
+                ],
+                'bike' => [
+                    'model' => [
+                        'type' => 'text',
+                    ],
+                    'bike_type' => [
+                        'type' => 'select',
+                        'options' => [
+                            [
+                                'text' => 'Régulier',
+                                'value' => 'regular',
+                            ],
+                            [
+                                'text' => 'Électrique',
+                                'value' => 'electric',
+                            ],
+                            [
+                                'text' => 'Roue fixe',
+                                'value' => 'fixed_wheel',
+                            ],
+                        ],
+                    ],
+                    'size' => [
+                        'type' => 'select',
+                        'options' => [
+                            [
+                                'text' => 'Grand',
+                                'value' => 'big',
+                            ],
+                            [
+                                'text' => 'Moyen',
+                                'value' => 'medium',
+                            ],
+                            [
+                                'text' => 'Petit',
+                                'value' => 'small',
+                            ],
+                            [
+                                'text' => 'Enfant',
+                                'value' => 'kid',
+                            ],
+                        ],
+                    ],
+                ],
+                'car' => [
+                    'brand' => [
+                        'type' => 'text',
+                    ],
+
+                    'model' => [
+                        'type' => 'text',
+                    ],
+                    'year_of_circulation' => [
+                        'type' => 'number',
+                    ],
+                    'transmission_mode' => [
+                        'type' => 'select',
+                        'options' => [
+                            [
+                                'text' => 'Automatique',
+                                'value' => 'automatic',
+                            ],
+                            [
+                                'text' => 'Manuelle',
+                                'value' => 'manual',
+                            ],
+                        ],
+                    ],
+                    'engine' => [
+                        'type' => 'select',
+                        'options' => [
+                            [
+                                'text' => 'Essence',
+                                'value' => 'fuel',
+                            ],
+                            [
+                                'text' => 'Diesel',
+                                'value' => 'diesel',
+                            ],
+                            [
+                                'text' => 'Électrique',
+                                'value' => 'electric',
+                            ],
+                            [
+                                'text' => 'Hybride',
+                                'value' => 'hybrid',
+                            ],
+                        ],
+                    ],
+                    'plate_number' => [
+                        'type' => 'text',
+                    ],
+                    'is_value_over_fifty_thousand' => [
+                        'type' => 'checkbox',
+                    ],
+                    'ownership' => [
+                        'type' => 'select',
+                        'options' => [
+                            [
+                                'text' => 'Propriétaire',
+                                'value' => 'self',
+                            ],
+                            [
+                                'text' => 'Location',
+                                'value' => 'rental',
+                            ]
+                        ],
+                    ],
+                    'papers_location' => [
+                        'type' => 'text',
+                    ],
+                    'has_accident_report' => [
+                        'type' => 'checkbox',
+                    ],
+                    'insurer' => [
+                        'type' => 'text',
+                    ],
+                    'has_informed_insurer' => [
+                        'type' => 'checkbox',
+                    ],
+                ],
+                'trailer' => [],
+            ],
+            'filters' => $this->model::$filterTypes,
         ];
+
+        $rules = $this->model->getRules();
+        foreach (['name', 'position', 'type'] as $field) {
+            $template['form']['general'][$field]['rules'] = $this->formatRules($rules[$field]);
+        }
+
+        $bikeRules = Bike::getRules();
+        foreach (['model', 'bike_type', 'size'] as $field) {
+            $template['form']['bike'][$field]['rules'] = $this->formatRules($bikeRules[$field]);
+        }
+
+        return $template;
     }
 }
