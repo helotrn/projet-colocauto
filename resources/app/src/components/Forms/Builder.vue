@@ -1,46 +1,19 @@
 <template>
   <div class="forms-builder">
-    <b-form-group v-for="(def, key) in definition" :key="key"
-      :description="def.description"
+    <forms-validated-input v-for="(def, key) in definition" :key="key"
       :label="def.type !== 'checkbox' ? $t(`${entity}.fields.${key}`) : '' | capitalize"
-      :label-for="key">
-      <b-form-select v-if="def.type === 'select'"
-        :id="key" :name="key"
-        v-bind:value="item[key]"
-        v-on:input="commitChange(key, $event)"
-        :options="def.options" />
-      <b-form-checkbox v-else-if="type === 'checkbox'"
-        :name="key" :id="key"
-        v-bind:checked="item[key]"
-        v-on:change="commitChange(key, $event)">
-        {{ $t(`${entity}.fields.${key}`) | capitalize }}
-      </b-form-checkbox>
-      <b-form-input v-else-if="def.type === 'number'" :type="def.type"
-        :name="key" :id="key"
-        v-bind:value="item[key]"
-        v-on:input="commitChange(key, $event)"
-        :placeholder="placeholderOrLabel(key) | capitalize"
-        :disabled="def.disabled" />
-      <b-form-input v-else-if="def.type === 'text'" :type="def.type"
-        :name="key" :id="key"
-        v-bind:value="item[key]"
-        v-on:input="commitChange(key, $event)"
-        :placeholder="placeholderOrLabel(key) | capitalize"
-        :disabled="def.disabled" />
-      <b-form-textarea v-else-if="def.type === 'textarea'"
-        :id="key" :name="key"
-        v-bind:value="item[key]"
-        v-on:input="commitChange(key, $event)"
-        :placeholder="placeholderOrLabel(key) | capitalize"
-        :rows="def.rows || 3" :max-rows="def.maxRows || 6" />
-      <div v-else>Non supporté : {{ def.type }}</div>
-    </b-form-group>
+      :name="key" :rules="def.rules" :type="def.type" :options="def.options"
+      :placeholder="placeholderOrLabel(key) | capitalize"
+      v-model="item[key]" />
   </div>
 </template>
 
 <script>
+import FormsValidatedInput from '@/components/Forms/ValidatedInput.vue';
+
 export default {
   name: 'FormsBuilder',
+  components: { FormsValidatedInput },
   props: {
     definition: {
       type: Object,
@@ -56,12 +29,6 @@ export default {
     },
   },
   methods: {
-    commitChange(key, value) {
-      this.$store.commit(`${this.entity}/item`, {
-        ...this.item,
-        [key]: value,
-      });
-    },
     placeholderOrLabel(key) {
       if (this.$i18n.te(`${this.entity}.placeholders.${key}`)) {
         return this.$i18n.t(`${this.entity}.placeholders.${key}`);

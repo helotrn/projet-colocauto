@@ -1,18 +1,18 @@
 <template>
   <validation-provider class="forms-validated-input"
     :name="name"
-    :rules="rules"
+    :rules="rulesOrNothing"
     v-slot="validationContext">
     <b-form-group :label="type !== 'checkbox' ? label : ''" :label-for="name"
       :description="description">
       <b-form-select v-if="type === 'select'"
-        :id="name" :name="name"
+        :id="name" :name="name" :key="`${type}-${name}`"
         :state="getValidationState(validationContext)"
         :options="options"
         v-bind:value="value"
         v-on:change="emitChange" />
       <b-form-checkbox v-else-if="type === 'checkbox'"
-        :id="name" :name="name"
+        :id="name" :name="name" :key="`${type}-${name}`"
         :value="true"
         :unchecked-value="false"
         :state="getValidationState(validationContext)"
@@ -21,14 +21,15 @@
         {{ label }}
       </b-form-checkbox>
       <b-form-textarea v-else-if="type === 'textarea'"
-        :id="name" :name="name"
+        :id="name" :name="name" :key="`${type}-${name}`"
         :placeholder="placeholder"
         :rows="rows" :max-rows="maxRows"
         :state="getValidationState(validationContext)"
         v-bind:value="value"
         v-on:input="emitChange" />
+      <forms-map-input v-else-if="type === 'point'" />
       <b-form-input v-else
-        :id="name" :name="name" :type="type"
+        :id="name" :name="name" :key="`${type}-${name}`" :type="type"
         :placeholder="placeholder"
         :state="getValidationState(validationContext)"
         v-bind:value="value"
@@ -41,6 +42,8 @@
 </template>
 
 <script>
+import FormsMapInput from '@/components/Forms/MapInput.vue';
+
 export default {
   name: 'FormsValidatedInput',
   props: {
@@ -83,7 +86,7 @@ export default {
       type: Object,
       required: false,
       default() {
-        return {};
+        return null;
       },
     },
     type: {
@@ -92,6 +95,12 @@ export default {
     },
     value: {
       required: true,
+    },
+  },
+  components: { FormsMapInput },
+  computed: {
+    rulesOrNothing() {
+      return this.rules || '';
     },
   },
   methods: {
