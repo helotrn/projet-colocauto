@@ -62,6 +62,6 @@ class Loanable extends BaseModel
     public $collections = ['loans'];
 
     public function loans() {
-        return $this->hasMany(Loan::class);
+        return $this->morphMany(Loan::class, 'loanable');
     }
 }

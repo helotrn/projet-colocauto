@@ -77,7 +77,7 @@ class Loan extends BaseModel
     }
 
     public function loanable() {
-        return $this->morphTo(Loanable::class);
+        return $this->morphTo();
     }
 
     public function setCanceled() {
