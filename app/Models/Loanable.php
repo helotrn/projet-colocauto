@@ -3,16 +3,17 @@
 namespace App\Models;
 
 use App\Models\Community;
-use App\Models\Owner;
 use App\Models\Loan;
+use App\Models\Owner;
 use App\Utils\PointCast;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Phaza\LaravelPostgis\Eloquent\PostgisTrait;
 use Vkovic\LaravelCustomCasts\HasCustomCasts;
 
 class Loanable extends BaseModel
 {
-    use HasCustomCasts, PostgisTrait;
+    use HasCustomCasts, PostgisTrait, SoftDeletes;
 
     public static $filterTypes = [
         'id' => 'number',

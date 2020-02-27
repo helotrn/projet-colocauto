@@ -34,10 +34,28 @@
           <div>Ici des blocs de réservations à venir.</div>
         </section>
 
-        <section class="page__section">
-          <h2>Mes véhicules</h2>
+        <section class="page__section" v-if="user.owner">
+          <b-row>
+            <b-col>
+              <h2>Mes véhicules</h2>
+            </b-col>
+            <b-col class="text-right">
+              <b-button variant="outline-primary" to="/profile/loanables">
+                Gérer mes véhicules
+              </b-button>
+            </b-col>
+          </b-row>
 
-          <div>Ici des blocs de réservations à venir.</div>
+          <div class="dashboard__vehicles">
+            <div v-if="user.loanables.length > 0">
+              <loanable-info-box
+               v-for="loanable in user.loanables" :key="loanable.id"
+               v-bind="loanable" />
+            </div>
+            <div v-else>
+              Aucun véhicule. Ajoutez-en un <router-link to="/profile/loanables/new">ici</router-link>.
+            </div>
+          </div>
         </section>
       </b-col>
 
@@ -64,6 +82,7 @@ import Authenticated from '@/mixins/Authenticated';
 import Notification from '@/mixins/Notification';
 
 import AccountStatus from '@/components/Dashboard/AccountStatus.vue';
+import LoanableInfoBox from '@/components/Loanable/InfoBox.vue';
 import LocationHistory from '@/components/Dashboard/LocationHistory.vue';
 import ResourcesList from '@/components/Dashboard/ResourcesList.vue';
 import TutorialBlock from '@/components/Dashboard/TutorialBlock.vue';
@@ -73,6 +92,7 @@ export default {
   mixins: [Authenticated, Notification],
   components: {
     AccountStatus,
+    LoanableInfoBox,
     LocationHistory,
     ResourcesList,
     TutorialBlock,
@@ -86,4 +106,17 @@ export default {
 </script>
 
 <style lang="scss">
+.dashboard {
+  .page__section {
+    h2 {
+      margin-bottom: 25px;
+    }
+  }
+
+  &__vehicles {
+    .loanable-info-box {
+      margin-bottom: 20px;
+    }
+  }
+}
 </style>

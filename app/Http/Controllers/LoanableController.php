@@ -3,10 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\BaseRequest as Request;
+use App\Http\Requests\Loanable\DestroyRequest;
 use App\Http\Requests\Bike\CreateRequest as BikeCreateRequest;
 use App\Http\Requests\Bike\UpdateRequest as BikeUpdateRequest;
 use App\Http\Requests\Car\CreateRequest as CarCreateRequest;
 use App\Http\Requests\Car\UpdateRequest as CarUpdateRequest;
+use App\Http\Requests\Trailer\CreateRequest as TrailerCreateRequest;
+use App\Http\Requests\Trailer\UpdateRequest as TrailerUpdateRequest;
 use App\Models\Bike;
 use App\Models\Car;
 use App\Models\Loanable;
@@ -49,16 +52,21 @@ class LoanableController extends RestController
         switch ($request->get('type')) {
             case 'bike':
                 $bikeRequest = new BikeCreateRequest();
-                $bikeRequest->setMethod('GET');
                 $bikeRequest->request->add($request->all());
                 return $this->bikeController->create($bikeRequest);
                 break;
             case 'car':
                 $bikeRequest = new CarCreateRequest();
-                $bikeRequest->setMethod('GET');
                 $bikeRequest->request->add($request->all());
                 return $this->carController->create($bikeRequest);
                 break;
+            case 'trailer':
+                $trailerRequest = new TrailerCreateRequest();
+                $trailerRequest->request->add($request->all());
+                return $this->trailerController->create($trailerRequest);
+                break;
+            default:
+                throw new \Exception('invalid loanable type');
         }
     }
 
@@ -111,19 +119,31 @@ class LoanableController extends RestController
         switch ($request->get('type')) {
             case 'bike':
                 $bikeRequest = new BikeUpdateRequest();
-                $bikeRequest->setMethod('POST');
                 $bikeRequest->request->add($request->all());
                 return $this->bikeController->update($bikeRequest, $id);
             case 'car':
                 $carRequest = new CarUpdateRequest();
-                $carRequest->setMethod('POST');
                 $carRequest->request->add($request->all());
                 return $this->carController->update($carRequest, $id);
             case 'trailer':
-                $trailerRequest = new Request();
-                $trailerRequest->setMethod('POST');
+                $trailerRequest = new TrailerUpdateRequest();
                 $trailerRequest->request->add($request->all());
                 return $this->trailerController->update($trailerRequest, $id);
+            default:
+                throw new \Exception('invalid loanable type');
+        }
+    }
+
+    public function destroy(DestroyRequest $request, $id) {
+        $item = $this->repo->find($request, $id);
+
+        switch ($item->type) {
+            case 'bike':
+                return $this->bikeController->destroy($request, $id);
+            case 'car':
+                return $this->carController->destroy($request, $id);
+            case 'trailer':
+                return $this->trailerController->destroy($request, $id);
             default:
                 throw new \Exception('invalid loanable type');
         }

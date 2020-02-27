@@ -155,7 +155,9 @@ class RestRepository
 
         $model = $query->findOrFail($id);
 
-        return $this->model->destroy($id);
+        $this->model->destroy($id);
+
+        return $model->fresh();
     }
 
     protected function orderBy($query, $def) {

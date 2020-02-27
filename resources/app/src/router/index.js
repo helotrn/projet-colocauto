@@ -97,18 +97,6 @@ const routes = [
           title: 'titles.loanable',
         },
       },
-      //      {
-      //        path: 'payments',
-      //        name: 'payments',
-      //        component: ProfilePayments,
-      //        title: 'titles.profile.payments',
-      //      },
-      //      {
-      //        path: 'reservations',
-      //        name: 'reservations',
-      //        component: ProfileReservations,
-      //        title: 'titles.profile.reservations',
-      //      },
     ],
   },
   {

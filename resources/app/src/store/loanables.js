@@ -1,3 +1,4 @@
+import Vue from 'vue';
 import RestModule from './RestModule';
 
 export default new RestModule('loanables', {
@@ -7,5 +8,25 @@ export default new RestModule('loanables', {
     per_page: 10,
     q: '',
     type: null,
+  },
+}, {
+  async disable({ commit, dispatch, state }, id) {
+    try {
+      const ajax = Vue.axios.delete(`/${state.slug}/${id}`);
+
+      commit('ajax', ajax);
+
+      const { data: item } = await ajax;
+
+      commit('ajax', null);
+
+      await dispatch('loadUser', null, { root: true });
+    } catch (e) {
+      commit('ajax', null);
+
+      commit('error', e.response.data);
+
+      throw e;
+    }
   },
 });

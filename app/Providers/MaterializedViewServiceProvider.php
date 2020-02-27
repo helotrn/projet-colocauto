@@ -18,6 +18,10 @@ class MaterializedViewServiceProvider extends ServiceProvider
             $class::saved(function ($model) {
                 \DB::statement('REFRESH MATERIALIZED VIEW CONCURRENTLY loanables');
             });
+
+            $class::deleted(function ($model) {
+                \DB::statement('REFRESH MATERIALIZED VIEW CONCURRENTLY loanables');
+            });
         }
 
         foreach ([
@@ -29,6 +33,10 @@ class MaterializedViewServiceProvider extends ServiceProvider
             \App\Models\Takeover::class,
         ] as $class) {
             $class::saved(function ($model) {
+                \DB::statement('REFRESH MATERIALIZED VIEW CONCURRENTLY actions');
+            });
+
+            $class::deleted(function ($model) {
                 \DB::statement('REFRESH MATERIALIZED VIEW CONCURRENTLY actions');
             });
         }

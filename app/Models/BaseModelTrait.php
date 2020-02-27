@@ -16,7 +16,12 @@ trait BaseModelTrait
     }
 
     public static function getRules($action = '', $auth = null) {
-        return static::$rules;
+        switch ($action) {
+            case 'destroy':
+                return [];
+            default:
+                return static::$rules;
+        }
     }
 
     public static $rules = [];

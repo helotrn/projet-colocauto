@@ -1,0 +1,105 @@
+<template>
+  <b-card class="loanable-info-box" bg="white" no-body>
+    <div class="card-body">
+      <b-row>
+        <b-col class="loanable-info-box__image">Image</b-col>
+
+        <b-col class="loanable-info-box__name"><span>{{ name }}</span></b-col>
+
+        <b-col class="loanable-info-box__actions">
+          <div>
+            <b-button size="sm" variant="outline-primary" :to="`/profile/loanables/${id}`">
+              Modifier les disponibilités
+            </b-button>
+
+            <b-button size="sm" variant="outline-dark" @click="makeLoanableUnavailableFor24h">
+              Rendre indisponible (24h)
+            </b-button>
+
+            <b-button size="sm" variant="outline-danger"
+              @click="disableLoanableModal">
+              Retirer
+            </b-button>
+          </div>
+        </b-col>
+      </b-row>
+    </div>
+
+    <b-modal id="`loanable-info-box-modal-${id}`">Hello From My Modal!</b-modal>
+  </b-card>
+</template>
+
+<script>
+export default {
+  name: 'LoanableInfoBox',
+  props: {
+    id: {
+      type: Number,
+      required: true,
+    },
+    name: {
+      type: String,
+      required: true,
+    },
+  },
+  methods: {
+    async makeLoanableUnavailableFor24h() {
+      await this.$store.dispatch('loanables/makeUnavailableFor24h');
+      this.$bvModal.msgBoxOk('Ce véhicule est indisponible pour les prochaines 24h.', {
+        buttonSize: 'sm',
+        footerClass: 'd-none',
+      });
+    },
+    disableLoanableModal() {
+      this.$bvModal.msgBoxConfirm(
+        'Êtes-vous sûr de vouloir retirer ce véhicule de la plateforme?',
+        {
+          size: 'sm',
+          buttonSize: 'sm',
+          okTitle: 'Oui, retirer',
+          cancelTitle: 'Annuler',
+          okVariant: 'danger',
+          cancelVariant: 'primary',
+          footerClass: 'p-2 border-top-0',
+          centered: true,
+        }
+      )
+        .then((value) => {
+          this.disableLoanable();
+        })
+    },
+    disableLoanable() {
+      this.$store.dispatch('loanables/disable', this.id);
+    },
+  },
+};
+</script>
+
+<style lang="scss">
+.loanable-info-box {
+  &__image.col {
+    flex: 0 1 85px;
+    height: 85px;
+  }
+
+  &__name.col {
+    flex-grow: 1;
+  }
+
+  &__name.col,
+  &__actions.col {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+  }
+
+  &__actions.col {
+    flex: 0 1 500px;
+    text-align: right;
+
+    .btn {
+      margin-left: 16px;
+    }
+  }
+}
+</style>

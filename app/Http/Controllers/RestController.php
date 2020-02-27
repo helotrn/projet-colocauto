@@ -48,7 +48,12 @@ class RestController extends Controller
             throw new ValidationException($validator);
         }
 
-        return $this->repo->create($input);
+        $this->repo->create($input);
+
+        $fieldsRequest = new Request;
+        $fieldsRequest->merge([ 'fields' => $request->get('fields') ]);
+
+        return $this->repo->find($fieldsRequest, $item->id);
     }
 
     protected function respondWithItem(Request $request, $item, $status = 200) {
@@ -81,7 +86,12 @@ class RestController extends Controller
             throw new ValidationException($validator);
         }
 
-        return $this->repo->update($id, $input);
+        $this->repo->update($id, $input);
+
+        $fieldsRequest = new Request;
+        $fieldsRequest->merge([ 'fields' => $request->get('fields') ]);
+
+        return $this->repo->find($fieldsRequest, $item->id);
     }
 
     protected function validateAndDestroy(Request $request, $id) {
