@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\BaseRequest as Request;
+use App\Http\Requests\Bike\CreateRequest as BikeCreateRequest;
+use App\Http\Requests\Bike\UpdateRequest as BikeUpdateRequest;
+use App\Models\Bike;
 use App\Models\Loanable;
 use App\Repositories\LoanableRepository;
 use Illuminate\Validation\ValidationException;
@@ -29,14 +32,29 @@ class LoanableController extends RestController
     }
 
     public function create(Request $request) {
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'rule' => 'one_of:bike,car,trailer',
+            ]
+        );
 
-        try {
-            $item = parent::validateAndCreate($request);
-        } catch (ValidationException $e) {
-            return $this->respondWithErrors($e->errors(), $e->getMessage());
+        if ($validator->fails()) {
+            return $this->respondWithErrors($validator->errors());
         }
 
-        return $this->respondWithItem($request, $item, 201);
+        switch ($request->get('type')) {
+            case 'bike':
+                $bikeRequest = new BikeCreateRequest();
+                $bikeRequest->setMethod('GET');
+                $bikeRequest->request->add($request->all());
+                return $this->bikeController->create($bikeRequest);
+                break;
+            default:
+                return $this->respondWithErrors([
+                    'type' => 'Type invalide.',
+                ]);
+        }
     }
 
     public function index(Request $request) {
@@ -87,7 +105,7 @@ class LoanableController extends RestController
 
         switch ($request->get('type')) {
             case 'bike':
-                $bikeRequest = new Request();
+                $bikeRequest = new BikeUpdateRequest();
                 $bikeRequest->setMethod('POST');
                 $bikeRequest->request->add($request->all());
                 return $this->bikeController->update($bikeRequest, $id);
