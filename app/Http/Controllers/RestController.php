@@ -21,6 +21,10 @@ class RestController extends Controller
         $perPage = $request->get('per_page') ?: 10;
         $page = $request->get('page') ?: 1;
 
+        if ($items->isEmpty()) {
+            return new LengthAwarePaginator([], $total, $perPage, $page);
+        }
+
         $transformer = new $items[0]::$transformer;
         $results = $items->map(function ($item) use ($transformer, $request) {
             return $transformer->transform($item, [
