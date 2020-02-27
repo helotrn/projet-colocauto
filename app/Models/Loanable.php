@@ -35,6 +35,14 @@ class Loanable extends BaseModel
         'availability_ics' => [ 'present' ],
     ];
 
+    public static function getRules($action = '', $auth = null) {
+        if ($action === 'update') {
+            return array_diff_key(static::$rules, [ 'type' => false ]);
+        }
+
+        return parent::getRules($action, $auth);
+    }
+
     protected $table = 'loanables';
 
     protected $postgisFields = [

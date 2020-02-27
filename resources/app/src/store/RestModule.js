@@ -8,6 +8,7 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
       ajax: null,
       data: [],
       dataById: {},
+      deleted: null,
       empty: null,
       error: null,
       filters: [],
@@ -29,14 +30,17 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
       ...initialState,
     },
     mutations: {
+      addData(state, data) {
+        state.data.push(...data);
+      },
       ajax(state, ajax) {
         state.ajax = ajax;
       },
       data(state, data) {
         state.data = data;
       },
-      addData(state, data) {
-        state.data.push(...data);
+      deleted(state, deleted) {
+        state.deleted = deleted;
       },
       empty(state, empty) {
         state.empty = empty;

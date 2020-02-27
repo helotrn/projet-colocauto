@@ -62,11 +62,13 @@ export default {
           cancelVariant: 'primary',
           footerClass: 'p-2 border-top-0',
           centered: true,
-        }
+        },
       )
         .then((value) => {
-          this.disableLoanable();
-        })
+          if (value) {
+            this.disableLoanable();
+          }
+        });
     },
     disableLoanable() {
       this.$store.dispatch('loanables/disable', this.id);

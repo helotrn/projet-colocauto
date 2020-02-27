@@ -48,7 +48,7 @@ class RestController extends Controller
             throw new ValidationException($validator);
         }
 
-        $this->repo->create($input);
+        $item = $this->repo->create($input);
 
         $fieldsRequest = new Request;
         $fieldsRequest->merge([ 'fields' => $request->get('fields') ]);
@@ -75,9 +75,11 @@ class RestController extends Controller
 
     protected function validateAndUpdate(Request $request, $id) {
         $input = $request->json()->all();
+        $item = $this->model->findOrFail($id);
+        $item->fill($input);
 
         $validator = Validator::make(
-            $input,
+            $item->toArray(),
             $this->model::getRules('update', $request->user()),
             $this->model::$validationMessages
         );
@@ -86,7 +88,7 @@ class RestController extends Controller
             throw new ValidationException($validator);
         }
 
-        $this->repo->update($id, $input);
+        $item = $this->repo->update($id, $input);
 
         $fieldsRequest = new Request;
         $fieldsRequest->merge([ 'fields' => $request->get('fields') ]);

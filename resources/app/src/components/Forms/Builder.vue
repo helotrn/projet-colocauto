@@ -2,7 +2,8 @@
   <div class="forms-builder">
     <forms-validated-input v-for="(def, key) in definition" :key="key"
       :label="$t(`${entity}.fields.${key}`) | capitalize"
-      :name="key" :rules="def.rules" :type="def.type" :options="def.options"
+      :name="key" :rules="def.rules" :type="def.type"
+      :options="def.options"
       :placeholder="placeholderOrLabel(key) | capitalize"
       v-model="item[key]" />
   </div>

@@ -10,6 +10,7 @@ use App\Models\User;
 use App\Repositories\CommunityRepository;
 use App\Repositories\UserRepository;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class UserController extends RestController
 {
@@ -51,6 +52,8 @@ class UserController extends RestController
             $item = parent::validateAndUpdate($request, $id);
         } catch (ValidationException $e) {
             return $this->respondWithErrors($e->errors(), $e->getMessage());
+        } catch (ModelNotFoundException $e) {
+            return $this->respondWithMessage('Not found', 404);
         }
 
         return $this->respondWithItem($request, $item);
@@ -65,21 +68,18 @@ class UserController extends RestController
 
         try {
             $item = $this->repo->find($request, $id);
-            $response = $this->respondWithItem($request, $item);
+            return $this->respondWithItem($request, $item);
         } catch (ValidationException $e) {
             return $this->respondWithErrors($e->errors(), $e->getMessage());
         }
-
-        return $response;
     }
 
     public function destroy(DestroyRequest $request, $id) {
         try {
-            $response = parent::validateAndDestroy($request, $id);
+            return parent::validateAndDestroy($request, $id);
         } catch (ValidationException $e) {
             return $this->respondWithErrors($e->errors(), $e->getMessage());
         }
-        return $response;
     }
 
     public function submit(Request $request, $id) {

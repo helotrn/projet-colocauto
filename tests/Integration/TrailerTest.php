@@ -30,6 +30,7 @@ class TrailerTest extends TestCase
             'instructions' => $this->faker->paragraph,
             'maximum_charge' => $this->faker->numberBetween($min = 1000, $max = 9000),
             'availability_ics' => $this->faker->sentence,
+            'type' => 'trailer',
         ];
 
         $response = $this->json('POST', '/api/v1/trailers', $data);

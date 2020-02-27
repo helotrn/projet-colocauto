@@ -17,7 +17,9 @@ export default new RestModule('loanables', {
 
       commit('ajax', ajax);
 
-      const { data: item } = await ajax;
+      const { data: deleted } = await ajax;
+
+      commit('deleted', deleted);
 
       commit('ajax', null);
 

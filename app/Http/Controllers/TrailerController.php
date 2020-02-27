@@ -33,7 +33,7 @@ class TrailerController extends RestController
             return $this->respondWithErrors($e->errors(), $e->getMessage());
         }
 
-        return $this->respondWithItem($request, $item);
+        return $this->respondWithItem($request, $item, 201);
     }
 
     public function update(UpdateRequest $request, $id) {

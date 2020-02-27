@@ -49,11 +49,12 @@
           <div class="dashboard__vehicles">
             <div v-if="user.loanables.length > 0">
               <loanable-info-box
-               v-for="loanable in user.loanables" :key="loanable.id"
-               v-bind="loanable" />
+                v-for="loanable in user.loanables" :key="loanable.id"
+                v-bind="loanable" />
             </div>
             <div v-else>
-              Aucun véhicule. Ajoutez-en un <router-link to="/profile/loanables/new">ici</router-link>.
+              Aucun véhicule.<br>
+              Ajoutez-en un <router-link to="/profile/loanables/new">ici</router-link>.
             </div>
           </div>
         </section>

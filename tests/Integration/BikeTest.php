@@ -34,6 +34,7 @@ class BikeTest extends TestCase
             'bike_type' => $this->faker->randomElement(['regular' ,'electric', 'fixed_wheel']),
             'size' => $this->faker->randomElement(['big' ,'medium', 'small', 'kid']),
             'availability_ics' => $this->faker->sentence,
+            'type' => 'bike',
         ];
 
         $response = $this->json('POST', '/api/v1/bikes', $data);

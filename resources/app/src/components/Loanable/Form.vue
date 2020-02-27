@@ -101,7 +101,7 @@
 <script>
 import FormsBuilder from '@/components/Forms/Builder.vue';
 import FormsValidatedInput from '@/components/Forms/ValidatedInput.vue';
-import FormsImageUploader from '@/components/Forms/ImageUploader.vue';
+// import FormsImageUploader from '@/components/Forms/ImageUploader.vue';
 
 import locales from '@/locales';
 
@@ -109,7 +109,7 @@ export default {
   name: 'LoanableForm',
   components: {
     FormsBuilder,
-    FormsImageUploader,
+    // FormsImageUploader,
     FormsValidatedInput,
   },
   props: {

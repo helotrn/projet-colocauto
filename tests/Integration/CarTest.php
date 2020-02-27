@@ -52,6 +52,7 @@ class CarTest extends TestCase
             'has_informed_insurer' => true,
             'availability_ics' => $this->faker->sentence,
             'owner_id' => $owner->id,
+            'type' => 'car',
         ];
 
         $response = $this->json('POST', '/api/v1/cars', $data);

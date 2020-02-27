@@ -48,8 +48,7 @@ class IntentionTest extends TestCase
         $loan = factory(Loan::class)->create(['borrower_id' => $borrower->id]);
         $intention = $loan->intentions()->first();
 
-        $data = [
-        ];
+        $data = [];
 
         $response = $this->json('PUT', "/api/v1/intentions/$intention->id", $data);
 

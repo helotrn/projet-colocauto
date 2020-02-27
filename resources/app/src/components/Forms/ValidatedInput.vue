@@ -29,7 +29,8 @@
         v-on:input="emitChange" />
       <forms-map-input v-else-if="type === 'point'" />
       <b-form-input v-else
-        :id="name" :name="name" :key="`${type}-${name}`" :type="type"
+        :id="name" :name="name" :key="`${type}-${name}`"
+        :type="type"
         :placeholder="placeholder"
         :state="getValidationState(validationContext)"
         v-bind:value="value"

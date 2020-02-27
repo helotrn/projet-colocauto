@@ -13,7 +13,6 @@ class Intention extends Action
     protected $table = 'intentions';
 
     public static $rules = [
-        'executed_at' => 'date',
     ];
 
     protected $fillable = [
