@@ -8,7 +8,6 @@
             <forms-image-uploader
               :label="community.name"
               field="proof"
-              :accept="['image/png', 'image/jpg', 'image/jpeg', 'application/pdf']"
               v-model="community.proof" />
 
             <div class="form__buttons">

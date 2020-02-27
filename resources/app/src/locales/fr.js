@@ -29,6 +29,7 @@ export default {
   profile: {
     titles: {
       account: 'Informations du compte',
+      communities: 'Mes communautés',
       payment: 'Paiement',
       reservations: 'Historique des réservations',
       vehicles: 'Mes véhicules',

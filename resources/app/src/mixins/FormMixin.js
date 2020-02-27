@@ -9,8 +9,10 @@ export default {
 
     next();
   },
-  async mounted() {
-    await this.loadItem();
+  beforeRouteEnter(to, from, next) {
+    next((vm) => {
+      vm.loadItem();
+    });
   },
   computed: {
     changed() {

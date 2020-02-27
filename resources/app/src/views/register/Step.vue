@@ -68,7 +68,7 @@
         </p>
 
         <div class="register-step__completed__button">
-          <b-button variant="primary" to="/">Revenir à l'accueil</b-button>
+          <b-button variant="primary" to="/app">Revenir à l'accueil</b-button>
         </div>
       </div>
     </div>

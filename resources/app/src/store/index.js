@@ -46,7 +46,7 @@ const actions = {
     try {
       const { data: user } = await Vue.axios.get('/auth/user', {
         params: {
-          fields: '*,avatar.*,owner.*,borrower.*.*,communities.id,communities.name,communities.role,communities.proof',
+          fields: '*,loanables.*,avatar.*,owner.*,borrower.*.*,communities.id,communities.name,communities.role,communities.proof',
         },
       });
 

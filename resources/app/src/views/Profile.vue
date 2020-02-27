@@ -40,13 +40,7 @@ export default {
   beforeRouteUpdate: routeGuard,
   computed: {
     pageTitle() {
-      switch (this.$route.name) {
-        case 'payments':
-          return this.$i18n.t('profile.titles.payment');
-        case 'account':
-        default:
-          return this.$i18n.t('profile.titles.account');
-      }
+      return this.$i18n.t(`profile.${this.$route.meta.title}`);
     },
   },
 };

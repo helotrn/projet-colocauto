@@ -8,6 +8,7 @@ import Login from '../views/Login.vue';
 
 import Profile from '../views/Profile.vue';
 import ProfileAccount from '../views/profile/Account.vue';
+import ProfileCommunities from '../views/profile/Communities.vue';
 
 import Community from '../views/Community.vue';
 import CommunityMap from '../views/community/Map.vue';
@@ -47,7 +48,19 @@ const routes = [
           title: 'titles.account',
           slug: 'users',
           params: {
-            fields: '*,avatar.*,owner.*,borrower.*.*,communities.id,communities.name,communities.role,payments.*,loanables.*',
+            fields: '*,avatar.*,borrower.*.*',
+          },
+        },
+      },
+      {
+        path: 'communities',
+        name: 'communities',
+        component: ProfileCommunities,
+        meta: {
+          title: 'titles.communities',
+          slug: 'users',
+          params: {
+            fields: 'id,communities.*.*',
           },
         },
       },
