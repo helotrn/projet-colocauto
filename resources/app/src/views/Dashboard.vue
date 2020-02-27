@@ -7,7 +7,13 @@
         <section class="page__section">
           <h2>Pour commencer</h2>
 
-          <div>Ici des blocs de tutoriels selon les tags appliqués à l'utilisateur.</div>
+          <div class="page__section__tutorials">
+            <div v-if="user.owner && user.loanables.length === 0">
+              <tutorial-block title="Inscrire un véhicule"
+                to="/guide/inscrire-un-vehicule"
+                bg-image="/img-tetes.png" variant="dark" />
+            </div>
+          </div>
         </section>
 
         <section class="page__section">
@@ -60,6 +66,7 @@ import Notification from '@/mixins/Notification';
 import AccountStatus from '@/components/Dashboard/AccountStatus.vue';
 import LocationHistory from '@/components/Dashboard/LocationHistory.vue';
 import ResourcesList from '@/components/Dashboard/ResourcesList.vue';
+import TutorialBlock from '@/components/Dashboard/TutorialBlock.vue';
 
 export default {
   name: 'Dashboard',
@@ -68,6 +75,7 @@ export default {
     AccountStatus,
     LocationHistory,
     ResourcesList,
+    TutorialBlock,
   },
   beforeMount() {
     if (!this.isLoggedIn) {
