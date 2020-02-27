@@ -33,7 +33,11 @@ class CarController extends RestController
             return $this->respondWithErrors($e->errors(), $e->getMessage());
         }
 
-        return $this->respondWithItem($request, $item, 201);
+        $fieldsRequest = new Request;
+        $fieldsRequest->merge($request->get('fields'));
+        $fullItem = $this->repo->find($fieldsRequest, $item->id);
+
+        return $this->respondWithItem($request, $fullItem, 201);
     }
 
     public function update(UpdateRequest $request, $id) {
@@ -43,7 +47,11 @@ class CarController extends RestController
             return $this->respondWithErrors($e->errors(), $e->getMessage());
         }
 
-        return $this->respondWithItem($request, $item);
+        $fieldsRequest = new Request;
+        $fieldsRequest->merge([ 'fields' => $request->get('fields') ]);
+        $fullItem = $this->repo->find($fieldsRequest, $item->id);
+
+        return $this->respondWithItem($request, $fullItem);
     }
 
     public function retrieve(Request $request, $id) {
