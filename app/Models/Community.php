@@ -2,8 +2,6 @@
 
 namespace App\Models;
 
-use App\Models\Loanable;
-use App\Models\Pricing;
 use App\Rules\Polygon;
 use App\Utils\PointCast;
 use App\Utils\PolygonCast;
@@ -60,7 +58,7 @@ class Community extends BaseModel
 
     public static $transformer = CommunityTransformer::class;
 
-    public static function getRules($action, $auth = null) {
+    public static function getRules($action = '', $auth = null) {
         return array_merge(
             static::$rules,
             [

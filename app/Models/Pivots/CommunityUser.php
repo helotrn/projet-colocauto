@@ -2,6 +2,7 @@
 
 namespace App\Models\Pivots;
 
+use App\Models\Community;
 use App\Models\Image;
 
 class CommunityUser extends BasePivot
