@@ -31,7 +31,7 @@ export default {
         data: {
           communities: {
             retrieve: {
-              fields: 'id,name,type',
+              fields: 'id,name,type,users.id,users.loanables.id,loanables.id',
             },
           },
         },

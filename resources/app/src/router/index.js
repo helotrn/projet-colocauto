@@ -106,6 +106,18 @@ const routes = [
     meta: {
       auth: true,
       title: 'titles.community',
+      data: {
+        communities: {
+          retrieveOne: {
+            params: {
+              fields: 'id,name,users',
+            },
+            id({ user }) {
+              return user.communities[0].id;
+            },
+          },
+        },
+      },
     },
   },
   {
