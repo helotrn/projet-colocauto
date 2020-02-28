@@ -96,16 +96,18 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
         await dispatch('retrieve', state.params);
       },
       async loadEmpty({ commit, dispatch, state }) {
+        commit('loaded', false);
+
         try {
           await dispatch('options');
 
           commit('item', { ...state.empty });
           commit('initialItem', state.item);
 
+          commit('loaded', true);
+
           commit('ajax', null);
         } catch (e) {
-          commit('loaded', false);
-
           commit('ajax', null);
 
           commit('error', e.response.data);
@@ -123,6 +125,8 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
         await dispatch('create', { data: state.item, params });
       },
       async create({ commit, dispatch, state }, { data, params }) {
+        commit('loaded', false);
+
         try {
           const ajax = Vue.axios.post(`/${state.slug}`, data, {
             params: {
@@ -134,8 +138,6 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
 
           const { data: item } = await ajax;
 
-          commit('loaded', false);
-
           commit('item', item);
           commit('initialItem', item);
 
@@ -143,7 +145,6 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
 
           await dispatch('retrieve', state.params);
         } catch (e) {
-          commit('loaded', false);
           commit('ajax', null);
 
           commit('error', e.response.data);
@@ -169,6 +170,8 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
         }
       },
       async retrieveOne({ dispatch, commit, state }, { params, id }) {
+        commit('loaded', false);
+
         try {
           await dispatch('options');
 
@@ -185,10 +188,10 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
           commit('item', data);
           commit('initialItem', data);
 
+          commit('loaded', true);
+
           commit('ajax', null);
         } catch (e) {
-          commit('loaded', false);
-
           commit('ajax', null);
 
           commit('error', e.response.data);
@@ -197,6 +200,8 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
         }
       },
       async retrieve({ dispatch, state, commit }, params) {
+        commit('loaded', false);
+
         try {
           await dispatch('options');
 
@@ -221,9 +226,9 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
           commit('lastLoadedAt', Date.now());
 
           commit('loaded', true);
+
           commit('ajax', null);
         } catch (e) {
-          commit('loaded', false);
           commit('ajax', null);
 
           commit('error', e.response.data);
@@ -235,6 +240,8 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
         await dispatch('update', { id: state.item.id, data: state.item, params });
       },
       async update({ commit, dispatch, state }, { id, data, params }) {
+        commit('loaded', false);
+
         try {
           const ajax = Vue.axios.put(`/${state.slug}/${id}`, data, {
             params: {
@@ -246,8 +253,6 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
 
           const { data: item } = await ajax;
 
-          commit('loaded', false);
-
           commit('item', item);
           commit('initialItem', item);
 
@@ -255,7 +260,6 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
 
           await dispatch('retrieve', state.params);
         } catch (e) {
-          commit('loaded', false);
           commit('ajax', null);
 
           commit('error', e.response.data);

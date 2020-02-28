@@ -21,14 +21,14 @@ import { capitalize } from '@/helpers/filters';
 export default {
   name: 'LayoutPage',
   props: {
-    name: {
-      type: String,
-      required: true,
-    },
     fluid: {
       type: Boolean,
       required: false,
       default: false,
+    },
+    name: {
+      type: String,
+      required: true,
     },
     title: {
       type: String,
