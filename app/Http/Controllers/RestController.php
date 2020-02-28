@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use Molotov\Traits\RestController as RestControllerTrait;
+use Illuminate\Foundation\Bus\DispatchesJobs;
+use Illuminate\Foundation\Validation\ValidatesRequests;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Molotov\Controllers\RestController as MolotovRestController;
 
-class RestController
+class RestController extends MolotovRestController
 {
-    use RestControllerTrait;
+    use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 }
