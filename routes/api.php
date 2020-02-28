@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
-use App\Utils\RouteHelper;
+use Molotov\Utils\RouteHelper;
 
 Route::prefix('v1')->group(function () {
     Route::get('/', 'StaticController@blank');

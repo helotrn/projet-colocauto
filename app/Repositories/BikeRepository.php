@@ -2,8 +2,8 @@
 
 namespace App\Repositories;
 
-use App\Http\Requests\BaseRequest as Request;
 use App\Models\Bike;
+use Molotov\Repositories\RestRepository;
 
 class BikeRepository extends RestRepository
 {

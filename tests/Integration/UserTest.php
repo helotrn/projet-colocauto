@@ -186,6 +186,7 @@ class UserTest extends TestCase
             'communities' => [['id' => $community->id]]
         ];
         $response = $this->json('PUT', "/api/v1/users/$user->id", $data);
+        $response->assertStatus(200);
 
         $data = [
             'users_id' => $user->id,

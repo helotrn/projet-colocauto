@@ -2,8 +2,8 @@
 
 namespace App\Repositories;
 
-use App\Http\Requests\BaseRequest as Request;
 use App\Models\Trailer;
+use Molotov\Repositories\RestRepository;
 
 class TrailerRepository extends RestRepository
 {

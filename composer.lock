@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "9e538a0cd8eb2f755b6d337b45884445",
-    "content-hash": "dce371381b57b3c2671b8a403aa93fd4",
+    "hash": "915b4b1da53bc5bcd25c68248f64ef42",
+    "content-hash": "99e78d089d3945632ee0fddeb9a814e0",
     "packages": [
         {
             "name": "bosnadev/database",
@@ -1915,6 +1915,54 @@
             "time": "2019-05-05 09:22:01"
         },
         {
+            "name": "molotovcoop/laravel-api-molotov",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "git@gitlab.com:molotovcoop/laravel-api-molotov.git",
+                "reference": "2c3c05b7a30a9205b62789b143ba41d59dda6a5e"
+            },
+            "require": {
+                "illuminate/auth": "^6.0",
+                "illuminate/contracts": "^6.0",
+                "illuminate/database": "^6.0",
+                "illuminate/http": "^6.0",
+                "illuminate/pagination": "^6.0",
+                "illuminate/routing": "^6.0",
+                "illuminate/support": "^6.0",
+                "illuminate/validation": "^6.0",
+                "php": "^7.2",
+                "symfony/http-foundation": "^4.3"
+            },
+            "require-dev": {
+                "limedeck/phpunit-detailed-printer": "^4.0",
+                "phpunit/phpunit": "^7.5",
+                "squizlabs/php_codesniffer": "^3.5"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Molotov\\": "lib/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "Tests\\": "tests/"
+                }
+            },
+            "license": [
+                "LGPL-3.0"
+            ],
+            "authors": [
+                {
+                    "name": "Émile Plourde-Lavoie",
+                    "email": "emile@molotov.ca"
+                }
+            ],
+            "description": "A set of helper classes for building Laravel APIs, built by Molotov cooperative.",
+            "time": "2020-02-28 19:28:30"
+        },
+        {
             "name": "monolog/monolog",
             "version": "1.25.2",
             "source": {
@@ -2889,17 +2937,17 @@
             ],
             "authors": [
                 {
+                    "name": "Ben Ramsey",
+                    "email": "ben@benramsey.com",
+                    "homepage": "https://benramsey.com"
+                },
+                {
                     "name": "Marijn Huizendveld",
                     "email": "marijn.huizendveld@gmail.com"
                 },
                 {
                     "name": "Thibaud Fabre",
                     "email": "thibaud@aztech.io"
-                },
-                {
-                    "name": "Ben Ramsey",
-                    "email": "ben@benramsey.com",
-                    "homepage": "https://benramsey.com"
                 }
             ],
             "description": "Formerly rhumsaa/uuid. A PHP 5.4+ library for generating RFC 4122 version 1, 3, 4, and 5 universally unique identifiers (UUID).",
@@ -6687,7 +6735,9 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": [],
+    "stability-flags": {
+        "molotovcoop/laravel-api-molotov": 20
+    },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {

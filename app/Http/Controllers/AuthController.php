@@ -9,14 +9,14 @@ use App\Http\Requests\BaseRequest as Request;
 use App\Http\Requests\User\SubmitRequest as UserSubmitRequest;
 use App\Http\Requests\User\UpdateRequest as UserUpdateRequest;
 use App\Models\User;
-use App\Utils\Traits\ErrorResponseTrait;
+use Molotov\Traits\RespondsWithErrors;
 use Illuminate\Contracts\Auth\Factory as Auth;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Passport\TokenRepository;
 
 class AuthController extends Controller
 {
-    use ErrorResponseTrait;
+    use RespondsWithErrors;
 
     protected $auth;
     protected $tokens;

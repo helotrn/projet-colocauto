@@ -2,8 +2,8 @@
 
 namespace App\Repositories;
 
-use App\Http\Requests\BaseRequest as Request;
 use App\Models\Borrower;
+use Molotov\Repositories\RestRepository;
 
 class BorrowerRepository extends RestRepository
 {

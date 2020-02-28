@@ -4,6 +4,7 @@ namespace App\Transformers;
 
 use App\Models\Community;
 use Auth;
+use Molotov\Transformers\BaseTransformer;
 
 class UserTransformer extends BaseTransformer
 {

@@ -2,8 +2,8 @@
 
 namespace App\Models\Pivots;
 
-use App\Models\BaseModelTrait;
 use Illuminate\Database\Eloquent\Relations\Pivot;
+use Molotov\Traits\BaseModel as BaseModelTrait;
 
 abstract class BasePivot extends Pivot
 {

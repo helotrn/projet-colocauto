@@ -2,8 +2,8 @@
 
 namespace App\Repositories;
 
-use App\Http\Requests\BaseRequest as Request;
 use App\Models\Action;
+use Molotov\Repositories\RestRepository;
 
 class ActionRepository extends RestRepository
 {
