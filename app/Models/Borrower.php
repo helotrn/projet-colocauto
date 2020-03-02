@@ -5,7 +5,6 @@ namespace App\Models;
 use App\Models\Loan;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
-use App\Transformers\BorrowerTransformer;
 
 class Borrower extends BaseModel
 {
@@ -25,8 +24,6 @@ class Borrower extends BaseModel
         'submitted_at',
         'user_id',
     ];
-
-    public static $transformer = BorrowerTransformer::class;
 
     public $items = ['user'];
 

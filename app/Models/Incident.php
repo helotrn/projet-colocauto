@@ -4,7 +4,6 @@ namespace App\Models;
 
 use App\Models\Action;
 use App\Models\Loan;
-use App\Transformers\ImageTransformer;
 
 class Incident extends Action
 {
@@ -19,8 +18,6 @@ class Incident extends Action
         'status',
         'incident_type',
     ];
-
-    public static $transformer = IncidentTransformer::class;
 
     public function loan() {
         return $this->belongsTo(Loan::class);

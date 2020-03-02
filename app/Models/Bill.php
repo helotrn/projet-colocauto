@@ -4,7 +4,6 @@ namespace App\Models;
 
 use App\Models\BillableItem;
 use App\Models\User;
-use App\Transformers\BillTransformer;
 use Carbon\Carbon;
 
 class Bill extends BaseModel
@@ -12,8 +11,6 @@ class Bill extends BaseModel
     public static $rules = [
         'period' => 'required',
     ];
-
-    public static $transformer = BillTransformer::class;
 
     protected $fillable = [
         'period',

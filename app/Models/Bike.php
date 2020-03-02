@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use App\Models\Loanable;
-use App\Transformers\BikeTransformer;
 
 class Bike extends Loanable
 {
@@ -35,8 +34,6 @@ class Bike extends Loanable
         'position',
         'size',
     ];
-
-    public static $transformer = BikeTransformer::class;
 
     public static function getColumnsDefinition() {
         return [

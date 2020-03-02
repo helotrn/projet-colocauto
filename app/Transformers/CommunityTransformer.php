@@ -2,6 +2,8 @@
 
 namespace App\Transformers;
 
+use Molotov\Transformers\BaseTransformer;
+
 class CommunityTransformer extends BaseTransformer
 {
     public function transform($item, $options = []) {

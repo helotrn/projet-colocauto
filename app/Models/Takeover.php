@@ -5,7 +5,6 @@ namespace App\Models;
 use App\Models\Action;
 use App\Models\Loan;
 use Illuminate\Database\Eloquent\Builder;
-use App\Transformers\TakeoverTransformer;
 
 class Takeover extends Action
 {
@@ -24,8 +23,6 @@ class Takeover extends Action
         'fuel_beginning',
         'comments_on_vehicle',
     ];
-
-    public static $transformer = TakeoverTransformer::class;
 
     public function loan() {
         return $this->belongsTo(Loan::class);

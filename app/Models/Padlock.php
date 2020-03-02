@@ -2,8 +2,6 @@
 
 namespace App\Models;
 
-use App\Transformers\PadlockTransformer;
-
 class Padlock extends BaseModel
 {
     public static $rules = [
@@ -13,6 +11,4 @@ class Padlock extends BaseModel
     protected $fillable = [
         'mac_address',
     ];
-
-    public static $transformer = PadlockTransformer::class;
 }

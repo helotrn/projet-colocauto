@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use App\Models\Loanable;
-use App\Transformers\TrailerTransformer;
 
 class Trailer extends Loanable
 {
@@ -21,8 +20,6 @@ class Trailer extends Loanable
         'instructions',
         'maximum_charge',
     ];
-
-    public static $transformer = TrailerTransformer::class;
 
     public static function getColumnsDefinition() {
         return [

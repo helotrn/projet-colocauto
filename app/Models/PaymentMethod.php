@@ -4,7 +4,6 @@ namespace App\Models;
 
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
-use App\Transformers\PaymentMethodTransformer;
 
 class PaymentMethod extends BaseModel
 {
@@ -23,8 +22,6 @@ class PaymentMethod extends BaseModel
         'four_last_digits',
         'credit_card_type',
     ];
-
-    public static $transformer = PaymentMethodTransformer::class;
 
     public $items = ['user'];
 

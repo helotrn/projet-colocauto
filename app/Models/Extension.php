@@ -4,7 +4,6 @@ namespace App\Models;
 
 use App\Models\Action;
 use App\Models\Loan;
-use App\Transformers\ExtensionTransformer;
 
 class Extension extends Action
 {
@@ -21,8 +20,6 @@ class Extension extends Action
         'new_duration',
         'comments_on_extension',
     ];
-
-    public static $transformer = ExtensionTransformer::class;
 
     public function loan() {
         return $this->belongsTo(Loan::class);

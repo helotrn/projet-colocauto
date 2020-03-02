@@ -5,7 +5,6 @@ namespace App\Models;
 use App\Models\Action;
 use App\Models\BillableItem;
 use App\Models\Loan;
-use App\Transformers\PaymentTransformer;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -20,8 +19,6 @@ class Payment extends Action
         'loan_id',
         'billable_item_id',
     ];
-
-    public static $transformer = PaymentTransformer::class;
 
     public $items = ['billableItem', 'loan'];
 

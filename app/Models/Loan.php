@@ -11,7 +11,6 @@ use App\Models\Intention;
 use App\Models\Loanable;
 use App\Models\Payment;
 use App\Models\Takeover;
-use App\Transformers\LoanTransformer;
 
 class Loan extends BaseModel
 {
@@ -25,8 +24,6 @@ class Loan extends BaseModel
         'duration_in_minutes',
         'borrower_id',
     ];
-
-    public static $transformer = LoanTransformer::class;
 
     public static function boot() {
         parent::boot();

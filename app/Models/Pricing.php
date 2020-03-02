@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use App\Models\Community;
-use App\Transformers\PricingTransformer;
 
 class Pricing extends BaseModel
 {
@@ -20,8 +19,6 @@ class Pricing extends BaseModel
         'variable',
         'rule',
     ];
-
-    public static $transformer = PricingTransformer::class;
 
     public $items = ['community'];
 

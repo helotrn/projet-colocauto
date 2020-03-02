@@ -5,7 +5,6 @@ namespace App\Models;
 use App\Models\Bill;
 use App\Models\Payment;
 use Illuminate\Database\Eloquent\Builder;
-use App\Transformers\BillableItemTransformer;
 
 class BillableItem extends BaseModel
 {
@@ -21,8 +20,6 @@ class BillableItem extends BaseModel
         'payment_id',
         'item_date',
     ];
-
-    public static $transformer = BillableItemTransformer::class;
 
     public $items = ['bill', 'payment'];
 

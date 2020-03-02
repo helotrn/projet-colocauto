@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use App\Models\User;
-use App\Transformers\FileTransformer;
 use Illuminate\Database\Eloquent\Builder;
 use Storage;
 
@@ -18,8 +17,6 @@ class File extends BaseModel
         'filesize' => 'required',
         'field' => 'nullable',
     ];
-
-    public static $transformer = FileTransformer::class;
 
     protected $fillable = [
         'field',

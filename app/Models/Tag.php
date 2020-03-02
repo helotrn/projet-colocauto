@@ -2,8 +2,6 @@
 
 namespace App\Models;
 
-use App\Transformers\TagTransformer;
-
 class Tag extends BaseModel
 {
     public static $rules = [
@@ -15,8 +13,6 @@ class Tag extends BaseModel
         'name',
         'type',
     ];
-
-    public static $transformer = TagTransformer::class;
 
     public function taggable() {
         return $this->morphTo();

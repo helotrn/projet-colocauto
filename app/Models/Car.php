@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use App\Models\Loanable;
-use App\Transformers\CarTransformer;
 
 class Car extends Loanable
 {
@@ -44,8 +43,6 @@ class Car extends Loanable
             'digits:4',
         ],
     ];
-
-    public static $transformer = CarTransformer::class;
 
     public static function getColumnsDefinition() {
         return [

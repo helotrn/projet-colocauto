@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Transformers\ImageTransformer;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Support\Facades\File;
 use Intervention\Image\ImageManager;
@@ -39,8 +38,6 @@ class Image extends BaseModel
     ];
 
     public static $sizesByField = [];
-
-    public static $transformer = ImageTransformer::class;
 
     public static function fetch($path) {
         $disk = app()->environment() === 'local' ? 'local' : 's3';

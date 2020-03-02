@@ -5,7 +5,6 @@ namespace App\Models;
 use App\Models\Action;
 use App\Models\Loan;
 use App\Models\Payment;
-use App\Transformers\IntentionTransformer;
 use Carbon\Carbon;
 
 class Intention extends Action
@@ -18,8 +17,6 @@ class Intention extends Action
     protected $fillable = [
         'loan_id',
     ];
-
-    public static $transformer = IntentionTransformer::class;
 
     public $items = ['loan'];
 

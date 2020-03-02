@@ -6,7 +6,6 @@ use App\Models\Bike;
 use App\Models\Car;
 use App\Models\Loanable;
 use App\Models\Trailer;
-use App\Transformers\OwnerTransformer;
 
 class Owner extends BaseModel
 {
@@ -20,8 +19,6 @@ class Owner extends BaseModel
         'submitted_at',
         'user_id',
     ];
-
-    public static $transformer = OwnerTransformer::class;
 
     public $collections = [
       'loanables',
