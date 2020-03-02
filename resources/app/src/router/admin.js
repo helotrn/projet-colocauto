@@ -46,7 +46,15 @@ export default {
         auth: true,
         slug: 'communities',
         params: {
-          fields: '*,users.*',
+          fields: [
+            '*',
+            'users.id',
+            'users.full_name',
+            'users.role',
+            'users.approved_at',
+            'users.suspended_at',
+            'users.proof.id',
+          ].join(','),
         },
         form: {
           id: {

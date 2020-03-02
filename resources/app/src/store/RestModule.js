@@ -11,7 +11,7 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
       deleted: null,
       empty: null,
       error: null,
-      filters: [],
+      filters: {},
       form: null,
       initialItem: '',
       item: null,
@@ -54,6 +54,7 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
       form(state, form) {
         state.form = form;
       },
+      // SETTER : Sets the item as a whole
       item(state, item) {
         state.item = item;
       },
@@ -66,8 +67,16 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
       loaded(state, loaded) {
         state.loaded = loaded;
       },
+      // SETTER : Deep merges the partial in the item
       mergeItem(state, partial) {
         state.item = merge(state.item, partial);
+      },
+      // SETTER : Shallow merges the partial in the item
+      patchItem(state, partial) {
+        state.item = {
+          ...state.item,
+          ...partial,
+        };
       },
       setParam(state, { name, value }) {
         Vue.set(state.params, name, value);

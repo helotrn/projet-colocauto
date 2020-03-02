@@ -21,6 +21,9 @@ export default {
     modifier: 'modifier',
     nouveau: 'nouveau',
     réinitialiser: 'réinitialiser',
+    rétablir: 'rétablir',
+    retirer: 'retirer',
+    suspendre: 'suspendre',
     supprimer: 'supprimer',
   },
   locales: {

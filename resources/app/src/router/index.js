@@ -62,7 +62,7 @@ const routes = [
           title: 'titles.communities',
           slug: 'users',
           params: {
-            fields: 'id,communities.*.*',
+            fields: 'id,communities.id,communities.name,communities.requirements,communities.proof',
           },
         },
       },

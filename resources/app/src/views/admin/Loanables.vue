@@ -81,7 +81,6 @@ export default {
   components: { AdminFilters },
   data() {
     return {
-      selected: [],
       table: [
         { key: 'id', label: 'ID', sortable: true },
         { key: 'name', label: 'Nom', sortable: true },

@@ -9,9 +9,6 @@ export default {
 
     next();
   },
-  async mounted() {
-    await this.loadItem();
-  },
   beforeRouteEnter(to, from, next) {
     next((vm) => {
       vm.loadItem();
@@ -41,6 +38,9 @@ export default {
     loading() {
       return !!this.context.ajax;
     },
+    params() {
+      return this.$route.meta.params;
+    },
     slug() {
       return this.$route.meta.slug;
     },
@@ -55,7 +55,7 @@ export default {
         } else {
           await dispatch(`${this.slug}/retrieveOne`, {
             id: this.id,
-            params: this.$route.meta.params,
+            params: this.params,
           });
         }
       } catch (e) {
@@ -86,9 +86,9 @@ export default {
     async submit() {
       try {
         if (!this.item.id) {
-          await this.$store.dispatch(`${this.slug}/createItem`, this.$route.meta.params);
+          await this.$store.dispatch(`${this.slug}/createItem`, this.params);
         } else {
-          await this.$store.dispatch(`${this.slug}/updateItem`, this.$route.meta.params);
+          await this.$store.dispatch(`${this.slug}/updateItem`, this.params);
         }
       } catch (e) {
         switch (e.request.status) {

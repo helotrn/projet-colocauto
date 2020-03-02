@@ -4,7 +4,7 @@
       <div class="profile-communities__communities__community"
         v-for="community in item.communities" :key="community.id">
         <h3>{{ community.name }}</h3>
-        <community-proof-form :community="community" />
+        <community-proof-form :community="community" @submit="submit" />
       </div>
     </div>
   </div>
