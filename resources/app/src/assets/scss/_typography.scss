@@ -4,3 +4,11 @@ html {
   font-size: $base-font-size;
   line-height: $line-height-base;
 }
+
+.muted {
+  color: $grey;
+}
+
+.img-fit {
+  max-width: 100%;
+}
