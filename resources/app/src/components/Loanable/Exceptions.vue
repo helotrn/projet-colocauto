@@ -1,8 +1,11 @@
 <template>
   <div class="exceptions">
-    {{ exceptions }}
     <b-row class="exceptions__row"
       v-for="(exception, index) in exceptions" :key="index">
+      <b-col class="exceptions__row__remove">
+        <b-button size="sm" variant="outline-danger"
+          @click.prevent="removeException(exception)">X</b-button>
+      </b-col>
       <b-col class="exceptions__row__available">
         <b-select :value="exception.available"
           @change="emitChange(exception, 'available', $event)">
@@ -27,24 +30,25 @@
           <b-form-checkbox-group :id="`weekdays-${index}`"
             :checked="exception.scope" name="`weekdays-${index}`"
             @change="emitChange(exception, 'scope', $event)">
-            <b-form-checkbox value="SU">Dimanche</b-form-checkbox>
-            <b-form-checkbox value="MO">Lundi</b-form-checkbox>
-            <b-form-checkbox value="TU">Mardi</b-form-checkbox>
-            <b-form-checkbox value="WE">Mercredi</b-form-checkbox>
-            <b-form-checkbox value="TH">Jeudi</b-form-checkbox>
-            <b-form-checkbox value="FR">Vendredi</b-form-checkbox>
+            <b-form-checkbox value="SU">Dimanche</b-form-checkbox><br>
+            <b-form-checkbox value="MO">Lundi</b-form-checkbox><br>
+            <b-form-checkbox value="TU">Mardi</b-form-checkbox><br>
+            <b-form-checkbox value="WE">Mercredi</b-form-checkbox><br>
+            <b-form-checkbox value="TH">Jeudi</b-form-checkbox><br>
+            <b-form-checkbox value="FR">Vendredi</b-form-checkbox><br>
             <b-form-checkbox value="SA">Samedi</b-form-checkbox>
           </b-form-checkbox-group>
         </div>
-        <div v-if="exception.type === 'dates'">
-          <datepicker inline :disabled-dates="selectedDates(exception.scope)"
+        <div v-if="exception.type === 'dates'"  class="exceptions__row__type__calendar">
+          <datepicker inline class="mt-3"
+            :disabled-dates="selectedDates(exception.scope)"
             @selected="selectDate($event, exception)" />
         </div>
       </b-col>
 
       <b-col class="exceptions__row__period">
-        <div v-if="exception.type">
-          <b-form-input type="text" :value="exception.period"
+        <div v-if="exception.type" class="mb-3">
+          <b-form-input type="text" :value="exception.period" class="mb-3"
             @blur="emitPeriodChange(exception, $event)"
             v-mask="'##:##-##:##'" :disabled="exception.period === '00:00-23:59'" />
 
@@ -120,6 +124,12 @@ export default {
 
       this.emitChange(exception, 'scope', dates);
     },
+    removeException(exception) {
+      const newExceptions = [...this.exceptions];
+      const index = newExceptions.indexOf(exception);
+      newExceptions.splice(index, 1);
+      this.$emit('input', newExceptions);
+    },
     selectedDates(dates) {
       // FIXME Awful trick to avoid timezone issues
       return { dates: dates.map(d => new Date(`${d} 12:00:00`)) };
@@ -153,6 +163,23 @@ export default {
 .exceptions {
   &__row {
     margin-bottom: 1em;
+
+    &__remove.col {
+      flex: 0 1 55px;
+    }
+
+    &__available.col {
+      flex: 0 1 200px;
+    }
+
+    &__period.col {
+      flex: 0 1 200px;
+    }
+
+    &__type__calendar {
+      display: flex;
+      justify-content: space-around;
+    }
   }
 }
 </style>

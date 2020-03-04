@@ -21,7 +21,7 @@
           hide-view-selector :time="false" start-week-on-sunday
           default-view="month" :disable-views="['years', 'year', 'week', 'day']">
           <template v-slot:cell-content="{ cell, view, events }">
-            <span :class="`vuecal__cell-date ${availabilityClass(events)}`">
+            <span :class="`vuecal__cell-date ${availabilityClass(events, cell)}`">
               {{ cell.content }}
             </span>
           </template>
@@ -33,7 +33,7 @@
           hide-view-selector :time="false" start-week-on-sunday
           default-view="month" :disable-views="['years', 'year', 'week', 'day']">
           <template v-slot:cell-content="{ cell, view, events }">
-            <span :class="`vuecal__cell-date ${availabilityClass(events)}`">
+            <span :class="`vuecal__cell-date ${availabilityClass(events, cell)}`">
               {{ cell.content }}
             </span>
           </template>
@@ -44,16 +44,25 @@
     <b-row class="availability-calendar__legend">
       <b-col>
         <ul>
-          <li>Disponible</li>
-          <li>Disponibilité limitée</li>
-          <li>Indisponible</li>
+          <li>
+            <span class="availability-calendar__legend__available" />
+            Disponible
+          </li>
+          <li>
+            <span class="availability-calendar__legend__limited" />
+            Disponibilité limitée
+          </li>
+          <li>
+            <span class="availability-calendar__legend__unavailable" />
+            Indisponible
+          </li>
         </ul>
       </b-col>
     </b-row>
 
     <b-row class="availability-calendar__description">
       <b-col>
-        <div class="form-inline availability-calendar__description__default">
+        <div class="form-inline availability-calendar__description__default d-none">
           <b-form-group label="Par défaut:" label-for="availability_mode" inline>
             <b-select v-model="loanable.availability_mode"
               id="availability_mode" name="availability_mode">
@@ -124,7 +133,11 @@ export default {
         period: '00:00-00:00',
       }];
     },
-    availabilityClass(events) {
+    availabilityClass(events, cell) {
+      if (cell.startDate.format('YYYY-MM-DD') < this.loanable.created_at) {
+        return 'unavailable';
+      }
+
       if (events.length === 0) {
         return 'available';
       }
@@ -152,6 +165,10 @@ export default {
 
 <style lang="scss">
 .availability-calendar {
+  .vdp-datepicker__calendar .cell.selected {
+    background-color: transparent !important;
+  }
+
   .vdp-datepicker__calendar .cell.disabled {
     background-color: #4bd !important;
   }
@@ -163,6 +180,40 @@ export default {
       label {
         margin-right: 1em;
       }
+    }
+  }
+
+  &__legend {
+    margin-top: 1em;
+
+    ul {
+      padding: 0;
+      list-style-type: none;
+    }
+
+    li {
+      display: inline-block;
+      margin-right: 30px;
+
+    }
+
+    span {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      border-radius: 5px;
+    }
+
+    &__available {
+      background-color: $success;
+    }
+
+    &__limited {
+      background-color: $warning;
+    }
+
+    &__unavailable {
+      background-color: $danger;
     }
   }
 

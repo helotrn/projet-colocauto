@@ -11,7 +11,8 @@
 
     <b-row>
       <b-col>
-        <loanable-form :loanable="item" :form="form" :loading="loading" @submit="submit" />
+        <loanable-form :loanable="item" :form="form" :loading="loading" @submit="submit"
+          :show-reset="!!item.id" :changed="true" @reset="reset" />
       </b-col>
     </b-row>
   </b-container>
