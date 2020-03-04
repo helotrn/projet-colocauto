@@ -79,12 +79,6 @@ class CommunityController extends RestController
           ],
           'filters' => $this->model::$filterTypes,
           'form' => [
-            'id' => [
-              'type' => 'number',
-              'disabled' => true,
-              'required' => true,
-              'label' => 'ID',
-            ],
             'name' => [
               'type' => 'text',
               'required' => true,
