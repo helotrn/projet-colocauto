@@ -121,7 +121,17 @@ export default {
   watch: {
     item: {
       deep: true,
-      handler() {
+      handler(newValue, oldValue) {
+        if (oldValue === null && newValue) {
+          if (this.$route.hash) {
+            setTimeout(() => {
+              const el = document.getElementById(this.$route.hash.substring(1));
+              if (el) {
+                this.$scrollTo(el);
+              }
+            }, 100);
+          }
+        }
         this.$store.commit(`${this.slug}/item`, this.item);
       },
     },
