@@ -25,8 +25,10 @@ import LayoutFooter from './components/Layout/Footer.vue';
 import LayoutPage from './components/Layout/Page.vue';
 
 import { filters } from './helpers';
+import dayjs from './helpers/dayjs';
 
 import '@/assets/scss/main.scss';
+import 'vue-cal/dist/vuecal.css';
 
 Vue.config.productionTip = false;
 
@@ -69,6 +71,15 @@ axios.interceptors.request.use((config) => {
   return config;
 });
 Vue.use(VueAxios, axios);
+
+Object.defineProperties(Vue.prototype, {
+  $dayjs: {
+    get() {
+      return dayjs;
+    },
+  },
+});
+Vue.dayjs = dayjs;
 
 new Vue({
   i18n,

@@ -19,6 +19,7 @@
     "vee-validate": "^3.2.2",
     "vue": "^2.6.11",
     "vue-axios": "^2.1.5",
+    "vue-cal": "^2.24.7",
     "vue-headful": "^2.1.0",
     "vue-i18n": "^8.15.3",
     "vue-router": "^3.1.3",

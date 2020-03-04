@@ -10002,6 +10002,11 @@ vue-axios@^2.1.5:
   resolved "https://registry.yarnpkg.com/vue-axios/-/vue-axios-2.1.5.tgz#1af4bf1218ed71309c76afb38d0f683e312c24a7"
   integrity sha512-th5xVbInVoyIoe+qY+9GCflEVezxAvztD4xpFF39SRQYqpoKD2qkmX8yv08jJG9a2SgNOCjirjJGSwg/wTrbmA==
 
+vue-cal@^2.24.7:
+  version "2.24.7"
+  resolved "https://registry.yarnpkg.com/vue-cal/-/vue-cal-2.24.7.tgz#9b34eef144cc214c23f8660e12ecd159ad9e35ba"
+  integrity sha512-r+R7QbtpyrkAm1hei5xLuGafchdNK8vnfoUItiC5hOlWhWDwjE1bpPQLvCowM95+ZOlQ+Abi5Hc+m3Kn7Oxb8A==
+
 vue-eslint-parser@^5.0.0:
   version "5.0.0"
   resolved "https://registry.yarnpkg.com/vue-eslint-parser/-/vue-eslint-parser-5.0.0.tgz#00f4e4da94ec974b821a26ff0ed0f7a78402b8a1"
