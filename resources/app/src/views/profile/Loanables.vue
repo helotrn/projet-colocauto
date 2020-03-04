@@ -16,15 +16,17 @@
 
     <b-row v-else v-for="loanable in data" :key="loanable.id">
       <b-col>
-        <router-link :to="`/profile/${slug}/${loanable.id}`">
-          {{ loanable.name }} ({{ loanable.type }})
-        </router-link>
+        <loanable-info-box
+          v-for="loanable in data" :key="loanable.id"
+          v-bind="loanable" />
       </b-col>
     </b-row>
   </div>
 </template>
 
 <script>
+import LoanableInfoBox from '@/components/Loanable/InfoBox.vue';
+
 import DataRouteGuards from '@/mixins/DataRouteGuards';
 import ListMixin from '@/mixins/ListMixin';
 
@@ -33,6 +35,7 @@ import locales from '@/locales';
 export default {
   name: 'ProfileLoanables',
   mixins: [DataRouteGuards, ListMixin],
+  components: { LoanableInfoBox },
   data() {
     return {
       selected: [],

@@ -9,6 +9,7 @@ $locomotion-green: #16a59e;
 $locomotion-grey: #b6b6b6;
 $locomotion-light-green: #00ada8;
 $locomotion-dark-green: #1e4847;
+$locomotion-dark-blue: #0d256e;
 
 $primary: #245aea;
 $secondary: #576194;
@@ -44,6 +45,8 @@ $enable-shadows: true;
 
 // Keep sorted below this line
 //$b-toaster-offset-top: $layout-navbar-height + ($base-font-size / 2);
+$card-border-radius: 15px;
+$card-border-width: 0;
 $dropdown-box-shadow: 2px 2px 4px rgba($black, 0.12);
 $dropdown-link-hover-bg: rgba($locomotion-green, 0.08);
 $dropdown-link-active-bg: $locomotion-green;

@@ -1,6 +1,6 @@
 <template>
-  <b-card class="loanable-info-box" bg="white" no-body>
-    <div class="card-body">
+  <b-card class="loanable-info-box shadow" bg="white" no-body>
+    <router-link class="card-body" :to="`/profile/loanables/${id}`">
       <b-row>
         <b-col class="loanable-info-box__image">Image</b-col>
 
@@ -8,7 +8,8 @@
 
         <b-col class="loanable-info-box__actions">
           <div>
-            <b-button size="sm" variant="outline-primary" :to="`/profile/loanables/${id}`">
+            <b-button size="sm" variant="outline-primary"
+              :to="`/profile/loanables/${id}#availability`">
               Modifier les disponibilités
             </b-button>
 
@@ -23,7 +24,7 @@
           </div>
         </b-col>
       </b-row>
-    </div>
+    </router-link>
 
     <b-modal id="`loanable-info-box-modal-${id}`">Hello From My Modal!</b-modal>
   </b-card>
@@ -79,6 +80,10 @@ export default {
 
 <style lang="scss">
 .loanable-info-box {
+  a:hover, a:active, a:focus {
+    text-decoration: none;
+  }
+
   &__image.col {
     flex: 0 1 85px;
     height: 85px;
@@ -86,6 +91,8 @@ export default {
 
   &__name.col {
     flex-grow: 1;
+    color: $black;
+    font-size: 20px;
   }
 
   &__name.col,

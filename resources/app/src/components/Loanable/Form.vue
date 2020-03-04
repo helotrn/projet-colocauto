@@ -80,6 +80,13 @@
           </span>
         </div>
 
+        <div class="form__section" v-if="loanable.type">
+          <a id="availability" />
+          <loanable-availability-calendar
+            :loanable="loanable"
+            :loading="loading" />
+        </div>
+
         <div class="form__buttons" v-if="!hideButtons">
           <b-button-group v-if="showReset">
             <b-button variant="success" type="submit" :disabled="!changed">
@@ -101,6 +108,7 @@
 <script>
 import FormsBuilder from '@/components/Forms/Builder.vue';
 import FormsValidatedInput from '@/components/Forms/ValidatedInput.vue';
+import LoanableAvailabilityCalendar from '@/components/Loanable/AvailabilityCalendar.vue';
 // import FormsImageUploader from '@/components/Forms/ImageUploader.vue';
 
 import locales from '@/locales';
@@ -111,6 +119,7 @@ export default {
     FormsBuilder,
     // FormsImageUploader,
     FormsValidatedInput,
+    LoanableAvailabilityCalendar,
   },
   props: {
     form: {

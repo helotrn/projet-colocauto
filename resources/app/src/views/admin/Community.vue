@@ -50,7 +50,9 @@
               </template>
               <template v-slot:cell(proof)="row">
                 <span v-if="row.item.proof">
-                  <a href="#" v-b-modal="`proof-${row.item.id}`">{{ row.item.proof.original_filename }}</a>
+                  <a href="#" v-b-modal="`proof-${row.item.id}`">
+                    {{ row.item.proof.original_filename }}
+                  </a>
 
                   <b-modal size="xl"
                     :title="`Preuve de résidence (${row.item.full_name})`"
@@ -157,7 +159,7 @@ export default {
       this.$store.dispatch(`${this.slug}/updateItem`);
     },
     removeUser(user) {
-      const users = this.item.users.filter((u) => u !== user);
+      const users = this.item.users.filter(u => u !== user);
 
       this.$store.commit(`${this.slug}/patchItem`, { users });
     },
