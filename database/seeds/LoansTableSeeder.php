@@ -2,17 +2,16 @@
 
 use App\Models\Loan;
 use Illuminate\Database\Seeder;
-use Faker\Generator as Faker;
 use Carbon\Carbon;
 
 class LoansTableSeeder extends Seeder
 {
-    public function run(Faker $faker) {
+    public function run() {
         $loans = [
             [
                 'id' => 1,
                 'departure_at' => now(),
-                'duration_in_minutes' => $faker->randomNumber($nbDigits = 4, $strict = false),
+                'duration_in_minutes' => 120,
                 'borrower_id' => 1,
                 'loanable_type' => 'bike',
                 'loanable_id' => 1,
