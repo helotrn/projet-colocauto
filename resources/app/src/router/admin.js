@@ -56,42 +56,6 @@ export default {
             'users.proof.id',
           ].join(','),
         },
-        form: {
-          id: {
-            type: 'number',
-            disabled: true,
-            required: true,
-            label: 'ID',
-          },
-          name: {
-            type: 'text',
-            required: true,
-            label: 'Nom',
-          },
-          description: {
-            type: 'textarea',
-            required: true,
-            label: 'Description',
-          },
-          type: {
-            type: 'select',
-            label: 'Type',
-            options: [
-              {
-                text: 'Privée',
-                value: 'private',
-              },
-              {
-                text: 'Voisinage',
-                value: 'neighborhood',
-              },
-              {
-                text: 'Quartier',
-                value: 'borough',
-              },
-            ],
-          },
-        },
       },
     },
     {
