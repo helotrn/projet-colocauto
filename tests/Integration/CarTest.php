@@ -10,7 +10,6 @@ use Tests\TestCase;
 class CarTest extends TestCase
 {
     private static $getCarResponseStructure = [
-        'availability_ics',
         'brand',
         'comments',
         'engine',
@@ -50,7 +49,6 @@ class CarTest extends TestCase
             'has_accident_report' => false,
             'insurer' => $this->faker->word,
             'has_informed_insurer' => true,
-            'availability_ics' => $this->faker->sentence,
             'owner_id' => $owner->id,
             'type' => 'car',
         ];

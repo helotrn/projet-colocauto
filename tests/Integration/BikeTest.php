@@ -20,7 +20,6 @@ class BikeTest extends TestCase
         'location_description',
         'instructions',
         'comments',
-        'availability_ics',
     ];
 
     public function testCreateBikes() {
@@ -33,7 +32,6 @@ class BikeTest extends TestCase
             'model' => $this->faker->sentence,
             'bike_type' => $this->faker->randomElement(['regular' ,'electric', 'fixed_wheel']),
             'size' => $this->faker->randomElement(['big' ,'medium', 'small', 'kid']),
-            'availability_ics' => $this->faker->sentence,
             'type' => 'bike',
         ];
 

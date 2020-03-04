@@ -14,7 +14,6 @@ class TrailerTest extends TestCase
         'id',
         'name',
         'comments',
-        'availability_ics',
         'instructions',
         'location_description',
         'maximum_charge',
@@ -29,7 +28,6 @@ class TrailerTest extends TestCase
             'comments' => $this->faker->paragraph,
             'instructions' => $this->faker->paragraph,
             'maximum_charge' => $this->faker->numberBetween($min = 1000, $max = 9000),
-            'availability_ics' => $this->faker->sentence,
             'type' => 'trailer',
         ];
 

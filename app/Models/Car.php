@@ -16,7 +16,6 @@ class Car extends Loanable
         'location_description' => [ 'present' ],
         'instructions' => [ 'present' ],
         'comments' => [ 'present' ],
-        'availability_ics' => [ 'present' ],
         'model' => [ 'required' ],
         'brand' => [ 'required' ],
         'engine' => [
@@ -66,7 +65,8 @@ class Car extends Loanable
     protected $table = 'cars';
 
     protected $fillable = [
-        'availability_ics',
+        'availability_json',
+        'availability_mode',
         'brand',
         'comments',
         'engine',

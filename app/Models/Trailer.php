@@ -12,7 +12,6 @@ class Trailer extends Loanable
     ];
 
     protected $fillable = [
-        'availability_ics',
         'name',
         'position',
         'location_description',

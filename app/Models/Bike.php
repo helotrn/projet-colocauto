@@ -17,14 +17,12 @@ class Bike extends Loanable
         ],
         'instructions' => [ 'present' ],
         'comments' => [ 'present' ],
-        'availability_ics' => [ 'present' ],
         'model' => [ 'present' ],
         'bike_type' => [ 'required' ],
         'size' => [ 'required' ],
     ];
 
     protected $fillable = [
-        'availability_ics',
         'bike_type',
         'comments',
         'instructions',
