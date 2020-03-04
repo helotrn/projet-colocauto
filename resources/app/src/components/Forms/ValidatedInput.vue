@@ -8,12 +8,12 @@
       <b-form-select v-if="type === 'select'"
         :id="name" :name="name" :key="`${type}-${name}`"
         :state="getValidationState(validationContext)"
-        :options="options"
+        :options="options" :disabled="disabled"
         v-bind:value="value"
         v-on:change="emitChange" />
       <b-form-checkbox v-else-if="type === 'checkbox'"
         :id="name" :name="name" :key="`${type}-${name}`"
-        :value="true"
+        :value="true" :disabled="disabled"
         :unchecked-value="false"
         :state="getValidationState(validationContext)"
         v-bind:checked="value"
@@ -22,7 +22,7 @@
       </b-form-checkbox>
       <b-form-textarea v-else-if="type === 'textarea'"
         :id="name" :name="name" :key="`${type}-${name}`"
-        :placeholder="placeholder"
+        :placeholder="placeholder" :disabled="disabled"
         :rows="rows" :max-rows="maxRows"
         :state="getValidationState(validationContext)"
         v-bind:value="value"
@@ -31,7 +31,7 @@
       <b-form-input v-else
         :id="name" :name="name" :key="`${type}-${name}`"
         :type="type"
-        :placeholder="placeholder"
+        :placeholder="placeholder" :disabled="disabled"
         :state="getValidationState(validationContext)"
         v-bind:value="value"
         v-on:input="emitChange"/>
@@ -52,6 +52,11 @@ export default {
       type: String,
       required: false,
       default: '',
+    },
+    disabled: {
+      type: Boolean,
+      required: false,
+      default: false,
     },
     label: {
       type: String,
