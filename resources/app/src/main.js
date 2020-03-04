@@ -4,6 +4,7 @@ import axios from 'axios';
 import VueAxios from 'vue-axios';
 import * as VueGoogleMaps from 'vue2-google-maps';
 import vueHeadful from 'vue-headful';
+import VueScrollTo from 'vue-scrollto';
 
 import {
   ValidationObserver,
@@ -31,6 +32,8 @@ import '@/assets/scss/main.scss';
 import 'vue-cal/dist/vuecal.css';
 
 Vue.config.productionTip = false;
+
+Vue.use(VueScrollTo)
 
 Vue.use(BootstrapVue);
 Vue.use(BootstrapVueIcons);
