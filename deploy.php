@@ -5,7 +5,7 @@ require 'recipe/laravel.php';
 
 set('application', 'Locomotion');
 
-set('repository', 'git@git.molotov.ca:molotov/locomotion.app.git');
+set('repository', 'git@gitlab.com:Solon-collectif/locomotion.app.git');
 
 set('git_tty', true);
 
