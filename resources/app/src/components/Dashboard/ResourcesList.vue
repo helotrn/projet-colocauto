@@ -1,10 +1,42 @@
 <template>
-  <div class="resources-list">
+  <div class="dashboard-resources-list">
     <h3>Ressources</h3>
 
-    <ul class="resources-list__resources">
-      <li class="resources-list__resources__resource">
-        Foire aux questions (FAQ)
+    <ul class="dashboard-resources-list__resources">
+      <li class="dashboard-resources-list__resources__faq">
+        <router-link to="/faq">
+          <img src="/icons/faq.png">
+          <span>
+            Foire aux questions (FAQ)
+          </span>
+        </router-link>
+      </li>
+
+      <li class="dashboard-resources-list__resources__ambassadors">
+        <router-link to="/community?tag=ambassador">
+          <img src="/icons/allo.png">
+          <span>
+            Les ambassadeurs de ta communauté
+          </span>
+        </router-link>
+      </li>
+
+      <li class="dashboard-resources-list__resources__desjardins">
+        <router-link to="/guide/assurance-desjardins">
+          <img src="/icons/desjardins.png">
+          <span>
+            Assurance Desjardins
+          </span>
+        </router-link>
+      </li>
+
+      <li class="dashboard-resources-list__resources__messenger">
+        <a href="https://facebook.com" target="_blank">
+          <img src="/icons/messenger.png">
+          <span>
+            Groupe de clavardage Locomotion
+          </span>
+        </a>
       </li>
     </ul>
   </div>
@@ -12,9 +44,47 @@
 
 <script>
 export default {
-  name: 'ResourcesList',
+  name: 'DashboardResourcesList',
 };
 </script>
 
 <style lang="scss">
+.dashboard-resources-list {
+  h3 {
+    font-size: 20px;
+    font-weight: 600;
+  }
+
+  ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+
+    li > a {
+      color: $black;
+
+      &, &:hover, &:active, &:focus {
+        text-decoration: none;
+      }
+
+      display: flex;
+      flex-direction: row;
+      margin-top: 20px;
+    }
+
+    li {
+      img {
+        margin-right: 20px;
+      }
+
+      span {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+
+        font-size: 15px;
+      }
+    }
+  }
+}
 </style>

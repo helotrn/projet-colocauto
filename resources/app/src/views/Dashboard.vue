@@ -16,10 +16,13 @@
           </div>
         </section>
 
-        <section class="page__section">
+        <section class="page__section" v-if="hasUpcomingLoans">
           <h2>Nouvelles demandes de réservation</h2>
+          <p class="muted">Cette personne devrait entrer en contact avec vous sous peu.</p>
 
-          <div>Ici des blocs de nouvelles réservations.</div>
+          <div class="dashboard__upcoming-loans" v-for="loan in upcomingLoans" :key="loan.id">
+            {{ loan }}
+          </div>
         </section>
 
         <section class="page__section">
@@ -61,11 +64,17 @@
       </b-col>
 
       <b-col tag="aside" class="page__sidebar" lg="3">
-        <account-status />
+        <b-card>
+          <dashboard-balance :user="user" />
 
-        <location-history />
+          <hr>
 
-        <resources-list />
+          <dashboard-loan-history :loans="pastLoans" />
+
+          <hr>
+
+          <dashboard-resources-list />
+        </b-card>
       </b-col>
     </b-row>
   </layout-page>
@@ -82,20 +91,20 @@ en:
 import Authenticated from '@/mixins/Authenticated';
 import Notification from '@/mixins/Notification';
 
-import AccountStatus from '@/components/Dashboard/AccountStatus.vue';
+import DashboardBalance from '@/components/Dashboard/Balance.vue';
 import LoanableInfoBox from '@/components/Loanable/InfoBox.vue';
-import LocationHistory from '@/components/Dashboard/LocationHistory.vue';
-import ResourcesList from '@/components/Dashboard/ResourcesList.vue';
+import DashboardLoanHistory from '@/components/Dashboard/LoanHistory.vue';
+import DashboardResourcesList from '@/components/Dashboard/ResourcesList.vue';
 import TutorialBlock from '@/components/Dashboard/TutorialBlock.vue';
 
 export default {
   name: 'Dashboard',
   mixins: [Authenticated, Notification],
   components: {
-    AccountStatus,
+    DashboardBalance,
     LoanableInfoBox,
-    LocationHistory,
-    ResourcesList,
+    DashboardLoanHistory,
+    DashboardResourcesList,
     TutorialBlock,
   },
   beforeMount() {
@@ -112,6 +121,10 @@ export default {
     h2 {
       margin-bottom: 25px;
     }
+  }
+
+  .page__content {
+    padding-top: 45px;
   }
 
   &__vehicles {

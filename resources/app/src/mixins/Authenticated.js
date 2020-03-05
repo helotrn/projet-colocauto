@@ -49,6 +49,9 @@ export default {
 
       return true;
     },
+    pastLoans() {
+      return [];
+    },
     user() {
       return this.$store.state.user;
     },
