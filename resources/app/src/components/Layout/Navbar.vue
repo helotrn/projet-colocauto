@@ -26,7 +26,7 @@
     <b-collapse id="nav-collapse" class="layout-navbar__collapse" is-nav>
       <div class="layout-navbar__collapse__illustration d-md-none" />
       <b-navbar-nav class="ml-auto" v-if="isLoggedIn">
-        <b-nav-item to="/app">
+        <b-nav-item to="/app" v-if="isRegistered">
           <span class="nav-link__icon d-lg-none">
             <svg-dashboard />
           </span>
@@ -37,7 +37,7 @@
           <span class="nav-link__icon d-lg-none">
             <svg-location />
           </span>
-          <span class="nav-link__text">Trouver un véhicule</span>
+          <span class="nav-link__text">Trouve un véhicule</span>
         </b-nav-item>
 
         <b-nav-item to="/community" v-if="hasCommunity">

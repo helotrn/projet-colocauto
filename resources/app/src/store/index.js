@@ -41,6 +41,8 @@ const initialState = {
   refreshToken: null,
 };
 
+const loadUserFields = '*,loanables.*,loanables.loans.*,avatar.*,owner.*,borrower.*,communities.*';
+
 const actions = {
   async loadUser({ commit, dispatch }) {
     commit('loading', true);
@@ -48,8 +50,7 @@ const actions = {
     try {
       const { data: user } = await Vue.axios.get('/auth/user', {
         params: {
-          fields: '*,loanables.*,loanables.loans.*,avatar.*,owner.*,borrower.*,communities.id,communities.name,'
-            + 'communities.role,communities.proof',
+          fields: loadUserFields,
         },
       });
 
@@ -100,7 +101,7 @@ const actions = {
     try {
       const { data: user } = await Vue.axios.put('/auth/user/submit', {}, {
         params: {
-          fields: '*,avatar.*,owner.*,borrower.*.*,communities.id,communities.name,communities.role,communities.proof',
+          fields: loadUserFields,
         },
       });
 

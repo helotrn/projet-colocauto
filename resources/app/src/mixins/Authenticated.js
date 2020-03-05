@@ -20,8 +20,13 @@ export default {
         refreshToken,
       };
     },
+    canLoanCar() {
+      return this.canLoanVehicle && this.user.borrower.approved_at;
+    },
     canLoanVehicle() {
-      return this.user.borrower && this.user.borrower.approved_at;
+      return this.user.borrower && this.user.communities.reduce((acc, c) => {
+        return acc || (c.approved_at && !c.suspended_at);
+      }, false);
     },
     hasCommunity() {
       return this.isLoggedIn && this.user.communities && this.user.communities.length > 0;
@@ -73,7 +78,7 @@ export default {
       return this.user.loanables.reduce((acc, loanable) => {
         acc.push(...loanable.loans.filter(l => l.departure_at > now));
         return acc;
-      }, [])
+      }, []);
     },
     waitingLoans() {
       return [];

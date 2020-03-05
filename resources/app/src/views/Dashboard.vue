@@ -1,7 +1,7 @@
 <template>
   <layout-page name="dashboard">
     <b-row class="page__section">
-      <b-col class="page__content__main" lg="9">
+      <b-col class="page__content__main" xl="9" lg="8" md="7">
         <h1>{{ $t('Bienvenue, {name}', { name: user.full_name })}}</h1>
 
         <section class="page__section" v-if="hasTutorials">
@@ -45,7 +45,7 @@
           </div>
         </section>
 
-        <section class="page__section">
+        <section class="page__section" v-if="hasUpcomingLoans">
           <h2>Réservations à venir</h2>
 
           <div class="dashboard__upcoming-loans" v-for="loan in upcomingLoans" :key="loan.id">
@@ -79,7 +79,7 @@
         </section>
       </b-col>
 
-      <b-col tag="aside" class="page__sidebar" lg="3">
+      <b-col tag="aside" class="page__sidebar" xl="3" lg="4" md="5">
         <b-card>
           <dashboard-balance :user="user" />
 
@@ -127,6 +127,10 @@ export default {
     if (!this.isLoggedIn) {
       this.skipToLogin('app');
     }
+
+    if (!this.user.name) {
+      this.$router.replace('/register');
+    }
   },
   computed: {
     hasTutorials() {
@@ -142,12 +146,12 @@ export default {
         case 'find-vehicle':
           return !!this.user.borrower;
         case 'discover-community':
-          return this.user.created_at
+          return this.hasCommunity && this.user.created_at
             >= this.$dayjs().subtract(2, 'week').format('YYYY-MM-DD HH:mm:ss');
         default:
           return false;
       }
-    }
+    },
   },
 };
 </script>
@@ -162,6 +166,7 @@ export default {
 
   .page__content {
     padding-top: 45px;
+    padding-bottom: 45px;
   }
 
   &__vehicles {

@@ -203,9 +203,19 @@ export default {
       }
     },
     async submitOwnerDocumentsAndTags() {
-      await this.submit();
-      await this.$store.dispatch('submitUser');
-      this.$router.push('/register/5');
+      try {
+        await this.submit();
+        await this.$store.dispatch('submitUser');
+
+        this.$router.push('/register/5');
+      } catch (e) {
+          this.$store.commit('addNotification', {
+            content: 'Erreur fatale',
+            title: "Erreur d'inscription",
+            variant: 'danger',
+            type: 'register',
+          });
+      }
     },
   },
 };

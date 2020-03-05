@@ -64,6 +64,8 @@ export default {
     if (this.user.borrower && this.user.borrower.id) {
       this.borrower = this.user.borrower;
       this.carBorrowerIntent = true;
+    } else {
+      this.user.borrower = {};
     }
   },
   props: {
@@ -92,7 +94,7 @@ export default {
       if (val) {
         this.$store.commit('users/mergeItem', { borrower: this.borrower });
       } else {
-        this.$store.commit('users/mergeItem', { borrower: null });
+        this.$store.commit('users/mergeItem', { borrower: {} });
       }
     },
     ownerIntent(val) {

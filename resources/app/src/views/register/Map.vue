@@ -1,5 +1,5 @@
 <template>
-  <div name="register-map">
+  <div name="register-map" v-if="routeDataLoaded">
     <b-card title="Trouver une communauté" class="register-map__form" v-if="!community">
       <b-card-text>
         <b-form @submit.prevent="searchPostalCode">
@@ -47,30 +47,34 @@
       </b-card-text>
     </b-card>
 
-    <gmap-map class="register-map__map"
-      ref="map"
-      :zoom="zoom"
-      :center="center"
-      :options="mapOptions"
-      map-type-id="terrain">
-      <gmap-polygon v-for="c in communities" :key="`polygon-${c.id}`"
-        :path="c.area_google"
-        :label="c.name"
-        :options="polygonOptions"
-        @click="community = c" />
-      <gmap-marker v-for="c in communities" :key="`marker-${c.id}`"
-        :label="zoom > 14 ? {
-          text: c.name,
-          color: '#ffffff',
-          fontWeight: '600',
-          fontFamily: 'BrandonText',
-          fontSize: '40px'
-        } : null"
-        :clickable="false"
-        :icon="mapIcon"
-        :position="c.center_google" />
-    </gmap-map>
+    <div v-if="communities">
+      <gmap-map
+        class="register-map__map"
+        ref="map"
+        :zoom="zoom"
+        :center="center"
+        :options="mapOptions"
+        map-type-id="terrain">
+        <gmap-polygon v-for="c in communities" :key="`polygon-${c.id}`"
+          :path="c.area_google"
+          :label="c.name"
+          :options="polygonOptions"
+          @click="community = c" />
+        <gmap-marker v-for="c in communities" :key="`marker-${c.id}`"
+          :label="zoom > 14 ? {
+            text: c.name,
+            color: '#ffffff',
+            fontWeight: '600',
+            fontFamily: 'BrandonText',
+            fontSize: '40px'
+          } : null"
+          :clickable="false"
+          :icon="mapIcon"
+          :position="c.center_google" />
+      </gmap-map>
+    </div>
   </div>
+  <layout-loading v-else />
 </template>
 
 <script>
@@ -82,15 +86,6 @@ import FormMixin from '@/mixins/FormMixin';
 export default {
   name: 'Map',
   mixins: [DataRouteGuards, FormMixin],
-  mounted() {
-    this.$refs.map.$mapPromise.then(() => {
-      if (!this.community) {
-        this.resetCenter();
-      } else {
-        this.centerOnCommunity(this.community);
-      }
-    });
-  },
   props: {
     id: {
       required: false,
@@ -263,6 +258,17 @@ export default {
     },
   },
   watch: {
+    routeDataLoaded() {
+      setTimeout(() => {
+        this.$refs.map.$mapPromise.then(() => {
+          if (!this.community) {
+            this.resetCenter();
+          } else {
+            this.centerOnCommunity(this.community);
+          }
+        });
+      }, 500);
+    },
     community(value) {
       if (!value) {
         return this.resetCenter();

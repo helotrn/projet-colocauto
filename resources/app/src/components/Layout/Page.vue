@@ -4,14 +4,14 @@
 
     <layout-header class="page__header" :title="pageTitle" />
 
-      <div class="page__background">
-        <b-container :fluid="fluid" tag="main" class="page__content" v-if="!wide">
-          <slot />
-        </b-container>
-        <main class="page__content" v-else>
-          <slot />
-        </main>
-      </div>
+    <div class="page__background">
+      <b-container :fluid="fluid" tag="main" class="page__content" v-if="!wide">
+        <slot />
+      </b-container>
+      <main class="page__content" v-else>
+        <slot />
+      </main>
+    </div>
 
     <layout-footer class="page__footer" />
   </div>

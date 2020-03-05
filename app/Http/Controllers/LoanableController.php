@@ -200,8 +200,8 @@ class LoanableController extends RestController
                             ],
                         ],
                     ],
-                    'availability_ics' => [
-                        'type' => 'point',
+                    'availability_json' => [
+                        'type' => 'json',
                     ],
                     'owner_id' => [
                         'type' => 'relation',
@@ -352,6 +352,9 @@ class LoanableController extends RestController
         $generalRules = $this->model->getRules();
         $generalRulesKeys = array_keys($generalRules);
         foreach ($generalRules as $field => $rules) {
+            if (!isset($template['form']['general'][$field])) {
+                continue;
+            }
             $template['form']['general'][$field]['rules'] = $this->formatRules($rules);
         }
 
@@ -360,12 +363,18 @@ class LoanableController extends RestController
             if (in_array($field, $generalRulesKeys)) {
                 continue;
             }
+            if (!isset($template['form']['bike'][$field])) {
+                continue;
+            }
             $template['form']['bike'][$field]['rules'] = $this->formatRules($rules);
         }
 
         $carRules = Car::getRules();
         foreach ($carRules as $field => $rules) {
             if (in_array($field, $generalRulesKeys)) {
+                continue;
+            }
+            if (!isset($template['form']['car'][$field])) {
                 continue;
             }
             $template['form']['car'][$field]['rules'] = $this->formatRules($rules);

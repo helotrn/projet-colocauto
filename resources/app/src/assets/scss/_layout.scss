@@ -10,6 +10,10 @@ body {
       margin-bottom: 60px;
     }
 
+    .page__section:last-child {
+      margin-bottom: 0;
+    }
+
     &.padded {
       padding-top: 1em;
       padding-bottom: 50px;
