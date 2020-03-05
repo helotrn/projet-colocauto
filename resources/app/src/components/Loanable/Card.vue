@@ -1,18 +1,16 @@
 <template>
   <b-card class="loanable-card" no-body>
     <div class="loanable-card__image">
-        <div class="loanable-card__image__user" :style="userAvatarStyle" />
+      <div class="loanable-card__image__user" :style="userAvatarStyle" />
 
-        <div class="loanable-card__image__loanable" :style="loanableImageStyle" />
+      <div class="loanable-card__image__loanable" :style="loanableImageStyle" />
     </div>
 
     <h2>{{ name }}</h2>
 
-    <div class="loanable-card__tags">
-    </div>
+    <div class="loanable-card__tags"/>
 
-    <div class="loanable-card__estimated-fare">
-    </div>
+    <div class="loanable-card__estimated-fare"/>
 
     <div class="loanable-card__buttons">
       <b-button variant="outline-primary">Demande d'emprunt</b-button>
@@ -56,7 +54,7 @@ export default {
 
       return {
         backgroundImage: `url('${this.owner.user.avatar.sizes.thumbnail.url}')`,
-      }
+      };
     },
     loanableImageStyle() {
       if (!this.image) {
@@ -65,7 +63,7 @@ export default {
 
       return {
         backgroundImage: `url('${this.image.sizes.thumbnail.url}')`,
-      }
+      };
     },
   },
 };

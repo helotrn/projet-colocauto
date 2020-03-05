@@ -158,7 +158,7 @@ class User extends AuthenticatableBaseModel
             ->withPivot(['id', 'approved_at', 'created_at', 'role', 'suspended_at', 'updated_at']);
 
         if (Auth::user()->isAdmin()) {
-          return $relation;
+            return $relation;
         }
 
         return $relation->whereSuspendedAt(null);

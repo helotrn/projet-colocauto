@@ -10,7 +10,7 @@
 
 <script>
 import Datepicker from 'vuejs-datepicker';
-import { fr, en } from 'vuejs-datepicker/dist/locale'
+import { fr } from 'vuejs-datepicker/dist/locale';
 
 export default {
   name: 'FormsDatepicker',
@@ -33,7 +33,7 @@ export default {
           }
 
           return this.$dayjs(val).format('D MMMM YYYY').toLowerCase();
-        }
+        };
       },
     },
     inline: {
@@ -67,7 +67,7 @@ export default {
   },
   methods: {
     emitInput(value) {
-      this.$emit('input', value.format('YYYY-MM-DD'))
+      this.$emit('input', value.format('YYYY-MM-DD'));
     },
   },
 };

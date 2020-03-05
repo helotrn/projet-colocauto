@@ -209,12 +209,12 @@ export default {
 
         this.$router.push('/register/5');
       } catch (e) {
-          this.$store.commit('addNotification', {
-            content: 'Erreur fatale',
-            title: "Erreur d'inscription",
-            variant: 'danger',
-            type: 'register',
-          });
+        this.$store.commit('addNotification', {
+          content: 'Erreur fatale',
+          title: "Erreur d'inscription",
+          variant: 'danger',
+          type: 'register',
+        });
       }
     },
   },

@@ -24,9 +24,9 @@ export default {
       return this.canLoanVehicle && this.user.borrower.approved_at;
     },
     canLoanVehicle() {
-      return this.user.borrower && this.user.communities.reduce((acc, c) => {
-        return acc || (c.approved_at && !c.suspended_at);
-      }, false);
+      return this.user.borrower
+        && this.user.communities
+          .reduce((acc, c) => acc || (c.approved_at && !c.suspended_at), false);
     },
     hasCommunity() {
       return this.isLoggedIn && this.user.communities && this.user.communities.length > 0;
