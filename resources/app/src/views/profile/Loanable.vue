@@ -17,6 +17,7 @@
       </b-col>
     </b-row>
   </b-container>
+  <layout-loading v-else />
 </template>
 
 <script>

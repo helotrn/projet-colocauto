@@ -4,6 +4,7 @@
       @reset="reset" :changed="changed" show-reset
       @submit="submit" v-if="item" />
   </div>
+  <layout-loading v-else />
 </template>
 
 <script>

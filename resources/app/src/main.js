@@ -24,6 +24,7 @@ import i18n from './i18n';
 
 import LayoutHeader from './components/Layout/Header.vue';
 import LayoutFooter from './components/Layout/Footer.vue';
+import LayoutLoading from './components/Layout/Loading.vue';
 import LayoutPage from './components/Layout/Page.vue';
 
 import { filters } from './helpers';
@@ -34,13 +35,10 @@ import 'vue-cal/dist/vuecal.css';
 
 Vue.config.productionTip = false;
 
-Vue.use(VueTheMask)
-
-Vue.use(VueScrollTo)
-
+Vue.use(VueTheMask);
+Vue.use(VueScrollTo);
 Vue.use(BootstrapVue);
 Vue.use(BootstrapVueIcons);
-
 Vue.use(VueGoogleMaps, {
   load: {
     key: process.env.VUE_APP_GOOGLE_MAPS_API_KEY,
@@ -50,6 +48,7 @@ Vue.use(VueGoogleMaps, {
 
 Vue.component('layout-footer', LayoutFooter);
 Vue.component('layout-header', LayoutHeader);
+Vue.component('layout-loading', LayoutLoading);
 Vue.component('layout-page', LayoutPage);
 
 // Install VeeValidate rules and localization
