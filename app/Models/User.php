@@ -10,6 +10,7 @@ use App\Models\Loan;
 use App\Models\Owner;
 use App\Models\PaymentMethod;
 use App\Transformers\UserTransformer;
+use Auth;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
@@ -151,11 +152,16 @@ class User extends AuthenticatableBaseModel
     }
 
     public function communities() {
-        return $this->belongsToMany(Community::class)
+        $relation = $this->belongsToMany(Community::class)
             ->using(Pivots\CommunityUser::class)
             ->withTimestamps()
-            ->withPivot(['id', 'approved_at', 'created_at', 'role', 'suspended_at', 'updated_at'])
-            ->whereNull('suspended_at');
+            ->withPivot(['id', 'approved_at', 'created_at', 'role', 'suspended_at', 'updated_at']);
+
+        if (Auth::user()->isAdmin()) {
+          return $relation;
+        }
+
+        return $relation->whereSuspendedAt(null);
     }
 
     public function files() {
