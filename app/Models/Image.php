@@ -40,7 +40,7 @@ class Image extends BaseModel
     public static $sizesByField = [];
 
     public static function fetch($path) {
-        $disk = app()->environment() === 'local' ? 'local' : 's3';
+        $disk = app()->environment() === 'local' ? 'local' : 'local';
         try {
             $file = Storage::disk($disk)->get($path);
         } catch (FileNotFoundException $e) {
@@ -51,7 +51,7 @@ class Image extends BaseModel
     }
 
     public static function store($path, $image) {
-        $disk = app()->environment() === 'local' ? 'local' : 's3';
+        $disk = app()->environment() === 'local' ? 'local' : 'local';
 
         $image->stream();
         return Storage::disk($disk)->put($path, $image->__toString());

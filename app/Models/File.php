@@ -32,7 +32,7 @@ class File extends BaseModel
     protected $appends = ['url'];
 
     public static function fetch($path) {
-        $disk = app()->environment() === 'local' ? 'local' : 's3';
+        $disk = app()->environment() === 'local' ? 'local' : 'local';
         try {
             $file = Storage::disk($disk)->get($path);
         } catch (FileNotFoundException $e) {
@@ -42,7 +42,7 @@ class File extends BaseModel
     }
 
     public static function store($path, $file) {
-        $disk = app()->environment() === 'local' ? 'local' : 's3';
+        $disk = app()->environment() === 'local' ? 'local' : 'local';
         return Storage::disk($disk)->put($path, $file);
     }
 
