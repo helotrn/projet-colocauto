@@ -1,6 +1,7 @@
 import dayjs from 'dayjs';
 import advancedFormat from 'dayjs/plugin/advancedFormat';
 import relativeTime from 'dayjs/plugin/relativeTime';
+import timeZone from 'dayjs-ext/plugin/timeZone-2012-2022';
 
 const locale = {
   name: 'fr',
@@ -41,5 +42,6 @@ dayjs.locale(locale, null, true);
 dayjs.locale('fr');
 dayjs.extend(relativeTime);
 dayjs.extend(advancedFormat);
+dayjs.extend(timeZone);
 
 export default dayjs;
