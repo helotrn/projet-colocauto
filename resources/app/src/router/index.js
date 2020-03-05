@@ -92,7 +92,7 @@ const routes = [
           auth: true,
           slug: 'loanables',
           params: {
-            fields: '*,type',
+            fields: '*,type,community.id,community.center,owner.id,owner.user.id,owner.user.communities.center',
           },
           title: 'titles.loanable',
         },

@@ -22,12 +22,16 @@
       </b-form-checkbox>
       <b-form-textarea v-else-if="type === 'textarea'"
         :id="name" :name="name" :key="`${type}-${name}`"
+        :description="description"
         :placeholder="placeholder" :disabled="disabled"
         :rows="rows" :max-rows="maxRows"
         :state="getValidationState(validationContext)"
         v-bind:value="value"
         v-on:input="emitChange" />
-      <forms-map-input v-else-if="type === 'point'" />
+      <forms-map-input v-else-if="type === 'point'"
+        :center="center"
+        v-bind:value="value"
+        v-on:input="emitChange" />
       <b-form-input v-else
         :id="name" :name="name" :key="`${type}-${name}`"
         :type="type"
@@ -48,6 +52,11 @@ import FormsMapInput from '@/components/Forms/MapInput.vue';
 export default {
   name: 'FormsValidatedInput',
   props: {
+    center: {
+      type: Object,
+      required: false,
+      default: null,
+    },
     description: {
       type: String,
       required: false,

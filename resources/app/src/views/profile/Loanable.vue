@@ -11,8 +11,9 @@
 
     <b-row>
       <b-col>
-        <loanable-form :loanable="item" :form="form" :loading="loading" @submit="submit"
-          :show-reset="!!item.id" :changed="true" @reset="reset" />
+        <loanable-form :loanable="item" :form="form" :loading="loading"
+          @submit="submit" :show-reset="!!item.id" :changed="changed"
+          @reset="reset" :center="center" />
       </b-col>
     </b-row>
   </b-container>
@@ -34,6 +35,25 @@ export default {
     LoanableForm,
   },
   computed: {
+    communityCenter() {
+      if (!this.item.community) {
+        return null;
+      }
+
+      return this.item.community.center;
+    },
+    center: {
+      get() {
+        if (this.$store.state['profile.loanable'].center) {
+          return this.$store.state['profile.loanable'].center;
+        }
+
+        return this.communityCenter || this.ownerCommunitiesCenter;
+      },
+      set(center) {
+        this.$store.commit('register.map/center', center);
+      },
+    },
     fullTitle() {
       const parts = [
         'LocoMotion',
@@ -46,6 +66,17 @@ export default {
       }
 
       return parts.reverse().join(' | ');
+    },
+    ownerCommunitiesCenter() {
+      const { owner: { user: { communities } } } = this.item;
+      const center = communities.reduce((acc, c) => [
+        (acc[0] + c.center[0]) / 2,
+        (acc[1] + c.center[1]) / 2,
+      ], communities[0].center);
+      return {
+        lat: center[0],
+        lng: center[1],
+      };
     },
     pageTitle() {
       return this.item.name || capitalize(this.$i18n.tc('véhicule', 1));

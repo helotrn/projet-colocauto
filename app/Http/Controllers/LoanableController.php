@@ -168,9 +168,13 @@ class LoanableController extends RestController
                     ],
                     'position' => [
                         'type' => 'point',
+                        'description' => "Cliquez sur la carte pour définir l'emplacement usuel"
+                            . " du véhicule.",
                     ],
                     'location_description' => [
                         'type' => 'textarea',
+                        'description' => 'Des indications qui pourraient aider les autres'
+                         . ' membres de Locomotion à retrouver ce véhicule.',
                     ],
                     'comments' => [
                         'type' => 'textarea',
@@ -196,7 +200,7 @@ class LoanableController extends RestController
                         ],
                     ],
                     'availability_ics' => [
-                        'type' => 'text',
+                        'type' => 'point',
                     ],
                     'owner_id' => [
                         'type' => 'relation',

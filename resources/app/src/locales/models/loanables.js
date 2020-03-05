@@ -14,7 +14,7 @@ export default {
       instructions: 'instructions',
       insurer: 'assureur',
       is_value_over_fifty_thousand: 'la valeur de ce véhicule dépasse-t-elle 50 000$?',
-      location_description: "précisions sur la l'emplacement",
+      location_description: "précisions sur l'emplacement",
       maximum_charge: 'charge maximale',
       model: 'modèle',
       name: 'nom',

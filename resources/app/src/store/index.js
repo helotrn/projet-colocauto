@@ -14,6 +14,8 @@ import users from './users';
 import RegisterIntent from './pages/register/intent';
 import RegisterMap from './pages/register/map';
 
+import ProfileLoanable from './pages/profile/loanable';
+
 const vuexPersist = new VuexPersist({
   key: 'locomotion',
   storage: window.localStorage,
@@ -161,6 +163,7 @@ export default new Vuex.Store({
     loanables,
     login,
     register,
+    'profile.loanable': ProfileLoanable,
     'register.map': RegisterMap,
     'register.intent': RegisterIntent,
     users,

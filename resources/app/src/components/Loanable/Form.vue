@@ -25,15 +25,17 @@
           <b-row>
             <b-col lg="8">
               <forms-validated-input name="position"
-                :rules="form.general.position.rules"
-                :label="$t('fields.position') | capitalize" type="text"
+                :description="form.general.position.description"
+                :rules="form.general.position.rules" :center="center"
+                :label="$t('fields.position') | capitalize" type="point"
                 :placeholder="placeholderOrLabel('position') | capitalize"
                 v-model="loanable.position" />
             </b-col>
 
             <b-col>
               <forms-validated-input name="location_description"
-                :rules="form.general.location_description.rules"
+                :description="form.general.location_description.description"
+                :rules="form.general.location_description.rules" :rows="12"
                 :label="$t('fields.location_description') | capitalize" type="textarea"
                 :placeholder="placeholderOrLabel('location_description') | capitalize"
                 v-model="loanable.location_description" />
@@ -122,6 +124,10 @@ export default {
     LoanableAvailabilityCalendar,
   },
   props: {
+    center: {
+      type: Object,
+      required: true,
+    },
     form: {
       type: Object,
       required: false,
