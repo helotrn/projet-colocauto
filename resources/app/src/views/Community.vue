@@ -21,7 +21,7 @@
 
               <div class="page__section__users">
                 <p v-for="user in community.users" :key="user.id">
-                {{ user.full_name }}
+                  {{ user.full_name }}
                 </p>
               </div>
             </div>
