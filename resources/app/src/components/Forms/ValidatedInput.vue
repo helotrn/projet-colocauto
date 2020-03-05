@@ -4,7 +4,7 @@
     :rules="rulesOrNothing"
     v-slot="validationContext">
     <b-form-group :label="type !== 'checkbox' ? label : ''" :label-for="name"
-      :description="description">
+      :description="description" v-b-tooltip.hover :title="disabledTooltip">
       <b-form-select v-if="type === 'select'"
         :id="name" :name="name" :key="`${type}-${name}`"
         :state="getValidationState(validationContext)"
@@ -32,9 +32,13 @@
         :center="center"
         v-bind:value="value"
         v-on:input="emitChange" />
+      <forms-datepicker v-else-if="type === 'date'"
+        input-class="form-control"
+        v-bind:value="value"
+        v-on:input="emitChange" />
       <b-form-input v-else
         :id="name" :name="name" :key="`${type}-${name}`"
-        :type="type"
+        type="text"
         :placeholder="placeholder" :disabled="disabled"
         :state="getValidationState(validationContext)"
         v-bind:value="value"
@@ -47,6 +51,7 @@
 </template>
 
 <script>
+import FormsDatepicker from '@/components/Forms/Datepicker.vue';
 import FormsMapInput from '@/components/Forms/MapInput.vue';
 
 export default {
@@ -66,6 +71,11 @@ export default {
       type: Boolean,
       required: false,
       default: false,
+    },
+    disabledTooltip: {
+      type: String,
+      required: false,
+      default: '',
     },
     label: {
       type: String,
@@ -112,7 +122,7 @@ export default {
       required: true,
     },
   },
-  components: { FormsMapInput },
+  components: { FormsDatepicker, FormsMapInput },
   computed: {
     rulesOrNothing() {
       return this.rules || '';
