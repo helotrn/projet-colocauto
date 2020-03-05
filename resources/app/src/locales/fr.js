@@ -32,10 +32,10 @@ export default {
   },
   profile: {
     titles: {
-      account: 'Informations du compte',
+      account: 'Mon profil Locomotion',
       borrower: "Mon profil d'emprunteur",
       communities: 'Mes communautés',
-      payment: 'Paiement',
+      payment: 'Mes factures',
       reservations: 'Historique des réservations',
       loanable: 'Mon véhicule',
       loanables: 'Mes véhicules',

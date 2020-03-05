@@ -21,7 +21,7 @@ export default {
       };
     },
     canLoanVehicle() {
-      return false;
+      return this.user.borrower && this.user.borrower.approved_at;
     },
     hasCommunity() {
       return this.isLoggedIn && this.user.communities && this.user.communities.length > 0;

@@ -45,6 +45,7 @@
           <b-row>
             <b-col>
               <forms-validated-input name="comments"
+                :description="form.general.comments.description"
                 :rules="form.general.comments.rules"
                 :label="$t('fields.comments') | capitalize" type="textarea"
                 :placeholder="placeholderOrLabel('comments') | capitalize"
@@ -53,6 +54,7 @@
 
             <b-col>
               <forms-validated-input name="instructions"
+                :description="form.general.instructions.description"
                 :rules="form.general.instructions.rules"
                 :label="$t('fields.instructions') | capitalize" type="textarea"
                 :placeholder="placeholderOrLabel('instructions') | capitalize"

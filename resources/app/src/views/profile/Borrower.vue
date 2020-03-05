@@ -1,20 +1,20 @@
 <template>
-  <div class="profile-account" v-if="item">
-    <profile-form :loading="loading" :user="item"
+  <div class="profile-borrower" v-if="item">
+    <borrower-form :loading="loading" :borrower="item.borrower"
       @reset="reset" :changed="changed" show-reset
       @submit="submit" v-if="item" />
   </div>
 </template>
 
 <script>
-import ProfileForm from '@/components/Profile/Form.vue';
+import BorrowerForm from '@/components/Borrower/Form.vue';
 
 import FormMixin from '@/mixins/FormMixin';
 
 export default {
-  name: 'ProfileAccount',
+  name: 'ProfileBorrower',
   mixins: [FormMixin],
-  components: { ProfileForm },
+  components: { BorrowerForm },
   props: {
     id: {
       required: false,
@@ -25,7 +25,4 @@ export default {
 </script>
 
 <style lang="scss">
-.profile-account {
-  margin-bottom: 3em;
-}
 </style>

@@ -27,9 +27,6 @@ export default {
       type: 'type',
       year_of_circulation: 'année de circulation',
     },
-    placeholders: {
-      instructions: 'Y a-t-il des choses à savoir sur ce véhicule?',
-    },
     types: {
       bike: 'vélo',
       car: 'voiture',

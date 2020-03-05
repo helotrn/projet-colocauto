@@ -8,6 +8,7 @@ import Login from '../views/Login.vue';
 
 import Profile from '../views/Profile.vue';
 import ProfileAccount from '../views/profile/Account.vue';
+import ProfileBorrower from '../views/profile/Borrower.vue';
 import ProfileCommunities from '../views/profile/Communities.vue';
 import ProfileLoanables from '../views/profile/Loanables.vue';
 import ProfileLoanable from '../views/profile/Loanable.vue';
@@ -50,7 +51,19 @@ const routes = [
           title: 'titles.account',
           slug: 'users',
           params: {
-            fields: '*,avatar.*,borrower.*.*',
+            fields: '*,avatar.*',
+          },
+        },
+      },
+      {
+        path: 'borrower',
+        name: 'borrower',
+        component: ProfileBorrower,
+        meta: {
+          title: 'titles.borrower',
+          slug: 'users',
+          params: {
+            fields: '*,borrower.*',
           },
         },
       },

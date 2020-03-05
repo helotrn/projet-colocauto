@@ -181,6 +181,7 @@ class LoanableController extends RestController
                     ],
                     'instructions' => [
                         'type' => 'textarea',
+                        'description' => 'Y a-t-il des choses à savoir sur ce véhicule?',
                     ],
                     'type' => [
                         'type' => 'select',
