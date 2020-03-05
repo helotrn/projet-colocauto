@@ -6,17 +6,11 @@ import Help from '../views/Help.vue';
 import Home from '../views/Home.vue';
 import Login from '../views/Login.vue';
 
-import Profile from '../views/Profile.vue';
-import ProfileAccount from '../views/profile/Account.vue';
-import ProfileBorrower from '../views/profile/Borrower.vue';
-import ProfileCommunities from '../views/profile/Communities.vue';
-import ProfileLoanables from '../views/profile/Loanables.vue';
-import ProfileLoanable from '../views/profile/Loanable.vue';
-
 import Community from '../views/Community.vue';
 import CommunityMap from '../views/community/Map.vue';
 
 import adminRoutes from './admin';
+import profileRoutes from './profile';
 import registerRoutes from './register';
 
 Vue.use(VueRouter);
@@ -34,83 +28,6 @@ const routes = [
     meta: {
       title: 'titles.login',
     },
-  },
-  {
-    path: '/profile',
-    name: 'profile',
-    component: Profile,
-    meta: {
-      title: 'titles.profile',
-    },
-    children: [
-      {
-        path: 'account',
-        name: 'account',
-        component: ProfileAccount,
-        meta: {
-          title: 'titles.account',
-          slug: 'users',
-          params: {
-            fields: '*,avatar.*',
-          },
-        },
-      },
-      {
-        path: 'borrower',
-        name: 'borrower',
-        component: ProfileBorrower,
-        meta: {
-          title: 'titles.borrower',
-          slug: 'users',
-          params: {
-            fields: '*,borrower.*',
-          },
-        },
-      },
-      {
-        path: 'communities',
-        name: 'communities',
-        component: ProfileCommunities,
-        meta: {
-          title: 'titles.communities',
-          slug: 'users',
-          params: {
-            fields: 'id,communities.id,communities.name,communities.requirements,communities.proof',
-          },
-        },
-      },
-      {
-        path: 'loanables',
-        name: 'loanables',
-        component: ProfileLoanables,
-        meta: {
-          creatable: true,
-          title: 'titles.loanables',
-          slug: 'loanables',
-          data: {
-            loanables: {
-              retrieve: {
-                fields: 'id,name,type',
-                'owner.user.id': 'me',
-              },
-            },
-          },
-        },
-      },
-      {
-        path: 'loanables/:id',
-        component: ProfileLoanable,
-        props: true,
-        meta: {
-          auth: true,
-          slug: 'loanables',
-          params: {
-            fields: '*,type,community.id,community.center,owner.id,owner.user.id,owner.user.communities.center',
-          },
-          title: 'titles.loanable',
-        },
-      },
-    ],
   },
   {
     path: '/community',
@@ -161,6 +78,7 @@ const routes = [
     },
   },
   adminRoutes,
+  profileRoutes,
   registerRoutes,
 ];
 
