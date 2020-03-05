@@ -4,12 +4,14 @@
 
     <layout-header class="page__header" :title="pageTitle" />
 
-    <b-container :fluid="fluid" tag="main" class="page__content" v-if="!wide">
-      <slot />
-    </b-container>
-    <main class="page__content" v-else>
-      <slot />
-    </main>
+      <div class="page__background">
+        <b-container :fluid="fluid" tag="main" class="page__content" v-if="!wide">
+          <slot />
+        </b-container>
+        <main class="page__content" v-else>
+          <slot />
+        </main>
+      </div>
 
     <layout-footer class="page__footer" />
   </div>
@@ -80,4 +82,9 @@ export default {
 </script>
 
 <style lang="scss">
+.page {
+  &__background {
+    background-color: $main-bg;
+  }
+}
 </style>

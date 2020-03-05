@@ -28,6 +28,8 @@ export default {
 @import "@/assets/scss/tools";
 
 .layout-header {
+  border-bottom: 1px solid $light-grey;
+
   &__navbar {
     @include size("height", $layout-navbar-height-mobile, "", "", $layout-navbar-height);
 

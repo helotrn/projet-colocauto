@@ -47,4 +47,9 @@ export default {
 </script>
 
 <style lang="scss">
+.profile.page {
+  .page__content {
+    padding-top: 45px;
+  }
+}
 </style>

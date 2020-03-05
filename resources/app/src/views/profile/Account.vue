@@ -51,8 +51,6 @@ export default {
 
 <style lang="scss">
 .profile-account {
-  .profile-form, .borrower-form {
-    margin-bottom: 60px;
-  }
+  margin-bottom: 3em;
 }
 </style>
