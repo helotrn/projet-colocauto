@@ -73,7 +73,8 @@ class Loanable extends BaseModel
                     $recurrence->setFreq(RecurrenceRule::FREQ_MONTHLY);
                     $byDays = ['SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA'];
 
-                    $exceptions = json_decode($model->availability_json);
+                    $exceptions = json_decode($model->availability_json) ?: [];
+
                     foreach ($exceptions as $exception) {
                         switch ($exception->type) {
                             case 'dates':

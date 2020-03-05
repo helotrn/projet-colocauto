@@ -12,7 +12,6 @@ class CreateRequest extends BaseRequest
 
     public function rules() {
         $rules = [
-            'availability_ics' => 'required',
             'brand' => 'required',
             'comments' => 'required',
             'engine' => 'required',

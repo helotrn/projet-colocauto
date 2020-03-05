@@ -1,4 +1,3 @@
-import Vue from 'vue';
 import store from '@/store';
 
 function drillParams(object, vm) {
@@ -25,22 +24,22 @@ export default {
       next((vm) => {
         Promise.all(
           Object.keys(to.meta.data)
-          .reduce((acc, collection) => {
-            const actions = Object.keys(to.meta.data[collection]);
+            .reduce((acc, collection) => {
+              const actions = Object.keys(to.meta.data[collection]);
 
-            acc.push(...actions.map((action) => {
-              const routeParams = to.meta.data[collection][action];
+              acc.push(...actions.map((action) => {
+                const routeParams = to.meta.data[collection][action];
 
-              const params = drillParams(routeParams, vm);
+                const params = drillParams(routeParams, vm);
 
-              return store.dispatch(
-                `${collection}/${action}`,
-                params
-              )
-            }));
+                return store.dispatch(
+                  `${collection}/${action}`,
+                  params,
+                );
+              }));
 
-            return acc;
-          }, []),
+              return acc;
+            }, []),
         )
           .catch((e) => {
             if (e.request) {
@@ -59,10 +58,8 @@ export default {
   computed: {
     routeDataLoaded() {
       return Object.keys(this.$route.meta.data).reduce(
-        (acc, k) => {
-          return acc && this.$store.state[k].loaded;
-        },
-        true
+        (acc, k) => acc && this.$store.state[k].loaded,
+        true,
       );
     },
   },
