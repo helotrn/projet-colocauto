@@ -88,11 +88,9 @@ class Loanable extends BaseModel
                             case 'weekdays':
                                 $byDays = array_diff($byDays, $exception->scope);
 
-                                if ($exception->period === '00:00-23:59') {
-                                    continue;
+                                if ($exception->period !== '00:00-23:59') {
+                                    static::addWeekdaysExceptionScope($model, $exception, $calendar);
                                 }
-
-                                static::addWeekdaysExceptionScope($model, $exception, $calendar);
                                 break;
                         }
                     }
@@ -324,29 +322,27 @@ class Loanable extends BaseModel
                 default:
                     $baseEvent->addExDate(new Carbon($date));
 
-                    if ($exception->period === '00:00-23:59') {
-                        continue;
+                    if ($exception->period !== '00:00-23:59') {
+                        $startDayEvent = new Event();
+                        $endDayEvent = new Event();
+
+                        [$startTime, $endTime] = explode('-', $exception->period);
+                        $startTime = explode(':', $startTime);
+                        $endTime = explode(':', $endTime);
+
+                        [$startOfDay, $startOfPeriod, $endOfPeriod, $endOfDay]
+                            = static::getPeriodLimits($date, $startTime, $endTime);
+
+                        $startDayEvent
+                            ->setDtStart($startOfDay)
+                            ->setDtEnd($startOfPeriod);
+                        $endDayEvent
+                            ->setDtStart($endOfPeriod)
+                            ->setDtEnd($endOfDay);
+
+                        $calendar->addComponent($startDayEvent);
+                        $calendar->addComponent($endDayEvent);
                     }
-
-                    $startDayEvent = new Event();
-                    $endDayEvent = new Event();
-
-                    [$startTime, $endTime] = explode('-', $exception->period);
-                    $startTime = explode(':', $startTime);
-                    $endTime = explode(':', $endTime);
-
-                    [$startOfDay, $startOfPeriod, $endOfPeriod, $endOfDay]
-                        = static::getPeriodLimits($date, $startTime, $endTime);
-
-                    $startDayEvent
-                        ->setDtStart($startOfDay)
-                        ->setDtEnd($startOfPeriod);
-                    $endDayEvent
-                        ->setDtStart($endOfPeriod)
-                        ->setDtEnd($endOfDay);
-
-                    $calendar->addComponent($startDayEvent);
-                    $calendar->addComponent($endDayEvent);
                     break;
             }
         }
