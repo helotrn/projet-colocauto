@@ -26,11 +26,17 @@ export default {
     hasCommunity() {
       return this.isLoggedIn && this.user.communities && this.user.communities.length > 0;
     },
+    hasCompletedRegistration() {
+      return !!this.user.submitted_at;
+    },
+    hasOngoingLoans() {
+      return this.ongoingLoans.length > 0;
+    },
     hasUpcomingLoans() {
       return this.upcomingLoans.length > 0;
     },
-    hasCompletedRegistration() {
-      return !!this.user.submitted_at;
+    hasWaitingLoans() {
+      return this.waitingLoans.length > 0;
     },
     isAdmin() {
       return this.isLoggedIn && this.user.role === 'admin';
@@ -52,6 +58,9 @@ export default {
 
       return true;
     },
+    ongoingLoans() {
+      return [];
+    },
     pastLoans() {
       return [];
     },
@@ -65,6 +74,9 @@ export default {
         acc.push(...loanable.loans.filter(l => l.departure_at > now));
         return acc;
       }, [])
+    },
+    waitingLoans() {
+      return [];
     },
   },
   methods: {

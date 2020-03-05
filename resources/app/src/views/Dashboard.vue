@@ -28,25 +28,29 @@
           </div>
         </section>
 
-        <section class="page__section" v-if="hasUpcomingLoans">
+        <section class="page__section" v-if="hasWaitingLoans">
           <h2>Nouvelles demandes de réservation</h2>
           <p class="muted">Cette personne devrait entrer en contact avec vous sous peu.</p>
 
-          <div class="dashboard__upcoming-loans" v-for="loan in upcomingLoans" :key="loan.id">
+          <div class="dashboard__waiting-loans" v-for="loan in waitingLoans" :key="loan.id">
+            {{ loan }}
+          </div>
+        </section>
+
+        <section class="page__section" v-if="hasOngoingLoans">
+          <h2>Réservations en cours</h2>
+
+          <div class="dashboard__ongoing-loans" v-for="loan in ongoingLoans" :key="loan.id">
             {{ loan }}
           </div>
         </section>
 
         <section class="page__section">
-          <h2>Réservations en cours</h2>
-
-          <div>Ici des blocs de réservations en cours.</div>
-        </section>
-
-        <section class="page__section">
           <h2>Réservations à venir</h2>
 
-          <div>Ici des blocs de réservations à venir.</div>
+          <div class="dashboard__upcoming-loans" v-for="loan in upcomingLoans" :key="loan.id">
+            {{ loan }}
+          </div>
         </section>
 
         <section class="page__section" v-if="user.owner">
