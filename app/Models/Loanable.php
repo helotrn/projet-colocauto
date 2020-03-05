@@ -41,6 +41,10 @@ class Loanable extends BaseModel
         'availability_json' => [ 'present' ],
     ];
 
+    public static $sizes = [
+        'thumbnail' => '256x@fit',
+    ];
+
     public static function getRules($action = '', $auth = null) {
         if ($action === 'update') {
             return array_diff_key(static::$rules, [ 'type' => false ]);
@@ -125,10 +129,20 @@ class Loanable extends BaseModel
         'position' => PointCast::class,
     ];
 
+    protected $with = ['image'];
+
+    public $morphOnes = [
+        'image' => 'imageable',
+    ];
+
     public $items = ['owner', 'community'];
 
     public function community() {
         return $this->belongsTo(Community::class);
+    }
+
+    public function image() {
+        return $this->morphOne(Image::class, 'imageable');
     }
 
     public function owner() {

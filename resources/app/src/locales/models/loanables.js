@@ -11,6 +11,7 @@ export default {
       engine: 'moteur',
       has_accident_report: "un rapport d'accident exists-t-il?",
       has_informed_insurer: "l'assureur a-t-il été informé?",
+      image: 'photo',
       instructions: 'instructions',
       insurer: 'assureur',
       is_value_over_fifty_thousand: 'la valeur de ce véhicule dépasse-t-elle 50 000$?',

@@ -45,16 +45,20 @@
           </b-row>
 
           <b-row>
-            <b-col>
+            <b-col lg="4">
+              <forms-image-uploader field="image"
+                :label="$t('fields.image') | capitalize"
+                v-model="loanable.image" />
+            </b-col>
+
+            <b-col lg="8">
               <forms-validated-input name="comments"
                 :description="form.general.comments.description"
                 :rules="form.general.comments.rules"
                 :label="$t('fields.comments') | capitalize" type="textarea"
                 :placeholder="placeholderOrLabel('comments') | capitalize"
                 v-model="loanable.comments" />
-            </b-col>
 
-            <b-col>
               <forms-validated-input name="instructions"
                 :description="form.general.instructions.description"
                 :rules="form.general.instructions.rules"
@@ -115,7 +119,7 @@
 import FormsBuilder from '@/components/Forms/Builder.vue';
 import FormsValidatedInput from '@/components/Forms/ValidatedInput.vue';
 import LoanableAvailabilityCalendar from '@/components/Loanable/AvailabilityCalendar.vue';
-// import FormsImageUploader from '@/components/Forms/ImageUploader.vue';
+import FormsImageUploader from '@/components/Forms/ImageUploader.vue';
 
 import locales from '@/locales';
 
@@ -123,7 +127,7 @@ export default {
   name: 'LoanableForm',
   components: {
     FormsBuilder,
-    // FormsImageUploader,
+    FormsImageUploader,
     FormsValidatedInput,
     LoanableAvailabilityCalendar,
   },
