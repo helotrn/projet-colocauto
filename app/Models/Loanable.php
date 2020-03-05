@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\Community;
 use App\Models\Loan;
 use App\Models\Owner;
+use App\Models\User;
 use App\Utils\PointCast;
 use Carbon\Carbon;
 use Eluceo\iCal\Component\Calendar;
@@ -182,6 +183,34 @@ class Loanable extends BaseModel
                 ];
         }
         return $events;
+    }
+
+    public function scopeAccessibleBy(Builder $query, $user) {
+        if ($user->isAdmin()) {
+            return $query;
+        }
+
+        // A user has access to...
+        $communityIds = $user->communities->pluck('id');
+        return $query->where(function ($q) use ($communityIds) {
+            return $q
+                // ...loanables belonging to its accessible communities...
+                ->whereHas('community', function ($q2) use ($communityIds) {
+                    return $q2->whereIn(
+                        'communities.id',
+                        $communityIds
+                    );
+                })
+                // ...or belonging to owners of his accessible communities
+                // (communities through user through owner)
+                ->orWhereHas('owner', function ($q3) use ($communityIds) {
+                    return $q3->whereHas('user', function ($q4) use ($communityIds) {
+                        return $q4->whereHas('communities', function ($q5) use ($communityIds) {
+                            return $q5->whereIn('community_user.community_id', $communityIds);
+                        });
+                    });
+                });
+        });
     }
 
     protected static function buildTimezone() {
