@@ -4,7 +4,6 @@ namespace App\Models;
 
 use App\Models\Bill;
 use App\Models\Payment;
-use Illuminate\Database\Eloquent\Builder;
 
 class BillableItem extends BaseModel
 {

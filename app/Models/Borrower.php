@@ -4,7 +4,6 @@ namespace App\Models;
 
 use App\Models\Loan;
 use App\Models\User;
-use Illuminate\Database\Eloquent\Builder;
 
 class Borrower extends BaseModel
 {

@@ -4,7 +4,6 @@ namespace App\Models;
 
 use App\Models\Action;
 use App\Models\Loan;
-use Illuminate\Database\Eloquent\Builder;
 
 class Handover extends Action
 {

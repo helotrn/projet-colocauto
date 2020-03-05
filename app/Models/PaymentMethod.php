@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use App\Models\User;
-use Illuminate\Database\Eloquent\Builder;
 
 class PaymentMethod extends BaseModel
 {

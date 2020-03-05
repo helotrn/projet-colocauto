@@ -6,7 +6,6 @@ use App\Models\Action;
 use App\Models\BillableItem;
 use App\Models\Loan;
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Builder;
 
 class Payment extends Action
 {

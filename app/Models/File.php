@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use App\Models\User;
-use Illuminate\Database\Eloquent\Builder;
 use Storage;
 
 class File extends BaseModel

@@ -11,7 +11,6 @@ use App\Models\Owner;
 use App\Models\PaymentMethod;
 use App\Transformers\UserTransformer;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
 
