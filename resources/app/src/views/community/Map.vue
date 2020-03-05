@@ -15,7 +15,7 @@ import { gmapApi } from 'vue2-google-maps';
 import DataRouteGuards from '@/mixins/DataRouteGuards';
 
 export default {
-  name: 'Map',
+  name: 'CommunityMap',
   mixins: [DataRouteGuards],
   data() {
     return {
@@ -40,8 +40,8 @@ export default {
   computed: {
     center: {
       get() {
-        if (this.$store.state['register.map'].center) {
-          return this.$store.state['register.map'].center;
+        if (this.$store.state['community.map'].center) {
+          return this.$store.state['community.map'].center;
         }
 
         if (this.community) {
@@ -51,7 +51,7 @@ export default {
         return this.averageCommunitiesCenter;
       },
       set(center) {
-        this.$store.commit('register.map/center', center);
+        this.$store.commit('community.map/center', center);
       },
     },
     google: gmapApi,
@@ -60,26 +60,4 @@ export default {
 </script>
 
 <style lang="scss">
-.register-map.page {
-  .register-map-page {
-    position: relative;
-
-    &__map {
-      width: 100vw;
-      height: calc(100vh - #{$layout-navbar-height + $molotov-footer-height});
-      z-index: 10;
-    }
-
-    .card {
-      width: 190px;
-    }
-
-    &__form {
-      margin-top: 50px;
-      margin-left: 30px;
-      position: absolute;
-      z-index: 100;
-    }
-  }
-}
 </style>

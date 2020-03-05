@@ -7,6 +7,8 @@ import Home from '../views/Home.vue';
 import Login from '../views/Login.vue';
 
 import Community from '../views/Community.vue';
+import CommunityDashboard from '../views/community/Dashboard.vue';
+import CommunityList from '../views/community/List.vue';
 import CommunityMap from '../views/community/Map.vue';
 
 import adminRoutes from './admin';
@@ -31,24 +33,64 @@ const routes = [
   },
   {
     path: '/community',
-    name: 'community',
     component: Community,
     meta: {
       auth: true,
-      title: 'titles.community',
-      data: {
-        communities: {
-          retrieveOne: {
-            params: {
-              fields: 'id,name,users',
-            },
-            id({ user }) {
-              return user.communities[0].id;
+      titles: 'titles.community',
+    },
+    children: [
+      {
+        path: '',
+        component: CommunityDashboard,
+        meta: {
+          auth: true,
+          title: 'titles.community',
+          data: {
+            communities: {
+              retrieveOne: {
+                params: {
+                  fields: 'id,name,users',
+                },
+                id({ user }) {
+                  return user.communities[0].id;
+                },
+              },
             },
           },
         },
       },
-    },
+      {
+        path: 'map',
+        component: CommunityMap,
+        meta: {
+          auth: true,
+          title: 'Trouve un véhicule',
+          data: {
+            loanables: {
+              retrieve: {
+                fields: '*,owner.user.id,owner.user.full_name',
+              },
+            },
+          },
+        },
+      },
+      {
+        path: 'list',
+        component: CommunityList,
+        meta: {
+          auth: true,
+          title: 'Trouve un véhicule',
+          slug: 'loanables',
+          data: {
+            loanables: {
+              retrieve: {
+                fields: 'id,type,name,position,owner.user.id,owner.user.full_name,owner.user.avatar',
+              },
+            },
+          },
+        },
+      },
+    ],
   },
   {
     path: '/app',
@@ -57,16 +99,6 @@ const routes = [
     meta: {
       auth: true,
       title: 'titles.dashboard',
-    },
-  },
-
-  {
-    path: '/community/map',
-    name: 'community-map',
-    component: CommunityMap,
-    meta: {
-      auth: true,
-      title: 'Trouver un véhicule',
     },
   },
   {
