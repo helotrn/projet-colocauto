@@ -26,6 +26,9 @@ export default {
     hasCommunity() {
       return this.isLoggedIn && this.user.communities && this.user.communities.length > 0;
     },
+    hasUpcomingLoans() {
+      return this.upcomingLoans.length > 0;
+    },
     hasCompletedRegistration() {
       return !!this.user.submitted_at;
     },
@@ -54,6 +57,14 @@ export default {
     },
     user() {
       return this.$store.state.user;
+    },
+    upcomingLoans() {
+      const now = this.$dayjs().format('YYYY-MM-DD HH:mm:ss');
+
+      return this.user.loanables.reduce((acc, loanable) => {
+        acc.push(...loanable.loans.filter(l => l.departure_at > now));
+        return acc;
+      }, [])
     },
   },
   methods: {

@@ -4,14 +4,26 @@
       <b-col class="page__content__main" lg="9">
         <h1>{{ $t('Bienvenue, {name}', { name: user.full_name })}}</h1>
 
-        <section class="page__section">
+        <section class="page__section" v-if="hasTutorials">
           <h2>Pour commencer</h2>
 
           <div class="page__section__tutorials">
-            <div v-if="user.owner && user.loanables.length === 0">
-              <tutorial-block title="Inscrire un véhicule"
-                to="/guide/inscrire-un-vehicule"
+            <div v-if="hasTutorial('discover-community')">
+              <tutorial-block title="Découvre ta communauté"
+                to="/community"
                 bg-image="/img-tetes.png" variant="dark" />
+            </div>
+
+            <div v-if="hasTutorial('add-vehicle')">
+              <tutorial-block title="Inscris un véhicule"
+                to="/guide/inscris-un-vehicule"
+                bg-image="/img-voiture.png" variant="dark" />
+            </div>
+
+            <div v-if="hasTutorial('find-vehicle')">
+              <tutorial-block title="Trouve un véhicule"
+                to="/guide/trouve-un-vehicule"
+                bg-image="/img-vehicules.png" variant="light" />
             </div>
           </div>
         </section>
@@ -110,6 +122,27 @@ export default {
   beforeMount() {
     if (!this.isLoggedIn) {
       this.skipToLogin('app');
+    }
+  },
+  computed: {
+    hasTutorials() {
+      return this.hasTutorial('add-vehicle') || this.hasTutorial('find-vehicle')
+        || this.hasTutorial('discover-community');
+    },
+  },
+  methods: {
+    hasTutorial(name) {
+      switch (name) {
+        case 'add-vehicle':
+          return this.user.owner && this.user.loanables.length === 0;
+        case 'find-vehicle':
+          return !!this.user.borrower;
+        case 'discover-community':
+          return this.user.created_at
+            >= this.$dayjs().subtract(2, 'week').format('YYYY-MM-DD HH:mm:ss');
+        default:
+          return false;
+      }
     }
   },
 };
