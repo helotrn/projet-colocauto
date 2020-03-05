@@ -25,5 +25,7 @@ class LoansTableSeeder extends Seeder
                 Loan::where('id', $loan['id'])->first()->update($loan);
             }
         }
+
+        \DB::statement("SELECT setval('loans_id_seq'::regclass, 2)");
     }
 }

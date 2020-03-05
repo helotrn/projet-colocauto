@@ -50,6 +50,6 @@ class PricingsTableSeeder extends Seeder
             }
         }
 
-        \DB::statement("SELECT setval('pricings_id_seq'::regclass, 2)");
+        \DB::statement("SELECT setval('pricings_id_seq'::regclass, 5)");
     }
 }

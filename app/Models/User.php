@@ -157,7 +157,8 @@ class User extends AuthenticatableBaseModel
             ->withTimestamps()
             ->withPivot(['id', 'approved_at', 'created_at', 'role', 'suspended_at', 'updated_at']);
 
-        if (Auth::user()->isAdmin()) {
+        $user = Auth::user();
+        if ($user && $user->isAdmin()) {
             return $relation;
         }
 

@@ -26,5 +26,7 @@ class BorrowersTableSeeder extends Seeder
                 Borrower::where('id', $borrower['id'])->update($borrower);
             }
         }
+
+        \DB::statement("SELECT setval('bikes_id_seq'::regclass, 2)");
     }
 }
