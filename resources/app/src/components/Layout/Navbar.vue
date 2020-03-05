@@ -244,7 +244,6 @@ export default {
   }
 
   .navbar-nav .nav-link.router-link-exact-active,
-  .navbar-nav .nav-link.router-link-active,
   .navbar-nav .nav-link:hover {
     color: $locomotion-green;
   }
