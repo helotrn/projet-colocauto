@@ -51,18 +51,15 @@ class LoanableController extends RestController
 
         switch ($request->get('type')) {
             case 'bike':
-                $bikeRequest = new BikeCreateRequest();
-                $bikeRequest->request->add($request->all());
+                $bikeRequest = $this->redirectRequest(BikeCreateRequest::class, $request);
                 return $this->bikeController->create($bikeRequest);
                 break;
             case 'car':
-                $bikeRequest = new CarCreateRequest();
-                $bikeRequest->request->add($request->all());
+                $carRequest = $this->redirectRequest(CarCreateRequest::class, $request);
                 return $this->carController->create($bikeRequest);
                 break;
             case 'trailer':
-                $trailerRequest = new TrailerCreateRequest();
-                $trailerRequest->request->add($request->all());
+                $trailerRequest = $this->redirectRequest(TrailerCreateRequest::class, $request);
                 return $this->trailerController->create($trailerRequest);
                 break;
             default:
@@ -85,20 +82,11 @@ class LoanableController extends RestController
 
         switch ($item->type) {
             case 'bike':
-                $bikeRequest = new Request();
-                $bikeRequest->setMethod('GET');
-                $bikeRequest->request->add($request->all());
-                return $this->bikeController->retrieve($bikeRequest, $id);
+                return $this->bikeController->retrieve($request, $id);
             case 'car':
-                $carRequest = new Request();
-                $carRequest->setMethod('GET');
-                $carRequest->request->add($request->all());
-                return $this->carController->retrieve($carRequest, $id);
+                return $this->carController->retrieve($request, $id);
             case 'trailer':
-                $trailerRequest = new Request();
-                $trailerRequest->setMethod('GET');
-                $trailerRequest->request->add($request->all());
-                return $this->trailerController->retrieve($trailerRequest, $id);
+                return $this->trailerController->retrieve($request, $id);
             default:
                 throw new \Exception('invalid loanable type');
         }
@@ -118,16 +106,13 @@ class LoanableController extends RestController
 
         switch ($request->get('type')) {
             case 'bike':
-                $bikeRequest = new BikeUpdateRequest();
-                $bikeRequest->request->add($request->all());
+                $bikeRequest = $this->redirectRequest(BikeUpdateRequest::class, $request);
                 return $this->bikeController->update($bikeRequest, $id);
             case 'car':
-                $carRequest = new CarUpdateRequest();
-                $carRequest->request->add($request->all());
+                $carRequest = $this->redirectRequest(CarUpdateRequest::class, $request);
                 return $this->carController->update($carRequest, $id);
             case 'trailer':
-                $trailerRequest = new TrailerUpdateRequest();
-                $trailerRequest->request->add($request->all());
+                $trailerRequest = $this->redirectRequest(TrailerUpdateRequest::class, $request);
                 return $this->trailerController->update($trailerRequest, $id);
             default:
                 throw new \Exception('invalid loanable type');

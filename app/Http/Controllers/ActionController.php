@@ -47,32 +47,26 @@ class ActionController extends RestController
         switch ($item->type) {
             case 'intention':
                 $intentionRequest = new Request();
-                $intentionRequest->setMethod('GET');
                 $intentionRequest->request->add($request->all());
                 return $this->intentionController->retrieve($intentionRequest, $id);
             case 'payment':
                 $paymentRequest = new Request();
-                $paymentRequest->setMethod('GET');
                 $paymentRequest->request->add($request->all());
                 return $this->paymentController->retrieve($paymentRequest, $id);
             case 'takeover':
                 $takeoverRequest = new Request();
-                $takeoverRequest->setMethod('GET');
                 $takeoverRequest->request->add($request->all());
                 return $this->takeoverController->retrieve($takeoverRequest, $id);
             case 'extension':
                 $extensionRequest = new Request();
-                $extensionRequest->setMethod('GET');
                 $extensionRequest->request->add($request->all());
                 return $this->extensionController->retrieve($extensionRequest, $id);
             case 'intention':
                 $intentionRequest = new Request();
-                $intentionRequest->setMethod('GET');
                 $intentionRequest->request->add($request->all());
                 return $this->intentionController->retrieve($intentionRequest, $id);
             case 'incident':
                 $incidentRequest = new Request();
-                $incidentRequest->setMethod('GET');
                 $incidentRequest->request->add($request->all());
                 return $this->incidentController->retrieve($incidentRequest, $id);
             default:
