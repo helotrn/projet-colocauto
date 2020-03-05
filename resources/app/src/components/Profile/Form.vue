@@ -41,10 +41,10 @@
 
         <hr>
 
-        <p>
-          À partir d'ici, les données que vous entrez sont strictement confidentielles.
-          Consultez notre <a href="#">politique de confidentialité</a>.
-        </p>
+        <b-alert variant="warning" show>
+          À partir d'ici, les données que vous entrez sont strictement confidentielles.<br>
+          Consultez notre <router-link to="/privacy">politique de confidentialité</router-link>.
+        </b-alert>
 
         <b-row>
           <b-col>

@@ -9,8 +9,8 @@
     <b-nav-item to="/profile/borrower">
       {{ $t('profile.titles.borrower') }}
     </b-nav-item>
-    <b-nav-item to="/profile/reservations" :disabled="!user.borrower">
-      {{ $t('profile.titles.reservations') }}
+    <b-nav-item to="/profile/loans" :disabled="!user.borrower">
+      {{ $t('profile.titles.loans') }}
     </b-nav-item>
     <b-nav-item to="/profile/loanables" :disabled="!user.owner">
       {{ $t('profile.titles.loanables') }}

@@ -8,16 +8,17 @@
 
         <b-col class="loanable-info-box__actions">
           <div>
-            <b-button size="sm" variant="outline-primary"
+            <b-button size="sm" variant="outline-primary" v-if="hasButton('availability')"
               :to="`/profile/loanables/${id}#availability`">
               Modifier les disponibilités
             </b-button>
 
-            <b-button size="sm" variant="outline-dark" @click="makeLoanableUnavailableFor24h">
+            <b-button size="sm" variant="outline-dark" v-if="hasButton('unavailable24h')"
+              @click="makeLoanableUnavailableFor24h">
               Rendre indisponible (24h)
             </b-button>
 
-            <b-button size="sm" variant="outline-danger"
+            <b-button size="sm" variant="outline-danger" v-if="hasButton('remove')"
               @click="disableLoanableModal">
               Retirer
             </b-button>
@@ -37,6 +38,13 @@ export default {
     id: {
       type: Number,
       required: true,
+    },
+    buttons: {
+      type: Array,
+      required: false,
+      default() {
+        return ['availability', 'unavailable24h', 'remove'];
+      },
     },
     name: {
       type: String,
@@ -73,6 +81,9 @@ export default {
     },
     disableLoanable() {
       this.$store.dispatch('loanables/disable', this.id);
+    },
+    hasButton(name) {
+      return this.buttons.indexOf(name) > -1;
     },
   },
 };

@@ -46,6 +46,9 @@ export default {
   }
 
   .page__content {
+    padding-top: 45px;
+    padding-bottom: 45px;
+
     .admin__menu.col {
       flex: 0 1 12vw;
     }

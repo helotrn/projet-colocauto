@@ -1,7 +1,7 @@
 <template>
   <div class="forms-map-input">
     <gmap-map class="forms-map-input__map" ref="map"
-      :center="center" :zoom="14" :options="mapOptions"
+      :center="center || markerPosition" :zoom="14" :options="mapOptions"
       map-type-id="terrain" @click="savePosition">
       <gmap-marker
         :clickable="false"
@@ -16,8 +16,8 @@ export default {
   name: 'FormsMapInput',
   props: {
     center: {
-      required: true,
       type: Object,
+      required: false,
     },
     description: {
       type: String,

@@ -18,6 +18,8 @@
               <forms-validated-input name="type" :label="$t('fields.type') | capitalize"
                 :rules="form.general.type.rules" type="select" :options="form.general.type.options"
                 :placeholder="placeholderOrLabel('type') | capitalize"
+                :disabled="!!loanable.id"
+                disabled-tooltip="On ne peut pas changer le type d'un véhicule existant."
                 v-model="loanable.type" />
             </b-col>
           </b-row>

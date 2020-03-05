@@ -157,7 +157,7 @@ export default {
 
       this.$store.commit(`${this.slug}/item`, item);
 
-      this.$store.dispatch(`${this.slug}/updateItem`);
+      this.$store.dispatch(`${this.slug}/updateItem`, this.params);
     },
     removeUser(user) {
       const users = this.item.users.filter(u => u !== user);

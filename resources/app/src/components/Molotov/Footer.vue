@@ -4,7 +4,7 @@
       <b-col>
         <div class="molotov-footer__inner">
           <a href="https://molotov.ca" target="_blank">
-            <span>Créé avec</span>
+            <span>Fait avec</span>
             <span class="love"><svg-coeur /></span>
             <span>par Molotov</span>
           </a>

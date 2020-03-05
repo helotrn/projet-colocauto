@@ -36,7 +36,7 @@ export default {
       borrower: "Mon profil d'emprunteur",
       communities: 'Mes communautés',
       payment: 'Mes factures',
-      reservations: 'Historique des réservations',
+      loans: "Historique d'emprunts",
       loanable: 'Mon véhicule',
       loanables: 'Mes véhicules',
     },
@@ -44,6 +44,7 @@ export default {
   titles: {
     account: 'compte',
     admin: 'administration',
+    borrower: 'emprunteur',
     communities: 'communautés',
     community: 'communauté',
     dashboard: 'tableau de bord',

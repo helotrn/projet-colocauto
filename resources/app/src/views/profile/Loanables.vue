@@ -18,6 +18,7 @@
       <b-col>
         <loanable-info-box
           v-for="loanable in data" :key="loanable.id"
+          :buttons="['remove']"
           v-bind="loanable" />
       </b-col>
     </b-row>
