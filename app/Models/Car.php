@@ -85,4 +85,14 @@ class Car extends Loanable
         'transmission_mode',
         'year_of_circulation',
     ];
+
+    public $items = ['owner', 'community'];
+
+    public $morphOnes = [
+        'image' => 'imageable',
+    ];
+
+    public function image() {
+        return $this->morphOne(Image::class, 'imageable');
+    }
 }

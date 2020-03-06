@@ -130,18 +130,14 @@ class Loanable extends BaseModel
 
     protected $with = ['image'];
 
-    public $morphOnes = [
-        'image' => 'imageable',
-    ];
-
-    public $items = ['owner', 'community'];
+    public $items = ['owner', 'community', 'image'];
 
     public function community() {
         return $this->belongsTo(Community::class);
     }
 
     public function image() {
-        return $this->morphOne(Image::class, 'imageable');
+        return $this->belongsTo(Image::class);
     }
 
     public function owner() {

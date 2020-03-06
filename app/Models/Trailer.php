@@ -38,4 +38,14 @@ class Trailer extends Loanable
             }
         ];
     }
+
+    public $items = ['owner', 'community'];
+
+    public $morphOnes = [
+        'image' => 'imageable',
+    ];
+
+    public function image() {
+        return $this->morphOne(Image::class, 'imageable');
+    }
 }
