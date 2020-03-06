@@ -49,7 +49,8 @@ const routes = [
             communities: {
               retrieveOne: {
                 params: {
-                  fields: 'id,name,users',
+                  fields: 'id,name,users.id,users.full_name,users.avatar,users.description,'
+                   + 'users.owner.id',
                 },
                 id({ user }) {
                   return user.communities[0].id;

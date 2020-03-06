@@ -16,14 +16,19 @@
           </b-col>
 
           <b-col lg="9">
-            <div class="page__section" v-if="community.user">
+            <div class="page__section" v-if="community.users">
               <h2 id="mes-voisins">Mes voisins</h2>
 
-              <div class="page__section__users">
-                <p v-for="user in community.users" :key="user.id">
-                  {{ user.full_name }}
-                </p>
+              <div class="community__users-legend">
+                <b-badge pill variant="warning">P</b-badge> Propriétaire de véhicule
+                <b-badge pill variant="success">A</b-badge> Ambassadeur.rice de la communauté
               </div>
+
+              <b-row class="page__section__users">
+                <b-col v-for="user in community.users" :key="user.id" lg="6" md="12">
+                  <user-card :user="user" />
+                </b-col>
+              </b-row>
             </div>
 
             <div class="page__section">
@@ -42,6 +47,8 @@
 </template>
 
 <script>
+import UserCard from '@/components/User/Card.vue';
+
 import Authenticated from '@/mixins/Authenticated';
 import DataRouteGuards from '@/mixins/DataRouteGuards';
 import Notification from '@/mixins/Notification';
@@ -49,6 +56,9 @@ import Notification from '@/mixins/Notification';
 export default {
   name: 'CommunityDashboard',
   mixins: [Authenticated, DataRouteGuards, Notification],
+  components: {
+    UserCard,
+  },
   computed: {
     community() {
       return this.$store.state.communities.item;
@@ -59,9 +69,26 @@ export default {
 
 <style lang="scss">
 .page.community {
+  .page__section h2 {
+    margin-bottom: 40px;
+  }
+
+  .page__section:nth-child(2) {
+    margin-top: -30px;
+  }
+
+  .community__users-legend {
+    margin-bottom: 40px;
+
+    .badge {
+      line-height: 15px;
+      height: 21.45px;
+    }
+  }
+
   .community__content {
-    margin-top: 45px;
-    margin-bottom: 45px;
+    padding-top: 45px;
+    padding-bottom: 45px;
   }
 
   .community__header {
