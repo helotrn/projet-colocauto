@@ -4,7 +4,7 @@
     :rules="rulesOrNothing"
     v-slot="validationContext">
     <b-form-group :label="type !== 'checkbox' ? label : ''" :label-for="name"
-      :description="description" v-b-tooltip.hover :title="disabledTooltip">
+      :description="description" v-b-tooltip.hover :title="disabled ? disabledTooltip : ''">
       <b-form-select v-if="type === 'select'"
         :id="name" :name="name" :key="`${type}-${name}`"
         :state="getValidationState(validationContext)"

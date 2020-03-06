@@ -90,7 +90,7 @@
           </span>
         </div>
 
-        <div class="form__section" v-if="loanable.type">
+        <div class="form__section" v-if="loanable.type && loanable.id">
           <a id="availability" />
           <loanable-availability-calendar
             :loanable="loanable"

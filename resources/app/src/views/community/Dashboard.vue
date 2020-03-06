@@ -9,14 +9,14 @@
         <b-row>
           <b-col lg="3">
             <nav>
-              <a href="#mes-voisins">Mes voisins</a><br>
-              <a href="#nouvelles-de-la-communaute">Nouvelles de la communauté</a><br>
+              <a href="#mes-voisins" v-if="community.users">Mes voisins</a><br>
+              <a href="#nouvelles-de-ma-communaute">Nouvelles de ma communauté</a><br>
               <a href="#activites-locomotion">Activités Locomotion</a>
             </nav>
           </b-col>
 
           <b-col lg="9">
-            <div class="page__section">
+            <div class="page__section" v-if="community.user">
               <h2 id="mes-voisins">Mes voisins</h2>
 
               <div class="page__section__users">
@@ -27,7 +27,7 @@
             </div>
 
             <div class="page__section">
-              <h2 id="nouvelles-de-la-communaute">Nouvelles de ma communauté</h2>
+              <h2 id="nouvelles-de-ma-communaute">Nouvelles de ma communauté</h2>
             </div>
 
             <div class="page__section">
@@ -60,7 +60,8 @@ export default {
 <style lang="scss">
 .page.community {
   .community__content {
-    margin-top: 85px;
+    margin-top: 45px;
+    margin-bottom: 45px;
   }
 
   .community__header {

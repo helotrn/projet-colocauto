@@ -1,5 +1,5 @@
 <template>
-  <ul class="profile-sidebar">
+  <ul class="profile-sidebar" v-if="user">
     <b-nav-item to="/profile/account">
       {{ $t('profile.titles.account') }}
     </b-nav-item>
@@ -12,7 +12,7 @@
     <b-nav-item to="/profile/loans" :disabled="!user.borrower">
       {{ $t('profile.titles.loans') }}
     </b-nav-item>
-    <b-nav-item to="/profile/loanables" :disabled="!user.owner">
+    <b-nav-item to="/profile/loanables">
       {{ $t('profile.titles.loanables') }}
     </b-nav-item>
     <b-nav-item to="/profile/bills" :disabled="!user.submitted_at">

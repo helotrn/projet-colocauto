@@ -93,8 +93,6 @@
               </b-collapse>
             </b-card>
 
-            {{ item.pricings }}
-
             <div v-for="(pricing, index) in item.pricings"
               :key="pricing.id || `idx-${index}`">
               <pricing-form  :pricing="pricing"
@@ -352,6 +350,8 @@ export default {
 
 <style lang="scss">
 .admin-community-form__language-definition {
+  margin-bottom: 20px;
+
   .card-header {
     padding: 0;
 
