@@ -142,7 +142,7 @@ export default {
         return 'available';
       }
 
-      if (events.find((e) => e.period === '00:00-00:00')) {
+      if (events.find(e => e.period === '00:00-00:00')) {
         return 'unavailable';
       }
 

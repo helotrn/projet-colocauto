@@ -65,7 +65,7 @@ export default {
       }
 
       return `url('${this.image.sizes.thumbnail}')`;
-    }
+    },
   },
   methods: {
     async makeLoanableUnavailableFor24h() {

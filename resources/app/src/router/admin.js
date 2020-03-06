@@ -54,7 +54,7 @@ export default {
             'users.approved_at',
             'users.suspended_at',
             'users.proof.id',
-            'pricings.*'
+            'pricings.*',
           ].join(','),
         },
       },

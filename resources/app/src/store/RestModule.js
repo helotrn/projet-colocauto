@@ -245,7 +245,7 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
       async updateItem({ dispatch, state }, params) {
         await dispatch('update', { id: state.item.id, data: state.item, params });
       },
-      async update({ commit, dispatch, state }, { id, data, params }) {
+      async update({ commit, state }, { id, data, params }) {
         commit('loaded', false);
 
         try {

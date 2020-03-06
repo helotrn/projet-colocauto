@@ -11,7 +11,8 @@
     </b-form-group>
 
     <b-form-group label="Règle" label-for="rule">
-      <b-form-textarea name="rule" id="rule" :value="pricing.rule" rows="6"
+      <b-form-textarea name="rule" id="rule" :value="pricing.rule"
+        rows="6"
         @input="emitChange('rule', $event)" />
     </b-form-group>
   </b-card>
@@ -24,7 +25,7 @@ export default {
     pricing: {
       type: Object,
       required: true,
-    }
+    },
   },
   methods: {
     emitChange(key, value) {
@@ -32,8 +33,8 @@ export default {
         ...this.pricing,
         [key]: value,
       });
-    }
-  }
+    },
+  },
 };
 </script>
 

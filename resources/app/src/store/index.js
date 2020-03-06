@@ -44,7 +44,7 @@ const initialState = {
 const loadUserFields = '*,loanables.*,loanables.loans.*,avatar.*,owner.*,borrower.*,communities.*';
 
 const actions = {
-  async loadUser({ commit, dispatch }) {
+  async loadUser({ commit }) {
     commit('loading', true);
 
     const { data: user } = await Vue.axios.get('/auth/user', {
