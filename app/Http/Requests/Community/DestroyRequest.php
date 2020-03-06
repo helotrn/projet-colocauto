@@ -11,8 +11,7 @@ class DestroyRequest extends BaseRequest
     }
 
     public function rules() {
-        $rules = [
-        ];
+        $rules = [];
 
         return $rules;
     }

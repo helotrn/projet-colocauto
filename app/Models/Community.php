@@ -59,12 +59,17 @@ class Community extends BaseModel
     public static $transformer = CommunityTransformer::class;
 
     public static function getRules($action = '', $auth = null) {
-        return array_merge(
-            static::$rules,
-            [
-                'area' => ['nullable', new Polygon]
-            ]
-        );
+        switch ($action) {
+            case 'destroy':
+                return [];
+            default:
+                return array_merge(
+                    static::$rules,
+                    [
+                        'area' => ['nullable', new Polygon]
+                    ]
+                );
+        }
     }
 
     public static function getColumnsDefinition() {
