@@ -19,7 +19,7 @@ VALUES (
     false,
     current_timestamp,
     current_timestamp
-)
+) ON CONFLICT DO NOTHING
 SQL
         );
     }
