@@ -60,6 +60,6 @@ class CommunitiesTableSeeder extends Seeder
             }
         }
 
-        \DB::statement("SELECT setval('communities_id_seq'::regclass, 8)");
+        \DB::statement("SELECT setval('communities_id_seq'::regclass, (SELECT MAX(id) FROM communities) + 1)");
     }
 }

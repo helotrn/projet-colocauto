@@ -13,12 +13,22 @@ class UsersTableSeeder extends Seeder
                 'password' => 'molotov',
                 'role' => 'admin',
                 'name' => 'Molotov Communications',
+                'description' => 'Communications alternatives',
+                'date_of_birth' => '2009-01-01',
+                'address' => '2065 rue Parthenais',
+                'postal_code' => 'H2K 3T1',
+                'phone' => '514-908-9744',
             ],
             'emile@molotov.ca' => [
                 'id' => 2,
                 'password' => 'molotov',
                 'name' => 'Émile',
                 'last_name' => 'Plourde-Lavoie',
+                'description' => 'Salut tout le monde :)',
+                'date_of_birth' => '2009-01-01',
+                'address' => '2065 rue Parthenais',
+                'postal_code' => 'H2K 3T1',
+                'phone' => '514-908-9744',
             ],
             'ariane@molotov.ca' => [
                 'id' => 3,
@@ -74,6 +84,6 @@ class UsersTableSeeder extends Seeder
             $user->communities()->sync($communities);
         }
 
-        \DB::statement("SELECT setval('users_id_seq'::regclass, 6)");
+        \DB::statement("SELECT setval('users_id_seq'::regclass, (SELECT MAX(id) FROM users) + 1)");
     }
 }

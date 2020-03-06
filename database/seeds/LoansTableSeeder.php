@@ -26,6 +26,6 @@ class LoansTableSeeder extends Seeder
             }
         }
 
-        \DB::statement("SELECT setval('loans_id_seq'::regclass, 2)");
+        \DB::statement("SELECT setval('loans_id_seq'::regclass, (SELECT MAX(id) FROM loans) + 1)");
     }
 }

@@ -27,6 +27,6 @@ class BorrowersTableSeeder extends Seeder
             }
         }
 
-        \DB::statement("SELECT setval('bikes_id_seq'::regclass, 2)");
+        \DB::statement("SELECT setval('borrowers_id_seq'::regclass, (SELECT MAX(id) FROM borrowers) + 1)");
     }
 }
