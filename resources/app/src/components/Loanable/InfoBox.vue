@@ -2,7 +2,9 @@
   <b-card class="loanable-info-box shadow" bg="white" no-body>
     <router-link class="card-body" :to="`/profile/loanables/${id}`">
       <b-row>
-        <b-col class="loanable-info-box__image">Image</b-col>
+        <b-col class="loanable-info-box__image">
+          <div :style="{ backgroundImage: loanableImage }" />
+        </b-col>
 
         <b-col class="loanable-info-box__name"><span>{{ name }}</span></b-col>
 
@@ -46,10 +48,24 @@ export default {
         return ['availability', 'unavailable24h', 'remove'];
       },
     },
+    image: {
+      required: false,
+      type: Object,
+      default: null,
+    },
     name: {
       type: String,
       required: true,
     },
+  },
+  computed: {
+    loanableImage() {
+      if (!this.image) {
+        return '';
+      }
+
+      return `url('${this.image.sizes.thumbnail}')`;
+    }
   },
   methods: {
     async makeLoanableUnavailableFor24h() {
@@ -96,8 +112,17 @@ export default {
   }
 
   &__image.col {
-    flex: 0 1 85px;
+    flex: 0 1 115px;
     height: 85px;
+
+    > div {
+      height: 85px;
+      width: 85px;
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center center;
+      border-radius: 100%;
+    }
   }
 
   &__name.col {

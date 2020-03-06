@@ -65,7 +65,7 @@ export default {
         data: {
           loanables: {
             retrieve: {
-              fields: 'id,name,type',
+              fields: 'id,name,type,image.*',
               'owner.user.id': 'me',
             },
           },

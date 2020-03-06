@@ -57,6 +57,7 @@ export default {
     communities: 'communautés',
     community: 'communauté',
     dashboard: 'tableau de bord',
+    find_vehicle: 'trouve un véhicule',
     loanable: 'véhicule',
     loanables: 'véhicules',
     login: 'se connecter',

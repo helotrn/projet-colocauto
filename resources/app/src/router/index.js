@@ -65,11 +65,11 @@ const routes = [
         component: CommunityMap,
         meta: {
           auth: true,
-          title: 'Trouve un véhicule',
+          title: 'titles.find_vehicle',
           data: {
             loanables: {
               retrieve: {
-                fields: '*,owner.user.id,owner.user.full_name',
+                fields: 'id,type,name,position,owner.user.id,owner.user.full_name,owner.user.avatar,image.*',
               },
             },
           },
@@ -80,12 +80,12 @@ const routes = [
         component: CommunityList,
         meta: {
           auth: true,
-          title: 'Trouve un véhicule',
+          title: 'titles.find_vehicle',
           slug: 'loanables',
           data: {
             loanables: {
               retrieve: {
-                fields: 'id,type,name,position,owner.user.id,owner.user.full_name,owner.user.avatar',
+                fields: 'id,type,name,position,owner.user.id,owner.user.full_name,owner.user.avatar,image.*',
               },
             },
           },
