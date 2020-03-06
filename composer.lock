@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "c2b086427e31f300d33c771bd1442395",
-    "content-hash": "d51c43ca5c9fb23f1557366e746747b2",
+    "hash": "5bffbf0584bd221d5fda609d0a126071",
+    "content-hash": "54e1a571cb482a24a490fdd65313ff3f",
     "packages": [
         {
             "name": "bosnadev/database",
@@ -1842,7 +1842,7 @@
             "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "git@gitlab.com:molotovcoop/laravel-api-molotov.git",
+                "url": "https://gitlab.com/molotovcoop/laravel-api-molotov.git",
                 "reference": "688922946b835f22fb6b6ce03145cc56013fd682"
             },
             "require": {

@@ -10,7 +10,7 @@
     "repositories": [
         {
             "type": "git",
-            "url":  "git@gitlab.com:molotovcoop/laravel-api-molotov.git"
+            "url":  "https://gitlab.com/molotovcoop/laravel-api-molotov.git"
         }
     ],
     "require": {
