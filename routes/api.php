@@ -70,5 +70,7 @@ Route::prefix('v1')->group(function () {
         Route::put('/loans/{loan_id}/actions/{action_id}/cancel', 'ActionController@cancel');
 
         Route::put('/borrowers/{id}/approve', 'BorrowerController@approve');
+
+        Route::put('/pricings/{id}/evaluate', 'PricingController@evaluate');
     });
 });
