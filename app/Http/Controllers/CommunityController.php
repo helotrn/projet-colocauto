@@ -76,6 +76,7 @@ class CommunityController extends RestController
             'description' => '',
             'area' => [],
             'type' => 'neighborhood',
+            'pricings' => [],
           ],
           'filters' => $this->model::$filterTypes,
           'form' => [

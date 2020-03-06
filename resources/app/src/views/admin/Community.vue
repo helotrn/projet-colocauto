@@ -29,6 +29,87 @@
             </b-form-group>
           </div>
 
+          <div class="form__section">
+            <h2>Tarifications</h2>
+
+            <b-card no-body variant="info" class="admin-community-form__language-definition">
+              <template v-slot:header>
+                <b-button size="lg" block href="#"
+                  v-b-toggle.language-definition variant="transparent">
+                  Définition du langage de tarification
+                </b-button>
+              </template>
+
+              <b-collapse id="language-definition">
+                <div class="card-body">
+                  <p>
+                    Une règle par ligne. La dernière règle ne doit pas être conditionnelle.
+                  </p>
+
+                  <p>
+                    Une règle est de la forme <code>SI condition ALORS calcul</code> (forme dite
+                    conditionnelle) ou <code>calcul</code> où<br>
+                  </p>
+
+                  <ul>
+                    <li>
+                      <code>condition</code> est de la forme <code>expression comparateur expression
+                        (opérateur_logique condition)*</code>;
+                    </li>
+
+                    <li>
+                      <code>expression</code> est un équation mathématique composée d'un ou
+                      plusieurs variables, <code>opérateur</code> et de constantes;
+                    </li>
+
+                    <li>
+                      <code>opérateur</code> est un opérateur mathématique;
+                    </li>
+
+                    <li>
+                      <code>opérateur_logique</code> est un opérateur logique parmi
+                      <code>ET OU</code>.
+                    </li>
+                  </ul>
+
+                  <p>Les règles de priorité des opérateurs s'appliquent. Utilisez des parenthèses
+                    pour forcer un ordre.</p>
+
+                  <h4>Variables disponibles</h4>
+                  <ul>
+                    <li><code>$KM</code>, un entier représentant le kilométrage de l'emprunt;</li>
+                    <li><code>$MINUTES</code>, un entier représentant la durée de l'emprunt en
+                      minutes;</li>
+                    <li><code>$OBJET</code>, une entité donnant accès à l'objet touché par la
+                      tarification (non accessible pour la tarification générique).</li>
+                  </ul>
+
+                  <p>
+                    En ce qui concerne <code>OBJET</code>, on peut accéder à ses propriétés avec
+                    un point. Par exemple <code>OBJET.engine</code> pour le mode de combustion d'une
+                    voiture ou <code>OBJET.size</code> pour la taille d'un vélo.
+                  </p>
+                </div>
+              </b-collapse>
+            </b-card>
+
+            {{ item.pricings }}
+
+            <div v-for="(pricing, index) in item.pricings"
+              :key="pricing.id || `idx-${index}`">
+              <pricing-form  :pricing="pricing"
+                @remove="removePricing(pricing)"
+                @change="updatePricing(pricing, $event)" />
+            </div>
+
+            <p class="form-inline" v-if="remainingPricingTypes.length > 0">
+              Ajouter une tarification pour
+              <b-select class="ml-1 mr-1"
+                :options="remainingPricingTypes" v-model="newPricingType" />
+              <b-button @click="addPricing">OK</b-button>
+            </p>
+          </div>
+
           <div class="form__section" v-if="item.id">
             <h2>Membres</h2>
 
@@ -106,17 +187,22 @@
 
 <script>
 import FormsBuilder from '@/components/Forms/Builder.vue';
+import PricingForm from '@/components/Pricing/Form.vue';
 
 import FormMixin from '@/mixins/FormMixin';
+
+import locales from '@/locales';
 
 export default {
   name: 'AdminCommunity',
   mixins: [FormMixin],
   components: {
     FormsBuilder,
+    PricingForm,
   },
   data() {
     return {
+      newPricingType: null,
       usersSelected: [],
       userTable: [
         { key: 'id', label: 'ID', sortable: true },
@@ -142,8 +228,38 @@ export default {
         this.$store.commit(`${this.slug}/item`, newItem);
       },
     },
+    remainingPricingTypes() {
+      const currentPricingTypes = this.item.pricings.map(p => p.object_type);
+      return [
+        {
+          value: null,
+          text: 'Générique',
+        },
+        {
+          value: 'car',
+          text: 'Voiture',
+        },
+        {
+          value: 'bike',
+          text: 'Vélo',
+        },
+        {
+          value: 'trailer',
+          text: 'Remorque',
+        },
+      ].filter(p => currentPricingTypes.indexOf(p.value) === -1);
+    },
   },
   methods: {
+    addPricing() {
+      this.$store.commit(`${this.slug}/mergeItem`, {
+        pricings: [{
+          object_type: this.newPricingType,
+          rule: '',
+          name: '',
+        }],
+      });
+    },
     approveUser(user) {
       const item = {
         ...this.item,
@@ -158,6 +274,11 @@ export default {
       this.$store.commit(`${this.slug}/item`, item);
 
       this.$store.dispatch(`${this.slug}/updateItem`, this.params);
+    },
+    removePricing(pricing) {
+      const pricings = this.item.pricings.filter(p => p !== pricing);
+
+      this.$store.commit(`${this.slug}/patchItem`, { pricings });
     },
     removeUser(user) {
       const users = this.item.users.filter(u => u !== user);
@@ -204,12 +325,39 @@ export default {
         params: this.params,
       });
     },
+    updatePricing(oldValue, newValue) {
+      const pricings = [...this.item.pricings];
+      const index = pricings.indexOf(oldValue);
+      pricings.splice(index, 1, newValue);
+      this.$store.commit(`${this.slug}/patchItem`, { pricings });
+    },
     userRowSelected(rows) {
       this.usersSelected = rows;
+    },
+  },
+  i18n: {
+    messages: {
+      en: {
+        ...locales.en.communities,
+        ...locales.en.forms,
+      },
+      fr: {
+        ...locales.fr.communities,
+        ...locales.fr.forms,
+      },
     },
   },
 };
 </script>
 
 <style lang="scss">
+.admin-community-form__language-definition {
+  .card-header {
+    padding: 0;
+
+    > a {
+      padding: 0.75rem 1.25rem;
+    }
+  }
+}
 </style>

@@ -14,9 +14,9 @@ export default {
       filters: AdminFilters.fr,
     },
   },
-  loanables: loanables.fr,
   forms: {
     actions: 'actions',
+    approuver: 'approuver',
     enregistrer: 'enregistrer',
     modifier: 'modifier',
     nouveau: 'nouveau',
@@ -26,6 +26,15 @@ export default {
     suspendre: 'suspendre',
     supprimer: 'supprimer',
   },
+  pricings: {
+    types: {
+      car: 'voiture',
+      bike: 'vélo',
+      trailer: 'remorque',
+      génerique: 'générique',
+    },
+  },
+  loanables: loanables.fr,
   locales: {
     en: 'English',
     fr: 'Français',
