@@ -27,6 +27,7 @@
         "molotovcoop/laravel-api-molotov": "dev-master",
         "phaza/laravel-postgis": "^4.0",
         "predis/predis": "^1.1",
+        "symfony/expression-language": "^4",
         "vkovic/laravel-custom-casts": "^1.2"
     },
     "require-dev": {

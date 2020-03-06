@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Community;
 
 use App\Http\Requests\BaseRequest;
+use App\Models\Pricing;
 
 class UpdateRequest extends BaseRequest
 {
@@ -12,14 +13,13 @@ class UpdateRequest extends BaseRequest
     }
 
     public function rules() {
-        $rules = [
-        ];
+        $pricingRules = Pricing::getRules('', $this->user());
+        $rules = static::rebaseRules('pricings.*', $pricingRules);
 
         return $rules;
     }
 
     public function messages() {
-        return [
-        ];
+        return [];
     }
 }
