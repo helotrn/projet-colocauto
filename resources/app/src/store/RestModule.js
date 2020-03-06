@@ -124,9 +124,6 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
           throw e;
         }
       },
-      async loadOne({ dispatch }, id) {
-        await dispatch('retrieveOne', { id });
-      },
       search() { // state, search) {
         // dispatch retrieve with param "q"
       },
@@ -162,7 +159,7 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
         }
       },
       async options({ state, commit }) {
-        if (!this.form || !this.filters) {
+        if (state.form === null || state.filters === null || state.empty === null) {
           const options = Vue.axios.options(`/${state.slug}`);
 
           const {
@@ -265,9 +262,9 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
           commit('item', item);
           commit('initialItem', item);
 
-          commit('ajax', null);
+          commit('loaded', true);
 
-          await dispatch('retrieve', state.params);
+          commit('ajax', null);
         } catch (e) {
           commit('ajax', null);
 

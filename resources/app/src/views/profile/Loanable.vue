@@ -1,5 +1,5 @@
 <template>
-  <b-container fluid v-if="item">
+  <b-container fluid v-if="item && routeDataLoaded">
     <vue-headful :title="fullTitle" />
 
     <b-row>
@@ -23,6 +23,7 @@
 <script>
 import LoanableForm from '@/components/Loanable/Form.vue';
 
+import DataRouteGuards from '@/mixins/DataRouteGuards';
 import FormMixin from '@/mixins/FormMixin';
 
 import locales from '@/locales';
@@ -31,7 +32,7 @@ import { capitalize } from '@/helpers/filters';
 
 export default {
   name: 'ProfileLoanable',
-  mixins: [FormMixin],
+  mixins: [DataRouteGuards, FormMixin],
   components: {
     LoanableForm,
   },
@@ -49,7 +50,7 @@ export default {
           return this.$store.state['profile.loanable'].center;
         }
 
-        return this.communityCenter || this.ownerCommunitiesCenter;
+        return this.communityCenter || this.averageCommunitiesCenter;
       },
       set(center) {
         this.$store.commit('register.map/center', center);
@@ -68,8 +69,9 @@ export default {
 
       return parts.reverse().join(' | ');
     },
-    ownerCommunitiesCenter() {
-      const { owner: { user: { communities } } } = this.item;
+    averageCommunitiesCenter() {
+      const { communities: { data: communities } } = this.$store.state;
+
       const center = communities.reduce((acc, c) => [
         (acc[0] + c.center[0]) / 2,
         (acc[1] + c.center[1]) / 2,

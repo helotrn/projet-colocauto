@@ -146,7 +146,7 @@ export default {
 
         this.$store.commit('user', this.item);
 
-        if (this.item.communities.length === 0) {
+        if (!this.item.communities || this.item.communities.length === 0) {
           this.$store.commit('addNotification', {
             content: 'Il est temps de choisir une première communauté!',
             title: 'Profil mis-à-jour',

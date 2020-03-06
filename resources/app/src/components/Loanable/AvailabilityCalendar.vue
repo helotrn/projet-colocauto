@@ -130,7 +130,7 @@ export default {
         available: true,
         type: null,
         scope: [],
-        period: '00:00-00:00',
+        period: '00:00-23:59',
       }];
     },
     availabilityClass(events, cell) {
@@ -140,6 +140,10 @@ export default {
 
       if (events.length === 0) {
         return 'available';
+      }
+
+      if (events.find((e) => e.period === '00:00-00:00')) {
+        return 'unavailable';
       }
 
       return 'limited';
@@ -214,8 +218,10 @@ export default {
   }
 
   .vuecal {
+    background-color: $white;
+
     &__title-bar {
-      background-color: $white;
+      background-color: transparent;
     }
 
     &__title {

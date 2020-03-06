@@ -47,22 +47,16 @@ const actions = {
   async loadUser({ commit, dispatch }) {
     commit('loading', true);
 
-    try {
-      const { data: user } = await Vue.axios.get('/auth/user', {
-        params: {
-          fields: loadUserFields,
-        },
-      });
+    const { data: user } = await Vue.axios.get('/auth/user', {
+      params: {
+        fields: loadUserFields,
+      },
+    });
 
-      commit('user', user);
+    commit('user', user);
 
-      commit('loaded', true);
-      commit('loading', false);
-    } catch (e) {
-      dispatch('logout');
-
-      throw e;
-    }
+    commit('loaded', true);
+    commit('loading', false);
   },
   async login({ commit, dispatch, state }, { email, password }) {
     const { data } = await Vue.axios.post('/auth/login', {

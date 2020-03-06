@@ -18,7 +18,7 @@ class CreateRequest extends BaseRequest
             'instructions' => 'required',
             'insurer' => 'required',
             'is_value_over_fifty_thousand' => 'boolean',
-            'location_description' => 'required',
+            'location_description' => 'present',
             'model' => 'required',
             'name' => 'required',
             'ownership' => 'required',

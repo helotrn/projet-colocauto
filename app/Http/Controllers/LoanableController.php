@@ -56,7 +56,7 @@ class LoanableController extends RestController
                 break;
             case 'car':
                 $carRequest = $this->redirectRequest(CarCreateRequest::class, $request);
-                return $this->carController->create($bikeRequest);
+                return $this->carController->create($carRequest);
                 break;
             case 'trailer':
                 $trailerRequest = $this->redirectRequest(TrailerCreateRequest::class, $request);
@@ -139,12 +139,20 @@ class LoanableController extends RestController
             'item' => [
                 'name' => '',
                 'type' => null,
-                'location_description' => '',
-                'instructions' => '',
-                'comments' => '',
-                'availability_ics' => '',
-                'model' => '',
                 'brand' => '',
+                'comments' => '',
+                'engine' => '',
+                'instructions' => '',
+                'insurer' => '',
+                'location_description' => '',
+                'model' => '',
+                'name' => '',
+                'ownership' => '',
+                'papers_location' => '',
+                'plate_number' => '',
+                'position' => [],
+                'transmission_mode' => '',
+                'year_of_circulation' => '',
             ],
             'form' => [
                 'general' => [

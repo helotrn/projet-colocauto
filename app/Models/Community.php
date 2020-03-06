@@ -15,7 +15,7 @@ class Community extends BaseModel
     use HasCustomCasts, PostgisTrait;
 
     public static $rules = [
-        'name' => 'nullable',
+        'name' => 'required',
         'description' => 'nullable',
         'area' => 'nullable',
         'type' => [

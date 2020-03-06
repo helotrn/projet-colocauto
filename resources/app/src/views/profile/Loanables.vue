@@ -1,33 +1,40 @@
 <template>
-  <div class="profile-loanables">
-    <b-row>
-      <b-col class="admin__buttons">
-        <b-btn v-if="creatable" :to="`/profile/${slug}/new`">
-          {{ $t('ajouter un véhicule') | capitalize }}
-        </b-btn>
-      </b-col>
-    </b-row>
+  <div class="profile-loanables" v-if="routeDataLoaded">
+    <div v-if="user.owner">
+      <b-row>
+        <b-col class="admin__buttons">
+          <b-btn v-if="creatable" :to="`/profile/${slug}/new`">
+            {{ $t('ajouter un véhicule') | capitalize }}
+          </b-btn>
+        </b-col>
+      </b-row>
 
-    <b-row v-if="data.length === 0">
-      <b-col>
-        Pas de véhicule.
-      </b-col>
-    </b-row>
-
-    <b-row v-else v-for="loanable in data" :key="loanable.id">
-      <b-col>
-        <loanable-info-box
-          v-for="loanable in data" :key="loanable.id"
-          :buttons="['remove']"
-          v-bind="loanable" />
-      </b-col>
-    </b-row>
+      <b-row v-if="data.length === 0">
+        <b-col>
+          Pas de véhicule.
+        </b-col>
+      </b-row>
+      <b-row v-else v-for="loanable in data" :key="loanable.id"
+        class="profile-loanables__loanables">
+        <b-col class="profile-loanables__loanables__loanable">
+          <loanable-info-box :buttons="['remove']" v-bind="loanable" />
+        </b-col>
+      </b-row>
+    </div>
+    <div v-else>
+      <p>
+        Vous désirez mettre un véhicule à disposition de la communauté?
+        <a href="#" @click="createOwnerProfile">Cliquez ici</a> pour commencer!
+      </p>
+    </div>
   </div>
+  <layout-loading v-else />
 </template>
 
 <script>
 import LoanableInfoBox from '@/components/Loanable/InfoBox.vue';
 
+import Authenticated from '@/mixins/Authenticated';
 import DataRouteGuards from '@/mixins/DataRouteGuards';
 import ListMixin from '@/mixins/ListMixin';
 
@@ -35,7 +42,7 @@ import locales from '@/locales';
 
 export default {
   name: 'ProfileLoanables',
-  mixins: [DataRouteGuards, ListMixin],
+  mixins: [Authenticated, DataRouteGuards, ListMixin],
   components: { LoanableInfoBox },
   data() {
     return {
@@ -60,8 +67,21 @@ export default {
       },
     },
   },
+  methods: {
+    async createOwnerProfile() {
+      this.$store.commit('users/item', {
+        ...this.user,
+        owner: {},
+      });
+      await this.$store.dispatch('users/updateItem');
+      await this.$store.dispatch('loadUser');
+    },
+  },
 };
 </script>
 
 <style lang="scss">
+.profile-loanables__loanables__loanable {
+  margin-bottom: 20px;
+}
 </style>
