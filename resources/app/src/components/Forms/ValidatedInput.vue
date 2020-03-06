@@ -36,6 +36,13 @@
         input-class="form-control"
         v-bind:value="value"
         v-on:input="emitChange" />
+      <b-form-input v-else-if="type === 'password'"
+        :id="name" :name="name" :key="`${type}-${name}`"
+        type="password"
+        :placeholder="placeholder" :disabled="disabled"
+        :state="getValidationState(validationContext)"
+        v-bind:value="value"
+        v-on:input="emitChange"/>
       <b-form-input v-else
         :id="name" :name="name" :key="`${type}-${name}`"
         type="text"
