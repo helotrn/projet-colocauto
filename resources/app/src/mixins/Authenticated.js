@@ -5,11 +5,11 @@ export default {
         try {
           await this.$store.dispatch('loadUser');
         } catch (e) {
-          this.$router.push('/login');
+          this.$router.push(`/login?r=${this.$route.fullPath}`);
         }
       }
     } else if (this.$route.meta.auth) {
-      this.$router.push('/login');
+      this.$router.push(`/login?r=${this.$route.fullPath}`);
     }
   },
   computed: {

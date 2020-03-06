@@ -43,6 +43,7 @@ export default {
       component: RegisterStep,
       props: true,
       meta: {
+        auth: true,
         slug: 'users',
         params: {
           fields: '*,avatar.*,owner.*,borrower.*.*,communities.id,communities.name,communities.role,communities.proof',

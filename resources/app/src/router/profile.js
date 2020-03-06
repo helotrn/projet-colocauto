@@ -10,6 +10,7 @@ export default {
   name: 'profile',
   component: Profile,
   meta: {
+    auth: true,
     title: 'titles.profile',
   },
   children: [
@@ -18,6 +19,7 @@ export default {
       name: 'account',
       component: ProfileAccount,
       meta: {
+        auth: true,
         title: 'titles.account',
         slug: 'users',
         params: {
@@ -30,6 +32,7 @@ export default {
       name: 'borrower',
       component: ProfileBorrower,
       meta: {
+        auth: true,
         title: 'titles.borrower',
         slug: 'users',
         params: {
@@ -42,6 +45,7 @@ export default {
       name: 'communities',
       component: ProfileCommunities,
       meta: {
+        auth: true,
         title: 'titles.communities',
         slug: 'users',
         params: {
@@ -54,6 +58,7 @@ export default {
       name: 'loanables',
       component: ProfileLoanables,
       meta: {
+        auth: true,
         creatable: true,
         title: 'titles.loanables',
         slug: 'loanables',
@@ -75,9 +80,17 @@ export default {
         auth: true,
         slug: 'loanables',
         params: {
-          fields: '*,type,community.id,community.center,owner.id,owner.user.id,owner.user.communities.center',
+          fields: '*,type,community.id,community.center,owner.id,owner.user.id,'
+            + 'owner.user.communities.center',
         },
         title: 'titles.loanable',
+        data: {
+          communities: {
+            retrieve: {
+              fields: 'id,name,center',
+            },
+          },
+        },
       },
     },
   ],

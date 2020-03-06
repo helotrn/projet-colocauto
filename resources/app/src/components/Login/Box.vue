@@ -108,7 +108,11 @@ export default {
 
         this.$store.commit('login/loading', false);
 
-        this.$router.replace('/app');
+        if (this.$route.query.r) {
+          this.$router.replace(this.$route.query.r);
+        } else {
+          this.$router.replace('/app');
+        }
       } catch (e) {
         if (e.request) {
           switch (e.request.status) {
