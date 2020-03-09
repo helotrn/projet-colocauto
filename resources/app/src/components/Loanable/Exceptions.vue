@@ -42,7 +42,7 @@
         <div v-if="exception.type === 'dates'"  class="exceptions__row__type__calendar">
           <forms-datepicker inline class="mt-3"
             :disabled-dates="selectedDates(exception.scope)"
-            @selected="selectDate($event, exception)" />
+            @input="selectDate($event, exception)" />
         </div>
       </b-col>
 
@@ -138,11 +138,9 @@ export default {
     selectDate(date, exception) {
       const dates = [...exception.scope];
 
-      const dateStr = date.format('YYYY-MM-DD');
-
-      const index = dates.indexOf(dateStr);
+      const index = dates.indexOf(date);
       if (index === -1) {
-        dates.push(dateStr);
+        dates.push(date);
         dates.sort();
       } else {
         dates.splice(index, 1);
