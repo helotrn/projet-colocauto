@@ -12,10 +12,13 @@ class BorrowersTableSeeder extends Seeder
                 'id' => 1,
                 'user_id' => 2,
                 'submitted_at' => new DateTime,
-                'approved_at' => null,
-                'drivers_license_number' => null,
-                'has_been_sued_last_ten_years' => false,
-                'noke_id' => null
+                'approved_at' => new DateTime,
+            ],
+            [
+                'id' => 2,
+                'user_id' => 1,
+                'submitted_at' => new DateTime,
+                'approved_at' => new DateTime,
             ],
         ];
 

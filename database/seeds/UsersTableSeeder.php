@@ -7,47 +7,39 @@ use Illuminate\Support\Facades\Hash;
 class UsersTableSeeder extends Seeder
 {
     public function run() {
+        $generic = [
+            'password' => 'molotov',
+            'date_of_birth' => '2009-01-01',
+            'address' => '2065 rue Parthenais',
+            'postal_code' => 'H2K 3T1',
+            'phone' => '514-908-9744',
+            'description' => 'Communications alternatives',
+        ];
+
         $users = [
-            'soutien@molotov.ca' => [
-                'id' => 1,
-                'password' => 'molotov',
+            'soutien@molotov.ca' => array_merge([
                 'role' => 'admin',
                 'name' => 'Molotov Communications',
-                'description' => 'Communications alternatives',
-                'date_of_birth' => '2009-01-01',
-                'address' => '2065 rue Parthenais',
-                'postal_code' => 'H2K 3T1',
-                'phone' => '514-908-9744',
-            ],
-            'emile@molotov.ca' => [
-                'id' => 2,
-                'password' => 'molotov',
+            ], $generic),
+            'emile@molotov.ca' => array_merge($generic, [
                 'name' => 'Émile',
                 'last_name' => 'Plourde-Lavoie',
                 'description' => 'Salut tout le monde :)',
-                'date_of_birth' => '2009-01-01',
-                'address' => '2065 rue Parthenais',
-                'postal_code' => 'H2K 3T1',
-                'phone' => '514-908-9744',
-            ],
+            ]),
             'ariane@molotov.ca' => [
-                'id' => 3,
-                'password' => 'molotov',
                 'name' => 'Ariane',
                 'last_name' => 'Mercier',
             ],
-            'alexandre@molotov.ca' => [
-                'id' => 4,
-                'password' => 'molotov',
+            'alexandre@molotov.ca' => array_merge($generic, [
                 'name' => 'Alexandre',
                 'last_name' => 'Chouinard',
                 'role' => 'admin',
-            ],
+                'description' => 'Autre admin global',
+            ]),
             'achouinard31@gmail.com' => [
-                'id' => 5,
-                'password' => 'molotov',
                 'name' => 'Alexandre',
                 'last_name' => 'Chouinard',
+                'description' => 'Description',
             ],
         ];
 
@@ -65,8 +57,10 @@ class UsersTableSeeder extends Seeder
             ],
         ];
 
+        $id = 1;
         foreach ($users as $email => $data) {
             $data = array_merge($data, [
+                'id' => $id,
                 'email' => $email,
                 'password' => Hash::make(array_get($data, 'password', 'password')),
             ]);
@@ -76,6 +70,8 @@ class UsersTableSeeder extends Seeder
             } else {
                 User::where('email', $email)->update($data);
             }
+
+            $id += 1;
         }
 
         foreach ($memberships as $email => $communities) {
