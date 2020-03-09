@@ -68,16 +68,18 @@
 
     <b-row class="availability-calendar__description">
       <b-col>
-        <div class="form-inline availability-calendar__description__default d-none">
+        <div class="form-inline availability-calendar__description__default">
           <b-form-group label="Par défaut:" label-for="availability_mode" inline>
             <b-select v-model="loanable.availability_mode"
               id="availability_mode" name="availability_mode">
               <option value="never" selected>Toujours indisponible</option>
+              <option value="always" selected>Toujours disponible</option>
             </b-select>
           </b-form-group>
         </div>
 
-        <loanable-exceptions :exceptions="exceptions" @input="exceptions = $event" />
+        <loanable-exceptions v-if="loanable.availability_mode === 'never'"
+          :exceptions="exceptions" @input="exceptions = $event" />
 
         <b-row>
           <b-col>
@@ -145,8 +147,14 @@ export default {
       }];
     },
     availabilityClass(events, cell) {
-      if (cell.startDate.format('YYYY-MM-DD') < this.loanable.created_at) {
+      const now = this.$dayjs().format('YYYY-MM-DD');
+      const inAYear = this.$dayjs().add(365, 'day').format('YYYY-MM-DD');
+      if (cell.startDate.format('YYYY-MM-DD') < now) {
         return 'unavailable';
+      }
+
+      if (cell.startDate.format('YYYY-MM-DD') >= inAYear) {
+        return 'unknown';
       }
 
       if (events.length === 0) {
@@ -244,6 +252,10 @@ export default {
 
     &__unavailable {
       background-color: $danger;
+    }
+
+    &__unknown {
+      background-color: $info;
     }
   }
 

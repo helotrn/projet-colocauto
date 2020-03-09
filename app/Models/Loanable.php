@@ -67,6 +67,8 @@ class Loanable extends BaseModel
             $calendar->setTimezone($tz);
 
             switch ($model->availability_mode) {
+                case 'always':
+                    break;
                 case 'never':
                 default:
                     $baseEvent
@@ -95,7 +97,9 @@ class Loanable extends BaseModel
                         }
                     }
 
-                    $recurrence->setByDay(join(',', $byDays));
+                    if (!empty($byDays)) {
+                        $recurrence->setByDay(join(',', $byDays));
+                    }
                     $baseEvent->setRecurrenceRule($recurrence);
                     $calendar->addComponent($baseEvent);
                     break;
@@ -151,32 +155,38 @@ class Loanable extends BaseModel
     }
 
     public function getEventsAttribute() {
-        $ical = new \ICal\ICal($this->availability_ics, array(
-            'defaultTimeZone' => 'America/Toronto',
-            'defaultWeekStart' => 'SU',
-        ));
+        try {
+            $ical = new \ICal\ICal($this->availability_ics, [
+                'defaultTimeZone' => 'America/Toronto',
+                'defaultWeekStart' => 'SU',
+                'filterDaysBefore' => 1,
+                'filterDaysAfter' => 365,
+            ]);
 
-        $events = [];
-        foreach ($ical->events() as $event) {
-            $startDate = new Carbon($event->dtstart);
-            $endDate = new Carbon($event->dtend);
-            $period = $startDate->format('H:i') . '-' . $endDate->format('H:i');
+            $events = [];
+            foreach ($ical->events() as $event) {
+                $startDate = new Carbon($event->dtstart);
+                $endDate = new Carbon($event->dtend);
+                $period = $startDate->format('H:i') . '-' . $endDate->format('H:i');
 
-            $fullDay = $period === '00:00-00:00';
+                $fullDay = $period === '00:00-00:00';
 
-            $events[] = $fullDay
-                ? [
-                    'start' => $startDate->format('Y-m-d'),
-                    'end' => $endDate->format('Y-m-d'),
-                    'period' => $startDate->format('H:i') . '-' . $endDate->format('H:i'),
-                ]
-                : [
-                    'start' => $startDate->format('Y-m-d H:i'),
-                    'end' => $endDate->format('Y-m-d H:i'),
-                    'period' => $startDate->format('H:i') . '-' . $endDate->format('H:i'),
-                ];
+                $events[] = $fullDay
+                    ? [
+                        'start' => $startDate->format('Y-m-d'),
+                        'end' => $endDate->format('Y-m-d'),
+                        'period' => $startDate->format('H:i') . '-' . $endDate->format('H:i'),
+                    ]
+                    : [
+                        'start' => $startDate->format('Y-m-d H:i'),
+                        'end' => $endDate->format('Y-m-d H:i'),
+                        'period' => $startDate->format('H:i') . '-' . $endDate->format('H:i'),
+                    ];
+            }
+            return $events;
+        } catch (\Exception $e) {
+            return [];
         }
-        return $events;
     }
 
     public function scopeAccessibleBy(Builder $query, $user) {
