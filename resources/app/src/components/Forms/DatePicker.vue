@@ -13,7 +13,7 @@ import Datepicker from 'vuejs-datepicker';
 import { fr } from 'vuejs-datepicker/dist/locale';
 
 export default {
-  name: 'FormsDatepicker',
+  name: 'FormsDatePicker',
   components: { Datepicker },
   props: {
     disabledDates: {
@@ -74,4 +74,9 @@ export default {
 </script>
 
 <style lang="scss">
+.forms-datepicker {
+  input.form-control[readonly] {
+    background-color: $white;
+  }
+}
 </style>

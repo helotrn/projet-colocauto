@@ -33,10 +33,9 @@
         :state="getValidationState(validationContext)"
         v-bind:value="value"
         v-on:input="emitChange" />
-      <forms-datepicker v-else-if="type === 'date'"
-        input-class="form-control"
-        v-bind:value="value"
-        v-on:input="emitChange" />
+      <forms-date-picker v-else-if="type === 'date'"
+        :value="value"
+        @input="emitChange" />
       <b-form-input v-else-if="type === 'password'"
         :id="name" :name="name" :key="`${type}-${name}`"
         type="password"
@@ -62,7 +61,7 @@
 </template>
 
 <script>
-import FormsDatepicker from '@/components/Forms/Datepicker.vue';
+import FormsDatePicker from '@/components/Forms/DatePicker.vue';
 import FormsMapInput from '@/components/Forms/MapInput.vue';
 
 export default {
@@ -133,7 +132,10 @@ export default {
       required: true,
     },
   },
-  components: { FormsDatepicker, FormsMapInput },
+  components: {
+    FormsDatePicker,
+    FormsMapInput,
+  },
   computed: {
     rulesOrNothing() {
       if (!this.rules) {
