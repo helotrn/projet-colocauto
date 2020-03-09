@@ -5,10 +5,12 @@ export default {
         try {
           await this.$store.dispatch('loadUser');
         } catch (e) {
+          this.$store.commit('user', null);
           this.$router.push(`/login?r=${this.$route.fullPath}`);
         }
       }
     } else if (this.$route.meta.auth) {
+      this.$store.commit('user', null);
       this.$router.push(`/login?r=${this.$route.fullPath}`);
     }
   },
@@ -97,8 +99,8 @@ export default {
 
       this.$router.push('/');
     },
-    skipToLogin(from) {
-      this.$router.replace('/login', { from });
+    skipToLogin() {
+      this.$router.replace('/login');
     },
     skipToApp() {
       this.$router.replace('/app');

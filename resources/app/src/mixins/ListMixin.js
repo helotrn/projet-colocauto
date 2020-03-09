@@ -73,13 +73,24 @@ export default {
       }
 
       this.listDebounce = setTimeout(() => {
-        this.$store.dispatch(
-          `${this.slug}/retrieve`,
-          {
-            fields: this.fieldsList.join(','),
-          },
-        );
-        this.listDebounce = null;
+        try {
+          this.$store.dispatch(
+            `${this.slug}/retrieve`,
+            {
+              fields: this.fieldsList.join(','),
+            },
+          );
+          this.listDebounce = null;
+        } catch (e) {
+          this.$store.commit('addNotification', {
+            content: "Vous n'êtes pas connecté.",
+            title: 'Non connecté',
+            variant: 'warning',
+            type: 'login',
+          });
+          this.$store.commit('user', null);
+          this.$router.push(`/login?r=${this.$route.fullPath}`);
+        }
       }, 250);
     },
   },

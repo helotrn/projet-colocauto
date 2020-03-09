@@ -46,7 +46,8 @@ export default {
               switch (e.request.status) {
                 case 401:
                 default:
-                  vm.$router.push('/login');
+                  vm.$store.commit('user', null);
+                  vm.$router.push(`/login?r=${vm.$route.fullPath}`);
               }
             }
           });

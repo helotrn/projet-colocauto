@@ -67,7 +67,8 @@ export default {
               variant: 'warning',
               type: 'login',
             });
-            this.$router.push('/login');
+            this.$store.commit('user', null);
+            this.$router.push(`/login?r=${this.$route.fullPath}`);
             break;
           default:
             this.$store.commit('addNotification', {

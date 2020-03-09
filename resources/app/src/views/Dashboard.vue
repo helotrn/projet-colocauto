@@ -125,7 +125,7 @@ export default {
   },
   beforeMount() {
     if (!this.isLoggedIn) {
-      this.skipToLogin('app');
+      this.skipToLogin();
     }
 
     if (!this.user.name) {
