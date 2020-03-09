@@ -4,9 +4,12 @@ namespace App\Models;
 
 use App\Models\Loan;
 use App\Models\User;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Borrower extends BaseModel
 {
+    use SoftDeletes;
+
     public static $rules = [
         'drivers_license_number' => 'nullable',
         'has_been_sued_last_ten_years' => 'boolean',

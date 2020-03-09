@@ -5,9 +5,12 @@ namespace App\Models;
 use App\Models\BillableItem;
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Bill extends BaseModel
 {
+    use SoftDeletes;
+
     public static $rules = [
         'period' => 'required',
     ];

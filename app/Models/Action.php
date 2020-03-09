@@ -4,9 +4,11 @@ namespace App\Models;
 
 use App\Models\Loan;
 use App\Models\User;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Action extends BaseModel
 {
+    use SoftDeletes;
 
     public $items = ['loan', 'user'];
 

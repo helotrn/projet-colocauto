@@ -7,12 +7,13 @@ use App\Utils\PointCast;
 use App\Utils\PolygonCast;
 use App\Transformers\CommunityTransformer;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Phaza\LaravelPostgis\Eloquent\PostgisTrait;
 use Vkovic\LaravelCustomCasts\HasCustomCasts;
 
 class Community extends BaseModel
 {
-    use HasCustomCasts, PostgisTrait;
+    use HasCustomCasts, PostgisTrait, SoftDeletes;
 
     public static $rules = [
         'name' => 'required',
@@ -94,10 +95,6 @@ class Community extends BaseModel
     public $collections = ['users', 'pricings', 'loanables'];
 
     public $computed =  ['area_google', 'center_google'];
-
-    public function memberships() {
-        return $this->hasMany(Membership::class);
-    }
 
     public function users() {
         return $this->belongsToMany(User::class)

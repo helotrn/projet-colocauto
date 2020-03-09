@@ -3,9 +3,12 @@
 namespace App\Models;
 
 use App\Models\User;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class PaymentMethod extends BaseModel
 {
+    use SoftDeletes;
+
     public static $rules = [
         'name' => 'required',
         'external_id' => 'required',

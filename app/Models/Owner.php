@@ -6,9 +6,12 @@ use App\Models\Bike;
 use App\Models\Car;
 use App\Models\Loanable;
 use App\Models\Trailer;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Owner extends BaseModel
 {
+    use SoftDeletes;
+
     public static $rules = [
         'approved_at' => 'nullable|date',
         'submitted_at' => 'nullable|date',

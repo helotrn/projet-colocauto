@@ -4,9 +4,12 @@ namespace App\Models;
 
 use App\Models\Bill;
 use App\Models\Payment;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class BillableItem extends BaseModel
 {
+    use SoftDeletes;
+
     public static $rules = [
         'label' => 'required',
         'amount' => 'required|numeric',

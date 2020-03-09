@@ -12,12 +12,13 @@ use App\Models\PaymentMethod;
 use App\Transformers\UserTransformer;
 use Auth;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
 
 class User extends AuthenticatableBaseModel
 {
-    use HasApiTokens, Notifiable;
+    use HasApiTokens, Notifiable, SoftDeletes;
 
     public static $rules = [
         'address' => 'nullable',

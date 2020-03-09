@@ -11,9 +11,12 @@ use App\Models\Intention;
 use App\Models\Loanable;
 use App\Models\Payment;
 use App\Models\Takeover;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Loan extends BaseModel
 {
+    use SoftDeletes;
+
     public static $rules = [
         'departure_at' => 'nullable|date',
         'duration_in_minutes' => 'nullable',
