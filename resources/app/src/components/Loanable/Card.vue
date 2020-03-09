@@ -12,13 +12,23 @@
 
     <div class="loanable-card__tags">
       <div v-if="type === 'car'">
-        Voiture
+        <b-badge>
+          <svg-car /> Voiture
+        </b-badge>
       </div>
       <div v-else-if="type === 'bike'">
-        Vélo
+        <b-badge>
+          <svg-bike /> Vélo
+        </b-badge>
       </div>
       <div v-else-if="type === 'trailer'">
-        Remorque
+        <b-badge>
+          <svg-trailer /> Remorque
+        </b-badge>
+      </div>
+
+      <div v-if="isElectric">
+        <img src="/icons/electric.png">
       </div>
     </div>
 
@@ -31,11 +41,30 @@
 </template>
 
 <script>
+import Bike from '@/assets/svg/bike.svg';
+import Car from '@/assets/svg/car.svg';
+import Trailer from '@/assets/svg/trailer.svg';
+
 export default {
   name: 'LoanableCard',
+  components: {
+    'svg-bike': Bike,
+    'svg-car': Car,
+    'svg-trailer': Trailer,
+  },
   props: {
+    bike_type: {
+      type: String,
+      required: false,
+      default: null,
+    },
     community: {
       type: Object,
+      required: false,
+      default: null,
+    },
+    engine: {
+      type: String,
       required: false,
       default: null,
     },
@@ -62,8 +91,22 @@ export default {
       required: false,
       default: null,
     },
+    type: {
+      type: String,
+      required: true,
+    },
   },
   computed: {
+    isElectric() {
+      switch (this.type) {
+        case 'bike':
+          return this.bike_type === 'electric';
+        case 'car':
+          return this.engine === 'electric';
+        default:
+          return false;
+      }
+    },
     userAvatarStyle() {
       if (!this.owner.user || !this.owner.user.avatar) {
         return {};

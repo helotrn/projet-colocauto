@@ -167,6 +167,23 @@ export default {
       required: true,
     },
   },
+  methods: {
+    label(key) {
+      return this.$i18n.t(`fields.${key}`);
+    },
+    placeholderOrLabel(key) {
+      if (this.$i18n.te(`placeholders.${key}`)) {
+        return this.$i18n.t(`placeholders.${key}`);
+      }
+
+      return this.label(key);
+    },
+    submit(...params) {
+      const ownerId = this.$store.state.user.owner.id;
+      this.$store.commit('loanables/mergeItem', { owner: { id: ownerId } });
+      this.$emit('submit', ...params);
+    },
+  },
   i18n: {
     messages: {
       en: {
@@ -177,26 +194,6 @@ export default {
         ...locales.fr.loanables,
         ...locales.fr.forms,
       },
-    },
-  },
-  methods: {
-    placeholderOrLabel(key) {
-      if (this.$i18n.te(`placeholders.${key}`)) {
-        return this.$i18n.t(`placeholders.${key}`);
-      }
-
-      return this.label(key);
-    },
-    label(key) {
-      return this.$i18n.t(`fields.${key}`);
-    },
-    getValidationState({ dirty, validated, valid = null }) {
-      return dirty || validated ? valid : null;
-    },
-    submit(...params) {
-      const ownerId = this.$store.state.user.owner.id;
-      this.$store.commit('loanables/mergeItem', { owner: { id: ownerId } });
-      this.$emit('submit', ...params);
     },
   },
 };
