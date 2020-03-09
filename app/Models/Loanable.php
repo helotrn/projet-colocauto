@@ -114,8 +114,6 @@ class Loanable extends BaseModel
 
     protected $table = 'loanables';
 
-    protected $appends = ['events'];
-
     protected $hidden = ['availability_ics'];
 
     protected $postgisFields = [
@@ -133,6 +131,8 @@ class Loanable extends BaseModel
     ];
 
     protected $with = ['image'];
+
+    public $computed = ['events'];
 
     public $items = ['owner', 'community', 'image'];
 
