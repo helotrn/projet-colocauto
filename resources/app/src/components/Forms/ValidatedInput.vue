@@ -30,6 +30,7 @@
         v-on:input="emitChange" />
       <forms-map-input v-else-if="type === 'point'"
         :center="center"
+        :state="getValidationState(validationContext)"
         v-bind:value="value"
         v-on:input="emitChange" />
       <forms-datepicker v-else-if="type === 'date'"
@@ -132,7 +133,18 @@ export default {
   components: { FormsDatepicker, FormsMapInput },
   computed: {
     rulesOrNothing() {
-      return this.rules || '';
+      if (!this.rules) {
+        return '';
+      }
+
+      if (this.type === 'point') {
+        return {
+          ...this.rules,
+          length: 2,
+        };
+      }
+
+      return this.rules;
     },
   },
   methods: {

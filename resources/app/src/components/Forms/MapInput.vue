@@ -1,9 +1,9 @@
 <template>
-  <div class="forms-map-input">
+  <div :class="`forms-map-input ${stateClass}`">
     <gmap-map class="forms-map-input__map" ref="map"
-      :center="center || markerPosition" :zoom="14" :options="mapOptions"
+      :center="markerPosition || center" :zoom="14" :options="mapOptions"
       map-type-id="terrain" @click="savePosition">
-      <gmap-marker
+      <gmap-marker v-if="markerPosition"
         :clickable="false"
         :position="markerPosition" />
     </gmap-map>
@@ -22,6 +22,11 @@ export default {
     description: {
       type: String,
       required: false,
+    },
+    state: {
+      type: Boolean,
+      required: false,
+      default: true,
     },
     value: {
       required: true,
@@ -50,10 +55,25 @@ export default {
   },
   computed: {
     markerPosition() {
-      return {
-        lat: this.value[0],
-        lng: this.value[1],
-      };
+      if (this.value.length === 2) {
+        return {
+          lat: this.value[0],
+          lng: this.value[1],
+        };
+      }
+
+      return null;
+    },
+    stateClass() {
+      if (this.state === null) {
+        return '';
+      }
+
+      if (this.state) {
+        return 'is-valid';
+      }
+
+      return 'is-invalid';
     },
   },
   methods: {
@@ -67,7 +87,15 @@ export default {
 </script>
 
 <style lang="scss">
-.forms-map-input__map {
-  height: 240px;
+.forms-map-input {
+  border-radius: 0.25rem;
+
+  &__map {
+    height: 240px;
+  }
+
+  &.is-invalid {
+    border: 1px solid $danger;
+  }
 }
 </style>
