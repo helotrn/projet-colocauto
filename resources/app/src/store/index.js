@@ -27,6 +27,7 @@ const vuexPersist = new VuexPersist({
       email: state.login.email,
       rememberMe: state.login.rememberMe,
     },
+    'register.intent': state['register.intent'],
   }),
 });
 
@@ -41,7 +42,7 @@ const initialState = {
   refreshToken: null,
 };
 
-const loadUserFields = '*,loanables.*,loanables.loans.*,avatar.*,owner.*,borrower.*,communities.*';
+const loadUserFields = '*,loanables.*,!loanables.events,loanables.loans.*,avatar.*,owner.*,borrower.*,communities.*';
 
 const actions = {
   async loadUser({ commit }) {

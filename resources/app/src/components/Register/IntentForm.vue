@@ -60,14 +60,6 @@ export default {
   components: {
     BorrowerForm,
   },
-  mounted() {
-    if (this.user.borrower && this.user.borrower.id) {
-      this.borrower = this.user.borrower;
-      this.carBorrowerIntent = true;
-    } else {
-      this.user.borrower = {};
-    }
-  },
   props: {
     user: {
       type: Object,
