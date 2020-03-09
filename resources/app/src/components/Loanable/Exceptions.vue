@@ -27,7 +27,7 @@
         </b-select>
 
         <div v-if="exception.type === 'weekdays'">
-          <b-form-checkbox-group :id="`weekdays-${index}`"
+          <b-form-checkbox-group :id="`weekdays-${index}`" class="mt-3"
             :checked="exception.scope" name="`weekdays-${index}`"
             @change="emitChange(exception, 'scope', $event)">
             <b-form-checkbox value="SU">Dimanche</b-form-checkbox><br>

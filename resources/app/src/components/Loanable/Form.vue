@@ -93,6 +93,7 @@
         <div class="form__section" v-if="loanable.type && loanable.id">
           <a id="availability" />
           <loanable-availability-calendar
+            :changed="changed"
             :loanable="loanable"
             :loading="loading" />
         </div>

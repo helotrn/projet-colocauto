@@ -1,5 +1,5 @@
 <template>
-  <div class="availability-calendar">
+ <div class="availability-calendar">
     <b-row class="availability-calendar__header">
       <b-col>
         <h2>Disponibilités</h2>
@@ -15,6 +15,12 @@
     </b-row>
 
     <b-row class="availability-calendar__calendars">
+      <div v-if="changed" class="availability-calendar__calendars--changed">
+        <div>
+          Sauvegardez pour mettre-à-jour l'aperçu des disponibilités.
+        </div>
+      </div>
+
       <b-col lg="6">
         <vue-cal class="vuecal--rounded-theme" locale="fr" small
           :events="loanable.events" :selected-date="selectedMonth"
@@ -93,6 +99,11 @@ export default {
   name: 'LoanableAvailabilityCalendar',
   components: { LoanableExceptions, VueCal },
   props: {
+    changed: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
     loanable: {
       type: Object,
       required: true,
@@ -171,6 +182,25 @@ export default {
 
   .vdp-datepicker__calendar .cell.disabled {
     background-color: #4bd !important;
+  }
+
+  &__calendars {
+    position: relative;
+
+    &--changed {
+      z-index: 100;
+      opacity: 0.8;
+      background-color: $white;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      text-align: center;
+    }
   }
 
   &__description {
