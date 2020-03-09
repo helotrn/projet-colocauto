@@ -110,38 +110,31 @@ export default {
   &__image {
     height: 115px;
     position: relative;
-
-    &__user, &__loanable {
-      position: absolute;
-      height: 100%;
-      width: 115px;
-      bottom: 0;
-    }
+    width: 100%;
 
     &__user, &__loanable > div {
-      border-radius: 100%;
       background-size: cover;
       background-position: center center;
       background-repeat: no-repeat;
+      border-radius: 100%;
     }
 
     &__user {
-      left: 50%;
-      margin-left: -25%;
-      background-color: $white;
+      height: 100%;
+      width: 115px;
+      margin: 0 auto;
     }
 
     &__loanable {
-      left: 50%;
-      margin-left: -15%;
+      position: absolute;
+      bottom: 0;
+      left: calc(50% + 30px);
+      height: 50%;
+      width: 115px;
 
       > div {
-        width: 57.5px;
-        height: 50%;
-        margin-left: 50%;
-        margin-top: 50%;
-        background-color: $white;
-        border-radius: 100%;
+        width: calc(115px / 2);
+        height: calc(115px / 2);
       }
     }
   }
