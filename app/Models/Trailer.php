@@ -12,12 +12,14 @@ class Trailer extends Loanable
     ];
 
     protected $fillable = [
-        'name',
-        'position',
-        'location_description',
+        'availability_json',
+        'availability_mode',
         'comments',
         'instructions',
+        'location_description',
         'maximum_charge',
+        'name',
+        'position',
     ];
 
     public static function getColumnsDefinition() {

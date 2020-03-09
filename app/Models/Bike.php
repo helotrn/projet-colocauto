@@ -23,6 +23,8 @@ class Bike extends Loanable
     ];
 
     protected $fillable = [
+        'availability_json',
+        'availability_mode',
         'bike_type',
         'comments',
         'instructions',

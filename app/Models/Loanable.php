@@ -327,7 +327,7 @@ class Loanable extends BaseModel
                         $endTime = explode(':', $endTime);
 
                         [$startOfDay, $startOfPeriod, $endOfPeriod, $endOfDay]
-                            = static::getPeriodLimits($date, $startTime, $endTime);
+                            = static::getPeriodLimits(new Carbon($date), $startTime, $endTime);
 
                         $startDayEvent
                             ->setDtStart($startOfDay)
