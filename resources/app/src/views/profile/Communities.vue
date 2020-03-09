@@ -1,11 +1,18 @@
 <template>
   <div class="profile-communities" v-if="item">
-    <div class="profile-communities__communities">
+    <div class="profile-communities__communities" v-if="item.communities.length > 0">
       <div class="profile-communities__communities__community"
         v-for="community in item.communities" :key="community.id">
         <h3>{{ community.name }}</h3>
         <community-proof-form :community="community" @submit="submit" />
       </div>
+    </div>
+    <div v-else>
+      <p>
+        Vous n'êtes membre d'aucune communauté?
+        <router-link to="/register/map">Cliquez ici</router-link> pour rejoindre une
+        première communauté!
+      </p>
     </div>
   </div>
   <layout-loading v-else />

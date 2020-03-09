@@ -63,6 +63,7 @@ export default {
     login: 'se connecter',
     profile: 'Profil',
     register: "s'inscrire",
+    users: 'membres',
   },
   users: users.fr,
 };

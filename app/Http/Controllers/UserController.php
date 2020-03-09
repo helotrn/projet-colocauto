@@ -6,6 +6,7 @@ use App\Http\Requests\BaseRequest as Request;
 use App\Http\Requests\User\CreateRequest;
 use App\Http\Requests\User\DestroyRequest;
 use App\Http\Requests\User\UpdateRequest;
+use App\Models\Borrower;
 use App\Models\User;
 use App\Repositories\CommunityRepository;
 use App\Repositories\UserRepository;
@@ -143,5 +144,78 @@ class UserController extends RestController
         }
 
         return $community;
+    }
+
+    public function template(Request $request) {
+        $template = [
+            'item' => [
+                'name' => '',
+            ],
+            'form' => [
+                'general' => [
+                    'email' => [
+                        'type' => 'email',
+                    ],
+                    'name' => [
+                        'type' => 'text',
+                    ],
+                    'last_name' => [
+                        'type' => 'text',
+                    ],
+                    'description' => [
+                        'type' => 'textarea',
+                    ],
+                    'date_of_birth' => [
+                        'type' => 'date',
+                    ],
+                    'address' => [
+                        'type' => 'text',
+                    ],
+                    'postal_code' => [
+                        'type' => 'text',
+                    ],
+                    'phone' => [
+                        'type' => 'text',
+                    ],
+                    'is_smart_phone' => [
+                        'type' => 'checkbox',
+                    ],
+                    'other_phone' => [
+                        'type' => 'text',
+                    ],
+                ],
+                'borrower' => [
+                    'noke_id' => [
+                        'type' => 'text',
+                    ],
+                    'drivers_license_number' => [
+                        'type' => 'text'
+                    ],
+                    'has_been_sued_last_ten_years' => [
+                        'type' => 'checkbox',
+                    ],
+                    'insurance' => [
+                        'type' => 'file',
+                    ],
+                    'gaa' => [
+                        'type' => 'file',
+                    ],
+                    'saaq' => [
+                        'type' => 'file',
+                    ],
+                ],
+            ],
+            'filters' => $this->model::$filterTypes,
+        ];
+
+        $borrowerRules = Borrower::getRules();
+        foreach ($borrowerRules as $field => $rules) {
+            if (!isset($template['form']['borrower'][$field])) {
+                continue;
+            }
+            $template['form']['borrower'][$field]['rules'] = $this->formatRules($rules);
+        }
+
+        return $template;
     }
 }

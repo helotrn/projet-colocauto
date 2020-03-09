@@ -46,6 +46,12 @@ class User extends AuthenticatableBaseModel
         ],
     ];
 
+    public static $filterTypes = [
+        'id' => 'number',
+        'full_name' => 'text',
+        'deleted_at' => 'date',
+    ];
+
     public static function getRules($action = '', $auth = null) {
         if ($action === 'submit') {
             return array_merge(static::$rules, [

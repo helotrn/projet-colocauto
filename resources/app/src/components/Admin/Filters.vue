@@ -7,8 +7,9 @@
         { count: appliedFilters.length }
       ) }})</small>
     </b-button>
-    <b-collapse id="collapse-filters">
-      <b-card no-body bg-variant="eggshell" border-variant="dark">
+
+    <b-collapse id="collapse-filters" class="admin-filters__collapse">
+      <b-card no-body bg-variant="eggshell" border-variant="dark" class="shadow">
         <b-card-body>
           <b-form-group v-for="(def, key) in filters" :key="key"
             :label="$t(`${entity}.fields.${key}`) | capitalize" :label-for="key">

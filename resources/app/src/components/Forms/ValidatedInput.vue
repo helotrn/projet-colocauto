@@ -44,6 +44,9 @@
         :state="getValidationState(validationContext)"
         v-bind:value="value"
         v-on:input="emitChange"/>
+      <div v-else-if="type === 'relation'">
+        <strong>Relation {{name}}</strong>
+      </div>
       <b-form-input v-else
         :id="name" :name="name" :key="`${type}-${name}`"
         type="text"

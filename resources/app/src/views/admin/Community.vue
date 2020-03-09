@@ -109,6 +109,7 @@
           </div>
 
           <div class="form__section" v-if="item.id">
+            <a id="members" />
             <h2>Membres</h2>
 
             <b-table

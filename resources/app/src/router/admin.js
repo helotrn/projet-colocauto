@@ -4,6 +4,8 @@ import AdminCommunities from '../views/admin/Communities.vue';
 import AdminCommunity from '../views/admin/Community.vue';
 import AdminLoanable from '../views/admin/Loanable.vue';
 import AdminLoanables from '../views/admin/Loanables.vue';
+import AdminUser from '../views/admin/User.vue';
+import AdminUsers from '../views/admin/Users.vue';
 
 export default {
   path: '/admin',
@@ -85,6 +87,36 @@ export default {
         slug: 'loanables',
         params: {
           fields: '*,owner.id,owner.full_name',
+        },
+        title: 'titles.loanable',
+      },
+    },
+    {
+      path: 'users',
+      component: AdminUsers,
+      meta: {
+        auth: true,
+        creatable: true,
+        slug: 'users',
+        data: {
+          users: {
+            retrieve: {
+              fields: 'id,name,last_name,full_name,email',
+            },
+          },
+        },
+        title: 'titles.users',
+      },
+    },
+    {
+      path: 'users/:id',
+      component: AdminUser,
+      props: true,
+      meta: {
+        auth: true,
+        slug: 'users',
+        params: {
+          fields: '*,owner.*,borrower.*,loanables.*,communities.*',
         },
         title: 'titles.loanable',
       },

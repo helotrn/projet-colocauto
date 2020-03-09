@@ -11,11 +11,17 @@ class Borrower extends BaseModel
     use SoftDeletes;
 
     public static $rules = [
-        'drivers_license_number' => 'nullable',
-        'has_been_sued_last_ten_years' => 'boolean',
-        'noke_id' => 'nullable',
-        'approved_at' => 'nullable|date',
-        'submitted_at' => 'nullable|date',
+        'drivers_license_number' => [ 'nullable' ],
+        'has_been_sued_last_ten_years' => [ 'boolean' ],
+        'noke_id' => [ 'nullable' ],
+        'approved_at' => [
+            'nullable',
+            'date',
+        ],
+        'submitted_at' => [
+            'nullable',
+            'date',
+        ],
     ];
 
     protected $fillable = [
