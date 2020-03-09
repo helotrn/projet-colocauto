@@ -33,6 +33,18 @@
 
             <forms-builder :definition="form.trailer" :item="item" entity="trailers" />
           </div>
+          <div class="form__section text-center" v-else>
+            <span>
+              Sélectionnez un type de véhicule pour poursuivre la configuration.
+            </span>
+          </div>
+
+          <div class="form__section" v-if="item.type && item.id">
+            <loanable-availability-calendar
+              :changed="changed"
+              :loanable="item"
+              :loading="loading" />
+          </div>
 
           <div class="form__buttons">
             <b-button-group>
@@ -53,6 +65,7 @@
 
 <script>
 import FormsBuilder from '@/components/Forms/Builder.vue';
+import LoanableAvailabilityCalendar from '@/components/Loanable/AvailabilityCalendar.vue';
 
 import FormMixin from '@/mixins/FormMixin';
 
@@ -65,6 +78,7 @@ export default {
   mixins: [FormMixin],
   components: {
     FormsBuilder,
+    LoanableAvailabilityCalendar,
   },
   computed: {
     fullTitle() {

@@ -193,9 +193,6 @@ class LoanableController extends RestController
                             ],
                         ],
                     ],
-                    'availability_json' => [
-                        'type' => 'json',
-                    ],
                     'owner_id' => [
                         'type' => 'relation',
                     ],
