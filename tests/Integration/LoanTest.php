@@ -16,6 +16,7 @@ class LoanTest extends TestCase
         'departure_at',
         'duration_in_minutes',
         'borrower_id',
+        'estimated_distance'
     ];
 
     public function testCreateLoans() {
@@ -27,6 +28,7 @@ class LoanTest extends TestCase
         $data = [
             'departure_at' => now()->toDateTimeString(),
             'duration_in_minutes' => $this->faker->randomNumber($nbDigits = null, $strict = false),
+            'estimated_distance' => $this->faker->randomNumber($nbDigits = null, $strict = false),
             'borrower_id' => $borrower->id,
             'loanable_type' => 'bike',
             'loanable_id' => $loanable->id,

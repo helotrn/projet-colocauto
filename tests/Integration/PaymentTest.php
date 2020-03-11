@@ -78,7 +78,7 @@ class PaymentTest extends TestCase
 
         $this->assertTrue($loan->intentions()->count() > 0);
 
-        $executedAtDate = substr(Carbon::now('-5')->format("Y-m-d h:m:sO"), 0, -2);
+        $executedAtDate = substr(Carbon::now('-4')->format("Y-m-d h:m:sO"), 0, -2);
         Carbon::setTestNow($executedAtDate);
 
         $response = $this->json('PUT', "/api/v1/loans/$loan->id/actions/$intention->id/complete");
@@ -97,7 +97,7 @@ class PaymentTest extends TestCase
 
         $this->assertTrue($loan->intentions()->count() > 0);
 
-        $executedAtDate = substr(Carbon::now('-5')->format("Y-m-d h:m:sO"), 0, -2);
+        $executedAtDate = substr(Carbon::now('-4')->format("Y-m-d h:m:sO"), 0, -2);
         Carbon::setTestNow($executedAtDate);
 
         $response = $this->json('PUT', "/api/v1/loans/$loan->id/actions/$intention->id/cancel");

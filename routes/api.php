@@ -20,8 +20,11 @@ Route::prefix('v1')->group(function () {
 
         foreach ([
             'action',
+            'bike',
             'bill',
             'billable-item',
+            'borrower',
+            'car',
             'community',
             'extension',
             'file',
@@ -31,12 +34,14 @@ Route::prefix('v1')->group(function () {
             'intention',
             'loan',
             'loanable',
+            'owner',
             'padlock',
             'payment',
             'payment-method',
             'pricing',
             'tag',
             'takeover',
+            'trailer',
             'user'
         ] as $entity) {
             RouteHelper::resource($entity);

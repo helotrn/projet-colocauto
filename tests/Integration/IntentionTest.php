@@ -66,8 +66,8 @@ class IntentionTest extends TestCase
         $response = $this->json('GET', "/api/v1/intentions/$intention->id");
         $response->assertStatus(404);
 
-        //$response = $this->json('GET', "/api/v1/intentions?loan.id=$loan->id");
-        //$response->assertStatus(404);
+        $response = $this->json('GET', "/api/v1/intentions?loan.id=$loan->id");
+        $response->assertJson([ 'total' => 0 ]);
     }
 
     public function testCompleteIntentions() {
@@ -77,7 +77,7 @@ class IntentionTest extends TestCase
 
         $this->assertTrue($loan->intentions()->count() > 0);
 
-        $executedAtDate = substr(Carbon::now('-5')->format("Y-m-d h:m:sO"), 0, -2);
+        $executedAtDate = substr(Carbon::now('-4')->format("Y-m-d h:m:sO"), 0, -2);
         Carbon::setTestNow($executedAtDate);
 
         $response = $this->json(
@@ -97,7 +97,7 @@ class IntentionTest extends TestCase
         $loan = factory(Loan::class)->create(['borrower_id' => $borrower->id]);
         $intention = $loan->intentions()->first();
         if ($loan->intentions()->count() > 0) {
-            $executedAtDate = substr(Carbon::now('-5')->format("Y-m-d h:m:sO"), 0, -2);
+            $executedAtDate = substr(Carbon::now('-4')->format("Y-m-d h:m:sO"), 0, -2);
             Carbon::setTestNow($executedAtDate);
 
             $response = $this->json('PUT', "/api/v1/loans/$loan->id/actions/$intention->id/cancel");
