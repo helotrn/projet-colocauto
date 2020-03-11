@@ -25,11 +25,16 @@ class Loan extends BaseModel
         'duration_in_minutes' => [
             'nullable',
         ],
+        'estimated_distance' => [
+            'integer',
+            'required'
+        ],
     ];
 
     protected $fillable = [
         'departure_at',
         'duration_in_minutes',
+        'estimated_distance',
         'borrower_id',
     ];
 

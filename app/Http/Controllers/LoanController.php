@@ -76,6 +76,7 @@ class LoanController extends RestController
             'item' => [
                 'departure_at' => $defaultDeparture->format('Y-m-d H:i:s'),
                 'duration_in_minutes' => 60,
+                'estimated_distance' => 10,
             ],
             'form' => [
                 'departure_at' => [
