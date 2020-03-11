@@ -34,6 +34,12 @@
         v-bind:value="value"
         v-on:input="emitChange" />
       <forms-date-picker v-else-if="type === 'date'"
+        :disabled-dates="disabledDates"
+        :value="value"
+        @input="emitChange" />
+      <forms-date-time-picker v-else-if="type === 'datetime'"
+        :disabled-dates="disabledDates"
+        :disabled-times="disabledTimes"
         :value="value"
         @input="emitChange" />
       <b-form-input v-else-if="type === 'password'"
@@ -62,6 +68,7 @@
 
 <script>
 import FormsDatePicker from '@/components/Forms/DatePicker.vue';
+import FormsDateTimePicker from '@/components/Forms/DateTimePicker.vue';
 import FormsMapInput from '@/components/Forms/MapInput.vue';
 
 export default {
@@ -81,6 +88,20 @@ export default {
       type: Boolean,
       required: false,
       default: false,
+    },
+    disabledDates: {
+      type: Object,
+      required: false,
+      default() {
+        return {};
+      },
+    },
+    disabledTimes: {
+      type: Object,
+      required: false,
+      default() {
+        return {};
+      },
     },
     disabledTooltip: {
       type: String,
@@ -134,6 +155,7 @@ export default {
   },
   components: {
     FormsDatePicker,
+    FormsDateTimePicker,
     FormsMapInput,
   },
   computed: {

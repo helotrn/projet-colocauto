@@ -1289,6 +1289,11 @@ acorn@^6.0.2, acorn@^6.0.7, acorn@^6.1.1, acorn@^6.2.1:
   resolved "https://registry.yarnpkg.com/acorn/-/acorn-6.4.0.tgz#b659d2ffbafa24baf5db1cdbb2c94a983ecd2784"
   integrity sha512-gac8OEcQ2Li1dxIEWGZzsp2BitJxwkwcOm0zHAJLcPJaVvm58FRnk6RkuLRpU1EujipU2ZFODv2P9DLMfnV8mw==
 
+acorn@^6.3.0:
+  version "6.4.1"
+  resolved "https://registry.yarnpkg.com/acorn/-/acorn-6.4.1.tgz#531e58ba3f51b9dacb9a6646ca4debf5b14ca474"
+  integrity sha512-ZVA9k326Nwrj3Cj9jlh3wGFutC2ZornPNARZwsNYqQYgN0EsV2d53w5RN/co65Ohn4sUAUtb1rSUAOD6XN9idA==
+
 address@^1.1.2:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/address/-/address-1.1.2.tgz#bf1116c9c758c51b7a933d296b72c221ed9428b6"
@@ -10123,6 +10128,14 @@ vue-the-mask@^0.11.1:
   resolved "https://registry.yarnpkg.com/vue-the-mask/-/vue-the-mask-0.11.1.tgz#91ee01008354ae57bccc79bb61b65f32d971d9d5"
   integrity sha512-UquSfnSWejD0zAfcD+3jJ1chUAkOAyoxya9Lxh9acCRtrlmGcAIvd0cQYraWqKenbuZJUdum+S174atv2AuEHQ==
 
+vue-timeselector@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/vue-timeselector/-/vue-timeselector-1.0.0.tgz#069be4f8d0f4122ceba1c8600ccbe8eee295f692"
+  integrity sha512-xuninvDI+DIOJiEw/gYVPz6LxHeHlw9hXD9TWIi+/s3w3vQKDZDvIfglbbNMQC/u/SKMNRCQ4LPlFxRTEEUYDA==
+  dependencies:
+    acorn "^6.3.0"
+    vue "^2.6.10"
+
 vue2-google-maps@^0.10.7:
   version "0.10.7"
   resolved "https://registry.yarnpkg.com/vue2-google-maps/-/vue2-google-maps-0.10.7.tgz#2e4c1239386001bd47777d8c6a0475e5320cc3a8"
@@ -10131,7 +10144,7 @@ vue2-google-maps@^0.10.7:
     babel-runtime "^6.26.0"
     marker-clusterer-plus "^2.1.4"
 
-vue@^2.6.11:
+vue@^2.6.10, vue@^2.6.11:
   version "2.6.11"
   resolved "https://registry.yarnpkg.com/vue/-/vue-2.6.11.tgz#76594d877d4b12234406e84e35275c6d514125c5"
   integrity sha512-VfPwgcGABbGAue9+sfrD4PuwFar7gPb1yl1UK1MwXoQPAw0BKSqWfoYCT/ThFrdEVWoI51dBuyCoiNU9bZDZxQ==
