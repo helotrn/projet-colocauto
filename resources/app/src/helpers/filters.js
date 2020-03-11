@@ -8,14 +8,14 @@ const capitalize = (value) => {
   return string.charAt(0).toUpperCase() + string.slice(1);
 };
 
-const titleize = (value) => {
-  if (!value) {
+const currency = (value) => {
+  const floatVal = parseFloat(value, 10);
+
+  if (Number.isNaN(floatVal)) {
     return '';
   }
 
-  const parts = value.toString().split(/ /);
-
-  return parts.map(capitalize).join(' ');
+  return `${floatVal.toFixed(2)}$`
 };
 
 const datetime = (value) => {
@@ -34,14 +34,30 @@ const date = (value) => {
   return dayjs(value).format('D MMMM YYYY');
 };
 
-const currency = (value) => {
-  const floatVal = parseFloat(value, 10);
-
-  if (Number.isNaN(floatVal)) {
+const day = (value) => {
+  if (!value) {
     return '';
   }
 
-  return `${floatVal.toFixed(2)}$`
+  return dayjs(value).format('dddd');
+};
+
+const time = (value) => {
+  if (!value) {
+    return '';
+  }
+
+  return dayjs(value).format('HH:mm');
+};
+
+const titleize = (value) => {
+  if (!value) {
+    return '';
+  }
+
+  const parts = value.toString().split(/ /);
+
+  return parts.map(capitalize).join(' ');
 };
 
 export {
@@ -49,5 +65,7 @@ export {
   currency,
   date,
   datetime,
+  day,
+  time,
   titleize,
 };

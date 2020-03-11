@@ -45,7 +45,7 @@
     </div>
 
     <div class="loanable-card__buttons">
-      <b-button variant="outline-primary" v-if="available">
+      <b-button variant="outline-primary" v-if="available" @click="$emit('select')">
         Demande d'emprunt
       </b-button>
       <i v-else-if="!tested" v-b-tooltip.hover

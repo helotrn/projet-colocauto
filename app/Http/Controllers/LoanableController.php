@@ -156,7 +156,7 @@ class LoanableController extends RestController
         ) : 0;
 
         return response([
-          'available' => !$item->isAvailable($departureAt, $durationInMinutes),
+          'available' => $item->isAvailable($departureAt, $durationInMinutes),
           'price' => $price,
           'pricing' => $pricing ? $pricing->name : 'Gratuit'
         ], 200);

@@ -9,6 +9,7 @@
               @selectLoanableTypes="selectLoanableTypes"
               :loanable-types="loanableTypes"
               :form="loanForm"
+              @reset="resetLoan"
               @submit="testLoanables" />
           </b-card>
         </b-col>
@@ -16,14 +17,15 @@
         <b-col v-if="!loading" lg="9">
           <b-row v-if="data.length > 0">
             <b-col v-for="loanable in data" :key="loanable.id" lg="4">
-              <loanable-card v-bind="loanable" />
+              <loanable-card v-bind="loanable" @select="selectLoanable(loanable)" />
             </b-col>
           </b-row>
+
           <b-row v-else>
             <b-col>Aucun véhicule ne correspond à ces critères</b-col>
           </b-row>
         </b-col>
-        <layout-loading v-else />
+        <layout-loading class="col-lg-9" v-else />
       </b-row>
     </div>
     <layout-loading v-else />
@@ -56,7 +58,7 @@ export default {
     };
   },
   computed: {
-    ...buildComputed('community.list', ['loan', 'selectedLoanableTypes']),
+    ...buildComputed('community.list', ['loan', 'loanLoaded', 'selectedLoanableTypes']),
     loanForm() {
       return this.$store.state.loans.form;
     },
@@ -74,21 +76,35 @@ export default {
   methods: {
     dataRouteGuardsCallback() {
       this.dataRouteGuardsHaveRun = true;
+
+      if (!this.loanLoaded) {
+        this.resetLoan();
+      }
+
+      this.loanLoaded = true;
+    },
+    resetLoan() {
       this.loan = { ...this.$store.state.loans.empty };
     },
     selectLoanableTypes(value) {
-      this.selectedLoanableTypes = value;
+      this.selectedLoanableTypes = value.filter((item, i, ar) => ar.indexOf(item) === i);
     },
-    async testLoanables() {
-      await this.$store.dispatch(`${this.slug}/test`, {
-        loan: this.loan,
-        communityId: this.user.communities[0].id,
+    selectLoanable(loanable) {
+      this.$store.commit('loans/patchItem', {
+        loanable,
       });
+      this.$router.push('/loans/new');
     },
     setSelectedLoanableTypes() {
       this.$store.commit(`${this.slug}/setParam`, {
         name: 'type',
         value: this.selectedLoanableTypes.join(',')
+      });
+    },
+    async testLoanables() {
+      await this.$store.dispatch(`${this.slug}/test`, {
+        loan: this.loan,
+        communityId: this.user.communities[0].id,
       });
     },
   },

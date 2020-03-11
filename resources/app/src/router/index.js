@@ -4,6 +4,7 @@ import VueRouter from 'vue-router';
 import Dashboard from '../views/Dashboard.vue';
 import Help from '../views/Help.vue';
 import Home from '../views/Home.vue';
+import Loan from '../views/Loan.vue';
 import Login from '../views/Login.vue';
 
 import Community from '../views/Community.vue';
@@ -62,6 +63,7 @@ const routes = [
       },
       {
         path: 'map',
+        name: 'community-map',
         component: CommunityMap,
         meta: {
           auth: true,
@@ -77,6 +79,7 @@ const routes = [
       },
       {
         path: 'list',
+        name: 'community-list',
         component: CommunityList,
         meta: {
           auth: true,
@@ -85,7 +88,7 @@ const routes = [
           data: {
             loanables: {
               retrieve: {
-                fields: 'id,type,name,position,available,owner.user.id,owner.user.full_name,owner.user.avatar,image.*',
+                fields: 'id,type,name,position,available,owner.user.id,owner.user.name,owner.user.full_name,owner.user.avatar,image.*',
               },
             },
             loans: {
@@ -95,6 +98,24 @@ const routes = [
         },
       },
     ],
+  },
+  {
+    path: '/loans/:id',
+    component: Loan,
+    props: true,
+    meta: {
+      auth: true,
+      slug: 'loans',
+      skipCleanup(to, from) {
+        return to.name === 'community-map' || to.name === 'community-list';
+      },
+      params: {
+        fields: [
+          '*',
+          'actions.*',
+        ].join(','),
+      },
+    },
   },
   {
     path: '/app',

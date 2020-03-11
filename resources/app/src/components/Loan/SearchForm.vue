@@ -2,7 +2,7 @@
   <div class="loan-form">
     <validation-observer ref="observer" v-slot="{ passes }">
       <b-form :novalidate="true" class="form loan-form__form"
-        @submit.stop.prevent="passes(submit)">
+        @submit.stop.prevent="passes(submit)" @reset.stop.prevent="$emit('reset')">
         <div v-if="loan.departure_at">
           <forms-validated-input name="departure_at"
             :label="$t('fields.departure_at') | capitalize"
@@ -36,6 +36,8 @@
 
         <div class="form__buttons">
           <b-button type="submit" variant="primary">Rechercher</b-button>
+
+          <b-button type="reset" variant="outline-warning">Réinitialiser</b-button>
         </div>
       </b-form>
     </validation-observer>
@@ -108,6 +110,12 @@ export default {
       };
     },
     disabledTimesInThePast() {
+      const departure = this.$dayjs(this.loan.departure_at);
+
+      if (departure.format('YYYY-MM-DD') > this.$dayjs().format('YYYY-MM-DD')) {
+        return {};
+      }
+
       const hours = [];
       const nowHour = this.$dayjs().hour();
       for (let i = nowHour - 1; i >= 0; i -= 1) {
@@ -115,7 +123,7 @@ export default {
       }
 
       const minutes = [];
-      if (this.$dayjs(this.loan.departure_at).hour() === nowHour) {
+      if (departure.hour() === nowHour) {
         for (let i = this.$dayjs().minute(); i >= 0; i -= 1) {
           minutes.push(i);
         }

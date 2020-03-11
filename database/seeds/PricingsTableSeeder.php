@@ -10,7 +10,7 @@ class PricingsTableSeeder extends Seeder
         $pricings = [
             [
                 'id' => 1,
-                'name' => 'Tarification régressive par paliers',
+                'name' => 'Tarification par paliers',
                 'object_type' => 'bike',
                 'rule' => <<<RULE
 SI \$KM > 20 ALORS \$KM * 2

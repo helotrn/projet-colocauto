@@ -1,15 +1,16 @@
 export default {
   namespaced: true,
   state: {
-    loan: {
-      departure_at: null,
-      duration_in_minutes: 60,
-    },
-    selectedLoanableTypes: ['car', 'bike', 'trailer'],
+    loanLoaded: false,
+    loan: {},
+    selectedLoanableTypes: [],
   },
   mutations: {
     loan(state, loan) {
       state.loan = loan;
+    },
+    loanLoaded(state, loanLoaded) {
+      state.loanLoaded = loanLoaded;
     },
     selectedLoanableTypes(state, selectedLoanableTypes) {
       state.selectedLoanableTypes = selectedLoanableTypes;
