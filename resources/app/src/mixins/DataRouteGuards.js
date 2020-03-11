@@ -41,6 +41,7 @@ export default {
               return acc;
             }, []),
         )
+          .then(vm.dataRouteGuardsCallback)
           .catch((e) => {
             if (e.request) {
               switch (e.request.status) {

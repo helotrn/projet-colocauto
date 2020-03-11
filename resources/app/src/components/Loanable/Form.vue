@@ -1,6 +1,6 @@
 <template>
   <div class="loanable-form">
-    <validation-observer ref="observer" v-slot="{ valid, passes }">
+    <validation-observer ref="observer" v-slot="{ passes }">
       <b-form :novalidate="true" class="form loanable-form__form"
         @submit.stop.prevent="passes(submit)">
         <div class="form__section">

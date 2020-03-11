@@ -6,10 +6,13 @@ import merge from 'deepmerge';
 import communities from './communities';
 import files from './files';
 import images from './images';
+import loans from './loans';
 import loanables from './loanables';
 import login from './pages/login';
 import register from './pages/register';
 import users from './users';
+
+import CommunityList from './pages/community/list';
 
 import RegisterIntent from './pages/register/intent';
 import RegisterMap from './pages/register/map';
@@ -155,8 +158,10 @@ export default new Vuex.Store({
   actions,
   modules: {
     communities,
+    'community.list': CommunityList,
     files,
     images,
+    loans,
     loanables,
     login,
     register,

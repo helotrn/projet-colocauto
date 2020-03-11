@@ -5,8 +5,7 @@
       :value="dateValue"
       @input="emitChangeDate" />
 
-    <timeselector
-       h24
+    <timeselector :h24="true"
       :disable="disabledTimes"
       :displayFormat="'HH[h]mm'"
       :value="timeValue" @input="emitChangeTime" />

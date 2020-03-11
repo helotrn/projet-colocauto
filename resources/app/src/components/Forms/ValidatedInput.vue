@@ -20,6 +20,13 @@
         v-on:change="emitChange">
         {{ label }}
       </b-form-checkbox>
+      <b-form-checkbox-group v-else-if="type === 'checkboxes'"
+        :switches="switches" :stacked="stacked"
+        :id="name" :name="name" :key="`${type}-${name}`"
+        :disabled="disabled" :options="options"
+        :state="getValidationState(validationContext)"
+        :checked="value"
+        @change="emitChange" />
       <b-form-textarea v-else-if="type === 'textarea'"
         :id="name" :name="name" :key="`${type}-${name}`"
         :description="description"
@@ -145,6 +152,16 @@ export default {
         return null;
       },
     },
+    stacked: {
+      type: Boolean,
+      required: false,
+      default: true,
+    },
+    switches: {
+      type: Boolean,
+      required: false,
+      default: true,
+    },
     type: {
       type: String,
       required: true,
@@ -179,6 +196,10 @@ export default {
       this.$emit('input', value);
     },
     getValidationState({ dirty, validated, valid = null }) {
+      if (this.rulesOrNothing === '') {
+        return null;
+      }
+
       return dirty || validated ? valid : null;
     },
   },

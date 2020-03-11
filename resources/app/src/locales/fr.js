@@ -2,6 +2,7 @@ import AdminFilters from './components/Admin/Filters';
 import bikes from '@/locales/models/bikes';
 import borrowers from '@/locales/models/borrowers';
 import communities from '@/locales/models/communities';
+import loans from '@/locales/models/loans';
 import loanables from '@/locales/models/loanables';
 import users from '@/locales/models/users';
 
@@ -34,6 +35,7 @@ export default {
       génerique: 'générique',
     },
   },
+  loans: loans.fr,
   loanables: loanables.fr,
   locales: {
     en: 'English',
