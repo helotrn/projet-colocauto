@@ -18,8 +18,13 @@ class Loan extends BaseModel
     use SoftDeletes;
 
     public static $rules = [
-        'departure_at' => 'nullable|date',
-        'duration_in_minutes' => 'nullable',
+        'departure_at' => [
+            'nullable',
+            'date',
+        ],
+        'duration_in_minutes' => [
+            'nullable',
+        ],
     ];
 
     protected $fillable = [

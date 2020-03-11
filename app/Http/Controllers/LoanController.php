@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\BaseRequest as Request;
 use App\Models\Loan;
 use App\Repositories\LoanRepository;
+use Carbon\Carbon;
 use Illuminate\Validation\ValidationException;
 
 class LoanController extends RestController
@@ -64,5 +65,27 @@ class LoanController extends RestController
         }
 
         return $response;
+    }
+
+    public function template(Request $request) {
+        $defaultDeparture = new Carbon;
+        $defaultDeparture->minute = floor($defaultDeparture->minute / 10) * 10;
+        $defaultDeparture->second = 0;
+
+        return [
+            'item' => [
+                'departure_at' => $defaultDeparture->format('Y-m-d H:i:s'),
+                'duration_in_minutes' => 60,
+            ],
+            'form' => [
+                'departure_at' => [
+                    'type' => 'date',
+                ],
+                'duration_in_minutes' => [
+                    'type' => 'number',
+                ],
+            ],
+            'filters' => $this->model::$filterTypes,
+        ];
     }
 }
