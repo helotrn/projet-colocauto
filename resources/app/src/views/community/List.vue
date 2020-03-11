@@ -98,7 +98,7 @@ export default {
     setSelectedLoanableTypes() {
       this.$store.commit(`${this.slug}/setParam`, {
         name: 'type',
-        value: this.selectedLoanableTypes.join(',')
+        value: this.selectedLoanableTypes.join(','),
       });
     },
     async testLoanables() {

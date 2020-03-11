@@ -73,8 +73,6 @@ import DataRouteGuards from '@/mixins/DataRouteGuards';
 import ListMixin from '@/mixins/ListMixin';
 import locales from '@/locales';
 
-import { capitalize } from '@/helpers/filters';
-
 export default {
   name: 'AdminUsers',
   mixins: [DataRouteGuards, ListMixin],

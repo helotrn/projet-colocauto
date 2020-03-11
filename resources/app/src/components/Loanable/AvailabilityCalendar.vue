@@ -1,5 +1,5 @@
 <template>
- <div class="availability-calendar">
+  <div class="availability-calendar">
     <b-row class="availability-calendar__header">
       <b-col>
         <h2>Disponibilités</h2>

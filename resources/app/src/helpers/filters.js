@@ -15,7 +15,7 @@ const currency = (value) => {
     return '';
   }
 
-  return `${floatVal.toFixed(2)}$`
+  return `${floatVal.toFixed(2)}$`;
 };
 
 const datetime = (value) => {

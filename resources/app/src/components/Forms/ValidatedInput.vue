@@ -61,7 +61,8 @@
       </div>
       <b-form-input v-else-if="type === 'number'"
         :id="name" :name="name" :key="`${type}-${name}`"
-        type="number" :min="min" :max="max" :step="step"
+        type="number" :min="min" :max="max"
+        :step="step"
         :placeholder="placeholder" :disabled="disabled"
         :state="getValidationState(validationContext)"
         v-bind:value="value"

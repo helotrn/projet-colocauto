@@ -75,11 +75,8 @@
 </template>
 
 <script>
-import FormsDatePicker from '@/components/Forms/DatePicker.vue';
-
 export default {
   name: 'LoanableExceptions',
-  components: { FormsDatePicker },
   props: {
     exceptions: {
       type: Array,

@@ -24,13 +24,13 @@
     <b-row>
       <b-col lg="3" class="loan__sidebar">
         <ul class="loan__sidebar__actions">
-          <li>Demande d'emprunt</li>
-          <li>Confirmation de l'emprunt</li>
-          <li>Paiement</li>
-          <li>Prise de possession</li>
-          <li v-for="incident in item.incidents" :key="incident.id">Incident</li>
-          <li>Remise du véhicule</li>
-          <li>Conclusion</li>
+          <li><svg-check /> Demande d'emprunt</li>
+          <li><svg-waiting /> Confirmation de l'emprunt</li>
+          <li><svg-waiting /> Paiement</li>
+          <li><svg-waiting /> Prise de possession</li>
+          <li v-for="incident in item.incidents" :key="incident.id"><svg-waiting /> Incident</li>
+          <li><svg-waiting /> Remise du véhicule</li>
+          <li><svg-waiting /> Conclusion</li>
         </ul>
       </b-col>
 
@@ -79,7 +79,6 @@ export default {
         case 'car':
           return `${this.loanable.brand} ${this.loanable.model} `
             + `${this.loanable.year_of_circulation}`;
-          break;
         case 'bike':
           break;
         case 'trailer':
@@ -94,7 +93,7 @@ export default {
       const ownerName = this.item.loanable.owner.user.name;
       const particle = ['a', 'e', 'i', 'o', 'u', 'é', 'è']
         .indexOf(ownerName[0]
-        .toLowerCase()) > -1 ? "d'" : 'de ';
+          .toLowerCase()) > -1 ? "d'" : 'de ';
       return `${particle}${ownerName}`;
     },
     loanablePrettyName() {

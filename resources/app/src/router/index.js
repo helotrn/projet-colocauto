@@ -106,7 +106,7 @@ const routes = [
     meta: {
       auth: true,
       slug: 'loans',
-      skipCleanup(to, from) {
+      skipCleanup(to) {
         return to.name === 'community-map' || to.name === 'community-list';
       },
       params: {
@@ -143,9 +143,9 @@ const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
   routes,
-  scrollBehavior(to, from, savedPosition) {
+  scrollBehavior(to) {
     if (to.matched.length > 1) {
-      return { x: 0, y: 0 }
+      return { x: 0, y: 0 };
     }
 
     return undefined;
