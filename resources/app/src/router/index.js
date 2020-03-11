@@ -85,7 +85,7 @@ const routes = [
           data: {
             loanables: {
               retrieve: {
-                fields: 'id,type,name,position,owner.user.id,owner.user.full_name,owner.user.avatar,image.*',
+                fields: 'id,type,name,position,available,owner.user.id,owner.user.full_name,owner.user.avatar,image.*',
               },
             },
             loans: {

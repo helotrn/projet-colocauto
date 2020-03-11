@@ -154,6 +154,22 @@ class Loanable extends BaseModel
         return $this->morphMany(Loan::class, 'loanable');
     }
 
+    public function isAvailable($departureAt, $durationInMinutes) {
+        $ical = new \ICal\ICal($this->availability_ics, [
+            'defaultTimeZone' => 'America/Toronto',
+            'defaultWeekStart' => 'SU',
+            'filterDaysBefore' => 1,
+            'filterDaysAfter' => 365,
+        ]);
+
+        $events = $ical->eventsFromRange(
+            $departureAt,
+            $departureAt->add($durationInMinutes, 'minute')
+        );
+
+        return empty($events);
+    }
+
     public function getEventsAttribute() {
         try {
             $ical = new \ICal\ICal($this->availability_ics, [

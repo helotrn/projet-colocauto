@@ -34,8 +34,19 @@ const date = (value) => {
   return dayjs(value).format('D MMMM YYYY');
 };
 
+const currency = (value) => {
+  const floatVal = parseFloat(value, 10);
+
+  if (Number.isNaN(floatVal)) {
+    return '';
+  }
+
+  return `${floatVal.toFixed(2)}$`
+};
+
 export {
   capitalize,
+  currency,
   date,
   datetime,
   titleize,

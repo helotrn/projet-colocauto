@@ -63,5 +63,7 @@ Route::prefix('v1')->group(function () {
         Route::put('/borrowers/{id}/approve', 'BorrowerController@approve');
 
         Route::put('/pricings/{id}/evaluate', 'PricingController@evaluate');
+
+        Route::get('/loanables/{id}/test', 'LoanableController@test');
     });
 });

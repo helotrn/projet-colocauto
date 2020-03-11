@@ -59,6 +59,13 @@
       <div v-else-if="type === 'relation'">
         <strong>Relation {{name}}</strong>
       </div>
+      <b-form-input v-else-if="type === 'number'"
+        :id="name" :name="name" :key="`${type}-${name}`"
+        type="number" :min="min" :max="max" :step="step"
+        :placeholder="placeholder" :disabled="disabled"
+        :state="getValidationState(validationContext)"
+        v-bind:value="value"
+        v-on:input="emitChange"/>
       <b-form-input v-else
         :id="name" :name="name" :key="`${type}-${name}`"
         type="text"
@@ -119,10 +126,20 @@ export default {
       type: String,
       required: true,
     },
+    max: {
+      type: Number,
+      required: false,
+      default: null,
+    },
     maxRows: {
       type: Number,
       required: false,
       default: 6,
+    },
+    min: {
+      type: Number,
+      required: false,
+      default: null,
     },
     name: {
       type: String,
@@ -156,6 +173,11 @@ export default {
       type: Boolean,
       required: false,
       default: true,
+    },
+    step: {
+      type: Number,
+      required: false,
+      default: 1,
     },
     switches: {
       type: Boolean,

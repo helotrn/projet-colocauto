@@ -32,10 +32,31 @@
       </div>
     </div>
 
-    <div class="loanable-card__estimated-fare">Coût estimé: {{ estimatedFare || 'N/A' }}</div>
+    <div class="loanable-card__estimated-fare" v-if="price">
+      <i v-b-tooltip.hover :title="pricing">
+        Coût estimé: {{ price | currency }}
+      </i>
+    </div>
+    <div v-else class="loanable-card__estimated-fare">
+      <i class="muted" v-b-tooltip.hover
+        title="Recherchez pour valider la disponibilité et le coût">
+        Coût estimé: N/A
+      </i>
+    </div>
 
     <div class="loanable-card__buttons">
-      <b-button variant="outline-primary">Demande d'emprunt</b-button>
+      <b-button variant="outline-primary" v-if="available">
+        Demande d'emprunt
+      </b-button>
+      <i v-else-if="!tested" v-b-tooltip.hover
+        title="Recherchez pour valider la disponibilité et le coût">
+        <b-button variant="outline-primary" disabled>
+          Demande d'emprunt
+        </b-button>
+      </i>
+      <b-button variant="outline-info" v-else disabled>
+        Indisponible
+      </b-button>
     </div>
   </b-card>
 </template>
@@ -53,6 +74,11 @@ export default {
     'svg-trailer': Trailer,
   },
   props: {
+    available: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
     bike_type: {
       type: String,
       required: false,
@@ -65,11 +91,6 @@ export default {
     },
     engine: {
       type: String,
-      required: false,
-      default: null,
-    },
-    estimatedFare: {
-      type: Number,
       required: false,
       default: null,
     },
@@ -90,6 +111,21 @@ export default {
       type: Object,
       required: false,
       default: null,
+    },
+    price: {
+      type: Number,
+      required: false,
+      default: null,
+    },
+    pricing: {
+      type: String,
+      required: false,
+      default: '',
+    },
+    tested: {
+      type: Boolean,
+      required: false,
+      default: false,
     },
     type: {
       type: String,

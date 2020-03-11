@@ -111,6 +111,11 @@ class Community extends BaseModel
         return $this->hasMany(Loanable::class);
     }
 
+    public function getPricingFor(Loanable $loanable) {
+        return $this->pricings->where('object_type', $loanable->type)->first()
+            ?: $this->pricings->where('object_type', null)->first();
+    }
+
     public function getAreaGoogleAttribute() {
         if (!$this->area) {
             return null;

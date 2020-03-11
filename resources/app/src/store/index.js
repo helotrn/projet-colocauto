@@ -30,6 +30,7 @@ const vuexPersist = new VuexPersist({
       email: state.login.email,
       rememberMe: state.login.rememberMe,
     },
+    'community.list': state['community.list'],
     'register.intent': state['register.intent'],
   }),
 });

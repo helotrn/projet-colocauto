@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\BaseRequest as Request;
+use App\Http\Requests\Loanable\TestRequest;
 use App\Http\Requests\Loanable\DestroyRequest;
 use App\Http\Requests\Bike\CreateRequest as BikeCreateRequest;
 use App\Http\Requests\Bike\UpdateRequest as BikeUpdateRequest;
@@ -10,10 +11,12 @@ use App\Http\Requests\Car\CreateRequest as CarCreateRequest;
 use App\Http\Requests\Car\UpdateRequest as CarUpdateRequest;
 use App\Http\Requests\Trailer\CreateRequest as TrailerCreateRequest;
 use App\Http\Requests\Trailer\UpdateRequest as TrailerUpdateRequest;
+use App\Models\Community;
 use App\Models\Bike;
 use App\Models\Car;
 use App\Models\Loanable;
 use App\Repositories\LoanableRepository;
+use Carbon\Carbon;
 use Illuminate\Validation\ValidationException;
 use Validator;
 
@@ -132,6 +135,31 @@ class LoanableController extends RestController
             default:
                 throw new \Exception('invalid loanable type');
         }
+    }
+
+    public function test(TestRequest $request, $id) {
+        $findRequest = $this->redirectRequest(Request::class, $request);
+        $item = $this->repo->find($findRequest, $id);
+
+        $estimatedDistance = $request->get('estimated_distance');
+        $departureAt = new Carbon($request->get('departure_at'));
+        $durationInMinutes = $request->get('duration_in_minutes');
+
+        $communityId = $request->get('community_id');
+        $community = Community::accessibleBy($request->user())->find($communityId);
+        $pricing = $community->getPricingFor($item);
+
+        $price = $pricing ? $pricing->evaluateRule(
+            $estimatedDistance,
+            $durationInMinutes,
+            $item
+        ) : 0;
+
+        return response([
+          'available' => !$item->isAvailable($departureAt, $durationInMinutes),
+          'price' => $price,
+          'pricing' => $pricing ? $pricing->name : 'Gratuit'
+        ], 200);
     }
 
     public function template(Request $request) {
