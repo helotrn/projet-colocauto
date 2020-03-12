@@ -7,8 +7,14 @@
         </h1>
 
         <div class="page__section__content">
-          <b-button size="lg" variant="warning" to="register">S'inscrire</b-button>
-          <b-button size="lg" variant="outline-light" to="login">Se connecter</b-button>
+          <b-button size="lg" variant="warning" to="register"
+            v-if="!userRegistered">S'inscrire</b-button>
+          <b-button v-if="!userLoggedIn" size="lg" variant="outline-light" to="login">
+            Se connecter
+          </b-button>
+          <b-button v-else size="lg" variant="outline-light" to="/app">
+            Tableau de bord
+          </b-button>
         </div>
       </b-container>
 
@@ -145,55 +151,87 @@
             </div>
             <div class="page__section--faq__questions">
               <div role="tablist">
-                <b-card no-body>
-                  <b-card-header header-tag="header" role="tab">
-                    <b-button size="lg" block href="#"
-                      v-b-toggle.accordion-1 variant="white-secondary">
-                      Qu'est-ce qui arrive en cas d'accident ?
-                    </b-button>
-                  </b-card-header>
-                  <b-collapse id="accordion-1" role="tabpanel">
-                    <b-card-body>
-                      <b-card-text>
-                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eos, tenetur.
-                      </b-card-text>
-                    </b-card-body>
-                  </b-collapse>
-                </b-card>
-                <b-card no-body>
-                  <b-card-header header-tag="header" role="tab">
-                    <b-button size="lg" block href="#"
-                      v-b-toggle.accordion-2 variant="white-secondary">
-                      Pourquoi ferais-je confiance à des personnes inconnues
-                      pour leur prêter mon auto ?
-                    </b-button>
-                  </b-card-header>
-                  <b-collapse id="accordion-2" role="tabpanel">
-                    <b-card-body>
-                      <b-card-text>
-                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Obcaecati illo,
-                        dicta. Voluptate reiciendis amet laborum quod, alias quisquam excepturi
-                        culpa?
-                      </b-card-text>
-                    </b-card-body>
-                  </b-collapse>
-                </b-card>
-                <b-card no-body>
-                  <b-card-header header-tag="header" role="tab">
-                    <b-button size="lg" block href="#"
-                      v-b-toggle.accordion-3 variant="white-secondary">
-                      Est-ce que c’est juste du partage de voitures ?
-                    </b-button>
-                  </b-card-header>
-                  <b-collapse id="accordion-3" role="tabpanel">
-                    <b-card-body>
-                      <b-card-text>
-                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Mollitia
-                        incidunt iste eos at qui veritatis.
-                      </b-card-text>
-                    </b-card-body>
-                  </b-collapse>
-                </b-card>
+                <home-faq-item id="1"
+                  title="Comment faire confiance à mon voisinage pour partager mon auto?">
+                  <p>
+                    Comme propriétaire de voiture, vous avez toujours le choix d’accepter ou non
+                    une demande de réservation. Chaque participant-e nous fournit ses pièces
+                    d’identité et son dossier de conduite. Ainsi, nous connaissons les membres
+                    des voisinages LocoMotion. Aussi, en apprenant à connaître vos voisin-e-s, il
+                    est plus facile de se faire confiance. Et enfin, n’oubliez pas qu’il y a une
+                    assurance!
+                    </p>
+                </home-faq-item>
+
+                <home-faq-item id="2" title="Qu'est-ce qui arrive en cas d'accident?">
+                  <p>
+                    Si vous avez un accident, signalez-le sur la plateforme et suivez les
+                    instructions.
+                  </p>
+                  <p>
+                    En cas d’accident, notre couverture Desjardins Assurances prend en charge
+                    la responsabilité civile et les réparations. Une fois votre inscription
+                    complétée, nous vous fournirons tous les détails.
+                  </p>
+                  <ul>
+                    <li>
+                      Couverture responsabilité civile à hauteur de 2M$
+                    </li>
+                    <li>
+                      Franchise de 100$ pour les dommages causés notamment par le feu, le vol,
+                      le vandalisme, le bris de vitres.
+                    </li>
+                    <li>
+                      Franchise de 500$ pour les dommages causés par une collision ou un versement
+                    </li>
+                  </ul>
+                </home-faq-item>
+
+                <home-faq-item id="3" title="Combien ça coûte?">
+                  <p>
+                    L’inscription est gratuite. Et des véhicules se partagent à un prix juste
+                    pour tout le voisinage!
+                  </p>
+                  <ul>
+                    <li>
+                      Recevez une contribution des personnes qui utilisent votre voiture.
+                    </li>
+                    <li>
+                      Vous utilisez la voiture de votre voisin-e ?
+                    </li>
+                    <li>
+                      Participez à la compensation pour son usure, l’essence et l’assurance.
+                    </li>
+                    <li>
+                      Profitez des véhicules collectifs à deux roues : c’est gratuit!
+                    </li>
+                  </ul>
+                </home-faq-item>
+
+                <home-faq-item id="4" title="Qu’est-ce qu’il y a d’autres que des voitures?">
+                  <p>
+                  En plus des voitures variées de vos voisins et voisines, vous aurez accès à une
+                  variété de moyens de transport : vélo-cargo, vélo électrique, remorque à
+                  attacher à votre vélo…  Vous pourrez le choisir selon votre besoin. LocoMotion
+                  c’est la cerise de votre
+                  <a href="https://equiterre.org/solution/cocktail-transport" target="_blank">
+                    cocktail transport
+                  </a>!
+                  </p>
+                </home-faq-item>
+
+                <home-faq-item id="5" title="Alors, vous embarquez?">
+                  <p>
+                    Votre mission si vous l’acceptez : faire vivre votre voisinage! Plus une
+                    communauté renforce ses liens, plus le partage sera agréable et facile! C’est
+                    la conclusion - spoiler alert! - du projet de Nos milieux de vie!, de la
+                    Chaire de recherche qui nous étudié.
+                  </p>
+                  <p>
+                    Bref,dans votre voisinage :  aidez le nouveau monde, organisez des 5 à 7,
+                    parlez-en! Il y a plein de rôles à jouer, prenez part à ce mouvement collectif!
+                  </p>
+                </home-faq-item>
               </div>
             </div>
           </b-col>
@@ -209,6 +247,8 @@
 </template>
 
 <script>
+import HomeFaqItem from '@/components/Home/FaqItem.vue';
+
 import Authenticated from '@/mixins/Authenticated';
 import DataRouteGuards from '@/mixins/DataRouteGuards';
 import Notification from '@/mixins/Notification';
@@ -232,6 +272,7 @@ export default {
   name: 'Home',
   mixins: [Authenticated, DataRouteGuards, Notification],
   components: {
+    HomeFaqItem,
     'svg-borrow': Borrow,
     'svg-city-desktop': CityDesktop,
     'svg-city': City,
@@ -250,6 +291,27 @@ export default {
   computed: {
     stats() {
       return this.$store.state.stats.data;
+    },
+    userLoggedIn() {
+      return !!this.$store.state.user;
+    },
+    userRegistered() {
+      if (!this.$store.state.user) {
+        return false;
+      }
+
+      const requiredFields = [
+        'name', 'last_name', 'date_of_birth',
+        'address', 'postal_code', 'phone',
+      ];
+
+      for (let i = 0, len = requiredFields.length; i < len; i += 1) {
+        if (!this.$store.state.user[requiredFields[i]]) {
+          return false;
+        }
+      }
+
+      return true;
     },
   },
 };
