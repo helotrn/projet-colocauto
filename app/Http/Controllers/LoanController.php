@@ -77,6 +77,8 @@ class LoanController extends RestController
                 'departure_at' => $defaultDeparture->format('Y-m-d H:i:s'),
                 'duration_in_minutes' => 60,
                 'estimated_distance' => 10,
+                'message_for_owner' => '',
+                'reason' => '',
                 'incidents' => [],
                 'actions' => [],
             ],
@@ -86,6 +88,12 @@ class LoanController extends RestController
                 ],
                 'duration_in_minutes' => [
                     'type' => 'number',
+                ],
+                'message_for_owner' => [
+                  'type' => 'textarea',
+                ],
+                'reason' => [
+                  'type' => 'textarea',
                 ],
             ],
             'filters' => $this->model::$filterTypes,

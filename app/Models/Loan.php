@@ -29,6 +29,8 @@ class Loan extends BaseModel
             'integer',
             'required'
         ],
+        'message_for_owner' => [ 'present' ],
+        'reason' => [ 'required' ],
     ];
 
     protected $fillable = [

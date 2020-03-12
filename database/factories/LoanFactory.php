@@ -11,5 +11,7 @@ $factory->define(Loan::class, function (Faker $faker) {
         'duration_in_minutes' => $faker->randomNumber($nbDigits = null, $strict = false),
         'borrower_id' => 1,
         'estimated_distance' => $faker->randomNumber(),
+        'reason' => '',
+        'message_for_owner' => '',
     ];
 });
