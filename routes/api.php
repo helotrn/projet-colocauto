@@ -6,6 +6,7 @@ use Molotov\Utils\RouteHelper;
 Route::prefix('v1')->group(function () {
     Route::get('/', 'StaticController@blank');
     Route::get('/status', 'StaticController@status');
+    Route::get('/stats', 'StaticController@stats');
 
     Route::post('auth/login', 'AuthController@login');
     Route::post('auth/register', 'AuthController@register');

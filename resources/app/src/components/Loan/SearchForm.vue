@@ -35,9 +35,11 @@
           v-model="loan.estimated_distance" />
 
         <div class="form__buttons">
-          <b-button type="submit" variant="primary">Rechercher</b-button>
+          <b-button size="sm" type="submit" variant="primary" class="mr-3">
+            Rechercher
+          </b-button>
 
-          <b-button type="reset" variant="outline-warning">Réinitialiser</b-button>
+          <b-button size="sm" type="reset" variant="outline-warning">Réinitialiser</b-button>
         </div>
       </b-form>
     </validation-observer>

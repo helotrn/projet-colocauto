@@ -3,6 +3,7 @@ import Vuex from 'vuex';
 import VuexPersist from 'vuex-persist';
 import merge from 'deepmerge';
 
+import stats from './stats';
 import communities from './communities';
 import files from './files';
 import images from './images';
@@ -30,6 +31,7 @@ const vuexPersist = new VuexPersist({
       email: state.login.email,
       rememberMe: state.login.rememberMe,
     },
+    stats: state.stats,
     'community.list': state['community.list'],
     'register.intent': state['register.intent'],
   }),
@@ -166,6 +168,7 @@ export default new Vuex.Store({
     loanables,
     login,
     register,
+    stats,
     'profile.loanable': ProfileLoanable,
     'register.map': RegisterMap,
     'register.intent': RegisterIntent,

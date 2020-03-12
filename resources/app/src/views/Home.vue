@@ -100,11 +100,13 @@
             </h2>
 
             <p>
-              Aujourd’hui, 3 quartiers montréalais et 1 quartier sherbrookois, soit plus de
-              100 participant•e•s expérimentent cette solution collective.
+              Aujourd’hui, <span class="no-break">{{ stats.communities }}</span> quartiers,
+              soit plus de <span class="no-break">{{ stats.users }} participant•e•s</span>
+              partageant <span class="no-break">{{ stats.loanables }}</span> véhicules expérimentent
+              cette solution collective.
             </p>
 
-            <b-button size="lg" variant="outline-light" to="zones">Situer les voisinnages</b-button>
+            <b-button size="lg" variant="outline-light" to="/communities">Situer les voisinnages</b-button>
           </b-col>
         </b-row>
       </b-container>
@@ -208,6 +210,7 @@
 
 <script>
 import Authenticated from '@/mixins/Authenticated';
+import DataRouteGuards from '@/mixins/DataRouteGuards';
 import Notification from '@/mixins/Notification';
 
 import Borrow from '@/assets/svg/home-borrow.svg';
@@ -227,7 +230,7 @@ import Wave from '@/assets/svg/home-wave.svg';
 
 export default {
   name: 'Home',
-  mixins: [Authenticated, Notification],
+  mixins: [Authenticated, DataRouteGuards, Notification],
   components: {
     'svg-borrow': Borrow,
     'svg-city-desktop': CityDesktop,
@@ -243,6 +246,11 @@ export default {
     'svg-lend': Lend,
     'svg-wave-desktop': WaveDesktop,
     'svg-wave': Wave,
+  },
+  computed: {
+    stats() {
+      return this.$store.state.stats.data;
+    },
   },
 };
 </script>
