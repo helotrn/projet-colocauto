@@ -27,28 +27,30 @@ export default {
     },
   },
   actions: {
-    async retrieve({ commit }) {
-      commit('loaded', false);
+    async retrieve({ commit, state }) {
+      if (state.lastLoadedAt < (Date.now() - 3600)) {
+        commit('loaded', false);
 
-      try {
-        const ajax = Vue.axios.get('/stats');
+        try {
+          const ajax = Vue.axios.get('/stats');
 
-        commit('ajax', ajax);
+          commit('ajax', ajax);
 
-        const { data } = await ajax;
+          const { data } = await ajax;
 
-        commit('data', data);
-        commit('lastLoadedAt', Date.now());
+          commit('data', data);
+          commit('lastLoadedAt', Date.now());
 
-        commit('loaded', true);
+          commit('loaded', true);
 
-        commit('ajax', null);
-      } catch (e) {
-        commit('ajax', null);
+          commit('ajax', null);
+        } catch (e) {
+          commit('ajax', null);
 
-        commit('error', e.response.data);
+          commit('error', e.response.data);
 
-        throw e;
+          throw e;
+        }
       }
     },
   },
