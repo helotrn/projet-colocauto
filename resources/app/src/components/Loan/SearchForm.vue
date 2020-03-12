@@ -1,6 +1,6 @@
 <template>
   <div class="loan-form">
-    <validation-observer ref="observer" v-slot="{ passes }">
+    <validation-observer ref="observer" v-slot="{ passes }" :xyz="sss">
       <b-form :novalidate="true" class="form loan-form__form"
         @submit.stop.prevent="passes(submit)" @reset.stop.prevent="$emit('reset')">
         <div v-if="loan.departure_at">
@@ -90,6 +90,11 @@ export default {
       };
     },
     disabledTimes() {
+      const departure = this.$dayjs(this.loan.departure_at);
+      if (departure.format('YYYY-MM-DD') < this.$dayjs(this.return_at).format('YYYY-MM-DD')) {
+        return {};
+      }
+
       const hours = [];
       const departureHour = this.$dayjs(this.loan.departure_at).hour();
       for (let i = departureHour - 1; i >= 0; i -= 1) {
