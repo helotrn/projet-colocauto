@@ -59,8 +59,25 @@ export default {
   },
   computed: {
     routeDataLoaded() {
-      return Object.keys(this.$route.meta.data).reduce(
-        (acc, k) => acc && this.$store.state[k].loaded,
+      const {
+        $store: {
+          state,
+        },
+        $route: {
+          meta: {
+            data,
+          },
+        },
+      } = this;
+
+      return Object.keys(data).reduce(
+        (acc, collection) => {
+          if (Object.keys(data[collection]).indexOf('options') !== -1) {
+            return acc && state[collection].form;
+          }
+
+          return acc && state[collection].loaded;
+        },
         true,
       );
     },
