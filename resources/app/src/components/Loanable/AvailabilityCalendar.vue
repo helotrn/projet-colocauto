@@ -70,7 +70,7 @@
       <b-col>
         <div class="form-inline availability-calendar__description__default">
           <b-form-group label="Par défaut:" label-for="availability_mode" inline>
-            <b-select v-model="loanable.availability_mode"
+            <b-select v-model="loanable.availability_mode" @change="exceptions = []"
               id="availability_mode" name="availability_mode">
               <option value="never" selected>Toujours indisponible</option>
               <option value="always" selected>Toujours disponible</option>
@@ -78,8 +78,12 @@
           </b-form-group>
         </div>
 
-        <loanable-exceptions v-if="loanable.availability_mode === 'never'"
-          :exceptions="exceptions" @input="exceptions = $event" />
+        <b-row>
+          <b-col>
+            <loanable-exceptions
+              :exceptions="exceptions" @input="exceptions = $event" />
+          </b-col>
+        </b-row>
 
         <b-row>
           <b-col>

@@ -40,7 +40,7 @@
           </b-form-checkbox-group>
         </div>
         <div v-if="exception.type === 'dates'"  class="exceptions__row__type__calendar">
-          <forms-datepicker inline class="mt-3"
+          <forms-date-picker inline class="mt-3"
             :disabled-dates="selectedDates(exception.scope)"
             @input="selectDate($event, exception)" />
         </div>
@@ -75,8 +75,11 @@
 </template>
 
 <script>
+import FormsDatePicker from '@/components/Forms/DatePicker.vue';
+
 export default {
   name: 'LoanableExceptions',
+  components: { FormsDatePicker },
   props: {
     exceptions: {
       type: Array,
