@@ -29,15 +29,21 @@ class Loan extends BaseModel
             'integer',
             'required'
         ],
+        'estimated_price' => [
+            'decimal',
+            'required',
+        ],
         'message_for_owner' => [ 'present' ],
         'reason' => [ 'required' ],
     ];
 
     protected $fillable = [
+        'borrower_id',
         'departure_at',
         'duration_in_minutes',
         'estimated_distance',
-        'borrower_id',
+        'estimated_price',
+        'loanable_id',
     ];
 
     public static function boot() {

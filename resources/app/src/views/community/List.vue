@@ -92,6 +92,7 @@ export default {
     selectLoanable(loanable) {
       this.$store.commit('loans/patchItem', {
         loanable,
+        estimated_price: loanable.price,
       });
       this.$router.push('/loans/new');
     },
