@@ -116,6 +116,11 @@ const routes = [
       skipCleanup(to) {
         return to.name === 'community-map' || to.name === 'community-list';
       },
+      data: {
+        loans: {
+          options: {},
+        },
+      },
       params: {
         fields: [
           '*',

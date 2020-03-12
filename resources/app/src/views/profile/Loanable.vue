@@ -1,5 +1,5 @@
 <template>
-  <b-container fluid v-if="item && routeDataLoaded">
+  <b-container class="profile-loanable" fluid v-if="item && routeDataLoaded">
     <vue-headful :title="fullTitle" />
 
     <b-row>

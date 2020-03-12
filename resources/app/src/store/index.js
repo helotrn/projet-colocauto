@@ -27,6 +27,9 @@ const vuexPersist = new VuexPersist({
     token: state.token,
     refreshToken: state.refreshToken,
     user: state.user,
+    loans: {
+      item: state.loans.item,
+    },
     login: {
       email: state.login.email,
       rememberMe: state.login.rememberMe,

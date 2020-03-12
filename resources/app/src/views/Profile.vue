@@ -50,6 +50,7 @@ export default {
 .profile.page {
   .page__content {
     padding-top: 45px;
+    padding-bottom: 45px;
   }
 }
 </style>

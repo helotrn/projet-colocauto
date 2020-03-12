@@ -19,6 +19,7 @@ export default {
     actions: 'actions',
     approuver: 'approuver',
     enregistrer: 'enregistrer',
+    facultatif: 'facultatif',
     modifier: 'modifier',
     nouveau: 'nouveau',
     réinitialiser: 'réinitialiser',
