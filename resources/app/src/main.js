@@ -6,6 +6,8 @@ import * as VueGoogleMaps from 'vue2-google-maps';
 import vueHeadful from 'vue-headful';
 import VueScrollTo from 'vue-scrollto';
 import VueTheMask from 'vue-the-mask';
+import * as Sentry from '@sentry/browser';
+import * as Integrations from '@sentry/integrations';
 
 import {
   ValidationObserver,
@@ -32,6 +34,13 @@ import dayjs from './helpers/dayjs';
 
 import '@/assets/scss/main.scss';
 import 'vue-cal/dist/vuecal.css';
+
+Sentry.init({
+  dsn: 'https://d1a14784f15a4d88a021b1ad577a240a@sentry.molotov.ca/34',
+  integrations: [
+    new Integrations.Vue({ Vue, attachProps: true, logErrors: true }),
+  ],
+});
 
 Vue.config.productionTip = false;
 
