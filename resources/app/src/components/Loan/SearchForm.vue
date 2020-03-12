@@ -1,6 +1,6 @@
 <template>
   <div class="loan-form">
-    <validation-observer ref="observer" v-slot="{ passes }" :xyz="sss">
+    <validation-observer ref="observer" v-slot="{ passes }">
       <b-form :novalidate="true" class="form loan-form__form"
         @submit.stop.prevent="passes(submit)" @reset.stop.prevent="$emit('reset')">
         <div v-if="loan.departure_at">
