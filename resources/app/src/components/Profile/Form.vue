@@ -126,10 +126,13 @@
 import FormsValidatedInput from '@/components/Forms/ValidatedInput.vue';
 import FormsImageUploader from '@/components/Forms/ImageUploader.vue';
 
+import FormLabelsMixin from '@/mixins/FormLabelsMixin';
+
 import locales from '@/locales';
 
 export default {
   name: 'ProfileForm',
+  mixins: [FormLabelsMixin],
   components: {
     FormsImageUploader,
     FormsValidatedInput,
@@ -171,19 +174,6 @@ export default {
     },
   },
   methods: {
-    placeholderOrLabel(key) {
-      if (this.$i18n.te(`placeholders.${key}`)) {
-        return this.$i18n.t(`placeholders.${key}`);
-      }
-
-      return this.label(key);
-    },
-    label(key) {
-      return this.$i18n.t(`fields.${key}`);
-    },
-    getValidationState({ dirty, validated, valid = null }) {
-      return dirty || validated ? valid : null;
-    },
     submit(...params) {
       this.$emit('submit', ...params);
     },

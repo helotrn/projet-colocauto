@@ -1,7 +1,7 @@
 <template>
-  <div class="loan-form">
+  <div class="loan-search-form">
     <validation-observer ref="observer" v-slot="{ passes }">
-      <b-form :novalidate="true" class="form loan-form__form"
+      <b-form :novalidate="true" class="form loan-search-form__form"
         @submit.stop.prevent="passes(submit)" @reset.stop.prevent="$emit('reset')">
         <div v-if="loan.departure_at">
           <forms-validated-input name="departure_at"
@@ -49,21 +49,16 @@
 <script>
 import FormsValidatedInput from '@/components/Forms/ValidatedInput.vue';
 
+import FormLabelsMixin from '@/mixins/FormLabelsMixin';
+import LoanFormMixin from '@/mixins/LoanFormMixin';
+
 import locales from '@/locales';
 
 export default {
   name: 'Form',
-  components: {
-    FormsValidatedInput,
-  },
+  components: { FormsValidatedInput },
+  mixins: [FormLabelsMixin, LoanFormMixin],
   props: {
-    form: {
-      type: Object,
-      required: false,
-      default() {
-        return null;
-      },
-    },
     loanableTypes: {
       type: Array,
       required: false,
@@ -71,102 +66,14 @@ export default {
         return [];
       },
     },
-    loan: {
-      type: Object,
-      required: true,
-    },
     selectedLoanableTypes: {
       type: Array,
       require: true,
     },
   },
-  computed: {
-    disabledDates() {
-      return {
-        to: this.$dayjs(this.loan.departure_at).subtract(1, 'day').toDate(),
-      };
-    },
-    disabledDatesInThePast() {
-      return {
-        to: this.$dayjs().subtract(1, 'day').toDate(),
-      };
-    },
-    disabledTimes() {
-      const departure = this.$dayjs(this.loan.departure_at);
-      if (departure.format('YYYY-MM-DD') < this.$dayjs(this.return_at).format('YYYY-MM-DD')) {
-        return {};
-      }
-
-      const hours = [];
-      const departureHour = this.$dayjs(this.loan.departure_at).hour();
-      for (let i = departureHour - 1; i >= 0; i -= 1) {
-        hours.push(i);
-      }
-
-      const minutes = [];
-      if (this.$dayjs(this.returnAt).hour() === departureHour) {
-        for (let i = this.$dayjs(this.loan.departure_at).minute(); i >= 0; i -= 1) {
-          minutes.push(i);
-        }
-      }
-
-      return {
-        h: hours,
-        m: minutes,
-        s: [],
-      };
-    },
-    disabledTimesInThePast() {
-      const departure = this.$dayjs(this.loan.departure_at);
-
-      if (departure.format('YYYY-MM-DD') > this.$dayjs().format('YYYY-MM-DD')) {
-        return {};
-      }
-
-      const hours = [];
-      const nowHour = this.$dayjs().hour();
-      for (let i = nowHour - 1; i >= 0; i -= 1) {
-        hours.push(i);
-      }
-
-      const minutes = [];
-      if (departure.hour() === nowHour) {
-        for (let i = this.$dayjs().minute(); i >= 0; i -= 1) {
-          minutes.push(i);
-        }
-      }
-
-      return {
-        h: hours,
-        m: minutes,
-        s: [],
-      };
-    },
-    returnAt: {
-      get() {
-        return this.$dayjs(this.loan.departure_at)
-          .add(this.loan.duration_in_minutes, 'minute')
-          .format('YYYY-MM-DD HH:mm:ss');
-      },
-      set(val) {
-        this.loan.duration_in_minutes = this.$dayjs(val)
-          .diff(this.$dayjs(this.loan.departure_at), 'minute');
-      },
-    },
-  },
   methods: {
     emitLoanableTypes(value) {
       this.$emit('selectLoanableTypes', value);
-    },
-    label(key) {
-      return this.$i18n.t(`fields.${key}`);
-    },
-    placeholderOrLabel(key) {
-      if (this.$i18n.te(`placeholders.${key}`)) {
-        return this.$i18n.t(`placeholders.${key}`);
-      }
-
-      return this.label(key);
     },
     submit() {
       this.$emit('submit');

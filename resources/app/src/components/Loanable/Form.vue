@@ -122,10 +122,13 @@ import FormsValidatedInput from '@/components/Forms/ValidatedInput.vue';
 import LoanableAvailabilityCalendar from '@/components/Loanable/AvailabilityCalendar.vue';
 import FormsImageUploader from '@/components/Forms/ImageUploader.vue';
 
+import FormLabelsMixin from '@/mixins/FormLabelsMixin';
+
 import locales from '@/locales';
 
 export default {
   name: 'LoanableForm',
+  mixins: [FormLabelsMixin],
   components: {
     FormsBuilder,
     FormsImageUploader,
@@ -168,16 +171,6 @@ export default {
     },
   },
   methods: {
-    label(key) {
-      return this.$i18n.t(`fields.${key}`);
-    },
-    placeholderOrLabel(key) {
-      if (this.$i18n.te(`placeholders.${key}`)) {
-        return this.$i18n.t(`placeholders.${key}`);
-      }
-
-      return this.label(key);
-    },
     submit(...params) {
       const ownerId = this.$store.state.user.owner.id;
       this.$store.commit('loanables/mergeItem', { owner: { id: ownerId } });
