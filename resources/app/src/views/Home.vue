@@ -108,11 +108,13 @@
             <p>
               Aujourd’hui, <span class="no-break">{{ stats.communities }}</span> quartiers,
               soit plus de <span class="no-break">{{ stats.users }} participant•e•s</span>
-              partageant <span class="no-break">{{ stats.loanables }}</span> véhicules expérimentent
-              cette solution collective.
+              partageant <span class="no-break">{{ stats.loanables }}</span> véhicules
+              expérimentent cette solution collective.
             </p>
 
-            <b-button size="lg" variant="outline-light" to="/communities">Situer les voisinnages</b-button>
+            <b-button size="lg" variant="outline-light" to="/communities">
+              Situer les voisinnages
+            </b-button>
           </b-col>
         </b-row>
       </b-container>
@@ -160,7 +162,7 @@
                     des voisinages LocoMotion. Aussi, en apprenant à connaître vos voisin-e-s, il
                     est plus facile de se faire confiance. Et enfin, n’oubliez pas qu’il y a une
                     assurance!
-                    </p>
+                  </p>
                 </home-faq-item>
 
                 <home-faq-item id="2" title="Qu'est-ce qui arrive en cas d'accident?">
@@ -210,13 +212,13 @@
 
                 <home-faq-item id="4" title="Qu’est-ce qu’il y a d’autres que des voitures?">
                   <p>
-                  En plus des voitures variées de vos voisins et voisines, vous aurez accès à une
-                  variété de moyens de transport : vélo-cargo, vélo électrique, remorque à
-                  attacher à votre vélo…  Vous pourrez le choisir selon votre besoin. LocoMotion
-                  c’est la cerise de votre
-                  <a href="https://equiterre.org/solution/cocktail-transport" target="_blank">
-                    cocktail transport
-                  </a>!
+                    En plus des voitures variées de vos voisins et voisines, vous aurez accès à une
+                    variété de moyens de transport : vélo-cargo, vélo électrique, remorque à
+                    attacher à votre vélo…  Vous pourrez le choisir selon votre besoin. LocoMotion
+                    c’est la cerise de votre
+                    <a href="https://equiterre.org/solution/cocktail-transport" target="_blank">
+                      cocktail transport
+                    </a>!
                   </p>
                 </home-faq-item>
 

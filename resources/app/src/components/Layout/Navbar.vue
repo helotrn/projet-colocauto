@@ -5,8 +5,11 @@
     variant="transparent"
     type="light">
     <div class="layout-navbar__brand-wrapper">
-      <b-navbar-brand to="/">
+      <b-navbar-brand to="/" class="d-none d-lg-block">
         <svg-logo class="layout-navbar__logo" />
+      </b-navbar-brand>
+      <b-navbar-brand to="/" class="d-lg-none">
+        <svg-small-logo class="layout-navbar__logo" />
       </b-navbar-brand>
 
       <b-navbar-brand class="layout-navbar__separator" v-if="title" />
@@ -106,13 +109,14 @@
 <script>
 import Authenticated from '@/mixins/Authenticated';
 
-import Logo from '@/assets/svg/logo.svg';
 import Dashboard from '@/assets/svg/dashboard.svg';
-import Location from '@/assets/svg/location.svg';
 import Hand from '@/assets/svg/hand.svg';
-import Profile from '@/assets/svg/profile.svg';
 import Help from '@/assets/svg/help.svg';
+import Location from '@/assets/svg/location.svg';
+import Logo from '@/assets/svg/logo.svg';
 import Logout from '@/assets/svg/logout.svg';
+import Profile from '@/assets/svg/profile.svg';
+import SmallLogo from '@/assets/svg/small-logo.svg';
 
 import AdminMenu from '@/components/Admin/Menu.vue';
 import LocaleSwitcher from '@/components/LocaleSwitcher.vue';
@@ -123,13 +127,14 @@ export default {
   components: {
     AdminMenu,
     LocaleSwitcher,
-    'svg-logo': Logo,
     'svg-dashboard': Dashboard,
-    'svg-location': Location,
     'svg-hand': Hand,
-    'svg-profile': Profile,
     'svg-help': Help,
+    'svg-location': Location,
+    'svg-logo': Logo,
     'svg-logout': Logout,
+    'svg-profile': Profile,
+    'svg-small-logo': SmallLogo,
   },
   props: {
     title: {
@@ -188,10 +193,6 @@ export default {
     fill: $locomotion-grey;
   }
 
-  .layout-navbar__logo {
-    width: 162px;
-  }
-
   .layout-navbar__brand-wrapper {
     display: flex;
     align-items: flex-end;
@@ -216,6 +217,7 @@ export default {
       padding-bottom: 0;
       position: relative;
       top: 3px;
+      line-height: 30px;
     }
   }
 

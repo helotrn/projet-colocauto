@@ -27,7 +27,7 @@ export default {
     },
   },
   actions: {
-    async retrieve({ dispatch, state, commit }, params) {
+    async retrieve({ commit }) {
       commit('loaded', false);
 
       try {
