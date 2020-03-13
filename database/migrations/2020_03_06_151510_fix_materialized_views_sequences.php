@@ -14,9 +14,10 @@ class FixMaterializedViewsSequences extends Migration
     }
 
     public function down() {
-        \DB::statement('DROP SEQUENCE loanables_id_seq');
         foreach (['cars', 'bikes', 'trailers'] as $table) {
             \DB::statement("ALTER TABLE $table ALTER COLUMN id SET DEFAULT nextval('{$table}_id_seq'::regclass)");
         }
+
+        \DB::statement('DROP SEQUENCE loanables_id_seq');
     }
 }
