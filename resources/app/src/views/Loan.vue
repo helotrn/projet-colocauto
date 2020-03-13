@@ -1,5 +1,5 @@
 <template>
-  <layout-page name="loan" v-if="routeDataLoaded">
+  <layout-page name="loan" v-if="routeDataLoaded && item">
     <vue-headful :title="fullTitle" />
 
     <b-row>
@@ -69,7 +69,8 @@
         <h2>Informations sur l'emprunt</h2>
 
         <div>
-          <loan-form :loan="item" :form="loanForm" :open="isCurrentStep('creation')" />
+          <loan-form :loan="item" :form="loanForm" :open="isCurrentStep('creation')"
+            @submit="submit" />
 
           <div class="loan__actions__action" v-for="action in item.actions" :key="action.id">
             <loan-actions-intention v-if="action.type === 'intention'" :action="action" />
@@ -96,14 +97,6 @@ import { capitalize } from '@/helpers/filters';
 export default {
   name: 'Loan',
   mixins: [DataRouteGuards, FormMixin],
-  beforeRouteEnter(to, from, next) {
-    next((vm) => {
-      const { item } = vm.$store.state.loans;
-      if (!item || !item.loanable || item.id) {
-        vm.$router.push('/community/list');
-      }
-    });
-  },
   components: {
     LoanForm,
     LoanActionsIntention,

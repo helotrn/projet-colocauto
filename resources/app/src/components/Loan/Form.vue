@@ -15,7 +15,8 @@
       <b-collapse id="loan-actions-new" role="tabpanel" accordion="loan-actions" :visible="open">
         <validation-observer ref="observer" v-slot="{ passes }">
           <b-form :novalidate="true" class="form loan-form__form"
-            @submit.stop.prevent="passes(submit)" @reset.stop.prevent="$emit('reset')">
+            @submit.stop.prevent="passes(submit)"
+            @reset.stop.prevent="$emit('reset')">
             <b-row>
               <b-col lg="6">
                 <forms-validated-input name="departure_at"
@@ -112,6 +113,11 @@ export default {
       type: Boolean,
       required: false,
       default: false,
+    },
+  },
+  methods: {
+    submit() {
+      this.$emit('submit');
     },
   },
   i18n: {

@@ -91,6 +91,7 @@ export default {
     },
     selectLoanable(loanable) {
       this.$store.commit('loans/patchItem', {
+        borrower: this.user.borrower,
         loanable,
         estimated_price: loanable.price,
       });

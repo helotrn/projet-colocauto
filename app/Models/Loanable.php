@@ -22,6 +22,8 @@ class Loanable extends BaseModel
 {
     use HasCustomCasts, PostgisTrait, SoftDeletes;
 
+    public $readOnly = 'true';
+
     public static $filterTypes = [
         'id' => 'number',
         'name' => 'text',
@@ -151,7 +153,7 @@ class Loanable extends BaseModel
     public $collections = ['loans'];
 
     public function loans() {
-        return $this->morphMany(Loan::class, 'loanable');
+        return $this->hasMany(Loan::class);
     }
 
     public function isAvailable($departureAt, $durationInMinutes) {

@@ -10,6 +10,8 @@ class Action extends BaseModel
 {
     use SoftDeletes;
 
+    public $readOnly = 'true';
+
     public $items = ['loan', 'user'];
 
     public function loan() {

@@ -72,7 +72,7 @@ class LoanController extends RestController
         $defaultDeparture->minute = floor($defaultDeparture->minute / 10) * 10;
         $defaultDeparture->second = 0;
 
-        return [
+        $template = [
             'item' => [
                 'departure_at' => $defaultDeparture->format('Y-m-d H:i:s'),
                 'duration_in_minutes' => 60,
@@ -90,6 +90,9 @@ class LoanController extends RestController
                 'duration_in_minutes' => [
                     'type' => 'number',
                 ],
+                'estimated_distance' => [
+                    'type' => 'number',
+                ],
                 'estimated_price' => [
                     'type' => 'number',
                 ],
@@ -102,5 +105,12 @@ class LoanController extends RestController
             ],
             'filters' => $this->model::$filterTypes,
         ];
+
+        $modelRules = $this->model->getRules();
+        foreach ($modelRules as $field => $rules) {
+            $template['form'][$field]['rules'] = $this->formatRules($rules);
+        }
+
+        return $template;
     }
 }

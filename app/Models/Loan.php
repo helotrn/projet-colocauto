@@ -19,18 +19,18 @@ class Loan extends BaseModel
 
     public static $rules = [
         'departure_at' => [
-            'nullable',
-            'date',
+            'required',
         ],
         'duration_in_minutes' => [
-            'nullable',
+            'integer',
+            'required',
         ],
         'estimated_distance' => [
             'integer',
             'required'
         ],
         'estimated_price' => [
-            'decimal',
+            'numeric',
             'required',
         ],
         'message_for_owner' => [ 'present' ],
@@ -38,12 +38,12 @@ class Loan extends BaseModel
     ];
 
     protected $fillable = [
-        'borrower_id',
         'departure_at',
         'duration_in_minutes',
         'estimated_distance',
         'estimated_price',
-        'loanable_id',
+        'message_for_owner',
+        'reason',
     ];
 
     public static function boot() {
@@ -95,7 +95,7 @@ class Loan extends BaseModel
     }
 
     public function loanable() {
-        return $this->morphTo();
+        return $this->belongsTo(Loanable::class);
     }
 
     public function setCanceled() {

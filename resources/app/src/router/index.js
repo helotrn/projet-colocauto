@@ -125,6 +125,13 @@ const routes = [
         fields: [
           '*',
           'actions.*',
+          'loanable.id',
+          'loanable.name',
+          'loanable.type',
+          'loanable.owner.id',
+          'loanable.owner.user.id',
+          'loanable.owner.user.name',
+          'borrower',
         ].join(','),
       },
     },

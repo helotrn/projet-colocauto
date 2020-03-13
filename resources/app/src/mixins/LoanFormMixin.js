@@ -86,4 +86,12 @@ export default {
       },
     },
   },
+  watch: {
+    loan: {
+      deep: true,
+      handler(loan) {
+        this.$store.commit('loans/item', loan);
+      },
+    },
+  },
 };
