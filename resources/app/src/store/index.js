@@ -51,7 +51,23 @@ const initialState = {
   refreshToken: null,
 };
 
-const loadUserFields = '*,loanables.*,!loanables.events,loanables.loans.*,avatar.*,owner.*,borrower.*,communities.*';
+const loadUserFields = [
+  '*',
+  'loanables.*',
+  '!loanables.events',
+  'loans.*',
+  'loans.actions.*',
+  'loanables.loans.*',
+  'loanables.loans.borrower.id',
+  'loanables.loans.borrower.user.id',
+  'loanables.loans.borrower.user.full_name',
+  'loanables.loans.borrower.user.avatar.*',
+  'loanables.loans.actions.*',
+  'avatar.*',
+  'owner.*',
+  'borrower.*',
+  'communities.*',
+].join(',');
 
 const actions = {
   async loadUser({ commit }) {

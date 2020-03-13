@@ -29,16 +29,16 @@
         </section>
 
         <section class="page__section" v-if="hasWaitingLoans">
-          <h2>Nouvelles demandes de réservation</h2>
+          <h2>Nouvelles demandes d'emprunt</h2>
           <p class="muted">Cette personne devrait entrer en contact avec vous sous peu.</p>
 
           <div class="dashboard__waiting-loans" v-for="loan in waitingLoans" :key="loan.id">
-            {{ loan }}
+            <loan-info-box :loan="loan" />
           </div>
         </section>
 
         <section class="page__section" v-if="hasOngoingLoans">
-          <h2>Réservations en cours</h2>
+          <h2>Emprunts en cours</h2>
 
           <div class="dashboard__ongoing-loans" v-for="loan in ongoingLoans" :key="loan.id">
             {{ loan }}
@@ -46,7 +46,7 @@
         </section>
 
         <section class="page__section" v-if="hasUpcomingLoans">
-          <h2>Réservations à venir</h2>
+          <h2>Emprunts à venir</h2>
 
           <div class="dashboard__upcoming-loans" v-for="loan in upcomingLoans" :key="loan.id">
             {{ loan }}
@@ -108,6 +108,7 @@ import Authenticated from '@/mixins/Authenticated';
 import Notification from '@/mixins/Notification';
 
 import DashboardBalance from '@/components/Dashboard/Balance.vue';
+import LoanInfoBox from '@/components/Loan/InfoBox.vue';
 import LoanableInfoBox from '@/components/Loanable/InfoBox.vue';
 import DashboardLoanHistory from '@/components/Dashboard/LoanHistory.vue';
 import DashboardResourcesList from '@/components/Dashboard/ResourcesList.vue';
@@ -118,6 +119,7 @@ export default {
   mixins: [Authenticated, Notification],
   components: {
     DashboardBalance,
+    LoanInfoBox,
     LoanableInfoBox,
     DashboardLoanHistory,
     DashboardResourcesList,

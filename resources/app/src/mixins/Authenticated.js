@@ -78,12 +78,33 @@ export default {
       const now = this.$dayjs().format('YYYY-MM-DD HH:mm:ss');
 
       return this.user.loanables.reduce((acc, loanable) => {
-        acc.push(...loanable.loans.filter(l => l.departure_at > now));
+        acc.push(
+          ...loanable.loans
+            .filter(l => l.departure_at > now && l.actions.length > 1)
+            .map(l => {
+              return {
+                ...l,
+                loanable,
+              }
+            })
+        );
         return acc;
       }, []);
     },
     waitingLoans() {
-      return [];
+      return this.user.loanables.reduce((acc, loanable) => {
+        acc.push(
+          ...loanable.loans
+            .filter(l => l.actions.length === 1)
+            .map(l => {
+              return {
+                ...l,
+                loanable,
+              }
+            })
+        );
+        return acc;
+      }, []);
     },
   },
   methods: {

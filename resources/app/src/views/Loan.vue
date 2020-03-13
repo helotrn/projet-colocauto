@@ -70,7 +70,7 @@
 
         <div>
           <loan-form :loan="item" :form="loanForm" :open="isCurrentStep('creation')"
-            @submit="submit" />
+            @submit="submitLoan" />
 
           <div class="loan__actions__action" v-for="action in item.actions" :key="action.id">
             <loan-actions-intention v-if="action.type === 'intention'" :action="action" />
@@ -186,6 +186,10 @@ export default {
     },
   },
   methods: {
+    async submitLoan() {
+      await this.submit();
+      await this.$store.dispatch('loadUser');
+    },
     hasReachedStep(step) {
       switch (step) {
         case 'creation':

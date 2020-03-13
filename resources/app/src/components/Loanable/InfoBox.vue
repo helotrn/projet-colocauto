@@ -28,8 +28,6 @@
         </b-col>
       </b-row>
     </router-link>
-
-    <b-modal id="`loanable-info-box-modal-${id}`">Hello From My Modal!</b-modal>
   </b-card>
 </template>
 
