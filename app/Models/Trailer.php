@@ -6,11 +6,6 @@ use App\Models\Loanable;
 
 class Trailer extends Loanable
 {
-    protected $table = 'trailers';
-
-    public static $rules = [
-    ];
-
     protected $fillable = [
         'availability_json',
         'availability_mode',

@@ -114,8 +114,6 @@ class Loanable extends BaseModel
         });
     }
 
-    protected $table = 'loanables';
-
     protected $hidden = ['availability_ics'];
 
     protected $postgisFields = [

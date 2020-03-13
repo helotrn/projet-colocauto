@@ -7,8 +7,6 @@ use App\Models\Loan;
 
 class Incident extends Action
 {
-    protected $table = 'incidents';
-
     public static $rules = [
         'status' => 'required',
         'incident_type' => 'required',

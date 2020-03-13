@@ -7,8 +7,6 @@ use App\Models\Loan;
 
 class Takeover extends Action
 {
-    protected $table = 'takovers';
-
     public static $rules = [
         'status' => 'required',
         'mileage_beginning' => 'required',

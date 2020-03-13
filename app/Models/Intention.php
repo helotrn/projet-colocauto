@@ -2,18 +2,10 @@
 
 namespace App\Models;
 
-use App\Models\Action;
-use App\Models\Loan;
-use App\Models\Payment;
 use Carbon\Carbon;
 
 class Intention extends Action
 {
-    protected $table = 'intentions';
-
-    public static $rules = [
-    ];
-
     protected $fillable = [
         'loan_id',
     ];

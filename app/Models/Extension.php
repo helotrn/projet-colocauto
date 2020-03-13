@@ -7,8 +7,6 @@ use App\Models\Loan;
 
 class Extension extends Action
 {
-    protected $table = 'extensions';
-
     public static $rules = [
         'status' => 'required',
         'new_duration' => 'required',//add validation

@@ -7,8 +7,6 @@ use App\Models\Loan;
 
 class Handover extends Action
 {
-    protected $table = 'handovers';
-
     public static $rules = [
         'status' => 'required',
         'mileage_end' => 'required',

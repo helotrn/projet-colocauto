@@ -9,11 +9,6 @@ use Carbon\Carbon;
 
 class Payment extends Action
 {
-    protected $table = 'payments';
-
-    public static $rules = [
-    ];
-
     protected $fillable = [
         'loan_id',
         'billable_item_id',
