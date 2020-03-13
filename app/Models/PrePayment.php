@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Carbon\Carbon;
 
-class Intention extends Action
+class PrePayment extends Action
 {
     protected $fillable = [
         'loan_id',
@@ -23,11 +23,8 @@ class Intention extends Action
             if (!$model->executed_at) {
                 switch ($model->status) {
                     case 'completed':
-                        $prePayment = PrePayment::create(['loan_id' => $model->id]);
-
-                        $model->loan->prepayments()->save($prePayment);
-
                         $model->executed_at = Carbon::now();
+
                         $model->save();
                         break;
                     case 'canceled':
@@ -44,17 +41,17 @@ class Intention extends Action
         return [
             '*' => function ($query = null) {
                 if (!$query) {
-                    return 'intentions.*';
+                    return 'payments.*';
                 }
 
-                return $query->selectRaw('intentions.*');
+                return $query->selectRaw('payments.*');
             },
             'type' => function ($query = null) {
                 if (!$query) {
-                    return "'intention' AS type";
+                    return "'prepayment' AS type";
                 }
 
-                return $query->selectRaw("'intention' AS type");
+                return $query->selectRaw("'payment' AS type");
             }
         ];
     }
