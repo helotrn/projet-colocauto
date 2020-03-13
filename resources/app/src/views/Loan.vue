@@ -23,19 +23,28 @@
     <b-row>
       <b-col lg="3" class="loan__sidebar">
         <ul class="loan__sidebar__actions">
-          <li :class="{ 'current-step': isCurrentStep('creation') }">
+          <li :class="{
+            'current-step': isCurrentStep('creation'),
+            'reached-step': hasReachedStep('creation'),
+          }">
             <svg-check v-if="hasReachedStep('creation')" />
             <svg-waiting v-else />
 
             <span>Demande d'emprunt</span>
           </li>
-          <li>
+          <li :class="{
+            'current-step': isCurrentStep('intention'),
+            'reached-step': hasReachedStep('intention'),
+          }">
             <svg-check v-if="hasReachedStep('intention')" />
             <svg-waiting v-else />
 
             <span>Confirmation de l'emprunt</span>
           </li>
-          <li>
+          <li :class="{
+            'current-step': isCurrentStep('account'),
+            'reached-step': hasReachedStep('account'),
+          }">
             <svg-check v-if="hasReachedStep('account')" />
             <svg-waiting v-else />
 
@@ -73,7 +82,11 @@
             @submit="submitLoan" />
 
           <div class="loan__actions__action" v-for="action in item.actions" :key="action.id">
-            <loan-actions-intention v-if="action.type === 'intention'" :action="action" />
+            <loan-actions-intention v-if="action.type === 'intention'"
+              :action="action" :loan="item" :open="isCurrentStep('intention')" />
+            <span v-else>
+              {{ action.type }}
+            </span>
           </div>
         </div>
       </b-col>
@@ -104,20 +117,19 @@ export default {
     'svg-waiting': Waiting,
   },
   computed: {
-    loanable() {
-      return this.item.loanable;
-    },
     loanForm() {
       return this.$store.state.loans.form;
     },
     loanableDescription() {
-      switch (this.loanable.type) {
+      switch (this.item.loanable.type) {
         case 'car':
-          return `${this.loanable.brand} ${this.loanable.model} `
-            + `${this.loanable.year_of_circulation}`;
+          return `${this.item.loanable.brand} ${this.item.loanable.model} `
+            + `${this.item.loanable.year_of_circulation}`;
         case 'bike':
+          return `${this.item.loanable.model}`;
           break;
         case 'trailer':
+          return '';
           break;
         default:
           break;
@@ -134,7 +146,7 @@ export default {
     },
     loanablePrettyName() {
       let type;
-      switch (this.loanable.type) {
+      switch (this.item.loanable.type) {
         case 'car':
           type = 'de la voiture';
           break;
@@ -154,8 +166,7 @@ export default {
     fullTitle() {
       const parts = [
         'LocoMotion',
-        capitalize(this.$i18n.t('titles.profile')),
-        capitalize(this.$i18n.tc('véhicule', 2)),
+        capitalize(this.$i18n.tc('titles.loan', 2)),
       ];
 
       if (this.pageTitle) {
@@ -165,10 +176,10 @@ export default {
       return parts.reverse().join(' | ');
     },
     pageTitle() {
-      return this.item.name || capitalize(this.$i18n.tc('véhicule', 1));
+      return this.item.loanable ? this.item.loanable.name : capitalize(this.$i18n.tc('titles.loanable', 1));
     },
     prettyType() {
-      switch (this.loanable.type) {
+      switch (this.item.loanable.type) {
         case 'car':
           return 'Voiture';
         case 'bike':
@@ -186,26 +197,39 @@ export default {
     },
   },
   methods: {
-    async submitLoan() {
-      await this.submit();
-      await this.$store.dispatch('loadUser');
-    },
     hasReachedStep(step) {
+      const { id, actions } = this.item;
+      const intention = actions.find(a => a.type === 'intention');
+
       switch (step) {
         case 'creation':
-          return !!this.item.id;
+          return !!id;
+        case 'intention':
+          return intention && intention.accepted_at;
         default:
           return false;
       }
     },
     isCurrentStep(step) {
+      const { id, actions } = this.item;
+      const intention = actions.find(a => a.type === 'intention');
+
       switch (step) {
         case 'creation':
-          return !this.item.id;
+          return !id;
+        case 'intention':
+          return intention && !intention.accepted_at;
         default:
           return false;
       }
-    }
+    },
+    skipLoadItem() {
+      return !this.item.id && this.item.loanable;
+    },
+    async submitLoan() {
+      await this.submit();
+      await this.$store.dispatch('loadUser');
+    },
   },
 };
 </script>
@@ -229,7 +253,8 @@ export default {
           opacity: 0.5;
         }
 
-        li.current-step {
+        li.current-step,
+        li.reached-step {
           opacity: 1;
         }
 

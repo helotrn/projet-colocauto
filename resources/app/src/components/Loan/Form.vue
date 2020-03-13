@@ -4,6 +4,7 @@
       <h2 v-b-toggle.loan-actions-new>
         <svg-check v-if="loan.id" />
         <svg-waiting v-else />
+
         Demande d'emprunt
       </h2>
 
@@ -20,6 +21,7 @@
             <b-row>
               <b-col lg="6">
                 <forms-validated-input name="departure_at"
+                  :disabled="!!loan.id"
                   :label="$t('fields.departure_at') | capitalize"
                   :rules="form.departure_at.rules" type="datetime"
                   :disabled-dates="disabledDatesInThePast"
@@ -30,6 +32,7 @@
 
               <b-col lg="6">
                 <forms-validated-input name="return_at"
+                  :disabled="!!loan.id"
                   :label="$t('fields.return_at') | capitalize"
                   :rules="form.departure_at.rules" type="datetime"
                   :disabled-dates="disabledDates" :disabled-times="disabledTimes"
@@ -61,6 +64,7 @@
             <b-row>
               <b-col xl="6">
                 <forms-validated-input name="reason"
+                  :disabled="!!loan.id"
                   :label="$t('fields.reason') | capitalize"
                   :rules="form.reason.rules" type="textarea" :rows="3"
                   :placeholder="placeholderOrLabel('reason') | capitalize"
@@ -69,6 +73,7 @@
 
               <b-col xl="6">
                 <forms-validated-input name="message_for_owner"
+                  :disabled="!!loan.id"
                   :label="`${$t('fields.message_for_owner')} ` +
                     `(${$t('facultatif')})`| capitalize"
                   :rules="form.message_for_owner.rules" type="textarea" :rows="3"
@@ -77,7 +82,7 @@
               </b-col>
             </b-row>
 
-            <b-row class="form__buttons">
+            <b-row class="form__buttons" v-if="!loan.id">
               <b-col class="text-center">
                 <b-button type="submit">Faire la demande d'emprunt</b-button>
               </b-col>

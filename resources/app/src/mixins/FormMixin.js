@@ -48,37 +48,40 @@ export default {
   },
   methods: {
     async loadItem() {
-      const { dispatch } = this.$store;
+      if (!this.skipLoadItem
+        || (typeof this.skipLoadItem === 'function' && !this.skipLoadItem())) {
+        const { dispatch } = this.$store;
 
-      try {
-        if (this.id === 'new') {
-          await dispatch(`${this.slug}/loadEmpty`);
-        } else {
-          await dispatch(`${this.slug}/retrieveOne`, {
-            id: this.id,
-            params: this.params,
-          });
-        }
-      } catch (e) {
-        switch (e.request.status) {
-          case 401:
-            this.$store.commit('addNotification', {
-              content: "Vous n'êtes pas connecté.",
-              title: 'Non connecté',
-              variant: 'warning',
-              type: 'login',
+        try {
+          if (this.id === 'new') {
+            await dispatch(`${this.slug}/loadEmpty`);
+          } else {
+            await dispatch(`${this.slug}/retrieveOne`, {
+              id: this.id,
+              params: this.params,
             });
-            this.$store.commit('user', null);
-            this.$router.push(`/login?r=${this.$route.fullPath}`);
-            break;
-          default:
-            this.$store.commit('addNotification', {
-              content: 'Erreur fatale',
-              title: 'Erreur fatale',
-              variant: 'danger',
-              type: 'form',
-            });
-            break;
+          }
+        } catch (e) {
+          switch (e.request.status) {
+            case 401:
+              this.$store.commit('addNotification', {
+                content: "Vous n'êtes pas connecté.",
+                title: 'Non connecté',
+                variant: 'warning',
+                type: 'login',
+              });
+              this.$store.commit('user', null);
+              this.$router.push(`/login?r=${this.$route.fullPath}`);
+              break;
+            default:
+              this.$store.commit('addNotification', {
+                content: 'Erreur fatale',
+                title: 'Erreur fatale',
+                variant: 'danger',
+                type: 'form',
+              });
+              break;
+          }
         }
       }
     },

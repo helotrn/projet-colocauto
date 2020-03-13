@@ -4,6 +4,7 @@ import VuexPersist from 'vuex-persist';
 import merge from 'deepmerge';
 
 import stats from './stats';
+import cars from './cars';
 import communities from './communities';
 import files from './files';
 import images from './images';
@@ -179,6 +180,7 @@ export default new Vuex.Store({
   mutations,
   actions,
   modules: {
+    cars,
     communities,
     'community.list': CommunityList,
     files,

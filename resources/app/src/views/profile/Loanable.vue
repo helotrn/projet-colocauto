@@ -12,7 +12,7 @@
     <b-row>
       <b-col>
         <loanable-form :loanable="item" :form="form" :loading="loading"
-          @submit="submit" :show-reset="!!item.id" :changed="changed"
+          @submit="submitLoanable" :show-reset="!!item.id" :changed="changed"
           @reset="reset" :center="center" />
       </b-col>
     </b-row>
@@ -83,6 +83,12 @@ export default {
     },
     pageTitle() {
       return this.item.name || capitalize(this.$i18n.tc('véhicule', 1));
+    },
+  },
+  methods: {
+    async submitLoanable() {
+      await this.submit();
+      await this.$store.dispatch('loadUser');
     },
   },
   i18n: {

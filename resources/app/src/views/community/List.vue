@@ -89,12 +89,34 @@ export default {
     selectLoanableTypes(value) {
       this.selectedLoanableTypes = value.filter((item, i, ar) => ar.indexOf(item) === i);
     },
-    selectLoanable(loanable) {
+    async selectLoanable(loanable) {
+      let fullLoanable;
+      switch (loanable.type) {
+        case 'car':
+          await this.$store.dispatch('cars/retrieveOne', {
+            params: {
+              fields: '*,owner.id,owner.user.id,owner.user.avatar,owner.user.name',
+              '!fields': 'events',
+            },
+            id: loanable.id,
+          });
+          fullLoanable = this.$store.state.cars.item;
+          break;
+        default:
+          fullLoanable = loanable;
+          break;
+      }
+
       this.$store.commit('loans/patchItem', {
         borrower: this.user.borrower,
-        loanable,
+        loanable: fullLoanable,
         estimated_price: loanable.price,
       });
+
+      this.$store.commit('cars/item', null);
+      this.$store.commit('trailers/item', null);
+      this.$store.commit('bikes/item', null);
+
       this.$router.push('/loans/new');
     },
     setSelectedLoanableTypes() {
