@@ -12,7 +12,7 @@
   .vtimeselector__input {
     @extend .form-control;
 
-    &.form-control[readonly] {
+    &.form-control[readonly]:not([disabled]) {
       background-color: $white;
     }
   }

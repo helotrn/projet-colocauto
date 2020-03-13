@@ -4,6 +4,7 @@
     :format="format"
     :language="language"
     :disabled-dates="disabledDates"
+    :disabled="disabled"
     :value="dateValue"
     @selected="emitInput($event)" />
 </template>
@@ -16,6 +17,11 @@ export default {
   name: 'FormsDatePicker',
   components: { Datepicker },
   props: {
+    disabled: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
     disabledDates: {
       type: Object,
       required: false,
@@ -75,7 +81,7 @@ export default {
 
 <style lang="scss">
 .forms-datepicker {
-  input.form-control[readonly] {
+  input.form-control[readonly]:not([disabled]) {
     background-color: $white;
   }
 }

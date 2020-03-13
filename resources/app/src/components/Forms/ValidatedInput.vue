@@ -42,11 +42,13 @@
         v-on:input="emitChange" />
       <forms-date-picker v-else-if="type === 'date'"
         :disabled-dates="disabledDates"
+        :disabled="disabled"
         :value="value"
         @input="emitChange" />
       <forms-date-time-picker v-else-if="type === 'datetime'"
         :disabled-dates="disabledDates"
         :disabled-times="disabledTimes"
+        :disabled="disabled"
         :value="value"
         @input="emitChange" />
       <b-form-input v-else-if="type === 'password'"

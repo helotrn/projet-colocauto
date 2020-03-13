@@ -1,11 +1,13 @@
 <template>
   <div class="forms-date-time-picker">
     <forms-date-picker
+      :disabled="disabled"
       :disabled-dates="disabledDates"
       :value="dateValue"
       @input="emitChangeDate" />
 
     <timeselector :h24="true"
+      :disabled="disabled"
       :disable="disabledTimes"
       :displayFormat="'HH[h]mm'"
       :value="timeValue" @input="emitChangeTime" />
@@ -20,6 +22,11 @@ import FormsDatePicker from '@/components/Forms/DatePicker.vue';
 export default {
   name: 'FormsDateTimePicker',
   props: {
+    disabled: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
     disabledDates: {
       type: Object,
       required: false,
@@ -70,6 +77,10 @@ export default {
 .forms-date-time-picker {
   .forms-datepicker {
     margin-bottom: 10px;
+  }
+
+  .vtimeselector__clear {
+    display: none;
   }
 }
 </style>
