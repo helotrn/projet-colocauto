@@ -41,7 +41,6 @@ class Loanable extends BaseModel
         'location_description' => [ 'present' ],
         'instructions' => [ 'present' ],
         'comments' => [ 'present' ],
-        'availability_json' => [ 'present' ],
     ];
 
     public static $sizes = [

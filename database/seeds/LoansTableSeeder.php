@@ -16,6 +16,8 @@ class LoansTableSeeder extends Seeder
                 'loanable_type' => 'bike',
                 'loanable_id' => 1,
                 'estimated_distance' => 20,
+                'estimated_price' => 2,
+                'reason' => 'Promenade',
             ],
         ];
 

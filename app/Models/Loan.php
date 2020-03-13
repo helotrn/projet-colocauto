@@ -61,7 +61,7 @@ class Loan extends BaseModel
     public $collections = ['actions'];
 
     public function actions() {
-        return $this->hasMany(Action::class);
+        return $this->hasMany(Action::class)->orderBy('created_at', 'asc');
     }
 
     public function payments() {

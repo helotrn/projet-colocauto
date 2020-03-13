@@ -215,7 +215,7 @@ class User extends AuthenticatableBaseModel
 
     public function getLastBillOrCreate() {
         if ($this->currentBill) {
-            return $this->currenBill;
+            return $this->currentBill;
         }
 
         $bill = new Bill;
