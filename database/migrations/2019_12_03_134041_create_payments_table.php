@@ -14,7 +14,7 @@ class CreatePaymentsTable extends Migration
             $table->enum('status', ['in_process', 'canceled', 'completed']);
             $table->unsignedBigInteger('loan_id');
 
-            $table->unsignedBigInteger('billable_item_id');
+            $table->unsignedBigInteger('bill_item_id');
 
             $table->timestamps();
             $table->softDeletes();
@@ -22,8 +22,8 @@ class CreatePaymentsTable extends Migration
             $table->foreign('loan_id')
                 ->references('id')->on('loans')
                 ->onDelete('cascade');
-            $table->foreign('billable_item_id')
-                ->references('id')->on('billable_items')
+            $table->foreign('bill_item_id')
+                ->references('id')->on('bill_items')
                 ->onDelete('cascade');
         });
     }

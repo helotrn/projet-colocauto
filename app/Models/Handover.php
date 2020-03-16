@@ -40,8 +40,7 @@ class Handover extends Action
 
                         $bill = $user->getLastBillOrCreate();
 
-                        $billableItem = BillableItem::create([
-                            'bill_id' => $bill->id,
+                        $billItem = $bill->addItem([
                             'label' => 'Payment', // FIXME
                             'amount' => $model->loan->getPrice(),
                             'item_date' => date('Y-m-d'),
@@ -49,9 +48,9 @@ class Handover extends Action
 
                         $payment = Payment::create([
                             'loan_id' => $model->loan->id,
-                            'billable_item_id' => $billableItem->id,
+                            'bill_item_id' => $billItem->id,
                         ]);
-                        $model->loan->payments()->save($payment);
+                        $model->loan->payment()->save($payment);
 
                         $model->executed_at = Carbon::now();
                         $model->save();

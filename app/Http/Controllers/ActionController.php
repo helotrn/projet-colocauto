@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\BaseRequest as Request;
 use App\Http\Requests\Action\IntentionRequest;
+use App\Http\Requests\Action\PrePaymentRequest;
 use App\Models\Action;
 use App\Repositories\ActionRepository;
 use App\Repositories\LoanRepository;
@@ -14,6 +15,7 @@ class ActionController extends RestController
     public function __construct(
         ActionRepository $repository,
         Action $model,
+        PrePaymentController $prePaymentController,
         PaymentController $paymentController,
         TakeoverController $takeoverController,
         HandoverController $handoverController,
@@ -24,6 +26,7 @@ class ActionController extends RestController
     ) {
         $this->repo = $repository;
         $this->model = $model;
+        $this->prePaymentController = $prePaymentController;
         $this->paymentController = $paymentController;
         $this->takeoverController = $takeoverController;
         $this->handoverController = $handoverController;
@@ -42,31 +45,23 @@ class ActionController extends RestController
 
         return $this->respondWithCollection($request, $items, $total);
     }
-    // payment, takeover, handover, incident, intention, extension
+
     public function retrieve(Request $request, $id) {
         $item = $this->repo->find($request, $id);
 
         switch ($item->type) {
             case 'intention':
-                $intentionRequest = new Request();
-                $intentionRequest->request->add($request->all());
-                return $this->intentionController->retrieve($intentionRequest, $id);
+                return $this->intentionController->retrieve($request, $id);
+            case 'pre_payment':
+                return $this->prePaymentController->retrieve($request, $id);
             case 'payment':
-                $paymentRequest = new Request();
-                $paymentRequest->request->add($request->all());
-                return $this->paymentController->retrieve($paymentRequest, $id);
+                return $this->paymentController->retrieve($request, $id);
             case 'takeover':
-                $takeoverRequest = new Request();
-                $takeoverRequest->request->add($request->all());
-                return $this->takeoverController->retrieve($takeoverRequest, $id);
+                return $this->takeoverController->retrieve($request, $id);
             case 'extension':
-                $extensionRequest = new Request();
-                $extensionRequest->request->add($request->all());
-                return $this->extensionController->retrieve($extensionRequest, $id);
+                return $this->extensionController->retrieve($request, $id);
             case 'intention':
-                $intentionRequest = new Request();
-                $intentionRequest->request->add($request->all());
-                return $this->intentionController->retrieve($intentionRequest, $id);
+                return $this->intentionController->retrieve($request, $id);
             case 'incident':
                 $incidentRequest = new Request();
                 $incidentRequest->request->add($request->all());
@@ -139,11 +134,17 @@ class ActionController extends RestController
                     $actionId,
                     $loanId
                 );
-            case 'payment':
-                $paymentRequest = new Request();
-                $paymentRequest->setMethod('PUT');
-                $paymentRequest->request->add($request->all());
-                return $this->paymentController->complete($paymentRequest, $actionId, $loanId);
+            case 'pre_payment':
+                $prePaymentRequest = $this->redirectRequest(
+                    PrePaymentRequest::class,
+                    $request,
+                    $this->loanRepository
+                );
+                return $this->prePaymentController->complete(
+                    $prePaymentRequest,
+                    $actionId,
+                    $loanId
+                );
             case 'takeover':
                 $takeoverRequest = new Request();
                 $takeoverRequest->setMethod('PUT');
@@ -164,6 +165,11 @@ class ActionController extends RestController
                 $incidentRequest->setMethod('PUT');
                 $incidentRequest->request->add($request->all());
                 return $this->incidentController->complete($incidentRequest, $actionId, $loanId);
+            case 'payment':
+                $paymentRequest = new Request();
+                $paymentRequest->setMethod('PUT');
+                $paymentRequest->request->add($request->all());
+                return $this->paymentController->complete($paymentRequest, $actionId, $loanId);
             default:
                 throw new \Exception('invalid action type');
         }
@@ -174,35 +180,19 @@ class ActionController extends RestController
 
         switch ($item->type) {
             case 'intention':
-                $intentionRequest = new Request();
-                $intentionRequest->setMethod('PUT');
-                $intentionRequest->request->add($request->all());
-                return $this->intentionController->cancel($intentionRequest, $actionId, $loanId);
+                return $this->intentionController->cancel($request, $actionId, $loanId);
+            case 'pre_payment':
+                return $this->prePaymentController->cancel($request, $actionId, $loanId);
             case 'payment':
-                $paymentRequest = new Request();
-                $paymentRequest->setMethod('PUT');
-                $paymentRequest->request->add($request->all());
-                return $this->paymentController->complete($paymentRequest, $actionId, $loanId);
+                return $this->paymentController->cancel($request, $actionId, $loanId);
             case 'takeover':
-                $takeoverRequest = new Request();
-                $takeoverRequest->setMethod('PUT');
-                $takeoverRequest->request->add($request->all());
-                return $this->takeoverController->complete($takeoverRequest, $actionId, $loanId);
+                return $this->takeoverController->cancel($request, $actionId, $loanId);
             case 'extension':
-                $extensionRequest = new Request();
-                $extensionRequest->setMethod('PUT');
-                $extensionRequest->request->add($request->all());
-                return $this->extensionController->complete($extensionRequest, $actionId, $loanId);
+                return $this->extensionController->cancel($request, $actionId, $loanId);
             case 'handover':
-                $handoverRequest = new Request();
-                $handoverRequest->setMethod('PUT');
-                $handoverRequest->request->add($request->all());
-                return $this->handoverController->complete($handoverRequest, $actionId, $loanId);
+                return $this->handoverController->cancel($request, $actionId, $loanId);
             case 'incident':
-                $incidentRequest = new Request();
-                $incidentRequest->setMethod('PUT');
-                $incidentRequest->request->add($request->all());
-                return $this->incidentController->complete($incidentRequest, $actionId, $loanId);
+                return $this->incidentController->cancel($request, $actionId, $loanId);
             default:
                 throw new \Exception('invalid action type');
         }

@@ -32,6 +32,9 @@ class LoanTest extends TestCase
             'borrower_id' => $borrower->id,
             'loanable_type' => 'bike',
             'loanable_id' => $loanable->id,
+            'estimated_price' => 1,
+            'message_for_owner' => '',
+            'reason' => 'salut',
         ];
 
         $response = $this->json('POST', "/api/v1/loans", $data);

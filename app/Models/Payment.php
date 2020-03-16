@@ -2,22 +2,19 @@
 
 namespace App\Models;
 
-use App\Models\Action;
-use App\Models\BillableItem;
-use App\Models\Loan;
 use Carbon\Carbon;
 
 class Payment extends Action
 {
     protected $fillable = [
         'loan_id',
-        'billable_item_id',
+        'bill_item_id',
     ];
 
-    public $items = ['billableItem', 'loan'];
+    public $items = ['bill_item', 'loan'];
 
-    public function billableItem() {
-        return $this->belongsTo(BillableItem::class);
+    public function billItem() {
+        return $this->belongsTo(BillItem::class);
     }
 
     public function loan() {

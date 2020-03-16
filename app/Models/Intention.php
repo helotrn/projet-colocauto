@@ -24,10 +24,11 @@ class Intention extends Action
             if (!$model->executed_at) {
                 switch ($model->status) {
                     case 'completed':
-                        if ($model->loan->prePayment->isEmpty()) {
+                        if (!$model->loan->prePayment) {
                             $prePayment = PrePayment::create(['loan_id' => $model->loan->id]);
-                            $model->loan->prePayments()->save($prePayment);
+                            $model->loan->prePayment()->save($prePayment);
                             $model->executed_at = Carbon::now();
+
                             $model->save();
                         }
                         break;
