@@ -3,7 +3,6 @@ import Vuex from 'vuex';
 import VuexPersist from 'vuex-persist';
 import merge from 'deepmerge';
 
-import stats from './stats';
 import bikes from './bikes';
 import cars from './cars';
 import communities from './communities';
@@ -13,6 +12,7 @@ import loans from './loans';
 import loanables from './loanables';
 import login from './pages/login';
 import register from './pages/register';
+import stats from './stats';
 import trailers from './trailers';
 import users from './users';
 
