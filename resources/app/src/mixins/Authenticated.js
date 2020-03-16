@@ -19,18 +19,16 @@ export default {
       return [
         ...this.user.loanables.reduce((acc, loanable) => {
           acc.push(
-            ...loanable.loans.map((l) => {
-              return {
-                ...l,
-                loanable: {
-                  ...loanable,
-                  owner: {
-                    ...this.user.owner,
-                    user: this.user,
-                  },
+            ...loanable.loans.map(l => ({
+              ...l,
+              loanable: {
+                ...loanable,
+                owner: {
+                  ...this.user.owner,
+                  user: this.user,
                 },
-              };
-            })
+              },
+            })),
           );
           return acc;
         }, []),
@@ -103,12 +101,10 @@ export default {
         acc.push(
           ...loanable.loans
             .filter(l => l.departure_at > now && l.actions.length > 1)
-            .map(l => {
-              return {
-                ...l,
-                loanable,
-              }
-            })
+            .map(l => ({
+              ...l,
+              loanable,
+            })),
         );
         return acc;
       }, []);

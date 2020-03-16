@@ -8,7 +8,7 @@ export default new RestModule('loans', {
     per_page: 10,
   },
 }, {
-  async completeAction({ commit, dispatch, state }, action) {
+  async completeAction({ commit, state }, action) {
     try {
       const ajax = Vue.axios.put(
         `/${state.slug}/${action.loan_id}/actions/${action.id}/complete`,

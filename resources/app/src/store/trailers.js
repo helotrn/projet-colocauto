@@ -1,4 +1,3 @@
-import Vue from 'vue';
 import RestModule from './RestModule';
 
 export default new RestModule('trailers', {
@@ -11,5 +10,5 @@ export default new RestModule('trailers', {
     deleted_at: null,
   },
 }, {
-    options() {},
+  options() {},
 });

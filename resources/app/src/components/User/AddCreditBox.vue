@@ -111,7 +111,7 @@ export default {
         },
       ];
 
-      for (let i = 0, len = standardOptions.length; i < len; i++) {
+      for (let i = 0, len = standardOptions.length; i < len; i += 1) {
         if (standardOptions[i].value > this.minimumRequired) {
           options.push(standardOptions[i]);
         }
@@ -130,7 +130,7 @@ export default {
       this.$emit('cancel');
     },
     buyCredit() {
-      console.log('buyCredit');
+      this.$emit('buy', this.amount);
     },
   },
 };
