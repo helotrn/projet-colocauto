@@ -35,12 +35,14 @@ import dayjs from './helpers/dayjs';
 import '@/assets/scss/main.scss';
 import 'vue-cal/dist/vuecal.css';
 
-Sentry.init({
-  dsn: 'https://d1a14784f15a4d88a021b1ad577a240a@sentry.molotov.ca/34',
-  integrations: [
-    new Integrations.Vue({ Vue, attachProps: true, logErrors: true }),
-  ],
-});
+if (process.env.NODE_ENV !== 'development') {
+  Sentry.init({
+    dsn: 'https://d1a14784f15a4d88a021b1ad577a240a@sentry.molotov.ca/34',
+    integrations: [
+      new Integrations.Vue({ Vue, attachProps: true, logErrors: true }),
+    ],
+  });
+}
 
 Vue.config.productionTip = false;
 
