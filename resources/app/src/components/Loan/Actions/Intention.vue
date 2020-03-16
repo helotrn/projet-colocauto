@@ -87,46 +87,15 @@
 <script>
 import FormsValidatedInput from '@/components/Forms/ValidatedInput.vue';
 
-import Check from '@/assets/svg/check.svg';
-import Danger from '@/assets/svg/danger.svg';
-import Waiting from '@/assets/svg/waiting.svg';
+import LoanActionsMixin from '@/mixins/LoanActionsMixin';
 
 export default {
   name: 'LoanActionsIntention',
+  mixins: [LoanActionsMixin],
   components: {
     FormsValidatedInput,
-    'svg-check': Check,
-    'svg-danger': Danger,
-    'svg-waiting': Waiting,
-  },
-  props: {
-    action: {
-      type: Object,
-      required: true,
-    },
-    loan: {
-      type: Object,
-      required: true,
-    },
-    open: {
-      type: Boolean,
-      required: false,
-      default: false,
-    },
-    userRole: {
-      type: String,
-      required: true,
-    },
   },
   computed: {
-    borrowerAvatar() {
-      const { avatar } = this.loan.borrower.user;
-      if (!avatar) {
-        return '';
-      }
-
-      return `url('${avatar.sizes.thumbnail}')`;
-    },
     loanablePrettyName() {
       let article;
       let type;
@@ -155,23 +124,6 @@ export default {
       }
 
       return `${article} ${type}`;
-    },
-    ownerAvatar() {
-      const { avatar } = this.loan.loanable.owner.user;
-      if (!avatar) {
-        return '';
-      }
-
-      return `url('${avatar.sizes.thumbnail}')`;
-    },
-  },
-  methods: {
-    async completeAction() {
-      await this.$store.dispatch('loans/completeAction', this.action);
-      this.$emit('completed');
-    },
-    cancelAction() {
-      this.$store.dispatch('loans/cancelAction', this.action);
     },
   },
 };
