@@ -33,7 +33,7 @@ class PrePaymentTest extends TestCase
         $loan = factory(Loan::class)->create(['borrower_id' => $borrower->id]);
         $loan = $loan->fresh();
 
-        $executedAtDate = substr(Carbon::now('-4')->format("Y-m-d h:m:sO"), 0, -2);
+        $executedAtDate = substr(Carbon::now()->format("Y-m-d h:m:sO"), 0, -2);
         Carbon::setTestNow($executedAtDate);
 
         $intention = $loan->intention;
@@ -66,7 +66,7 @@ class PrePaymentTest extends TestCase
         $loan = factory(Loan::class)->create(['borrower_id' => $borrower->id]);
         $loan = $loan->fresh();
 
-        $executedAtDate = substr(Carbon::now('-4')->format("Y-m-d h:m:sO"), 0, -2);
+        $executedAtDate = substr(Carbon::now()->format("Y-m-d h:m:sO"), 0, -2);
         Carbon::setTestNow($executedAtDate);
 
         $intention = $loan->intention;
