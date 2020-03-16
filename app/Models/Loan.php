@@ -11,6 +11,7 @@ use App\Models\Intention;
 use App\Models\Loanable;
 use App\Models\Payment;
 use App\Models\Takeover;
+use App\Transformers\LoanTransformer;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Loan extends BaseModel
@@ -37,6 +38,20 @@ class Loan extends BaseModel
         'reason' => [ 'required' ],
     ];
 
+    public static $transformer = LoanTransformer::class;
+
+    public static function boot() {
+        parent::boot();
+
+        self::created(function ($model) {
+            if (!$model->intention) {
+                $intention = Intention::create(['loan_id' => $model->id]);
+
+                $model->intention()->save($intention);
+            }
+        });
+    }
+
     protected $fillable = [
         'departure_at',
         'duration_in_minutes',
@@ -46,17 +61,6 @@ class Loan extends BaseModel
         'reason',
     ];
 
-    public static function boot() {
-        parent::boot();
-
-        self::created(function ($model) {
-            if ($model->intentions()->count() == 0) {
-                $intention = Intention::create(['loan_id' => $model->id]);
-
-                $model->intentions()->save($intention);
-            }
-        });
-    }
     public $items = ['borrower', 'intention', 'loanable'];
 
     public $collections = ['actions'];

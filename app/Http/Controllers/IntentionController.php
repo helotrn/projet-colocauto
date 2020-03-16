@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\BaseRequest as Request;
+use App\Http\Requests\Action\IntentionRequest;
 use App\Models\Intention;
 use App\Repositories\IntentionRepository;
 use App\Repositories\LoanRepository;
@@ -72,10 +73,10 @@ class IntentionController extends RestController
         return $response;
     }
 
-    public function complete(Request $request, $actionId, $loanId) {
+    public function complete(IntentionRequest $request, $actionId, $loanId) {
         $item = $this->repo->find($request, $actionId);
-        $loan = $this->loanRepo->find($request, $loanId);
 
+        $item->message_for_borrower = $request->get('message_for_borrower');
         $item->status = 'completed';
         $item->save();
 

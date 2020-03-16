@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\BaseRequest as Request;
+use App\Http\Requests\Action\IntentionRequest;
 use App\Models\Action;
 use App\Repositories\ActionRepository;
 use App\Repositories\LoanRepository;
@@ -10,7 +11,6 @@ use Validator;
 
 class ActionController extends RestController
 {
-
     public function __construct(
         ActionRepository $repository,
         Action $model,
@@ -19,7 +19,8 @@ class ActionController extends RestController
         HandoverController $handoverController,
         IncidentController $incidentController,
         IntentionController $intentionController,
-        ExtensionController $extensionController
+        ExtensionController $extensionController,
+        LoanRepository $loanRepository
     ) {
         $this->repo = $repository;
         $this->model = $model;
@@ -29,6 +30,7 @@ class ActionController extends RestController
         $this->incidentController = $incidentController;
         $this->intentionController = $intentionController;
         $this->extensionController = $extensionController;
+        $this->loanRepository = $loanRepository;
     }
 
     public function index(Request $request) {
@@ -127,10 +129,16 @@ class ActionController extends RestController
 
         switch ($item->type) {
             case 'intention':
-                $intentionRequest = new Request();
-                $intentionRequest->setMethod('PUT');
-                $intentionRequest->request->add($request->all());
-                return $this->intentionController->complete($intentionRequest, $actionId, $loanId);
+                $intentionRequest = $this->redirectRequest(
+                    IntentionRequest::class,
+                    $request,
+                    $this->loanRepository
+                );
+                return $this->intentionController->complete(
+                    $intentionRequest,
+                    $actionId,
+                    $loanId
+                );
             case 'payment':
                 $paymentRequest = new Request();
                 $paymentRequest->setMethod('PUT');

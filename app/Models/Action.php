@@ -15,7 +15,7 @@ class Action extends BaseModel
     public $items = ['loan', 'user'];
 
     public function loan() {
-        return $this->morphOne(Loan::class);
+        return $this->belongsTo(Loan::class);
     }
 
     public function user() {

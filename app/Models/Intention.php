@@ -8,6 +8,7 @@ class Intention extends Action
 {
     protected $fillable = [
         'loan_id',
+        'message_for_borrower',
     ];
 
     public $items = ['loan'];
@@ -23,12 +24,12 @@ class Intention extends Action
             if (!$model->executed_at) {
                 switch ($model->status) {
                     case 'completed':
-                        $prePayment = PrePayment::create(['loan_id' => $model->id]);
-
-                        $model->loan->prepayments()->save($prePayment);
-
-                        $model->executed_at = Carbon::now();
-                        $model->save();
+                        if ($model->loan->prePayment->isEmpty()) {
+                            $prePayment = PrePayment::create(['loan_id' => $model->loan->id]);
+                            $model->loan->prePayments()->save($prePayment);
+                            $model->executed_at = Carbon::now();
+                            $model->save();
+                        }
                         break;
                     case 'canceled':
                         $model->executed_at = Carbon::now();
