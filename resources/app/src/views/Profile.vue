@@ -20,7 +20,6 @@
 import ProfileSidebar from '@/components/Profile/Sidebar.vue';
 
 import Authenticated from '@/mixins/Authenticated';
-import Notification from '@/mixins/Notification';
 
 const routeGuard = (to, from, next) => {
   if (to.name === 'profile') {
@@ -32,7 +31,7 @@ const routeGuard = (to, from, next) => {
 
 export default {
   name: 'Account',
-  mixins: [Authenticated, Notification],
+  mixins: [Authenticated],
   components: {
     ProfileSidebar,
   },

@@ -5,8 +5,11 @@
 </template>
 
 <script>
+import Notification from '@/mixins/Notification';
+
 export default {
   name: 'Locomotion',
+  mixins: [Notification],
 };
 </script>
 

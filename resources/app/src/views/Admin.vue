@@ -18,11 +18,10 @@
 import AdminMenu from '@/components/Admin/Menu.vue';
 
 import Authenticated from '@/mixins/Authenticated';
-import Notification from '@/mixins/Notification';
 
 export default {
   name: 'Admin',
-  mixins: [Authenticated, Notification],
+  mixins: [Authenticated],
   components: { AdminMenu },
 };
 </script>

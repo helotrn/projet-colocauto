@@ -6,7 +6,6 @@
 
 <script>
 import Authenticated from '@/mixins/Authenticated';
-import Notification from '@/mixins/Notification';
 
 const routeGuard = (to, from, next) => {
   if (to.name === 'register') {
@@ -18,7 +17,7 @@ const routeGuard = (to, from, next) => {
 
 export default {
   name: 'Register',
-  mixins: [Authenticated, Notification],
+  mixins: [Authenticated],
   beforeRouteEnter: routeGuard,
   beforeRouteUpdate: routeGuard,
 };

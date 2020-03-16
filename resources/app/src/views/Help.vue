@@ -15,11 +15,10 @@
 
 <script>
 import Authenticated from '@/mixins/Authenticated';
-import Notification from '@/mixins/Notification';
 
 export default {
   name: 'Home',
-  mixins: [Authenticated, Notification],
+  mixins: [Authenticated],
 };
 </script>
 

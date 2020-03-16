@@ -105,7 +105,6 @@ en:
 
 <script>
 import Authenticated from '@/mixins/Authenticated';
-import Notification from '@/mixins/Notification';
 
 import DashboardBalance from '@/components/Dashboard/Balance.vue';
 import LoanInfoBox from '@/components/Loan/InfoBox.vue';
@@ -116,7 +115,7 @@ import TutorialBlock from '@/components/Dashboard/TutorialBlock.vue';
 
 export default {
   name: 'Dashboard',
-  mixins: [Authenticated, Notification],
+  mixins: [Authenticated],
   components: {
     DashboardBalance,
     LoanInfoBox,

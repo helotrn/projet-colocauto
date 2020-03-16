@@ -6,13 +6,12 @@
 
 <script>
 import Authenticated from '@/mixins/Authenticated';
-import Notification from '@/mixins/Notification';
 
 import LoginBox from '@/components/Login/Box.vue';
 
 export default {
   name: 'Login',
-  mixins: [Authenticated, Notification],
+  mixins: [Authenticated],
   mounted() {
     if (this.isLoggedIn) {
       this.skipToApp();

@@ -51,11 +51,10 @@ import UserCard from '@/components/User/Card.vue';
 
 import Authenticated from '@/mixins/Authenticated';
 import DataRouteGuards from '@/mixins/DataRouteGuards';
-import Notification from '@/mixins/Notification';
 
 export default {
   name: 'CommunityDashboard',
-  mixins: [Authenticated, DataRouteGuards, Notification],
+  mixins: [Authenticated, DataRouteGuards],
   components: {
     UserCard,
   },

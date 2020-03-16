@@ -19,13 +19,12 @@
 
 <script>
 import Authenticated from '@/mixins/Authenticated';
-import Notification from '@/mixins/Notification';
 
 import RegisterForm from '@/components/Register/Form.vue';
 
 export default {
   name: 'RegisterIntro',
-  mixins: [Authenticated, Notification],
+  mixins: [Authenticated],
   components: {
     RegisterForm,
   },
