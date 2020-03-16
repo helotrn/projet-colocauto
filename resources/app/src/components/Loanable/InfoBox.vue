@@ -137,7 +137,7 @@ export default {
   }
 
   &__actions.col {
-    flex: 0 1 500px;
+    flex: 1 1 0;
     text-align: right;
 
     .btn {

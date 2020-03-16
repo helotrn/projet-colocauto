@@ -11,7 +11,8 @@ export default new RestModule('loans', {
   async completeAction({ commit, dispatch, state }, action) {
     try {
       const ajax = Vue.axios.put(
-        `/${state.slug}/${action.loan_id}/actions/${action.id}/complete`
+        `/${state.slug}/${action.loan_id}/actions/${action.id}/complete`,
+        action,
       );
 
       commit('ajax', ajax);
@@ -19,12 +20,11 @@ export default new RestModule('loans', {
       await ajax;
 
       commit('ajax', null);
-
-      await dispatch('loadItem');
     } catch (e) {
       commit('ajax', null);
 
-      commit('error', e.response.data);
+      const { request, response } = e;
+      commit('error', { request, response });
 
       throw e;
     }

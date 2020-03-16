@@ -4,6 +4,7 @@ import VuexPersist from 'vuex-persist';
 import merge from 'deepmerge';
 
 import stats from './stats';
+import bikes from './bikes';
 import cars from './cars';
 import communities from './communities';
 import files from './files';
@@ -12,6 +13,7 @@ import loans from './loans';
 import loanables from './loanables';
 import login from './pages/login';
 import register from './pages/register';
+import trailers from './trailers';
 import users from './users';
 
 import CommunityList from './pages/community/list';
@@ -57,6 +59,17 @@ const loadUserFields = [
   'loanables.*',
   '!loanables.events',
   'loans.*',
+  'loans.borrower.id',
+  'loans.borrower.user.id',
+  'loans.borrower.user.full_name',
+  'loans.borrower.user.avatar',
+  'loans.loanable.id',
+  'loans.loanable.type',
+  'loans.loanable.name',
+  'loans.loanable.owner.id',
+  'loans.loanable.owner.user.id',
+  'loans.loanable.owner.user.full_name',
+  'loans.loanable.owner.user.avatar.*',
   'loans.actions.*',
   'loanables.loans.*',
   'loanables.loans.borrower.id',
@@ -180,6 +193,7 @@ export default new Vuex.Store({
   mutations,
   actions,
   modules: {
+    bikes,
     cars,
     communities,
     'community.list': CommunityList,
@@ -188,11 +202,12 @@ export default new Vuex.Store({
     loans,
     loanables,
     login,
-    register,
-    stats,
     'profile.loanable': ProfileLoanable,
-    'register.map': RegisterMap,
+    register,
     'register.intent': RegisterIntent,
+    'register.map': RegisterMap,
+    stats,
+    trailers,
     users,
   },
   plugins: [vuexPersist.plugin],

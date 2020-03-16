@@ -42,6 +42,31 @@
         <hr>
 
         <b-alert variant="warning" show>
+          À partir d'ici, les données que vous entrez seront uniquement partagées avec
+          l'équipe de Locomotion ou si vous mettez vos véhicules à disposition de la
+          communauté.<br>
+          Consultez notre <router-link to="/privacy">politique de confidentialité</router-link>.
+        </b-alert>
+
+        <b-row>
+          <b-col md="8">
+            <forms-validated-input name="phone" :label="$t('fields.phone') | capitalize"
+              :rules="{ required: true, regex:/^[-1-9][-0-9]*$/  }" type="text"
+              :placeholder="placeholderOrLabel('phone') | capitalize"
+              v-model="user.phone" />
+          </b-col>
+
+          <b-col md="4">
+            <forms-validated-input name="is_smart_phone"
+              :label="$t('fields.is_smart_phone') | capitalize" type="checkbox"
+              :placeholder="placeholderOrLabel('is_smart_phone') | capitalize"
+              v-model="user.is_smart_phone" />
+          </b-col>
+        </b-row>
+
+        <hr>
+
+        <b-alert variant="warning" show>
           À partir d'ici, les données que vous entrez sont strictement confidentielles.<br>
           Consultez notre <router-link to="/privacy">politique de confidentialité</router-link>.
         </b-alert>
@@ -75,22 +100,6 @@
               }" type="text"
               :placeholder="placeholderOrLabel('postal_code') | capitalize"
               v-model="user.postal_code" />
-          </b-col>
-        </b-row>
-
-        <b-row>
-          <b-col md="8">
-            <forms-validated-input name="phone" :label="$t('fields.phone') | capitalize"
-              :rules="{ required: true, regex:/^[-1-9][-0-9]*$/  }" type="text"
-              :placeholder="placeholderOrLabel('phone') | capitalize"
-              v-model="user.phone" />
-          </b-col>
-
-          <b-col md="4">
-            <forms-validated-input name="is_smart_phone"
-              :label="$t('fields.is_smart_phone') | capitalize" type="checkbox"
-              :placeholder="placeholderOrLabel('is_smart_phone') | capitalize"
-              v-model="user.is_smart_phone" />
           </b-col>
         </b-row>
 

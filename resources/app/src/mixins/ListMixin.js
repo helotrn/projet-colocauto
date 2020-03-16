@@ -3,6 +3,9 @@ export default {
     context() {
       return this.$store.state[this.slug];
     },
+    contextParams() {
+      return this.context.params;
+    },
     creatable() {
       return this.$route.meta.creatable;
     },
@@ -20,11 +23,20 @@ export default {
     jsonParams() {
       return JSON.stringify(this.params);
     },
+    loaded() {
+      return this.context.loaded;
+    },
     loading() {
       return !!this.context.ajax;
     },
     params() {
-      return this.context.params;
+      return {
+        ...this.routeParams,
+        ...this.contextParams,
+      };
+    },
+    routeParams() {
+      return this.$route.meta.data[this.slug].retrieve || {};
     },
     slug() {
       return this.$route.meta.slug;
@@ -57,6 +69,7 @@ export default {
   },
   data() {
     return {
+      firstLoad: true,
       selected: [],
       listDebounce: null,
     };
@@ -68,6 +81,11 @@ export default {
   },
   watch: {
     jsonParams() {
+      if (this.firstLoad && this.skipListMixinFirstLoad) {
+        this.firstLoad = false;
+        return false;
+      }
+
       if (this.listDebounce) {
         clearTimeout(this.listDebounce);
       }
@@ -76,9 +94,7 @@ export default {
         try {
           this.$store.dispatch(
             `${this.slug}/retrieve`,
-            {
-              fields: this.fieldsList.join(','),
-            },
+            this.params,
           );
           this.listDebounce = null;
         } catch (e) {
@@ -92,6 +108,8 @@ export default {
           this.$router.push(`/login?r=${this.$route.fullPath}`);
         }
       }, 250);
+
+      return true;
     },
   },
 };

@@ -27,7 +27,8 @@ export default new RestModule('loanables', {
     } catch (e) {
       commit('ajax', null);
 
-      commit('error', e.response.data);
+      const { request, response } = e;
+      commit('error', { request, response });
 
       throw e;
     }
@@ -56,7 +57,8 @@ export default new RestModule('loanables', {
     } catch (e) {
       commit('ajax', null);
 
-      commit('error', e.response.data);
+      const { request, response } = e;
+      commit('error', { request, response });
 
       throw e;
     }

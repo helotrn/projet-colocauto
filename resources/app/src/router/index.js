@@ -96,6 +96,7 @@ const routes = [
             loanables: {
               retrieve: {
                 fields: 'id,type,name,position,available,owner.user.id,owner.user.name,owner.user.full_name,owner.user.avatar,image.*',
+                '!owner.user.id': 'me',
               },
             },
             loans: {
@@ -125,6 +126,7 @@ const routes = [
         fields: [
           '*',
           'actions.*',
+          'intention.*',
           'loanable.id',
           'loanable.name',
           'loanable.type',
@@ -135,6 +137,7 @@ const routes = [
           'loanable.owner.id',
           'loanable.owner.user.id',
           'loanable.owner.user.name',
+          'loanable.owner.user.phone',
           'loanable.owner.user.avatar',
         ].join(','),
       },

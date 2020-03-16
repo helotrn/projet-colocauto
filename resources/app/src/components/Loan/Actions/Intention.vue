@@ -4,26 +4,35 @@
       <h2 v-b-toggle.loan-actions-intention>
         <svg-waiting v-if="action.status === 'in_process'" />
         <svg-check v-else-if="action.status === 'completed'" />
-        <svg-cancel v-else-if="action.status === 'canceled'" />
+        <svg-danger v-else-if="action.status === 'canceled'" />
 
         Confirmation de l'emprunt
       </h2>
 
       <span v-if="action.status == 'in_process'">En attente d'approbation</span>
-      <span v-else-if="action.status === 'completed'">Approuvé &bull; {{ action.executed_at | datetime }}</span>
-      <span v-else-if="action.status === 'canceled'">Refusé &bull; {{ action.executed_at | datetime }}</span>
+      <span v-else-if="action.status === 'completed'">
+        Approuvé &bull; {{ action.executed_at | datetime }}
+      </span>
+      <span v-else-if="action.status === 'canceled'">
+        Refusé &bull; {{ action.executed_at | datetime }}
+      </span>
     </b-card-header>
 
 
     <b-card-body>
-      <b-collapse id="loan-actions-intention" role="tabpanel" accordion="loan-actions" :visible="open">
+      <b-collapse id="loan-actions-intention" role="tabpanel" accordion="loan-actions"
+        :visible="open">
         <div class="loan-actions-intention__image mb-3 text-center">
           <div :style="{ backgroundImage: borrowerAvatar }" />
         </div>
 
         <div class="loan-actions-intention__description text-center mb-3">
-          <p>
-            {{ loan.borrower.user.name }} veut vous emprunter {{ loanablePrettyName }}
+          <p v-if="userRole === 'owner'">
+            {{ loan.borrower.user.name }} veut vous emprunter {{ loanablePrettyName }}.
+          </p>
+          <p v-else>
+            Vous avez demandé à {{ loan.borrower.user.name }} de lui
+            emprunter {{ loanablePrettyName }}.
           </p>
 
           <label>Raison de l'emprunt</label>
@@ -31,29 +40,44 @@
 
           <blockquote v-if="loan.message_for_owner">
             {{ loan.message_for_owner }}
+            <div class="user-avatar" :style="{ backgroundImage: borrowerAvatar }" />
+          </blockquote>
+
+          <blockquote v-if="action.message_for_borrower
+            && (userRole !== 'owner' || !!action.executed_at)">
+            {{ action.message_for_borrower }}
+            <div class="user-avatar" :style="{ backgroundImage: ownerAvatar }" />
           </blockquote>
         </div>
 
-        <div class="loan-actions-intention__see-details text-center mb-3">
-          <b-button size="sm" variant="outline-info" v-b-toggle.loan-actions-new>
-            Voir les détails
-          </b-button>
-        </div>
+        <div v-if="!action.executed_at">
+          <div class="loan-actions-intention__see-details text-center mb-3">
+            <b-button size="sm" variant="outline-info" v-b-toggle.loan-actions-new>
+              Voir les détails
+            </b-button>
+          </div>
 
-        <div class="loan-actions-intention__message_for_borrower text-center mb-3">
-          <forms-validated-input type="textarea" name="message_for_borrower"
-            v-model="message_for_borrower"
-            label="Laissez un message à l'emprunteur (facultatif)" />
-        </div>
+          <div v-if="userRole === 'owner'">
+            <div class="loan-actions-intention__message_for_borrower text-center mb-3">
+              <forms-validated-input type="textarea" name="message_for_borrower"
+                v-model="action.message_for_borrower"
+                label="Laissez un message à l'emprunteur (facultatif)" />
+            </div>
 
-        <div class="loan-actions-intention__buttons text-center">
-          <b-button size="sm" variant="success" class="mr-3" @click="completeAction">
-            Accepter
-          </b-button>
+            <div class="loan-actions-intention__buttons text-center">
+              <b-button size="sm" variant="success" class="mr-3" @click="completeAction">
+                Accepter
+              </b-button>
 
-          <b-button size="sm" variant="outline-danger" @click="cancelAction">
-            Refuser
-          </b-button>
+              <b-button size="sm" variant="outline-danger" @click="cancelAction">
+                Refuser
+              </b-button>
+            </div>
+          </div>
+          <div v-else class="text-center">
+            <p>Contactez le propriétaire pour qu'il confirme votre demande.</p>
+            <p>{{ loan.loanable.owner.user.phone }}</p>
+          </div>
         </div>
       </b-collapse>
     </b-card-body>
@@ -89,11 +113,10 @@ export default {
       required: false,
       default: false,
     },
-  },
-  data() {
-    return {
-      message_for_borrower: '',
-    };
+    userRole: {
+      type: String,
+      required: true,
+    },
   },
   computed: {
     borrowerAvatar() {
@@ -105,21 +128,47 @@ export default {
       return `url('${avatar.sizes.thumbnail}')`;
     },
     loanablePrettyName() {
+      let article;
+      let type;
+
       switch (this.loan.loanable.type) {
         case 'car':
-          return 'votre voiture';
+          article = 'sa';
+          type = 'voiture';
+          break;
         case 'bike':
-          return 'votre vélo';
+          article = 'son';
+          type = 'vélo';
+          break;
         case 'trailer':
-          return 'votre remorque';
+          article = 'sa';
+          type = 'remorque';
+          break;
         default:
-          return 'votre objet';
+          article = 'son';
+          type = 'objet';
+          break;
       }
+
+      if (this.userRole === 'owner') {
+        article = 'votre';
+      }
+
+      return `${article} ${type}`;
+    },
+    ownerAvatar() {
+      const { avatar } = this.loan.loanable.owner.user;
+      if (!avatar) {
+        return '';
+      }
+
+      return `url('${avatar.sizes.thumbnail}')`;
     },
   },
   methods: {
-    completeAction() {
-      this.$store.dispatch('loans/completeAction', this.action);
+    async completeAction() {
+      await this.$store.dispatch('loans/completeAction', this.action);
+      this.$emit('completed');
     },
     cancelAction() {
       this.$store.dispatch('loans/cancelAction', this.action);

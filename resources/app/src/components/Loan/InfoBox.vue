@@ -1,55 +1,63 @@
 <template>
-  <b-card class="loan-info-box shadow" bg="white" no-body>
-    <router-link class="card-body" :to="`/loans/${this.loan.id}`">
-      <b-row>
-        <b-col class="loan-info-box__image">
-          <div :style="{ backgroundImage: loanImage }" />
-        </b-col>
+  <div class="loan-info-box">
+    <b-card class="shadow" bg="white" no-body>
+      <router-link class="card-body" :to="`/loans/${this.loan.id}`">
+        <b-row>
+          <b-col class="loan-info-box__image">
+            <div :style="{ backgroundImage: loanImage }" />
+          </b-col>
 
-        <b-col class="loan-info-box__name">
-          <span>{{ loan.borrower.user.full_name }}</span>
-        </b-col>
+          <b-col class="loan-info-box__name">
+            <span>{{ otherUser.full_name }}</span>
+          </b-col>
 
-        <b-col class="loan-info-box__details">
-          <span>
-            {{ loan.loanable.name }}<br>
-            <span v-if="multipleDays">
-              {{ loan.departure_at | date }} {{ loan.departure_at | time }}<br>
-              {{ returnAt | date }} {{ returnAt | time }}
+          <b-col class="loan-info-box__details">
+            <span>
+              {{ loan.loanable.name }}<br>
+              <span v-if="multipleDays">
+                {{ loan.departure_at | date }} {{ loan.departure_at | time }}<br>
+                {{ returnAt | date }} {{ returnAt | time }}
+              </span>
+              <span v-else>
+                {{ loan.departure_at | date }}<br>
+                {{ loan.departure_at | time }} à {{ returnAt | time }}
+              </span>
             </span>
-            <span v-else>
-              {{ loan.departure_at | date }}<br>
-              {{ loan.departure_at | time }} à {{ returnAt | time }}
-            </span>
-          </span>
-        </b-col>
+          </b-col>
 
-        <b-col class="loan-info-box__actions">
-          <div>
-            <b-button size="sm" variant="success" v-if="hasButton('accept')"
-              @click="acceptLoan">
-              Accepter
-            </b-button>
+          <b-col class="loan-info-box__actions">
+            <div>
+              <b-button size="sm" variant="success" v-if="hasButton('accept')"
+                @click="acceptLoan">
+                Accepter
+              </b-button>
 
-            <b-button size="sm" variant="outline-primary" v-if="hasButton('view')"
-              :to="`/loans/${this.loan.id}`">
-              Consulter
-            </b-button>
+              <b-button size="sm" variant="outline-primary" v-if="hasButton('view')"
+                :to="`/loans/${this.loan.id}`">
+                Consulter
+              </b-button>
 
-            <b-button size="sm" variant="outline-danger" v-if="hasButton('deny')"
-              @click="denyLoan">
-              Refuser
-            </b-button>
+              <b-button size="sm" variant="outline-danger" v-if="hasButton('deny')"
+                @click="denyLoan">
+                Refuser
+              </b-button>
 
-            <b-button size="sm" variant="outline-danger" v-if="hasButton('cancel')"
-              @click="cancelLoan">
-              Annuler
-            </b-button>
-          </div>
-        </b-col>
-      </b-row>
-    </router-link>
-  </b-card>
+              <b-button size="sm" variant="outline-danger" v-if="hasButton('cancel')"
+                @click="cancelLoan">
+                Annuler
+              </b-button>
+            </div>
+          </b-col>
+        </b-row>
+      </router-link>
+    </b-card>
+    <p class="loan-info-box__instructions muted" v-if="userIsOwner">
+      Cette personne devrait entrer en contact avec vous sous peu.
+    </p>
+    <p class="loan-info-box__instructions muted" v-else>
+      Par convention, il est de votre responsabilité de contacter cette personne.
+    </p>
+  </div>
 </template>
 
 <script>
@@ -67,10 +75,14 @@ export default {
       type: Object,
       required: true,
     },
+    user: {
+      type: Object,
+      required: true,
+    },
   },
   computed: {
     loanImage() {
-      const { avatar } = this.loan.borrower.user;
+      const { avatar } = this.otherUser;
       if (!avatar) {
         return '';
       }
@@ -81,10 +93,20 @@ export default {
       return this.$dayjs(this.loan.departure_at).format('YYYY-MM-DD')
         !== this.$dayjs(this.returnAt).format('YYYY-MM-DD');
     },
+    otherUser() {
+      if (this.user.id === this.loan.borrower.user.id) {
+        return this.loan.loanable.owner.user;
+      }
+
+      return this.loan.borrower.user;
+    },
     returnAt() {
       return this.$dayjs(this.loan.departure_at)
         .add(this.loan.duration_in_minutes, 'minute')
         .format('YYYY-MM-DD HH:mm:ss');
+    },
+    userIsOwner() {
+      return this.user.id === this.loan.loanable.owner.user.id;
     },
   },
   methods: {
@@ -115,6 +137,11 @@ export default {
 .loan-info-box {
   a:hover, a:active, a:focus {
     text-decoration: none;
+  }
+
+  &__instructions {
+    margin-top: 10px;
+    margin-left: 20px;
   }
 
   &__image.col {

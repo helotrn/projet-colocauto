@@ -30,10 +30,8 @@
 
         <section class="page__section" v-if="hasWaitingLoans">
           <h2>Nouvelles demandes d'emprunt</h2>
-          <p class="muted">Cette personne devrait entrer en contact avec vous sous peu.</p>
-
           <div class="dashboard__waiting-loans" v-for="loan in waitingLoans" :key="loan.id">
-            <loan-info-box :loan="loan" />
+            <loan-info-box :loan="loan" :user="user" />
           </div>
         </section>
 

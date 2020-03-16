@@ -15,6 +15,28 @@ export default {
     }
   },
   computed: {
+    allLoans() {
+      return [
+        ...this.user.loanables.reduce((acc, loanable) => {
+          acc.push(
+            ...loanable.loans.map((l) => {
+              return {
+                ...l,
+                loanable: {
+                  ...loanable,
+                  owner: {
+                    ...this.user.owner,
+                    user: this.user,
+                  },
+                },
+              };
+            })
+          );
+          return acc;
+        }, []),
+        ...this.user.loans,
+      ];
+    },
     auth() {
       const { token, refreshToken } = this.$store.state;
       return {
@@ -92,19 +114,7 @@ export default {
       }, []);
     },
     waitingLoans() {
-      return this.user.loanables.reduce((acc, loanable) => {
-        acc.push(
-          ...loanable.loans
-            .filter(l => l.actions.length === 1)
-            .map(l => {
-              return {
-                ...l,
-                loanable,
-              }
-            })
-        );
-        return acc;
-      }, []);
+      return this.allLoans.filter(l => l.actions.length === 1);
     },
   },
   methods: {

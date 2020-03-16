@@ -24,7 +24,8 @@ export default new RestModule('users', {
     } catch (e) {
       commit('ajax', null);
 
-      commit('error', e.response.data);
+      const { request, response } = e;
+      commit('error', { request, response });
 
       throw e;
     }

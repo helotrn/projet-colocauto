@@ -5,6 +5,38 @@
     > div {
       padding: 1.25rem;
     }
+
+    blockquote {
+      padding: 1rem;
+      position: relative;
+      border: 1px solid $grey;
+      border-radius: 15px;
+      padding-left: 100px;
+      @extend .shadow;
+
+      &::before {
+        content: "«";
+        font-size: 80px;
+        color: $grey;
+        display: block;
+        position: absolute;
+        left: 0;
+        top: 5px;
+        line-height: 10px;
+      }
+
+      > .user-avatar {
+        position: absolute;
+        height: 45px;
+        width: 45px;
+        border-radius: 100%;
+        top: 3px;
+        left: 40px;
+
+        background-size: cover;
+        background-repeat: no-repeat;
+      }
+    }
   }
 
   &__header {

@@ -1,5 +1,5 @@
 <template>
-  <layout-page name="loan" v-if="routeDataLoaded && item">
+  <layout-page name="loan" v-if="routeDataLoaded && item && loadedFullLoanable">
     <vue-headful :title="fullTitle" />
 
     <b-row>
@@ -83,7 +83,8 @@
 
           <div class="loan__actions__action" v-for="action in item.actions" :key="action.id">
             <loan-actions-intention v-if="action.type === 'intention'"
-              :action="action" :loan="item" :open="isCurrentStep('intention')" />
+              :action="action" :loan="item" :open="isCurrentStep('intention')"
+              @completed="loadItem" :user-role="userRole" />
             <span v-else>
               {{ action.type }}
             </span>
@@ -102,6 +103,7 @@ import Waiting from '@/assets/svg/waiting.svg';
 import LoanForm from '@/components/Loan/Form.vue';
 import LoanActionsIntention from '@/components/Loan/Actions/Intention.vue';
 
+import Authenticated from '@/mixins/Authenticated';
 import DataRouteGuards from '@/mixins/DataRouteGuards';
 import FormMixin from '@/mixins/FormMixin';
 
@@ -109,12 +111,17 @@ import { capitalize } from '@/helpers/filters';
 
 export default {
   name: 'Loan',
-  mixins: [DataRouteGuards, FormMixin],
+  mixins: [Authenticated, DataRouteGuards, FormMixin],
   components: {
     LoanForm,
     LoanActionsIntention,
     'svg-check': Check,
     'svg-waiting': Waiting,
+  },
+  data() {
+    return {
+      loadedFullLoanable: false,
+    };
   },
   computed: {
     loanForm() {
@@ -127,17 +134,17 @@ export default {
             + `${this.item.loanable.year_of_circulation}`;
         case 'bike':
           return `${this.item.loanable.model}`;
-          break;
         case 'trailer':
           return '';
-          break;
         default:
-          break;
+          return '';
       }
-
-      return '';
     },
     loanableOwnerText() {
+      if (this.userIsOwner) {
+        return '';
+      }
+
       const ownerName = this.item.loanable.owner.user.name;
       const particle = ['a', 'e', 'i', 'o', 'u', 'é', 'è']
         .indexOf(ownerName[0]
@@ -145,23 +152,34 @@ export default {
       return `${particle}${ownerName}`;
     },
     loanablePrettyName() {
+      let particle;
       let type;
+
       switch (this.item.loanable.type) {
         case 'car':
-          type = 'de la voiture';
+          particle = 'de la ';
+          type = 'voiture';
           break;
         case 'bike':
-          type = 'du vélo';
+          particle = 'du ';
+          type = 'vélo';
           break;
         case 'trailer':
-          type = 'de la remorque';
+          particle = 'de la ';
+          type = 'remorque';
           break;
         default:
-          type = "l'objet";
+          particle = "de l'";
+          type = 'objet';
           break;
       }
 
-      return `${type} ${this.loanableOwnerText}`;
+      if (this.user.id === this.item.loanable.owner.user.id) {
+        particle = 'de votre ';
+      }
+
+      const description = `${particle}${type}`;
+      return `${description} ${this.loanableOwnerText}`;
     },
     fullTitle() {
       const parts = [
@@ -195,6 +213,12 @@ export default {
         .add(this.item.duration_in_minutes, 'minute')
         .format('YYYY-MM-DD HH:mm:ss');
     },
+    userIsOwner() {
+      return this.user.id === this.item.loanable.owner.user.id;
+    },
+    userRole() {
+      return this.userIsOwner ? 'owner' : 'borrower';
+    },
   },
   methods: {
     hasReachedStep(step) {
@@ -223,12 +247,36 @@ export default {
           return false;
       }
     },
+    async loadFullLoanable() {
+      const { id, type } = this.item.loanable;
+      await this.$store.dispatch(`${type}s/retrieveOne`, {
+        params: {
+          fields: '*,owner.id,owner.user.id,owner.user.avatar,owner.user.name',
+          '!fields': 'events',
+        },
+        id,
+      });
+      const loanable = this.$store.state[`${type}s`].item;
+
+      this.$store.commit(`${type}s/item`, null);
+
+      this.$store.commit(`${this.slug}/mergeItem`, { loanable });
+
+      this.loadedFullLoanable = true;
+    },
     skipLoadItem() {
-      return !this.item.id && this.item.loanable;
+      return this.id === 'new';
     },
     async submitLoan() {
       await this.submit();
       await this.$store.dispatch('loadUser');
+    },
+  },
+  watch: {
+    loading(val) {
+      if (!val && !this.loadedFullLoanable) {
+        this.loadFullLoanable();
+      }
     },
   },
 };

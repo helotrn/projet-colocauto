@@ -16,22 +16,3 @@ html {
 .no-break {
   white-space: nowrap;
 }
-
-blockquote {
-  padding: 1rem;
-  position: relative;
-  border: 1px solid $grey;
-  border-radius: 15px;
-  @extend .shadow;
-
-  &::before {
-    content: "«";
-    font-size: 80px;
-    color: $grey;
-    display: block;
-    position: absolute;
-    left: 0;
-    top: 5px;
-    line-height: 10px;
-  }
-}

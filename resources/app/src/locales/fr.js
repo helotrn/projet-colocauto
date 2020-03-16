@@ -62,7 +62,7 @@ export default {
     dashboard: 'tableau de bord',
     find_vehicle: 'trouve un véhicule',
     loan: 'emprunt',
-    loanable: 'véhicule | véhicules',
+    loanable: 'véhicule',
     loanables: 'véhicules',
     login: 'se connecter',
     profile: 'Profil',
