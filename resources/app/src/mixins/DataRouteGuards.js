@@ -73,10 +73,10 @@ export default {
       return Object.keys(data).reduce(
         (acc, collection) => {
           if (Object.keys(data[collection]).indexOf('options') !== -1) {
-            return acc && state[collection].form;
+            return acc && !!state[collection].form;
           }
 
-          return acc && state[collection].loaded;
+          return acc && !!state[collection].loaded;
         },
         true,
       );

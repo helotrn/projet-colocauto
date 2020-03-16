@@ -123,6 +123,13 @@ export default {
     'svg-check': Check,
     'svg-waiting': Waiting,
   },
+  beforeRouteEnter(to, from, next) {
+    next((vm) => {
+      if (vm.id === 'new' && !vm.item.loanable) {
+        vm.$router.replace('/community/list');
+      }
+    });
+  },
   data() {
     return {
       loadedFullLoanable: false,
@@ -273,18 +280,19 @@ export default {
       this.loadedFullLoanable = true;
     },
     skipLoadItem() {
-      return this.id === 'new';
+      if (this.id === 'new') {
+        if (!this.loadedFullLoanable) {
+          this.loadFullLoanable();
+        }
+
+        return true;
+      }
+
+      return false;
     },
     async submitLoan() {
       await this.submit();
       await this.$store.dispatch('loadUser');
-    },
-  },
-  watch: {
-    loading(val) {
-      if (!val && !this.loadedFullLoanable) {
-        this.loadFullLoanable();
-      }
     },
   },
 };
