@@ -1843,7 +1843,7 @@
             "source": {
                 "type": "git",
                 "url": "https://gitlab.com/molotovcoop/laravel-api-molotov.git",
-                "reference": "d8c7505e34a0d0f22f3fac8974f79ded2d5d1904"
+                "reference": "a3aec4a0be937d391f6145233d4129932d156bf2"
             },
             "require": {
                 "illuminate/auth": "^6.0",
@@ -1884,7 +1884,7 @@
                 }
             ],
             "description": "A set of helper classes for building Laravel APIs, built by Molotov cooperative.",
-            "time": "2020-03-11 19:45:08"
+            "time": "2020-03-16 22:30:38"
         },
         {
             "name": "monolog/monolog",
@@ -2195,6 +2195,7 @@
                 }
             ],
             "description": "Postgis extensions for laravel. Aims to make it easy to work with geometries from laravel models",
+            "abandoned": "mstaack/laravel-postgis",
             "time": "2019-09-11 09:52:16"
         },
         {
