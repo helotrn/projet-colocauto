@@ -41,17 +41,17 @@ class PrePayment extends Action
         return [
             '*' => function ($query = null) {
                 if (!$query) {
-                    return 'payments.*';
+                    return 'pre_payments.*';
                 }
 
-                return $query->selectRaw('payments.*');
+                return $query->selectRaw('pre_payments.*');
             },
             'type' => function ($query = null) {
                 if (!$query) {
-                    return "'prepayment' AS type";
+                    return "'pre_payment' AS type";
                 }
 
-                return $query->selectRaw("'payment' AS type");
+                return $query->selectRaw("'pre_payment' AS type");
             }
         ];
     }
