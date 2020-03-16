@@ -8,7 +8,7 @@ class AddEstimatedPriceToLoans extends Migration
 {
     public function up() {
         Schema::table('loans', function (Blueprint $table) {
-              $table->decimal('estimated_price', 8, 2);
+            $table->decimal('estimated_price', 8, 2);
         });
     }
 

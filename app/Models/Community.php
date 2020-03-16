@@ -31,32 +31,6 @@ class Community extends BaseModel
         'type' => ['neighborhood', 'borough', 'private'],
     ];
 
-    protected $fillable = [
-        'area',
-        'description',
-        'name',
-        'type',
-    ];
-
-    protected $postgisFields = [
-        'center',
-        'area',
-    ];
-
-    protected $postgisTypes = [
-        'center' => [
-            'geomtype' => 'point',
-        ],
-        'area' => [
-            'geomtype' => 'geography',
-        ],
-    ];
-
-    protected $casts = [
-        'center' => PointCast::class,
-        'area' => PolygonCast::class,
-    ];
-
     public static $transformer = CommunityTransformer::class;
 
     public static function getRules($action = '', $auth = null) {
@@ -91,6 +65,32 @@ class Community extends BaseModel
             }
         ];
     }
+
+    protected $fillable = [
+        'area',
+        'description',
+        'name',
+        'type',
+    ];
+
+    protected $postgisFields = [
+        'center',
+        'area',
+    ];
+
+    protected $postgisTypes = [
+        'center' => [
+            'geomtype' => 'point',
+        ],
+        'area' => [
+            'geomtype' => 'geography',
+        ],
+    ];
+
+    protected $casts = [
+        'center' => PointCast::class,
+        'area' => PolygonCast::class,
+    ];
 
     public $collections = ['users', 'pricings', 'loanables'];
 

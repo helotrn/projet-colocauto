@@ -57,6 +57,7 @@ class Loan extends BaseModel
             }
         });
     }
+    public $items = ['borrower', 'intention', 'loanable'];
 
     public $collections = ['actions'];
 
@@ -64,38 +65,40 @@ class Loan extends BaseModel
         return $this->hasMany(Action::class)->orderBy('created_at', 'asc');
     }
 
-    public function payments() {
-        return $this->hasMany(Payment::class);
-    }
-
-    public function takeovers() {
-        return $this->hasMany(Takeover::class);
-    }
-
-    public function handovers() {
-        return $this->hasMany(Handover::class);
-    }
-
-    public function incidents() {
-        return $this->hasMany(Incident::class);
-    }
-
-    public function intentions() {
-        return $this->hasMany(Intention::class);
+    public function borrower() {
+        return $this->belongsTo(Borrower::class);
     }
 
     public function extensions() {
         return $this->hasMany(Extension::class);
     }
 
-    public $items = ['borrower', 'loanable'];
+    public function handover() {
+        return $this->hasOne(Handover::class);
+    }
 
-    public function borrower() {
-        return $this->belongsTo(Borrower::class);
+    public function incidents() {
+        return $this->hasMany(Incident::class);
+    }
+
+    public function intention() {
+        return $this->hasOne(Intention::class);
     }
 
     public function loanable() {
         return $this->belongsTo(Loanable::class);
+    }
+
+    public function payment() {
+        return $this->hasOne(Payment::class);
+    }
+
+    public function prePayment() {
+        return $this->hasOne(PrePayment::class);
+    }
+
+    public function takeover() {
+        return $this->hasOne(Takeover::class);
     }
 
     public function setCanceled() {
