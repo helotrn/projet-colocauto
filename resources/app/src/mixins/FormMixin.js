@@ -22,6 +22,9 @@ export default {
     context() {
       return this.$store.state[this.slug];
     },
+    error() {
+      return this.context.error;
+    },
     form() {
       return this.context.form || this.$route.meta.form;
     },
@@ -125,6 +128,37 @@ export default {
     },
   },
   watch: {
+    error(newError) {
+      let variant;
+      let title;
+      let content;
+
+      switch (newError.response.status) {
+        case 400:
+          content = 'Erreur dans la requête.';
+          title = 'Mauvaise requête';
+          variant = 'warning';
+          break;
+        case 403:
+          content = "Vous n'avez pas les permissions nécessaires pour effectuer cette action.";
+          title = 'Permissions insuffisantes';
+          variant = 'warning';
+          break;
+        case 500:
+        default:
+          content = "Une erreur sytème s'est produite.";
+          title = 'Erreur fatale';
+          variant = 'danger';
+          break;
+      }
+
+      this.$store.commit('addNotification', {
+        content,
+        title,
+        variant,
+        type: this.slug,
+      });
+    },
     item: {
       deep: true,
       handler(newValue, oldValue) {

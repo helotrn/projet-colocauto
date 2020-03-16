@@ -12,6 +12,9 @@ export default {
     data() {
       return this.context.data;
     },
+    error() {
+      return this.context.error;
+    },
     fieldsList() {
       return this.fields
         ? this.fields.map(f => f.key)
