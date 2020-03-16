@@ -251,7 +251,6 @@
 <script>
 import HomeFaqItem from '@/components/Home/FaqItem.vue';
 
-import Authenticated from '@/mixins/Authenticated';
 import DataRouteGuards from '@/mixins/DataRouteGuards';
 import Notification from '@/mixins/Notification';
 
@@ -272,7 +271,7 @@ import Wave from '@/assets/svg/home-wave.svg';
 
 export default {
   name: 'Home',
-  mixins: [Authenticated, DataRouteGuards, Notification],
+  mixins: [DataRouteGuards, Notification],
   components: {
     HomeFaqItem,
     'svg-borrow': Borrow,
