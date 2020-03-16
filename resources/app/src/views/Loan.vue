@@ -42,13 +42,13 @@
             <span>Confirmation de l'emprunt</span>
           </li>
           <li :class="{
-            'current-step': isCurrentStep('account'),
-            'reached-step': hasReachedStep('account'),
+            'current-step': isCurrentStep('pre_payment'),
+            'reached-step': hasReachedStep('pre_payment'),
           }">
-            <svg-check v-if="hasReachedStep('account')" />
+            <svg-check v-if="hasReachedStep('pre_payment')" />
             <svg-waiting v-else />
 
-            <span>Paiement</span>
+            <span>Prépaiement</span>
           </li>
           <li>
             <svg-check v-if="hasReachedStep('takeover')" />
@@ -84,7 +84,10 @@
           <div class="loan__actions__action" v-for="action in item.actions" :key="action.id">
             <loan-actions-intention v-if="action.type === 'intention'"
               :action="action" :loan="item" :open="isCurrentStep('intention')"
-              @completed="loadItem" :user-role="userRole" />
+              @completed="loadItem" :user="user" />
+            <loan-actions-pre-payment v-else-if="action.type === 'pre_payment'"
+              :action="action" :loan="item" :open="isCurrentStep('pre_payment')"
+              @completed="loadItem" :user="user" />
             <span v-else>
               {{ action.type }}
             </span>
@@ -102,6 +105,7 @@ import Waiting from '@/assets/svg/waiting.svg';
 
 import LoanForm from '@/components/Loan/Form.vue';
 import LoanActionsIntention from '@/components/Loan/Actions/Intention.vue';
+import LoanActionsPrePayment from '@/components/Loan/Actions/PrePayment.vue';
 
 import Authenticated from '@/mixins/Authenticated';
 import DataRouteGuards from '@/mixins/DataRouteGuards';
@@ -115,6 +119,7 @@ export default {
   components: {
     LoanForm,
     LoanActionsIntention,
+    LoanActionsPrePayment,
     'svg-check': Check,
     'svg-waiting': Waiting,
   },
@@ -216,20 +221,20 @@ export default {
     userIsOwner() {
       return this.user.id === this.item.loanable.owner.user.id;
     },
-    userRole() {
-      return this.userIsOwner ? 'owner' : 'borrower';
-    },
   },
   methods: {
     hasReachedStep(step) {
       const { id, actions } = this.item;
       const intention = actions.find(a => a.type === 'intention');
+      const prePayment = actions.find(a => a.type === 'pre_payment');
 
       switch (step) {
         case 'creation':
           return !!id;
         case 'intention':
-          return intention && intention.accepted_at;
+          return intention && intention.executed_at;
+        case 'pre_payment':
+          return prePayment && prePayment.executed_at;
         default:
           return false;
       }
@@ -237,12 +242,15 @@ export default {
     isCurrentStep(step) {
       const { id, actions } = this.item;
       const intention = actions.find(a => a.type === 'intention');
+      const prePayment = actions.find(a => a.type === 'pre_payment');
 
       switch (step) {
         case 'creation':
           return !id;
         case 'intention':
-          return intention && !intention.accepted_at;
+          return intention && !intention.executed_at;
+        case 'pre_payment':
+          return prePayment && !prePayment.executed_at;
         default:
           return false;
       }
