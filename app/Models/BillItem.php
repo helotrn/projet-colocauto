@@ -6,7 +6,7 @@ use App\Models\Bill;
 use App\Models\Payment;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class BillableItem extends BaseModel
+class BillItem extends BaseModel
 {
     use SoftDeletes;
 

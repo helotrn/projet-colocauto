@@ -1,10 +1,9 @@
 <?php
 
-use App\Models\BillableItem;
-use Illuminate\Support\Str;
+use App\Models\BillItem;
 use Faker\Generator as Faker;
 
-$factory->define(BillableItem::class, function (Faker $faker) {
+$factory->define(BillItem::class, function (Faker $faker) {
     return [
         'label' => $faker->word,
         'amount' => $faker->numberBetween($min = 0, $max = 300000),

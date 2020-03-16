@@ -2,8 +2,6 @@
 
 namespace App\Models;
 
-use App\Models\BillableItem;
-use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -26,9 +24,9 @@ class Bill extends BaseModel
     }
 
 
-    public $collections = ['billableItems'];
+    public $collections = ['items'];
 
-    public function billableItems() {
-        return $this->hasMany(BillableItem::class);
+    public function items() {
+        return $this->hasMany(BilledItem::class);
     }
 }

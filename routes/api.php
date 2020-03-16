@@ -23,7 +23,6 @@ Route::prefix('v1')->group(function () {
             'action',
             'bike',
             'bill',
-            'billable-item',
             'borrower',
             'car',
             'community',

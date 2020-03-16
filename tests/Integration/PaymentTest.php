@@ -3,7 +3,7 @@
 namespace Tests\Integration;
 
 use App\Models\Bill;
-use App\Models\BillableItem;
+use App\Models\BillItem;
 use App\Models\Borrower;
 use App\Models\Loan;
 use App\Models\Payment;
@@ -16,25 +16,25 @@ class PaymentTest extends TestCase
     private static $getPaymentResponseStructure = [
         'id',
         'loan_id',
-        'billable_item_id',
+        'bill_item_id',
     ];
 
     public function testCreatePayments() {
         $borrower = factory(Borrower::class)->create(['user_id' => $this->user->id]);
         $loan = factory(Loan::class)->create(['borrower_id' => $borrower->id]);
         $bill = factory(Bill::class)->create(['user_id' => $this->user->id]);
-        $billableItem = factory(BillableItem::class)->create(['bill_id' => $bill->id]);
+        $billItem = factory(BillItem::class)->create(['bill_id' => $bill->id]);
 
         $data = [
             'loan_id' => $loan->id,
-            'billable_item_id' => $billableItem->id,
+            'bill_item_id' => $billItem->id,
         ];
 
         $response = $this->json('POST', "/api/v1/payments", $data);
 
         $response->assertStatus(201)
             ->assertJson(['loan_id' => $loan->id])
-            ->assertJson(['billable_item_id' => $billableItem->id])
+            ->assertJson(['bill_item_id' => $billItem->id])
             ->assertJsonStructure(static::$getPaymentResponseStructure);
     }
 
@@ -43,8 +43,8 @@ class PaymentTest extends TestCase
         $loan = factory(Loan::class)->create(['borrower_id' => $borrower->id]);
         $paymentMethod = factory(PaymentMethod::class)->create(['user_id' => $this->user->id]);
         $bill = factory(Bill::class)->create(['user_id' => $this->user->id, 'payment_method_id' => $paymentMethod->id]);
-        $billableItem = factory(BillableItem::class)->create(['bill_id' => $bill->id]);
-        $payment = factory(Payment::class)->create(['loan_id' => $loan->id, 'billable_item_id' => $billableItem->id]);
+        $billItem = factory(BillItem::class)->create(['bill_id' => $bill->id]);
+        $payment = factory(Payment::class)->create(['loan_id' => $loan->id, 'bill_item_id' => $billItem->id]);
 
         $response = $this->json('GET', "/api/v1/payments/$payment->id?loan.id=$loan->id");
 

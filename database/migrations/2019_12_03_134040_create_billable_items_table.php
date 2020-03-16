@@ -7,7 +7,7 @@ use Illuminate\Database\Migrations\Migration;
 class CreateBillableItemsTable extends Migration
 {
     public function up() {
-        Schema::create('billable_items', function (Blueprint $table) {
+        Schema::create('bill_items', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('label');
             $table->decimal('amount', 8, 2);
@@ -24,6 +24,6 @@ class CreateBillableItemsTable extends Migration
     }
 
     public function down() {
-        Schema::dropIfExists('billable_items');
+        Schema::dropIfExists('bill_items');
     }
 }
