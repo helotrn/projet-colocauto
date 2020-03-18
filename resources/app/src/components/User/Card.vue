@@ -1,11 +1,8 @@
 <template>
   <b-card no-body class="user-card">
-    <div class="user-card__tags">
-      <b-badge pill variant="warning" v-if="user.owner">P</b-badge>
-    </div>
-    <b-row no-gutters>
-      <b-col class="user-card__avatar" :style="{ backgroundImage: userAvatarStyle }" />
-      <b-col class="user-card__details">
+    <b-row no-gutters class="user-card__content">
+      <b-col class="user-card__content__avatar" :style="{ backgroundImage: userAvatarStyle }" />
+      <b-col class="user-card__content__details">
         <div>
           <i>Membre Locomotion</i>
 
@@ -15,6 +12,9 @@
         </div>
       </b-col>
     </b-row>
+    <div class="user-card__tags">
+      <b-badge pill variant="warning" v-if="user.owner">P</b-badge>
+    </div>
   </b-card>
 </template>
 
@@ -55,28 +55,31 @@ export default {
     height: 100%;
   }
 
-  &__avatar.col {
-    flex: 0 1 140px;
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center center;
-  }
-
-  &__details {
-    > div {
-      padding: 30px;
+  &__content {
+    &__avatar.col {
+      border-radius: 15px 0 0 15px;
+      flex: 0 1 140px;
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center center;
     }
 
-    i {
-      text-transform: uppercase;
-      margin-bottom: 20px;
-      font-size: 12px;
-      font-weight: 600;
-    }
+    &__details {
+      > div {
+        padding: 30px;
+      }
 
-    h3 {
-      font-size: 22px;
-      margin-bottom: 20px;
+      i {
+        text-transform: uppercase;
+        margin-bottom: 20px;
+        font-size: 12px;
+        font-weight: 600;
+      }
+
+      h3 {
+        font-size: 22px;
+        margin-bottom: 20px;
+      }
     }
   }
 }

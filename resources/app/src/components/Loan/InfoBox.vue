@@ -6,16 +6,14 @@
           <b-col class="loan-info-box__image" v-if="mode === 'waiting'">
             <div :style="{ backgroundImage: loanImage }" />
           </b-col>
-
           <b-col class="loan-info-box__name" v-if="mode === 'waiting'">
             <span>{{ otherUser.full_name }}</span>
           </b-col>
 
-          <b-col class="loan-info-box__image" v-else-if="mode === 'upcoming'">
+          <b-col class="loan-info-box__image" v-if="mode === 'upcoming'">
             <div :style="{ backgroundImage: loanableImage }" />
           </b-col>
-
-          <b-col class="loan-info-box__name" v-else-if="mode === 'upcoming'">
+          <b-col class="loan-info-box__name" v-if="mode === 'upcoming'">
             <span>{{ loan.loanable.name }}</span>
           </b-col>
 
