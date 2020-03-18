@@ -5,10 +5,10 @@
     <layout-header class="page__header" :title="pageTitle" />
 
     <div class="page__background">
-      <b-container :fluid="fluid" tag="main" class="page__content" v-if="!wide">
+      <b-container :fluid="fluid" tag="main" :class="mainClass" v-if="!wide">
         <slot />
       </b-container>
-      <main class="page__content" v-else>
+      <main :class="mainClass" v-else>
         <slot />
       </main>
     </div>
@@ -23,6 +23,21 @@ import { capitalize } from '@/helpers/filters';
 export default {
   name: 'LayoutPage',
   props: {
+    bgColor: {
+      type: String,
+      required: false,
+      default: '',
+    },
+    bgImage: {
+      type: Boolean,
+      default: false,
+      required: false,
+    },
+    centered: {
+      type: Boolean,
+      default: false,
+      required: false,
+    },
     fluid: {
       type: Boolean,
       required: false,
@@ -50,6 +65,14 @@ export default {
       }
 
       return 'LocoMotion';
+    },
+    mainClass() {
+      return [
+        'page__content',
+        this.bgColor,
+        this.bgImage ? 'with-tiled-bg' : '',
+        this.centered ? 'centered' : '',
+      ].filter(c => !!c).join(' ');
     },
     treeTitle() {
       const firstMatchedParts = this.$route.matched.slice(0, this.$route.matched.length - 1);
@@ -83,6 +106,22 @@ export default {
 
 <style lang="scss">
 .page {
+  &__content {
+    &.with-tiled-bg {
+      background-image: url("/bg-tile.png");
+    }
+
+    &.green {
+      background-color: $locomotion-green;
+    }
+
+    &.centered {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+    }
+  }
+
   &__background {
     background-color: $main-bg;
   }

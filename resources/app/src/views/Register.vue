@@ -1,5 +1,5 @@
 <template>
-  <layout-page name="register" wide>
+  <layout-page name="register" wide bg-color="green" bg-image centered>
     <router-view />
   </layout-page>
 </template>
@@ -24,12 +24,4 @@ export default {
 </script>
 
 <style lang="scss">
-.page.register {
-  main {
-    background-color: $locomotion-green;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-  }
-}
 </style>

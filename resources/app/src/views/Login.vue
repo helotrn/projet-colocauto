@@ -1,5 +1,5 @@
 <template>
-  <layout-page name="login" wide>
+  <layout-page name="login" wide bg-color="green" bg-image centered>
     <login-box />
   </layout-page>
 </template>
@@ -22,13 +22,4 @@ export default {
 </script>
 
 <style lang="scss">
-.page.login {
-  main {
-    background-color: $locomotion-green;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    padding: $grid-gutter-width / 2;
-  }
-}
 </style>

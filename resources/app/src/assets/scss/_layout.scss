@@ -4,7 +4,7 @@ body {
 
 .page {
   &__content {
-    min-height: calc(100vh - #{$layout-navbar-height + $molotov-footer-height});
+    min-height: calc(100vh - #{$layout-navbar-height + $molotov-footer-height} - 1px);
 
     h1, .page__section {
       margin-bottom: 60px;
