@@ -17,7 +17,17 @@ class BikesTableSeeder extends Seeder
                 'model' => 'Minelli Ferrari De Vinci',
                 'bike_type' => 'regular',
                 'size' => 'big',
-                'availability_ics' => '',
+                'availability_json' => <<<JSON
+[
+  {
+    "available":true,
+    "type":"weekdays",
+    "scope":["MO","TU","TH","WE","FR"],
+    "period":"00:00-23:59"
+  }
+]
+JSON
+                ,
                 'owner_id' => 1,
             ],
         ];

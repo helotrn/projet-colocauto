@@ -10,7 +10,7 @@ class BorrowersTableSeeder extends Seeder
         $borrowers = [
             [
                 'id' => 1,
-                'user_id' => 2,
+                'user_id' => 3,
                 'submitted_at' => new DateTime,
                 'approved_at' => new DateTime,
             ],
