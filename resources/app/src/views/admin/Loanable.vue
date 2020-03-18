@@ -11,52 +11,54 @@
 
     <b-row>
       <b-col>
-        <b-form class="form" @submit.prevent="submit">
-          <div class="form__section">
-            <h2>Informations</h2>
+        <validation-observer ref="observer" v-slot="{ passes }">
+          <b-form class="form" @submit.prevent="passes(submit)">
+            <div class="form__section">
+              <h2>Informations</h2>
 
-            <forms-builder :definition="form.general" :item="item" entity="loanables" />
-          </div>
+              <forms-builder :definition="form.general" :item="item" entity="loanables" />
+            </div>
 
-          <div class="form__section" v-if="item.type === 'bike'">
-            <h2>Détails du vélo</h2>
+            <div class="form__section" v-if="item.type === 'bike'">
+              <h2>Détails du vélo</h2>
 
-            <forms-builder :definition="form.bike" :item="item" entity="bikes" />
-          </div>
-          <div class="form__section" v-else-if="item.type === 'car'">
-            <h2>Détails de la voiture</h2>
+              <forms-builder :definition="form.bike" :item="item" entity="bikes" />
+            </div>
+            <div class="form__section" v-else-if="item.type === 'car'">
+              <h2>Détails de la voiture</h2>
 
-            <forms-builder :definition="form.car" :item="item" entity="cars" />
-          </div>
-          <div class="form__section" v-else-if="item.type === 'trailer'">
-            <h2>Détails de la remorque</h2>
+              <forms-builder :definition="form.car" :item="item" entity="cars" />
+            </div>
+            <div class="form__section" v-else-if="item.type === 'trailer'">
+              <h2>Détails de la remorque</h2>
 
-            <forms-builder :definition="form.trailer" :item="item" entity="trailers" />
-          </div>
-          <div class="form__section text-center" v-else>
-            <span>
-              Sélectionnez un type de véhicule pour poursuivre la configuration.
-            </span>
-          </div>
+              <forms-builder :definition="form.trailer" :item="item" entity="trailers" />
+            </div>
+            <div class="form__section text-center" v-else>
+              <span>
+                Sélectionnez un type de véhicule pour poursuivre la configuration.
+              </span>
+            </div>
 
-          <div class="form__section" v-if="item.type && item.id">
-            <loanable-availability-calendar
-              :changed="changed"
-              :loanable="item"
-              :loading="loading" />
-          </div>
+            <div class="form__section" v-if="item.type && item.id">
+              <loanable-availability-calendar
+                :changed="changed"
+                :loanable="item"
+                :loading="loading" />
+            </div>
 
-          <div class="form__buttons">
-            <b-button-group>
-              <b-button variant="success" type="submit" :disabled="!changed">
-                Sauvegarder
-              </b-button>
-              <b-button type="reset" :disabled="!changed" @click="reset">
-                Réinitialiser
-              </b-button>
-            </b-button-group>
-          </div>
-        </b-form>
+            <div class="form__buttons">
+              <b-button-group>
+                <b-button variant="success" type="submit" :disabled="!changed">
+                  Sauvegarder
+                </b-button>
+                <b-button type="reset" :disabled="!changed" @click="reset">
+                  Réinitialiser
+                </b-button>
+              </b-button-group>
+            </div>
+          </b-form>
+        </validation-observer>
       </b-col>
     </b-row>
   </b-container>

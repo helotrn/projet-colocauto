@@ -1,7 +1,7 @@
 <template>
   <div :class="`forms-map-input ${stateClass}`">
     <gmap-map class="forms-map-input__map" ref="map"
-      :center="markerPosition || center" :zoom="14" :options="mapOptions"
+      :center="markerPositionOrCenter" :zoom="14" :options="mapOptions"
       map-type-id="terrain" @click="savePosition">
       <gmap-marker v-if="markerPosition"
         :clickable="false"
@@ -63,6 +63,9 @@ export default {
       }
 
       return null;
+    },
+    markerPositionOrCenter() {
+      return this.markerPosition || this.center || { lat: 0, lng: 0 };
     },
     stateClass() {
       if (this.state === null) {

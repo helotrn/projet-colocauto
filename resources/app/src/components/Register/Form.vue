@@ -18,17 +18,17 @@
     <validation-observer ref="observer" v-slot="{ passes }">
       <b-form :novalidate="true" class="register-form__form"
         @submit.stop.prevent="passes(register)">
-        <forms-validated-input name="email" :label="$t('email')"
+        <forms-validated-input mode="passive" name="email" :label="$t('email')"
           :rules="{ required: true, email: true }" type="email"
           :placeholder="$t('email')"
           v-model="email" />
 
-        <forms-validated-input name="password" :label="$t('password')"
+        <forms-validated-input mode="passive" name="password" :label="$t('password')"
           :rules="{ required: true, min: 8 }" type="password"
           :placeholder="$t('password')"
           v-model="password" />
 
-        <forms-validated-input name="password_repeat" :label="$t('password-repeat')"
+        <forms-validated-input mode="passive" name="password_repeat" :label="$t('password-repeat')"
           :rules="{ required: true, is: password }" type="password"
           :placeholder="$t('password-repeat')"
           v-model="passwordRepeat" />

@@ -1,5 +1,6 @@
 <template>
   <validation-provider class="forms-validated-input"
+    mode="lazy"
     :name="name"
     :rules="rulesOrNothing"
     v-slot="validationContext">

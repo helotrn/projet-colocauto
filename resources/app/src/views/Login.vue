@@ -12,10 +12,12 @@ import LoginBox from '@/components/Login/Box.vue';
 export default {
   name: 'Login',
   mixins: [Authenticated],
-  mounted() {
-    if (this.isLoggedIn) {
-      this.skipToApp();
-    }
+  beforeRouteEnter(to, from, next) {
+    next((vm) => {
+      if (vm.isLoggedIn) {
+        vm.skipToApp();
+      }
+    });
   },
   components: { LoginBox },
 };

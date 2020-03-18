@@ -3,7 +3,7 @@
     <forms-validated-input v-for="(def, key) in definition" :key="key"
       :label="$t(`${entity}.fields.${key}`) | capitalize"
       :name="key" :rules="def.rules" :type="def.type"
-      :options="def.options" :disabled="def.disabled"
+      :options="def.options" :disabled="disabled || def.disabled"
       :placeholder="placeholderOrLabel(key) | capitalize"
       v-model="item[key]" />
   </div>
@@ -19,6 +19,11 @@ export default {
     definition: {
       type: Object,
       required: true,
+    },
+    disabled: {
+      type: Boolean,
+      required: false,
+      default: false,
     },
     entity: {
       type: String,

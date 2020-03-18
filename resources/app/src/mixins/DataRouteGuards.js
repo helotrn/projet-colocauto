@@ -53,12 +53,16 @@ export default {
             }
           });
       });
+    } else {
+      next();
     }
-
-    return true;
   },
   computed: {
     routeDataLoaded() {
+      if (!this.$route.meta || !this.$route.meta.data) {
+        return true;
+      }
+
       const {
         $store: {
           state,
