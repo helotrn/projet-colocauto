@@ -119,7 +119,7 @@ class UserController extends RestController
         return "";
     }
 
-    public function createUserCommunity(Request $request, $userId, $communityId) {
+    public function createCommunityUser(Request $request, $userId, $communityId) {
         $user = $this->repo->find($request, $userId);
         $community = $this->communityRepo->find($request, $communityId);
 
@@ -135,7 +135,7 @@ class UserController extends RestController
         );
     }
 
-    public function deleteCommunity(Request $request, $userId, $communityId) {
+    public function deleteCommunityUser(Request $request, $userId, $communityId) {
         $community = $this->communityRepo->find($request, $communityId);
         $user = $this->repo->find($request, $userId);
 
