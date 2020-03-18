@@ -278,8 +278,27 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
           throw e;
         }
       },
-      delete() { // state, data) {
-        // call API DELETE
+      async destroy({ commit, dispatch, state }, id) {
+        try {
+          const ajax = Vue.axios.delete(`/${state.slug}/${id}`);
+
+          commit('ajax', ajax);
+
+          const { data: deleted } = await ajax;
+
+          commit('deleted', deleted);
+
+          commit('ajax', null);
+
+          await dispatch('loadUser', null, { root: true });
+        } catch (e) {
+          commit('ajax', null);
+
+          const { request, response } = e;
+          commit('error', { request, response });
+
+          throw e;
+        }
       },
       ...actions,
     },

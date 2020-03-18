@@ -133,7 +133,23 @@ export default {
       this.$emit('cancel');
     },
     async buyCredit() {
-      await this.$store.dispatch('account/buyCredit', this.amount);
+      try {
+        await this.$store.dispatch('account/buyCredit', this.amount);
+      } catch (e) {
+        switch (e.response.data.message) {
+          case 'no_payment_method':
+            this.$store.commit('addNotification', {
+              content: "Vous n'avez pas configuré de méthode de paiement.",
+              title: 'Méthode de paiement par défaut manquante',
+              variant: 'warning',
+              type: 'payment_method',
+            });
+            this.$router.push('/profile/payment_methods/new');
+            break;
+          default:
+            break;
+        }
+      }
     },
   },
 };

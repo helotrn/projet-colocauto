@@ -13,13 +13,13 @@ import files from './models/files';
 import images from './models/images';
 import loans from './models/loans';
 import loanables from './models/loanables';
-import login from './pages/login';
-import register from './pages/register';
+import paymentMethods from './models/paymentMethods';
 import trailers from './models/trailers';
 import users from './models/users';
 
 import CommunityList from './pages/community/list';
-
+import Login from './pages/login';
+import Register from './pages/register';
 import RegisterIntent from './pages/register/intent';
 import RegisterMap from './pages/register/map';
 
@@ -98,6 +98,8 @@ const actions = {
     });
 
     commit('user', user);
+
+    commit('account/transactionId', user.transaction_id + 1);
 
     commit('loaded', true);
     commit('loading', false);
@@ -206,9 +208,10 @@ export default new Vuex.Store({
     images,
     loans,
     loanables,
-    login,
+    login: Login,
+    paymentMethods,
     'profile.loanable': ProfileLoanable,
-    register,
+    register: Register,
     'register.intent': RegisterIntent,
     'register.map': RegisterMap,
     stats,

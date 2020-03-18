@@ -4,6 +4,8 @@ import ProfileBorrower from '../views/profile/Borrower.vue';
 import ProfileCommunities from '../views/profile/Communities.vue';
 import ProfileLoanables from '../views/profile/Loanables.vue';
 import ProfileLoanable from '../views/profile/Loanable.vue';
+import ProfilePaymentMethods from '../views/profile/PaymentMethods.vue';
+import ProfilePaymentMethod from '../views/profile/PaymentMethod.vue';
 
 export default {
   path: '/profile',
@@ -16,7 +18,6 @@ export default {
   children: [
     {
       path: 'account',
-      name: 'account',
       component: ProfileAccount,
       meta: {
         auth: true,
@@ -29,7 +30,6 @@ export default {
     },
     {
       path: 'borrower',
-      name: 'borrower',
       component: ProfileBorrower,
       meta: {
         auth: true,
@@ -42,7 +42,6 @@ export default {
     },
     {
       path: 'communities',
-      name: 'communities',
       component: ProfileCommunities,
       meta: {
         auth: true,
@@ -55,7 +54,6 @@ export default {
     },
     {
       path: 'loanables',
-      name: 'loanables',
       component: ProfileLoanables,
       meta: {
         auth: true,
@@ -91,6 +89,36 @@ export default {
             },
           },
         },
+      },
+    },
+    {
+      path: 'payment_methods',
+      component: ProfilePaymentMethods,
+      meta: {
+        auth: true,
+        creatable: true,
+        title: 'titles.payment_methods',
+        slug: 'paymentMethods',
+        data: {
+          paymentMethods: {
+            retrieve: {
+              fields: '*',
+            },
+          },
+        },
+      },
+    },
+    {
+      path: 'payment_methods/:id',
+      component: ProfilePaymentMethod,
+      props: true,
+      meta: {
+        auth: true,
+        slug: 'paymentMethods',
+        params: {
+          fields: '*',
+        },
+        title: 'titles.payment_method',
       },
     },
   ],

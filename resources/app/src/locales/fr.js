@@ -4,6 +4,7 @@ import borrowers from '@/locales/models/borrowers';
 import communities from '@/locales/models/communities';
 import loans from '@/locales/models/loans';
 import loanables from '@/locales/models/loanables';
+import paymentMethods from '@/locales/models/paymentMethods';
 import users from '@/locales/models/users';
 
 export default {
@@ -42,15 +43,18 @@ export default {
     en: 'English',
     fr: 'Français',
   },
+  paymentMethods: paymentMethods.fr,
   profile: {
     titles: {
       account: 'Mon profil Locomotion',
       borrower: "Mon profil d'emprunteur",
       communities: 'Mes communautés',
-      payment: 'Mes factures',
+      invoices: 'Mes factures',
       loans: "Historique d'emprunts",
       loanable: 'Mon véhicule',
       loanables: 'Mes véhicules',
+      payment_method: 'Ma méthode de paiement',
+      payment_methods: 'Mes méthodes de paiement',
     },
   },
   titles: {
@@ -65,6 +69,7 @@ export default {
     loanable: 'véhicule',
     loanables: 'véhicules',
     login: 'se connecter',
+    payment_method: 'méthode de paiement',
     profile: 'Profil',
     register: "s'inscrire",
     users: 'membres',

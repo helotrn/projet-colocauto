@@ -45,11 +45,20 @@ export default {
     params() {
       return this.$route.meta.params;
     },
+    parentPath() {
+      const parentPathParts = this.$route.path.split('/').filter(p => !!p);
+      parentPathParts.pop();
+      return `/${parentPathParts.join('/')}`;
+    },
     slug() {
       return this.$route.meta.slug;
     },
   },
   methods: {
+    async destroy() {
+      await this.$store.dispatch('paymentMethods/destroy', this.item.id);
+      this.$router.push(this.parentPath);
+    },
     async loadItem() {
       const { dispatch } = this.$store;
 
@@ -81,13 +90,10 @@ export default {
             this.$store.commit('user', null);
             this.$router.push(`/login?r=${this.$route.fullPath}`);
             break;
+          case 404:
+            this.$router.push(`/${this.parentPath}`);
+            break;
           default:
-            this.$store.commit('addNotification', {
-              content: 'Erreur fatale',
-              title: 'Erreur fatale',
-              variant: 'danger',
-              type: 'form',
-            });
             break;
         }
       }
@@ -114,12 +120,6 @@ export default {
             });
             break;
           default:
-            this.$store.commit('addNotification', {
-              content: 'Erreur fatale',
-              title: 'Erreur de sauvegarde',
-              variant: 'danger',
-              type: 'form',
-            });
             break;
         }
       }
@@ -146,6 +146,11 @@ export default {
         case 403:
           content = "Vous n'avez pas les permissions nécessaires pour effectuer cette action.";
           title = 'Permissions insuffisantes';
+          variant = 'warning';
+          break;
+        case 404:
+          content = 'La page que vous avez demandée est introuvable.';
+          title = 'Page introuvable';
           variant = 'warning';
           break;
         case 500:

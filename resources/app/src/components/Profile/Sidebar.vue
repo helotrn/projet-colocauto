@@ -15,8 +15,11 @@
     <b-nav-item to="/profile/loanables">
       {{ $t('profile.titles.loanables') }}
     </b-nav-item>
+    <b-nav-item to="/profile/payment_methods" :disabled="!user.submitted_at">
+      {{ $t('profile.titles.payment_methods') }}
+    </b-nav-item>
     <b-nav-item to="/profile/invoices" :disabled="!user.submitted_at">
-      {{ $t('profile.titles.payment') }}
+      {{ $t('profile.titles.invoices') }}
     </b-nav-item>
   </ul>
 </template>
