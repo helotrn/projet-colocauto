@@ -15,7 +15,7 @@
     <b-nav-item to="/profile/loanables">
       {{ $t('profile.titles.loanables') }}
     </b-nav-item>
-    <b-nav-item to="/profile/bills" :disabled="!user.submitted_at">
+    <b-nav-item to="/profile/invoices" :disabled="!user.submitted_at">
       {{ $t('profile.titles.payment') }}
     </b-nav-item>
   </ul>

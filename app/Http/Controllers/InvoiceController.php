@@ -3,12 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\BaseRequest as Request;
-use App\Models\Bill;
-use App\Repositories\BillRepository;
+use App\Models\Invoice;
+use App\Repositories\InvoiceRepository;
 
-class BillController extends RestController
+class InvoiceController extends RestController
 {
-    public function __construct(BillRepository $repository, Bill $model) {
+    public function __construct(InvoiceRepository $repository, Invoice $model) {
         $this->repo = $repository;
         $this->model = $model;
     }

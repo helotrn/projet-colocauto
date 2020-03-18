@@ -2,9 +2,9 @@
 
 namespace Tests\Integration;
 
-use App\Models\Bill;
 use App\Models\BillItem;
 use App\Models\Borrower;
+use App\Models\Invoice;
 use App\Models\Loan;
 use App\Models\Payment;
 use App\Models\PaymentMethod;
@@ -22,8 +22,8 @@ class PaymentTest extends TestCase
     public function testCreatePayments() {
         $borrower = factory(Borrower::class)->create(['user_id' => $this->user->id]);
         $loan = factory(Loan::class)->create(['borrower_id' => $borrower->id]);
-        $bill = factory(Bill::class)->create(['user_id' => $this->user->id]);
-        $billItem = factory(BillItem::class)->create(['bill_id' => $bill->id]);
+        $invoice = factory(Invoice::class)->create(['user_id' => $this->user->id]);
+        $billItem = factory(BillItem::class)->create(['invoice_id' => $invoice->id]);
 
         $data = [
             'loan_id' => $loan->id,
@@ -42,8 +42,8 @@ class PaymentTest extends TestCase
         $borrower = factory(Borrower::class)->create(['user_id' => $this->user->id]);
         $loan = factory(Loan::class)->create(['borrower_id' => $borrower->id]);
         $paymentMethod = factory(PaymentMethod::class)->create(['user_id' => $this->user->id]);
-        $bill = factory(Bill::class)->create(['user_id' => $this->user->id, 'payment_method_id' => $paymentMethod->id]);
-        $billItem = factory(BillItem::class)->create(['bill_id' => $bill->id]);
+        $invoice = factory(Invoice::class)->create(['user_id' => $this->user->id, 'payment_method_id' => $paymentMethod->id]);
+        $billItem = factory(BillItem::class)->create(['invoice_id' => $invoice->id]);
         $payment = factory(Payment::class)->create(['loan_id' => $loan->id, 'bill_item_id' => $billItem->id]);
 
         $response = $this->json('GET', "/api/v1/payments/$payment->id?loan.id=$loan->id");

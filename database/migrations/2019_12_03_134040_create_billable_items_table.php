@@ -11,14 +11,14 @@ class CreateBillableItemsTable extends Migration
             $table->bigIncrements('id');
             $table->string('label');
             $table->decimal('amount', 8, 2);
-            $table->unsignedBigInteger('bill_id');
+            $table->unsignedBigInteger('invoice_id');
             $table->date('item_date');
 
             $table->timestamps();
             $table->softDeletes();
 
-            $table->foreign('bill_id')
-                ->references('id')->on('bills')
+            $table->foreign('invoice_id')
+                ->references('id')->on('invoices')
                 ->onDelete('cascade');
         });
     }

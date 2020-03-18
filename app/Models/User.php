@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use App\Models\Action;
-use App\Models\Bill;
+use App\Models\Invoice;
 use App\Models\Borrower;
 use App\Models\File;
 use App\Models\Loan;
@@ -115,7 +115,7 @@ class User extends AuthenticatableBaseModel
 
     public $collections = [
       'actions',
-      'bills',
+      'invoices',
       'communities',
       'files',
       'loans',
@@ -144,12 +144,12 @@ class User extends AuthenticatableBaseModel
         return $this->hasMany(Action::class);
     }
 
-    public function bills() {
-        return $this->hasMany(Bill::class);
+    public function invoices() {
+        return $this->hasMany(Invoice::class);
     }
 
-    public function currentBill() {
-        return $this->hasOne(Bill::class)
+    public function currentInvoice() {
+        return $this->hasOne(Invoice::class)
             ->orderBy('created_at', 'desc')
             ->whereNull('paid_at');
     }
@@ -213,15 +213,15 @@ class User extends AuthenticatableBaseModel
             ->exists();
     }
 
-    public function getLastBillOrCreate() {
-        if ($this->currentBill) {
-            return $this->currentBill;
+    public function getLastInvoiceOrCreate() {
+        if ($this->currentInvoice) {
+            return $this->currentInvoice;
         }
 
-        $bill = new Bill;
-        $bill->user_id = $this->id;
-        $bill->save();
+        $invoice = new Invoice;
+        $invoice->user_id = $this->id;
+        $invoice->save();
 
-        return $bill;
+        return $invoice;
     }
 }

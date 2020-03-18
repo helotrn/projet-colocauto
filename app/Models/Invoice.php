@@ -5,7 +5,7 @@ namespace App\Models;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Bill extends BaseModel
+class Invoice extends BaseModel
 {
     use SoftDeletes;
 
@@ -27,6 +27,6 @@ class Bill extends BaseModel
     public $collections = ['items'];
 
     public function items() {
-        return $this->hasMany(BilledItem::class);
+        return $this->hasMany(BillItem::class);
     }
 }

@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Models\Bill;
+use App\Models\Invoice;
 use App\Models\Payment;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -18,15 +18,15 @@ class BillItem extends BaseModel
     protected $fillable = [
         'label',
         'amount',
-        'bill_id',
+        'invoice_id',
         'payment_id',
         'item_date',
     ];
 
-    public $items = ['bill', 'payment'];
+    public $items = ['invoice', 'payment'];
 
-    public function bill() {
-        return $this->belongsTo(Bill::class);
+    public function invoice() {
+        return $this->belongsTo(Invoice::class);
     }
 
     public function payment() {

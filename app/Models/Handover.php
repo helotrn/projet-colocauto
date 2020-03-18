@@ -38,9 +38,9 @@ class Handover extends Action
                     case 'completed':
                         $user = $model->loan->borrower->user;
 
-                        $bill = $user->getLastBillOrCreate();
+                        $invoice = $user->getLastInvoiceOrCreate();
 
-                        $billItem = $bill->addItem([
+                        $billItem = $invoice->addItem([
                             'label' => 'Payment', // FIXME
                             'amount' => $model->loan->getPrice(),
                             'item_date' => date('Y-m-d'),

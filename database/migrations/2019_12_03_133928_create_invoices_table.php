@@ -4,10 +4,10 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateBillsTable extends Migration
+class CreateInvoicesTable extends Migration
 {
     public function up() {
-        Schema::create('bills', function (Blueprint $table) {
+        Schema::create('invoices', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('period');
             $table->string('payment_method');
@@ -30,6 +30,6 @@ class CreateBillsTable extends Migration
     }
 
     public function down() {
-        Schema::dropIfExists('bills');
+        Schema::dropIfExists('invoices');
     }
 }
