@@ -1,6 +1,6 @@
 <template>
   <layout-page name="community-list">
-    <div v-if="routeDataLoaded || dataRouteGuardsHaveRun">
+    <div v-if="routeDataLoaded">
       <b-row class="community-list__form">
         <b-col lg="3">
           <b-card>
@@ -49,17 +49,19 @@ export default {
     LoanSearchForm,
     LoanableCard,
   },
+  data() {
+    return {
+      lastLoanMerged: false,
+    };
+  },
   mounted() {
     this.setSelectedLoanableTypes();
   },
-  data() {
-    return {
-      dataRouteGuardsHaveRun: false,
-      skipListMixinFirstLoad: true,
-    };
-  },
   computed: {
-    ...buildComputed('community.list', ['loan', 'loanLoaded', 'selectedLoanableTypes']),
+    ...buildComputed('community.list', ['lastLoan', 'selectedLoanableTypes']),
+    loan() {
+      return this.$store.state.loans.item;
+    },
     loanForm() {
       return this.$store.state.loans.form;
     },
@@ -75,15 +77,6 @@ export default {
     },
   },
   methods: {
-    dataRouteGuardsCallback() {
-      this.dataRouteGuardsHaveRun = true;
-
-      if (!this.loanLoaded) {
-        this.resetLoan();
-      }
-
-      this.loanLoaded = true;
-    },
     resetLoan() {
       this.loan = { ...this.$store.state.loans.empty };
     },
@@ -113,6 +106,21 @@ export default {
     },
   },
   watch: {
+    loan: {
+      deep: true,
+      handler(val) {
+        if (this.lastLoanMerged) {
+          this.lastLoan = { ...val };
+          this.$store.commit('loans/item', val);
+        } else {
+          this.lastLoanMerged = true;
+          this.$store.commit('loans/item', {
+            ...val,
+            ...this.lastLoan,
+          });
+        }
+      },
+    },
     selectedLoanableTypes() {
       this.setSelectedLoanableTypes();
     },

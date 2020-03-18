@@ -230,6 +230,23 @@ export default {
     },
   },
   methods: {
+    async formMixinCallback() {
+      const { id, type } = this.item.loanable;
+      await this.$store.dispatch(`${type}s/retrieveOne`, {
+        params: {
+          fields: '*,owner.id,owner.user.id,owner.user.avatar,owner.user.name',
+          '!fields': 'events',
+        },
+        id,
+      });
+      const loanable = this.$store.state[`${type}s`].item;
+
+      this.$store.commit(`${type}s/item`, null);
+
+      this.$store.commit(`${this.slug}/mergeItem`, { loanable });
+
+      this.loadedFullLoanable = true;
+    },
     hasReachedStep(step) {
       const { id, actions } = this.item;
       const intention = actions.find(a => a.type === 'intention');
@@ -262,29 +279,8 @@ export default {
           return false;
       }
     },
-    async loadFullLoanable() {
-      const { id, type } = this.item.loanable;
-      await this.$store.dispatch(`${type}s/retrieveOne`, {
-        params: {
-          fields: '*,owner.id,owner.user.id,owner.user.avatar,owner.user.name',
-          '!fields': 'events',
-        },
-        id,
-      });
-      const loanable = this.$store.state[`${type}s`].item;
-
-      this.$store.commit(`${type}s/item`, null);
-
-      this.$store.commit(`${this.slug}/mergeItem`, { loanable });
-
-      this.loadedFullLoanable = true;
-    },
     skipLoadItem() {
       if (this.id === 'new') {
-        if (!this.loadedFullLoanable) {
-          this.loadFullLoanable();
-        }
-
         return true;
       }
 

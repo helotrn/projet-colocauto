@@ -44,7 +44,10 @@
 
     <b-row class="user-add-credit-box__buttons">
       <b-col class="text-center">
-        <b-button class="mr-3" type="submit" variant="primary" @click="buyCredit">Acheter</b-button>
+        <b-button class="mr-3" type="submit" variant="primary" @click="buyCredit"
+          :disabled="amount < minimumRequired">
+          Acheter
+        </b-button>
 
         <b-button variant="danger" @click="emitCancel">Annuler</b-button>
       </b-col>
@@ -129,8 +132,8 @@ export default {
     emitCancel() {
       this.$emit('cancel');
     },
-    buyCredit() {
-      this.$emit('buy', this.amount);
+    async buyCredit() {
+      await this.$store.dispatch('buyCredit', this.amount);
     },
   },
 };
@@ -138,6 +141,12 @@ export default {
 
 <style lang="scss">
 .user-add-credit-box {
+  &__add label {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
   &__add__custom {
     margin-right: 70px;
     margin-left: 70px;

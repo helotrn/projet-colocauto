@@ -25,7 +25,7 @@ export default {
     },
     disabledTimes() {
       const departure = this.$dayjs(this.loan.departure_at);
-      if (departure.format('YYYY-MM-DD') < this.$dayjs(this.return_at).format('YYYY-MM-DD')) {
+      if (departure.format('YYYY-MM-DD') < this.$dayjs(this.returnAt).format('YYYY-MM-DD')) {
         return {};
       }
 
