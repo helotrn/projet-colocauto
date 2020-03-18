@@ -3,6 +3,7 @@ import Vuex from 'vuex';
 import VuexPersist from 'vuex-persist';
 import merge from 'deepmerge';
 
+import account from './account';
 import stats from './stats';
 
 import bikes from './models/bikes';
@@ -196,6 +197,7 @@ export default new Vuex.Store({
   mutations,
   actions,
   modules: {
+    account,
     bikes,
     cars,
     communities,

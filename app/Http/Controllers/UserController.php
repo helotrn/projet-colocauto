@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\BaseRequest as Request;
+use App\Http\Requests\User\AddBalanceRequest;
 use App\Http\Requests\User\CreateRequest;
 use App\Http\Requests\User\DestroyRequest;
 use App\Http\Requests\User\UpdateRequest;
@@ -144,6 +145,21 @@ class UserController extends RestController
         }
 
         return $community;
+    }
+
+    public function getBalance(Request $request, $userId) {
+        $user = $this->repo->find($request, $userId);
+
+        return $user->balance;
+    }
+
+    public function addToBalance(AddBalanceRequest $request, $userId) {
+        $user = $this->repo->find($request, $userId);
+
+        $transaction = $this->get('transaction');
+        $amount = $this->get('amount');
+
+        return $user->balance;
     }
 
     public function template(Request $request) {

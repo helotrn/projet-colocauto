@@ -133,7 +133,7 @@ export default {
       this.$emit('cancel');
     },
     async buyCredit() {
-      await this.$store.dispatch('buyCredit', this.amount);
+      await this.$store.dispatch('account/buyCredit', this.amount);
     },
   },
 };
