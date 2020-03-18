@@ -1,9 +1,9 @@
 <template>
   <layout-page name="admin">
     <b-row>
-      <b-col class="admin__menu">
+      <b-col class="admin__sidebar">
         <b-nav vertical>
-          <admin-menu />
+          <admin-sidebar />
         </b-nav>
       </b-col>
 
@@ -15,14 +15,14 @@
 </template>
 
 <script>
-import AdminMenu from '@/components/Admin/Menu.vue';
+import AdminSidebar from '@/components/Admin/Sidebar.vue';
 
 import Authenticated from '@/mixins/Authenticated';
 
 export default {
   name: 'Admin',
   mixins: [Authenticated],
-  components: { AdminMenu },
+  components: { AdminSidebar },
 };
 </script>
 
@@ -48,7 +48,7 @@ export default {
     padding-top: 45px;
     padding-bottom: 45px;
 
-    .admin__menu.col {
+    .admin__sidebar.col {
       flex: 0 1 12vw;
     }
 

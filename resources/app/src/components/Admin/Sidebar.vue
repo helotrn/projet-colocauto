@@ -1,5 +1,5 @@
 <template>
-  <div class="admin-menu">
+  <div class="admin-sidebar">
     <b-nav-item to="/admin">{{ $t('titles.dashboard') | capitalize }}</b-nav-item>
     <b-nav-item to="/admin/communities">Communautés</b-nav-item>
     <b-nav-item to="/admin/users">Membres</b-nav-item>
@@ -10,12 +10,12 @@
 
 <script>
 export default {
-  name: 'AdminMenu',
+  name: 'AdminSidebar',
 };
 </script>
 
 <style lang="scss">
-.admin-menu {
+.admin-sidebar {
   .nav-item a.nav-link {
     color: $black;
 

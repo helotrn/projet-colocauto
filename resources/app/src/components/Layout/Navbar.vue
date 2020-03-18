@@ -79,7 +79,7 @@
         </b-nav-item>
 
         <b-nav-item-dropdown class="layout-navbar__admin" text="Admin" right v-if="isAdmin">
-          <admin-menu />
+          <admin-sidebar />
         </b-nav-item-dropdown>
 
         <locale-switcher />
@@ -120,14 +120,14 @@ import Logout from '@/assets/svg/logout.svg';
 import Profile from '@/assets/svg/profile.svg';
 import SmallLogo from '@/assets/svg/small-logo.svg';
 
-import AdminMenu from '@/components/Admin/Menu.vue';
+import AdminSidebar from '@/components/Admin/Sidebar.vue';
 import LocaleSwitcher from '@/components/LocaleSwitcher.vue';
 
 export default {
   name: 'Navbar',
   mixins: [Authenticated],
   components: {
-    AdminMenu,
+    AdminSidebar,
     LocaleSwitcher,
     'svg-dashboard': Dashboard,
     'svg-hand': Hand,
