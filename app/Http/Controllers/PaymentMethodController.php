@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\BaseRequest as Request;
+use App\Http\Requests\PaymentMethod\CreateRequest;
 use App\Models\PaymentMethod;
 use App\Repositories\PaymentMethodRepository;
 
@@ -23,7 +24,18 @@ class PaymentMethodController extends RestController
         return $this->respondWithCollection($request, $items, $total);
     }
 
-    public function create(Request $request) {
+    public function create(CreateRequest $request) {
+        if ($request->get('type') === 'credit_card') {
+            $user = $request->user();
+            $customer = $user->getStripeCustomer();
+            $card = \Stripe\Customer::createSource(
+                $customer->id,
+                [ 'source' => $request->get('external_id'), ]
+            );
+
+            $request->merge([ 'external_id' => $card->id ]);
+        }
+
         try {
             $item = parent::validateAndCreate($request);
         } catch (ValidationException $e) {
@@ -56,6 +68,14 @@ class PaymentMethodController extends RestController
     }
 
     public function destroy(Request $request, $id) {
+        $item = $this->repo->find($request, $id);
+
+        if ($item->type === 'credit_card') {
+            $user = $request->user();
+            $customer = $user->getStripeCustomer();
+            \Stripe\Customer::deleteSource($customer->id, $item->external_id);
+        }
+
         try {
             $response = parent::validateAndDestroy($request, $id);
         } catch (ValidationException $e) {
@@ -63,5 +83,53 @@ class PaymentMethodController extends RestController
         }
 
         return $response;
+    }
+
+    public function template(Request $request) {
+        $template = [
+            'item' => [
+                'name' => '',
+                'type' => '',
+            ],
+            'form' => [
+                'name' => [
+                    'type' => 'text',
+                ],
+                'external_id' => [
+                    'type' => 'text',
+                ],
+                'type' => [
+                    'type' => 'select',
+                    'options' => [
+                        [
+                            'text' => 'Compte bancaire',
+                            'value' => 'bank_account',
+                        ],
+                        [
+                            'text' => 'Carte de crédit',
+                            'value' => 'credit_card',
+                        ],
+                    ],
+                ],
+                'credit_card_type' => [
+                    'type' => 'text',
+                ],
+                'four_last_digits' => [
+                    'type' => 'number',
+                    'disabled' => true,
+                ],
+            ],
+            'filters' => $this->model::$filterTypes,
+        ];
+
+        $modelRules = $this->model->getRules();
+        foreach ($modelRules as $field => $rules) {
+            if (!isset($template['form'][$field])) {
+                continue;
+            }
+            $template['form'][$field]['rules'] = $this->formatRules($rules);
+        }
+
+        return $template;
     }
 }

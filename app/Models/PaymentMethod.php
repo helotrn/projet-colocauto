@@ -9,12 +9,24 @@ class PaymentMethod extends BaseModel
 {
     use SoftDeletes;
 
+    public static $filterTypes = [
+        'name' => 'text',
+        'type' => ['credit_card', 'bank_account'],
+        'user_id' => User::class,
+    ];
+
     public static $rules = [
         'name' => 'required',
         'external_id' => 'required',
         'type' => 'required',
-        'four_last_digits' => 'digits:4|nullable',
-        'credit_card_type' => 'nullable|string',
+        'four_last_digits' => [
+          'digits:4',
+          'nullable',
+        ],
+        'credit_card_type' => [
+          'nullable',
+          'string',
+        ],
     ];
 
     protected $fillable = [

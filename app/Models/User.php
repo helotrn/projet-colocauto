@@ -172,6 +172,10 @@ class User extends AuthenticatableBaseModel
         return $relation->whereSuspendedAt(null);
     }
 
+    public function defaultPaymentMethod() {
+        return $this->hasOne(PaymentMethod::class)->whereIsDefault(true);
+    }
+
     public function files() {
         return $this->hasMany(File::class);
     }
@@ -223,5 +227,29 @@ class User extends AuthenticatableBaseModel
         $invoice->save();
 
         return $invoice;
+    }
+
+    public function getStripeCustomer() {
+        \Stripe\Stripe::setApiKey(config('services.stripe.secret'));
+        $customers = \Stripe\Customer::all([
+            'email' => $this->email,
+            'limit' => 1,
+        ]);
+
+        if (empty($customers->data)) {
+            return \Stripe\Customer::create([
+                'description' => "{$this->name} {$this->last_name} "
+                    . "<{$this->email}> ({$this->id})",
+                'email' => $this->email,
+                'name' => "{$this->name} {$this->last_name}",
+                'address' => [
+                    'line1' => $this->address,
+                    'country' => 'CA',
+                    'postal_code' => $this->postal_code,
+                ],
+            ]);
+        }
+
+        return array_pop($customers->data);
     }
 }

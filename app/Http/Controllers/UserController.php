@@ -154,12 +154,24 @@ class UserController extends RestController
     }
 
     public function addToBalance(AddBalanceRequest $request, $userId) {
-        $user = $this->repo->find($request, $userId);
+        $findRequest = $this->redirectRequest(Request::class, $request);
+        $user = $this->repo->find($findRequest, $userId);
 
-        $transaction = $this->get('transaction');
-        $amount = $this->get('amount');
+        $transaction = $request->get('transaction');
+        $amount = $request->get('amount');
+        $paymentMethodId = $request->get('payment_method_id');
 
-        return $user->balance;
+        if ($paymentMethodId) {
+            $paymentMethod = $user->paymentMethods->where('id', $paymentMethodId);
+        } else {
+            $paymentMethod = $user->defaultPaymentMethod;
+        }
+
+        if (!$paymentMethod) {
+          return $this->respondWithMessage('no_payment_method', 400);
+        }
+
+        return $paymentMethod;
     }
 
     public function template(Request $request) {
