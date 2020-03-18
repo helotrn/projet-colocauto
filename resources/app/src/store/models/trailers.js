@@ -1,4 +1,4 @@
-import RestModule from './RestModule';
+import RestModule from '../RestModule';
 
 export default new RestModule('trailers', {
   params: {

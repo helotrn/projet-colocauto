@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import RestModule from './RestModule';
+import RestModule from '../RestModule';
 
 export default new RestModule('users', {
   params: {
@@ -12,7 +12,7 @@ export default new RestModule('users', {
 }, {
   async joinCommunity({ commit }, { communityId, userId }) {
     try {
-      const ajax = Vue.axios.post(`/users/${userId}/communities/${communityId}`);
+      const ajax = Vue.axios.put(`/users/${userId}/communities/${communityId}`);
 
       commit('ajax', ajax);
 

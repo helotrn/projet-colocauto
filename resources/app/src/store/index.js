@@ -3,18 +3,19 @@ import Vuex from 'vuex';
 import VuexPersist from 'vuex-persist';
 import merge from 'deepmerge';
 
-import bikes from './bikes';
-import cars from './cars';
-import communities from './communities';
-import files from './files';
-import images from './images';
-import loans from './loans';
-import loanables from './loanables';
+import stats from './stats';
+
+import bikes from './models/bikes';
+import cars from './models/cars';
+import communities from './models/communities';
+import files from './models/files';
+import images from './models/images';
+import loans from './models/loans';
+import loanables from './models/loanables';
 import login from './pages/login';
 import register from './pages/register';
-import stats from './stats';
-import trailers from './trailers';
-import users from './users';
+import trailers from './models/trailers';
+import users from './models/users';
 
 import CommunityList from './pages/community/list';
 
