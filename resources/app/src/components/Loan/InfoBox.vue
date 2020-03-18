@@ -3,17 +3,27 @@
     <b-card class="shadow" bg="white" no-body>
       <router-link class="card-body" :to="`/loans/${this.loan.id}`">
         <b-row>
-          <b-col class="loan-info-box__image">
+          <b-col class="loan-info-box__image" v-if="mode === 'waiting'">
             <div :style="{ backgroundImage: loanImage }" />
           </b-col>
 
-          <b-col class="loan-info-box__name">
+          <b-col class="loan-info-box__name" v-if="mode === 'waiting'">
             <span>{{ otherUser.full_name }}</span>
+          </b-col>
+
+          <b-col class="loan-info-box__image" v-else-if="mode === 'upcoming'">
+            <div :style="{ backgroundImage: loanableImage }" />
+          </b-col>
+
+          <b-col class="loan-info-box__name" v-else-if="mode === 'upcoming'">
+            <span>{{ loan.loanable.name }}</span>
           </b-col>
 
           <b-col class="loan-info-box__details">
             <span>
-              {{ loan.loanable.name }}<br>
+              <span v-if="mode === 'waiting'">
+                {{ loan.loanable.name }}<br>
+              </span>
               <span v-if="multipleDays">
                 {{ loan.departure_at | date }} {{ loan.departure_at | time }}<br>
                 {{ returnAt | date }} {{ returnAt | time }}
@@ -75,6 +85,11 @@ export default {
       type: Object,
       required: true,
     },
+    mode: {
+      type: String,
+      required: false,
+      default: 'waiting',
+    },
     user: {
       type: Object,
       required: true,
@@ -88,6 +103,14 @@ export default {
       }
 
       return `url('${avatar.sizes.thumbnail}')`;
+    },
+    loanableImage() {
+      const { image } = this.loan.loanable;
+      if (!image) {
+        return '';
+      }
+
+      return `url('${image.sizes.thumbnail}')`;
     },
     multipleDays() {
       return this.$dayjs(this.loan.departure_at).format('YYYY-MM-DD')

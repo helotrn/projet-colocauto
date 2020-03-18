@@ -97,17 +97,7 @@ export default {
     upcomingLoans() {
       const now = this.$dayjs().format('YYYY-MM-DD HH:mm:ss');
 
-      return this.user.loanables.reduce((acc, loanable) => {
-        acc.push(
-          ...loanable.loans
-            .filter(l => l.departure_at > now && l.actions.length > 1)
-            .map(l => ({
-              ...l,
-              loanable,
-            })),
-        );
-        return acc;
-      }, []);
+      return this.allLoans.filter(l => l.actions.length > 1 && l.departure_at < now);
     },
     waitingLoans() {
       return this.allLoans.filter(l => l.actions.length === 1);

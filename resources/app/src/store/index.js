@@ -58,6 +58,7 @@ const initialState = {
 const loadUserFields = [
   '*',
   'loanables.*',
+  'loanables.image.*',
   '!loanables.events',
   'loans.*',
   'loans.borrower.id',
@@ -67,6 +68,7 @@ const loadUserFields = [
   'loans.loanable.id',
   'loans.loanable.type',
   'loans.loanable.name',
+  'loans.loanable.image.*',
   'loans.loanable.owner.id',
   'loans.loanable.owner.user.id',
   'loans.loanable.owner.user.full_name',

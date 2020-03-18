@@ -30,6 +30,7 @@
 
         <section class="page__section" v-if="hasWaitingLoans">
           <h2>Nouvelles demandes d'emprunt</h2>
+
           <div class="dashboard__waiting-loans" v-for="loan in waitingLoans" :key="loan.id">
             <loan-info-box :loan="loan" :user="user" />
           </div>
@@ -47,7 +48,8 @@
           <h2>Emprunts à venir</h2>
 
           <div class="dashboard__upcoming-loans" v-for="loan in upcomingLoans" :key="loan.id">
-            {{ loan }}
+            <loan-info-box mode="upcoming"
+              :loan="loan" :user="user" :buttons="['view', 'cancel']" />
           </div>
         </section>
 
