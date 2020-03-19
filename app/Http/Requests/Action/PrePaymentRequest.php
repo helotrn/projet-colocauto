@@ -15,7 +15,7 @@ class PrePaymentRequest extends BaseRequest
             return true;
         }
 
-        if ($user->borrower->id === $loan->borrower->id) {
+        if ($user->borrower->id === Loan::find($this->get('loan_id'))->borrower->id) {
             return true;
         }
 

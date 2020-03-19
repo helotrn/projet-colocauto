@@ -16,4 +16,21 @@
       background-color: $white;
     }
   }
+
+  .StripeElement {
+    &--focus {
+      border-color: $primary;
+      outline: 0;
+      box-shadow: 0 0 0 0.2rem rgba($primary, 0.25);
+      transition: border-color $one-tick ease-in-out, box-shadow $one-tick ease-in-out;
+    }
+
+    &--complete {
+      @extend .is-valid;
+    }
+
+    &--invalid {
+      @extend .is-invalid;
+    }
+  }
 }

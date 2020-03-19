@@ -31,7 +31,6 @@ class PrePayment extends Action
 
                             $model->save();
                         }
-                        $model->save();
                         break;
                     case 'canceled':
                         $model->executed_at = Carbon::now();

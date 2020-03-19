@@ -92,6 +92,8 @@ class User extends AuthenticatableBaseModel
 
     public static $sizesByField = [];
 
+    private $stripeCustomerMemo;
+
     protected $fillable = [
         'name',
         'last_name',
@@ -120,7 +122,7 @@ class User extends AuthenticatableBaseModel
       'files',
       'loans',
       'loanables',
-      'paymentMethods',
+      'payment_methods',
     ];
 
     public $items = [
@@ -230,14 +232,20 @@ class User extends AuthenticatableBaseModel
     }
 
     public function getStripeCustomer() {
+        if ($this->stripeCustomerMemo) {
+            return $this->stripeCustomerMemo;
+        }
+
         \Stripe\Stripe::setApiKey(config('services.stripe.secret'));
         $customers = \Stripe\Customer::all([
             'email' => $this->email,
             'limit' => 1,
         ]);
 
-        if (empty($customers->data)) {
-            return \Stripe\Customer::create([
+        $newCustomer = array_pop($customers->data);
+
+        if (!$newCustomer) {
+            $newCustomer = \Stripe\Customer::create([
                 'description' => "{$this->name} {$this->last_name} "
                     . "<{$this->email}> ({$this->id})",
                 'email' => $this->email,
@@ -250,6 +258,8 @@ class User extends AuthenticatableBaseModel
             ]);
         }
 
-        return array_pop($customers->data);
+        $this->stripeCustomerMemo = $newCustomer;
+
+        return $this->stripeCustomerMemo;
     }
 }

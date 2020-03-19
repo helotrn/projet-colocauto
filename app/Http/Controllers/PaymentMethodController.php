@@ -25,8 +25,9 @@ class PaymentMethodController extends RestController
     }
 
     public function create(CreateRequest $request) {
+        $user = $request->user();
+
         if ($request->get('type') === 'credit_card') {
-            $user = $request->user();
             $customer = $user->getStripeCustomer();
             $card = \Stripe\Customer::createSource(
                 $customer->id,
@@ -34,6 +35,10 @@ class PaymentMethodController extends RestController
             );
 
             $request->merge([ 'external_id' => $card->id ]);
+        }
+
+        if (!$request->get('user_id')) {
+            $request->merge([ 'user_id' => $request->user()->id ]);
         }
 
         try {
@@ -122,7 +127,7 @@ class PaymentMethodController extends RestController
             'filters' => $this->model::$filterTypes,
         ];
 
-        $modelRules = $this->model->getRules();
+        $modelRules = $this->model->getRules('template', $request->user());
         foreach ($modelRules as $field => $rules) {
             if (!isset($template['form'][$field])) {
                 continue;

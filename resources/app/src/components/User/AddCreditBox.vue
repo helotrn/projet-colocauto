@@ -4,9 +4,9 @@
       <b-col class="user-add-credit-box__add">
         <p>Ajouter</p>
 
-        <p><b-form-radio-group v-model="selectedOption" :options="options" buttons /></p>
+        <p><b-form-radio-group v-model="selectedAmount" :options="amounts" buttons /></p>
 
-        <p v-if="selectedOption === 'other'" class="user-add-credit-box__add__custom">
+        <p v-if="selectedAmount === 'other'" class="user-add-credit-box__add__custom">
           <b-form-input v-model="customAmount" />
         </p>
 
@@ -33,8 +33,19 @@
       </b-col>
     </b-row>
 
-    <b-row class="user-add-credit-box__explanations">
-      <b-col>
+    <b-row>
+      <b-col lg="6" class="user-add-credit-box__payment-methods">
+        <b-form-select id="payment_method_id" name="payment_method_id"
+          :options="paymentMethods" v-model="paymentMethodId">
+          <template v-slot:first>
+            <b-form-select-option :value="null" disabled>
+              Choisissez une méthode de paiement
+            </b-form-select-option>
+          </template>
+        </b-form-select>
+      </b-col>
+
+      <b-col class="user-add-credit-box__explanations">
         <p>
           Pour limiter au maximum l'impact des frais de transaction, envisagez de vous procurer
           plus de crédits Locomotion à la fois.
@@ -42,7 +53,7 @@
       </b-col>
     </b-row>
 
-    <b-row class="user-add-credit-box__buttons">
+    <b-row class="user-add-credit-box__buttons" tag="p">
       <b-col class="text-center">
         <b-button class="mr-3" type="submit" variant="primary" @click="buyCredit"
           :disabled="amount < minimumRequired">
@@ -63,7 +74,8 @@ export default {
       customAmount: this.minimumRequired * 2,
       fee: 1.05,
       feeConstant: 1,
-      selectedOption: parseFloat(this.minimumRequired, 10),
+      paymentMethodId: null,
+      selectedAmount: parseFloat(this.minimumRequired, 10),
     };
   },
   props: {
@@ -78,16 +90,16 @@ export default {
   },
   computed: {
     amount() {
-      if (this.selectedOption === 'other') {
+      if (this.selectedAmount === 'other') {
         return parseFloat(this.customAmount, 10);
       }
 
-      return parseFloat(this.selectedOption, 10);
+      return parseFloat(this.selectedAmount, 10);
     },
     newAmount() {
       return this.amount + parseFloat(this.user.balance);
     },
-    options() {
+    amounts() {
       const options = [
         {
           text: 'Minimum requis',
@@ -127,6 +139,15 @@ export default {
 
       return options;
     },
+    paymentMethods() {
+      return this.user.payment_methods.map((pm) => {
+        return {
+          text: pm.name,
+          value: pm.id,
+          selected: pm.is_default,
+        };
+      });
+    },
   },
   methods: {
     emitCancel() {
@@ -134,7 +155,11 @@ export default {
     },
     async buyCredit() {
       try {
-        await this.$store.dispatch('account/buyCredit', this.amount);
+        const { amount, paymentMethodId } = this;
+        await this.$store.dispatch('account/buyCredit', {
+          amount,
+          paymentMethodId
+        });
       } catch (e) {
         switch (e.response.data.message) {
           case 'no_payment_method':

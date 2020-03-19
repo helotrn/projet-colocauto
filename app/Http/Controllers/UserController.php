@@ -154,24 +154,48 @@ class UserController extends RestController
     }
 
     public function addToBalance(AddBalanceRequest $request, $userId) {
-        $findRequest = $this->redirectRequest(Request::class, $request);
+        $findRequest = $this->redirectAuthRequest(Request::class, $request);
         $user = $this->repo->find($findRequest, $userId);
 
-        $transaction = $request->get('transaction');
+        $transactionId = $request->get('transaction_id');
         $amount = $request->get('amount');
         $paymentMethodId = $request->get('payment_method_id');
 
         if ($paymentMethodId) {
-            $paymentMethod = $user->paymentMethods->where('id', $paymentMethodId);
+            $paymentMethod = $user->paymentMethods->where('id', $paymentMethodId)->first();
         } else {
             $paymentMethod = $user->defaultPaymentMethod;
         }
 
         if (!$paymentMethod) {
-          return $this->respondWithMessage('no_payment_method', 400);
+            return $this->respondWithMessage('no_payment_method', 400);
         }
 
-        return $paymentMethod;
+        \Stripe\Stripe::setApiKey(config('services.stripe.secret'));
+
+        $amountInCents = intval($amount * 100);
+
+        if ($amountInCents <= 0) {
+            return $this->respondWithMessage('amount_in_cents_is_nothing', 400);
+        }
+
+        $date = date('Y-m-d');
+        try {
+            $charge = \Stripe\Charge::create([
+                'amount' => intval($amount * 100),
+                'currency' => 'cad',
+                'customer' => $user->getStripeCustomer()->id,
+                'description' => "$date - Ajout au compte Locomotion: {$amount}$",
+            ]);
+
+            $user->balance += $charge['amount'] / 100;
+            $user->transaction_id = $transactionId + 1;
+            $user->save();
+
+            return response($user->balance, 200);
+        } catch (\Exception $e) {
+            return $this->respondWithMessage($e->getMessage(), 500);
+        }
     }
 
     public function template(Request $request) {
@@ -236,8 +260,8 @@ class UserController extends RestController
             'filters' => $this->model::$filterTypes,
         ];
 
-        $borrowerRules = Borrower::getRules();
-        foreach ($borrowerRules as $field => $rules) {
+        $modelRules = $this->model->getRules('template', $request->user());
+        foreach ($modelRules as $field => $rules) {
             if (!isset($template['form']['borrower'][$field])) {
                 continue;
             }

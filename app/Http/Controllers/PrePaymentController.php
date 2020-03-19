@@ -50,7 +50,10 @@ class PrePaymentController extends RestController
     }
 
     public function retrieve(Request $request, $id) {
-        $item = $this->repo->find($request, $id);
+        $item = $this->repo->find(
+            $this->redirectAuthRequest(Request::class, $request),
+            $id
+        );
 
         try {
             $response = $this->respondWithItem($request, $item);
@@ -72,12 +75,15 @@ class PrePaymentController extends RestController
     }
 
     public function complete(Request $request, $actionId, $loanId) {
-        $item = $this->repo->find($request, $actionId);
-        $loan = $this->loanRepo->find($request, $loanId);
-        if ($item->id && $loan->id) {
-            $item->status = 'completed';
-            $item->save();
-        }
+        $authRequest = $this->redirectAuthRequest(Request::class, $request);
+
+        $item = $this->repo->find($authRequest, $actionId);
+        $loan = $this->loanRepo->find($authRequest, $loanId);
+
+        $item->status = 'completed';
+        $item->save();
+
+        return response('', 201);
     }
 
     public function cancel(Request $request, $actionId, $loanId) {

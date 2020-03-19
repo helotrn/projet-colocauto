@@ -30,12 +30,13 @@ export default {
     },
   },
   actions: {
-    async buyCredit({ commit, state }, amount) {
+    async buyCredit({ commit, state }, { amount, paymentMethodId }) {
       commit('loaded', false);
 
       try {
         const ajax = Vue.axios.put('/auth/user/balance', {
           amount,
+          payment_method_id: paymentMethodId,
           transaction_id: state.transactionId,
         });
 

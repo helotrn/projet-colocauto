@@ -106,7 +106,7 @@ class LoanController extends RestController
             'filters' => $this->model::$filterTypes,
         ];
 
-        $modelRules = $this->model->getRules();
+        $modelRules = $this->model->getRules('template', $request->user());
         foreach ($modelRules as $field => $rules) {
             $template['form'][$field]['rules'] = $this->formatRules($rules);
         }

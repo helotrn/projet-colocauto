@@ -15,6 +15,11 @@ class UserTransformer extends BaseTransformer
             $output['borrower'] = $item->borrower ?: new \stdClass;
         }
 
+        if (isset($output['balance'])) {
+            // Approximation but more convenient for display
+            $output['balance'] = floatval($output['balance']);
+        }
+
         return $output;
     }
 }

@@ -13,7 +13,7 @@ class UpdateRequest extends BaseRequest
     }
 
     public function rules() {
-        $pricingRules = Pricing::getRules('', $this->user());
+        $pricingRules = Pricing::getRules('update', $this->user());
         $rules = static::rebaseRules('pricings.*', $pricingRules);
 
         return $rules;

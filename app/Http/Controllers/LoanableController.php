@@ -367,7 +367,9 @@ class LoanableController extends RestController
             'filters' => $this->model::$filterTypes,
         ];
 
-        $generalRules = $this->model->getRules();
+        $user = $request->user();
+
+        $generalRules = $this->model->getRules('template', $user);
         $generalRulesKeys = array_keys($generalRules);
         foreach ($generalRules as $field => $rules) {
             if (!isset($template['form']['general'][$field])) {
@@ -376,7 +378,7 @@ class LoanableController extends RestController
             $template['form']['general'][$field]['rules'] = $this->formatRules($rules);
         }
 
-        $bikeRules = Bike::getRules();
+        $bikeRules = Bike::getRules('template', $user);
         foreach ($bikeRules as $field => $rules) {
             if (in_array($field, $generalRulesKeys)) {
                 continue;
@@ -387,7 +389,7 @@ class LoanableController extends RestController
             $template['form']['bike'][$field]['rules'] = $this->formatRules($rules);
         }
 
-        $carRules = Car::getRules();
+        $carRules = Car::getRules('template', $user);
         foreach ($carRules as $field => $rules) {
             if (in_array($field, $generalRulesKeys)) {
                 continue;

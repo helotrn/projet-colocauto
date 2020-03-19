@@ -15,7 +15,7 @@ use Illuminate\Contracts\Auth\Factory as Auth;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Passport\TokenRepository;
 
-class AuthController extends Controller
+class AuthController extends RestController
 {
     use RespondsWithErrors;
 
@@ -104,8 +104,10 @@ class AuthController extends Controller
         return $this->userController->getBalance($request, $this->auth->user()->id);
     }
 
-    public function addToUserBalance(UserAddBalanceRequest $request) {
-        return $this->userController->addToBalance($request, $this->auth->user()->id);
+    public function addToUserBalance(Request $request) {
+        $request->merge([ 'user_id' => $this->auth->user()->id ]);
+        $addBalanceRequest = $this->redirectRequest(UserAddBalanceRequest::class, $request);
+        return $this->userController->addToBalance($addBalanceRequest, $this->auth->user()->id);
     }
 
     public function updateUser(UserUpdateRequest $request) {

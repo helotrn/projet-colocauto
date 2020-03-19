@@ -2,19 +2,22 @@
   <div class="payment-method-form">
     <validation-observer ref="observer" v-slot="{ passes }">
       <b-form class="form" @submit.prevent="passes(submit)">
-        <forms-builder :definition="definition" :disabled="!!paymentMethod.id"
-          :item="paymentMethod" entity="paymentMethods" />
+        <div class="form__section">
+          <forms-builder :definition="definition" :disabled="!!paymentMethod.id"
+            :item="paymentMethod" entity="paymentMethods" />
+        </div>
 
         <div v-if="!paymentMethod.id" :class="{
           'payment-method-form__credit-card': true,
+          'form__section': true,
           'd-none': paymentMethod.type !== 'credit_card',
         }">
           <h2>Carte de crédit</h2>
 
-          <div id="stripe-card" />
+          <div id="stripe-card" class="form-control" />
         </div>
 
-        <div class="payment-method-form__bank-account"
+        <div class="payment-method-form__bank-account form__section"
           v-if="paymentMethod.type === 'bank_account'">
           <h2>Compte bancaire</h2>
 
@@ -26,7 +29,7 @@
           <b-button variant="danger" v-if="!!paymentMethod.id" @click="emitDestroy">
             {{ $t('forms.supprimer') | capitalize }}
           </b-button>
-          <b-button variant="success" type="submit" v-else>
+          <b-button variant="success" type="submit" :disabled="loading" v-else>
             {{ $t('forms.enregistrer') | capitalize }}
           </b-button>
         </div>
@@ -51,7 +54,7 @@ export default {
         'card',
         {
           hidePostalCode: true,
-        }
+        },
       );
       card.mount(element);
 

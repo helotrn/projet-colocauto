@@ -6,6 +6,22 @@ use App\Http\Requests\BaseRequest;
 
 class AddBalanceRequest extends BaseRequest
 {
+    public function authorize() {
+        $user = $this->user();
+
+        if (!$user) {
+            return false;
+        }
+
+        if ($user->isAdmin()) {
+            return true;
+        }
+
+        $routeUserId = $this->route('user_id') ?: $this->get('user_id');
+
+        return $user->id === $routeUserId;
+    }
+
     public function rules() {
         $user = $this->user();
 
