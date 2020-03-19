@@ -127,6 +127,8 @@ const routes = [
           '*',
           'actions.*',
           'intention.*',
+          'pre_payment.*',
+          'takeover.*',
           'loanable.id',
           'loanable.name',
           'loanable.type',

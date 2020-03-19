@@ -7,7 +7,7 @@ use App\Models\Loanable;
 use App\Models\User;
 use DB;
 
-class StaticController extends Controller
+class StaticController extends RestController
 {
     public function redirectToSolon() {
         return redirect('https://solon-collectif.org/locomotion/');

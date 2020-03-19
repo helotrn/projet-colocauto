@@ -88,6 +88,9 @@
             <loan-actions-pre-payment v-else-if="action.type === 'pre_payment'"
               :action="action" :loan="item" :open="isCurrentStep('pre_payment')"
               @completed="loadItem" :user="user" />
+            <loan-actions-takeover v-else-if="action.type === 'takeover'"
+              :action="action" :loan="item" :open="isCurrentStep('takeover')"
+              @completed="loadItem" :user="user" />
             <span v-else>
               {{ action.type }}
             </span>
@@ -106,6 +109,7 @@ import Waiting from '@/assets/svg/waiting.svg';
 import LoanForm from '@/components/Loan/Form.vue';
 import LoanActionsIntention from '@/components/Loan/Actions/Intention.vue';
 import LoanActionsPrePayment from '@/components/Loan/Actions/PrePayment.vue';
+import LoanActionsTakeover from '@/components/Loan/Actions/Takeover.vue';
 
 import Authenticated from '@/mixins/Authenticated';
 import DataRouteGuards from '@/mixins/DataRouteGuards';
@@ -120,6 +124,7 @@ export default {
     LoanForm,
     LoanActionsIntention,
     LoanActionsPrePayment,
+    LoanActionsTakeover,
     'svg-check': Check,
     'svg-waiting': Waiting,
   },
@@ -251,6 +256,7 @@ export default {
       const { id, actions } = this.item;
       const intention = actions.find(a => a.type === 'intention');
       const prePayment = actions.find(a => a.type === 'pre_payment');
+      const takeover = actions.find(a => a.type === 'takeover');
 
       switch (step) {
         case 'creation':
@@ -259,6 +265,8 @@ export default {
           return intention && intention.executed_at;
         case 'pre_payment':
           return prePayment && prePayment.executed_at;
+        case 'takeover':
+          return takeover && !takeover.executed_at;
         default:
           return false;
       }
@@ -267,6 +275,7 @@ export default {
       const { id, actions } = this.item;
       const intention = actions.find(a => a.type === 'intention');
       const prePayment = actions.find(a => a.type === 'pre_payment');
+      const takeover = actions.find(a => a.type === 'takeover');
 
       switch (step) {
         case 'creation':
@@ -275,6 +284,8 @@ export default {
           return intention && !intention.executed_at;
         case 'pre_payment':
           return prePayment && !prePayment.executed_at;
+        case 'takeover':
+          return takeover && !takeover.executed_at;
         default:
           return false;
       }

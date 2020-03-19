@@ -17,6 +17,7 @@ class Handover extends Action
     ];
 
     protected $fillable = [
+        'loan_id',
         'status',
         'mileage_end',
         'fuel_end',

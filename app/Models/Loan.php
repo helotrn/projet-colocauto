@@ -61,7 +61,7 @@ class Loan extends BaseModel
         'reason',
     ];
 
-    public $items = ['borrower', 'intention', 'loanable'];
+    public $items = ['borrower', 'intention', 'loanable', 'pre_payment', 'takeover', 'handover'];
 
     public $collections = ['actions'];
 

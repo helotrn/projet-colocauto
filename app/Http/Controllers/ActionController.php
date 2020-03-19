@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\BaseRequest as Request;
+use App\Http\Requests\Action\ActionRequest;
 use App\Http\Requests\Action\IntentionRequest;
 use App\Http\Requests\Action\PrePaymentRequest;
+use App\Http\Requests\Action\TakeoverRequest;
 use App\Models\Action;
 use App\Repositories\ActionRepository;
 use App\Repositories\LoanRepository;
@@ -119,10 +121,8 @@ class ActionController extends RestController
         }
     }
 
-    public function complete(Request $request, $loanId, $actionId) {
-        $item = $this->repo->find($request, $actionId);
-
-        switch ($item->type) {
+    public function complete(ActionRequest $request, $loanId, $actionId) {
+        switch ($request->get('type')) {
             case 'intention':
                 $intentionRequest = $this->redirectRequest(
                     IntentionRequest::class,
@@ -146,10 +146,16 @@ class ActionController extends RestController
                     $loanId
                 );
             case 'takeover':
-                $takeoverRequest = new Request();
-                $takeoverRequest->setMethod('PUT');
-                $takeoverRequest->request->add($request->all());
-                return $this->takeoverController->complete($takeoverRequest, $actionId, $loanId);
+                $takeoverRequest = $this->redirectRequest(
+                    TakeoverRequest::class,
+                    $request,
+                    $this->loanRepository
+                );
+                return $this->takeoverController->complete(
+                    $takeoverRequest,
+                    $actionId,
+                    $loanId
+                );
             case 'extension':
                 $extensionRequest = new Request();
                 $extensionRequest->setMethod('PUT');

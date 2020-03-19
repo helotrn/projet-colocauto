@@ -21,23 +21,21 @@ class PrePayment extends Action
 
         self::saved(function ($model) {
             if (!$model->executed_at) {
+                $model->executed_at = Carbon::now();
+
                 switch ($model->status) {
                     case 'completed':
                         if (!$model->loan->takeover) {
                             $takeover = Takeover::create([ 'loan_id' => $model->loan->id ]);
-
                             $model->loan->takeover()->save($takeover);
-                            $model->executed_at = Carbon::now();
-
-                            $model->save();
                         }
                         break;
                     case 'canceled':
-                        $model->executed_at = Carbon::now();
-                        $model->save();
                         $model->loan->setCanceled();
                         break;
                 }
+
+                $model->save();
             }
         });
     }

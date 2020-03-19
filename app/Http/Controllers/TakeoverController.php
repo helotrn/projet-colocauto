@@ -4,14 +4,20 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\BaseRequest as Request;
 use App\Models\Takeover;
+use App\Repositories\LoanRepository;
 use App\Repositories\TakeoverRepository;
 use Illuminate\Validation\ValidationException;
 
 class TakeoverController extends RestController
 {
-    public function __construct(TakeoverRepository $repository, Takeover $model) {
+    public function __construct(
+        TakeoverRepository $repository,
+        Takeover $model,
+        LoanRepository $loanRepository
+    ) {
         $this->repo = $repository;
         $this->model = $model;
+        $this->loanRepo = $loanRepository;
     }
 
     public function index(Request $request) {
@@ -64,5 +70,17 @@ class TakeoverController extends RestController
         }
 
         return $response;
+    }
+
+    public function complete(Request $request, $actionId, $loanId) {
+        $authRequest = $this->redirectAuthRequest(Request::class, $request);
+
+        $item = $this->repo->find($authRequest, $actionId);
+        $loan = $this->loanRepo->find($authRequest, $loanId);
+
+        $item->status = 'completed';
+        $item->save();
+
+        return response('', 201);
     }
 }

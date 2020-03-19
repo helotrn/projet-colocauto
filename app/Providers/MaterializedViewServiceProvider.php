@@ -30,6 +30,7 @@ class MaterializedViewServiceProvider extends ServiceProvider
             \App\Models\Incident::class,
             \App\Models\Intention::class,
             \App\Models\Payment::class,
+            \App\Models\PrePayment::class,
             \App\Models\Takeover::class,
         ] as $class) {
             $class::saved(function ($model) {

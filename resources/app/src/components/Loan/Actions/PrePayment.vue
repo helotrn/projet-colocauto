@@ -22,7 +22,8 @@
     <b-card-body>
       <b-collapse id="loan-actions-pre_payment" role="tabpanel" accordion="loan-actions"
         :visible="open">
-        <div class="loan-actions-pre_payment__description text-center mb-3">
+        <div class="loan-actions-pre_payment__description text-center mb-3"
+          v-if="!action.executed_at">
           <div v-if="userRole === 'owner'">
             <p>
               {{ loan.borrower.user.name }} doit ajouter des crédits à son compte.
@@ -51,6 +52,10 @@
               </b-button>
             </div>
           </div>
+        </div>
+        <div v-else>
+          <p>Il y a assez de crédits à votre compte pour couvrir cette course.</p>
+          <p>Visitez votre profil pour ajouter des crédits à votre compte.</p>
         </div>
       </b-collapse>
     </b-card-body>

@@ -10,20 +10,22 @@ class LoanTransformer extends BaseTransformer
     public function transform($item, $options = []) {
         $output = parent::transform($item, $options);
 
-        if (isset($output['intention']) && isset($output['actions'])) {
-            for ($i = 0; $i < count($output['actions']); $i++) {
-                if ($output['actions'][$i]['type'] === 'intention') {
-                    break;
+        foreach (['intention', 'pre_payment', 'takeover', 'handover'] as $key) {
+            if (isset($output[$key]) && isset($output['actions'])) {
+                for ($i = 0; $i < count($output['actions']); $i++) {
+                    if ($output['actions'][$i]['type'] === $key) {
+                        break;
+                    }
                 }
-            }
 
-            $intentionAction = array_merge(
-                $output['intention'],
-                [
-                    'type' => 'intention',
-                ]
-            );
-            $output['actions'][$i] = $intentionAction;
+                $action = array_merge(
+                    $output[$key],
+                    [
+                        'type' => $key,
+                    ]
+                );
+                $output['actions'][$i] = $action;
+            }
         }
 
         return $output;

@@ -6,6 +6,7 @@ use App\Http\Requests\BaseRequest as Request;
 use App\Models\PrePayment;
 use App\Repositories\LoanRepository;
 use App\Repositories\PrePaymentRepository;
+use Illuminate\Validation\ValidationException;
 
 class PrePaymentController extends RestController
 {

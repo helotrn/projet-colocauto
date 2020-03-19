@@ -5,7 +5,7 @@ namespace App\Http\Requests\Action;
 use App\Http\Requests\BaseRequest;
 use App\Models\Loan;
 
-class PrePaymentRequest extends BaseRequest
+class TakeoverRequest extends BaseRequest
 {
     public function authorize() {
         $user = $this->user();
@@ -14,7 +14,12 @@ class PrePaymentRequest extends BaseRequest
             return true;
         }
 
-        if ($user->borrower->id === Loan::find($this->get('loan_id'))->borrower->id) {
+        $loan = Loan::find($this->get('loan_id'));
+        if ($user->borrower->id === $loan->borrower->id) {
+            return true;
+        }
+
+        if ($user->owner->id === $loan->loanable->owner->id) {
             return true;
         }
 
