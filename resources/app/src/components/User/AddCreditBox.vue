@@ -11,7 +11,13 @@
         </p>
 
         <p class="user-add-credit-box__balance__cost">
-          coûtera {{ (amount * fee + feeConstant) | currency }} avec les frais.
+          coûtera {{ amountWithFee | currency }}
+          <span class="no-break">
+            avec les frais ({{ onlyFee | currency }})
+          </span>
+          <span class="no-break">
+            et les taxes ({{ onlyTaxes | currency }}).
+          </span>
         </p>
 
         <p>
@@ -75,17 +81,18 @@ export default {
   name: 'UserAddCreditBox',
   data() {
     return {
-      customAmount: this.minimumRequired * 2,
+      customAmount: this.minimumRequired ? (parseFloat(this.minimumRequired, 10) * 2) : 20,
       fee: 1.05,
       feeConstant: 1,
       paymentMethodId: null,
-      selectedAmount: parseFloat(this.minimumRequired, 10),
+      selectedAmount: this.minimumRequired ? parseFloat(this.minimumRequired, 10) : 10,
     };
   },
   props: {
     minimumRequired: {
       type: String,
-      required: true,
+      required: false,
+      default: null,
     },
     user: {
       type: Object,
@@ -100,16 +107,22 @@ export default {
 
       return parseFloat(this.selectedAmount, 10);
     },
+    amountWithFee() {
+      return (this.amount * this.fee + this.feeConstant) * 1.14975;
+    },
     newAmount() {
       return this.amount + parseFloat(this.user.balance);
     },
     amounts() {
       const options = [
-        {
+      ];
+
+      if (this.minimumRequired) {
+        options.push({
           text: 'Minimum requis',
           value: parseFloat(this.minimumRequired, 10),
-        },
-      ];
+        });
+      }
 
       const standardOptions = [
         {
@@ -131,7 +144,7 @@ export default {
       ];
 
       for (let i = 0, len = standardOptions.length; i < len; i += 1) {
-        if (standardOptions[i].value > this.minimumRequired) {
+        if (!this.minimumRequired || standardOptions[i].value > this.minimumRequired) {
           options.push(standardOptions[i]);
         }
       }
@@ -142,6 +155,12 @@ export default {
       });
 
       return options;
+    },
+    onlyFee() {
+      return (this.amount * this.fee + this.feeConstant) - this.amount;
+    },
+    onlyTaxes() {
+      return (this.amount * this.fee + this.feeConstant) * 1.14975 - this.amount - this.fee;
     },
     paymentMethods() {
       return this.user.payment_methods.map((pm) => {

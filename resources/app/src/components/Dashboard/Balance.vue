@@ -7,7 +7,7 @@
     </div>
 
     <div class="dashboard-balance__buttons">
-      <b-button class="mr-3" size="sm" variant="primary">
+      <b-button class="mr-3" size="sm" variant="primary" v-b-modal.add-credit-modal>
         {{ $t('approvisionner') }}
       </b-button>
 
@@ -27,6 +27,11 @@
         {{ $t('modify_payment_method') }}
       </router-link>
     </p>
+
+    <b-modal id="add-credit-modal" title="Ajouter des crédits" size="lg"
+      footer-class="d-none">
+      <user-add-credit-box :user="user" @bought="reloadUserAndCloseModal" @cancel="closeModal"/>
+    </b-modal>
   </div>
 </template>
 
@@ -39,8 +44,13 @@ fr:
 </i18n>
 
 <script>
+import UserAddCreditBox from '@/components/User/AddCreditBox.vue';
+
 export default {
   name: 'DashboardBalance',
+  components: {
+    UserAddCreditBox,
+  },
   props: {
     user: {
       type: Object,
@@ -50,6 +60,18 @@ export default {
   computed: {
     roundedBalance() {
       return Math.floor(this.user.balance);
+    },
+  },
+  methods: {
+    closeModal() {
+      this.$bvModal.hide('add-credit-modal');
+    },
+    async reloadUser() {
+      await this.$store.dispatch('loadUser');
+    },
+    async reloadUserAndCloseModal() {
+      this.closeModal();
+      await this.reloadUser();
     },
   },
 };

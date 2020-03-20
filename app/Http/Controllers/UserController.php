@@ -173,22 +173,27 @@ class UserController extends RestController
 
         \Stripe\Stripe::setApiKey(config('services.stripe.secret'));
 
-        $amountInCents = intval($amount * 100);
+        $amountWithFeeAndTaxes = ($amount * 1.05) * 1.14975;
+        $amountWithFeeAndTaxesInCents = intval($amountWithFeeAndTaxes * 100);
 
-        if ($amountInCents <= 0) {
+        if ($amountWithFeeAndTaxesInCents <= 0) {
             return $this->respondWithMessage('amount_in_cents_is_nothing', 400);
         }
+
+        $fee = $amount * 1.05 - $amount;
+        $taxes = $amount * 1.05 * 1.14975 - $amount - $fee;
 
         $date = date('Y-m-d');
         try {
             $charge = \Stripe\Charge::create([
-                'amount' => intval($amount * 100),
+                'amount' => $amountWithFeeAndTaxesInCents,
                 'currency' => 'cad',
                 'customer' => $user->getStripeCustomer()->id,
-                'description' => "$date - Ajout au compte Locomotion: {$amount}$",
+                'description' => "$date - Ajout au compte Locomotion: "
+                    . "{$amount}$ + {$fee}$ (frais) + {$taxes}$ (taxes)",
             ]);
 
-            $user->balance += $charge['amount'] / 100;
+            $user->balance += $amount;
             $user->transaction_id = $transactionId + 1;
             $user->save();
 
