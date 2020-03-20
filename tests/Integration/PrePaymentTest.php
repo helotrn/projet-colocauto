@@ -16,16 +16,22 @@ class PrePaymentTest extends TestCase
         $loan = $loan->fresh();
         $intention = $loan->intention;
 
-        $response = $this->json('PUT', "/api/v1/loans/$loan->id/actions/$intention->id/complete");
+        $response = $this->json(
+            'PUT',
+            "/api/v1/loans/$loan->id/actions/$intention->id/complete",
+            [
+                'type' => 'intention',
+            ]
+        );
         $response->assertStatus(200);
 
         $prePayment = $loan->prePayment;
-        $response = $this->json('GET', "/api/v1/pre_payments?loan.id=$loan->id");
+        $response = $this->json('GET', "/api/v1/loans/$loan->id/actions/$prePayment->id");
 
         $response->assertStatus(200);
 
         $json = $response->json();
-        $this->assertEquals($prePayment->id, array_get($json, 'data.0.id'));
+        $this->assertEquals($prePayment->id, array_get($json, 'id'));
     }
 
     public function testCompletePrePayments() {
@@ -37,7 +43,13 @@ class PrePaymentTest extends TestCase
         Carbon::setTestNow($executedAtDate);
 
         $intention = $loan->intention;
-        $response = $this->json('PUT', "/api/v1/loans/$loan->id/actions/$intention->id/complete");
+        $response = $this->json(
+            'PUT',
+            "/api/v1/loans/$loan->id/actions/$intention->id/complete",
+            [
+                'type' => 'intention',
+            ]
+        );
         $response->assertStatus(200);
 
         $loan = $loan->fresh();
@@ -46,10 +58,16 @@ class PrePaymentTest extends TestCase
 
         $this->assertNotNull($prePayment);
 
-        $response = $this->json('PUT', "/api/v1/loans/$loan->id/actions/$prePayment->id/complete");
+        $response = $this->json(
+            'PUT',
+            "/api/v1/loans/$loan->id/actions/$prePayment->id/complete",
+            [
+                'type' => 'pre_payment',
+            ]
+        );
         $response->assertStatus(200);
 
-        $response = $this->json('GET', "/api/v1/pre_payments/$prePayment->id?loan.id=$loan->id");
+        $response = $this->json('GET', "/api/v1/loans/$loan->id/actions/$prePayment->id");
         $response->assertStatus(200)
             ->assertJson(['status' => 'completed'])
             ->assertJson(['executed_at' => $executedAtDate]);
@@ -70,7 +88,13 @@ class PrePaymentTest extends TestCase
         Carbon::setTestNow($executedAtDate);
 
         $intention = $loan->intention;
-        $response = $this->json('PUT', "/api/v1/loans/$loan->id/actions/$intention->id/complete");
+        $response = $this->json(
+            'PUT',
+            "/api/v1/loans/$loan->id/actions/$intention->id/complete",
+            [
+                'type' => 'intention',
+            ]
+        );
         $response->assertStatus(200);
 
         $loan = $loan->fresh();
@@ -79,10 +103,16 @@ class PrePaymentTest extends TestCase
 
         $this->assertNotNull($prePayment);
 
-        $response = $this->json('PUT', "/api/v1/loans/$loan->id/actions/$prePayment->id/cancel");
+        $response = $this->json(
+            'PUT',
+            "/api/v1/loans/$loan->id/actions/$prePayment->id/cancel",
+            [
+                'type' => 'pre_payment',
+            ]
+        );
         $response->assertStatus(200);
 
-        $response = $this->json('GET', "/api/v1/pre_payments/$prePayment->id?loan.id=$loan->id");
+        $response = $this->json('GET', "/api/v1/loans/$loan->id/actions/$prePayment->id");
         $response->assertStatus(200)
             ->assertJson(['status' => 'canceled'])
             ->assertJson(['executed_at' => $executedAtDate]);

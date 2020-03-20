@@ -85,12 +85,13 @@ class IntentionController extends RestController
     }
 
     public function cancel(Request $request, $actionId, $loanId) {
-        $item = $this->repo->find($request, $actionId);
-        $loan = $this->loanRepo->find($request, $loanId);
+        $authRequest = $request->redirectAuth(Request::class);
+        $item = $this->repo->find($authRequest, $actionId);
 
-        if ($item->id && $loan->id) {
-            $item->status = 'canceled';
-            $item->save();
-        }
+        $item->message_for_borrower = $request->get('message_for_borrower');
+        $item->status = 'canceled';
+        $item->save();
+
+        return $item;
     }
 }

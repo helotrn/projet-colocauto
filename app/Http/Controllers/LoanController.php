@@ -10,9 +10,16 @@ use Illuminate\Validation\ValidationException;
 
 class LoanController extends RestController
 {
-    public function __construct(LoanRepository $repository, Loan $model) {
+    private $actionController;
+
+    public function __construct(
+        LoanRepository $repository,
+        Loan $model,
+        ActionController $actionController
+    ) {
         $this->repo = $repository;
         $this->model = $model;
+        $this->actionController = $actionController;
     }
 
     public function index(Request $request) {
@@ -65,6 +72,11 @@ class LoanController extends RestController
         }
 
         return $response;
+    }
+
+    public function retrieveAction(Request $request, $loanId, $actionId) {
+        $request->merge([ 'loan_id' => $loanId ]);
+        return $this->actionController->retrieve($request, $actionId);
     }
 
     public function template(Request $request) {

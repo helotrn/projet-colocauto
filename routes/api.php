@@ -28,23 +28,16 @@ Route::prefix('v1')->group(function () {
             'borrower',
             'car',
             'community',
-            'extension',
             'file',
-            'handover',
             'image',
-            'incident',
-            'intention',
             'invoice',
             'loan',
             'loanable',
             'owner',
             'padlock',
-            'payment',
             'payment_method',
-            'pre_payment',
             'pricing',
             'tag',
-            'takeover',
             'trailer',
             'user'
         ] as $entity) {
@@ -65,6 +58,8 @@ Route::prefix('v1')->group(function () {
 
         Route::delete('users/{user_id}/communities/{community_id}', 'UserController@deleteCommunityUser')
             ->name("users.deleteCommunityUser");
+
+        Route::get('/loans/{loan_id}/actions/{action_id}', 'LoanController@retrieveAction');
 
         Route::put('/loans/{loan_id}/actions/{action_id}/complete', 'ActionController@complete');
         Route::put('/loans/{loan_id}/actions/{action_id}/cancel', 'ActionController@cancel');

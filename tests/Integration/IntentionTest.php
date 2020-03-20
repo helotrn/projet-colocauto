@@ -15,77 +15,6 @@ class IntentionTest extends TestCase
         'loan_id',
     ];
 
-    public function testCreateIntentions() {
-        $borrower = factory(Borrower::class)->create(['user_id' => $this->user->id]);
-        $loan = factory(Loan::class)->create(['borrower_id' => $borrower->id]);
-        $loan = $loan->fresh();
-
-        $intention = $loan->intention;
-
-        $this->assertNotNull($intention);
-
-        $data = [
-            'loan_id' => $loan->id,
-        ];
-
-        $response = $this->json('POST', "/api/v1/intentions", $data);
-
-        $response->assertStatus(201)
-            ->assertJson(['loan_id' => $loan->id])
-            ->assertJsonStructure(static::$getIntentionResponseStructure);
-    }
-
-    public function testShowIntentions() {
-        $borrower = factory(Borrower::class)->create(['user_id' => $this->user->id]);
-        $loan = factory(Loan::class)->create(['borrower_id' => $borrower->id]);
-        $loan = $loan->fresh();
-
-        $intention = $loan->intention;
-
-        $this->assertNotNull($intention);
-
-        $response = $this->json('GET', "/api/v1/intentions/$intention->id?loan.id=$loan->id");
-
-        $response->assertStatus(200)
-            ->assertJson(['id' => $intention->id])
-            ->assertJsonStructure(static::$getIntentionResponseStructure);
-    }
-
-    public function testUpdateIntentions() {
-        $borrower = factory(Borrower::class)->create(['user_id' => $this->user->id]);
-        $loan = factory(Loan::class)->create(['borrower_id' => $borrower->id]);
-        $loan = $loan->fresh();
-
-        $intention = $loan->intention;
-
-        $this->assertNotNull($intention);
-
-        $data = [];
-
-        $response = $this->json('PUT', "/api/v1/intentions/$intention->id", $data);
-
-        $response->assertStatus(200)->assertJson($data);
-    }
-
-    public function testDeleteIntentions() {
-        $borrower = factory(Borrower::class)->create(['user_id' => $this->user->id]);
-        $loan = factory(Loan::class)->create(['borrower_id' => $borrower->id]);
-        $loan = $loan->fresh();
-
-        $intention = $loan->intention;
-
-        $this->assertNotNull($intention);
-
-        $response = $this->json('DELETE', "/api/v1/intentions/$intention->id");
-        $response->assertStatus(200);
-
-        $response = $this->json('GET', "/api/v1/intentions/$intention->id");
-        $response->assertStatus(404);
-
-        $response = $this->json('GET', "/api/v1/intentions?loan.id=$loan->id");
-        $response->assertJson([ 'total' => 0 ]);
-    }
-
     public function testCompleteIntentions() {
         $borrower = factory(Borrower::class)->create(['user_id' => $this->user->id]);
         $loan = factory(Loan::class)->create(['borrower_id' => $borrower->id]);
@@ -100,11 +29,14 @@ class IntentionTest extends TestCase
 
         $response = $this->json(
             'PUT',
-            "/api/v1/loans/$loan->id/actions/$intention->id/complete"
+            "/api/v1/loans/$loan->id/actions/$intention->id/complete",
+            [
+              'type' => 'intention',
+            ]
         );
         $response->assertStatus(200);
 
-        $response = $this->json('GET', "/api/v1/intentions/$intention->id?loan.id=$loan->id");
+        $response = $this->json('GET', "/api/v1/loans/$loan->id/actions/$intention->id");
         $response->assertStatus(200)
             ->assertJson(['status' => 'completed'])
             ->assertJson(['executed_at' => $executedAtDate]);
@@ -122,10 +54,16 @@ class IntentionTest extends TestCase
         $executedAtDate = substr(Carbon::now()->format("Y-m-d h:m:sO"), 0, -2);
         Carbon::setTestNow($executedAtDate);
 
-        $response = $this->json('PUT', "/api/v1/loans/$loan->id/actions/$intention->id/cancel");
+        $response = $this->json(
+            'PUT',
+            "/api/v1/loans/$loan->id/actions/$intention->id/cancel",
+            [
+                'type' => 'intention',
+            ]
+        );
         $response->assertStatus(200);
 
-        $response = $this->json('GET', "/api/v1/intentions/$intention->id?loan.id=$loan->id");
+        $response = $this->json('GET', "/api/v1/loans/{$loan->id}/actions/$intention->id");
         $response->assertStatus(200)
             ->assertJson(['status' => 'canceled'])
             ->assertJson(['executed_at' => $executedAtDate]);

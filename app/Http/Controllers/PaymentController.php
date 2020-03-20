@@ -81,6 +81,6 @@ class PaymentController extends RestController
         $item->status = 'completed';
         $item->save();
 
-        return response('', 201);
+        return $item;
     }
 }
