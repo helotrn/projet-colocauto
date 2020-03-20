@@ -25,6 +25,7 @@ class UsersTableSeeder extends Seeder
                 'name' => 'Émile',
                 'last_name' => 'Plourde-Lavoie',
                 'description' => 'Salut tout le monde :)',
+                'submitted_at' => new \DateTime,
             ]),
             'ariane@molotov.ca' => [
                 'name' => 'Ariane',
@@ -48,6 +49,7 @@ class UsersTableSeeder extends Seeder
             'emile@molotov.ca' => [
                 1 => [
                     'role' => 'admin',
+                    'approved_at' => new \DateTime,
                 ],
             ],
             'achouinard31@gmail.com' => [
