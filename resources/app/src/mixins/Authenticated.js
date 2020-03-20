@@ -86,10 +86,14 @@ export default {
       return true;
     },
     ongoingLoans() {
-      return [];
+      const now = this.$dayjs().format('YYYY-MM-DD HH:mm:ss');
+
+      return this.allLoans.filter(l => l.actions.length > 1 && l.departure_at < now);
     },
     pastLoans() {
-      return [];
+      return this.allLoans
+        .filter(l => l.actions.length > 1 && !!l.actions.find(a => a.type === 'payment'))
+        .slice(0, 3);
     },
     user() {
       return this.$store.state.user;
@@ -97,7 +101,9 @@ export default {
     upcomingLoans() {
       const now = this.$dayjs().format('YYYY-MM-DD HH:mm:ss');
 
-      return this.allLoans.filter(l => l.actions.length > 1 && l.departure_at < now);
+      return this.allLoans
+        .filter(l => l.actions.length > 1 && l.departure_at > now
+          && !l.actions.find(a => a.type === 'payment'));
     },
     waitingLoans() {
       return this.allLoans.filter(l => l.actions.length === 1);

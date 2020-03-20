@@ -6,6 +6,7 @@ use App\Http\Requests\BaseRequest as Request;
 use App\Http\Requests\Action\ActionRequest;
 use App\Http\Requests\Action\HandoverRequest;
 use App\Http\Requests\Action\IntentionRequest;
+use App\Http\Requests\Action\PaymentRequest;
 use App\Http\Requests\Action\PrePaymentRequest;
 use App\Http\Requests\Action\TakeoverRequest;
 use App\Models\Action;
@@ -151,10 +152,12 @@ class ActionController extends RestController
                 $incidentRequest->request->add($request->all());
                 return $this->incidentController->complete($incidentRequest, $actionId, $loanId);
             case 'payment':
-                $paymentRequest = new Request();
-                $paymentRequest->setMethod('PUT');
-                $paymentRequest->request->add($request->all());
-                return $this->paymentController->complete($paymentRequest, $actionId, $loanId);
+                $paymentRequest = $request->redirect(PaymentRequest::class);
+                return $this->paymentController->complete(
+                    $paymentRequest,
+                    $actionId,
+                    $loanId
+                );
             default:
                 throw new \Exception('invalid action type');
         }

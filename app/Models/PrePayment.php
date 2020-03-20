@@ -22,10 +22,16 @@ class PrePayment extends Action
                 return;
             }
 
+            $loan = $model->loan;
+            $borrowerUser = $loan->borrower->user;
+            if ($borrowerUser->balance >= $loan->estimated_price) {
+                $model->status = 'completed';
+            }
+
             switch ($model->status) {
                 case 'completed':
                     if (!$model->loan->takeover) {
-                        $takeover = Takeover::create();
+                        $takeover = new Takeover();
                         $takeover->loan()->associate($model->loan);
                         $takeover->save();
                     }

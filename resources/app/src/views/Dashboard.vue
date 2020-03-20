@@ -40,7 +40,7 @@
           <h2>Emprunts en cours</h2>
 
           <div class="dashboard__ongoing-loans" v-for="loan in ongoingLoans" :key="loan.id">
-            {{ loan }}
+            <loan-info-box :loan="loan" :user="user" :buttons="['view']" />
           </div>
         </section>
 

@@ -25,19 +25,33 @@ class Payment extends Action
         parent::boot();
 
         self::saved(function ($model) {
-            if ($model->status !== 'in_process' && !$model->executed_at) {
-                switch ($model->status) {
-                    case 'completed':
-                        $model->executed_at = Carbon::now();
+            if ($model->executed_at) {
+                return;
+            }
 
-                        $model->save();
-                        break;
-                    case 'canceled':
-                        $model->executed_at = Carbon::now();
-                        $model->save();
-                        $model->loan->setCanceled();
-                        break;
-                }
+            switch ($model->status) {
+                case 'completed':
+                    $loan = $model->loan;
+                    $price = $loan->actual_price;
+
+                    $borrower = $loan->borrower->user;
+                    $borrower->removeFromBalance($price);
+
+                    $owner = $loan->loanable->owner->user;
+                    $owner->addToBalance($price);
+
+                    $loan->final_price = $price;
+                    $loan->save();
+
+                    $model->executed_at = Carbon::now();
+                    $model->save();
+                    break;
+                case 'canceled':
+                    $model->loan->setCanceled();
+
+                    $model->executed_at = Carbon::now();
+                    $model->save();
+                    break;
             }
         });
     }

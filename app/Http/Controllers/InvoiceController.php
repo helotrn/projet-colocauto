@@ -64,4 +64,12 @@ class InvoiceController extends RestController
 
         return $response;
     }
+
+    public function template() {
+        return [
+            'item' => [],
+            'rules' => [],
+            'filters' => $this->model::$filterTypes,
+        ];
+    }
 }

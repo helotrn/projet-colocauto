@@ -9,5 +9,6 @@ class InvoiceRepository extends RestRepository
 {
     public function __construct(Invoice $model) {
         $this->model = $model;
+        $this->columnsDefinition = $model::getColumnsDefinition();
     }
 }

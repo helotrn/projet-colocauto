@@ -27,8 +27,8 @@ class Intention extends Action
             switch ($model->status) {
                 case 'completed':
                     if (!$model->loan->prePayment) {
-                        $prePayment = PrePayment::create();
-                        $prePayment->loan()->attach($model->loan);
+                        $prePayment = new PrePayment();
+                        $prePayment->loan()->associate($model->loan);
                         $prePayment->save();
                     }
 

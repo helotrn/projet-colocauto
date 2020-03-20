@@ -22,7 +22,37 @@
     <b-card-body>
       <b-collapse id="loan-actions-payment" role="tabpanel" accordion="loan-actions"
         :visible="open">
-        Paiment
+        <div v-if="!!action.executed_at">
+          <p>L'emprunt s'est conclu avec succès!</p>
+
+          <p>Le montant final était {{ loan.final_price | currency }}.</p>
+        </div>
+        <div v-else>
+          <div v-if="userRole === 'owner'">
+            <p>
+              Vous pouvez maintenant valider les données de la course.
+            </p>
+          </div>
+          <div v-if="userRole === 'borrower'" class="text-center">
+            <p>
+              Le prix final de la course s'élève à {{ loan.actual_price | currency }}.
+            </p>
+
+            <p>
+              Si tout est en ordre, veuillez valider ci-dessous.
+            </p>
+
+            <div class="loan-actions-payment__buttons text-center">
+              <b-button size="sm" variant="success" class="mr-3" @click="completeAction">
+                Accepter
+              </b-button>
+
+              <b-button size="sm" variant="outline-danger" @click="cancelAction">
+                Refuser
+              </b-button>
+            </div>
+          </div>
+        </div>
       </b-collapse>
     </b-card-body>
   </b-card>

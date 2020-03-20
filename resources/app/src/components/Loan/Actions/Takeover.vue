@@ -74,7 +74,7 @@
         </validation-observer>
 
         <div v-if="!!action.executed_at">
-          <hr />
+          <hr>
 
           <b-row>
             <b-col lg="6">
@@ -115,7 +115,6 @@
 <script>
 import FormsImageUploader from '@/components/Forms/ImageUploader.vue';
 import FormsValidatedInput from '@/components/Forms/ValidatedInput.vue';
-import UserAddCreditBox from '@/components/User/AddCreditBox.vue';
 
 import LoanActionsMixin from '@/mixins/LoanActionsMixin';
 
@@ -125,7 +124,6 @@ export default {
   components: {
     FormsImageUploader,
     FormsValidatedInput,
-    UserAddCreditBox,
   },
 };
 </script>

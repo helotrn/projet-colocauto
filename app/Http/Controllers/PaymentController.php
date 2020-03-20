@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Action\PaymentRequest;
 use App\Http\Requests\BaseRequest as Request;
 use App\Models\Payment;
 use App\Repositories\LoanRepository;
@@ -71,12 +72,15 @@ class PaymentController extends RestController
         return $response;
     }
 
-    public function complete(Request $request, $actionId, $loanId) {
-        $item = $this->repo->find($request, $actionId);
-        $loan = $this->loanRepo->find($request, $loanId);
-        if ($item->id && $loan->id) {
-            $item->status = 'completed';
-            $item->save();
-        }
+    public function complete(PaymentRequest $request, $actionId, $loanId) {
+        $authRequest = $request->redirectAuth(Request::class);
+
+        $item = $this->repo->find($authRequest, $actionId);
+        $loan = $this->loanRepo->find($authRequest, $loanId);
+
+        $item->status = 'completed';
+        $item->save();
+
+        return response('', 201);
     }
 }

@@ -11,6 +11,7 @@ import cars from './models/cars';
 import communities from './models/communities';
 import files from './models/files';
 import images from './models/images';
+import invoices from './models/invoices';
 import loans from './models/loans';
 import loanables from './models/loanables';
 import paymentMethods from './models/paymentMethods';
@@ -207,6 +208,7 @@ export default new Vuex.Store({
     'community.list': CommunityList,
     files,
     images,
+    invoices,
     loans,
     loanables,
     login: Login,

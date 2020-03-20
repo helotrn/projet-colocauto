@@ -127,6 +127,7 @@ const routes = [
           '*',
           'actions.*',
           'intention.*',
+          'payment.*',
           'pre_payment.*',
           'takeover.*',
           'takeover.image.*',

@@ -31,7 +31,7 @@
             {{ loan.borrower.user.name }} veut vous emprunter {{ loanablePrettyName }}.
           </p>
           <p v-else>
-            Vous avez demandé à {{ loan.borrower.user.name }} de lui
+            Vous avez demandé à {{ loan.loanable.owner.user.name }} de lui
             emprunter {{ loanablePrettyName }}.
           </p>
 

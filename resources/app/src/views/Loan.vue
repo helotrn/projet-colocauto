@@ -316,7 +316,7 @@ export default {
         case 'handover':
           return handover && !handover.executed_at;
         case 'payment':
-          return payment && payment.executed_at;
+          return payment && !payment.executed_at;
         default:
           return false;
       }

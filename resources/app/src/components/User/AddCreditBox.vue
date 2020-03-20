@@ -51,7 +51,9 @@
         </b-form-select>
 
         <p>
-          <router-link to="/profile/payment_methods/new">+ Ajouter une méthode de paiement</router-link>
+          <router-link to="/profile/payment_methods/new">
+            + Ajouter une méthode de paiement
+          </router-link>
         </p>
       </b-col>
 
@@ -65,8 +67,8 @@
 
     <b-row class="user-add-credit-box__buttons" tag="p">
       <b-col class="text-center">
-        <b-button class="mr-3" type="submit" variant="primary" @click="buyCredit"
-          :disabled="amount < minimumRequired">
+        <b-button class="mr-3" type="submit" variant="primary"
+          @click="buyCredit" :disabled="amount < minimumRequired">
           Acheter
         </b-button>
 
@@ -164,10 +166,11 @@ export default {
     },
     paymentMethods() {
       return this.user.payment_methods.map((pm) => {
+        const { name: text, id: value, is_default: selected } = pm;
         return {
-          text: pm.name,
-          value: pm.id,
-          selected: pm.is_default,
+          text,
+          value,
+          selected,
         };
       });
     },
@@ -181,7 +184,7 @@ export default {
         const { amount, paymentMethodId } = this;
         await this.$store.dispatch('account/buyCredit', {
           amount,
-          paymentMethodId
+          paymentMethodId,
         });
         this.$emit('bought');
       } catch (e) {

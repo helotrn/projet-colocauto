@@ -13,6 +13,10 @@ class Takeover extends Action
         'comments_on_vehicle' => [ 'nullable' ],
     ];
 
+    public static $sizes = [
+        'thumbnail' => '256x@fit',
+    ];
+
     protected $fillable = [
         'mileage_beginning',
         'fuel_beginning',
@@ -21,10 +25,6 @@ class Takeover extends Action
 
     public $morphOnes = [
         'image' => 'imageable',
-    ];
-
-    public static $sizes = [
-        'thumbnail' => '256x@fit',
     ];
 
     public function image() {

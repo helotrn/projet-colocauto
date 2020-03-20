@@ -2,6 +2,7 @@ import Profile from '../views/Profile.vue';
 import ProfileAccount from '../views/profile/Account.vue';
 import ProfileBorrower from '../views/profile/Borrower.vue';
 import ProfileCommunities from '../views/profile/Communities.vue';
+import ProfileInvoices from '../views/profile/Invoices.vue';
 import ProfileLoanables from '../views/profile/Loanables.vue';
 import ProfileLoanable from '../views/profile/Loanable.vue';
 import ProfilePaymentMethods from '../views/profile/PaymentMethods.vue';
@@ -49,6 +50,22 @@ export default {
         slug: 'users',
         params: {
           fields: 'id,communities.id,communities.name,communities.requirements,communities.proof',
+        },
+      },
+    },
+    {
+      path: 'invoices',
+      component: ProfileInvoices,
+      meta: {
+        auth: true,
+        title: 'titles.invoices',
+        slug: 'invoices',
+        data: {
+          invoices: {
+            retrieve: {
+              fields: '*',
+            },
+          },
         },
       },
     },

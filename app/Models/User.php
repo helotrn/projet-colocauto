@@ -110,6 +110,7 @@ class User extends AuthenticatableBaseModel
     protected $hidden = ['password', 'current_bill'];
 
     protected $casts = [
+        'balance' => 'decimal:2',
         'email_verified_at' => 'datetime',
     ];
 
@@ -261,5 +262,21 @@ class User extends AuthenticatableBaseModel
         $this->stripeCustomerMemo = $newCustomer;
 
         return $this->stripeCustomerMemo;
+    }
+
+    public function addToBalance($amount) {
+        $this->balance = floatval($this->balance) + $amount;
+        $this->save();
+    }
+
+    public function removeFromBalance($amount) {
+        var_dump($this->balance);
+        $this->balance = floatval($this->balance) - $amount;
+        var_dump($this->balance);
+        if (floatval($this->balance) < 0) {
+            return abort(400);
+        }
+
+        $this->save();
     }
 }

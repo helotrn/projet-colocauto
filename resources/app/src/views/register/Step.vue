@@ -21,6 +21,7 @@
       </p>
 
       <profile-form v-if="item" :user="item" :loading="loading" @submit="submitAndReload" />
+      <layout-loading v-else />
     </div>
 
     <div v-if="currentPage == 3" class="register-step__community">
@@ -35,6 +36,7 @@
           :key="community.id" :community="community"
           @submit="submitCommunityProof" />
       </div>
+      <layout-loading v-else />
     </div>
 
     <div v-if="currentPage == 4" class="register-step__intents">
@@ -52,6 +54,7 @@
 
       <register-intent-form :user="item" v-if="item" :loading="loading"
         @submit="submitOwnerDocumentsAndTags" />
+      <layout-loading v-else />
     </div>
 
     <div v-if="currentPage == 5" class="register-step__completed">

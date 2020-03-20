@@ -45,9 +45,9 @@ class Loan extends BaseModel
 
         self::created(function ($model) {
             if (!$model->intention) {
-                $intention = Intention::create(['loan_id' => $model->id]);
-
-                $model->intention()->save($intention);
+                $intention = new Intention();
+                $intention->loan()->associate($model);
+                $intention->save();
             }
         });
     }
@@ -61,16 +61,31 @@ class Loan extends BaseModel
         'reason',
     ];
 
-    public $items = ['borrower', 'intention', 'loanable', 'pre_payment', 'takeover', 'handover'];
+    public $computed = ['actual_price', 'actual_duration_in_minutes'];
+
+    public $items = [
+        'borrower',
+        'community',
+        'handover',
+        'intention',
+        'loanable',
+        'payment',
+        'pre_payment',
+        'takeover',
+    ];
 
     public $collections = ['actions'];
 
     public function actions() {
-        return $this->hasMany(Action::class)->orderBy('created_at', 'asc');
+        return $this->hasMany(Action::class)->orderBy('id', 'asc');
     }
 
     public function borrower() {
         return $this->belongsTo(Borrower::class);
+    }
+
+    public function community() {
+        return $this->belongsTo(Community::class);
     }
 
     public function extensions() {
@@ -109,7 +124,28 @@ class Loan extends BaseModel
         //TODO
     }
 
-    public function getPrice() {
-        return 12.22; // FIXME
+    public function getActualDurationInMinutesAttribute() {
+        return $this->duration_in_minutes;
+    }
+
+    public function getActualPriceAttribute() {
+        $takeover = $this->takeover;
+        $handover = $this->handover;
+
+        if (!$takeover || !$handover) {
+            return null;
+        }
+
+        if (!$takeover->executed_at || !$handover->executed_at) {
+            return null;
+        }
+
+        $pricing = $this->community->getPricingFor($this->loanable);
+
+        return $pricing->evaluateRule(
+            $handover->mileage_end - $takeover->mileage_beginning,
+            $this->actual_duration_in_minutes,
+            $this->loanable
+        );
     }
 }

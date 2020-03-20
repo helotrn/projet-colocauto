@@ -34,6 +34,7 @@ Route::prefix('v1')->group(function () {
             'image',
             'incident',
             'intention',
+            'invoice',
             'loan',
             'loanable',
             'owner',

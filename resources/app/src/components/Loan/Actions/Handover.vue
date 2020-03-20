@@ -59,12 +59,31 @@
 
         <b-row>
           <b-col>
-            <forms-validated-input
+            <forms-validated-input v-if="userRole === 'borrower'"
               id="comments_by_borrower" name="comments_by_borrower"
-              type="textarea" :rows="3" :disabled="!!action.executed_at"
-              label="Commentaires sur la réservation"
+              type="textarea" :rows="3" :disabled="!!action.commented_by_borrower_at"
+              label="Laissez un message au propriétaire (facultatif)"
               placeholder="Commentaire sur la réservation"
               v-model="action.comments_by_borrower" />
+            <blockquote v-else-if="action.comments_by_borrower">
+              {{ action.comments_by_borrower }}
+              <div class="user-avatar" :style="{ backgroundImage: borrowerAvatar }" />
+            </blockquote>
+          </b-col>
+        </b-row>
+
+        <b-row>
+          <b-col>
+            <forms-validated-input v-if="userRole === 'owner'"
+              id="comments_by_owner" name="comments_by_owner"
+              type="textarea" :rows="3" :disabled="!!action.commented_by_owner_at"
+              label="Laissez un message à l'emprunteur (facultatif)"
+              placeholder="Commentaire sur la réservation"
+              v-model="action.comments_by_owner" />
+            <blockquote v-else-if="action.comments_by_owner">
+              {{ action.comments_by_owner }}
+              <div class="user-avatar" :style="{ backgroundImage: ownerAvatar }" />
+            </blockquote>
           </b-col>
         </b-row>
 
@@ -78,7 +97,7 @@
         </b-row>
 
         <div v-if="!!action.executed_at" >
-          <hr />
+          <hr>
 
           <b-row>
             <b-col lg="6">
@@ -96,7 +115,7 @@
             <b-col lg="6">
               <forms-validated-input
                 id="comments_on_contestation" name="comments_on_contestation"
-                type="text"
+                type="textarea" :rows="3"
                 label="Commentaires sur la contestation"
                 placeholder="Commentaire sur la contestation"
                 v-model="action.comments_on_contestation" />
@@ -119,7 +138,6 @@
 <script>
 import FormsImageUploader from '@/components/Forms/ImageUploader.vue';
 import FormsValidatedInput from '@/components/Forms/ValidatedInput.vue';
-import UserAddCreditBox from '@/components/User/AddCreditBox.vue';
 
 import LoanActionsMixin from '@/mixins/LoanActionsMixin';
 
@@ -129,7 +147,6 @@ export default {
   components: {
     FormsImageUploader,
     FormsValidatedInput,
-    UserAddCreditBox,
   },
 };
 </script>

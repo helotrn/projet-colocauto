@@ -49,22 +49,11 @@ class Handover extends Action
 
             switch ($model->status) {
                 case 'completed':
-                    $user = $model->loan->borrower->user;
-
-                    $invoice = $user->getLastInvoiceOrCreate();
-
-
-                    $billItem = $invoice->items()->create([
-                        'label' => 'Payment', // FIXME
-                        'amount' => $model->loan->getPrice(),
-                        'item_date' => date('Y-m-d'),
-                    ]);
-
-                    $payment = Payment::create([
-                        'loan_id' => $model->loan->id,
-                        'bill_item_id' => $billItem->id,
-                    ]);
-                    $model->loan->payment()->save($payment);
+                    if (!$model->loan->payment) {
+                        $payment = new Payment();
+                        $payment->loan()->associate($model->loan);
+                        $payment->save();
+                    }
 
                     $model->executed_at = Carbon::now();
                     $model->save();

@@ -86,6 +86,7 @@ export default {
     async selectLoanable(loanable) {
       this.$store.commit('loans/patchItem', {
         borrower: this.user.borrower,
+        community_id: this.user.communities[0].id,
         loanable,
         estimated_price: loanable.price,
       });
