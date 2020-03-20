@@ -122,6 +122,15 @@ export default {
         address_zip: `${this.user.postal_code}`,
       });
 
+      if (error) {
+        this.$store.commit('addNotification', {
+          content: 'Il est temps de choisir une première communauté!',
+          title: 'Erreur sur la carte',
+          variant: 'danger',
+          type: 'payment-form',
+        });
+      }
+
       const { id, card } = token;
 
       this.paymentMethod.external_id = id;

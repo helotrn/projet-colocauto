@@ -43,6 +43,10 @@
             </b-form-select-option>
           </template>
         </b-form-select>
+
+        <p>
+          <router-link to="/profile/payment_methods/new">+ Ajouter une méthode de paiement</router-link>
+        </p>
       </b-col>
 
       <b-col class="user-add-credit-box__explanations">
@@ -160,6 +164,7 @@ export default {
           amount,
           paymentMethodId
         });
+        this.$emit('bought');
       } catch (e) {
         switch (e.response.data.message) {
           case 'no_payment_method':
@@ -169,7 +174,6 @@ export default {
               variant: 'warning',
               type: 'payment_method',
             });
-            this.$router.push('/profile/payment_methods/new');
             break;
           default:
             break;

@@ -37,7 +37,9 @@
               Vous pouvez ajouter des crédits à votre compte.
             </p>
 
-            <user-add-credit-box :minimumRequired="loan.estimated_price" :user="user" />
+            <user-add-credit-box
+              :minimumRequired="loan.estimated_price" :user="user"
+              @bought="completeAction" />
 
             <div class="loan-actions-intention__buttons text-center"
               v-if="user.balance >= loan.estimated_price">

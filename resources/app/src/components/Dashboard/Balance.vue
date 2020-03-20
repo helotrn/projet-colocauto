@@ -33,7 +33,7 @@
 <i18n>
 fr:
   approvisionner: Approvisionner
-  modify_payment_method: Modifier la méthode de paiement
+  modify_payment_method: Modifier les méthodes de paiement
   reclamer: Réclamer
   reclamer_tooltip: Un minimum de 10$ est requis pour réclamer son solde.
 </i18n>
