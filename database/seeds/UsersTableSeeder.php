@@ -27,10 +27,11 @@ class UsersTableSeeder extends Seeder
                 'description' => 'Salut tout le monde :)',
                 'submitted_at' => new \DateTime,
             ]),
-            'ariane@molotov.ca' => [
+            'ariane@molotov.ca' => array_merge($generic, [
                 'name' => 'Ariane',
                 'last_name' => 'Mercier',
-            ],
+                'submitted_at' => new \DateTime,
+            ]),
             'alexandre@molotov.ca' => array_merge($generic, [
                 'name' => 'Alexandre',
                 'last_name' => 'Chouinard',
@@ -49,6 +50,11 @@ class UsersTableSeeder extends Seeder
             'emile@molotov.ca' => [
                 1 => [
                     'role' => 'admin',
+                    'approved_at' => new \DateTime,
+                ],
+            ],
+            'ariane@molotov.ca' => [
+                1 => [
                     'approved_at' => new \DateTime,
                 ],
             ],
