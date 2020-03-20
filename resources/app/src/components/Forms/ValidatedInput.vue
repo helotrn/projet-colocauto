@@ -1,6 +1,6 @@
 <template>
   <validation-provider class="forms-validated-input"
-    mode="lazy"
+    :mode="mode"
     :name="name"
     :rules="rulesOrNothing"
     v-slot="validationContext">
@@ -130,6 +130,11 @@ export default {
       type: String,
       required: true,
     },
+    mode: {
+      required: false,
+      type: String,
+      default: 'eager',
+    },
     max: {
       type: Number,
       required: false,
@@ -226,7 +231,11 @@ export default {
         return null;
       }
 
-      return dirty || validated ? valid : null;
+      if (dirty && !validated) {
+        return null;
+      }
+
+      return validated ? valid : null;
     },
   },
 };
