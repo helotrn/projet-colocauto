@@ -154,7 +154,7 @@ export default {
 </script>
 
 <style lang="scss">
-@import "@/assets/scss/tools";
+@import "~bootstrap/scss/bootstrap-grid";
 
 .navbar.layout-navbar {
   flex-direction: row-reverse;

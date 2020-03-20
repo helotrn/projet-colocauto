@@ -46,5 +46,8 @@ module.exports = {
   pluginOptions: {
     lintStyleOnBuild: true,
     stylelint: {},
+    webpackBundleAnalyzer: {
+      openAnalyzer: true,
+    },
   },
 };

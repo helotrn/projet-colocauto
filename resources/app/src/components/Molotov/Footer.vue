@@ -26,8 +26,6 @@ export default {
 </script>
 
 <style lang="scss">
-@import "~bootstrap/scss/bootstrap-grid";
-
 $molotov-footer-height: 44px !default;
 $molotov-footer-color: #fff;
 $molotov-footer-hover-color: #fff;

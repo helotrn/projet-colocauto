@@ -10108,6 +10108,13 @@ vue-cal@^2.24.7:
   resolved "https://registry.yarnpkg.com/vue-cal/-/vue-cal-2.24.7.tgz#9b34eef144cc214c23f8660e12ecd159ad9e35ba"
   integrity sha512-r+R7QbtpyrkAm1hei5xLuGafchdNK8vnfoUItiC5hOlWhWDwjE1bpPQLvCowM95+ZOlQ+Abi5Hc+m3Kn7Oxb8A==
 
+vue-cli-plugin-webpack-bundle-analyzer@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/vue-cli-plugin-webpack-bundle-analyzer/-/vue-cli-plugin-webpack-bundle-analyzer-2.0.0.tgz#160fbd492a673bae1be3a9f714db12218678fa01"
+  integrity sha512-zOsxSaJC0+yYqnJNsxvGJOgtso8kL2ejlsx3p614LTNFSzaxc+KJ8AsBb712Yw19eVzhCXZrCpnhRad3kRa+aw==
+  dependencies:
+    webpack-bundle-analyzer "^3.6.0"
+
 vue-eslint-parser@^5.0.0:
   version "5.0.0"
   resolved "https://registry.yarnpkg.com/vue-eslint-parser/-/vue-eslint-parser-5.0.0.tgz#00f4e4da94ec974b821a26ff0ed0f7a78402b8a1"
