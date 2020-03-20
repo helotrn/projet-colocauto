@@ -6,10 +6,12 @@
 
     <div class="page__background">
       <b-container :fluid="fluid" tag="main" :class="mainClass" v-if="!wide">
-        <slot />
+        <layout-loading v-if="loading" />
+        <slot v-else />
       </b-container>
       <main :class="mainClass" v-else>
-        <slot />
+        <layout-loading v-if="loading" />
+        <slot v-else />
       </main>
     </div>
 
@@ -39,6 +41,11 @@ export default {
       required: false,
     },
     fluid: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
+    loading: {
       type: Boolean,
       required: false,
       default: false,
