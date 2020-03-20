@@ -89,6 +89,10 @@ $molotov-footer-heart-fill-hover: $molotov-footer-heart-fill !default;
         text-decoration: none;
         color: $molotov-footer-hover-color;
 
+        svg {
+          top: -2px;
+        }
+
         .love {
           fill: $molotov-footer-heart-fill-hover;
           animation: 0.8s infinite heartbeat;
@@ -97,6 +101,9 @@ $molotov-footer-heart-fill-hover: $molotov-footer-heart-fill !default;
     }
 
     svg {
+      position: relative;
+      top: -3px;
+
       overflow: visible;
       display: inline;
       height: $molotov-footer-heart-size;
