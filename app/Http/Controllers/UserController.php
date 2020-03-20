@@ -154,7 +154,7 @@ class UserController extends RestController
     }
 
     public function addToBalance(AddBalanceRequest $request, $userId) {
-        $findRequest = $this->redirectAuthRequest(Request::class, $request);
+        $findRequest = $request->redirectAuth(Request::class);
         $user = $this->repo->find($findRequest, $userId);
 
         $transactionId = $request->get('transaction_id');

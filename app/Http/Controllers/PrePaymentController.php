@@ -52,7 +52,7 @@ class PrePaymentController extends RestController
 
     public function retrieve(Request $request, $id) {
         $item = $this->repo->find(
-            $this->redirectAuthRequest(Request::class, $request),
+            $request->redirectAuth(Request::class),
             $id
         );
 
@@ -76,7 +76,7 @@ class PrePaymentController extends RestController
     }
 
     public function complete(Request $request, $actionId, $loanId) {
-        $authRequest = $this->redirectAuthRequest(Request::class, $request);
+        $authRequest = $request->redirectAuth(Request::class);
 
         $item = $this->repo->find($authRequest, $actionId);
         $loan = $this->loanRepo->find($authRequest, $loanId);

@@ -10,7 +10,10 @@ class IntentionRequest extends BaseRequest
 {
     public function authorize() {
         $loanRepository = new LoanRepository(new Loan);
-        $loan = $loanRepository->find($this, $this->route('loan_id'));
+        $loan = $loanRepository->find(
+            $this->redirectAuth(BaseRequest::class),
+            $this->route('loan_id')
+        );
 
         $user = $this->user();
 

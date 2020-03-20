@@ -124,35 +124,30 @@ class ActionController extends RestController
     public function complete(ActionRequest $request, $loanId, $actionId) {
         switch ($request->get('type')) {
             case 'intention':
-                $intentionRequest = $this->redirectRequest(
-                    IntentionRequest::class,
-                    $request,
-                    $this->loanRepository
-                );
+                $intentionRequest = $request->redirect(IntentionRequest::class);
                 return $this->intentionController->complete(
                     $intentionRequest,
                     $actionId,
                     $loanId
                 );
             case 'pre_payment':
-                $prePaymentRequest = $this->redirectRequest(
-                    PrePaymentRequest::class,
-                    $request,
-                    $this->loanRepository
-                );
+                $prePaymentRequest = $request->redirect(PrePaymentRequest::class);
                 return $this->prePaymentController->complete(
                     $prePaymentRequest,
                     $actionId,
                     $loanId
                 );
             case 'takeover':
-                $takeoverRequest = $this->redirectRequest(
-                    TakeoverRequest::class,
-                    $request,
-                    $this->loanRepository
-                );
+                $takeoverRequest = $request->redirect(TakeoverRequest::class);
                 return $this->takeoverController->complete(
                     $takeoverRequest,
+                    $actionId,
+                    $loanId
+                );
+            case 'handover':
+                $handoverRequest = $request->redirect(HandoverRequest::class);
+                return $this->handoverController->complete(
+                    $handoverRequest,
                     $actionId,
                     $loanId
                 );
@@ -161,11 +156,6 @@ class ActionController extends RestController
                 $extensionRequest->setMethod('PUT');
                 $extensionRequest->request->add($request->all());
                 return $this->extensionController->complete($extensionRequest, $actionId, $loanId);
-            case 'handover':
-                $handoverRequest = new Request();
-                $handoverRequest->setMethod('PUT');
-                $handoverRequest->request->add($request->all());
-                return $this->handoverController->complete($handoverRequest, $actionId, $loanId);
             case 'incident':
                 $incidentRequest = new Request();
                 $incidentRequest->setMethod('PUT');

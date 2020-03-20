@@ -106,7 +106,7 @@ class AuthController extends RestController
 
     public function addToUserBalance(Request $request) {
         $request->merge([ 'user_id' => $this->auth->user()->id ]);
-        $addBalanceRequest = $this->redirectRequest(UserAddBalanceRequest::class, $request);
+        $addBalanceRequest = $request->redirect(UserAddBalanceRequest::class);
         return $this->userController->addToBalance($addBalanceRequest, $this->auth->user()->id);
     }
 

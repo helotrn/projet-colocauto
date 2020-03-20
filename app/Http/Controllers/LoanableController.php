@@ -54,15 +54,15 @@ class LoanableController extends RestController
 
         switch ($request->get('type')) {
             case 'bike':
-                $bikeRequest = $this->redirectRequest(BikeCreateRequest::class, $request);
+                $bikeRequest = $request->redirect(BikeCreateRequest::class);
                 return $this->bikeController->create($bikeRequest);
                 break;
             case 'car':
-                $carRequest = $this->redirectRequest(CarCreateRequest::class, $request);
+                $carRequest = $request->redirect(CarCreateRequest::class);
                 return $this->carController->create($carRequest);
                 break;
             case 'trailer':
-                $trailerRequest = $this->redirectRequest(TrailerCreateRequest::class, $request);
+                $trailerRequest = $request->redirect(TrailerCreateRequest::class);
                 return $this->trailerController->create($trailerRequest);
                 break;
             default:
@@ -109,13 +109,13 @@ class LoanableController extends RestController
 
         switch ($request->get('type')) {
             case 'bike':
-                $bikeRequest = $this->redirectRequest(BikeUpdateRequest::class, $request);
+                $bikeRequest = $request->redirect(BikeUpdateRequest::class);
                 return $this->bikeController->update($bikeRequest, $id);
             case 'car':
-                $carRequest = $this->redirectRequest(CarUpdateRequest::class, $request);
+                $carRequest = $request->redirect(CarUpdateRequest::class);
                 return $this->carController->update($carRequest, $id);
             case 'trailer':
-                $trailerRequest = $this->redirectRequest(TrailerUpdateRequest::class, $request);
+                $trailerRequest = $this->redirect(TrailerUpdateRequest::class);
                 return $this->trailerController->update($trailerRequest, $id);
             default:
                 throw new \Exception('invalid loanable type');
@@ -138,7 +138,7 @@ class LoanableController extends RestController
     }
 
     public function test(TestRequest $request, $id) {
-        $findRequest = $this->redirectRequest(Request::class, $request);
+        $findRequest = $request->redirectAuth(Request::class);
         $item = $this->repo->find($findRequest, $id);
 
         $estimatedDistance = $request->get('estimated_distance');
