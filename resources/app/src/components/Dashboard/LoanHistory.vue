@@ -3,17 +3,20 @@
     <h3>Historique d'emprunts</h3>
 
     <div v-if="loans.length > 0" class="dashboard-loan-history__loans">
-      <div class="dashboard-loan-history__loans__loan"
+      <ul class="dashboard-loan-history__loans"
         v-for="loan in loans" :key="loan.id">
-        {{ loan }}
-      </div>
+        <li class="dashboard-loan-history__loans__loan">
+          {{ loan.loanable.name }}<br>
+          <span>{{ loan.departure_at | date }}</span>
+        </li>
+      </ul>
     </div>
     <div v-else class="dashboard-loan-history__loans">
       <p class="muted">Aucun historique d'emprunt.</p>
     </div>
 
     <p class="dashboard-loan-history__link">
-      <router-link to="/profile/loans">Voir l'historique</router-link>
+      <router-link to="/profile/loans">Voir tout l'historique</router-link>
     </p>
   </div>
 </template>
@@ -40,6 +43,13 @@ export default {
 
   &__loans, &__link {
     font-size: 13px;
+  }
+
+  &__loans {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    margin-bottom: 1rem;
   }
 }
 </style>
