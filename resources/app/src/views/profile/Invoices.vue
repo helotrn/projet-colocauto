@@ -32,6 +32,7 @@ export default {
         { key: 'paid_at', label: 'Payée', sortable: true },
         { key: 'items_count', label: "Nb. d'items", sortable: true },
         { key: 'total', label: 'Total', sortable: true },
+        { key: 'total_with_taxes', label: 'Total avec taxes', sortable: true },
       ],
     };
   },

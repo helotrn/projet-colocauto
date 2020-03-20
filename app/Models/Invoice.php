@@ -29,6 +29,10 @@ class Invoice extends BaseModel
                 return $query->selectRaw('invoices.*');
             },
             'items_count' => function ($query = null) {
+                if (!$query) {
+                    return 'invoices.*';
+                }
+
                 $query = static::addJoin(
                     $query,
                     'bill_items AS bill_items_join',
@@ -42,6 +46,10 @@ class Invoice extends BaseModel
                     ->groupBy('invoices.id');
             },
             'total' => function ($query = null) {
+                if (!$query) {
+                    return 'invoices.*';
+                }
+
                 $query = static::addJoin(
                     $query,
                     'bill_items AS bill_items_join',
@@ -55,6 +63,10 @@ class Invoice extends BaseModel
                     ->groupBy('invoices.id');
             },
             'total_with_taxes' => function ($query = null) {
+                if (!$query) {
+                    return 'invoices.*';
+                }
+
                 $query = static::addJoin(
                     $query,
                     'bill_items AS bill_items_join',

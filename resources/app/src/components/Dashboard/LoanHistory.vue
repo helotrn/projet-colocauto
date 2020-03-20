@@ -7,7 +7,13 @@
         v-for="loan in loans" :key="loan.id">
         <li class="dashboard-loan-history__loans__loan">
           {{ loan.loanable.name }}<br>
-          <span>{{ loan.departure_at | date }}</span>
+          <span>{{ loan.departure_at | date }}</span><br>
+          <span v-if="loan.borrower.id === borrower.id">
+            Payé {{ loan.final_price | currency }}
+          </span>
+          <span v-else>
+            Reçu {{ loan.final_price | currency }}
+          </span>
         </li>
       </ul>
     </div>
@@ -25,6 +31,10 @@
 export default {
   name: 'DashboardLoanHistory',
   props: {
+    borrower: {
+      type: Object,
+      required: true,
+    },
     loans: {
       type: Array,
       required: true,

@@ -85,7 +85,7 @@
 
           <hr>
 
-          <dashboard-loan-history :loans="pastLoans" />
+          <dashboard-loan-history :loans="pastLoans" :borrower="user.borrower" />
 
           <hr>
 
