@@ -2,8 +2,7 @@
 
 namespace App\Models;
 
-use App\Models\Action;
-use App\Models\Loan;
+use Carbon\Carbon;
 
 class Handover extends Action
 {
@@ -16,15 +15,25 @@ class Handover extends Action
         'purchases_amount' => 'required',//add validation
     ];
 
+    public static $sizes = [
+        'thumbnail' => '256x@fit',
+    ];
+
     protected $fillable = [
-        'loan_id',
-        'status',
         'mileage_end',
         'fuel_end',
         'comments_by_borrower',
         'comments_by_owner',
         'purchases_amount',
     ];
+
+    public $morphOnes = [
+        'image' => 'imageable',
+    ];
+
+    public function image() {
+        return $this->morphOne(Image::class, 'imageable');
+    }
 
     public function loan() {
         return $this->belongsTo(Loan::class);
@@ -34,34 +43,40 @@ class Handover extends Action
         parent::boot();
 
         self::saved(function ($model) {
-            if (!$model->executed_at) {
-                switch ($model->status) {
-                    case 'completed':
-                        $user = $model->loan->borrower->user;
+            if ($model->executed_at) {
+                return;
+            }
 
-                        $invoice = $user->getLastInvoiceOrCreate();
+            switch ($model->status) {
+                case 'completed':
+                    $user = $model->loan->borrower->user;
 
-                        $billItem = $invoice->addItem([
-                            'label' => 'Payment', // FIXME
-                            'amount' => $model->loan->getPrice(),
-                            'item_date' => date('Y-m-d'),
-                        ]);
+                    $invoice = $user->getLastInvoiceOrCreate();
 
-                        $payment = Payment::create([
-                            'loan_id' => $model->loan->id,
-                            'bill_item_id' => $billItem->id,
-                        ]);
-                        $model->loan->payment()->save($payment);
 
-                        $model->executed_at = Carbon::now();
-                        $model->save();
-                        break;
-                    case 'canceled':
-                        $model->executed_at = Carbon::now();
-                        $model->save();
-                        $model->loan->setCanceled();
-                        break;
-                }
+                    $billItem = $invoice->items()->create([
+                        'label' => 'Payment', // FIXME
+                        'amount' => $model->loan->getPrice(),
+                        'item_date' => date('Y-m-d'),
+                    ]);
+
+                    $payment = Payment::create([
+                        'loan_id' => $model->loan->id,
+                        'bill_item_id' => $billItem->id,
+                    ]);
+                    $model->loan->payment()->save($payment);
+
+                    $model->executed_at = Carbon::now();
+                    $model->save();
+                    break;
+                case 'canceled':
+                    $model->loan->setCanceled();
+
+                    $model->executed_at = Carbon::now();
+                    $model->save();
+                    break;
+                default:
+                    break;
             }
         });
     }

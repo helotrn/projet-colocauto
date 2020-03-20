@@ -7,7 +7,6 @@ use Carbon\Carbon;
 class Intention extends Action
 {
     protected $fillable = [
-        'loan_id',
         'message_for_borrower',
     ];
 
@@ -21,23 +20,29 @@ class Intention extends Action
         parent::boot();
 
         self::saved(function ($model) {
-            if (!$model->executed_at) {
-                switch ($model->status) {
-                    case 'completed':
-                        if (!$model->loan->prePayment) {
-                            $prePayment = PrePayment::create(['loan_id' => $model->loan->id]);
-                            $model->loan->prePayment()->save($prePayment);
-                            $model->executed_at = Carbon::now();
+            if ($model->executed_at) {
+                return;
+            }
 
-                            $model->save();
-                        }
-                        break;
-                    case 'canceled':
-                        $model->executed_at = Carbon::now();
-                        $model->save();
-                        $model->loan->setCanceled();
-                        break;
-                }
+            switch ($model->status) {
+                case 'completed':
+                    if (!$model->loan->prePayment) {
+                        $prePayment = PrePayment::create();
+                        $prePayment->loan()->attach($model->loan);
+                        $prePayment->save();
+                    }
+
+                    $model->executed_at = Carbon::now();
+                    $model->save();
+                    break;
+                case 'canceled':
+                    $model->loan->setCanceled();
+
+                    $model->executed_at = Carbon::now();
+                    $model->save();
+                    break;
+                default:
+                    break;
             }
         });
     }

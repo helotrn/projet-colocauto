@@ -2,8 +2,6 @@
 
 namespace App\Models;
 
-use App\Models\Action;
-use App\Models\Loan;
 use Carbon\Carbon;
 
 class Takeover extends Action
@@ -16,8 +14,6 @@ class Takeover extends Action
     ];
 
     protected $fillable = [
-        'loan_id',
-        'status',
         'mileage_beginning',
         'fuel_beginning',
         'comments_on_vehicle',
@@ -25,6 +21,10 @@ class Takeover extends Action
 
     public $morphOnes = [
         'image' => 'imageable',
+    ];
+
+    public static $sizes = [
+        'thumbnail' => '256x@fit',
     ];
 
     public function image() {
@@ -39,23 +39,30 @@ class Takeover extends Action
         parent::boot();
 
         self::saved(function ($model) {
-            if (!$model->executed_at) {
-                $model->executed_at = Carbon::now();
-
-                switch ($model->status) {
-                    case 'completed':
-                        if (!$model->loan->handover) {
-                            $handover = Handover::create([ 'loan_id' => $model->loan->id ]);
-                            $model->loan->handover()->save($handover);
-                        }
-                        break;
-                    case 'canceled':
-                        $model->loan->setCanceled();
-                        break;
-                }
+            if ($model->executed_at) {
+                return;
             }
 
-            $model->save();
+            switch ($model->status) {
+                case 'completed':
+                    if (!$model->loan->handover) {
+                        $handover = new Handover;
+                        $handover->loan()->associate($model->loan);
+                        $handover->save();
+                    }
+
+                    $model->executed_at = Carbon::now();
+                    $model->save();
+                    break;
+                case 'canceled':
+                    $model->loan->setCanceled();
+
+                    $model->executed_at = Carbon::now();
+                    $model->save();
+                    break;
+                default:
+                    break;
+            }
         });
     }
 

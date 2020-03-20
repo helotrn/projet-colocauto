@@ -5,13 +5,19 @@ namespace App\Http\Controllers;
 use App\Http\Requests\BaseRequest as Request;
 use App\Models\Handover;
 use App\Repositories\HandoverRepository;
+use App\Repositories\LoanRepository;
 use Illuminate\Validation\ValidationException;
 
 class HandoverController extends RestController
 {
-    public function __construct(HandoverRepository $repository, Handover $model) {
+    public function __construct(
+        HandoverRepository $repository,
+        Handover $model,
+        LoanRepository $loanRepository
+    ) {
         $this->repo = $repository;
         $this->model = $model;
+        $this->loanRepo = $loanRepository;
     }
 
     public function index(Request $request) {
@@ -64,5 +70,20 @@ class HandoverController extends RestController
         }
 
         return $response;
+    }
+
+    public function complete(Request $request, $actionId, $loanId) {
+        $authRequest = $request->redirectAuth(Request::class);
+
+        $item = $this->repo->find($authRequest, $actionId);
+        $loan = $this->loanRepo->find($authRequest, $loanId);
+
+        $item->fill($request->all());
+        $item->status = 'completed';
+        $item->save();
+
+        $this->repo->update($request, $actionId, $request->all());
+
+        return response('', 201);
     }
 }

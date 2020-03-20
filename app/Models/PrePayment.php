@@ -6,9 +6,7 @@ use Carbon\Carbon;
 
 class PrePayment extends Action
 {
-    protected $fillable = [
-        'loan_id',
-    ];
+    protected $fillable = [];
 
     public $items = ['loan'];
 
@@ -20,22 +18,29 @@ class PrePayment extends Action
         parent::boot();
 
         self::saved(function ($model) {
-            if (!$model->executed_at) {
-                $model->executed_at = Carbon::now();
+            if ($model->executed_at) {
+                return;
+            }
 
-                switch ($model->status) {
-                    case 'completed':
-                        if (!$model->loan->takeover) {
-                            $takeover = Takeover::create([ 'loan_id' => $model->loan->id ]);
-                            $model->loan->takeover()->save($takeover);
-                        }
-                        break;
-                    case 'canceled':
-                        $model->loan->setCanceled();
-                        break;
-                }
+            switch ($model->status) {
+                case 'completed':
+                    if (!$model->loan->takeover) {
+                        $takeover = Takeover::create();
+                        $takeover->loan()->associate($model->loan);
+                        $takeover->save();
+                    }
 
-                $model->save();
+                    $model->executed_at = Carbon::now();
+                    $model->save();
+                    break;
+                case 'canceled':
+                    $model->loan->setCanceled();
+
+                    $model->executed_at = Carbon::now();
+                    $model->save();
+                    break;
+                default:
+                    break;
             }
         });
     }

@@ -25,7 +25,7 @@ class Payment extends Action
         parent::boot();
 
         self::saved(function ($model) {
-            if (!$model->executed_at) {
+            if ($model->status !== 'in_process' && !$model->executed_at) {
                 switch ($model->status) {
                     case 'completed':
                         $model->executed_at = Carbon::now();

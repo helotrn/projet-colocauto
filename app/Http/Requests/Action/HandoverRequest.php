@@ -5,13 +5,13 @@ namespace App\Http\Requests\Action;
 use App\Http\Requests\BaseRequest;
 use App\Models\Loan;
 
-class TakeoverRequest extends BaseRequest
+class HandoverRequest extends BaseRequest
 {
     public function rules() {
         return [
-            'fuel_beginning' => 'required',
-            'mileage_beginning' => [
-                'required',
+            'fuel_end' => 'required:image',
+            'mileage_end' => [
+                'required:image',
                 'integer'
             ],
         ];
@@ -25,7 +25,6 @@ class TakeoverRequest extends BaseRequest
         }
 
         $loan = Loan::find($this->get('loan_id'));
-
         if ($user->borrower && $user->borrower->id === $loan->borrower->id) {
             return true;
         }

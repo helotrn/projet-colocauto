@@ -1,5 +1,5 @@
 <template>
-  <layout-page name="loan" v-if="routeDataLoaded && item && loadedFullLoanable">
+  <layout-page name="loan" :loading="!(routeDataLoaded && item && loadedFullLoanable)">
     <vue-headful :title="fullTitle" />
 
     <b-row>
@@ -50,7 +50,10 @@
 
             <span>Prépaiement</span>
           </li>
-          <li>
+          <li :class="{
+            'current-step': isCurrentStep('takeover'),
+            'reached-step': hasReachedStep('takeover'),
+          }">
             <svg-check v-if="hasReachedStep('takeover')" />
             <svg-waiting v-else />
 
@@ -59,13 +62,19 @@
           <li v-for="incident in item.incidents" :key="incident.id">
             <span>Incident</span>
           </li>
-          <li>
+          <li :class="{
+            'current-step': isCurrentStep('handover'),
+            'reached-step': hasReachedStep('handover'),
+          }">
             <svg-check v-if="hasReachedStep('handover')" />
             <svg-waiting v-else />
 
             <span>Remise du véhicule</span></li>
           </li>
-          <li>
+          <li :class="{
+            'current-step': isCurrentStep('payment'),
+            'reached-step': hasReachedStep('payment'),
+          }">
             <svg-check v-if="hasReachedStep('payment')" />
             <svg-waiting v-else />
 
@@ -91,15 +100,21 @@
             <loan-actions-takeover v-else-if="action.type === 'takeover'"
               :action="action" :loan="item" :open="isCurrentStep('takeover')"
               @completed="loadItem" :user="user" />
+            <loan-actions-handover v-else-if="action.type === 'handover'"
+              :action="action" :loan="item" :open="isCurrentStep('handover')"
+              @completed="loadItem" :user="user" />
+            <loan-actions-payment v-else-if="action.type === 'payment'"
+              :action="action" :loan="item" :open="isCurrentStep('payment')"
+              @completed="loadItem" :user="user" />
             <span v-else>
-              {{ action.type }}
+              {{ action.type }} n'est pas supporté. Contactez le
+              <a href="mailto:support@locomotion.app">support</a>.
             </span>
           </div>
         </div>
       </b-col>
     </b-row>
   </layout-page>
-  <layout-loading v-else />
 </template>
 
 <script>
@@ -107,7 +122,9 @@ import Check from '@/assets/svg/check.svg';
 import Waiting from '@/assets/svg/waiting.svg';
 
 import LoanForm from '@/components/Loan/Form.vue';
+import LoanActionsHandover from '@/components/Loan/Actions/Handover.vue';
 import LoanActionsIntention from '@/components/Loan/Actions/Intention.vue';
+import LoanActionsPayment from '@/components/Loan/Actions/Payment.vue';
 import LoanActionsPrePayment from '@/components/Loan/Actions/PrePayment.vue';
 import LoanActionsTakeover from '@/components/Loan/Actions/Takeover.vue';
 
@@ -122,7 +139,9 @@ export default {
   mixins: [Authenticated, DataRouteGuards, FormMixin],
   components: {
     LoanForm,
+    LoanActionsHandover,
     LoanActionsIntention,
+    LoanActionsPayment,
     LoanActionsPrePayment,
     LoanActionsTakeover,
     'svg-check': Check,
@@ -257,6 +276,8 @@ export default {
       const intention = actions.find(a => a.type === 'intention');
       const prePayment = actions.find(a => a.type === 'pre_payment');
       const takeover = actions.find(a => a.type === 'takeover');
+      const handover = actions.find(a => a.type === 'handover');
+      const payment = actions.find(a => a.type === 'payment');
 
       switch (step) {
         case 'creation':
@@ -266,7 +287,11 @@ export default {
         case 'pre_payment':
           return prePayment && prePayment.executed_at;
         case 'takeover':
-          return takeover && !takeover.executed_at;
+          return takeover && takeover.executed_at;
+        case 'handover':
+          return handover && handover.executed_at;
+        case 'payment':
+          return payment && payment.executed_at;
         default:
           return false;
       }
@@ -276,6 +301,8 @@ export default {
       const intention = actions.find(a => a.type === 'intention');
       const prePayment = actions.find(a => a.type === 'pre_payment');
       const takeover = actions.find(a => a.type === 'takeover');
+      const handover = actions.find(a => a.type === 'handover');
+      const payment = actions.find(a => a.type === 'payment');
 
       switch (step) {
         case 'creation':
@@ -286,6 +313,10 @@ export default {
           return prePayment && !prePayment.executed_at;
         case 'takeover':
           return takeover && !takeover.executed_at;
+        case 'handover':
+          return handover && !handover.executed_at;
+        case 'payment':
+          return payment && payment.executed_at;
         default:
           return false;
       }

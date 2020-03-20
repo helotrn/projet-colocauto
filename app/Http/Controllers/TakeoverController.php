@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Action\TakeoverRequest;
 use App\Http\Requests\BaseRequest as Request;
 use App\Models\Takeover;
 use App\Repositories\LoanRepository;
@@ -72,14 +73,17 @@ class TakeoverController extends RestController
         return $response;
     }
 
-    public function complete(Request $request, $actionId, $loanId) {
+    public function complete(TakeoverRequest $request, $actionId, $loanId) {
         $authRequest = $request->redirectAuth(Request::class);
 
         $item = $this->repo->find($authRequest, $actionId);
         $loan = $this->loanRepo->find($authRequest, $loanId);
 
+        $item->fill($request->all());
         $item->status = 'completed';
         $item->save();
+
+        $this->repo->update($request, $actionId, $request->all());
 
         return response('', 201);
     }

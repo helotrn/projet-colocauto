@@ -8,12 +8,10 @@ use App\Models\Loan;
 class Incident extends Action
 {
     public static $rules = [
-        'status' => 'required',
         'incident_type' => 'required',
     ];
 
     protected $fillable = [
-        'status',
         'incident_type',
     ];
 

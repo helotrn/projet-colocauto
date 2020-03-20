@@ -4,13 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\BaseRequest as Request;
 use App\Http\Requests\Action\ActionRequest;
+use App\Http\Requests\Action\HandoverRequest;
 use App\Http\Requests\Action\IntentionRequest;
 use App\Http\Requests\Action\PrePaymentRequest;
 use App\Http\Requests\Action\TakeoverRequest;
 use App\Models\Action;
 use App\Repositories\ActionRepository;
 use App\Repositories\LoanRepository;
-use Validator;
 
 class ActionController extends RestController
 {
@@ -73,18 +73,7 @@ class ActionController extends RestController
         }
     }
 
-    public function update(Request $request, $id) {
-        $validator = Validator::make(
-            $request->all(),
-            [
-                'rule' => 'in:payment,takeover,handover,incident,intention,extension',
-            ]
-        );
-
-        if ($validator->fails()) {
-            return $this->respondWithErrors($validator->errors());
-        }
-
+    public function update(ActionRequest $request, $id) {
         switch ($request->get('type')) {
             case 'intention':
                 $intentionRequest = new Request();
@@ -171,10 +160,8 @@ class ActionController extends RestController
         }
     }
 
-    public function cancel(Request $request, $loanId, $actionId) {
-        $item = $this->repo->find($request, $actionId);
-
-        switch ($item->type) {
+    public function cancel(ActionRequest $request, $loanId, $actionId) {
+        switch ($request->get('type')) {
             case 'intention':
                 return $this->intentionController->cancel($request, $actionId, $loanId);
             case 'pre_payment':

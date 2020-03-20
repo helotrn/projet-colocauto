@@ -8,7 +8,10 @@ class ActionRequest extends BaseRequest
 {
     public function rules() {
         return [
-            'type' => 'required',
+            'type' => [
+                'required',
+                'in:pre_payment,payment,takeover,handover,incident,intention,extension',
+            ],
         ];
     }
 }
