@@ -69,11 +69,14 @@ export default {
   },
   methods: {
     async createOwnerProfile() {
-      this.$store.commit('users/item', {
-        ...this.user,
-        owner: {},
+      await this.$store.dispatch('users/update', {
+        id: this.user.id,
+        data: {
+          id: this.user.id,
+          owner: {},
+        },
+        params: {},
       });
-      await this.$store.dispatch('users/updateItem');
       await this.$store.dispatch('loadUser');
     },
   },
