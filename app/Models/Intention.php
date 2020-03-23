@@ -36,8 +36,6 @@ class Intention extends Action
                     $model->save();
                     break;
                 case 'canceled':
-                    $model->loan->setCanceled();
-
                     $model->executed_at = Carbon::now();
                     $model->save();
                     break;

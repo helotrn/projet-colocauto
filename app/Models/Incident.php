@@ -34,7 +34,6 @@ class Incident extends Action
                     case 'canceled':
                         $model->executed_at = Carbon::now();
                         $model->save();
-                        $model->loan->setCanceled();
                         break;
                 }
             }

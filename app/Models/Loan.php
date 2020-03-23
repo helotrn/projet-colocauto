@@ -61,7 +61,7 @@ class Loan extends BaseModel
         'reason',
     ];
 
-    public $computed = ['actual_price', 'actual_duration_in_minutes'];
+    public $computed = ['actual_price', 'actual_duration_in_minutes', 'canceled_at'];
 
     public $items = [
         'borrower',
@@ -120,10 +120,6 @@ class Loan extends BaseModel
         return $this->hasOne(Takeover::class);
     }
 
-    public function setCanceled() {
-        //TODO
-    }
-
     public function getActualDurationInMinutesAttribute() {
         return $this->duration_in_minutes;
     }
@@ -147,5 +143,15 @@ class Loan extends BaseModel
             $this->actual_duration_in_minutes,
             $this->loanable
         );
+    }
+
+    public function getCanceledAtAttribute() {
+        $canceledAction = $this->actions->where('status', 'canceled')->first();
+
+        if ($canceledAction) {
+            return $canceledAction->executed_at;
+        }
+
+        return null;
     }
 }
