@@ -7,7 +7,20 @@
           selectable select-mode="single" @row-selected="showInvoice"
           :busy="loading" :fields="fields" no-local-sorting
           :sort-by.sync="sortBy" :sort-desc.sync="sortDesc" no-sort-reset
-          :show-empty="true" empty-text="Pas de facture" />
+          :show-empty="true" empty-text="Pas de facture">
+          <template v-slot:cell(created_at)="row">
+            {{ row.item.created_at | datetime }}
+          </template>
+          <template v-slot:cell(paid_at)="row">
+            {{ row.item.paid_at | datetime }}
+          </template>
+          <template v-slot:cell(total)="row">
+            {{ row.item.total | currency }}
+          </template>
+          <template v-slot:cell(total_with_taxes)="row">
+            {{ row.item.total_with_taxes | currency }}
+          </template>
+        </b-table>
       </b-col>
     </b-row>
   </div>
@@ -31,8 +44,18 @@ export default {
         { key: 'created_at', label: 'Créée', sortable: true },
         { key: 'paid_at', label: 'Payée', sortable: true },
         { key: 'items_count', label: "Nb. d'items", sortable: true },
-        { key: 'total', label: 'Total', sortable: true },
-        { key: 'total_with_taxes', label: 'Total avec taxes', sortable: true },
+        {
+          key: 'total',
+          label: 'Total',
+          sortable: true,
+          tdClass: 'text-right',
+        },
+        {
+          key: 'total_with_taxes',
+          label: 'Total avec taxes',
+          sortable: true,
+          tdClass: 'text-right',
+        },
       ],
     };
   },

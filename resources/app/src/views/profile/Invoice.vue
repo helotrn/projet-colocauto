@@ -1,11 +1,5 @@
 <template>
   <b-container class="profile-invoice" fluid v-if="item">
-    <b-row>
-      <b-col>
-        <h1>{{ item.name }}</h1>
-      </b-col>
-    </b-row>
-
     <b-row class="mb-5">
       <b-col lg="6">
         <p class="text-left">
@@ -47,7 +41,7 @@
                 {{ item.total | currency }}<br>
                 {{ item.tps | currency }}<br>
                 {{ item.tvq | currency }}<br>
-                {{ totalWithTaxes | currency }}
+                {{ item.total_with_taxes | currency }}
               </b-td>
             </b-tr>
           </template>
@@ -75,13 +69,6 @@ export default {
         { key: 'amount', label: 'Montant', sortable: false },
       ],
     };
-  },
-  computed: {
-    totalWithTaxes() {
-      return parseFloat(this.item.total, 10)
-        + parseFloat(this.item.tvq, 10)
-        + parseFloat(this.item.tps, 10);
-    },
   },
   i18n: {
     messages: {

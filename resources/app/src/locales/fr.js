@@ -67,6 +67,7 @@ export default {
     dashboard: 'tableau de bord',
     find_vehicle: 'trouve un véhicule',
     invoice: 'facture',
+    invoices: 'factures',
     loan: 'emprunt',
     loanable: 'véhicule',
     loanables: 'véhicules',
