@@ -30,8 +30,8 @@
           <svg-clouds class="d-lg-none" />
           <svg-clouds-desktop class="d-none d-lg-block" />
           <p>
-            Partager avec ses voisin-e-s des voitures, des vélos électriques et des remorques à
-            vélo de manière sécuritaire et conviviale.
+            Partager avec ses voisin-e-s des voitures, vélos et remorques à
+            vélos de manière conviviale et sécuritaire.
           </p>
           <svg-city class="d-lg-none" />
           <svg-city-desktop class="d-none d-lg-block" />
@@ -64,7 +64,7 @@
                   <svg-lend class="svg-lend" />
                 </b-col>
                 <b-col cols="6" md="12" order="1" order-md="2">
-                  <p>Prête ton auto à tes voisins</p>
+                  <p>Partage ton auto avec tes voisin-e-s</p>
                 </b-col>
               </b-row>
             </b-col>
@@ -75,7 +75,7 @@
                   <svg-borrow class="svg-borrow" />
                 </b-col>
                 <b-col cols="6" md="12">
-                  <p>Fais partie d’une économie circulaire</p>
+                  <p>Fais partie d’un projet collectif ambitieux</p>
                 </b-col>
               </b-row>
             </b-col>
@@ -102,7 +102,7 @@
           </b-col>
           <b-col lg="6">
             <h2 class="page__section__title">
-              Plus de 200 participant.e.s!
+              Plus de 200 participant-e-s!
             </h2>
 
             <p>
@@ -113,7 +113,7 @@
             </p>
 
             <b-button size="lg" variant="outline-light" to="/communities">
-              Situer les voisinnages
+              Situer les voisinnages Locomotion
             </b-button>
           </b-col>
         </b-row>
@@ -129,11 +129,11 @@
           </b-col>
           <b-col lg="6">
             <h2 class="page__section__title">
-              Rejoins ta communauté
+              Rejoins ta voisinage
             </h2>
             <p>
-              Des citoyen-ne-s en mouvement qui transforment leur quartier par la connexion avec
-              l'autre et la possibilité de se déplacer autrement.
+              Se déplacer autrement et entrer en relation aux autres transforment votre coin.<br>
+              Des voisins et des voisines s’activent, prenez part au mouvement!
             </p>
             <b-button size="lg" variant="warning" to="register">S'inscrire</b-button>
           </b-col>
