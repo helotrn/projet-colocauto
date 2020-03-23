@@ -1,48 +1,45 @@
 <template>
-  <layout-page name="community" wide>
-    <div  v-if="routeDataLoaded">
-      <div class="community__header">
-        <h1>{{ community.name }}</h1>
-      </div>
-
-      <b-container class="community__content">
-        <b-row>
-          <b-col lg="3">
-            <nav>
-              <a href="#mes-voisins" v-if="community.users">Mes voisins</a><br>
-              <a href="#nouvelles-de-ma-communaute">Nouvelles de ma communauté</a><br>
-              <a href="#activites-locomotion">Activités Locomotion</a>
-            </nav>
-          </b-col>
-
-          <b-col lg="9">
-            <div class="page__section" v-if="community.users">
-              <h2 id="mes-voisins">Mes voisins</h2>
-
-              <div class="community__users-legend">
-                <b-badge pill variant="warning">P</b-badge> Propriétaire de véhicule
-                <b-badge pill variant="success">A</b-badge> Ambassadeur.rice de la communauté
-              </div>
-
-              <b-row class="page__section__users">
-                <b-col v-for="user in community.users" :key="user.id" lg="6" md="12">
-                  <user-card :user="user" />
-                </b-col>
-              </b-row>
-            </div>
-
-            <div class="page__section">
-              <h2 id="nouvelles-de-ma-communaute">Nouvelles de ma communauté</h2>
-            </div>
-
-            <div class="page__section">
-              <h2 id="activites-locomotion">Activités Locomotion</h2>
-            </div>
-          </b-col>
-        </b-row>
-      </b-container>
+  <layout-page name="community" wide :loading="!routeDataLoaded">
+    <div class="community__header">
+      <h1>{{ community.name }}</h1>
     </div>
-    <layout-loading v-else />
+
+    <b-container class="community__content">
+      <b-row>
+        <b-col lg="3">
+          <nav>
+            <a href="#mes-voisins" v-if="community.users">Mes voisins</a><br>
+            <a href="#nouvelles-de-ma-communaute">Nouvelles de ma communauté</a><br>
+            <a href="#activites-locomotion">Activités Locomotion</a>
+          </nav>
+        </b-col>
+
+        <b-col lg="9">
+          <div class="page__section" v-if="community.users">
+            <h2 id="mes-voisins">Mes voisins</h2>
+
+            <div class="community__users-legend">
+              <b-badge pill variant="warning">P</b-badge> Propriétaire de véhicule
+              <b-badge pill variant="success">A</b-badge> Ambassadeur.rice de la communauté
+            </div>
+
+            <b-row class="page__section__users">
+              <b-col v-for="user in community.users" :key="user.id" lg="6" md="12">
+                <user-card :user="user" />
+              </b-col>
+            </b-row>
+          </div>
+
+          <div class="page__section">
+            <h2 id="nouvelles-de-ma-communaute">Nouvelles de ma communauté</h2>
+          </div>
+
+          <div class="page__section">
+            <h2 id="activites-locomotion">Activités Locomotion</h2>
+          </div>
+        </b-col>
+      </b-row>
+    </b-container>
   </layout-page>
 </template>
 
@@ -60,7 +57,7 @@ export default {
   },
   computed: {
     community() {
-      return this.$store.state.communities.item;
+      return this.$store.state.communities.item || {};
     },
   },
 };
