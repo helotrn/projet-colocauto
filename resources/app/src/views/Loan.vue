@@ -310,7 +310,7 @@ export default {
         case 'takeover': // eslint-disable-line no-fallthrough
           canceled = canceled && (!takeover || takeover.status === 'canceled');
         case 'pre_payment': // eslint-disable-line no-fallthrough
-          canceled = canceled && (!prePayment || prePayment.status === 'canceled')
+          canceled = canceled && (!prePayment || prePayment.status === 'canceled');
         case 'intention': // eslint-disable-line no-fallthrough
           canceled = canceled && (!intention || intention.status === 'canceled');
           break;

@@ -62,7 +62,7 @@ class Invoice extends BaseModel
                     ->selectRaw("sum(bill_items_join.amount) AS total")
                     ->groupBy('invoices.id');
             },
-            'total_with_taxes' => function ($query = null) {
+            'tps' => function ($query = null) {
                 if (!$query) {
                     return 'invoices.*';
                 }
@@ -76,7 +76,24 @@ class Invoice extends BaseModel
                 );
 
                 return $query
-                    ->selectRaw("(sum(bill_items_join.amount) * 1.14975)::decimal(8, 2) AS total_with_taxes")
+                    ->selectRaw("(sum(bill_items_join.amount) * 0.05)::decimal(8, 2) AS tps")
+                    ->groupBy('invoices.id');
+            },
+            'tvq' => function ($query = null) {
+                if (!$query) {
+                    return 'invoices.*';
+                }
+
+                $query = static::addJoin(
+                    $query,
+                    'bill_items AS bill_items_join',
+                    \DB::raw('bill_items_join.invoice_id'),
+                    '=',
+                    \DB::raw('invoices.id')
+                );
+
+                return $query
+                    ->selectRaw("(sum(bill_items_join.amount) * 0.09975)::decimal(8, 2) AS tvq")
                     ->groupBy('invoices.id');
             },
         ];
@@ -92,9 +109,9 @@ class Invoice extends BaseModel
         return $this->belongsTo(User::class);
     }
 
-    public $collections = ['items'];
+    public $collections = ['bill_items'];
 
-    public function items() {
+    public function billItems() {
         return $this->hasMany(BillItem::class);
     }
 
