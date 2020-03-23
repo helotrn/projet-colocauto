@@ -19,7 +19,7 @@ export default {
       return [
         ...this.user.loanables.reduce((acc, loanable) => {
           acc.push(
-            ...loanable.loans.map(l => ({
+            ...loanable.loans.filter(l => !l.canceled_at).map(l => ({
               ...l,
               loanable: {
                 ...loanable,
@@ -32,7 +32,7 @@ export default {
           );
           return acc;
         }, []),
-        ...this.user.loans,
+        ...this.user.loans.filter(l => !l.canceled_at),
       ];
     },
     auth() {
@@ -88,7 +88,10 @@ export default {
     ongoingLoans() {
       const now = this.$dayjs().format('YYYY-MM-DD HH:mm:ss');
 
-      return this.allLoans.filter(l => l.actions.length > 1 && l.departure_at < now);
+      return this.allLoans
+        .filter(l => l.actions.length > 1
+          && l.departure_at < now
+          && !l.actions.find(a => a.type === 'payment'));
     },
     pastLoans() {
       return this.allLoans

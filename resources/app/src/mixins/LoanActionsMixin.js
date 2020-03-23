@@ -53,8 +53,9 @@ export default {
       await this.$store.dispatch('loans/completeAction', this.action);
       this.$emit('completed');
     },
-    cancelAction() {
-      this.$store.dispatch('loans/cancelAction', this.action);
+    async cancelAction() {
+      await this.$store.dispatch('loans/cancelAction', this.action);
+      this.$emit('canceled');
     },
   },
 };

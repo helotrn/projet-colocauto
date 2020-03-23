@@ -27,7 +27,8 @@
             'current-step': isCurrentStep('creation'),
             'reached-step': hasReachedStep('creation'),
           }">
-            <svg-check v-if="hasReachedStep('creation')" />
+            <svg-danger v-if="hasCanceledStep('creation')" />
+            <svg-check v-else-if="hasReachedStep('creation')" />
             <svg-waiting v-else />
 
             <span>Demande d'emprunt</span>
@@ -36,7 +37,8 @@
             'current-step': isCurrentStep('intention'),
             'reached-step': hasReachedStep('intention'),
           }">
-            <svg-check v-if="hasReachedStep('intention')" />
+            <svg-danger v-if="hasCanceledStep('intention')" />
+            <svg-check v-else-if="hasReachedStep('intention')" />
             <svg-waiting v-else />
 
             <span>Confirmation de l'emprunt</span>
@@ -45,7 +47,8 @@
             'current-step': isCurrentStep('pre_payment'),
             'reached-step': hasReachedStep('pre_payment'),
           }">
-            <svg-check v-if="hasReachedStep('pre_payment')" />
+            <svg-danger v-if="hasCanceledStep('pre_payment')" />
+            <svg-check v-else-if="hasReachedStep('pre_payment')" />
             <svg-waiting v-else />
 
             <span>Prépaiement</span>
@@ -54,7 +57,8 @@
             'current-step': isCurrentStep('takeover'),
             'reached-step': hasReachedStep('takeover'),
           }">
-            <svg-check v-if="hasReachedStep('takeover')" />
+            <svg-danger v-if="hasCanceledStep('takeover')" />
+            <svg-check v-else-if="hasReachedStep('takeover')" />
             <svg-waiting v-else />
 
             <span>Prise de possession</span>
@@ -66,7 +70,8 @@
             'current-step': isCurrentStep('handover'),
             'reached-step': hasReachedStep('handover'),
           }">
-            <svg-check v-if="hasReachedStep('handover')" />
+            <svg-danger v-if="hasCanceledStep('handover')" />
+            <svg-check v-else-if="hasReachedStep('handover')" />
             <svg-waiting v-else />
 
             <span>Remise du véhicule</span></li>
@@ -75,7 +80,8 @@
             'current-step': isCurrentStep('payment'),
             'reached-step': hasReachedStep('payment'),
           }">
-            <svg-check v-if="hasReachedStep('payment')" />
+            <svg-danger v-if="hasCanceledStep('payment')" />
+            <svg-check v-else-if="hasReachedStep('payment')" />
             <svg-waiting v-else />
 
             <span>Conclusion</span></li>
@@ -84,7 +90,21 @@
       </b-col>
 
       <b-col lg="9" class="loan__actions">
-        <h2>Informations sur l'emprunt</h2>
+        <div class="loan__actions__buttons text-right mb-3" v-if="!!item.id">
+          <b-button class="mr-3 mb-3" variant="primary" :disabled="hasReachedStep('takeover')">
+            Modifier la réservation
+          </b-button>
+          <b-button class="mr-3 mb-3" variant="danger" :disabled="hasReachedStep('handover')">
+            Annuler la réservation
+          </b-button>
+          <b-button class="mr-3 mb-3" variant="warning"
+            :disabled="!hasReachedStep('takeover') || hasReachedStep('payment')">
+            Signaler un retard
+          </b-button>
+          <b-button class="mb-3" variant="warning" :disabled="!hasReachedStep('pre_payment')">
+            Signaler un incident
+          </b-button>
+        </div>
 
         <div>
           <loan-form :loan="item" :form="loanForm" :open="isCurrentStep('creation')"
@@ -93,19 +113,19 @@
           <div class="loan__actions__action" v-for="action in item.actions" :key="action.id">
             <loan-actions-intention v-if="action.type === 'intention'"
               :action="action" :loan="item" :open="isCurrentStep('intention')"
-              @completed="loadItem" :user="user" />
+              @completed="loadItem" @canceled="loadItem" :user="user" />
             <loan-actions-pre-payment v-else-if="action.type === 'pre_payment'"
               :action="action" :loan="item" :open="isCurrentStep('pre_payment')"
-              @completed="loadItem" :user="user" />
+              @completed="loadItem" @canceled="loadItem" :user="user" />
             <loan-actions-takeover v-else-if="action.type === 'takeover'"
               :action="action" :loan="item" :open="isCurrentStep('takeover')"
-              @completed="loadItem" :user="user" />
+              @completed="loadItem" @canceled="loadItem" :user="user" />
             <loan-actions-handover v-else-if="action.type === 'handover'"
               :action="action" :loan="item" :open="isCurrentStep('handover')"
-              @completed="loadItem" :user="user" />
+              @completed="loadItem" @canceled="loadItem" :user="user" />
             <loan-actions-payment v-else-if="action.type === 'payment'"
               :action="action" :loan="item" :open="isCurrentStep('payment')"
-              @completed="loadItem" :user="user" />
+              @completed="loadItem" @canceled="loadItem" :user="user" />
             <span v-else>
               {{ action.type }} n'est pas supporté. Contactez le
               <a href="mailto:support@locomotion.app">support</a>.
@@ -119,6 +139,7 @@
 
 <script>
 import Check from '@/assets/svg/check.svg';
+import Danger from '@/assets/svg/danger.svg';
 import Waiting from '@/assets/svg/waiting.svg';
 
 import LoanForm from '@/components/Loan/Form.vue';
@@ -145,6 +166,7 @@ export default {
     LoanActionsPrePayment,
     LoanActionsTakeover,
     'svg-check': Check,
+    'svg-danger': Danger,
     'svg-waiting': Waiting,
   },
   beforeRouteEnter(to, from, next) {
@@ -270,6 +292,33 @@ export default {
       this.$store.commit(`${this.slug}/mergeItem`, { loanable });
 
       this.loadedFullLoanable = true;
+    },
+    hasCanceledStep(step) {
+      const { actions } = this.item;
+      const intention = actions.find(a => a.type === 'intention');
+      const prePayment = actions.find(a => a.type === 'pre_payment');
+      const takeover = actions.find(a => a.type === 'takeover');
+      const handover = actions.find(a => a.type === 'handover');
+      const payment = actions.find(a => a.type === 'payment');
+
+      let canceled = true;
+      switch (step) {
+        case 'payment': // eslint-disable-line no-fallthrough
+          canceled = canceled && (!payment || payment.status === 'canceled');
+        case 'handover': // eslint-disable-line no-fallthrough
+          canceled = canceled && (!handover || handover.status === 'canceled');
+        case 'takeover': // eslint-disable-line no-fallthrough
+          canceled = canceled && (!takeover || takeover.status === 'canceled');
+        case 'pre_payment': // eslint-disable-line no-fallthrough
+          canceled = canceled && (!prePayment || prePayment.status === 'canceled')
+        case 'intention': // eslint-disable-line no-fallthrough
+          canceled = canceled && (!intention || intention.status === 'canceled');
+          break;
+        default:
+          return false;
+      }
+
+      return canceled;
     },
     hasReachedStep(step) {
       const { id, actions } = this.item;
