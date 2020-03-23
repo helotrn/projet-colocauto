@@ -44,6 +44,7 @@
       <forms-date-picker v-else-if="type === 'date'"
         :disabled-dates="disabledDates"
         :disabled="disabled"
+        :state="getValidationState(validationContext)"
         :value="value"
         @input="emitChange" />
       <forms-date-time-picker v-else-if="type === 'datetime'"
@@ -66,6 +67,13 @@
         :id="name" :name="name" :key="`${type}-${name}`"
         type="number" :min="min" :max="max"
         :step="step"
+        :placeholder="placeholder" :disabled="disabled"
+        :state="getValidationState(validationContext)"
+        v-bind:value="value"
+        v-on:input="emitChange"/>
+      <b-form-input v-else-if="!!mask"
+        :id="name" :name="name" :key="`${type}-${name}`"
+        type="text" v-mask="mask" masked
         :placeholder="placeholder" :disabled="disabled"
         :state="getValidationState(validationContext)"
         v-bind:value="value"
@@ -134,6 +142,11 @@ export default {
       required: false,
       type: String,
       default: 'eager',
+    },
+    mask: {
+      required: false,
+      type: String,
+      default: '',
     },
     max: {
       type: Number,

@@ -31,14 +31,14 @@ class User extends AuthenticatableBaseModel
         'name' => 'nullable',
         'other_phone' => [
           'nullable',
-          'regex:/^$|^[-1-9][-0-9]*$/',
+          'regex:/^\([1-9][0-9]{2}\) [1-9][0-9]{2}-[0-9]{4}$/',
         ],
         'password' => [
           'min:8',
         ],
         'phone' => [
           'nullable',
-          'regex:/^$|^[-1-9][-0-9]*$/',
+          'regex:/^\([1-9][0-9]{2}\) [1-9][0-9]{2}-[0-9]{4}$/',
         ],
         'postal_code' => [
           'nullable',

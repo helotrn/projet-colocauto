@@ -33,7 +33,7 @@
 
       <div v-if="item && item.communities">
         <community-proof-form v-for="community in item.communities"
-          :key="community.id" :community="community"
+          :key="community.id" :community="community" :loading="!hasAllProofs"
           @submit="submitCommunityProof" />
       </div>
       <layout-loading v-else />
@@ -141,6 +141,9 @@ export default {
 
       return stepIndex;
     },
+    hasAllProofs() {
+      return this.item.communities.reduce((acc, c) => acc && !!c.proof, true);
+    },
   },
   methods: {
     async submitAndReload() {
@@ -177,7 +180,7 @@ export default {
       }
     },
     async submitCommunityProof() {
-      if (!this.item.communities.reduce((acc, c) => acc && !!c.proof, true)) {
+      if (!this.hasAllProofs) {
         this.$store.commit('addNotification', {
           content: 'Fournissez toutes les preuves requises.',
           title: 'Données incomplètes',

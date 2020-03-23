@@ -1,5 +1,10 @@
 <template>
-  <datepicker class="forms-datepicker" :inline="inline"
+  <datepicker
+    :class="{
+      'forms-datepicker': true,
+      'is-valid': state === true,
+      'is-invalid': state === false,
+    }" :inline="inline"
     input-class="form-control"
     :format="format"
     :language="language"
@@ -53,6 +58,11 @@ export default {
       default() {
         return () => {};
       },
+    },
+    state: {
+      type: Boolean,
+      required: false,
+      default: null,
     },
     value: {
       type: String,

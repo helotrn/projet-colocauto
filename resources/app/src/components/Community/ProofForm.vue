@@ -11,13 +11,14 @@
               v-model="community.proof" />
 
             <div class="form__buttons">
-              <b-button variant="success" type="submit">
+              <b-button variant="success" type="submit" :disabled="loading">
                 {{ $t('enregistrer') | capitalize }}
               </b-button>
             </div>
           </b-form>
         </validation-observer>
       </b-col>
+
       <b-col>
         <div class="community-proof-form__instructions">
           <p>
@@ -51,6 +52,11 @@ export default {
     community: {
       type: Object,
       required: true,
+    },
+    loading: {
+      type: Boolean,
+      required: false,
+      default: false,
     },
   },
   i18n: {

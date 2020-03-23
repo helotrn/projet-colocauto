@@ -11,6 +11,10 @@
       </b-button>
     </div>
 
+    <div class="form__separator">
+      <span class="form__separator__text">{{ $t('or') }}</span>
+    </div>
+
     <b-form class="login-box__form" @submit.prevent="login">
       <b-form-group :label="$t('email')">
         <b-form-input
@@ -47,19 +51,21 @@
 
 <i18n>
 fr:
-  'login': Connexion
-  'google': Connexion Google
   'email': Courriel
+  'google': Se connecter avec Google
+  'login': Connexion
+  'login-submit': Se connecter
+  'or': OU
   'password': Mot de passe
   'remember-me': Se souvenir de moi
-  'login-submit': Se connecter
 en:
-  'login': Login
-  'google': Sign in with Google
   'email': Email
+  'google': Sign in with Google
+  'login': Login
+  'login-submit': Login
+  'or': OR
   'password': Password
   'remember-me': Remember me
-  'login-submit': Login
 </i18n>
 
 <script>

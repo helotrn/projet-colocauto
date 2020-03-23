@@ -1,7 +1,7 @@
 <template>
   <div class="profile-form">
     <validation-observer ref="observer" v-slot="{ passes }">
-      <b-form :novalidate="true" class="profile-form__form"
+      <b-form :novalidate="true" class="profile-form__form form"
         @submit.stop.prevent="passes(submit)">
         <b-row>
           <b-col lg="4">
@@ -13,7 +13,7 @@
             <b-row>
               <b-col lg="6">
                 <forms-validated-input name="name" :label="$t('fields.name') | capitalize"
-                  :rules="{ required: true }" type="text"
+                  :rules="{ required: true }" type="text" @keypress.native="onlyChars"
                   :placeholder="placeholderOrLabel('name') | capitalize"
                   v-model="user.name" />
               </b-col>
@@ -51,7 +51,11 @@
         <b-row>
           <b-col md="8">
             <forms-validated-input name="phone" :label="$t('fields.phone') | capitalize"
-              :rules="{ required: true, regex:/^[-1-9][-0-9]*$/  }" type="text"
+              :rules="{
+                required: true,
+                regex:/^\([1-9][0-9]{2}\) [1-9][0-9]{2}-[0-9]{4}$/,
+              }" type="text"
+              mask="(###) ###-####"
               :placeholder="placeholderOrLabel('phone') | capitalize"
               v-model="user.phone" />
           </b-col>
@@ -97,7 +101,7 @@
               :rules="{
                 required: true,
                 regex: /^[a-zA-Z][0-9][a-zA-Z]\s*[0-9][a-zA-Z][0-9]$/
-              }" type="text"
+              }" type="text" mask="A#A #A#"
               :placeholder="placeholderOrLabel('postal_code') | capitalize"
               v-model="user.postal_code" />
           </b-col>
@@ -107,7 +111,9 @@
           <b-col>
             <forms-validated-input name="other_phone"
               :label="$t('fields.other_phone') | capitalize"
-              :rules="{ regex:/^[-1-9][-0-9]*$/  }" type="text"
+              :rules="{
+                regex:/^\([1-9][0-9]{2}\) [1-9][0-9]{2}-[0-9]{4}$/,
+              }" type="text" mask="(###) ###-####"
               :placeholder="placeholderOrLabel('other_phone') | capitalize"
               v-model="user.other_phone" />
           </b-col>
@@ -170,6 +176,11 @@ export default {
       required: true,
     },
   },
+  data() {
+    return {
+      isPerson: true,
+    };
+  },
   i18n: {
     messages: {
       en: {
@@ -183,6 +194,18 @@ export default {
     },
   },
   methods: {
+    onlyChars(event) {
+      if (!this.isPerson) {
+        return true;
+      }
+
+      if (event.key.match(/[0-9]/)) {
+        event.preventDefault();
+        return false;
+      }
+
+      return true;
+    },
     submit(...params) {
       this.$emit('submit', ...params);
     },

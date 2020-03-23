@@ -1,6 +1,6 @@
 <template>
   <div class="register-form">
-    <h2>{{ $t('register') }}</h2>
+    <h2 class="text-center">{{ $t('register') }}</h2>
 
     <div class="register-form__google">
       <b-button :disabled="loading" variant="primary" class="btn-google">
@@ -11,8 +11,8 @@
       </b-button>
     </div>
 
-    <div class="register-form__separator">
-      <span class="register-form__separator__text">{{ $t('or') }}</span>
+    <div class="form__separator">
+      <span class="form__separator__text">{{ $t('or') }}</span>
     </div>
 
     <validation-observer ref="observer" v-slot="{ passes }">
@@ -25,7 +25,7 @@
 
         <forms-validated-input mode="passive" name="password" :label="$t('password')"
           :rules="{ required: true, min: 8 }" type="password"
-          :placeholder="$t('password')"
+          :placeholder="$t('password')" description="Minimum 8 caractères"
           v-model="password" />
 
         <forms-validated-input mode="passive" name="password_repeat" :label="$t('password-repeat')"
@@ -137,20 +137,17 @@ export default {
 </script>
 
 <style lang="scss">
-.register-form__google {
-  text-align: center;
-}
+.register-form {
+  h2 {
+    margin-bottom: 20px;
+  }
 
-.register-form__separator {
-  text-align: center;
-  margin: 24px 0;
-  border-bottom: 1px solid $black;
-}
+  &__google {
+    text-align: center;
+  }
 
-.register-form__separator__text {
-  position: relative;
-  top: 11px;
-  padding: 0 20px;
-  background: $white;
+  &__form {
+    margin-top: 32px;
+  }
 }
 </style>
