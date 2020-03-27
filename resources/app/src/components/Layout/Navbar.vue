@@ -5,10 +5,10 @@
     variant="transparent"
     type="light">
     <div class="layout-navbar__brand-wrapper">
-      <b-navbar-brand to="/" class="d-none d-lg-block">
+      <b-navbar-brand :to="isLoggedIn ? '/app' : '/'" class="d-none d-lg-block">
         <svg-logo class="layout-navbar__logo" />
       </b-navbar-brand>
-      <b-navbar-brand to="/" class="d-lg-none">
+      <b-navbar-brand :to="isLoggedIn ? '/app' : '/'" class="d-lg-none">
         <svg-small-logo class="layout-navbar__logo" />
       </b-navbar-brand>
 

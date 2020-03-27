@@ -11,15 +11,15 @@ export default {
       let canceled = true;
       switch (step) {
         case 'payment': // eslint-disable-line no-fallthrough
-          canceled = canceled && (!payment || payment.status === 'canceled');
+          canceled = canceled && payment && payment.status === 'canceled';
         case 'handover': // eslint-disable-line no-fallthrough
-          canceled = canceled && (!handover || handover.status === 'canceled');
+          canceled = canceled && handover && handover.status === 'canceled';
         case 'takeover': // eslint-disable-line no-fallthrough
-          canceled = canceled && (!takeover || takeover.status === 'canceled');
+          canceled = canceled && takeover && takeover.status === 'canceled';
         case 'pre_payment': // eslint-disable-line no-fallthrough
-          canceled = canceled && (!prePayment || prePayment.status === 'canceled');
+          canceled = canceled && prePayment && prePayment.status === 'canceled';
         case 'intention': // eslint-disable-line no-fallthrough
-          canceled = canceled && (!intention || intention.status === 'canceled');
+          canceled = canceled && intention && intention.status === 'canceled';
           break;
         default:
           return false;
