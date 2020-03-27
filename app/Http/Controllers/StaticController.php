@@ -17,6 +17,10 @@ class StaticController extends RestController
         return response('', 204);
     }
 
+    public function notFound() {
+        return abort(404);
+    }
+
     public function status() {
         return view('status', [
             'database' => DB::statement('SELECT 1') ? 'OK' : 'Erreur',

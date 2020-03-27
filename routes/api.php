@@ -70,4 +70,6 @@ Route::prefix('v1')->group(function () {
 
         Route::get('/loanables/{id}/test', 'LoanableController@test');
     });
+
+    Route::get('/{any?}', 'StaticController@notFound')->where('any', '.*');
 });
