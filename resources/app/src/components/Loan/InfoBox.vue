@@ -33,8 +33,9 @@
 
           <b-col class="loan-info-box__actions">
             <div>
-              <b-button size="sm" variant="success" v-if="hasButton('accept')"
-                @click="acceptLoan">
+              <b-button size="sm" variant="success"
+                v-if="hasButton('accept') && userRole === 'owner'"
+                @click.prevent="acceptLoan">
                 Accepter
               </b-button>
 
@@ -43,13 +44,14 @@
                 Consulter
               </b-button>
 
-              <b-button size="sm" variant="outline-danger" v-if="hasButton('deny')"
-                @click="denyLoan">
+              <b-button size="sm" variant="outline-danger"
+                v-if="hasButton('deny') && userRole === 'owner'"
+                @click.prevent="denyLoan">
                 Refuser
               </b-button>
 
               <b-button size="sm" variant="outline-danger" v-if="hasButton('cancel')"
-                @click="cancelLoan">
+                @click.prevent="cancelLoan">
                 Annuler
               </b-button>
             </div>
@@ -63,7 +65,7 @@
       </router-link>
     </b-card>
     <div v-if="hasButton('accept')">
-      <p class="loan-info-box__instructions muted" v-if="userIsOwner">
+      <p class="loan-info-box__instructions muted" v-if="userRole === 'owner'">
         Cette personne devrait entrer en contact avec vous sous peu.
       </p>
       <p class="loan-info-box__instructions muted" v-else>
@@ -136,8 +138,8 @@ export default {
         .add(this.loan.duration_in_minutes, 'minute')
         .format('YYYY-MM-DD HH:mm:ss');
     },
-    userIsOwner() {
-      return this.user.id === this.loan.loanable.owner.user.id;
+    userRole() {
+      return this.user.id === this.loan.loanable.owner.user.id ? 'owner' : 'borrower';
     },
   },
   methods: {
@@ -148,11 +150,23 @@ export default {
         footerClass: 'd-none',
       });
     },
-    acceptLoan() {
-      this.$store.dispatch('loans/accept', this.loan.id);
+    async acceptLoan() {
+      const intention = this.loan.actions.find(a => a.type === 'intention');
+      try {
+        await this.$store.dispatch('loans/completeAction', intention);
+        await this.$store.dispatch('loadUser');
+      } catch (e) {
+        throw e;
+      }
     },
-    cancelLoan() {
-      this.$store.dispatch('loans/cancel', this.loan.id);
+    async cancelLoan() {
+      const intention = this.loan.actions.find(a => a.type === 'intention');
+      try {
+        await this.$store.dispatch('loans/cancelAction', intention);
+        await this.$store.dispatch('loadUser');
+      } catch (e) {
+        throw e;
+      }
     },
     denyLoan() {
       this.$store.dispatch('loans/deny', this.loan.id);
