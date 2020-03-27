@@ -19,8 +19,14 @@
             <h2 id="mes-voisins">Mes voisins</h2>
 
             <div class="community__users-legend">
-              <b-badge pill variant="warning">P</b-badge> Propriétaire de véhicule
-              <b-badge pill variant="success">A</b-badge> Ambassadeur.rice de la communauté
+              <span>
+                <b-badge pill variant="warning">P</b-badge>
+                <span>Propriétaire de véhicule</span>
+              </span>
+              <span>
+                <b-badge pill variant="success">A</b-badge>
+                <span>Ambassadeur.rice de la communauté</span>
+              </span>
             </div>
 
             <b-row class="page__section__users">
@@ -75,6 +81,10 @@ export default {
 
   .community__users-legend {
     margin-bottom: 40px;
+
+    > span {
+      margin-right: 5px;
+    }
 
     .badge {
       line-height: 15px;
