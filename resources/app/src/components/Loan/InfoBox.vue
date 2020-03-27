@@ -3,25 +3,23 @@
     <b-card class="shadow" bg="white" no-body>
       <router-link class="card-body" :to="`/loans/${this.loan.id}`">
         <b-row>
-          <b-col class="loan-info-box__image" v-if="mode === 'waiting'">
-            <div :style="{ backgroundImage: loanImage }" />
-          </b-col>
-          <b-col class="loan-info-box__name" v-if="mode === 'waiting'">
-            <span>{{ otherUser.full_name }}</span>
-          </b-col>
+          <b-col class="loan-info-box__image">
+            <div class="loan-info-box__image__user"
+              :style="{ backgroundImage: loanPersonImage }" />
 
-          <b-col class="loan-info-box__image" v-if="mode === 'upcoming'">
-            <div :style="{ backgroundImage: loanableImage }" />
+            <div class="loan-info-box__image__loanable">
+              <div :style="{ backgroundImage: loanableImage }" />
+            </div>
           </b-col>
-          <b-col class="loan-info-box__name" v-if="mode === 'upcoming'">
-            <span>{{ loan.loanable.name }}</span>
+          <b-col class="loan-info-box__name">
+            <span>
+              {{ otherUser.full_name }}<br>
+              {{ loan.loanable.name }}
+            </span>
           </b-col>
 
           <b-col class="loan-info-box__details">
             <span>
-              <span v-if="mode === 'waiting'">
-                {{ loan.loanable.name }}<br>
-              </span>
               <span v-if="multipleDays">
                 {{ loan.departure_at | date }} {{ loan.departure_at | time }}<br>
                 {{ returnAt | date }} {{ returnAt | time }}
@@ -57,18 +55,27 @@
             </div>
           </b-col>
         </b-row>
+        <b-row v-if="withSteps">
+          <b-col class="loan-info-box__steps">
+            <loan-menu :item="loan" horizontal />
+          </b-col>
+        </b-row>
       </router-link>
     </b-card>
-    <p class="loan-info-box__instructions muted" v-if="userIsOwner">
-      Cette personne devrait entrer en contact avec vous sous peu.
-    </p>
-    <p class="loan-info-box__instructions muted" v-else>
-      Par convention, il est de votre responsabilité de contacter cette personne.
-    </p>
+    <div v-if="hasButton('accept')">
+      <p class="loan-info-box__instructions muted" v-if="userIsOwner">
+        Cette personne devrait entrer en contact avec vous sous peu.
+      </p>
+      <p class="loan-info-box__instructions muted" v-else>
+        Par convention, il est de votre responsabilité de contacter cette personne.
+      </p>
+    </div>
   </div>
 </template>
 
 <script>
+import LoanMenu from '@/components/Loan/Menu.vue';
+
 export default {
   name: 'LoanInfoBox',
   props: {
@@ -83,18 +90,21 @@ export default {
       type: Object,
       required: true,
     },
-    mode: {
-      type: String,
-      required: false,
-      default: 'waiting',
-    },
     user: {
       type: Object,
       required: true,
     },
+    withSteps: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
+  },
+  components: {
+    LoanMenu,
   },
   computed: {
-    loanImage() {
+    loanPersonImage() {
       const { avatar } = this.otherUser;
       if (!avatar) {
         return '';
@@ -156,6 +166,10 @@ export default {
 
 <style lang="scss">
 .loan-info-box {
+  .card {
+    margin-bottom: 20px;
+  }
+
   a:hover, a:active, a:focus {
     text-decoration: none;
   }
@@ -166,16 +180,37 @@ export default {
   }
 
   &__image.col {
-    flex: 0 1 115px;
     height: 85px;
+    position: relative;
+    width: 85px;
+    flex: 0 1 115px;
 
-    > div {
-      height: 85px;
-      width: 85px;
-      background-size: cover;
-      background-repeat: no-repeat;
-      background-position: center center;
-      border-radius: 100%;
+    .loan-info-box__image {
+      &__user, &__loanable > div {
+        background-size: cover;
+        background-position: center center;
+        background-repeat: no-repeat;
+        border-radius: 100%;
+      }
+
+      &__user {
+        height: 100%;
+        width: 85px;
+        margin: 0 auto;
+      }
+
+      &__loanable {
+        position: absolute;
+        bottom: 0;
+        left: calc(50% + 15px);
+        height: 50%;
+        width: 85px;
+
+        > div {
+          width: calc(85px / 2);
+          height: calc(85px / 2);
+        }
+      }
     }
   }
 

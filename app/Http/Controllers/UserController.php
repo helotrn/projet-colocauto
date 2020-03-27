@@ -201,7 +201,8 @@ class UserController extends RestController
             $invoice = $user->getLastInvoiceOrCreate();
 
             $billItem = $invoice->items()->create([
-                'label' => 'Ajout au compte Locomotion',
+                'label' => "Ajout au compte Locomotion: "
+                    . "{$amount}$ + {$fee}$ (frais)",
                 'amount' => $amountWithFee,
                 'item_date' => date('Y-m-d'),
             ]);

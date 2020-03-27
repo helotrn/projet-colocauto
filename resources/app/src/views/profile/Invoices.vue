@@ -8,11 +8,11 @@
           :busy="loading" :fields="fields" no-local-sorting
           :sort-by.sync="sortBy" :sort-desc.sync="sortDesc" no-sort-reset
           :show-empty="true" empty-text="Pas de facture">
-          <template v-slot:cell(created_at)="row">
-            {{ row.item.created_at | datetime }}
-          </template>
           <template v-slot:cell(paid_at)="row">
-            {{ row.item.paid_at | datetime }}
+            {{ row.item.paid_at ? '✓' : '✗' }}
+          </template>
+          <template v-slot:cell(created_at)="row">
+            {{ row.item.created_at | date }}
           </template>
           <template v-slot:cell(total)="row">
             {{ row.item.total | currency }}
@@ -40,10 +40,8 @@ export default {
   data() {
     return {
       fields: [
-        { key: 'id', label: 'ID', sortable: true },
-        { key: 'created_at', label: 'Créée', sortable: true },
+        { key: 'created_at', label: 'Date', sortable: true },
         { key: 'paid_at', label: 'Payée', sortable: true },
-        { key: 'items_count', label: "Nb. d'items", sortable: true },
         {
           key: 'total',
           label: 'Total',

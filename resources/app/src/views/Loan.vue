@@ -22,71 +22,7 @@
 
     <b-row>
       <b-col lg="3" class="loan__sidebar">
-        <ul class="loan__sidebar__actions">
-          <li :class="{
-            'current-step': isCurrentStep('creation'),
-            'reached-step': hasReachedStep('creation'),
-          }">
-            <svg-danger v-if="hasCanceledStep('creation')" />
-            <svg-check v-else-if="hasReachedStep('creation')" />
-            <svg-waiting v-else />
-
-            <span>Demande d'emprunt</span>
-          </li>
-          <li :class="{
-            'current-step': isCurrentStep('intention'),
-            'reached-step': hasReachedStep('intention'),
-          }">
-            <svg-danger v-if="hasCanceledStep('intention')" />
-            <svg-check v-else-if="hasReachedStep('intention')" />
-            <svg-waiting v-else />
-
-            <span>Confirmation de l'emprunt</span>
-          </li>
-          <li :class="{
-            'current-step': isCurrentStep('pre_payment'),
-            'reached-step': hasReachedStep('pre_payment'),
-          }">
-            <svg-danger v-if="hasCanceledStep('pre_payment')" />
-            <svg-check v-else-if="hasReachedStep('pre_payment')" />
-            <svg-waiting v-else />
-
-            <span>Prépaiement</span>
-          </li>
-          <li :class="{
-            'current-step': isCurrentStep('takeover'),
-            'reached-step': hasReachedStep('takeover'),
-          }">
-            <svg-danger v-if="hasCanceledStep('takeover')" />
-            <svg-check v-else-if="hasReachedStep('takeover')" />
-            <svg-waiting v-else />
-
-            <span>Prise de possession</span>
-          </li>
-          <li v-for="incident in item.incidents" :key="incident.id">
-            <span>Incident</span>
-          </li>
-          <li :class="{
-            'current-step': isCurrentStep('handover'),
-            'reached-step': hasReachedStep('handover'),
-          }">
-            <svg-danger v-if="hasCanceledStep('handover')" />
-            <svg-check v-else-if="hasReachedStep('handover')" />
-            <svg-waiting v-else />
-
-            <span>Remise du véhicule</span></li>
-          </li>
-          <li :class="{
-            'current-step': isCurrentStep('payment'),
-            'reached-step': hasReachedStep('payment'),
-          }">
-            <svg-danger v-if="hasCanceledStep('payment')" />
-            <svg-check v-else-if="hasReachedStep('payment')" />
-            <svg-waiting v-else />
-
-            <span>Conclusion</span></li>
-          </li>
-        </ul>
+        <loan-menu :item="item" />
       </b-col>
 
       <b-col lg="9" class="loan__actions">
@@ -138,11 +74,8 @@
 </template>
 
 <script>
-import Check from '@/assets/svg/check.svg';
-import Danger from '@/assets/svg/danger.svg';
-import Waiting from '@/assets/svg/waiting.svg';
-
 import LoanForm from '@/components/Loan/Form.vue';
+import LoanMenu from '@/components/Loan/Menu.vue';
 import LoanActionsHandover from '@/components/Loan/Actions/Handover.vue';
 import LoanActionsIntention from '@/components/Loan/Actions/Intention.vue';
 import LoanActionsPayment from '@/components/Loan/Actions/Payment.vue';
@@ -152,22 +85,21 @@ import LoanActionsTakeover from '@/components/Loan/Actions/Takeover.vue';
 import Authenticated from '@/mixins/Authenticated';
 import DataRouteGuards from '@/mixins/DataRouteGuards';
 import FormMixin from '@/mixins/FormMixin';
+import LoanStepsSequence from '@/mixins/LoanStepsSequence';
 
 import { capitalize } from '@/helpers/filters';
 
 export default {
   name: 'Loan',
-  mixins: [Authenticated, DataRouteGuards, FormMixin],
+  mixins: [Authenticated, DataRouteGuards, FormMixin, LoanStepsSequence],
   components: {
     LoanForm,
+    LoanMenu,
     LoanActionsHandover,
     LoanActionsIntention,
     LoanActionsPayment,
     LoanActionsPrePayment,
     LoanActionsTakeover,
-    'svg-check': Check,
-    'svg-danger': Danger,
-    'svg-waiting': Waiting,
   },
   beforeRouteEnter(to, from, next) {
     next((vm) => {
@@ -293,83 +225,6 @@ export default {
 
       this.loadedFullLoanable = true;
     },
-    hasCanceledStep(step) {
-      const { actions } = this.item;
-      const intention = actions.find(a => a.type === 'intention');
-      const prePayment = actions.find(a => a.type === 'pre_payment');
-      const takeover = actions.find(a => a.type === 'takeover');
-      const handover = actions.find(a => a.type === 'handover');
-      const payment = actions.find(a => a.type === 'payment');
-
-      let canceled = true;
-      switch (step) {
-        case 'payment': // eslint-disable-line no-fallthrough
-          canceled = canceled && (!payment || payment.status === 'canceled');
-        case 'handover': // eslint-disable-line no-fallthrough
-          canceled = canceled && (!handover || handover.status === 'canceled');
-        case 'takeover': // eslint-disable-line no-fallthrough
-          canceled = canceled && (!takeover || takeover.status === 'canceled');
-        case 'pre_payment': // eslint-disable-line no-fallthrough
-          canceled = canceled && (!prePayment || prePayment.status === 'canceled');
-        case 'intention': // eslint-disable-line no-fallthrough
-          canceled = canceled && (!intention || intention.status === 'canceled');
-          break;
-        default:
-          return false;
-      }
-
-      return canceled;
-    },
-    hasReachedStep(step) {
-      const { id, actions } = this.item;
-      const intention = actions.find(a => a.type === 'intention');
-      const prePayment = actions.find(a => a.type === 'pre_payment');
-      const takeover = actions.find(a => a.type === 'takeover');
-      const handover = actions.find(a => a.type === 'handover');
-      const payment = actions.find(a => a.type === 'payment');
-
-      switch (step) {
-        case 'creation':
-          return !!id;
-        case 'intention':
-          return intention && intention.executed_at;
-        case 'pre_payment':
-          return prePayment && prePayment.executed_at;
-        case 'takeover':
-          return takeover && takeover.executed_at;
-        case 'handover':
-          return handover && handover.executed_at;
-        case 'payment':
-          return payment && payment.executed_at;
-        default:
-          return false;
-      }
-    },
-    isCurrentStep(step) {
-      const { id, actions } = this.item;
-      const intention = actions.find(a => a.type === 'intention');
-      const prePayment = actions.find(a => a.type === 'pre_payment');
-      const takeover = actions.find(a => a.type === 'takeover');
-      const handover = actions.find(a => a.type === 'handover');
-      const payment = actions.find(a => a.type === 'payment');
-
-      switch (step) {
-        case 'creation':
-          return !id;
-        case 'intention':
-          return intention && !intention.executed_at;
-        case 'pre_payment':
-          return prePayment && !prePayment.executed_at;
-        case 'takeover':
-          return takeover && !takeover.executed_at;
-        case 'handover':
-          return handover && !handover.executed_at;
-        case 'payment':
-          return payment && !payment.executed_at;
-        default:
-          return false;
-      }
-    },
     skipLoadItem() {
       if (this.id === 'new') {
         return true;
@@ -392,36 +247,6 @@ export default {
   }
 
   .loan {
-    &__sidebar {
-      &__actions {
-        padding: 0;
-        list-style-type: none;
-
-        li {
-          line-height: 19px;
-          margin-bottom: 10px;
-
-          opacity: 0.5;
-        }
-
-        li.current-step,
-        li.reached-step {
-          opacity: 1;
-        }
-
-        li span {
-          position: relative;
-          top: 5px;
-        }
-
-        li svg {
-          width: 19px;
-          height: 19px;
-          margin-right: 6px;
-        }
-      }
-    }
-
     &__description {
       font-size: 20px;
       font-weight: 600;

@@ -4,6 +4,7 @@ import ProfileBorrower from '../views/profile/Borrower.vue';
 import ProfileCommunities from '../views/profile/Communities.vue';
 import ProfileInvoice from '../views/profile/Invoice.vue';
 import ProfileInvoices from '../views/profile/Invoices.vue';
+import ProfileLoans from '../views/profile/Loans.vue';
 import ProfileLoanables from '../views/profile/Loanables.vue';
 import ProfileLoanable from '../views/profile/Loanable.vue';
 import ProfilePaymentMethods from '../views/profile/PaymentMethods.vue';
@@ -38,7 +39,7 @@ export default {
         title: 'titles.borrower',
         slug: 'users',
         params: {
-          fields: '*,borrower.*',
+          fields: 'id,borrower.*',
         },
       },
     },
@@ -117,6 +118,37 @@ export default {
           communities: {
             retrieve: {
               fields: 'id,name,center',
+            },
+          },
+        },
+      },
+    },
+    {
+      path: 'loans',
+      component: ProfileLoans,
+      meta: {
+        auth: true,
+        title: 'titles.loans',
+        slug: 'loans',
+        data: {
+          loans: {
+            retrieve: {
+              fields: [
+                '*',
+                'actions.*',
+                'borrower.id',
+                'borrower.user.avatar',
+                'borrower.user.full_name',
+                'borrower.user.id',
+                'loanable.id',
+                'loanable.image.*',
+                'loanable.name',
+                'loanable.owner.id',
+                'loanable.owner.user.avatar.*',
+                'loanable.owner.user.full_name',
+                'loanable.owner.user.id',
+                'loanable.type',
+              ].join(','),
             },
           },
         },
