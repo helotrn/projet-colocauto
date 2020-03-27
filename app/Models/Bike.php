@@ -17,7 +17,7 @@ class Bike extends Loanable
         ],
         'instructions' => [ 'present' ],
         'comments' => [ 'present' ],
-        'model' => [ 'present' ],
+        'model' => [ 'required' ],
         'bike_type' => [ 'required' ],
         'size' => [ 'required' ],
     ];

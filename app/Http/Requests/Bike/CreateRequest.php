@@ -13,9 +13,9 @@ class CreateRequest extends BaseRequest
     public function rules() {
         $rules = [
             'bike_type' => 'required',
-            'comments' => 'required',
-            'instructions' => 'required',
-            'location_description' => 'required',
+            'comments' => 'present',
+            'instructions' => 'present',
+            'location_description' => 'present',
             'model' => 'required',
             'name' => 'required',
             'position' => 'required',

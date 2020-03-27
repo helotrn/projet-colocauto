@@ -39,8 +39,8 @@ class Loanable extends BaseModel
             'in:car,bike,trailer',
         ],
         'location_description' => [ 'present' ],
-        'instructions' => [ 'present' ],
-        'comments' => [ 'present' ],
+        'instructions' => [ 'required' ],
+        'comments' => [ 'required' ],
     ];
 
     public static $sizes = [

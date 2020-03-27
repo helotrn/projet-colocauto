@@ -14,9 +14,9 @@ class CreateRequest extends BaseRequest
         $rules = [
             'name' => 'required',
             'position' => 'required',
-            'location_description' => 'required|string',
-            'comments' => 'required|string',
-            'instructions' => 'required|string',
+            'location_description' => 'present',
+            'comments' => 'present',
+            'instructions' => 'present',
             'maximum_charge' => 'required',
         ];
 
