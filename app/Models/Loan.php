@@ -12,6 +12,7 @@ use App\Models\Loanable;
 use App\Models\Payment;
 use App\Models\Takeover;
 use App\Transformers\LoanTransformer;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Loan extends BaseModel
@@ -153,5 +154,25 @@ class Loan extends BaseModel
         }
 
         return null;
+    }
+
+    public function scopeAccessibleBy(Builder $query, $user) {
+        if ($user->isAdmin()) {
+            return $query;
+        }
+
+        if ($user->owner) {
+            $ownerId = $user->owner->id;
+            $query = $query->whereHas('loanable', function ($q) use ($ownerId) {
+                return $q->where('owner_id', $ownerId);
+            });
+        }
+
+        if ($user->borrower) {
+            $borrowerId = $user->borrower->id;
+            return $query->orWhere('borrower_id', $borrowerId);
+        }
+
+        return $query;
     }
 }
