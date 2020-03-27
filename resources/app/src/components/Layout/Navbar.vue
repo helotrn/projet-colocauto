@@ -28,6 +28,7 @@
 
     <b-collapse id="nav-collapse" class="layout-navbar__collapse" is-nav>
       <div class="layout-navbar__collapse__illustration d-md-none" />
+
       <b-navbar-nav class="ml-auto" v-if="isLoggedIn">
         <b-nav-item to="/app" v-if="isRegistered">
           <span class="nav-link__icon d-lg-none">
@@ -98,6 +99,7 @@
           <b-dropdown-item @click="logout">Déconnexion</b-dropdown-item>
         </b-nav-item-dropdown>
       </b-navbar-nav>
+
       <b-navbar-nav class="ml-auto" v-else>
         <b-nav-item to="/register">S'inscrire</b-nav-item>
         <b-nav-item to="/login">Se connecter</b-nav-item>

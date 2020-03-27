@@ -1,5 +1,5 @@
 <template>
-  <b-nav-item-dropdown class="locale-switcher" :text="currentLocale" right>
+  <b-nav-item-dropdown class="locale-switcher d-none" :text="currentLocale" right>
     <b-dropdown-item @click="currentLocale = locale"
       v-for="locale in otherLocales" :key="locale">
       {{ $t(`locales.${locale}`) }}
