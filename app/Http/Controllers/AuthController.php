@@ -92,7 +92,7 @@ class AuthController extends RestController
         return $this->respondWithErrors('Registration error.', 400);
     }
 
-    public function getUser(Request $request) {
+    public function retrieveUser(Request $request) {
         return $this->userController->retrieve($request, $this->auth->user()->id);
     }
 
