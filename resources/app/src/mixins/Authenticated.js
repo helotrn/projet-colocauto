@@ -4,6 +4,9 @@ export default {
       if (!this.$store.state.loaded && !this.$store.state.loading) {
         try {
           await this.$store.dispatch('loadUser');
+          if (this.$route.name === 'login') {
+            this.skipToApp();
+          }
         } catch (e) {
           this.$store.commit('user', null);
           this.$router.push(`/login?r=${this.$route.fullPath}`);
@@ -129,7 +132,11 @@ export default {
       this.$router.replace('/login');
     },
     skipToApp() {
-      this.$router.replace('/app');
+      if (this.$route.query.r) {
+        this.$router.replace(this.$route.query.r);
+      } else {
+        this.$router.replace('/app');
+      }
     },
   },
 };
