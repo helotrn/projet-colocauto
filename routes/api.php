@@ -44,23 +44,19 @@ Route::prefix('v1')->group(function () {
             RouteHelper::resource($entity);
         }
 
-        Route::get('users/{user_id}/communities', 'UserController@getCommunities')
-            ->name('users.getCommunities');
-
-        Route::get('users/{user_id}/communities/{community_id}', 'UserController@retrieveCommunity')
-            ->name('users.retrieveCommunity');
-
+        Route::get('users/{user_id}/communities', 'UserController@indexCommunities');
+        Route::get('users/{user_id}/communities/{community_id}', 'UserController@retrieveCommunity');
         Route::put(
             'users/{user_id}/communities/{community_id}',
             'UserController@createCommunityUser'
-        )
-            ->name('users.createCommunityUser');
+        );
+        Route::delete(
+            'users/{user_id}/communities/{community_id}',
+            'UserController@deleteCommunityUser'
+        );
 
-        Route::delete('users/{user_id}/communities/{community_id}', 'UserController@deleteCommunityUser')
-            ->name("users.deleteCommunityUser");
 
         Route::get('/loans/{loan_id}/actions/{action_id}', 'LoanController@retrieveAction');
-
         Route::put('/loans/{loan_id}/actions/{action_id}/complete', 'ActionController@complete');
         Route::put('/loans/{loan_id}/actions/{action_id}/cancel', 'ActionController@cancel');
 

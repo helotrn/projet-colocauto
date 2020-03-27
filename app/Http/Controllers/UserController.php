@@ -27,9 +27,6 @@ class UserController extends RestController
     }
 
     public function index(Request $request) {
-        $perPage = $request->get('per_page') ?: 10;
-        $page = $request->get('page') ?: 1;
-
         try {
             [$items, $total] = $this->repo->get($request);
         } catch (ValidationException $e) {
@@ -96,12 +93,12 @@ class UserController extends RestController
         return $this->respondWithItem($request, $user);
     }
 
-    public function getCommunities(Request $request, $userId) {
+    public function indexCommunities(Request $request, $userId) {
         $user = $this->repo->find($request, $userId);
-        if ($user) {
-            $request->merge(['user_id' => $userId]);
-            return $this->communityRepo->get($request);
-        }
+
+        $request->merge(['user_id' => $userId]);
+
+        return $this->communityRepo->get($request);
     }
 
     public function retrieveCommunity(Request $request, $userId, $communityId) {
