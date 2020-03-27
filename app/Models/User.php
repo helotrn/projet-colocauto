@@ -3,9 +3,9 @@
 namespace App\Models;
 
 use App\Models\Action;
-use App\Models\Invoice;
 use App\Models\Borrower;
 use App\Models\File;
+use App\Models\Invoice;
 use App\Models\Loan;
 use App\Models\Owner;
 use App\Models\PaymentMethod;
@@ -122,6 +122,7 @@ class User extends AuthenticatableBaseModel
       'loans',
       'loanables',
       'payment_methods',
+      'tags',
     ];
 
     public $items = [
@@ -203,7 +204,7 @@ class User extends AuthenticatableBaseModel
     }
 
     public function tags() {
-        return $this->morphMany(Tag::class, 'taggable');
+        return $this->morphToMany(Tag::class, 'taggable');
     }
 
     public function isAdmin() {

@@ -5,7 +5,7 @@ namespace App\Models;
 class Tag extends BaseModel
 {
     public static $rules = [
-        'name' => 'required|string',
+        'name' => 'required',
         'type' => 'required',
     ];
 
@@ -14,7 +14,11 @@ class Tag extends BaseModel
         'type',
     ];
 
-    public function taggable() {
-        return $this->morphTo();
+    public $collections = [
+        'users',
+    ];
+
+    public function users() {
+        return $this->morphedByMany(User::class, 'taggable');
     }
 }
