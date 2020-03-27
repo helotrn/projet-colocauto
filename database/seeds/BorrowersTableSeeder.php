@@ -2,7 +2,6 @@
 
 use App\Models\Borrower;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Hash;
 
 class BorrowersTableSeeder extends Seeder
 {

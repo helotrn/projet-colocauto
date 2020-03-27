@@ -2,7 +2,6 @@
 
 use App\Models\Pricing;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Hash;
 
 class PricingsTableSeeder extends Seeder
 {

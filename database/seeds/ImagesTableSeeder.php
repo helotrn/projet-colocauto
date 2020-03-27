@@ -2,7 +2,6 @@
 
 use App\Models\Image;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Hash;
 
 class ImagesTableSeeder extends Seeder
 {

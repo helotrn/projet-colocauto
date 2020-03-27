@@ -2,7 +2,6 @@
 
 use App\Models\Owner;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Hash;
 
 class OwnersTableSeeder extends Seeder
 {
