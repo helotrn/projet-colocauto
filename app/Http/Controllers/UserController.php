@@ -185,6 +185,7 @@ class UserController extends RestController
         $taxes = round($amountWithFeeAndTaxes - $amountWithFee, 2);
 
         $date = date('Y-m-d');
+        $charge = null;
         try {
             $charge = \Stripe\Charge::create([
                 'amount' => $amountWithFeeAndTaxesInCents,
@@ -193,14 +194,20 @@ class UserController extends RestController
                 'description' => "Ajout au compte Locomotion: "
                     . "{$amount}$ + {$fee}$ (frais) + {$taxes}$ (taxes)",
             ]);
+        } catch (\Exception $e) {
+            $message = $e->getMessage();
+            return $this->respondWithMessage("Stripe: {$message}", 500);
+        }
 
+        try {
             $user->balance += $amount;
             $user->transaction_id = $transactionId + 1;
             $user->save();
 
             $invoice = $user->getLastInvoiceOrCreate();
 
-            $billItem = $invoice->items()->create([
+            $u = $invoice->items();
+            $billItem = $invoice->billItems()->create([
                 'label' => "Ajout au compte Locomotion: "
                     . "{$amount}$ + {$fee}$ (frais)",
                 'amount' => $amountWithFee,
@@ -211,6 +218,12 @@ class UserController extends RestController
 
             return response($user->balance, 200);
         } catch (\Exception $e) {
+            if ($charge) {
+                \Stripe\Refund::create([
+                    'charge' => $charge->id,
+                ]);
+            }
+
             return $this->respondWithMessage($e->getMessage(), 500);
         }
     }
