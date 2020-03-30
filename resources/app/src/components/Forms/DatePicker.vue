@@ -7,6 +7,8 @@
     }" :inline="inline"
     input-class="form-control"
     :format="format"
+    :initial-view="initialView"
+    :open-date="openDate"
     :language="language"
     :disabled-dates="disabledDates"
     :disabled="disabled"
@@ -47,10 +49,20 @@ export default {
         };
       },
     },
+    initialView: {
+      type: String,
+      required: false,
+      default: 'day',
+    },
     inline: {
       type: Boolean,
       required: false,
       default: false,
+    },
+    openDate: {
+      type: String,
+      required: false,
+      default: '2001-01-01',
     },
     selected: {
       type: Function,

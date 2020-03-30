@@ -43,7 +43,7 @@
         v-on:input="emitChange" />
       <forms-date-picker v-else-if="type === 'date'"
         :disabled-dates="disabledDates"
-        :disabled="disabled"
+        :disabled="disabled" :initial-view="initialView"
         :state="getValidationState(validationContext)"
         :value="value"
         @input="emitChange" />
@@ -133,6 +133,11 @@ export default {
       type: String,
       required: false,
       default: '',
+    },
+    initialView: {
+      type: String,
+      required: false,
+      default: null,
     },
     label: {
       type: String,

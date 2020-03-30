@@ -79,7 +79,7 @@
           <b-col>
             <forms-validated-input name="date_of_birth"
               :label="$t('fields.date_of_birth') | capitalize"
-              :rules="{ required: true }" type="date"
+              :rules="{ required: true }" type="date" initial-view="year"
               :placeholder="placeholderOrLabel('date_of_birth') | capitalize"
               v-model="user.date_of_birth" />
           </b-col>
