@@ -13,7 +13,6 @@ class LoansTableSeeder extends Seeder
                 'departure_at' => now(),
                 'duration_in_minutes' => 120,
                 'borrower_id' => 1,
-                'loanable_type' => 'bike',
                 'loanable_id' => 1,
                 'estimated_distance' => 20,
                 'estimated_price' => 2,

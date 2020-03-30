@@ -30,7 +30,6 @@ class LoanTest extends TestCase
             'duration_in_minutes' => $this->faker->randomNumber($nbDigits = null, $strict = false),
             'estimated_distance' => $this->faker->randomNumber($nbDigits = null, $strict = false),
             'borrower_id' => $borrower->id,
-            'loanable_type' => 'bike',
             'loanable_id' => $loanable->id,
             'estimated_price' => 1,
             'message_for_owner' => '',
