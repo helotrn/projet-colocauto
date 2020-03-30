@@ -18,6 +18,7 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
       lastLoadedAt: null,
       loaded: false,
       search: [],
+      searchAjax: null,
       lastSearchQuery: '',
       params: {
         page: 1,
@@ -81,8 +82,11 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
       setParam(state, { name, value }) {
         Vue.set(state.params, name, value);
       },
-      setSearch(state, search) {
-        state.search.splice(0, state.search, search);
+      searchAjax(state, searchAjax) {
+        state.searchAjax = searchAjax;
+      },
+      search(state, search) {
+        state.search = search;
       },
       setOrder(state, { field, direction }) {
         switch (direction) {
@@ -125,8 +129,26 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
           throw e;
         }
       },
-      search() { // state, search) {
-        // dispatch retrieve with param "q"
+      async search({ commit, state }, { q, params }) {
+        const ajax = Vue.axios.get(`/${state.slug}`, {
+          params: {
+            ...params,
+            q,
+          },
+        });
+
+        commit('searchAjax', ajax);
+
+        const {
+          data: {
+            data,
+            total,
+          },
+        } = await ajax;
+
+        commit('search', data);
+
+        commit('searchAjax', null);
       },
       async createItem({ dispatch, state }, params) {
         await dispatch('create', { data: state.item, params });

@@ -7,13 +7,13 @@
     <b-form-group :label="type !== 'checkbox' ? label : ''" :label-for="name"
       :description="description" v-b-tooltip.hover :title="disabled ? disabledTooltip : ''">
       <b-form-select v-if="type === 'select'"
-        :id="name" :name="name" :key="`${type}-${name}`"
+        :id="name" :name="name"
         :state="getValidationState(validationContext)"
         :options="options" :disabled="disabled"
         v-bind:value="value"
         v-on:change="emitChange" />
       <b-form-checkbox v-else-if="type === 'checkbox'"
-        :id="name" :name="name" :key="`${type}-${name}`"
+        :id="name" :name="name"
         :value="true" :disabled="disabled"
         :unchecked-value="false"
         :state="getValidationState(validationContext)"
@@ -23,13 +23,13 @@
       </b-form-checkbox>
       <b-form-checkbox-group v-else-if="type === 'checkboxes'"
         :switches="switches" :stacked="stacked"
-        :id="name" :name="name" :key="`${type}-${name}`"
+        :id="name" :name="name"
         :disabled="disabled" :options="options"
         :state="getValidationState(validationContext)"
         :checked="value"
         @change="emitChange" />
       <b-form-textarea v-else-if="type === 'textarea'"
-        :id="name" :name="name" :key="`${type}-${name}`"
+        :id="name" :name="name"
         :description="description"
         :placeholder="placeholder" :disabled="disabled"
         :rows="rows" :max-rows="maxRows"
@@ -54,17 +54,23 @@
         :value="value"
         @input="emitChange" />
       <b-form-input v-else-if="type === 'password'"
-        :id="name" :name="name" :key="`${type}-${name}`"
+        :id="name" :name="name"
         type="password"
         :placeholder="placeholder" :disabled="disabled"
         :state="getValidationState(validationContext)"
         v-bind:value="value"
         v-on:input="emitChange"/>
       <div v-else-if="type === 'relation'">
-        <strong>Relation {{name}}</strong>
+        <forms-relation-input :query="query"
+          :id="name" :name="name"
+          :placeholder="placeholder" :disabled="disabled"
+          :state="getValidationState(validationContext)"
+          :object-value="objectValue"
+          v-bind:value="value"
+          v-on:input="emitRelationChange"/>
       </div>
       <b-form-input v-else-if="type === 'number'"
-        :id="name" :name="name" :key="`${type}-${name}`"
+        :id="name" :name="name"
         type="number" :min="min" :max="max"
         :step="step"
         :placeholder="placeholder" :disabled="disabled"
@@ -72,14 +78,14 @@
         v-bind:value="value"
         v-on:input="emitChange"/>
       <b-form-input v-else-if="!!mask"
-        :id="name" :name="name" :key="`${type}-${name}`"
+        :id="name" :name="name"
         type="text" v-mask="mask" masked
         :placeholder="placeholder" :disabled="disabled"
         :state="getValidationState(validationContext)"
         v-bind:value="value"
         v-on:input="emitChange"/>
       <b-form-input v-else
-        :id="name" :name="name" :key="`${type}-${name}`"
+        :id="name" :name="name"
         type="text"
         :placeholder="placeholder" :disabled="disabled"
         :state="getValidationState(validationContext)"
@@ -96,6 +102,7 @@
 import FormsDatePicker from '@/components/Forms/DatePicker.vue';
 import FormsDateTimePicker from '@/components/Forms/DateTimePicker.vue';
 import FormsMapInput from '@/components/Forms/MapInput.vue';
+import FormsRelationInput from '@/components/Forms/RelationInput.vue';
 
 export default {
   name: 'FormsValidatedInput',
@@ -172,6 +179,11 @@ export default {
       type: String,
       required: true,
     },
+    objectValue: {
+      type: Object,
+      required: false,
+      default: null,
+    },
     options: {
       type: Array,
       required: false,
@@ -183,6 +195,11 @@ export default {
       type: String,
       required: false,
       default: '',
+    },
+    query: {
+      type: Object,
+      required: false,
+      default: null,
     },
     rows: {
       type: Number,
@@ -223,6 +240,7 @@ export default {
     FormsDatePicker,
     FormsDateTimePicker,
     FormsMapInput,
+    FormsRelationInput,
   },
   computed: {
     rulesOrNothing() {
@@ -243,6 +261,9 @@ export default {
   methods: {
     emitChange(value) {
       this.$emit('input', value);
+    },
+    emitRelationChange(value) {
+      this.$emit('relation', value);
     },
     getValidationState({ dirty, validated, valid = null }) {
       if (this.rulesOrNothing === '') {

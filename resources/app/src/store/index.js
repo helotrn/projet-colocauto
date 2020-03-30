@@ -17,6 +17,7 @@ import loans from './models/loans';
 import loanables from './models/loanables';
 import paymentMethods from './models/paymentMethods';
 import trailers from './models/trailers';
+import owners from './models/owners';
 import users from './models/users';
 
 import CommunityList from './pages/community/list';
@@ -215,6 +216,7 @@ export default new Vuex.Store({
     loans,
     loanables,
     login: Login,
+    owners,
     paymentMethods,
     'profile.loanable': ProfileLoanable,
     register: Register,

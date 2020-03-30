@@ -6,6 +6,7 @@ use App\Models\Bike;
 use App\Models\Car;
 use App\Models\Loanable;
 use App\Models\Trailer;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Owner extends BaseModel
@@ -56,5 +57,11 @@ class Owner extends BaseModel
 
     public function trailers() {
         return $this->hasMany(Trailer::class);
+    }
+
+    public function scopeSearch(Builder $query, $q) {
+        return $query->whereHas('user', function ($q2) use ($q) {
+            return $q2->search($q);
+        });
     }
 }
