@@ -269,13 +269,33 @@ class User extends AuthenticatableBaseModel
     }
 
     public function removeFromBalance($amount) {
-        var_dump($this->balance);
         $this->balance = floatval($this->balance) - $amount;
-        var_dump($this->balance);
+
         if (floatval($this->balance) < 0) {
             return abort(400);
         }
 
         $this->save();
+    }
+
+    public function scopeAccessibleBy(Builder $query, $user) {
+        if ($user->isAdmin()) {
+            return $query;
+        }
+
+        // A user has access to...
+        return $query
+            // ...himself or herself
+            ->whereId($user->id)
+            // ...or belonging to a community of which he or she is administrator
+            ->orWhere(function ($q) use ($user) {
+                return $q->whereHas('communities', function ($q2) use ($user) {
+                    return $q2->whereHas('users', function ($q3) use ($user) {
+                        return $q3
+                            ->where('community_user.user_id', $user->id)
+                            ->where('community_user.role', 'admin');
+                    });
+                });
+            });
     }
 }
