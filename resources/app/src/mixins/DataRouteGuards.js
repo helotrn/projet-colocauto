@@ -22,36 +22,7 @@ export default {
   beforeRouteEnter(to, from, next) {
     if (to.meta && to.meta.data) {
       next((vm) => {
-        Promise.all(
-          Object.keys(to.meta.data)
-            .reduce((acc, collection) => {
-              const actions = Object.keys(to.meta.data[collection]);
-
-              acc.push(...actions.map((action) => {
-                const routeParams = to.meta.data[collection][action];
-
-                const params = drillParams(routeParams, vm);
-
-                return store.dispatch(
-                  `${collection}/${action}`,
-                  params,
-                );
-              }));
-
-              return acc;
-            }, []),
-        )
-          .then(vm.dataRouteGuardsCallback)
-          .catch((e) => {
-            if (e.request) {
-              switch (e.request.status) {
-                case 401:
-                default:
-                  vm.$store.commit('user', null);
-                  vm.$router.push(`/login?r=${vm.$route.fullPath}`);
-              }
-            }
-          });
+        vm.loadDataRoutesData(vm, to);
       });
     } else {
       next();
@@ -59,6 +30,10 @@ export default {
   },
   computed: {
     routeDataLoaded() {
+      if (this.reloading) {
+        return true;
+      }
+
       if (!this.$route.meta || !this.$route.meta.data) {
         return true;
       }
@@ -84,6 +59,40 @@ export default {
         },
         true,
       );
+    },
+  },
+  methods: {
+    loadDataRoutesData(vm, to) {
+      return Promise.all(
+        Object.keys(to.meta.data)
+        .reduce((acc, collection) => {
+          const actions = Object.keys(to.meta.data[collection]);
+
+          acc.push(...actions.map((action) => {
+            const routeParams = to.meta.data[collection][action];
+
+            const params = drillParams(routeParams, vm);
+
+            return store.dispatch(
+              `${collection}/${action}`,
+              params,
+            );
+          }));
+
+          return acc;
+        }, []),
+      )
+        .then(vm.dataRouteGuardsCallback)
+        .catch((e) => {
+          if (e.request) {
+            switch (e.request.status) {
+              case 401:
+              default:
+                vm.$store.commit('user', null);
+                vm.$router.push(`/login?r=${vm.$route.fullPath}`);
+            }
+          }
+        });
     },
   },
 };

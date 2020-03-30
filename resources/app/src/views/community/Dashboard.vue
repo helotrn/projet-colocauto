@@ -9,8 +9,6 @@
         <b-col lg="3">
           <nav>
             <a href="#mes-voisins" v-if="community.users">Mes voisins</a><br>
-            <a href="#nouvelles-de-ma-communaute">Nouvelles de ma communauté</a><br>
-            <a href="#activites-locomotion">Activités Locomotion</a>
           </nav>
         </b-col>
 
@@ -29,19 +27,12 @@
               </span>
             </div>
 
-            <b-row class="page__section__users">
+            <b-row class="page__section community__users">
               <b-col v-for="user in community.users" :key="user.id" lg="6" md="12">
-                <user-card :user="user" />
+                <user-card :user="user" :is-admin="isAdminOfCommunity(community)"
+                  :community-id="community.id" @updated="reload" />
               </b-col>
             </b-row>
-          </div>
-
-          <div class="page__section">
-            <h2 id="nouvelles-de-ma-communaute">Nouvelles de ma communauté</h2>
-          </div>
-
-          <div class="page__section">
-            <h2 id="activites-locomotion">Activités Locomotion</h2>
           </div>
         </b-col>
       </b-row>
@@ -50,7 +41,7 @@
 </template>
 
 <script>
-import UserCard from '@/components/User/Card.vue';
+import UserCard from '@/components/User/UserCard.vue';
 
 import Authenticated from '@/mixins/Authenticated';
 import DataRouteGuards from '@/mixins/DataRouteGuards';
@@ -64,6 +55,13 @@ export default {
   computed: {
     community() {
       return this.$store.state.communities.item || {};
+    },
+  },
+  methods: {
+    async reload() {
+      this.reloading = true;
+      await this.loadDataRoutesData(this, this.$route);
+      this.reloading = false;
     },
   },
 };

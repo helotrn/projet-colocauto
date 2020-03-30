@@ -289,8 +289,6 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
           commit('deleted', deleted);
 
           commit('ajax', null);
-
-          await dispatch('loadUser', null, { root: true });
         } catch (e) {
           commit('ajax', null);
 

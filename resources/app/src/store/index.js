@@ -4,6 +4,7 @@ import VuexPersist from 'vuex-persist';
 import merge from 'deepmerge';
 
 import account from './account';
+import global from './global';
 import stats from './stats';
 
 import bikes from './models/bikes';
@@ -121,6 +122,7 @@ const actions = {
     }
 
     await dispatch('loadUser');
+    await dispatch('global/load');
   },
   async register({ commit, dispatch, state }, { email, password }) {
     const { data } = await Vue.axios.post('/auth/register', {
@@ -207,6 +209,7 @@ export default new Vuex.Store({
     communities,
     'community.list': CommunityList,
     files,
+    global,
     images,
     invoices,
     loans,

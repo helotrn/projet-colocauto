@@ -116,6 +116,9 @@ export default {
     },
   },
   methods: {
+    isAdminOfCommunity(community) {
+      return !!this.user.communities.find(c => c.id === community.id && c.role === 'admin');
+    },
     logout() {
       this.$store.dispatch('logout');
 
