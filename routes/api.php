@@ -55,6 +55,20 @@ Route::prefix('v1')->group(function () {
             'UserController@deleteCommunityUser'
         );
 
+        RouteHelper::subresource('user', 'tag');
+
+        Route::get(
+            'communities/{community_id}/users/{user_id}/tags',
+            'CommunityController@indexCommunityUserTags'
+        );
+        Route::put(
+            'communities/{community_id}/users/{user_id}/tags/{tag_id}',
+            'CommunityController@updateCommunityUserTags'
+        );
+        Route::delete(
+            'communities/{community_id}/users/{user_id}/tags/{tag_id}',
+            'CommunityController@destroyCommunityUserTags'
+        );
 
         Route::get('/loans/{loan_id}/actions/{action_id}', 'LoanController@retrieveAction');
         Route::put('/loans/{loan_id}/actions/{action_id}/complete', 'ActionController@complete');

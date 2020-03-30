@@ -4,6 +4,7 @@ namespace App\Models\Pivots;
 
 use App\Models\Community;
 use App\Models\Image;
+use App\Models\Tag;
 
 class CommunityUser extends BasePivot
 {
@@ -19,10 +20,14 @@ class CommunityUser extends BasePivot
         'user_id',
     ];
 
-    protected $with = ['proof'];
+    protected $with = ['proof', 'tags'];
 
     public $morphOnes = [
         'proof' => 'imageable',
+    ];
+
+    public $morphManys = [
+        'tags' => 'taggable',
     ];
 
     public function user() {
@@ -35,5 +40,9 @@ class CommunityUser extends BasePivot
 
     public function proof() {
         return $this->morphOne(Image::class, 'imageable')->where('field', 'proof');
+    }
+
+    public function tags() {
+        return $this->morphToMany(Tag::class, 'taggable');
     }
 }

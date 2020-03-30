@@ -2,19 +2,27 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\CommunityController;
 use App\Http\Requests\BaseRequest as Request;
 use App\Http\Requests\Community\CreateRequest;
 use App\Http\Requests\Community\DestroyRequest;
 use App\Http\Requests\Community\UpdateRequest;
+use App\Http\Requests\Community\CommunityUserTagRequest;
 use App\Models\Community;
+use App\Models\User;
 use App\Repositories\CommunityRepository;
 use Illuminate\Validation\ValidationException;
 
 class CommunityController extends RestController
 {
-    public function __construct(CommunityRepository $repository, Community $model) {
+    public function __construct(
+        CommunityRepository $repository,
+        Community $model,
+        TagController $tagController
+    ) {
         $this->repo = $repository;
         $this->model = $model;
+        $this->tagController = $tagController;
     }
 
     public function index(Request $request) {
@@ -68,6 +76,62 @@ class CommunityController extends RestController
 
         return $response;
     }
+
+    public function indexCommunityUserTags(Request $request, $communityId, $userId) {
+        $community = $this->repo->find($request, $communityId);
+        User::accessibleBy($request->user())->findOrFail($userId);
+        $user = $community->users->find($userId);
+
+        $request->merge([ 'community_users.id' => $user->pivot->id ]);
+
+        return $this->tagController->index($request);
+    }
+
+    public function updateCommunityUserTags(
+        CommunityUserTagRequest $request,
+        $communityId,
+        $userId,
+        $tagId
+    ) {
+        $community = $this->repo->find($request, $communityId);
+        User::accessibleBy($request->user())->findOrFail($userId);
+        $user = $community->users->find($userId);
+
+        if (!$user) {
+            return abort(404);
+        }
+
+        if ($tag = $user->pivot->tags()->find($tagId)) {
+            return $this->respondWithItem($request, $tag);
+        }
+
+        $user->pivot->tags()->attach($tagId);
+
+        return $this->respondWithItem($request, $user->pivot->tags()->find($tagId));
+    }
+
+    public function destroyCommunityUserTags(
+        CommunityUserTagRequest $request,
+        $communityId,
+        $userId,
+        $tagId
+    ) {
+        $community = $this->repo->find($request, $communityId);
+        User::accessibleBy($request->user())->findOrFail($userId);
+        $user = $community->users->find($userId);
+
+        if (!$user) {
+            return abort(404);
+        }
+
+        if ($tag = $user->pivot->tags()->find($tagId)) {
+            $user->pivot->tags()->detach($tagId);
+            return $this->respondWithItem($request, $tag);
+        }
+
+        return abort(404);
+    }
+
 
     public function template(Request $request) {
         return [

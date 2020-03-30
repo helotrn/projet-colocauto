@@ -10,11 +10,13 @@ class TagsTableSeeder extends Seeder
             [
                 'id' => 1,
                 'name' => 'Ambassadeur.rice de la communauté',
+                'slug' => 'ambassador',
                 'type' => 'tag',
             ],
             [
                 'id' => 2,
                 'name' => 'Pionnier.ère Locomotion',
+                'slug' => 'early_adopter',
                 'type' => 'tag',
             ],
         ];

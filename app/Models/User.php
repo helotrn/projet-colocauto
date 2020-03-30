@@ -123,7 +123,6 @@ class User extends AuthenticatableBaseModel
       'loans',
       'loanables',
       'payment_methods',
-      'tags',
     ];
 
     public $items = [

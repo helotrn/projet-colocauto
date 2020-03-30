@@ -14,11 +14,16 @@ class Tag extends BaseModel
         'type',
     ];
 
-    public $collections = [
-        'users',
+    public $morphManys = [
+        'users' => 'taggable',
+        'community_users' => 'taggable',
     ];
 
     public function users() {
         return $this->morphedByMany(User::class, 'taggable');
+    }
+
+    public function communityUsers() {
+        return $this->morphedByMany(Pivots\CommunityUser::class, 'taggable');
     }
 }

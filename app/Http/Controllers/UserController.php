@@ -7,6 +7,7 @@ use App\Http\Requests\User\AddBalanceRequest;
 use App\Http\Requests\User\CreateRequest;
 use App\Http\Requests\User\DestroyRequest;
 use App\Http\Requests\User\UpdateRequest;
+use App\Http\Requests\User\UserTagRequest;
 use App\Models\Borrower;
 use App\Models\User;
 use App\Repositories\CommunityRepository;
@@ -19,11 +20,13 @@ class UserController extends RestController
     public function __construct(
         UserRepository $repository,
         User $model,
-        CommunityRepository $communityRepo
+        CommunityRepository $communityRepo,
+        TagController $tagController
     ) {
         $this->repo = $repository;
         $this->model = $model;
         $this->communityRepo = $communityRepo;
+        $this->tagController = $tagController;
     }
 
     public function index(Request $request) {
@@ -142,6 +145,37 @@ class UserController extends RestController
         }
 
         return $community;
+    }
+
+    public function indexTags(Request $request, $userId) {
+        $user = $this->repo->find($request, $userId);
+
+        $request->merge([ 'users.id' => $userId ]);
+
+        return $this->tagController->index($request);
+    }
+
+    public function updateTags(UserTagRequest $request, $userId, $tagId) {
+        $user = $this->repo->find($request, $userId);
+
+        if ($tag = $user->tags->find($tagId)) {
+            return $this->respondWithItem($request, $tag);
+        }
+
+        $user->tags()->attach($tagId);
+
+        return $this->respondWithItem($request, $user->tags()->find($tagId));
+    }
+
+    public function destroyTags(UserTagRequest $request, $userId, $tagId) {
+        $user = $this->repo->find($request, $userId);
+
+        if ($tag = $user->tags->find($tagId)) {
+            $user->tags()->detach($tag->id);
+            return $this->respondWithItem($request, $tag);
+        }
+
+        return abort(404);
     }
 
     public function getBalance(Request $request, $userId) {
