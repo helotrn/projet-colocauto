@@ -15,7 +15,7 @@ class ObjectTypeCast extends CustomCastBase
             case 'bike':
                 return 'App\Models\Bike';
             default:
-                return null;
+                return $objectType;
         }
     }
 
@@ -28,7 +28,7 @@ class ObjectTypeCast extends CustomCastBase
             case 'App\Models\Bike':
                 return 'bike';
             default:
-                return null;
+                return $objectType;
         }
     }
 }
