@@ -75,6 +75,7 @@ export default {
     li {
       img {
         margin-right: 20px;
+        flex: 0 0 58px;
       }
 
       span {

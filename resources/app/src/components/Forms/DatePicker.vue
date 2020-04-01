@@ -60,9 +60,11 @@ export default {
       default: false,
     },
     openDate: {
-      type: String,
+      type: Date,
       required: false,
-      default: '2001-01-01',
+      default() {
+        return new Date('2001-01-01');
+      },
     },
     selected: {
       type: Function,

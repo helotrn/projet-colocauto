@@ -6,6 +6,7 @@
       :options="def.options" :disabled="disabled || def.disabled"
       :placeholder="placeholderOrLabel(key) | capitalize"
       :query="def.query" :object-value="objectValue(key)" @relation="updateObject($event, key)"
+      :initial-view="def.initial_view"
       v-model="item[key]" />
   </div>
 </template>

@@ -142,7 +142,6 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
         const {
           data: {
             data,
-            total,
           },
         } = await ajax;
 
@@ -300,7 +299,7 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
           throw e;
         }
       },
-      async destroy({ commit, dispatch, state }, id) {
+      async destroy({ commit, state }, id) {
         try {
           const ajax = Vue.axios.delete(`/${state.slug}/${id}`);
 

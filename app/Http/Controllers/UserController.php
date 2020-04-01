@@ -280,6 +280,7 @@ class UserController extends RestController
                     ],
                     'date_of_birth' => [
                         'type' => 'date',
+                        'initial_view' => 'year',
                     ],
                     'address' => [
                         'type' => 'text',
