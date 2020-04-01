@@ -148,16 +148,17 @@
                     @click="approveUser(row.item)">
                     {{ $t('approuver') | capitalize }}
                   </b-button>
-                  <b-button v-if="!row.item.suspended_at"
+                  <b-button v-else-if="!row.item.suspended_at"
                     size="sm" class="mr-1" variant="warning"
                     @click="suspendUser(row.item)">
                     {{ $t('suspendre') | capitalize }}
                   </b-button>
-                  <b-button v-if="row.item.suspended_at"
+                  <b-button v-else
                     size="sm" class="mr-1" variant="success"
                     @click="unsuspendUser(row.item)">
                     {{ $t('rétablir') | capitalize }}
                   </b-button>
+
                   <b-button size="sm" variant="danger"
                     @click="removeUser(row.item)">
                     {{ $t('retirer') | capitalize }}
