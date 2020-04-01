@@ -16,13 +16,13 @@
 
             <div v-if="hasTutorial('add-vehicle')">
               <tutorial-block title="Inscris un véhicule"
-                to="/guide/inscris-un-vehicule"
+                to="/profile/loanables/new"
                 bg-image="/img-voiture.png" variant="dark" />
             </div>
 
             <div v-if="hasTutorial('find-vehicle')">
               <tutorial-block title="Trouve un véhicule"
-                to="/guide/trouve-un-vehicule"
+                to="/community/list"
                 bg-image="/img-vehicules.png" variant="light" />
             </div>
           </div>
