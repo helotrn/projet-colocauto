@@ -4,11 +4,13 @@ namespace App\Models;
 
 use App\Models\Loan;
 use App\Models\User;
+use App\Utils\TimestampWithTimezone;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Vkovic\LaravelCustomCasts\HasCustomCasts;
 
 class Borrower extends BaseModel
 {
-    use SoftDeletes;
+    use HasCustomCasts, SoftDeletes;
 
     public static $rules = [
         'drivers_license_number' => [ 'nullable' ],
@@ -28,12 +30,18 @@ class Borrower extends BaseModel
         'drivers_license_number',
         'has_been_sued_last_ten_years',
         'noke_id',
-        'approved_at',
         'submitted_at',
         'user_id',
     ];
 
+    protected $casts = [
+        'approved_at' => TimestampWithTimezone::class,
+        'suspended_at' => TimestampWithTimezone::class,
+    ];
+
     public $items = ['user'];
+
+    public $computed = ['approved', 'suspended'];
 
     public $morphOnes = [
       'insurance' => 'fileable',
@@ -53,6 +61,10 @@ class Borrower extends BaseModel
 
     public function getApprovedAttribute() {
         return !!$this->approved_at;
+    }
+
+    public function getSuspendedAttribute() {
+        return !!$this->suspended_at;
     }
 
     public function gaa() {

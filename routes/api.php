@@ -25,7 +25,6 @@ Route::prefix('v1')->group(function () {
             'action',
             'bike',
             'bill',
-            'borrower',
             'car',
             'community',
             'file',
@@ -33,7 +32,6 @@ Route::prefix('v1')->group(function () {
             'invoice',
             'loan',
             'loanable',
-            'owner',
             'padlock',
             'payment_method',
             'pricing',
@@ -55,6 +53,11 @@ Route::prefix('v1')->group(function () {
             'UserController@deleteCommunityUser'
         );
 
+        Route::get('/users/{user_id}/borrower', 'UserController@retrieveBorrower');
+        Route::put('/users/{user_id}/borrower/approve', 'UserController@approveBorrower');
+        Route::put('/users/{user_id}/borrower/suspend', 'UserController@suspendBorrower');
+        Route::delete('/users/{user_id}/borrower/suspend', 'UserController@unsuspendBorrower');
+
         RouteHelper::subresource('user', 'tag');
 
         Route::get(
@@ -73,8 +76,6 @@ Route::prefix('v1')->group(function () {
         Route::get('/loans/{loan_id}/actions/{action_id}', 'LoanController@retrieveAction');
         Route::put('/loans/{loan_id}/actions/{action_id}/complete', 'ActionController@complete');
         Route::put('/loans/{loan_id}/actions/{action_id}/cancel', 'ActionController@cancel');
-
-        Route::put('/borrowers/{id}/approve', 'BorrowerController@approve');
 
         Route::put('/pricings/{id}/evaluate', 'PricingController@evaluate');
 

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\BaseRequest as Request;
+use App\Http\Requests\User\BorrowerStatusRequest;
 use App\Http\Requests\User\AddBalanceRequest;
 use App\Http\Requests\User\CreateRequest;
 use App\Http\Requests\User\DestroyRequest;
@@ -176,6 +177,45 @@ class UserController extends RestController
         }
 
         return abort(404);
+    }
+
+    public function approveBorrower(BorrowerStatusRequest $request, $id) {
+        $item = $this->repo->find($request, $id);
+
+        if (!$item->borrower->approved_at) {
+            $item->borrower->approved_at = new \DateTime;
+            $item->borrower->save();
+        }
+
+        return $this->respondWithItem($request, $item->borrower);
+    }
+
+    public function retrieveBorrower(Request $request, $id) {
+        $item = $this->repo->find($request, $id);
+
+        return $this->respondWithItem($request, $item->borrower);
+    }
+
+    public function suspendBorrower(BorrowerStatusRequest $request, $id) {
+        $item = $this->repo->find($request, $id);
+
+        if (!$item->borrower->suspended_at) {
+            $item->borrower->suspended_at = new \DateTime;
+            $item->borrower->save();
+        }
+
+        return $this->respondWithItem($request, $item->borrower);
+    }
+
+    public function unsuspendBorrower(BorrowerStatusRequest $request, $id) {
+        $item = $this->repo->find($request, $id);
+
+        if ($item->borrower->suspended_at) {
+            $item->borrower->suspended_at = null;
+            $item->borrower->save();
+        }
+
+        return $this->respondWithItem($request, $item->borrower);
     }
 
     public function getBalance(Request $request, $userId) {
