@@ -11,6 +11,7 @@ export default {
       date_of_birth: 'date de naissance',
       deleted_at: 'supprimé',
       description: 'description',
+      email: 'courriel',
       full_name: 'nom complet',
       id: 'ID',
       is_smart_phone: 'téléphone intelligent?',
