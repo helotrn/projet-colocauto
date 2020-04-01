@@ -300,6 +300,10 @@ class User extends AuthenticatableBaseModel
     }
 
     public function scopeSearch(Builder $query, $q) {
+        if (!$q) {
+            return $query;
+        }
+
         return $query->where(function ($q2) use ($q) {
             return $q2->where('name', 'LIKE', $q)
                 ->orWhere('last_name', 'LIKE', $q);
