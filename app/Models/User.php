@@ -305,8 +305,8 @@ class User extends AuthenticatableBaseModel
         }
 
         return $query->where(function ($q2) use ($q) {
-            return $q2->where('name', 'LIKE', $q)
-                ->orWhere('last_name', 'LIKE', $q);
+            return $q2->where('unaccent(name)', 'ILIKE', "unaccent(%$q%)")
+                ->orWhere('unaccent(last_name)', 'ILIKE', "unaccent(%$q%)");
         });
     }
 }

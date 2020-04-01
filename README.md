@@ -9,6 +9,8 @@ Prérequis
 - \>= PHP 7.3
 - Node 10
 - Postgresql 10
+  - postgis
+  - unaccent
 - composer, npm
 - Redis
 
@@ -32,6 +34,8 @@ CREATE DATABASE
 postgres=# \q
 locomotion@localhost $ psql locomotion
 postgres=# CREATE EXTENSION postgis;
+CREATE EXTENSION
+postgres=# CREATE EXTENSION unaccent;
 CREATE EXTENSION
 postgres=# \q
 ```
