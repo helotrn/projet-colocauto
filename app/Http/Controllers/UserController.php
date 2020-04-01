@@ -263,6 +263,7 @@ class UserController extends RestController
         $template = [
             'item' => [
                 'name' => '',
+                'borrower' => new \stdClass,
             ],
             'form' => [
                 'general' => [

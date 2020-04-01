@@ -10,6 +10,26 @@ export default new RestModule('users', {
     type: null,
   },
 }, {
+  async approveBorrower({ commit }, userId) {
+    try {
+      const ajax = Vue.axios.put(`/users/${userId}/borrower/approve`);
+
+      commit('ajax', ajax);
+
+      const { data } = await ajax;
+
+      commit('mergeItem', { borrower: data });
+
+      commit('ajax', null);
+    } catch (e) {
+      commit('ajax', null);
+
+      const { request, response } = e;
+      commit('error', { request, response });
+
+      throw e;
+    }
+  },
   async joinCommunity({ commit }, { communityId, userId }) {
     try {
       const ajax = Vue.axios.put(`/users/${userId}/communities/${communityId}`);
@@ -19,6 +39,46 @@ export default new RestModule('users', {
       const { data } = await ajax;
 
       commit('mergeItem', { communities: [data] });
+
+      commit('ajax', null);
+    } catch (e) {
+      commit('ajax', null);
+
+      const { request, response } = e;
+      commit('error', { request, response });
+
+      throw e;
+    }
+  },
+  async suspendBorrower({ commit }, userId) {
+    try {
+      const ajax = Vue.axios.put(`/users/${userId}/borrower/suspend`);
+
+      commit('ajax', ajax);
+
+      const { data } = await ajax;
+
+      commit('mergeItem', { borrower: data });
+
+      commit('ajax', null);
+    } catch (e) {
+      commit('ajax', null);
+
+      const { request, response } = e;
+      commit('error', { request, response });
+
+      throw e;
+    }
+  },
+  async unsuspendBorrower({ commit }, userId) {
+    try {
+      const ajax = Vue.axios.delete(`/users/${userId}/borrower/suspend`);
+
+      commit('ajax', ajax);
+
+      const { data } = await ajax;
+
+      commit('mergeItem', { borrower: data });
 
       commit('ajax', null);
     } catch (e) {

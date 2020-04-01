@@ -52,7 +52,7 @@ export default {
       return this.$store.state.global.tags.find(t => t.slug === 'ambassador');
     },
     isAmbassador() {
-      return this.user.tags.find(t => t.slug === 'ambassador')
+      return this.user.tags.find(t => t.slug === 'ambassador');
     },
     userAvatarStyle() {
       if (!this.user.avatar) {

@@ -2,6 +2,8 @@ import Admin from '../views/Admin.vue';
 import AdminDashboard from '../views/admin/Dashboard.vue';
 import AdminCommunities from '../views/admin/Communities.vue';
 import AdminCommunity from '../views/admin/Community.vue';
+import AdminInvoices from '../views/admin/Invoices.vue';
+import AdminInvoice from '../views/admin/Invoice.vue';
 import AdminLoanable from '../views/admin/Loanable.vue';
 import AdminLoanables from '../views/admin/Loanables.vue';
 import AdminUser from '../views/admin/User.vue';
@@ -20,7 +22,7 @@ export default {
       component: AdminDashboard,
       meta: {
         auth: true,
-        title: 'tableau de bord',
+        title: 'titles.dashboard',
       },
     },
     {
@@ -116,9 +118,42 @@ export default {
         auth: true,
         slug: 'users',
         params: {
-          fields: '*,owner.*,borrower.*,loanables.*,communities.*',
+          fields: '*,owner.*,borrower.*,loanables.*,loanables.loans.*,'
+            + 'loanables.loans.borrower.user.full_name,communities.*,loans.*,'
+            + 'invoices.*,invoices.total,invoices.total_with_taxes,loans.borrower.user.*,'
+            + 'loans.loanable.name',
         },
-        title: 'titles.loanable',
+        title: 'titles.user',
+      },
+    },
+    {
+      path: 'invoices',
+      component: AdminInvoices,
+      meta: {
+        auth: true,
+        creatable: true,
+        slug: 'invoices',
+        data: {
+          invoices: {
+            retrieve: {
+              fields: '*,user.id,user.full_name',
+            },
+          },
+        },
+        title: 'titles.invoices',
+      },
+    },
+    {
+      path: 'invoices/:id',
+      component: AdminInvoice,
+      props: true,
+      meta: {
+        auth: true,
+        slug: 'invoices',
+        params: {
+          fields: '*,invoice_items.*,user.id,user.full_name',
+        },
+        title: 'titles.invoice',
       },
     },
   ],

@@ -9,16 +9,4 @@ class DestroyRequest extends BaseRequest
     public function authorize() {
         return $this->user()->isAdmin();
     }
-
-    public function rules() {
-        $rules = [
-        ];
-
-        return $rules;
-    }
-
-    public function messages() {
-        return [
-        ];
-    }
 }

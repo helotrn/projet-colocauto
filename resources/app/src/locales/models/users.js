@@ -1,5 +1,6 @@
 export default {
   fr: {
+    'ajouter un membre': 'ajouter un membre',
     descriptions: {
       description: 'Décrivez-vous en quelques mots. Cette description personnelle sera affichée '
         + 'sur votre profil de membre Locomotion.',

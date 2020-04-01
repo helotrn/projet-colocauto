@@ -15,16 +15,13 @@ class CreateRequest extends BaseRequest
             'email' => 'email',
         ];
 
-        if ($user = $this->user()) {
-            $rules['email'] = "email|unique:users,email,$user->id";
+        if ($userId = $this->get('id')) {
+            $rules['email'] = [
+                'email',
+                "unique:users,email,$userId",
+            ];
         }
 
         return $rules;
-    }
-
-    public function messages() {
-        return [
-            'name.required' => 'Le nom est requis.'
-        ];
     }
 }

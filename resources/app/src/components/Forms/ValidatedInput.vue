@@ -60,15 +60,23 @@
         :state="getValidationState(validationContext)"
         v-bind:value="value"
         v-on:input="emitChange"/>
-      <div v-else-if="type === 'relation'">
-        <forms-relation-input :query="query"
-          :id="name" :name="name"
-          :placeholder="placeholder" :disabled="disabled"
-          :state="getValidationState(validationContext)"
-          :object-value="objectValue"
-          v-bind:value="value"
-          v-on:input="emitRelationChange"/>
-      </div>
+      <forms-file-uploader v-else-if="type === 'file'"
+        :id="name" :name="name" :field="name"
+        :placeholder="placeholder" :disabled="disabled"
+        :value="value"
+        @input="emitRelationChange" />
+      <forms-image-uploader v-else-if="type === 'image'"
+        :id="name" :name="name" :field="name"
+        :placeholder="placeholder" :disabled="disabled"
+        :value="value"
+        @input="emitRelationChange" />
+      <forms-relation-input v-else-if="type === 'relation'"
+        :id="name" :name="name" :query="query"
+        :placeholder="placeholder" :disabled="disabled"
+        :state="getValidationState(validationContext)"
+        :object-value="objectValue"
+        v-bind:value="value"
+        v-on:input="emitRelationChange"/>
       <b-form-input v-else-if="type === 'number'"
         :id="name" :name="name"
         type="number" :min="min" :max="max"
@@ -101,6 +109,8 @@
 <script>
 import FormsDatePicker from '@/components/Forms/DatePicker.vue';
 import FormsDateTimePicker from '@/components/Forms/DateTimePicker.vue';
+import FormsFileUploader from '@/components/Forms/FileUploader.vue';
+import FormsImageUploader from '@/components/Forms/ImageUploader.vue';
 import FormsMapInput from '@/components/Forms/MapInput.vue';
 import FormsRelationInput from '@/components/Forms/RelationInput.vue';
 
@@ -239,6 +249,8 @@ export default {
   components: {
     FormsDatePicker,
     FormsDateTimePicker,
+    FormsFileUploader,
+    FormsImageUploader,
     FormsMapInput,
     FormsRelationInput,
   },
