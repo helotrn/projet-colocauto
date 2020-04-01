@@ -2,6 +2,7 @@ import AdminFilters from './components/Admin/Filters';
 import bikes from '@/locales/models/bikes';
 import borrowers from '@/locales/models/borrowers';
 import communities from '@/locales/models/communities';
+import invoices from '@/locales/models/invoices';
 import loans from '@/locales/models/loans';
 import loanables from '@/locales/models/loanables';
 import paymentMethods from '@/locales/models/paymentMethods';
@@ -16,6 +17,7 @@ export default {
       filters: AdminFilters.fr,
     },
   },
+  invoices: invoices.fr,
   forms: {
     actions: 'actions',
     approuver: 'approuver',
@@ -77,6 +79,7 @@ export default {
     payment_methods: 'méthodes de paiement',
     profile: 'Profil',
     register: "s'inscrire",
+    user: 'membre',
     users: 'membres',
   },
   users: users.fr,
