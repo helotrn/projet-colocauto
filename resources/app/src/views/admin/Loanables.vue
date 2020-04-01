@@ -23,7 +23,7 @@
       </b-col>
 
       <b-col class="admin__filters">
-        <admin-filters entity="loanables" :filters="filters" :params="params" />
+        <admin-filters entity="loanables" :filters="filters" :params="contextParams" />
       </b-col>
     </b-row>
 

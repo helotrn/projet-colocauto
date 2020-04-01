@@ -23,7 +23,7 @@
       </b-col>
 
       <b-col class="admin__filters">
-        <admin-filters entity="communities" :filters="filters" :params="params" />
+        <admin-filters entity="communities" :filters="filters" :params="contextParams" />
       </b-col>
     </b-row>
 
