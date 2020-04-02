@@ -209,6 +209,11 @@ class Loanable extends BaseModel
             return $query;
         }
 
+        $allowedTypes = ['bike', 'trailer'];
+        if ($user->borrower && $user->borrower->validated) {
+            $allowedTypes[] = 'car';
+        }
+
         // A user has access to...
         $communityIds = $user->communities->pluck('id');
         return $query->where(function ($q) use ($communityIds) {
@@ -229,7 +234,8 @@ class Loanable extends BaseModel
                         });
                     });
                 });
-        });
+        // ...and cars are only allowed if the borrower profile is approved
+        })->whereIn('type', $allowedTypes);
     }
 
     protected static function buildTimezone() {

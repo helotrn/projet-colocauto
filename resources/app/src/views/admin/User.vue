@@ -20,6 +20,10 @@
             <h2>Profil d'emprunteur</h2>
 
             <p>
+              <em>Un profil d'emprunteur valide est requis pour emprunter une voiture.</em>
+            </p>
+
+            <p>
               <strong>Statut:</strong>
               {{ borrowerStatus }}
 

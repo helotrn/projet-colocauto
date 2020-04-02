@@ -41,7 +41,7 @@ class Borrower extends BaseModel
 
     public $items = ['user'];
 
-    public $computed = ['approved', 'suspended'];
+    public $computed = ['approved', 'suspended', 'validated'];
 
     public $morphOnes = [
       'insurance' => 'fileable',
@@ -65,6 +65,10 @@ class Borrower extends BaseModel
 
     public function getSuspendedAttribute() {
         return !!$this->suspended_at;
+    }
+
+    public function getValidatedAttribute() {
+        return $this->approved & !$this->suspended;
     }
 
     public function gaa() {
