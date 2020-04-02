@@ -2,23 +2,7 @@
   <layout-page name="loan" :loading="!(routeDataLoaded && item && loadedFullLoanable)">
     <vue-headful :title="fullTitle" />
 
-    <b-row>
-      <b-col>
-        <h1>Emprunt {{ loanablePrettyName }}</h1>
-      </b-col>
-    </b-row>
-
-    <b-row>
-      <b-col class="loan__description">
-        <p>
-          {{ prettyType }} {{ loanableDescription }} {{ loanableOwnerText }}
-          <br>
-          {{ item.departure_at | day | capitalize }} {{ item.departure_at | date }}
-          &bull;
-          {{ item.departure_at | time }} à {{ returnAt | time }}
-        </p>
-      </b-col>
-    </b-row>
+    <loan-header :user="user" :loan="item" />
 
     <b-row>
       <b-col lg="3" class="loan__sidebar">
@@ -42,45 +26,17 @@
           </b-button>
         </div>
 
-        <div>
-          <loan-form :loan="item" :form="loanForm" :open="isCurrentStep('creation')"
-            @submit="submitLoan" />
-
-          <div class="loan__actions__action" v-for="action in item.actions" :key="action.id">
-            <loan-actions-intention v-if="action.type === 'intention'"
-              :action="action" :loan="item" :open="isCurrentStep('intention')"
-              @completed="loadItem" @canceled="loadItem" :user="user" />
-            <loan-actions-pre-payment v-else-if="action.type === 'pre_payment'"
-              :action="action" :loan="item" :open="isCurrentStep('pre_payment')"
-              @completed="loadItem" @canceled="loadItem" :user="user" />
-            <loan-actions-takeover v-else-if="action.type === 'takeover'"
-              :action="action" :loan="item" :open="isCurrentStep('takeover')"
-              @completed="loadItem" @canceled="loadItem" :user="user" />
-            <loan-actions-handover v-else-if="action.type === 'handover'"
-              :action="action" :loan="item" :open="isCurrentStep('handover')"
-              @completed="loadItem" @canceled="loadItem" :user="user" />
-            <loan-actions-payment v-else-if="action.type === 'payment'"
-              :action="action" :loan="item" :open="isCurrentStep('payment')"
-              @completed="loadItem" @canceled="loadItem" :user="user" />
-            <span v-else>
-              {{ action.type }} n'est pas supporté. Contactez le
-              <a href="mailto:support@locomotion.app">support</a>.
-            </span>
-          </div>
-        </div>
+        <loan-actions :item="item" @load="loadItem" :form="loanForm" :user="user"
+          @submit="submitLoan" />
       </b-col>
     </b-row>
   </layout-page>
 </template>
 
 <script>
-import LoanForm from '@/components/Loan/Form.vue';
+import LoanActions from '@/components/Loan/Actions.vue';
+import LoanHeader from '@/components/Loan/LoanHeader.vue';
 import LoanMenu from '@/components/Loan/Menu.vue';
-import LoanActionsHandover from '@/components/Loan/Actions/Handover.vue';
-import LoanActionsIntention from '@/components/Loan/Actions/Intention.vue';
-import LoanActionsPayment from '@/components/Loan/Actions/Payment.vue';
-import LoanActionsPrePayment from '@/components/Loan/Actions/PrePayment.vue';
-import LoanActionsTakeover from '@/components/Loan/Actions/Takeover.vue';
 
 import Authenticated from '@/mixins/Authenticated';
 import DataRouteGuards from '@/mixins/DataRouteGuards';
@@ -93,13 +49,9 @@ export default {
   name: 'Loan',
   mixins: [Authenticated, DataRouteGuards, FormMixin, LoanStepsSequence],
   components: {
-    LoanForm,
+    LoanActions,
+    LoanHeader,
     LoanMenu,
-    LoanActionsHandover,
-    LoanActionsIntention,
-    LoanActionsPayment,
-    LoanActionsPrePayment,
-    LoanActionsTakeover,
   },
   beforeRouteEnter(to, from, next) {
     next((vm) => {
@@ -117,60 +69,6 @@ export default {
     loanForm() {
       return this.$store.state.loans.form;
     },
-    loanableDescription() {
-      switch (this.item.loanable.type) {
-        case 'car':
-          return `${this.item.loanable.brand} ${this.item.loanable.model} `
-            + `${this.item.loanable.year_of_circulation}`;
-        case 'bike':
-          return `${this.item.loanable.model}`;
-        case 'trailer':
-          return '';
-        default:
-          return '';
-      }
-    },
-    loanableOwnerText() {
-      if (this.userIsOwner) {
-        return '';
-      }
-
-      const ownerName = this.item.loanable.owner.user.name;
-      const particle = ['a', 'e', 'i', 'o', 'u', 'é', 'è']
-        .indexOf(ownerName[0]
-          .toLowerCase()) > -1 ? "d'" : 'de ';
-      return `${particle}${ownerName}`;
-    },
-    loanablePrettyName() {
-      let particle;
-      let type;
-
-      switch (this.item.loanable.type) {
-        case 'car':
-          particle = 'de la ';
-          type = 'voiture';
-          break;
-        case 'bike':
-          particle = 'du ';
-          type = 'vélo';
-          break;
-        case 'trailer':
-          particle = 'de la ';
-          type = 'remorque';
-          break;
-        default:
-          particle = "de l'";
-          type = 'objet';
-          break;
-      }
-
-      if (this.user.id === this.item.loanable.owner.user.id) {
-        particle = 'de votre ';
-      }
-
-      const description = `${particle}${type}`;
-      return `${description} ${this.loanableOwnerText}`;
-    },
     fullTitle() {
       const parts = [
         'LocoMotion',
@@ -185,26 +83,6 @@ export default {
     },
     pageTitle() {
       return this.item.loanable ? this.item.loanable.name : capitalize(this.$i18n.tc('titles.loanable', 1));
-    },
-    prettyType() {
-      switch (this.item.loanable.type) {
-        case 'car':
-          return 'Voiture';
-        case 'bike':
-          return 'Vélo';
-        case 'trailer':
-          return 'Remorque';
-        default:
-          return 'Objet';
-      }
-    },
-    returnAt() {
-      return this.$dayjs(this.item.departure_at)
-        .add(this.item.duration_in_minutes, 'minute')
-        .format('YYYY-MM-DD HH:mm:ss');
-    },
-    userIsOwner() {
-      return this.user.id === this.item.loanable.owner.user.id;
     },
   },
   methods: {
@@ -242,29 +120,6 @@ export default {
 
 <style lang="scss">
 .loan.page {
-  h1 {
-    margin-bottom: 30px;
-  }
-
-  .loan {
-    &__description {
-      font-size: 20px;
-      font-weight: 600;
-      line-height: 30px;
-      margin-bottom: 30px;
-    }
-
-    &__actions {
-      > h2 {
-        margin-bottom: 60px;
-      }
-
-      .card {
-        margin-bottom: 20px;
-      }
-    }
-  }
-
   .page__content {
     padding-top: 45px;
     padding-bottom: 45px;
