@@ -26,8 +26,8 @@
           </b-button>
         </div>
 
-        <loan-actions :item="item" @load="loadItem" :form="loanForm" :user="user"
-          @submit="submitLoan" />
+        <loan-actions :item="item" @load="loadItem" :form="loanForm"
+          :user="user" @submit="submitLoan" />
       </b-col>
     </b-row>
   </layout-page>

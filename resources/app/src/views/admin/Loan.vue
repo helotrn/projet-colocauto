@@ -4,8 +4,8 @@
 
     <loan-header :user="user" :loan="item" />
 
-    <loan-actions :item="item" @load="loadItem" :form="form" :user="user"
-      @submit="submit" />
+    <loan-actions :item="item" @load="loadItem" :form="form"
+      :user="user" @submit="submit" />
   </b-container>
   <layout-loading v-else />
 </template>

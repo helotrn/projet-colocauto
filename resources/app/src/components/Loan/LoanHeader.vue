@@ -9,11 +9,11 @@
     <b-row>
       <b-col class="loan-header__description">
         <p>
-        {{ prettyType }} {{ loanableDescription }} {{ loanableOwnerText }}
-        <br>
-        {{ loan.departure_at | day | capitalize }} {{ loan.departure_at | date }}
-        &bull;
-        {{ loan.departure_at | time }} à {{ returnAt | time }}
+          {{ prettyType }} {{ loanableDescription }} {{ loanableOwnerText }}
+          <br>
+          {{ loan.departure_at | day | capitalize }} {{ loan.departure_at | date }}
+          &bull;
+          {{ loan.departure_at | time }} à {{ returnAt | time }}
         </p>
       </b-col>
     </b-row>
