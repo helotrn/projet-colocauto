@@ -1,3 +1,5 @@
+import users from './users';
+
 export default {
   fr: {
     'créer une facture': 'créer une facture',
@@ -6,6 +8,7 @@ export default {
     fields: {
       created_at: 'créée',
       paid_at: 'payée',
+      user: users.fr.fields,
     },
   },
 };

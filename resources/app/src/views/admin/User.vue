@@ -126,9 +126,9 @@
 
             <p><strong>Balance:</strong> {{ roundedBalance | currency }}</p>
 
-            <p><strong>Transactions</strong></p>
+            <p v-if="false"><strong>Transactions</strong></p>
 
-            <b-table
+            <b-table v-if="false"
               striped hover :items="item.transactions"
               selectable select-mode="multi" @row-selected="transactionRowSelected"
               :fields="transactionsTable" no-sort-reset

@@ -151,7 +151,7 @@ export default {
         auth: true,
         slug: 'invoices',
         params: {
-          fields: '*,invoice_items.*,user.id,user.full_name',
+          fields: '*,bill_items.*,user.*',
         },
         title: 'titles.invoice',
       },

@@ -55,7 +55,7 @@
 import locales from '@/locales';
 
 export default {
-  name: 'View',
+  name: 'Single',
   props: {
     invoice: {
       type: Object,

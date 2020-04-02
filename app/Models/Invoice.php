@@ -17,6 +17,7 @@ class Invoice extends BaseModel
     public static $filterTypes = [
       'created_at' => 'date',
       'paid_at' => 'date',
+      'user.full_name' => 'text'
     ];
 
     public static function getColumnsDefinition() {
