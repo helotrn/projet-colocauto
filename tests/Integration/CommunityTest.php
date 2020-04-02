@@ -175,9 +175,9 @@ class CommunityTest extends TestCase
         $response = $this->json('PUT', "/api/v1/communities/$community->id", $data);
 
         $data = [
-            'community_id' => $community->id,
+            'community.id' => $community->id,
         ];
-        $response = $this->json('GET', "/api/v1/users", $data);
+        $response = $this->json('GET', '/api/v1/users', $data);
         $response->assertStatus(200)
                 ->assertJsonStructure($this->buildCollectionStructure(static::$getUserResponseStructure));
     }

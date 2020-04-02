@@ -80,7 +80,7 @@ class BikeTest extends TestCase
                 return $bike->only(static::$getBikeResponseStructure);
             });
 
-        $response = $this->json('GET', "/api/v1/bikes");
+        $response = $this->json('GET', '/api/v1/bikes');
 
         $response->assertStatus(200)
             ->assertJson([ 'total' => 2 ])

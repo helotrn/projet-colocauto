@@ -73,6 +73,7 @@ Route::prefix('v1')->group(function () {
             'CommunityController@destroyCommunityUserTags'
         );
 
+        Route::get('/loans/{loan_id}/borrower', 'LoanController@retrieveBorrower');
         Route::get('/loans/{loan_id}/actions/{action_id}', 'LoanController@retrieveAction');
         Route::put('/loans/{loan_id}/actions/{action_id}/complete', 'ActionController@complete');
         Route::put('/loans/{loan_id}/actions/{action_id}/cancel', 'ActionController@cancel');

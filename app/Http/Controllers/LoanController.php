@@ -74,6 +74,12 @@ class LoanController extends RestController
         return $response;
     }
 
+    public function retrieveBorrower(Request $request, $loanId) {
+        $item = $this->repo->find($request, $loanId);
+
+        return $this->respondWithItem($request, $item->borrower);
+    }
+
     public function retrieveAction(Request $request, $loanId, $actionId) {
         $request->merge([ 'loan_id' => $loanId ]);
         return $this->actionController->retrieve($request, $actionId);

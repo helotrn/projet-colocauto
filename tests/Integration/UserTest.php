@@ -189,7 +189,7 @@ class UserTest extends TestCase
         $response->assertStatus(200);
 
         $data = [
-            'users_id' => $user->id,
+            'users.id' => $user->id,
         ];
 
         $response = $this->json('GET', "/api/v1/communities/$otherCommunity->id", $data);
@@ -203,17 +203,15 @@ class UserTest extends TestCase
         $user = factory(User::class)->create();
         $communities = factory(Community::class, 2)->create();
 
-        foreach ($communities as $community) {
-            $data = [
-                'communities' => [['id' => $community->id]]
-            ];
-            $response = $this->json('PUT', "/api/v1/users/$user->id", $data);
-        }
+        $data = [
+            'communities' => [ ['id' => $communities[0]->id] ]
+        ];
+        $response = $this->json('PUT', "/api/v1/users/$user->id", $data);
 
         $data = [
-            'users_id' => $user->id,
+            'users.id' => $user->id,
         ];
-        $response = $this->json('GET', "/api/v1/communities", $data);
+        $response = $this->json('GET', '/api/v1/communities', $data);
         $response->assertStatus(200)
             ->assertJson([ 'total' => 1 ])
             ->assertJsonStructure($this->buildCollectionStructure(static::$getCommunityResponseStructure));
