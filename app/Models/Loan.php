@@ -41,6 +41,11 @@ class Loan extends BaseModel
 
     public static $transformer = LoanTransformer::class;
 
+    public static $filterTypes = [
+      'loanable.owner.user.full_name' => 'text',
+      'borrower.user.full_name' => 'text',
+    ];
+
     public static function boot() {
         parent::boot();
 

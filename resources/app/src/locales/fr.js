@@ -20,6 +20,7 @@ export default {
   invoices: invoices.fr,
   forms: {
     actions: 'actions',
+    afficher: 'afficher',
     approuver: 'approuver',
     enregistrer: 'enregistrer',
     facultatif: 'facultatif',

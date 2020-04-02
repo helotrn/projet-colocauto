@@ -1,3 +1,5 @@
+import users from './users';
+
 export default {
   fr: {
     fields: {
@@ -7,6 +9,10 @@ export default {
       insurance: "contrat d'assurances",
       noke_id: 'ID Noke',
       saaq: 'dossier de conduite de la SAAQ',
+      user: Object.keys(users.fr.fields).reduce((acc, f) => {
+        acc[f] = `${users.fr.fields[f]} (Emprunteur)`;
+        return acc;
+      }, {}),
     },
   },
 };

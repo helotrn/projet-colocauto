@@ -1,3 +1,5 @@
+import owners from './owners';
+
 export default {
   fr: {
     'créer un véhicule': 'créer un véhicule',
@@ -20,6 +22,7 @@ export default {
       maximum_charge: 'charge maximale',
       model: 'modèle',
       name: 'nom',
+      owner: owners.fr.fields,
       ownership: 'type de propriété',
       owner_id: 'propriétaire',
       papers_location: 'emplacement des papiers',

@@ -6,6 +6,8 @@ import AdminInvoices from '../views/admin/Invoices.vue';
 import AdminInvoice from '../views/admin/Invoice.vue';
 import AdminLoanable from '../views/admin/Loanable.vue';
 import AdminLoanables from '../views/admin/Loanables.vue';
+import AdminLoans from '../views/admin/Loans.vue';
+import AdminLoan from '../views/admin/Loan.vue';
 import AdminUser from '../views/admin/User.vue';
 import AdminUsers from '../views/admin/Users.vue';
 
@@ -154,6 +156,36 @@ export default {
           fields: '*,bill_items.*,user.*',
         },
         title: 'titles.invoice',
+      },
+    },
+    {
+      path: 'loans',
+      component: AdminLoans,
+      meta: {
+        auth: true,
+        creatable: true,
+        slug: 'loans',
+        data: {
+          loans: {
+            retrieve: {
+              fields: '*,borrower.user.full_name,loanable.owner.user.full_name,community.name',
+            },
+          },
+        },
+        title: 'titles.loans',
+      },
+    },
+    {
+      path: 'loans/:id',
+      component: AdminLoan,
+      props: true,
+      meta: {
+        auth: true,
+        slug: 'loans',
+        params: {
+          fields: '*,borrower.user.*,loanable.owner.user.*,actions.*',
+        },
+        title: 'titles.loan',
       },
     },
   ],
