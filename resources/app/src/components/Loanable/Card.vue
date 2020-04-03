@@ -1,5 +1,5 @@
 <template>
-  <b-card class="loanable-card mb-3" no-body>
+  <b-card class="loanable-card" no-body>
     <div class="loanable-card__image">
       <div class="loanable-card__image__user" :style="userAvatarStyle" />
 

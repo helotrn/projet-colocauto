@@ -1,5 +1,6 @@
 <template>
-  <layout-page :name="`community-view-${view}`" :loading="!routeDataLoaded" :wide="view === 'map'">
+  <layout-page :name="`community-view-${view}`" :loading="!routeDataLoaded && view !== 'map'"
+    :wide="view === 'map'">
     <div :class="`community-view-${view}__form${view === 'map' ? ' container' : ''}`">
       <b-row>
         <b-col lg="3">
@@ -16,7 +17,7 @@
             <hr>
 
             <div class="`community-view-${view}__form__search`">
-              <loan-search-form :loan="loan"
+              <loan-search-form v-if="loan" :loan="loan"
                 :selected-loanable-types="selectedLoanableTypes"
                 @selectLoanableTypes="selectLoanableTypes"
                 @selectLoanable="selectLoanable"
@@ -30,12 +31,14 @@
         </b-col>
 
         <b-col v-if="view === 'list'" lg="9">
-          {{ data }}
-          <community-list v-if="!loading" :data="data" />
+          <community-list v-if="!loading" :data="data" @select="selectLoanable" />
           <layout-loading class="col-lg-9" v-else />
         </b-col>
       </b-row>
     </div>
+
+    <community-map v-if="view === 'map'" :data="data" :communities="user.communities"
+      @select="selectLoanable" />
   </layout-page>
 </template>
 
@@ -45,6 +48,7 @@ import DataRouteGuards from '@/mixins/DataRouteGuards';
 import ListMixin from '@/mixins/ListMixin';
 
 import CommunityList from '@/components/Community/List.vue';
+import CommunityMap from '@/components/Community/Map.vue';
 import LoanSearchForm from '@/components/Loan/SearchForm.vue';
 
 import { buildComputed } from '@/helpers';
@@ -54,6 +58,7 @@ export default {
   mixins: [Authenticated, DataRouteGuards, ListMixin],
   components: {
     CommunityList,
+    CommunityMap,
     LoanSearchForm,
   },
   props: {
@@ -206,7 +211,6 @@ export default {
           margin: 1.25rem;
         }
 
-        overflow-y: auto;
         max-height: calc(100vh - #{$layout-navbar-height + $molotov-footer-height} - 92px);
       }
     }

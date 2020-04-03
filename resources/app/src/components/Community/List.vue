@@ -2,7 +2,7 @@
   <b-container class="community-list">
     <b-row v-if="data.length > 0">
       <b-col v-for="loanable in data" :key="loanable.id" lg="4">
-        <loanable-card v-bind="loanable" @select="emitSelect" />
+        <loanable-card v-bind="loanable" @select="emitSelect" class="mb-3" />
       </b-col>
     </b-row>
 

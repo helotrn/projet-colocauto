@@ -131,7 +131,7 @@ class Loanable extends BaseModel
 
     protected $with = ['image'];
 
-    public $computed = ['events'];
+    public $computed = ['events', 'position_google'];
 
     public $items = ['owner', 'community', 'image'];
 
@@ -202,6 +202,13 @@ class Loanable extends BaseModel
         } catch (\Exception $e) {
             return [];
         }
+    }
+
+    public function getPositionGoogleAttribute() {
+        return [
+            'lat' => $this->position[0],
+            'lng' => $this->position[1],
+        ];
     }
 
     public function scopeAccessibleBy(Builder $query, $user) {
