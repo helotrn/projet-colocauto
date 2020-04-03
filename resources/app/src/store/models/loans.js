@@ -8,10 +8,30 @@ export default new RestModule('loans', {
     per_page: 10,
   },
 }, {
-  async cancelAction({ commit, state }, action) {
+  async cancel({ commit }, loanId) {
     try {
       const ajax = Vue.axios.put(
-        `/${state.slug}/${action.loan_id}/actions/${action.id}/cancel`,
+        `/loans/${loanId}/cancel`,
+      );
+
+      commit('ajax', ajax);
+
+      await ajax;
+
+      commit('ajax', null);
+    } catch (e) {
+      commit('ajax', null);
+
+      const { request, response } = e;
+      commit('error', { request, response });
+
+      throw e;
+    }
+  },
+  async cancelAction({ commit }, action) {
+    try {
+      const ajax = Vue.axios.put(
+        `/loans/${action.loan_id}/actions/${action.id}/cancel`,
         action,
       );
 
@@ -29,10 +49,10 @@ export default new RestModule('loans', {
       throw e;
     }
   },
-  async completeAction({ commit, state }, action) {
+  async completeAction({ commit }, action) {
     try {
       const ajax = Vue.axios.put(
-        `/${state.slug}/${action.loan_id}/actions/${action.id}/complete`,
+        `/loans/${action.loan_id}/actions/${action.id}/complete`,
         action,
       );
 

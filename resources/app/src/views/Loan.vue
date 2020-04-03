@@ -20,10 +20,12 @@
               Annuler la réservation
             </b-button>
             <b-button class="mr-3 mb-3" variant="warning"
-              :disabled="!hasReachedStep('pre_payment') || hasReachedStep('payment')">
+              :disabled="!hasReachedStep('pre_payment') || hasReachedStep('payment')
+                || item.status === 'canceled'">
               Signaler un retard
             </b-button>
-            <b-button class="mb-3" variant="warning" :disabled="!hasReachedStep('pre_payment')">
+            <b-button class="mb-3" variant="warning" :disabled="!hasReachedStep('pre_payment')
+              || item.status === 'canceled'">
               Signaler un incident
             </b-button>
           </div>
@@ -96,6 +98,7 @@ export default {
   methods: {
     async cancelLoan() {
       await this.$store.dispatch('loans/cancel', this.item.id);
+      await this.loadItem();
     },
     async formMixinCallback() {
       const { id, type } = this.item.loanable;

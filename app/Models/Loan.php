@@ -58,6 +58,31 @@ class Loan extends BaseModel
         });
     }
 
+    public static function getColumnsDefinition() {
+        return [
+            '*' => function ($query = null) {
+                if (!$query) {
+                    return 'loans.*';
+                }
+
+                return $query->selectRaw('loans.*');
+            },
+            'status' => function ($query = null) {
+                $query = static::addJoin(
+                    $query,
+                    'actions AS all_actions',
+                    \DB::raw('all_actions.loan_id'),
+                    '=',
+                    \DB::raw('loans.id')
+                );
+
+                return $query
+                    ->selectRaw('(array_agg(all_actions.status ORDER BY all_actions.id DESC))[1] AS status')
+                    ->groupBy('loans.id');
+            }
+        ];
+    }
+
     protected $fillable = [
         'departure_at',
         'duration_in_minutes',

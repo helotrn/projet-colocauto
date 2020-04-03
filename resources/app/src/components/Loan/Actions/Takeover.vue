@@ -14,7 +14,7 @@
         Rempli &bull; {{ action.executed_at | datetime }}
       </span>
       <span v-else-if="action.status === 'canceled'">
-        Contesté &bull; {{ action.executed_at | datetime }}
+        Annulé &bull; {{ action.executed_at | datetime }}
       </span>
     </b-card-header>
 
@@ -73,7 +73,7 @@
           </b-form>
         </validation-observer>
 
-        <div v-if="!!action.executed_at">
+        <div v-if="!!action.executed_at && action.status !== 'canceled'">
           <hr>
 
           <b-row>

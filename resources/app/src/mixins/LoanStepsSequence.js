@@ -8,24 +8,33 @@ export default {
       const handover = actions.find(a => a.type === 'handover');
       const payment = actions.find(a => a.type === 'payment');
 
-      let canceled = true;
+      // Using fallthrough because an earlier step cancels
+      // all following steps if it has been canceled
       switch (step) {
         case 'payment': // eslint-disable-line no-fallthrough
-          canceled = canceled && payment && payment.status === 'canceled';
+          if (payment && payment.status === 'canceled') {
+            return true;
+          }
         case 'handover': // eslint-disable-line no-fallthrough
-          canceled = canceled && handover && handover.status === 'canceled';
+          if (handover && handover.status === 'canceled') {
+            return true;
+          }
         case 'takeover': // eslint-disable-line no-fallthrough
-          canceled = canceled && takeover && takeover.status === 'canceled';
+          if (takeover && takeover.status === 'canceled') {
+            return true;
+          }
         case 'pre_payment': // eslint-disable-line no-fallthrough
-          canceled = canceled && prePayment && prePayment.status === 'canceled';
+          if (prePayment && prePayment.status === 'canceled') {
+            return true;
+          }
         case 'intention': // eslint-disable-line no-fallthrough
-          canceled = canceled && intention && intention.status === 'canceled';
+          if (intention && intention.status === 'canceled') {
+            return true;
+          }
           break;
         default:
           return false;
       }
-
-      return canceled;
     },
     hasReachedStep(step) {
       const { id, actions } = this.item;

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Action\ActionRequest;
 use App\Http\Requests\BaseRequest as Request;
 use App\Models\Loan;
 use App\Repositories\LoanRepository;
@@ -67,6 +68,27 @@ class LoanController extends RestController
     public function destroy(Request $request, $id) {
         try {
             $response = parent::validateAndDestroy($request, $id);
+        } catch (ValidationException $e) {
+            return $this->respondWithErrors($e->errors(), $e->getMessage());
+        }
+
+        return $response;
+    }
+
+    public function cancel(Request $request, $id) {
+        $item = $this->repo->find($request, $id);
+
+        $lastAction = $item->actions->last();
+        $request->merge([ 'type' => $lastAction->type ]);
+
+        $lastAction = $this->actionController->cancel(
+            $request->redirect(ActionRequest::class, $request),
+            $id,
+            $lastAction->id
+        );
+
+        try {
+            $response = $this->respondWithItem($request, $item);
         } catch (ValidationException $e) {
             return $this->respondWithErrors($e->errors(), $e->getMessage());
         }

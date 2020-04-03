@@ -9,5 +9,6 @@ class LoanRepository extends RestRepository
 {
     public function __construct(Loan $model) {
         $this->model = $model;
+        $this->columnsDefinition = $model::getColumnsDefinition();
     }
 }
