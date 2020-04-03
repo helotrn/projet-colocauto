@@ -39,15 +39,15 @@ export default {
         case 'creation':
           return !!id;
         case 'intention':
-          return intention && intention.executed_at;
+          return intention && !!intention.executed_at;
         case 'pre_payment':
-          return prePayment && prePayment.executed_at;
+          return prePayment && !!prePayment.executed_at;
         case 'takeover':
-          return takeover && takeover.executed_at;
+          return takeover && !!takeover.executed_at;
         case 'handover':
-          return handover && handover.executed_at;
+          return handover && !!handover.executed_at;
         case 'payment':
-          return payment && payment.executed_at;
+          return payment && !!payment.executed_at;
         default:
           return false;
       }

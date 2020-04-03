@@ -15,8 +15,8 @@ class TestRequest extends BaseRequest
     public function rules() {
         $rules = [
             'departure_at' => ['date', 'required'],
-            'duration_in_minutes' => ['integer', 'required', 'min:0'],
-            'estimated_distance' => ['integer', 'required', 'min:0'],
+            'duration_in_minutes' => ['integer', 'required', 'min:1'],
+            'estimated_distance' => ['integer', 'required', 'min:1'],
             'loanable_id' => ['integer', 'required'],
             'community_id' => ['integer', 'required']
         ];

@@ -37,7 +37,7 @@
           <span class="nav-link__text">{{ $t('titles.dashboard') | capitalize }}</span>
         </b-nav-item>
 
-        <b-nav-item to="/community/list" v-if="canLoanVehicle">
+        <b-nav-item to="/community/map" v-if="canLoanVehicle">
           <span class="nav-link__icon d-lg-none">
             <svg-location />
           </span>

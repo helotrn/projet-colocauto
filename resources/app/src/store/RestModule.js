@@ -35,6 +35,10 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
         state.data.push(...data);
       },
       ajax(state, ajax) {
+        if (ajax && state.ajax && state.ajax.cancel) {
+          state.ajax.cancel();
+        }
+
         state.ajax = ajax;
       },
       data(state, data) {

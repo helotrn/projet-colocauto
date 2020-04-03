@@ -1,35 +1,38 @@
 <template>
-  <layout-page name="loan" :loading="!(routeDataLoaded && item && loadedFullLoanable)">
-    <vue-headful :title="fullTitle" />
+  <layout-page name="loan" :loading="!pageLoaded">
+    <div v-if="pageLoaded">
+      <vue-headful :title="fullTitle" />
 
-    <loan-header :user="user" :loan="item" />
+      <loan-header :user="user" :loan="item" />
 
-    <b-row>
-      <b-col lg="3" class="loan__sidebar">
-        <loan-menu :item="item" />
-      </b-col>
+      <b-row>
+        <b-col lg="3" class="loan__sidebar">
+          <loan-menu :item="item" />
+        </b-col>
 
-      <b-col lg="9" class="loan__actions">
-        <div class="loan__actions__buttons text-right mb-3" v-if="!!item.id">
-          <b-button class="mr-3 mb-3" variant="primary" :disabled="hasReachedStep('takeover')">
-            Modifier la réservation
-          </b-button>
-          <b-button class="mr-3 mb-3" variant="danger" :disabled="hasReachedStep('handover')">
-            Annuler la réservation
-          </b-button>
-          <b-button class="mr-3 mb-3" variant="warning"
-            :disabled="!hasReachedStep('takeover') || hasReachedStep('payment')">
-            Signaler un retard
-          </b-button>
-          <b-button class="mb-3" variant="warning" :disabled="!hasReachedStep('pre_payment')">
-            Signaler un incident
-          </b-button>
-        </div>
+        <b-col lg="9" class="loan__actions">
+          <div class="loan__actions__buttons text-right mb-3" v-if="!!item.id">
+            <b-button class="mr-3 mb-3" variant="primary" :disabled="hasReachedStep('pre_payment')">
+              Modifier la réservation
+            </b-button>
+            <b-button class="mr-3 mb-3" variant="danger" :disabled="hasReachedStep('takeover')"
+              @click="cancelLoan">
+              Annuler la réservation
+            </b-button>
+            <b-button class="mr-3 mb-3" variant="warning"
+              :disabled="!hasReachedStep('pre_payment') || hasReachedStep('payment')">
+              Signaler un retard
+            </b-button>
+            <b-button class="mb-3" variant="warning" :disabled="!hasReachedStep('pre_payment')">
+              Signaler un incident
+            </b-button>
+          </div>
 
-        <loan-actions :item="item" @load="loadItem" :form="loanForm"
-          :user="user" @submit="submitLoan" />
-      </b-col>
-    </b-row>
+          <loan-actions :item="item" @load="loadItem" :form="loanForm"
+            :user="user" @submit="submitLoan" />
+        </b-col>
+      </b-row>
+    </div>
   </layout-page>
 </template>
 
@@ -66,9 +69,6 @@ export default {
     };
   },
   computed: {
-    loanForm() {
-      return this.$store.state.loans.form;
-    },
     fullTitle() {
       const parts = [
         'LocoMotion',
@@ -81,11 +81,22 @@ export default {
 
       return parts.reverse().join(' | ');
     },
+    loanForm() {
+      return this.$store.state.loans.form;
+    },
+    pageLoaded() {
+      return this.routeDataLoaded && this.item && this.loadedFullLoanable;
+    },
     pageTitle() {
-      return this.item.loanable ? this.item.loanable.name : capitalize(this.$i18n.tc('titles.loanable', 1));
+      return (this.item && this.item.loanable)
+        ? this.item.loanable.name
+        : capitalize(this.$i18n.tc('titles.loanable', 1));
     },
   },
   methods: {
+    async cancelLoan() {
+      await this.$store.dispatch('loans/cancel', this.item.id);
+    },
     async formMixinCallback() {
       const { id, type } = this.item.loanable;
       await this.$store.dispatch(`${type}s/retrieveOne`, {

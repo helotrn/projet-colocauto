@@ -50,4 +50,29 @@ export default new RestModule('loans', {
       throw e;
     }
   },
+  async test({ commit }, params) {
+    const { CancelToken } = Vue.axios;
+    let cancel;
+
+    const ajax = Vue.axios.get(`/loanables/${params.loanable_id}/test`, {
+      params,
+      cancelToken: new CancelToken((c) => {
+        cancel = c;
+      }),
+    });
+    ajax.cancel = cancel;
+
+    commit('ajax', ajax);
+
+    const { data } = await ajax;
+
+    commit('mergeItem', {
+      estimated_price: data.price,
+      loanable: {
+        ...data,
+      },
+    });
+
+    commit('ajax', null);
+  },
 });

@@ -42,7 +42,7 @@
             </b-row>
 
             <b-row>
-              <b-col lg="6">
+              <b-col lg="3">
                 <div class="form-group">
                   <label>{{ $t('fields.duration_in_minutes') | capitalize }}</label>
                   <div>
@@ -52,9 +52,24 @@
               </b-col>
 
               <b-col lg="6">
+                <forms-validated-input name="estimated_distance"
+                  :label="$t('fields.estimated_distance') | capitalize"
+                  type="number" :min="10" :max="1000"
+                  :disabled="!!loan.id"
+                  :placeholder="placeholderOrLabel('estimated_distance') | capitalize"
+                  v-model="loan.estimated_distance" />
+              </b-col>
+
+              <b-col lg="3">
                 <div class="form-group">
                   <label>{{ $t('fields.estimated_price') | capitalize }}</label>
-                  <div>
+                  <layout-loading v-if="priceUpdating" style="max-height: 30px;"/>
+                  <div v-else-if="!loan.id">
+                    <i v-b-tooltip.hover :title="loan.loanable.pricing">
+                      {{ loan.estimated_price | currency }}
+                    </i>
+                  </div>
+                  <div v-else>
                     {{ loan.estimated_price | currency }}
                   </div>
                 </div>
@@ -84,7 +99,10 @@
 
             <b-row class="form__buttons" v-if="!loan.id">
               <b-col class="text-center">
-                <b-button type="submit">Faire la demande d'emprunt</b-button>
+                <b-button type="submit"
+                  :disabled="priceUpdating || !loan.loanable.available">
+                  {{ loan.loanable.available ? "Faire la demande d'emprunt" : 'Indisponible' }}
+                </b-button>
               </b-col>
             </b-row>
           </b-form>
@@ -120,9 +138,34 @@ export default {
       default: false,
     },
   },
+  data() {
+    return {
+      priceUpdating: false,
+    };
+  },
   methods: {
     submit() {
       this.$emit('submit');
+    },
+  },
+  computed: {
+    loanParams() {
+      return JSON.stringify({
+        departure_at: this.loan.departure_at,
+        duration_in_minutes: this.loan.duration_in_minutes,
+        estimated_distance: this.loan.estimated_distance,
+        loanable_id: this.loan.loanable.id,
+        community_id: this.loan.community_id
+      });
+    },
+  },
+  watch: {
+    async loanParams(newValue, oldValue) {
+      if (newValue !== oldValue) {
+        this.priceUpdating = true;
+        await this.$store.dispatch('loans/test', JSON.parse(newValue));
+        this.priceUpdating = false;
+      }
     },
   },
   i18n: {
