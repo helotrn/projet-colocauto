@@ -20,7 +20,7 @@ import trailers from './models/trailers';
 import owners from './models/owners';
 import users from './models/users';
 
-import CommunityList from './pages/community/list';
+import CommunityView from './pages/community/view';
 import Login from './pages/login';
 import Register from './pages/register';
 import RegisterIntent from './pages/register/intent';
@@ -40,7 +40,7 @@ const vuexPersist = new VuexPersist({
       rememberMe: state.login.rememberMe,
     },
     stats: state.stats,
-    'community.list': state['community.list'],
+    'community.view': state['community.view'],
     'register.intent': state['register.intent'],
   }),
 });
@@ -205,7 +205,7 @@ export default new Vuex.Store({
     bikes,
     cars,
     communities,
-    'community.list': CommunityList,
+    'community.view': CommunityView,
     files,
     global,
     images,

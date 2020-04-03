@@ -25,7 +25,7 @@ const routes = [
       auth: true,
       slug: 'loans',
       skipCleanup(to) {
-        return to.name === 'community-map' || to.name === 'community-list';
+        return to.name === 'community-view';
       },
       data: {
         loans: {
