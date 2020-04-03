@@ -1,34 +1,41 @@
 <template>
-  <layout-page name="community-list">
-    <div v-if="routeDataLoaded">
-      <b-row class="community-list__form">
-        <b-col lg="3">
-          <b-card>
-            <loan-search-form :loan="loan"
-              :selected-loanable-types="selectedLoanableTypes"
-              @selectLoanableTypes="selectLoanableTypes"
-              :loanable-types="loanableTypes"
-              :form="loanForm"
-              @reset="resetLoan"
-              @submit="testLoanables" />
-          </b-card>
-        </b-col>
+  <layout-page name="community-list" :loading="!routeDataLoaded">
+    <b-row class="community-list__form">
+      <b-col lg="3">
+        <b-card class="community-list__form__view mb-3 form-inline">
+          <b-form-group label="Vue" label-for="view">
+            <b-form-select v-model="view" name="view" id="view">
+              <b-form-select-option value="list">Liste</b-form-select-option>
+              <b-form-select-option value="map">Carte</b-form-select-option>
+            </b-form-select>
+          </b-form-group>
+        </b-card>
 
-        <b-col v-if="!loading" lg="9">
-          <b-row v-if="data.length > 0">
-            <b-col v-for="loanable in data" :key="loanable.id" lg="4">
-              <loanable-card v-bind="loanable" @select="selectLoanable(loanable)" />
-            </b-col>
-          </b-row>
+        <b-card>
+          <loan-search-form :loan="loan"
+            :selected-loanable-types="selectedLoanableTypes"
+            @selectLoanableTypes="selectLoanableTypes"
+            :loanable-types="loanableTypes"
+            :form="loanForm"
+            @changed="resetLoanables"
+            @reset="resetLoan"
+            @submit="testLoanables" />
+        </b-card>
+      </b-col>
 
-          <b-row v-else>
-            <b-col>Aucun véhicule ne correspond à ces critères</b-col>
-          </b-row>
-        </b-col>
-        <layout-loading class="col-lg-9" v-else />
-      </b-row>
-    </div>
-    <layout-loading v-else />
+      <b-col v-if="!loading" lg="9">
+        <b-row v-if="data.length > 0">
+          <b-col v-for="loanable in data" :key="loanable.id" lg="4">
+            <loanable-card v-bind="loanable" @select="selectLoanable(loanable)" />
+          </b-col>
+        </b-row>
+
+        <b-row v-else>
+          <b-col>Aucun véhicule ne correspond à ces critères</b-col>
+        </b-row>
+      </b-col>
+      <layout-loading class="col-lg-9" v-else />
+    </b-row>
   </layout-page>
 </template>
 
@@ -52,6 +59,7 @@ export default {
   data() {
     return {
       lastLoanMerged: false,
+      view: 'list',
     };
   },
   mounted() {
@@ -79,6 +87,9 @@ export default {
   methods: {
     resetLoan() {
       this.loan = { ...this.$store.state.loans.empty };
+    },
+    resetLoanables() {
+      this.$store.dispatch(`${this.slug}/reset`);
     },
     selectLoanableTypes(value) {
       this.selectedLoanableTypes = value.filter((item, i, ar) => ar.indexOf(item) === i);
@@ -115,15 +126,23 @@ export default {
           this.$store.commit('loans/item', val);
         } else {
           this.lastLoanMerged = true;
-          this.$store.commit('loans/item', {
-            ...val,
-            ...this.lastLoan,
-          });
+
+          if (this.$dayjs(this.lastLoan.departure_at).isAfter(this.$dayjs())) {
+            this.$store.commit('loans/item', {
+              ...val,
+              ...this.lastLoan,
+            });
+          }
         }
       },
     },
     selectedLoanableTypes() {
       this.setSelectedLoanableTypes();
+    },
+    view(newValue, oldValue) {
+      if (newValue !== oldValue) {
+        this.$router.push(`/commnity/${newValue}`);
+      }
     },
   },
 };
@@ -133,6 +152,27 @@ export default {
 .community-list {
   &__form {
     margin-bottom: 20px;
+
+    &__view {
+      .card-body {
+        width: 100%;
+      }
+
+      .form-group {
+        label {
+          margin-right: 1em;
+          display: inline-block;
+        }
+
+        > div {
+          flex-grow: 1;
+        }
+
+        .custom-select {
+          width: 100%;
+        }
+      }
+    }
   }
 
   .page__content {

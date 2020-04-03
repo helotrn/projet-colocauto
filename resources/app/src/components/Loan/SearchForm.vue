@@ -79,6 +79,14 @@ export default {
       this.$emit('submit');
     },
   },
+  watch: {
+    loan: {
+      deep: true,
+      handler() {
+        this.$emit('changed');
+      },
+    },
+  },
   i18n: {
     messages: {
       en: {

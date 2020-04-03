@@ -33,6 +33,17 @@ export default new RestModule('loanables', {
       throw e;
     }
   },
+  reset({ commit, state }) {
+    const newData = state.data.map((d, index) => ({
+      ...d,
+      available: null,
+      price: null,
+      pricing: null,
+      tested: false,
+    }));
+
+    commit('data', newData);
+  },
   async test({ commit, state }, { loan, communityId }) {
     try {
       const ajax = Promise.all([
