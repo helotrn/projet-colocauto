@@ -159,11 +159,10 @@ class CommunityTest extends TestCase
 
         $response = $this->json('GET', "/api/v1/communities", []);
         $response->assertStatus(200)
-                ->assertJsonStructure($this->buildCollectionStructure([
-                    'id', 'name', 'description', 'area',
-                ]));
+            ->assertJsonStructure($this->buildCollectionStructure([
+                'id', 'name', 'description', 'area',
+            ]));
     }
-
 
     public function testShowCommunitiesUsers() {
         $user = factory(User::class)->create();
@@ -179,6 +178,6 @@ class CommunityTest extends TestCase
         ];
         $response = $this->json('GET', '/api/v1/users', $data);
         $response->assertStatus(200)
-                ->assertJsonStructure($this->buildCollectionStructure(static::$getUserResponseStructure));
+            ->assertJsonStructure($this->buildCollectionStructure(static::$getUserResponseStructure));
     }
 }
