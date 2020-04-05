@@ -19,8 +19,13 @@
       <loan-actions-payment v-else-if="action.type === 'payment'"
         :action="action" :loan="item" :open="isCurrentStep('payment')"
         @completed="emitLoad" @canceled="emitLoad" :user="user" />
-      <loan-actions-extension :open="true"
+      <loan-actions-extension :open="!action.executed_at"
         v-else-if="action.type === 'extension'"
+        :action="action" :loan="item" :user="user"
+        @aborted="abortAction" @created="emitLoad" @completed="emitLoad"
+        @canceled="emitLoad" />
+      <loan-actions-incident :open="!action.executed_at"
+        v-else-if="action.type === 'incident'"
         :action="action" :loan="item" :user="user"
         @aborted="abortAction" @created="emitLoad" @completed="emitLoad"
         @canceled="emitLoad" />
@@ -36,6 +41,7 @@
 import LoanForm from '@/components/Loan/Form.vue';
 import LoanActionsExtension from '@/components/Loan/Actions/Extension.vue';
 import LoanActionsHandover from '@/components/Loan/Actions/Handover.vue';
+import LoanActionsIncident from '@/components/Loan/Actions/Incident.vue';
 import LoanActionsIntention from '@/components/Loan/Actions/Intention.vue';
 import LoanActionsPayment from '@/components/Loan/Actions/Payment.vue';
 import LoanActionsPrePayment from '@/components/Loan/Actions/PrePayment.vue';
@@ -50,6 +56,7 @@ export default {
     LoanForm,
     LoanActionsExtension,
     LoanActionsHandover,
+    LoanActionsIncident,
     LoanActionsIntention,
     LoanActionsPayment,
     LoanActionsPrePayment,

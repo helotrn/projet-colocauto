@@ -121,11 +121,22 @@ export default {
       }, 10)
     },
     addIncident(type) {
-      this.item.incidents.push({
-        status: 'in_process',
-        incident_type: type,
-        type: 'incident',
-      });
+      const handover = this.item.actions.find(a => a.type === 'handover');
+
+      if (handover) {
+        const indexOfHandover = this.item.actions.indexOf(handover);
+        this.item.actions.splice(indexOfHandover, 0, {
+          status: 'in_process',
+          incident_type: type,
+          type: 'incident',
+          loan_id: this.item.id,
+        });
+      }
+
+      setTimeout(() => {
+        const el = document.getElementById('loan-incident-new');
+        this.$scrollTo(el);
+      }, 10)
     },
     async cancelLoan() {
       await this.$store.dispatch('loans/cancel', this.item.id);
