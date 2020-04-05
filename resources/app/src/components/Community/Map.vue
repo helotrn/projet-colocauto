@@ -7,7 +7,7 @@
     @click="selectedLoanable = null"
     map-type-id="terrain">
     <gmap-marker v-for="l in data" :key="`marker-${l.id}`"
-      :icon="iconFor(l)" @click="selectedLoanable = l" @hover="selectedLoanable = l"
+      :icon="iconFor(l)" @click="selectedLoanable = l"
       :clickable="l.available !== false" :position="l.position_google">
       <gmap-info-window v-if="selectedLoanable === l" @closeclick="selectLoanable = null">
         <div style="width: 270px;">
@@ -125,10 +125,10 @@ export default {
   watch: {
     selectedLoanable(newValue, oldValue) {
       if (newValue && newValue !== oldValue) {
-        this.center = newValue.position_google
+        this.center = newValue.position_google;
       }
     },
-  }
+  },
 };
 </script>
 
