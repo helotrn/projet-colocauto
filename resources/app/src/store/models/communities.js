@@ -17,7 +17,7 @@ export default new RestModule('communities', {
 
       commit('ajax', ajax);
 
-      const { data } = await ajax;
+      await ajax;
 
       commit('ajax', null);
     } catch (e) {
@@ -36,7 +36,7 @@ export default new RestModule('communities', {
 
       commit('ajax', ajax);
 
-      const { data } = await ajax;
+      await ajax;
 
       commit('ajax', null);
     } catch (e) {

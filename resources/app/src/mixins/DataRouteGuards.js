@@ -65,22 +65,22 @@ export default {
     loadDataRoutesData(vm, to) {
       return Promise.all(
         Object.keys(to.meta.data)
-        .reduce((acc, collection) => {
-          const actions = Object.keys(to.meta.data[collection]);
+          .reduce((acc, collection) => {
+            const actions = Object.keys(to.meta.data[collection]);
 
-          acc.push(...actions.map((action) => {
-            const routeParams = to.meta.data[collection][action];
+            acc.push(...actions.map((action) => {
+              const routeParams = to.meta.data[collection][action];
 
-            const params = drillParams(routeParams, vm);
+              const params = drillParams(routeParams, vm);
 
-            return store.dispatch(
-              `${collection}/${action}`,
-              params,
-            );
-          }));
+              return store.dispatch(
+                `${collection}/${action}`,
+                params,
+              );
+            }));
 
-          return acc;
-        }, []),
+            return acc;
+          }, []),
       )
         .then(vm.dataRouteGuardsCallback)
         .catch((e) => {

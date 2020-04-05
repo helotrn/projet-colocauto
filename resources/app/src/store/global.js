@@ -46,6 +46,6 @@ export default {
     async reload({ commit, dispatch }) {
       commit('loaded', false);
       await dispatch('load');
-    }
+    },
   },
 };

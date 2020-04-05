@@ -22,7 +22,7 @@
             <b-button v-if="!userIsOwner" class="ml-3 mb-3" variant="warning"
               :disabled="!hasReachedStep('pre_payment') || hasReachedStep('payment')
                 || item.status === 'canceled' || hasActiveExtensions"
-                @click="addExtension">
+              @click="addExtension">
               Signaler un retard
             </b-button>
             <b-button v-if="!userIsOwner" class="ml-3 mb-3" variant="warning"
@@ -118,7 +118,7 @@ export default {
       setTimeout(() => {
         const el = document.getElementById('loan-extension-new');
         this.$scrollTo(el);
-      }, 10)
+      }, 10);
     },
     addIncident(type) {
       const handover = this.item.actions.find(a => a.type === 'handover');
@@ -136,7 +136,7 @@ export default {
       setTimeout(() => {
         const el = document.getElementById('loan-incident-new');
         this.$scrollTo(el);
-      }, 10)
+      }, 10);
     },
     async cancelLoan() {
       await this.$store.dispatch('loans/cancel', this.item.id);

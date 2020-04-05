@@ -74,7 +74,7 @@ export default new RestModule('loans', {
     try {
       const ajax = Vue.axios.post(
         `/loans/${action.loan_id}/actions`,
-        action
+        action,
       );
 
       commit('ajax', ajax);

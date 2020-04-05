@@ -80,7 +80,6 @@
 <script>
 import FormsValidatedInput from '@/components/Forms/ValidatedInput.vue';
 
-import LoanFormMixin from '@/mixins/LoanFormMixin';
 import LoanActionsMixin from '@/mixins/LoanActionsMixin';
 
 export default {

@@ -42,6 +42,7 @@
             <p>
               Indiquez une nouvelle heure de retour et laissez un message.
             </p>
+
             <validation-observer ref="observer" v-slot="{ passes }">
               <b-form :novalidate="true" class="form loan-actions-extension__form"
                 @submit.stop.prevent="passes(createAction)"

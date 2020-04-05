@@ -34,7 +34,7 @@ export default new RestModule('loanables', {
     }
   },
   reset({ commit, state }) {
-    const newData = state.data.map((d, index) => ({
+    const newData = state.data.map(d => ({
       ...d,
       available: null,
       price: null,
