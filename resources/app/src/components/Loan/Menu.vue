@@ -40,8 +40,23 @@
 
       <span>Prise de possession</span>
     </li>
-    <li v-for="incident in item.incidents" :key="incident.id">
-      <span>Incident</span>
+    <li v-for="incident in item.incidents" :key="incident.id" :class="{
+      'current-step': incident.status === 'in_process',
+      'reached-step': incident.status === 'completed',
+    }">
+      <svg-danger v-if="incident.status === 'canceled'" />
+      <svg-check v-else-if="incident.status === 'completed'" />
+      <svg-waiting v-else />
+      <span>Incident ({{ prettyIncidentName(incident.incident_type) }})</span>
+    </li>
+    <li v-for="extension in item.extensions" :key="extension.id" :class="{
+      'current-step': extension.status === 'in_process',
+      'reached-step': extension.status === 'completed',
+    }">
+      <svg-danger v-if="extension.status === 'canceled'" />
+      <svg-check v-else-if="extension.status === 'completed'" />
+      <svg-waiting v-else />
+      <span>Extension</span>
     </li>
     <li :class="{
       'current-step': isCurrentStep('handover'),
@@ -57,7 +72,7 @@
       'current-step': isCurrentStep('payment'),
       'reached-step': hasReachedStep('payment'),
     }">
-      <svg-danger v-if="hasCanceledStep('payment')" />
+      <svg-danger v-if="hasCanceledStep('payment') || hasActiveIncidents || hasActiveExtensions" />
       <svg-check v-else-if="hasReachedStep('payment')" />
       <svg-waiting v-else />
 
@@ -91,6 +106,18 @@ export default {
     'svg-check': Check,
     'svg-danger': Danger,
     'svg-waiting': Waiting,
+  },
+  methods: {
+    prettyIncidentName(type) {
+      switch (type) {
+        case 'delay':
+          return 'Retard';
+        case 'accident':
+          return 'Accident';
+        default:
+          return 'Générique';
+      }
+    },
   },
 };
 </script>

@@ -70,6 +70,27 @@ export default new RestModule('loans', {
       throw e;
     }
   },
+  async createAction({ commit }, action) {
+    try {
+      const ajax = Vue.axios.post(
+        `/loans/${action.loan_id}/actions`,
+        action
+      );
+
+      commit('ajax', ajax);
+
+      await ajax;
+
+      commit('ajax', null);
+    } catch (e) {
+      commit('ajax', null);
+
+      const { request, response } = e;
+      commit('error', { request, response });
+
+      throw e;
+    }
+  },
   async test({ commit }, params) {
     const { CancelToken } = Vue.axios;
     let cancel;

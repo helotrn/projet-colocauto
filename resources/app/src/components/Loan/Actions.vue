@@ -19,6 +19,11 @@
       <loan-actions-payment v-else-if="action.type === 'payment'"
         :action="action" :loan="item" :open="isCurrentStep('payment')"
         @completed="emitLoad" @canceled="emitLoad" :user="user" />
+      <loan-actions-extension :open="true"
+        v-else-if="action.type === 'extension'"
+        :action="action" :loan="item" :user="user"
+        @aborted="abortAction" @created="emitLoad" @completed="emitLoad"
+        @canceled="emitLoad" />
       <span v-else>
         {{ action.type }} n'est pas supporté. Contactez le
         <a href="mailto:support@locomotion.app">support</a>.
@@ -29,6 +34,7 @@
 
 <script>
 import LoanForm from '@/components/Loan/Form.vue';
+import LoanActionsExtension from '@/components/Loan/Actions/Extension.vue';
 import LoanActionsHandover from '@/components/Loan/Actions/Handover.vue';
 import LoanActionsIntention from '@/components/Loan/Actions/Intention.vue';
 import LoanActionsPayment from '@/components/Loan/Actions/Payment.vue';
@@ -42,6 +48,7 @@ export default {
   mixins: [LoanStepsSequence],
   components: {
     LoanForm,
+    LoanActionsExtension,
     LoanActionsHandover,
     LoanActionsIntention,
     LoanActionsPayment,
@@ -63,6 +70,10 @@ export default {
     },
   },
   methods: {
+    abortAction(action) {
+      const indexOfAction = this.actions.indexOf(action);
+      this.actions.splice(indexOfAction, 1);
+    },
     emitLoad() {
       this.$emit('load');
     },

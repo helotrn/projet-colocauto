@@ -1,4 +1,13 @@
 export default {
+  computed: {
+    hasActiveExtensions() {
+      return this.item.extensions
+        .reduce((acc, i) => (acc || !i.id || i.status !== 'completed'), false);
+    },
+    hasActiveIncidents() {
+      return this.item.incidents.reduce((acc, i) => (acc || i.status !== 'completed'), false);
+    },
+  },
   methods: {
     hasCanceledStep(step) {
       const { actions } = this.item;
@@ -35,6 +44,8 @@ export default {
         default:
           return false;
       }
+
+      return false;
     },
     hasReachedStep(step) {
       const { id, actions } = this.item;

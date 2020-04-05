@@ -10,6 +10,10 @@ class BaseModel extends Model
     use BaseModelTrait;
 
     public static function addJoin($query, $table, $left, $operator, $right) {
+        if (!$query) {
+            return $query;
+        }
+
         if (isset($query->getQuery()->joins)) {
             $joins = $query->getQuery()->joins ?: [];
         } else {

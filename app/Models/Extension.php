@@ -2,8 +2,7 @@
 
 namespace App\Models;
 
-use App\Models\Action;
-use App\Models\Loan;
+use Carbon\Carbon;
 
 class Extension extends Action
 {

@@ -155,7 +155,7 @@ export default {
         duration_in_minutes: this.loan.duration_in_minutes,
         estimated_distance: this.loan.estimated_distance,
         loanable_id: this.loan.loanable.id,
-        community_id: this.loan.community_id
+        community_id: this.loan.community_id,
       });
     },
   },

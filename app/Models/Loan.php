@@ -12,12 +12,14 @@ use App\Models\Loanable;
 use App\Models\Payment;
 use App\Models\Takeover;
 use App\Transformers\LoanTransformer;
+use App\Utils\TimestampWithTimezone;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Vkovic\LaravelCustomCasts\HasCustomCasts;
 
 class Loan extends BaseModel
 {
-    use SoftDeletes;
+    use HasCustomCasts, SoftDeletes;
 
     public static $rules = [
         'departure_at' => [
@@ -68,13 +70,14 @@ class Loan extends BaseModel
                 return $query->selectRaw('loans.*');
             },
             'status' => function ($query = null) {
-                $query = static::addJoin(
-                    $query,
-                    'actions AS all_actions',
-                    \DB::raw('all_actions.loan_id'),
-                    '=',
-                    \DB::raw('loans.id')
-                );
+                if (!$query) {
+                    return '(array_agg(all_actions.status ORDER BY all_actions.id DESC))[1] ';
+                }
+
+                $query = $query->leftJoin('actions AS all_actions', function ($j) {
+                    return $j->on('all_actions.loan_id', '=', 'loans.id')
+                        ->whereNotIn('type', ['extension', 'incident']);
+                });
 
                 return $query
                     ->selectRaw('(array_agg(all_actions.status ORDER BY all_actions.id DESC))[1] AS status')
@@ -82,6 +85,10 @@ class Loan extends BaseModel
             }
         ];
     }
+
+    protected $casts = [
+        'departure_at' => TimestampWithTimezone::class,
+    ];
 
     protected $fillable = [
         'departure_at',
@@ -105,10 +112,10 @@ class Loan extends BaseModel
         'takeover',
     ];
 
-    public $collections = ['actions'];
+    public $collections = ['actions', 'extensions', 'incidents'];
 
     public function actions() {
-        return $this->hasMany(Action::class)->orderBy('id', 'asc');
+        return $this->hasMany(Action::class)->orderBy('weight', 'asc')->orderBy('id', 'asc');
     }
 
     public function borrower() {

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Action\ExtensionRequest;
 use App\Http\Requests\BaseRequest as Request;
 use App\Models\Extension;
 use App\Repositories\ExtensionRepository;
@@ -23,7 +24,7 @@ class ExtensionController extends RestController
         return $this->respondWithCollection($request, $items, $total);
     }
 
-    public function create(Request $request) {
+    public function create(ExtensionRequest $request) {
         try {
             $item = parent::validateAndCreate($request);
         } catch (ValidationException $e) {
@@ -63,5 +64,27 @@ class ExtensionController extends RestController
         }
 
         return $response;
+    }
+
+    public function complete(ExtensionRequest $request, $actionId, $loanId) {
+        $authRequest = $request->redirectAuth(Request::class);
+        $item = $this->repo->find($authRequest, $actionId);
+
+        $item->message_for_borrower = $request->get('message_for_borrower');
+        $item->status = 'completed';
+        $item->save();
+
+        return $item;
+    }
+
+    public function cancel(Request $request, $actionId, $loanId) {
+        $authRequest = $request->redirectAuth(Request::class);
+        $item = $this->repo->find($authRequest, $actionId);
+
+        $item->message_for_borrower = $request->get('message_for_borrower');
+        $item->status = 'canceled';
+        $item->save();
+
+        return $item;
     }
 }

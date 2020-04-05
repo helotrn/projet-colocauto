@@ -28,7 +28,7 @@
 
         <div class="loan-actions-intention__description text-center mb-3">
           <p v-if="userRole === 'owner'">
-            {{ loan.borrower.user.name }} veut vous emprunter {{ loanablePrettyName }}.
+            {{ borrower.user.name }} veut vous emprunter {{ loanablePrettyName }}.
           </p>
           <p v-else>
             Vous avez demandé à {{ loan.loanable.owner.user.name }} de lui

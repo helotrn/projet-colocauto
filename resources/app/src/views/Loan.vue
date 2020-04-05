@@ -12,20 +12,22 @@
 
         <b-col lg="9" class="loan__actions">
           <div class="loan__actions__buttons text-right mb-3" v-if="!!item.id">
-            <b-button class="mr-3 mb-3" variant="primary" :disabled="hasReachedStep('pre_payment')">
+            <b-button class="mb-3" variant="primary" :disabled="hasReachedStep('pre_payment')">
               Modifier la réservation
             </b-button>
-            <b-button class="mr-3 mb-3" variant="danger" :disabled="hasReachedStep('takeover')"
+            <b-button class="ml-3 mb-3" variant="danger" :disabled="hasReachedStep('takeover')"
               @click="cancelLoan">
               Annuler la réservation
             </b-button>
-            <b-button class="mr-3 mb-3" variant="warning"
+            <b-button v-if="!userIsOwner" class="ml-3 mb-3" variant="warning"
               :disabled="!hasReachedStep('pre_payment') || hasReachedStep('payment')
-                || item.status === 'canceled'">
+                || item.status === 'canceled' || hasActiveExtensions"
+                @click="addExtension">
               Signaler un retard
             </b-button>
-            <b-button class="mb-3" variant="warning" :disabled="!hasReachedStep('pre_payment')
-              || item.status === 'canceled'">
+            <b-button v-if="!userIsOwner" class="ml-3 mb-3" variant="warning"
+              :disabled="!hasReachedStep('pre_payment') || item.status === 'canceled'"
+              @click="addIncident('accident')">
               Signaler un incident
             </b-button>
           </div>
@@ -94,8 +96,37 @@ export default {
         ? this.item.loanable.name
         : capitalize(this.$i18n.tc('titles.loanable', 1));
     },
+    userIsOwner() {
+      return this.user.id === this.item.loanable.owner.user.id;
+    },
   },
   methods: {
+    addExtension() {
+      const handover = this.item.actions.find(a => a.type === 'handover');
+
+      if (handover) {
+        const indexOfHandover = this.item.actions.indexOf(handover);
+        this.item.actions.splice(indexOfHandover, 0, {
+          status: 'in_process',
+          new_duration: this.item.duration_in_minutes,
+          comments_on_extension: '',
+          type: 'extension',
+          loan_id: this.item.id,
+        });
+      }
+
+      setTimeout(() => {
+        const el = document.getElementById('loan-extension-new');
+        this.$scrollTo(el);
+      }, 10)
+    },
+    addIncident(type) {
+      this.item.incidents.push({
+        status: 'in_process',
+        incident_type: type,
+        type: 'incident',
+      });
+    },
     async cancelLoan() {
       await this.$store.dispatch('loans/cancel', this.item.id);
       await this.loadItem();

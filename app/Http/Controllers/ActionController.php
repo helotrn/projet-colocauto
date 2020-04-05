@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\BaseRequest as Request;
 use App\Http\Requests\Action\ActionRequest;
+use App\Http\Requests\Action\CreateRequest;
+use App\Http\Requests\Action\ExtensionRequest;
 use App\Http\Requests\Action\HandoverRequest;
 use App\Http\Requests\Action\IntentionRequest;
 use App\Http\Requests\Action\PaymentRequest;
@@ -39,6 +41,18 @@ class ActionController extends RestController
         $this->loanRepository = $loanRepository;
     }
 
+    public function create(CreateRequest $request) {
+        switch ($request->get('type')) {
+            case 'extension':
+                return $this->extensionController
+                    ->create($request->redirect(ExtensionRequest::class));
+            case 'incident':
+                return $this->incidentController->create($request);
+            default:
+                throw new \Exception('invalid action type');
+        }
+    }
+
     public function index(Request $request) {
         try {
             [$items, $total] = $this->repo->get($request);
@@ -66,9 +80,7 @@ class ActionController extends RestController
             case 'intention':
                 return $this->intentionController->retrieve($request, $id);
             case 'incident':
-                $incidentRequest = new Request();
-                $incidentRequest->request->add($request->all());
-                return $this->incidentController->retrieve($incidentRequest, $id);
+                return $this->incidentController->retrieve($request, $id);
             default:
                 throw new \Exception('invalid action type');
         }
@@ -142,10 +154,12 @@ class ActionController extends RestController
                     $loanId
                 );
             case 'extension':
-                $extensionRequest = new Request();
-                $extensionRequest->setMethod('PUT');
-                $extensionRequest->request->add($request->all());
-                return $this->extensionController->complete($extensionRequest, $actionId, $loanId);
+                $extensionRequest = $request->redirect(ExtensionRequest::class);
+                return $this->extensionController->complete(
+                    $extensionRequest,
+                    $actionId,
+                    $loanId
+                );
             case 'incident':
                 $incidentRequest = new Request();
                 $incidentRequest->setMethod('PUT');

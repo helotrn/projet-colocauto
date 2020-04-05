@@ -75,6 +75,8 @@ Route::prefix('v1')->group(function () {
 
         Route::get('/loans/{loan_id}/borrower', 'LoanController@retrieveBorrower');
         Route::put('/loans/{loan_id}/cancel', 'LoanController@cancel');
+
+        Route::post('/loans/{loan_id}/actions', 'LoanController@createAction');
         Route::get('/loans/{loan_id}/actions/{action_id}', 'LoanController@retrieveAction');
         Route::put('/loans/{loan_id}/actions/{action_id}/complete', 'ActionController@complete');
         Route::put('/loans/{loan_id}/actions/{action_id}/cancel', 'ActionController@cancel');

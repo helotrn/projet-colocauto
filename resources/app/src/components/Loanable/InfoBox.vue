@@ -10,17 +10,20 @@
 
         <b-col class="loanable-info-box__actions">
           <div>
-            <b-button size="sm" variant="outline-primary" v-if="hasButton('availability')"
+            <b-button class="ml-3 mb-3"
+              size="sm" variant="outline-primary" v-if="hasButton('availability')"
               :to="`/profile/loanables/${id}#availability`">
               Modifier les disponibilités
             </b-button>
 
-            <b-button size="sm" variant="outline-dark" v-if="hasButton('unavailable24h')"
+            <b-button class="ml-3 mb-3"
+              size="sm" variant="outline-dark" v-if="hasButton('unavailable24h')"
               @click="makeLoanableUnavailableFor24h">
               Rendre indisponible (24h)
             </b-button>
 
-            <b-button size="sm" variant="outline-danger" v-if="hasButton('remove')"
+            <b-button class="ml-3 mb-3"
+              size="sm" variant="outline-danger" v-if="hasButton('remove')"
               @click="disableLoanableModal">
               Retirer
             </b-button>
@@ -139,10 +142,6 @@ export default {
   &__actions.col {
     flex: 1 1 0;
     text-align: right;
-
-    .btn {
-      margin-left: 16px;
-    }
   }
 }
 </style>

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Action\ActionRequest;
+use App\Http\Requests\Action\CreateRequest as ActionCreateRequest;
 use App\Http\Requests\BaseRequest as Request;
 use App\Models\Loan;
 use App\Repositories\LoanRepository;
@@ -105,6 +106,14 @@ class LoanController extends RestController
     public function retrieveAction(Request $request, $loanId, $actionId) {
         $request->merge([ 'loan_id' => $loanId ]);
         return $this->actionController->retrieve($request, $actionId);
+    }
+
+    public function createAction(ActionCreateRequest $request, $id) {
+        $item = $this->repo->find($request->redirectAuth(Request::class), $id);
+
+        $request->merge([ 'loan_id' => $id ]);
+
+        return $this->actionController->create($request);
     }
 
     public function template(Request $request) {

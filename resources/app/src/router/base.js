@@ -6,15 +6,15 @@ import Login from '../views/Login.vue';
 export default [
   {
     path: '/',
-      name: 'home',
-      component: Home,
-      meta: {
-        data: {
-          stats: {
-            retrieve: {},
-          },
+    name: 'home',
+    component: Home,
+    meta: {
+      data: {
+        stats: {
+          retrieve: {},
         },
       },
+    },
   },
   {
     path: '/login',
