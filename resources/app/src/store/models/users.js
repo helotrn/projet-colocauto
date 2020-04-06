@@ -90,4 +90,25 @@ export default new RestModule('users', {
       throw e;
     }
   },
+  async updatePassword({ commit }, { userId, currentPassword, newPassword }) {
+    try {
+      const ajax = Vue.axios.post(`/users/${userId}/password`, {
+        current: currentPassword,
+        new: newPassword,
+      });
+
+      commit('ajax', ajax);
+
+      await ajax;
+
+      commit('ajax', null);
+    } catch (e) {
+      commit('ajax', null);
+
+      const { request, response } = e;
+      commit('error', { request, response });
+
+      throw e;
+    }
+  }
 });

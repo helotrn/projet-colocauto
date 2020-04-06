@@ -17,6 +17,13 @@
           </div>
 
           <div class="form__section">
+            <h2>Mot de passe</h2>
+
+            <user-password-form :loading="loading" :is-admin="loggedInUserIsAdmin"
+              :user-id="item.id" />
+          </div>
+
+          <div class="form__section">
             <h2>Profil d'emprunteur</h2>
 
             <p>
@@ -190,6 +197,7 @@
 
 <script>
 import FormsBuilder from '@/components/Forms/Builder.vue';
+import UserPasswordForm from '@/components/User/PasswordForm.vue';
 
 import FormMixin from '@/mixins/FormMixin';
 
@@ -200,6 +208,7 @@ export default {
   mixins: [FormMixin],
   components: {
     FormsBuilder,
+    UserPasswordForm,
   },
   data() {
     return {
@@ -274,6 +283,9 @@ export default {
       }
 
       return this.item.borrower.suspended ? 'Suspendu' : 'Approuvé';
+    },
+    loggedInUserIsAdmin() {
+      return this.$store.state.user.role === 'admin';
     },
     roundedBalance() {
       if (this.item.balance) {

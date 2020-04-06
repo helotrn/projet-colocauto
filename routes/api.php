@@ -42,6 +42,7 @@ Route::prefix('v1')->group(function () {
             RouteHelper::resource($entity);
         }
 
+        Route::post('users/{user_id}/password', 'UserController@updatePassword');
         Route::get('users/{user_id}/communities', 'UserController@indexCommunities');
         Route::get('users/{user_id}/communities/{community_id}', 'UserController@retrieveCommunity');
         Route::put(

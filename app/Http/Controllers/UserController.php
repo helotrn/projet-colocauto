@@ -8,6 +8,7 @@ use App\Http\Requests\User\AddBalanceRequest;
 use App\Http\Requests\User\CreateRequest;
 use App\Http\Requests\User\DestroyRequest;
 use App\Http\Requests\User\UpdateRequest;
+use App\Http\Requests\User\UpdatePasswordRequest;
 use App\Http\Requests\User\UserTagRequest;
 use App\Models\Borrower;
 use App\Models\User;
@@ -83,6 +84,26 @@ class UserController extends RestController
         } catch (ValidationException $e) {
             return $this->respondWithErrors($e->errors(), $e->getMessage());
         }
+    }
+
+    public function updatePassword(UpdatePasswordRequest $request, $id) {
+        $item = $this->repo->find($request->redirectAuth(Request::class), $id);
+
+        if (!$request->user()->isAdmin()) {
+            $currentPassword = $request->get('current');
+
+            $loginRequest = new LoginRequest();
+            $loginRequest->setMethod('POST');
+            $loginRequest->request->add([
+                'email' => $item->email,
+                'password' => $currentPassword,
+            ]);
+            $response = $this->login($loginRequest);
+        }
+
+        $this->repo->updatePassword($request, $id, $request->get('new'));
+
+        return response('', 204);
     }
 
     public function submit(Request $request, $id) {
@@ -277,7 +298,6 @@ class UserController extends RestController
 
             $invoice = $user->getLastInvoiceOrCreate();
 
-            $u = $invoice->items();
             $billItem = $invoice->billItems()->create([
                 'label' => "Ajout au compte Locomotion: "
                     . "{$amount}$ + {$fee}$ (frais)",

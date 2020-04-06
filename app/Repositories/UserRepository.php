@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 use Molotov\Repositories\RestRepository;
 
 class UserRepository extends RestRepository
@@ -24,6 +25,22 @@ class UserRepository extends RestRepository
         $this->model->save();
 
         $this->saveRelations($data);
+
+        $this->model->save();
+
+        return $this->model;
+    }
+
+    public function updatePassword($request, $id, $newPassword) {
+        $query = $this->model;
+
+        if (method_exists($query, 'scopeAccessibleBy')) {
+            $query = $query->accessibleBy($request->user());
+        }
+
+        $this->model = $query->findOrFail($id);
+
+        $this->model->password = Hash::make($newPassword);
 
         $this->model->save();
 
