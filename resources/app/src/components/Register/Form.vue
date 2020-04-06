@@ -92,12 +92,6 @@ export default {
     },
   },
   methods: {
-    getValidationState({ dirty, validated, valid = null }) {
-      return dirty || validated ? valid : null;
-    },
-    paginationLinks(pageNum) {
-      return pageNum > 1 ? `/register/${pageNum}` : '/register';
-    },
     async register() {
       this.$store.commit('register/loading', true);
 

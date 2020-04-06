@@ -40,6 +40,7 @@ return [
     ],
 
     'noke' => [
+        'api_user_id' => env('NOKE_API_USER_ID'),
         'username' => env('NOKE_USERNAME'),
         'password' => env('NOKE_PASSWORD'),
     ],

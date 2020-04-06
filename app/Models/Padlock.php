@@ -3,9 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Padlock extends BaseModel
 {
+    use SoftDeletes;
+
     public static $rules = [
         'external_id' => 'required',
         'mac_address' => 'required',
@@ -13,6 +16,7 @@ class Padlock extends BaseModel
     ];
 
     public static $filterTypes = [
+        'external_id' => 'text',
         'name' => 'text',
         'loanable.name' => 'text',
     ];

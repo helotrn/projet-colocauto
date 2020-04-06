@@ -134,7 +134,7 @@ class Loanable extends BaseModel
 
     protected $with = ['image'];
 
-    public $computed = ['events', 'position_google'];
+    public $computed = ['events', 'has_padlock', 'position_google'];
 
     public $items = ['owner', 'community', 'image', 'padlock'];
 
@@ -209,6 +209,10 @@ class Loanable extends BaseModel
         } catch (\Exception $e) {
             return [];
         }
+    }
+
+    public function getHasPadlockAttribute() {
+        return !!$this->padlock;
     }
 
     public function getPositionGoogleAttribute() {

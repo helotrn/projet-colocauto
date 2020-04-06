@@ -69,7 +69,7 @@ export default {
   data() {
     return {
       table: [
-        { key: 'id', label: 'ID', sortable: true },
+        { key: 'external_id', label: 'ID', sortable: true },
         { key: 'name', label: 'Nom', sortable: true },
         { key: 'mac_address', label: 'Adresse MAC', sortable: false },
         { key: 'loanable.name', label: 'Objet', sortable: false },
