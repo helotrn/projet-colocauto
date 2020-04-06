@@ -39,4 +39,9 @@ return [
         'secret' => env('STRIPE_SECRET'),
     ],
 
+    'noke' => [
+        'username' => env('NOKE_USERNAME'),
+        'password' => env('NOKE_PASSWORD'),
+    ],
+
 ];

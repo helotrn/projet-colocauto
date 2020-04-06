@@ -25,6 +25,7 @@ export default {
       owner: owners.fr.fields,
       ownership: 'type de propriété',
       owner_id: 'propriétaire',
+      padlock_id: 'cadenas',
       papers_location: 'emplacement des papiers',
       plate_number: 'numéro de plaque',
       position: 'position géographique',
@@ -32,6 +33,9 @@ export default {
       transmission_mode: 'transmission',
       type: 'type',
       year_of_circulation: 'année de circulation',
+    },
+    model: {
+      singular: 'véhicule',
     },
     types: {
       bike: 'vélo',

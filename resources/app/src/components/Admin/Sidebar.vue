@@ -6,6 +6,7 @@
     <b-nav-item to="/admin/loanables">Véhicules</b-nav-item>
     <b-nav-item to="/admin/loans">Emprunts</b-nav-item>
     <b-nav-item to="/admin/invoices">Factures</b-nav-item>
+    <b-nav-item to="/admin/padlocks">Cadenas</b-nav-item>
   </div>
 </template>
 

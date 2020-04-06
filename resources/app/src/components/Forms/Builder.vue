@@ -46,6 +46,12 @@ export default {
         return this.item[objectName];
       }
 
+      if (this.item[key]
+        && typeof this.item[key] === 'object'
+        && !Array.isArray(this.item[key])) {
+        return this.item[key];
+      }
+
       return null;
     },
     placeholderOrLabel(key) {

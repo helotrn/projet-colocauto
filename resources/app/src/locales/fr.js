@@ -5,6 +5,7 @@ import communities from '@/locales/models/communities';
 import invoices from '@/locales/models/invoices';
 import loans from '@/locales/models/loans';
 import loanables from '@/locales/models/loanables';
+import padlocks from '@/locales/models/padlocks';
 import paymentMethods from '@/locales/models/paymentMethods';
 import users from '@/locales/models/users';
 
@@ -46,6 +47,7 @@ export default {
     en: 'English',
     fr: 'Français',
   },
+  padlocks: padlocks.fr,
   paymentMethods: paymentMethods.fr,
   profile: {
     titles: {
@@ -76,6 +78,8 @@ export default {
     loanable: 'véhicule',
     loanables: 'véhicules',
     login: 'se connecter',
+    padlock: 'Cadenas',
+    padlocks: 'Cadenas',
     payment_method: 'méthode de paiement',
     payment_methods: 'méthodes de paiement',
     profile: 'Profil',

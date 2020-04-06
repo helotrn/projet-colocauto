@@ -1,8 +1,13 @@
 <template>
   <v-select class="forms-relation-input" label="text" :options="data"
     :placeholder="placeholder" @search="setQ" :loading="loading"
+    :filterable="false"
     :value="convertedObjectValue" @input="emitInput">
-    <template #no-options>Pas de résultat</template>
+    <template #no-options>
+      <span v-if="!q">Tapez quelque chose pour commencer à chercher...</span>
+      <span v-else-if="searchDebounce">Chargement...</span>
+      <span v-else>Pas de résultat</span>
+    </template>
   </v-select>
 </template>
 
@@ -117,6 +122,7 @@ export default {
       }
 
       this.searchDebounce = setTimeout(() => {
+        this.searchDebounce = null;
         this.$store.dispatch(`${this.slug}/search`, {
           q,
           params: this.params,

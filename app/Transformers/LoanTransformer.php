@@ -2,7 +2,6 @@
 
 namespace App\Transformers;
 
-use Auth;
 use Molotov\Transformers\BaseTransformer;
 
 class LoanTransformer extends BaseTransformer

@@ -1,13 +1,15 @@
 import Admin from '../views/Admin.vue';
-import AdminDashboard from '../views/admin/Dashboard.vue';
 import AdminCommunities from '../views/admin/Communities.vue';
 import AdminCommunity from '../views/admin/Community.vue';
-import AdminInvoices from '../views/admin/Invoices.vue';
+import AdminDashboard from '../views/admin/Dashboard.vue';
 import AdminInvoice from '../views/admin/Invoice.vue';
+import AdminInvoices from '../views/admin/Invoices.vue';
+import AdminLoan from '../views/admin/Loan.vue';
 import AdminLoanable from '../views/admin/Loanable.vue';
 import AdminLoanables from '../views/admin/Loanables.vue';
 import AdminLoans from '../views/admin/Loans.vue';
-import AdminLoan from '../views/admin/Loan.vue';
+import AdminPadlock from '../views/admin/Padlock.vue';
+import AdminPadlocks from '../views/admin/Padlocks.vue';
 import AdminUser from '../views/admin/User.vue';
 import AdminUsers from '../views/admin/Users.vue';
 
@@ -90,7 +92,7 @@ export default {
         auth: true,
         slug: 'loanables',
         params: {
-          fields: '*,owner.id,owner.user.id,owner.user.full_name,community.id,community.name',
+          fields: '*,owner.user.full_name,community.name,padlock.name',
         },
         title: 'titles.loanable',
       },
@@ -184,6 +186,36 @@ export default {
         slug: 'loans',
         params: {
           fields: '*,borrower.user.*,loanable.owner.user.*,actions.*',
+        },
+        title: 'titles.loan',
+      },
+    },
+    {
+      path: 'padlocks',
+      component: AdminPadlocks,
+      meta: {
+        auth: true,
+        creatable: false,
+        slug: 'padlocks',
+        data: {
+          padlocks: {
+            retrieve: {
+              fields: '*,loanable.name',
+            },
+          },
+        },
+        title: 'titles.padlocks',
+      },
+    },
+    {
+      path: 'padlocks/:id',
+      component: AdminPadlock,
+      props: true,
+      meta: {
+        auth: true,
+        slug: 'padlocks',
+        params: {
+          fields: '*,loanable.name',
         },
         title: 'titles.loan',
       },

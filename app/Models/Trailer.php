@@ -37,7 +37,7 @@ class Trailer extends Loanable
         ];
     }
 
-    public $items = ['owner', 'community'];
+    public $items = ['community','owner', 'padlock'];
 
     public $morphOnes = [
         'image' => 'imageable',
@@ -45,6 +45,10 @@ class Trailer extends Loanable
 
     public function image() {
         return $this->morphOne(Image::class, 'imageable');
+    }
+
+    public function padlock() {
+        return $this->hasOne(Padlock::class, 'loanable_id');
     }
 
     public function scopeAccessibleBy(Builder $query, $user) {

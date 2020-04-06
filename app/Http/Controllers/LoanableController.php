@@ -243,6 +243,18 @@ class LoanableController extends RestController
                             ],
                         ],
                     ],
+                    'padlock_id' => [
+                        'type' => 'relation',
+                        'disabled' => true,
+                        'query' => [
+                            'slug' => 'padlocks',
+                            'value' => 'id',
+                            'text' => 'name',
+                            'params' => [
+                                'fields' => 'id,name',
+                            ],
+                        ],
+                    ],
                 ],
                 'bike' => [
                     'model' => [

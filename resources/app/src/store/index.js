@@ -15,6 +15,7 @@ import images from './models/images';
 import invoices from './models/invoices';
 import loans from './models/loans';
 import loanables from './models/loanables';
+import padlocks from './models/padlocks';
 import paymentMethods from './models/paymentMethods';
 import trailers from './models/trailers';
 import owners from './models/owners';
@@ -217,6 +218,7 @@ export default new Vuex.Store({
     loanables,
     login: Login,
     owners,
+    padlocks,
     paymentMethods,
     'profile.loanable': ProfileLoanable,
     register: Register,

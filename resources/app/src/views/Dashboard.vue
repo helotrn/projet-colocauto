@@ -132,6 +132,10 @@ export default {
     if (!this.user.name) {
       this.$router.replace('/register');
     }
+
+    if (this.user.role === 'admin') {
+      this.$router.replace('/admin');
+    }
   },
   computed: {
     hasTutorials() {

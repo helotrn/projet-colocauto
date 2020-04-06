@@ -6,6 +6,7 @@ use App\Models\Community;
 use App\Models\Loan;
 use App\Models\Owner;
 use App\Models\User;
+use App\Transformers\LoanableTransformer;
 use App\Utils\PointCast;
 use Carbon\Carbon;
 use Eluceo\iCal\Component\Calendar;
@@ -23,6 +24,8 @@ class Loanable extends BaseModel
     use HasCustomCasts, PostgisTrait, SoftDeletes;
 
     public $readOnly = 'true';
+
+    public static $transformer = LoanableTransformer::class;
 
     public static $filterTypes = [
         'id' => 'number',
@@ -133,7 +136,7 @@ class Loanable extends BaseModel
 
     public $computed = ['events', 'position_google'];
 
-    public $items = ['owner', 'community', 'image'];
+    public $items = ['owner', 'community', 'image', 'padlock'];
 
     public function community() {
         return $this->belongsTo(Community::class);
@@ -145,6 +148,10 @@ class Loanable extends BaseModel
 
     public function owner() {
         return $this->belongsTo(Owner::class);
+    }
+
+    public function padlock() {
+        return $this->hasOne(Padlock::class);
     }
 
     public $collections = ['loans'];
@@ -243,6 +250,18 @@ class Loanable extends BaseModel
                 });
         // ...and cars are only allowed if the borrower profile is approved
         })->whereIn('type', $allowedTypes);
+    }
+
+    public function scopeSearch(Builder $query, $q) {
+        if (!$q) {
+            return $query;
+        }
+
+        return $query->where(
+            \DB::raw('unaccent(name)'),
+            'ILIKE',
+            \DB::raw("unaccent('%$q%')")
+        );
     }
 
     protected static function buildTimezone() {
