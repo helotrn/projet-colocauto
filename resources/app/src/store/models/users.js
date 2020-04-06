@@ -110,5 +110,5 @@ export default new RestModule('users', {
 
       throw e;
     }
-  }
+  },
 });

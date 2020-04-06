@@ -14,7 +14,8 @@
           :placeholder="$t('new_password')" description="Minimum 8 caractères"
           v-model="newPassword" />
 
-        <forms-validated-input mode="lazy" name="new_password_repeat" :label="$t('new_password_repeat')"
+        <forms-validated-input mode="lazy"
+          name="new_password_repeat" :label="$t('new_password_repeat')"
           :rules="{ required: true, is: newPassword }" type="password"
           :placeholder="$t('new_password_repeat')"
           v-model="newPasswordRepeat" />
