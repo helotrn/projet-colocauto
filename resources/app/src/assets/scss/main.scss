@@ -9,7 +9,11 @@
 
 @import "components/badge";
 @import "components/buttons";
+@import "components/form";
+@import "components/header";
+@import "components/loanactions";
+@import "components/navbar";
 @import "components/pagination";
 @import "components/table";
-@import "components/form";
-@import "components/loanactions";
+
+@import "pages/home";
