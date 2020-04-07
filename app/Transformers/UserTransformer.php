@@ -2,11 +2,35 @@
 
 namespace App\Transformers;
 
+use Auth;
 use Molotov\Transformers\BaseTransformer;
 
 class UserTransformer extends BaseTransformer
 {
     protected $contexts = ['Community'];
+
+    public function authorize($item, $output, $user = null) {
+        if ($user && ($user->isAdmin() || $user->id === $item->id)) {
+            return $output;
+        }
+
+        $publicFields = [
+            'id',
+            'name',
+            'last_name',
+            'full_name',
+            'avatar',
+            'tags',
+            'description',
+            'owner',
+        ];
+
+        if (isset($options['context']['Loan'])) {
+            $publicFields[] = 'phone';
+        }
+
+        return $this->filterKeys($output, $publicFields);
+    }
 
     public function transform($item, $options = []) {
         $output = parent::transform($item, $options);
@@ -33,6 +57,6 @@ class UserTransformer extends BaseTransformer
             $output['balance'] = floatval($output['balance']);
         }
 
-        return $output;
+        return $this->authorize($item, $output, Auth::user());
     }
 }
