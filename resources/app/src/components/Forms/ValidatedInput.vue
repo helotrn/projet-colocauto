@@ -37,7 +37,7 @@
         v-bind:value="value"
         v-on:input="emitChange" />
       <forms-map-input v-else-if="type === 'point'"
-        :center="center"
+        :center="center" :disabled="disabled"
         :state="getValidationState(validationContext)"
         v-bind:value="value"
         v-on:input="emitChange" />

@@ -1,9 +1,24 @@
 import owners from './owners';
 
 export default {
+  en: {
+    fields: {
+    },
+  },
   fr: {
+    bike_types: {
+      regular: 'régulier',
+      electric: 'electric',
+      fixed_wheel: 'roue fixe',
+    },
     'créer un véhicule': 'créer un véhicule',
     '{count} véhicule sélectionné': 'aucun véhicule sélectionné | 1 véhicule sélectionné | {count} véhicules sélectionnés',
+    engines: {
+      fuel: 'essence',
+      diesel: 'diesel',
+      electric: 'électrique',
+      hybrid: 'hybride',
+    },
     fields: {
       id: 'ID',
       bike_type: 'type de vélo',
@@ -36,6 +51,20 @@ export default {
     },
     model: {
       singular: 'véhicule',
+    },
+    papers_location: {
+      in_the_car: 'dans la voiture',
+      to_request_with_car: 'à récupérer avec la voiture',
+    },
+    sizes: {
+      big: 'grand',
+      medium: 'moyen',
+      small: 'petit',
+      kid: 'enfant',
+    },
+    transmission_modes: {
+      automatic: 'automatique',
+      manual: 'manuelle',
     },
     types: {
       bike: 'vélo',

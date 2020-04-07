@@ -1,5 +1,5 @@
 <template>
-  <b-container fluid v-if="item">
+  <b-container fluid v-if="item && loadedFullLoanable">
     <vue-headful :title="fullTitle" />
 
     <loan-header :user="user" :loan="item" />
@@ -29,6 +29,11 @@ export default {
     LoanActions,
     LoanHeader,
   },
+  data() {
+    return {
+      loadedFullLoanable: false,
+    };
+  },
   computed: {
     fullTitle() {
       const parts = [
@@ -45,6 +50,25 @@ export default {
     },
     pageTitle() {
       return this.item.name || capitalize(this.$i18n.tc('emprunt', 1));
+    },
+  },
+  methods: {
+    async formMixinCallback() {
+      const { id, type } = this.item.loanable;
+      await this.$store.dispatch(`${type}s/retrieveOne`, {
+        params: {
+          fields: '*,owner.id,owner.user.id,owner.user.avatar,owner.user.name',
+          '!fields': 'events',
+        },
+        id,
+      });
+      const loanable = this.$store.state[`${type}s`].item;
+
+      this.$store.commit(`${type}s/item`, null);
+
+      this.$store.commit(`${this.slug}/mergeItem`, { loanable });
+
+      this.loadedFullLoanable = true;
     },
   },
   i18n: {

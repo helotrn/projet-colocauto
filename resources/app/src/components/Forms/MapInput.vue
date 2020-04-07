@@ -23,6 +23,11 @@ export default {
       type: String,
       required: false,
     },
+    disabled: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
     state: {
       type: Boolean,
       required: false,
@@ -81,9 +86,11 @@ export default {
   },
   methods: {
     savePosition(event) {
-      const lat = event.latLng.lat();
-      const lng = event.latLng.lng();
-      this.$emit('input', [lat, lng]);
+      if (!this.disabled) {
+        const lat = event.latLng.lat();
+        const lng = event.latLng.lng();
+        this.$emit('input', [lat, lng]);
+      }
     },
   },
 };

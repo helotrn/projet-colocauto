@@ -1,5 +1,6 @@
 import AdminFilters from './components/Admin/Filters';
 import communities from '@/locales/models/communities';
+import loanables from '@/locales/models/loanables';
 
 export default {
   communities: communities.fr,
@@ -13,6 +14,7 @@ export default {
     modifier: 'modify',
     supprimer: 'delete',
   },
+  loanables: loanables.en,
   locales: {
     en: 'English',
     fr: 'Français',

@@ -9,7 +9,9 @@
     <b-row>
       <b-col class="loan-header__description">
         <p>
-          {{ prettyType }} {{ loanableDescription }} {{ loanableOwnerText }}
+          <a href="#" v-b-modal="'loanable-modal'">
+            {{ prettyType }} {{ loanableDescription }} {{ loanableOwnerText }}
+          </a>
           <br>
           {{ loan.departure_at | day | capitalize }} {{ loan.departure_at | date }}
           &bull;
@@ -17,12 +19,23 @@
         </p>
       </b-col>
     </b-row>
+
+    <b-modal size="xl"
+      :title="`${prettyType} ${loanableDescription} ${loanableOwnerText}`"
+      :id="'loanable-modal'" footer-class="d-none">
+      <loanable-details-box :loanable="loan.loanable" />
+    </b-modal>
   </div>
 </template>
 
 <script>
+import LoanableDetailsBox from '@/components/Loanable/DetailsBox.vue';
+
 export default {
   name: 'LoanHeader',
+  components: {
+    LoanableDetailsBox,
+  },
   props: {
     loan: {
       type: Object,
