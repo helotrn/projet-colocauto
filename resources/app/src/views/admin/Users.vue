@@ -59,8 +59,8 @@
 
     <b-row>
       <b-col>
-        <b-pagination align="right" v-model="params.page"
-          :total-rows="total" :per-page="params.per_page" />
+        <b-pagination align="right" v-model="contextParams.page"
+          :total-rows="total" :per-page="contextParams.per_page" />
       </b-col>
     </b-row>
   </b-container>
