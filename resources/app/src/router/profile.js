@@ -136,6 +136,8 @@ export default {
               fields: [
                 '*',
                 'actions.*',
+                'incidents.*',
+                'extensions.*',
                 'borrower.id',
                 'borrower.user.avatar',
                 'borrower.user.full_name',
