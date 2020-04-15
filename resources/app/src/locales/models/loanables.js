@@ -23,7 +23,7 @@ export default {
       community_id: 'communauté',
       deleted_at: 'supprimé',
       engine: 'moteur',
-      has_accident_report: "un rapport d'accident exists-t-il?",
+      has_accident_report: "un rapport d'accident existe-t-il?",
       has_informed_insurer: "l'assureur a-t-il été informé?",
       image: 'photo',
       instructions: 'instructions',
