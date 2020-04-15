@@ -8,7 +8,7 @@
       :initial-view="def.initial_view"
       :query="def.query" :object-value="objectValue(key)"
       @relation="updateObject($event, key)"
-      v-model="item[key]" />
+      v-model="value[key]" />
   </div>
 </template>
 
@@ -32,7 +32,7 @@ export default {
       type: String,
       required: true,
     },
-    item: {
+    value: {
       type: Object,
       required: true,
     },
@@ -44,13 +44,13 @@ export default {
     objectValue(key) {
       if (key.indexOf('_id') !== -1) {
         const objectName = key.replace('_id', '');
-        return this.item[objectName];
+        return this.value[objectName];
       }
 
-      if (this.item[key]
-        && typeof this.item[key] === 'object'
-        && !Array.isArray(this.item[key])) {
-        return this.item[key];
+      if (this.value[key]
+        && typeof this.value[key] === 'object'
+        && !Array.isArray(this.value[key])) {
+        return this.value[key];
       }
 
       return null;
@@ -64,7 +64,7 @@ export default {
     },
     updateObject(selection, key) {
       const objectKey = key.replace('_id', '');
-      const newItem = { ...this.item };
+      const newItem = { ...this.value };
 
       newItem[objectKey] = selection;
 

@@ -10,7 +10,7 @@
     <b-row>
       <b-col>
         <b-form class="form" @submit.prevent="submit">
-          <forms-builder :definition="form" :item="item" entity="padlocks" />
+          <forms-builder :definition="form" v-model="item" entity="padlocks" />
 
           <div class="form__buttons">
             <b-button-group>

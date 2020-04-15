@@ -13,7 +13,7 @@
           <div class="form__section">
             <h2>Informations générales</h2>
 
-            <forms-builder :definition="form.general" :item="item" entity="users" />
+            <forms-builder :definition="form.general" v-model="item" entity="users" />
           </div>
 
           <div class="form__section">
@@ -54,7 +54,7 @@
               </b-button>
             </p>
 
-            <forms-builder :definition="form.borrower" :item="item.borrower"
+            <forms-builder :definition="form.borrower" v-model="item.borrower"
               entity="borrowers" />
           </div>
 

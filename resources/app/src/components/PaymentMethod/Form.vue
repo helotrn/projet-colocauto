@@ -4,7 +4,7 @@
       <b-form class="form" @submit.prevent="passes(submit)">
         <div class="form__section">
           <forms-builder :definition="definition" :disabled="!!paymentMethod.id"
-            :item="paymentMethod" entity="paymentMethods" />
+            v-model="paymentMethod" entity="paymentMethods" />
         </div>
 
         <div v-if="!paymentMethod.id" :class="{
@@ -22,7 +22,7 @@
           <h2>Compte bancaire</h2>
 
           <forms-builder :definition="restOfDefinition"
-            :item="paymentMethod" entity="paymentMethods" />
+            v-model="paymentMethod" entity="paymentMethods" />
         </div>
 
         <div class="form__buttons">

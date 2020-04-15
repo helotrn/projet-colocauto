@@ -13,7 +13,7 @@
           <div class="form__section">
             <h2>Informations générales</h2>
 
-            <forms-builder :definition="form" :item="item" entity="communities" />
+            <forms-builder :definition="form" v-model="item" entity="communities" />
           </div>
 
           <div class="form__section">

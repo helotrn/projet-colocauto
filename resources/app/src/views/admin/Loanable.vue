@@ -16,25 +16,23 @@
             <div class="form__section">
               <h2>Informations</h2>
 
-              <forms-builder :definition="form.general" :item="item"
-                @input="item = $event"
-                entity="loanables" />
+              <forms-builder :definition="form.general" v-model="item" entity="loanables" />
             </div>
 
             <div class="form__section" v-if="item.type === 'bike'">
               <h2>Détails du vélo</h2>
 
-              <forms-builder :definition="form.bike" :item="item" entity="bikes" />
+              <forms-builder :definition="form.bike" v-model="item" entity="bikes" />
             </div>
             <div class="form__section" v-else-if="item.type === 'car'">
               <h2>Détails de la voiture</h2>
 
-              <forms-builder :definition="form.car" :item="item" entity="cars" />
+              <forms-builder :definition="form.car" v-model="item" entity="cars" />
             </div>
             <div class="form__section" v-else-if="item.type === 'trailer'">
               <h2>Détails de la remorque</h2>
 
-              <forms-builder :definition="form.trailer" :item="item" entity="trailers" />
+              <forms-builder :definition="form.trailer" v-model="item" entity="trailers" />
             </div>
             <div class="form__section text-center" v-else>
               <span>
