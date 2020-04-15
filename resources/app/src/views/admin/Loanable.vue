@@ -105,11 +105,13 @@ export default {
       en: {
         ...locales.en.loanables,
         ...locales.en.forms,
+        cars: locales.en.cars,
         titles: locales.en.titles,
       },
       fr: {
         ...locales.fr.loanables,
         ...locales.fr.forms,
+        cars: locales.fr.cars,
         titles: locales.fr.titles,
       },
     },

@@ -1,3 +1,4 @@
+import cars from './cars';
 import owners from './owners';
 
 export default {
@@ -13,12 +14,7 @@ export default {
     },
     'créer un véhicule': 'créer un véhicule',
     '{count} véhicule sélectionné': 'aucun véhicule sélectionné | 1 véhicule sélectionné | {count} véhicules sélectionnés',
-    engines: {
-      fuel: 'essence',
-      diesel: 'diesel',
-      electric: 'électrique',
-      hybrid: 'hybride',
-    },
+    engines: cars.fr.engines,
     fields: {
       id: 'ID',
       bike_type: 'type de vélo',
@@ -62,10 +58,7 @@ export default {
       small: 'petit',
       kid: 'enfant',
     },
-    transmission_modes: {
-      automatic: 'automatique',
-      manual: 'manuelle',
-    },
+    transmission_modes: cars.fr.transmission_modes,
     types: {
       bike: 'vélo',
       car: 'voiture',
