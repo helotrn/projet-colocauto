@@ -123,13 +123,21 @@ export default {
         if (e.request) {
           switch (e.request.status) {
             case 401:
-            default:
               this.$store.commit('addNotification', {
                 content: "Nom d'utilisateur ou mot de passe invalide.",
                 title: 'Erreur de connexion.',
                 variant: 'danger',
                 type: 'login',
               });
+              break;
+            default:
+              this.$store.commit('addNotification', {
+                content: `Erreur de communication avec le serveur. (${e.message})`,
+                title: 'Erreur de connexion.',
+                variant: 'danger',
+                type: 'login',
+              });
+              break;
           }
         }
       }
