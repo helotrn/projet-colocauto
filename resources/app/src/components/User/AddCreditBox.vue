@@ -11,7 +11,7 @@
         </p>
 
         <p class="user-add-credit-box__balance__cost">
-          coûtera {{ amountWithFee | currency }}
+          coûtera {{ amountWithFeeAndTaxes | currency }}
           <span class="no-break">
             avec les frais ({{ onlyFee | currency }})
           </span>
@@ -109,7 +109,7 @@ export default {
 
       return parseFloat(this.selectedAmount, 10);
     },
-    amountWithFee() {
+    amountWithFeeAndTaxes() {
       return (this.amount * this.fee + this.feeConstant) * 1.14975;
     },
     newAmount() {
@@ -159,10 +159,10 @@ export default {
       return options;
     },
     onlyFee() {
-      return (this.amount * this.fee + this.feeConstant) - this.amount;
+      return this.amount * (this.fee - 1) + this.feeConstant;
     },
     onlyTaxes() {
-      return (this.amount * this.fee + this.feeConstant) * 1.14975 - this.amount - this.fee;
+      return (this.amount * this.fee + this.feeConstant) * 0.14975;
     },
     paymentMethods() {
       return this.user.payment_methods.map((pm) => {
