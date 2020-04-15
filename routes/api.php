@@ -41,6 +41,8 @@ Route::prefix('v1')->group(function () {
             RouteHelper::resource($entity);
         }
 
+        RouteHelper::retrieve('borrower');
+        RouteHelper::index('borrower');
         RouteHelper::retrieve('owner');
         RouteHelper::index('owner');
 

@@ -8,6 +8,7 @@ import global from './global';
 import stats from './stats';
 
 import bikes from './models/bikes';
+import borrowers from './models/borrowers';
 import cars from './models/cars';
 import communities from './models/communities';
 import files from './models/files';
@@ -207,6 +208,7 @@ export default new Vuex.Store({
   modules: {
     account,
     bikes,
+    borrowers,
     cars,
     communities,
     'community.view': CommunityView,

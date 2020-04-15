@@ -131,10 +131,16 @@ class LoanController extends RestController
                 'reason' => '',
                 'incidents' => [],
                 'actions' => [],
+                'community_id' => null,
+                'community' => null,
+                'borrower_id' => null,
+                'borrower' => null,
+                'loanable_id' => null,
+                'loanable' => null,
             ],
             'form' => [
                 'departure_at' => [
-                    'type' => 'date',
+                    'type' => 'datetime',
                 ],
                 'duration_in_minutes' => [
                     'type' => 'number',
@@ -150,6 +156,39 @@ class LoanController extends RestController
                 ],
                 'reason' => [
                   'type' => 'textarea',
+                ],
+                'community_id' => [
+                    'type' => 'relation',
+                    'query' => [
+                        'slug' => 'communities',
+                        'value' => 'id',
+                        'text' => 'name',
+                        'params' => [
+                            'fields' => 'id,name',
+                        ],
+                    ],
+                ],
+                'loanable_id' => [
+                    'type' => 'relation',
+                    'query' => [
+                        'slug' => 'loanables',
+                        'value' => 'id',
+                        'text' => 'name',
+                        'params' => [
+                            'fields' => 'id,name',
+                        ],
+                    ],
+                ],
+                'borrower_id' => [
+                    'type' => 'relation',
+                    'query' => [
+                        'slug' => 'borrowers',
+                        'value' => 'id',
+                        'text' => 'user.full_name',
+                        'params' => [
+                            'fields' => 'id,user.full_name',
+                        ],
+                    ],
                 ],
             ],
             'filters' => $this->model::$filterTypes,

@@ -1,4 +1,5 @@
 import borrowers from './borrowers';
+import communities from './communities';
 import loanables from './loanables';
 
 export default {
@@ -7,11 +8,15 @@ export default {
     emprunt: 'emprunt | emprunts',
     fields: {
       id: 'ID',
+      borrower_id: 'emprunteur',
       borrower: borrowers.fr.fields,
+      community_id: 'communauté',
+      community: communities.fr.fields,
       departure_at: 'départ',
       duration_in_minutes: 'durée (minutes)',
       estimated_distance: 'kilométrage à parcourir',
       estimated_price: 'prix estimé',
+      loanable_id: 'véhicule',
       loanable: loanables.fr.fields,
       loanable_type: 'type de véhicule',
       message_for_owner: 'message pour le propriétaire',
