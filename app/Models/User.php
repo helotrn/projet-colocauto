@@ -309,12 +309,12 @@ class User extends AuthenticatableBaseModel
                 ->where(
                     \DB::raw('unaccent(name)'),
                     'ILIKE',
-                    \DB::raw("unaccent(%$q%)")
+                    \DB::raw("unaccent('%$q%')")
                 )
                 ->orWhere(
                     \DB::raw('unaccent(last_name)'),
                     'ILIKE',
-                    \DB::raw("unaccent(%$q%)")
+                    \DB::raw("unaccent('%$q%')")
                 );
         });
     }

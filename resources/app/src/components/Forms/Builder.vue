@@ -5,8 +5,9 @@
       :name="key" :rules="def.rules" :type="def.type"
       :options="def.options" :disabled="disabled || def.disabled"
       :placeholder="placeholderOrLabel(key) | capitalize"
-      :query="def.query" :object-value="objectValue(key)" @relation="updateObject($event, key)"
       :initial-view="def.initial_view"
+      :query="def.query" :object-value="objectValue(key)"
+      @relation="updateObject($event, key)"
       v-model="item[key]" />
   </div>
 </template>
@@ -63,13 +64,17 @@ export default {
     },
     updateObject(selection, key) {
       const objectKey = key.replace('_id', '');
-      this.item[objectKey] = selection;
+      const newItem = { ...this.item };
+
+      newItem[objectKey] = selection;
 
       if (!selection) {
-        this.item[key] = null;
+        newItem[key] = null;
       } else {
-        this.item[key] = selection.id;
+        newItem[key] = selection.id;
       }
+
+      this.$emit('input', newItem);
     },
   },
 };

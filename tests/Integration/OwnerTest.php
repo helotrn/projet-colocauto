@@ -1,0 +1,64 @@
+<?php
+
+namespace Tests\Integration;
+
+use App\Models\Owner;
+use App\Models\User;
+use Tests\TestCase;
+
+class OwnerTest extends TestCase
+{
+    private static $getOwnerResponseStructure = [
+        'id',
+        'submitted_at',
+        'approved_at',
+    ];
+
+    public function testCreateOwners() {
+        $response = $this->json('POST', '/api/v1/owners', []);
+
+        $response->assertStatus(405);
+    }
+
+    public function testShowOwners() {
+        $owner = factory(Owner::class)->create(['user_id' => $this->user->id]);
+
+        $response = $this->json('GET', "/api/v1/owners/$owner->id");
+
+        $response->assertStatus(200)
+            ->assertJson(['id' => $owner->id])
+            ->assertJsonStructure(static::$getOwnerResponseStructure);
+    }
+
+    public function testUpdateOwners() {
+        $owner = factory(Owner::class)->create(['user_id' => $this->user->id]);
+
+        $approvedAt = now()->toIsoString();
+        $data = [
+            'approved_at' => $approvedAt,
+        ];
+
+        $response = $this->json('PUT', "/api/v1/owners/$owner->id", $data);
+
+        $response->assertStatus(405);
+    }
+
+    public function testDeleteOwners() {
+        $owner = factory(Owner::class)->create(['user_id' => $this->user->id]);
+
+        $response = $this->json('DELETE', "/api/v1/owners/$owner->id");
+        $response->assertStatus(405);
+    }
+
+    public function testListOwners() {
+        $owners = factory(Owner::class, 2)->create(['user_id' => $this->user->id])->map(function ($owner) {
+            return $owner->only(static::$getOwnerResponseStructure);
+        });
+
+        $response = $this->json('GET', '/api/v1/owners');
+
+        $response->assertStatus(200)
+            ->assertJson([ 'total' => 2 ])
+            ->assertJsonStructure($this->buildCollectionStructure(static::$getOwnerResponseStructure));
+    }
+}

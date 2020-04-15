@@ -16,7 +16,9 @@
             <div class="form__section">
               <h2>Informations</h2>
 
-              <forms-builder :definition="form.general" :item="item" entity="loanables" />
+              <forms-builder :definition="form.general" :item="item"
+                @input="item = $event"
+                entity="loanables" />
             </div>
 
             <div class="form__section" v-if="item.type === 'bike'">

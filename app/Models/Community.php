@@ -147,4 +147,17 @@ class Community extends BaseModel
             })->orWhere('type', '!=', 'private');
         });
     }
+
+    public function scopeSearch(Builder $query, $q) {
+        if (!$q) {
+            return $query;
+        }
+
+        return $query
+            ->where(
+                \DB::raw('unaccent(name)'),
+                'ILIKE',
+                \DB::raw("unaccent('%$q%')")
+            );
+    }
 }

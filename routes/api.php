@@ -24,7 +24,6 @@ Route::prefix('v1')->group(function () {
         foreach ([
             'action',
             'bike',
-            'bill',
             'car',
             'community',
             'file',
@@ -41,6 +40,9 @@ Route::prefix('v1')->group(function () {
         ] as $entity) {
             RouteHelper::resource($entity);
         }
+
+        RouteHelper::retrieve('owner');
+        RouteHelper::index('owner');
 
         Route::post('users/{user_id}/password', 'UserController@updatePassword');
         Route::get('users/{user_id}/communities', 'UserController@indexCommunities');
