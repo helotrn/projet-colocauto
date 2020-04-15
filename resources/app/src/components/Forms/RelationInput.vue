@@ -4,7 +4,7 @@
     :filterable="false"
     :value="convertedObjectValue" @input="emitInput">
     <template #no-options>
-      <span v-if="!q">Tapez quelque chose pour commencer à chercher...</span>
+      <span v-if="!q || q.length < 3">Tapez quelque chose pour commencer à chercher...</span>
       <span v-else-if="searchDebounce">Chargement...</span>
       <span v-else>Pas de résultat</span>
     </template>
@@ -113,21 +113,27 @@ export default {
   },
   watch: {
     q(q) {
-      if (this.searchAjax) {
-        this.searchAjax.abort();
+      if (!q || q.length < 3) {
+        this.$store.commit(`${this.slug}/search`, []);
       }
 
-      if (this.searchDebounce) {
-        clearTimeout(this.searchDebounce);
-      }
+      if (q && q.length >= 3) {
+        if (this.searchAjax) {
+          this.searchAjax.abort();
+        }
 
-      this.searchDebounce = setTimeout(() => {
-        this.searchDebounce = null;
-        this.$store.dispatch(`${this.slug}/search`, {
-          q,
-          params: this.params,
-        });
-      }, 250);
+        if (this.searchDebounce) {
+          clearTimeout(this.searchDebounce);
+        }
+
+        this.searchDebounce = setTimeout(() => {
+          this.searchDebounce = null;
+          this.$store.dispatch(`${this.slug}/search`, {
+            q,
+            params: this.params,
+          });
+        }, 250);
+      }
     },
   },
 };

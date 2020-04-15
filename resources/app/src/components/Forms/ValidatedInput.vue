@@ -75,8 +75,8 @@
         :placeholder="placeholder" :disabled="disabled"
         :state="getValidationState(validationContext)"
         :object-value="objectValue"
-        v-bind:value="value"
-        v-on:input="emitRelationChange"/>
+        :value="value"
+        @input="emitRelationChange"/>
       <b-form-input v-else-if="type === 'number'"
         :id="name" :name="name"
         type="number" :min="min" :max="max"

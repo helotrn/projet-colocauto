@@ -70,7 +70,7 @@ export default {
       return null;
     },
     markerPositionOrCenter() {
-      return this.markerPosition || this.center || { lat: 0, lng: 0 };
+      return this.markerPosition || this.center || { lat: 45.5342925, lng: -73.599039 };
     },
     stateClass() {
       if (this.state === null) {
