@@ -99,7 +99,7 @@ export default {
       this.$router.push(`/community/${view}`);
     },
     resetLoan() {
-      this.loan = { ...this.$store.state.loans.empty };
+      this.$store.commit('loans/item', { ...this.$store.state.loans.empty });
     },
     resetLoanables() {
       this.$store.dispatch(`${this.slug}/reset`);
