@@ -3,22 +3,27 @@
     <b-card class="shadow" bg="white" no-body>
       <router-link class="card-body" :to="`/loans/${this.loan.id}`">
         <b-row>
-          <b-col class="loan-info-box__image">
-            <div class="loan-info-box__image__user"
-              :style="{ backgroundImage: loanPersonImage }" />
+          <b-col lg="6">
+            <b-row>
+              <b-col class="loan-info-box__image">
+                <div class="loan-info-box__image__user"
+                  :style="{ backgroundImage: loanPersonImage }" />
 
-            <div class="loan-info-box__image__loanable">
-              <div :style="{ backgroundImage: loanableImage }" />
-            </div>
-          </b-col>
-          <b-col class="loan-info-box__name">
-            <span>
-              {{ otherUser.full_name }}<br>
-              {{ loan.loanable.name }}
-            </span>
+                <div class="loan-info-box__image__loanable">
+                  <div :style="{ backgroundImage: loanableImage }" />
+                </div>
+              </b-col>
+
+              <b-col class="loan-info-box__name">
+                <span>
+                  {{ otherUser.full_name }}<br>
+                  {{ loan.loanable.name }}
+                </span>
+              </b-col>
+            </b-row>
           </b-col>
 
-          <b-col class="loan-info-box__details">
+          <b-col class="loan-info-box__details mb-2 mt-2" lg>
             <span>
               <span v-if="multipleDays">
                 {{ loan.departure_at | date }} {{ loan.departure_at | time }}<br>
@@ -31,7 +36,7 @@
             </span>
           </b-col>
 
-          <b-col class="loan-info-box__actions">
+          <b-col class="loan-info-box__actions" lg>
             <div>
               <b-button size="sm" variant="success"
                 v-if="hasButton('accept') && userRole === 'owner'"
@@ -234,26 +239,31 @@ export default {
     font-size: 20px;
   }
 
-  &__details.col {
+  &__details.col-lg {
     flex-grow: 1;
     color: $black;
     font-size: 15px;
+    text-align: center;
   }
 
   &__name.col,
-  &__details.col,
-  &__actions.col {
+  &__details.col-lg,
+  &__actions.col-lg {
     display: flex;
     flex-direction: column;
     justify-content: space-around;
   }
 
-  &__actions.col {
-    flex: 0 1 220px;
+  &__actions.col-lg {
     text-align: right;
 
     .btn {
       margin-left: 16px;
+      margin-bottom: 8px;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
     }
   }
 }
