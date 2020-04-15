@@ -85,7 +85,12 @@
 
           <hr>
 
-          <dashboard-loan-history :loans="pastLoans" :borrower="user.borrower" />
+          <dashboard-loan-history
+            :past-loans="pastLoans.slice(0, 3)"
+            :upcoming-loans="upcomingLoans.slice(0, 3)"
+            :ongoing-loans="ongoingLoans.slice(0, 3)"
+            :waiting-loans="waitingLoans.slice(0, 3)"
+            :borrower="user.borrower" />
 
           <hr>
 
