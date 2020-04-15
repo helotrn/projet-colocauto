@@ -1,3 +1,3 @@
 <?php
 
-Route::get('/{any?}', 'StaticController@app')->where('any', '.*')->name('app');
+Route::get('/', 'StaticController@app')->where('any', '.*')->name('app');
