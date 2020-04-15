@@ -12,9 +12,6 @@
 
         <b-col lg="9" class="loan__actions">
           <div class="loan__actions__buttons text-right mb-3" v-if="!!item.id">
-            <b-button class="mb-3" variant="primary" :disabled="hasReachedStep('pre_payment')">
-              Modifier la réservation
-            </b-button>
             <b-button class="ml-3 mb-3" variant="danger" :disabled="hasReachedStep('takeover')"
               @click="cancelLoan">
               Annuler la réservation
