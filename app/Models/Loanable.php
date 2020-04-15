@@ -70,6 +70,8 @@ class Loanable extends BaseModel
             $dtz = new \DateTimeZone('America/Montreal');
             $calendar->setTimezone($tz);
 
+            $byDays = ['SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA'];
+
             switch ($model->availability_mode) {
                 case 'always':
                     $exceptions = json_decode($model->availability_json) ?: [];
@@ -93,7 +95,6 @@ class Loanable extends BaseModel
 
                     $recurrence = new RecurrenceRule();
                     $recurrence->setFreq(RecurrenceRule::FREQ_MONTHLY);
-                    $byDays = ['SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA'];
 
                     $exceptions = json_decode($model->availability_json) ?: [];
 
@@ -435,10 +436,12 @@ class Loanable extends BaseModel
                 ->setByDay(join(',', $exception->scope));
 
             $startDayEvent
+                ->setUseTimezone(true)
                 ->setDtStart($startOfDay)
                 ->setDtEnd($startOfPeriod)
                 ->setRecurrenceRule($recurrence);
             $endDayEvent
+                ->setUseTimezone(true)
                 ->setDtStart($endOfPeriod)
                 ->setDtEnd($endOfDay)
                 ->setRecurrenceRule($recurrence);
@@ -464,9 +467,11 @@ class Loanable extends BaseModel
                     = $model::getPeriodLimits($baseDate, $startTime, $endTime);
 
                 $startDayEvent
+                    ->setUseTimezone(true)
                     ->setDtStart($startOfDay)
                     ->setDtEnd($startOfPeriod);
                 $endDayEvent
+                    ->setUseTimezone(true)
                     ->setDtStart($endOfPeriod)
                     ->setDtEnd($endOfDay);
 
