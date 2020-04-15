@@ -1,11 +1,11 @@
 <template>
   <layout-page :name="`community-view-${view}`" :loading="!routeDataLoaded && view !== 'map'"
     :wide="view === 'map'">
-    <div :class="`community-view-${view}__form${view === 'map' ? ' container' : ''}`">
+    <div :class="mainDivClasses">
       <b-row>
         <b-col lg="3">
-          <b-card>
-            <div :class="`community-view-${view}__form__view mb-3 form-inline`">
+          <b-card :class="`community-view-${view}__form__sections`">
+            <div :class="`community-view-${view}__form__sections__view mb-3 form-inline`">
               <b-form-group label="Vue" label-for="view">
                 <b-form-select :value="view" @change="gotoView" name="view" id="view">
                   <b-form-select-option value="list">Liste</b-form-select-option>
@@ -16,7 +16,7 @@
 
             <hr>
 
-            <div class="`community-view-${view}__form__search`">
+            <div class="`community-view-${view}__form__sections__search`">
               <loan-search-form v-if="loan" :loan="loan"
                 :selected-loanable-types="selectedLoanableTypes"
                 @selectLoanableTypes="selectLoanableTypes"
@@ -27,6 +27,9 @@
                 @reset="reset"
                 @submit="testLoanables" />
             </div>
+          </b-card>
+          <b-card :class="`community-view-${view}__form__toggler`">
+            <b-button @click="searched = false">Modifier la recherche</b-button>
           </b-card>
         </b-col>
 
@@ -77,7 +80,17 @@ export default {
     this.setSelectedLoanableTypes();
   },
   computed: {
-    ...buildComputed('community.view', ['center', 'lastLoan', 'selectedLoanableTypes']),
+    ...buildComputed('community.view', [
+      'center',
+      'lastLoan',
+      'searched',
+      'selectedLoanableTypes',
+    ]),
+    mainDivClasses() {
+      const base = `community-view-${this.view}__form`;
+      return base + (this.searched ? ` ${base}--searched` : '')
+        + (this.view === 'map' ? ' container' : '');
+    },
     loan() {
       return this.$store.state.loans.item;
     },
@@ -137,6 +150,7 @@ export default {
         loan: this.loan,
         communityId: this.user.communities[0].id,
       });
+      this.searched = true;
     },
   },
   watch: {
@@ -149,11 +163,13 @@ export default {
         } else {
           this.lastLoanMerged = true;
 
-          if (this.$dayjs(this.lastLoan.departure_at).isAfter(this.$dayjs())) {
-            this.$store.commit('loans/item', {
-              ...val,
-              ...this.lastLoan,
-            });
+          if (this.lastLoan) {
+            if (this.$dayjs(this.lastLoan.departure_at).isAfter(this.$dayjs())) {
+              this.$store.commit('loans/item', {
+                ...val,
+                ...this.lastLoan,
+              });
+            }
           }
         }
       },
@@ -166,15 +182,47 @@ export default {
 </script>
 
 <style lang="scss">
+@import "~bootstrap/scss/mixins/breakpoints";
+
 .community-view {
   &-list, &-map {
     &__form {
       z-index: 20;
       position: relative;
 
-      &__view {
+      @include media-breakpoint-down(lg) {
+        &--searched &__sections.card {
+          max-height: 0;
+          overflow: hidden;
+
+          + .card {
+            max-height: 100px;
+          }
+        }
+      }
+
+      &__sections.card, &__sections.card + .card {
+        transition: max-height $one-tick ease-in-out;
+      }
+
+      &__sections.card + .card {
+        max-height: 0;
+        overflow: hidden;
+      }
+
+      &__toggler.card {
+        display: inline-block;
+      }
+
+      &__sections__view {
         .card-body {
           width: 100%;
+          display: flex;
+          flex-direction: column;
+        }
+
+        .form-group {
+          margin-bottom: 0;
         }
 
         .form-group label {
@@ -208,8 +256,13 @@ export default {
     }
 
     &__form {
-      padding-top: 45px;
-      padding-bottom: 45px;
+      padding-top: 15px;
+      padding-bottom: 15px;
+
+      @include media-breakpoint-up(lg) {
+        padding-top: 45px;
+        padding-bottom: 45px;
+      }
       pointer-events: none;
 
       .card {
@@ -220,7 +273,7 @@ export default {
           margin: 1.25rem;
         }
 
-        max-height: calc(100vh - #{$layout-navbar-height + $molotov-footer-height} - 92px);
+        max-height: calc(100vh - #{$layout-navbar-height + $molotov-footer-height} - 30px);
       }
     }
   }

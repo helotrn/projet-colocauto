@@ -3,6 +3,7 @@ export default {
   state: {
     center: null,
     lastLoan: {},
+    searched: false,
     selectedLoanableTypes: ['bike', 'trailer', 'car'],
   },
   mutations: {
@@ -11,6 +12,9 @@ export default {
     },
     lastLoan(state, lastLoan) {
       state.lastLoan = lastLoan;
+    },
+    searched(state, searched) {
+      state.searched = searched;
     },
     selectedLoanableTypes(state, selectedLoanableTypes) {
       state.selectedLoanableTypes = selectedLoanableTypes;

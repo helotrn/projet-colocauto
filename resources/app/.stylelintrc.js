@@ -5,7 +5,7 @@ module.exports = {
     'at-rule-blacklist': [],
     'order/properties-order': null,
     'selector-max-type': null,
-    'max-nesting-depth': 4,
+    'max-nesting-depth': 5,
     'selector-list-comma-newline-after': 'always-multi-line',
     'plugin/no-unsupported-browser-features': [
       'warn',
