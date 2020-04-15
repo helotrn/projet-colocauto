@@ -244,28 +244,41 @@ class Loanable extends BaseModel
             $allowedTypes[] = 'car';
         }
 
-        // A user has access to...
-        $communityIds = $user->communities->pluck('id');
-        return $query->where(function ($q) use ($communityIds) {
-            return $q
-                // ...loanables belonging to its accessible communities...
-                ->whereHas('community', function ($q2) use ($communityIds) {
-                    return $q2->whereIn(
-                        'communities.id',
-                        $communityIds
-                    );
-                })
-                // ...or belonging to owners of his accessible communities
-                // (communities through user through owner)
-                ->orWhereHas('owner', function ($q3) use ($communityIds) {
-                    return $q3->whereHas('user', function ($q4) use ($communityIds) {
-                        return $q4->whereHas('communities', function ($q5) use ($communityIds) {
-                            return $q5->whereIn('community_user.community_id', $communityIds);
+        $query = $query
+            // A user has access to...
+            ->where(function ($q) use ($user, $allowedTypes) {
+                $communityIds = $user->communities->pluck('id');
+
+                return $q->where(function ($q) use ($communityIds) {
+                    return $q
+                        // ...loanables belonging to its accessible communities...
+                        ->whereHas('community', function ($q) use ($communityIds) {
+                            return $q->whereIn(
+                                'communities.id',
+                                $communityIds
+                            );
+                        })
+                        // ...or belonging to owners of his accessible communities
+                        // (communities through user through owner)
+                        ->orWhereHas('owner', function ($q) use ($communityIds) {
+                            return $q->whereHas('user', function ($q) use ($communityIds) {
+                                return $q->whereHas('communities', function ($q) use ($communityIds) {
+                                    return $q->whereIn('community_user.community_id', $communityIds);
+                                });
+                            });
                         });
-                    });
-                });
-        // ...and cars are only allowed if the borrower profile is approved
-        })->whereIn('type', $allowedTypes);
+                // ...and cars are only allowed if the borrower profile is approved
+                })->whereIn('type', $allowedTypes);
+            });
+
+        if ($user->owner) {
+            // ...and his/her own cars even if the borrower profile is not approved
+            $query = $query->orWhereHas('owner', function ($q) use ($user) {
+                return $q->where('owners.id', $user->owner->id);
+            });
+        }
+
+        return $query;
     }
 
     public function scopeSearch(Builder $query, $q) {
