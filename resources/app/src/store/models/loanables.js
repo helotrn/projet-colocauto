@@ -44,7 +44,7 @@ export default new RestModule('loanables', {
 
     commit('data', newData);
   },
-  async test({ commit, state }, { loan, communityId }) {
+  async testAll({ commit, state }, { loan, communityId }) {
     try {
       const ajax = Promise.all([
         ...state.data.map(d => Vue.axios.get(`/${state.slug}/${d.id}/test`, {
@@ -61,6 +61,44 @@ export default new RestModule('loanables', {
         ...data[index].data,
         tested: true,
       }));
+
+      commit('data', newData);
+
+      commit('ajax', null);
+    } catch (e) {
+      commit('ajax', null);
+
+      const { request, response } = e;
+      commit('error', { request, response });
+
+      throw e;
+    }
+  },
+  async testOne({ commit, state }, { communityId, loan, loanableId }) {
+    try {
+      const ajax = Vue.axios.get(`/${state.slug}/${loanableId}/test`, {
+        params: {
+          ...loan,
+          loanable_id: loanableId,
+          community_id: communityId
+        },
+      });
+
+      commit('ajax', ajax);
+
+      const { data } = await ajax;
+
+      const newData = state.data.map((d, index) => {
+        if (d.id === loanableId) {
+          return {
+            ...d,
+            ...data,
+            tested: true,
+          };
+        }
+
+        return d;
+      });
 
       commit('data', newData);
 

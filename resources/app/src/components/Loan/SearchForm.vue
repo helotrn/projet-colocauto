@@ -34,12 +34,14 @@
           :placeholder="placeholderOrLabel('estimated_distance') | capitalize"
           v-model="loan.estimated_distance" />
 
-        <div class="form__buttons mb-3">
-          <b-button size="sm" type="submit" variant="primary" class="mr-3">
+        <div class="form__buttons">
+          <b-button size="sm" type="submit" variant="primary" class="mr-2 mb-2">
             Rechercher
           </b-button>
 
-          <b-button size="sm" type="reset" variant="outline-warning">Réinitialiser</b-button>
+          <b-button size="sm" type="reset" variant="outline-warning" class="mb-2">
+            Réinitialiser
+          </b-button>
         </div>
       </b-form>
     </validation-observer>

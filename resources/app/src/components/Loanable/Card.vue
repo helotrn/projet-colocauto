@@ -48,12 +48,11 @@
       <b-button variant="outline-primary" v-if="available" @click="$emit('select')">
         Demande d'emprunt
       </b-button>
-      <i v-else-if="!tested" v-b-tooltip.hover
-        title="Recherchez pour valider la disponibilité et le coût">
-        <b-button variant="outline-primary" disabled>
-          Demande d'emprunt
-        </b-button>
-      </i>
+      <b-button v-else-if="!tested" variant="outline-warning" v-b-tooltip.hover
+        :title="`Cliquez pour valider la disponibilité avec les paramètres` +
+          `d'emprunt sélectionnés`" @click="$emit('test')">
+        Valider la disponibilité
+      </b-button>
       <b-button variant="outline-info" v-else disabled>
         Indisponible
       </b-button>

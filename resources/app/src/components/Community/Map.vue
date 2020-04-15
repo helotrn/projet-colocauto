@@ -10,7 +10,7 @@
       :icon="iconFor(l)" @click="selectedLoanable = l"
       :clickable="l.available !== false" :position="l.position_google">
       <gmap-info-window v-if="selectedLoanable === l" @closeclick="selectLoanable = null">
-        <div style="width: 270px;">
+        <div class="info-box-content" style="width: 270px;">
           <loanable-card v-bind="l" @select="emitSelect(l)" />
         </div>
       </gmap-info-window>

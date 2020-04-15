@@ -24,21 +24,22 @@
                 :loanable-types="loanableTypes"
                 :form="loanForm"
                 @changed="resetLoanables"
-                @reset="resetLoan"
+                @reset="reset"
                 @submit="testLoanables" />
             </div>
           </b-card>
         </b-col>
 
         <b-col v-if="view === 'list'" lg="9">
-          <community-list v-if="!loading" :data="data" @select="selectLoanable" />
+          <community-list v-if="!loading" :data="data"
+            @select="selectLoanable" @test="testLoanable" />
           <layout-loading class="col-lg-9" v-else />
         </b-col>
       </b-row>
     </div>
 
     <community-map v-if="view === 'map'" :data="data" :communities="user.communities"
-      @select="selectLoanable" />
+      @test="testLoanable" @select="selectLoanable" />
   </layout-page>
 </template>
 
@@ -76,7 +77,7 @@ export default {
     this.setSelectedLoanableTypes();
   },
   computed: {
-    ...buildComputed('community.view', ['lastLoan', 'selectedLoanableTypes']),
+    ...buildComputed('community.view', ['center', 'lastLoan', 'selectedLoanableTypes']),
     loan() {
       return this.$store.state.loans.item;
     },
@@ -98,8 +99,9 @@ export default {
     gotoView(view) {
       this.$router.push(`/community/${view}`);
     },
-    resetLoan() {
+    reset() {
       this.$store.commit('loans/item', { ...this.$store.state.loans.empty });
+      this.selectedLoanableTypes = ['bike', 'trailer', 'car'];
     },
     resetLoanables() {
       this.$store.dispatch(`${this.slug}/reset`);
@@ -123,8 +125,15 @@ export default {
         value: this.selectedLoanableTypes.join(','),
       });
     },
+    async testLoanable(loanable) {
+      await this.$store.dispatch(`${this.slug}/testOne`, {
+        loanableId: loanable.id,
+        loan: this.loan,
+        communityId: this.user.communities[0].id,
+      });
+    },
     async testLoanables() {
-      await this.$store.dispatch(`${this.slug}/test`, {
+      await this.$store.dispatch(`${this.slug}/testAll`, {
         loan: this.loan,
         communityId: this.user.communities[0].id,
       });
