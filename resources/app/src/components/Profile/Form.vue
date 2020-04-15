@@ -81,6 +81,7 @@
               :label="$t('fields.date_of_birth') | capitalize"
               :rules="{ required: true }" type="date" initial-view="year"
               :placeholder="placeholderOrLabel('date_of_birth') | capitalize"
+              :open-date="openDate"
               v-model="user.date_of_birth" />
           </b-col>
         </b-row>
@@ -179,6 +180,7 @@ export default {
   data() {
     return {
       isPerson: true,
+      openDate: new Date('2001-01-01'),
     };
   },
   i18n: {

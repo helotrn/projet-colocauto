@@ -80,7 +80,7 @@
 
         <b-row>
           <b-col>
-            <loanable-exceptions
+            <loanable-exceptions :mode="loanable.availability_mode"
               :exceptions="exceptions" @input="exceptions = $event" />
           </b-col>
         </b-row>
@@ -144,7 +144,7 @@ export default {
   methods: {
     addException() {
       this.exceptions = [...this.exceptions, {
-        available: true,
+        available: this.loanable.availability_mode === 'never',
         type: null,
         scope: [],
         period: '00:00-23:59',

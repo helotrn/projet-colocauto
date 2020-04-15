@@ -9,7 +9,7 @@
       <b-col class="exceptions__row__available">
         <b-select :value="exception.available"
           @change="emitChange(exception, 'available', $event)">
-          <option :value="true">Rendre disponible</option>
+          <option :value="true" v-if="mode !== 'always'">Rendre disponible</option>
           <option :value="false">Rendre indisponible</option>
         </b-select>
       </b-col>
@@ -42,6 +42,7 @@
         <div v-if="exception.type === 'dates'"  class="exceptions__row__type__calendar">
           <forms-date-picker inline class="mt-3"
             :disabled-dates="selectedDates(exception.scope)"
+            :open-date="firstSelectedDate(selectedDates(exception.scope))"
             @input="selectDate($event, exception)" />
         </div>
       </b-col>
@@ -85,6 +86,10 @@ export default {
       type: Array,
       required: true,
     },
+    mode: {
+      type: String,
+      require: true,
+    },
   },
   methods: {
     emitChange(target, key, value) {
@@ -114,6 +119,9 @@ export default {
     },
     emitPeriodChange(target, event) {
       this.emitChange(target, 'period', event.target.value);
+    },
+    firstSelectedDate({ dates }) {
+      return dates.length > 0 ? dates[0] : new Date();
     },
     removeDate(date, exception) {
       const dates = [...exception.scope];

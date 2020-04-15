@@ -63,7 +63,7 @@ export default {
       type: Date,
       required: false,
       default() {
-        return new Date('2001-01-01');
+        return new Date();
       },
     },
     selected: {
