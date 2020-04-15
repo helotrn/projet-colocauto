@@ -72,6 +72,17 @@ class Loanable extends BaseModel
 
             switch ($model->availability_mode) {
                 case 'always':
+                    $exceptions = json_decode($model->availability_json) ?: [];
+
+                    foreach ($exceptions as $exception) {
+                        switch ($exception->type) {
+                            case 'dates':
+                                static::addDates($model, $exception, $calendar);
+                                break;
+                            default:
+                                break;
+                        }
+                    }
                     break;
                 case 'never':
                 default:
@@ -434,6 +445,40 @@ class Loanable extends BaseModel
 
             $calendar->addComponent($startDayEvent);
             $calendar->addComponent($endDayEvent);
+        }
+    }
+
+    protected static function addDates(&$model, &$exception, &$calendar) {
+        foreach ($exception->scope as $date) {
+            $baseDate = new Carbon($date, new \DateTimeZone('America/Montreal'));
+
+            if ($exception->period !== '00:00-23:59') {
+                $startDayEvent = new Event();
+                $endDayEvent = new Event();
+
+                [$startTime, $endTime] = explode('-', $exception->period);
+                $startTime = explode(':', $startTime);
+                $endTime = explode(':', $endTime);
+
+                [$startOfDay, $startOfPeriod, $endOfPeriod, $endOfDay]
+                    = $model::getPeriodLimits($baseDate, $startTime, $endTime);
+
+                $startDayEvent
+                    ->setDtStart($startOfDay)
+                    ->setDtEnd($startOfPeriod);
+                $endDayEvent
+                    ->setDtStart($endOfPeriod)
+                    ->setDtEnd($endOfDay);
+
+                $calendar->addComponent($startDayEvent);
+                $calendar->addComponent($endDayEvent);
+            } else {
+                $event = (new Event())
+                    ->setDtStart($baseDate)
+                    ->setDtEnd($baseDate)
+                    ->setNoTime(true);
+                $calendar->addComponent($event);
+            }
         }
     }
 }
