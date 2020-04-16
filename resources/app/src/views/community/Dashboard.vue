@@ -68,6 +68,8 @@ export default {
 </script>
 
 <style lang="scss">
+@import "~bootstrap/scss/mixins/breakpoints";
+
 .page.community {
   .page__section h2 {
     margin-bottom: 40px;
@@ -97,19 +99,30 @@ export default {
   }
 
   .community__header {
-    height: 450px;
+    height: 300px;
     background-image: url("/img-tetes.png");
     background-color: $locomotion-dark-green;
-    background-size: contain;
+    background-size: auto 300px;
     background-repeat: no-repeat;
     background-position: bottom -50px right -50px;
 
     h1 {
-      padding-top: 110px;
-      padding-left: 90px;
-      font-size: 60px;
       font-weight: normal;
       color: $white;
+      padding-top: 55px;
+      padding-left: 45px;
+      font-size: 40px;
+
+      @include media-breakpoint-up(lg) {
+        padding-top: 110px;
+        padding-left: 90px;
+        font-size: 60px;
+      }
+    }
+
+    @include media-breakpoint-up(lg) {
+      height: 450px;
+      background-size: auto 450px;
     }
   }
 }
