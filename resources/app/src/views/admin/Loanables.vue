@@ -44,14 +44,9 @@
             </span>
           </template>
           <template v-slot:cell(actions)="row">
-            <div class="text-right">
-              <b-button size="sm" variant="primary" :to="`/admin/${slug}/${row.item.id}`">
-                {{ $t('modifier') | capitalize }}
-              </b-button>
-              <b-button size="sm" class="mr-1" variant="danger">
-                {{ $t('supprimer') | capitalize }}
-              </b-button>
-            </div>
+            <admin-list-actions :row="row" :slug="slug"
+              @restore="restoreItemModal(row.item)"
+              @destroy="destroyItemModal(row.item)" />
           </template>
         </b-table>
       </b-col>
@@ -68,6 +63,7 @@
 
 <script>
 import AdminFilters from '@/components/Admin/Filters.vue';
+import AdminListActions from '@/components/Admin/ListActions.vue';
 
 import DataRouteGuards from '@/mixins/DataRouteGuards';
 import ListMixin from '@/mixins/ListMixin';
@@ -76,7 +72,10 @@ import locales from '@/locales';
 export default {
   name: 'AdminLoanables',
   mixins: [DataRouteGuards, ListMixin],
-  components: { AdminFilters },
+  components: {
+    AdminFilters,
+    AdminListActions,
+  },
   data() {
     return {
       table: [
@@ -87,6 +86,11 @@ export default {
         { key: 'actions', label: 'Actions', tdClass: 'table__cell__actions' },
       ],
     };
+  },
+  methods: {
+    itemLabel(item) {
+      return `${item.name} (${item.id})`;
+    },
   },
   i18n: {
     messages: {

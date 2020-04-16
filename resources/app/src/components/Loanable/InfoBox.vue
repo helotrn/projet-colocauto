@@ -17,7 +17,7 @@
             </b-button>
 
             <b-button class="ml-3 mb-3"
-              size="sm" variant="outline-dark" v-if="hasButton('unavailable24h')"
+              size="sm" variant="outline-dark" v-if="false && hasButton('unavailable24h')"
               @click="makeLoanableUnavailableFor24h">
               Rendre indisponible (24h)
             </b-button>
