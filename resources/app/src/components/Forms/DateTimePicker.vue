@@ -1,17 +1,21 @@
 <template>
-  <div class="forms-date-time-picker">
-    <forms-date-picker
-      :disabled="disabled"
-      :disabled-dates="disabledDates"
-      :value="dateValue"
-      @input="emitChangeDate" />
+  <b-row no-gutter class="forms-date-time-picker">
+    <b-col col lg="12">
+      <forms-date-picker
+        :disabled="disabled"
+        :disabled-dates="disabledDates"
+        :value="dateValue"
+        @input="emitChangeDate" />
+    </b-col>
 
-    <timeselector :h24="true"
-      :disabled="disabled"
-      :disable="disabledTimes"
-      :displayFormat="'HH[h]mm'"
-      :value="timeValue" @input="emitChangeTime" />
-  </div>
+    <b-col col lg="12">
+      <timeselector :h24="true"
+        :disabled="disabled"
+        :disable="disabledTimes"
+        :displayFormat="'HH[h]mm'"
+        :value="timeValue" @input="emitChangeTime" />
+    </b-col>
+  </b-row>
 </template>
 
 <script>

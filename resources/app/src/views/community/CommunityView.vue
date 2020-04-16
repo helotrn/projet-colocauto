@@ -5,7 +5,7 @@
       <b-row>
         <b-col lg="3">
           <b-card :class="`community-view-${view}__form__sections`">
-            <div :class="`community-view-${view}__form__sections__view mb-3 form-inline`">
+            <div :class="`community-view-${view}__form__sections__view mb-3`">
               <b-form-group label="Vue" label-for="view">
                 <b-form-select :value="view" @change="gotoView" name="view" id="view">
                   <b-form-select-option value="list">Liste</b-form-select-option>
@@ -16,7 +16,7 @@
 
             <hr>
 
-            <div class="`community-view-${view}__form__sections__search`">
+            <div :class="`community-view-${view}__form__sections__search`">
               <loan-search-form v-if="loan" :loan="loan"
                 :selected-loanable-types="selectedLoanableTypes"
                 @selectLoanableTypes="selectLoanableTypes"
@@ -256,6 +256,8 @@ export default {
     }
 
     &__form {
+      max-height: calc(100vh - #{$layout-navbar-height + $molotov-footer-height} - 1px);
+
       padding-top: 15px;
       padding-bottom: 15px;
 
@@ -274,6 +276,30 @@ export default {
         }
 
         max-height: calc(100vh - #{$layout-navbar-height + $molotov-footer-height} - 30px);
+      }
+
+      &__sections {
+        &__view {
+          height: 34px;
+
+          .form-group {
+            display: flex;
+          }
+
+          .form-group label {
+            line-height: 34px;
+          }
+        }
+
+        hr {
+          height: 1px;
+        }
+
+        &__search {
+          max-height: calc(100vh - #{$layout-navbar-height + $molotov-footer-height} - 40px - 50px - 34px - 30px);
+          overflow: auto;
+          overflow-x: hidden;
+        }
       }
     }
   }
