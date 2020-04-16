@@ -65,6 +65,10 @@ class Bike extends Loanable
         return $this->morphOne(Image::class, 'imageable');
     }
 
+    public function loans() {
+        return $this->hasMany(Loan::class, 'loanable_id');
+    }
+
     public function padlock() {
         return $this->hasOne(Padlock::class, 'loanable_id');
     }

@@ -61,7 +61,20 @@ class Loanable extends BaseModel
     public static function boot() {
         parent::boot();
 
+        self::deleted(function ($model) {
+            $model->loans()->delete();
+        });
+
+        self::restored(function ($model) {
+            $model->loans()->restore();
+        });
+
         self::saved(function ($model) {
+            if (!$model->created_at) {
+                // Most likely deleting: skipping
+                return $model;
+            }
+
             $calendar = new Calendar("locomotion.app/api/loanables/{$model->id}.ics");
 
             $baseEvent = new Event();

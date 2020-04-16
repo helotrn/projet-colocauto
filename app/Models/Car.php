@@ -97,6 +97,10 @@ class Car extends Loanable
         return $this->morphOne(Image::class, 'imageable');
     }
 
+    public function loans() {
+        return $this->hasMany(Loan::class, 'loanable_id');
+    }
+
     public function padlock() {
         return $this->morphOne(Padlock::class, 'loanable')->where(\DB::raw('1 = 0'));
     }

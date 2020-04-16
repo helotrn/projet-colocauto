@@ -3,8 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\BaseRequest as Request;
-use App\Http\Requests\Loanable\TestRequest;
 use App\Http\Requests\Loanable\DestroyRequest;
+use App\Http\Requests\Loanable\TestRequest;
+use App\Http\Requests\Loanable\RestoreRequest;
 use App\Http\Requests\Bike\CreateRequest as BikeCreateRequest;
 use App\Http\Requests\Bike\UpdateRequest as BikeUpdateRequest;
 use App\Http\Requests\Car\CreateRequest as CarCreateRequest;
@@ -132,6 +133,22 @@ class LoanableController extends RestController
                 return $this->carController->destroy($request, $id);
             case 'trailer':
                 return $this->trailerController->destroy($request, $id);
+            default:
+                throw new \Exception('invalid loanable type');
+        }
+    }
+
+    public function restore(RestoreRequest $request, $id) {
+        $request->merge([ 'deleted_at' => '0001-01-01' ]);
+        $item = $this->repo->find($request, $id);
+
+        switch ($item->type) {
+            case 'bike':
+                return $this->bikeController->restore($request, $id);
+            case 'car':
+                return $this->carController->restore($request, $id);
+            case 'trailer':
+                return $this->trailerController->restore($request, $id);
             default:
                 throw new \Exception('invalid loanable type');
         }

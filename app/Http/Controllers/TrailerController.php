@@ -67,4 +67,14 @@ class TrailerController extends RestController
 
         return $response;
     }
+
+    public function restore(Request $request, $id) {
+        try {
+            $response = parent::validateAndRestore($request, $id);
+        } catch (ValidationException $e) {
+            return $this->respondWithErrors($e->errors(), $e->getMessage());
+        }
+
+        return $response;
+    }
 }
