@@ -73,41 +73,6 @@
               </b-row>
             </b-form>
           </validation-observer>
-
-          <div v-if="!!action.executed_at && action.status !== 'canceled'">
-            <hr>
-
-            <b-row>
-              <b-col lg="6">
-                <p>
-                  Cette information est-elle incorrecte?
-                </p>
-                <p>
-                  Pour la modifier, vous pouvez procéder
-                  à une "contestation". Par cette procédure, un membre de l'équipe Locomotion
-                  sera appelé à arbitrer la résolution du conflit entre l'emprunteur et le
-                  propriétaire.
-                </p>
-              </b-col>
-
-              <b-col lg="6">
-                <forms-validated-input
-                  id="comments_on_contestation" name="comments_on_contestation"
-                  type="textarea" :rows="3"
-                  label="Commentaires sur la contestation"
-                  placeholder="Commentaire sur la contestation"
-                  v-model="action.comments_on_contestation" />
-              </b-col>
-            </b-row>
-
-            <b-row class="loan-actions-takeover__buttons text-center">
-              <b-col>
-                <b-button size="sm" variant="outline-danger" @click="cancelAction">
-                  Contester
-                </b-button>
-              </b-col>
-            </b-row>
-          </div>
         </div>
         <div v-else-if="loan.loanable.has_padlock">
           <p>
@@ -115,26 +80,102 @@
             à temps pour la prise de possession.
           </p>
 
+          <validation-observer ref="observer" v-slot="{ passes }">
+            <b-form :novalidate="true" class="register-form__form"
+              @submit.stop.prevent="passes(completeAction)">
+              <b-row v-if="!action.executed_at">
+                <b-col>
+                  <p>Envoyez une photo de l'état du véhicule.</p>
+
+                  <forms-image-uploader
+                     label="Photo du tableau de bord"
+                     field="image"
+                     v-model="action.image" />
+
+                  <p><small>
+                    Cette photo est optionnelle mais permet à Locomotion de déterminer à quel
+                    moment un bris s'est produit, le cas échéant.
+                  </small></p>
+                </b-col>
+              </b-row>
+
+              <b-row class="loan-actions-takeover__buttons text-center"
+                v-if="!action.executed_at">
+                <b-col>
+                  <b-button type="submit" size="sm" variant="success" class="mr-3">
+                    Enregistrer
+                  </b-button>
+                </b-col>
+              </b-row>
+            </b-form>
+          </validation-observer>
+        </div>
+        <div v-else>
           <b-row v-if="!action.executed_at">
             <b-col>
-              <p>Envoyez une photo de l'état du véhicule.</p>
+              <p v-if="userRole === 'borrower'">
+                Demandez au propriétaire de récupérer le véhicule.
+              </p>
+              <p v-else>
+                L'emprunteur vous contactera pour arranger la prise de possession du véhicule.
+              </p>
+            </b-col>
+          </b-row>
+          <b-row v-else>
+            <b-col>
+              <p v-if="action.status !== 'canceled'">
+                La prise de possession a été effectuée.
+              </p>
+              <p v-else>
+                La prise de possession a été annulée.
+              </p>
+            </b-col>
+          </b-row>
 
-              <forms-image-uploader
-                label="Photo du tableau de bord"
-                field="image"
-                v-model="action.image" />
-
-              <p><small>
-                Cette photo est optionnelle mais permet à Locomotion de déterminer à quel
-                moment un bris s'est produit, le cas échéant.
-              </small></p>
+          <b-row class="loan-actions-takeover__buttons text-center"
+            v-if="!action.executed_at">
+            <b-col>
+              <b-button type="submit" size="sm" variant="success" class="mr-3"
+                @click="completeAction">
+                C'est fait!
+              </b-button>
             </b-col>
           </b-row>
         </div>
-        <div>
-          <p>
-            Demandez au propriétaire de récupérer le véhicule.
-          </p>
+
+        <div v-if="!!action.executed_at && action.status !== 'canceled'">
+          <hr>
+
+          <b-row>
+            <b-col lg="6">
+              <p>
+                Cette information est-elle incorrecte?
+              </p>
+              <p>
+                Pour la modifier, vous pouvez procéder
+                à une "contestation". Par cette procédure, un membre de l'équipe Locomotion
+                sera appelé à arbitrer la résolution du conflit entre l'emprunteur et le
+                propriétaire.
+              </p>
+            </b-col>
+
+            <b-col lg="6">
+              <forms-validated-input
+                id="comments_on_contestation" name="comments_on_contestation"
+                type="textarea" :rows="3"
+                label="Commentaires sur la contestation"
+                placeholder="Commentaire sur la contestation"
+                v-model="action.comments_on_contestation" />
+            </b-col>
+          </b-row>
+
+          <b-row class="loan-actions-takeover__buttons text-center">
+            <b-col>
+              <b-button size="sm" variant="outline-danger" @click="cancelAction">
+                Contester
+              </b-button>
+            </b-col>
+          </b-row>
         </div>
       </b-collapse>
     </b-card-body>

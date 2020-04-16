@@ -32,10 +32,20 @@
             <p>
               Vous pouvez maintenant valider les données de la course.
             </p>
+            <p>
+              L'emprunteur sera invité à faire de même avant d'effectuer le paiement final.
+            </p>
           </div>
           <div v-if="userRole === 'borrower'" class="text-center">
             <p>
-              Le prix final de la course s'élève à {{ loan.actual_price | currency }}.
+              Vous pouvez maintenant valider les données de la course.
+            </p>
+            <p>
+              Le prix final s'élève à {{ loan.actual_price | currency }}.
+            </p>
+
+            <p>
+              Le propriétaire sera invité à faire de même.
             </p>
 
             <p>

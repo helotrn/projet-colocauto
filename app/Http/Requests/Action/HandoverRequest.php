@@ -8,13 +8,20 @@ use App\Models\Loan;
 class HandoverRequest extends BaseRequest
 {
     public function rules() {
-        return [
-            'fuel_end' => 'required:image',
-            'mileage_end' => [
-                'required:image',
-                'integer'
-            ],
-        ];
+        $loanId = $this->route('loan_id');
+        $loan = Loan::accessibleBy($this->user())->find($loanId);
+
+        if ($loan->loanable->type === 'car') {
+            return [
+                'fuel_end' => 'required',
+                'mileage_end' => [
+                    'required',
+                    'integer'
+                ],
+            ];
+        }
+
+        return [];
     }
 
     public function authorize() {
