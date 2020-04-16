@@ -102,7 +102,7 @@
           </b-col>
           <b-col lg="6">
             <h2 class="page__section__title">
-              Plus de 200 participant-e-s!
+              Plus de 200 <span class="no-break">participant-e-s!</span>
             </h2>
 
             <p>
