@@ -90,8 +90,8 @@
         type="text" v-mask="mask" masked
         :placeholder="placeholder" :disabled="disabled"
         :state="getValidationState(validationContext)"
-        v-bind:value="value"
-        v-on:input="emitChange"/>
+        :value="value"
+        @input="emitChange"/>
       <b-form-input v-else
         :id="name" :name="name"
         type="text"

@@ -20,7 +20,9 @@
         Remplissez vos informations de profil Locomotion.
       </p>
 
-      <profile-form v-if="item" :user="item" :loading="loading" @submit="submitAndReload" />
+      <profile-form v-if="item"
+        :form="form" :user="item" :loading="loading"
+        @submit="submitAndReload" />
       <layout-loading v-else />
     </div>
 

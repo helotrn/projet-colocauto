@@ -385,6 +385,14 @@ class UserController extends RestController
 
         $modelRules = $this->model->getRules('template', $request->user());
         foreach ($modelRules as $field => $rules) {
+            if (!isset($template['form']['general'][$field])) {
+                continue;
+            }
+            $template['form']['general'][$field]['rules'] = $this->formatRules($rules);
+        }
+
+        $borrowerRules = Borrower::getRules('template', $request->user());
+        foreach ($modelRules as $field => $rules) {
             if (!isset($template['form']['borrower'][$field])) {
                 continue;
             }

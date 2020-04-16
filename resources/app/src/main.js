@@ -66,8 +66,26 @@ Vue.component('layout-page', LayoutPage);
 Object.keys(rules).forEach((rule) => {
   extend(rule, rules[rule]);
 });
+extend('nullable', () => true); // More of a backend concern, just skip through
+extend('date', (v) => {
+  const parsedDate = new Date(v);
+  return !Number.isNaN(parsedDate.getTime());
+});
 extend('present', v => v !== null && v !== undefined);
 extend('boolean', v => typeof v === 'boolean');
+extend('before', (v, args) => {
+  switch (args) {
+    case 'today': {
+      const parsedDate = new Date(v);
+      if (!Number.isNaN(parsedDate.getTime())) {
+        return parsedDate < new Date();
+      }
+      return false;
+    }
+    default:
+      return true; // Pass to backend if handling cannot be done in frontend
+  }
+});
 
 localize('fr', fr);
 

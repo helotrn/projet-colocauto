@@ -1,6 +1,6 @@
 <template>
   <div class="profile-account" v-if="item">
-    <profile-form :loading="loading" :user="item"
+    <profile-form :loading="loading" :user="item" :form="form"
       @reset="reset" :changed="changed" show-reset
       @submit="submit" v-if="item" />
   </div>

@@ -22,23 +22,25 @@ class User extends AuthenticatableBaseModel
     use HasApiTokens, Notifiable, SoftDeletes;
 
     public static $rules = [
-        'address' => 'nullable',
-        'date_of_birth' => 'nullable|date',
+        'address' => ['nullable'],
+        'date_of_birth' => [
+            'nullable',
+            'date',
+            'before:today'
+        ],
         'description' => 'nullable',
         'email' => 'email',
         'google_id' => 'nullable',
         'is_smart_phone' => 'nullable|boolean',
         'last_name' => 'nullable',
-        'name' => 'nullable',
+        'name' => ['nullable'],
         'other_phone' => [
           'nullable',
         ],
         'password' => [
           'min:8',
         ],
-        'phone' => [
-          'nullable',
-        ],
+        'phone' => ['nullable'],
         'postal_code' => [
           'nullable',
           'regex:/^$|^[a-zA-Z][0-9][a-zA-Z]\s*[0-9][a-zA-Z][0-9]$/',
@@ -52,18 +54,26 @@ class User extends AuthenticatableBaseModel
     ];
 
     public static function getRules($action = '', $auth = null) {
-        if ($action === 'submit') {
-            return array_merge(static::$rules, [
-                'address' => 'required',
-                'date_of_birth' => 'required',
-                'first_name' => 'required',
-                'last_name' => 'required',
-                'postal_code' => 'required',
-                'telephone' => 'required',
-            ]);
+        switch ($action) {
+            case 'submit':
+                return array_merge(static::$rules, [
+                    'address' => 'required',
+                    'date_of_birth' => 'required',
+                    'first_name' => 'required',
+                    'last_name' => 'required',
+                    'postal_code' => 'required',
+                    'telephone' => 'required',
+                ]);
+            case 'template':
+                $rules = parent::getRules($action, $auth);
+                $rules['name'][] = 'required';
+                $rules['phone'][] = 'required';
+                $rules['address'][] = 'required';
+                $rules['postal_code'][] = 'required';
+                return $rules;
+            default:
+                return parent::getRules($action, $auth);
         }
-
-        return parent::getRules($action, $auth);
     }
 
     public static $transformer = UserTransformer::class;

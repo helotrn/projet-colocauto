@@ -1,7 +1,7 @@
 <template>
   <div class="profile-form">
     <validation-observer ref="observer" v-slot="{ passes }">
-      <b-form :novalidate="true" class="profile-form__form form"
+      <b-form novalidate class="profile-form__form form"
         @submit.stop.prevent="passes(submit)">
         <b-row>
           <b-col lg="4">
@@ -13,7 +13,7 @@
             <b-row>
               <b-col lg="6">
                 <forms-validated-input name="name" :label="$t('fields.name') | capitalize"
-                  :rules="{ required: true }" type="text" @keypress.native="onlyChars"
+                  :rules="form.general.name.rules" type="text" @keypress.native="onlyChars"
                   :placeholder="placeholderOrLabel('name') | capitalize"
                   v-model="user.name" />
               </b-col>
@@ -21,7 +21,7 @@
               <b-col lg="6">
                 <forms-validated-input name="last_name"
                   :label="$t('fields.last_name') | capitalize"
-                  :rules="{ required: true }" type="text"
+                  :rules="form.general.last_name.rules" type="text"
                   :placeholder="placeholderOrLabel('last_name') | capitalize"
                   v-model="user.last_name" />
               </b-col>
@@ -51,10 +51,7 @@
         <b-row>
           <b-col md="8">
             <forms-validated-input name="phone" :label="$t('fields.phone') | capitalize"
-              :rules="{
-                required: true,
-                regex:/^\([1-9][0-9]{2}\) [1-9][0-9]{2}-[0-9]{4}$/,
-              }" type="text"
+              :rules="form.general.phone.rules" type="text"
               mask="(###) ###-####"
               :placeholder="placeholderOrLabel('phone') | capitalize"
               v-model="user.phone" />
@@ -79,9 +76,9 @@
           <b-col>
             <forms-validated-input name="date_of_birth"
               :label="$t('fields.date_of_birth') | capitalize"
-              :rules="{ required: true }" type="date" initial-view="year"
+              :rules="{ date: true, required: true }" type="date" initial-view="year"
               :placeholder="placeholderOrLabel('date_of_birth') | capitalize"
-              :open-date="openDate"
+              :open-date="openDate" :disabled-dates="datesInTheFuture"
               v-model="user.date_of_birth" />
           </b-col>
         </b-row>
@@ -89,7 +86,7 @@
         <b-row>
           <b-col>
             <forms-validated-input name="address" :label="$t('fields.address') | capitalize"
-              :rules="{ required: true }" type="text"
+              :rules="form.general.address.rules" type="text"
               :placeholder="placeholderOrLabel('address') | capitalize"
               v-model="user.address" />
           </b-col>
@@ -112,9 +109,7 @@
           <b-col>
             <forms-validated-input name="other_phone"
               :label="$t('fields.other_phone') | capitalize"
-              :rules="{
-                regex:/^\([1-9][0-9]{2}\) [1-9][0-9]{2}-[0-9]{4}$/,
-              }" type="text" mask="(###) ###-####"
+              :rules="form.general.other_phone.rules" type="text" mask="(###) ###-####"
               :placeholder="placeholderOrLabel('other_phone') | capitalize"
               v-model="user.other_phone" />
           </b-col>
@@ -159,6 +154,10 @@ export default {
       required: false,
       default: false,
     },
+    form: {
+      type: Object,
+      required: true,
+    },
     hideButtons: {
       type: Boolean,
       required: false,
@@ -181,6 +180,9 @@ export default {
     return {
       isPerson: true,
       openDate: new Date('2001-01-01'),
+      datesInTheFuture: {
+        from: new Date(),
+      },
     };
   },
   i18n: {
