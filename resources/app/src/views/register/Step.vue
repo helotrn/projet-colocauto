@@ -35,7 +35,8 @@
 
       <div v-if="item && item.communities">
         <community-proof-form v-for="community in item.communities"
-          :key="community.id" :community="community" :loading="!hasAllProofs"
+          :key="community.id" :community="community"
+          :loading="!hasAllProofs"
           @submit="submitCommunityProof" />
       </div>
       <layout-loading v-else />

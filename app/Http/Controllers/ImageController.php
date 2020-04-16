@@ -6,6 +6,7 @@ use App\Models\Image;
 use App\Repositories\ImageRepository;
 use App\Http\Requests\BaseRequest as Request;
 use Intervention\Image\Exception\NotReadableException;
+use Intervention\Image\Exception\NotSupportedException;
 use Intervention\Image\ImageManager as ImageManager;
 
 class ImageController extends FileController
@@ -29,9 +30,14 @@ class ImageController extends FileController
         try {
             $image = $manager->make($file);
         } catch (NotReadableException $e) {
-            return null;
+            return $this->respondWithMessage('Fichier illisible.', 422);
         }
-        Image::store($uri . DIRECTORY_SEPARATOR . $filename, $image);
+
+        try {
+            Image::store($uri . DIRECTORY_SEPARATOR . $filename, $image);
+        } catch (NotSupportedException $e) {
+            return $this->respondWithMessage('Format non supporté.', 422);
+        }
 
         $request = new Request();
         $request->merge([

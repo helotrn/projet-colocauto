@@ -1,15 +1,22 @@
 <template>
   <b-form-group class="forms-image-uploader" :label="label" :label-for="field">
-    <div class="mb-3" v-if="!value">
-      <b-form-file v-bind:value="value" :state="Boolean(value)" :id="field"
+    <div v-if="loading">
+      <img src="/loading.svg">
+    </div>
+    <div class="mb-3" v-else-if="!value">
+      <b-form-file :value="value" :state="validationState" :id="field"
         :ref="`${field}fileinput`" :placeholder="placeholder"
-        :name="field" :accept="accept.join(',')"
+        :name="field" :accept="accept.join(',')" browse-text="Sélectionner"
+        drop-placeholder="Déposer l'image ici..."
         @change="uploadImage($event.target.name, $event.target.files)"/>
+      <div class="invalid-feedback" v-if="errors">
+        {{ errors.message }}
+      </div>
     </div>
     <div v-else>
       <figure class="preview">
         <img v-if="value.sizes" :src="value.sizes.thumbnail" >
-        <img v-else src="/loading.gif" >
+        <img src="/loading.svg" v-else>
 
         <figcaption>{{ value.original_filename }}</figcaption>
       </figure>
@@ -23,14 +30,9 @@
 <script>
 export default {
   name: 'FormsImageUploader',
-  data() {
-    return {
-      errors: [],
-    };
-  },
   props: {
     accept: {
-      default: () => ['image/png', 'image/jpg', 'image/jpeg'],
+      default: () => ['*.png', '*.jpg', '*.jpeg', 'image/png', 'image/jpg', 'image/jpeg'],
       type: Array,
     },
     field: {
@@ -53,6 +55,17 @@ export default {
       type: Object,
       require: false,
       default: null,
+    },
+  },
+  computed: {
+    errors() {
+      return this.$store.state.images.errors;
+    },
+    loading() {
+      return !!this.$store.state.images.ajax;
+    },
+    validationState() {
+      return !this.errors && Boolean(this.value);
     },
   },
   methods: {

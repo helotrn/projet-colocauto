@@ -1,10 +1,17 @@
 <template>
   <b-form-group class="forms-file-uploader" :label="label" :label-for="field">
-    <div class="mb-3" v-if="!value">
-      <b-form-file v-bind:value="value" :state="Boolean(value)" :id="field"
+    <div v-if="loading">
+      <img src="/loading.svg">
+    </div>
+    <div class="mb-3" v-else-if="!value">
+      <b-form-file :value="value" :state="validationState" :id="field"
         :ref="`${field}fileinput`" :placeholder="placeholder"
-        :name="field" :accept="accept.join(',')"
+        :name="field" :accept="accept.join(',')" browse-text="Sélectionner"
+        drop-placeholder="Déposer le fichier ici..."
         @change="uploadFile($event.target.name, $event.target.files)"/>
+      <div class="invalid-feedback" v-if="errors">
+        {{ errors.message }}
+      </div>
     </div>
     <div v-else>
       <figure class="preview">
@@ -22,14 +29,9 @@
 <script>
 export default {
   name: 'FormsFileUploader',
-  data() {
-    return {
-      errors: [],
-    };
-  },
   props: {
     accept: {
-      default: () => ['application/pdf'],
+      default: () => ['*.pdf', 'application/pdf'],
       type: Array,
     },
     field: {
@@ -53,6 +55,17 @@ export default {
       type: Object,
       require: false,
       default: null,
+    },
+  },
+  computed: {
+    errors() {
+      return this.$store.state.images.errors;
+    },
+    loading() {
+      return !!this.$store.state.images.ajax;
+    },
+    validationState() {
+      return !this.errors && Boolean(this.value);
     },
   },
   methods: {

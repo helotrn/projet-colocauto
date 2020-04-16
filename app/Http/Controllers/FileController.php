@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\File;
 use App\Repositories\FileRepository;
 use App\Http\Requests\BaseRequest as Request;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\File as IlluminateFile;
 
 class FileController extends RestController
@@ -32,6 +33,10 @@ class FileController extends RestController
         }
 
         $fileData = $this->upload($file, $field);
+
+        if (is_a($fileData, JsonResponse::class)) {
+            return $fileData;
+        }
 
         if (!$fileData) {
             abort(400);
