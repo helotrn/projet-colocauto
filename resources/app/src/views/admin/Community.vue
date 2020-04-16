@@ -13,7 +13,7 @@
           <div class="form__section">
             <h2>Informations générales</h2>
 
-            <forms-builder :definition="form" v-model="item" entity="communities" />
+            <forms-builder :definition="formExceptArea" v-model="item" entity="communities" />
           </div>
 
           <div class="form__section">
@@ -227,6 +227,11 @@ export default {
         };
         this.$store.commit(`${this.slug}/item`, newItem);
       },
+    },
+    formExceptArea() {
+      const form = { ...this.form };
+      delete form.area;
+      return form;
     },
     remainingPricingTypes() {
       const currentPricingTypes = this.item.pricings.map(p => p.object_type);
