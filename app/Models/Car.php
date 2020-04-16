@@ -8,27 +8,23 @@ use Illuminate\Database\Eloquent\Builder;
 class Car extends Loanable
 {
     public static $rules = [
-        'name' => [ 'required' ],
-        'position' => [ 'required' ],
-        'type' => [
-            'required',
-            'in:car'
-        ],
-        'location_description' => [ 'present' ],
-        'instructions' => [ 'present' ],
-        'comments' => [ 'present' ],
-        'model' => [ 'required' ],
         'brand' => [ 'required' ],
+        'comments' => [ 'present' ],
         'engine' => [
             'required',
             'in:fuel,diesel,electric,hybrid',
         ],
+        'instructions' => [ 'present' ],
         'insurer' => [ 'required' ],
         'is_value_over_fifty_thousand' => [ 'boolean' ],
+        'location_description' => [ 'present' ],
+        'model' => [ 'required' ],
+        'name' => [ 'required' ],
         'ownership' => [
             'required',
             'in:self,rental',
         ],
+        'position' => [ 'required' ],
         'papers_location' => [
             'required' ,
             'in:in_the_car,to_request_with_car'
@@ -37,6 +33,10 @@ class Car extends Loanable
         'transmission_mode' => [
             'required' ,
             'in:manual,automatic',
+        ],
+        'type' => [
+            'required',
+            'in:car'
         ],
         'year_of_circulation' => [
             'required',

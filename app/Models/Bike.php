@@ -10,17 +10,18 @@ class Bike extends Loanable
     protected $table = 'bikes';
 
     public static $rules = [
+        'bike_type' => [ 'required' ],
+        'comments' => [ 'present' ],
+        'instructions' => [ 'present' ],
+        'location_description' => [ 'present' ],
+        'model' => [ 'required' ],
         'name' => [ 'required' ],
         'position' => [ 'required' ],
+        'size' => [ 'required' ],
         'type' => [
             'required',
             'in:bike',
         ],
-        'instructions' => [ 'present' ],
-        'comments' => [ 'present' ],
-        'model' => [ 'required' ],
-        'bike_type' => [ 'required' ],
-        'size' => [ 'required' ],
     ];
 
     protected $fillable = [

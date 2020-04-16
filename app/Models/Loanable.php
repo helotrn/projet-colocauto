@@ -35,15 +35,15 @@ class Loanable extends BaseModel
     ];
 
     public static $rules = [
+        'comments' => [ 'present' ],
+        'instructions' => [ 'present' ],
+        'location_description' => [ 'present' ],
         'name' => [ 'required' ],
         'position' => [ 'required' ],
         'type' => [
             'required',
             'in:car,bike,trailer',
         ],
-        'location_description' => [ 'present' ],
-        'instructions' => [ 'required' ],
-        'comments' => [ 'required' ],
     ];
 
     public static $sizes = [
