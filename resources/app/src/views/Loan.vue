@@ -29,7 +29,7 @@
             </b-button>
           </div>
 
-          <loan-actions :item="item" @load="loadItem" :form="loanForm"
+          <loan-actions :item="item" @load="loadItemAndUser" :form="loanForm"
             :user="user" @submit="submitLoan" />
         </b-col>
       </b-row>
@@ -155,6 +155,12 @@ export default {
       this.$store.commit(`${this.slug}/mergeItem`, { loanable });
 
       this.loadedFullLoanable = true;
+    },
+    async loadItemAndUser() {
+      await Promise.all([
+        this.loadItem(),
+        this.$store.dispatch('loadUser'),
+      ]);
     },
     skipLoadItem() {
       if (this.id === 'new') {
