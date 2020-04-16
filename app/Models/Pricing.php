@@ -76,11 +76,12 @@ class Pricing extends BaseModel
         $lines = explode("\n", $this->rule);
 
         foreach ($lines as $line) {
-            if ($response = static::evaluateRuleLine($line, [
+            $response = static::evaluateRuleLine($line, [
                 'km' => $km,
                 'minutes' => $minutes,
                 'loanable' => (object) $loanable,
-            ])) {
+            ]);
+            if ($response !== null) {
                 return $response;
             }
         }
