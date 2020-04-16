@@ -78,6 +78,54 @@ export default {
     };
   },
   methods: {
+    destroyItemModal(item) {
+      const itemLabel = typeof this.itemLabel === 'function'
+        ? this.itemLabel(item)
+        : 'cet item';
+      this.$bvModal.msgBoxConfirm(
+        `Êtes-vous sûr de vouloir retirer ${itemLabel}?`,
+        {
+          size: 'sm',
+          buttonSize: 'sm',
+          okTitle: 'Oui, retirer',
+          cancelTitle: 'Annuler',
+          okVariant: 'danger',
+          cancelVariant: 'primary',
+          footerClass: 'p-2 border-top-0',
+          centered: true,
+        },
+      )
+        .then(async (value) => {
+          if (value) {
+            await this.$store.dispatch(`${this.slug}/destroy`, item.id);
+            await this.$store.dispatch(`${this.slug}/load`);
+          }
+        });
+    },
+    restoreItemModal(item) {
+      const itemLabel = typeof this.itemLabel === 'function'
+        ? this.itemLabel(item)
+        : 'cet item';
+      this.$bvModal.msgBoxConfirm(
+        `Êtes-vous sûr de vouloir restaurer ${itemLabel}?`,
+        {
+          size: 'sm',
+          buttonSize: 'sm',
+          okTitle: 'Oui, restaurer',
+          cancelTitle: 'Annuler',
+          okVariant: 'warning',
+          cancelVariant: 'primary',
+          footerClass: 'p-2 border-top-0',
+          centered: true,
+        },
+      )
+        .then(async (value) => {
+          if (value) {
+            await this.$store.dispatch(`${this.slug}/restore`, item.id);
+            await this.$store.dispatch(`${this.slug}/load`);
+          }
+        });
+    },
     rowSelected(items) {
       this.selected = items;
     },

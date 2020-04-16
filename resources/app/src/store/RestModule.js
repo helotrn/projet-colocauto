@@ -323,6 +323,24 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
           throw e;
         }
       },
+      async restore({ commit, state }, id) {
+        try {
+          const ajax = Vue.axios.put(`/${state.slug}/${id}/restore`);
+
+          commit('ajax', ajax);
+
+          await ajax;
+
+          commit('ajax', null);
+        } catch (e) {
+          commit('ajax', null);
+
+          const { request, response } = e;
+          commit('error', { request, response });
+
+          throw e;
+        }
+      },
       ...actions,
     },
   };
