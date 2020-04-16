@@ -23,11 +23,9 @@
               </b-form-select-option>
             </b-form-select>
             <b-form-input v-else-if="def === 'date'" type="date"
-              v-model="params[key]" :name="key" :id="key"
-              :placeholder="$t(`${entity}.fields.${key}`) | capitalize" />
+              v-model="params[key]" :name="key" :id="key" />
             <b-form-input v-else type="text"
-              v-model="params[key]" :name="key" :id="key"
-              :placeholder="$t(`${entity}.fields.${key}`) | capitalize" />
+              v-model="params[key]" :name="key" :id="key" />
           </b-form-group>
         </b-card-body>
       </b-card>
