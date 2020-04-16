@@ -8,6 +8,7 @@ import loans from '@/locales/models/loans';
 import loanables from '@/locales/models/loanables';
 import padlocks from '@/locales/models/padlocks';
 import paymentMethods from '@/locales/models/paymentMethods';
+import tags from '@/locales/models/tags';
 import users from '@/locales/models/users';
 
 export default {
@@ -65,6 +66,7 @@ export default {
       payment_methods: 'Mes méthodes de paiement',
     },
   },
+  tags: tags.fr,
   titles: {
     account: 'compte',
     admin: 'administration',
@@ -86,6 +88,8 @@ export default {
     payment_methods: 'méthodes de paiement',
     profile: 'Profil',
     register: "s'inscrire",
+    tags: 'Mots-clés',
+    tag: 'Mot-clé',
     user: 'membre',
     users: 'membres',
   },

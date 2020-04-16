@@ -17,6 +17,9 @@ export default {
         auth: true,
         title: 'titles.community',
         data: {
+          global: {
+            load: {},
+          },
           communities: {
             retrieveOne: {
               params: {

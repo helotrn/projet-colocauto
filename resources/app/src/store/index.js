@@ -18,6 +18,7 @@ import loans from './models/loans';
 import loanables from './models/loanables';
 import padlocks from './models/padlocks';
 import paymentMethods from './models/paymentMethods';
+import tags from './models/tags';
 import trailers from './models/trailers';
 import owners from './models/owners';
 import users from './models/users';
@@ -227,6 +228,7 @@ export default new Vuex.Store({
     'register.intent': RegisterIntent,
     'register.map': RegisterMap,
     stats,
+    tags,
     trailers,
     users,
   },

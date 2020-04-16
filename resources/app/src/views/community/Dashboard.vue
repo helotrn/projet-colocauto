@@ -81,12 +81,13 @@ export default {
     margin-bottom: 40px;
 
     > span {
-      margin-right: 5px;
+      margin-right: 10px;
     }
 
     .badge {
       line-height: 15px;
       height: 21.45px;
+      margin-right: 5px;
     }
   }
 

@@ -93,6 +93,10 @@ export default {
     position: absolute;
     top: -8px;
     left: -8px;
+
+    .badge {
+      margin-right: 5px;
+    }
   }
 
   > div {

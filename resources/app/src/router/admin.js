@@ -10,6 +10,8 @@ import AdminLoanables from '../views/admin/Loanables.vue';
 import AdminLoans from '../views/admin/Loans.vue';
 import AdminPadlock from '../views/admin/Padlock.vue';
 import AdminPadlocks from '../views/admin/Padlocks.vue';
+import AdminTag from '../views/admin/Tag.vue';
+import AdminTags from '../views/admin/Tags.vue';
 import AdminUser from '../views/admin/User.vue';
 import AdminUsers from '../views/admin/Users.vue';
 
@@ -218,6 +220,36 @@ export default {
           fields: '*,loanable.name',
         },
         title: 'titles.loan',
+      },
+    },
+    {
+      path: 'tags',
+      component: AdminTags,
+      meta: {
+        auth: true,
+        creatable: true,
+        slug: 'tags',
+        data: {
+          tags: {
+            retrieve: {
+              fields: '*',
+            },
+          },
+        },
+        title: 'titles.tags',
+      },
+    },
+    {
+      path: 'tags/:id',
+      component: AdminTag,
+      props: true,
+      meta: {
+        auth: true,
+        slug: 'tags',
+        params: {
+          fields: '*',
+        },
+        title: 'titles.tag',
       },
     },
   ],
