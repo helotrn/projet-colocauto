@@ -154,10 +154,12 @@ export default {
           variant = 'warning';
           break;
         case 500:
-        default:
           content = "Une erreur sytème s'est produite.";
           title = 'Erreur fatale';
           variant = 'danger';
+          break;
+        default:
+          // 422 errors are managed at the request level
           break;
       }
 
