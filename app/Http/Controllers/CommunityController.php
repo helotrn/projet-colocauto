@@ -134,45 +134,48 @@ class CommunityController extends RestController
 
 
     public function template(Request $request) {
-        return [
-          'item' => [
-            'name' => '',
-            'description' => '',
-            'area' => [],
-            'type' => 'neighborhood',
-            'pricings' => [],
-          ],
-          'filters' => $this->model::$filterTypes,
-          'form' => [
-            'name' => [
-              'type' => 'text',
-              'required' => true,
-              'label' => 'Nom',
+        $template = [
+            'item' => [
+                'name' => '',
+                'description' => '',
+                'area' => [],
+                'type' => 'neighborhood',
+                'pricings' => [],
             ],
-            'description' => [
-              'type' => 'textarea',
-              'required' => true,
-              'label' => 'Description',
+            'filters' => $this->model::$filterTypes,
+            'form' => [
+                'name' => [
+                    'type' => 'text',
+                ],
+                'description' => [
+                    'type' => 'textarea',
+                ],
+                'type' => [
+                    'type' => 'select',
+                    'label' => 'Type',
+                    'options' => [
+                        [
+                            'text' => 'Privée',
+                            'value' => 'private',
+                        ],
+                        [
+                            'text' => 'Voisinage',
+                            'value' => 'neighborhood',
+                        ],
+                        [
+                            'text' => 'Quartier',
+                            'value' => 'borough',
+                        ],
+                    ],
+                ],
             ],
-            'type' => [
-              'type' => 'select',
-              'label' => 'Type',
-              'options' => [
-                [
-                  'text' => 'Privée',
-                  'value' => 'private',
-                ],
-                [
-                  'text' => 'Voisinage',
-                  'value' => 'neighborhood',
-                ],
-                [
-                  'text' => 'Quartier',
-                  'value' => 'borough',
-                ],
-              ],
-            ],
-          ],
         ];
+
+        $modelRules = $this->model->getRules('template', $request->user());
+        foreach ($modelRules as $field => $rules) {
+            $template['form'][$field]['rules'] = $this->formatRules($rules);
+        }
+
+        return $template;
     }
 }
