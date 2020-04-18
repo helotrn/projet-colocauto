@@ -88,9 +88,9 @@
                   <p>Envoyez une photo de l'état du véhicule.</p>
 
                   <forms-image-uploader
-                     label="Photo du tableau de bord"
-                     field="image"
-                     v-model="action.image" />
+                    label="Photo du tableau de bord"
+                    field="image"
+                    v-model="action.image" />
 
                   <p><small>
                     Cette photo est optionnelle mais permet à Locomotion de déterminer à quel
@@ -135,7 +135,8 @@
           <b-row class="loan-actions-takeover__buttons text-center"
             v-if="!action.executed_at">
             <b-col>
-              <b-button type="submit" size="sm" variant="success" class="mr-3"
+              <b-button type="submit" size="sm" variant="success"
+                class="mr-3"
                 @click="completeAction">
                 C'est fait!
               </b-button>

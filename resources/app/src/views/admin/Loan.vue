@@ -108,7 +108,7 @@ export default {
     async submitAndReload() {
       await this.submit();
       await this.formMixinCallback();
-    }
+    },
   },
   i18n: {
     messages: {

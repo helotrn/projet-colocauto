@@ -80,7 +80,7 @@ export default new RestModule('loanables', {
         params: {
           ...loan,
           loanable_id: loanableId,
-          community_id: communityId
+          community_id: communityId,
         },
       });
 
@@ -88,7 +88,7 @@ export default new RestModule('loanables', {
 
       const { data } = await ajax;
 
-      const newData = state.data.map((d, index) => {
+      const newData = state.data.map((d) => {
         if (d.id === loanableId) {
           return {
             ...d,

@@ -296,7 +296,7 @@ export default {
         }
 
         &__search {
-          max-height: calc(100vh - #{$layout-navbar-height + $molotov-footer-height} - 40px - 50px - 34px - 30px);
+          max-height: calc(100vh - #{$layout-navbar-height + $molotov-footer-height} - 154px);
           overflow: auto;
           overflow-x: hidden;
         }
