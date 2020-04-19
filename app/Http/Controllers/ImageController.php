@@ -28,7 +28,7 @@ class ImageController extends FileController
 
         $manager = new ImageManager(array('driver' => 'imagick'));
         try {
-            $image = $manager->make($file);
+            $image = $manager->make($file)->orientate();
         } catch (NotReadableException $e) {
             return $this->respondWithMessage('Fichier illisible.', 422);
         }
