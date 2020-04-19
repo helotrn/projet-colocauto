@@ -51,14 +51,7 @@
             {{ row.item.total_with_taxes | currency }}
           </template>
           <template v-slot:cell(actions)="row">
-            <div class="text-right">
-              <b-button size="sm" variant="primary" :to="`/admin/${slug}/${row.item.id}`">
-                {{ $t('modifier') | capitalize }}
-              </b-button>
-              <b-button size="sm" class="mr-1" variant="danger">
-                {{ $t('supprimer') | capitalize }}
-              </b-button>
-            </div>
+            <admin-list-actions :columns="['view']" />
           </template>
         </b-table>
       </b-col>
@@ -74,6 +67,7 @@
 </template>
 
 <script>
+import AdminListActions from '@/components/Admin/ListActions.vue';
 import AdminFilters from '@/components/Admin/Filters.vue';
 
 import DataRouteGuards from '@/mixins/DataRouteGuards';
@@ -83,7 +77,10 @@ import locales from '@/locales';
 export default {
   name: 'AdminInvoices',
   mixins: [DataRouteGuards, ListMixin],
-  components: { AdminFilters },
+  components: {
+    AdminListActions,
+    AdminFilters,
+  },
   data() {
     return {
       table: [

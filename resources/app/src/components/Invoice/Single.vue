@@ -1,7 +1,7 @@
 <template>
   <b-container class="invoice-view" fluid>
     <b-row class="mb-5">
-      <b-col lg="6">
+      <b-col sm="6">
         <p class="text-left">
           LocoMotion<br>
           Solon collectif (Celsius Mtl)<br>
@@ -11,7 +11,7 @@
         </p>
       </b-col>
 
-      <b-col lg="6">
+      <b-col sm="6">
         <p class="text-right">
           {{ invoice.user.full_name }}<br>
           {{ invoice.user.address }}<br>

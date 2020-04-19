@@ -137,7 +137,7 @@ export default {
       component: AdminInvoices,
       meta: {
         auth: true,
-        creatable: true,
+        creatable: false,
         slug: 'invoices',
         data: {
           invoices: {
