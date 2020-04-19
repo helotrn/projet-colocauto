@@ -1,7 +1,7 @@
 <template>
   <validation-provider class="forms-validated-input"
     :mode="mode"
-    :name="name"
+    :name="label"
     :rules="rulesOrNothing"
     v-slot="validationContext">
     <b-form-group :label="type !== 'checkbox' ? label : ''" :label-for="name"

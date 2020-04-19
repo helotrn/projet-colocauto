@@ -15,7 +15,7 @@
       <span class="form__separator__text">{{ $t('or') }}</span>
     </div>
 
-    <b-form class="login-box__form" @submit.prevent="login">
+    <b-form class="login-box__form" @submit.prevent="login" novalidate>
       <b-form-group :label="$t('email')">
         <b-form-input
           type="email"
