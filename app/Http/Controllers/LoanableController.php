@@ -57,15 +57,12 @@ class LoanableController extends RestController
             case 'bike':
                 $bikeRequest = $request->redirect(BikeCreateRequest::class);
                 return $this->bikeController->create($bikeRequest);
-                break;
             case 'car':
                 $carRequest = $request->redirect(CarCreateRequest::class);
                 return $this->carController->create($carRequest);
-                break;
             case 'trailer':
                 $trailerRequest = $request->redirect(TrailerCreateRequest::class);
                 return $this->trailerController->create($trailerRequest);
-                break;
             default:
                 throw new \Exception('invalid loanable type');
         }
@@ -116,7 +113,7 @@ class LoanableController extends RestController
                 $carRequest = $request->redirect(CarUpdateRequest::class);
                 return $this->carController->update($carRequest, $id);
             case 'trailer':
-                $trailerRequest = $this->redirect(TrailerUpdateRequest::class);
+                $trailerRequest = $request->redirect(TrailerUpdateRequest::class);
                 return $this->trailerController->update($trailerRequest, $id);
             default:
                 throw new \Exception('invalid loanable type');
