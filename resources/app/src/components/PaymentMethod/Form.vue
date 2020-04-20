@@ -124,7 +124,7 @@ export default {
 
       if (error) {
         this.$store.commit('addNotification', {
-          content: 'Il est temps de choisir une première communauté!',
+          content: 'Les informations de la carte sont incomplètes ou invalides.',
           title: 'Erreur sur la carte',
           variant: 'danger',
           type: 'payment-form',
