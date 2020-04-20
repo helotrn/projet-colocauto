@@ -45,7 +45,7 @@
         :disabled-dates="disabledDates"
         :disabled="disabled" :initial-view="initialView"
         :state="getValidationState(validationContext)"
-        :value="value"
+        :value="value" :open-date="openDate"
         @input="emitChange" />
       <forms-date-time-picker v-else-if="type === 'datetime'"
         :disabled-dates="disabledDates"
@@ -193,6 +193,13 @@ export default {
       type: Object,
       required: false,
       default: null,
+    },
+    openDate: {
+      type: Date,
+      required: false,
+      default() {
+        return new Date();
+      },
     },
     options: {
       type: Array,
