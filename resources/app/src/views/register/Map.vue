@@ -61,15 +61,14 @@
           :options="polygonOptions"
           @click="community = c" />
         <gmap-marker v-for="c in communities" :key="`marker-${c.id}`"
-          :label="zoom > 14 ? {
-            text: c.name,
-            color: '#ffffff',
-            fontWeight: '600',
-            fontFamily: 'BrandonText',
-            fontSize: '40px'
-          } : null"
+          :icon="{
+            url: '/pins/default-pin.svg',
+            scaledSize: {
+              width: 28,
+              height: 40,
+            },
+          }"
           :clickable="false"
-          :icon="mapIcon"
           :position="c.center_google" />
       </gmap-map>
     </div>
@@ -290,7 +289,7 @@ export default {
 
   &__map {
     width: 100vw;
-    height: calc(100vh - #{$layout-navbar-height + $molotov-footer-height});
+    height: calc(100vh - #{$layout-navbar-height + $molotov-footer-height} - 1px);
     z-index: 10;
   }
 
