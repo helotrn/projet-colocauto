@@ -67,8 +67,8 @@
 </template>
 
 <script>
-import AdminListActions from '@/components/Admin/ListActions.vue';
 import AdminFilters from '@/components/Admin/Filters.vue';
+import AdminListActions from '@/components/Admin/ListActions.vue';
 
 import DataRouteGuards from '@/mixins/DataRouteGuards';
 import ListMixin from '@/mixins/ListMixin';
