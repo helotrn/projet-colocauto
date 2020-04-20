@@ -2,6 +2,14 @@
   <b-container class="profile-payment-method" fluid v-if="item && routeDataLoaded">
     <vue-headful :title="fullTitle" />
 
+    <b-row v-if="!!item.id">
+      <b-col class="admin__buttons">
+        <b-btn to="/profile/payment_methods/new">
+          {{ $t('ajouter une autre méthode de paiement') | capitalize }}
+        </b-btn>
+      </b-col>
+    </b-row>
+
     <b-row>
       <b-col>
         <h1 v-if="item.name">{{ item.name }}</h1>

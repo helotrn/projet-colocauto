@@ -26,7 +26,6 @@ class PaymentMethod extends BaseModel
         ],
         'credit_card_type' => [
           'nullable',
-          'string',
         ],
         'user_id' => [
           'required',

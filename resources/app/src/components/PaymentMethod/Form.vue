@@ -26,11 +26,12 @@
         </div>
 
         <div class="form__buttons">
+          <b-button variant="success" type="submit" :disabled="loading" class="mr-3"
+            v-if="paymentMethod.type !== 'credit_card' || !paymentMethod.id">
+            {{ $t('forms.enregistrer') | capitalize }}
+          </b-button>
           <b-button variant="danger" v-if="!!paymentMethod.id" @click="emitDestroy">
             {{ $t('forms.supprimer') | capitalize }}
-          </b-button>
-          <b-button variant="success" type="submit" :disabled="loading" v-else>
-            {{ $t('forms.enregistrer') | capitalize }}
           </b-button>
         </div>
       </b-form>
@@ -115,27 +116,29 @@ export default {
       this.$emit('destroy');
     },
     async submit() {
-      const { token, error } = await this.stripe.createToken(this.card, {
-        name: `${this.user.full_name}`,
-        address_country: 'CA',
-        address_line_1: `${this.user.address}`,
-        address_zip: `${this.user.postal_code}`,
-      });
-
-      if (error) {
-        this.$store.commit('addNotification', {
-          content: 'Les informations de la carte sont incomplètes ou invalides.',
-          title: 'Erreur sur la carte',
-          variant: 'danger',
-          type: 'payment-form',
+      if (this.paymentMethod.type === 'credit_card') {
+        const { token, error } = await this.stripe.createToken(this.card, {
+          name: `${this.user.full_name}`,
+          address_country: 'CA',
+          address_line_1: `${this.user.address}`,
+          address_zip: `${this.user.postal_code}`,
         });
+
+        if (error) {
+          this.$store.commit('addNotification', {
+            content: 'Les informations de la carte sont incomplètes ou invalides.',
+            title: 'Erreur sur la carte',
+            variant: 'danger',
+            type: 'payment-form',
+          });
+        }
+
+        const { id, card } = token;
+
+        this.paymentMethod.external_id = id;
+        this.paymentMethod.credit_card_type = card.brand;
+        this.paymentMethod.name = `${card.brand} se terminant par ${card.last4}`;
       }
-
-      const { id, card } = token;
-
-      this.paymentMethod.external_id = id;
-      this.paymentMethod.credit_card_type = card.brand;
-      this.paymentMethod.name = `${card.brand} se terminant par ${card.last4}`;
 
       this.$emit('submit');
     },
