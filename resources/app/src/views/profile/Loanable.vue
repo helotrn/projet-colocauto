@@ -87,8 +87,26 @@ export default {
   },
   methods: {
     async submitLoanable() {
+      const isNew = !this.item.id;
+
       await this.submit();
       await this.$store.dispatch('loadUser');
+
+      if (isNew) {
+        this.$store.commit('addNotification', {
+          content: 'Votre véhicule a bien été créé. Veuillez maintenant ajouter des disponibilités dans la section du bas.',
+          title: 'Véhicule créé',
+          variant: 'success',
+          type: 'loanable',
+        });
+      } else {
+        this.$store.commit('addNotification', {
+          content: 'Le véhicule a été enregistré avec succès.',
+          title: 'Véhicule enregistré',
+          variant: 'success',
+          type: 'loanable',
+        });
+      }
     },
   },
   i18n: {
