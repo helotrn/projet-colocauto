@@ -16,8 +16,8 @@
 
               <b-col class="loan-info-box__name">
                 <span>
-                  {{ otherUser.full_name }}<br>
-                  {{ loan.loanable.name }}
+                  <span class="loan-info-box__name__user">{{ otherUser.full_name }}</span><br>
+                  <span class="loan-info-box__name__loanable">{{ loan.loanable.name }}</span>
                 </span>
               </b-col>
             </b-row>
@@ -236,6 +236,14 @@ export default {
   &__name.col {
     flex-grow: 1;
     color: $black;
+  }
+
+  &__name__user {
+    font-size: 16px;
+    text-style: italic;
+  }
+
+  &__name__loanable {
     font-size: 20px;
   }
 
