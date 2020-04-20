@@ -30,7 +30,7 @@
           </template>
 
           <template v-slot:custom-foot>
-            <b-tr class="profile-invoice__footer-row">
+            <b-tr class="invoice-view__footer-row">
               <b-td colspan="2">
                 Sous-total<br>
                 TPS<br>
