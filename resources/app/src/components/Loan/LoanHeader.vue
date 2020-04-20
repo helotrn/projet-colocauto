@@ -8,8 +8,20 @@
 
     <b-row>
       <b-col class="loan-header__description">
-        <p>
-          <a href="#" v-b-modal="'loanable-modal'">
+        <p class="loan-header__description__people">
+          <a href="#"
+            v-b-modal="'borrower-modal'" v-if="userRole !== 'borrower'">
+            {{ loan.borrower.user.full_name }}
+          </a>
+          <a href="#"
+            v-b-modal="'owner-modal'" v-else-if="userRole !== 'owner'">
+            {{ loan.loanable.owner.user.full_name }}
+          </a>
+          <br>
+        </p>
+        <p class="loan-header__description__loan">
+          <a href="#"
+            v-b-modal="'loanable-modal'">
             {{ prettyType }} {{ loanableDescription }} {{ loanableOwnerText }}
           </a>
           <br>
@@ -22,8 +34,34 @@
 
     <b-modal size="xl"
       :title="`${prettyType} ${loanableDescription} ${loanableOwnerText}`"
-      :id="'loanable-modal'" footer-class="d-none">
+      id="loanable-modal" footer-class="d-none">
       <loanable-details-box :loanable="loan.loanable" />
+    </b-modal>
+
+    <b-modal size="md"
+      title="Coordonnées du propriétaire"
+      id="owner-modal" footer-class="d-none">
+      <p>
+        <strong>{{ loan.loanable.owner.user.full_name }}</strong>
+      </p>
+
+      <dl>
+        <dt>Téléphone</dt>
+        <dd>{{ loan.loanable.owner.user.phone }}</dd>
+      </dl>
+    </b-modal>
+
+    <b-modal size="md"
+      title="Coordonnées de l'emprunteur"
+      id="borrower-modal" footer-class="d-none">
+      <p>
+        <strong>{{ loan.borrower.user.full_name }}</strong>
+      </p>
+
+      <dl>
+        <dt>Téléphone</dt>
+        <dd>{{ loan.borrower.user.phone }}</dd>
+      </dl>
     </b-modal>
   </div>
 </template>
@@ -61,7 +99,7 @@ export default {
       }
     },
     loanableOwnerText() {
-      if (this.userIsOwner) {
+      if (this.userRole === 'owner') {
         return '';
       }
 
@@ -118,8 +156,16 @@ export default {
         .add(this.loan.duration_in_minutes, 'minute')
         .format('YYYY-MM-DD HH:mm:ss');
     },
-    userIsOwner() {
-      return this.user.id === this.loan.loanable.owner.user.id;
+    userRole() {
+      if (this.user.id === this.loan.loanable.owner.user.id) {
+        return 'owner';
+      }
+
+      if (this.user.id === this.loan.borrower.user.id) {
+        return 'borrower';
+      }
+
+      return 'other';
     },
   },
 };
@@ -132,10 +178,21 @@ export default {
   }
 
   &__description {
-    font-size: 20px;
     font-weight: 600;
-    line-height: 30px;
     margin-bottom: 30px;
+
+    p {
+      margin-bottom: 0;
+    }
+
+    &__people {
+      font-size: 16px;
+      text-style: italic;
+    }
+
+    &__loan {
+      font-size: 20px;
+    }
   }
 }
 </style>

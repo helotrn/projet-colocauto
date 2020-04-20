@@ -7,7 +7,7 @@ use Molotov\Transformers\BaseTransformer;
 
 class CarTransformer extends LoanableTransformer
 {
-    public function authorize($item, $output, $user = null) {
+    public function authorize($item, $output, $options, $user = null) {
         if ($user && ($user->isAdmin() || $user->id === $output['id'])) {
             return $output;
         }
@@ -26,8 +26,11 @@ class CarTransformer extends LoanableTransformer
             'year_of_circulation',
             'transmission_mode',
             'engine',
-            'papers_location',
         ];
+
+        if (isset($options['context']['Loan'])) {
+            $publicFields[] = 'papers_location';
+        }
 
         return $this->filterKeys($output, $publicFields);
     }
@@ -35,6 +38,6 @@ class CarTransformer extends LoanableTransformer
     public function transform($item, $options = []) {
         $output = parent::transform($item, $options);
 
-        return $this->authorize($item, $output, Auth::user());
+        return $this->authorize($item, $output, $options, Auth::user());
     }
 }

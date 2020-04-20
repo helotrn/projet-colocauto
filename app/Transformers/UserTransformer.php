@@ -9,7 +9,7 @@ class UserTransformer extends BaseTransformer
 {
     protected $contexts = ['Community'];
 
-    public function authorize($item, $output, $user = null) {
+    public function authorize($item, $output, $options, $user = null) {
         if ($user && ($user->isAdmin() || $user->id === $item->id)) {
             return $output;
         }
@@ -57,6 +57,6 @@ class UserTransformer extends BaseTransformer
             $output['balance'] = floatval($output['balance']);
         }
 
-        return $this->authorize($item, $output, Auth::user());
+        return $this->authorize($item, $output, $options, Auth::user());
     }
 }

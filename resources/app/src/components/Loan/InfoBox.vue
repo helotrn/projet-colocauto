@@ -144,7 +144,15 @@ export default {
         .format('YYYY-MM-DD HH:mm:ss');
     },
     userRole() {
-      return this.user.id === this.loan.loanable.owner.user.id ? 'owner' : 'borrower';
+      if (this.user.id === this.loan.loanable.owner.user.id) {
+        return 'owner';
+      }
+
+      if (this.user.id === this.loan.borrower.user.id) {
+        return 'borrower';
+      }
+
+      return 'other';
     },
   },
   methods: {
