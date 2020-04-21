@@ -2,17 +2,13 @@
 
 namespace App\Models;
 
+use App\Utils\TimestampWithTimezone;
 use Carbon\Carbon;
+use Vkovic\LaravelCustomCasts\HasCustomCasts;
 
 class PrePayment extends Action
 {
-    protected $fillable = [];
-
-    public $items = ['loan'];
-
-    public function loan() {
-        return $this->belongsTo(Loan::class);
-    }
+    use HasCustomCasts;
 
     public static function boot() {
         parent::boot();
@@ -67,4 +63,18 @@ class PrePayment extends Action
             }
         ];
     }
+
+    protected $fillable = [];
+
+    protected $casts = [
+        'executed_at' => TimestampWithTimezone::class,
+    ];
+
+
+    public $items = ['loan'];
+
+    public function loan() {
+        return $this->belongsTo(Loan::class);
+    }
+
 }
