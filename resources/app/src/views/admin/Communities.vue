@@ -39,7 +39,7 @@
             {{ $t(`types.${row.item.type}`) | capitalize }}
           </template>
           <template v-slot:cell(actions)="row">
-            <admin-list-actions :columns="['edit']" />
+            <admin-list-actions :columns="['edit']" :row="row" :slug="slug" />
           </template>
         </b-table>
       </b-col>

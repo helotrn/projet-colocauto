@@ -51,7 +51,7 @@
             {{ row.item.total_with_taxes | currency }}
           </template>
           <template v-slot:cell(actions)="row">
-            <admin-list-actions :columns="['view']" />
+            <admin-list-actions :columns="['view']" :row="row" :slug="slug" />
           </template>
         </b-table>
       </b-col>
