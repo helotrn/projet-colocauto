@@ -26,7 +26,8 @@
         </div>
 
         <div class="form__buttons">
-          <b-button variant="success" type="submit" :disabled="loading" class="mr-3"
+          <b-button variant="success" type="submit" :disabled="loading"
+            class="mr-3"
             v-if="paymentMethod.type !== 'credit_card' || !paymentMethod.id">
             {{ $t('forms.enregistrer') | capitalize }}
           </b-button>

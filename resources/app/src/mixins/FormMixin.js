@@ -121,7 +121,6 @@ export default {
             break;
           default:
             throw e;
-            break;
         }
       }
     },

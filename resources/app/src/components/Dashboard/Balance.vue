@@ -45,7 +45,10 @@ fr:
   modify_payment_method: Modifier les modes de paiement
   reclamer: Réclamer
   reclamer_tooltip: Un minimum de 10$ est requis pour réclamer son solde.
-  approvisionner_popover: On aime l'idée de « monnaie locale », une autre manière d'aider les échanges dans le quartier et le commerce local. Une opportunité d'essayer une économie à visage humain? Finalement, c'est facile. C'est comme mettre des billets sur sa carte de transport collectif :-)
+  approvisionner_popover: |
+    On aime l'idée de « monnaie locale », une autre manière d'aider les échanges dans le quartier
+    et le commerce local. Une opportunité d'essayer une économie à visage humain? Finalement, c'est
+    facile. C'est comme mettre des billets sur sa carte de transport collectif :-)
 </i18n>
 
 <script>
