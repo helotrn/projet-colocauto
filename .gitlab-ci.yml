@@ -21,7 +21,9 @@ before_script:
   - php -r "if (hash_file('SHA384', 'composer-setup.php') === file_get_contents('installer.sig')) { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
   - php composer-setup.php
   - php -r "unlink('composer-setup.php'); unlink('installer.sig');"
+  - pecl install xdebug
   - docker-php-ext-install pdo_pgsql
+  - docker-php-ext-enable xdebug
 
 cache:
   paths:
@@ -37,6 +39,6 @@ locomotion:test:
     - php composer.phar install
     - php artisan migrate --env testing
     - php artisan passport:install --env testing
-    - vendor/bin/phpunit
+    - vendor/bin/phpunit --coverage-text --colors=never
     - vendor/bin/phpcs app/
     - cd resources/app && yarn && yarn lint
