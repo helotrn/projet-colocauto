@@ -6,21 +6,6 @@ use Carbon\Carbon;
 
 class Payment extends Action
 {
-    protected $fillable = [
-        'loan_id',
-        'bill_item_id',
-    ];
-
-    public $items = ['bill_item', 'loan'];
-
-    public function billItem() {
-        return $this->belongsTo(BillItem::class);
-    }
-
-    public function loan() {
-        return $this->belongsTo(Loan::class);
-    }
-
     public static function boot() {
         parent::boot();
 
@@ -71,5 +56,20 @@ class Payment extends Action
                 return $query->selectRaw("'payment' AS type");
             }
         ];
+    }
+
+    protected $fillable = [
+        'loan_id',
+        'bill_item_id',
+    ];
+
+    public $items = ['bill_item', 'loan'];
+
+    public function billItem() {
+        return $this->belongsTo(BillItem::class);
+    }
+
+    public function loan() {
+        return $this->belongsTo(Loan::class);
     }
 }

@@ -6,16 +6,6 @@ use Carbon\Carbon;
 
 class Intention extends Action
 {
-    protected $fillable = [
-        'message_for_borrower',
-    ];
-
-    public $items = ['loan'];
-
-    public function loan() {
-        return $this->belongsTo(Loan::class);
-    }
-
     public static function boot() {
         parent::boot();
 
@@ -62,5 +52,15 @@ class Intention extends Action
                 return $query->selectRaw("'intention' AS type");
             }
         ];
+    }
+
+    protected $fillable = [
+        'message_for_borrower',
+    ];
+
+    public $items = ['loan'];
+
+    public function loan() {
+        return $this->belongsTo(Loan::class);
     }
 }

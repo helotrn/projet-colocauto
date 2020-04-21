@@ -23,7 +23,7 @@ class Loanable extends BaseModel
 {
     use HasCustomCasts, PostgisTrait, SoftDeletes;
 
-    public $readOnly = 'true';
+    public $readOnly = true;
 
     public static $transformer = LoanableTransformer::class;
 
@@ -120,7 +120,11 @@ class Loanable extends BaseModel
                                 $byDays = array_diff($byDays, $exception->scope);
 
                                 if ($exception->period !== '00:00-23:59') {
-                                    static::addWeekdaysExceptionScope($model, $exception, $calendar);
+                                    static::addWeekdaysExceptionScope(
+                                        $model,
+                                        $exception,
+                                        $calendar
+                                    );
                                 }
                                 break;
                         }
@@ -275,9 +279,15 @@ class Loanable extends BaseModel
                         // (communities through user through owner)
                         ->orWhereHas('owner', function ($q) use ($communityIds) {
                             return $q->whereHas('user', function ($q) use ($communityIds) {
-                                return $q->whereHas('communities', function ($q) use ($communityIds) {
-                                    return $q->whereIn('community_user.community_id', $communityIds);
-                                });
+                                return $q->whereHas(
+                                    'communities',
+                                    function ($q) use ($communityIds) {
+                                        return $q->whereIn(
+                                            'community_user.community_id',
+                                            $communityIds
+                                        );
+                                    }
+                                );
                             });
                         });
                 // ...and cars are only allowed if the borrower profile is approved

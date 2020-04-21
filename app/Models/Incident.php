@@ -15,10 +15,6 @@ class Incident extends Action
         'incident_type',
     ];
 
-    public function loan() {
-        return $this->belongsTo(Loan::class);
-    }
-
     public static function boot() {
         parent::boot();
 
@@ -57,5 +53,9 @@ class Incident extends Action
                 return $query->selectRaw("'incident' AS type");
             }
         ];
+    }
+
+    public function loan() {
+        return $this->belongsTo(Loan::class);
     }
 }

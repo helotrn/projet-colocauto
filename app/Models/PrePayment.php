@@ -67,5 +67,4 @@ class PrePayment extends Action
     public function loan() {
         return $this->belongsTo(Loan::class);
     }
-
 }

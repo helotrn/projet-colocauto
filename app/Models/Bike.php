@@ -7,8 +7,6 @@ use Illuminate\Database\Eloquent\Builder;
 
 class Bike extends Loanable
 {
-    protected $table = 'bikes';
-
     public static $rules = [
         'bike_type' => [ 'required' ],
         'comments' => [ 'present' ],
@@ -55,6 +53,8 @@ class Bike extends Loanable
             }
         ];
     }
+
+    protected $table = 'bikes';
 
     public $items = ['community','owner', 'padlock'];
 

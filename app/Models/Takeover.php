@@ -17,24 +17,6 @@ class Takeover extends Action
         'thumbnail' => '256x@fit',
     ];
 
-    protected $fillable = [
-        'mileage_beginning',
-        'fuel_beginning',
-        'comments_on_vehicle',
-    ];
-
-    public $morphOnes = [
-        'image' => 'imageable',
-    ];
-
-    public function image() {
-        return $this->morphOne(Image::class, 'imageable');
-    }
-
-    public function loan() {
-        return $this->belongsTo(Loan::class);
-    }
-
     public static function boot() {
         parent::boot();
 
@@ -81,5 +63,23 @@ class Takeover extends Action
                 return $query->selectRaw("'takeover' AS type");
             }
         ];
+    }
+
+    protected $fillable = [
+        'mileage_beginning',
+        'fuel_beginning',
+        'comments_on_vehicle',
+    ];
+
+    public $morphOnes = [
+        'image' => 'imageable',
+    ];
+
+    public function image() {
+        return $this->morphOne(Image::class, 'imageable');
+    }
+
+    public function loan() {
+        return $this->belongsTo(Loan::class);
     }
 }

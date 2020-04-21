@@ -7,17 +7,6 @@ use Illuminate\Database\Eloquent\Builder;
 
 class Trailer extends Loanable
 {
-    protected $fillable = [
-        'availability_json',
-        'availability_mode',
-        'comments',
-        'instructions',
-        'location_description',
-        'maximum_charge',
-        'name',
-        'position',
-    ];
-
     public static function getColumnsDefinition() {
         return [
             '*' => function ($query = null) {
@@ -36,6 +25,17 @@ class Trailer extends Loanable
             }
         ];
     }
+
+    protected $fillable = [
+        'availability_json',
+        'availability_mode',
+        'comments',
+        'instructions',
+        'location_description',
+        'maximum_charge',
+        'name',
+        'position',
+    ];
 
     public $items = ['community','owner', 'padlock'];
 

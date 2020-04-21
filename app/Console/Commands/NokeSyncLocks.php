@@ -9,7 +9,9 @@ use GuzzleHttp\Client;
 class NokeSyncLocks extends Command
 {
     private $baseUrl = 'https://v1-api-nokepro.appspot.com';
-    private $token = 'eyJhbGciOiJOT0tFIiwidHlwIjoiSldUIn0.eyJhbGciOiJOT0tFIiwiY29tcGFueSI6MTAwMDE4MiwiZXhwIjoxNTg2MjkwNzU0LCJpc3MiOiJub2tlLmNvbSIsImxvZ291dElkIjoiIiwibm9rZVVzZXIiOjQwNTc4LCJ0b2tlblR5cGUiOiJzaWduSW4ifQ.3fbd2d192d9b5e6f29fc10c110bdfbef5067c665';
+    private $token = 'eyJhbGciOiJOT0tFIiwidHlwIjoiSldUIn0.eyJhbGciOiJOT0tFIiwiY29tcGFueSI6MTA'
+        . 'wMDE4MiwiZXhwIjoxNTg2MjkwNzU0LCJpc3MiOiJub2tlLmNvbSIsImxvZ291dElkIjoiIiwibm9rZVVzZ'
+        . 'XIiOjQwNTc4LCJ0b2tlblR5cGUiOiJzaWduSW4ifQ.3fbd2d192d9b5e6f29fc10c110bdfbef5067c665';
     private $groups = [];
     private $groupsIndex = [];
 

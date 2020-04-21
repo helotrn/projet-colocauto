@@ -12,16 +12,6 @@ class Extension extends Action
         'comments_on_extension' => 'required|string',
     ];
 
-    protected $fillable = [
-        'status',
-        'new_duration',
-        'comments_on_extension',
-    ];
-
-    public function loan() {
-        return $this->belongsTo(Loan::class);
-    }
-
     public static function boot() {
         parent::boot();
 
@@ -60,5 +50,15 @@ class Extension extends Action
                 return $query->selectRaw("'extension' AS type");
             }
         ];
+    }
+
+    protected $fillable = [
+        'status',
+        'new_duration',
+        'comments_on_extension',
+    ];
+
+    public function loan() {
+        return $this->belongsTo(Loan::class);
     }
 }
