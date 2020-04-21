@@ -9,9 +9,9 @@
     </div>
     <div v-else>
       <p>
-        Vous n'êtes membre d'aucune communauté?
-        <router-link to="/register/map">Cliquez ici</router-link> pour rejoindre une
-        première communauté!
+        Vous n'êtes membre d'aucun voisinage?
+        <router-link to="/register/map">Cliquez ici</router-link> pour rejoindre un
+        premier voisinage!
       </p>
     </div>
   </div>

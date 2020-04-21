@@ -203,8 +203,6 @@ class LoanableController extends RestController
                     ],
                     'position' => [
                         'type' => 'point',
-                        'description' => "Cliquez sur la carte pour définir l'emplacement usuel"
-                            . " du véhicule.",
                     ],
                     'location_description' => [
                         'type' => 'textarea',

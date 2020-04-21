@@ -17,7 +17,7 @@
       <h2>Profil de membre</h2>
 
       <p class="register-step__profile__text">
-        Remplissez vos informations de profil Locomotion.
+        Informez votre voisinage de qui vous êtes en remplisssant les champs suivants.
       </p>
 
       <profile-form v-if="item"
@@ -30,7 +30,8 @@
       <h2>Preuve de résidence</h2>
 
       <p class="register-step__community__text">
-        Pour rejoindre une communauté LocoMotion, vous devez fournir une preuve de résidence.
+        Pour rejoindre un voisinage LocoMotion, il faut&hellip; habiter dedans! :-)
+        Merci de nous fournir une preuve de résidence.
       </p>
 
       <div v-if="item && item.communities">
@@ -43,17 +44,7 @@
     </div>
 
     <div v-if="currentPage == 4" class="register-step__intents">
-      <h2>Utilisation désirée</h2>
-
-      <div class="register-step__intents__text">
-        <p>
-          Vous avez presque terminé! Indiquez ci-dessous les fonctionnalités de la
-          plateforme que vous désirez utiliser. Ceci vous permettra d'accéder plus
-          rapidement au partage de voiture, par exemple.
-        </p>
-
-        <p>Vous pouvez aussi passer cette étape pour utiliser le partage de vélos.</p>
-      </div>
+      <h2>Que voulez-vous faire en premier?</h2>
 
       <register-intent-form :user="item" v-if="item" :loading="loading"
         @submit="submitOwnerDocumentsAndTags" />
@@ -74,7 +65,7 @@
         </p>
 
         <div class="register-step__completed__button">
-          <b-button variant="primary" to="/app">Revenir à l'accueil</b-button>
+          <b-button variant="primary" to="/app">Aller au tableau de bord</b-button>
         </div>
       </div>
     </div>
@@ -157,7 +148,7 @@ export default {
 
         if (!this.item.communities || this.item.communities.length === 0) {
           this.$store.commit('addNotification', {
-            content: 'Il est temps de choisir une première communauté!',
+            content: 'Il est temps de choisir un premier voisinage!',
             title: 'Profil mis-à-jour',
             variant: 'success',
             type: 'register',

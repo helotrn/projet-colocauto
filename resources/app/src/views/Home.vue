@@ -53,7 +53,7 @@
                   <svg-borrow class="svg-borrow" />
                 </b-col>
                 <b-col cols="6" md="12">
-                  <p>Emprunte des véhicules à 5 min à pieds de chez toi</p>
+                  <p>Empruntez une auto à 5 minutes à pied</p>
                 </b-col>
               </b-row>
             </b-col>
@@ -64,7 +64,7 @@
                   <svg-lend class="svg-lend" />
                 </b-col>
                 <b-col cols="6" md="12" order="1" order-md="2">
-                  <p>Partage ton auto avec tes voisin-e-s</p>
+                  <p>Partagez votre auto à votre voisine</p>
                 </b-col>
               </b-row>
             </b-col>
@@ -75,7 +75,7 @@
                   <svg-borrow class="svg-borrow" />
                 </b-col>
                 <b-col cols="6" md="12">
-                  <p>Fais partie d’un projet collectif ambitieux</p>
+                  <p>Faites partie d’un projet collectif ambitieux</p>
                 </b-col>
               </b-row>
             </b-col>
@@ -129,11 +129,11 @@
           </b-col>
           <b-col lg="6">
             <h2 class="page__section__title">
-              Rejoins ta voisinage
+              Rejoignez un voisinage
             </h2>
             <p>
-              Se déplacer autrement et entrer en relation aux autres transforment votre coin.<br>
-              Des voisins et des voisines s’activent, prenez part au mouvement!
+              Participez à la vie de quartier en vous déplaceant autrement.
+              Des voisins et des voisines s'activent, prenez part au mouvement!
             </p>
             <b-button size="lg" variant="warning" to="register">S'inscrire</b-button>
           </b-col>

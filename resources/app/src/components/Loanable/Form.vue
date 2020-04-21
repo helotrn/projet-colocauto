@@ -4,13 +4,12 @@
       <b-form :novalidate="true" class="form loanable-form__form"
         @submit.stop.prevent="passes(submit)">
         <div class="form__section">
-          <h2>Informations</h2>
-
           <b-row>
             <b-col lg="8">
               <forms-validated-input name="name" :label="$t('fields.name') | capitalize"
                 :rules="form.general.name.rules" type="text"
                 :placeholder="placeholderOrLabel('name') | capitalize"
+                :description="$t('descriptions.name')"
                 v-model="loanable.name" />
             </b-col>
 
@@ -36,7 +35,7 @@
 
             <b-col>
               <forms-validated-input name="location_description"
-                :description="form.general.location_description.description"
+                :description="$t('descriptions.location_description')"
                 :rules="form.general.location_description.rules" :rows="12"
                 :label="$t('fields.location_description') | capitalize" type="textarea"
                 :placeholder="placeholderOrLabel('location_description') | capitalize"

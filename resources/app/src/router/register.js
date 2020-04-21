@@ -34,7 +34,7 @@ export default {
             },
           },
         },
-        title: 'Trouver une communauté',
+        title: 'titles.register-map',
       },
     },
     {

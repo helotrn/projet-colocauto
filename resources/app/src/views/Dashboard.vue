@@ -2,26 +2,72 @@
   <layout-page name="dashboard">
     <b-row class="page__section">
       <b-col class="page__content__main" xl="9" lg="8" md="7">
-        <h1>{{ $t('Bienvenue, {name}', { name: user.full_name })}}</h1>
+        <h1>{{ $t('Bienvenue, {name}', { name: user.name })}}</h1>
+
+        <section class="page__section">
+          <b-jumbotron bg-variant="warning"
+            header="Mise-à-jour COVID-19" lead="LocoMotion est avec vous">
+            <b-button v-b-modal="'covid-modal'">En savoir plus</b-button>
+          </b-jumbotron>
+
+          <b-modal size="md" class="covid-modal"
+            title="COVID-19: Quelques informations importantes"
+            id="covid-modal" footer-class="d-none">
+            <p class="covid-modal__subtitle">VOUS ÊTES MALADE OU VOUS REVENEZ DE VOYAGE?</p>
+            <p>→  N’UTILISEZ PAS LOCOMOTION</p>
+
+            <p class="covid-modal__subtitle">POUR LES PROPRIÉTAIRES D'AUTO</p>
+            <p>
+              Si vous souhaitez retirer temporairement votre auto,
+              pensez à mettre à jour votre calendrier.
+            </p>
+
+            <p class="covid-modal__subtitle">POUR TOU-TE-S LES PARTICIPANT-E-S</p>
+            <p>
+              Avant et après l’utilisation d’une voiture, LAVEZ VOS MAINS à l’eau courante
+              tiède et au savon pendant au moins 20 secondes ou utilisez un désinfectant à
+              base d’alcool.
+            </p>
+
+            <p class="covid-modal__subtitle">GARDEZ LES AUTOS PROPRES</p>
+            <p>
+              Que ce soit votre autre ou celle de votre voisin-e, voici quelques
+              recommandations à prendre avant et après son utilisation:
+            </p>
+            <ul>
+              <li>
+                Nettoyez le volant et autres surfaces avec un linge et du désinfectant.
+              </li>
+              <li>
+                Évitez plus que jamais de laisser tout déchet
+                (mouchoir, tasse, emballage, etc…)
+              </li>
+            </ul>
+          </b-modal>
+        </section>
+
+        <section class="page__section" v-if="!hasCompletedRegistration">
+          <b-button to="/register">Compléter l'inscription</b-button>
+        </section>
 
         <section class="page__section" v-if="hasTutorials">
           <h2>Pour commencer</h2>
 
           <div class="page__section__tutorials">
             <div v-if="hasTutorial('discover-community')">
-              <tutorial-block title="Découvre ta communauté"
+              <tutorial-block title="Découvrez votre voisinage"
                 to="/community"
                 bg-image="/img-tetes.png" variant="dark" />
             </div>
 
             <div v-if="hasTutorial('add-vehicle')">
-              <tutorial-block title="Inscris un véhicule"
+              <tutorial-block title="Inscrivez un véhicule"
                 to="/profile/loanables/new"
                 bg-image="/img-voiture.png" variant="dark" />
             </div>
 
             <div v-if="hasTutorial('find-vehicle')">
-              <tutorial-block title="Trouve un véhicule"
+              <tutorial-block title="Trouvez un véhicule"
                 to="/community/list"
                 bg-image="/img-vehicules.png" variant="light" />
             </div>
@@ -81,20 +127,24 @@
 
       <b-col tag="aside" class="page__sidebar" xl="3" lg="4" md="5">
         <b-card>
-          <dashboard-balance :user="user" />
+          <div v-if="hasCompletedRegistration">
+            <dashboard-balance :user="user" />
 
-          <hr>
+            <hr>
+          </div>
 
-          <dashboard-loan-history
-            :past-loans="pastLoans.slice(0, 3)"
-            :upcoming-loans="upcomingLoans.slice(0, 3)"
-            :ongoing-loans="ongoingLoans.slice(0, 3)"
-            :waiting-loans="waitingLoans.slice(0, 3)"
-            :borrower="user.borrower" />
+          <div v-if="hasCompletedRegistration">
+            <dashboard-loan-history
+              :past-loans="pastLoans.slice(0, 3)"
+              :upcoming-loans="upcomingLoans.slice(0, 3)"
+              :ongoing-loans="ongoingLoans.slice(0, 3)"
+              :waiting-loans="waitingLoans.slice(0, 3)"
+              :borrower="user.borrower" />
 
-          <hr>
+            <hr>
+          </div>
 
-          <dashboard-resources-list />
+          <dashboard-resources-list :has-community="hasCommunity" />
         </b-card>
       </b-col>
     </b-row>
@@ -154,7 +204,7 @@ export default {
         case 'add-vehicle':
           return this.user.owner && this.user.loanables.length === 0;
         case 'find-vehicle':
-          return !!this.user.borrower;
+          return !!this.user.borrower && this.hasCommunity;
         case 'discover-community':
           return this.hasCommunity && this.user.created_at
             >= this.$dayjs().subtract(2, 'week').format('YYYY-MM-DD HH:mm:ss');
@@ -177,6 +227,10 @@ export default {
   .page__content {
     padding-top: 45px;
     padding-bottom: 45px;
+
+    &__main > h1 {
+      margin-bottom: 60px;
+    }
   }
 
   &__vehicles {

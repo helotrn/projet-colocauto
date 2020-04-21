@@ -14,6 +14,12 @@ export default {
     },
     'créer un véhicule': 'créer un véhicule',
     '{count} véhicule sélectionné': 'aucun véhicule sélectionné | 1 véhicule sélectionné | {count} véhicules sélectionnés',
+    descriptions: {
+      location_description: 'Généralement, votre véhicule se trouve où? Cliquez sur la carte '
+        + 'pour définir sa position.',
+      name: "Merci de nommer votre véhicule pour en informer votre voisinage. Le nom n'a pas "
+        + "besoin d'être compliqué. Allez-y au plus simple... ou au plus drôle !",
+    },
     engines: cars.fr.engines,
     fields: {
       id: 'ID',
@@ -25,7 +31,7 @@ export default {
       engine: 'moteur',
       has_accident_report: "un rapport d'accident existe-t-il?",
       has_informed_insurer: "l'assureur a-t-il été informé?",
-      image: 'photo',
+      image: 'photo du véhicule',
       instructions: 'instructions',
       insurer: 'assureur',
       is_value_over_fifty_thousand: 'la valeur de ce véhicule dépasse-t-elle 50 000$?',
@@ -42,7 +48,7 @@ export default {
       position: 'position géographique',
       size: 'taille',
       transmission_mode: 'transmission',
-      type: 'type',
+      type: 'type de véhicule',
       year_of_circulation: 'année de circulation',
     },
     model: {
@@ -51,6 +57,14 @@ export default {
     papers_location: {
       in_the_car: 'dans la voiture',
       to_request_with_car: 'à récupérer avec la voiture',
+    },
+    placeholders: {
+      comments: "ex.: J'ai un siège pour bébé et un support pour les vélos en arrière.",
+      instructions: "ex.: SVP ne pas fumer dans mon auto. Aussi, j'apprécierai que le siège de "
+        + "bébé soit replacé, s'il y a lieu.  Merci beaucoup!",
+      location_description: 'ex.: Généralement dans la ruelle, textez-moi plus plus de '
+        + 'précision',
+      name: 'ex.: la LocoMobile bleue',
     },
     sizes: {
       big: 'grand',
@@ -61,7 +75,7 @@ export default {
     transmission_modes: cars.fr.transmission_modes,
     types: {
       bike: 'vélo',
-      car: 'voiture',
+      car: 'auto',
       null: "n'importe quel type",
       trailer: 'remorque',
     },

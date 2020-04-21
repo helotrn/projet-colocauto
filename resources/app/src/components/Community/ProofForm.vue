@@ -22,11 +22,11 @@
       <b-col>
         <div class="community-proof-form__instructions">
           <p>
-            Envoyez un relevé de compte, un bail, ou tout autre document indiquant
-            votre adresse et votre nom.
+            Merci de nous fournir un document avec votre nom et votre adresse.
+            Ça peut être: relevé de compte, un bail ou votre permis de conduire.
           </p>
           <p>
-            Soit en fichier numérisé, ou simplement une photo prise avec votre téléphone.
+            Soit en document numérisé ou simplement une photo prise avec votre téléphone.
           </p>
         </div>
 

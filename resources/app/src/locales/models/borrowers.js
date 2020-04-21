@@ -14,5 +14,8 @@ export default {
         return acc;
       }, {}),
     },
+    placeholders: {
+      drivers_license_number: 'ex.: L1234-456789-09',
+    },
   },
 };

@@ -17,16 +17,15 @@
         <b-row>
           <b-col>
             <forms-validated-input name="has_been_sued_last_ten_years" type="checkbox"
-              :label="$t('fields.has_been_sued_last_ten_years') | capitalize"
-              :placeholder="placeholderOrLabel('has_been_sued_last_ten_years') | capitalize"
-              v-model="borrower.has_been_sued_last_ten_years" />
+              label="Je confirme n'avoir reçu aucune poursuite au cours des 10 dernières années"
+              v-model="reverseHasBeenSuedLastTenYears" />
           </b-col>
         </b-row>
 
         <b-row>
           <b-col>
             <forms-file-uploader field="saaq"
-              :label="$t('fields.saaq') | capitalize"
+              label="Ex.: monfichier.pdf"
               v-model="borrower.saaq" />
           </b-col>
         </b-row>
@@ -34,22 +33,16 @@
         <b-row>
           <b-col>
             <forms-file-uploader field="gaa"
-              :label="$t('fields.gaa') | capitalize"
+              label="Ex.: monfichier.pdf"
               v-model="borrower.gaa" />
           </b-col>
         </b-row>
 
         <b-row>
           <b-col>
-            <div class="borrower-form__insurance">
-              <div class="borrower-form__insurance__text">
-                <p>Les documents d'assurances</p>
-              </div>
-
-              <forms-file-uploader field="insurance"
-                :label="$t('fields.insurance') | capitalize"
-                v-model="borrower.insurance" />
-            </div>
+            <forms-file-uploader field="insurance"
+              label="Ex.: monfichier.pdf"
+              v-model="borrower.insurance" />
           </b-col>
         </b-row>
 
@@ -125,6 +118,16 @@ export default {
   methods: {
     submit(...params) {
       this.$emit('submit', ...params);
+    },
+  },
+  computed: {
+    reverseHasBeenSuedLastTenYear: {
+      get() {
+        return !this.borrower.has_been_sued_last_ten_years;
+      },
+      set(val) {
+        this.borrower.has_been_sued_last_ten_years = !val;
+      },
     },
   },
 };

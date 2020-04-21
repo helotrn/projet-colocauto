@@ -3,7 +3,7 @@ export default {
     fields: {
       credit_card_type: 'type de compte',
       external_id: 'numéro de compte',
-      name: 'nom',
+      name: 'nom associé au compte',
       type: 'type',
     },
   },

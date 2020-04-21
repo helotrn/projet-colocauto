@@ -1,6 +1,10 @@
 <template>
   <div class="dashboard-balance">
-    <h3>Mon solde</h3>
+    <h3>
+      Solde
+      <b-badge pill variant="light" v-b-popover.hover="$t('approvisionner_popover')">
+        ?
+      </b-badge></h3>
 
     <div class="dashboard-balance__balance">
       {{ roundedBalance }}&nbsp;$
@@ -28,7 +32,7 @@
       </router-link>
     </p>
 
-    <b-modal id="add-credit-modal" title="Ajouter des crédits" size="lg"
+    <b-modal id="add-credit-modal" title="Approvisionner mon compte" size="lg"
       footer-class="d-none">
       <user-add-credit-box :user="user" @bought="reloadUserAndCloseModal" @cancel="closeModal"/>
     </b-modal>
@@ -38,9 +42,10 @@
 <i18n>
 fr:
   approvisionner: Approvisionner
-  modify_payment_method: Modifier les méthodes de paiement
+  modify_payment_method: Modifier les modes de paiement
   reclamer: Réclamer
   reclamer_tooltip: Un minimum de 10$ est requis pour réclamer son solde.
+  approvisionner_popover: On aime l'idée de « monnaie locale », une autre manière d'aider les échanges dans le quartier et le commerce local. Une opportunité d'essayer une économie à visage humain? Finalement, c'est facile. C'est comme mettre des billets sur sa carte de transport collectif :-)
 </i18n>
 
 <script>
@@ -83,6 +88,10 @@ export default {
     font-size: 20px;
     font-weight: normal;
     font-weight: 600;
+
+    .badge {
+      cursor: pointer;
+    }
   }
 
   &__balance {

@@ -12,11 +12,11 @@
         </router-link>
       </li>
 
-      <li class="dashboard-resources-list__resources__ambassadors">
+      <li class="dashboard-resources-list__resources__ambassadors" v-if="hasCommunity">
         <router-link to="/community?tag=ambassador">
           <img src="/icons/allo.png">
           <span>
-            Les ambassadeurs de ta communauté
+            Motiver son quartier
           </span>
         </router-link>
       </li>
@@ -25,7 +25,7 @@
         <router-link to="/guide/assurance-desjardins">
           <img src="/icons/desjardins.png">
           <span>
-            Assurance Desjardins
+            Assurances Desjardins
           </span>
         </router-link>
       </li>
@@ -34,7 +34,7 @@
         <a href="https://facebook.com" target="_blank">
           <img src="/icons/messenger.png">
           <span>
-            Groupe de clavardage Locomotion
+            Discuter avec son voisinage
           </span>
         </a>
       </li>
@@ -45,6 +45,13 @@
 <script>
 export default {
   name: 'DashboardResourcesList',
+  props: {
+    hasCommunity: {
+      required: false,
+      type: Boolean,
+      default: true,
+    },
+  },
 };
 </script>
 

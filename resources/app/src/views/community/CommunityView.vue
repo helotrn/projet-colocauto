@@ -251,12 +251,12 @@ export default {
       top: 0;
       left: 0;
       width: 100vw;
-      height: calc(100vh - #{$layout-navbar-height + $molotov-footer-height});
+      height: calc(100vh - #{$layout-navbar-height + $footer-height});
       z-index: 10;
     }
 
     &__form {
-      max-height: calc(100vh - #{$layout-navbar-height + $molotov-footer-height} - 1px);
+      max-height: calc(100vh - #{$layout-navbar-height + $footer-height} - 1px);
 
       padding-top: 15px;
       padding-bottom: 15px;
@@ -275,7 +275,7 @@ export default {
           margin: 1.25rem;
         }
 
-        max-height: calc(100vh - #{$layout-navbar-height + $molotov-footer-height} - 30px);
+        max-height: calc(100vh - #{$layout-navbar-height + $footer-height} - 30px);
       }
 
       &__sections {
@@ -296,7 +296,7 @@ export default {
         }
 
         &__search {
-          max-height: calc(100vh - #{$layout-navbar-height + $molotov-footer-height} - 154px);
+          max-height: calc(100vh - #{$layout-navbar-height + $footer-height} - 154px);
           overflow: auto;
           overflow-x: hidden;
         }

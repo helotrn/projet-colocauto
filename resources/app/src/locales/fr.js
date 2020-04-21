@@ -88,6 +88,7 @@ export default {
     payment_methods: 'méthodes de paiement',
     profile: 'Profil',
     register: "s'inscrire",
+    'register-map': 'choisir un voisinage',
     tags: 'Mots-clés',
     tag: 'Mot-clé',
     user: 'membre',

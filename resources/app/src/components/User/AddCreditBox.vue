@@ -10,18 +10,8 @@
           <b-form-input v-model="customAmount" />
         </p>
 
-        <p class="user-add-credit-box__balance__cost">
-          coûtera {{ amountWithFeeAndTaxes | currency }}
-          <span class="no-break">
-            avec les frais ({{ onlyFee | currency }})
-          </span>
-          <span class="no-break">
-            et les taxes ({{ onlyTaxes | currency }}).
-          </span>
-        </p>
-
         <p>
-          <em>Frais de transaction : 5% + 1$</em>
+          Montant prélevé du mode de paiement: {{ amountWithFeeAndTaxes | currency }}
         </p>
       </b-col>
 
@@ -29,13 +19,6 @@
         <p>Vous avez actuellement</p>
 
         <p class="user-add-credit-box__balance__initial">{{ user.balance | currency }}</p>
-
-        <p>
-          {{ user.balance > 1 ? 'auquel' : 'auxquels' }} on ajoute {{ amount | currency }}
-          pour un nouveau total de
-        </p>
-
-        <p class="user-add-credit-box__balance__added">{{ newAmount | currency }}</p>
       </b-col>
     </b-row>
 
@@ -45,22 +28,22 @@
           :options="paymentMethods" v-model="paymentMethodId">
           <template v-slot:first>
             <b-form-select-option :value="null" disabled>
-              Choisissez une méthode de paiement
+              Choisir votre mode de paiement
             </b-form-select-option>
           </template>
         </b-form-select>
 
         <p>
           <router-link to="/profile/payment_methods/new">
-            + Ajouter une méthode de paiement
+            + Ajouter un mode de paiement
           </router-link>
         </p>
       </b-col>
 
       <b-col class="user-add-credit-box__explanations">
         <p>
-          Pour limiter au maximum l'impact des frais de transaction, envisagez de vous procurer
-          plus de crédits Locomotion à la fois.
+          Plus vous mettez d'argent, plus vous économisez sur les frais de transaction
+          (carte de crédit)
         </p>
       </b-col>
     </b-row>
@@ -69,7 +52,7 @@
       <b-col class="text-center">
         <b-button class="mr-3" type="submit" variant="primary"
           @click="buyCredit" :disabled="amount < minimumRequired">
-          Acheter
+          Valider
         </b-button>
 
         <b-button variant="danger" @click="emitCancel">Annuler</b-button>

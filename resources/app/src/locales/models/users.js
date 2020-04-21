@@ -2,8 +2,9 @@ export default {
   fr: {
     'ajouter un membre': 'ajouter un membre',
     descriptions: {
-      description: 'Décrivez-vous en quelques mots. Cette description personnelle sera affichée '
-        + 'sur votre profil de membre Locomotion.',
+      description: 'De quoi aimeriez-vous discuter avec vos voisins et voisines? En quelques'
+        + 'mots, dites-nous qui vous êtes ou nommez une activité à faire dans votre quartier. '
+        + 'On l\'affichera sur votre profil. :-)',
     },
     membre: 'membre | membres',
     fields: {

@@ -44,7 +44,7 @@ export default {
       type: String,
     },
     placeholder: {
-      default: 'Envoyer...',
+      default: 'Téléverser...',
       type: String,
     },
     removeImageText: {

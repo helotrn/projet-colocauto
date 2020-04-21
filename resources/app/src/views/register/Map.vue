@@ -1,6 +1,6 @@
 <template>
   <div name="register-map" v-if="routeDataLoaded">
-    <b-card title="Trouver une communauté" class="register-map__form" v-if="!community">
+    <b-card title="Choisir un voisinage" class="register-map__form" v-if="!community">
       <b-card-text>
         <b-form @submit.prevent="searchPostalCode">
           <b-form-group label="Code postal">
@@ -27,7 +27,7 @@
         </div>
 
         <h4 class="card-title">
-          {{ `Rejoindre la communauté ${community ? community.name : ''}` }}
+          {{ `Rejoindre le voisinage ${community ? community.name : ''}` }}
         </h4>
       </template>
       <b-card-text>
@@ -40,8 +40,8 @@
         <b-form class="register-map__community__submit"
           @submit.prevent="joinCommunity" @reset.prevent="resetCommunity">
           <b-button-group>
-            <b-button type="submit" variant="primary">Poursuivre l'inscription</b-button>
-            <b-button type="reset" variant="warning">Revenir aux communautés</b-button>
+            <b-button type="submit" variant="primary">Rejoindre ce voisinage</b-button>
+            <b-button type="reset" variant="warning">Voir l'ensemble des voisinages</b-button>
           </b-button-group>
         </b-form>
       </b-card-text>
@@ -289,7 +289,7 @@ export default {
 
   &__map {
     width: 100vw;
-    height: calc(100vh - #{$layout-navbar-height + $molotov-footer-height} - 1px);
+    height: calc(100vh - #{$layout-navbar-height + $footer-height} - 1px);
     z-index: 10;
   }
 

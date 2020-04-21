@@ -6,7 +6,7 @@
         <b-row>
           <b-col lg="4">
             <forms-image-uploader field="avatar"
-              :label="$t('fields.avatar') | capitalize"
+              label="📷 Ajouter une photo de profil"
               v-model="user.avatar" />
           </b-col>
           <b-col>
@@ -31,7 +31,7 @@
               <b-col>
                 <forms-validated-input name="description"
                   :description="$t('descriptions.description')"
-                  :label="$t('fields.description') | capitalize" type="textarea"
+                  label="Pour briser la glace" type="textarea"
                   :placeholder="placeholderOrLabel('description') | capitalize"
                   v-model="user.description" />
               </b-col>
@@ -179,7 +179,7 @@ export default {
   data() {
     return {
       isPerson: true,
-      openDate: new Date('2001-01-01'),
+      openDate: new Date('1985-01-01'),
       datesInTheFuture: {
         from: new Date(),
       },
