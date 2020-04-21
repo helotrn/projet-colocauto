@@ -24,7 +24,7 @@ class IntentionTest extends TestCase
 
         $this->assertNotNull($intention);
 
-        $executedAtDate = substr(Carbon::now()->format("Y-m-d h:m:sO"), 0, -2);
+        $executedAtDate = Carbon::now()->format('Y-m-d h:m:s');
         Carbon::setTestNow($executedAtDate);
 
         $response = $this->json(
@@ -51,7 +51,7 @@ class IntentionTest extends TestCase
 
         $this->assertNotNull($intention);
 
-        $executedAtDate = substr(Carbon::now()->format("Y-m-d h:m:sO"), 0, -2);
+        $executedAtDate = Carbon::now()->format('Y-m-d h:m:s');
         Carbon::setTestNow($executedAtDate);
 
         $response = $this->json(

@@ -2,14 +2,10 @@
 
 namespace App\Models;
 
-use App\Utils\TimestampWithTimezone;
 use Carbon\Carbon;
-use Vkovic\LaravelCustomCasts\HasCustomCasts;
 
 class PrePayment extends Action
 {
-    use HasCustomCasts;
-
     public static function boot() {
         parent::boot();
 
@@ -65,11 +61,6 @@ class PrePayment extends Action
     }
 
     protected $fillable = [];
-
-    protected $casts = [
-        'executed_at' => TimestampWithTimezone::class,
-    ];
-
 
     public $items = ['loan'];
 

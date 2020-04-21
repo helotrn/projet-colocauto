@@ -4,13 +4,19 @@ namespace App\Models;
 
 use App\Models\Loan;
 use App\Models\User;
+use App\Utils\TimestampWithTimezone;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Vkovic\LaravelCustomCasts\HasCustomCasts;
 
 class Action extends BaseModel
 {
-    use SoftDeletes;
+    use HasCustomCasts, SoftDeletes;
 
-    public $readOnly = 'true';
+    protected $casts = [
+        'executed_at' => TimestampWithTimezone::class,
+    ];
+
+    public $readOnly = true;
 
     public $items = ['loan', 'user'];
 
