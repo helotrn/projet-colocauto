@@ -23,6 +23,7 @@ before_script:
   - php -r "unlink('composer-setup.php'); unlink('installer.sig');"
   - pecl install xdebug
   - docker-php-ext-install pdo_pgsql
+  - docker-php-ext-install pgsql
   - docker-php-ext-enable xdebug
 
 cache:
