@@ -85,6 +85,7 @@ class LoanTest extends TestCase
 
         $response = $this->json('GET', "/api/v1/loans");
 
+        $response->dump();
         $response->assertStatus(200)
             ->assertJson([ 'total' => 2 ])
             ->assertJsonStructure($this->buildCollectionStructure(static::$getLoanResponseStructure));
