@@ -8,7 +8,7 @@
         :ref="`${field}fileinput`" :placeholder="placeholder"
         :name="field" :accept="accept.join(',')" browse-text="Sélectionner"
         drop-placeholder="Déposer l'image ici..."
-        @change="uploadImage($event.target.name, $event.target.files)"/>
+        @change="handleChange" />
       <div class="invalid-feedback" v-if="errors">
         {{ errors.message }}
       </div>
@@ -51,6 +51,11 @@ export default {
       default: "Retirer l'image",
       type: String,
     },
+    required: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
     value: {
       type: Object,
       require: false,
@@ -65,10 +70,24 @@ export default {
       return !!this.$store.state.images.ajax;
     },
     validationState() {
-      return !this.errors && Boolean(this.value);
+      if (!this.required && !this.value) {
+        return null;
+      }
+
+      return !this.errors && (!this.required || !!this.value);
     },
   },
   methods: {
+    handleChange(event) {
+      switch (event.type) {
+        case 'drop':
+          this.uploadImage(event.target.getAttribute('for'), event.dataTransfer.files);
+          break;
+        default:
+          this.uploadImage(event.target.name, event.target.files);
+          break;
+      }
+    },
     removeImage() {
       this.$emit('input', null);
 
@@ -99,12 +118,44 @@ export default {
 };
 </script>
 
-<style>
-.preview img {
-  max-width: 100%;
+<style lang="scss">
+.forms-image-uploader {
+  width: 100%;
+  min-height: 200px;
+
+  .custom-file-label {
+    overflow: hidden;
+    height: calc(200px - 27px);
+    text-align: center;
+
+    border: 1px dashed $light-grey;
+
+    background-image: url("/cloud.svg");
+    background-repeat: no-repeat;
+    background-size: auto 50%;
+    background-position: top 40px center;
+
+    &.dragging {
+      background-image: url("/cloud-active.svg");
+      border: 1px dashed $primary;
+    }
+
+    &::after {
+      border-left: 0;
+      border-radius: 0.25rem;
+      position: absolute;
+      bottom: 0.5rem;
+      left: 0;
+      right: 0;
+      top: auto;
+      width: 50%;
+      min-width: 200px;
+      margin: 0 auto;
+    }
+  }
 }
 
-.custom-file-label {
-  overflow: hidden;
+.preview img {
+  max-width: 100%;
 }
 </style>
