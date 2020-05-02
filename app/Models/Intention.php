@@ -58,6 +58,8 @@ class Intention extends Action
         'message_for_borrower',
     ];
 
+    public $readOnly = false;
+
     public $items = ['loan'];
 
     public function loan() {

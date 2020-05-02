@@ -27,6 +27,8 @@ class Handover extends Action
         'purchases_amount',
     ];
 
+    public $readOnly = false;
+
     public $morphOnes = [
         'image' => 'imageable',
     ];

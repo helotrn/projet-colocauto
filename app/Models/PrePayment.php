@@ -60,6 +60,8 @@ class PrePayment extends Action
         ];
     }
 
+    public $readOnly = false;
+
     protected $fillable = [];
 
     public $items = ['loan'];

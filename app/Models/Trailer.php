@@ -37,6 +37,8 @@ class Trailer extends Loanable
         'position',
     ];
 
+    public $readOnly = false;
+
     public $items = ['community','owner', 'padlock'];
 
     public $morphOnes = [

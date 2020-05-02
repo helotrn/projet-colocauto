@@ -65,6 +65,8 @@ class Car extends Loanable
 
     protected $table = 'cars';
 
+    public $readOnly = false;
+
     protected $fillable = [
         'availability_json',
         'availability_mode',

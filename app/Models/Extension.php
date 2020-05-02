@@ -52,6 +52,8 @@ class Extension extends Action
         ];
     }
 
+    public $readOnly = false;
+
     protected $fillable = [
         'status',
         'new_duration',

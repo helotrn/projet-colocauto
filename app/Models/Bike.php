@@ -56,6 +56,8 @@ class Bike extends Loanable
 
     protected $table = 'bikes';
 
+    public $readOnly = false;
+
     public $items = ['community','owner', 'padlock'];
 
     public $morphOnes = [

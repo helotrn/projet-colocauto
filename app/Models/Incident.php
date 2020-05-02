@@ -55,6 +55,8 @@ class Incident extends Action
         ];
     }
 
+    public $readOnly = false;
+
     public function loan() {
         return $this->belongsTo(Loan::class);
     }

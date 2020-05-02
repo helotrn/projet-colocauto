@@ -63,6 +63,8 @@ class Payment extends Action
         'bill_item_id',
     ];
 
+    public $readOnly = false;
+
     public $items = ['bill_item', 'loan'];
 
     public function billItem() {

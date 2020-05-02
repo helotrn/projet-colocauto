@@ -71,6 +71,8 @@ class Takeover extends Action
         'comments_on_vehicle',
     ];
 
+    public $readOnly = false;
+
     public $morphOnes = [
         'image' => 'imageable',
     ];
