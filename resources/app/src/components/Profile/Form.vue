@@ -76,7 +76,7 @@
           <b-col>
             <forms-validated-input name="date_of_birth"
               :label="$t('fields.date_of_birth') | capitalize"
-              :rules="{ date: true, required: true }" type="date" initial-view="year"
+              :rules="form.general.date_of_birth.rules" type="date" initial-view="year"
               :placeholder="placeholderOrLabel('date_of_birth') | capitalize"
               :open-date="openDate" :disabled-dates="datesInTheFuture"
               v-model="user.date_of_birth" />
@@ -96,10 +96,7 @@
           <b-col>
             <forms-validated-input name="postal_code"
               :label="$t('fields.postal_code') | capitalize"
-              :rules="{
-                required: true,
-                regex: /^[a-zA-Z][0-9][a-zA-Z]\s*[0-9][a-zA-Z][0-9]$/
-              }" type="text" mask="A#A #A#"
+              :rules="form.general.postal_code.rules" type="text" mask="A#A #A#"
               :placeholder="placeholderOrLabel('postal_code') | capitalize"
               v-model="user.postal_code" />
           </b-col>
@@ -177,11 +174,14 @@ export default {
     },
   },
   data() {
+    const from = new Date();
+    from.setDate(from.getDate() - 1);
+
     return {
       isPerson: true,
       openDate: new Date('1985-01-01'),
       datesInTheFuture: {
-        from: new Date(),
+        from,
       },
     };
   },
