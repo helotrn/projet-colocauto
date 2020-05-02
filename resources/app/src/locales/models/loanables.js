@@ -1,4 +1,6 @@
+import bikes from './bikes';
 import cars from './cars';
+import trailers from './trailers';
 import owners from './owners';
 
 export default {
@@ -22,34 +24,21 @@ export default {
     },
     engines: cars.fr.engines,
     fields: {
-      id: 'ID',
-      bike_type: 'type de vélo',
-      brand: 'marque',
+      ...bikes.fr.fields,
+      ...cars.fr.fields,
+      ...trailers.fr.fields,
       comments: 'commentaires',
       community_id: 'communauté',
       deleted_at: 'supprimé',
-      engine: 'moteur',
-      has_accident_report: "un rapport d'accident existe-t-il?",
-      has_informed_insurer: "l'assureur a-t-il été informé?",
       image: 'photo du véhicule',
       instructions: 'instructions',
-      insurer: 'assureur',
-      is_value_over_fifty_thousand: 'la valeur de ce véhicule dépasse-t-elle 50 000$?',
       location_description: "précisions sur l'emplacement",
-      maximum_charge: 'charge maximale',
-      model: 'modèle',
       name: 'nom',
       owner: owners.fr.fields,
-      ownership: 'type de propriété',
       owner_id: 'propriétaire',
       padlock_id: 'cadenas',
-      papers_location: 'emplacement des papiers',
-      plate_number: 'numéro de plaque',
       position: 'position géographique',
-      size: 'taille',
-      transmission_mode: 'transmission',
       type: 'type de véhicule',
-      year_of_circulation: 'année de circulation',
     },
     model: {
       singular: 'véhicule',

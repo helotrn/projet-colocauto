@@ -9,6 +9,7 @@ export default {
     fields: {
       brand: 'marque',
       engine: 'moteur',
+      has_accident_report: "un rapport d'accident existe-t-il?",
       has_informed_insurer: "l'assureur a-t-il été informé?",
       insurer: 'assureur',
       is_value_over_fifty_thousand: 'la valeur de ce véhicule dépasse-t-elle 50 000$?',
