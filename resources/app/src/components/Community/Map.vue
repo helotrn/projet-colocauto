@@ -11,7 +11,7 @@
       :clickable="l.available !== false" :position="l.position_google">
       <gmap-info-window v-if="selectedLoanable === l" @closeclick="selectLoanable = null">
         <div class="info-box-content" style="width: 270px;">
-          <loanable-card v-bind="l" @select="emitSelect(l)" />
+          <loanable-card v-bind="l" @select="$emit('select', l)" @test="$emit('test', l)" />
         </div>
       </gmap-info-window>
     </gmap-marker>
@@ -83,9 +83,6 @@ export default {
     google: gmapApi,
   },
   methods: {
-    emitSelect(loanable) {
-      this.$emit('select', loanable);
-    },
     iconFor(loanable) {
       const status = loanable.available === false ? '-unavailable-' : '-';
 

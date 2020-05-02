@@ -2,79 +2,40 @@
 
 namespace Tests\Integration;
 
+use App\Models\Community;
+use App\Models\Car;
+use App\Models\Owner;
 use App\Models\Pricing;
 use Tests\TestCase;
 
 class PricingTest extends TestCase
 {
-    public function testCreatePricings() {
-        $this->markTestIncomplete();
+    public function testEvaluatePricing() {
+        $community = factory(Community::class)->create();
+
+        $syncCommunities = [];
+        $syncCommunities[$community->id] = [
+            'approved_at' => new \DateTime(),
+            'role' => 'admin',
+        ];
+        $this->user->communities()->sync($syncCommunities);
+
+        $owner = factory(Owner::class)->create([ 'user_id' => $this->user->id ]);
+        $car = factory(Car::class)->create([
+            'owner_id' => $owner->id ,
+            'year_of_circulation' => 1000000,
+        ]);
+
+        $pricing = factory(Pricing::class)->create([ 'community_id' => $community->id]);
+
         $data = [
-            'name' => $this->faker->name,
-            'object_type' => $this->faker->sentence,
-            'variable' => $this->faker->randomElement(['time' ,'distance']),
-            'rule' => $this->faker->sentence,
+            'km' => 1,
+            'minutes' => 1,
+            'loanable' => $car->toArray(),
         ];
 
-        $response = $this->json('POST', route('pricings.create'), $data);
+        $response = $this->json('PUT', route('pricings.evaluate', $pricing->id), $data);
 
-        $response->assertStatus(201)->assertJson($data);
-    }
-
-    public function testShowPricings() {
-        $this->markTestIncomplete();
-        $post = factory(Pricing::class)->create();
-
-        $response = $this->json('GET', route('pricings.retrieve', $post->id), $data);
-
-        $response->assertStatus(200)->assertJson($data);
-    }
-
-    public function testUpdatePricings() {
-        $this->markTestIncomplete();
-        $post = factory(Pricing::class)->create();
-        $data = [
-            'name' => $this->faker->name,
-        ];
-
-        $response = $this->json('PUT', route('pricings.update', $post->id), $data);
-
-        $response->assertStatus(200)->assertJson($data);
-    }
-
-    public function testDeletePricings() {
-        $this->markTestIncomplete();
-        $post = factory(Pricing::class)->create();
-
-        $response = $this->json('DELETE', route('pricings.delete', $post->id), $data);
-
-        $response->assertStatus(204)->assertJson($data);
-    }
-
-    public function testListPricings() {
-        $this->markTestIncomplete();
-        $pricings = factory(Pricing::class, 2)->create()->map(function ($post) {
-            return $post->only([
-                'id',
-                'name',
-                'object_type',
-                'variable',
-                'rule',
-            ]);
-        });
-
-        $response = $this->json('GET', route('pricings.index'));
-
-        $response->assertStatus(200)
-                ->assertJson($pricings->toArray())
-                ->assertJsonStructure([
-                    '*' => [
-                        'id',
-                        'name',
-                        'object_type',
-                        'variable',
-                        'rule',
-                    ],
-                ]);
+        $response->assertStatus(200)->assertJson(['price' => 1001001]);
     }
 }

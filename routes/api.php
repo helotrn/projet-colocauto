@@ -33,7 +33,6 @@ Route::prefix('v1')->group(function () {
             'loanable',
             'padlock',
             'payment_method',
-            'pricing',
             'tag',
             'trailer',
             'user'
@@ -86,7 +85,8 @@ Route::prefix('v1')->group(function () {
         Route::put('/loans/{loan_id}/actions/{action_id}/complete', 'ActionController@complete');
         Route::put('/loans/{loan_id}/actions/{action_id}/cancel', 'ActionController@cancel');
 
-        Route::put('/pricings/{id}/evaluate', 'PricingController@evaluate');
+        Route::put('/pricings/{id}/evaluate', 'PricingController@evaluate')
+          ->name('pricings.evaluate');
 
         Route::get('/loanables/{id}/test', 'LoanableController@test');
     });

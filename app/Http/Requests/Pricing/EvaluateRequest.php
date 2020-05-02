@@ -17,13 +17,11 @@ class EvaluateRequest extends BaseRequest
     }
 
     public function rules() {
-        $rules = [
+        return [
             'km' => ['integer', 'required'],
             'minutes' => ['integer', 'required'],
-            'object' => ['nullable'],
+            'loanable' => ['nullable'],
         ];
-
-        return $rules;
     }
 
     public function messages() {

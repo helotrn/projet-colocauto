@@ -1,14 +1,16 @@
 <?php
 
 use App\Models\Pricing;
-use Illuminate\Support\Str;
 use Faker\Generator as Faker;
 
 $factory->define(Pricing::class, function (Faker $faker) {
     return [
         'name' => $faker->name,
-        'object_type' => $faker->sentence,
-        'variable' => $faker->randomElement(['time' ,'distance']),
-        'rule' => $faker->sentence,
+        'object_type' => $faker->randomElement([
+            'App\Models\Bike' ,
+            'App\Models\Car',
+            'App\Models\Trailer',
+        ]),
+        'rule' => '$KM * 1 + $MINUTES * 1000 + $OBJET.year_of_circulation',
     ];
 });

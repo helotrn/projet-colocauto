@@ -30,7 +30,7 @@ class CarTest extends TestCase
     ];
 
     public function testCreateCars() {
-        $owner = factory(Owner::class)->create(['user_id' => $this->user->id]);
+        $owner = factory(Owner::class)->create([ 'user_id' => $this->user->id ]);
         $data = [
             'name' => $this->faker->name,
             'position' => [$this->faker->latitude, $this->faker->longitude],
