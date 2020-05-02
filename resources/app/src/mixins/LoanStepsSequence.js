@@ -1,10 +1,18 @@
 export default {
   computed: {
     hasActiveExtensions() {
+      if (!this.item.id) {
+        return false;
+      }
+
       return this.item.extensions
         .reduce((acc, i) => (acc || !i.id || i.status !== 'completed'), false);
     },
     hasActiveIncidents() {
+      if (!this.item.id) {
+        return false;
+      }
+
       return this.item.incidents.reduce((acc, i) => (acc || i.status !== 'completed'), false);
     },
   },

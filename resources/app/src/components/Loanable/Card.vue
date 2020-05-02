@@ -50,7 +50,7 @@
       </b-button>
       <b-button v-else-if="!tested" variant="outline-warning" v-b-tooltip.hover
         :title="`Cliquez pour valider la disponibilité avec les paramètres` +
-          `d'emprunt sélectionnés`" @click="$emit('test')">
+          `d'emprunt sélectionnés`" @click.stop.prevent="$emit('test')">
         Valider la disponibilité
       </b-button>
       <b-button variant="outline-info" v-else disabled>

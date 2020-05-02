@@ -183,5 +183,9 @@ export default {
     padding-top: 45px;
     padding-bottom: 45px;
   }
+
+  .loan-menu {
+    margin-bottom: 30px;
+  }
 }
 </style>
