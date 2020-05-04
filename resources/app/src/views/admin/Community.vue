@@ -32,66 +32,7 @@
           <div class="form__section">
             <h2>Tarifications</h2>
 
-            <b-card no-body variant="info" class="admin-community-form__language-definition">
-              <template v-slot:header>
-                <b-button size="lg" block href="#"
-                  v-b-toggle.language-definition variant="transparent">
-                  Définition du langage de tarification
-                </b-button>
-              </template>
-
-              <b-collapse id="language-definition">
-                <div class="card-body">
-                  <p>
-                    Une règle par ligne. La dernière règle ne doit pas être conditionnelle.
-                  </p>
-
-                  <p>
-                    Une règle est de la forme <code>SI condition ALORS calcul</code> (forme dite
-                    conditionnelle) ou <code>calcul</code> où<br>
-                  </p>
-
-                  <ul>
-                    <li>
-                      <code>condition</code> est de la forme <code>expression comparateur expression
-                        (opérateur_logique condition)*</code>;
-                    </li>
-
-                    <li>
-                      <code>expression</code> est un équation mathématique composée d'un ou
-                      plusieurs variables, <code>opérateur</code> et de constantes;
-                    </li>
-
-                    <li>
-                      <code>opérateur</code> est un opérateur mathématique;
-                    </li>
-
-                    <li>
-                      <code>opérateur_logique</code> est un opérateur logique parmi
-                      <code>ET OU</code>.
-                    </li>
-                  </ul>
-
-                  <p>Les règles de priorité des opérateurs s'appliquent. Utilisez des parenthèses
-                    pour forcer un ordre.</p>
-
-                  <h4>Variables disponibles</h4>
-                  <ul>
-                    <li><code>$KM</code>, un entier représentant le kilométrage de l'emprunt;</li>
-                    <li><code>$MINUTES</code>, un entier représentant la durée de l'emprunt en
-                      minutes;</li>
-                    <li><code>$OBJET</code>, une entité donnant accès à l'objet touché par la
-                      tarification (non accessible pour la tarification générique).</li>
-                  </ul>
-
-                  <p>
-                    En ce qui concerne <code>OBJET</code>, on peut accéder à ses propriétés avec
-                    un point. Par exemple <code>OBJET.engine</code> pour le mode de combustion d'une
-                    voiture ou <code>OBJET.size</code> pour la taille d'un vélo.
-                  </p>
-                </div>
-              </b-collapse>
-            </b-card>
+            <pricing-language-definition />
 
             <div v-for="(pricing, index) in item.pricings"
               :key="pricing.id || `idx-${index}`">
@@ -188,6 +129,7 @@
 <script>
 import FormsBuilder from '@/components/Forms/Builder.vue';
 import PricingForm from '@/components/Pricing/Form.vue';
+import PricingLanguageDefinition from '@/components/Pricing/LanguageDefinition.vue';
 
 import FormMixin from '@/mixins/FormMixin';
 
@@ -199,6 +141,7 @@ export default {
   components: {
     FormsBuilder,
     PricingForm,
+    PricingLanguageDefinition,
   },
   data() {
     return {
@@ -356,15 +299,4 @@ export default {
 </script>
 
 <style lang="scss">
-.admin-community-form__language-definition {
-  margin-bottom: 20px;
-
-  .card-header {
-    padding: 0;
-
-    > a {
-      padding: 0.75rem 1.25rem;
-    }
-  }
-}
 </style>
