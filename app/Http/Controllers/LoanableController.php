@@ -163,10 +163,17 @@ class LoanableController extends RestController
         $community = Community::accessibleBy($request->user())->find($communityId);
         $pricing = $community->getPricingFor($item);
 
+        $end = $departureAt->copy()->add($durationInMinutes, 'minutes');
+
         $price = $pricing ? $pricing->evaluateRule(
             $estimatedDistance,
             $durationInMinutes,
-            $item
+            $item,
+            [
+                'days' => 1 + $end->dayOfYear - $departureAt->dayOfYear,
+                'start' => Pricing::dateToDataArray($departureAt),
+                'end' => Pricing::dateToDataArray($end),
+            ]
         ) : 0;
 
         return response([

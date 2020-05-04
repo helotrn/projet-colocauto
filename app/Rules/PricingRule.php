@@ -15,7 +15,14 @@ class PricingRule implements Rule
                 Pricing::evaluateRuleLine($line, [
                     'km' => 1,
                     'minutes' => 1,
-                    'object' => Pricing::buildGenericObject(),
+                    'object' => [
+                        'pricing_category' => 'large',
+                    ],
+                    'loan' => [
+                        'days' => 1,
+                        'start' => Pricing::dateToDataArray('now'),
+                        'end' => Pricing::dateToDataArray('+ 1 hour'),
+                    ],
                 ]);
             } catch (\Exception $e) {
                 return false;

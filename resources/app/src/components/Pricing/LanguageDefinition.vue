@@ -100,7 +100,8 @@
         <ul>
           <li><code>PLANCHER(nombre)</code>: valeur entière inférieure</li>
           <li><code>PLAFOND(nombre)</code>: valeur entière supérieure</li>
-          <li><code>ARRONDI(nombre)</code>: valeur arrondie</li>
+          <li><code>ARRONDI(nombre)</code>: valeur entière arrondie</li>
+          <li><code>DOLLARS(nombre)</code>: valeur arrondie à deux décimales</li>
         </ul>
 
         <p>

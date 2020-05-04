@@ -7,14 +7,17 @@ use App\Utils\ObjectTypeCast;
 use App\Rules\PricingRule;
 use Carbon\Carbon;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
+use Symfony\Component\ExpressionLanguage\SyntaxError;
 use Vkovic\LaravelCustomCasts\HasCustomCasts;
 
 class Pricing extends BaseModel
 {
     use HasCustomCasts;
 
+    public static $language;
+
     public static function evaluateRuleLine($line, $data) {
-        $expressionLanguage = new ExpressionLanguage();
+        $language = static::getExpressionLanguage();
 
         if (preg_match('/^SI\s+.+?\s+ALORS\s+.+$/', $line)) {
             $line = str_replace('SI', '', $line);
@@ -27,21 +30,67 @@ class Pricing extends BaseModel
         $line = str_replace('$OBJET', 'loanable', $line);
         $line = str_replace('$EMPRUNT', 'loan', $line);
 
-        return $expressionLanguage->evaluate($line, $data);
+        return $language->evaluate($line, $data);
     }
 
-    public static function buildGenericObject($type = null) {
-        $object = new \stdClass;
-
-        switch ($type) {
-            case 'car':
-                $object->year_of_circulation = 1;
-                break;
-            default:
-                break;
+    public static function getExpressionLanguage() {
+        if (self::$language) {
+            return self::$language;
         }
 
-        return $object;
+        $language = new ExpressionLanguage();
+        $language->register('PLANCHER', function ($str) {
+            return sprintf('(is_numeric(%1$s) ? intval(floor(%1$s)) : %1$s)', $str);
+        }, function ($arguments, $str) {
+            if (!is_numeric($str)) {
+                return $str;
+            }
+
+            return intval(floor($str));
+        });
+        $language->register('PLAFOND', function ($str) {
+            return sprintf('(is_numeric(%1$s) ? intval(ceil(%1$s)) : %1$s)', $str);
+        }, function ($arguments, $str) {
+            if (!is_numeric($str)) {
+                return $str;
+            }
+
+            return intval(ceil($str));
+        });
+        $language->register('ARRONDI', function ($str) {
+            return sprintf('(is_numeric(%1$s) ? intval(round(%1$s)) : %1$s)', $str);
+        }, function ($arguments, $str) {
+            if (!is_numeric($str)) {
+                return $str;
+            }
+
+            return intval(round($str));
+        });
+        $language->register('DOLLARS', function ($str) {
+            return sprintf('(is_numeric(%1$s) ? intval(round(%1$s), 2) : %1$s)', $str);
+        }, function ($arguments, $str) {
+            if (!is_numeric($str)) {
+                return $str;
+            }
+
+            return number_format(round($str, 2), 2);
+        });
+
+        self::$language = $language;
+
+        return self::$language;
+    }
+
+    public static function dateToDataArray($date) {
+        $date = new Carbon($date);
+        return [
+            'year' => $date->year,
+            'month' => $date->month,
+            'day' => $date->day,
+            'hour' => $date->hour,
+            'minute' => $date->minute,
+            'day_of_year' => $date->dayOfYear,
+        ];
     }
 
     public static $rules = [
@@ -77,40 +126,38 @@ class Pricing extends BaseModel
     public function evaluateRule($km, $minutes, $loanable = null, $loan = null) {
         $lines = explode("\n", $this->rule);
 
+        if ($loanable instanceof Loanable) {
+            $loanableData = $loanable->toArray();
+        } else {
+            $loanableData = $loanable;
+        }
+
         if ($loan instanceof Loan) {
             $start = new Carbon($loan->departure_at);
-            $end = $start->add($loan->actual_duration_in_minutes, 'minutes');
+            $end = $start->copy()->add($loan->actual_duration_in_minutes, 'minutes');
 
             $loanData = [
-                'days' => $end->diffInDays($start),
-                'start' =>  [
-                    'year' => $start->year,
-                    'month' => $start->month,
-                    'day' => $start->day,
-                    'hour' => $start->hour,
-                    'minute' => $start->minute,
-                ],
-                'end' => [
-                    'year' => $end->year,
-                    'month' => $end->month,
-                    'day' => $end->day,
-                    'hour' => $end->hour,
-                    'minute' => $end->minute,
-                ]
+                'days' => 1 + $end->dayOfYear - $start->dayOfYear,
+                'start' =>  self::dateToDataArray($start),
+                'end' => self::dateToDataArray($end)
             ];
         } else {
-            $loanData = (object) $loan;
+            $loanData = $loan;
         }
 
         foreach ($lines as $line) {
-            $response = static::evaluateRuleLine($line, [
-                'km' => $km,
-                'minutes' => $minutes,
-                'loanable' => (object) $loanable,
-                'loan' => $loanData,
-            ]);
-            if ($response !== null) {
-                return $response;
+            try {
+                $response = static::evaluateRuleLine($line, [
+                    'km' => $km,
+                    'minutes' => $minutes,
+                    'loanable' => (object) $loanableData,
+                    'loan' => (object) $loanData,
+                ]);
+                if ($response !== null) {
+                    return $response;
+                }
+            } catch (SyntaxError $e) {
+                // Should not happen but let it got at this point
             }
         }
 
