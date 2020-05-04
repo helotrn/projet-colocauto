@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Cache;
 trait NokeCommandTrait
 {
     protected $baseUrl = 'https://v1-api-nokepro.appspot.com';
-    protected $token = 'eyJhbGciOiJOT0tFIiwidHlwIjoiSldUIn0.eyJhbGciOiJOT0tFIiwiY29tcGFueSI6MTAwMDE4MiwiZXhwIjoxNTg4NzE1MjAyLCJpc3MiOiJub2tlLmNvbSIsImxvZ291dElkIjoiIiwibm9rZVVzZXIiOjQwNTc4LCJ0b2tlblR5cGUiOiJzaWduSW4ifQ.f3a0b5a834d69294e45ab8623db5dc83bee7e18c';
+    protected $token;
 
     protected $groups = [];
     protected $groupsIndex = [];
