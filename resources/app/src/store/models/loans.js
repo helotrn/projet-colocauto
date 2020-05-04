@@ -95,25 +95,33 @@ export default new RestModule('loans', {
     const { CancelToken } = Vue.axios;
     let cancel;
 
-    const ajax = Vue.axios.get(`/loanables/${params.loanable_id}/test`, {
-      params,
-      cancelToken: new CancelToken((c) => {
-        cancel = c;
-      }),
-    });
-    ajax.cancel = cancel;
+    try {
+      const ajax = Vue.axios.get(`/loanables/${params.loanable_id}/test`, {
+        params,
+        cancelToken: new CancelToken((c) => {
+          cancel = c;
+        }),
+      });
+      ajax.cancel = cancel;
+      ajax.context = 'test';
 
-    commit('ajax', ajax);
+      commit('ajax', ajax);
 
-    const { data } = await ajax;
+      const { data } = await ajax;
 
-    commit('mergeItem', {
-      estimated_price: data.price,
-      loanable: {
-        ...data,
-      },
-    });
+      commit('mergeItem', {
+        estimated_insurance: data.insurance,
+        estimated_price: data.price,
+        loanable: {
+          ...data,
+        },
+      });
 
-    commit('ajax', null);
+      commit('ajax', null);
+    } catch (e) {
+      if (!e.message || e.message !== 'loans canceled test') {
+        throw e;
+      }
+    }
   },
 });

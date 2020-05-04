@@ -36,7 +36,7 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
       },
       ajax(state, ajax) {
         if (ajax && state.ajax && state.ajax.cancel) {
-          state.ajax.cancel();
+          state.ajax.cancel(`${state.slug} canceled ${state.ajax.context}`);
         }
 
         state.ajax = ajax;
