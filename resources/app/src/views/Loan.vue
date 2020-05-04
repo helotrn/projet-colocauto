@@ -137,7 +137,7 @@ export default {
     },
     async cancelLoan() {
       await this.$store.dispatch('loans/cancel', this.item.id);
-      await this.loadItem();
+      await this.loadItemAndUser();
     },
     async formMixinCallback() {
       const { id, type } = this.item.loanable;
@@ -157,6 +157,8 @@ export default {
       this.loadedFullLoanable = true;
     },
     async loadItemAndUser() {
+      this.loadedFullLoanable = false;
+
       await Promise.all([
         this.loadItem(),
         this.$store.dispatch('loadUser'),
@@ -171,7 +173,7 @@ export default {
     },
     async submitLoan() {
       await this.submit();
-      await this.$store.dispatch('loadUser');
+      await this.loadItemAndUser();
     },
   },
 };

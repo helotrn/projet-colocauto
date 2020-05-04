@@ -15,7 +15,7 @@ class BorrowersTableSeeder extends Seeder
             ],
             [
                 'id' => 2,
-                'user_id' => 1,
+                'user_id' => 2,
                 'submitted_at' => new DateTime,
                 'approved_at' => new DateTime,
             ],

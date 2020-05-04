@@ -40,8 +40,9 @@ export default {
       type: String,
     },
     label: {
-      required: true,
+      required: false,
       type: String,
+      default: '',
     },
     placeholder: {
       default: 'Téléverser...',

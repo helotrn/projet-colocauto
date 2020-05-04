@@ -104,7 +104,7 @@ class Community extends BaseModel
     }
 
     public function pricings() {
-        return $this->hasMany(Pricing::class);
+        return $this->hasMany(Pricing::class)->orderBy('object_type', 'desc');
     }
 
     public function loanables() {
