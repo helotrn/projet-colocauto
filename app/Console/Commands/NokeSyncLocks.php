@@ -9,9 +9,7 @@ use GuzzleHttp\Client;
 class NokeSyncLocks extends Command
 {
     private $baseUrl = 'https://v1-api-nokepro.appspot.com';
-    private $token = 'eyJhbGciOiJOT0tFIiwidHlwIjoiSldUIn0.eyJhbGciOiJOT0tFIiwiY29tcGFueSI6MTA'
-        . 'wMDE4MiwiZXhwIjoxNTg2MjkwNzU0LCJpc3MiOiJub2tlLmNvbSIsImxvZ291dElkIjoiIiwibm9rZVVzZ'
-        . 'XIiOjQwNTc4LCJ0b2tlblR5cGUiOiJzaWduSW4ifQ.3fbd2d192d9b5e6f29fc10c110bdfbef5067c665';
+    private $token;
     private $groups = [];
     private $groupsIndex = [];
 
@@ -26,22 +24,26 @@ class NokeSyncLocks extends Command
     }
 
     public function handle() {
-        $this->info("Logging in...");
+        $this->info('Logging in...');
         $this->login();
 
-        $this->info("Synchronizing locks...");
+        $this->info('Synchronizing local locks...');
         $this->syncLocks();
 
-        $this->info("Fetching groups...");
+        $this->info('Fetching groups...');
         $this->getGroups();
 
-        $this->info("Creating groups...");
+        $this->info('Creating remote groups...');
         $this->createGroups();
 
-        $this->info("Done.");
+        $this->info('Done.');
     }
 
     private function login() {
+        if ($this->token) {
+            return $this->token;
+        }
+
         $loginResponse = $this->client->post("{$this->baseUrl}/company/web/login/", [
             'json' => [
                 'username' => config('services.noke.username'),
@@ -131,7 +133,7 @@ class NokeSyncLocks extends Command
             $groupName = "API {$lock->mac_address}";
             if (!isset($this->groupsIndex[$groupName])) {
                 $this->warn("Creating group {$groupName}.");
-                $createGroupResponse = $this->client->post(
+                $this->client->post(
                     "{$this->baseUrl}/group/create/",
                     [
                         'json' => [
