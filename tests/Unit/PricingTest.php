@@ -5,6 +5,7 @@ namespace Tests\Unit;
 use App\Models\Car;
 use App\Models\Loan;
 use App\Models\Pricing;
+use Illuminate\Support\Str;
 use Tests\TestCase;
 
 class PricingTest extends TestCase
@@ -191,5 +192,63 @@ RULE
 
         $pricing->rule = '[1, 2, 3]';
         $this->assertEquals(null, $pricing->evaluateRule(0, 0));
+    }
+
+    public function testRuleEvaluationWithLogicalOperators() {
+        $pricing = new Pricing;
+
+        // ET
+        $pricing->rule = 'SI $KM == 1 ET $MINUTES == 2 ALORS 1234';
+        $this->assertEquals(1234, $pricing->evaluateRule(1, 2));
+        $this->assertEquals(null, $pricing->evaluateRule(2, 2));
+
+        // OU
+        $pricing->rule = 'SI $KM == 1 OU $MINUTES == 2 ALORS 1234';
+        $this->assertEquals(1234, $pricing->evaluateRule(1, 1));
+        $this->assertEquals(1234, $pricing->evaluateRule(2, 2));
+        $this->assertEquals(null, $pricing->evaluateRule(3, 3));
+    }
+
+    public function testRuleEvaluationWithArrayOperators() {
+        $pricing = new Pricing;
+
+        // DANS
+        $pricing->rule = 'SI $KM DANS [1] ALORS 1234';
+        $this->assertEquals(1234, $pricing->evaluateRule(1, 0));
+        $this->assertEquals(null, $pricing->evaluateRule(2, 0));
+
+        // PAS DANS
+        $pricing->rule = 'SI $KM PAS DANS [1] ALORS 1234';
+        $this->assertEquals(null, $pricing->evaluateRule(1, 0));
+        $this->assertEquals(1234, $pricing->evaluateRule(2, 0));
+    }
+
+    public function testRuleEvaluationRanges() {
+        $pricing = new Pricing;
+
+        $pricing->rule = 'SI $KM DANS 1..3 ALORS 1234';
+        $this->assertEquals(null, $pricing->evaluateRule(0, 0));
+        $this->assertEquals(1234, $pricing->evaluateRule(1, 0));
+        $this->assertEquals(1234, $pricing->evaluateRule(2, 0));
+        $this->assertEquals(1234, $pricing->evaluateRule(3, 0));
+        $this->assertEquals(null, $pricing->evaluateRule(4, 0));
+    }
+
+    public function testRuleEvaluationDateProperties() {
+        $loan = new Loan;
+        $date = new \Carbon\Carbon('2020-01-01 16:00:00');
+        $loan->duration_in_minutes = 12 * 60;
+        $loan->departure_at = $date;
+
+        $pricing = new Pricing;
+
+        foreach (['year', 'month', 'day', 'hour', 'minute', 'day_of_year'] as $key) {
+            $pricing->rule = "\$EMPRUNT.start.$key";
+            $camelKey = Str::camel($key);
+            $this->assertEquals(
+                $date->{$camelKey},
+                $pricing->evaluateRule(0, 0, null, $loan)
+            );
+        }
     }
 }

@@ -14,8 +14,8 @@
         </p>
 
         <p>
-          Une règle est de la forme <code>SI condition ALORS calcul</code> (forme dite
-          conditionnelle) ou <code>calcul</code> où<br>
+          Une règle est de la forme <code>SI condition ALORS expression</code> (forme dite
+          conditionnelle) ou <code>expression</code> où<br>
         </p>
 
         <ul>
@@ -25,19 +25,27 @@
           </li>
 
           <li>
-            <code>expression</code> est un équation mathématique composée d'un ou
+            <code>expression</code> est un équation mathématique composée d'une ou
             plusieurs variables, <code>opérateur</code> et de constantes;
           </li>
 
           <li>
-            <code>opérateur</code> est un opérateur mathématique;
+            <code>opérateur</code> est un opérateur arithmétique;
           </li>
 
           <li>
-            <code>opérateur_logique</code> est un opérateur logique parmi
-            <code>ET OU</code>.
+            <code>opérateur_logique</code> est un opérateur logique;
+          </li>
+
+          <li>
+            <code>comparateur</code> est un opérateur de comparaison;
           </li>
         </ul>
+
+        <p>
+            Un tableau est une liste entre crochets de valeurs séparées par des virgules,
+            par ex. <code>[1,2,3]</code>.
+        </p>
 
         <p>
           La dernière règle ne peut pas être conditionnelle
@@ -47,7 +55,7 @@
         <h4>Opérateurs disponibles</h4>
 
         <ul>
-          <li>Arithmétiques</li>
+          <li>Arithmétique</li>
           <ul>
             <li><code>+</code> (addition)</li>
             <li><code>-</code> (soustraction)</li>
@@ -71,15 +79,15 @@
 
           <li>Logique</li>
           <ul>
-            <li><code>!</code> ou <code>not</code> (non)</li>
-            <li><code>&&</code> (et)</li>
-            <li><code>||</code> (ou)</li>
+            <li><code>!</code> ou <code>NON</code> (non)</li>
+            <li><code>&&</code> ou <code>ET</code> (et)</li>
+            <li><code>||</code> ou <code>OU</code> (ou)</li>
           </ul>
 
           <li>Tableaux</li>
           <ul>
-            <li><code>in</code> (inclus)</li>
-            <li><code>not in</code> (non inclus)</li>
+            <li><code>DANS</code> (inclus)</li>
+            <li><code>PAS DANS</code> (non inclus)</li>
           </ul>
 
           <li>Autres</li>
@@ -95,6 +103,13 @@
         pour forcer un ordre.
         </p>
 
+        <p>
+          On peut appeler une fonction avec la syntaxe suivante:
+          <code>fonction(expression)</code>.
+        </p>
+
+        <p>Les fonctions suivantes sont disponibles:</p>
+
         <h4>Fonctions disponibles</h4>
 
         <ul>
@@ -104,20 +119,20 @@
           <li><code>DOLLARS(nombre)</code>: valeur arrondie à deux décimales</li>
         </ul>
 
-        <p>
-          On peut appeler une fonction avec la syntaxe suivante:
-          <code>fonction(expression)</code>.
-        </p>
-
-        <p>Les fonctions suivantes sont disponibles:</p>
-
         <h4>Variables disponibles</h4>
+
         <ul>
           <li><code>$KM</code>, un entier représentant le kilométrage de l'emprunt;</li>
           <li><code>$MINUTES</code>, un entier représentant la durée de l'emprunt en
             minutes;</li>
           <li><code>$OBJET</code>, une entité donnant accès à l'objet touché par la
             tarification (non accessible pour la tarification générique).</li>
+          <li><code>$EMPRUNT</code>, un objet contenant les valeurs:</li>
+          <ul>
+            <li><code>days</code>: le nombre de jours de calendriers</li>
+            <li><code>start</code>: un <code>objet de date</code></li>
+            <li><code>end</code>: un <code>objet de date</code></li>
+          </ul>
         </ul>
 
         <p>

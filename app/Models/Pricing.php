@@ -30,6 +30,13 @@ class Pricing extends BaseModel
         $line = str_replace('$OBJET', 'loanable', $line);
         $line = str_replace('$EMPRUNT', 'loan', $line);
 
+        $line = str_replace(' NON ', ' !', $line);
+        $line = str_replace(' OU ', ' or ', $line);
+        $line = str_replace(' ET ', ' and ', $line);
+
+        $line = str_replace(' PAS DANS ', ' not in ', $line);
+        $line = str_replace(' DANS ', ' in ', $line);
+
         $response = $language->evaluate($line, $data);
 
         if (is_array($response)) {
@@ -148,8 +155,8 @@ class Pricing extends BaseModel
 
             $loanData = [
                 'days' => $loan->calendar_days,
-                'start' =>  self::dateToDataArray($start),
-                'end' => self::dateToDataArray($end)
+                'start' =>  (object) self::dateToDataArray($start),
+                'end' => (object) self::dateToDataArray($end)
             ];
         } else {
             $loanData = $loan;
