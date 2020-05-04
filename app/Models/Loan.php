@@ -112,6 +112,7 @@ class Loan extends BaseModel
         'departure_at',
         'duration_in_minutes',
         'estimated_distance',
+        'estimated_insurance',
         'estimated_price',
         'message_for_owner',
         'reason',
@@ -206,12 +207,38 @@ class Loan extends BaseModel
 
         $pricing = $this->community->getPricingFor($this->loanable);
 
-        return $pricing->evaluateRule(
+        $values = $pricing->evaluateRule(
             $handover->mileage_end - $takeover->mileage_beginning,
             $this->actual_duration_in_minutes,
             $this->loanable,
             $this
         );
+
+        return is_array($values) ? $values[0] : $values;
+    }
+
+    public function getActualInsuranceAttribute() {
+        $takeover = $this->takeover;
+        $handover = $this->handover;
+
+        if (!$takeover || !$handover) {
+            return null;
+        }
+
+        if (!$takeover->executed_at || !$handover->executed_at) {
+            return null;
+        }
+
+        $pricing = $this->community->getPricingFor($this->loanable);
+
+        $values = $pricing->evaluateRule(
+            $handover->mileage_end - $takeover->mileage_beginning,
+            $this->actual_duration_in_minutes,
+            $this->loanable,
+            $this
+        );
+
+        return is_array($values) ? $values[0] : $values;
     }
 
     public function getCanceledAtAttribute() {
