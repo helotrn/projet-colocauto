@@ -30,7 +30,17 @@ class Pricing extends BaseModel
         $line = str_replace('$OBJET', 'loanable', $line);
         $line = str_replace('$EMPRUNT', 'loan', $line);
 
-        return $language->evaluate($line, $data);
+        $response = $language->evaluate($line, $data);
+
+        if (is_array($response)) {
+            if (count(array_filter($response, 'is_numeric')) !== 2) {
+                return null;
+            }
+        } elseif (!is_numeric($response)) {
+            return null;
+        }
+
+        return $response;
     }
 
     public static function getExpressionLanguage() {

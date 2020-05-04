@@ -31,8 +31,24 @@ class PricingController extends RestController
             $request->get('loan')
         );
 
+        if (!$response) {
+            return $this->respondWithMessage('Rule does not evaluate.', 400);
+        }
+
+        if (is_array($response) && count($response) !== 2) {
+            return $this->respondWithMessage('Rule does not evaluate properly.', 400);
+        }
+
+        if (is_array($response)) {
+            [$price, $insurance] = $response;
+        } else {
+            $price = $response;
+            $insurance = 0;
+        }
+
         return [
-            'price' => $response,
+            'price' => $price,
+            'insurance' => $insurance,
         ];
     }
 }

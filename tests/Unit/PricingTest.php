@@ -164,4 +164,32 @@ RULE
         $this->assertEquals(1.59, $pricing->evaluateRule(1.589, 0));
         $this->assertEquals(2.12, $pricing->evaluateRule(2.122, 0));
     }
+
+    public function testRuleEvaluationMayReturnArray() {
+        $pricing = new Pricing;
+        $pricing->rule = '[1, 2]';
+        $this->assertEquals([1, 2], $pricing->evaluateRule(0, 0));
+    }
+
+    public function testRuleEvaluationMustReturnTupleOfTwoOrNumber() {
+        $pricing = new Pricing;
+
+        $pricing->rule = '\'test\'';
+        $this->assertEquals(null, $pricing->evaluateRule(0, 0));
+
+        $pricing->rule = '1';
+        $this->assertEquals(1, $pricing->evaluateRule(0, 0));
+
+        $pricing->rule = '[1]';
+        $this->assertEquals(null, $pricing->evaluateRule(0, 0));
+
+        $pricing->rule = '[1, 2]';
+        $this->assertEquals([1, 2], $pricing->evaluateRule(0, 0));
+
+        $pricing->rule = "[1, 'test']";
+        $this->assertEquals(null, $pricing->evaluateRule(0, 0));
+
+        $pricing->rule = '[1, 2, 3]';
+        $this->assertEquals(null, $pricing->evaluateRule(0, 0));
+    }
 }
