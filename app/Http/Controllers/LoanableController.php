@@ -319,6 +319,19 @@ class LoanableController extends RestController
                     'model' => [
                         'type' => 'text',
                     ],
+                    'pricing_category' => [
+                        'type' => 'select',
+                        'options' => [
+                            [
+                                'text' => 'Petit (compacte, sous-compacte)',
+                                'value' => 'small',
+                            ],
+                            [
+                                'text' => 'Grand (van, VUS, pick-up)',
+                                'value' => 'large',
+                            ],
+                        ],
+                    ],
                     'year_of_circulation' => [
                         'type' => 'number',
                     ],

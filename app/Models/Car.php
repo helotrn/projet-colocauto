@@ -24,12 +24,16 @@ class Car extends Loanable
             'required',
             'in:self,rental',
         ],
-        'position' => [ 'required' ],
         'papers_location' => [
             'required' ,
             'in:in_the_car,to_request_with_car'
         ],
         'plate_number' => [ 'required' ],
+        'position' => [ 'required' ],
+        'pricing_category' => [
+            'required',
+            'in:small,large',
+        ],
         'transmission_mode' => [
             'required' ,
             'in:manual,automatic',

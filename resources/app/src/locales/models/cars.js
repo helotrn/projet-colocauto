@@ -17,6 +17,7 @@ export default {
       ownership: 'type de propriété',
       papers_location: 'emplacement des papiers',
       plate_number: 'numéro de plaque',
+      pricing_category: 'catégorie',
       transmission_mode: 'transmission',
       year_of_circulation: 'année de circulation',
     },
