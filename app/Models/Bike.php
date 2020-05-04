@@ -58,22 +58,8 @@ class Bike extends Loanable
 
     public $readOnly = false;
 
-    public $items = ['community','owner', 'padlock'];
-
-    public $morphOnes = [
-        'image' => 'imageable',
-    ];
-
-    public function image() {
-        return $this->morphOne(Image::class, 'imageable');
-    }
-
     public function loans() {
         return $this->hasMany(Loan::class, 'loanable_id');
-    }
-
-    public function padlock() {
-        return $this->hasOne(Padlock::class, 'loanable_id');
     }
 
     public function scopeAccessibleBy(Builder $query, $user) {

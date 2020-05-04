@@ -165,14 +165,27 @@ class Loanable extends BaseModel
 
     public $computed = ['events', 'has_padlock', 'position_google'];
 
-    public $items = ['owner', 'community', 'image', 'padlock'];
+    public $items = ['owner', 'community', 'padlock'];
+
+    public $morphOnes = [
+        'image' => 'imageable',
+    ];
 
     public function community() {
         return $this->belongsTo(Community::class);
     }
 
     public function image() {
-        return $this->belongsTo(Image::class);
+        return $this->hasOne(Image::class, 'imageable_id')
+            ->whereIn(
+                'imageable_type',
+                [
+                    'App\Models\Bike',
+                    'App\Models\Car',
+                    'App\Models\Loanable',
+                    'App\Models\Trailer'
+                ]
+            );
     }
 
     public function owner() {
@@ -180,7 +193,7 @@ class Loanable extends BaseModel
     }
 
     public function padlock() {
-        return $this->hasOne(Padlock::class);
+        return $this->hasOne(Padlock::class, 'loanable_id');
     }
 
     public $collections = ['loans'];

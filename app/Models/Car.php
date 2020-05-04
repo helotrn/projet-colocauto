@@ -108,7 +108,7 @@ class Car extends Loanable
     }
 
     public function padlock() {
-        return $this->morphOne(Padlock::class, 'loanable')->where(\DB::raw('1 = 0'));
+        return $this->hasOne(Padlock::class, 'loanable_id')->where(\DB::raw('1 = 0'));
     }
 
     public function scopeAccessibleBy(Builder $query, $user) {
