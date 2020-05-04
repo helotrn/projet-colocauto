@@ -44,7 +44,7 @@ export default {
     isContestable() {
       return !!this.action.executed_at
         && this.action.status !== 'canceled'
-        && !!this.owner
+        && !!this.owner;
     },
     owner() {
       return this.loan.loanable.owner;

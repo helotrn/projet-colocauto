@@ -27,8 +27,9 @@ class LoanTest extends TestCase
 
         $data = [
             'departure_at' => now()->toDateTimeString(),
-            'duration_in_minutes' => $this->faker->randomNumber($nbDigits = null, $strict = false),
-            'estimated_distance' => $this->faker->randomNumber($nbDigits = null, $strict = false),
+            'duration_in_minutes' => $this->faker->randomNumber(4),
+            'estimated_distance' => $this->faker->randomNumber(4),
+            'estimated_insurance' => $this->faker->randomNumber(4),
             'borrower_id' => $borrower->id,
             'loanable_id' => $loanable->id,
             'estimated_price' => 1,
@@ -36,7 +37,7 @@ class LoanTest extends TestCase
             'reason' => 'salut',
         ];
 
-        $response = $this->json('POST', "/api/v1/loans", $data);
+        $response = $this->json('POST', '/api/v1/loans', $data);
 
         $response->assertStatus(201)
                 ->assertJsonStructure(static::$getLoanResponseStructure);
