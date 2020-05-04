@@ -204,7 +204,7 @@ class UserController extends RestController
         $item = $this->repo->find($request, $id);
 
         if (!$item->borrower->approved_at) {
-            $item->borrower->approved_at = new \DateTime;
+            $item->borrower->approved_at = new \Carbon\Carbon;
             $item->borrower->save();
         }
 
