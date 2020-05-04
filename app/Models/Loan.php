@@ -13,6 +13,7 @@ use App\Models\Payment;
 use App\Models\Takeover;
 use App\Transformers\LoanTransformer;
 use App\Utils\TimestampWithTimezone;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Vkovic\LaravelCustomCasts\HasCustomCasts;
@@ -87,6 +88,18 @@ class Loan extends BaseModel
         ];
     }
 
+    public static function getCalendarDays($start, $end) {
+        if ($end->dayOfYear === $start->dayOfYear) {
+            return 1;
+        }
+
+        if ($end->dayOfYear < $start->dayOfYear) {
+            return 1 + ((365 + $start->format('L')) + $end->dayOfYear) - $start->dayOfYear;
+        }
+
+        return 1 + $end->dayOfYear - $start->dayOfYear;
+    }
+
     protected $casts = [
         'departure_at' => TimestampWithTimezone::class,
     ];
@@ -100,7 +113,12 @@ class Loan extends BaseModel
         'reason',
     ];
 
-    public $computed = ['actual_price', 'actual_duration_in_minutes', 'canceled_at'];
+    public $computed = [
+      'actual_price',
+      'actual_duration_in_minutes',
+      'calendar_days',
+      'canceled_at',
+    ];
 
     public $items = [
         'borrower',
@@ -161,6 +179,13 @@ class Loan extends BaseModel
 
     public function getActualDurationInMinutesAttribute() {
         return $this->duration_in_minutes;
+    }
+
+    public function getCalendarDaysAttribute() {
+        $start = new Carbon($this->departure_at);
+        $end = $start->copy()->add($this->actual_duration_in_minutes, 'minutes');
+
+        return static::getCalendarDays($start, $end);
     }
 
     public function getActualPriceAttribute() {

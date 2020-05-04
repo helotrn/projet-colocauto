@@ -147,7 +147,7 @@ class Pricing extends BaseModel
             $end = $start->copy()->add($loan->actual_duration_in_minutes, 'minutes');
 
             $loanData = [
-                'days' => 1 + $end->dayOfYear - $start->dayOfYear,
+                'days' => $loan->calendar_days,
                 'start' =>  self::dateToDataArray($start),
                 'end' => self::dateToDataArray($end)
             ];

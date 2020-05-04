@@ -170,7 +170,7 @@ class LoanableController extends RestController
             $durationInMinutes,
             $item,
             [
-                'days' => 1 + $end->dayOfYear - $departureAt->dayOfYear,
+                'days' => Loan::getCalendarDays($departureAt, $end),
                 'start' => Pricing::dateToDataArray($departureAt),
                 'end' => Pricing::dateToDataArray($end),
             ]
