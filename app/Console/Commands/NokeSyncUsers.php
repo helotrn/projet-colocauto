@@ -8,10 +8,7 @@ use GuzzleHttp\Client;
 
 class NokeSyncUsers extends Command
 {
-    private $baseUrl = 'https://v1-api-nokepro.appspot.com';
-    private $token;
-    private $users = [];
-    private $usersIndex = [];
+    use NokeCommandTrait;
 
     protected $signature = 'noke:sync:users';
 
@@ -34,38 +31,6 @@ class NokeSyncUsers extends Command
         $this->createUsers();
 
         $this->info('Done.');
-    }
-
-    private function login() {
-        $loginResponse = $this->client->post("{$this->baseUrl}/company/web/login/", [
-            'json' => [
-                'username' => config('services.noke.username'),
-                'password' => config('services.noke.password'),
-            ],
-        ]);
-
-        $loginResult = json_decode($loginResponse->getBody());
-
-        if ($loginResult->result === 'failure') {
-            throw new \Exception('login error');
-        }
-
-        $this->token = $loginResult->token;
-    }
-
-    private function getUsers() {
-          $usersResponse = $this->client->post("{$this->baseUrl}/user/get/list/", [
-              'headers' => [
-                  'Accept' => 'application/json',
-                  'Authorization' => "Bearer $this->token",
-              ],
-          ]);
-          $usersResults = json_decode($usersResponse->getBody());
-          $this->users = $usersResults->data;
-
-        foreach ($this->users as $user) {
-            $this->usersIndex[$user->username] = $user;
-        }
     }
 
     private function createUsers() {

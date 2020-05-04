@@ -8,10 +8,7 @@ use GuzzleHttp\Client;
 
 class NokeSyncLocks extends Command
 {
-    private $baseUrl = 'https://v1-api-nokepro.appspot.com';
-    private $token;
-    private $groups = [];
-    private $groupsIndex = [];
+    use NokeCommandTrait;
 
     protected $signature = 'noke:sync:locks';
 
@@ -39,39 +36,8 @@ class NokeSyncLocks extends Command
         $this->info('Done.');
     }
 
-    private function login() {
-        if ($this->token) {
-            return $this->token;
-        }
-
-        $loginResponse = $this->client->post("{$this->baseUrl}/company/web/login/", [
-            'json' => [
-                'username' => config('services.noke.username'),
-                'password' => config('services.noke.password'),
-            ],
-        ]);
-
-        $loginResult = json_decode($loginResponse->getBody());
-
-        if ($loginResult->result === 'failure') {
-            throw new \Exception('login error');
-        }
-
-        $this->token = $loginResult->token;
-    }
-
     private function syncLocks() {
-        $locksResponse = $this->client->post("{$this->baseUrl}/lock/get/list/", [
-            'json' => [
-                'page' => 1,
-            ],
-            'headers' => [
-                'Accept' => 'application/json',
-                'Authorization' => "Bearer $this->token",
-            ],
-        ]);
-
-        $locksResult = json_decode($locksResponse->getBody());
+        $locksResult = $this->getLocks(true);
 
         $lockIds = [];
         foreach ($locksResult->data as $nokeLock) {
@@ -100,30 +66,6 @@ class NokeSyncLocks extends Command
         foreach ($removedLocks as $lock) {
             $this->warn("Removing lock $nokeLock->name ({$nokeLock->id}).");
             $lock->destroy();
-        }
-    }
-
-    private function getGroups() {
-        $page = 0;
-        do {
-            $page += 1;
-
-            $groupsResponse = $this->client->post("{$this->baseUrl}/group/get/all/", [
-                'json' => [
-                    'page' => $page,
-                ],
-                'headers' => [
-                    'Accept' => 'application/json',
-                    'Authorization' => "Bearer $this->token",
-                ],
-            ]);
-            $groupsResult = json_decode($groupsResponse->getBody());
-            $this->groups = array_merge($groupsResult->data->groups, $this->groups);
-            $maxPage = intval($groupsResult->data->pageCount);
-        } while ($maxPage > $page);
-
-        foreach ($this->groups as $group) {
-            $this->groupsIndex[$group->name] = $group;
         }
     }
 
