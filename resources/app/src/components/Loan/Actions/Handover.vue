@@ -21,82 +21,156 @@
     <b-card-body>
       <b-collapse id="loan-actions-handover" role="tabpanel" accordion="loan-actions"
         :visible="open">
-        <b-row>
-          <b-col lg="6" v-if="!action.executed_at">
-            <p>Envoyez une photo du tableau de bord.</p>
+        <div v-if="loan.loanable.type === 'car'">
+          <b-row>
+            <b-col lg="6" v-if="!action.executed_at">
+              <p>Envoyez une photo du tableau de bord.</p>
 
-            <forms-image-uploader
-              label="Photo du tableau de bord"
-              field="image"
-              v-model="action.image" />
+              <forms-image-uploader
+                label="Photo du tableau de bord"
+                field="image"
+                v-model="action.image" />
 
-            <p><small>
-              Cette photo doit indiquer le kilométrage et le niveau d'essence.
-            </small></p>
-          </b-col>
-          <b-col lg="6" v-else>
-            <img :src="action.image ? action.image.sizes.thumbnail : ''">
-          </b-col>
+              <p><small>
+                Cette photo doit indiquer le kilométrage et le niveau d'essence.
+              </small></p>
+            </b-col>
+            <b-col lg="6" v-else>
+              <img :src="action.image ? action.image.sizes.thumbnail : ''">
+            </b-col>
 
-          <b-col lg="6">
-            <forms-validated-input
-              id="mileage_end" name="mileage_end"
-              type="number"
-              label="KM au compteur, à la fin de la course"
-              placholder="KM au compteur"
-              :disabled="!!action.executed_at"
-              v-model="action.mileage_end" />
+            <b-col lg="6">
+              <forms-validated-input
+                id="mileage_end" name="mileage_end"
+                type="number"
+                label="KM au compteur, à la fin de la course"
+                placholder="KM au compteur"
+                :disabled="!!action.executed_at"
+                v-model="action.mileage_end" />
 
-            <forms-validated-input
-              id="fuel_end" name="fuel_end"
-              type="text"
-              label="Essence dans le réservervoir à la fin de la course"
-              placeholder="Donnez une indication approximative"
-              :disabled="!!action.executed_at"
-              v-model="action.fuel_end" />
-          </b-col>
-        </b-row>
+              <forms-validated-input
+                id="fuel_end" name="fuel_end"
+                type="text"
+                label="Essence dans le réservervoir à la fin de la course"
+                placeholder="Donnez une indication approximative"
+                :disabled="!!action.executed_at"
+                v-model="action.fuel_end" />
+            </b-col>
+          </b-row>
 
-        <b-row>
-          <b-col>
-            <forms-validated-input v-if="userRole === 'borrower'"
-              id="comments_by_borrower" name="comments_by_borrower"
-              type="textarea" :rows="3" :disabled="!!action.commented_by_borrower_at"
-              label="Laissez un message au propriétaire (facultatif)"
-              placeholder="Commentaire sur la réservation"
-              v-model="action.comments_by_borrower" />
-            <blockquote v-else-if="action.comments_by_borrower">
-              {{ action.comments_by_borrower }}
-              <div class="user-avatar" :style="{ backgroundImage: borrowerAvatar }" />
-            </blockquote>
-          </b-col>
-        </b-row>
+          <b-row>
+            <b-col>
+              <forms-validated-input v-if="userRole === 'borrower'"
+                id="comments_by_borrower" name="comments_by_borrower"
+                type="textarea" :rows="3" :disabled="!!action.commented_by_borrower_at"
+                label="Laissez un message au propriétaire (facultatif)"
+                placeholder="Commentaire sur la réservation"
+                v-model="action.comments_by_borrower" />
+              <blockquote v-else-if="action.comments_by_borrower">
+                {{ action.comments_by_borrower }}
+                <div class="user-avatar" :style="{ backgroundImage: borrowerAvatar }" />
+              </blockquote>
+            </b-col>
+          </b-row>
 
-        <b-row>
-          <b-col>
-            <forms-validated-input v-if="userRole === 'owner'"
-              id="comments_by_owner" name="comments_by_owner"
-              type="textarea" :rows="3" :disabled="!!action.commented_by_owner_at"
-              label="Laissez un message à l'emprunteur (facultatif)"
-              placeholder="Commentaire sur la réservation"
-              v-model="action.comments_by_owner" />
-            <blockquote v-else-if="action.comments_by_owner">
-              {{ action.comments_by_owner }}
-              <div class="user-avatar" :style="{ backgroundImage: ownerAvatar }" />
-            </blockquote>
-          </b-col>
-        </b-row>
+          <b-row>
+            <b-col>
+              <forms-validated-input v-if="userRole === 'owner'"
+                id="comments_by_owner" name="comments_by_owner"
+                type="textarea" :rows="3" :disabled="!!action.commented_by_owner_at"
+                label="Laissez un message à l'emprunteur (facultatif)"
+                placeholder="Commentaire sur la réservation"
+                v-model="action.comments_by_owner" />
+              <blockquote v-else-if="action.comments_by_owner">
+                {{ action.comments_by_owner }}
+                <div class="user-avatar" :style="{ backgroundImage: ownerAvatar }" />
+              </blockquote>
+            </b-col>
+          </b-row>
+        </div>
 
-        <b-row class="loan-actions-handover__buttons text-center"
-          v-if="!action.executed_at">
-          <b-col>
-            <b-button size="sm" variant="success" class="mr-3" @click="completeAction">
-              Enregistrer
-            </b-button>
-          </b-col>
-        </b-row>
+        <div v-else-if="loan.loanable.has_padlock">
+          <p>
+            Le cadenas du véhicule sera automatiquement dissocié de application NOKE
+            lorsque vous aurez complété la remise du véhicule.
+          </p>
 
-        <div v-if="!!action.executed_at" >
+          <p>
+            Si vous prévoyez avoir du retard, ajoutez une extension: d'autres membres
+            LocoMotion attendent peut-être ce véhicule.
+          </p>
+
+          <validation-observer ref="observer" v-slot="{ passes }">
+            <b-form :novalidate="true" class="register-form__form"
+              @submit.stop.prevent="passes(completeAction)">
+              <b-row v-if="!action.executed_at">
+                <b-col>
+                  <p>Envoyez une photo de l'état du véhicule.</p>
+
+                  <forms-image-uploader
+                    label="Photo du véhicule"
+                    field="image"
+                    v-model="action.image" />
+
+                  <p><small>
+                    Cette photo est optionnelle mais permet à Locomotion de déterminer à quel
+                    moment un bris s'est produit, le cas échéant.
+                  </small></p>
+                </b-col>
+              </b-row>
+              <b-row v-else>
+                <b-col>
+                  <img :src="action.image ? action.image.sizes.thumbnail : ''">
+                </b-col>
+              </b-row>
+
+              <b-row class="loan-actions-takeover__buttons text-center"
+                v-if="!action.executed_at">
+                <b-col>
+                  <b-button type="submit" size="sm" variant="success" class="mr-3">
+                    Enregistrer
+                  </b-button>
+                </b-col>
+              </b-row>
+            </b-form>
+          </validation-observer>
+        </div>
+
+        <div v-else>
+          <b-row v-if="!action.executed_at">
+            <b-col>
+              <p v-if="userRole === 'borrower'">
+                Demandez au propriétaire de récupérer le véhicule.
+              </p>
+              <p v-else>
+                L'emprunteur vous contactera pour arranger la remise du véhicule.
+              </p>
+            </b-col>
+          </b-row>
+          <b-row v-else>
+            <b-col>
+              <p v-if="action.status !== 'canceled'">
+                La remise du véhicule a été effectuée.
+              </p>
+              <p v-else>
+                La remise du véhicule a été annulée.
+              </p>
+            </b-col>
+          </b-row>
+
+          <b-row class="loan-actions-takeover__buttons text-center"
+            v-if="!action.executed_at">
+            <b-col>
+              <b-button type="submit" size="sm" variant="success"
+                class="mr-3"
+                @click="completeAction">
+                C'est fait!
+              </b-button>
+            </b-col>
+          </b-row>
+        </div>
+
+        <div v-if="isContestable" >
           <hr>
 
           <b-row>

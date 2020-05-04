@@ -74,6 +74,7 @@
             </b-form>
           </validation-observer>
         </div>
+
         <div v-else-if="loan.loanable.has_padlock">
           <p>
             Le cadenas du véhicule sera automatiquement associé à votre application NOKE
@@ -88,7 +89,7 @@
                   <p>Envoyez une photo de l'état du véhicule.</p>
 
                   <forms-image-uploader
-                    label="Photo du tableau de bord"
+                    label="Photo du véhicule"
                     field="image"
                     v-model="action.image" />
 
@@ -96,6 +97,11 @@
                     Cette photo est optionnelle mais permet à Locomotion de déterminer à quel
                     moment un bris s'est produit, le cas échéant.
                   </small></p>
+                </b-col>
+              </b-row>
+              <b-row v-else>
+                <b-col>
+                  <img :src="action.image ? action.image.sizes.thumbnail : ''">
                 </b-col>
               </b-row>
 
@@ -110,6 +116,7 @@
             </b-form>
           </validation-observer>
         </div>
+
         <div v-else>
           <b-row v-if="!action.executed_at">
             <b-col>
@@ -144,7 +151,7 @@
           </b-row>
         </div>
 
-        <div v-if="!!action.executed_at && action.status !== 'canceled'">
+        <div v-if="isContestable">
           <hr>
 
           <b-row>

@@ -41,6 +41,11 @@ export default {
 
       return `url('${avatar.sizes.thumbnail}')`;
     },
+    isContestable() {
+      return !!this.action.executed_at
+        && this.action.status !== 'canceled'
+        && !!this.owner
+    },
     owner() {
       return this.loan.loanable.owner;
     },
