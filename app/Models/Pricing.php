@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\Community;
 use App\Utils\ObjectTypeCast;
 use App\Rules\PricingRule;
+use Carbon\Carbon;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 use Vkovic\LaravelCustomCasts\HasCustomCasts;
 
@@ -24,6 +25,7 @@ class Pricing extends BaseModel
         $line = str_replace('$KM', 'km', $line);
         $line = str_replace('$MINUTES', 'minutes', $line);
         $line = str_replace('$OBJET', 'loanable', $line);
+        $line = str_replace('$EMPRUNT', 'loan', $line);
 
         return $expressionLanguage->evaluate($line, $data);
     }
@@ -72,14 +74,40 @@ class Pricing extends BaseModel
         return $this->belongsTo(Community::class);
     }
 
-    public function evaluateRule($km, $minutes, $loanable = null) {
+    public function evaluateRule($km, $minutes, $loanable = null, $loan = null) {
         $lines = explode("\n", $this->rule);
+
+        if ($loan instanceof Loan) {
+            $start = new Carbon($loan->departure_at);
+            $end = $start->add($loan->actual_duration_in_minutes, 'minutes');
+
+            $loanData = [
+                'days' => $end->diffInDays($start),
+                'start' =>  [
+                    'year' => $start->year,
+                    'month' => $start->month,
+                    'day' => $start->day,
+                    'hour' => $start->hour,
+                    'minute' => $start->minute,
+                ],
+                'end' => [
+                    'year' => $end->year,
+                    'month' => $end->month,
+                    'day' => $end->day,
+                    'hour' => $end->hour,
+                    'minute' => $end->minute,
+                ]
+            ];
+        } else {
+            $loanData = (object) $loan;
+        }
 
         foreach ($lines as $line) {
             $response = static::evaluateRuleLine($line, [
                 'km' => $km,
                 'minutes' => $minutes,
                 'loanable' => (object) $loanable,
+                'loan' => $loanData,
             ]);
             if ($response !== null) {
                 return $response;

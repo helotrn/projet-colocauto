@@ -180,7 +180,8 @@ class Loan extends BaseModel
         return $pricing->evaluateRule(
             $handover->mileage_end - $takeover->mileage_beginning,
             $this->actual_duration_in_minutes,
-            $this->loanable
+            $this->loanable,
+            $this
         );
     }
 

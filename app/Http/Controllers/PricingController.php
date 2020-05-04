@@ -27,7 +27,8 @@ class PricingController extends RestController
         $response = $item->evaluateRule(
             $request->get('km'),
             $request->get('minutes'),
-            $request->get('loanable')
+            $request->get('loanable'),
+            $request->get('loan')
         );
 
         return [

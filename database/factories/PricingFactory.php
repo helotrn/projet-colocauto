@@ -11,6 +11,5 @@ $factory->define(Pricing::class, function (Faker $faker) {
             'App\Models\Car',
             'App\Models\Trailer',
         ]),
-        'rule' => '$KM * 1 + $MINUTES * 1000 + $OBJET.year_of_circulation',
     ];
 });

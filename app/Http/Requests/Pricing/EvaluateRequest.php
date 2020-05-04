@@ -21,6 +21,7 @@ class EvaluateRequest extends BaseRequest
             'km' => ['integer', 'required'],
             'minutes' => ['integer', 'required'],
             'loanable' => ['nullable'],
+            'loan' => ['nullable'],
         ];
     }
 
