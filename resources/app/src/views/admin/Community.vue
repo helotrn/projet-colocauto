@@ -128,7 +128,7 @@
 
 <script>
 import FormsBuilder from '@/components/Forms/Builder.vue';
-import PricingForm from '@/components/Pricing/Form.vue';
+import PricingForm from '@/components/Pricing/PricingForm.vue';
 import PricingLanguageDefinition from '@/components/Pricing/LanguageDefinition.vue';
 
 import FormMixin from '@/mixins/FormMixin';

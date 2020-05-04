@@ -20,7 +20,7 @@
 <script>
 import Authenticated from '@/mixins/Authenticated';
 
-import RegisterForm from '@/components/Register/Form.vue';
+import RegisterForm from '@/components/Register/RegisterForm.vue';
 
 export default {
   name: 'RegisterIntro',

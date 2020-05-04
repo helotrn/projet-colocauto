@@ -96,7 +96,7 @@ fr:
 </i18n>
 
 <script>
-import BorrowerForm from '@/components/Borrower/Form.vue';
+import BorrowerForm from '@/components/Borrower/BorrowerForm.vue';
 
 import { buildComputed } from '@/helpers';
 

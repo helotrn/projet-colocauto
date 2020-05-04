@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import LoanableForm from '@/components/Loanable/Form.vue';
+import LoanableForm from '@/components/Loanable/LoanableForm.vue';
 
 import DataRouteGuards from '@/mixins/DataRouteGuards';
 import FormMixin from '@/mixins/FormMixin';

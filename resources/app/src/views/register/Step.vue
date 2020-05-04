@@ -77,7 +77,7 @@ import Authenticated from '@/mixins/Authenticated';
 import Notification from '@/mixins/Notification';
 
 import CommunityProofForm from '@/components/Community/ProofForm.vue';
-import ProfileForm from '@/components/Profile/Form.vue';
+import ProfileForm from '@/components/Profile/ProfileForm.vue';
 import RegisterIntentForm from '@/components/Register/IntentForm.vue';
 
 import FormMixin from '@/mixins/FormMixin';

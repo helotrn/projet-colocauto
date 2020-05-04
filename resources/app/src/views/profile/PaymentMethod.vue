@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import PaymentMethodForm from '@/components/PaymentMethod/Form.vue';
+import PaymentMethodForm from '@/components/PaymentMethod/PaymentMethodForm.vue';
 
 import Authenticated from '@/mixins/Authenticated';
 import DataRouteGuards from '@/mixins/DataRouteGuards';

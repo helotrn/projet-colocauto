@@ -15,7 +15,7 @@
 </template>
 
 <script>
-import BorrowerForm from '@/components/Borrower/Form.vue';
+import BorrowerForm from '@/components/Borrower/BorrowerForm.vue';
 
 import FormMixin from '@/mixins/FormMixin';
 

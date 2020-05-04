@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import ProfileForm from '@/components/Profile/Form.vue';
+import ProfileForm from '@/components/Profile/ProfileForm.vue';
 
 import FormMixin from '@/mixins/FormMixin';
 
