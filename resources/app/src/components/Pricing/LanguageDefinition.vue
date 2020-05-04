@@ -43,8 +43,8 @@
         </ul>
 
         <p>
-            Un tableau est une liste entre crochets de valeurs séparées par des virgules,
-            par ex. <code>[1,2,3]</code>.
+          Un tableau est une liste entre crochets de valeurs séparées par des virgules,
+          par ex. <code>[1,2,3]</code>.
         </p>
 
         <p>
@@ -100,7 +100,7 @@
 
         <p>
           Les règles de priorité des opérateurs s'appliquent. Utilisez des parenthèses
-        pour forcer un ordre.
+          pour forcer un ordre.
         </p>
 
         <p>
