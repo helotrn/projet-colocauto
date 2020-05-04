@@ -132,6 +132,7 @@ export default {
         },
         community_id: this.user.communities[0].id,
         loanable,
+        estimated_insurance: loanable.insurance,
         estimated_price: loanable.price,
       });
 

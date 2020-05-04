@@ -42,37 +42,60 @@
             </b-row>
 
             <b-row>
-              <b-col lg="3">
-                <div class="form-group">
-                  <label>{{ $t('fields.duration_in_minutes') | capitalize }}</label>
-                  <div>
-                    {{ loan.duration_in_minutes }} minutes
-                  </div>
-                </div>
+              <b-col lg="6">
+                <b-row>
+                  <b-col xs="6">
+                    <div class="form-group">
+                      <label>{{ $t('fields.duration_in_minutes') | capitalize }}</label>
+                      <div>
+                        {{ loan.duration_in_minutes }} minutes
+                      </div>
+                    </div>
+                  </b-col>
+
+                  <b-col xs="6">
+                    <forms-validated-input name="estimated_distance"
+                      :label="$t('fields.estimated_distance') | capitalize"
+                      type="number" :min="10" :max="1000"
+                      :disabled="!!loan.id"
+                      :placeholder="placeholderOrLabel('estimated_distance') | capitalize"
+                      v-model="loan.estimated_distance" />
+                  </b-col>
+                </b-row>
               </b-col>
 
               <b-col lg="6">
-                <forms-validated-input name="estimated_distance"
-                  :label="$t('fields.estimated_distance') | capitalize"
-                  type="number" :min="10" :max="1000"
-                  :disabled="!!loan.id"
-                  :placeholder="placeholderOrLabel('estimated_distance') | capitalize"
-                  v-model="loan.estimated_distance" />
-              </b-col>
+                <b-row>
+                  <b-col xs="6">
+                    <div class="form-group">
+                      <label>{{ $t('fields.estimated_price') | capitalize }}</label>
+                      <layout-loading v-if="priceUpdating" class="loan-form__estimations__loading" />
+                      <div v-else-if="!loan.id">
+                        <i v-b-tooltip.hover :title="loan.loanable.pricing">
+                          {{ loan.estimated_price | currency }}
+                        </i>
+                      </div>
+                      <div v-else>
+                        {{ loan.estimated_price | currency }}
+                      </div>
+                    </div>
+                  </b-col>
 
-              <b-col lg="3">
-                <div class="form-group">
-                  <label>{{ $t('fields.estimated_price') | capitalize }}</label>
-                  <layout-loading v-if="priceUpdating" style="max-height: 30px;"/>
-                  <div v-else-if="!loan.id">
-                    <i v-b-tooltip.hover :title="loan.loanable.pricing">
-                      {{ loan.estimated_price | currency }}
-                    </i>
-                  </div>
-                  <div v-else>
-                    {{ loan.estimated_price | currency }}
-                  </div>
-                </div>
+                  <b-col xs="6">
+                    <div class="form-group">
+                      <label>{{ $t('fields.estimated_insurance') | capitalize }}</label>
+                      <layout-loading v-if="priceUpdating" class="loan-form__estimations__loading" />
+                      <div v-else-if="!loan.id">
+                        <i v-b-tooltip.hover :title="loan.loanable.pricing">
+                          {{ loan.estimated_insurance | currency }}
+                        </i>
+                      </div>
+                      <div v-else>
+                        {{ loan.estimated_insurance | currency }}
+                      </div>
+                    </div>
+                  </b-col>
+                </b-row>
               </b-col>
             </b-row>
 
@@ -184,4 +207,8 @@ export default {
 </script>
 
 <style lang="scss">
+.loan-form__estimations__loading {
+  max-width: 100px;
+  max-height: 30px;
+}
 </style>

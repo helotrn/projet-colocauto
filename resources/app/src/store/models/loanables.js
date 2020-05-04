@@ -37,6 +37,7 @@ export default new RestModule('loanables', {
     const newData = state.data.map(d => ({
       ...d,
       available: null,
+      insurance: null,
       price: null,
       pricing: null,
       tested: false,

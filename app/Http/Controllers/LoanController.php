@@ -148,6 +148,9 @@ class LoanController extends RestController
                 'estimated_distance' => [
                     'type' => 'number',
                 ],
+                'estimated_insurance' => [
+                    'type' => 'number',
+                ],
                 'estimated_price' => [
                     'type' => 'number',
                 ],

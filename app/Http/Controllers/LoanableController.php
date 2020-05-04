@@ -15,7 +15,9 @@ use App\Http\Requests\Trailer\UpdateRequest as TrailerUpdateRequest;
 use App\Models\Community;
 use App\Models\Bike;
 use App\Models\Car;
+use App\Models\Loan;
 use App\Models\Loanable;
+use App\Models\Pricing;
 use App\Repositories\LoanableRepository;
 use Carbon\Carbon;
 use Illuminate\Validation\ValidationException;
@@ -165,7 +167,7 @@ class LoanableController extends RestController
 
         $end = $departureAt->copy()->add($durationInMinutes, 'minutes');
 
-        $price = $pricing ? $pricing->evaluateRule(
+        $response = $pricing ? $pricing->evaluateRule(
             $estimatedDistance,
             $durationInMinutes,
             $item,
@@ -176,9 +178,17 @@ class LoanableController extends RestController
             ]
         ) : 0;
 
+        if (is_array($response)) {
+            [$price, $insurance] = $response;
+        } else {
+            $price = $response;
+            $insurance = 0;
+        }
+
         return response([
           'available' => $item->isAvailable($departureAt, $durationInMinutes),
           'price' => $price,
+          'insurance' => $insurance,
           'pricing' => $pricing ? $pricing->name : 'Gratuit'
         ], 200);
     }

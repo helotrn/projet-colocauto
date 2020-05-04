@@ -32,9 +32,12 @@
       </div>
     </div>
 
-    <div class="loanable-card__estimated-fare" v-if="price">
-      <i v-b-tooltip.hover :title="pricing">
+    <div class="loanable-card__estimated-fare" v-if="price" v-b-tooltip.hover :title="pricing">
+      <i>
         Coût estimé: {{ price | currency }}
+      </i>
+      <i v-if="insurance">
+        Assurance: {{ insurance | currency }}
       </i>
     </div>
     <div v-else class="loanable-card__estimated-fare">
@@ -99,6 +102,11 @@ export default {
     },
     image: {
       type: Object,
+      required: false,
+      default: null,
+    },
+    insurance: {
+      type: Number,
       required: false,
       default: null,
     },

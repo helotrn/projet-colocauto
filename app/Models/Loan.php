@@ -34,6 +34,10 @@ class Loan extends BaseModel
             'integer',
             'required'
         ],
+        'estimated_insurance' => [
+            'numeric',
+            'required',
+        ],
         'estimated_price' => [
             'numeric',
             'required',

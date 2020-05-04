@@ -70,7 +70,7 @@
                 <span v-else>{{ row.item.suspended_at | date }}</span>
               </template>
               <template v-slot:cell(proof)="row">
-                <span v-if="row.item.proof">
+                <span v-if="row.item.proof" class="admin-community__users__table__proof">
                   <a href="#" v-b-modal="`proof-${row.item.id}`">
                     {{ row.item.proof.original_filename }}
                   </a>
@@ -299,4 +299,11 @@ export default {
 </script>
 
 <style lang="scss">
+.admin-community__users__table__proof {
+  display: inline-block;
+  max-width: 100px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 </style>

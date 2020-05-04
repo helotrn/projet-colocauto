@@ -30,7 +30,7 @@
             </p>
           </div>
           <div v-else>
-            <p v-if="user.balance < loan.estimated_price">
+            <p v-if="user.balance < (loan.estimated_price + loan.estimated_insurance)">
               Vous devez ajouter des crédits à votre compte.
             </p>
             <p v-else>
@@ -38,11 +38,11 @@
             </p>
 
             <user-add-credit-box
-              :minimumRequired="loan.estimated_price" :user="user"
-              @bought="completeAction" />
+              :minimumRequired="loan.estimated_price + loan.estimated_insurance"
+              :user="user" @bought="completeAction" />
 
             <div class="loan-actions-intention__buttons text-center"
-              v-if="user.balance >= loan.estimated_price">
+              v-if="user.balance >= (loan.estimated_price + loan.estimated_insurance)">
               <p>Ou compléter cette étape sans plus attendre.</p>
 
               <b-button size="sm" variant="success" class="mr-3" @click="completeAction">

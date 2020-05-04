@@ -15,6 +15,7 @@ export default {
       departure_at: 'départ',
       duration_in_minutes: 'durée (minutes)',
       estimated_distance: 'kilométrage à parcourir',
+      estimated_insurance: "coût estimé de l'assurance",
       estimated_price: 'coût estimé',
       loanable_id: 'véhicule',
       loanable: loanables.fr.fields,
