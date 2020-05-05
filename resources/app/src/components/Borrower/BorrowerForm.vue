@@ -25,7 +25,8 @@
         <b-row>
           <b-col>
             <forms-file-uploader field="saaq"
-              label="Ex.: monfichier.pdf"
+              :label="$t('fields.saaq') | capitalize"
+              placeholder="Ex.: monfichier.pdf"
               v-model="borrower.saaq" />
           </b-col>
         </b-row>
@@ -33,7 +34,8 @@
         <b-row>
           <b-col>
             <forms-file-uploader field="gaa"
-              label="Ex.: monfichier.pdf"
+              :label="$t('fields.gaa') | capitalize"
+              placeholder="Ex.: monfichier.pdf"
               v-model="borrower.gaa" />
           </b-col>
         </b-row>
@@ -41,7 +43,8 @@
         <b-row>
           <b-col>
             <forms-file-uploader field="insurance"
-              label="Ex.: monfichier.pdf"
+              :label="$t('fields.insurance') | capitalize"
+              placeholder="Ex.: monfichier.pdf"
               v-model="borrower.insurance" />
           </b-col>
         </b-row>
