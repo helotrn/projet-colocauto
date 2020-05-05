@@ -8,7 +8,8 @@ class AddEstimatedInsuranceToLoan extends Migration
 {
     public function up() {
         Schema::table('loans', function (Blueprint $table) {
-            $table->decimal('estimated_insurance', 8, 2);
+            $table->decimal('estimated_insurance', 8, 2)->default(0);
+            $table->decimal('estimated_insurance', 8, 2)->default(null)->change();
         });
     }
 
