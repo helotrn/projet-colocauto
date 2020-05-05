@@ -51,6 +51,17 @@ class User extends AuthenticatableBaseModel
         'id' => 'number',
         'full_name' => 'text',
         'deleted_at' => 'date',
+        'communities.id' => [
+            'type' => 'relation',
+            'query' => [
+                'slug' => 'communities',
+                'value' => 'id',
+                'text' => 'name',
+                'params' => [
+                    'fields' => 'id,name',
+                ],
+            ],
+        ],
     ];
 
     public static function getRules($action = '', $auth = null) {

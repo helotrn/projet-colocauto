@@ -49,6 +49,7 @@ export default {
   },
   data() {
     return {
+      lastSelectedItem: null,
       searchDebounce: null,
       q: '',
     };
@@ -59,7 +60,11 @@ export default {
     },
     convertedObjectValue() {
       if (!this.objectValue) {
-        return null;
+        if (!this.lastSelectedItem) {
+          return null;
+        }
+
+        return this.lastSelectedItem;
       }
 
       const value = this.dig(this.objectValue, this.query.value);
@@ -105,6 +110,7 @@ export default {
       }, target);
     },
     emitInput(value) {
+      this.lastSelectedItem = value;
       this.$emit('input', value);
     },
     setQ(q) {

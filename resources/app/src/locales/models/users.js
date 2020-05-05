@@ -1,3 +1,5 @@
+import communities from './communities';
+
 export default {
   fr: {
     'ajouter un membre': 'ajouter un membre',
@@ -10,6 +12,10 @@ export default {
     fields: {
       address: 'adresse',
       avatar: 'image de profil',
+      communities: Object.keys(communities.fr.fields).reduce((acc, f) => {
+        acc[f] = `${communities.fr.fields[f]} (Communauté)`;
+        return acc;
+      }, {}),
       date_of_birth: 'date de naissance',
       deleted_at: 'supprimé',
       description: 'description',

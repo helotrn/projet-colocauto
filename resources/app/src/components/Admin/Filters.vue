@@ -24,6 +24,12 @@
             </b-form-select>
             <b-form-input v-else-if="def === 'date'" type="date"
               v-model="params[key]" :name="key" :id="key" />
+            <forms-relation-input v-else-if="def.type === 'relation'"
+              :id="key" :name="key" :query="def.query"
+              :value="params[key]"
+              @input="emitRelationChange(key, $event)" />
+            <b-form-input v-else-if="def.type === 'relation'" type="date"
+              v-model="params[key]" :name="key" :id="key" />
             <b-form-input v-else type="text"
               v-model="params[key]" :name="key" :id="key" />
           </b-form-group>
@@ -34,8 +40,11 @@
 </template>
 
 <script>
+import FormsRelationInput from '@/components/Forms/RelationInput.vue';
+
 export default {
   name: 'AdminFilters',
+  components: { FormsRelationInput },
   props: {
     entity: {
       type: String,
@@ -55,6 +64,14 @@ export default {
       return Object.keys(this.filters).filter(f => !!this.params[f]);
     },
   },
+  methods: {
+    emitRelationChange(name, event) {
+      this.$store.commit(`${this.entity}/setParam`, {
+        name,
+        value: event ? event.value : null,
+      });
+    },
+  }
 };
 </script>
 
