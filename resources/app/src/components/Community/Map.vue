@@ -7,9 +7,10 @@
     @click="selectedLoanable = null"
     map-type-id="terrain">
     <gmap-marker v-for="l in data" :key="`marker-${l.id}`"
-      :icon="iconFor(l)" @click="selectedLoanable = l"
+      :icon="iconFor(l)" @click="activateLoanable(l)"
       :clickable="l.available !== false" :position="l.position_google">
-      <gmap-info-window v-if="selectedLoanable === l" @closeclick="selectLoanable = null">
+      <gmap-info-window v-if="selectedLoanable && selectedLoanable.id === l.id"
+        @closeclick="selectedLoanable = null">
         <div class="info-box-content" style="width: 270px;">
           <loanable-card v-bind="l" @select="$emit('select', l)" @test="$emit('test', l)" />
         </div>
@@ -83,6 +84,13 @@ export default {
     google: gmapApi,
   },
   methods: {
+    activateLoanable(l) {
+      if (this.selectedLoanable === l) {
+        this.selectedLoanable = null;
+      } else {
+        this.selectedLoanable = l;
+      }
+    },
     iconFor(loanable) {
       const status = loanable.available === false ? '-unavailable-' : '-';
 
