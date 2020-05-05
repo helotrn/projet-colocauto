@@ -52,7 +52,7 @@ before('deploy:symlink', 'deploy:build');
 
 desc('Set release version in .env file');
 task('deploy:set_release', function () {
-    run('cat {{release_path}}/resources/.release >> '
+    run('cat {{release_path}}/resources/app/.release >> '
         . '{{release_path}}/../../shared/resources/app/.env');
 });
 before('deploy:build', 'deploy:set_release');
