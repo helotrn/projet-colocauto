@@ -32,17 +32,6 @@ class UsersTableSeeder extends Seeder
                 'last_name' => 'Mercier',
                 'submitted_at' => new \DateTime,
             ]),
-            'alexandre@molotov.ca' => array_merge($generic, [
-                'name' => 'Alexandre',
-                'last_name' => 'Chouinard',
-                'role' => 'admin',
-                'description' => 'Autre admin global',
-            ]),
-            'achouinard31@gmail.com' => [
-                'name' => 'Alexandre',
-                'last_name' => 'Chouinard',
-                'description' => 'Description',
-            ],
         ];
 
         $memberships = [
@@ -56,11 +45,6 @@ class UsersTableSeeder extends Seeder
             'ariane@molotov.ca' => [
                 1 => [
                     'approved_at' => new \DateTime,
-                ],
-            ],
-            'achouinard31@gmail.com' => [
-                1 => [
-                    'role' => 'admin',
                 ],
             ],
         ];
