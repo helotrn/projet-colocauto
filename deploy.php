@@ -44,18 +44,18 @@ task('deploy:reload:php-fpm', function () {
 });
 after('deploy:reload', 'deploy:reload:php-fpm');
 
+desc('Build frontend application');
+task('deploy:build', function () {
+    run('cd {{release_path}}/resources/app && yarn && yarn build');
+});
+before('deploy:symlink', 'deploy:build');
+
 desc('Set release version in .env file');
 task('deploy:set_release', function () {
     run('cat {{release_path}}/resources/.release >> '
         . '{{release_path}}/../../shared/resources/app/.env');
 });
 before('deploy:build', 'deploy:set_release');
-
-desc('Build frontend application');
-task('deploy:build', function () {
-    run('cd {{release_path}}/resources/app && yarn && yarn build');
-});
-before('deploy:symlink', 'deploy:build');
 
 desc('Copy assets');
 task('deploy:copy', function () {
