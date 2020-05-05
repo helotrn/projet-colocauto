@@ -5,7 +5,7 @@
     </div>
     <div class="mb-3" v-else-if="!value">
       <b-form-file :value="value" :state="validationState" :id="field"
-        :ref="`${field}fileinput`" :placeholder="placeholder"
+        :ref="`${field}imageinput`" :placeholder="placeholder"
         :name="field" :accept="accept.join(',')" browse-text="Sélectionner"
         drop-placeholder="Déposer l'image ici..."
         @change="handleChange" />
@@ -18,7 +18,11 @@
         <img v-if="value.sizes" :src="value.sizes.thumbnail" >
         <img src="/loading.svg" v-else>
 
-        <figcaption>{{ value.original_filename }}</figcaption>
+        <figcaption>
+          <a :href="value.url" target="_blank">
+            {{ value.original_filename }}
+          </a>
+        </figcaption>
       </figure>
       <b-button variant="warning" @click="removeImage">
         <small>{{ removeImageText }}</small>
@@ -92,8 +96,8 @@ export default {
     removeImage() {
       this.$emit('input', null);
 
-      if (this.$refs[`${this.field}fileinput`]) {
-        this.$refs[`${this.field}fileinput`].reset();
+      if (this.$refs[`${this.field}imageinput`]) {
+        this.$refs[`${this.field}imageinput`].reset();
       }
     },
     async uploadImage(fieldName, fileList) {

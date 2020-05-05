@@ -8,16 +8,20 @@
         :ref="`${field}fileinput`" :placeholder="placeholder"
         :name="field" :accept="accept.join(',')" browse-text="Sélectionner"
         drop-placeholder="Déposer le fichier ici..."
-        @change="uploadFile($event.target.name, $event.target.files)"/>
+        @change="handleChange"/>
       <div class="invalid-feedback" v-if="errors">
         {{ errors.message }}
       </div>
     </div>
     <div v-else>
       <figure class="preview">
-        <img v-if="!value" src="/loading.gif" >
+        <img v-if="!value" src="/loading.svg" >
 
-        <figcaption>{{ value.original_filename }}</figcaption>
+        <figcaption>
+          <a :href="value.url" target="_blank">
+            {{ value.original_filename }}
+          </a>
+        </figcaption>
       </figure>
       <b-button variant="warning" @click="removeFile">
         <small>{{ removeFileText }}</small>
@@ -44,12 +48,17 @@ export default {
       default: '',
     },
     placeholder: {
-      default: 'Envoyer un fichier...',
+      default: 'Téléverser...',
       type: String,
     },
     removeFileText: {
       default: 'Retirer le fichier',
       type: String,
+    },
+    required: {
+      type: Boolean,
+      required: false,
+      default: false,
     },
     value: {
       type: Object,
@@ -65,10 +74,24 @@ export default {
       return !!this.$store.state.images.ajax;
     },
     validationState() {
-      return !this.errors && Boolean(this.value);
+      if (!this.required && !this.value) {
+        return null;
+      }
+
+      return !this.errors && (!this.required || !!this.value);
     },
   },
   methods: {
+    handleChange(event) {
+      switch (event.type) {
+        case 'drop':
+          this.uploadFile(event.target.getAttribute('for'), event.dataTransfer.files);
+          break;
+        default:
+          this.uploadFile(event.target.name, event.target.files);
+          break;
+      }
+    },
     removeFile() {
       this.$emit('input', null);
 

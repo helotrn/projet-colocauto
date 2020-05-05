@@ -70,9 +70,9 @@ class FileController extends RestController
 
         $request = new Request();
         $request->merge([
-            'path' => '/' . dirname($location),
+            'path' => $uri,
             'original_filename' => $originalFilename,
-            'filename' => basename($location),
+            'filename' => $filename,
             'field' => $field,
             'filesize' => $file->getSize(),
         ]);

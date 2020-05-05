@@ -71,7 +71,7 @@ export default {
         value: event ? event.value : null,
       });
     },
-  }
+  },
 };
 </script>
 

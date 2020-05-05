@@ -64,12 +64,12 @@
         :id="name" :name="name" :field="name"
         :placeholder="placeholder" :disabled="disabled"
         :value="value"
-        @input="emitRelationChange" />
+        @input="emitChange" />
       <forms-image-uploader v-else-if="type === 'image'"
         :id="name" :name="name" :field="name"
         :placeholder="placeholder" :disabled="disabled"
         :value="value"
-        @input="emitRelationChange" />
+        @input="emitChange" />
       <forms-relation-input v-else-if="type === 'relation'"
         :id="name" :name="name" :query="query"
         :placeholder="placeholder" :disabled="disabled"
