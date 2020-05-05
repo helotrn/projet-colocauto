@@ -133,12 +133,27 @@
             <li><code>start</code>: un <code>objet de date</code></li>
             <li><code>end</code>: un <code>objet de date</code></li>
           </ul>
+          <li>un <code>objet de date</code> contient les valeurs:</li>
+          <ul>
+            <li><code>year</code></li>
+            <li><code>month</code></li>
+            <li><code>day</code></li>
+            <li><code>hour</code></li>
+            <li><code>minute</code></li>
+            <li><code>day_of_year</code></li>
+          </ul>
         </ul>
 
         <p>
-          En ce qui concerne <code>OBJET</code>, on peut accéder à ses propriétés avec
-          un point. Par exemple <code>OBJET.engine</code> pour le mode de combustion d'une
-          voiture ou <code>OBJET.size</code> pour la taille d'un vélo.
+          En ce qui concerne <code>$OBJET</code> et <code>$EMPRUNT</code>, on peut accéder à
+          leurs propriétés avec un point. Par exemple <code>OBJET.engine</code> pour le
+          mode de combustion d'une voiture ou <code>OBJET.size</code> pour la taille d'un
+          vélo.
+        </p>
+
+        <p>
+          Se référer à <a :href="unitTestUrl" target="_blank">ce fichier</a> pour
+          des exemple d'utilisation.
         </p>
       </div>
     </b-collapse>
@@ -148,6 +163,12 @@
 <script>
 export default {
   name: 'LanguageDefinition',
+  data() {
+    return {
+      unitTestUrl: 'https://gitlab.com/Solon-collectif/locomotion.app/'
+        + '-/blob/master/tests/Unit/PricingTest.php',
+    };
+  },
 };
 </script>
 
