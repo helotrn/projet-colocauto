@@ -52,6 +52,15 @@
           (doit être une <code>expression</code>).
         </p>
 
+        <h4>Valeurs de retour</h4>
+
+        <p>
+          Chaque ligne doit retourner une valeur numérique ou un tableau avec deux valeurs
+          numériques. Dans ce cas, la première valeur est le prix et la deuxième valeur est
+          l'assurance. Si une seule valeur numérique est fournie, l'assurance est considérée
+          être zéro.
+        </p>
+
         <h4>Opérateurs disponibles</h4>
 
         <ul>
