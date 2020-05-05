@@ -72,6 +72,7 @@ export default {
     admin: 'administration',
     borrower: 'emprunteur',
     communities: 'communautés',
+    'communities-overview': 'communautés',
     community: 'communauté',
     dashboard: 'tableau de bord',
     find_vehicle: 'trouve un véhicule',

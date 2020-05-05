@@ -106,7 +106,7 @@
             </h2>
 
             <p>
-              Aujourd’hui, <span class="no-break">{{ stats.communities }}</span> quartiers,
+              Aujourd’hui, <span class="no-break">{{ stats.communities.length }}</span> quartiers,
               soit plus de <span class="no-break">{{ stats.users }} participant•e•s</span>
               partageant <span class="no-break">{{ stats.loanables }}</span> véhicules
               expérimentent cette solution collective.

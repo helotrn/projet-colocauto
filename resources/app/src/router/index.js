@@ -2,6 +2,7 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 
 import Loan from '../views/Loan.vue';
+import CommunityOverview from '@/views/community/Overview.vue';
 
 import adminRoutes from './admin';
 import baseRoutes from './base';
@@ -17,6 +18,21 @@ const routes = [
   communityRoutes,
   profileRoutes,
   registerRoutes,
+  {
+    path: '/communities',
+    name: 'communities-overview',
+    component: CommunityOverview,
+    meta: {
+      slug: 'communities',
+      skipCleanup: true,
+      data: {
+        stats: {
+          retrieve: {},
+        },
+      },
+      title: 'titles.communities-overview',
+    },
+  },
   {
     path: '/loans/:id',
     component: Loan,

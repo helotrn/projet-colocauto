@@ -28,8 +28,23 @@ class StaticController extends RestController
     }
 
     public function stats() {
+        $communityQuery = Community::whereIn('type', ['neighborhood', 'borough']);
+        $columnsDefinition = Community::getColumnsDefinition();
+
+        $communityQuery = $columnsDefinition['*']($communityQuery);
+        $communityQuery = $columnsDefinition['center']($communityQuery);
+
         return response([
-            'communities' => Community::whereIn('type', ['neighborhood', 'borough'])->count(),
+            'communities' => $communityQuery->get()
+                ->map(function ($c) {
+                    return [
+                        'id' => $c->id,
+                        'name' => $c->name,
+                        'center' => $c->center,
+                        'area_google' => $c->area_google,
+                        'center_google' => $c->center_google,
+                    ];
+                }),
             'users' => User::whereRole(null)->whereSuspendedAt(null)->count(),
             'loanables' => Loanable::count(),
         ], 200);

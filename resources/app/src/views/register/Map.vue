@@ -1,5 +1,5 @@
 <template>
-  <div name="register-map" v-if="routeDataLoaded">
+  <layout-page name="register-map" v-if="routeDataLoaded" wide>
     <b-card title="Choisir un voisinage" class="register-map__form" v-if="!community">
       <b-card-text>
         <b-form @submit.prevent="searchPostalCode">
@@ -72,7 +72,7 @@
           :position="c.center_google" />
       </gmap-map>
     </div>
-  </div>
+  </layout-page>
   <layout-loading v-else />
 </template>
 
