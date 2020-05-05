@@ -9,12 +9,12 @@ Application et API de Locomotion
 Prérequis
 ---------
 
-- \>= PHP 7.3
+- PHP 7.3
 - Node 10
 - Postgresql 10
   - postgis
   - unaccent
-- composer, npm
+- composer, yarn
 - Redis
 
 Configuration
