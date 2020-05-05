@@ -94,7 +94,7 @@ export default {
         auth: true,
         slug: 'loanables',
         params: {
-          fields: '*,owner.user.full_name,community.name,padlock.name',
+          fields: '*,owner.user.full_name,community.name,padlock.name,report.*',
         },
         title: 'titles.loanable',
       },

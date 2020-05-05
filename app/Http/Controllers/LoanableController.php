@@ -300,6 +300,10 @@ class LoanableController extends RestController
                                 'value' => 'regular',
                             ],
                             [
+                                'text' => 'Cargo',
+                                'value' => 'cargo',
+                            ],
+                            [
                                 'text' => 'Électrique',
                                 'value' => 'electric',
                             ],
@@ -335,7 +339,6 @@ class LoanableController extends RestController
                     'brand' => [
                         'type' => 'text',
                     ],
-
                     'model' => [
                         'type' => 'text',
                     ],
@@ -394,6 +397,9 @@ class LoanableController extends RestController
                     ],
                     'is_value_over_fifty_thousand' => [
                         'type' => 'checkbox',
+                    ],
+                    'report' => [
+                        'type' => 'file',
                     ],
                     'ownership' => [
                         'type' => 'select',

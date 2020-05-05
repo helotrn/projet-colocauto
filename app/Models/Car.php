@@ -97,10 +97,15 @@ class Car extends Loanable
 
     public $morphOnes = [
         'image' => 'imageable',
+        'report' => 'fileable',
     ];
 
     public function image() {
-        return $this->morphOne(Image::class, 'imageable');
+        return $this->morphOne(Image::class, 'imageable')->where('field', 'image');
+    }
+
+    public function report() {
+        return $this->morphOne(File::class, 'fileable')->where('field', 'report');
     }
 
     public function loans() {

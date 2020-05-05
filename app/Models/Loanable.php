@@ -177,6 +177,7 @@ class Loanable extends BaseModel
 
     public function image() {
         return $this->hasOne(Image::class, 'imageable_id')
+            ->where('field', 'image')
             ->whereIn(
                 'imageable_type',
                 [

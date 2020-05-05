@@ -10,9 +10,10 @@ export default {
   },
   fr: {
     bike_types: {
-      regular: 'régulier',
+      cargo: 'cargo',
       electric: 'electric',
       fixed_wheel: 'roue fixe',
+      regular: 'régulier',
     },
     'créer un véhicule': 'créer un véhicule',
     '{count} véhicule sélectionné': 'aucun véhicule sélectionné | 1 véhicule sélectionné | {count} véhicules sélectionnés',

@@ -4,24 +4,37 @@ export default {
   namespaced: true,
   state: {
     ajax: false,
-    errors: {},
+    errors: null,
   },
   mutations: {
     ajax(state, ajax) {
       state.ajax = ajax;
     },
+    errors(state, errors) {
+      state.errors = errors;
+    },
   },
   actions: {
     async upload({ commit }, formData) {
-      const ajax = Vue.axios.post('/files', formData);
+      commit('errors', null);
 
-      commit('ajax', ajax);
+      try {
+        const ajax = Vue.axios.post('/files', formData);
 
-      const { data: image } = await ajax;
+        commit('ajax', ajax);
 
-      commit('ajax', null);
+        const { data: file } = await ajax;
 
-      return image;
+        commit('ajax', null);
+
+        return file;
+      } catch (e) {
+        commit('errors', e.response.data);
+
+        commit('ajax', null);
+
+        return null;
+      }
     },
   },
 };
