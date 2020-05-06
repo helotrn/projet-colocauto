@@ -43,15 +43,15 @@ class File extends BaseModel
 
     public static function store($path, $file) {
         $disk = app()->environment() === 'local' ? 'local' : 'local';
-        return Storage::disk($disk)->put($path, $file);
+        return Storage::disk($disk)->putFileAs(dirname($path), $file, basename($path));
     }
 
     public static function copy($source, $destination) {
-        $file = static::fetch($source);
-        if (!$file) {
-            return null;
+        if ($source === $destination) {
+            return true;
         }
-        return static::store($destination, $file);
+        $disk = app()->environment() === 'local' ? 'local' : 'local';
+        return Storage::disk($disk)->copy($source, $destination);
     }
 
     public static function boot() {
@@ -72,6 +72,7 @@ class File extends BaseModel
             }
 
             File::copy($fullPath, $filePath . $ds . $model->filename);
+
             $model->path = $filePath;
         });
     }
