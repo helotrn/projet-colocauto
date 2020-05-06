@@ -13,7 +13,7 @@ class EventServiceProvider extends ServiceProvider
         Registered::class => [
             SendEmailVerificationNotification::class,
         ],
-        'App\Events\UserRegistrationSubmitted' => [
+        'App\Events\RegistrationSubmittedEvent' => [
             'App\Listeners\SendRegistrationSubmittedEmails',
         ],
         'App\Events\LoanableCreatedEvent' => [

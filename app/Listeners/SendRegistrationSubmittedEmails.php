@@ -2,7 +2,7 @@
 
 namespace App\Listeners;
 
-use App\Events\UserRegistrationSubmitted;
+use App\Events\RegistrationSubmittedEvent;
 use App\Mail\RegistrationSubmitted;
 use App\Mail\RegistrationReviewable;
 use App\Models\User;
@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Mail;
 
 class SendRegistrationSubmittedEmails
 {
-    public function handle(UserRegistrationSubmitted $event) {
+    public function handle(RegistrationSubmittedEvent $event) {
         Mail::to($event->user->email, $event->user->full_name)
           ->queue(new RegistrationSubmitted($event->user));
 

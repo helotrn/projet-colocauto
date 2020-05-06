@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Events\UserRegistrationSubmitted;
+use App\Events\RegistrationSubmittedEvent;
 use App\Http\Requests\BaseRequest as Request;
 use App\Http\Requests\User\BorrowerStatusRequest;
 use App\Http\Requests\User\AddBalanceRequest;
@@ -119,7 +119,7 @@ class UserController extends RestController
 
         $user->submit();
 
-        event(new UserRegistrationSubmitted($user));
+        event(new RegistrationSubmittedEvent($user));
 
         return $this->respondWithItem($request, $user);
     }
