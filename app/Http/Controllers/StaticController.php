@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Routing\Controller;
 use App\Models\Community;
 use App\Models\Loanable;
 use App\Models\User;
 use DB;
 
-class StaticController extends RestController
+class StaticController extends Controller
 {
     public function redirectToSolon() {
         return redirect('https://solon-collectif.org/locomotion/');
