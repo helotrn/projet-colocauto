@@ -9,11 +9,15 @@ class CreateAssetsView extends Migration
     public function up() {
         \DB::statement(<<<SQL
 CREATE MATERIALIZED VIEW assets
-(path, type, field, foreign_id) AS
-    SELECT images.path, 'image' AS type, images.field AS field, images.id AS foreign_id
+(path, type, field, filename, foreign_id) AS
+    SELECT
+        images.path, 'image' AS type, images.field AS field,
+        images.filename AS filename, images.id AS foreign_id
     FROM images
 UNION
-    SELECT files.path, 'file' AS type, files.field AS field, files.id AS foreign_id
+    SELECT
+        files.path, 'file' AS type, files.field AS field,
+        files.filename AS filename, files.id AS foreign_id
     FROM files
 SQL
         );
