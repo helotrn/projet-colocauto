@@ -5,7 +5,7 @@
     </div>
     <div class="mb-3" v-else-if="!value">
       <b-form-file :value="value" :state="validationState" :id="field"
-        :ref="`${field}fileinput`" :placeholder="placeholder"
+        :ref="`${field}fileinput`" :placeholder="placeholder" :disabled="disabled"
         :name="field" :accept="accept.join(',')" browse-text="Sélectionner"
         drop-placeholder="Déposer le fichier ici..."
         @change="handleChange"/>
@@ -23,7 +23,7 @@
           </a>
         </figcaption>
       </figure>
-      <b-button variant="warning" @click="removeFile">
+      <b-button variant="warning" @click="removeFile" v-if="!disabled">
         <small>{{ removeFileText }}</small>
       </b-button>
     </div>
@@ -37,6 +37,11 @@ export default {
     accept: {
       default: () => ['*.pdf', 'application/pdf'],
       type: Array,
+    },
+    disabled: {
+      type: Boolean,
+      required: false,
+      default: false,
     },
     field: {
       required: true,

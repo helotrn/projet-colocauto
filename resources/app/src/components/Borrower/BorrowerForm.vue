@@ -1,13 +1,12 @@
 <template>
   <div class="borrower-form">
-    <div class="borrower-form__text"/>
-
     <validation-observer ref="observer" v-slot="{ passes }">
       <b-form :novalidate="true" class="borrower-form__form"
         @submit.stop.prevent="passes(submit)">
         <b-row>
           <b-col>
             <forms-validated-input name="drivers_license_number" type="text"
+              :disabled="disabled"
               :label="$t('fields.drivers_license_number') | capitalize"
               :placeholder="placeholderOrLabel('drivers_license_number') | capitalize"
               v-model="borrower.drivers_license_number" />
@@ -17,6 +16,7 @@
         <b-row>
           <b-col>
             <forms-validated-input name="has_been_sued_last_ten_years" type="checkbox"
+              :disabled="disabled"
               label="Je confirme n'avoir reçu aucune poursuite au cours des 10 dernières années"
               v-model="reverseHasBeenSuedLastTenYears" />
           </b-col>
@@ -25,6 +25,7 @@
         <b-row>
           <b-col>
             <forms-file-uploader field="saaq"
+              :disabled="disabled"
               :label="$t('fields.saaq') | capitalize"
               placeholder="Ex.: monfichier.pdf"
               v-model="borrower.saaq" />
@@ -34,6 +35,7 @@
         <b-row>
           <b-col>
             <forms-file-uploader field="gaa"
+              :disabled="disabled"
               :label="$t('fields.gaa') | capitalize"
               placeholder="Ex.: monfichier.pdf"
               v-model="borrower.gaa" />
@@ -43,6 +45,7 @@
         <b-row>
           <b-col>
             <forms-file-uploader field="insurance"
+              :disabled="disabled"
               :label="$t('fields.insurance') | capitalize"
               placeholder="Ex.: monfichier.pdf"
               v-model="borrower.insurance" />
@@ -88,6 +91,11 @@ export default {
       required: true,
     },
     changed: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
+    disabled: {
       type: Boolean,
       required: false,
       default: false,

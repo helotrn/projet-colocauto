@@ -7,8 +7,28 @@
       Consultez notre <router-link to="/privacy">politique de confidentialité</router-link>.
     </b-alert>
 
+    <div v-if="item.borrower.is_complete" class="profile-borrower__completed-alert">
+      <b-alert v-if="!item.borrower.validated"
+        variant="warning" show>
+        <p>
+          Votre profil d'emprunteur est complet et doit maintenant être validé par
+          l'équipe de LocoMotion.
+        </p>
+      </b-alert>
+      <b-alert v-else variant="success" show>
+        <p>
+          Votre profil d'emprunteur est complet et a été validé par l'équipe de LocoMotion.
+        </p>
+        <p>
+          Contactez le support si vous désirez y apporter des changements.
+        </p>
+      </b-alert>
+    </div>
+
+
     <borrower-form :loading="loading" :borrower="item.borrower"
       @reset="reset" :changed="changed" show-reset
+      :disabled="item.borrower.is_complete" :hide-buttons="item.borrower.is_complete"
       @submit="submit" v-if="item" />
   </div>
   <layout-loading v-else />
@@ -33,4 +53,11 @@ export default {
 </script>
 
 <style lang="scss">
+.profile-borrower {
+  &__completed-alert {
+    p:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
 </style>

@@ -41,7 +41,7 @@ class Borrower extends BaseModel
 
     public $items = ['user'];
 
-    public $computed = ['approved', 'suspended', 'validated'];
+    public $computed = ['approved', 'is_complete', 'suspended', 'validated'];
 
     public $morphOnes = [
       'insurance' => 'fileable',
@@ -59,6 +59,11 @@ class Borrower extends BaseModel
         return $this->hasMany(Loan::class);
     }
 
+    public function getIsCompleteAttribute() {
+        return !!$this->drivers_license_number && !$this->has_been_sued_last_ten_years
+            && !!$this->gaa && !!$this->saaq && !!$this->insurance;
+    }
+
     public function getApprovedAttribute() {
         return !!$this->approved_at;
     }
@@ -68,7 +73,7 @@ class Borrower extends BaseModel
     }
 
     public function getValidatedAttribute() {
-        return $this->approved & !$this->suspended;
+        return $this->approved && !$this->suspended;
     }
 
     public function gaa() {
