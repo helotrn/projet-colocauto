@@ -26,6 +26,9 @@ export default {
     jsonParams() {
       return JSON.stringify(this.params);
     },
+    lastPage() {
+      return this.context.lastPage;
+    },
     loaded() {
       return this.context.loaded;
     },
@@ -102,6 +105,37 @@ export default {
           }
         });
     },
+    loadListData() {
+      if (this.firstLoad && this.skipListMixinFirstLoad) {
+        this.firstLoad = false;
+        return false;
+      }
+
+      if (this.listDebounce) {
+        clearTimeout(this.listDebounce);
+      }
+
+      this.listDebounce = setTimeout(() => {
+        try {
+          this.$store.dispatch(
+            `${this.slug}/retrieve`,
+            this.params,
+          );
+          this.listDebounce = null;
+        } catch (e) {
+          this.$store.commit('addNotification', {
+            content: "Vous n'êtes pas connecté.",
+            title: 'Non connecté',
+            variant: 'warning',
+            type: 'login',
+          });
+          this.$store.commit('user', null);
+          this.$router.push(`/login?r=${this.$route.fullPath}`);
+        }
+      }, 250);
+
+      return true;
+    },
     restoreItemModal(item) {
       const itemLabel = typeof this.itemLabel === 'function'
         ? this.itemLabel(item)
@@ -132,35 +166,7 @@ export default {
   },
   watch: {
     jsonParams() {
-      if (this.firstLoad && this.skipListMixinFirstLoad) {
-        this.firstLoad = false;
-        return false;
-      }
-
-      if (this.listDebounce) {
-        clearTimeout(this.listDebounce);
-      }
-
-      this.listDebounce = setTimeout(() => {
-        try {
-          this.$store.dispatch(
-            `${this.slug}/retrieve`,
-            this.params,
-          );
-          this.listDebounce = null;
-        } catch (e) {
-          this.$store.commit('addNotification', {
-            content: "Vous n'êtes pas connecté.",
-            title: 'Non connecté',
-            variant: 'warning',
-            type: 'login',
-          });
-          this.$store.commit('user', null);
-          this.$router.push(`/login?r=${this.$route.fullPath}`);
-        }
-      }, 250);
-
-      return true;
+      this.loadListData();
     },
   },
 };

@@ -16,6 +16,7 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
       initialItem: '',
       item: null,
       lastLoadedAt: null,
+      lastPage: 1,
       loaded: false,
       search: [],
       searchAjax: null,
@@ -68,6 +69,9 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
       },
       lastLoadedAt(state, lastLoadedAt) {
         state.lastLoadedAt = lastLoadedAt;
+      },
+      lastPage(state, lastPage) {
+        state.lastPage = lastPage;
       },
       loaded(state, loaded) {
         state.loaded = loaded;
@@ -252,11 +256,13 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
             data: {
               data,
               total,
+              last_page: lastPage,
             },
           } = await ajax;
 
           commit('data', data);
           commit('total', total);
+          commit('lastPage', lastPage);
           commit('lastLoadedAt', Date.now());
 
           commit('loaded', true);

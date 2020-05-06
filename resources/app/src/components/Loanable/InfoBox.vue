@@ -18,13 +18,13 @@
 
             <b-button class="ml-3 mb-3"
               size="sm" variant="outline-dark" v-if="false && hasButton('unavailable24h')"
-              @click="makeLoanableUnavailableFor24h">
+              @click.prevent="makeLoanableUnavailableFor24h">
               Rendre indisponible (24h)
             </b-button>
 
             <b-button class="ml-3 mb-3"
               size="sm" variant="outline-danger" v-if="hasButton('remove')"
-              @click="disableLoanableModal">
+              @click.prevent="disableLoanableModal">
               Retirer
             </b-button>
           </div>
@@ -96,8 +96,9 @@ export default {
           }
         });
     },
-    disableLoanable() {
+    async disableLoanable() {
       this.$store.dispatch('loanables/disable', this.id);
+      this.$emit('disabled');
     },
     hasButton(name) {
       return this.buttons.indexOf(name) > -1;

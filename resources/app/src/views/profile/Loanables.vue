@@ -17,7 +17,15 @@
       <b-row v-else v-for="loanable in data" :key="loanable.id"
         class="profile-loanables__loanables">
         <b-col class="profile-loanables__loanables__loanable">
-          <loanable-info-box :buttons="['remove']" v-bind="loanable" />
+          <loanable-info-box :buttons="['remove']" v-bind="loanable"
+            @disabled="loadListData" />
+        </b-col>
+      </b-row>
+
+      <b-row v-if="lastPage > 1">
+        <b-col>
+          <b-pagination align="right" v-model="contextParams.page"
+            :total-rows="total" :per-page="contextParams.per_page" />
         </b-col>
       </b-row>
     </div>
