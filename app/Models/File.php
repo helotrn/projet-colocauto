@@ -2,7 +2,10 @@
 
 namespace App\Models;
 
-use App\Models\User;
+use App\Models\Borrower;
+use Auth;
+use Illuminate\Database\Eloquent\Builder;
+use Laravel\Passport\Token;
 use Storage;
 
 class File extends BaseModel
@@ -83,14 +86,54 @@ class File extends BaseModel
         return $this->morphTo();
     }
 
-    public function user() {
-        return $this->belongsTo(User::class);
+    public function borrower() {
+        return $this->belongsTo(Borrower::class, 'fileable_id')
+            ->whereFileableType(Borrower::class);
     }
 
     public function getUrlAttribute() {
         $base = app()->environment() === 'local'
             ? app()->make('url')->to('/')
             : env('CDN_URL');
-        return "{$base}{$this->path}/{$this->filename}";
+
+        $tokenQueryString = $this->getTokenQueryString();
+
+        return "{$base}{$this->path}/{$this->filename}" . $tokenQueryString;
+    }
+
+    protected function getTokenQueryString() {
+        if ($user = Auth::user()) {
+            $token = Token::whereUserId($user->id)
+                ->whereRevoked(false)
+                ->orderBy('expires_at', 'desc')
+                ->limit(1)
+                ->first();
+            if ($token) {
+                return "?token=$token->id";
+            }
+        }
+
+        return '';
+    }
+
+    public function scopeAccessibleBy(Builder $query, $user) {
+        if ($user->isAdmin()) {
+            return true;
+        }
+
+        // File is...
+        return $query
+            // ...associated to a borrower
+            ->where(function ($q) use ($user) {
+                return $q->whereHas('borrower', function ($q) use ($user) {
+                    return $q->whereHas('user', function ($q) use ($user) {
+                        return $q->accessibleBy($user);
+                    });
+                });
+            })
+            // ...or a temporary file
+            ->orWhere(function ($q) {
+                return $q->whereFileableType(null);
+            });
     }
 }

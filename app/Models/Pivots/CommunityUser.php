@@ -5,6 +5,8 @@ namespace App\Models\Pivots;
 use App\Models\Community;
 use App\Models\Image;
 use App\Models\Tag;
+use App\Models\User;
+use Illuminate\Database\Eloquent\Builder;
 
 class CommunityUser extends BasePivot
 {
@@ -44,5 +46,15 @@ class CommunityUser extends BasePivot
 
     public function tags() {
         return $this->morphToMany(Tag::class, 'taggable');
+    }
+
+    public function scopeAccessibleBy(Builder $query, $user) {
+        if ($user->isAdmin()) {
+            return $query;
+        }
+
+        return $query->whereHas('user', function ($q) use ($user) {
+            return $q->accessibleBy($user);
+        });
     }
 }

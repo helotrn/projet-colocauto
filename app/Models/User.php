@@ -308,13 +308,11 @@ class User extends AuthenticatableBaseModel
         return $query
             // ...himself or herself
             ->whereId($user->id)
-            // ...or belonging to a community of which he or she is administrator
+            // ...or belonging to a community of which he or she is a member
             ->orWhere(function ($q) use ($user) {
                 return $q->whereHas('communities', function ($q2) use ($user) {
                     return $q2->whereHas('users', function ($q3) use ($user) {
-                        return $q3
-                            ->where('community_user.user_id', $user->id)
-                            ->where('community_user.role', 'admin');
+                        return $q3->where('community_user.user_id', $user->id);
                     });
                 });
             });

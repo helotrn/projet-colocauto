@@ -2,9 +2,14 @@
 
 namespace App\Models;
 
+use App\Models\Pivots\CommunityUser;
+use App\Models\User;
+use Auth;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\File;
 use Intervention\Image\ImageManager;
+use Laravel\Passport\Token;
 use Storage;
 
 class Image extends BaseModel
@@ -170,11 +175,14 @@ class Image extends BaseModel
         return $this->morphTo();
     }
 
-    public function getUrlAttribute() {
-        $base = app()->environment() === 'local'
-            ? app()->make('url')->to('/')
-            : env('CDN_URL');
-        return "{$base}{$this->path}/{$this->filename}";
+    public function user() {
+        return $this->belongsTo(User::class, 'imageable_id')
+            ->whereImageableType(User::class);
+    }
+
+    public function communityUser() {
+        return $this->belongsTo(CommunityUser::class, 'imageable_id')
+            ->whereImageableType(CommunityUser::class);
     }
 
     public function getSizesAttribute() {
@@ -198,11 +206,68 @@ class Image extends BaseModel
             $sizes = self::$sizes;
         }
 
+        $tokenQueryString = $this->getTokenQueryString();
+
         $encodedFilename = str_replace(' ', '%20', $this->attributes['filename']);
         foreach (array_keys($sizes) as $name) {
-            $sizes[$name] =  "$base{$this->attributes['path']}/{$name}_{$encodedFilename}";
+            $sizes[$name] =  "$base{$this->attributes['path']}/{$name}_{$encodedFilename}"
+                . $tokenQueryString;
         }
 
         return $sizes;
+    }
+
+    public function getUrlAttribute() {
+        $base = app()->environment() === 'local'
+            ? app()->make('url')->to('/')
+            : env('CDN_URL');
+
+        $tokenQueryString = $this->getTokenQueryString();
+
+        return "{$base}{$this->path}/{$this->filename}" . $tokenQueryString;
+    }
+
+    public function scopeAccessibleBy(Builder $query, $user) {
+        if (!$user) {
+            return $query->where(\DB::raw('1 = 0'));
+        }
+
+        if ($user->isAdmin()) {
+            return $query;
+        }
+
+        // Image is...
+        return $query
+            // ...associated to a user
+            ->where(function ($q) use ($user) {
+                return $q->whereHas('user', function ($q) use ($user) {
+                    return $q->accessibleBy($user);
+                });
+            })
+            // ...or associated to a community user
+            ->orWhere(function ($q) use ($user) {
+                return $q->whereHas('communityUser', function ($q) use ($user) {
+                    return $q->accessibleBy($user);
+                });
+            })
+            // ...or a temporary file
+            ->orWhere(function ($q) {
+                return $q->whereImageableType(null);
+            });
+    }
+
+    protected function getTokenQueryString() {
+        if ($user = Auth::user()) {
+            $token = Token::whereUserId($user->id)
+                ->whereRevoked(false)
+                ->orderBy('expires_at', 'desc')
+                ->limit(1)
+                ->first();
+            if ($token) {
+                return "?token=$token->id";
+            }
+        }
+
+        return '';
     }
 }

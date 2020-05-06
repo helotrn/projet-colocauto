@@ -20,6 +20,9 @@ use Illuminate\Validation\ValidationException;
 
 class UserController extends RestController
 {
+    protected $communityRepo;
+    protected $tagController;
+
     public function __construct(
         UserRepository $repository,
         User $model,
@@ -338,6 +341,9 @@ class UserController extends RestController
                     ],
                     'last_name' => [
                         'type' => 'text',
+                    ],
+                    'avatar' => [
+                        'type' => 'image',
                     ],
                     'description' => [
                         'type' => 'textarea',
