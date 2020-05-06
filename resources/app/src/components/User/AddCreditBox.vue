@@ -11,8 +11,10 @@
         </p>
 
         <p>
-          Montant prélevé du mode de paiement: {{ amountWithFeeAndTaxes | currency }}
+          Montant prélevé du mode de paiement: {{ amountWithFee | currency }}
         </p>
+
+        <p><small>Frais de transaction: 2,2% + 30¢</small></p>
       </b-col>
 
       <b-col class="user-add-credit-box__balance">
@@ -51,11 +53,11 @@
     <b-row class="user-add-credit-box__buttons" tag="p">
       <b-col class="text-center">
         <b-button class="mr-3" type="submit" variant="primary"
-          @click="buyCredit" :disabled="amount < minimumRequired">
+          @click="buyCredit" :disabled="amount < minimumRequired || loading">
           Valider
         </b-button>
 
-        <b-button variant="danger" @click="emitCancel">Annuler</b-button>
+        <b-button variant="outline-warning" @click="emitCancel">Annuler</b-button>
       </b-col>
     </b-row>
   </div>
@@ -67,9 +69,13 @@ export default {
   data() {
     return {
       customAmount: this.minimumRequired ? (parseFloat(this.minimumRequired, 10) * 2) : 20,
-      fee: 1.05,
-      feeConstant: 1,
-      paymentMethodId: null,
+      fee: 1.022,
+      feeConstant: 0.30,
+      loading: false,
+      paymentMethodId: this.user.payment_methods
+        .reduce((acc, p) => {
+          return p.is_default ? p.id : null
+        }, null),
       selectedAmount: this.minimumRequired ? parseFloat(this.minimumRequired, 10) : 10,
     };
   },
@@ -92,8 +98,8 @@ export default {
 
       return parseFloat(this.selectedAmount, 10);
     },
-    amountWithFeeAndTaxes() {
-      return (this.amount * this.fee + this.feeConstant) * 1.14975;
+    amountWithFee() {
+      return (this.amount * this.fee + this.feeConstant);
     },
     newAmount() {
       return this.amount + parseFloat(this.user.balance);
@@ -144,9 +150,6 @@ export default {
     onlyFee() {
       return this.amount * (this.fee - 1) + this.feeConstant;
     },
-    onlyTaxes() {
-      return (this.amount * this.fee + this.feeConstant) * 0.14975;
-    },
     paymentMethods() {
       return this.user.payment_methods.map((pm) => {
         const { name: text, id: value, is_default: selected } = pm;
@@ -163,6 +166,8 @@ export default {
       this.$emit('cancel');
     },
     async buyCredit() {
+      this.loading = true;
+
       try {
         const { amount, paymentMethodId } = this;
         await this.$store.dispatch('account/buyCredit', {
@@ -183,6 +188,8 @@ export default {
           default:
             break;
         }
+
+        this.loading = false;
       }
     },
   },

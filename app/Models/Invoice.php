@@ -65,7 +65,7 @@ class Invoice extends BaseModel
             },
             'tps' => function ($query = null) {
                 if (!$query) {
-                    return '(sum(bill_items_join.amount) * 0.05)::decimal(8, 2)';
+                    return 'sum(bill_items_join.taxes_tps)::decimal(8, 2)';
                 }
 
                 $query = static::addJoin(
@@ -77,12 +77,12 @@ class Invoice extends BaseModel
                 );
 
                 return $query
-                    ->selectRaw('(sum(bill_items_join.amount) * 0.05)::decimal(8, 2) AS tps')
+                    ->selectRaw('sum(bill_items_join.taxes_tps)::decimal(8, 2) AS tps')
                     ->groupBy('invoices.id');
             },
             'tvq' => function ($query = null) {
                 if (!$query) {
-                    return '(sum(bill_items_join.amount) * 0.09975)::decimal(8, 2)';
+                    return 'sum(bill_items_join.taxes_tvq)::decimal(8, 2)';
                 }
 
                 $query = static::addJoin(
@@ -94,7 +94,7 @@ class Invoice extends BaseModel
                 );
 
                 return $query
-                    ->selectRaw('(sum(bill_items_join.amount) * 0.09975)::decimal(8, 2) AS tvq')
+                    ->selectRaw('sum(bill_items_join.taxes_tvq)::decimal(8, 2) AS tvq')
                     ->groupBy('invoices.id');
             },
             'total_with_taxes' => function ($query = null) {

@@ -13,6 +13,8 @@ class BillItem extends BaseModel
     public static $rules = [
         'label' => 'required',
         'amount' => 'required|numeric',
+        'taxes_tps' => 'required|numeric',
+        'taxes_tvq' => 'required|numeric',
     ];
 
     protected $fillable = [
@@ -21,6 +23,8 @@ class BillItem extends BaseModel
         'invoice_id',
         'payment_id',
         'item_date',
+        'taxes_tps',
+        'taxes_tvq',
     ];
 
     public $items = ['invoice', 'payment'];

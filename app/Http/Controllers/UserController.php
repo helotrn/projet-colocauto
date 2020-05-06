@@ -271,26 +271,24 @@ class UserController extends RestController
 
         \Stripe\Stripe::setApiKey(config('services.stripe.secret'));
 
-        $amountWithFee = ($amount * 1.05 + 1);
-        $amountWithFeeAndTaxes = $amountWithFee * 1.14975;
-        $amountWithFeeAndTaxesInCents = intval($amountWithFeeAndTaxes * 100);
+        $amountWithFee = ($amount * 1.022 + 0.30);
+        $amountWithFeeInCents = intval($amountWithFee * 100);
 
-        if ($amountWithFeeAndTaxesInCents <= 0) {
+        if ($amountWithFeeInCents <= 0) {
             return $this->respondWithMessage('amount_in_cents_is_nothing', 400);
         }
 
         $fee = round($amountWithFee - $amount, 2);
-        $taxes = round($amountWithFeeAndTaxes - $amountWithFee, 2);
 
         $date = date('Y-m-d');
         $charge = null;
         try {
             $charge = \Stripe\Charge::create([
-                'amount' => $amountWithFeeAndTaxesInCents,
+                'amount' => $amountWithFeeInCents,
                 'currency' => 'cad',
                 'customer' => $user->getStripeCustomer()->id,
                 'description' => "Ajout au compte Locomotion: "
-                    . "{$amount}$ + {$fee}$ (frais) + {$taxes}$ (taxes)",
+                    . "{$amount}$ + {$fee}$ (frais)",
             ]);
         } catch (\Exception $e) {
             $message = $e->getMessage();
@@ -309,6 +307,8 @@ class UserController extends RestController
                     . "{$amount}$ + {$fee}$ (frais)",
                 'amount' => $amountWithFee,
                 'item_date' => date('Y-m-d'),
+                'taxes_tps' => 0,
+                'taxes_tvq' => 0,
             ]);
 
             $invoice->pay();
