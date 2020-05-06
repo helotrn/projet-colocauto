@@ -44,6 +44,16 @@ class PaymentMethod extends BaseModel
         return $rules;
     }
 
+    public static function boot() {
+        parent::boot();
+
+        self::saving(function ($model) {
+            if (!PaymentMethod::whereUserId($model->user->id)->where('is_default', true)->exists()) {
+                $model->is_default = true;
+            }
+        });
+    }
+
     protected $fillable = [
         'credit_card_type',
         'external_id',
