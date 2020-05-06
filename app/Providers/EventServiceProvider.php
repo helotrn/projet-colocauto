@@ -16,6 +16,9 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\UserRegistrationSubmitted' => [
             'App\Listeners\SendRegistrationSubmittedEmails',
         ],
+        'App\Events\LoanableCreatedEvent' => [
+            'App\Listeners\SendLoanableCreatedEmails',
+        ],
     ];
 
     public function boot() {

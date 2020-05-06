@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\LoanableCreatedEvent;
 use App\Http\Requests\BaseRequest as Request;
 use App\Http\Requests\Car\CreateRequest;
 use App\Http\Requests\Car\UpdateRequest;
@@ -32,6 +33,8 @@ class CarController extends RestController
         } catch (ValidationException $e) {
             return $this->respondWithErrors($e->errors(), $e->getMessage());
         }
+
+        event(new LoanableCreatedEvent($request->user(), $item));
 
         return $this->respondWithItem($request, $item, 201);
     }
