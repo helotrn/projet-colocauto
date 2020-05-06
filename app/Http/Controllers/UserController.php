@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\UserRegistrationSubmitted;
 use App\Http\Requests\BaseRequest as Request;
 use App\Http\Requests\User\BorrowerStatusRequest;
 use App\Http\Requests\User\AddBalanceRequest;
@@ -14,8 +15,8 @@ use App\Models\Borrower;
 use App\Models\User;
 use App\Repositories\CommunityRepository;
 use App\Repositories\UserRepository;
-use Illuminate\Validation\ValidationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Validation\ValidationException;
 
 class UserController extends RestController
 {
@@ -114,6 +115,8 @@ class UserController extends RestController
         }
 
         $user->submit();
+
+        event(new UserRegistrationSubmitted($user));
 
         return $this->respondWithItem($request, $user);
     }
