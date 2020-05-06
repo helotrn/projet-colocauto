@@ -4,6 +4,7 @@
 <p>
     Bonjour {{ $user->name }},
 </p>
+
 <p>
     Félicitations, votre véhicule {{ $loanable->name }} a bien été ajouté!
 </p>

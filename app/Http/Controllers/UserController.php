@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\AddedToUserBalanceEvent;
 use App\Events\RegistrationSubmittedEvent;
 use App\Http\Requests\BaseRequest as Request;
 use App\Http\Requests\User\BorrowerStatusRequest;
@@ -12,8 +13,10 @@ use App\Http\Requests\User\UpdateRequest;
 use App\Http\Requests\User\UpdatePasswordRequest;
 use App\Http\Requests\User\UserTagRequest;
 use App\Models\Borrower;
+use App\Models\Invoice;
 use App\Models\User;
 use App\Repositories\CommunityRepository;
+use App\Repositories\InvoiceRepository;
 use App\Repositories\UserRepository;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Validation\ValidationException;
@@ -21,16 +24,19 @@ use Illuminate\Validation\ValidationException;
 class UserController extends RestController
 {
     protected $communityRepo;
+    protected $invoiceRepo;
     protected $tagController;
 
     public function __construct(
         UserRepository $repository,
         User $model,
         CommunityRepository $communityRepo,
+        InvoiceRepository $invoiceRepo,
         TagController $tagController
     ) {
         $this->repo = $repository;
         $this->model = $model;
+        $this->invoiceRepo = $invoiceRepo;
         $this->communityRepo = $communityRepo;
         $this->tagController = $tagController;
     }
@@ -300,7 +306,11 @@ class UserController extends RestController
             $user->transaction_id = $transactionId + 1;
             $user->save();
 
-            $invoice = $user->getLastInvoiceOrCreate();
+            $invoice = new Invoice;
+
+            $invoice->period = \Carbon\Carbon::now()->locale('fr_FR')->isoFormat('LLLL');
+            $invoice->user()->associate($user);
+            $invoice->save();
 
             $billItem = $invoice->billItems()->create([
                 'label' => "Ajout au compte Locomotion: "
@@ -313,6 +323,8 @@ class UserController extends RestController
 
             $invoice->pay();
 
+            $this->triggerInvoicePaidEvent($user, $invoice);
+
             return response($user->balance, 200);
         } catch (\Exception $e) {
             if ($charge) {
@@ -320,6 +332,10 @@ class UserController extends RestController
                     'charge' => $charge->id,
                 ]);
             }
+
+            $user->balance -= $amount;
+            $user->transaction_id = $transactionId - 1;
+            $user->save();
 
             return $this->respondWithMessage($e->getMessage(), 500);
         }
@@ -409,5 +425,23 @@ class UserController extends RestController
         }
 
         return $template;
+    }
+
+    private function triggerInvoicePaidEvent($user, $invoice) {
+        $invoiceRequest = new Request;
+        $invoiceRequest->setUserResolver(function () use ($user) {
+            return $user;
+        });
+        $invoiceRequest->merge([ 'fields' => '*,bill_items.*' ]);
+
+        $item = $this->invoiceRepo->find($invoiceRequest, $invoice->id);
+        $invoiceTransformer = new $item::$transformer;
+
+        event(new AddedToUserBalanceEvent(
+            $user,
+            $invoiceTransformer->transform($item, [
+                'fields' => ['*' => '*'],
+            ])
+        ));
     }
 }

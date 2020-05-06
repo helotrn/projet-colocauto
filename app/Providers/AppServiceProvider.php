@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Passport\Client;
 
@@ -18,6 +19,10 @@ class AppServiceProvider extends ServiceProvider
 
         Client::retrieved(function (Client $client) {
             $client->incrementing = false;
+        });
+
+        Blade::directive('money', function ($amount) {
+            return "<?php echo number_format($amount, 2, ',', ' ') . '$'; ?>";
         });
     }
 

@@ -1,5 +1,5 @@
-@include('emails.partial.header_text')
+@include('emails.partials.header_text')
 
 @yield('content')
 
-@include('emails.partial.footer_text')
+@include('emails.partials.footer_text')
