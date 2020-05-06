@@ -18,6 +18,7 @@ Route::prefix('v1')->group(function () {
             Route::put('user/submit', 'AuthController@submitUser');
             Route::get('user/balance', 'AuthController@getUserBalance');
             Route::put('user/balance', 'AuthController@addToUserBalance');
+            Route::put('user/claim', 'AuthController@claimUserBalance');
             Route::put('logout', 'AuthController@logout');
         });
 

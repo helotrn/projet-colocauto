@@ -21,7 +21,7 @@
           {{ $t('reclamer') }}
         </b-button>
       </span>
-      <b-button v-else size="sm" variant="outline-primary">
+      <b-button v-else size="sm" variant="outline-primary" v-b-modal.claim-modal>
         {{ $t('reclamer') }}
       </b-button>
     </div>
@@ -34,7 +34,14 @@
 
     <b-modal id="add-credit-modal" title="Approvisionner mon compte" size="lg"
       footer-class="d-none">
-      <user-add-credit-box :user="user" @bought="reloadUserAndCloseModal" @cancel="closeModal"/>
+      <user-add-credit-box :user="user"
+        @bought="reloadUserAndCloseModal" @cancel="closeModal"/>
+    </b-modal>
+
+    <b-modal id="claim-modal" title="Réclamer l'argent au compte LocoMotion" size="md"
+      footer-class="d-none">
+      <user-claim-credits-box :user="user"
+        @claimed="reloadUserAndCloseModal" @cancel="closeModal" />
     </b-modal>
   </div>
 </template>
@@ -53,11 +60,13 @@ fr:
 
 <script>
 import UserAddCreditBox from '@/components/User/AddCreditBox.vue';
+import UserClaimCreditsBox from '@/components/User/ClaimCreditsBox.vue';
 
 export default {
   name: 'DashboardBalance',
   components: {
     UserAddCreditBox,
+    UserClaimCreditsBox,
   },
   props: {
     user: {
@@ -73,6 +82,7 @@ export default {
   methods: {
     closeModal() {
       this.$bvModal.hide('add-credit-modal');
+      this.$bvModal.hide('claim-modal');
     },
     async reloadUser() {
       await this.$store.dispatch('loadUser');

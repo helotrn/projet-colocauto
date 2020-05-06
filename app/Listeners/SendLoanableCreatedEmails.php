@@ -26,7 +26,6 @@ class SendLoanableCreatedEmails
                 ->toArray();
 
             foreach (array_merge($admins, $communityAdmins) as $admin) {
-                var_dump($admin);
                 Mail::to($admin['email'], $admin['name'] . ' ' . $admin['last_name'])
                     ->queue(new LoanableReviewable(
                         $event->user,

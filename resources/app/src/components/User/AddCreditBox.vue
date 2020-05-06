@@ -188,9 +188,9 @@ export default {
           default:
             break;
         }
-
-        this.loading = false;
       }
+
+      this.loading = false;
     },
   },
 };

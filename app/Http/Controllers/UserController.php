@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Events\AddedToUserBalanceEvent;
+use App\Events\ClaimedUserBalanceEvent;
 use App\Events\RegistrationSubmittedEvent;
 use App\Http\Requests\BaseRequest as Request;
 use App\Http\Requests\User\BorrowerStatusRequest;
@@ -18,6 +19,7 @@ use App\Models\User;
 use App\Repositories\CommunityRepository;
 use App\Repositories\InvoiceRepository;
 use App\Repositories\UserRepository;
+use Cache;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Validation\ValidationException;
 
@@ -339,6 +341,20 @@ class UserController extends RestController
 
             return $this->respondWithMessage($e->getMessage(), 500);
         }
+    }
+
+    public function claimBalance(Request $request, $userId) {
+        $user = $this->repo->find($request, $userId);
+
+        if (Cache::get("user:claim:$userId")) {
+            return $this->respondWithMessage('Déjà soumis.', 429);
+        }
+
+        event(new ClaimedUserBalanceEvent($user));
+
+        Cache::put("user:claim:$userId", 14400);
+
+        return $this->respondWithMessage('', 201);
     }
 
     public function template(Request $request) {

@@ -19,9 +19,6 @@ export default {
     error(state, error) {
       state.error = error;
     },
-    incrementTransactionId(state) {
-      state.transactionId += 1;
-    },
     transactionId(state, transactionId) {
       state.transactionId = transactionId;
     },
@@ -49,8 +46,29 @@ export default {
         commit('loaded', true);
 
         commit('ajax', null);
+      } catch (e) {
+        commit('ajax', null);
 
-        commit('incrementTransactionId', null);
+        commit('error', e.response.data);
+
+        throw e;
+      }
+    },
+    async claimCredit({ commit, state }) {
+      commit('loaded', false);
+
+      try {
+        const ajax = Vue.axios.put('/auth/user/claim');
+
+        commit('ajax', ajax);
+
+        const { data } = await ajax;
+
+        commit('data', data);
+
+        commit('loaded', true);
+
+        commit('ajax', null);
       } catch (e) {
         commit('ajax', null);
 

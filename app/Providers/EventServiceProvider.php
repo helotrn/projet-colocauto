@@ -16,6 +16,9 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\AddedToUserBalanceEvent' => [
             'App\Listeners\SendAddedToUserBalanceEmails',
         ],
+        'App\Events\ClaimedUserBalanceEvent' => [
+            'App\Listeners\SendClaimedUserBalanceEmails',
+        ],
         'App\Events\RegistrationSubmittedEvent' => [
             'App\Listeners\SendRegistrationSubmittedEmails',
         ],

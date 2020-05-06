@@ -109,6 +109,10 @@ class AuthController extends RestController
         return $this->userController->addToBalance($addBalanceRequest, $this->auth->user()->id);
     }
 
+    public function claimUserBalance(Request $request) {
+        return $this->userController->claimBalance($request, $this->auth->user()->id);
+    }
+
     public function updateUser(UserUpdateRequest $request) {
         $user = $this->auth->user();
 
