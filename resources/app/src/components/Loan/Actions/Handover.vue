@@ -51,7 +51,7 @@
               <forms-validated-input
                 id="fuel_end" name="fuel_end"
                 type="text"
-                label="Essence dans le réservervoir à la fin de la course"
+                label="Essence dans le réservoir à la fin de la course"
                 placeholder="Donnez une indication approximative"
                 :disabled="!!action.executed_at"
                 v-model="action.fuel_end" />
