@@ -11,6 +11,19 @@ class MaterializedViewServiceProvider extends ServiceProvider
 
     public function boot() {
         foreach ([
+            \App\Models\Image::class,
+            \App\Models\File::class,
+        ] as $class) {
+            $class::saved(function ($model) {
+                \DB::statement('REFRESH MATERIALIZED VIEW CONCURRENTLY assets');
+            });
+
+            $class::deleted(function ($model) {
+                \DB::statement('REFRESH MATERIALIZED VIEW CONCURRENTLY assets');
+            });
+        }
+
+        foreach ([
             \App\Models\Bike::class,
             \App\Models\Car::class,
             \App\Models\Trailer::class,
