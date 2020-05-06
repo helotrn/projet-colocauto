@@ -124,7 +124,7 @@ export default {
     },
   },
   computed: {
-    reverseHasBeenSuedLastTenYear: {
+    reverseHasBeenSuedLastTenYears: {
       get() {
         return !this.borrower.has_been_sued_last_ten_years;
       },

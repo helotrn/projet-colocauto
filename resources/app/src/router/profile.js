@@ -39,7 +39,7 @@ export default {
         title: 'titles.borrower',
         slug: 'users',
         params: {
-          fields: 'id,borrower.*',
+          fields: 'id,borrower.*,borrower.gaa.*,borrower.saaq.*,borrower.insurance.*',
         },
       },
     },
