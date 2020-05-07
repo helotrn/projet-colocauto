@@ -54,7 +54,7 @@ class UserController extends RestController
 
         switch ($request->headers->get('accept')) {
             case 'text/csv':
-                $filename = $this->respondWithCsv($request, $items, 'users');
+                $filename = $this->respondWithCsv($request, $items, $this->model);
                 $base = app()->make('url')->to('/');
                 return response($base . $filename, 201);
             default:

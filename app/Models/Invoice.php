@@ -126,7 +126,11 @@ class Invoice extends BaseModel
         'period',
     ];
 
-    public $items = ['user'];
+    public $items = ['payment_method', 'user'];
+
+    public function paymentMethod() {
+        return $this->belongsTo(PaymentMethod::class);
+    }
 
     public function user() {
         return $this->belongsTo(User::class);

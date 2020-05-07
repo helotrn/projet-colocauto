@@ -24,7 +24,14 @@ class PadlockController extends RestController
             return $this->respondWithErrors($e->errors(), $e->getMessage());
         }
 
-        return $this->respondWithCollection($request, $items, $total);
+        switch ($request->headers->get('accept')) {
+            case 'text/csv':
+                $filename = $this->respondWithCsv($request, $items, $this->model);
+                $base = app()->make('url')->to('/');
+                return response($base . $filename, 201);
+            default:
+                return $this->respondWithCollection($request, $items, $total);
+        }
     }
 
     public function retrieve(RetrieveRequest $request, $id) {
