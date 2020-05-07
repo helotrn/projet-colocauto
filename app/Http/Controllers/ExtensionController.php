@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\LoanExtensionCreatedEvent;
 use App\Http\Requests\Action\ExtensionRequest;
 use App\Http\Requests\BaseRequest as Request;
 use App\Models\Extension;
@@ -30,6 +31,8 @@ class ExtensionController extends RestController
         } catch (ValidationException $e) {
             return $this->respondWithErrors($e->errors(), $e->getMessage());
         }
+
+        event(new LoanExtensionCreatedEvent($item));
 
         return $this->respondWithItem($request, $item, 201);
     }
