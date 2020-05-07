@@ -211,12 +211,29 @@ class Loanable extends BaseModel
             'filterDaysAfter' => 365,
         ]);
 
-        $events = $ical->eventsFromRange(
-            $departureAt,
-            $departureAt->add($durationInMinutes, 'minute')
-        );
+        $returnAt = $departureAt->copy()->add($durationInMinutes, 'minutes');
 
-        return empty($events);
+        $events = $ical->eventsFromRange($departureAt, $returnAt);
+
+        if (!empty($events)) {
+            return false;
+        }
+
+        $query = Loan::where('loanable_id', $this->id);
+
+        $cDef = Loan::getColumnsDefinition();
+        $query = $cDef['*']($query);
+        $query = $cDef['status']($query);
+
+        return $query->where('status', '!=', 'canceled')
+            ->whereRaw(
+                "(departure_at + duration_in_minutes * interval '1 minute') > ?",
+                [$departureAt]
+            )->where(
+                'departure_at',
+                '<',
+                $returnAt
+            )->where('loanable_id', $this->id)->count() === 0;
     }
 
     public function getEventsAttribute() {
