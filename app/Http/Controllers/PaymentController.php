@@ -91,7 +91,7 @@ class PaymentController extends RestController
 
         // Update loan
         $loan->final_price = $price;
-        $loan->final_insurance = $insurance
+        $loan->final_insurance = $insurance;
         $loan->final_platform_tip = $platformTip;
         $loan->save();
 

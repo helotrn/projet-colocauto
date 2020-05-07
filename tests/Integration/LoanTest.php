@@ -33,6 +33,8 @@ class LoanTest extends TestCase
             'borrower_id' => $borrower->id,
             'loanable_id' => $loanable->id,
             'estimated_price' => 1,
+            'estimated_insurance' => 1,
+            'platform_tip' => 1,
             'message_for_owner' => '',
             'reason' => 'salut',
         ];
@@ -40,7 +42,7 @@ class LoanTest extends TestCase
         $response = $this->json('POST', '/api/v1/loans', $data);
 
         $response->assertStatus(201)
-                ->assertJsonStructure(static::$getLoanResponseStructure);
+            ->assertJsonStructure(static::$getLoanResponseStructure);
     }
 
     public function testShowLoans() {

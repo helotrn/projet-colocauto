@@ -122,7 +122,7 @@ export default {
     platformTip: {
       get() {
         if (this.action.platform_tip === undefined) {
-          return this.loan.platform_tip
+          return this.loan.platform_tip;
         }
 
         return this.action.platform_tip;

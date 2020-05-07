@@ -27,7 +27,7 @@ export default {
       return_at: 'retour',
     },
     placeholders: {
-      reason: 'ex.: épicerie, déménagement, etc.'
+      reason: 'ex.: épicerie, déménagement, etc.',
     },
   },
 };

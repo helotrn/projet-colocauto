@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Events\LoanIntentionAcceptedEvent;
+use App\Events\LoanIntentionRejectedEvent;
 use App\Http\Requests\BaseRequest as Request;
 use App\Http\Requests\Action\IntentionRequest;
 use App\Models\Intention;
