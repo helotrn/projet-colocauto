@@ -42,6 +42,10 @@ class Loan extends BaseModel
             'numeric',
             'required',
         ],
+        'platform_tip' => [
+            'numeric',
+            'required',
+        ],
         'message_for_owner' => [ 'present' ],
         'reason' => [ 'required' ],
     ];
@@ -114,6 +118,7 @@ class Loan extends BaseModel
         'estimated_distance',
         'estimated_insurance',
         'estimated_price',
+        'platform_tip',
         'message_for_owner',
         'reason',
     ];

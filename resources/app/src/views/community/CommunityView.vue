@@ -134,6 +134,7 @@ export default {
         loanable,
         estimated_insurance: loanable.insurance,
         estimated_price: loanable.price,
+        platform_tip: Math.max(loanable.price * 0.1, 2),
       });
 
       this.$router.push('/loans/new');

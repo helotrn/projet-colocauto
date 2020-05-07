@@ -69,7 +69,8 @@
                   <b-col xs="6">
                     <div class="form-group">
                       <label>{{ $t('fields.estimated_price') | capitalize }}</label>
-                      <layout-loading v-if="priceUpdating" class="loan-form__estimations__loading" />
+                      <layout-loading v-if="priceUpdating"
+                        class="loan-form__estimations__loading" />
                       <div v-else-if="!loan.id">
                         <i v-b-tooltip.hover :title="loan.loanable.pricing">
                           {{ loan.estimated_price | currency }}
@@ -84,7 +85,8 @@
                   <b-col xs="6">
                     <div class="form-group">
                       <label>{{ $t('fields.estimated_insurance') | capitalize }}</label>
-                      <layout-loading v-if="priceUpdating" class="loan-form__estimations__loading" />
+                      <layout-loading v-if="priceUpdating"
+                        class="loan-form__estimations__loading" />
                       <div v-else-if="!loan.id">
                         <i v-b-tooltip.hover :title="loan.loanable.pricing">
                           {{ loan.estimated_insurance | currency }}
@@ -96,6 +98,24 @@
                     </div>
                   </b-col>
                 </b-row>
+              </b-col>
+            </b-row>
+
+            <b-row>
+              <b-col xl="6">
+                <forms-validated-input name="platform_tip"
+                  :disabled="!!loan.id"
+                  :label="$t('fields.platform_tip') | capitalize"
+                  :rules="{ required: true }"
+                  type="number" :min="0" :step="0.01"
+                  :placeholder="placeholderOrLabel('platform_tip') | capitalize"
+                  v-model="loan.platform_tip" />
+              </b-col>
+
+              <b-col xl="6">
+                <p>
+                  Montant pour LocoMotion. Vous pourrez le changer avant le paiement final.
+                </p>
               </b-col>
             </b-row>
 

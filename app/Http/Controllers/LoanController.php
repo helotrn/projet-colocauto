@@ -136,6 +136,7 @@ class LoanController extends RestController
                 'duration_in_minutes' => 60,
                 'estimated_distance' => 10,
                 'estimated_price' => 0,
+                'platform_tip' => 0,
                 'message_for_owner' => '',
                 'reason' => '',
                 'incidents' => [],
@@ -161,6 +162,9 @@ class LoanController extends RestController
                     'type' => 'number',
                 ],
                 'estimated_price' => [
+                    'type' => 'number',
+                ],
+                'platform_tip' => [
                     'type' => 'number',
                 ],
                 'message_for_owner' => [
