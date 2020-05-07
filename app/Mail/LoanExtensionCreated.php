@@ -20,7 +20,12 @@ class LoanExtensionCreated extends Mailable
     public $loan;
     public $owner;
 
-    public function __construct(Extension $extension, Loan $loan, Borrower $borrower, Owner $owner) {
+    public function __construct(
+        Extension $extension,
+        Loan $loan,
+        Borrower $borrower,
+        Owner $owner
+    ) {
          $this->borrower = $borrower;
          $this->extension = $extension;
          $this->loan = $loan;

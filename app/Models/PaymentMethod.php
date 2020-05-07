@@ -48,7 +48,8 @@ class PaymentMethod extends BaseModel
         parent::boot();
 
         self::saving(function ($model) {
-            if (!PaymentMethod::whereUserId($model->user->id)->where('is_default', true)->exists()) {
+            if (!PaymentMethod::whereUserId($model->user->id)
+                ->where('is_default', true)->exists()) {
                 $model->is_default = true;
             }
         });

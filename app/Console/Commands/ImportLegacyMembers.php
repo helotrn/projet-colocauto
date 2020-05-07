@@ -40,7 +40,9 @@ class ImportLegacyMembers extends Command
             //$this->echoLine($headers, $line);
 
             if (!filter_var($line[5], FILTER_VALIDATE_EMAIL)) {
-                $this->error("Invalid email {$line[5]} for user {$line[0]} {$line[1]}. Skipping...");
+                $this->error(
+                    "Invalid email {$line[5]} for user {$line[0]} {$line[1]}. Skipping..."
+                );
                 continue;
             }
 
