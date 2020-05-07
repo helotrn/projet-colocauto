@@ -14,7 +14,7 @@ stages:
 
 before_script:
   - curl -sL https://deb.nodesource.com/setup_10.x | bash
-  - apt-get install curl git wget unzip libpq-dev nodejs libjpeg-dev libpng-dev libxpm-dev -yqq
+  - apt-get install curl git wget unzip libpq-dev nodejs libjpeg-dev libpng-dev libxpm-dev libzip-dev -yqq
   - npm install -g yarn
   - wget https://composer.github.io/installer.sig -O - -q | tr -d '\n' > installer.sig
   - php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
