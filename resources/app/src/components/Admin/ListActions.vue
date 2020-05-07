@@ -22,6 +22,8 @@
 </template>
 
 <script>
+import locales from '@/locales';
+
 export default {
   name: 'AdminListActions',
   props: {
@@ -44,6 +46,16 @@ export default {
   methods: {
     hasColumn(name) {
       return this.columns.indexOf(name) !== -1;
+    },
+  },
+  i18n: {
+    messages: {
+      en: {
+        ...locales.en.forms,
+      },
+      fr: {
+        ...locales.fr.forms,
+      },
     },
   },
 };
