@@ -38,7 +38,7 @@
             </p>
 
             <user-add-credit-box
-              :minimumRequired="loan.estimated_price + loan.estimated_insurance"
+              :minimumRequired="minimumRequired"
               :user="user" @bought="completeAction" />
 
             <div class="loan-actions-intention__buttons text-center"
@@ -74,6 +74,12 @@ export default {
   mixins: [LoanActionsMixin],
   components: {
     UserAddCreditBox,
+  },
+  computed: {
+    minimumRequired() {
+      return parseFloat(this.loan.estimated_price)
+        + parseFloat(this.loan.estimated_insurance);
+    },
   },
 };
 </script>

@@ -53,7 +53,7 @@
     <b-row class="user-add-credit-box__buttons" tag="p">
       <b-col class="text-center">
         <b-button class="mr-3" type="submit" variant="primary"
-          @click="buyCredit" :disabled="amount < minimumRequired || loading">
+          @click="buyCredit" :disabled="amount < floatMinimumRequired || loading">
           Valider
         </b-button>
 
@@ -68,7 +68,7 @@ export default {
   name: 'UserAddCreditBox',
   data() {
     return {
-      customAmount: this.minimumRequired ? (parseFloat(this.minimumRequired, 10) * 2) : 20,
+      customAmount: this.minimumRequired ? (this.floatMinimumRequired * 2) : 20,
       fee: 1.022,
       feeConstant: 0.30,
       loading: false,
@@ -80,14 +80,14 @@ export default {
 
           return acc;
         }, null),
-      selectedAmount: this.minimumRequired ? parseFloat(this.minimumRequired, 10) : 10,
+      selectedAmount: this.minimumRequired ? this.floatMinimumRequired : 10,
     };
   },
   props: {
     minimumRequired: {
-      type: String,
+      type: Number,
       required: false,
-      default: null,
+      default: 0,
     },
     user: {
       type: Object,
@@ -105,9 +105,6 @@ export default {
     amountWithFee() {
       return (this.amount * this.fee + this.feeConstant);
     },
-    newAmount() {
-      return this.amount + parseFloat(this.user.balance);
-    },
     amounts() {
       const options = [
       ];
@@ -115,7 +112,7 @@ export default {
       if (this.minimumRequired) {
         options.push({
           text: 'Minimum requis',
-          value: parseFloat(this.minimumRequired, 10),
+          value: this.floatMinimumRequired,
         });
       }
 
@@ -139,7 +136,7 @@ export default {
       ];
 
       for (let i = 0, len = standardOptions.length; i < len; i += 1) {
-        if (!this.minimumRequired || standardOptions[i].value > this.minimumRequired) {
+        if (!this.minimumRequired || standardOptions[i].value > this.floatMinimumRequired) {
           options.push(standardOptions[i]);
         }
       }
@@ -151,8 +148,8 @@ export default {
 
       return options;
     },
-    onlyFee() {
-      return this.amount * (this.fee - 1) + this.feeConstant;
+    floatMinimumRequired() {
+      return parseFloat(this.minimumRequired);
     },
     paymentMethods() {
       return this.user.payment_methods.map((pm) => {
