@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\LoanExtensionAcceptedEvent;
 use App\Events\LoanExtensionCreatedEvent;
+use App\Events\LoanExtensionRejectedEvent;
 use App\Http\Requests\Action\ExtensionRequest;
 use App\Http\Requests\BaseRequest as Request;
 use App\Models\Extension;
