@@ -54,7 +54,7 @@ export default {
         throw e;
       }
     },
-    async claimCredit({ commit, state }) {
+    async claimCredit({ commit }) {
       commit('loaded', false);
 
       try {

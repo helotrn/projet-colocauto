@@ -74,7 +74,11 @@ export default {
       loading: false,
       paymentMethodId: this.user.payment_methods
         .reduce((acc, p) => {
-          return p.is_default ? p.id : null
+          if (p.is_default) {
+            return p.id;
+          }
+
+          return acc;
         }, null),
       selectedAmount: this.minimumRequired ? parseFloat(this.minimumRequired, 10) : 10,
     };
