@@ -274,7 +274,13 @@ export default {
       }
       pointer-events: none;
 
+      &__sections.card {
+        min-width: 382px;
+      }
+
       .card {
+        min-width: 382px;
+
         pointer-events: all;
 
         &-body {
