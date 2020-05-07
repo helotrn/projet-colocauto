@@ -7,7 +7,7 @@
 
 <p>
     {{ $borrower->user->name }} a demandé à emprunter votre {{ $loan->loanable->name }}
-    à partir de {{ $loan->departure_at }} et pour un total de {{ $loan->duration_in_minutes }}.
+    à partir de {{ $loan->departure_at }} et pour une durée de {{ $loan->duration_in_minutes }} minutes.
 </p>
 
 <p>
