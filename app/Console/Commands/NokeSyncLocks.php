@@ -40,7 +40,7 @@ class NokeSyncLocks extends Command
         $locksResult = $this->getLocks(true);
 
         $lockIds = [];
-        foreach ($locksResult->data as $nokeLock) {
+        foreach ($locksResult as $nokeLock) {
             $lock = Padlock::whereExternalId($nokeLock->id)->first();
             if (!$lock) {
                 $lock = new Padlock;
@@ -58,7 +58,7 @@ class NokeSyncLocks extends Command
             $lockIds[] = $lock->id;
         }
 
-        $this->warn('Removing defunct locks...');
+        $this->info('Removing defunct locks...');
         $removedLocks = Padlock::whereNotIn('id', $lockIds);
         if ($removedLocks->count() === 0) {
               $this->warn('No lock to remove.');
