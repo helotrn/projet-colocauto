@@ -24,6 +24,7 @@ before_script:
   - pecl install xdebug
   - docker-php-ext-install pdo_pgsql
   - docker-php-ext-install pgsql
+  - docker-php-ext-install gd
   - docker-php-ext-enable xdebug
 
 cache:
