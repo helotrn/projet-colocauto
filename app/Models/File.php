@@ -35,9 +35,8 @@ class File extends BaseModel
     protected $appends = ['url'];
 
     public static function fetch($path) {
-        $disk = app()->environment() === 'local' ? 'local' : 'local';
         try {
-            $file = Storage::disk($disk)->get($path);
+            $file = Storage::disk('local')->get($path);
         } catch (FileNotFoundException $e) {
             return null;
         }
@@ -45,16 +44,14 @@ class File extends BaseModel
     }
 
     public static function store($path, $file) {
-        $disk = app()->environment() === 'local' ? 'local' : 'local';
-        return Storage::disk($disk)->putFileAs(dirname($path), $file, basename($path));
+        return Storage::disk('local')->putFileAs(dirname($path), $file, basename($path));
     }
 
     public static function copy($source, $destination) {
         if ($source === $destination) {
             return true;
         }
-        $disk = app()->environment() === 'local' ? 'local' : 'local';
-        return Storage::disk($disk)->copy($source, $destination);
+        return Storage::disk('local')->copy($source, $destination);
     }
 
     public static function boot() {

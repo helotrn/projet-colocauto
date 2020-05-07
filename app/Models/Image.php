@@ -45,9 +45,8 @@ class Image extends BaseModel
     public static $sizesByField = [];
 
     public static function fetch($path) {
-        $disk = app()->environment() === 'local' ? 'local' : 'local';
         try {
-            $file = Storage::disk($disk)->get($path);
+            $file = Storage::disk('local')->get($path);
         } catch (FileNotFoundException $e) {
             return null;
         }
@@ -56,10 +55,8 @@ class Image extends BaseModel
     }
 
     public static function store($path, $image) {
-        $disk = app()->environment() === 'local' ? 'local' : 'local';
-
         $image->stream();
-        return Storage::disk($disk)->put($path, $image->__toString());
+        return Storage::disk('local')->put($path, $image->__toString());
     }
 
     public static function copy($source, $destination) {
@@ -186,9 +183,8 @@ class Image extends BaseModel
     }
 
     public function getSizesAttribute() {
-        $base = app()->environment() === 'local'
-            ? app()->make('url')->to('/')
-            : env('CDN_URL');
+        $base = app()->make('url')->to('/');
+
         $sizes = [
             'original' => "{$base}{$this->attributes['path']}/{$this->attributes['filename']}"
         ];
