@@ -181,8 +181,9 @@ export default {
         throw e;
       }
     },
-    denyLoan() {
-      this.$store.dispatch('loans/deny', this.loan.id);
+    async denyLoan() {
+      await this.$store.dispatch('loans/cancel', this.loan.id);
+      await this.$store.dispatch('loadUser');
     },
     hasButton(name) {
       return this.buttons.indexOf(name) > -1;
