@@ -1,6 +1,6 @@
 <template>
   <b-container class="invoice-view" fluid>
-    <b-row class="mb-5">
+    <b-row>
       <b-col sm="6">
         <p class="text-left">
           LocoMotion<br>
@@ -17,6 +17,12 @@
           {{ invoice.user.address }}<br>
           {{ invoice.user.postal_code }}
         </p>
+      </b-col>
+    </b-row>
+
+    <b-row class="mt-3 mb-3">
+      <b-col>
+        <p><strong>{{ invoice.id }}</strong> &bull; <strong>{{ invoice.period }}</strong></p>
       </b-col>
     </b-row>
 

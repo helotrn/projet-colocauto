@@ -26,6 +26,14 @@
           <p>L'emprunt s'est conclu avec succès!</p>
 
           <p>Le montant final était {{ loan.final_price | currency }}.</p>
+
+          <p v-if="loan.final_insurance">
+            Le montant final de l'assurance était {{ loan.final_insurance | currency }}.
+          </p>
+
+          <p v-if="loan.final_platform_tip">
+            Vous avez contribué {{ loan.final_platform_tip | currency }} à LocoMotion.
+          </p>
         </div>
         <div v-else>
           <div v-if="userRole === 'owner'">

@@ -84,78 +84,86 @@ class PaymentController extends RestController
         // Prepare variables
         $price = $loan->actual_price;
         $insurance = $loan->actual_insurance;
-        $platformTip = $request->get('platform_tip');
+        $platformTip = floatval($request->get('platform_tip'));
         $expenses = 0;
         $object = $loan->loanable->name;
         $prettyDate = (new Carbon($loan->departure_at))->locale('fr_FR')->isoFormat('LLL');
 
         // Update loan
         $loan->final_price = $price;
+        $loan->final_insurance = $insurance
         $loan->final_platform_tip = $platformTip;
         $loan->save();
 
         // Build line items
-        $items = array_filter([
-            [
+        $items = [
+            'price' => [
                 'label' => "Coût de l'emprunt de $object le $prettyDate",
                 'amount' => $price,
                 'item_date' => date('Y-m-d'),
                 'taxes_tps' => 0,
                 'taxes_tvq' => 0,
             ],
-            $insurance ? [
+            'insurance' => $insurance ? [
                 'label' => "Coût de l'assurance pour l'emprunt de $object le $prettyDate",
                 'amount' => $insurance,
                 'item_date' => date('Y-m-d'),
                 'taxes_tps' => 0,
                 'taxes_tvq' => 0,
             ] : null,
-            $expenses ? [
+            'expenses' => $expenses ? [
                 'label' => "Dépenses pour l'emprunt de $object le $prettyDate",
                 'amount' => -$expenses,
                 'item_date' => date('Y-m-d'),
                 'taxes_tps' => 0,
                 'taxes_tvq' => 0,
             ] : null,
-            $platformTip ? [
+            'platform_tip' => $platformTip ? [
                 'label' => "Frais de plateforme pour l'emprunt de $object le $prettyDate",
-                'amount' => round($platformTip - ($platformTip / 1.14975), 2),
+                'amount' => round($platformTip / 1.14975, 2),
                 'item_date' => date('Y-m-d'),
                 'taxes_tps' => round(($platformTip / 1.14975) * 0.05, 2),
                 'taxes_tvq' => round(($platformTip / 1.14975) * 0.09975, 2),
             ] : null,
-        ]);
+        ];
 
         // Update invoices
         $borrower = $loan->borrower->user;
         $borrowerInvoice = $borrower->getLastInvoiceOrCreate();
-
         foreach ($items as $item) {
-            $borrowerInvoice->billItems()->create($item);
+            if ($item) {
+                $borrowerInvoice->billItems()->create($item);
+            }
         }
-
-        $payment->borrower_invoice_id = $borrowerInvoice->id;
+        $borrowerInvoice->pay();
 
         if ($loan->loanable->owner) {
             $owner = $loan->loanable->owner->user;
             $ownerInvoice = $owner->getLastInvoiceOrCreate();
 
-            foreach ($items as $item) {
-                $item['amount'] = -$item['amount'];
-                $ownerInvoice->billItems()->create($item);
+            if ($items['price']) {
+                $items['price']['amount'] = -$items['price']['amount'];
+                $ownerInvoice->billItems()->create($items['price']);
             }
 
-            $payment->owner_invoice_id = $ownerInvoice->id;
+            if ($items['expenses']) {
+                $items['expenses']['amount'] = -$items['expenses']['amount'];
+                $items['expenses']['taxes_tvq'] = -$items['expenses']['taxes_tvq'];
+                $items['expenses']['taxes_tps'] = -$items['expenses']['taxes_tps'];
+                $ownerInvoice->billItems()->create($items['expenses']);
+            }
         }
 
 
         // Update balances
         $borrower->removeFromBalance($price + $insurance + $platformTip - $expenses);
         if ($loan->loanable->owner) {
-            $owner->addToBalance($price + $insurance + $platformTip - $expenses);
+            $owner->addToBalance($price - $expenses);
         }
 
         // Save payment
+        $payment->borrower_invoice_id = $borrowerInvoice->id;
+        $payment->owner_invoice_id = $ownerInvoice->id;
         $payment->status = 'completed';
         $payment->save();
 
