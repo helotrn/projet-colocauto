@@ -25,6 +25,7 @@ before_script:
   - docker-php-ext-install pdo_pgsql
   - docker-php-ext-install pgsql
   - docker-php-ext-install gd
+  - docker-php-ext-install zip
   - docker-php-ext-enable xdebug
 
 cache:
