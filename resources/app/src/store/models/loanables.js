@@ -10,6 +10,22 @@ export default new RestModule('loanables', {
     type: null,
     deleted_at: null,
   },
+  exportFields: [
+    'id',
+    'name',
+    'type',
+    'comments',
+    'instructions',
+    'location_description',
+    'position',
+    'owner.id',
+    'owner.user.id',
+    'owner.user.name',
+    'owner.user.last_name',
+  ],
+  exportNotFields: [
+    'events',
+  ],
 }, {
   async disable({ commit, dispatch, state }, id) {
     try {

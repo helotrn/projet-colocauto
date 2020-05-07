@@ -1,5 +1,9 @@
 <?php
 
+Route::get('/exports/{any?}', 'AssetController@exportFile')
+    ->where('any', '.*')
+    ->name('assets.export');
+
 Route::get('/borrower/{any?}', 'AssetController@borrowerFile')
     ->where('any', '.*')
     ->name('assets.borrower');

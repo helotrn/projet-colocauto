@@ -12,6 +12,7 @@ use App\Http\Requests\Car\CreateRequest as CarCreateRequest;
 use App\Http\Requests\Car\UpdateRequest as CarUpdateRequest;
 use App\Http\Requests\Trailer\CreateRequest as TrailerCreateRequest;
 use App\Http\Requests\Trailer\UpdateRequest as TrailerUpdateRequest;
+use App\Exports\LoanablesExport;
 use App\Models\Community;
 use App\Models\Bike;
 use App\Models\Car;
@@ -20,6 +21,7 @@ use App\Models\Loanable;
 use App\Models\Pricing;
 use App\Repositories\LoanableRepository;
 use Carbon\Carbon;
+use Excel;
 use Illuminate\Validation\ValidationException;
 use Validator;
 
@@ -77,7 +79,25 @@ class LoanableController extends RestController
             return $this->respondWithErrors($e->errors(), $e->getMessage());
         }
 
-        return $this->respondWithCollection($request, $items, $total);
+        switch ($request->headers->get('accept')) {
+            case 'text/csv':
+                $export = new LoanablesExport(
+                    $this->transformCollection($request, $items),
+                    explode(',', $request->get('fields'))
+                );
+
+                $userId = $request->user()->id;
+                $date = date('YmdHmi');
+                $filename = "/exports/$date.$userId.loanables.csv";
+                Excel::store($export, $filename, 'local');
+
+                $base = app()->make('url')->to('/');
+
+                return response($base . $filename, 201);
+                break;
+            default:
+                return $this->respondWithCollection($request, $items, $total);
+        }
     }
 
     public function retrieve(Request $request, $id) {

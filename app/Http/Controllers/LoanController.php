@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\LoansExport;
 use App\Http\Requests\Action\ActionRequest;
 use App\Http\Requests\Action\CreateRequest as ActionCreateRequest;
 use App\Http\Requests\BaseRequest as Request;
 use App\Models\Loan;
 use App\Repositories\LoanRepository;
 use Carbon\Carbon;
+use Excel;
 use Illuminate\Validation\ValidationException;
 
 class LoanController extends RestController
@@ -31,7 +33,25 @@ class LoanController extends RestController
             return $this->respondWithErrors($e->errors(), $e->getMessage());
         }
 
-        return $this->respondWithCollection($request, $items, $total);
+        switch ($request->headers->get('accept')) {
+            case 'text/csv':
+                $export = new LoansExport(
+                    $this->transformCollection($request, $items),
+                    explode(',', $request->get('fields'))
+                );
+
+                $userId = $request->user()->id;
+                $date = date('YmdHmi');
+                $filename = "/exports/$date.$userId.loans.csv";
+                Excel::store($export, $filename, 'local');
+
+                $base = app()->make('url')->to('/');
+
+                return response($base . $filename, 201);
+                break;
+            default:
+                return $this->respondWithCollection($request, $items, $total);
+        }
     }
 
     public function create(Request $request) {

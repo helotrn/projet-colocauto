@@ -11,6 +11,9 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
       deleted: null,
       empty: null,
       error: null,
+      exportFields: ['id'],
+      exportNotFields: [],
+      exportUrl: null,
       filters: {},
       form: null,
       initialItem: '',
@@ -53,6 +56,9 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
       },
       error(state, error) {
         state.error = error;
+      },
+      exportUrl(state, exportUrl) {
+        state.exportUrl = exportUrl;
       },
       filters(state, filters) {
         state.filters = filters;
@@ -346,6 +352,29 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
 
           throw e;
         }
+      },
+      async export({ state, commit }, params) {
+        const ajax = Vue.axios.get(`/${state.slug}`, {
+          params: {
+            ...state.params,
+            ...params,
+            per_page: 1000000,
+            page: 1,
+            fields: state.exportFields.join(','),
+            '!fields': state.exportNotFields.join(','),
+          },
+          headers: {
+            Accept: 'text/csv',
+          },
+        });
+
+        commit('ajax', ajax);
+
+        const { data: url } = await ajax;
+
+        commit('exportUrl', url);
+
+        commit('ajax', null);
       },
       ...actions,
     },

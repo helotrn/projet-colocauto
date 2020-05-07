@@ -88,6 +88,14 @@ class AssetController extends Controller
         }
     }
 
+    public function exportFile(Request $request, $rest) {
+        return response()
+            ->download(storage_path("app/exports/$rest"), $rest, [
+                'Content-Type' => 'text/csv',
+            ])
+            ->deleteFileAfterSend();
+    }
+
     private function findAsset($rest, $slug) {
         [$path, $filename] = explode('/', $rest . '/');
 

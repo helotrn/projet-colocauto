@@ -15,6 +15,9 @@ export default {
     error() {
       return this.context.error;
     },
+    exportUrl() {
+      return this.context.exportUrl;
+    },
     fieldsList() {
       return this.fields
         ? this.fields.map(f => f.key)
@@ -105,6 +108,12 @@ export default {
           }
         });
     },
+    async exportCSV() {
+      await this.$store.dispatch(
+        `${this.slug}/export`,
+        this.params,
+      );
+    },
     loadListData() {
       if (this.firstLoad && this.skipListMixinFirstLoad) {
         this.firstLoad = false;
@@ -135,6 +144,9 @@ export default {
       }, 250);
 
       return true;
+    },
+    resetExportUrl() {
+      this.$store.commit(`${this.slug}/exportUrl`, null);
     },
     restoreItemModal(item) {
       const itemLabel = typeof this.itemLabel === 'function'

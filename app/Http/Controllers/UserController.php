@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Events\AddedToUserBalanceEvent;
 use App\Events\ClaimedUserBalanceEvent;
 use App\Events\RegistrationSubmittedEvent;
+use App\Exports\UsersExport;
 use App\Http\Requests\BaseRequest as Request;
 use App\Http\Requests\User\BorrowerStatusRequest;
 use App\Http\Requests\User\AddBalanceRequest;
@@ -20,6 +21,7 @@ use App\Repositories\CommunityRepository;
 use App\Repositories\InvoiceRepository;
 use App\Repositories\UserRepository;
 use Cache;
+use Excel;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Validation\ValidationException;
 
@@ -50,7 +52,25 @@ class UserController extends RestController
             return $this->respondWithErrors($e->errors(), $e->getMessage());
         }
 
-        return $this->respondWithCollection($request, $items, $total);
+        switch ($request->headers->get('accept')) {
+            case 'text/csv':
+                $export = new UsersExport(
+                    $this->transformCollection($request, $items),
+                    explode(',', $request->get('fields'))
+                );
+
+                $userId = $request->user()->id;
+                $date = date('YmdHmi');
+                $filename = "/exports/$date.$userId.users.csv";
+                Excel::store($export, $filename, 'local');
+
+                $base = app()->make('url')->to('/');
+
+                return response($base . $filename, 201);
+                break;
+            default:
+                return $this->respondWithCollection($request, $items, $total);
+        }
     }
 
     public function create(CreateRequest $request) {

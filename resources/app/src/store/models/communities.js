@@ -9,6 +9,14 @@ export default new RestModule('communities', {
     q: '',
     type: null,
   },
+  exportFields: [
+    'id',
+    'name',
+    'type',
+    'center',
+    'area',
+    'area_google',
+  ],
 }, {
   async setAmbassador({ commit }, { communityId, tagId, userId }) {
     try {

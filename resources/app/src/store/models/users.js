@@ -9,6 +9,22 @@ export default new RestModule('users', {
     q: '',
     type: null,
   },
+  exportFields: [
+    'id',
+    'address',
+    'date_of_birth',
+    'description',
+    'email',
+    'google_id',
+    'is_smart_phone',
+    'last_name',
+    'name',
+    'other_phone',
+    'password',
+    'phone',
+    'postal_code',
+    'communities.id',
+  ],
 }, {
   async approveBorrower({ commit }, userId) {
     try {

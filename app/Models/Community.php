@@ -62,7 +62,7 @@ class Community extends BaseModel
                 }
 
                 return $query->selectRaw('ST_Centroid(communities.area::geometry) AS center');
-            }
+            },
         ];
     }
 
