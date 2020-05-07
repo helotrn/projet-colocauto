@@ -13,7 +13,7 @@ class SendLoanCreatedEmails
     public function handle(LoanCreatedEvent $event) {
         $owner = $event->loan->loanable->owner;
         $borrower = $event->loan->borrower;
-        Mail::to($owner->user->email, $owner->name . ' ' . $owner->full_name)
+        Mail::to($owner->user->email, $owner->name . ' ' . $owner->last_name)
           ->queue(new LoanCreated($borrower, $owner, $event->loan));
     }
 }

@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Mail;
 class SendRegistrationSubmittedEmails
 {
     public function handle(RegistrationSubmittedEvent $event) {
-        Mail::to($event->user->email, $event->user->full_name)
+        Mail::to($event->user->email, $event->user->name . ' ' . $event->user->last_name)
           ->queue(new RegistrationSubmitted($event->user));
 
         $admins = User::whereRole('admin')

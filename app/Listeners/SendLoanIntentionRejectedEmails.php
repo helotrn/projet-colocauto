@@ -15,14 +15,16 @@ class SendLoanIntentionRejectedEmails
         $borrower = $loan->borrower;
         $owner = $loan->loanable->owner;
 
-        Mail::to($borrower->user->email, $borrower->user->full_name)
-          ->queue(
-              new LoanIntentionRejected(
-                  $event->intention,
-                  $loan,
-                  $borrower,
-                  $owner
-              )
-          );
+        Mail::to(
+            $borrower->user->email,
+            $borrower->user->name . ' ' . $borrower->user->last_name
+        )->queue(
+            new LoanIntentionRejected(
+                $event->intention,
+                $loan,
+                $borrower,
+                $owner
+            )
+        );
     }
 }
