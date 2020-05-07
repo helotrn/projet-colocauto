@@ -332,7 +332,7 @@ class UserController extends RestController
                 'taxes_tvq' => 0,
             ]);
 
-            $invoice->pay();
+            $invoice->payWith($paymentMethod);
 
             $this->triggerInvoicePaidEvent($user, $invoice);
 

@@ -154,4 +154,10 @@ class Invoice extends BaseModel
         $this->paid_at = new \DateTime;
         $this->save();
     }
+
+    public function payWith($paymentMethod) {
+        $this->paymentMethod()->associate($paymentMethod);
+        $this->paid_at = new \DateTime;
+        $this->save();
+    }
 }
