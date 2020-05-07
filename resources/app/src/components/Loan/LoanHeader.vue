@@ -153,7 +153,7 @@ export default {
     },
     returnAt() {
       return this.$dayjs(this.loan.departure_at)
-        .add(this.loan.duration_in_minutes, 'minute')
+        .add(this.loan.actual_duration_in_minutes, 'minute')
         .format('YYYY-MM-DD HH:mm:ss');
     },
     userRole() {

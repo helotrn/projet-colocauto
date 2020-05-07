@@ -323,7 +323,7 @@ class UserController extends RestController
             $invoice->user()->associate($user);
             $invoice->save();
 
-            $billItem = $invoice->billItems()->create([
+            $invoice->billItems()->create([
                 'label' => "Ajout au compte Locomotion: "
                     . "{$amount}$ + {$fee}$ (frais)",
                 'amount' => $amountWithFee,

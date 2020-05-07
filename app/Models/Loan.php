@@ -125,6 +125,7 @@ class Loan extends BaseModel
 
     public $computed = [
       'actual_price',
+      'actual_insurance',
       'actual_duration_in_minutes',
       'calendar_days',
       'canceled_at',
@@ -188,6 +189,15 @@ class Loan extends BaseModel
     }
 
     public function getActualDurationInMinutesAttribute() {
+        $completedExtensions = $this->extensions->where('status', 'completed');
+        if (!$completedExtensions->isEmpty()) {
+            return $completedExtensions->reduce(function ($acc, $ext) {
+                if ($ext->new_duration > $acc) {
+                    return $ext->new_duration;
+                }
+            }, $this->duration_in_minutes);
+        }
+
         return $this->duration_in_minutes;
     }
 
@@ -243,7 +253,7 @@ class Loan extends BaseModel
             $this
         );
 
-        return is_array($values) ? $values[0] : $values;
+        return is_array($values) ? $values[1] : 0;
     }
 
     public function getCanceledAtAttribute() {

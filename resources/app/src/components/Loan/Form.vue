@@ -102,7 +102,7 @@
             </b-row>
 
             <b-row>
-              <b-col xl="6">
+              <b-col lg="6">
                 <forms-validated-input name="platform_tip"
                   :disabled="!!loan.id"
                   :label="$t('fields.platform_tip') | capitalize"
@@ -112,7 +112,7 @@
                   v-model="loan.platform_tip" />
               </b-col>
 
-              <b-col xl="6">
+              <b-col lg="6">
                 <p>
                   Montant pour LocoMotion. Vous pourrez le changer avant le paiement final.
                 </p>

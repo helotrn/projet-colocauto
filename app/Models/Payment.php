@@ -16,18 +16,6 @@ class Payment extends Action
 
             switch ($model->status) {
                 case 'completed':
-                    $loan = $model->loan;
-                    $price = $loan->actual_price;
-
-                    $borrower = $loan->borrower->user;
-                    $borrower->removeFromBalance($price);
-
-                    $owner = $loan->loanable->owner->user;
-                    $owner->addToBalance($price);
-
-                    $loan->final_price = $price;
-                    $loan->save();
-
                     $model->executed_at = Carbon::now();
                     $model->save();
                     break;
@@ -60,15 +48,18 @@ class Payment extends Action
 
     protected $fillable = [
         'loan_id',
-        'bill_item_id',
     ];
 
     public $readOnly = false;
 
-    public $items = ['bill_item', 'loan'];
+    public $items = ['borrower_invoice', 'owner_invoice', 'loan'];
 
-    public function billItem() {
-        return $this->belongsTo(BillItem::class);
+    public function borrowerInvoice() {
+        return $this->belongsTo(Invoice::class, 'borrower_invoice_id');
+    }
+
+    public function ownerInvoice() {
+        return $this->belongsTo(Invoice::class, 'owner_invoice_id');
     }
 
     public function loan() {

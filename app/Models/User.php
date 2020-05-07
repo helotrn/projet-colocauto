@@ -247,6 +247,7 @@ class User extends AuthenticatableBaseModel
 
         $invoice = new Invoice;
         $invoice->user_id = $this->id;
+        $invoice->period = \Carbon\Carbon::now()->locale('fr_FR')->format('m/Y');
         $invoice->save();
 
         return $invoice;
