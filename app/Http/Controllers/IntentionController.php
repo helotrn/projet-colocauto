@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\LoanIntentionAcceptedEvent;
 use App\Http\Requests\BaseRequest as Request;
 use App\Http\Requests\Action\IntentionRequest;
 use App\Models\Intention;
@@ -81,6 +82,8 @@ class IntentionController extends RestController
         $item->status = 'completed';
         $item->save();
 
+        event(new LoanIntentionAcceptedEvent($item));
+
         return $item;
     }
 
@@ -91,6 +94,8 @@ class IntentionController extends RestController
         $item->message_for_borrower = $request->get('message_for_borrower');
         $item->status = 'canceled';
         $item->save();
+
+        event(new LoanIntentionRejectedEvent($item));
 
         return $item;
     }
