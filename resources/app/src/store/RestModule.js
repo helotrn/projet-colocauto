@@ -354,27 +354,36 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
         }
       },
       async export({ state, commit }, params) {
-        const ajax = Vue.axios.get(`/${state.slug}`, {
-          params: {
-            ...state.params,
-            ...params,
-            per_page: 1000000,
-            page: 1,
-            fields: state.exportFields.join(','),
-            '!fields': state.exportNotFields.join(','),
-          },
-          headers: {
-            Accept: 'text/csv',
-          },
-        });
+        try {
+          const ajax = Vue.axios.get(`/${state.slug}`, {
+            params: {
+              ...state.params,
+              ...params,
+              per_page: 1000000,
+              page: 1,
+              fields: state.exportFields.join(','),
+              '!fields': state.exportNotFields.join(','),
+            },
+            headers: {
+              Accept: 'text/csv',
+            },
+          });
 
-        commit('ajax', ajax);
+          commit('ajax', ajax);
 
-        const { data: url } = await ajax;
+          const { data: url } = await ajax;
 
-        commit('exportUrl', url);
+          commit('exportUrl', url);
 
-        commit('ajax', null);
+          commit('ajax', null);
+        } catch (e) {
+          commit('ajax', null);
+
+          const { request, response } = e;
+          commit('error', { request, response });
+
+          throw e;
+        }
       },
       ...actions,
     },
