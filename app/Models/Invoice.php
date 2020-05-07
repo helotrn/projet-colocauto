@@ -94,7 +94,7 @@ class Invoice extends BaseModel
                 );
 
                 return $query
-                    ->selectRaw('sum(bill_items_join.taxes_tvq)::decimal(8, 2) AS tvq')
+                    ->selectRaw('sum(bill_items_join.taxes_tvq)::decimal(8, 2) AS total_tvq')
                     ->groupBy('invoices.id');
             },
             'total_with_taxes' => function ($query = null) {
