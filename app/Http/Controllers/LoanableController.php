@@ -81,20 +81,9 @@ class LoanableController extends RestController
 
         switch ($request->headers->get('accept')) {
             case 'text/csv':
-                $export = new LoanablesExport(
-                    $this->transformCollection($request, $items),
-                    explode(',', $request->get('fields'))
-                );
-
-                $userId = $request->user()->id;
-                $date = date('YmdHmi');
-                $filename = "/exports/$date.$userId.loanables.csv";
-                Excel::store($export, $filename, 'local');
-
+                $filename = $this->respondWithCsv($request, $items, 'loanables');
                 $base = app()->make('url')->to('/');
-
                 return response($base . $filename, 201);
-                break;
             default:
                 return $this->respondWithCollection($request, $items, $total);
         }

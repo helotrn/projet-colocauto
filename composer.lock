@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "60335ee47edf79e58d61835407697451",
+    "content-hash": "0897e9ab4c3ffa5fe64b11326ffc7a85",
     "packages": [
         {
             "name": "bosnadev/database",
@@ -2236,7 +2236,7 @@
             "source": {
                 "type": "git",
                 "url": "https://gitlab.com/molotovcoop/laravel-api-molotov.git",
-                "reference": "8cf782cfe2ad2d3f9cdf601dc8ee6a9f97f0ce41"
+                "reference": "d6a115d017795742659339dc173382a225013dec"
             },
             "require": {
                 "illuminate/auth": "^6.0",
@@ -2248,6 +2248,7 @@
                 "illuminate/support": "^6.0",
                 "illuminate/validation": "^6.0",
                 "laravel/helpers": "^1.1",
+                "maatwebsite/excel": "^3.1",
                 "php": "^7.2",
                 "symfony/http-foundation": "^4.3"
             },
@@ -2277,7 +2278,7 @@
                 }
             ],
             "description": "A set of helper classes for building Laravel APIs, built by Molotov cooperative.",
-            "time": "2020-05-04T22:42:43+00:00"
+            "time": "2020-05-07T14:25:49+00:00"
         },
         {
             "name": "monolog/monolog",
