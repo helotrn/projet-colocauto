@@ -69,7 +69,7 @@
                 <strong>TPS</strong>
               </td>
               <td style="text-align: right;">
-                @money($invoice['tps'])
+                @money($invoice['total_tps'])
               </td>
             </tr>
             <tr>
@@ -77,7 +77,7 @@
                 <strong>TVQ</strong>
               </td>
               <td style="text-align: right;">
-                @money($invoice['tvq'])
+                @money($invoice['total_tvq'])
               </td>
             </tr>
             <tr>

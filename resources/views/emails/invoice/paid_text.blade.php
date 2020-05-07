@@ -28,10 +28,10 @@ Sous-total:
 @money($invoice['total'])
 
 TPS:
-@money($invoice['tps'])
+@money($invoice['total_tps'])
 
 TVQ:
-@money($invoice['tvq'])
+@money($invoice['total_tvq'])
 
 Total
 @money($invoice['total_with_taxes'])

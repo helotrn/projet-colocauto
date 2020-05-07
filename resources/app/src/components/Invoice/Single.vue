@@ -39,8 +39,8 @@
               </b-td>
               <b-td>
                 {{ invoice.total | currency }}<br>
-                {{ invoice.tps | currency }}<br>
-                {{ invoice.tvq | currency }}<br>
+                {{ invoice.total_tps | currency }}<br>
+                {{ invoice.total_tvq | currency }}<br>
                 {{ invoice.total_with_taxes | currency }}
               </b-td>
             </b-tr>

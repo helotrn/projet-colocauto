@@ -63,7 +63,7 @@ class Invoice extends BaseModel
                     ->selectRaw('sum(bill_items_join.amount) AS total')
                     ->groupBy('invoices.id');
             },
-            'tps' => function ($query = null) {
+            'total_tps' => function ($query = null) {
                 if (!$query) {
                     return 'sum(bill_items_join.taxes_tps)::decimal(8, 2)';
                 }
@@ -77,10 +77,10 @@ class Invoice extends BaseModel
                 );
 
                 return $query
-                    ->selectRaw('sum(bill_items_join.taxes_tps)::decimal(8, 2) AS tps')
+                    ->selectRaw('sum(bill_items_join.taxes_tps)::decimal(8, 2) AS total_tps')
                     ->groupBy('invoices.id');
             },
-            'tvq' => function ($query = null) {
+            'total_tvq' => function ($query = null) {
                 if (!$query) {
                     return 'sum(bill_items_join.taxes_tvq)::decimal(8, 2)';
                 }
@@ -100,8 +100,8 @@ class Invoice extends BaseModel
             'total_with_taxes' => function ($query = null) {
                 $defs = static::getColumnsDefinition();
                 $total = $defs['total']();
-                $tps = $defs['tps']();
-                $tvq = $defs['tvq']();
+                $tps = $defs['total_tps']();
+                $tvq = $defs['total_tvq']();
 
                 if (!$query) {
                     return "($total + $tps + $tvq)::decimal(8, 2)";
