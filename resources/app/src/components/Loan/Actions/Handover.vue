@@ -140,7 +140,7 @@
           <b-row v-if="!action.executed_at">
             <b-col>
               <p v-if="userRole === 'borrower'">
-                Demandez au propriétaire de récupérer le véhicule.
+                Rendez le véhicule au propriétaire.
               </p>
               <p v-else>
                 L'emprunteur vous contactera pour arranger la remise du véhicule.

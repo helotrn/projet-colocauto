@@ -58,19 +58,32 @@
             </b-form>
           </validation-observer>
         </div>
-        <div v-else-if="userRole === 'borrower'">
-          <p>Un incident s'est produit.</p>
+        <div v-else-if="!action.completed_at">
+          <div v-if="userRole === 'borrower'">
+            <p>Un incident s'est produit.</p>
 
-          <p>Procédure d'assurances.</p>
-          <p>Contactez les assurances pour entamer le processus.</p>
+            <p>Procédure d'assurances.</p>
+            <p>Contactez les assurances pour entamer le processus.</p>
 
-          <p>Contactez le propriétaire pour qu'il confirme votre demande.</p>
-          <p>{{ loan.loanable.owner.user.phone }}</p>
-        </div>
-        <div v-else>
-          <p>
-            {{ borrower.user.name }} mentionne qu'un incident s'est produit.
-          </p>
+            <p>Contactez le propriétaire pour qu'il confirme votre demande.</p>
+            <p>{{ loan.loanable.owner.user.phone }}</p>
+          </div>
+          <div v-else>
+            <p>
+              {{ borrower.user.name }} mentionne qu'un incident s'est produit.
+            </p>
+
+            <p>
+              {{ action.comments_on_incident }}
+            </p>
+          </div>
+
+          <div class="loan-actions-incident__buttons text-center"
+            v-if="user.role === 'admin'">
+            <b-button size="sm" variant="success" class="mr-3" @click="completeAction">
+              Résoudre
+            </b-button>
+          </div>
         </div>
       </b-collapse>
     </b-card-body>
