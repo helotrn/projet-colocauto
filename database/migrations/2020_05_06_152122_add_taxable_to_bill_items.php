@@ -8,8 +8,13 @@ class AddTaxableToBillItems extends Migration
 {
     public function up() {
         Schema::table('bill_items', function (Blueprint $table) {
-            $table->decimal('taxes_tps', 8, 2);
-            $table->decimal('taxes_tvq', 8, 2);
+            $table->decimal('taxes_tps', 8, 2)->default(0);
+            $table->decimal('taxes_tvq', 8, 2)->default(0);
+        });
+
+        Schema::table('bill_items', function (Blueprint $table) {
+            $table->decimal('taxes_tps', 8, 2)->default(null)->change();
+            $table->decimal('taxes_tvq', 8, 2)->default(null)->change();
         });
     }
 
