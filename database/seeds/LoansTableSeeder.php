@@ -17,6 +17,7 @@ class LoansTableSeeder extends Seeder
                 'estimated_distance' => 20,
                 'estimated_price' => 2,
                 'estimated_insurance' => 0,
+                'platform_tip' => 2,
                 'reason' => 'Promenade',
                 'community_id' => 1,
             ],

@@ -9,12 +9,12 @@ class PricingsTableSeeder extends Seeder
         $pricings = [
             [
                 'id' => 1,
-                'name' => 'Tarification par paliers',
+                'name' => 'Tarification par paliers avec assurances',
                 'object_type' => 'bike',
                 'rule' => <<<RULE
-SI \$KM > 20 ALORS \$KM * 2
-SI \$KM > 10 ALORS \$KM * 3
-\$KM * 4
+SI \$MINUTES > 20 ALORS [\$MINUTES * 2, 2]
+SI \$MINUTES > 10 ALORS [\$MINUTES * 3, 3]
+[\$MINUTES * 4, 4]
 RULE
                 ,
 
@@ -22,10 +22,10 @@ RULE
             ],
             [
                 'id' => 2,
-                'name' => 'Équation avec 10% de frais',
+                'name' => 'Équation avec 10% de frais et assurances',
                 'object_type' => 'car',
                 'rule' => <<<RULE
-(\$MINUTES * 0.25 + \$KM * 0.5) * 1.10
+[(\$MINUTES * 0.25 + \$KM * 0.5) * 1.10, \$KM * 0.01]
 RULE
                 ,
                 'community_id' => 1,
