@@ -61,7 +61,7 @@ class ImportLegacyLoanables extends Command
                 continue;
             }
             $line = array_map('trim', $line);
-            $this->echoLine($headers, $line);
+            //$this->echoLine($headers, $line);
 
             switch (strtolower($line[0])) {
                 case 'voiture':
@@ -236,7 +236,8 @@ class ImportLegacyLoanables extends Command
                         continue;
                     }
 
-                    File::copy($path, $uri . DIRECTORY_SEPARATOR . $filename);
+                    mkdir(storage_path('app') . $uri);
+                    copy($path, storage_path('app') . $uri . DIRECTORY_SEPARATOR . $filename);
 
                     $file = new File;
                     $file->fill($fileData);
