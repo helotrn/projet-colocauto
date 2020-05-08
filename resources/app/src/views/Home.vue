@@ -72,7 +72,7 @@
             <b-col md="4">
               <b-row align-v="center">
                 <b-col cols="6" md="12">
-                  <svg-borrow class="svg-borrow" />
+                  <svg-tridem class="svg-tridem" />
                 </b-col>
                 <b-col cols="6" md="12">
                   <p>Faites partie d’un projet collectif ambitieux</p>
@@ -265,6 +265,7 @@ import Dot from '@/assets/svg/home-dot.svg';
 import FooterDot from '@/assets/svg/home-footer-dot.svg';
 import Footer from '@/assets/svg/home-footer.svg';
 import Lend from '@/assets/svg/home-lend.svg';
+import Tridem from '@/assets/svg/tridem.svg';
 import WaveDesktop from '@/assets/svg/home-wave-desktop.svg';
 import Wave from '@/assets/svg/home-wave.svg';
 
@@ -285,6 +286,7 @@ export default {
     'svg-footer-dot': FooterDot,
     'svg-footer': Footer,
     'svg-lend': Lend,
+    'svg-tridem': Tridem,
     'svg-wave-desktop': WaveDesktop,
     'svg-wave': Wave,
   },
