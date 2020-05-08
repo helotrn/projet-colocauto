@@ -92,13 +92,26 @@ export default {
       const now = this.$dayjs().format('YYYY-MM-DD HH:mm:ss');
 
       return this.allLoans
-        .filter(l => l.actions.length > 1
-          && l.departure_at < now
-          && !l.actions.find(a => a.type === 'payment'));
+        .filter(l => {
+          if (l.actions.length <= 1) {
+            return false;
+          }
+
+          const payment = l.actions.find(a => a.type === 'payment');
+          return l.departure_at < now
+            && (!payment || payment.status !== 'completed');
+        });
     },
     pastLoans() {
       return this.allLoans
-        .filter(l => l.actions.length > 1 && !!l.actions.find(a => a.type === 'payment'))
+        .filter(l => {
+          if (l.actions.length <= 1) {
+            return false;
+          }
+
+          const payment = l.actions.find(a => a.type === 'payment');
+          return !!payment && payment.status === 'completed';
+        })
         .slice(0, 3);
     },
     user() {

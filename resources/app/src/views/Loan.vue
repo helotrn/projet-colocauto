@@ -17,13 +17,13 @@
               Annuler la réservation
             </b-button>
             <b-button v-if="!userIsOwner" class="ml-3 mb-3" variant="warning"
-              :disabled="!hasReachedStep('pre_payment') || hasReachedStep('payment')
+              :disabled="!hasReachedStep('takeover') || hasReachedStep('payment')
                 || item.status === 'canceled' || hasActiveExtensions"
               @click="addExtension">
               Signaler un retard
             </b-button>
             <b-button v-if="!userIsOwner" class="ml-3 mb-3" variant="warning"
-              :disabled="!hasReachedStep('pre_payment') || item.status === 'canceled'"
+              :disabled="!hasReachedStep('takeover') || item.status === 'canceled'"
               @click="addIncident('accident')">
               Signaler un incident
             </b-button>
