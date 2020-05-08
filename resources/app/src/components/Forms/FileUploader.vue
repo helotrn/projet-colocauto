@@ -35,7 +35,11 @@ export default {
   name: 'FormsFileUploader',
   props: {
     accept: {
-      default: () => ['*.pdf', 'application/pdf'],
+      default: () => [
+        '*.png', '*.jpg', '*.jpeg',
+        'image/png', 'image/jpg', 'image/jpeg',
+        '*.pdf', 'application/pdf',
+      ],
       type: Array,
     },
     disabled: {
