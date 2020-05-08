@@ -152,6 +152,8 @@ class PaymentController extends RestController
                 $items['expenses']['taxes_tps'] = -$items['expenses']['taxes_tps'];
                 $ownerInvoice->billItems()->create($items['expenses']);
             }
+
+            $ownerInvoice->pay();
         }
 
 
