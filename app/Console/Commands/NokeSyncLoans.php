@@ -116,6 +116,7 @@ class NokeSyncLoans extends Command
             }
 
             $this->warn("Updating group {$groupName} users.");
+            $data->userIds = array_values(array_unique($data->userIds));
 
             $response = $this->client->post(
                 "{$this->baseUrl}/group/edit/",
