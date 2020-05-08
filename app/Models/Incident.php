@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Action;
 use App\Models\Loan;
+use Carbon\Carbon;
 
 class Incident extends Action
 {
@@ -13,6 +14,7 @@ class Incident extends Action
 
     protected $fillable = [
         'incident_type',
+        'comments_on_incident',
     ];
 
     public static function boot() {

@@ -15,7 +15,7 @@ class CreateExtensionsTable extends Migration
             $table->unsignedBigInteger('loan_id');
 
             // Extension-specific fields
-            $table->unsignedInteger('new_duration');//in minutes
+            $table->unsignedInteger('new_duration'); // in minutes
             $table->text('comments_on_extension');
             $table->dateTimeTz('contested_at')->nullable();
             $table->text('comments_on_contestation')->nullable();
