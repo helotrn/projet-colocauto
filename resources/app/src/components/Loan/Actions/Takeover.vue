@@ -41,7 +41,15 @@
                   </small></p>
                 </b-col>
                 <b-col lg="6" v-else>
-                  <img :src="action.image ? action.image.sizes.thumbnail : ''">
+                  <a href="#" v-b-modal="'takeover-image'">
+                    <img :src="action.image ? action.image.sizes.thumbnail : ''">
+                  </a>
+
+                  <b-modal size="xl"
+                    title="Photo du tableau de bord"
+                    :id="'takeover-image'" footer-class="d-none">
+                    <img class="img-fit" :src="action.image.url">
+                  </b-modal>
                 </b-col>
 
                 <b-col lg="6">
@@ -101,7 +109,15 @@
               </b-row>
               <b-row v-else>
                 <b-col>
-                  <img :src="action.image ? action.image.sizes.thumbnail : ''">
+                  <a href="#" v-b-modal="'takeover-image'">
+                    <img :src="action.image ? action.image.sizes.thumbnail : ''">
+                  </a>
+
+                  <b-modal size="xl"
+                    title="Photo de l'état du véhicule"
+                    :id="'takeover-image'" footer-class="d-none">
+                    <img class="img-fit" :src="action.image.url">
+                  </b-modal>
                 </b-col>
               </b-row>
 

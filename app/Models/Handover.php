@@ -31,10 +31,15 @@ class Handover extends Action
 
     public $morphOnes = [
         'image' => 'imageable',
+        'expense' => 'imageable',
     ];
 
+    public function expense() {
+        return $this->morphOne(Image::class, 'imageable')->where('field', 'expense');
+    }
+
     public function image() {
-        return $this->morphOne(Image::class, 'imageable');
+        return $this->morphOne(Image::class, 'imageable')->where('field', 'image');
     }
 
     public function loan() {

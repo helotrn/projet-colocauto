@@ -60,6 +60,7 @@ const routes = [
           'extensions.*',
           'handover.*',
           'handover.image.*',
+          'handover.expense.*',
           'incidents.*',
           'intention.*',
           'loanable.name',

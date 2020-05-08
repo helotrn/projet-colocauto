@@ -85,7 +85,7 @@ class PaymentController extends RestController
         $price = $loan->actual_price;
         $insurance = $loan->actual_insurance;
         $platformTip = floatval($request->get('platform_tip'));
-        $expenses = 0;
+        $expenses = $loan->handover->purchases_amount;
         $object = $loan->loanable->name;
         $prettyDate = (new Carbon($loan->departure_at))->locale('fr_FR')->isoFormat('LLL');
 

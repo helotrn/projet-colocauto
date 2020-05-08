@@ -22,71 +22,134 @@
       <b-collapse id="loan-actions-handover" role="tabpanel" accordion="loan-actions"
         :visible="open">
         <div v-if="loan.loanable.type === 'car'">
-          <b-row>
-            <b-col lg="6" v-if="!action.executed_at">
-              <p>Envoyez une photo du tableau de bord.</p>
+          <validation-observer ref="observer" v-slot="{ passes }">
+            <b-form :novalidate="true" class="register-form__form"
+              @submit.stop.prevent="passes(completeAction)">
+              <b-row>
+                <b-col lg="6" v-if="!action.executed_at">
+                  <p>Envoyez une photo du tableau de bord.</p>
 
-              <forms-image-uploader
-                label="Photo du tableau de bord"
-                field="image"
-                v-model="action.image" />
+                  <forms-image-uploader
+                    label="Photo du tableau de bord"
+                    field="image"
+                    v-model="action.image" />
 
-              <p><small>
-                Cette photo doit indiquer le kilométrage et le niveau d'essence.
-              </small></p>
-            </b-col>
-            <b-col lg="6" v-else>
-              <img :src="action.image ? action.image.sizes.thumbnail : ''">
-            </b-col>
+                  <p><small>
+                    Cette photo doit indiquer le kilométrage et le niveau d'essence.
+                  </small></p>
+                </b-col>
+                <b-col lg="6" v-else>
+                  <a href="#" v-b-modal="'handover-image'">
+                    <img :src="action.image ? action.image.sizes.thumbnail : ''">
+                  </a>
 
-            <b-col lg="6">
-              <forms-validated-input
-                id="mileage_end" name="mileage_end"
-                type="number"
-                label="KM au compteur, à la fin de la course"
-                placholder="KM au compteur"
-                :disabled="!!action.executed_at"
-                v-model="action.mileage_end" />
+                  <b-modal size="xl"
+                    title="Photo du tableau de bord"
+                    :id="'handover-image'" footer-class="d-none">
+                    <img class="img-fit" :src="action.image.url">
+                  </b-modal>
+                </b-col>
 
-              <forms-validated-input
-                id="fuel_end" name="fuel_end"
-                type="text"
-                label="Essence dans le réservoir à la fin de la course"
-                placeholder="Donnez une indication approximative"
-                :disabled="!!action.executed_at"
-                v-model="action.fuel_end" />
-            </b-col>
-          </b-row>
+                <b-col lg="6">
+                  <forms-validated-input
+                    id="mileage_end" name="mileage_end"
+                    type="number"
+                    label="KM au compteur, à la fin de la course"
+                    placholder="KM au compteur"
+                    :disabled="!!action.executed_at"
+                    v-model="action.mileage_end" />
 
-          <b-row>
-            <b-col>
-              <forms-validated-input v-if="userRole === 'borrower'"
-                id="comments_by_borrower" name="comments_by_borrower"
-                type="textarea" :rows="3" :disabled="!!action.commented_by_borrower_at"
-                label="Laissez un message au propriétaire (facultatif)"
-                placeholder="Commentaire sur la réservation"
-                v-model="action.comments_by_borrower" />
-              <blockquote v-else-if="action.comments_by_borrower">
-                {{ action.comments_by_borrower }}
-                <div class="user-avatar" :style="{ backgroundImage: borrowerAvatar }" />
-              </blockquote>
-            </b-col>
-          </b-row>
+                  <forms-validated-input
+                    id="fuel_end" name="fuel_end"
+                    type="text"
+                    label="Essence dans le réservoir à la fin de la course"
+                    placeholder="Donnez une indication approximative"
+                    :disabled="!!action.executed_at"
+                    v-model="action.fuel_end" />
+                </b-col>
+              </b-row>
 
-          <b-row>
-            <b-col>
-              <forms-validated-input v-if="userRole === 'owner'"
-                id="comments_by_owner" name="comments_by_owner"
-                type="textarea" :rows="3" :disabled="!!action.commented_by_owner_at"
-                label="Laissez un message à l'emprunteur (facultatif)"
-                placeholder="Commentaire sur la réservation"
-                v-model="action.comments_by_owner" />
-              <blockquote v-else-if="action.comments_by_owner">
-                {{ action.comments_by_owner }}
-                <div class="user-avatar" :style="{ backgroundImage: ownerAvatar }" />
-              </blockquote>
-            </b-col>
-          </b-row>
+              <hr>
+
+              <b-row>
+                <b-col lg="6" v-if="!action.executed_at">
+                  <p>Envoyez une photo de vos dépenses.</p>
+
+                  <forms-image-uploader
+                    label="Photo des dépenses"
+                    field="expense"
+                    v-model="action.expense" />
+
+                  <p><small>
+                    Cette photo doit afficher le détails des dépenses.
+                  </small></p>
+                </b-col>
+                <b-col lg="6" v-else>
+                  <a href="#" v-b-modal="'handover-expense'">
+                    <img :src="action.expense ? action.expense.sizes.thumbnail : ''">
+                  </a>
+
+                  <b-modal size="xl"
+                    title="Photo des dépenses"
+                    :id="'handover-expense'" footer-class="d-none">
+                    <img class="img-fit" :src="action.expense.url">
+                  </b-modal>
+                </b-col>
+
+                <b-col lg="6">
+                  <forms-validated-input
+                    id="purchases_amount" name="purchases_amount"
+                    type="number" :min="0" :step="0.01"
+                    label="Total des dépenses"
+                    placholder="Total des dépenses"
+                    :disabled="!!action.executed_at"
+                    v-model="action.purchases_amount" />
+                </b-col>
+              </b-row>
+
+              <hr>
+
+              <b-row>
+                <b-col>
+                  <forms-validated-input
+                    v-if="userRole === 'borrower' && !action.executed_at"
+                    id="comments_by_borrower" name="comments_by_borrower"
+                    type="textarea" :rows="3" :disabled="!!action.commented_by_borrower_at"
+                    label="Laissez un message au propriétaire (facultatif)"
+                    placeholder="Commentaire sur la réservation"
+                    v-model="action.comments_by_borrower" />
+                  <blockquote v-else-if="action.comments_by_borrower">
+                    {{ action.comments_by_borrower }}
+                    <div class="user-avatar" :style="{ backgroundImage: borrowerAvatar }" />
+                  </blockquote>
+                </b-col>
+              </b-row>
+
+              <b-row>
+                <b-col>
+                  <forms-validated-input v-if="userRole === 'owner' && !action.executed_at"
+                    id="comments_by_owner" name="comments_by_owner"
+                    type="textarea" :rows="3" :disabled="!!action.commented_by_owner_at"
+                    label="Laissez un message à l'emprunteur (facultatif)"
+                    placeholder="Commentaire sur la réservation"
+                    v-model="action.comments_by_owner" />
+                  <blockquote v-else-if="action.comments_by_owner">
+                    {{ action.comments_by_owner }}
+                    <div class="user-avatar" :style="{ backgroundImage: ownerAvatar }" />
+                  </blockquote>
+                </b-col>
+              </b-row>
+
+              <b-row class="loan-actions-handover__buttons text-center"
+                v-if="!action.executed_at">
+                <b-col>
+                  <b-button type="submit" size="sm" variant="success" class="mr-3">
+                    Enregistrer
+                  </b-button>
+                </b-col>
+              </b-row>
+            </b-form>
+          </validation-observer>
         </div>
 
         <div v-else-if="loan.loanable.has_padlock">
@@ -120,7 +183,15 @@
               </b-row>
               <b-row v-else>
                 <b-col>
-                  <img :src="action.image ? action.image.sizes.thumbnail : ''">
+                  <a href="#" v-b-modal="'handover-image'">
+                    <img :src="action.image ? action.image.sizes.thumbnail : ''">
+                  </a>
+
+                  <b-modal size="xl"
+                    title="Photo de l'état du véhicule"
+                    :id="'handover-image'" footer-class="d-none">
+                    <img class="img-fit" :src="action.image.url">
+                  </b-modal>
                 </b-col>
               </b-row>
 
