@@ -266,6 +266,10 @@ class Loan extends BaseModel
         return null;
     }
 
+    public function getTotalEstimatedCostAttribute() {
+        return $this->estimated_price + $this->estimated_insurance + $this->platform_tip;
+    }
+
     public function scopeAccessibleBy(Builder $query, $user) {
         if ($user->isAdmin()) {
             return $query;
