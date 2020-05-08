@@ -2,15 +2,15 @@
 
 @section('content')
 <p>
-    Bonjour {{ $owner->user->name }},
+    Bonjour {{ $borrower->user->name }},
 </p>
 
 <p>
-    {{ $borrower->user->name }} a demandé à rallonger son emprunt de votre {{ $loan->loanable->name }} qui commençait à {{ $loan->departure_at }} et qui durerait maintenant {{ $extension->new_duration }} minutes.
+    {{ $owner->user->name }} a accepté la rallonge de l'emprunt de son {{ $loan->loanable->name }} qui commençait à {{ $loan->departure_at }} et qui durera maintenant {{ $extension->new_duration }} minutes.
 </p>
 
 <p>
-    {{ $extension->comments_on_extension }}
+    {{ $extension->message_for_borrower }}
 </p>
 
 <p style="text-align: center;">
@@ -21,4 +21,3 @@
     <em>- L'équipe LocoMotion</em>
 </p>
 @endsection
-

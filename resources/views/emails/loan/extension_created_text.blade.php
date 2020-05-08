@@ -3,9 +3,9 @@
 @section('content')
 Bonjour {{ $owner->user->name }},
 
-{{ $borrower->user->name }} a demandé à rallong son emprunt de votre {{ $loan->loanable->name }} qui commençait à {{ $loan->departure_at }} et qui durerait maintenant {{ $extension->new_duration }} minutes.
+{{ $borrower->user->name }} a demandé à rallonger son emprunt de votre {{ $loan->loanable->name }} qui commençait à {{ $loan->departure_at }} et qui durerait maintenant {{ $extension->new_duration }} minutes.
 
-{{ $loan->comments_on_extension }}
+{{ $extension->comments_on_extension }}
 
 Voir l'emprunt [https://locomotion.app/loans/{{ $loan->id }}]
 

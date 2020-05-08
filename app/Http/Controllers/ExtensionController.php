@@ -79,6 +79,8 @@ class ExtensionController extends RestController
         $item->status = 'completed';
         $item->save();
 
+        event(new LoanExtensionAcceptedEvent($item));
+
         return $item;
     }
 
@@ -89,6 +91,8 @@ class ExtensionController extends RestController
         $item->message_for_borrower = $request->get('message_for_borrower');
         $item->status = 'canceled';
         $item->save();
+
+        event(new LoanExtensionRejectedEvent($item));
 
         return $item;
     }

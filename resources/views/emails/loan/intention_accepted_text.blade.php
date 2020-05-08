@@ -4,7 +4,7 @@
 Bonjour {{ $borrower->user->name }},
 
 {{ $owner->user->name }} a accepté votre demande d'emprunt de {{ $loan->loanable->name }}
-à partir de {{ $loan->departure_at }} et pour un total de {{ $loan->duration_in_minutes }}.
+à partir de {{ $loan->departure_at }}.
 
 {{ $intention->message_for_borrower }}
 
