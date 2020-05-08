@@ -236,7 +236,7 @@ class ImportLegacyLoanables extends Command
                         continue;
                     }
 
-                    copy($path, $uri . DIRECTORY_SEPARATOR . $filename);
+                    File::copy($path, $uri . DIRECTORY_SEPARATOR . $filename);
 
                     $file = new File;
                     $file->fill($fileData);
