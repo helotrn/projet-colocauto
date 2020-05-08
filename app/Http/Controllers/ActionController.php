@@ -6,6 +6,7 @@ use App\Http\Requests\BaseRequest as Request;
 use App\Http\Requests\Action\ActionRequest;
 use App\Http\Requests\Action\CreateRequest;
 use App\Http\Requests\Action\ExtensionRequest;
+use App\Http\Requests\Action\IncidentRequest;
 use App\Http\Requests\Action\HandoverRequest;
 use App\Http\Requests\Action\IntentionRequest;
 use App\Http\Requests\Action\PaymentRequest;
@@ -161,10 +162,12 @@ class ActionController extends RestController
                     $loanId
                 );
             case 'incident':
-                $incidentRequest = new Request();
-                $incidentRequest->setMethod('PUT');
-                $incidentRequest->request->add($request->all());
-                return $this->incidentController->complete($incidentRequest, $actionId, $loanId);
+                $incidentRequest = $request->redirect(IncidentRequest::class);
+                return $this->incidentController->complete(
+                    $incidentRequest,
+                    $actionId,
+                    $loanId
+                );
             case 'payment':
                 $paymentRequest = $request->redirect(PaymentRequest::class);
                 return $this->paymentController->complete(

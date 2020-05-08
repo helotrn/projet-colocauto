@@ -2,6 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\LoanIncidentCreatedEvent;
+use App\Events\LoanIncidentResolvedEvent;
+use App\Http\Requests\Action\ExtensionRequest;
+use App\Http\Requests\Action\IncidentRequest;
 use App\Http\Requests\BaseRequest as Request;
 use App\Models\Incident;
 use App\Repositories\IncidentRepository;
@@ -30,6 +34,8 @@ class IncidentController extends RestController
         } catch (ValidationException $e) {
             return $this->respondWithErrors($e->errors(), $e->getMessage());
         }
+
+        event(new LoanIncidentCreatedEvent($item));
 
         return $this->respondWithItem($request, $item, 201);
     }
@@ -64,5 +70,29 @@ class IncidentController extends RestController
         }
 
         return $response;
+    }
+
+    public function complete(IncidentRequest $request, $actionId, $loanId) {
+        $authRequest = $request->redirectAuth(Request::class);
+        $item = $this->repo->find($authRequest, $actionId);
+
+        $item->status = 'completed';
+        $item->save();
+
+        event(new LoanIncidentResolvedEvent($item));
+
+        return $item;
+    }
+
+    public function cancel(IncidentRequest $request, $actionId, $loanId) {
+        $authRequest = $request->redirectAuth(Request::class);
+        $item = $this->repo->find($authRequest, $actionId);
+
+        $item->status = 'canceled';
+        $item->save();
+
+        event(new LoanIncidentRejectedEvent($item));
+
+        return $item;
     }
 }
