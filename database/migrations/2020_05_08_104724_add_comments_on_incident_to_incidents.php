@@ -8,7 +8,10 @@ class AddCommentsOnIncidentToIncidents extends Migration
 {
     public function up() {
         Schema::table('incidents', function (Blueprint $table) {
-            $table->text('comments_on_incident');
+            $table->text('comments_on_incident')->default('');
+        });
+        Schema::table('incidents', function (Blueprint $table) {
+            $table->text('comments_on_incident')->default(null)->change();
         });
     }
 
