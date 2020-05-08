@@ -92,7 +92,7 @@ export default {
       const now = this.$dayjs().format('YYYY-MM-DD HH:mm:ss');
 
       return this.allLoans
-        .filter(l => {
+        .filter((l) => {
           if (l.actions.length <= 1) {
             return false;
           }
@@ -104,7 +104,7 @@ export default {
     },
     pastLoans() {
       return this.allLoans
-        .filter(l => {
+        .filter((l) => {
           if (l.actions.length <= 1) {
             return false;
           }

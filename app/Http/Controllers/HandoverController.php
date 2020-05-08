@@ -84,6 +84,19 @@ class HandoverController extends RestController
 
         $this->repo->update($request, $actionId, $request->all());
 
-        return response('', 201);
+        return $item;
+    }
+
+    public function cancel(Request $request, $actionId, $loanId) {
+        $authRequest = $request->redirectAuth(Request::class);
+
+        $item = $this->repo->find($authRequest, $actionId);
+        $loan = $this->loanRepo->find($authRequest, $loanId);
+
+        $item->fill($request->all());
+        $item->status = 'canceled';
+        $item->save();
+
+        return $item;
     }
 }
