@@ -110,13 +110,13 @@ class NokeSyncLoans extends Command
                 return $u->id;
             }, $group->users);
 
+            $data->userIds = array_values(array_unique($data->userIds));
             if (empty(array_diff($data->userIds, $currentUserIds))
                 && count($data->userIds) === count($currentUserIds)) {
                 continue;
             }
 
             $this->warn("Updating group {$groupName} users.");
-            $data->userIds = array_values(array_unique($data->userIds));
 
             $response = $this->client->post(
                 "{$this->baseUrl}/group/edit/",
