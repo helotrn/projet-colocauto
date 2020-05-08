@@ -17,6 +17,9 @@ export default {
       estimated_distance: 'kilométrage à parcourir',
       estimated_insurance: "coût estimé de l'assurance",
       estimated_price: 'coût estimé',
+      incidents: {
+        status: 'statut (Incident)',
+      },
       loanable_id: 'véhicule',
       loanable: loanables.fr.fields,
       loanable_type: 'type de véhicule',
@@ -25,6 +28,14 @@ export default {
       price: 'prix',
       reason: "raison de l'utilisation",
       return_at: 'retour',
+    },
+    incidents: {
+      statuss: {
+        null: '-',
+        in_process: 'En cours',
+        canceled: 'Annulé',
+        completed: 'Complété',
+      },
     },
     placeholders: {
       reason: 'ex.: épicerie, déménagement, etc.',
