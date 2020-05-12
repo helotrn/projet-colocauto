@@ -13,7 +13,6 @@ class TakeoverRequest extends BaseRequest
 
         if ($loan->loanable->type === 'car') {
             return [
-                'fuel_beginning' => 'required',
                 'mileage_beginning' => [
                     'required',
                     'integer'

@@ -9,7 +9,6 @@ class Takeover extends Action
     public static $rules = [
         'status' => 'required',
         'mileage_beginning' => [ 'nullable' ],
-        'fuel_beginning' => [ 'nullable' ],
         'comments_on_vehicle' => [ 'nullable' ],
     ];
 
@@ -67,7 +66,6 @@ class Takeover extends Action
 
     protected $fillable = [
         'mileage_beginning',
-        'fuel_beginning',
         'comments_on_vehicle',
     ];
 

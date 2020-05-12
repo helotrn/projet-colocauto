@@ -60,14 +60,6 @@
                     placholder="KM au compteur"
                     :disabled="!!action.executed_at"
                     v-model="action.mileage_beginning" />
-
-                  <forms-validated-input
-                    id="fuel_beginning" name="fuel_beginning"
-                    type="text" :rules="{ required: true }"
-                    label="Essence dans le réservoir au début de la course"
-                    placeholder="Donnez une indication approximative"
-                    :disabled="!!action.executed_at"
-                    v-model="action.fuel_beginning" />
                 </b-col>
               </b-row>
 

@@ -13,7 +13,6 @@ class HandoverRequest extends BaseRequest
 
         if ($loan->loanable->type === 'car') {
             return [
-                'fuel_end' => 'required',
                 'mileage_end' => [
                     'required',
                     'integer'

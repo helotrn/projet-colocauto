@@ -9,10 +9,9 @@ class Handover extends Action
     public static $rules = [
         'status' => 'required',
         'mileage_end' => 'required',
-        'fuel_end' => 'required',
         'comments_by_borrower' => 'nullable',
         'comments_by_owner' => 'nullable',
-        'purchases_amount' => 'required',//add validation
+        'purchases_amount' => 'required',
     ];
 
     public static $sizes = [
@@ -21,7 +20,6 @@ class Handover extends Action
 
     protected $fillable = [
         'mileage_end',
-        'fuel_end',
         'comments_by_borrower',
         'comments_by_owner',
         'purchases_amount',
