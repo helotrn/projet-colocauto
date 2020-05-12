@@ -29,7 +29,8 @@ class GoogleAccountService
             $user = new User;
             $user->email = $providerUser->getEmail();
             $user->name = $providerUser->getName();
-            $user->password = md5('1');
+            // Password should be a hashed string, this will fail login every time
+            $user->password = md5(rand(1, 100000000));
             $user->save();
         }
 
