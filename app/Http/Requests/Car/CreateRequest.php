@@ -21,7 +21,6 @@ class CreateRequest extends BaseRequest
             'location_description' => 'present',
             'model' => 'required',
             'name' => 'required',
-            'ownership' => 'required',
             'papers_location' => 'required',
             'plate_number' => 'required',
             'position' => 'required',

@@ -20,10 +20,6 @@ class Car extends Loanable
         'location_description' => [ 'present' ],
         'model' => [ 'required' ],
         'name' => [ 'required' ],
-        'ownership' => [
-            'required',
-            'in:self,rental',
-        ],
         'papers_location' => [
             'required' ,
             'in:in_the_car,to_request_with_car'
@@ -85,7 +81,6 @@ class Car extends Loanable
         'location_description',
         'model',
         'name',
-        'ownership',
         'papers_location',
         'plate_number',
         'position',

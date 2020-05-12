@@ -215,7 +215,6 @@ class LoanableController extends RestController
                 'location_description' => '',
                 'model' => '',
                 'name' => '',
-                'ownership' => '',
                 'papers_location' => '',
                 'plate_number' => '',
                 'position' => [],
@@ -409,19 +408,6 @@ class LoanableController extends RestController
                     ],
                     'report' => [
                         'type' => 'file',
-                    ],
-                    'ownership' => [
-                        'type' => 'select',
-                        'options' => [
-                            [
-                                'text' => 'Propriétaire',
-                                'value' => 'self',
-                            ],
-                            [
-                                'text' => 'Location',
-                                'value' => 'rental',
-                            ]
-                        ],
                     ],
                     'papers_location' => [
                         'type' => 'select',

@@ -87,7 +87,6 @@ class ImportLegacyLoanables extends Command
                             ? 'in_the_car'
                             : 'to_request_with_car',
                         'insurer' => $line[16],
-                        'ownership' => 'self',
                     ];
 
                     $car = Car::where('name', $line[2])->first();

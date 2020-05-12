@@ -14,7 +14,6 @@ export default {
       insurer: 'assureur',
       is_value_over_fifty_thousand: 'la valeur de ce véhicule dépasse-t-elle 50 000$?',
       model: 'modèle',
-      ownership: 'type de propriété',
       papers_location: 'emplacement des papiers',
       plate_number: 'numéro de plaque',
       pricing_category: 'catégorie',

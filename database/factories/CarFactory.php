@@ -20,7 +20,6 @@ $factory->define(Car::class, function (Faker $faker) {
         'model' => $faker->sentence,
         'name' => $faker->name,
         'owner_id' => 1,
-        'ownership' => $faker->randomElement(['self', 'rental']),
         'papers_location' => $faker->randomElement(['in_the_car', 'to_request_with_car']),
         'plate_number' => $faker->shuffle('9F29J2'),
         'position' => new Point($faker->latitude, $faker->longitude),
