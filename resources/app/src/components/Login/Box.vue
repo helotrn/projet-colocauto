@@ -3,7 +3,7 @@
     <h1 class="login-box__title">{{ $t('login') }}</h1>
 
     <div class="google-login">
-      <b-button :disabled="loading" variant="primary" class="btn-google">
+      <b-button href="/auth/google" variant="primary" class="btn-google">
         <div class="btn-google__icon">
           <svg-google />
         </div>

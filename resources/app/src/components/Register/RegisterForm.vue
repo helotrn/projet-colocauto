@@ -3,7 +3,7 @@
     <h2 class="text-center">{{ $t('register') }}</h2>
 
     <div class="register-form__google">
-      <b-button :disabled="loading" variant="primary" class="btn-google">
+      <b-button href="/auth/google" variant="primary" class="btn-google">
         <div class="btn-google__icon">
           <svg-google />
         </div>

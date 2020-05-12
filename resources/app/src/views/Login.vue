@@ -17,6 +17,11 @@ export default {
       if (vm.isLoggedIn) {
         vm.skipToApp();
       }
+
+      if (to.query.token) {
+        vm.$store.commit('token', to.query.token);
+        vm.$router.replace('/');
+      }
     });
   },
   components: { LoginBox },

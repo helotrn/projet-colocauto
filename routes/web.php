@@ -1,5 +1,8 @@
 <?php
 
+Route::get('/auth/callback', 'AuthController@callback');
+Route::get('/auth/google', 'AuthController@google');
+
 Route::get('/exports/{any?}', 'AssetController@exportFile')
     ->where('any', '.*')
     ->name('assets.export');

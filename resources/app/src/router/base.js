@@ -25,6 +25,14 @@ export default [
     },
   },
   {
+    path: '/login/callback',
+    name: 'login-callback',
+    component: Login,
+    meta: {
+      title: 'titles.login',
+    },
+  },
+  {
     path: '/app',
     name: 'dashboard',
     component: Dashboard,

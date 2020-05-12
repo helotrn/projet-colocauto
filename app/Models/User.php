@@ -149,6 +149,7 @@ class User extends AuthenticatableBaseModel
     public $items = [
       'borrower',
       'owner',
+      'google_account',
     ];
 
     public $morphOnes = [
@@ -165,6 +166,10 @@ class User extends AuthenticatableBaseModel
 
     public function actions() {
         return $this->hasMany(Action::class);
+    }
+
+    public function googleAccount() {
+        return $this->hasOne(GoogleAccount::class);
     }
 
     public function invoices() {

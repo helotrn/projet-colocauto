@@ -9,10 +9,12 @@ use App\Http\Requests\BaseRequest as Request;
 use App\Http\Requests\User\AddBalanceRequest as UserAddBalanceRequest;
 use App\Http\Requests\User\UpdateRequest as UserUpdateRequest;
 use App\Models\User;
-use Molotov\Traits\RespondsWithErrors;
+use App\Services\GoogleAccountService;
 use Illuminate\Contracts\Auth\Factory as Auth;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Passport\TokenRepository;
+use Laravel\Socialite\Facades\Socialite;
+use Molotov\Traits\RespondsWithErrors;
 
 class AuthController extends RestController
 {
@@ -119,5 +121,18 @@ class AuthController extends RestController
         $request->merge([ 'email' => $user->email ]);
 
         return $this->userController->update($request, $user->id);
+    }
+
+    public function google() {
+        return Socialite::driver('google')->stateless()->redirect();
+    }
+
+    public function callback(GoogleAccountService $service) {
+        $user = $service->createOrGetUser(
+            Socialite::driver('google')->stateless()->user()
+        );
+        auth()->login($user);
+        $token = $user->createToken('API Token')->accessToken;
+        return redirect()->to('/login/callback?token=' . $token);
     }
 }
