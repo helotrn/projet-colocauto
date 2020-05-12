@@ -15,7 +15,6 @@ export default new RestModule('users', {
     'date_of_birth',
     'description',
     'email',
-    'google_id',
     'is_smart_phone',
     'last_name',
     'name',

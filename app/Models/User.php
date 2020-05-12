@@ -30,7 +30,6 @@ class User extends AuthenticatableBaseModel
         ],
         'description' => 'nullable',
         'email' => 'email',
-        'google_id' => 'nullable',
         'is_smart_phone' => 'nullable|boolean',
         'last_name' => 'nullable',
         'name' => ['nullable'],
@@ -117,7 +116,6 @@ class User extends AuthenticatableBaseModel
     protected $fillable = [
         'name',
         'last_name',
-        'google_id',
         'description',
         'date_of_birth',
         'address',

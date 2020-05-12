@@ -13,7 +13,6 @@ class CommunityTest extends TestCase
         'name',
         'email',
         'email_verified_at',
-        'google_id',
         'description',
         'date_of_birth',
         'address',
