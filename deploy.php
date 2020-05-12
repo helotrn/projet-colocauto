@@ -24,6 +24,11 @@ host('vps.locomotion.app')
     ->user('locomotion')
     ->set('deploy_path', '/var/www/staging.locomotion.app');
 
+host('staging.locomotion.app')
+    ->stage('demo')
+    ->user('locomotion')
+    ->set('deploy_path', '/var/www/staging.locomotion.app');
+
 after('deploy:failed', 'deploy:unlock');
 
 before('deploy:symlink', 'artisan:migrate');
@@ -52,6 +57,7 @@ task('deploy:reload:queue', function () {
             run('sudo /usr/sbin/service locomotion-queue reload');
             break;
         case 'staging':
+        case 'demo':
             run('sudo /usr/sbin/service locomotion-staging-queue reload');
             break;
     }
