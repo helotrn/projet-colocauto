@@ -23,10 +23,7 @@
 
       <li class="dashboard-resources-list__resources__desjardins">
         <router-link to="/guide/assurance-desjardins">
-          <img src="/icons/desjardins.png">
-          <span>
-            Assurances Desjardins
-          </span>
+          <img src="/icons/desjardins-assurances.png">
         </router-link>
       </li>
 
@@ -83,6 +80,11 @@ export default {
       img {
         margin-right: 20px;
         flex: 0 0 58px;
+      }
+
+      &.dashboard-resources-list__resources__desjardins img {
+        margin-right: 0;
+        flex: 1 0 100%;
       }
 
       span {
