@@ -74,6 +74,7 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "scripts": {
+        "test": "vendor/bin/phpunit && vendor/bin/phpcs app/",
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
             "@php artisan package:discover --ansi"
