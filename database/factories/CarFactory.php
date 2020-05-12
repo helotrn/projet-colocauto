@@ -11,7 +11,6 @@ $factory->define(Car::class, function (Faker $faker) {
         'brand' => $faker->word,
         'comments' => $faker->paragraph,
         'engine' => $faker->randomElement(['fuel' ,'diesel', 'electric', 'hybrid']),
-        'has_accident_report' => $faker->boolean,
         'has_informed_insurer' => $faker->boolean,
         'instructions' => $faker->paragraph,
         'insurer' => $faker->word,

@@ -422,9 +422,6 @@ class LoanableController extends RestController
                             ]
                         ],
                     ],
-                    'has_accident_report' => [
-                        'type' => 'checkbox',
-                    ],
                     'insurer' => [
                         'type' => 'text',
                     ],

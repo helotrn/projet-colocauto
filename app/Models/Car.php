@@ -73,7 +73,6 @@ class Car extends Loanable
         'brand',
         'comments',
         'engine',
-        'has_accident_report',
         'has_informed_insurer',
         'instructions',
         'insurer',
