@@ -12,7 +12,10 @@ class CreateRequest extends BaseRequest
 
     public function rules() {
         $rules = [
-            'email' => 'email',
+            'email' => [
+                'email',
+                'unique:users,email',
+            ],
         ];
 
         if ($userId = $this->get('id')) {
@@ -23,5 +26,11 @@ class CreateRequest extends BaseRequest
         }
 
         return $rules;
+    }
+
+    public function messages() {
+        return [
+            'email.unique' => 'Le courriel est déjà pris.',
+        ];
     }
 }

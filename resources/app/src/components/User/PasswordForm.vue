@@ -10,17 +10,17 @@
           v-model="currentPassword" />
 
         <forms-validated-input mode="lazy" name="new_password" :label="$t('new_password')"
-          :rules="{ required: true, min: 8 }" type="password"
+          :rules="{ required: !user.id, min: 8 }" type="password"
           :placeholder="$t('new_password')" description="Minimum 8 caractères"
-          v-model="newPassword" />
+          v-model="user.password" />
 
         <forms-validated-input mode="lazy"
           name="new_password_repeat" :label="$t('new_password_repeat')"
-          :rules="{ required: true, is: newPassword }" type="password"
+          :rules="{ required: !user.id, is: user.password }" type="password"
           :placeholder="$t('new_password_repeat')"
           v-model="newPasswordRepeat" />
 
-        <b-button type="submit" :disabled="loading" variant="primary">
+        <b-button type="submit" :disabled="loading" variant="primary" v-if="!!user.id">
           {{ $t('submit') }}
         </b-button>
       </b-form>
@@ -55,21 +55,20 @@ export default {
       required: false,
       default: false,
     },
-    userId: {
-      type: Number,
+    user: {
+      type: Object,
       required: true,
     },
   },
   data() {
     return {
       currentPassword: '',
-      newPassword: '',
       newPasswordRepeat: '',
     };
   },
   methods: {
     async updatePassword() {
-      const { currentPassword, newPassword, userId } = this;
+      const { currentPassword, newPassword, user: { id: userId } } = this;
 
       await this.$store.dispatch('users/updatePassword', {
         currentPassword,
@@ -81,6 +80,10 @@ export default {
       this.newPassword = '';
       this.newPasswordRepeat = '';
     },
+  },
+  reset() {
+    this.currentPassword = '';
+    this.newPasswordRepeat = '';
   },
 };
 </script>

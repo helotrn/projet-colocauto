@@ -109,6 +109,9 @@ export default {
         } else {
           await this.$store.dispatch(`${this.slug}/updateItem`, this.params);
         }
+        if (typeof this.afterSubmit === 'function') {
+          this.afterSubmit();
+        }
       } catch (e) {
         switch (e.request.status) {
           case 422:

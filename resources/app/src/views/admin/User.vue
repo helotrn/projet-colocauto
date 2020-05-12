@@ -9,186 +9,188 @@
 
     <b-row>
       <b-col>
-        <b-form class="form" @submit.prevent="submit">
-          <div class="form__section">
-            <h2>Informations générales</h2>
+        <validation-observer ref="observer" v-slot="{ passes }">
+          <b-form class="form" @submit.prevent="passes(submit)">
+            <div class="form__section">
+              <h2>Informations générales</h2>
 
-            <forms-builder :definition="form.general" v-model="item" entity="users" />
-          </div>
+              <forms-builder :definition="form.general" v-model="item" entity="users" />
+            </div>
 
-          <div class="form__section">
-            <h2>Mot de passe</h2>
+            <div class="form__section">
+              <h2>Mot de passe</h2>
 
-            <user-password-form :loading="loading" :is-admin="loggedInUserIsAdmin"
-              :user-id="item.id" />
-          </div>
+              <user-password-form :loading="loading" :is-admin="loggedInUserIsAdmin"
+                :user="item" ref="passwordForm" />
+            </div>
 
-          <div class="form__section">
-            <h2>Profil d'emprunteur</h2>
+            <div class="form__section">
+              <h2>Profil d'emprunteur</h2>
 
-            <p>
-              <em>Un profil d'emprunteur valide est requis pour emprunter une voiture.</em>
-            </p>
+              <p>
+                <em>Un profil d'emprunteur valide est requis pour emprunter une voiture.</em>
+              </p>
 
-            <p>
-              <strong>Statut:</strong>
-              {{ borrowerStatus }}
+              <p>
+                <strong>Statut:</strong>
+                {{ borrowerStatus }}
 
-              <b-button v-if="!item.borrower.approved_at"
-                size="sm" class="ml-1" variant="primary"
-                :disabled="loading"
-                @click="approveBorrower(item)">
-                {{ $t('approuver') | capitalize }}
-              </b-button>
-              <b-button v-else-if="!item.borrower.suspended_at"
-                size="sm" class="ml-1" variant="warning"
-                :disabled="loading"
-                @click="suspendBorrower(item)">
-                {{ $t('suspendre') | capitalize }}
-              </b-button>
-              <b-button v-else
-                size="sm" class="mr-1" variant="success"
-                :disabled="loading"
-                @click="unsuspendBorrower(item)">
-                {{ $t('rétablir') | capitalize }}
-              </b-button>
-            </p>
+                <b-button v-if="!item.borrower.approved_at"
+                  size="sm" class="ml-1" variant="primary"
+                  :disabled="loading"
+                  @click="approveBorrower(item)">
+                  {{ $t('approuver') | capitalize }}
+                </b-button>
+                <b-button v-else-if="!item.borrower.suspended_at"
+                  size="sm" class="ml-1" variant="warning"
+                  :disabled="loading"
+                  @click="suspendBorrower(item)">
+                  {{ $t('suspendre') | capitalize }}
+                </b-button>
+                <b-button v-else
+                  size="sm" class="mr-1" variant="success"
+                  :disabled="loading"
+                  @click="unsuspendBorrower(item)">
+                  {{ $t('rétablir') | capitalize }}
+                </b-button>
+              </p>
 
-            <forms-builder :definition="form.borrower" v-model="item.borrower"
-              entity="borrowers" />
-          </div>
+              <forms-builder :definition="form.borrower" v-model="item.borrower"
+                entity="borrowers" />
+            </div>
 
-          <div class="form__section" v-if="!!item.id">
-            <h2>Véhicules</h2>
+            <div class="form__section" v-if="!!item.id">
+              <h2>Véhicules</h2>
 
-            <b-table
-              striped hover :items="item.loanables"
-              selectable select-mode="multi" @row-selected="loanableRowSelected"
-              :fields="loanablesTable" no-sort-reset
-              :show-empty="true" empty-text="Pas de véhicules">
-              <template v-slot:cell(actions)="row">
-                <div class="text-right">
-                  <b-button size="sm" :to="`/admin/loanables/${row.item.id}`">
-                    {{ $t('modifier') | capitalize }}
-                  </b-button>
-                </div>
-              </template>
-            </b-table>
-          </div>
+              <b-table
+                striped hover :items="item.loanables"
+                selectable select-mode="multi" @row-selected="loanableRowSelected"
+                :fields="loanablesTable" no-sort-reset
+                :show-empty="true" empty-text="Pas de véhicules">
+                <template v-slot:cell(actions)="row">
+                  <div class="text-right">
+                    <b-button size="sm" :to="`/admin/loanables/${row.item.id}`">
+                      {{ $t('modifier') | capitalize }}
+                    </b-button>
+                  </div>
+                </template>
+              </b-table>
+            </div>
 
-          <div class="form__section" v-if="!!item.id">
-            <h2>Communautés</h2>
+            <div class="form__section" v-if="!!item.id">
+              <h2>Communautés</h2>
 
-            <b-table
-              striped hover :items="item.communities"
-              selectable select-mode="multi" @row-selected="communityRowSelected"
-              :fields="communitiesTable" no-sort-reset
-              :show-empty="true" empty-text="Pas de communauté">
-              <template v-slot:cell(actions)="row">
-                <div class="text-right">
-                  <b-button size="sm" :to="`/admin/communities/${row.item.id}#members`">
-                    {{ $t('modifier') | capitalize }}
-                  </b-button>
-                </div>
-              </template>
-            </b-table>
-          </div>
+              <b-table
+                striped hover :items="item.communities"
+                selectable select-mode="multi" @row-selected="communityRowSelected"
+                :fields="communitiesTable" no-sort-reset
+                :show-empty="true" empty-text="Pas de communauté">
+                <template v-slot:cell(actions)="row">
+                  <div class="text-right">
+                    <b-button size="sm" :to="`/admin/communities/${row.item.id}#members`">
+                      {{ $t('modifier') | capitalize }}
+                    </b-button>
+                  </div>
+                </template>
+              </b-table>
+            </div>
 
-          <div class="form__section" v-if="!!item.id">
-            <h2>Emprunts</h2>
+            <div class="form__section" v-if="!!item.id">
+              <h2>Emprunts</h2>
 
-            <b-table
-              striped hover :items="allLoans"
-              selectable select-mode="multi" @row-selected="loanRowSelected"
-              :fields="loansTable" no-sort-reset
-              :show-empty="true" empty-text="Pas d'emprunt">
-              <template v-slot:cell(borrower)="row">
-                {{ row.item.borrower.user.full_name }}
-              </template>
-              <template v-slot:cell(loanable)="row">
-                {{ row.item.loanable.name }}
-              </template>
-              <template v-slot:cell(date)="row">
-                <span v-if="isLoanMultipleDays(row.item)">
-                  {{ row.item.departure_at | date }} {{ row.item.departure_at | time }}<br>
-                  {{ computeReturnAt(row.item) | date }} {{ computeReturnAt(row.item) | time }}
-                </span>
-                <span v-else>
-                  {{ row.item.departure_at | date }}<br>
-                  {{ row.item.departure_at | time }} à {{ computeReturnAt(row.item) | time }}
-                </span>
-              </template>
-              <template v-slot:cell(actions)="row">
-                <div class="text-right">
-                  <b-button size="sm" :to="`/admin/loans/${row.item.id}`">
-                    {{ $t('modifier') | capitalize }}
-                  </b-button>
-                </div>
-              </template>
-            </b-table>
-          </div>
+              <b-table
+                striped hover :items="allLoans"
+                selectable select-mode="multi" @row-selected="loanRowSelected"
+                :fields="loansTable" no-sort-reset
+                :show-empty="true" empty-text="Pas d'emprunt">
+                <template v-slot:cell(borrower)="row">
+                  {{ row.item.borrower.user.full_name }}
+                </template>
+                <template v-slot:cell(loanable)="row">
+                  {{ row.item.loanable.name }}
+                </template>
+                <template v-slot:cell(date)="row">
+                  <span v-if="isLoanMultipleDays(row.item)">
+                    {{ row.item.departure_at | date }} {{ row.item.departure_at | time }}<br>
+                    {{ computeReturnAt(row.item) | date }} {{ computeReturnAt(row.item) | time }}
+                  </span>
+                  <span v-else>
+                    {{ row.item.departure_at | date }}<br>
+                    {{ row.item.departure_at | time }} à {{ computeReturnAt(row.item) | time }}
+                  </span>
+                </template>
+                <template v-slot:cell(actions)="row">
+                  <div class="text-right">
+                    <b-button size="sm" :to="`/admin/loans/${row.item.id}`">
+                      {{ $t('modifier') | capitalize }}
+                    </b-button>
+                  </div>
+                </template>
+              </b-table>
+            </div>
 
-          <div class="form__section" v-if="!!item.id">
-            <h2>Compte</h2>
+            <div class="form__section" v-if="!!item.id">
+              <h2>Compte</h2>
 
-            <p><strong>Balance:</strong> {{ roundedBalance | currency }}</p>
+              <p><strong>Balance:</strong> {{ roundedBalance | currency }}</p>
 
-            <p v-if="false"><strong>Transactions</strong></p>
+              <p v-if="false"><strong>Transactions</strong></p>
 
-            <b-table v-if="false"
-              striped hover :items="item.transactions"
-              selectable select-mode="multi" @row-selected="transactionRowSelected"
-              :fields="transactionsTable" no-sort-reset
-              :show-empty="true" empty-text="Pas de transaction">
-              <template v-slot:cell(actions)="row">
-                <div class="text-right">
-                  <b-button size="sm" :to="`/admin/invoices/${row.item.id}`">
-                    {{ $t('modifier') | capitalize }}
-                  </b-button>
-                </div>
-              </template>
-            </b-table>
+              <b-table v-if="false"
+                striped hover :items="item.transactions"
+                selectable select-mode="multi" @row-selected="transactionRowSelected"
+                :fields="transactionsTable" no-sort-reset
+                :show-empty="true" empty-text="Pas de transaction">
+                <template v-slot:cell(actions)="row">
+                  <div class="text-right">
+                    <b-button size="sm" :to="`/admin/invoices/${row.item.id}`">
+                      {{ $t('modifier') | capitalize }}
+                    </b-button>
+                  </div>
+                </template>
+              </b-table>
 
-            <p><strong>Factures</strong></p>
+              <p><strong>Factures</strong></p>
 
-            <b-table
-              striped hover :items="item.invoices"
-              selectable select-mode="multi" @row-selected="invoiceRowSelected"
-              :fields="invoicesTable" no-sort-reset
-              :show-empty="true" empty-text="Pas de facture">
-              <template v-slot:cell(paid_at)="row">
-                {{ row.item.paid_at ? '✓' : '✗' }}
-              </template>
-              <template v-slot:cell(created_at)="row">
-                {{ row.item.created_at | date }}
-              </template>
-              <template v-slot:cell(total)="row">
-                {{ row.item.total | currency }}
-              </template>
-              <template v-slot:cell(total_with_taxes)="row">
-                {{ row.item.total_with_taxes | currency }}
-              </template>
-              <template v-slot:cell(actions)="row">
-                <div class="text-right">
-                  <b-button size="sm" :to="`/admin/invoices/${row.item.id}`">
-                    {{ $t('modifier') | capitalize }}
-                  </b-button>
-                </div>
-              </template>
-            </b-table>
-          </div>
+              <b-table
+                striped hover :items="item.invoices"
+                selectable select-mode="multi" @row-selected="invoiceRowSelected"
+                :fields="invoicesTable" no-sort-reset
+                :show-empty="true" empty-text="Pas de facture">
+                <template v-slot:cell(paid_at)="row">
+                  {{ row.item.paid_at ? '✓' : '✗' }}
+                </template>
+                <template v-slot:cell(created_at)="row">
+                  {{ row.item.created_at | date }}
+                </template>
+                <template v-slot:cell(total)="row">
+                  {{ row.item.total | currency }}
+                </template>
+                <template v-slot:cell(total_with_taxes)="row">
+                  {{ row.item.total_with_taxes | currency }}
+                </template>
+                <template v-slot:cell(actions)="row">
+                  <div class="text-right">
+                    <b-button size="sm" :to="`/admin/invoices/${row.item.id}`">
+                      {{ $t('modifier') | capitalize }}
+                    </b-button>
+                  </div>
+                </template>
+              </b-table>
+            </div>
 
-          <div class="form__buttons">
-            <b-button-group>
-              <b-button variant="success" type="submit" :disabled="!changed || loading">
-                Sauvegarder
-              </b-button>
-              <b-button type="reset" :disabled="!changed" @click="reset">
-                Réinitialiser
-              </b-button>
-            </b-button-group>
-          </div>
-        </b-form>
+            <div class="form__buttons">
+              <b-button-group>
+                <b-button variant="success" type="submit" :disabled="!changed || loading">
+                  Sauvegarder
+                </b-button>
+                <b-button type="reset" :disabled="!changed" @click="reset">
+                  Réinitialiser
+                </b-button>
+              </b-button-group>
+            </div>
+          </b-form>
+        </validation-observer>
       </b-col>
     </b-row>
   </b-container>
@@ -296,6 +298,9 @@ export default {
     },
   },
   methods: {
+    afterSubmit() {
+      this.$refs.passwordForm.reset();
+    },
     async approveBorrower(user) {
       await this.$store.dispatch(`${this.slug}/approveBorrower`, user.id);
     },
