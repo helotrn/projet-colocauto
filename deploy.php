@@ -14,12 +14,12 @@ add('shared_dirs', ['resources/app/node_modules']);
 
 add('writable_dirs', []);
 
-host('locomotion.app')
+host('vps.locomotion.app')
     ->stage('production')
     ->user('locomotion')
     ->set('deploy_path', '/var/www/locomotion.app');
 
-host('staging.locomotion.app')
+host('vps.locomotion.app')
     ->stage('staging')
     ->user('locomotion')
     ->set('deploy_path', '/var/www/staging.locomotion.app');
@@ -41,6 +41,20 @@ after('deploy:reload', 'deploy:reload:nginx');
 desc('Reload php-fpm');
 task('deploy:reload:php-fpm', function () {
     run('sudo /usr/sbin/service php7.3-fpm reload');
+});
+after('deploy:reload', 'deploy:reload:php-fpm');
+
+desc('Reload queue');
+task('deploy:reload:queue', function () {
+    $stage = input()->getArgument('stage');
+    switch ($stage) {
+        case 'production':
+            run('sudo /usr/sbin/service locomotion-queue reload');
+            break;
+        case 'staging':
+            run('sudo /usr/sbin/service locomotion-staging-queue reload');
+            break;
+    }
 });
 after('deploy:reload', 'deploy:reload:php-fpm');
 
