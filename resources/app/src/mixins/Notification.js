@@ -8,6 +8,7 @@ function displayNotifications(notifications) {
       toaster: 'b-toaster-top-right',
       variant: notification.variant,
       toastClass: notification.type,
+      noAutoHide: notification.variant === 'danger',
     });
     this.$store.commit('removeNotification', notification);
   });
