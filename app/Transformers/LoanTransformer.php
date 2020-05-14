@@ -22,6 +22,19 @@ class LoanTransformer extends BaseTransformer
             }
         }
 
+        if (isset($output['actions']) && isset($output['incidents'])) {
+            foreach ($output['incidents'] as $incident) {
+                for ($i = 0; $i < count($output['actions']); $i++) {
+                    $action = $output['actions'][$i];
+                    if ($action['type'] === 'incident' && $action['id'] === $incident['id']) {
+                        break;
+                    }
+                }
+
+                $output['actions'][$i] = array_merge($output['actions'][$i], $incident);
+            }
+        }
+
         foreach (['intention', 'pre_payment', 'takeover', 'handover'] as $key) {
             if (isset($output[$key]) && isset($output['actions'])) {
                 for ($i = 0; $i < count($output['actions']); $i++) {

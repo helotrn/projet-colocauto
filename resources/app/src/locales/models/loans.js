@@ -5,6 +5,10 @@ import loanables from './loanables';
 export default {
   fr: {
     'créer un emprunt': 'créer un emprunt',
+    descriptions: {
+      platform_tip: 'LocoMotion est un projet citoyen et collaboratif. Participez à son'
+        + 'développement en donnant une contribution volontaire.',
+    },
     emprunt: 'emprunt | emprunts',
     fields: {
       id: 'ID',
@@ -24,7 +28,7 @@ export default {
       loanable: loanables.fr.fields,
       loanable_type: 'type de véhicule',
       message_for_owner: 'message pour le propriétaire',
-      platform_tip: 'contribution volontaire',
+      platform_tip: 'contribution volontaire LocoMotion',
       price: 'prix',
       reason: "raison de l'utilisation",
       return_at: 'retour',

@@ -71,17 +71,17 @@
         <div class="form__section" v-if="loanable.type === 'bike'">
           <h2>Détails du vélo</h2>
 
-          <forms-builder :definition="form.bike" v-model="loanable" entity="loanables" />
+          <forms-builder :definition="form.bike" v-model="loanable" entity="bikes" />
         </div>
         <div class="form__section" v-else-if="loanable.type === 'car'">
           <h2>Détails de la voiture</h2>
 
-          <forms-builder :definition="form.car" v-model="loanable" entity="loanables" />
+          <forms-builder :definition="form.car" v-model="loanable" entity="cars" />
         </div>
         <div class="form__section" v-else-if="loanable.type === 'trailer'">
           <h2>Détails de la remorque</h2>
 
-          <forms-builder :definition="form.trailer" v-model="loanable" entity="loanables" />
+          <forms-builder :definition="form.trailer" v-model="loanable" entity="trailers" />
         </div>
         <div class="form__section text-center" v-else>
           <span>

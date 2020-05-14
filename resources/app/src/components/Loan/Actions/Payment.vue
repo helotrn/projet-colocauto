@@ -24,24 +24,12 @@
         :visible="open">
         <div v-if="!!action.executed_at">
           <p>L'emprunt s'est conclu avec succès!</p>
-
-          <p>Le montant final était {{ loan.final_price | currency }}.</p>
-
-          <p v-if="loan.final_insurance">
-            Le montant final de l'assurance était {{ loan.final_insurance | currency }}.
-          </p>
-
-          <p v-if="loan.final_platform_tip">
-            Vous avez contribué {{ loan.final_platform_tip | currency }} à LocoMotion.
-          </p>
         </div>
         <div v-else>
           <div v-if="userRole === 'owner'">
             <p>
-              Vous pouvez maintenant valider les données de la course.
-            </p>
-            <p>
-              L'emprunteur sera invité à faire de même avant d'effectuer le paiement final.
+              Validez dès maintenant les informations sur ce trajet:
+              le kilomètrage, la facture d'essence&hellip;
             </p>
 
             <hr>
@@ -52,43 +40,42 @@
           </div>
           <div v-if="userRole === 'borrower'" class="text-center">
             <p>
-              Vous pouvez maintenant valider les données de la course.
-            </p>
-            <p>
-              Le propriétaire sera invité à faire de même.
-            </p>
-
-            <hr>
-
-            <p>
-              Le prix de l'emprunt est de {{ loan.actual_price | currency }}.
-            </p>
-            <p v-if="loan.actual_insurance">
-              Le prix des assurances est de {{ loan.actual_insurance | currency }}.
+              Validez dès maintenant les informations sur votre trajet:
+              le kilomètrage, la facture d'essence&hellip;
             </p>
 
             <hr>
 
             <b-row>
               <b-col lg="6">
-                <forms-validated-input name="platform_tip"
-                  label="Montant pour LocoMotion"
-                  :rules="{ required: true }"
-                  type="number" :min="0" :step="0.01"
-                  placeholder="Montant pour LocoMotion"
-                  v-model="platformTip" />
+                <p>
+                  Coût final du trajet: {{ finalPrice | currency }}.
+                </p>
               </b-col>
 
               <b-col lg="6">
-                <p>
-                  LocoMotion est un projet citoyen et collaboratif.
-                  Les contributions volontaires financent son développement.
-                </p>
+                <div role="group" class="form-group">
+                  <label for="platform_tip" class="d-block" id="__BVID__151__BV_label_">
+                    {{ $t('fields.platform_tip') | capitalize }}
+                    <b-badge pill variant="light"
+                      v-b-popover.hover="$t('descriptions.platform_tip')">
+                      ?
+                    </b-badge>
+                  </label>
+
+                  <div class="bv-no-focus-ring">
+                    <b-form-input
+                      id="platform_tip" name="platform_tip"
+                      type="number" :step="0.01"
+                      v-model="platformTip" />
+                  </div>
+                </div>
               </b-col>
             </b-row>
 
             <div class="loan-actions-payment__buttons text-center">
-              <b-button size="sm" variant="success" class="mr-3" @click="completeAction">
+              <b-button size="sm" variant="success" class="mr-3"
+                @click="completeAction">
                 Accepter
               </b-button>
 
@@ -108,28 +95,40 @@ import FormsValidatedInput from '@/components/Forms/ValidatedInput.vue';
 
 import LoanActionsMixin from '@/mixins/LoanActionsMixin';
 
+import locales from '@/locales';
+
 export default {
   name: 'LoanActionsPrePayment',
   mixins: [LoanActionsMixin],
-  mounted() {
-    if (this.action.platform_tip === undefined) {
-      this.action.platform_tip = this.loan.platform_tip;
-    }
-  },
   components: {
     FormsValidatedInput,
   },
+  data() {
+    return {
+      platformTip: this.loan.platform_tip,
+    };
+  },
   computed: {
-    platformTip: {
-      get() {
-        if (this.action.platform_tip === undefined) {
-          return this.loan.platform_tip;
-        }
-
-        return this.action.platform_tip;
+    finalPrice() {
+      return this.loan.actual_price
+        + this.loan.actual_insurance
+        + parseFloat(this.platformTip, 10);
+    },
+  },
+  watch: {
+    platformTip(val) {
+      this.action.platform_tip = parseFloat(this.platformTip, 10);
+    },
+  },
+  i18n: {
+    messages: {
+      en: {
+        ...locales.en.loans,
+        ...locales.en.forms,
       },
-      set(val) {
-        this.action.platform_tip = val;
+      fr: {
+        ...locales.fr.loans,
+        ...locales.fr.forms,
       },
     },
   },

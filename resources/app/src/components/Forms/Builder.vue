@@ -1,6 +1,7 @@
 <template>
   <div class="forms-builder">
     <forms-validated-input v-for="(def, key) in definition" :key="key"
+      :description="descriptionOrNothing(key)"
       :label="$t(`${entity}.fields.${key}`) | capitalize"
       :name="key" :rules="def.rules" :type="def.type"
       :options="def.options" :disabled="disabled || def.disabled"
@@ -38,6 +39,13 @@ export default {
     },
   },
   methods: {
+    descriptionOrNothing(key) {
+      if (this.$i18n.te(`${this.entity}.descriptions.${key}`)) {
+        return this.$i18n.t(`${this.entity}.descriptions.${key}`)
+      }
+
+      return '';
+    },
     label(key) {
       return this.$i18n.t(`${this.entity}.fields.${key}`);
     },

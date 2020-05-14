@@ -58,6 +58,10 @@ export default {
       return `url('${avatar.sizes.thumbnail}')`;
     },
     userRole() {
+      if (this.user.role === 'admin') {
+        return 'admin';
+      }
+
       return this.user.id === this.owner.user.id ? 'owner' : 'borrower';
     },
   },

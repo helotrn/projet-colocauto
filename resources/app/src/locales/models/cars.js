@@ -1,5 +1,9 @@
 export default {
   fr: {
+    descriptions: {
+      report: "Faites part à votre voisinage de l'état de votre auto. Lorsque vous la partagerez, "
+        + 'vous pourrez vous appuyer sur ce document dans vos discussions. Gardez-le bien à jour!',
+    },
     engines: {
       fuel: 'essence',
       diesel: 'diesel',

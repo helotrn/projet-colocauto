@@ -3,7 +3,7 @@
     <div v-if="loading">
       <img src="/loading.svg">
     </div>
-    <div class="mb-3" v-else-if="!value">
+    <div v-else-if="!value">
       <b-form-file :value="value" :state="validationState" :id="field"
         :ref="`${field}fileinput`" :placeholder="placeholder" :disabled="disabled"
         :name="field" :accept="accept.join(',')" browse-text="Sélectionner"
@@ -131,12 +131,14 @@ export default {
 };
 </script>
 
-<style>
-.preview img {
-  max-width: 100%;
-}
+<style lang="scss">
+.forms-file-uploader {
+  .preview img {
+    max-width: 100%;
+  }
 
-.custom-file-label {
-  overflow: hidden;
+  .custom-file-label {
+    overflow: hidden;
+  }
 }
 </style>

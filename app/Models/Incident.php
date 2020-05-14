@@ -9,7 +9,10 @@ use Carbon\Carbon;
 class Incident extends Action
 {
     public static $rules = [
-        'incident_type' => 'required',
+        'incident_type' => [
+            'required',
+            'in:accident,small_incident',
+        ],
     ];
 
     protected $fillable = [

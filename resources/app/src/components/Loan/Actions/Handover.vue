@@ -35,10 +35,12 @@
                     v-model="action.image" />
 
                   <p><small>
-                    Cette photo doit indiquer le kilométrage et le niveau d'essence.
+                    On vous demande une preuve? Prenez une photo du tableau de bord de l'auto
+                    pour rentrer les bonnes informations (kilométrage, essence).
+                    Cette photo est facultative.
                   </small></p>
                 </b-col>
-                <b-col lg="6" v-else>
+                <b-col lg="6" v-else-if="action.image">
                   <a href="#" v-b-modal="'handover-image'">
                     <img :src="action.image ? action.image.sizes.thumbnail : ''">
                   </a>
@@ -76,7 +78,7 @@
                     Cette photo doit afficher le détails des dépenses.
                   </small></p>
                 </b-col>
-                <b-col lg="6" v-else>
+                <b-col lg="6" v-else-if="action.expense">
                   <a href="#" v-b-modal="'handover-expense'">
                     <img :src="action.expense ? action.expense.sizes.thumbnail : ''">
                   </a>
@@ -173,7 +175,7 @@
                   </small></p>
                 </b-col>
               </b-row>
-              <b-row v-else>
+              <b-row v-else-if="action.image">
                 <b-col>
                   <a href="#" v-b-modal="'handover-image'">
                     <img :src="action.image ? action.image.sizes.thumbnail : ''">

@@ -54,6 +54,16 @@
 
         <div v-if="loan.loanable.type === 'car'">
           <validation-observer ref="observer" v-slot="{ passes }">
+            <b-row v-if="userRole === 'borrower'">
+              <b-col>
+                <p>
+                  Avez-vous bien pris connaissance de l'état de cette auto?<br>
+                  Il est important de le faire avant de prendre en prendre possession.
+                  Ainsi, s'il arrive un pépin, vous allez être en mesure d'en discuter avec
+                  la personne propriétaire de l'auto.
+                </p>
+              </b-col>
+            </b-row>
             <b-form :novalidate="true" class="register-form__form"
               @submit.stop.prevent="passes(completeAction)">
               <b-row>
@@ -66,12 +76,12 @@
                     v-model="action.image" />
 
                   <p><small>
-                    Cette photo doit indiquer le kilométrage et le niveau d'essence. Elle est
-                    optionnelle mais représente la meilleur solution pour éviter toute
-                    ambiguïté.
+                    On vous demande une preuve? Prenez une photo du tableau de bord de l'auto
+                    pour rentrer les bonnes informations (kilométrage, essence).
+                    Cette photo est facultative.
                   </small></p>
                 </b-col>
-                <b-col lg="6" v-else>
+                <b-col lg="6" v-else-if="action.image">
                   <a href="#" v-b-modal="'takeover-image'">
                     <img :src="action.image ? action.image.sizes.thumbnail : ''">
                   </a>
@@ -130,7 +140,7 @@
                   </small></p>
                 </b-col>
               </b-row>
-              <b-row v-else>
+              <b-row v-else-if="action.image">
                 <b-col>
                   <a href="#" v-b-modal="'takeover-image'">
                     <img :src="action.image ? action.image.sizes.thumbnail : ''">
