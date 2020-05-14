@@ -74,7 +74,7 @@ export default {
     isAdmin() {
       return this.isLoggedIn && (
         this.user.role === 'admin'
-        || !!this.user.communities.find((c) => c.role === 'admin')
+        || !!this.user.communities.find(c => c.role === 'admin')
       );
     },
     isLoggedIn() {
