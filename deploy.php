@@ -62,7 +62,7 @@ task('deploy:reload:queue', function () {
             break;
     }
 });
-after('deploy:reload', 'deploy:reload:php-fpm');
+after('deploy:reload', 'deploy:reload:queue');
 
 desc('Build frontend application');
 task('deploy:build', function () {
