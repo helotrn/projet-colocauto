@@ -24,7 +24,7 @@ host('vps.locomotion.app')
     ->user('locomotion')
     ->set('deploy_path', '/var/www/staging.locomotion.app');
 
-host('staging.locomotion.app')
+host('demo.locomotion.app')
     ->stage('demo')
     ->user('locomotion')
     ->set('deploy_path', '/var/www/staging.locomotion.app');
