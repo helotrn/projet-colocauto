@@ -68,8 +68,14 @@ export default {
     hasWaitingLoans() {
       return this.waitingLoans.length > 0;
     },
-    isAdmin() {
+    isGlobalAdmin() {
       return this.isLoggedIn && this.user.role === 'admin';
+    },
+    isAdmin() {
+      return this.isLoggedIn && (
+        this.user.role === 'admin'
+        || !!this.user.communities.find((c) => c.role === 'admin')
+      );
     },
     isLoggedIn() {
       return !!this.user;

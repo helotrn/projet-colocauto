@@ -59,7 +59,10 @@
               :fields="userTable" no-sort-reset
               :show-empty="true" empty-text="Pas de membres">
               <template v-slot:cell(role)="row">
-                {{ (row.item.role || 'membre') | capitalize }}
+                <b-select :options="[
+                  { value: null, text: 'Membre' },
+                  { value: 'admin', text: 'Admin' }
+                ]" v-model="row.item.role" />
               </template>
               <template v-slot:cell(approved_at)="row">
                 <small class="muted" v-if="!row.item.approved_at">N/A</small>

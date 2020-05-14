@@ -18,6 +18,24 @@
             </div>
 
             <div class="form__section">
+              <h2>Administrateur global</h2>
+
+              <b-alert show variant="danger">
+                Attention! N'accordez pas le rôle d'administration globale à la légère:
+                un-e administrateur-rice global-e peut <strong>tout</strong> faire avec
+                un minimum de validations.
+              </b-alert>
+
+              <b-form-select
+                id="role" name="role"
+                :options="[
+                  { value: null, text: 'Régulier' },
+                  { value: 'admin', text: 'Admin global' }
+                ]"
+                v-model="item.role" />
+            </div>
+
+            <div class="form__section">
               <h2>Mot de passe</h2>
 
               <user-password-form :loading="loading" :is-admin="loggedInUserIsAdmin"

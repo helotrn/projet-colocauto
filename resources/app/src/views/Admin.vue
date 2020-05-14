@@ -3,7 +3,7 @@
     <b-row>
       <b-col class="admin__sidebar">
         <b-nav vertical>
-          <admin-sidebar />
+          <admin-sidebar :is-global-admin="isGlobalAdmin" />
         </b-nav>
       </b-col>
 
@@ -23,6 +23,11 @@ export default {
   name: 'Admin',
   mixins: [Authenticated],
   components: { AdminSidebar },
+  mounted() {
+    if (!this.isAdmin) {
+      this.$router.replace('/app');
+    }
+  },
 };
 </script>
 

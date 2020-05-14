@@ -1,19 +1,25 @@
 <template>
   <div class="admin-sidebar">
     <b-nav-item to="/admin">{{ $t('titles.dashboard') | capitalize }}</b-nav-item>
-    <b-nav-item to="/admin/communities">Communautés</b-nav-item>
+    <b-nav-item to="/admin/communities" v-if="isGlobalAdmin">Communautés</b-nav-item>
     <b-nav-item to="/admin/users">Membres</b-nav-item>
     <b-nav-item to="/admin/loanables">Véhicules</b-nav-item>
     <b-nav-item to="/admin/loans">Emprunts</b-nav-item>
-    <b-nav-item to="/admin/invoices">Factures</b-nav-item>
-    <b-nav-item to="/admin/padlocks">Cadenas</b-nav-item>
-    <b-nav-item to="/admin/tags">Mots-clés</b-nav-item>
+    <b-nav-item to="/admin/invoices" v-if="isGlobalAdmin">Factures</b-nav-item>
+    <b-nav-item to="/admin/padlocks" v-if="isGlobalAdmin">Cadenas</b-nav-item>
+    <b-nav-item to="/admin/tags" v-if="isGlobalAdmin">Mots-clés</b-nav-item>
   </div>
 </template>
 
 <script>
 export default {
   name: 'AdminSidebar',
+  props: {
+    isGlobalAdmin: {
+      required: true,
+      type: Boolean,
+    },
+  },
 };
 </script>
 

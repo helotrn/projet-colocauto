@@ -15,11 +15,15 @@ class UserRepository extends RestRepository
 
     public function create($data) {
         $this->model->fill($data);
-        if ($email = array_get($data, 'email')) {
-            $this->model->email = $email;
+
+        if (array_key_exists('email', $data)) {
+            $this->model->email = $data['email'];
         }
-        if ($password = array_get($data, 'password')) {
-            $this->model->password = $password;
+        if (array_key_exists('password', $data)) {
+            $this->model->password = $data['password'];
+        }
+        if (array_key_exists('role', $data)) {
+            $this->model->role = $data['role'];
         }
 
         $this->model->save();
@@ -29,6 +33,36 @@ class UserRepository extends RestRepository
         $this->model->save();
 
         return $this->model;
+    }
+
+    public function update($request, $id, $data) {
+        $query = $this->model;
+
+        if (method_exists($query, 'scopeAccessibleBy')) {
+            $query = $query->accessibleBy($request->user());
+        }
+
+        $this->model = $query->findOrFail($id);
+
+        $this->model->fill($data);
+
+        if (array_key_exists('email', $data)) {
+            $this->model->email = $data['email'];
+        }
+        if (array_key_exists('password', $data)) {
+            $this->model->password = $data['password'];
+        }
+        if (array_key_exists('role', $data)) {
+            $this->model->role = $data['role'];
+        }
+
+        $this->model->save();
+
+        $this->saveRelations($data);
+
+        $this->model->save();
+
+        return $this->model->find($id);
     }
 
     public function updatePassword($request, $id, $newPassword) {

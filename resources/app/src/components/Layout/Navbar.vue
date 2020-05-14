@@ -80,7 +80,7 @@
         </b-nav-item>
 
         <b-nav-item-dropdown class="layout-navbar__admin" text="Admin" right v-if="isAdmin">
-          <admin-sidebar />
+          <admin-sidebar :is-global-admin="isGlobalAdmin" />
         </b-nav-item-dropdown>
 
         <locale-switcher />
