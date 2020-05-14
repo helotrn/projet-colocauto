@@ -7,6 +7,8 @@ use Illuminate\Contracts\Validation\Rule;
 
 class PricingRule implements Rule
 {
+    protected $message;
+
     public function passes($attribute, $value) {
         $lines = explode("\n", $value);
 
@@ -15,16 +17,18 @@ class PricingRule implements Rule
                 Pricing::evaluateRuleLine($line, [
                     'km' => 1,
                     'minutes' => 1,
-                    'object' => [
+                    'loanable' => (object) [
                         'pricing_category' => 'large',
+                        'year_of_circulation' => 1999,
                     ],
-                    'loan' => [
+                    'loan' => (object) [
                         'days' => 1,
-                        'start' => Pricing::dateToDataArray('now'),
-                        'end' => Pricing::dateToDataArray('+ 1 hour'),
+                        'start' => (object) Pricing::dateToDataArray('now'),
+                        'end' => (object) Pricing::dateToDataArray('+ 1 hour'),
                     ],
                 ]);
             } catch (\Exception $e) {
+                $this->message = $this->rebuildMessage($e->getMessage());
                 return false;
             }
         }
@@ -37,6 +41,22 @@ class PricingRule implements Rule
     }
 
     public function message() {
-        return 'The :attribute is invalid.';
+        return $this->message ?: 'The :attribute is invalid.';
+    }
+
+    private function rebuildMessage($message) {
+        $message = str_replace('km', '$KM', $message);
+        $message = str_replace('minutes', '$MINUTES', $message);
+        $message = str_replace('loanable', '$OBJET', $message);
+        $message = str_replace('loan', '$EMPRUNT', $message);
+
+        $message = str_replace(' !', ' NON ', $message);
+        $message = str_replace(' or ', ' OU ', $message);
+        $message = str_replace(' and ', ' ET ', $message);
+
+        $message = str_replace(' not in ', ' PAS DANS ', $message);
+        $message = str_replace(' in ', ' DANS ', $message);
+
+        return $message;
     }
 }
