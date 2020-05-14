@@ -96,7 +96,9 @@
 
               <ol>
                 <li>Prévenez le-la propriétaire</li>
-                <li>Le-la propriétaire communiquera avec Desjardins Assurances pour ouvrir un dossier</li>
+                <li>
+                  Le-la propriétaire communiquera avec Desjardins Assurances pour ouvrir un dossier
+                </li>
                 <li>
                   LocoMotion transmet à Desjardins Assurances les renseignements nécessaires sur
                   votre inscription à LocoMotion et sur la réservation de la voiture.

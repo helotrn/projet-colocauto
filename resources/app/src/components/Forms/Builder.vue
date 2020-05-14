@@ -41,7 +41,7 @@ export default {
   methods: {
     descriptionOrNothing(key) {
       if (this.$i18n.te(`${this.entity}.descriptions.${key}`)) {
-        return this.$i18n.t(`${this.entity}.descriptions.${key}`)
+        return this.$i18n.t(`${this.entity}.descriptions.${key}`);
       }
 
       return '';

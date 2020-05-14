@@ -91,8 +91,6 @@
 </template>
 
 <script>
-import FormsValidatedInput from '@/components/Forms/ValidatedInput.vue';
-
 import LoanActionsMixin from '@/mixins/LoanActionsMixin';
 
 import locales from '@/locales';
@@ -100,9 +98,6 @@ import locales from '@/locales';
 export default {
   name: 'LoanActionsPrePayment',
   mixins: [LoanActionsMixin],
-  components: {
-    FormsValidatedInput,
-  },
   data() {
     return {
       platformTip: this.loan.platform_tip,
@@ -117,7 +112,7 @@ export default {
   },
   watch: {
     platformTip(val) {
-      this.action.platform_tip = parseFloat(this.platformTip, 10);
+      this.action.platform_tip = parseFloat(val, 10);
     },
   },
   i18n: {
