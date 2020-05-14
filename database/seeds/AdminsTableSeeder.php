@@ -14,7 +14,7 @@ class AdminsTableSeeder extends Seeder
             ],
         ];
 
-        foreach ($users as $email => $data) {
+        foreach ($admins as $email => $data) {
             $data = array_merge($data, [
                 'email' => $email,
                 'password' => Hash::make(array_get($data, 'password', md5(rand(1, 100000)))),
