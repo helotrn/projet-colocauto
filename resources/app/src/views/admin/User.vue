@@ -2,7 +2,7 @@
   <b-container fluid v-if="item">
     <b-row>
       <b-col>
-        <h1 v-if="item.name">{{ item.name }}</h1>
+        <h1 v-if="item.name || item.last_name">{{ item.name }} {{ item.last_name }}</h1>
         <h1 v-else><em>{{ $tc('membre', 1) | capitalize }}</em></h1>
       </b-col>
     </b-row>

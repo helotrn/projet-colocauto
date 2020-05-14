@@ -12,11 +12,11 @@
         <forms-validated-input mode="lazy" name="new_password" :label="$t('new_password')"
           :rules="{ required: !user.id, min: 8 }" type="password"
           :placeholder="$t('new_password')" description="Minimum 8 caractères"
-          v-model="user.password" />
+          v-model="newPassword" />
 
         <forms-validated-input mode="lazy"
           name="new_password_repeat" :label="$t('new_password_repeat')"
-          :rules="{ required: !user.id, is: user.password }" type="password"
+          :rules="{ required: !user.id, is: newPassword }" type="password"
           :placeholder="$t('new_password_repeat')"
           v-model="newPasswordRepeat" />
 
@@ -63,6 +63,7 @@ export default {
   data() {
     return {
       currentPassword: '',
+      newPassword: '',
       newPasswordRepeat: '',
     };
   },
@@ -81,9 +82,12 @@ export default {
       this.newPasswordRepeat = '';
     },
   },
-  reset() {
-    this.currentPassword = '';
-    this.newPasswordRepeat = '';
+  watch: {
+    newPassword(val) {
+      if (!this.user.id) {
+        this.user.password = val;
+      }
+    },
   },
 };
 </script>

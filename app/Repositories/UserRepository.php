@@ -20,7 +20,7 @@ class UserRepository extends RestRepository
             $this->model->email = $data['email'];
         }
         if (array_key_exists('password', $data)) {
-            $this->model->password = $data['password'];
+            $this->model->password = Hash::make($data['password']);
         }
         if (array_key_exists('role', $data)) {
             $this->model->role = $data['role'];
@@ -50,7 +50,7 @@ class UserRepository extends RestRepository
             $this->model->email = $data['email'];
         }
         if (array_key_exists('password', $data)) {
-            $this->model->password = $data['password'];
+            $this->model->password = Hash::make($data['password']);
         }
         if (array_key_exists('role', $data)) {
             $this->model->role = $data['role'];
