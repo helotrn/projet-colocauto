@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 
-	<title>État du service - Locomotion</title>
+	<title>État du service - LocoMotion</title>
 </head>
 
 <body>

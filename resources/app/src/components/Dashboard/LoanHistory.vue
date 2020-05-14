@@ -37,11 +37,11 @@
       </ul>
     </div>
     <div v-else class="dashboard-loan-history__loans">
-      <p class="muted">Aucun historique d'emprunt.</p>
+      <p class="muted">Aucun trajet.</p>
     </div>
 
     <p class="dashboard-loan-history__link">
-      <router-link to="/profile/loans">Voir tout l'historique</router-link>
+      <router-link to="/profile/loans">Voir tous les trajets</router-link>
     </p>
   </div>
 </template>
@@ -93,15 +93,15 @@ export default {
     widgetTitle() {
       switch (this.loanHistoryType) {
         case 'upcoming':
-          return 'Emprunts à venir';
+          return 'Trajets à venir';
         case 'waiting':
-          return 'Nouveaux emprunts';
+          return 'Nouveaux trajets';
         case 'ongoing':
-          return 'Emprunts en cours';
+          return 'Trajets en cours';
         case 'past':
-          return 'Emprunts passés';
+          return 'Trajets passés';
         default:
-          return "Historique d'emprunts";
+          return 'Mes trajets';
       }
     },
   },

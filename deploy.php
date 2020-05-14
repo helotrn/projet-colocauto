@@ -3,7 +3,7 @@ namespace Deployer;
 
 require 'recipe/laravel.php';
 
-set('application', 'Locomotion');
+set('application', 'LocoMotion');
 
 set('repository', 'git@gitlab.com:Solon-collectif/locomotion.app.git');
 

@@ -18,7 +18,7 @@ export default new RestModule('communities', {
     'area_google',
   ],
 }, {
-  async setAmbassador({ commit }, { communityId, tagId, userId }) {
+  async setCommittee({ commit }, { communityId, tagId, userId }) {
     try {
       const ajax = Vue.axios.put(`/communities/${communityId}`
         + `/users/${userId}/tags/${tagId}`);
@@ -37,7 +37,7 @@ export default new RestModule('communities', {
       throw e;
     }
   },
-  async unsetAmbassador({ commit }, { communityId, tagId, userId }) {
+  async unsetCommittee({ commit }, { communityId, tagId, userId }) {
     try {
       const ajax = Vue.axios.delete(`/communities/${communityId}`
         + `/users/${userId}/tags/${tagId}`);

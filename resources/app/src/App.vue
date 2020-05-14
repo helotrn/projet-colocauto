@@ -8,7 +8,7 @@
 import Notification from '@/mixins/Notification';
 
 export default {
-  name: 'Locomotion',
+  name: 'LocoMotion',
   mixins: [Notification],
 };
 </script>

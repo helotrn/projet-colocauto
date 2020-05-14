@@ -74,7 +74,8 @@
         Cette personne devrait entrer en contact avec vous sous peu.
       </p>
       <p class="loan-info-box__instructions muted" v-else>
-        Par convention, il est de votre responsabilité de contacter cette personne.
+        La demande est envoyée! Maintenant contactez la personne propriétaire
+        pour valider votre demande.
       </p>
     </div>
   </div>

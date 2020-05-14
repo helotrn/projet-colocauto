@@ -5,49 +5,15 @@
         <h1>{{ $t('Bienvenue, {name}', { name: user.name })}}</h1>
 
         <section class="page__section">
-          <b-jumbotron bg-variant="warning"
-            header="Mise-à-jour COVID-19" lead="LocoMotion est avec vous">
-            <b-button v-b-modal="'covid-modal'">En savoir plus</b-button>
-          </b-jumbotron>
-
-          <b-modal size="md" class="covid-modal"
-            title="COVID-19: Quelques informations importantes"
-            id="covid-modal" footer-class="d-none">
-            <p class="covid-modal__subtitle">VOUS ÊTES MALADE OU VOUS REVENEZ DE VOYAGE?</p>
-            <p>→  N’UTILISEZ PAS LOCOMOTION</p>
-
-            <p class="covid-modal__subtitle">POUR LES PROPRIÉTAIRES D'AUTO</p>
-            <p>
-              Si vous souhaitez retirer temporairement votre auto,
-              pensez à mettre à jour votre calendrier.
-            </p>
-
-            <p class="covid-modal__subtitle">POUR TOU-TE-S LES PARTICIPANT-E-S</p>
-            <p>
-              Avant et après l’utilisation d’une voiture, LAVEZ VOS MAINS à l’eau courante
-              tiède et au savon pendant au moins 20 secondes ou utilisez un désinfectant à
-              base d’alcool.
-            </p>
-
-            <p class="covid-modal__subtitle">GARDEZ LES AUTOS PROPRES</p>
-            <p>
-              Que ce soit votre autre ou celle de votre voisin-e, voici quelques
-              recommandations à prendre avant et après son utilisation:
-            </p>
-            <ul>
-              <li>
-                Nettoyez le volant et autres surfaces avec un linge et du désinfectant.
-              </li>
-              <li>
-                Évitez plus que jamais de laisser tout déchet
-                (mouchoir, tasse, emballage, etc…)
-              </li>
-            </ul>
-          </b-modal>
+          <dashboard-covid-section />
         </section>
 
         <section class="page__section" v-if="!hasCompletedRegistration">
-          <b-button to="/register">Compléter l'inscription</b-button>
+          <b-jumbotron bg-variant="light"
+            header="Inscription"
+            :lead="$t('lead_text')">
+            <b-button to="/register">Compléter l'inscription</b-button>
+          </b-jumbotron>
         </section>
 
         <section class="page__section" v-if="hasTutorials">
@@ -154,6 +120,8 @@
 <i18n>
 fr:
   'Bienvenue, {name}': Bienvenue, {name}
+  lead_text: |
+    Vous y êtes presque. Il ne vous manque que quelques étapes, pour prendre la route!
 en:
   'Bienvenue, {name}': Welcome, {name}
 </i18n>
@@ -162,6 +130,7 @@ en:
 import Authenticated from '@/mixins/Authenticated';
 
 import DashboardBalance from '@/components/Dashboard/Balance.vue';
+import DashboardCovidSection from '@/components/Dashboard/CovidSection.vue';
 import LoanInfoBox from '@/components/Loan/InfoBox.vue';
 import LoanableInfoBox from '@/components/Loanable/InfoBox.vue';
 import DashboardLoanHistory from '@/components/Dashboard/LoanHistory.vue';
@@ -173,6 +142,7 @@ export default {
   mixins: [Authenticated],
   components: {
     DashboardBalance,
+    DashboardCovidSection,
     LoanInfoBox,
     LoanableInfoBox,
     DashboardLoanHistory,

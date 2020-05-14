@@ -304,7 +304,7 @@ class UserController extends RestController
                 'amount' => $amountWithFeeInCents,
                 'currency' => 'cad',
                 'customer' => $user->getStripeCustomer()->id,
-                'description' => "Ajout au compte Locomotion: "
+                'description' => "Ajout au compte LocoMotion: "
                     . "{$amount}$ + {$fee}$ (frais)",
             ]);
         } catch (\Exception $e) {
@@ -324,7 +324,7 @@ class UserController extends RestController
             $invoice->save();
 
             $invoice->billItems()->create([
-                'label' => "Ajout au compte Locomotion: "
+                'label' => "Ajout au compte LocoMotion: "
                     . "{$amount}$ + {$fee}$ (frais)",
                 'amount' => $amountWithFee,
                 'item_date' => date('Y-m-d'),

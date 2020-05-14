@@ -235,7 +235,7 @@ class LoanableController extends RestController
                     'location_description' => [
                         'type' => 'textarea',
                         'description' => 'Des indications qui pourraient aider les autres'
-                         . ' membres de Locomotion à retrouver ce véhicule.',
+                         . ' membres de LocoMotion à retrouver ce véhicule.',
                     ],
                     'comments' => [
                         'type' => 'textarea',

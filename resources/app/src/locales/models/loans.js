@@ -24,7 +24,7 @@ export default {
       loanable: loanables.fr.fields,
       loanable_type: 'type de véhicule',
       message_for_owner: 'message pour le propriétaire',
-      platform_tip: 'don pour LocoMotion',
+      platform_tip: 'contribution volontaire',
       price: 'prix',
       reason: "raison de l'utilisation",
       return_at: 'retour',

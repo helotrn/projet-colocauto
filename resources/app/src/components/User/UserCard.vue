@@ -4,18 +4,18 @@
       <b-col class="user-card__content__avatar" :style="{ backgroundImage: userAvatarStyle }" />
       <b-col class="user-card__content__details">
         <div>
-          <i>Membre Locomotion</i>
+          <i>Membre LocoMotion</i>
 
           <h3>{{ user.full_name }}</h3>
 
           <p>{{ user.description }}</p>
 
           <div v-if="isAdmin && communityId" class="user-card__admin-actions">
-            <a href="#" @click.prevent="unsetAmbassador" v-if="isAmbassador">
-              Désaffecter comme ambassadeur.rice
+            <a href="#" @click.prevent="unsetCommittee" v-if="isCommittee">
+              Désaffecter du comité du voisinage
             </a>
-            <a href="#" @click.prevent="setAmbassador" v-else>
-              Affecter comme ambassadeur.rice
+            <a href="#" @click.prevent="setCommittee" v-else>
+              Affecter au comité du voisinage
             </a>
           </div>
         </div>
@@ -23,7 +23,7 @@
     </b-row>
     <div class="user-card__tags">
       <b-badge pill variant="warning" v-if="user.owner">P</b-badge>
-      <b-badge pill variant="success" v-if="isAmbassador">A</b-badge>
+      <b-badge pill variant="success" v-if="isCommittee">C</b-badge>
     </div>
   </b-card>
 </template>
@@ -48,11 +48,11 @@ export default {
     },
   },
   computed: {
-    ambassadorTag() {
-      return this.$store.state.global.tags.find(t => t.slug === 'ambassador');
+    committeeTag() {
+      return this.$store.state.global.tags.find(t => t.slug === 'committee');
     },
-    isAmbassador() {
-      return this.user.tags.find(t => t.slug === 'ambassador');
+    isCommittee() {
+      return this.user.tags.find(t => t.slug === 'committee');
     },
     userAvatarStyle() {
       if (!this.user.avatar) {
@@ -63,18 +63,18 @@ export default {
     },
   },
   methods: {
-    async setAmbassador() {
-      await this.$store.dispatch('communities/setAmbassador', {
+    async setCommittee() {
+      await this.$store.dispatch('communities/setCommittee', {
         communityId: this.communityId,
-        tagId: this.ambassadorTag.id,
+        tagId: this.committeeTag.id,
         userId: this.user.id,
       });
       this.$emit('updated');
     },
-    async unsetAmbassador() {
-      await this.$store.dispatch('communities/unsetAmbassador', {
+    async unsetCommittee() {
+      await this.$store.dispatch('communities/unsetCommittee', {
         communityId: this.communityId,
-        tagId: this.ambassadorTag.id,
+        tagId: this.committeeTag.id,
         userId: this.user.id,
       });
       this.$emit('updated');

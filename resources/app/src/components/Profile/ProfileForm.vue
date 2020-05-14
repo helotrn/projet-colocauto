@@ -43,7 +43,7 @@
 
         <b-alert variant="warning" show>
           À partir d'ici, les données que vous entrez seront uniquement partagées avec
-          l'équipe de Locomotion ou si vous mettez vos véhicules à disposition de la
+          l'équipe de LocoMotion ou si vous mettez vos véhicules à disposition de la
           communauté.<br>
           Consultez notre <router-link to="/privacy">politique de confidentialité</router-link>.
         </b-alert>

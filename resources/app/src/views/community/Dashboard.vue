@@ -8,13 +8,13 @@
       <b-row>
         <b-col lg="3">
           <nav>
-            <a href="#mes-voisins" v-if="community.users">Mes voisins</a><br>
+            <a href="#voisinage" v-if="community.users" class="no-break">Mes voisin-e-s</a><br>
           </nav>
         </b-col>
 
         <b-col lg="9">
           <div class="page__section" v-if="community.users">
-            <h2 id="mes-voisins">Mes voisins</h2>
+            <h2 id="voisinage">Mon voisinage</h2>
 
             <div class="community__users-legend">
               <span>
@@ -22,8 +22,8 @@
                 <span>Propriétaire de véhicule</span>
               </span>
               <span>
-                <b-badge pill variant="success">A</b-badge>
-                <span>Ambassadeur.rice de la communauté</span>
+                <b-badge pill variant="success">C</b-badge>
+                <span>Comité du voisinage</span>
               </span>
             </div>
 

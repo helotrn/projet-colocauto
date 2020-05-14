@@ -2,7 +2,7 @@
   <div class="profile-borrower" v-if="item">
     <b-alert variant="warning" show>
       Les informations ci-contre ne sont requises que si vous désirez emprunter des voitures.<br>
-      Celles-ci ne seront accessibles que par l'équipe de Locomotion ou les représentants
+      Celles-ci ne seront accessibles que par l'équipe de LocoMotion ou les représentants
       des assurances Desjardins.<br>
       Consultez notre <router-link to="/privacy">politique de confidentialité</router-link>.
     </b-alert>

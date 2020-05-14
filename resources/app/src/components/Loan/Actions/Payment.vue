@@ -81,7 +81,8 @@
 
               <b-col lg="6">
                 <p>
-                  Montant pour LocoMotion
+                  LocoMotion est un projet citoyen et collaboratif.
+                  Les contributions volontaires financent son développement.
                 </p>
               </b-col>
             </b-row>

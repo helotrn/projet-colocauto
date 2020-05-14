@@ -24,6 +24,10 @@
       <svg-wave-desktop class="wave-svg d-none d-lg-block" />
     </section>
 
+    <section>
+      <dashboard-covid-section />
+    </section>
+
     <section class="page__section page__section--hero">
       <b-col>
         <div class="page__section__content">
@@ -113,7 +117,7 @@
             </p>
 
             <b-button size="lg" variant="outline-light" to="/communities">
-              Situer les voisinnages Locomotion
+              Situer les voisinnages LocoMotion
             </b-button>
           </b-col>
         </b-row>
@@ -249,6 +253,7 @@
 </template>
 
 <script>
+import DashboardCovidSection from '@/components/Dashboard/CovidSection.vue';
 import HomeFaqItem from '@/components/Home/FaqItem.vue';
 
 import DataRouteGuards from '@/mixins/DataRouteGuards';
@@ -273,6 +278,7 @@ export default {
   name: 'Home',
   mixins: [DataRouteGuards],
   components: {
+    DashboardCovidSection,
     HomeFaqItem,
     'svg-borrow': Borrow,
     'svg-city-desktop': CityDesktop,

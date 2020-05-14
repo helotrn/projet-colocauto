@@ -36,6 +36,14 @@
     @include font-size(18px, "", "", 20px);
   }
 
+  .dashboard-covid-section {
+    text-align: center;
+
+    p {
+      color: inherit;
+    }
+  }
+
   .page__section--top {
     height: calc(100vh - #{$layout-navbar-height});
     min-height: 604px;
@@ -47,6 +55,8 @@
     position: relative;
     overflow: hidden;
     @include space("padding-bottom", 122px, "", "", 80px);
+
+    margin-bottom: 0;
 
     .page__section__title {
       color: $white;

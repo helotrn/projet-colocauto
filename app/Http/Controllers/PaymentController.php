@@ -119,7 +119,7 @@ class PaymentController extends RestController
                 'taxes_tvq' => 0,
             ] : null,
             'platform_tip' => $platformTip ? [
-                'label' => "Frais de plateforme pour l'emprunt de $object le $prettyDate",
+                'label' => "Contribution volontaire pour l'emprunt de $object le $prettyDate",
                 'amount' => round($platformTip / 1.14975, 2),
                 'item_date' => date('Y-m-d'),
                 'taxes_tps' => round(($platformTip / 1.14975) * 0.05, 2),

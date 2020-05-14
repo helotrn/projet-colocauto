@@ -12,8 +12,8 @@
         </router-link>
       </li>
 
-      <li class="dashboard-resources-list__resources__ambassadors" v-if="hasCommunity">
-        <router-link to="/community?tag=ambassador">
+      <li class="dashboard-resources-list__resources__committee" v-if="hasCommunity">
+        <router-link to="/community?tag=committee">
           <img src="/icons/allo.png">
           <span>
             Motiver son quartier
@@ -28,12 +28,20 @@
       </li>
 
       <li class="dashboard-resources-list__resources__messenger">
-        <a href="https://facebook.com" target="_blank">
+        <div>
           <img src="/icons/messenger.png">
           <span>
             Discuter avec son voisinage
           </span>
-        </a>
+        </div>
+
+        <div class="dashboard-resources-list__resources__messenger__list">
+          <ul>
+            <li><a href="https://m.me/join/AbYKAXEN1zNM-SYv" target="_blank">Bellechasse</a></li>
+            <li><a href="https://m.me/join/Abblub9IWQl1Xz7Y" target="_blank">Masson</a></li>
+            <li><a href="https://m.me/join/AbYnbYDmbGzYdwzc" target="_blank">Papineau</a></li>
+          </ul>
+        </div>
       </li>
     </ul>
   </div>
@@ -64,7 +72,7 @@ export default {
     padding: 0;
     margin: 0;
 
-    li > a {
+    li > a, li > div {
       color: $black;
 
       &, &:hover, &:active, &:focus {
@@ -85,6 +93,16 @@ export default {
       &.dashboard-resources-list__resources__desjardins img {
         margin-right: 0;
         flex: 1 0 100%;
+      }
+
+      &.dashboard-resources-list__resources__messenger {
+        &__list {
+          margin-top: 0;
+
+          a {
+            margin-top: 0;
+          }
+        }
       }
 
       span {

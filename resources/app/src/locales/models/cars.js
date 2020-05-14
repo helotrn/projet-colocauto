@@ -16,7 +16,7 @@ export default {
       papers_location: 'emplacement des papiers',
       plate_number: 'numéro de plaque',
       pricing_category: 'catégorie',
-      report: "rapport d'inspection",
+      report: "fiche - état de l'auto",
       transmission_mode: 'transmission',
       year_of_circulation: 'année de circulation',
     },

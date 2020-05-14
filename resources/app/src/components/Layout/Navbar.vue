@@ -41,14 +41,14 @@
           <span class="nav-link__icon d-lg-none">
             <svg-location />
           </span>
-          <span class="nav-link__text">Trouve un véhicule</span>
+          <span class="nav-link__text">Trouver un véhicule</span>
         </b-nav-item>
 
         <b-nav-item to="/community" v-if="hasCommunity">
           <span class="nav-link__icon d-lg-none">
             <svg-hand />
           </span>
-          <span class="nav-link__text">Communauté</span>
+          <span class="nav-link__text">Voisinage</span>
         </b-nav-item>
 
         <b-nav-item to="/register" v-if="!isAdmin && !hasCompletedRegistration">

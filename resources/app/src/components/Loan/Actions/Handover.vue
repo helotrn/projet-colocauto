@@ -168,7 +168,7 @@
                     v-model="action.image" />
 
                   <p><small>
-                    Cette photo est optionnelle mais permet à Locomotion de déterminer à quel
+                    Cette photo est optionnelle mais permet à LocoMotion de déterminer à quel
                     moment un bris s'est produit, le cas échéant.
                   </small></p>
                 </b-col>
@@ -243,7 +243,7 @@
               </p>
               <p>
                 Pour la modifier, vous pouvez procéder
-                à une "contestation". Par cette procédure, un membre de l'équipe Locomotion
+                à une "contestation". Par cette procédure, un membre de l'équipe LocoMotion
                 sera appelé à arbitrer la résolution du conflit entre l'emprunteur et le
                 propriétaire.
               </p>

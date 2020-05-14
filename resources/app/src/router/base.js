@@ -46,7 +46,7 @@ export default [
     name: 'help',
     component: Help,
     meta: {
-      title: 'Aide de Locomotion',
+      title: 'Aide de LocoMotion',
     },
   },
 ];

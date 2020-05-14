@@ -9,13 +9,13 @@ class TagsTableSeeder extends Seeder
         $tags = [
             [
                 'id' => 1,
-                'name' => 'Ambassadeur.rice de la communauté',
-                'slug' => 'ambassador',
+                'name' => 'Comité du voisinage',
+                'slug' => 'committee',
                 'type' => 'tag',
             ],
             [
                 'id' => 2,
-                'name' => 'Pionnier.ère Locomotion',
+                'name' => 'Pionnier.ère LocoMotion',
                 'slug' => 'early_adopter',
                 'type' => 'tag',
             ],

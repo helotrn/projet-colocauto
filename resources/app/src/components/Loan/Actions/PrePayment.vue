@@ -30,11 +30,8 @@
             </p>
           </div>
           <div v-else>
-            <p v-if="user.balance < (loan.estimated_price + loan.estimated_insurance)">
-              Vous devez ajouter des crédits à votre compte.
-            </p>
-            <p v-else>
-              Vous pouvez ajouter des crédits à votre compte.
+            <p>
+              Utilisez votre solde ou payez directement.
             </p>
 
             <user-add-credit-box

@@ -21,6 +21,37 @@
     <b-card-body>
       <b-collapse id="loan-actions-takeover" role="tabpanel" accordion="loan-actions"
         :visible="open">
+        <b-row>
+          <b-col>
+            <b-jumbotron bg-variant="warning"
+              header="COVID-19 | Informations"
+              lead="Vous êtes malade ou vous revenez de voyage? N'utilisez pas LocoMotion">
+              <dl>
+                <dt>Pour les propriétaires d'auto</dt>
+                <dd>
+                  Si vous souhaitez retirer temporairement votre auto,
+                  pensez à mettre à jour ses disponibilités.
+                </dd>
+
+                <dt>Pour tout le monde</dt>
+                <dd>
+                  Avant et après l’utilisation d’un vélo, d'une remorque ou d'une auto,
+                  <strong>lavez vos mains</strong> à l’eau courante tiède et au savon pendant
+                  au moins 20 secondes ou utilisez un désinfectant à base d’alcool.<br>
+                  Pendant un trajet à vélo, respectez les 2 mètres de distance.
+                </dd>
+
+                <dt>Gardez les véhicules propres</dt>
+                <dd>
+                  Nettoyez le volant, le guidon ou toutes autres surfaces de contact
+                  avec un linge et du désinfectant. Évitez plus que jamais de laisser tout
+                  déchet dans les autos et les remorques  (mouchoir, tasse, emballage, etc…).
+                </dd>
+              </dl>
+            </b-jumbotron>
+          </b-col>
+        </b-row>
+
         <div v-if="loan.loanable.type === 'car'">
           <validation-observer ref="observer" v-slot="{ passes }">
             <b-form :novalidate="true" class="register-form__form"
@@ -94,7 +125,7 @@
                     v-model="action.image" />
 
                   <p><small>
-                    Cette photo est optionnelle mais permet à Locomotion de déterminer à quel
+                    Cette photo est optionnelle mais permet à LocoMotion de déterminer à quel
                     moment un bris s'est produit, le cas échéant.
                   </small></p>
                 </b-col>
@@ -169,7 +200,7 @@
               </p>
               <p>
                 Pour la modifier, vous pouvez procéder
-                à une "contestation". Par cette procédure, un membre de l'équipe Locomotion
+                à une "contestation". Par cette procédure, un membre de l'équipe LocoMotion
                 sera appelé à arbitrer la résolution du conflit entre l'emprunteur et le
                 propriétaire.
               </p>

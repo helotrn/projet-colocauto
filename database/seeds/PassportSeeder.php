@@ -14,7 +14,7 @@ INSERT INTO oauth_clients
     created_at, updated_at)
 VALUES (
     'pTrmRvquBD6mXlep',
-    'Locomotion Password Grant Client',
+    'LocoMotion Password Grant Client',
     '1hu8xmgtXI8O6HRH4zIbRt92X6rSLCgY6NtTNyxN',
     'http://localhost',
     false,

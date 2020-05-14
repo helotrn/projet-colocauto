@@ -7,7 +7,8 @@
         <p><b-form-radio-group v-model="selectedAmount" :options="amounts" buttons /></p>
 
         <p v-if="selectedAmount === 'other'" class="user-add-credit-box__add__custom">
-          <b-form-input v-model="customAmount" />
+          <b-form-input type="number" :min="minimumRequired" :step="0.01"
+            v-model="customAmount" />
         </p>
 
         <p>
@@ -18,7 +19,7 @@
       </b-col>
 
       <b-col class="user-add-credit-box__balance">
-        <p>Vous avez actuellement</p>
+        <p>Solde</p>
 
         <p class="user-add-credit-box__balance__initial">{{ user.balance | currency }}</p>
       </b-col>
@@ -44,8 +45,7 @@
 
       <b-col class="user-add-credit-box__explanations">
         <p>
-          Plus vous mettez d'argent, plus vous économisez sur les frais de transaction
-          (carte de crédit)
+          Approvisionnez votre compte pour économiser sur les frais de transaction.
         </p>
       </b-col>
     </b-row>
@@ -68,7 +68,7 @@ export default {
   name: 'UserAddCreditBox',
   data() {
     return {
-      customAmount: this.minimumRequired ? (this.floatMinimumRequired * 2) : 20,
+      customAmount: this.minimumRequired ? (parseFloat(this.minimumRequired) * 2) : 20,
       fee: 1.022,
       feeConstant: 0.30,
       loading: false,
@@ -111,7 +111,7 @@ export default {
 
       if (this.minimumRequired) {
         options.push({
-          text: 'Minimum requis',
+          text: 'Je paie juste pour ce trajet',
           value: this.floatMinimumRequired,
         });
       }
@@ -136,13 +136,14 @@ export default {
       ];
 
       for (let i = 0, len = standardOptions.length; i < len; i += 1) {
-        if (!this.minimumRequired || standardOptions[i].value > this.floatMinimumRequired) {
+        if (!this.minimumRequired
+          || standardOptions[i].value > parseFloat(this.minimumRequired, 10)) {
           options.push(standardOptions[i]);
         }
       }
 
       options.push({
-        text: 'Autre',
+        text: "J'en profite pour ajouter",
         value: 'other',
       });
 
