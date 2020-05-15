@@ -166,6 +166,8 @@ class LoanableController extends RestController
         $findRequest = $request->redirectAuth(Request::class);
         $item = $this->repo->find($findRequest, $id);
 
+        $objectResponse = $this->retrieve($findRequest, $id);
+
         $estimatedDistance = $request->get('estimated_distance');
         $departureAt = new Carbon($request->get('departure_at'));
         $durationInMinutes = $request->get('duration_in_minutes');
@@ -174,13 +176,15 @@ class LoanableController extends RestController
         $community = Community::accessibleBy($request->user())->find($communityId);
         $pricing = $community->getPricingFor($item);
 
+        $loanableData = json_decode($objectResponse->getContent());
+
         $end = $departureAt->copy()->add($durationInMinutes, 'minutes');
 
         $response = $pricing ? $pricing->evaluateRule(
             $estimatedDistance,
             $durationInMinutes,
-            $item,
-            [
+            $loanableData,
+            (object) [
                 'days' => Loan::getCalendarDays($departureAt, $end),
                 'start' => Pricing::dateToDataArray($departureAt),
                 'end' => Pricing::dateToDataArray($end),
