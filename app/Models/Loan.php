@@ -223,12 +223,16 @@ class Loan extends BaseModel
 
         $pricing = $this->community->getPricingFor($this->loanable);
 
-        $values = $pricing->evaluateRule(
-            $handover->mileage_end - $takeover->mileage_beginning,
-            $this->actual_duration_in_minutes,
-            $this->loanable,
-            $this
-        );
+        try {
+            $values = $pricing->evaluateRule(
+                $handover->mileage_end - $takeover->mileage_beginning,
+                $this->actual_duration_in_minutes,
+                $this->loanable,
+                $this
+            );
+        } catch (\Exception $e) {
+            return [0, 0];
+        }
 
         return is_array($values) ? $values[0] : $values;
     }
@@ -247,12 +251,16 @@ class Loan extends BaseModel
 
         $pricing = $this->community->getPricingFor($this->loanable);
 
-        $values = $pricing->evaluateRule(
-            $handover->mileage_end - $takeover->mileage_beginning,
-            $this->actual_duration_in_minutes,
-            $this->loanable,
-            $this
-        );
+        try {
+            $values = $pricing->evaluateRule(
+                $handover->mileage_end - $takeover->mileage_beginning,
+                $this->actual_duration_in_minutes,
+                $this->loanable,
+                $this
+            );
+        } catch (\Exception $e) {
+            return [0, 0];
+        }
 
         return is_array($values) ? $values[1] : 0;
     }
