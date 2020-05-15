@@ -98,9 +98,9 @@ class Pricing extends BaseModel
         return self::$language;
     }
 
-    public static function dateToDataArray($date) {
+    public static function dateToDataObject($date) {
         $date = new Carbon($date);
-        return [
+        return (object) [
             'year' => $date->year,
             'month' => $date->month,
             'day' => $date->day,
@@ -155,8 +155,8 @@ class Pricing extends BaseModel
 
             $loanData = [
                 'days' => $loan->calendar_days,
-                'start' =>  (object) self::dateToDataArray($start),
-                'end' => (object) self::dateToDataArray($end)
+                'start' =>  self::dateToDataObject($start),
+                'end' => self::dateToDataObject($end)
             ];
         } else {
             $loanData = $loan;

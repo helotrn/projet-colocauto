@@ -186,8 +186,8 @@ class LoanableController extends RestController
             $loanableData,
             (object) [
                 'days' => Loan::getCalendarDays($departureAt, $end),
-                'start' => Pricing::dateToDataArray($departureAt),
-                'end' => Pricing::dateToDataArray($end),
+                'start' => Pricing::dateToDataObject($departureAt),
+                'end' => Pricing::dateToDataObject($end),
             ]
         ) : 0;
 

@@ -23,8 +23,8 @@ class PricingRule implements Rule
                     ],
                     'loan' => (object) [
                         'days' => 1,
-                        'start' => (object) Pricing::dateToDataArray('now'),
-                        'end' => (object) Pricing::dateToDataArray('+ 1 hour'),
+                        'start' => Pricing::dateToDataObject('now'),
+                        'end' => Pricing::dateToDataObject('+ 1 hour'),
                     ],
                 ]);
             } catch (\Exception $e) {
