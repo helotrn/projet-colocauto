@@ -12,6 +12,10 @@ class AdminsTableSeeder extends Seeder
                 'role' => 'admin',
                 'name' => 'Molotov Communications',
             ],
+            'info@solon-collectif.org' => [
+                'role' => 'admin',
+                'name' => 'Solon Collectif',
+            ],
         ];
 
         foreach ($admins as $email => $data) {
