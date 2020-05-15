@@ -49,16 +49,16 @@ task('deploy:reload:php-fpm', function () {
 });
 after('deploy:reload', 'deploy:reload:php-fpm');
 
-desc('Reload queue');
+desc('Restart queue');
 task('deploy:reload:queue', function () {
     $stage = input()->getArgument('stage');
     switch ($stage) {
         case 'production':
-            run('sudo /usr/sbin/service locomotion-queue reload');
+            run('sudo /usr/sbin/service locomotion-queue restart');
             break;
         case 'staging':
         case 'demo':
-            run('sudo /usr/sbin/service locomotion-staging-queue reload');
+            run('sudo /usr/sbin/service locomotion-staging-queue restart');
             break;
     }
 });
