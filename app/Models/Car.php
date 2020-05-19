@@ -83,6 +83,7 @@ class Car extends Loanable
         'papers_location',
         'plate_number',
         'position',
+        'pricing_category',
         'transmission_mode',
         'year_of_circulation',
     ];

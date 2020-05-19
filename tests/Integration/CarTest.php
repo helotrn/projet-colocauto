@@ -44,7 +44,7 @@ class CarTest extends TestCase
             'papers_location' => $this->faker->randomElement(['in_the_car', 'to_request_with_car']),
             'plate_number' => $this->faker->shuffle('9F29J2'),
             'position' => [$this->faker->latitude, $this->faker->longitude],
-            'pricing_category' => 'small',
+            'pricing_category' => 'large',
             'transmission_mode' => $this->faker->randomElement(['automatic' ,'manual']),
             'type' => 'car',
             'year_of_circulation' => $this->faker->year($max = 'now'),
@@ -52,7 +52,8 @@ class CarTest extends TestCase
 
         $response = $this->json('POST', '/api/v1/cars', $data);
         $response->assertStatus(201)
-            ->assertJsonStructure(static::$getCarResponseStructure);
+            ->assertJsonStructure(static::$getCarResponseStructure)
+            ->assertJson([ 'pricing_category' => 'large']);
     }
 
     public function testShowCars() {
