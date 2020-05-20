@@ -57,9 +57,6 @@ class ImportLegacyLoanables extends Command
         $this->info('Syncing loanables...');
         $headers = fgetcsv($this->file, null, "\t");
         while ($line = fgetcsv($this->file, null, "\t")) {
-            if (strtolower($line[0]) !== 'voiture') {
-                continue;
-            }
             $line = array_map('trim', $line);
             //$this->echoLine($headers, $line);
 
