@@ -7,7 +7,8 @@ use App\Http\Requests\BaseRequest;
 class UpdateRequest extends BaseRequest
 {
     public function authorize() {
-        if ($this->user()->isAdmin()) {
+        if ($this->user()->isAdmin()
+            || $this->user()->isAdminOfCommunityFor($this->route('id'))) {
             return true;
         }
 
