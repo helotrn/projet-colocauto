@@ -22,6 +22,11 @@ export default new RestModule('users', {
     'password',
     'phone',
     'postal_code',
+    'communities.id',
+    'communities.name',
+    'communities.tags.id',
+    'communities.tags.name',
+    'communities.tags.slug',
   ],
 }, {
   async approveBorrower({ commit }, userId) {
