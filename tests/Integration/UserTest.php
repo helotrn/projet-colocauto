@@ -150,17 +150,12 @@ class UserTest extends TestCase
             ->assertJsonStructure($this->buildCollectionStructure(static::$getUserResponseStructure));
     }
 
-
     public function testAssociateUserToCommunity() {
-        $this->markTestIncomplete();
         $user = factory(User::class)->create();
         $community = factory(Community::class)->create();
 
-        if ($user->id && $community->id) {
-            $response = $this->json('PUT', "/api/v1/users/$user->id/communities/$community->id");
-            //TODO fix two-level uris
-            $response->assertStatus(200);
-        }
+        $response = $this->json('PUT', "/api/v1/users/$user->id/communities/$community->id");
+        $response->assertStatus(200);
     }
 
     public function testUpdateUserWithCommunity() {
