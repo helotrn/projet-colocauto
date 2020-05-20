@@ -4,19 +4,13 @@
 
     <b-row>
       <b-col lg="6">
-        <div class="loanable-details-box__section">
-          <h3>{{ $t('fields.location_description') | capitalize }}</h3>
-
-          <p>{{ loanable.location_description }} </p>
-        </div>
-
-        <div class="loanable-details-box__section">
+        <div class="loanable-details-box__section" v-if="loanable.comments">
           <h3>{{ $t('fields.comments') | capitalize }}</h3>
 
           <p>{{ loanable.comments }} </p>
         </div>
 
-        <div class="loanable-details-box__section">
+        <div class="loanable-details-box__section" v-if="loanable.instructions">
           <h3>{{ $t('fields.instructions') | capitalize }}</h3>
 
           <p>{{ loanable.instructions }} </p>
@@ -78,13 +72,19 @@
 
           <p>
             <strong>{{ $t('fields.papers_location') | capitalize }}</strong>:
-            {{ $t(`papers_locations.${loanable.papers_locations}`) | capitalize }}
+            {{ $t(`papers_locations.${loanable.papers_location}`) | capitalize }}
           </p>
         </div>
       </b-col>
 
       <b-col lg="6">
         <forms-map-input :value="loanable.position" disabled />
+
+        <div class="mt-3 loanable-details-box__section" v-if="loanable.location_description">
+          <h3>{{ $t('fields.location_description') | capitalize }}</h3>
+
+          <p>{{ loanable.location_description }} </p>
+        </div>
       </b-col>
     </b-row>
   </div>

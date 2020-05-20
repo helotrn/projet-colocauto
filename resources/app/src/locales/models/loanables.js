@@ -44,7 +44,7 @@ export default {
     model: {
       singular: 'véhicule',
     },
-    papers_location: {
+    papers_locations: {
       in_the_car: 'dans la voiture',
       to_request_with_car: 'à récupérer avec la voiture',
     },

@@ -22,7 +22,7 @@ export default {
       pricing_category: 'catégorie',
       report: "fiche - état de l'auto",
       transmission_mode: 'transmission',
-      year_of_circulation: 'année de circulation',
+      year_of_circulation: 'année de mise en circulation',
     },
     transmission_modes: {
       automatic: 'automatique',
