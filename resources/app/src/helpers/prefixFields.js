@@ -1,4 +1,4 @@
-export default (fields, prefix) => Object
+const prefixFields = (fields, prefix) => Object
   .keys(fields)
   .reduce((acc, f) => {
     if (!!fields[f] && typeof fields[f] === 'object') {
@@ -9,3 +9,5 @@ export default (fields, prefix) => Object
 
     return acc;
   }, {});
+
+export default prefixFields;
