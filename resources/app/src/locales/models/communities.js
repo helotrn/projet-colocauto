@@ -1,3 +1,7 @@
+import { prefixFields } from '@/helpers';
+
+import tags from './tags';
+
 export default {
   fr: {
     communauté: 'communauté | communautés',
@@ -8,6 +12,10 @@ export default {
       id: 'ID',
       name: 'nom',
       proof: 'preuve de résidence',
+      tags: {
+        ...prefixFields(tags.fr.fields, '(Mot-clé)'),
+        model_name: tags.fr.model_name,
+      },
       type: 'type',
     },
     types: {
@@ -26,6 +34,10 @@ export default {
       id: 'ID',
       name: 'name',
       type: 'type',
+      tags: {
+        ...tags.fr.fields,
+        model_name: tags.fr.model_name,
+      },
     },
     types: {
       neighborhood: 'neighborhood',

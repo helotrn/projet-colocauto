@@ -79,23 +79,27 @@ export default {
           this.formMixinCallback();
         }
       } catch (e) {
-        switch (e.request.status) {
-          case 401:
-            this.$store.commit('addNotification', {
-              content: "Vous n'êtes pas connecté.",
-              title: 'Non connecté',
-              variant: 'warning',
-              type: 'login',
-            });
-            this.$store.commit('user', null);
-            this.$router.push(`/login?r=${this.$route.fullPath}`);
-            break;
-          case 404:
-            this.$router.push(`/${this.parentPath}`);
-            break;
-          default:
-            break;
+        if (e.request) {
+          switch (e.request.status) {
+            case 401:
+              this.$store.commit('addNotification', {
+                content: "Vous n'êtes pas connecté.",
+                title: 'Non connecté',
+                variant: 'warning',
+                type: 'login',
+              });
+              this.$store.commit('user', null);
+              this.$router.push(`/login?r=${this.$route.fullPath}`);
+              break;
+            case 404:
+              this.$router.push(`/${this.parentPath}`);
+              break;
+            default:
+              throw e;
+          }
         }
+
+        throw e;
       }
     },
     reset() {
@@ -113,18 +117,22 @@ export default {
           this.afterSubmit();
         }
       } catch (e) {
-        switch (e.request.status) {
-          case 422:
-            this.$store.commit('addNotification', {
-              content: extractErrors(e.response.data).join(', '),
-              title: 'Erreur de sauvegarde',
-              variant: 'danger',
-              type: 'form',
-            });
-            break;
-          default:
-            throw e;
+        if (e.request) {
+          switch (e.request.status) {
+            case 422:
+              this.$store.commit('addNotification', {
+                content: extractErrors(e.response.data).join(', '),
+                title: 'Erreur de sauvegarde',
+                variant: 'danger',
+                type: 'form',
+              });
+              break;
+            default:
+              throw e;
+          }
         }
+
+        throw e;
       }
     },
   },

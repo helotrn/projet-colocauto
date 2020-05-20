@@ -75,6 +75,7 @@
         :placeholder="placeholder" :disabled="disabled"
         :state="getValidationState(validationContext)"
         :object-value="objectValue"
+        :reset-after-select="resetAfterSelect"
         :value="value"
         @input="emitRelationChange"/>
       <b-form-input v-else-if="type === 'number'"
@@ -217,6 +218,11 @@ export default {
       type: Object,
       required: false,
       default: null,
+    },
+    resetAfterSelect: {
+      type: Boolean,
+      required: false,
+      default: false,
     },
     rows: {
       type: Number,

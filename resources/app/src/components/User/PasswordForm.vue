@@ -5,7 +5,7 @@
         @submit.stop.prevent="passes(updatePassword)">
         <forms-validated-input v-if="!isAdmin" mode="lazy"
           name="current_password" :label="$t('current_password')"
-          :rules="{ required: true }" type="password"
+          :rules="{ required: !!newPassword }" type="password"
           :placeholder="$t('current_password')"
           v-model="currentPassword" />
 
@@ -76,7 +76,8 @@ export default {
         newPassword,
         userId,
       });
-
+    },
+    reset() {
       this.currentPassword = '';
       this.newPassword = '';
       this.newPasswordRepeat = '';

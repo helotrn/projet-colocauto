@@ -36,6 +36,11 @@ export default {
       type: Object,
       required: true,
     },
+    resetAfterSelect: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
     state: {
       type: Boolean,
       required: false,
@@ -112,9 +117,16 @@ export default {
     emitInput(value) {
       this.lastSelectedItem = value;
       this.$emit('input', value);
+
+      if (this.resetAfterSelect) {
+        this.reset();
+      }
     },
     setQ(q) {
       this.q = q;
+    },
+    reset() {
+      this.lastSelectedItem = null;
     },
   },
   watch: {

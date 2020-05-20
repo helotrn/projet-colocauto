@@ -3,7 +3,7 @@
     <b-row>
       <b-col>
         <h1 v-if="item.name || item.last_name">{{ item.name }} {{ item.last_name }}</h1>
-        <h1 v-else><em>{{ $tc('membre', 1) | capitalize }}</em></h1>
+        <h1 v-else><em>{{ $tc('model_name', 1) | capitalize }}</em></h1>
       </b-col>
     </b-row>
 
@@ -35,7 +35,7 @@
                 v-model="item.role" />
             </div>
 
-            <div class="form__section" v-if="loggedInUserIsAdmin">
+            <div class="form__section" v-show="loggedInUserIsAdmin">
               <h2>Mot de passe</h2>
 
               <user-password-form :loading="loading" :is-admin="loggedInUserIsAdmin"
@@ -100,7 +100,7 @@
 
               <b-table
                 striped hover :items="item.communities"
-                selectable select-mode="multi" @row-selected="communityRowSelected"
+                selectable select-mode="single" @row-selected="communityRowSelected"
                 :fields="communitiesTable" no-sort-reset
                 :show-empty="true" empty-text="Pas de communauté">
                 <template v-slot:cell(actions)="row">
@@ -111,6 +111,51 @@
                   </div>
                 </template>
               </b-table>
+            </div>
+
+            <div class="form__section" v-if="!!item.id">
+              <h2>
+                {{ $tc('fields.communities.tags.model_name', 2) | capitalize }}
+              </h2>
+
+              <div v-if="communitySelected">
+                <b-table
+                  striped hover :items="communitySelected.tags"
+                  selectable select-mode="multi" @row-selected="tagRowSelected"
+                  :fields="tagsTable" no-sort-reset
+                  :show-empty="true" empty-text="Pas de mot-clé">
+                  <template v-slot:cell(actions)="row">
+                    <div class="text-right">
+                      <b-button size="sm" :to="`/admin/tags/${row.item.id}`">
+                        {{ $t('modifier') | capitalize }}
+                      </b-button>
+                    </div>
+                  </template>
+                  <template v-slot:cell(actions)="row">
+                    <div class="text-right">
+                      <b-button size="sm" class="mr-1" variant="danger"
+                        @click="removeCommunityTag(communitySelected, row.item)">
+                        {{ $t('retirer') | capitalize }}
+                      </b-button>
+                    </div>
+                  </template>
+                </b-table>
+
+                <forms-validated-input type="relation"
+                  name="community_tag" label="Ajouter un mot-clé"
+                  :value="null" reset-after-select
+                  :query="{
+                    slug: 'tags',
+                    value: 'id',
+                    text: 'name',
+                    params: {
+                      '!id': communitySelectedTagIds,
+                    },
+                  }" @relation="addCommunityTag(communitySelected, $event)" />
+              </div>
+              <div v-else>
+                <p>Sélectionnez une communauté pour voir les mots-clés de la communauté.</p>
+              </div>
             </div>
 
             <div class="form__section" v-if="!!item.id">
@@ -217,17 +262,22 @@
 
 <script>
 import FormsBuilder from '@/components/Forms/Builder.vue';
+import FormsValidatedInput from '@/components/Forms/ValidatedInput.vue';
 import UserPasswordForm from '@/components/User/PasswordForm.vue';
 
 import FormMixin from '@/mixins/FormMixin';
 
+import { filters } from '@/helpers';
 import locales from '@/locales';
+
+const { capitalize } = filters;
 
 export default {
   name: 'AdminUser',
   mixins: [FormMixin],
   components: {
     FormsBuilder,
+    FormsValidatedInput,
     UserPasswordForm,
   },
   data() {
@@ -268,6 +318,25 @@ export default {
         { key: 'borrower', label: 'Emprunteur', sortable: true },
         { key: 'loanable', label: 'Objet', sortable: true },
         { key: 'date', label: 'Date', sortable: true },
+        { key: 'actions', label: 'Actions', tdClass: 'table__cell__actions' },
+      ],
+      tagsSelected: [],
+      tagsTable: [
+        {
+          key: 'id',
+          label: capitalize(this.$t('fields.communities.tags.id')),
+          sortable: true,
+        },
+        {
+          key: 'name',
+          label: capitalize(this.$t('fields.communities.tags.name')),
+          sortable: true,
+        },
+        {
+          key: 'slug',
+          label: capitalize(this.$t('fields.communities.tags.slug')),
+          sortable: true,
+        },
         { key: 'actions', label: 'Actions', tdClass: 'table__cell__actions' },
       ],
       transactionsTable: [
@@ -314,8 +383,23 @@ export default {
 
       return 0;
     },
+    communitySelected() {
+      return this.communitiesSelected[0];
+    },
+    communitySelectedTagIds() {
+      if (!this.communitySelected) {
+        return '0';
+      }
+
+      return this.communitySelected.tags.map(t => t.id).join(',') || '0';
+    },
   },
   methods: {
+    addCommunityTag(community, tag) {
+      if (tag) {
+        community.tags.push(tag);
+      }
+    },
     afterSubmit() {
       this.$refs.passwordForm.reset();
     },
@@ -343,14 +427,21 @@ export default {
     loanRowSelected(rows) {
       this.loansSelected = rows;
     },
+    removeCommunityTag(community, tag) {
+      const index = community.tags.indexOf(tag);
+      community.tags.splice(index, 1);
+    },
     async suspendBorrower(user) {
       await this.$store.dispatch(`${this.slug}/suspendBorrower`, user.id);
     },
-    async unsuspendBorrower(user) {
-      await this.$store.dispatch(`${this.slug}/unsuspendBorrower`, user.id);
+    tagRowSelected(rows) {
+      this.tagsSelected = rows;
     },
     transactionRowSelected(rows) {
       this.transactionsSelected = rows;
+    },
+    async unsuspendBorrower(user) {
+      await this.$store.dispatch(`${this.slug}/unsuspendBorrower`, user.id);
     },
   },
   i18n: {

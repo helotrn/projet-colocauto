@@ -1,21 +1,21 @@
+import { prefixFields } from '@/helpers';
+
 import communities from './communities';
 
 export default {
   fr: {
-    'ajouter un membre': 'ajouter un membre',
+    buttons: {
+      add: 'ajouter un membre',
+    },
     descriptions: {
       description: 'De quoi aimeriez-vous discuter avec vos voisins et voisines? En quelques'
         + 'mots, dites-nous qui vous êtes ou nommez une activité à faire dans votre quartier. '
         + 'On l\'affichera sur votre profil. :-)',
     },
-    membre: 'membre | membres',
     fields: {
       address: 'adresse',
       avatar: 'image de profil',
-      communities: Object.keys(communities.fr.fields).reduce((acc, f) => {
-        acc[f] = `${communities.fr.fields[f]} (Communauté)`;
-        return acc;
-      }, {}),
+      communities: prefixFields(communities.fr.fields, '(Communauté)'),
       date_of_birth: 'date de naissance',
       deleted_at: 'supprimé',
       description: 'description',
@@ -29,5 +29,6 @@ export default {
       phone: 'téléphone',
       postal_code: 'code postal',
     },
+    model_name: 'membre | membres',
   },
 };
