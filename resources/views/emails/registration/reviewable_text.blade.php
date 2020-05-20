@@ -3,5 +3,5 @@
 @section('content')
 Un&bull;e nouveau&bull;lle membre, {{ $user->name }} {{ $user->last_name }}, a complété son inscription dans {{ $community->name }} et peut être validé&bull;e.
 
-Voir le voisinage [https://locomotion.app/admin/communities/{{ $community->id }}#members]
+Voir le voisinage [{{ url('/admin/communities/' . $community->id) }}#members]
 @endsection

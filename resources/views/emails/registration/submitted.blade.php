@@ -12,7 +12,7 @@
     Vous pouvez maintenant partager auto, vélo ... et pédalo ? Ça, ça dépend de vos voisines et voisins. ;-)
 </p>
 <p style="text-align: center;">
-    <a href="https://locomotion.app/community" style="display: inline-block; background-color: #246AEA; padding: 10px; border-radius: 3px; color: white; font-weight: bold; text-decoration: none;" target="_blank">Voir mon voisinage</a>
+    <a href="{{ url('/community') }}" style="display: inline-block; background-color: #246AEA; padding: 10px; border-radius: 3px; color: white; font-weight: bold; text-decoration: none;" target="_blank">Voir mon voisinage</a>
 </p>
 
 <p style="text-align: right;">

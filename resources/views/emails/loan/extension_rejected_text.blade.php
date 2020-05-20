@@ -7,7 +7,7 @@ Bonjour {{ $borrower->user->name }},
 
 {{ $extension->message_for_borrower }}
 
-Voir l'emprunt [https://locomotion.app/loans/{{ $loan->id }}]
+Voir l'emprunt [{{ url('/loans/' . $loan->id) }}]
 
             - L'équipe LocoMotion
 @endsection

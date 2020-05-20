@@ -6,6 +6,6 @@
 </p>
 
 <p style="text-align: center;">
-<a href="https://locomotion.app/admin/communities/{{ $community->id }}#members" style="display: inline-block; background-color: #246AEA; padding: 10px; border-radius: 3px; color: white; font-weight: bold; text-decoration: none;" target="_blank">Voir le voisinage</a>
+<a href="{{ url('/admin/communities/' . $community->id) }}#members" style="display: inline-block; background-color: #246AEA; padding: 10px; border-radius: 3px; color: white; font-weight: bold; text-decoration: none;" target="_blank">Voir le voisinage</a>
 </p>
 @endsection

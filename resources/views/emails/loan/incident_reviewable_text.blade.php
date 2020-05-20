@@ -5,5 +5,5 @@
 
 {{ $incident->comments_on_incident }}
 
-Voir l'emprunt [https://locomotion.app/loans/{{ $loan->id }}]
+Voir l'emprunt [{{ url('/loans/'. $loan->id) }}]
 @endsection

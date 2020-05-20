@@ -6,7 +6,7 @@
     </td>
 </tr>
 <tr>
-    <td align="top" style="background-image: url('http://localhost:8000/mail-header-bg.png'); background-repeat: no-repeat; background-color: #00ADA8; background-position: bottom center; height: 300px; padding: 0 0 100px 0;">
+    <td align="top" style="background-image: url('{{ url('/mail-header-bg.png') }}'); background-repeat: no-repeat; background-color: #00ADA8; background-position: bottom center; height: 300px; padding: 0 0 100px 0;">
         <h1 style="margin: 0 auto; text-align: center; font-size: 40px; line-height: 48px; color: white;">
             {{ $title }}
         </h1>
