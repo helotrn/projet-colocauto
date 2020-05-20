@@ -10,10 +10,41 @@ class UserTransformer extends BaseTransformer
     protected $contexts = ['Community'];
 
     public function authorize($item, $output, $options, $user = null) {
-        if ($user && ($user->isAdmin() || $user->id === $item->id)) {
-            return $output;
+        // If the user is...
+        if ($user) {
+            // ...a global admin or itself
+            if ($user->isAdmin() || $user->id === $item->id) {
+                // ...display everything
+                return $output;
+            }
+            // ...a community admin
+            if ($user->isAdminOfCommunityFor($item->id)) {
+                $adminOfCommunityFields = [
+                    'id',
+                    'avatar',
+                    'communities',
+                    'date_of_birth',
+                    'address',
+                    'postal_code',
+                    'phone',
+                    'is_smart_phone',
+                    'other_phone',
+                    'description',
+                    'email',
+                    'full_name',
+                    'last_name',
+                    'loanables',
+                    'loans',
+                    'name',
+                    'owner',
+                    'tags',
+                ];
+
+                return $this->filterKeys($output, $adminOfCommunityFields);
+            }
         }
 
+        // ...otherwise, limit the visible fields...
         $publicFields = [
             'id',
             'name',
@@ -25,6 +56,7 @@ class UserTransformer extends BaseTransformer
             'owner',
         ];
 
+        // ...except when we are in the context of a loan
         if (isset($options['context']['Loan'])) {
             $publicFields[] = 'phone';
         }

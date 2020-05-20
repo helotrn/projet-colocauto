@@ -42,6 +42,7 @@ export default {
           communities: {
             retrieve: {
               fields: 'id,name,type,users.id,users.loanables.id,loanables.id',
+              for: 'edit',
             },
           },
         },
@@ -66,6 +67,7 @@ export default {
             'users.proof.id',
             'pricings.*',
           ].join(','),
+          for: 'edit',
         },
       },
     },

@@ -1,7 +1,7 @@
 <template>
   <div class="admin-sidebar">
     <b-nav-item to="/admin">{{ $t('titles.dashboard') | capitalize }}</b-nav-item>
-    <b-nav-item to="/admin/communities" v-if="isGlobalAdmin">Communautés</b-nav-item>
+    <b-nav-item to="/admin/communities">Communautés</b-nav-item>
     <b-nav-item to="/admin/users">Membres</b-nav-item>
     <b-nav-item to="/admin/loanables">Véhicules</b-nav-item>
     <b-nav-item to="/admin/loans">Emprunts</b-nav-item>

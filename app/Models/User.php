@@ -235,10 +235,25 @@ class User extends AuthenticatableBaseModel
         return $this->role === 'admin';
     }
 
-    public function isAdminOfCommunity($communityId) {
+    public function isAdminOfCommunity(int $communityId) {
         return $this->communities()->where('communities.id', $communityId)
             ->whereHas('users', function ($q) {
-                return $q->where('community_user.role', 'admin');
+                return $q
+                    ->where('community_user.role', 'admin')
+                    ->where('community_user.user_id', $this->id);
+            })
+            ->exists();
+    }
+
+    public function isAdminOfCommunityFor(int $userId) {
+        return $this->communities()
+            ->whereHas('users', function ($q) {
+                return $q
+                    ->where('community_user.role', 'admin')
+                    ->where('community_user.user_id', $this->id);
+            })
+            ->whereHas('users', function ($q) use ($userId) {
+                return $q->where('community_user.user_id', $userId);
             })
             ->exists();
     }

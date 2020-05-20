@@ -17,7 +17,7 @@
               <forms-builder :definition="form.general" v-model="item" entity="users" />
             </div>
 
-            <div class="form__section">
+            <div class="form__section" v-if="loggedInUserIsAdmin">
               <h2>Administrateur global</h2>
 
               <b-alert show variant="danger">
@@ -35,14 +35,14 @@
                 v-model="item.role" />
             </div>
 
-            <div class="form__section">
+            <div class="form__section" v-if="loggedInUserIsAdmin">
               <h2>Mot de passe</h2>
 
               <user-password-form :loading="loading" :is-admin="loggedInUserIsAdmin"
                 :user="item" ref="passwordForm" />
             </div>
 
-            <div class="form__section">
+            <div class="form__section" v-if="item.borrower">
               <h2>Profil d'emprunteur</h2>
 
               <p>

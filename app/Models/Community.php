@@ -160,4 +160,30 @@ class Community extends BaseModel
                 \DB::raw("unaccent('%$q%')")
             );
     }
+
+    public function scopeFor(Builder $query, $for, $user) {
+        if (!$user) {
+            $for = 'read';
+        }
+
+        if ($user->isAdmin()) {
+            return $query;
+        }
+
+        switch ($for) {
+            case 'edit':
+                return $query
+                    ->whereHas('users', function ($q) use ($user) {
+                        return $q->where('community_user.id', $user->id)
+                            ->where('community_user.role', 'admin');
+                    })
+                    ->orWhereHas('users', function ($q) use ($user) {
+                        return $q->where('users.id', $user->id)
+                            ->where('users.role', 'admin');
+                    });
+            case 'read':
+            default:
+                return $query;
+        }
+    }
 }
