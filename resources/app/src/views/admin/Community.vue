@@ -57,7 +57,7 @@
               striped hover :items="item.users"
               selectable select-mode="multi" @row-selected="userRowSelected"
               :fields="userTable" no-sort-reset
-              :show-empty="true" empty-text="Pas de membres">
+              :show-empty="true" empty-text="Pas de membre">
               <template v-slot:cell(role)="row">
                 <b-select :options="[
                   { value: null, text: 'Membre' },

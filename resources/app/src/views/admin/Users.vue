@@ -34,7 +34,7 @@
           selectable select-mode="multi" @row-selected="rowSelected"
           :busy="loading" :fields="table" no-local-sorting
           :sort-by.sync="sortBy" :sort-desc.sync="sortDesc" no-sort-reset
-          :show-empty="true" empty-text="Pas de véhicule">
+          :show-empty="true" empty-text="Pas de membre">
           <template v-slot:cell(type)="row">
             {{ $t(`types.${row.item.type}`) | capitalize }}
           </template>
