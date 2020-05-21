@@ -49,7 +49,8 @@
             <b-row>
               <b-col lg="6">
                 <p>
-                  Coût final du trajet: {{ finalPrice | currency }}.
+                  Coût final du trajet:
+                  <span v-b-popover.hover="priceTooltip">{{ finalPrice | currency }}</span>.
                 </p>
               </b-col>
 
@@ -93,7 +94,10 @@
 <script>
 import LoanActionsMixin from '@/mixins/LoanActionsMixin';
 
+import { filters } from '@/helpers';
 import locales from '@/locales';
+
+const { currency } = filters;
 
 export default {
   name: 'LoanActionsPrePayment',
@@ -108,6 +112,19 @@ export default {
       return this.loan.actual_price
         + this.loan.actual_insurance
         + parseFloat(this.platformTip, 10);
+    },
+    priceTooltip() {
+      const strParts = [];
+
+      strParts.push(`Trajet: ${currency(this.loan.actual_price)}`);
+      if (this.loan.actual_insurance > 0) {
+        strParts.push(`Assurance: ${currency(this.loan.actual_insurance)}`);
+      }
+      if (parseFloat(this.platformTip, 10) > 0) {
+        strParts.push(`Contribution: ${currency(parseFloat(this.platformTip, 10))}`);
+      }
+
+      return strParts.join(' \\ ');
     },
   },
   watch: {
