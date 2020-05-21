@@ -9,6 +9,7 @@ import loanables from '@/locales/models/loanables';
 import padlocks from '@/locales/models/padlocks';
 import paymentMethods from '@/locales/models/paymentMethods';
 import tags from '@/locales/models/tags';
+import trailers from '@/locales/models/trailers';
 import users from '@/locales/models/users';
 
 export default {
@@ -95,5 +96,6 @@ export default {
     user: 'membre',
     users: 'membres',
   },
+  trailers: trailers.fr,
   users: users.fr,
 };
