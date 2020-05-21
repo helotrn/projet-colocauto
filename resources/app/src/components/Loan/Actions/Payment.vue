@@ -116,12 +116,12 @@ export default {
     priceTooltip() {
       const strParts = [];
 
-      strParts.push(`Trajet: ${currency(this.loan.actual_price)}`);
+      strParts.push(`Trajet: ${currency(this.loan.actual_price)}`); // eslint-disable-line no-irregular-whitespace
       if (this.loan.actual_insurance > 0) {
-        strParts.push(`Assurance: ${currency(this.loan.actual_insurance)}`);
+        strParts.push(`Assurance: ${currency(this.loan.actual_insurance)}`); // eslint-disable-line no-irregular-whitespace
       }
       if (parseFloat(this.platformTip, 10) > 0) {
-        strParts.push(`Contribution: ${currency(parseFloat(this.platformTip, 10))}`);
+        strParts.push(`Contribution: ${currency(parseFloat(this.platformTip, 10))}`); // eslint-disable-line no-irregular-whitespace
       }
 
       return strParts.join(' \\ ');
