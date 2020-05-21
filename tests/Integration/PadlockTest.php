@@ -7,62 +7,48 @@ use Tests\TestCase;
 
 class PadlockTest extends TestCase
 {
-    public function testCreatePadlocks() {
-        $this->markTestIncomplete();
-        $data = [
-            'mac_address' => $this->faker->macAddress,
-        ];
-
-        $response = $this->json('POST', route('padlocks.create'), $data);
-
-        $response->assertStatus(201)->assertJson($data);
-    }
-
     public function testShowPadlocks() {
-        $this->markTestIncomplete();
-        $post = factory(Padlock::class)->create();
+        $padlock = factory(Padlock::class)->create();
 
-        $response = $this->json('GET', route('padlocks.retrieve', $post->id), $data);
+        $response = $this->json('GET', route('padlocks.retrieve', $padlock->id));
 
-        $response->assertStatus(200)->assertJson($data);
+        $response->assertStatus(200)->assertJson($padlock->toArray());
     }
 
     public function testUpdatePadlocks() {
-        $this->markTestIncomplete();
-        $post = factory(Padlock::class)->create();
+        $padlock = factory(Padlock::class)->create();
         $data = [
             'mac_address' => $this->faker->macAddress,
         ];
+        $response = $this->json('GET', route('padlocks.retrieve', $padlock->id))
+            ->assertJson([ 'mac_address' => $padlock->mac_address ]);
 
-        $response = $this->json('PUT', route('padlocks.update', $post->id), $data);
+        $response = $this->json('PUT', route('padlocks.update', $padlock->id), $data);
 
         $response->assertStatus(200)->assertJson($data);
-    }
 
-    public function testDeletePadlocks() {
-        $this->markTestIncomplete();
-        $post = factory(Padlock::class)->create();
-
-        $response = $this->json('DELETE', route('padlocks.delete', $post->id), $data);
-
-        $response->assertStatus(204)->assertJson($data);
+        $response = $this->json('GET', route('padlocks.retrieve', $padlock->id))
+            ->assertJson($data);
     }
 
     public function testListPadlocks() {
-        $this->markTestIncomplete();
-        $padlocks = factory(Padlock::class, 2)->create()->map(function ($post) {
-            return $post->only(['id', 'mac_address']);
+        $padlocks = factory(Padlock::class, 2)->create()->map(function ($padlock) {
+            return $padlock->only(['id', 'mac_address']);
         });
 
         $response = $this->json('GET', route('padlocks.index'));
 
         $response->assertStatus(200)
-                ->assertJson($padlocks->toArray())
-                ->assertJsonStructure([
+            ->assertJson([
+                'data' => $padlocks->toArray()
+            ])
+            ->assertJsonStructure([
+                'data' => [
                     '*' => [
                         'id',
                         'mac_address',
                     ],
-                ]);
+                ],
+            ]);
     }
 }

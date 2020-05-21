@@ -8,18 +8,10 @@ class UpdateRequest extends BaseRequest
 {
     public function authorize() {
         $user = $this->user();
-        if ($user->isAdmin()) {
+        if ($user && $user->isAdmin()) {
             return true;
         }
 
         return false;
-    }
-
-    public function rules() {
-        return [
-            'external_id' => 'required',
-            'mac_address' => 'required',
-            'name' => 'required',
-        ];
     }
 }
