@@ -54,6 +54,11 @@ export default {
       type: String,
       required: true,
     },
+    padded: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
     title: {
       type: String,
       require: false,
@@ -79,6 +84,7 @@ export default {
         this.bgColor,
         this.bgImage ? 'with-tiled-bg' : '',
         this.centered ? 'centered' : '',
+        this.padded ? 'padded' : '',
       ].filter(c => !!c).join(' ');
     },
     treeTitle() {

@@ -1,4 +1,5 @@
 import Dashboard from '../views/Dashboard.vue';
+import Faq from '../views/Faq.vue';
 import Help from '../views/Help.vue';
 import Home from '../views/Home.vue';
 import Login from '../views/Login.vue';
@@ -15,6 +16,11 @@ export default [
         },
       },
     },
+  },
+  {
+    path: '/faq',
+    name: 'faq',
+    component: Faq,
   },
   {
     path: '/login',

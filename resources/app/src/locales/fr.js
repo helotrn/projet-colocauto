@@ -1,8 +1,9 @@
-import AdminFilters from './components/Admin/Filters';
+import AdminFilters from '@/locales/components/Admin/Filters';
 import bikes from '@/locales/models/bikes';
 import borrowers from '@/locales/models/borrowers';
 import cars from '@/locales/models/cars';
 import communities from '@/locales/models/communities';
+import faq from '@/locales/faq';
 import invoices from '@/locales/models/invoices';
 import loans from '@/locales/models/loans';
 import loanables from '@/locales/models/loanables';
@@ -22,7 +23,7 @@ export default {
       filters: AdminFilters.fr,
     },
   },
-  invoices: invoices.fr,
+  faq: faq.fr,
   forms: {
     actions: 'actions',
     afficher: 'afficher',
@@ -37,14 +38,7 @@ export default {
     suspendre: 'suspendre',
     supprimer: 'supprimer',
   },
-  pricings: {
-    types: {
-      car: 'voiture',
-      bike: 'vélo',
-      trailer: 'remorque',
-      génerique: 'générique',
-    },
-  },
+  invoices: invoices.fr,
   loans: loans.fr,
   loanables: loanables.fr,
   locales: {
@@ -53,6 +47,14 @@ export default {
   },
   padlocks: padlocks.fr,
   paymentMethods: paymentMethods.fr,
+  pricings: {
+    types: {
+      car: 'voiture',
+      bike: 'vélo',
+      trailer: 'remorque',
+      génerique: 'générique',
+    },
+  },
   profile: {
     titles: {
       account: 'Mon profil LocoMotion',

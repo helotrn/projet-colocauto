@@ -164,92 +164,31 @@
           <b-col>
             <div class="page__section__header">
               <h2 class="page__section__title">
-                FAQ
+                {{ $t('faq.title') }}
               </h2>
               <b-button size="lg" variant="outline-secondary" to="faq">Visiter la FAQ</b-button>
             </div>
             <div class="page__section--faq__questions">
               <div role="tablist">
                 <home-faq-item id="1"
-                  title="Comment faire confiance à mon voisinage pour partager mon auto?">
-                  <p>
-                    Comme propriétaire de voiture, vous avez toujours le choix d’accepter ou non
-                    une demande de réservation. Chaque participant-e nous fournit ses pièces
-                    d’identité et son dossier de conduite. Ainsi, nous connaissons les membres
-                    des voisinages LocoMotion. Aussi, en apprenant à connaître vos voisin-e-s, il
-                    est plus facile de se faire confiance. Et enfin, n’oubliez pas qu’il y a une
-                    assurance!
-                  </p>
+                  :title="$t('faq.sections.why.questions.0.title')">
+                  <p v-html="$t('faq.sections.why.questions.0.content')" />
                 </home-faq-item>
 
-                <home-faq-item id="2" title="Qu'est-ce qui arrive en cas d'accident?">
-                  <p>
-                    Si vous avez un accident, signalez-le sur la plateforme et suivez les
-                    instructions.
-                  </p>
-                  <p>
-                    En cas d’accident, notre couverture Desjardins Assurances prend en charge
-                    la responsabilité civile et les réparations. Une fois votre inscription
-                    complétée, nous vous fournirons tous les détails.
-                  </p>
-                  <ul>
-                    <li>
-                      Couverture responsabilité civile à hauteur de 2M$
-                    </li>
-                    <li>
-                      Franchise de 100$ pour les dommages causés notamment par le feu, le vol,
-                      le vandalisme, le bris de vitres.
-                    </li>
-                    <li>
-                      Franchise de 500$ pour les dommages causés par une collision ou un versement
-                    </li>
-                  </ul>
+                <home-faq-item id="2" :title="$t('faq.sections.insurance.questions.0.title')">
+                  <div v-html="$t('faq.sections.insurance.questions.0.content')" />
                 </home-faq-item>
 
-                <home-faq-item id="3" title="Combien ça coûte?">
-                  <p>
-                    L’inscription est gratuite. Et des véhicules se partagent à un prix juste
-                    pour tout le voisinage!
-                  </p>
-                  <ul>
-                    <li>
-                      Recevez une contribution des personnes qui utilisent votre voiture.
-                    </li>
-                    <li>
-                      Vous utilisez la voiture de votre voisin-e ?
-                    </li>
-                    <li>
-                      Participez à la compensation pour son usure, l’essence et l’assurance.
-                    </li>
-                    <li>
-                      Profitez des véhicules collectifs à deux roues : c’est gratuit!
-                    </li>
-                  </ul>
+                <home-faq-item id="3" :title="$t('faq.sections.costs.questions.0.title')">
+                  <div v-html="$t('faq.sections.costs.questions.0.content')" />
                 </home-faq-item>
 
-                <home-faq-item id="4" title="Qu’est-ce qu’il y a d’autres que des voitures?">
-                  <p>
-                    En plus des voitures variées de vos voisins et voisines, vous aurez accès à une
-                    variété de moyens de transport : vélo-cargo, vélo électrique, remorque à
-                    attacher à votre vélo…  Vous pourrez le choisir selon votre besoin. LocoMotion
-                    c’est la cerise de votre
-                    <a href="https://equiterre.org/solution/cocktail-transport" target="_blank">
-                      cocktail transport
-                    </a>!
-                  </p>
+                <home-faq-item id="4" :title="$t('faq.sections.why.questions.1.title')">
+                  <p v-html="$t('faq.sections.why.questions.1.content')" />
                 </home-faq-item>
 
-                <home-faq-item id="5" title="Alors, vous embarquez?">
-                  <p>
-                    Votre mission si vous l’acceptez : faire vivre votre voisinage! Plus une
-                    communauté renforce ses liens, plus le partage sera agréable et facile! C’est
-                    la conclusion - spoiler alert! - du projet de Nos milieux de vie!, de la
-                    Chaire de recherche qui nous étudié.
-                  </p>
-                  <p>
-                    Bref,dans votre voisinage :  aidez le nouveau monde, organisez des 5 à 7,
-                    parlez-en! Il y a plein de rôles à jouer, prenez part à ce mouvement collectif!
-                  </p>
+                <home-faq-item id="5" :title="$t('faq.sections.participate.questions.0.title')">
+                  <div v-html="$t('faq.sections.participate.questions.0.content')" />
                 </home-faq-item>
               </div>
             </div>

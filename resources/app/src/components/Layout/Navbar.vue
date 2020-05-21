@@ -63,11 +63,11 @@
           <span class="nav-link__text">Profil</span>
         </b-nav-item>
 
-        <b-nav-item to="/help" class="d-block d-lg-none" >
+        <b-nav-item to="/faq" class="d-block d-lg-none" >
           <span class="nav-link__icon">
             <svg-help />
           </span>
-          <span class="nav-link__text">Aide</span>
+          <span class="nav-link__text">FAQ</span>
         </b-nav-item>
 
         <b-nav-item @click="logout" class="d-block d-lg-none">
@@ -92,7 +92,7 @@
           <b-dropdown-item to="/profile" v-if="hasCompletedRegistration">
             Profil
           </b-dropdown-item>
-          <b-dropdown-item to="/help">Aide</b-dropdown-item>
+          <b-dropdown-item to="/faq">FAQ</b-dropdown-item>
           <b-dropdown-divider />
           <b-dropdown-item @click="logout">Déconnexion</b-dropdown-item>
         </b-nav-item-dropdown>
