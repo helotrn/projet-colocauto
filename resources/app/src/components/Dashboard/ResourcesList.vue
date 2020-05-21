@@ -93,6 +93,7 @@ export default {
       &.dashboard-resources-list__resources__desjardins img {
         margin-right: 0;
         flex: 1 0 100%;
+        max-width: 300px;
       }
 
       &.dashboard-resources-list__resources__messenger {
