@@ -150,8 +150,16 @@ class Loan extends BaseModel
         return $this->hasMany(Action::class)->orderBy('weight', 'asc')->orderBy('id', 'asc');
     }
 
+    public function bike() {
+        return $this->belongsTo(Bike::class, 'loanable_id');
+    }
+
     public function borrower() {
         return $this->belongsTo(Borrower::class);
+    }
+
+    public function car() {
+        return $this->belongsTo(Car::class, 'loanable_id');
     }
 
     public function community() {
@@ -190,6 +198,10 @@ class Loan extends BaseModel
         return $this->hasOne(Takeover::class);
     }
 
+    public function trailer() {
+        return $this->belongsTo(Trailer::class, 'loanable_id');
+    }
+
     public function getActualDurationInMinutesAttribute() {
         $completedExtensions = $this->extensions->where('status', 'completed');
         if (!$completedExtensions->isEmpty()) {
@@ -222,20 +234,18 @@ class Loan extends BaseModel
             return null;
         }
 
-        $pricing = $this->community->getPricingFor($this->loanable);
+        $loanable = $this->getFullLoanable();
 
-        try {
-            $values = $pricing->evaluateRule(
-                $handover->mileage_end - $takeover->mileage_beginning,
-                $this->actual_duration_in_minutes,
-                $this->loanable,
-                $this
-            );
-        } catch (\Exception $e) {
-            return [0, 0];
-        }
+        $pricing = $this->community->getPricingFor($loanable);
 
-        return is_array($values) ? $values[0] : $values;
+        $values = $pricing->evaluateRule(
+            $handover->mileage_end - $takeover->mileage_beginning,
+            $this->actual_duration_in_minutes,
+            $loanable,
+            $this
+        );
+
+        return max(0, is_array($values) ? $values[0] : $values);
     }
 
     public function getActualInsuranceAttribute() {
@@ -250,20 +260,18 @@ class Loan extends BaseModel
             return null;
         }
 
-        $pricing = $this->community->getPricingFor($this->loanable);
+        $loanable = $this->getFullLoanable();
 
-        try {
-            $values = $pricing->evaluateRule(
-                $handover->mileage_end - $takeover->mileage_beginning,
-                $this->actual_duration_in_minutes,
-                $this->loanable,
-                $this
-            );
-        } catch (\Exception $e) {
-            return [0, 0];
-        }
+        $pricing = $this->community->getPricingFor($loanable);
 
-        return is_array($values) ? $values[1] : 0;
+        $values = $pricing->evaluateRule(
+            $handover->mileage_end - $takeover->mileage_beginning,
+            $this->actual_duration_in_minutes,
+            $loanable,
+            $this
+        );
+
+        return max(0, is_array($values) ? $values[1] : $values);
     }
 
     public function getCanceledAtAttribute() {
@@ -298,5 +306,18 @@ class Loan extends BaseModel
         }
 
         return $query;
+    }
+
+    protected function getFullLoanable() {
+      switch ($this->loanable->type) {
+          case 'car':
+                return $this->car;
+          case 'bike':
+                return $this->bike;
+          case 'trailer':
+                return $this->trailer;
+          default:
+              return $this->loanable;
+      }
     }
 }
