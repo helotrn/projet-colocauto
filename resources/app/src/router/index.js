@@ -86,7 +86,7 @@ const router = new VueRouter({
   base: process.env.BASE_URL,
   routes,
   scrollBehavior(to) {
-    if (to.matched.length > 1) {
+    if (to.matched.length >= 1) {
       return { x: 0, y: 0 };
     }
 
