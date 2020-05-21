@@ -3,10 +3,10 @@ import Vue from 'vue';
 export default {
   namespaced: true,
   state: {
-    tags: [],
     error: null,
     lastLoadedAt: null,
     loaded: false,
+    tags: [],
   },
   mutations: {
     ajax(state, ajax) {

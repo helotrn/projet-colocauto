@@ -94,4 +94,13 @@ const router = new VueRouter({
   },
 });
 
+router.beforeEach((to, from, next) => {
+  const { body: { style } } = document;
+
+  style.overflow = 'auto';
+  style.height = 'auto';
+
+  next();
+})
+
 export default router;

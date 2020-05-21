@@ -5,11 +5,8 @@
     variant="transparent"
     type="light">
     <div class="layout-navbar__brand-wrapper">
-      <b-navbar-brand :to="isLoggedIn ? '/app' : '/'" class="d-none d-lg-block">
+      <b-navbar-brand :to="isLoggedIn ? '/app' : '/'">
         <svg-logo class="layout-navbar__logo" />
-      </b-navbar-brand>
-      <b-navbar-brand :to="isLoggedIn ? '/app' : '/'" class="d-lg-none">
-        <svg-small-logo class="layout-navbar__logo" />
       </b-navbar-brand>
 
       <b-navbar-brand class="layout-navbar__separator" v-if="title" />
@@ -26,7 +23,8 @@
         @click="toggleMenu = !toggleMenu" />
     </div>
 
-    <b-collapse id="nav-collapse" class="layout-navbar__collapse" is-nav>
+    <b-collapse id="nav-collapse" class="layout-navbar__collapse" is-nav
+      v-model="toggleMenu">
       <div class="layout-navbar__collapse__illustration d-md-none" />
 
       <b-navbar-nav class="ml-auto" v-if="isLoggedIn">
@@ -101,8 +99,18 @@
       </b-navbar-nav>
 
       <b-navbar-nav class="ml-auto" v-else>
-        <b-nav-item to="/register">S'inscrire</b-nav-item>
-        <b-nav-item to="/login">Se connecter</b-nav-item>
+        <b-nav-item to="/register">
+          <span class="nav-link__icon d-lg-none">
+            <svg-register />
+          </span>
+          <span class="nav-link__text">S'inscrire</span>
+        </b-nav-item>
+        <b-nav-item to="/login">
+          <span class="nav-link__icon d-lg-none">
+            <svg-login />
+          </span>
+          <span class="nav-link__text">Se connecter</span>
+        </b-nav-item>
 
         <locale-switcher />
       </b-navbar-nav>
@@ -117,10 +125,11 @@ import Dashboard from '@/assets/svg/dashboard.svg';
 import Hand from '@/assets/svg/hand.svg';
 import Help from '@/assets/svg/help.svg';
 import Location from '@/assets/svg/location.svg';
+import Login from '@/assets/svg/login.svg';
 import Logo from '@/assets/svg/logo.svg';
 import Logout from '@/assets/svg/logout.svg';
 import Profile from '@/assets/svg/profile.svg';
-import SmallLogo from '@/assets/svg/small-logo.svg';
+import Register from '@/assets/svg/register.svg';
 
 import AdminSidebar from '@/components/Admin/Sidebar.vue';
 import LocaleSwitcher from '@/components/LocaleSwitcher.vue';
@@ -135,10 +144,11 @@ export default {
     'svg-hand': Hand,
     'svg-help': Help,
     'svg-location': Location,
+    'svg-login': Login,
     'svg-logo': Logo,
     'svg-logout': Logout,
     'svg-profile': Profile,
-    'svg-small-logo': SmallLogo,
+    'svg-register': Register,
   },
   props: {
     title: {
@@ -151,6 +161,18 @@ export default {
     return {
       toggleMenu: false,
     };
+  },
+  watch: {
+    toggleMenu(val) {
+      const { body: { style } } = document;
+      if (val) {
+        style.overflow = 'hidden';
+        style.height = '100vh';
+      } else {
+        style.overflow = 'auto';
+        style.height = 'auto';
+      }
+    },
   },
 };
 </script>
