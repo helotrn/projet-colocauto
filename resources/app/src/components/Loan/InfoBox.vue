@@ -277,11 +277,8 @@ export default {
 
     .btn {
       margin-left: 16px;
+      margin-top: 8px;
       margin-bottom: 8px;
-
-      &:last-child {
-        margin-bottom: 0;
-      }
     }
   }
 }
