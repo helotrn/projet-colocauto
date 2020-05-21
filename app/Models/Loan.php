@@ -309,15 +309,15 @@ class Loan extends BaseModel
     }
 
     protected function getFullLoanable() {
-      switch ($this->loanable->type) {
-          case 'car':
+        switch ($this->loanable->type) {
+            case 'car':
                 return $this->car;
-          case 'bike':
+            case 'bike':
                 return $this->bike;
-          case 'trailer':
+            case 'trailer':
                 return $this->trailer;
-          default:
-              return $this->loanable;
-      }
+            default:
+                return $this->loanable;
+        }
     }
 }
