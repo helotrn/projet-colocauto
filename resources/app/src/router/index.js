@@ -101,6 +101,6 @@ router.beforeEach((to, from, next) => {
   style.height = 'auto';
 
   next();
-})
+});
 
 export default router;
