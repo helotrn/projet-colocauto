@@ -11,7 +11,8 @@ class PaymentRequest extends BaseRequest
         return [
             'platform_tip' => [
                 'numeric',
-                'required',
+                'present',
+                'min:0',
             ],
         ];
     }

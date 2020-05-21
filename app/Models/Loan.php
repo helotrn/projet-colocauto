@@ -44,7 +44,8 @@ class Loan extends BaseModel
         ],
         'platform_tip' => [
             'numeric',
-            'required',
+            'present',
+            'min:0',
         ],
         'message_for_owner' => [ 'present' ],
         'reason' => [ 'required' ],

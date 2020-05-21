@@ -66,7 +66,7 @@
                   <div class="bv-no-focus-ring">
                     <b-form-input
                       id="platform_tip" name="platform_tip"
-                      type="number" :step="0.01"
+                      type="number" :min="0" :step="0.01"
                       v-model="platformTip" />
                   </div>
                 </div>
