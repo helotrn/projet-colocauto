@@ -4,7 +4,7 @@
       <b-row>
         <b-col>
           <div class="layout-footer__text">
-            <strong>locomotion.app</strong> est un <a href="https://www.gnu.org/philosophy/free-sw.fr.html" target="_blank">logiciel libre</a> <br>
+            <strong>locomotion.app</strong> est un <a href="https://www.gnu.org/philosophy/free-sw.fr.html" target="_blank">logiciel libre</a>
             Vous pourrez bientôt contribuer au code!
           </div>
         </b-col>
@@ -23,11 +23,14 @@ export default {
 $footer-height: 44px !default;
 
 .layout-footer .container-fluid {
-  background-color: $black;
+  background-color: $locomotion-light-green;
   height: $footer-height;
 
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+
   .layout-footer__text {
-    margin-top: 6px;
     font-size: 14px;
     line-height: 16px;
     text-align: center;

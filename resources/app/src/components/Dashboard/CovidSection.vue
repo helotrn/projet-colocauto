@@ -49,4 +49,9 @@ export default {
 </script>
 
 <style lang="scss">
+.dashboard-covid-section {
+  .jumbotron {
+    margin-bottom: 0;
+  }
+}
 </style>

@@ -1,3 +1,18 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 388" preserveAspectRatio="none">
-  <path fill="#00ADA8" d="M330.15909,54.8218 C293.317,68.9349 236.25,61.1117 191.443,43.5745 C106.558,10.3505 34.389,49.7809 0,66.9319 L0,388 L700,388 L700,-1.60681e-07 C688.09,2.66757 661.258,10.5345 634.843,25.5356 C601.419,44.5167 539.967,82.7543 463.145,54.8218 C400.0703,31.888 367.0012,40.7087 330.15909,54.8218 Z"/>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   height="388"
+   width="402"
+   id="svg4"
+   version="1.1"
+   preserveAspectRatio="auto"
+   viewBox="0 0 390 368">
+  <path
+     style="fill:#00ada8"
+     id="path2"
+     d="M 32.15909,54.8218 C 21.88455,61.140914 19.83814,63.176765 0,66.9319 V 388 H 402 V 0 C 390.09,2.6675702 363.258,10.5345 336.843,25.5356 303.419,44.5167 241.967,82.7543 165.145,54.8218 102.0703,31.888 69.0012,40.7087 32.15909,54.8218 Z" />
 </svg>

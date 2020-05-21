@@ -1,6 +1,6 @@
 <template>
   <layout-page name="home" wide>
-    <section class="page__section page__section--top">
+    <section class="page__section page__section--top mb-0">
       <b-container>
         <h1 class="page__section__title">
           Communautés <br class="d-lg-none">mobiles <br>et solidaires
@@ -24,11 +24,7 @@
       <svg-wave-desktop class="wave-svg d-none d-lg-block" />
     </section>
 
-    <section>
-      <dashboard-covid-section />
-    </section>
-
-    <section class="page__section page__section--hero">
+    <section class="page__section page__section--hero mb-0">
       <b-col>
         <div class="page__section__content">
           <svg-clouds class="d-lg-none" />
@@ -43,43 +39,53 @@
       </b-col>
     </section>
 
+    <section>
+      <dashboard-covid-section />
+    </section>
+
     <section class="page__section page__section--what-is-it">
       <b-container>
-        <h2 class="page__section__title">
-          C’est quoi LocoMotion?
+        <h2 class="page__section__title mb-4">
+          C’est quoi<br>LocoMotion?
         </h2>
 
         <div class="page__section__content">
           <b-row align-v="end">
             <b-col md="4">
               <b-row align-v="center">
-                <b-col cols="6" md="12">
+                <b-col md="12">
                   <svg-borrow class="svg-borrow" />
                 </b-col>
-                <b-col cols="6" md="12">
-                  <p>Empruntez une auto à 5 minutes à pied</p>
+                <b-col md="12">
+                  <p class="text-center mb-5">
+                    Empruntez une auto à 5 minutes à pied
+                  </p>
                 </b-col>
               </b-row>
             </b-col>
 
             <b-col md="4">
               <b-row align-v="center">
-                <b-col cols="6" md="12" order="2" order-md="1" >
+                <b-col md="12">
                   <svg-lend class="svg-lend" />
                 </b-col>
-                <b-col cols="6" md="12" order="1" order-md="2">
-                  <p>Partagez votre auto à votre voisine</p>
+                <b-col md="12">
+                  <p class="text-center mb-5">
+                    Partagez votre auto à votre voisine
+                  </p>
                 </b-col>
               </b-row>
             </b-col>
 
             <b-col md="4">
               <b-row align-v="center">
-                <b-col cols="6" md="12">
+                <b-col md="12">
                   <svg-tridem class="svg-tridem" />
                 </b-col>
-                <b-col cols="6" md="12">
-                  <p>Faites partie d’un projet collectif ambitieux</p>
+                <b-col md="12">
+                  <p class="text-center mb-5">
+                    Faites partie d’un projet collectif ambitieux
+                  </p>
                 </b-col>
               </b-row>
             </b-col>
@@ -89,42 +95,47 @@
     </section>
 
     <section class="page__section page__section--participants">
-      <b-container>
+      <b-container fluid>
         <b-row>
           <b-col lg="6">
             <b-row class="page__section--participants__photos">
-              <b-col cols="4" class="page__section--participants__photo">
+              <b-col col class="page__section--participants__photo">
                 <img src="/user1.png">
               </b-col>
-              <b-col cols="4" class="page__section--participants__photo">
+              <b-col col class="page__section--participants__photo">
                 <img src="/user2.png">
               </b-col>
-              <b-col cols="4" class="page__section--participants__photo">
+              <b-col col class="page__section--participants__photo">
                 <img src="/user3.png">
               </b-col>
             </b-row>
           </b-col>
           <b-col lg="6">
-            <h2 class="page__section__title">
-              Plus de 200 <span class="no-break">participant-e-s!</span>
-            </h2>
+            <div class="page__section--participants__text">
+              <h2 class="mb-4 page__section__title">
+                Plus de {{ roundedStatsUsers }}
+                <span class="no-break">participant-e-s!</span>
+              </h2>
 
-            <p>
-              Aujourd’hui, <span class="no-break">{{ stats.communities.length }}</span> quartiers,
-              soit plus de <span class="no-break">{{ stats.users }} participant•e•s</span>
-              partageant <span class="no-break">{{ stats.loanables }}</span> véhicules
-              expérimentent cette solution collective.
-            </p>
+              <p class="mb-5">
+                Aujourd’hui, <span class="no-break">{{ stats.communities.length }}</span> quartiers,
+                soit plus de <span class="no-break">{{ stats.users }} participant•e•s</span>
+                partageant <span class="no-break">{{ stats.loanables }}</span> véhicules
+                expérimentent cette solution collective.
+              </p>
 
-            <b-button size="lg" variant="outline-light" to="/communities">
-              Situer les voisinnages LocoMotion
-            </b-button>
+              <div>
+                <b-button size="lg" variant="outline-light" to="/communities">
+                  Situer les voisinages
+                </b-button>
+              </div>
+            </div>
           </b-col>
         </b-row>
       </b-container>
     </section>
 
-    <section class="page__section page__section--community">
+    <section class="page__section page__section--community mb-0">
       <b-container>
         <b-row align-v="center">
           <b-col lg="6" order-lg="2">
@@ -132,13 +143,15 @@
             <svg-community-desktop class="d-none d-lg-block svg-community" />
           </b-col>
           <b-col lg="6">
-            <h2 class="page__section__title">
+            <h2 class="mt-4 mb-4 page__section__title">
               Rejoignez un voisinage
             </h2>
-            <p>
+
+            <p class="mb-5">
               Participez à la vie de quartier en vous déplaceant autrement.
               Des voisins et des voisines s'activent, prenez part au mouvement!
             </p>
+
             <b-button size="lg" variant="warning" to="register">S'inscrire</b-button>
           </b-col>
         </b-row>
@@ -243,11 +256,44 @@
           </b-col>
         </b-row>
       </b-container>
-      <svg-footer class="svg-footer" />
     </section>
 
-    <section class="page__section page__section--footer">
+    <section class="page__section page__section--footer d-none d-lg-block">
       <svg-footer-dot />
+    </section>
+
+    <section class="page__section page__section--partners">
+      <b-container>
+        <b-row>
+          <b-col>
+            <h2 class="page__section__title">Partenaires</h2>
+
+            <svg-footer-dot class="page__section--partners__dot d-lg-none" />
+
+            <div class="page__section--partners__partners">
+              <div class="page__section--partners__partners__partner">
+                <img src="/partners/Logo_Mtl_Ahuntsic-Cartierville.svg">
+              </div>
+
+              <div class="page__section--partners__partners__partner">
+                <img src="/partners/logo-chaire-mobilite.png">
+              </div>
+
+              <div class="page__section--partners__partners__partner">
+                <img src="/partners/f20-logo-n1-desjardins-v.svg">
+              </div>
+
+              <div class="page__section--partners__partners__partner">
+                <img src="/partners/FCM-logo-2018-col_fr.png">
+              </div>
+
+              <div class="page__section--partners__partners__partner">
+                <img src="/partners/Logo_Mtl_Rosemont-La-Petite-Patrie.svg">
+              </div>
+            </div>
+          </b-col>
+        </b-row>
+      </b-container>
     </section>
   </layout-page>
 </template>
@@ -268,9 +314,8 @@ import Community from '@/assets/svg/home-community.svg';
 import DotDesktop from '@/assets/svg/home-dot-desktop.svg';
 import Dot from '@/assets/svg/home-dot.svg';
 import FooterDot from '@/assets/svg/home-footer-dot.svg';
-import Footer from '@/assets/svg/home-footer.svg';
 import Lend from '@/assets/svg/home-lend.svg';
-import Tridem from '@/assets/svg/tridem.svg';
+import Tridem from '@/assets/svg/home-tridem.svg';
 import WaveDesktop from '@/assets/svg/home-wave-desktop.svg';
 import Wave from '@/assets/svg/home-wave.svg';
 
@@ -290,13 +335,19 @@ export default {
     'svg-dot-desktop': DotDesktop,
     'svg-dot': Dot,
     'svg-footer-dot': FooterDot,
-    'svg-footer': Footer,
     'svg-lend': Lend,
     'svg-tridem': Tridem,
     'svg-wave-desktop': WaveDesktop,
     'svg-wave': Wave,
   },
   computed: {
+    roundedStatsUsers() {
+      if (this.stats.users) {
+        return Math.max(10, Math.floor(this.stats.users / 10) * 10);
+      }
+
+      return 200;
+    },
     stats() {
       return this.$store.state.stats.data;
     },
