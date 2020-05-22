@@ -3,6 +3,8 @@
 namespace App\Http\Requests\Community;
 
 use App\Http\Requests\BaseRequest;
+use App\Models\Pricing;
+use App\Rules\CommunityPricingRule;
 
 class CreateRequest extends BaseRequest
 {
@@ -13,7 +15,13 @@ class CreateRequest extends BaseRequest
     public function rules() {
         $rules = [
             'name' => 'string',
+            'pricings' => [
+                new CommunityPricingRule,
+            ],
         ];
+
+        $pricingRules = Pricing::getRules('update', $this->user());
+        $rules = array_merge($rules, static::rebaseRules('pricings.*', $pricingRules));
 
         return $rules;
     }

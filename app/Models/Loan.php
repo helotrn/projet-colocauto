@@ -238,6 +238,10 @@ class Loan extends BaseModel
 
         $pricing = $this->community->getPricingFor($loanable);
 
+        if (!$pricing) {
+            return 0;
+        }
+
         $values = $pricing->evaluateRule(
             $handover->mileage_end - $takeover->mileage_beginning,
             $this->actual_duration_in_minutes,
@@ -263,6 +267,10 @@ class Loan extends BaseModel
         $loanable = $this->getFullLoanable();
 
         $pricing = $this->community->getPricingFor($loanable);
+
+        if (!$pricing) {
+            return 0;
+        }
 
         $values = $pricing->evaluateRule(
             $handover->mileage_end - $takeover->mileage_beginning,

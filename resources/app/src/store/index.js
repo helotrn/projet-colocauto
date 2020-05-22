@@ -77,6 +77,8 @@ const loadUserFields = [
   'loanables.loans.borrower.user.full_name',
   'loanables.loans.borrower.user.id',
   'loans.*',
+  '!loans.actual_price',
+  '!loans.actual_insurance',
   'loans.actions.*',
   'loans.borrower.id',
   'loans.borrower.user.avatar',
