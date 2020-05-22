@@ -86,7 +86,7 @@ export default {
       }
 
       return this.user.communities.find(c => c.id === id);
-    }
+    },
   },
 };
 </script>
