@@ -165,7 +165,9 @@ class PaymentController extends RestController
 
         // Save payment
         $payment->borrower_invoice_id = $borrowerInvoice->id;
-        $payment->owner_invoice_id = $ownerInvoice->id;
+        if ($loan->loanable->owner) {
+            $payment->owner_invoice_id = $ownerInvoice->id;
+        }
         $payment->status = 'completed';
         $payment->save();
 

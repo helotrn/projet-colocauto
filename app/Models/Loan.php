@@ -62,8 +62,8 @@ class Loan extends BaseModel
     public static function boot() {
         parent::boot();
 
-        self::created(function ($model) {
-            if (!$model->intention) {
+        self::saved(function ($model) {
+            if ($model->loanable && !$model->intention) {
                 $intention = new Intention();
                 $intention->loan()->associate($model);
                 $intention->save();

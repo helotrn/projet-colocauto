@@ -15,6 +15,10 @@ class SendLoanIntentionRejectedEmails
         $borrower = $loan->borrower;
         $owner = $loan->loanable->owner;
 
+        if (!$owner) {
+            return;
+        }
+
         Mail::to(
             $borrower->user->email,
             $borrower->user->name . ' ' . $borrower->user->last_name

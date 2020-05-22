@@ -10,6 +10,8 @@ class Intention extends Action
         parent::boot();
 
         self::saved(function ($model) {
+            $loan = $model->loan;
+
             if ($model->executed_at) {
                 return;
             }
@@ -30,6 +32,10 @@ class Intention extends Action
                     $model->save();
                     break;
                 default:
+                    if (!$loan->loanable->owner) {
+                        $model->status = 'completed';
+                        $model->save();
+                    }
                     break;
             }
         });
