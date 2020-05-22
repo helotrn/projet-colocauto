@@ -162,8 +162,9 @@ export default {
       }
     },
     returnAt() {
+      const duration = this.loan.actual_duration_in_minutes || this.loan.duration_in_minutes;
       return this.$dayjs(this.loan.departure_at)
-        .add(this.loan.actual_duration_in_minutes, 'minute')
+        .add(duration, 'minute')
         .format('YYYY-MM-DD HH:mm:ss');
     },
     userRole() {
