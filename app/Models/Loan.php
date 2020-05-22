@@ -92,7 +92,8 @@ class Loan extends BaseModel
 
                 return $query
                     ->selectRaw(
-                        '(array_agg(all_actions.status ORDER BY all_actions.id DESC))[1] AS loan_status'
+                        '(array_agg(all_actions.status ORDER BY all_actions.id DESC))[1]'
+                            . ' AS loan_status'
                     )->groupBy('loans.id');
             }
         ];
