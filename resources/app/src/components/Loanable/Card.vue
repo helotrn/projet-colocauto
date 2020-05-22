@@ -1,9 +1,10 @@
 <template>
   <b-card class="loanable-card" no-body>
     <div class="loanable-card__image">
-      <div class="loanable-card__image__user" :style="userAvatarStyle" />
+      <div class="loanable-card__image__user" :style="userAvatarStyle" v-if="owner" />
+      <div class="loanable-card__image__user" :style="loanableImageStyle" v-else />
 
-      <div class="loanable-card__image__loanable">
+      <div class="loanable-card__image__loanable" v-if="owner">
         <div :style="loanableImageStyle" />
       </div>
     </div>
@@ -151,7 +152,7 @@ export default {
       }
     },
     userAvatarStyle() {
-      if (!this.owner.user || !this.owner.user.avatar) {
+      if (!this.owner || !this.owner.user || !this.owner.user.avatar) {
         return {};
       }
 

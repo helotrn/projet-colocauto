@@ -64,6 +64,7 @@ const routes = [
           'incidents.*',
           'intention.*',
           'loanable.name',
+          'loanable.community.name',
           'loanable.owner.user.avatar',
           'loanable.owner.user.name',
           'loanable.owner.user.full_name',

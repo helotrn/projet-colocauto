@@ -143,7 +143,8 @@ export default {
       const { id, type } = this.item.loanable;
       await this.$store.dispatch(`${type}s/retrieveOne`, {
         params: {
-          fields: '*,owner.id,owner.user.id,owner.user.avatar,owner.user.name,owner.user.phone',
+          fields: '*,owner.id,owner.user.id,owner.user.avatar,owner.user.name,owner.user.phone,'
+            + 'community.name',
           '!fields': 'events',
         },
         id,

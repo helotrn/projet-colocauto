@@ -13,10 +13,14 @@
             v-b-modal="'borrower-modal'" v-if="userRole !== 'borrower'">
             {{ loan.borrower.user.full_name }}
           </a>
+
           <a href="#"
-            v-b-modal="'owner-modal'" v-else-if="userRole !== 'owner'">
+            v-b-modal="'owner-modal'" v-if="loan.loanable.owner && userRole !== 'owner'">
             {{ loan.loanable.owner.user.full_name }}
           </a>
+          <span v-else>
+            {{ loan.loanable.community.name }}
+          </span>
           <br>
         </p>
         <p class="loan-header__description__loan">
@@ -41,11 +45,11 @@
     <b-modal size="md"
       title="Coordonnées du propriétaire"
       id="owner-modal" footer-class="d-none">
-      <p>
+      <p v-if="loan.loanable.owner">
         <strong>{{ loan.loanable.owner.user.full_name }}</strong>
       </p>
 
-      <dl>
+      <dl v-if="loan.loanable.owner">
         <dt>Téléphone</dt>
         <dd>{{ loan.loanable.owner.user.phone }}</dd>
       </dl>
@@ -103,7 +107,13 @@ export default {
         return '';
       }
 
-      const ownerName = this.loan.loanable.owner.user.name;
+      let ownerName;
+      if (this.loan.loanable.owner) {
+        ownerName = this.loan.loanable.owner.user.name;
+      } else {
+        ownerName = this.loan.loanable.community.name;
+      }
+
       const particle = ['a', 'e', 'i', 'o', 'u', 'é', 'è']
         .indexOf(ownerName[0]
           .toLowerCase()) > -1 ? "d'" : 'de ';
@@ -132,7 +142,7 @@ export default {
           break;
       }
 
-      if (this.user.id === this.loan.loanable.owner.user.id) {
+      if (this.loan.loanable.owner && this.user.id === this.loan.loanable.owner.user.id) {
         particle = 'de votre ';
       }
 
@@ -157,7 +167,7 @@ export default {
         .format('YYYY-MM-DD HH:mm:ss');
     },
     userRole() {
-      if (this.user.id === this.loan.loanable.owner.user.id) {
+      if (this.loan.loanable.owner && this.user.id === this.loan.loanable.owner.user.id) {
         return 'owner';
       }
 

@@ -127,6 +127,7 @@ export default {
         borrower: {
           ...this.user.borrower,
           user: {
+            id: this.user.id,
             full_name: this.user.full_name,
           },
         },
