@@ -11,7 +11,8 @@
         </b-col>
 
         <b-col lg="9" class="loan__actions">
-          <div class="loan__actions__buttons text-right mb-3" v-if="!!item.id">
+          <div class="loan__actions__buttons text-right mb-3"
+            v-if="!!item.id && item.status !== 'completed'">
             <b-button class="ml-3 mb-3" variant="danger" :disabled="hasReachedStep('takeover')"
               @click="cancelLoan">
               Annuler la réservation
@@ -23,7 +24,8 @@
               Signaler un retard
             </b-button>
             <b-button v-if="!userIsOwner" class="ml-3 mb-3" variant="warning"
-              :disabled="!hasReachedStep('takeover') || item.status === 'canceled'"
+              :disabled="!hasReachedStep('takeover')
+                || item.status === 'canceled' || item.status === 'completed'"
               @click="addIncident('accident')">
               Signaler un incident
             </b-button>
@@ -94,6 +96,10 @@ export default {
         : capitalize(this.$i18n.tc('titles.loanable', 1));
     },
     userIsOwner() {
+      if (!this.item.loanable.owner) {
+        return false;
+      }
+
       return this.user.id === this.item.loanable.owner.user.id;
     },
   },

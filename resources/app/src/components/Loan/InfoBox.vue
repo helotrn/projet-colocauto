@@ -5,7 +5,7 @@
         <b-row>
           <b-col lg="6">
             <b-row>
-              <b-col class="loan-info-box__image">
+              <b-col class="loan-info-box__image" v-if="otherUser">
                 <div class="loan-info-box__image__user"
                   :style="{ backgroundImage: loanPersonImage }" />
 
@@ -13,10 +13,25 @@
                   <div :style="{ backgroundImage: loanableImage }" />
                 </div>
               </b-col>
+              <b-col class="loan-info-box__image" v-else>
+                <div class="loan-info-box__image__user"
+                  :style="{ backgroundImage: loanableImage }" />
+
+                <div class="loan-info-box__image__loanable" v-if="otherUser">
+                  <div :style="{ backgroundImage: loanableImage }" />
+                </div>
+              </b-col>
 
               <b-col class="loan-info-box__name">
                 <span>
-                  <span class="loan-info-box__name__user">{{ otherUser.full_name }}</span><br>
+                  <span class="loan-info-box__name__user" v-if="otherUser">
+                    {{ otherUser.full_name }}
+                  </span>
+                  <span class="loan-info-box__name__user" v-else-if="loan.loanable.community">
+                    {{ loan.loanable.community.name }}
+                  </span>
+
+                  <br>
                   <span class="loan-info-box__name__loanable">{{ loan.loanable.name }}</span>
                 </span>
               </b-col>
@@ -113,6 +128,10 @@ export default {
   },
   computed: {
     loanPersonImage() {
+      if (!this.otherUser) {
+        return '';
+      }
+
       const { avatar } = this.otherUser;
       if (!avatar) {
         return '';
@@ -134,6 +153,10 @@ export default {
     },
     otherUser() {
       if (this.user.id === this.loan.borrower.user.id) {
+        if (!this.loan.loanable.owner) {
+            return null
+        }
+
         return this.loan.loanable.owner.user;
       }
 
@@ -145,7 +168,7 @@ export default {
         .format('YYYY-MM-DD HH:mm:ss');
     },
     userRole() {
-      if (this.user.id === this.loan.loanable.owner.user.id) {
+      if (this.loan.loanable.owner && this.user.id === this.loan.loanable.owner.user.id) {
         return 'owner';
       }
 

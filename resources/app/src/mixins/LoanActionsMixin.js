@@ -50,6 +50,10 @@ export default {
       return this.loan.loanable.owner;
     },
     ownerAvatar() {
+      if (!this.owner) {
+        return '';
+      }
+
       const { avatar } = this.owner.user;
       if (!avatar) {
         return '';
@@ -62,7 +66,7 @@ export default {
         return 'admin';
       }
 
-      return this.user.id === this.owner.user.id ? 'owner' : 'borrower';
+      return (this.owner && this.user.id === this.owner.user.id) ? 'owner' : 'borrower';
     },
   },
   methods: {

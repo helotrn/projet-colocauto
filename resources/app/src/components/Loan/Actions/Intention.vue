@@ -30,7 +30,7 @@
           <p v-if="userRole === 'owner'">
             {{ borrower.user.name }} veut vous emprunter {{ loanablePrettyName }}.
           </p>
-          <p v-else>
+          <p v-else-if="loan.loanable.owner">
             Vous avez demandé à {{ loan.loanable.owner.user.name }} de lui
             emprunter {{ loanablePrettyName }}.
           </p>
@@ -74,7 +74,7 @@
               </b-button>
             </div>
           </div>
-          <div v-else class="text-center">
+          <div v-else-if="loan.loanable.owner" class="text-center">
             <p>Contactez le propriétaire pour qu'il confirme votre demande.</p>
             <p>{{ loan.loanable.owner.user.phone }}</p>
           </div>

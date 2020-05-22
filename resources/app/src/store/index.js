@@ -83,6 +83,7 @@ const loadUserFields = [
   'loans.borrower.user.full_name',
   'loans.borrower.user.id',
   'loans.loanable.id',
+  'loans.loanable.community.name',
   'loans.loanable.image.*',
   'loans.loanable.name',
   'loans.loanable.owner.id',
