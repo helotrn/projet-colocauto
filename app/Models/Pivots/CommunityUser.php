@@ -14,6 +14,16 @@ class CommunityUser extends BasePivot
         'thumbnail' => '256x@fit',
     ];
 
+    public static function boot() {
+        parent::boot();
+
+        self::saved(function ($model) {
+            if ($model->approved_at && !$model->suspended_at) {
+                $model->user->getNokeUser();
+            }
+        });
+    }
+
     protected $fillable = [
         'approved_at',
         'community_id',

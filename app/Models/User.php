@@ -9,8 +9,10 @@ use App\Models\Invoice;
 use App\Models\Loan;
 use App\Models\Owner;
 use App\Models\PaymentMethod;
+use App\Services\NokeService;
 use App\Transformers\UserTransformer;
 use Auth;
+use GuzzleHttp\Client as HttpClient;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -112,6 +114,7 @@ class User extends AuthenticatableBaseModel
     public static $sizesByField = [];
 
     private $stripeCustomerMemo;
+    private $nokeUserMemo;
 
     protected $fillable = [
         'name',
@@ -301,6 +304,20 @@ class User extends AuthenticatableBaseModel
         $this->stripeCustomerMemo = $newCustomer;
 
         return $this->stripeCustomerMemo;
+    }
+
+    public function getNokeUser() {
+        if ($this->nokeUserMemo) {
+            return $this->nokeUserMemo;
+        }
+
+        $nokeService = new NokeService(new HttpClient);
+
+        $nokeUser = $nokeService->findOrCreateUser($this);
+
+        $this->nokeUserMemo = $nokeUser;
+
+        return $nokeUser;
     }
 
     public function addToBalance($amount) {
