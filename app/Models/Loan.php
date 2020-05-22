@@ -80,9 +80,9 @@ class Loan extends BaseModel
 
                 return $query->selectRaw('loans.*');
             },
-            'status' => function ($query = null) {
+            'loan_status' => function ($query = null) {
                 if (!$query) {
-                    return '(array_agg(all_actions.status ORDER BY all_actions.id DESC))[1] ';
+                    return '(array_agg(all_actions.status ORDER BY all_actions.id DESC))[1]';
                 }
 
                 $query = $query->leftJoin('actions AS all_actions', function ($j) {
@@ -92,7 +92,7 @@ class Loan extends BaseModel
 
                 return $query
                     ->selectRaw(
-                        '(array_agg(all_actions.status ORDER BY all_actions.id DESC))[1] AS status'
+                        '(array_agg(all_actions.status ORDER BY all_actions.id DESC))[1] AS loan_status'
                     )->groupBy('loans.id');
             }
         ];
