@@ -22,7 +22,7 @@
       </li>
 
       <li class="dashboard-resources-list__resources__desjardins">
-        <router-link to="/guide/assurance-desjardins">
+        <router-link to="/assurances-desjardins">
           <img src="/icons/desjardins-assurances.png">
         </router-link>
       </li>

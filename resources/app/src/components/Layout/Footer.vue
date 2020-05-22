@@ -6,6 +6,7 @@
           <div class="layout-footer__text">
             <strong>locomotion.app</strong> est un <a href="https://www.gnu.org/philosophy/free-sw.fr.html" target="_blank">logiciel libre</a>
             Vous pourrez bientôt contribuer au code!
+            &mdash; <a href="/conditions">Conditions d'utilisation</a>
           </div>
         </b-col>
       </b-row>
