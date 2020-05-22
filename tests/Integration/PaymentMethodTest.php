@@ -22,7 +22,7 @@ class PaymentMethodTest extends TestCase
         $data = [
             'name' => $this->faker->name,
             'external_id' => $this->faker->sentence,
-            'type' => $this->faker->randomElement(['credit_card' ,'bank_account']),
+            'type' => $this->faker->randomElement(['bank_account']),
             'four_last_digits' => $this->faker->randomNumber($nbDigits = 4, $strict = true),
             'credit_card_type' => $this->faker->creditCardType,
             'user_id' => $this->user->id,
