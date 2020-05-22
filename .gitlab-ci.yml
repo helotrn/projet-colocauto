@@ -39,6 +39,7 @@ locomotion:test:
     refs:
       - master
   script:
+    - cp .env.testing .env
     - php composer.phar install
     - php artisan migrate --env testing
     - php artisan passport:install --env testing
