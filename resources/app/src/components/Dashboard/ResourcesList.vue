@@ -27,7 +27,7 @@
         </router-link>
       </li>
 
-      <li class="dashboard-resources-list__resources__messenger">
+      <li class="dashboard-resources-list__resources__messenger" v-show="false">
         <div>
           <img src="/icons/messenger.png">
           <span>
