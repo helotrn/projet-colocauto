@@ -11,14 +11,30 @@ class CommunityPricingRule implements Rule
             return false;
         }
 
-        foreach ($value as $pricing) {
-            if ($pricing['object_type'] === null) {
-                return true;
+        $pricingsByType = array_reduce($value, function ($acc, $p) {
+            if ($p['object_type'] === null) {
+                $type = 'null';
+            } else {
+                $type = $p['object_type'];
             }
+
+            if (!isset($acc[$type])) {
+                $acc[$type] = 0;
+            }
+
+            $acc[$type]++;
+
+            return $acc;
+        }, []);
+
+        if (count($value) < 3 && !isset($pricingsByType['null'])) {
+            return false;
         }
 
-        if (count($value) < 3) {
-            return false;
+        foreach ($pricingsByType as $type) {
+            if ($type > 1) {
+                return false;
+            }
         }
 
         return true;
@@ -26,6 +42,6 @@ class CommunityPricingRule implements Rule
 
     public function message() {
         return 'Spécifiez une tarification par défaut ou '
-                    . 'une tarification pour tous les types.';
+                    . 'une tarification pour tous les autres types.';
     }
 }

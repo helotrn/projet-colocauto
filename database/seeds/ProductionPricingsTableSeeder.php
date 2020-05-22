@@ -20,7 +20,7 @@ class ProductionPricingsTableSeeder extends Seeder
             ],
             [
                 'name' => 'Tarif Voitures LocoMotion',
-                'object_type' => 'trailer',
+                'object_type' => 'car',
                 'rule' => <<<RULE
 SI \$OBJET.pricing_category == 'large' && PLAFOND(\$MINUTES/120) <= 6 && \$EMPRUNT.start.year - \$OBJET.year_of_circulation > 3 ALORS [0.18 * \$KM + 34.12 / 6 * PLAFOND(\$MINUTES/120), 3 + 0]
 SI \$OBJET.pricing_category == 'large' &&  PLAFOND(\$MINUTES/120) <= 6 && \$EMPRUNT.start.year - \$OBJET.year_of_circulation <= 3 ALORS [0.18 * \$KM + 34.12 / 6 * PLAFOND(\$MINUTES/120), 3 + 1]
