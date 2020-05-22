@@ -110,7 +110,7 @@
             <hr>
           </div>
 
-          <dashboard-resources-list :has-community="hasCommunity" />
+          <dashboard-resources-list :user="user" />
         </b-card>
       </b-col>
     </b-row>

@@ -12,7 +12,7 @@
         </router-link>
       </li>
 
-      <li class="dashboard-resources-list__resources__committee" v-if="hasCommunity">
+      <li class="dashboard-resources-list__resources__committee" v-if="hasCommunity()">
         <router-link to="/community?tag=committee">
           <img src="/icons/allo.png">
           <span>
@@ -27,7 +27,7 @@
         </router-link>
       </li>
 
-      <li class="dashboard-resources-list__resources__messenger" v-show="false">
+      <li class="dashboard-resources-list__resources__messenger">
         <div>
           <img src="/icons/messenger.png">
           <span>
@@ -36,10 +36,33 @@
         </div>
 
         <div class="dashboard-resources-list__resources__messenger__list">
+          <span />
           <ul>
-            <li><a href="https://m.me/join/AbYKAXEN1zNM-SYv" target="_blank">Bellechasse</a></li>
-            <li><a href="https://m.me/join/Abblub9IWQl1Xz7Y" target="_blank">Masson</a></li>
-            <li><a href="https://m.me/join/AbYnbYDmbGzYdwzc" target="_blank">Papineau</a></li>
+            <li v-if="hasCommunity(1)">
+              <a href="https://www.facebook.com/groups/2992806784171151" target="_blank">
+                Bellechasse
+              </a>
+            </li>
+            <li v-if="hasCommunity(5)">
+              <a href="https://www.facebook.com/groups/278871156602975" target="_blank">
+                Fleury-Est
+              </a>
+            </li>
+            <li v-if="hasCommunity(7)">
+              <a href="https://www.facebook.com/groups/292112945285190" target="_blank">
+                Fleury-Ouest
+              </a>
+            </li>
+            <li v-if="hasCommunity(3)">
+              <a href="https://www.facebook.com/groups/2304440433199032" target="_blank">
+                Papineau
+              </a>
+            </li>
+            <li v-if="hasCommunity(6)">
+              <a href="https://www.facebook.com/groups/2740404116192047" target="_blank">
+                Youville
+              </a>
+            </li>
           </ul>
         </div>
       </li>
@@ -51,11 +74,19 @@
 export default {
   name: 'DashboardResourcesList',
   props: {
-    hasCommunity: {
-      required: false,
-      type: Boolean,
-      default: true,
+    user: {
+      required: true,
+      type: Object,
     },
+  },
+  methods: {
+    hasCommunity(id) {
+      if (!id) {
+        return this.user.communities.length > 0;
+      }
+
+      return this.user.communities.find(c => c.id === id);
+    }
   },
 };
 </script>
@@ -67,7 +98,7 @@ export default {
     font-weight: 600;
   }
 
-  ul {
+  &__resources {
     list-style-type: none;
     padding: 0;
     margin: 0;
@@ -97,7 +128,19 @@ export default {
       }
 
       &.dashboard-resources-list__resources__messenger {
-        &__list {
+        .dashboard-resources-list__resources__messenger__list {
+          display: flex;
+
+          span {
+            margin-right: 20px;
+            flex: 0 0 58px;
+          }
+
+          ul {
+            padding: 0 0 0 20px;
+            max-width: 300px;
+          }
+
           margin-top: 0;
 
           a {
