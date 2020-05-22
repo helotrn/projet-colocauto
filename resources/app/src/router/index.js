@@ -27,7 +27,9 @@ const routes = [
       skipCleanup: true,
       data: {
         stats: {
-          retrieve: {},
+          retrieve: {
+            type: 'neighborhood',
+          },
         },
       },
       title: 'titles.communities-overview',

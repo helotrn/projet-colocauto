@@ -154,7 +154,7 @@ export default {
     otherUser() {
       if (this.user.id === this.loan.borrower.user.id) {
         if (!this.loan.loanable.owner) {
-            return null
+          return null;
         }
 
         return this.loan.loanable.owner.user;
