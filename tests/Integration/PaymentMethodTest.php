@@ -7,76 +7,88 @@ use Tests\TestCase;
 
 class PaymentMethodTest extends TestCase
 {
+    public static $responseStructure = [
+        'name',
+        'external_id',
+        'type',
+        'four_last_digits',
+        'credit_card_type',
+        'user_id',
+        'is_default',
+        'id',
+    ];
+
     public function testCreatePaymentMethods() {
-        $this->markTestIncomplete();
         $data = [
             'name' => $this->faker->name,
             'external_id' => $this->faker->sentence,
             'type' => $this->faker->randomElement(['credit_card' ,'bank_account']),
             'four_last_digits' => $this->faker->randomNumber($nbDigits = 4, $strict = true),
             'credit_card_type' => $this->faker->creditCardType,
+            'user_id' => $this->user->id,
         ];
 
-        $response = $this->json('POST', route('payment-methods.create'), $data);
+        $response = $this->json('POST', '/api/v1/payment_methods', $data);
 
         $response->assertStatus(201)->assertJson($data);
     }
 
     public function testShowPaymentMethods() {
-        $this->markTestIncomplete();
-        $post = factory(PaymentMethod::class)->create();
+        $paymentMethod = factory(PaymentMethod::class)->create([
+            'user_id' => $this->user->id
+        ]);
 
-        $response = $this->json('GET', route('payment-methods.retrieve', $post->id), $data);
+        $response = $this->json('GET', "/api/v1/payment_methods/$paymentMethod->id");
 
-        $response->assertStatus(200)->assertJson($data);
+        $response->assertStatus(200)
+            ->assertJson($paymentMethod->only(static::$responseStructure));
     }
 
     public function testUpdatePaymentMethods() {
-        $this->markTestIncomplete();
-        $post = factory(PaymentMethod::class)->create();
+        $paymentMethod = factory(PaymentMethod::class)->create([
+            'user_id' => $this->user->id,
+        ]);
+
         $data = [
             'name' => $this->faker->name,
         ];
 
-        $response = $this->json('PUT', route('payment-methods.update', $post->id), $data);
+        $response = $this->json(
+            'PUT',
+            "/api/v1/payment_methods/$paymentMethod->id",
+            $data
+        );
 
         $response->assertStatus(200)->assertJson($data);
     }
 
     public function testDeletePaymentMethods() {
-        $this->markTestIncomplete();
-        $post = factory(PaymentMethod::class)->create();
+        $paymentMethod = factory(PaymentMethod::class)->create([
+            'user_id' => $this->user->id,
+        ]);
 
-        $response = $this->json('DELETE', route('payment-methods.delete', $post->id), $data);
+        $response = $this->json('DELETE', "/api/v1/payment_methods/$paymentMethod->id");
 
-        $response->assertStatus(204)->assertJson($data);
+        $response->assertStatus(200)
+            ->assertJson($paymentMethod->only(static::$responseStructure));
     }
 
     public function testListPaymentMethods() {
-        $this->markTestIncomplete();
-        $payment_methods = factory(PaymentMethod::class, 2)->create()->map(function ($post) {
-            return $post->only([
-                'id',
-                'name',
-                'external_id',
-                'type',
-                'four_last_digits',
-                'credit_card_type',
-            ]);
-        });
+        $paymentMethods = factory(PaymentMethod::class, 2)
+            ->create([
+                'user_id' => $this->user->id,
+            ])
+            ->map(function ($paymentMethod) {
+                return $paymentMethod->only(static::$responseStructure);
+            });
 
-        $response = $this->json('GET', route('payment-methods.index'));
+        $response = $this->json('GET', '/api/v1/payment_methods');
 
         $response->assertStatus(200)
-                ->assertJson($payment_methods->toArray())
+                ->assertJson([ 'data' => $paymentMethods->toArray() ])
                 ->assertJsonStructure([
-                    '*' => [
-                        'id',
-                        'name',
-                        'external_id',
-                        'type',
-                        'four_last_digits',
-                        'credit_card_type',
+                    'data' => [
+                        '*' => static::$responseStructure,
                     ],
                 ]);
     }
