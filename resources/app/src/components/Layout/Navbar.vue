@@ -10,7 +10,9 @@
       </b-navbar-brand>
 
       <b-navbar-brand class="layout-navbar__separator d-none d-sm-block" v-if="title" />
-      <b-navbar-brand class="navbar-brand--title d-none d-sm-block" v-if="title">{{ title }}</b-navbar-brand>
+      <b-navbar-brand class="navbar-brand--title d-none d-sm-block" v-if="title">
+        {{ title }}
+      </b-navbar-brand>
     </div>
 
     <div :class="{
