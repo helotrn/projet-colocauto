@@ -114,6 +114,7 @@ class NokeService
     }
 
     private function resetToken() {
+        var_dump(app()->environment());
         if (app()->environment() === 'testing') {
             return; // TODO mock
         }
