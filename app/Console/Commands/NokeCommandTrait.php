@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Services\NokeService;
 use Illuminate\Support\Facades\Cache;
 
 trait NokeCommandTrait
@@ -57,7 +58,7 @@ trait NokeCommandTrait
 
         $locksResult = json_decode($locksResponse->getBody());
 
-        Cache::put('noke:locks', json_encode($locksResult->data), 3600);
+        Cache::put('noke:locks', json_encode($locksResult->data), 14400);
 
         return $locksResult->data;
     }
@@ -89,7 +90,7 @@ trait NokeCommandTrait
                 $maxPage = intval($groupsResult->data->pageCount);
             } while ($maxPage > $page);
 
-            Cache::set('noke:groups', json_encode($this->groups), 3600);
+            Cache::set('noke:groups', json_encode($this->groups), 14400);
         }
 
         foreach ($this->groups as $group) {
@@ -98,25 +99,9 @@ trait NokeCommandTrait
     }
 
     protected function getUsers($force = false) {
-        if ($force) {
-            Cache::forget('noke:users');
-        }
+        $nokeService = new NokeService($this->client);
 
-        if ($users = Cache::get('noke:users')) {
-            $this->users = json_decode($users);
-        } else {
-            $usersResponse = $this->client->post("{$this->baseUrl}/user/get/list/", [
-                'headers' => [
-                    'Accept' => 'application/json',
-                    'Authorization' => "Bearer $this->token",
-                ],
-            ]);
-            $usersResults = json_decode($usersResponse->getBody());
-
-            $this->users = $usersResults->data;
-
-            Cache::set('noke:users', json_encode($this->users), 3600);
-        }
+        $this->users = $nokeService->fetchUsers($force);
 
         foreach ($this->users as $user) {
             $this->usersIndex[$user->username] = $user;

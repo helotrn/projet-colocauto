@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\User;
+use App\Services\NokeService;
 use Illuminate\Console\Command;
 use GuzzleHttp\Client;
 
@@ -14,18 +15,16 @@ class NokeSyncUsers extends Command
 
     protected $description = 'Synchronize NOKE users';
 
-    public function __construct(Client $client) {
+    public function __construct(Client $client, NokeService $service) {
         parent::__construct();
 
         $this->client = $client;
+        $this->service = $service;
     }
 
     public function handle() {
-        $this->info('Logging in...');
-        $this->login();
-
         $this->info('Fetching users...');
-        $this->getUsers();
+        $this->getUsers(true);
 
         $this->info('Creating remote users...');
         $this->createUsers();
@@ -37,39 +36,13 @@ class NokeSyncUsers extends Command
         $users = User::whereHas('borrower')
             ->whereNotNull('submitted_at')
             ->select('id', 'email', 'name', 'last_name', 'phone', 'is_smart_phone')
-            ->get()
-            ->toArray();
+            ->get();
 
         foreach ($users as $user) {
-            if (!isset($this->usersIndex[$user['email']])) {
-                $this->warn("Creating user {$user['email']}.");
+            if (!isset($this->usersIndex[$user->email])) {
+                $this->warn("Creating user {$user->email}.");
 
-                $data = [
-                    'city' => '',
-                    'company' => '',
-                    'mobilePhone' => $user['is_smart_phone'] ? $user['phone'] : '',
-                    'name' => "{$user['name']} {$user['last_name']}",
-                    'notifyEmail' => 1,
-                    'notifySMS' => $user['is_smart_phone'] ? 1 : 0,
-                    'permissions' => ['app_flag'],
-                    'phoneCountryCode' => '1',
-                    'state' => '',
-                    'streetAddress' => '',
-                    'title' => '',
-                    'username' => $user['email'],
-                    'zip' => '',
-                ];
-
-                $this->client->post(
-                    "{$this->baseUrl}/user/create/",
-                    [
-                        'json' => $data,
-                        'headers' => [
-                            'Accept' => 'application/json',
-                            'Authorization' => "Bearer $this->token",
-                        ],
-                    ]
-                );
+                $this->service->findOrCreateUser($user);
             }
         }
     }
