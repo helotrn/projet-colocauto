@@ -327,8 +327,10 @@ class Loanable extends BaseModel
 
         if ($user->owner) {
             // ...and his/her own cars even if the borrower profile is not approved
-            $query = $query->orWhereHas('owner', function ($q) use ($user) {
-                return $q->where('owners.id', $user->owner->id);
+            $query = $query->orWhere(function ($q) use ($user) {
+                return $q->whereHas('owner', function ($q) use ($user) {
+                    return $q->where('owners.id', $user->owner->id);
+                })->orDoesntHave('owner');
             });
         }
 
