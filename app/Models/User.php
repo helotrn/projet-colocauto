@@ -275,6 +275,10 @@ class User extends AuthenticatableBaseModel
     }
 
     public function getStripeCustomer() {
+        if (app()->environment() === 'testing') {
+            return; // TODO mock
+        }
+
         if ($this->stripeCustomerMemo) {
             return $this->stripeCustomerMemo;
         }
