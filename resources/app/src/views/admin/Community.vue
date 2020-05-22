@@ -87,21 +87,23 @@
               </template>
               <template v-slot:cell(actions)="row">
                 <div class="text-right">
-                  <b-button v-if="!row.item.approved_at"
-                    size="sm" class="mr-1" variant="primary"
-                    @click="approveUser(row.item)">
-                    {{ $t('approuver') | capitalize }}
-                  </b-button>
-                  <b-button v-else-if="!row.item.suspended_at"
-                    size="sm" class="mr-1" variant="warning"
-                    @click="suspendUser(row.item)">
-                    {{ $t('suspendre') | capitalize }}
-                  </b-button>
-                  <b-button v-else
-                    size="sm" class="mr-1" variant="success"
-                    @click="unsuspendUser(row.item)">
-                    {{ $t('rétablir') | capitalize }}
-                  </b-button>
+                  <div v-if="!row.item._new">
+                    <b-button v-if="!row.item.approved_at"
+                      size="sm" class="mr-1" variant="primary"
+                      @click="approveUser(row.item)">
+                      {{ $t('approuver') | capitalize }}
+                    </b-button>
+                    <b-button v-else-if="!row.item.suspended_at"
+                      size="sm" class="mr-1" variant="warning"
+                      @click="suspendUser(row.item)">
+                      {{ $t('suspendre') | capitalize }}
+                    </b-button>
+                    <b-button v-else
+                      size="sm" class="mr-1" variant="success"
+                      @click="unsuspendUser(row.item)">
+                      {{ $t('rétablir') | capitalize }}
+                    </b-button>
+                  </div>
 
                   <b-button size="sm" variant="danger"
                     @click="removeUser(row.item)">
@@ -110,6 +112,19 @@
                 </div>
               </template>
             </b-table>
+
+            <forms-validated-input type="relation"
+              name="community" label="Ajouter un membre"
+              :value="null" reset-after-select
+              :query="{
+                slug: 'users',
+                value: 'id',
+                text: 'full_name',
+                params: {
+                  'fields': 'id,full_name',
+                  '!id': item.users.map(u => u.id).join(','),
+                },
+              }" @relation="addUser" />
           </div>
 
           <div class="form__buttons">
@@ -133,6 +148,7 @@
 import FormsBuilder from '@/components/Forms/Builder.vue';
 import PricingForm from '@/components/Pricing/PricingForm.vue';
 import PricingLanguageDefinition from '@/components/Pricing/LanguageDefinition.vue';
+import FormsValidatedInput from '@/components/Forms/ValidatedInput.vue';
 
 import FormMixin from '@/mixins/FormMixin';
 
@@ -143,6 +159,7 @@ export default {
   mixins: [FormMixin],
   components: {
     FormsBuilder,
+    FormsValidatedInput,
     PricingForm,
     PricingLanguageDefinition,
   },
@@ -209,6 +226,13 @@ export default {
           rule: '',
           name: '',
         }],
+      });
+    },
+    addUser(user) {
+      this.item.users.push({
+        ...user,
+        _new: true,
+        role: null,
       });
     },
     approveUser(user) {

@@ -111,6 +111,18 @@
                   </div>
                 </template>
               </b-table>
+
+              <forms-validated-input type="relation"
+                name="community" label="Ajouter une communauté"
+                :value="null" reset-after-select
+                :query="{
+                  slug: 'communities',
+                  value: 'id',
+                  text: 'name',
+                  params: {
+                    '!id': item.communities.map(c => c.id).join(','),
+                  },
+                }" @relation="addCommunity" />
             </div>
 
             <div class="form__section" v-if="!!item.id">
@@ -395,6 +407,9 @@ export default {
     },
   },
   methods: {
+    addCommunity(community) {
+      this.item.communities.push(community);
+    },
     addCommunityTag(community, tag) {
       if (tag) {
         community.tags.push(tag);
