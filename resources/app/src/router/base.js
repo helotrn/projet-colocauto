@@ -3,7 +3,6 @@ import Faq from '../views/Faq.vue';
 import Help from '../views/Help.vue';
 import Home from '../views/Home.vue';
 import Insurance from '../views/Insurance.vue';
-import Login from '../views/Login.vue';
 import Privacy from '../views/Privacy.vue';
 
 export default [
@@ -49,22 +48,6 @@ export default [
     component: Faq,
     meta: {
       titles: 'titles.faq',
-    },
-  },
-  {
-    path: '/login',
-    name: 'login',
-    component: Login,
-    meta: {
-      title: 'titles.login',
-    },
-  },
-  {
-    path: '/login/callback',
-    name: 'login-callback',
-    component: Login,
-    meta: {
-      title: 'titles.login',
     },
   },
   {

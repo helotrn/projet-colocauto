@@ -5,6 +5,7 @@ import merge from 'deepmerge';
 
 import account from './account';
 import global from './global';
+import passwordModule from './password';
 import stats from './stats';
 
 import bikes from './models/bikes';
@@ -225,6 +226,7 @@ export default new Vuex.Store({
     login: Login,
     owners,
     padlocks,
+    password: passwordModule,
     paymentMethods,
     'profile.loanable': ProfileLoanable,
     register: Register,

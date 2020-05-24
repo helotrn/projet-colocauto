@@ -40,18 +40,25 @@
         </b-form-checkbox>
       </b-form-group>
 
-      <b-form-group>
+      <b-form-group class="mb-1">
         <b-button type="submit" :disabled="loading" variant="primary" block>
           {{ $t('login-submit') }}
         </b-button>
       </b-form-group>
     </b-form>
+
+    <div class="text-right">
+      <router-link to="/password/request">
+        <small>{{ $t('forgot_password') }}</small>
+      </router-link>
+    </div>
   </div>
 </template>
 
 <i18n>
 fr:
   'email': Courriel
+  forgot_password: J'ai oublié mon mot de passe
   'google': Se connecter avec Google
   'login': Connexion
   'login-submit': Se connecter

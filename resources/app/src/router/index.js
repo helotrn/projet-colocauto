@@ -5,6 +5,7 @@ import Loan from '../views/Loan.vue';
 import CommunityOverview from '@/views/community/Overview.vue';
 
 import adminRoutes from './admin';
+import authRoutes from './auth';
 import baseRoutes from './base';
 import communityRoutes from './community';
 import profileRoutes from './profile';
@@ -13,6 +14,7 @@ import registerRoutes from './register';
 Vue.use(VueRouter);
 
 const routes = [
+  ...authRoutes,
   ...baseRoutes,
   adminRoutes,
   communityRoutes,
