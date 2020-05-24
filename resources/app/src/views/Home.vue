@@ -118,7 +118,7 @@
               </h2>
 
               <p class="mb-5">
-                Aujourd’hui, <span class="no-break">{{ stats.communities.length }}</span> quartiers,
+                Aujourd’hui, <span class="no-break">{{ communities.length }}</span> quartiers,
                 soit plus de <span class="no-break">{{ stats.users }} participant•e•s</span>
                 partageant <span class="no-break">{{ stats.loanables }}</span> véhicules
                 expérimentent cette solution collective.
@@ -280,6 +280,13 @@ export default {
     'svg-wave': Wave,
   },
   computed: {
+    communities() {
+      if (this.stats && this.stats.communities) {
+        return this.stats.communities.length;
+      }
+
+      return 5;
+    },
     roundedStatsUsers() {
       if (this.stats.users) {
         return Math.max(10, Math.floor(this.stats.users / 10) * 10);
