@@ -14,12 +14,14 @@ add('shared_dirs', ['resources/app/node_modules']);
 
 add('writable_dirs', []);
 
-host('vps.locomotion.app')
+host('production')
+    ->hostname('vps.locomotion.app')
     ->stage('production')
     ->user('locomotion')
     ->set('deploy_path', '/var/www/locomotion.app');
 
-host('vps.locomotion.app')
+host('staging')
+    ->hostname('vps.locomotion.app')
     ->stage('staging')
     ->user('locomotion')
     ->set('deploy_path', '/var/www/staging.locomotion.app');
