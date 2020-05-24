@@ -63,6 +63,12 @@
       <b-col md="6">
         <b-pagination align="right" v-model="contextParams.page"
           :total-rows="total" :per-page="contextParams.per_page" />
+
+        <b-form inline class="text-right">
+          <label for="per_page" class="ml-auto mr-1">Par page</label>&nbsp;
+          <b-form-select id="per_page" name="per_page"
+            :options="[10,20,50,100]" v-model="contextParams.per_page" />
+        </b-form>
       </b-col>
     </b-row>
   </b-container>
