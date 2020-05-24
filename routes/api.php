@@ -10,6 +10,8 @@ Route::prefix('v1')->group(function () {
 
     Route::post('auth/login', 'AuthController@login');
     Route::post('auth/register', 'AuthController@register');
+    Route::post('auth/password/request', 'AuthController@passwordRequest');
+    Route::post('auth/password/reset', 'AuthController@passwordReset');
 
     Route::middleware('auth:api')->group(function () {
         Route::prefix('auth')->group(function () {

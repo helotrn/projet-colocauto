@@ -19,4 +19,5 @@ Route::get('/user/{any?}', 'AssetController@userFile')
     ->where('any', '.*')
     ->name('assets.user');
 
+Route::get('/password/reset', 'StaticController@app')->name('password.reset');
 Route::get('/{any?}', 'StaticController@app')->where('any', '.*')->name('app');

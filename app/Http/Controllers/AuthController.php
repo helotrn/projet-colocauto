@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\UserController;
+use App\Http\Requests\Auth\ForgotPasswordRequest;
+use App\Http\Requests\Auth\ResetPasswordRequest;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\Auth\RegisterRequest;
 use App\Http\Requests\BaseRequest as Request;
@@ -11,14 +13,17 @@ use App\Http\Requests\User\UpdateRequest as UserUpdateRequest;
 use App\Models\User;
 use App\Services\GoogleAccountService;
 use Illuminate\Contracts\Auth\Factory as Auth;
+use Illuminate\Foundation\Auth\SendsPasswordResetEmails;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Str;
 use Laravel\Passport\TokenRepository;
 use Laravel\Socialite\Facades\Socialite;
 use Molotov\Traits\RespondsWithErrors;
 
 class AuthController extends RestController
 {
-    use RespondsWithErrors;
+    use RespondsWithErrors, SendsPasswordResetEmails;
 
     protected $auth;
     protected $tokens;
@@ -134,5 +139,53 @@ class AuthController extends RestController
         auth()->login($user);
         $token = $user->createToken('API Token')->accessToken;
         return redirect()->to('/login/callback?token=' . $token);
+    }
+
+    public function passwordRequest(Request $request) {
+        return $this->sendResetLinkEmail($request);
+    }
+
+    public function passwordReset(ResetPasswordRequest $request) {
+        $broker = Password::broker();
+
+        $response = $this->broker()->reset(
+            $request->only(
+                'email',
+                'password',
+                'password_confirmation',
+                'token'
+            ),
+            function ($user, $password) {
+                $this->resetPassword($user, $password);
+            }
+        );
+
+        return $response == Password::PASSWORD_RESET
+                    ? $this->sendResetResponse($request, $response)
+                    : $this->sendResetFailedResponse($request, $response);
+    }
+
+    protected function sendResetLinkResponse($response) {
+        return $this->respondWithMessage('Token sent.', 200);
+    }
+
+    protected function sendResetLinkFailedResponse(Request $request, $response) {
+        return $this->respondWithMessage(trans($response), 400);
+    }
+
+    protected function sendResetResponse(Request $request, $response) {
+        return $this->respondWithMessage('Reset succesful.', 200);
+    }
+
+    protected function sendResetFailedResponse(Request $request, $response) {
+        return $this->respondWithMessage(trans($response), 400);
+    }
+
+    protected function resetPassword($user, $password) {
+        $user->password = Hash::make($password);
+
+        $user->setRememberToken(Str::random(60));
+
+        $user->save();
     }
 }

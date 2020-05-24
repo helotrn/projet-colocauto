@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Mail\PasswordRequest;
 use App\Models\Action;
 use App\Models\Borrower;
 use App\Models\File;
@@ -17,6 +18,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
+use Mail;
 use Laravel\Passport\HasApiTokens;
 
 class User extends AuthenticatableBaseModel
@@ -376,5 +378,10 @@ class User extends AuthenticatableBaseModel
                     \DB::raw("unaccent('%$q%')")
                 );
         });
+    }
+
+    public function sendPasswordResetNotification($token) {
+        Mail::to($this->email, $this->name . ' ' . $this->last_name)
+          ->queue(new PasswordRequest($this, $token));
     }
 }
