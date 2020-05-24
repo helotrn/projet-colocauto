@@ -73,7 +73,7 @@ class NokeSyncLoans extends Command
                         return $q->where('mac_address', $mac);
                     });
                 });
-            $query = $columnDefinitions['status']($query);
+            $query = $columnDefinitions['loan_status']($query);
             $query = $columnDefinitions['*']($query);
 
             $query->with('borrower', 'borrower.user');
