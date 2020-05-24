@@ -22,7 +22,7 @@ class DatabaseSeeder extends Seeder
             case 'staging':
             case 'production':
                 $this->call(ProductionPricingsTableSeeder::class);
-                $this->call(AdminsTableSeeder::class);
+                //$this->call(AdminsTableSeeder::class);
                 break;
         }
     }
