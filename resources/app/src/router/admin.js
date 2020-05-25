@@ -189,8 +189,8 @@ export default {
         auth: true,
         slug: 'loans',
         params: {
-          fields: '*,borrower.user.*,loanable.type,loanable.owner.user.*,actions.*,incidents.*,'
-            + 'extension.*',
+          fields: '*,borrower.user.*,loanable.type,loanable.owner.user.*,loanable.community.*,'
+            + 'actions.*,incidents.*,extension.*',
         },
         title: 'titles.loan',
       },
