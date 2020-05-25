@@ -99,7 +99,7 @@ class NokeSyncLoans extends Command
             $data->userIds = [];
 
             foreach ($this->locksIndex[$mac]->users as $email) {
-                if ($this->usersIndex[$email]) {
+                if (isset($this->usersIndex[$email])) {
                     $data->userIds[] = $this->usersIndex[$email]->id;
                 } else {
                     $this->error("User not found: $email!");
