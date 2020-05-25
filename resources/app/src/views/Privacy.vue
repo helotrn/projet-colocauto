@@ -2,7 +2,7 @@
   <layout-page name="cgu" class="cgu__content">
     <b-row tag="section" class="page__section">
       <b-col>
-        <iframe src="http://localhost:8000/cgu.html" border="0" width="100%" />
+        <iframe src="/cgu.html" border="0" width="100%" />
       </b-col>
     </b-row>
   </layout-page>

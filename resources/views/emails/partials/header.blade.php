@@ -1,7 +1,7 @@
 <tr>
     <td align="center" style="height: 60px; background-color: white;">
         <div style="text-align: center;">
-            <img src="http://localhost:8000/mail-header-logo.png" alt="LocoMotion" style="width: 125px; height: 17px;">
+            <img src="{{ url('/mail-header-logo.png') }}" alt="LocoMotion" style="width: 125px; height: 17px;">
         </div>
     </td>
 </tr>
