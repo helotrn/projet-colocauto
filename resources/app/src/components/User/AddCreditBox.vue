@@ -1,7 +1,7 @@
 <template>
   <div class="user-add-credit-box">
     <b-row>
-      <b-col class="user-add-credit-box__add">
+      <b-col lg="8" class="user-add-credit-box__add">
         <p>Ajouter</p>
 
         <p><b-form-radio-group v-model="selectedAmount" :options="amounts" buttons /></p>
@@ -18,7 +18,7 @@
         <p><small>Frais de transaction: 2,2% + 30¢</small></p>
       </b-col>
 
-      <b-col class="user-add-credit-box__balance">
+      <b-col lg="4" class="user-add-credit-box__balance">
         <p>Solde</p>
 
         <p class="user-add-credit-box__balance__initial">{{ user.balance | currency }}</p>

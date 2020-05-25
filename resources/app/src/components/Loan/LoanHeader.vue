@@ -14,6 +14,8 @@
             {{ loan.borrower.user.full_name }}
           </a>
 
+          <br v-if="userRole === 'other'">
+
           <a href="#"
             v-b-modal="'owner-modal'" v-if="loan.loanable.owner && userRole !== 'owner'">
             {{ loan.loanable.owner.user.full_name }}
@@ -21,7 +23,6 @@
           <span v-else>
             {{ loan.loanable.community.name }}
           </span>
-          <br>
         </p>
         <p class="loan-header__description__loan">
           <a href="#"

@@ -74,14 +74,25 @@
               </b-col>
             </b-row>
 
+            <b-row v-if="!hasEnoughBalance">
+              <b-col>
+                <p>
+                  Il manque de crédits à votre compte pour payer cet emprunt.<br>
+                  <a href="#" v-b-modal.add-credit-modal>Ajoutez des crédits</a>
+                </p>
+
+                <b-modal id="add-credit-modal" title="Approvisionner mon compte" size="lg"
+                  footer-class="d-none">
+                  <user-add-credit-box :user="user" :minimum-required="finalPrice - user.balance"
+                    @bought="reloadUserAndCloseModal" @cancel="closeModal"/>
+                </b-modal>
+              </b-col>
+            </b-row>
+
             <div class="loan-actions-payment__buttons text-center">
-              <b-button size="sm" variant="success" class="mr-3"
+              <b-button size="sm" variant="success" class="mr-3" :disabled="!hasEnoughBalance"
                 @click="completeAction">
                 Accepter
-              </b-button>
-
-              <b-button size="sm" variant="outline-danger" @click="cancelAction">
-                Refuser
               </b-button>
             </div>
           </div>
@@ -92,6 +103,8 @@
 </template>
 
 <script>
+import UserAddCreditBox from '@/components/User/AddCreditBox.vue';
+
 import LoanActionsMixin from '@/mixins/LoanActionsMixin';
 
 import { filters } from '@/helpers';
@@ -102,6 +115,9 @@ const { currency } = filters;
 export default {
   name: 'LoanActionsPrePayment',
   mixins: [LoanActionsMixin],
+  components: {
+    UserAddCreditBox,
+  },
   data() {
     return {
       platformTip: this.loan.platform_tip,
@@ -112,6 +128,9 @@ export default {
       return this.loan.actual_price
         + this.loan.actual_insurance
         + parseFloat(this.platformTip, 10);
+    },
+    hasEnoughBalance() {
+      return this.user.balance >= this.finalPrice;
     },
     priceTooltip() {
       const strParts = [];
@@ -125,6 +144,15 @@ export default {
       }
 
       return strParts.join(' \\ ');
+    },
+  },
+  methods: {
+    closeModal() {
+      this.$bvModal.hide('add-credit-modal');
+    },
+    async reloadUserAndCloseModal() {
+      await this.$store.dispatch('loadUser');
+      this.closeModal();
     },
   },
   watch: {
