@@ -11,6 +11,8 @@ export default new RestModule('users', {
   },
   exportFields: [
     'id',
+    'created_at',
+    'submitted_at',
     'address',
     'date_of_birth',
     'description',
@@ -27,6 +29,7 @@ export default new RestModule('users', {
     'communities.tags.id',
     'communities.tags.name',
     'communities.tags.slug',
+    'communities.proof.url',
   ],
 }, {
   async approveBorrower({ commit }, userId) {
