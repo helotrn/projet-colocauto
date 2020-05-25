@@ -283,6 +283,10 @@ class Loan extends BaseModel
         return max(0, is_array($values) ? $values[1] : $values);
     }
 
+    public function getTotalActualCostAttribute() {
+        return $this->actual_price + $this->actual_insurance + $this->platform_tip;
+    }
+
     public function getCanceledAtAttribute() {
         $canceledAction = $this->actions->where('status', 'canceled')->first();
 

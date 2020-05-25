@@ -8,7 +8,7 @@ use App\Models\Loan;
 class TakeoverRequest extends BaseRequest
 {
     public function rules() {
-        $loanId = $this->route('loan_id');
+        $loanId = $this->route('loan_id') ?: $this->get('loan_id');
         $loan = Loan::accessibleBy($this->user())->find($loanId);
 
         if ($loan->loanable->type === 'car') {
