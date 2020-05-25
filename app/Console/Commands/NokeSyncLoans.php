@@ -99,7 +99,11 @@ class NokeSyncLoans extends Command
             $data->userIds = [];
 
             foreach ($this->locksIndex[$mac]->users as $email) {
-                $data->userIds[] = $this->usersIndex[$email]->id;
+                if ($this->usersIndex[$email]) {
+                    $data->userIds[] = $this->usersIndex[$email]->id;
+                } else {
+                    $this->error("User not found: $email!");
+                }
             }
 
             $data->userIds[] = $this->usersIndex['api@locomotion.app']->id;
