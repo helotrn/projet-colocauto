@@ -90,8 +90,8 @@
             </b-row>
 
             <div class="loan-actions-payment__buttons text-center">
-              <b-button size="sm" variant="success" class="mr-3" :disabled="!hasEnoughBalance"
-                @click="completeAction">
+              <b-button size="sm" variant="success" class="mr-3"
+                :disabled="!hasEnoughBalance" @click="completeAction">
                 Accepter
               </b-button>
             </div>
