@@ -204,7 +204,7 @@ class Loanable extends BaseModel
     }
 
     public function isAvailable($departureAt, $durationInMinutes) {
-        $ical = new \ICal\ICal($this->availability_ics, [
+        $ical = new \ICal\ICal([ 0 => [$this->availability_ics] ], [
             'defaultTimeZone' => 'America/Toronto',
             'defaultWeekStart' => 'SU',
             'filterDaysBefore' => 1,
@@ -238,7 +238,7 @@ class Loanable extends BaseModel
 
     public function getEventsAttribute() {
         try {
-            $ical = new \ICal\ICal($this->availability_ics, [
+            $ical = new \ICal\ICal([ 0 => [$this->availability_ics] ], [
                 'defaultTimeZone' => 'America/Toronto',
                 'defaultWeekStart' => 'SU',
                 'filterDaysBefore' => 1,
