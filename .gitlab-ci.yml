@@ -1,5 +1,5 @@
 services:
-  - postgres:10-alpine
+  - mdillon/postgis:10-alpine
   - redis:latest
 
 variables:
