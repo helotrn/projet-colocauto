@@ -51,7 +51,7 @@ class UserTest extends TestCase
             'remember_token' => Str::random(10),
         ];
 
-        $response = $this->json('POST', "/api/v1/users", $data);
+        $response = $this->json('POST', '/api/v1/users', $data);
         $response->assertStatus(201)
             ->assertJsonStructure([
                 'id',
@@ -68,6 +68,22 @@ class UserTest extends TestCase
                 'created_at',
                 'updated_at'
             ]);
+    }
+
+    public function testCreateUsersWithSimilarEmails() {
+        $user = factory(User::class)->make()->toArray();
+        $user['password'] = '12354123124';
+
+        $response = $this->json('POST', '/api/v1/users', $user);
+        $response->assertStatus(201);
+
+        $response = $this->json('POST', '/api/v1/users', $user);
+        $response->assertStatus(422);
+
+        // Case insensitivity
+        $user['email'] = strtoupper($user['email'][0]) . substr($user['email'], 1);
+        $response = $this->json('POST', '/api/v1/users', $user);
+        $response->assertStatus(422);
     }
 
     public function testShowUsers() {
