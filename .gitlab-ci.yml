@@ -1,5 +1,5 @@
 services:
-  - mdillon/postgis:10
+  - postgres:latest
   - redis:latest
 
 variables:
@@ -16,7 +16,6 @@ before_script:
   - curl -sL https://deb.nodesource.com/setup_10.x | bash
   - apt-get install curl git wget unzip libpq-dev nodejs libjpeg-dev libpng-dev libxpm-dev libzip-dev postgresql-client -yqq
   - npm install -g yarn
-  - psql -h postgres -U locomotion -w locomotion -c 'CREATE EXTENSION citext;';
   - wget https://composer.github.io/installer.sig -O - -q | tr -d '\n' > installer.sig
   - php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
   - php -r "if (hash_file('SHA384', 'composer-setup.php') === file_get_contents('installer.sig')) { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
@@ -28,6 +27,9 @@ before_script:
   - docker-php-ext-install gd
   - docker-php-ext-install zip
   - docker-php-ext-enable xdebug
+  - psql -h postgres -U locomotion -w locomotion -c 'CREATE EXTENSION postgis;';
+  - psql -h postgres -U locomotion -w locomotion -c 'CREATE EXTENSION unaccent;';
+  - psql -h postgres -U locomotion -w locomotion -c 'CREATE EXTENSION citext;';
 
 cache:
   paths:
