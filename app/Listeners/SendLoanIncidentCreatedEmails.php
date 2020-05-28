@@ -17,8 +17,10 @@ class SendLoanIncidentCreatedEmails
         $borrower = $loan->borrower;
         $owner = $loan->loanable->owner;
 
-        Mail::to($owner->user->email, $owner->user->name . ' ' . $owner->user->last_name)
-            ->queue(new LoanIncidentCreated($event->incident, $loan, $borrower, $owner));
+        if ($owner) {
+            Mail::to($owner->user->email, $owner->user->name . ' ' . $owner->user->last_name)
+                ->queue(new LoanIncidentCreated($event->incident, $loan, $borrower, $owner));
+        }
 
         $admins = User::whereRole('admin')
             ->select('name', 'last_name', 'email')->get()
