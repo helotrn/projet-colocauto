@@ -112,7 +112,7 @@ export default {
       if (this.loan.loanable.owner) {
         ownerName = this.loan.loanable.owner.user.name;
       } else {
-        ownerName = this.loan.loanable.community.name;
+        ownerName = `${this.loan.loanable.community.name} (${this.loan.loanable.name})`;
       }
 
       const particle = ['a', 'e', 'i', 'o', 'u', 'é', 'è']
