@@ -330,7 +330,7 @@ class Loanable extends BaseModel
             $query = $query->orWhere(function ($q) use ($user) {
                 return $q->whereHas('owner', function ($q) use ($user) {
                     return $q->where('owners.id', $user->owner->id);
-                })->orDoesntHave('owner');
+                });
             });
         }
 
