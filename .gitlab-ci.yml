@@ -5,7 +5,8 @@ services:
 variables:
   POSTGRES_DB: locomotion_test
   POSTGRES_USER: locomotion
-  POSTGRES_PASSWORD: locomotion
+  POSTGRES_PASSWORD: ""
+  POSTGRES_HOST_AUTH_METHOD: trust
 
 image: php:7.3
 
