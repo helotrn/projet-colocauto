@@ -28,9 +28,9 @@ before_script:
   - docker-php-ext-install gd
   - docker-php-ext-install zip
   - docker-php-ext-enable xdebug
-  - psql -h postgres -U locomotion -w locomotion -c 'CREATE EXTENSION postgis;';
-  - psql -h postgres -U locomotion -w locomotion -c 'CREATE EXTENSION unaccent;';
-  - psql -h postgres -U locomotion -w locomotion -c 'CREATE EXTENSION citext;';
+  - psql -h postgres -U locomotion -w locomotion_test -c 'CREATE EXTENSION postgis;';
+  - psql -h postgres -U locomotion -w locomotion_test -c 'CREATE EXTENSION unaccent;';
+  - psql -h postgres -U locomotion -w locomotion_test -c 'CREATE EXTENSION citext;';
 
 cache:
   paths:
