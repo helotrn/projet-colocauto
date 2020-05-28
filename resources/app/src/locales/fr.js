@@ -79,7 +79,7 @@ export default {
     community: 'communauté',
     dashboard: 'tableau de bord',
     faq: 'foire aux questions',
-    find_vehicle: 'trouve un véhicule',
+    find_vehicle: 'trouver un véhicule',
     insurance: 'assurances Desjardins',
     invoice: 'facture',
     invoices: 'factures',
