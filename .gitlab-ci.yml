@@ -1,5 +1,5 @@
 services:
-  - mdillon/postgis:10-alpine
+  - postgis/postgis:10-2.5-alpine
   - redis:latest
 
 variables:
