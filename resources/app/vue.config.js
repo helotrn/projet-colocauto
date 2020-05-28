@@ -41,7 +41,7 @@ module.exports = {
     },
   },
 
-  assetsDir: 'app/',
+  assetsDir: 'dist/',
 
   pluginOptions: {
     lintStyleOnBuild: true,
