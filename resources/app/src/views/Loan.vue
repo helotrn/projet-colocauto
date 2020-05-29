@@ -12,20 +12,18 @@
 
         <b-col lg="9" class="loan__actions">
           <div class="loan__actions__buttons text-right mb-3"
-            v-if="!!item.id && item.status !== 'completed'">
+            v-if="!!item.id && item.loan_status === 'in_process'">
             <b-button class="ml-3 mb-3" variant="danger" :disabled="hasReachedStep('takeover')"
               @click="cancelLoan">
               Annuler la réservation
             </b-button>
             <b-button v-if="!userIsOwner" class="ml-3 mb-3" variant="warning"
-              :disabled="!hasReachedStep('takeover') || hasReachedStep('payment')
-                || item.status === 'canceled' || hasActiveExtensions"
+              :disabled="!hasReachedStep('takeover') || hasReachedStep('payment')"
               @click="addExtension">
               Signaler un retard
             </b-button>
             <b-button v-if="!userIsOwner" class="ml-3 mb-3" variant="warning"
-              :disabled="!hasReachedStep('takeover')
-                || item.status === 'canceled' || item.status === 'completed'"
+              :disabled="!hasReachedStep('takeover')"
               @click="addIncident('accident')">
               Signaler un incident
             </b-button>
