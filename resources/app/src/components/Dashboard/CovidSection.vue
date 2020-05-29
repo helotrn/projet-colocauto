@@ -26,7 +26,7 @@
 
       <p class="covid-modal__subtitle">GARDEZ LES AUTOS PROPRES</p>
       <p>
-        Que ce soit votre autre ou celle de votre voisin-e, voici quelques
+        Que ce soit votre auto ou celle de votre voisin-e, voici quelques
         recommandations à prendre avant et après son utilisation:
       </p>
       <ul>
