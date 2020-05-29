@@ -125,6 +125,7 @@ export default {
         margin-right: 0;
         flex: 1 0 100%;
         max-width: 300px;
+        max-height: 112px;
       }
 
       &.dashboard-resources-list__resources__messenger {
