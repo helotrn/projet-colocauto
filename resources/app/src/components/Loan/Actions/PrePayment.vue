@@ -75,7 +75,8 @@ export default {
   computed: {
     minimumRequired() {
       return parseFloat(this.loan.estimated_price)
-        + parseFloat(this.loan.estimated_insurance);
+        + parseFloat(this.loan.estimated_insurance)
+        + parseFloat(this.loan.platform_tip);
     },
   },
 };
