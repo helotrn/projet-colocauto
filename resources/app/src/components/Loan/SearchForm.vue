@@ -39,8 +39,9 @@
             Rechercher
           </b-button>
 
-          <b-button size="sm" type="reset" variant="outline-warning" class="mb-2">
-            Réinitialiser
+          <b-button size="sm" variant="info" class="ml-2 mb-2 d-block d-lg-none"
+            @click="$emit('hide')">
+            Fermer
           </b-button>
         </div>
       </b-form>
@@ -105,4 +106,10 @@ export default {
 </script>
 
 <style lang="scss">
+.loan-search-form {
+  .form__buttons {
+    display: flex;
+    justify-content: space-between;
+  }
+}
 </style>

@@ -24,6 +24,7 @@
                 :loanable-types="loanableTypes"
                 :form="loanForm"
                 @changed="resetLoanables"
+                @hide="searched = true"
                 @reset="reset"
                 @submit="testLoanables" />
             </div>
