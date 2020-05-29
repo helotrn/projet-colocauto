@@ -33,7 +33,7 @@
       </div>
     </div>
 
-    <div class="loanable-card__estimated-fare" v-if="price > 0"
+    <div class="loanable-card__estimated-fare" v-if="price !== null || price !== undefined"
       v-b-tooltip.hover :title="pricing">
       <i>
         Coût estimé: {{ price | currency }}
