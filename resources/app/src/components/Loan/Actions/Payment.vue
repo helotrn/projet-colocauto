@@ -115,6 +115,9 @@ const { currency } = filters;
 export default {
   name: 'LoanActionsPrePayment',
   mixins: [LoanActionsMixin],
+  mounted() {
+    this.action.platform_tip = parseFloat(this.platformTip, 10);
+  },
   components: {
     UserAddCreditBox,
   },
