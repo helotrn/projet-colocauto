@@ -115,7 +115,7 @@ class File extends BaseModel
 
     public function scopeAccessibleBy(Builder $query, $user) {
         if ($user->isAdmin()) {
-            return true;
+            return $query;
         }
 
         // File is...
