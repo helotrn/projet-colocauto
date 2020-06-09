@@ -58,6 +58,7 @@ class NokeSyncLoans extends Command
                 $this->locksIndex[$mac]->users = [];
             }
 
+            $columnDefinitions = Loan::getColumnsDefinition();
             $query = Loan::where('departure_at', '<=', new \DateTime('- 15 minutes'))
                 ->whereHas('prePayment', function ($q) {
                     return $q->where('status', 'completed');
@@ -72,6 +73,8 @@ class NokeSyncLoans extends Command
                         return $q->where('mac_address', $mac);
                     });
                 });
+            $query = $columnDefinitions['loan_status']($query);
+            $query = $columnDefinitions['*']($query);
 
             $query->with('borrower', 'borrower.user');
 
@@ -90,11 +93,6 @@ class NokeSyncLoans extends Command
 
         foreach ($macAddresses as $mac) {
             $groupName = "API $mac";
-
-            if (!isset($this->groupsIndex[$groupName])) {
-                $this->callSilent('noke:sync:locks');
-                break;
-            }
 
             $data = $this->groupsIndex[$groupName];
 
