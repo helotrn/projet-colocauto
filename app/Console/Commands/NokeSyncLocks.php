@@ -28,7 +28,7 @@ class NokeSyncLocks extends Command
         $this->syncLocks();
 
         $this->info('Fetching groups...');
-        $this->getGroups();
+        $this->getGroups(true);
 
         $this->info('Creating remote groups...');
         $this->createGroups();
@@ -85,9 +85,9 @@ class NokeSyncLocks extends Command
                             'userIds' => [ intval(config('services.noke.api_user_id')) ],
                             'schedule' => [
                                 [
-                                    'startDate' => '2020-04-01T12:00:00-04:00',
-                                    'endDate' => '2020-04-01T13:00:00-04:00',
-                                    'expiration' => '2020-04-01T13:00:00-04:00',
+                                    'startDate' => '2020-05-01T00:00:00-04:00',
+                                    'endDate' => '2030-05-01T23:59:59-04:00',
+                                    'expiration' => '2030-05-01T23:59:59-04:00',
                                     'repeatType' => 'none',
                                     'dayOfWeek' => '',
                                     'name' => strval(time()),
