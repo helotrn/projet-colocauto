@@ -94,6 +94,10 @@ class NokeSyncLoans extends Command
         foreach ($macAddresses as $mac) {
             $groupName = "API $mac";
 
+            if (!isset($this->groupsIndex[$groupName])) {
+                break;
+            }
+
             $data = $this->groupsIndex[$groupName];
 
             $data->userIds = [];
