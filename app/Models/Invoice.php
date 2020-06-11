@@ -128,6 +128,8 @@ class Invoice extends BaseModel
 
     public $items = ['payment_method', 'user'];
 
+    public $computed = ['items_count', 'total', 'total_with_taxes'];
+
     public function paymentMethod() {
         return $this->belongsTo(PaymentMethod::class);
     }
@@ -159,5 +161,45 @@ class Invoice extends BaseModel
         $this->paymentMethod()->associate($paymentMethod);
         $this->paid_at = new \DateTime;
         $this->save();
+    }
+
+    public function getTotalTpsAttribute() {
+        if (isset($this->attributes['total_tps'])) {
+            return $this->attributes['total_tps'];
+        }
+
+        return $this->billItems->sum('taxes_tps');
+    }
+
+    public function getTotalTvqAttribute() {
+        if (isset($this->attributes['total_tvq'])) {
+            return $this->attributes['total_tvq'];
+        }
+
+        return $this->billItems->sum('taxes_tvq');
+    }
+
+    public function getTotalWithTaxesAttribute() {
+        if (isset($this->attributes['total_with_taxes'])) {
+            return $this->attributes['total_with_taxes'];
+        }
+
+        return $this->total + $this->total_tps + $this->total_tvq;
+    }
+
+    public function getTotalAttribute() {
+        if (isset($this->attributes['total'])) {
+            return $this->attributes['total'];
+        }
+
+        return $this->billItems->sum('amount');
+    }
+
+    public function getItemsCountAttribute() {
+        if (isset($this->attributes['items_count'])) {
+            return $this->attributes['items_count'];
+        }
+
+        return $this->billItems->count();
     }
 }

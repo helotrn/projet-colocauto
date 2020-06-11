@@ -207,7 +207,7 @@
             <div class="form__section" v-if="!!item.id">
               <h2>Compte</h2>
 
-              <p><strong>Balance:</strong> {{ roundedBalance | currency }}</p>
+              <p><strong>Balance:</strong> {{ item.balance | currency }}</p>
 
               <p v-if="false"><strong>Transactions</strong></p>
 
@@ -232,9 +232,6 @@
                 selectable select-mode="multi" @row-selected="invoiceRowSelected"
                 :fields="invoicesTable" no-sort-reset
                 :show-empty="true" empty-text="Pas de facture">
-                <template v-slot:cell(paid_at)="row">
-                  {{ row.item.paid_at ? '✓' : '✗' }}
-                </template>
                 <template v-slot:cell(created_at)="row">
                   {{ row.item.created_at | date }}
                 </template>
@@ -303,7 +300,7 @@ export default {
       invoicesSelected: [],
       invoicesTable: [
         { key: 'created_at', label: 'Date', sortable: true },
-        { key: 'paid_at', label: 'Payée', sortable: true },
+        { key: 'items_count', label: "Nb d'items", sortable: true },
         {
           key: 'total',
           label: 'Total',
@@ -387,13 +384,6 @@ export default {
     },
     loggedInUserIsAdmin() {
       return this.$store.state.user.role === 'admin';
-    },
-    roundedBalance() {
-      if (this.item.balance) {
-        return Math.floor(this.item.balance);
-      }
-
-      return 0;
     },
     communitySelected() {
       return this.communitiesSelected[0];
