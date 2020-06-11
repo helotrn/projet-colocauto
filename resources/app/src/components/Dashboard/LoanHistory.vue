@@ -28,10 +28,10 @@
           {{ loan.loanable.name }}<br>
           <span>{{ loan.departure_at | date }}</span><br>
           <span v-if="loan.borrower.id === borrower.id">
-            Payé {{ loan.final_price | currency }}
+            Payé {{ loan.total_final_cost | currency }}
           </span>
           <span v-else>
-            Reçu {{ loan.final_price | currency }}
+            Reçu {{ loan.total_final_cost | currency }}
           </span>
         </li>
       </ul>

@@ -132,6 +132,7 @@ class Loan extends BaseModel
       'actual_duration_in_minutes',
       'calendar_days',
       'canceled_at',
+      'total_final_cost',
     ];
 
     public $items = [
@@ -285,6 +286,10 @@ class Loan extends BaseModel
 
     public function getTotalActualCostAttribute() {
         return $this->actual_price + $this->actual_insurance + $this->platform_tip;
+    }
+
+    public function getTotalFinalCostAttribute() {
+        return $this->final_price + $this->final_insurance + $this->final_platform_tip;
     }
 
     public function getCanceledAtAttribute() {
