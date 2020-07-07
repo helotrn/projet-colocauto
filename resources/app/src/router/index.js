@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 
-import Loan from '../views/Loan.vue';
+import Loan from '@/views/Loan.vue';
 import CommunityOverview from '@/views/community/Overview.vue';
 
 import adminRoutes from './admin';

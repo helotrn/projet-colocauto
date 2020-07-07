@@ -1,6 +1,6 @@
-import AdminFilters from './components/Admin/Filters';
 import communities from '@/locales/models/communities';
 import loanables from '@/locales/models/loanables';
+import AdminFilters from './components/Admin/Filters';
 
 export default {
   communities: communities.fr,
