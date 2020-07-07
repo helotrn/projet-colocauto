@@ -51,12 +51,22 @@
 
           <div class="form__section" v-if="item.id">
             <a id="members" />
-            <h2>Membres</h2>
+            <b-row>
+              <b-col md="8">
+                <h2>Membres</h2>
+              </b-col>
+
+              <b-col md="4" class="text-right">
+                <b-input v-model="userTableFilter" placeholder="Tapez pour filtrer..." />
+              </b-col>
+            </b-row>
 
             <b-table
+              :filter="userTableFilter" empty-filtered-text="Pas de membre correspondant"
+              :filter-function="localizedFilter(userTableFilterFields)"
               striped hover :items="item.users"
               selectable select-mode="multi" @row-selected="userRowSelected"
-              :fields="userTable" no-sort-reset
+              :fields="userTable" no-sort-reset sticky-header="500px"
               :show-empty="true" empty-text="Pas de membre">
               <template v-slot:cell(role)="row">
                 <b-select :options="[
@@ -89,23 +99,23 @@
                 <div class="text-right">
                   <div v-if="!row.item._new">
                     <b-button v-if="!row.item.approved_at"
-                      size="sm" class="mr-1" variant="primary"
+                      size="sm" class="ml-1 mb-1" variant="primary"
                       @click="approveUser(row.item)">
                       {{ $t('approuver') | capitalize }}
                     </b-button>
                     <b-button v-else-if="!row.item.suspended_at"
-                      size="sm" class="mr-1" variant="warning"
+                      size="sm" class="ml-1 mb-1" variant="warning"
                       @click="suspendUser(row.item)">
                       {{ $t('suspendre') | capitalize }}
                     </b-button>
                     <b-button v-else
-                      size="sm" class="mr-1" variant="success"
+                      size="sm" class="ml-1 mb-1" variant="success"
                       @click="unsuspendUser(row.item)">
                       {{ $t('rétablir') | capitalize }}
                     </b-button>
                   </div>
 
-                  <b-button size="sm" variant="danger"
+                  <b-button size="sm" variant="danger" class="ml-1 mb-1"
                     @click="removeUser(row.item)">
                     {{ $t('retirer') | capitalize }}
                   </b-button>
@@ -176,6 +186,8 @@ export default {
         { key: 'proof', label: 'Preuve', sortable: false },
         { key: 'actions', label: 'Actions', tdClass: 'table__cell__actions' },
       ],
+      userTableFilter: '',
+      userTableFilterFields: ['full_name'],
     };
   },
   computed: {
@@ -249,6 +261,16 @@ export default {
       this.$store.commit(`${this.slug}/item`, item);
 
       this.$store.dispatch(`${this.slug}/updateItem`, this.params);
+    },
+    localizedFilter(columns) {
+      return (row, filter) => {
+        return columns
+          .map((c) => row[c] || '')
+          .join(',')
+          .normalize('NFD')
+          .replace(/[\u0300-\u036f]/g, '')
+          .match(new RegExp(filter.normalize('NFD'), 'i'));
+      };
     },
     removePricing(pricing) {
       const pricings = this.item.pricings.filter(p => p !== pricing);
