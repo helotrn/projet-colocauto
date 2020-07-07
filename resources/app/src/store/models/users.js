@@ -30,6 +30,10 @@ export default new RestModule('users', {
     'communities.tags.name',
     'communities.tags.slug',
     'communities.proof.url',
+    'payment_methods.id',
+    'payment_methods.type',
+    'payment_methods.credit_card_type',
+    'payment_methods.external_id',
   ],
 }, {
   async approveBorrower({ commit }, userId) {

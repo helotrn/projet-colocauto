@@ -218,8 +218,9 @@
                 :show-empty="true" empty-text="Pas de transaction">
                 <template v-slot:cell(actions)="row">
                   <div class="text-right">
-                    <b-button size="sm" :to="`/admin/invoices/${row.item.id}`">
-                      {{ $t('modifier') | capitalize }}
+                    <b-button variant="success" size="sm"
+                      :to="`/admin/invoices/${row.item.id}`">
+                      {{ $t('afficher') | capitalize }}
                     </b-button>
                   </div>
                 </template>
@@ -243,10 +244,36 @@
                 </template>
                 <template v-slot:cell(actions)="row">
                   <div class="text-right">
-                    <b-button size="sm" :to="`/admin/invoices/${row.item.id}`">
-                      {{ $t('modifier') | capitalize }}
+                    <b-button variant="success" size="sm" :to="`/admin/invoices/${row.item.id}`">
+                      {{ $t('afficher') | capitalize }}
                     </b-button>
                   </div>
+                </template>
+              </b-table>
+            </div>
+
+            <div class="form__section" v-if="!!item.id">
+              <b-row>
+                <b-col>
+                  <h2>Modes de paiement</h2>
+                </b-col>
+              </b-row>
+
+              <b-table
+                striped hover :items="item.payment_methods"
+                :fields="paymentMethodsTable" no-sort-reset
+                :show-empty="true" empty-text="Pas de mode de paiement">
+                <template v-slot:cell(type)="row">
+                  {{ $t(`payment_methods.types.${row.item.type}`) | capitalize }}
+                </template>
+
+                <template v-slot:cell(informations)="row">
+                  <span v-if="row.item.type === 'bank_account'">
+                    {{ row.item.external_id }} ({{ row.item.credit_card_type }})
+                  </span>
+                  <span v-if="row.item.type === 'credit_card'">
+                    {{ row.item.credit_card_type }} se terminant par {{ row.item.four_last_digits}} ({{ row.item.external_id }})
+                  </span>
                 </template>
               </b-table>
             </div>
@@ -328,6 +355,12 @@ export default {
         { key: 'loanable', label: 'Objet', sortable: true },
         { key: 'date', label: 'Date', sortable: true },
         { key: 'actions', label: 'Actions', tdClass: 'table__cell__actions' },
+      ],
+      paymentMethodsTable: [
+        { key: 'id', label: 'ID', sortable: true },
+        { key: 'name', label: 'Nom', sortable: true },
+        { key: 'type', label: 'Type', sortable: true },
+        { key: 'informations', label: 'Informations' },
       ],
       tagsSelected: [],
       tagsTable: [

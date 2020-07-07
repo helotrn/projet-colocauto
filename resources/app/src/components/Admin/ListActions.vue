@@ -2,7 +2,7 @@
   <div class="admin-list-actions text-right">
     <b-button v-if="hasColumn('view')"
       size="sm" variant="success" :to="`/admin/${slug}/${row.item.id}`">
-      {{ $t('voir') | capitalize }}
+      {{ $t('afficher') | capitalize }}
     </b-button>
     <b-button v-if="hasColumn('edit')"
       size="sm" variant="primary" :to="`/admin/${slug}/${row.item.id}`">

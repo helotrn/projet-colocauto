@@ -6,5 +6,9 @@ export default {
       name: 'nom associé au compte',
       type: 'type',
     },
+    types: {
+      credit_card: 'carte de crédit',
+      bank_account: 'compte de banque',
+    },
   },
 };

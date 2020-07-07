@@ -1,6 +1,7 @@
 import { prefixFields } from '@/helpers';
 
 import communities from './communities';
+import paymentMethods from './paymentMethods';
 
 export default {
   fr: {
@@ -30,5 +31,6 @@ export default {
       postal_code: 'code postal',
     },
     model_name: 'membre | membres',
+    payment_methods: paymentMethods.fr,
   },
 };

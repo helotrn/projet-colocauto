@@ -130,7 +130,7 @@ export default {
             + 'loanables.*,loanables.loans.*,avatar.*,'
             + 'loanables.loans.borrower.user.full_name,communities.*,loans.*,'
             + 'invoices.*,invoices.total,invoices.total_with_taxes,loans.borrower.user.*,'
-            + 'loans.loanable.name,communities.tags.*',
+            + 'loans.loanable.name,communities.tags.*,payment_methods.*',
         },
         title: 'titles.user',
       },
