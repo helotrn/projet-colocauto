@@ -9,11 +9,12 @@ use GuzzleHttp\Client;
 
 class NokeSyncUsers extends Command
 {
-    use NokeCommandTrait;
-
-    protected $signature = 'noke:sync:users';
+    protected $signature = 'noke:sync:users;
+                            {--pretend : Do not call remote API}';
 
     protected $description = 'Synchronize NOKE users';
+
+    private $pretend = false;
 
     public function __construct(Client $client, NokeService $service) {
         parent::__construct();
@@ -23,6 +24,10 @@ class NokeSyncUsers extends Command
     }
 
     public function handle() {
+        if ($this->option('pretend') || app()->environment() !== 'production') {
+            $this->pretend = true;
+        }
+
         $this->info('Fetching users...');
         $this->getUsers(true);
 
@@ -30,6 +35,14 @@ class NokeSyncUsers extends Command
         $this->createUsers();
 
         $this->info('Done.');
+    }
+
+    private function getUsers() {
+        $this->users = $this->service->fetchUsers(true);
+
+        foreach ($this->users as $user) {
+            $this->usersIndex[$user->username] = $user;
+        }
     }
 
     private function createUsers() {
@@ -41,6 +54,10 @@ class NokeSyncUsers extends Command
         foreach ($users as $user) {
             if (!isset($this->usersIndex[$user->email])) {
                 $this->warn("Creating user {$user->email}.");
+
+                if ($this->pretend) {
+                    continue;
+                }
 
                 $this->service->findOrCreateUser($user);
             }
