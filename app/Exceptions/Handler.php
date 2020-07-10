@@ -4,11 +4,12 @@ namespace App\Exceptions;
 
 use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Symfony\Component\Console\Exception\CommandNotFoundException;
 
 class Handler extends ExceptionHandler
 {
     protected $dontReport = [
-        //
+        CommandNotFoundException::class,
     ];
 
     protected $dontFlash = [
