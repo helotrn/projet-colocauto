@@ -263,14 +263,12 @@ export default {
       this.$store.dispatch(`${this.slug}/updateItem`, this.params);
     },
     localizedFilter(columns) {
-      return (row, filter) => {
-        return columns
-          .map((c) => row[c] || '')
-          .join(',')
-          .normalize('NFD')
-          .replace(/[\u0300-\u036f]/g, '')
-          .match(new RegExp(filter.normalize('NFD'), 'i'));
-      };
+      return (row, filter) => columns
+        .map(c => row[c] || '')
+        .join(',')
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .match(new RegExp(filter.normalize('NFD'), 'i'));
     },
     removePricing(pricing) {
       const pricings = this.item.pricings.filter(p => p !== pricing);
