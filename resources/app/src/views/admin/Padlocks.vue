@@ -80,8 +80,8 @@ export default {
   name: 'AdminPadlocks',
   mixins: [DataRouteGuards, ListMixin],
   components: {
-      AdminFilters,
-      AdminListActions,
+    AdminFilters,
+    AdminListActions,
   },
   data() {
     return {
