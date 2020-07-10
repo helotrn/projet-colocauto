@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Padlock\CreateRequest;
 use App\Http\Requests\Padlock\IndexRequest;
+use App\Http\Requests\Padlock\RestoreRequest;
 use App\Http\Requests\Padlock\RetrieveRequest;
 use App\Http\Requests\Padlock\UpdateRequest;
 use App\Http\Requests\BaseRequest as Request;
@@ -53,6 +54,16 @@ class PadlockController extends RestController
         }
 
         return $this->respondWithItem($request, $item);
+    }
+
+    public function restore(RestoreRequest $request, $id) {
+        try {
+            $response = parent::validateAndRestore($request, $id);
+        } catch (ValidationException $e) {
+            return $this->respondWithErrors($e->errors(), $e->getMessage());
+        }
+
+        return $response;
     }
 
     public function template(Request $request) {

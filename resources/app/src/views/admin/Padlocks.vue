@@ -36,11 +36,8 @@
           :sort-by.sync="sortBy" :sort-desc.sync="sortDesc" no-sort-reset
           :show-empty="true" empty-text="Pas de cadenas">
           <template v-slot:cell(actions)="row">
-            <div class="text-right">
-              <b-button size="sm" variant="primary" :to="`/admin/${slug}/${row.item.id}`">
-                {{ $t('modifier') | capitalize }}
-              </b-button>
-            </div>
+            <admin-list-actions :columns="['edit', 'restore']" :row="row" :slug="slug"
+              @restore="restoreItemModal(row.item)" />
           </template>
         </b-table>
       </b-col>
@@ -73,6 +70,7 @@
 
 <script>
 import AdminFilters from '@/components/Admin/Filters.vue';
+import AdminListActions from '@/components/Admin/ListActions.vue';
 
 import DataRouteGuards from '@/mixins/DataRouteGuards';
 import ListMixin from '@/mixins/ListMixin';
@@ -81,7 +79,10 @@ import locales from '@/locales';
 export default {
   name: 'AdminPadlocks',
   mixins: [DataRouteGuards, ListMixin],
-  components: { AdminFilters },
+  components: {
+      AdminFilters,
+      AdminListActions,
+  },
   data() {
     return {
       table: [
