@@ -4,7 +4,7 @@
     :name="label"
     :rules="rulesOrNothing"
     v-slot="validationContext">
-    <b-form-group :label="type !== 'checkbox' ? label : ''" :label-for="name"
+    <b-form-group :label="type !== 'checkbox' ? label : ''" :label-for="name" :label-cols="inline"
       :description="description" v-b-tooltip.hover :title="disabled ? disabledTooltip : ''">
       <b-form-select v-if="type === 'select'"
         :id="name" :name="name"
@@ -154,6 +154,11 @@ export default {
     },
     initialView: {
       type: String,
+      required: false,
+      default: null,
+    },
+    inline: {
+      type: [String],
       required: false,
       default: null,
     },
