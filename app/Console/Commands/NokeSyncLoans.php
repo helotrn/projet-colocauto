@@ -7,20 +7,24 @@ use App\Models\Padlock;
 use App\Services\NokeService;
 use Illuminate\Console\Command;
 use GuzzleHttp\Client;
+use Log;
 
 class NokeSyncLoans extends Command
 {
-    protected $locksIndex = [];
-
-    protected $signature = 'noke:sync:loans';
+    protected $signature = 'noke:sync:loans
+                            {--pretend : Do not call remote API}';
 
     protected $description = 'Synchronize NOKE loans';
 
     protected $groups = [];
     protected $groupsIndex = [];
 
+    protected $locksIndex = [];
+
     protected $users = [];
     protected $usersIndex = [];
+
+    private $pretend = false;
 
     public function __construct(Client $client, NokeService $service) {
         parent::__construct();
@@ -30,6 +34,10 @@ class NokeSyncLoans extends Command
     }
 
     public function handle() {
+        if ($this->option('pretend') || app()->environment() !== 'production') {
+            $this->pretend = true;
+        }
+
         $this->info('Fetching locks...');
         $this->getLocks();
 
@@ -49,9 +57,7 @@ class NokeSyncLoans extends Command
     }
 
     protected function getLocks($force = false) {
-        $nokeService = new NokeService($this->client);
-
-        $this->locks = $nokeService->fetchLocks($force);
+        $this->locks = $this->service->fetchLocks($force);
 
         foreach ($this->locks as $lock) {
             $this->locksIndex[$lock->macAddress] = $lock;
@@ -60,9 +66,7 @@ class NokeSyncLoans extends Command
     }
 
     protected function getGroups($force = false) {
-        $nokeService = new NokeService($this->client);
-
-        $this->groups = $nokeService->fetchGroups($force);
+        $this->groups = $this->service->fetchGroups($force);
 
         foreach ($this->groups as $group) {
             $this->groupsIndex[$group->name] = $group;
@@ -70,9 +74,7 @@ class NokeSyncLoans extends Command
     }
 
     protected function getUsers($force = false) {
-        $nokeService = new NokeService($this->client);
-
-        $this->users = $nokeService->fetchUsers($force);
+        $this->users = $this->service->fetchUsers($force);
 
         foreach ($this->users as $user) {
             $this->usersIndex[$user->username] = $user;
@@ -146,6 +148,7 @@ class NokeSyncLoans extends Command
             $currentUserIds = array_map(function ($u) {
                 return $u->id;
             }, $group->users);
+            Log::channel('noke')->info("Group $groupName has " . join(',', $currentUserIds));
 
             $data->userIds = array_values(array_unique($data->userIds));
             if (empty(array_diff($data->userIds, $currentUserIds))
@@ -154,8 +157,15 @@ class NokeSyncLoans extends Command
             }
 
             $this->warn("Updating group {$groupName} users.");
+            $userIds = join(',', $data->userIds);
+            Log::channel('noke')->info("Updating $groupName with $userIds");
 
-            $this->service->updateGroup($data);
+            if ($this->pretend) {
+                continue;
+            }
+            var_dump('here');
+
+            //$this->service->updateGroup($data);
         }
     }
 }
