@@ -3,32 +3,46 @@
 namespace App\Console\Commands;
 
 use App\Models\Padlock;
+use App\Services\NokeService;
 use Illuminate\Console\Command;
 use GuzzleHttp\Client;
 
 class NokeSyncLocks extends Command
 {
-    use NokeCommandTrait;
-
-    protected $signature = 'noke:sync:locks';
+    protected $signature = 'noke:sync:locks --debug
+                            {--pretend : Do not call remote API}';
 
     protected $description = 'Synchronize NOKE locks configuration';
 
-    public function __construct(Client $client) {
+    private $groups = [];
+    private $groupsIndex = [];
+
+    private $locks = [];
+
+    private $pretend = false;
+
+    public function __construct(Client $client, NokeService $service) {
         parent::__construct();
 
         $this->client = $client;
+        $this->service = $service;
     }
 
     public function handle() {
-        $this->info('Logging in...');
-        $this->login();
+        if ($this->option('pretend') || app()->environment() !== 'production') {
+            $this->pretend = true;
+        }
+
+        $this->info('Fetching locks...');
+        $this->locks = $this->service->fetchLocks(true);
+        $this->info('Found ' . count($this->locks) . ' locks.');
 
         $this->info('Synchronizing local locks...');
         $this->syncLocks();
 
         $this->info('Fetching groups...');
-        $this->getGroups(true);
+        $this->getGroups();
+        $this->info('Found ' . count($this->groups) . ' groups.');
 
         $this->info('Creating remote groups...');
         $this->createGroups();
@@ -36,70 +50,70 @@ class NokeSyncLocks extends Command
         $this->info('Done.');
     }
 
-    private function syncLocks() {
-        $locksResult = $this->getLocks(true);
+    private function getGroups() {
+        $this->groups = $this->service->fetchGroups(true);
 
+        foreach ($this->groups as $group) {
+            $this->groupsIndex[$group->name] = $group;
+        }
+    }
+
+    private function syncLocks() {
         $lockIds = [];
-        foreach ($locksResult as $nokeLock) {
+        foreach ($this->locks as $nokeLock) {
             $lock = Padlock::whereExternalId($nokeLock->id)->first();
             if (!$lock) {
                 $lock = new Padlock;
-                $this->warn("Creating lock $nokeLock->name ({$nokeLock->id}).");
+                $this->warn("Creating lock $nokeLock->name ({$lock->id} / {$nokeLock->id}).");
             } else {
-                $this->warn("Updating lock $nokeLock->name ({$nokeLock->id}).");
+                $this->warn("Updating lock $nokeLock->name ({$lock->id} / {$nokeLock->id}).");
             }
 
             $lock->external_id = $nokeLock->id;
             $lock->name = $nokeLock->name;
             $lock->mac_address = $nokeLock->macAddress;
             $lock->deleted_at = null;
-            $lock->save();
 
-            $lockIds[] = $lock->id;
+            if (!$this->pretend) {
+                $lock->save();
+            }
+
+            if ($lock->id) {
+                $lockIds[] = $lock->id;
+            }
         }
 
         $this->info('Removing defunct locks...');
-        $removedLocks = Padlock::whereNotIn('id', $lockIds);
+        $removedLocks = Padlock::whereNotIn('id', $lockIds)->get();
         if ($removedLocks->count() === 0) {
               $this->warn('No lock to remove.');
         }
+
         foreach ($removedLocks as $lock) {
-            $this->warn("Removing lock $nokeLock->name ({$nokeLock->id}).");
+            $this->warn("Removing lock $nokeLock->name ({$lock->id} / {$nokeLock->id}).");
+
+            if ($this->pretend) {
+                continue;
+            }
+
             $lock->destroy();
         }
     }
 
     private function createGroups() {
         $locks = Padlock::all();
+
         foreach ($locks as $lock) {
             $groupName = "API {$lock->mac_address}";
+
             if (!isset($this->groupsIndex[$groupName])) {
                 $this->warn("Creating group {$groupName}.");
-                $this->client->post(
-                    "{$this->baseUrl}/group/create/",
-                    [
-                        'json' => [
-                            'name' => $groupName,
-                            'groupType' => 'online',
-                            'lockIds' => [ intval($lock->external_id) ],
-                            'userIds' => [ intval(config('services.noke.api_user_id')) ],
-                            'schedule' => [
-                                [
-                                    'startDate' => '2020-05-01T00:00:00-04:00',
-                                    'endDate' => '2030-05-01T23:59:59-04:00',
-                                    'expiration' => '2030-05-01T23:59:59-04:00',
-                                    'repeatType' => 'none',
-                                    'dayOfWeek' => '',
-                                    'name' => strval(time()),
-                                ]
-                            ],
-                        ],
-                        'headers' => [
-                            'Accept' => 'application/json',
-                            'Authorization' => "Bearer $this->token",
-                        ],
-                    ]
-                );
+
+                if ($this->pretend) {
+                    continue;
+                }
+
+                $this->service->findOrCreateGroup($groupName, $lock->external_id);
             }
         }
     }

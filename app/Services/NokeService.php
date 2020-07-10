@@ -11,6 +11,12 @@ class NokeService
     private $baseUrl = 'https://v1-api-nokepro.appspot.com';
     private $token;
 
+    private $groups = [];
+    private $groupsIndex = [];
+
+    private $locks = [];
+    private $locksIndex = [];
+
     private $users = [];
     private $usersIndex = [];
 
@@ -24,6 +30,63 @@ class NokeService
         if (!$this->token) {
             $this->resetToken();
         }
+    }
+
+    public function findOrCreateGroup($groupName, $lockExternalId) {
+        if (!$this->groups) {
+            $this->fetchGroups();
+        }
+
+        if (isset($this->groupsIndex[$groupName])) {
+            return $this->groupsIndex[$groupName];
+        }
+
+        $url = "{$this->baseUrl}/group/create/";
+        Log::channel('noke')->info("Request to $url for group $groupName");
+
+        if (app()->environment() !== 'production') {
+            return;
+        }
+
+        $this->client->post(
+            $url,
+            [
+                'json' => [
+                    'name' => $groupName,
+                    'groupType' => 'online',
+                    'lockIds' => [ intval($lockExternalId) ],
+                    'userIds' => [ intval(config('services.noke.api_user_id')) ],
+                    'schedule' => [
+                        [
+                            'startDate' => '2020-05-01T00:00:00-04:00',
+                            'endDate' => '2030-05-01T23:59:59-04:00',
+                            'expiration' => '2030-05-01T23:59:59-04:00',
+                            'repeatType' => 'none',
+                            'dayOfWeek' => '',
+                            'name' => strval(time()),
+                        ]
+                    ],
+                ],
+                'headers' => [
+                    'Accept' => 'application/json',
+                    'Authorization' => "Bearer $this->token",
+                ],
+            ]
+        );
+
+        $result = json_decode($response->getBody());
+
+        if (isset($result->result) && $result->result === 'failure') {
+            return null;
+        }
+
+        $newGroup = $result->data;
+        $this->groupsIndex[$groupName] = $newGroup;
+        array_push($this->groups, $newGroup);
+
+        Cache::set('noke:groups', json_encode($this->groups), 14400);
+
+        return $newGroup;
     }
 
     public function findOrCreateUser(User $user) {
@@ -79,6 +142,83 @@ class NokeService
         Cache::set('noke:users', json_encode($this->users), 14400);
 
         return $newUser;
+    }
+
+    public function fetchGroups($force = false) {
+        if ($force) {
+            Cache::forget('noke:groups');
+        }
+
+        if ($groupsJson = Cache::get('noke:groups')) {
+            $this->groups = json_decode($groupsJson);
+        } else {
+            $page = 0;
+            do {
+                $page += 1;
+
+                $url = "{$this->baseUrl}/group/get/all/";
+                Log::channel('noke')
+                    ->info("Request to $url with page $page");
+
+                $groupsResponse = $this->client->post($url, [
+                    'json' => [
+                        'page' => $page,
+                    ],
+                    'headers' => [
+                        'Accept' => 'application/json',
+                        'Authorization' => "Bearer $this->token",
+                    ],
+                ]);
+                $groupsResult = json_decode($groupsResponse->getBody());
+
+                $this->groups = array_merge($groupsResult->data->groups, $this->groups);
+                $maxPage = intval($groupsResult->data->pageCount);
+            } while ($maxPage > $page);
+
+            Cache::set('noke:groups', json_encode($this->groups), 14400);
+        }
+
+        foreach ($this->groups as $group) {
+            $this->groupsIndex[$group->name] = $group;
+        }
+
+        return $this->groups;
+    }
+
+    public function fetchLocks($force = false) {
+        if ($force) {
+            Cache::forget('noke:locks');
+        }
+
+        if ($locks = Cache::get('noke:locks')) {
+            return json_decode($locks);
+        }
+
+        $url = "{$this->baseUrl}/lock/get/list/";
+        Log::channel('noke')->info("Request to $url");
+
+        $locksResponse = $this->client->post($url, [
+            'json' => [
+                'page' => 1,
+            ],
+            'headers' => [
+                'Accept' => 'application/json',
+                'Authorization' => "Bearer $this->token",
+            ],
+        ]);
+
+        $locksResult = json_decode($locksResponse->getBody());
+
+        Cache::put('noke:locks', json_encode($locksResult->data), 14400);
+
+        $this->locks = $locksResult->data;
+
+        foreach ($this->locks as $lock) {
+            $this->locksIndex[$lock->macAddress] = $lock;
+            $this->locksIndex[$lock->macAddress]->users = [];
+        }
+
+        return $this->locks;
     }
 
     public function fetchUsers($force = false) {
