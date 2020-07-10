@@ -20,6 +20,7 @@ class Padlock extends BaseModel
         'name' => 'text',
         'loanable.name' => 'text',
         'loanable.id' => 'number',
+        'deleted_at' => 'date',
     ];
 
     protected $fillable = [

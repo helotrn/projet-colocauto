@@ -4,6 +4,7 @@ export default {
   fr: {
     cadenas: 'cadenas',
     fields: {
+      deleted_at: 'supprimé',
       name: 'nom',
       mac_address: 'adresse MAC',
       external_id: 'ID externe',
