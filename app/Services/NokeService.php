@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\User;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Cache;
+use Log;
 
 class NokeService
 {
@@ -114,12 +115,15 @@ class NokeService
             'zip' => '',
         ];
 
-        if (app()->environment() === 'testing') {
-            return; // TODO mock
+        $url = "{$this->baseUrl}/user/create/";
+        Log::channel('noke')->info("Request to $url for user ID $user->id");
+
+        if (app()->environment() !== 'production') {
+            return;
         }
 
         $response = $this->client->post(
-            "{$this->baseUrl}/user/create/",
+            $url,
             [
                 'json' => $data,
                 'headers' => [
@@ -233,7 +237,10 @@ class NokeService
                 return; // TODO mock
             }
 
-            $usersResponse = $this->client->post("{$this->baseUrl}/user/get/list/", [
+            $url = "{$this->baseUrl}/user/get/list/";
+            Log::channel('noke')->info("Request to $url");
+
+            $usersResponse = $this->client->post($url, [
                 'headers' => [
                     'Accept' => 'application/json',
                     'Authorization' => "Bearer $this->token",
@@ -295,7 +302,10 @@ class NokeService
             return; // TODO mock
         }
 
-        $loginResponse = $this->client->post("{$this->baseUrl}/company/web/login/", [
+        $url = "{$this->baseUrl}/company/web/login/";
+        Log::channel('noke')->info("Request to $url");
+
+        $loginResponse = $this->client->post($url, [
             'json' => [
                 'username' => config('services.noke.username'),
                 'password' => config('services.noke.password'),
