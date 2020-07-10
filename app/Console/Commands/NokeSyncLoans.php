@@ -4,36 +4,34 @@ namespace App\Console\Commands;
 
 use App\Models\Loan;
 use App\Models\Padlock;
+use App\Services\NokeService;
 use Illuminate\Console\Command;
 use GuzzleHttp\Client;
 
 class NokeSyncLoans extends Command
 {
-    use NokeCommandTrait;
-
     protected $locksIndex = [];
 
     protected $signature = 'noke:sync:loans';
 
     protected $description = 'Synchronize NOKE loans';
 
-    public function __construct(Client $client) {
+    protected $groups = [];
+    protected $groupsIndex = [];
+
+    protected $users = [];
+    protected $usersIndex = [];
+
+    public function __construct(Client $client, NokeService $service) {
         parent::__construct();
 
         $this->client = $client;
+        $this->service = $service;
     }
 
     public function handle() {
-        $this->info('Logging in...');
-        $this->login();
-
         $this->info('Fetching locks...');
-        $locks = $this->getLocks();
-
-        foreach ($locks as $lock) {
-            $this->locksIndex[$lock->macAddress] = $lock;
-            $this->locksIndex[$lock->macAddress]->users = [];
-        }
+        $this->getLocks();
 
         $this->info('Fetching users...');
         $this->getUsers();
@@ -48,6 +46,37 @@ class NokeSyncLoans extends Command
         $this->updateLocksUsers();
 
         $this->info('Done.');
+    }
+
+    protected function getLocks($force = false) {
+        $nokeService = new NokeService($this->client);
+
+        $this->locks = $nokeService->fetchLocks($force);
+
+        foreach ($this->locks as $lock) {
+            $this->locksIndex[$lock->macAddress] = $lock;
+            $this->locksIndex[$lock->macAddress]->users = [];
+        }
+    }
+
+    protected function getGroups($force = false) {
+        $nokeService = new NokeService($this->client);
+
+        $this->groups = $nokeService->fetchGroups($force);
+
+        foreach ($this->groups as $group) {
+            $this->groupsIndex[$group->name] = $group;
+        }
+    }
+
+    protected function getUsers($force = false) {
+        $nokeService = new NokeService($this->client);
+
+        $this->users = $nokeService->fetchUsers($force);
+
+        foreach ($this->users as $user) {
+            $this->usersIndex[$user->username] = $user;
+        }
     }
 
     private function buildLocksUsers() {
@@ -113,7 +142,7 @@ class NokeSyncLoans extends Command
             $data->userIds[] = $this->usersIndex['api@locomotion.app']->id;
             $data->lockIds = [$this->locksIndex[$mac]->id];
 
-            $group = $this->getGroupProfile($data->id);
+            $group = $this->service->getGroupProfile($data->id);
             $currentUserIds = array_map(function ($u) {
                 return $u->id;
             }, $group->users);
@@ -126,17 +155,7 @@ class NokeSyncLoans extends Command
 
             $this->warn("Updating group {$groupName} users.");
 
-            $response = $this->client->post(
-                "{$this->baseUrl}/group/edit/",
-                [
-                    'json' => $data,
-                    'headers' => [
-                        'Accept' => 'application/json',
-                        'Authorization' => "Bearer $this->token",
-                    ],
-                ]
-            );
-            $result = json_decode($response->getBody());
+            $this->service->updateGroup($data);
         }
     }
 }

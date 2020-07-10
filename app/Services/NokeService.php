@@ -253,6 +253,43 @@ class NokeService
         return $this->users;
     }
 
+    public function getGroupProfile($id) {
+        $url = "{$this->baseUrl}/group/profile/";
+        Log::channel('noke')->info("Request to $url");
+
+        $response = $this->client->post($url, [
+            'json' => [
+                'id' => $id,
+            ],
+            'headers' => [
+                'Accept' => 'application/json',
+                'Authorization' => "Bearer $this->token",
+            ],
+        ]);
+
+        $result = json_decode($response->getBody());
+
+        return $result->data;
+    }
+
+    public function updateGroup($data) {
+        $url = "{$this->baseUrl}/group/edit/";
+        Log::channel('noke')->info("Request to $url");
+
+        $response = $this->client->post(
+            $url,
+            [
+                'json' => $data,
+                'headers' => [
+                    'Accept' => 'application/json',
+                    'Authorization' => "Bearer $this->token",
+                ],
+            ]
+        );
+
+        return json_decode($response->getBody());
+    }
+
     private function resetToken() {
         if (app()->environment() === 'testing') {
             return; // TODO mock
