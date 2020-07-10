@@ -17,8 +17,8 @@
         :value="true" :disabled="disabled"
         :unchecked-value="false"
         :state="getValidationState(validationContext)"
-        v-bind:checked="value"
-        v-on:change="emitChange">
+        :checked="value"
+        @change="emitChange">
         {{ label }}
       </b-form-checkbox>
       <b-form-checkbox-group v-else-if="type === 'checkboxes'"

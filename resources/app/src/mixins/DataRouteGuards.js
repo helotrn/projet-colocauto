@@ -7,6 +7,7 @@ function drillParams(object, vm) {
     if (typeof object[k] === 'function') {
       newAcc[k] = object[k]({
         user: vm.user,
+        route: vm.$route,
       });
     } else if (typeof object[k] === 'object') {
       newAcc[k] = drillParams(object[k], vm);
@@ -72,6 +73,13 @@ export default {
               const routeParams = to.meta.data[collection][action];
 
               const params = drillParams(routeParams, vm);
+
+              if (routeParams.conditional && !routeParams.conditional({
+                user: vm.user,
+                route: vm.$route,
+              })) {
+                return null;
+              }
 
               return store.dispatch(
                 `${collection}/${action}`,

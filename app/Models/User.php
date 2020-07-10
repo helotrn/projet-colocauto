@@ -341,6 +341,14 @@ class User extends AuthenticatableBaseModel
         $this->save();
     }
 
+    public function updateBalance($amount) {
+        if ($amount > 0) {
+            $this->updateBalance($amount);
+        } elseif ($amount < 0) {
+            $this->removeFromBalance(-$amount);
+        }
+    }
+
     public function scopeAccessibleBy(Builder $query, $user) {
         if ($user->isAdmin()) {
             return $query;

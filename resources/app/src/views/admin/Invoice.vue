@@ -81,32 +81,47 @@
           </b-col>
         </b-row>
 
-        <hr>
-
         <b-row>
           <b-col>
-            <h3>Nouvel item</h3>
+            <forms-validated-input label="Payée" type="checkbox" :value="true"
+              name="paid_at" disabled
+              description="Les factures créées manuellement sont présumées déjà payées." />
 
-            <forms-validated-input label="Description" type="text"
-              name="label" v-model="newBillItem.label" :rules="{ required: true }" />
-            <forms-validated-input label="Date" type="date"
-              name="item_date" v-model="newBillItem.item_date" :rules="{ required: true }" />
-            <forms-validated-input label="Montant" type="number"
-              name="amount" v-model="newBillItem.amount" :rules="{ required: true }" />
-            <forms-validated-input label="TPS" type="number"
-              name="taxes_tps" v-model="newBillItem.taxes_tps" :rules="{ required: true }" />
-            <forms-validated-input label="TPS" type="number"
-              name="taxes_tvq" v-model="newBillItem.taxes_tvq" :rules="{ required: true }" />
-
-            <b-button @click="addBillItemAndReset">Ajouter l'item</b-button>
+            <forms-validated-input label="Appliquer au solde" type="checkbox"
+              name="apply_to_balance" v-model="item.apply_to_balance" />
           </b-col>
         </b-row>
 
-        <hr>
+        <b-row>
+          <b-col>
+            <b-card no-body class="mb-1">
+              <b-card-header header-tag="header" class="p-1" role="tab">
+                <b-button block v-b-toggle.new-item variant="light"><h3>Nouvel item</h3></b-button>
+              </b-card-header>
+
+              <b-collapse id="new-item" visible accordion="new-item" role="tabpanel">
+                <b-card-body>
+                  <forms-validated-input label="Description" type="text"
+                    name="label" v-model="newBillItem.label" :rules="{ required: true }" />
+                  <forms-validated-input label="Date" type="date"
+                    name="item_date" v-model="newBillItem.item_date" :rules="{ required: true }" />
+                  <forms-validated-input label="Montant" type="number"
+                    name="amount" v-model="newBillItem.amount" :rules="{ required: true }" />
+                  <forms-validated-input label="TPS" type="number"
+                    name="taxes_tps" v-model="newBillItem.taxes_tps" :rules="{ required: true }" />
+                  <forms-validated-input label="TPS" type="number"
+                    name="taxes_tvq" v-model="newBillItem.taxes_tvq" :rules="{ required: true }" />
+
+                  <b-button @click="addBillItemAndReset">Ajouter l'item</b-button>
+                </b-card-body>
+              </b-collapse>
+            </b-card>
+          </b-col>
+        </b-row>
 
         <b-row>
           <b-col>
-            <div class="form__buttons">
+            <div class="form__buttons mt-3">
               <b-button-group>
                 <b-button variant="success" type="submit"
                   @click="mergeUserAndSubmit" :disabled="!changed || loading">

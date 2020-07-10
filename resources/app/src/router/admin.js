@@ -163,6 +163,21 @@ export default {
           fields: '*,bill_items.*,user.*',
         },
         title: 'titles.invoice',
+        data: {
+          users: {
+            retrieveOne: {
+              conditional({ route }) {
+                return !!route && !!route.query && !!route.query.user_id;
+              },
+              params: {
+                fields: 'full_name,address,postal_code',
+              },
+              id({ route: { query } }) {
+                return query.user_id;
+              },
+            },
+          },
+        },
       },
     },
     {

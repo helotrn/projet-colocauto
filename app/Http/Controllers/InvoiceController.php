@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\BaseRequest as Request;
+use App\Http\Requests\Invoice\CreateRequest;
 use App\Models\Invoice;
 use App\Repositories\InvoiceRepository;
 
@@ -30,11 +31,18 @@ class InvoiceController extends RestController
         }
     }
 
-    public function create(Request $request) {
+    public function create(CreateRequest $request) {
         try {
             $item = parent::validateAndCreate($request);
         } catch (ValidationException $e) {
             return $this->respondWithErrors($e->errors(), $e->getMessage());
+        }
+
+        if ($request->get('apply_to_balance')) {
+            $user = $item->user;
+            $total = $item->total;
+
+            $user->updateBalance($total);
         }
 
         return $this->respondWithItem($request, $item, 201);
@@ -74,7 +82,11 @@ class InvoiceController extends RestController
 
     public function template() {
         return [
-            'item' => [],
+            'item' => [
+                'apply_to_balance' => true,
+                'bill_items' => [],
+                'period' => '',
+            ],
             'rules' => [],
             'filters' => $this->model::$filterTypes,
         ];

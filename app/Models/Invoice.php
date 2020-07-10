@@ -12,6 +12,7 @@ class Invoice extends BaseModel
 
     public static $rules = [
         'period' => 'required',
+        'user_id' => 'required',
     ];
 
     public static $filterTypes = [

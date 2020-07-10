@@ -205,7 +205,17 @@
             </div>
 
             <div class="form__section" v-if="!!item.id">
-              <h2>Compte</h2>
+              <b-row>
+                <b-col md="6">
+                  <h2>Compte</h2>
+                </b-col>
+
+                <b-col md="6" class="text-right">
+                  <b-button :to="`/admin/invoices/new?user_id=${item.id}`">
+                    Ajouter une facture
+                  </b-button>
+                </b-col>
+              </b-row>
 
               <p><strong>Balance:</strong> {{ item.balance | currency }}</p>
 
