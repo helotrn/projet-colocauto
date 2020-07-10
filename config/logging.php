@@ -46,6 +46,13 @@ return [
             'level' => 'debug',
         ],
 
+        'noke' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/noke.log'),
+            'level' => 'debug',
+            'days' => 14,
+        ],
+
         'daily' => [
             'driver' => 'daily',
             'path' => storage_path('logs/laravel.log'),
