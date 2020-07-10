@@ -128,7 +128,7 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
         try {
           await dispatch('options');
 
-          commit('item', { ...state.empty });
+          commit('item', JSON.parse(JSON.stringify(state.empty)));
           commit('initialItem', state.item);
 
           commit('loaded', true);
