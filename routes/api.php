@@ -13,7 +13,7 @@ Route::prefix('v1')->group(function () {
     Route::post('auth/password/request', 'AuthController@passwordRequest');
     Route::post('auth/password/reset', 'AuthController@passwordReset');
 
-    Route::middleware('auth:api')->group(function () {
+    Route::middleware(['auth:api', 'transaction'])->group(function () {
         Route::prefix('auth')->group(function () {
             Route::get('user', 'AuthController@retrieveUser');
             Route::put('user', 'AuthController@updateUser');
