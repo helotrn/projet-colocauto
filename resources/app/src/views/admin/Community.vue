@@ -298,9 +298,9 @@ export default {
       );
     },
     async setUserRole(user, role) {
-      await this.updateUser(user, (u) => ({
+      await this.updateUser(user, u => ({
         ...u,
-          role,
+        role,
       }));
     },
     async suspendUser(user) {

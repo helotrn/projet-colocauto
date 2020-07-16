@@ -282,7 +282,8 @@
                     {{ row.item.external_id }} ({{ row.item.credit_card_type }})
                   </span>
                   <span v-if="row.item.type === 'credit_card'">
-                    {{ row.item.credit_card_type }} se terminant par {{ row.item.four_last_digits}} ({{ row.item.external_id }})
+                    {{ row.item.credit_card_type }} se terminant par
+                    {{ row.item.four_last_digits}} ({{ row.item.external_id }})
                   </span>
                 </template>
               </b-table>
