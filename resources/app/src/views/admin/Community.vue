@@ -61,13 +61,16 @@
               </b-col>
             </b-row>
 
-            <b-table
+            <b-table :busy="usersLoading"
               :filter="userTableFilter" empty-filtered-text="Pas de membre correspondant"
               :filter-function="localizedFilter(userTableFilterFields)"
-              striped hover :items="item.users"
-              selectable select-mode="multi" @row-selected="userRowSelected"
-              :fields="userTable" no-sort-reset sticky-header="500px"
+              striped hover :items="users"
+              sort-by="full_name" no-sort-reset
+              :fields="userTable" sticky-header="500px"
               :show-empty="true" empty-text="Pas de membre">
+              <template v-slot:table-busy>
+                <span>Chargement...</span>
+              </template>
               <template v-slot:cell(role)="row">
                 <b-select :options="[
                   { value: null, text: 'Membre' },
@@ -98,17 +101,17 @@
               <template v-slot:cell(actions)="row">
                 <div class="text-right">
                   <div v-if="!row.item._new">
-                    <b-button v-if="!row.item.approved_at"
+                    <b-button v-if="!row.item.approved_at" :disabled="usersLoading || loading"
                       size="sm" class="ml-1 mb-1" variant="primary"
                       @click="approveUser(row.item)">
                       {{ $t('approuver') | capitalize }}
                     </b-button>
-                    <b-button v-else-if="!row.item.suspended_at"
+                    <b-button v-else-if="!row.item.suspended_at" :disabled="usersLoading || loading"
                       size="sm" class="ml-1 mb-1" variant="warning"
                       @click="suspendUser(row.item)">
                       {{ $t('suspendre') | capitalize }}
                     </b-button>
-                    <b-button v-else
+                    <b-button v-else :disabled="usersLoading || loading"
                       size="sm" class="ml-1 mb-1" variant="success"
                       @click="unsuspendUser(row.item)">
                       {{ $t('rétablir') | capitalize }}
@@ -116,7 +119,7 @@
                   </div>
 
                   <b-button size="sm" variant="danger" class="ml-1 mb-1"
-                    @click="removeUser(row.item)">
+                    :disabled="usersLoading || loading" @click="removeUser(row.item)">
                     {{ $t('retirer') | capitalize }}
                   </b-button>
                 </div>
@@ -132,17 +135,17 @@
                 text: 'full_name',
                 params: {
                   'fields': 'id,full_name',
-                  '!id': item.users.map(u => u.id).join(','),
+                  '!id': users.map(u => u.id).join(','),
                 },
               }" @relation="addUser" />
           </div>
 
           <div class="form__buttons">
             <b-button-group>
-              <b-button variant="success" type="submit" :disabled="!changed">
+              <b-button variant="success" type="submit" :disabled="!changed || loading">
                 Sauvegarder
               </b-button>
-              <b-button type="reset" :disabled="!changed" @click="reset">
+              <b-button type="reset" :disabled="!changed || loading" @click="reset">
                 Réinitialiser
               </b-button>
             </b-button-group>
@@ -161,12 +164,13 @@ import PricingLanguageDefinition from '@/components/Pricing/LanguageDefinition.v
 import FormsValidatedInput from '@/components/Forms/ValidatedInput.vue';
 
 import FormMixin from '@/mixins/FormMixin';
+import DataRouteGuards from '@/mixins/DataRouteGuards';
 
 import locales from '@/locales';
 
 export default {
   name: 'AdminCommunity',
-  mixins: [FormMixin],
+  mixins: [DataRouteGuards, FormMixin],
   components: {
     FormsBuilder,
     FormsValidatedInput,
@@ -176,7 +180,6 @@ export default {
   data() {
     return {
       newPricingType: null,
-      usersSelected: [],
       userTable: [
         { key: 'id', label: 'ID', sortable: true },
         { key: 'full_name', label: 'Nom complet', sortable: true },
@@ -229,6 +232,12 @@ export default {
         },
       ].filter(p => currentPricingTypes.indexOf(p.value) === -1);
     },
+    users() {
+      return this.$store.state.users.data.filter(() => true);
+    },
+    usersLoading() {
+      return !!this.$store.state.users.ajax;
+    },
   },
   methods: {
     addPricing() {
@@ -240,27 +249,29 @@ export default {
         }],
       });
     },
-    addUser(user) {
-      this.item.users.push({
-        ...user,
-        _new: true,
-        role: null,
+    async addUser(user) {
+      await this.$store.dispatch(`${this.slug}/addUser`, {
+        id: this.item.id,
+        data: {
+          id: user.id,
+        },
+      });
+
+      this.$store.state.communities.lastAjax.then(({ data }) => {
+        this.$store.commit('users/addData', [data]);
       });
     },
-    approveUser(user) {
-      const item = {
-        ...this.item,
-      };
-      const index = item.users.indexOf(user);
-      const approvedUser = {
-        ...item.users[index],
-        approved_at: new Date(),
-      };
-      item.users.splice(index, 1, approvedUser);
+    async approveUser(user) {
+      await this.updateUser(user, (u) => {
+        const data = {
+          ...u,
+        };
 
-      this.$store.commit(`${this.slug}/item`, item);
+        const community = data.communities.find(c => c.id === this.item.id);
+        community.approved_at = new Date();
 
-      this.$store.dispatch(`${this.slug}/updateItem`, this.params);
+        return data;
+      });
     },
     localizedFilter(columns) {
       return (row, filter) => columns
@@ -275,49 +286,39 @@ export default {
 
       this.$store.commit(`${this.slug}/patchItem`, { pricings });
     },
-    removeUser(user) {
-      const users = this.item.users.filter(u => u !== user);
+    async removeUser(user) {
+      await this.$store.dispatch(`${this.slug}/removeUser`, {
+        id: this.item.id,
+        userId: user.id,
+      });
 
-      this.$store.commit(`${this.slug}/patchItem`, { users });
+      this.$store.commit(
+        'users/data',
+        this.$store.state.users.data.filter(u => u.id !== user.id),
+      );
     },
-    suspendUser(user) {
-      const item = {
-        ...this.item,
-      };
-      const index = item.users.indexOf(user);
-      const suspendedUser = {
-        ...item.users[index],
-        suspended_at: new Date(),
-      };
-      item.users.splice(index, 1, suspendedUser);
+    async suspendUser(user) {
+      await this.updateUser(user, (u) => {
+        const data = {
+          ...u,
+        };
 
-      this.$store.dispatch(`${this.slug}/update`, {
-        id: item.id,
-        data: {
-          id: item.id,
-          users: item.users,
-        },
-        params: this.params,
+        const community = data.communities.find(c => c.id === this.item.id);
+        community.suspended_at = new Date();
+
+        return data;
       });
     },
-    unsuspendUser(user) {
-      const item = {
-        ...this.item,
-      };
-      const index = item.users.indexOf(user);
-      const suspendedUser = {
-        ...item.users[index],
-        suspended_at: null,
-      };
-      item.users.splice(index, 1, suspendedUser);
+    async unsuspendUser(user) {
+      await this.updateUser(user, (u) => {
+        const data = {
+          ...u,
+        };
 
-      this.$store.dispatch(`${this.slug}/update`, {
-        id: item.id,
-        data: {
-          id: item.id,
-          users: item.users,
-        },
-        params: this.params,
+        const community = data.communities.find(c => c.id === this.item.id);
+        community.suspended_at = null;
+
+        return data;
       });
     },
     updatePricing(oldValue, newValue) {
@@ -326,9 +327,31 @@ export default {
       pricings.splice(index, 1, newValue);
       this.$store.commit(`${this.slug}/patchItem`, { pricings });
     },
-    userRowSelected(rows) {
-      this.usersSelected = rows;
-    },
+    async updateUser(user, transform) {
+      const data = transform(user);
+
+      await this.$store.dispatch(`${this.slug}/updateUser`, {
+        id: this.item.id,
+        data,
+        userId: user.id,
+      });
+
+      this.$store.state.communities.lastAjax.then(({ data: d }) => {
+        const item = this.$store.state.users.data.find(u => u.id === d.id);
+        const index = this.$store.state.users.data.indexOf(item);
+
+        const newData = [
+          ...this.$store.state.users.data,
+        ];
+        newData.splice(index, 1, {
+          ...item,
+          ...d,
+          id: item.id,
+        });
+
+        this.$store.commit('users/data', newData);
+      });
+    }
   },
   i18n: {
     messages: {

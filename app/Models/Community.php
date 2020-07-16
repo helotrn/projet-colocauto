@@ -6,6 +6,7 @@ use App\Rules\Polygon;
 use App\Utils\PointCast;
 use App\Utils\PolygonCast;
 use App\Transformers\CommunityTransformer;
+use Auth;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Phaza\LaravelPostgis\Eloquent\PostgisTrait;
@@ -101,6 +102,13 @@ class Community extends BaseModel
             ->using(Pivots\CommunityUser::class)
             ->withTimestamps()
             ->withPivot(['id', 'approved_at', 'created_at', 'role', 'suspended_at', 'updated_at']);
+
+        $user = Auth::user();
+        if ($user && $user->isAdmin()) {
+            return $relation;
+        }
+
+        return $relation->whereSuspendedAt(null);
     }
 
     public function pricings() {

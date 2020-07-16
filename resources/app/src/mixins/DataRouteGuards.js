@@ -4,6 +4,10 @@ function drillParams(object, vm) {
   return Object.keys(object).reduce((p, k) => {
     const newAcc = { ...p };
 
+    if (['conditional', 'mapResults'].indexOf(k) > -1) {
+      return newAcc;
+    }
+
     if (typeof object[k] === 'function') {
       newAcc[k] = object[k]({
         user: vm.user,
@@ -84,7 +88,18 @@ export default {
               return store.dispatch(
                 `${collection}/${action}`,
                 params,
-              );
+              ).then(() => {
+                if (routeParams.mapResults) {
+                  store.commit(
+                    `${collection}/data`,
+                    store.state[collection].data
+                      .map(routeParams.mapResults.bind({
+                        user: vm.user,
+                        route: vm.$route,
+                      })),
+                  );
+                }
+              });
             }));
 
             return acc;

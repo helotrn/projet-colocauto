@@ -23,6 +23,7 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
       loaded: false,
       search: [],
       searchAjax: null,
+      lastAjax: null,
       lastSearchQuery: '',
       params: {
         page: 1,
@@ -41,6 +42,10 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
       ajax(state, ajax) {
         if (ajax && state.ajax && state.ajax.cancel) {
           state.ajax.cancel(`${state.slug} canceled ${state.ajax.context}`);
+        }
+
+        if (!ajax) {
+          state.lastAjax = state.ajax;
         }
 
         state.ajax = ajax;

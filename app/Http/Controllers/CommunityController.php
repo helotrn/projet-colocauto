@@ -12,6 +12,7 @@ use App\Http\Requests\Community\CommunityUserTagRequest;
 use App\Models\Community;
 use App\Models\User;
 use App\Repositories\CommunityRepository;
+use App\Repositories\UserRepository;
 use Excel;
 use Illuminate\Validation\ValidationException;
 
@@ -20,11 +21,15 @@ class CommunityController extends RestController
     public function __construct(
         CommunityRepository $repository,
         Community $model,
-        TagController $tagController
+        TagController $tagController,
+        UserController $userController,
+        UserRepository $UserRepository
     ) {
         $this->repo = $repository;
         $this->model = $model;
         $this->tagController = $tagController;
+        $this->userController = $userController;
+        $this->userRepo = $UserRepository;
     }
 
     public function index(Request $request) {
@@ -141,6 +146,73 @@ class CommunityController extends RestController
         return abort(404);
     }
 
+    public function indexUsers(Request $request, $id) {
+        $community = $this->repo->find($request, $id);
+
+        $request->merge([ 'communities.id' => $id ]);
+
+        return $this->userController->index($request);
+    }
+
+    public function retrieveUsers(Request $request, $id, $userId) {
+        $community = $this->repo->find($request, $id);
+
+        $request->merge([ 'communities.id' => $id ]);
+
+        return $this->userController->retrieve($request, $userId);
+    }
+
+    public function createUsers(Request $request, $id) {
+        $community = $this->repo->find($request->redirectAuth(Request::class), $id);
+
+        $userId = $request->get('id');
+        $user = $this->userRepo->find($request->redirectAuth(Request::class), $userId);
+
+
+        if ($community->users->where('id', $userId)->isEmpty()) {
+            $community->users()->attach($userId);
+
+            return $this->respondWithItem($request, $user);
+        }
+
+        return $this->respondWithItem(
+            $request,
+            $community->users->where('id', $userId)->first()
+        );
+    }
+
+    public function updateUsers(Request $request, $id, $userId) {
+        $community = $this->repo->find($request->redirectAuth(Request::class), $id);
+
+        $user = $this->userRepo->find($request->redirectAuth(Request::class), $userId);
+
+        if ($community->users->where('id', $userId)->isEmpty()) {
+            return $this->respondWithMessage(null, 404);
+        }
+
+        $this->userRepo->update($request, $userId, $request->json()->all());
+
+        return $this->respondWithItem(
+            $request,
+            $community->users()->where('users.id', $userId)->first()
+        );
+    }
+
+    public function destroyUsers(Request $request, $communityId, $userId) {
+        $community = $this->repo->find($request->redirectAuth(Request::class), $communityId);
+        $user = $this->userRepo->find($request->redirectAuth(Request::class), $userId);
+
+        if ($community->users->where('id', $userId)->isEmpty()) {
+            return $this->respondWithMessage(null, 404);
+        }
+
+        $community->users()->detach($user);
+
+        return $this->respondWithItem(
+            $request,
+            $user
+        );
+    }
 
     public function template(Request $request) {
         $template = [

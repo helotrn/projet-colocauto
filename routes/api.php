@@ -67,6 +67,8 @@ Route::prefix('v1')->group(function () {
 
         RouteHelper::subresource('user', 'tag');
 
+        RouteHelper::subresource('community', 'user');
+
         Route::get(
             'communities/{community_id}/users/{user_id}/tags',
             'CommunityController@indexCommunityUserTags'
