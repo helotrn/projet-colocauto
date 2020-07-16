@@ -15,6 +15,10 @@ class SendLoanExtensionCreatedEmails
         $borrower = $loan->borrower;
         $owner = $loan->loanable->owner;
 
+        if (!$owner->user) {
+            return;
+        }
+
         Mail::to($owner->user->email, $owner->user->name . ' ' . $owner->user->last_name)
             ->queue(new LoanExtensionCreated($event->extension, $loan, $borrower, $owner));
     }
