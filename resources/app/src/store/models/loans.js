@@ -3,7 +3,7 @@ import RestModule from '../RestModule';
 
 export default new RestModule('loans', {
   params: {
-    order: '-departure_at',
+    order: '-id',
     page: 1,
     per_page: 10,
   },

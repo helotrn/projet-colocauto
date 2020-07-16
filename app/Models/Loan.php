@@ -57,6 +57,28 @@ class Loan extends BaseModel
         'loanable.owner.user.full_name' => 'text',
         'borrower.user.full_name' => 'text',
         'incidents.status' => ['in_process', 'completed', 'canceled'],
+        'community.id' => [
+            'type' => 'relation',
+            'query' => [
+                'slug' => 'communities',
+                'value' => 'id',
+                'text' => 'name',
+                'params' => [
+                    'fields' => 'id,name',
+                ],
+            ],
+        ],
+        'loanable.id' => [
+            'type' => 'relation',
+            'query' => [
+                'slug' => 'loanables',
+                'value' => 'id',
+                'text' => 'name',
+                'params' => [
+                    'fields' => 'id,name',
+                ],
+            ],
+        ],
     ];
 
     public static function boot() {

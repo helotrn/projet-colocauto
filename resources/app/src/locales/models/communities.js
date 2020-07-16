@@ -18,6 +18,7 @@ export default {
       },
       type: 'type',
     },
+    model_name: 'communauté | communautés',
     types: {
       neighborhood: 'voisinage',
       null: "n'importe quel type",

@@ -1,3 +1,5 @@
+import { prefixFields } from '@/helpers';
+
 import borrowers from './borrowers';
 import communities from './communities';
 import loanables from './loanables';
@@ -15,7 +17,10 @@ export default {
       borrower_id: 'emprunteur',
       borrower: borrowers.fr.fields,
       community_id: 'communauté',
-      community: communities.fr.fields,
+      community: {
+        ...prefixFields(communities.fr.fields, '(Communauté)'),
+        model_name: communities.fr.model_name,
+      },
       departure_at: 'départ',
       duration_in_minutes: 'durée (minutes)',
       estimated_distance: 'kilométrage à parcourir',
@@ -24,8 +29,11 @@ export default {
       incidents: {
         status: 'statut (Incident)',
       },
-      loanable_id: 'véhicule',
-      loanable: loanables.fr.fields,
+      loanable_id: loanables.fr.model.singular,
+      loanable: {
+        ...prefixFields(loanables.fr.fields, '(Véhicule)'),
+        model_name: loanables.fr.model_name,
+      },
       loanable_type: 'type de véhicule',
       message_for_owner: 'message pour le propriétaire',
       platform_tip: 'contribution volontaire LocoMotion',
