@@ -23,7 +23,8 @@
       </b-col>
 
       <b-col class="admin__filters">
-        <admin-filters entity="loans" :filters="filters" :params="contextParams" />
+        <admin-filters entity="loans" :filters="filters" :params="contextParams"
+          @change="contextParams = $event" />
       </b-col>
     </b-row>
 
@@ -37,6 +38,9 @@
           :show-empty="true" empty-text="Pas d'emprunt">
           <template v-slot:cell(borrower.user.full_name)="row">
             {{ row.item.borrower.user.full_name }}
+          </template>
+          <template v-slot:cell(departure_at)="row">
+            {{ $dayjs(row.item.departure_at).format('YYYY-MM-DD HH:mm') }}
           </template>
           <template v-slot:cell(actions)="row">
             <div class="text-right">
@@ -89,6 +93,7 @@ export default {
     return {
       table: [
         { key: 'id', label: 'ID', sortable: true },
+        { key: 'departure_at', label: 'Départ', sortable: true },
         { key: 'borrower.user.full_name', label: 'Emprunteur', sortable: true },
         { key: 'loanable.owner.user.full_name', label: 'Propriétaire', sortable: true },
         { key: 'community.name', label: 'Communauté', sortable: true },

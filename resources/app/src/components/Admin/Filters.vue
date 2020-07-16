@@ -13,7 +13,8 @@
         <b-card-body>
           <b-form-group v-for="(def, key) in filters" :key="key"
             :label="$t(`${entity}.fields.${key}`) | capitalize" :label-for="key">
-            <b-form-select v-if="Array.isArray(def)" v-model="params[key]"
+            <b-form-select v-if="Array.isArray(def)"
+              :value="params[key]" @input="setParam(key, $event)"
               :id="key" :name="key">
               <b-form-select-option :value="null">
                 {{ $t(`${entity}.${key}s.null`) | capitalize }}
@@ -23,15 +24,16 @@
               </b-form-select-option>
             </b-form-select>
             <b-form-input v-else-if="def === 'date'" type="date"
-              v-model="params[key]" :name="key" :id="key" />
+              :value="params[key]" @input="setParam(key, $event)" :name="key" :id="key" />
             <forms-relation-input v-else-if="def.type === 'relation'"
               :id="key" :name="key" :query="def.query"
               :value="params[key]"
               @input="emitRelationChange(key, $event)" />
             <b-form-input v-else-if="def.type === 'relation'" type="date"
-              v-model="params[key]" :name="key" :id="key" />
+              :value="params[key]" @input="setParam(key, $event)" :name="key" :id="key" />
             <b-form-input v-else type="text"
-              v-model="params[key]" :name="key" :id="key" />
+              :value="params[key]" @input="setParam(key, $event)"
+              :name="key" :id="key" />
           </b-form-group>
         </b-card-body>
       </b-card>
@@ -66,10 +68,16 @@ export default {
   },
   methods: {
     emitRelationChange(name, event) {
-      this.$store.commit(`${this.entity}/setParam`, {
-        name,
-        value: event ? event.value : null,
-      });
+      this.setParam(name, event ? event.value : null);
+    },
+    setParam(key, value) {
+      if (!value) {
+        this.params[key] = undefined;
+      } else {
+        this.params[key] = value;
+      }
+
+      this.$emit('change', this.params);
     },
   },
 };

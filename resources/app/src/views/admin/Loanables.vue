@@ -23,7 +23,8 @@
       </b-col>
 
       <b-col class="admin__filters">
-        <admin-filters entity="loanables" :filters="filters" :params="contextParams" />
+        <admin-filters entity="loanables" :filters="filters" :params="contextParams"
+          @change="contextParams = $event" />
       </b-col>
     </b-row>
 

@@ -3,8 +3,14 @@ export default {
     context() {
       return this.$store.state[this.slug];
     },
-    contextParams() {
-      return this.context.params;
+    contextParams: {
+      get() {
+        return this.context.params;
+      },
+      set(val) {
+        this.context.params = val;
+        this.loadListData();
+      },
     },
     creatable() {
       return this.$route.meta.creatable;
@@ -25,9 +31,6 @@ export default {
     },
     filters() {
       return this.context.filters;
-    },
-    jsonParams() {
-      return JSON.stringify(this.params);
     },
     lastPage() {
       return this.context.lastPage;
@@ -174,11 +177,6 @@ export default {
     },
     rowSelected(items) {
       this.selected = items;
-    },
-  },
-  watch: {
-    jsonParams() {
-      this.loadListData();
     },
   },
 };
