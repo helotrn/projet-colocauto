@@ -2,7 +2,10 @@
   <div class="loan-header">
     <b-row>
       <b-col>
-        <h1>Emprunt {{ loanablePrettyName }}</h1>
+        <h1>
+          Emprunt {{ loanablePrettyName }}
+          <small v-if="userRole === 'other'">(#{{ loan.id }})</small>
+        </h1>
       </b-col>
     </b-row>
 
