@@ -351,7 +351,7 @@ export default {
 
         this.$store.commit('users/data', newData);
       });
-    }
+    },
   },
   i18n: {
     messages: {

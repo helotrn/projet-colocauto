@@ -24,13 +24,15 @@
               </b-form-select-option>
             </b-form-select>
             <b-form-input v-else-if="def === 'date'" type="date"
-              :value="params[key]" @input="setParam(key, $event)" :name="key" :id="key" />
+              :value="params[key]" @input="setParam(key, $event)"
+              :name="key" :id="key" />
             <forms-relation-input v-else-if="def.type === 'relation'"
               :id="key" :name="key" :query="def.query"
               :value="params[key]"
               @input="emitRelationChange(key, $event)" />
             <b-form-input v-else-if="def.type === 'relation'" type="date"
-              :value="params[key]" @input="setParam(key, $event)" :name="key" :id="key" />
+              :value="params[key]" @input="setParam(key, $event)"
+              :name="key" :id="key" />
             <b-form-input v-else type="text"
               :value="params[key]" @input="setParam(key, $event)"
               :name="key" :id="key" />
