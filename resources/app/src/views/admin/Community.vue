@@ -75,7 +75,7 @@
                 <b-select :options="[
                   { value: null, text: 'Membre' },
                   { value: 'admin', text: 'Admin' }
-                ]" v-model="row.item.role" />
+                ]" :value="row.item.role" @change="setUserRole(row.item, $event)" />
               </template>
               <template v-slot:cell(approved_at)="row">
                 <small class="muted" v-if="!row.item.approved_at">N/A</small>
@@ -296,6 +296,12 @@ export default {
         'users/data',
         this.$store.state.users.data.filter(u => u.id !== user.id),
       );
+    },
+    async setUserRole(user, role) {
+      await this.updateUser(user, (u) => ({
+        ...u,
+          role,
+      }));
     },
     async suspendUser(user) {
       await this.updateUser(user, (u) => {

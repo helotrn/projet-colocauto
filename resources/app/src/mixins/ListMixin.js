@@ -178,5 +178,11 @@ export default {
     rowSelected(items) {
       this.selected = items;
     },
+    setParam(name, value) {
+      this.contextParams = {
+        ...this.contextParams,
+        [name]: value,
+      };
+    },
   },
 };
