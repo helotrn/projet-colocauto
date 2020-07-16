@@ -7,73 +7,90 @@ use Tests\TestCase;
 
 class InvoiceTest extends TestCase
 {
+    private static $invoiceResponseStructure = [
+        'id',
+        'period',
+    ];
+
     public function testCreateInvoices() {
-        $this->markTestIncomplete();
         $data = [
             'period' => $this->faker->word,
-            'payment_method' => $this->faker->word,
-            'total' => $this->faker->numberBetween($min = 0, $max = 300000),
-            'paid_at' => $this->faker->date($format = 'Y-m-d', $max = 'now'),
+            'total' => 0,
+            'paid_at' => null,
+            'user_id' => $this->user->id,
         ];
 
-        $response = $this->json('POST', route('invoices.create'), $data);
+        $response = $this->json('POST', route('invoices.create'), array_merge(
+            $data,
+            [
+                'apply_to_balance' => false
+            ]
+        ));
 
         $response->assertStatus(201)->assertJson($data);
     }
 
     public function testShowInvoices() {
-        $this->markTestIncomplete();
-        $post = factory(Invoice::class)->create();
+        $invoice = factory(Invoice::class)->create([
+            'user_id' => $this->user->id,
+        ]);
 
-        $response = $this->json('GET', route('invoices.retrieve', $post->id), $data);
+        $response = $this->json('GET', route('invoices.retrieve', $invoice->id));
 
-        $response->assertStatus(200)->assertJson($data);
+        $response->assertStatus(200)
+            ->assertJsonStructure(self::$invoiceResponseStructure);
     }
 
     public function testUpdateInvoices() {
-        $this->markTestIncomplete();
-        $post = factory(Invoice::class)->create();
+        $invoice = factory(Invoice::class)->create([
+            'user_id' => $this->user->id,
+        ]);
+
         $data = [
             'period' => $this->faker->word,
         ];
 
-        $response = $this->json('PUT', route('invoices.update', $post->id), $data);
+        $response = $this->json('PUT', route('invoices.update', $invoice->id), $data);
 
-        $response->assertStatus(200)->assertJson($data);
+        $response->assertStatus(200)
+            ->assertJsonStructure(self::$invoiceResponseStructure)
+            ->assertJson($data);
     }
 
     public function testDeleteInvoices() {
-        $this->markTestIncomplete();
-        $post = factory(Invoice::class)->create();
+        $invoice = factory(Invoice::class)->create([
+            'user_id' => $this->user->id,
+        ]);
 
-        $response = $this->json('DELETE', route('invoices.delete', $post->id), $data);
+        $response = $this->json('DELETE', route('invoices.destroy', $invoice->id));
 
-        $response->assertStatus(204)->assertJson($data);
+        $response->assertStatus(200)
+            ->assertJsonStructure(self::$invoiceResponseStructure);
     }
 
     public function testListInvoices() {
-        $this->markTestIncomplete();
-        $invoices = factory(Invoice::class, 2)->create()->map(function ($post) {
-            return $post->only([
+        $invoices = factory(Invoice::class, 2)->create([
+            'user_id' => $this->user->id,
+        ])->map(function ($invoice) {
+            return $invoice->only([
                 'id',
                 'period',
-                'payment_method',
                 'total',
-                'paid_at',
             ]);
         });
 
         $response = $this->json('GET', route('invoices.index'));
 
         $response->assertStatus(200)
-                ->assertJson($invoices->toArray())
+                ->assertJson([ 'data' => $invoices->toArray() ])
                 ->assertJsonStructure([
-                    '*' => [
-                        'id',
-                        'period',
-                        'payment_method',
-                        'total',
-                        'paid_at',
+                    'data' => [
+                        '*' => [
+                            'id',
+                            'period',
+                            'total',
+                            'paid_at',
+                        ],
                     ],
                 ]);
     }
