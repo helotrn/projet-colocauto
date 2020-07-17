@@ -24,6 +24,7 @@ import trailers from './models/trailers';
 import owners from './models/owners';
 import users from './models/users';
 
+import AdminCommunity from './pages/admin/community';
 import CommunityView from './pages/community/view';
 import Login from './pages/login';
 import Register from './pages/register';
@@ -216,6 +217,7 @@ export default new Vuex.Store({
   actions,
   modules: {
     account,
+    'admin.community': AdminCommunity,
     bikes,
     borrowers,
     cars,

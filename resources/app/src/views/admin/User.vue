@@ -105,8 +105,9 @@
                 :show-empty="true" empty-text="Pas de communauté">
                 <template v-slot:cell(actions)="row">
                   <div class="text-right">
-                    <b-button size="sm" :to="`/admin/communities/${row.item.id}#members`">
-                      {{ $t('modifier') | capitalize }}
+                    <b-button variant="success" size="sm"
+                      @click="viewUserInCommunity(row.item)">
+                      {{ $t('afficher') | capitalize }} dans la communauté
                     </b-button>
                   </div>
                 </template>
@@ -491,6 +492,10 @@ export default {
     },
     async unsuspendBorrower(user) {
       await this.$store.dispatch(`${this.slug}/unsuspendBorrower`, user.id);
+    },
+    viewUserInCommunity(community) {
+      this.$store.commit('admin.community/usersFilter', this.item.full_name);
+      this.$router.push(`/admin/communities/${community.id}#members`);
     },
   },
   i18n: {
