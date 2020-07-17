@@ -279,7 +279,7 @@ export default {
         .join(',')
         .normalize('NFD')
         .replace(/[\u0300-\u036f]/g, '')
-        .match(new RegExp(filter.normalize('NFD'), 'i'));
+        .match(new RegExp(filter.normalize('NFD').replace(/[\u0300-\u036f]/g, ''), 'i'));
     },
     removePricing(pricing) {
       const pricings = this.item.pricings.filter(p => p !== pricing);
