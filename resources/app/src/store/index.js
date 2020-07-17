@@ -47,7 +47,10 @@ const vuexPersist = new VuexPersist({
       rememberMe: state.login.rememberMe,
     },
     stats: state.stats,
-    'community.view': state['community.view'],
+    'community.view': {
+      ...state['community.view'],
+      center: null,
+    },
     'register.intent': state['register.intent'],
   }),
 });
