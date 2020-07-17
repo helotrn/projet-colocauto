@@ -35,6 +35,7 @@ class Trailer extends Loanable
         'maximum_charge',
         'name',
         'position',
+        'share_with_parent_communities',
     ];
 
     public $readOnly = false;

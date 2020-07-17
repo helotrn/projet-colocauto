@@ -22,6 +22,9 @@ export default {
         + 'pour définir sa position.',
       name: "Merci de nommer votre véhicule pour en informer votre voisinage. Le nom n'a pas "
         + "besoin d'être compliqué. Allez-y au plus simple... ou au plus drôle !",
+      share_with_parent_communities: 'Mon véhicule pourra être visible et demandé en réservation '
+      + "par des utilisateur du quartier en-dehors de mon voisinage. C'est l'occasion de "
+      + 'partager davantage!',
     },
     engines: cars.fr.engines,
     fields: {
@@ -39,6 +42,8 @@ export default {
       owner_id: 'propriétaire',
       padlock_id: 'cadenas',
       position: 'position géographique',
+      share_with_parent_communities: "j'accepte que mon véhicule soit partagé au quartier d'appartenance",
+      share_with_parent_communities_dynamic: "j'accepte que mon véhicule soit partagé avec {shared_with}",
       type: 'type de véhicule',
     },
     model: {

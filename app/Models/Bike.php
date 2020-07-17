@@ -32,6 +32,7 @@ class Bike extends Loanable
         'model',
         'name',
         'position',
+        'share_with_parent_communities',
         'size',
     ];
 

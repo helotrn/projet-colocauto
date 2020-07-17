@@ -222,6 +222,7 @@ class LoanableController extends RestController
                 'papers_location' => '',
                 'plate_number' => '',
                 'position' => [],
+                'share_with_parent_communities' => false,
                 'transmission_mode' => '',
                 'year_of_circulation' => '',
             ],
@@ -283,9 +284,12 @@ class LoanableController extends RestController
                             'value' => 'id',
                             'text' => 'name',
                             'params' => [
-                                'fields' => 'id,name',
+                                'fields' => 'id,name,parent.id,parent.name',
                             ],
                         ],
+                    ],
+                    'share_with_parent_communities' => [
+                        'type' => 'checkbox',
                     ],
                     'padlock_id' => [
                         'type' => 'relation',
