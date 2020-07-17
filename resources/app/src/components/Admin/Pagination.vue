@@ -32,7 +32,7 @@ export default {
     emitChange(name, value) {
       this.$emit('change', { name, value });
     },
-  }
+  },
 };
 </script>
 

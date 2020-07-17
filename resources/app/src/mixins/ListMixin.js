@@ -183,5 +183,5 @@ export default {
         this.loadListData();
       },
     },
-  }
+  },
 };

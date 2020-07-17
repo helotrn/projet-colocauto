@@ -77,12 +77,10 @@ export default {
               const routeParams = to.meta.data[collection][action];
 
               const zeroedOutFilters = Object.keys(store.state[collection].filters)
-                .reduce((filters, k) => {
-                  return {
-                    ...filters,
-                    [k]: undefined,
-                  };
-                }, {});
+                .reduce((filters, k) => ({
+                  ...filters,
+                  [k]: undefined,
+                }), {});
               const params = {
                 ...zeroedOutFilters,
                 ...drillParams(routeParams, vm),

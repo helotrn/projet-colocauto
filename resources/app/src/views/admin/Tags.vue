@@ -43,8 +43,7 @@
     </b-row>
 
     <b-row>
-      <b-col md="6">
-      </b-col>
+      <b-col md="6" />
 
       <b-col md="6">
         <admin-pagination :params="contextParams" :total="total" @change="setParam" />
