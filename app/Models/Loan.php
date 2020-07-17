@@ -342,8 +342,19 @@ class Loan extends BaseModel
 
         if ($user->borrower) {
             $borrowerId = $user->borrower->id;
-            return $query->orWhere('borrower_id', $borrowerId);
+            $query = $query->orWhere('borrower_id', $borrowerId);
         }
+
+
+        // Or belonging to its admin communities
+        $query = $query->orWhere(function ($q) use ($user) {
+            return $q->whereHas('community', function ($q) use ($user) {
+                return $q->whereHas('users', function ($q) use ($user) {
+                    return $q->where('community_user.user_id', $user->id)
+                        ->where('community_user.role', 'admin');
+                });
+            });
+        });
 
         return $query;
     }
