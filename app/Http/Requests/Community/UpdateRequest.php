@@ -15,8 +15,8 @@ class UpdateRequest extends BaseRequest
     }
 
     public function rules() {
-        $parentIds = Community::parentOf($this->get('id'))->toArray();
-        $childIds = Community::childOf($this->get('id'))->toArray();
+        $parentIds = Community::parentOf($this->get('id'))->pluck('id')->toArray();
+        $childIds = Community::childOf($this->get('id'))->pluck('id')->toArray();
 
         $ids = array_merge($parentIds, $childIds, [$this->get('id')]);
 
