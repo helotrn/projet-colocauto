@@ -71,6 +71,7 @@ const loadUserFields = [
   'avatar.*',
   'borrower.*',
   'communities.*',
+  'communities.parent.*',
   'loanables.*',
   '!loanables.events',
   'loanables.image.*',

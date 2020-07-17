@@ -68,6 +68,21 @@
           </b-row>
         </div>
 
+        <div class="form__section">
+          <h2>Accessibilité</h2>
+
+          <forms-validated-input
+            :description="$t('descriptions.share_with_parent_communities')"
+            :label="$t(
+              `fields.share_with_parent_communities_dynamic`,
+              {
+                shared_with: loanableBoroughsMessage,
+              }
+            ) | capitalize"
+            name="share_with_parent_communities" type="checkbox"
+            v-model="loanable.share_with_parent_communities" />
+        </div>
+
         <div class="form__section" v-if="loanable.type === 'bike'">
           <h2>Détails du vélo</h2>
 
@@ -121,13 +136,14 @@ import FormsValidatedInput from '@/components/Forms/ValidatedInput.vue';
 import LoanableAvailabilityCalendar from '@/components/Loanable/AvailabilityCalendar.vue';
 import FormsImageUploader from '@/components/Forms/ImageUploader.vue';
 
+import Authenticated from '@/mixins/Authenticated';
 import FormLabelsMixin from '@/mixins/FormLabelsMixin';
 
 import locales from '@/locales';
 
 export default {
   name: 'LoanableForm',
-  mixins: [FormLabelsMixin],
+  mixins: [Authenticated, FormLabelsMixin],
   components: {
     FormsBuilder,
     FormsImageUploader,
@@ -174,6 +190,30 @@ export default {
       const ownerId = this.$store.state.user.owner.id;
       this.$store.commit('loanables/mergeItem', { owner: { id: ownerId } });
       this.$emit('submit', ...params);
+    },
+  },
+  computed: {
+    hasBoroughs() {
+      return this.loanableBoroughs.length > 0;
+    },
+    loanableBoroughs() {
+      const boroughs = [];
+
+      if (this.loanable.community && this.loanable.community.parent) {
+        boroughs.push(this.loanable.community.parent);
+      }
+
+      boroughs.push(...this.user.communities
+        .filter(c => !!c.parent)
+        .map(c => c.parent));
+
+      return boroughs;
+    },
+    loanableBoroughsMessage() {
+      return this.loanableBoroughs
+        .map(b => b.name)
+        .filter((item, i, arr) => arr.indexOf(item) === i)
+        .join(', ');
     },
   },
   i18n: {
