@@ -57,12 +57,12 @@
               </b-col>
 
               <b-col md="4" class="text-right">
-                <b-input v-model="userTableFilter" placeholder="Tapez pour filtrer..." />
+                <b-input v-model="usersFilter" placeholder="Tapez pour filtrer..." />
               </b-col>
             </b-row>
 
             <b-table :busy="usersLoading"
-              :filter="userTableFilter" empty-filtered-text="Pas de membre correspondant"
+              :filter="usersFilter" empty-filtered-text="Pas de membre correspondant"
               :filter-function="localizedFilter(userTableFilterFields)"
               striped hover :items="users"
               sort-by="full_name" no-sort-reset
@@ -70,6 +70,11 @@
               :show-empty="true" empty-text="Pas de membre">
               <template v-slot:table-busy>
                 <span>Chargement...</span>
+              </template>
+              <template v-slot:cell(full_name)="row">
+                <router-link :to="`/admin/users/${row.item.id}`">
+                  {{ row.item.full_name}}
+                </router-link>
               </template>
               <template v-slot:cell(role)="row">
                 <b-select :options="[
@@ -189,7 +194,6 @@ export default {
         { key: 'proof', label: 'Preuve', sortable: false },
         { key: 'actions', label: 'Actions', tdClass: 'table__cell__actions' },
       ],
-      userTableFilter: '',
       userTableFilterFields: ['full_name'],
     };
   },
@@ -235,6 +239,14 @@ export default {
     users() {
       return this.$store.state.users.data.filter(() => true);
     },
+    usersFilter: {
+      get() {
+        return this.$store.state['admin.community'].usersFilter;
+      },
+      set(val) {
+        this.$store.commit('admin.community/usersFilter', val);
+      },
+    },
     usersLoading() {
       return !!this.$store.state.users.ajax;
     },
@@ -279,7 +291,7 @@ export default {
         .join(',')
         .normalize('NFD')
         .replace(/[\u0300-\u036f]/g, '')
-        .match(new RegExp(filter.normalize('NFD'), 'i'));
+        .match(new RegExp(filter.normalize('NFD').replace(/[\u0300-\u036f]/g, ''), 'i'));
     },
     removePricing(pricing) {
       const pricings = this.item.pricings.filter(p => p !== pricing);
