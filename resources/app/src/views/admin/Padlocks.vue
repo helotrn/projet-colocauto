@@ -24,7 +24,7 @@
 
       <b-col class="admin__filters">
         <admin-filters entity="padlocks" :filters="filters" :params="contextParams"
-          @change="contextParams = $event" />
+          @change="setParam" />
       </b-col>
     </b-row>
 

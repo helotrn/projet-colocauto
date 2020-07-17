@@ -7,7 +7,6 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
     state: {
       ajax: null,
       data: [],
-      dataById: {},
       deleted: null,
       empty: null,
       error: null,
@@ -98,9 +97,6 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
           ...partial,
         };
       },
-      setParam(state, { name, value }) {
-        Vue.set(state.params, name, value);
-      },
       searchAjax(state, searchAjax) {
         state.searchAjax = searchAjax;
       },
@@ -117,6 +113,9 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
             state.params.order = `${field}`;
             break;
         }
+      },
+      setParam(state, { name, value }) {
+        Vue.set(state.params, name, value);
       },
       total(state, total) {
         state.total = total;

@@ -72,14 +72,12 @@ export default {
     emitRelationChange(name, event) {
       this.setParam(name, event ? event.value : null);
     },
-    setParam(key, value) {
+    setParam(name, value) {
       if (!value) {
-        this.params[key] = undefined;
+        this.$emit('change', { name, value: undefined });
       } else {
-        this.params[key] = value;
+        this.$emit('change', { name, value });
       }
-
-      this.$emit('change', this.params);
     },
   },
 };

@@ -76,7 +76,17 @@ export default {
             acc.push(...actions.map((action) => {
               const routeParams = to.meta.data[collection][action];
 
-              const params = drillParams(routeParams, vm);
+              const zeroedOutFilters = Object.keys(store.state[collection].filters)
+                .reduce((filters, k) => {
+                  return {
+                    ...filters,
+                    [k]: undefined,
+                  };
+                }, {});
+              const params = {
+                ...zeroedOutFilters,
+                ...drillParams(routeParams, vm),
+              };
 
               if (routeParams.conditional && !routeParams.conditional({
                 user: vm.user,

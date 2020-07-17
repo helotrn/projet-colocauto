@@ -3,14 +3,8 @@ export default {
     context() {
       return this.$store.state[this.slug];
     },
-    contextParams: {
-      get() {
-        return this.context.params;
-      },
-      set(val) {
-        this.context.params = val;
-        this.loadListData();
-      },
+    contextParams() {
+      return this.context.params;
     },
     creatable() {
       return this.$route.meta.creatable;
@@ -41,12 +35,6 @@ export default {
     loading() {
       return !!this.context.ajax;
     },
-    params() {
-      return {
-        ...this.routeParams,
-        ...this.contextParams,
-      };
-    },
     routeParams() {
       return this.$route.meta.data[this.slug].retrieve || {};
     },
@@ -55,7 +43,7 @@ export default {
     },
     sortDesc: {
       get() {
-        return this.params.order[0] === '-';
+        return this.contextParams.order[0] === '-';
       },
       set(desc) {
         this.$store.commit(`${this.slug}/setOrder`, {
@@ -66,7 +54,7 @@ export default {
     },
     sortBy: {
       get() {
-        return this.params.order.replace('-', '');
+        return this.contextParams.order.replace('-', '');
       },
       set(field) {
         this.$store.commit(`${this.slug}/setOrder`, {
@@ -114,7 +102,10 @@ export default {
     async exportCSV() {
       await this.$store.dispatch(
         `${this.slug}/export`,
-        this.params,
+        {
+          ...this.routeParams,
+          ...this.contextParams,
+        },
       );
     },
     loadListData() {
@@ -131,7 +122,10 @@ export default {
         try {
           this.$store.dispatch(
             `${this.slug}/retrieve`,
-            this.params,
+            {
+              ...this.routeParams,
+              ...this.contextParams,
+            },
           );
           this.listDebounce = null;
         } catch (e) {
@@ -178,11 +172,16 @@ export default {
     rowSelected(items) {
       this.selected = items;
     },
-    setParam(name, value) {
-      this.contextParams = {
-        ...this.contextParams,
-        [name]: value,
-      };
+    setParam({ name, value }) {
+      this.$store.commit(`${this.slug}/setParam`, { name, value });
     },
   },
+  watch: {
+    contextParams: {
+      deep: true,
+      handler() {
+        this.loadListData();
+      },
+    },
+  }
 };
