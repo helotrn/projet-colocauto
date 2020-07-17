@@ -18,17 +18,17 @@
 
               <forms-builder :definition="form.general" v-model="item" entity="loanables">
                 <template v-slot:share_with_parent_communities="{ def, item, property }">
-                    <forms-validated-input v-if="hasBorough"
-                      :description="$t(`loanables.descriptions.${property}`)"
-                      :label="$t(
-                        `loanables.fields.${property}_dynamic`,
-                        {
-                          shared_with: loanableBoroughsMessage,
-                        }
-                      ) | capitalize"
-                      :name="property" :rules="def.rules" :type="def.type"
-                      :options="def.options" :disabled="def.disabled"
-                      v-model="item[property]" />
+                  <forms-validated-input v-if="hasBoroughs"
+                    :description="$t(`descriptions.${property}`)"
+                    :label="$t(
+                      `fields.${property}_dynamic`,
+                      {
+                        shared_with: loanableBoroughsMessage,
+                      }
+                    ) | capitalize"
+                    :name="property" :rules="def.rules" :type="def.type"
+                    :options="def.options" :disabled="def.disabled"
+                    v-model="item[property]" />
                 </template>
               </forms-builder>
             </div>
@@ -112,24 +112,29 @@ export default {
 
       return parts.reverse().join(' | ');
     },
-    hasBorough() {
-      return this.loanableBoroughs.length === 1;
+    hasBoroughs() {
+      return this.loanableBoroughs.length > 0;
     },
     loanableBoroughs() {
+      const boroughs = [];
+
       if (this.item.community && this.item.community.parent) {
-        return [this.item.community.parent];
+        boroughs.push(this.item.community.parent);
       }
 
-      if (!this.item.owner) {
-        return [];
+      if (this.item.owner) {
+        boroughs.push(...this.item.owner.user.communities
+          .filter(c => !!c.parent)
+          .map(c => c.parent));
       }
 
-      return this.item.owner.user.communities
-        .filter(c => !!c.parent)
-        .map(c => c.parent)
+      return boroughs;
     },
     loanableBoroughsMessage() {
-      return this.loanableBoroughs.map(b => b.name).join(', ');
+      return this.loanableBoroughs
+        .map(b => b.name)
+        .filter((item, i, arr) => arr.indexOf(item) === i)
+        .join(', ');
     },
     pageTitle() {
       return this.item.name || capitalize(this.$i18n.tc('véhicule', 1));

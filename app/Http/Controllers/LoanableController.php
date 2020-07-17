@@ -273,7 +273,9 @@ class LoanableController extends RestController
                             'value' => 'id',
                             'text' => 'user.full_name',
                             'params' => [
-                                'fields' => 'id,user.full_name',
+                                'fields' => 'id,user.full_name,'
+                                    . 'user.communities.id,user.communities.name,'
+                                    . 'user.communities.parent.id,user.communities.parent.name',
                             ],
                         ],
                     ],
