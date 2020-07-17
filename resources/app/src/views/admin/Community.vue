@@ -310,10 +310,16 @@ export default {
       );
     },
     async setUserRole(user, role) {
-      await this.updateUser(user, u => ({
-        ...u,
-        role,
-      }));
+      await this.updateUser(user, (u) => {
+        const data = {
+          ...u,
+        };
+
+        const community = data.communities.find(c => c.id === this.item.id);
+        community.role = role;
+
+        return data;
+      });
     },
     async suspendUser(user) {
       await this.updateUser(user, (u) => {

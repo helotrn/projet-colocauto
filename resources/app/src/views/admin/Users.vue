@@ -32,7 +32,6 @@
       <b-col>
         <b-table
           striped hover :items="data"
-          selectable select-mode="multi" @row-selected="rowSelected"
           :busy="loading" :fields="table" no-local-sorting
           :sort-by.sync="sortBy" :sort-desc.sync="sortDesc" no-sort-reset
           :show-empty="true" empty-text="Pas de membre">
