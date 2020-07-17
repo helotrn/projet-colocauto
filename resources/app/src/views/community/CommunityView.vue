@@ -142,10 +142,7 @@ export default {
       this.$router.push('/loans/new');
     },
     setSelectedLoanableTypes() {
-      this.$store.commit(`${this.slug}/setParam`, {
-        name: 'type',
-        value: this.selectedLoanableTypes.join(','),
-      });
+      this.setParam('type', this.selectedLoanableTypes.join(','));
     },
     async testLoanable(loanable) {
       await this.$store.dispatch(`${this.slug}/testOne`, {

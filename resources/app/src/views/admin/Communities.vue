@@ -32,7 +32,6 @@
       <b-col>
         <b-table
           striped hover :items="data"
-          selectable select-mode="multi" @row-selected="rowSelected"
           :busy="loading" :fields="fields" no-local-sorting
           :sort-by.sync="sortBy" :sort-desc.sync="sortDesc" no-sort-reset
           :show-empty="true" empty-text="Pas de communauté">
@@ -58,16 +57,7 @@
       </b-col>
 
       <b-col md="6">
-        <b-pagination align="right" :value="contextParams.page"
-          :total-rows="total" :per-page="contextParams.per_page"
-          @input="setParam('page', $event)" />
-
-        <b-form inline class="text-right">
-          <label for="per_page" class="ml-auto mr-1">Par page</label>&nbsp;
-          <b-form-select id="per_page" name="per_page"
-            :options="[10,20,50,100]" :value="contextParams.per_page"
-            @input="setParam('per_page', $event)" />
-        </b-form>
+        <admin-pagination :params="contextParams" :total="total" @change="setParam" />
       </b-col>
     </b-row>
   </b-container>
@@ -76,6 +66,7 @@
 <script>
 import AdminFilters from '@/components/Admin/Filters.vue';
 import AdminListActions from '@/components/Admin/ListActions.vue';
+import AdminPagination from '@/components/Admin/Pagination.vue';
 
 import DataRouteGuards from '@/mixins/DataRouteGuards';
 import ListMixin from '@/mixins/ListMixin';
@@ -85,8 +76,9 @@ export default {
   name: 'AdminCommunities',
   mixins: [DataRouteGuards, ListMixin],
   components: {
-    AdminListActions,
     AdminFilters,
+    AdminListActions,
+    AdminPagination,
   },
   data() {
     return {
