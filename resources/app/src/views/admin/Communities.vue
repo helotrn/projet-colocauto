@@ -38,6 +38,9 @@
           <template v-slot:cell(type)="row">
             {{ $t(`types.${row.item.type}`) | capitalize }}
           </template>
+          <template v-slot:cell(parent.name)="row">
+            {{ row.item.parent ? row.item.parent.name : '-' }}
+          </template>
           <template v-slot:cell(actions)="row">
             <admin-list-actions :columns="['edit']" :row="row" :slug="slug" />
           </template>
@@ -86,6 +89,7 @@ export default {
       fields: [
         { key: 'id', label: 'ID', sortable: true },
         { key: 'name', label: 'Nom', sortable: true },
+        { key: 'parent.name', label: 'Quartier', sortable: true },
         { key: 'type', label: 'Type', sortable: false },
         { key: 'actions', label: 'Actions', tdClass: 'table__cell__actions' },
       ],

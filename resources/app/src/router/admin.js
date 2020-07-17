@@ -41,7 +41,7 @@ export default {
         data: {
           communities: {
             retrieve: {
-              fields: 'id,name,type',
+              fields: 'id,name,type,parent.id,parent.name',
               for: 'edit',
             },
           },
@@ -60,6 +60,7 @@ export default {
           fields: [
             '*',
             'pricings.*',
+            'parent.*',
           ].join(','),
           for: 'edit',
         },

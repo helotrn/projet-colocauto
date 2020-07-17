@@ -2,7 +2,7 @@ import { prefixFields } from '@/helpers';
 
 import tags from './tags';
 
-export default {
+const i18n = {
   fr: {
     communauté: 'communauté | communautés',
     'créer une communauté': 'créer une communauté',
@@ -48,3 +48,11 @@ export default {
     },
   },
 };
+
+i18n.fr.fields.parent_id = 'quartier';
+i18n.fr.fields.parent = {
+  ...prefixFields(i18n.fr.fields, '(Quartier)'),
+  model_name: i18n.fr.model_name,
+};
+
+export default i18n;

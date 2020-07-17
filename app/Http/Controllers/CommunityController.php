@@ -249,6 +249,18 @@ class CommunityController extends RestController
                         ],
                     ],
                 ],
+                'parent_id' => [
+                    'type' => 'relation',
+                    'query' => [
+                        'slug' => 'communities',
+                        'value' => 'id',
+                        'text' => 'name',
+                        'params' => [
+                            'fields' => 'id,name',
+                            'type' => 'borough',
+                        ],
+                    ],
+                ],
             ],
         ];
 
