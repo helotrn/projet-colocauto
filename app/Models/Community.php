@@ -182,7 +182,7 @@ class Community extends BaseModel
             case 'edit':
                 return $query
                     ->whereHas('users', function ($q) use ($user) {
-                        return $q->where('community_user.id', $user->id)
+                        return $q->where('community_user.user_id', $user->id)
                             ->where('community_user.role', 'admin');
                     })
                     ->orWhereHas('users', function ($q) use ($user) {
