@@ -16,7 +16,21 @@
             <div class="form__section">
               <h2>Informations</h2>
 
-              <forms-builder :definition="form.general" v-model="item" entity="loanables" />
+              <forms-builder :definition="form.general" v-model="item" entity="loanables">
+                <template v-slot:share_with_parent_communities="{ def, item, property }">
+                    <forms-validated-input v-if="hasBorough"
+                      :description="$t(`loanables.descriptions.${property}`)"
+                      :label="$t(
+                        `loanables.fields.${property}_dynamic`,
+                        {
+                          shared_with: loanableBoroughsMessage,
+                        }
+                      ) | capitalize"
+                      :name="property" :rules="def.rules" :type="def.type"
+                      :options="def.options" :disabled="def.disabled"
+                      v-model="item[property]" />
+                </template>
+              </forms-builder>
             </div>
 
             <div class="form__section" v-if="item.type === 'bike'">
@@ -66,6 +80,7 @@
 </template>
 
 <script>
+import FormsValidatedInput from '@/components/Forms/ValidatedInput.vue';
 import FormsBuilder from '@/components/Forms/Builder.vue';
 import LoanableAvailabilityCalendar from '@/components/Loanable/AvailabilityCalendar.vue';
 
@@ -80,6 +95,7 @@ export default {
   mixins: [FormMixin],
   components: {
     FormsBuilder,
+    FormsValidatedInput,
     LoanableAvailabilityCalendar,
   },
   computed: {
@@ -95,6 +111,25 @@ export default {
       }
 
       return parts.reverse().join(' | ');
+    },
+    hasBorough() {
+      return this.loanableBoroughs.length === 1;
+    },
+    loanableBoroughs() {
+      if (this.item.community && this.item.community.parent) {
+        return [this.item.community.parent];
+      }
+
+      if (!this.item.owner) {
+        return [];
+      }
+
+      return this.item.owner.user.communities
+        .filter(c => !!c.parent)
+        .map(c => c.parent)
+    },
+    loanableBoroughsMessage() {
+      return this.loanableBoroughs.map(b => b.name).join(', ');
     },
     pageTitle() {
       return this.item.name || capitalize(this.$i18n.tc('véhicule', 1));
