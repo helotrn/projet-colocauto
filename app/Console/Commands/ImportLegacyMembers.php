@@ -10,16 +10,39 @@ use Illuminate\Support\Facades\Validator;
 
 class ImportLegacyMembers extends Command
 {
-    protected $signature = 'import:legacy:members {filename : The TSV filename}';
+    private static $headers = [
+        'id (ignored)',
+        'last_name',
+        'first_name',
+        'date_of_birth',
+        'phone',
+        'email',
+        'age (not used)',
+        'address',
+        'postal_code',
+        'is_smart_phone ("oui" === true)',
+        'description',
+        'communities (comma-separated names)',
+        'drivers_license_number',
+    ];
+
+    protected $signature = 'import:legacy:members {filename : The TSV filename}
+                            {--pretend : Do not actually import anything}
+                            {--debug : Print out more information}';
 
     protected $description = 'Import legacy members from a provided TSV file';
 
     protected $filename;
 
     private $file;
+    private $debug;
+    private $pretend;
     private $communitiesByName = [];
 
     public function handle() {
+        $this->debug = $this->option('debug');
+        $this->pretend = $this->option('pretend');
+
         $this->filename = $this->argument('filename');
 
         $this->info('Reading file...');
@@ -35,9 +58,15 @@ class ImportLegacyMembers extends Command
 
         $this->info('Syncing users...');
         $headers = fgetcsv($this->file, null, "\t");
+        if ($this->debug) {
+            $this->echoLine(static::$headers, $headers);
+        }
+
         while ($line = fgetcsv($this->file, null, "\t")) {
             $line = array_map('trim', $line);
-            //$this->echoLine($headers, $line);
+            if ($this->debug) {
+                $this->echoLine($headers, $line);
+            }
 
             if (!filter_var($line[5], FILTER_VALIDATE_EMAIL)) {
                 $this->error(
@@ -75,6 +104,10 @@ class ImportLegacyMembers extends Command
 
             if ($validator->fails()) {
                 $this->error("Invalid member {$line['id']}: skipping...");
+                continue;
+            }
+
+            if ($this->pretend) {
                 continue;
             }
 
@@ -120,7 +153,7 @@ class ImportLegacyMembers extends Command
     }
 
     private function getUserCommunities(string $names): array {
-        $parts = explode(' ', str_replace('et', '', $names));
+        $parts = array_map('trim', explode(',', str_replace('et', '', $names)));
 
         $output = [];
 
