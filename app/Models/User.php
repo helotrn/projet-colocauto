@@ -27,6 +27,7 @@ class User extends AuthenticatableBaseModel
 
     public static $rules = [
         'address' => ['nullable'],
+        'avatar' => ['required'],
         'date_of_birth' => [
             'nullable',
             'date',

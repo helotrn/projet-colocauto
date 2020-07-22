@@ -1,5 +1,5 @@
 <template>
-  <b-form-group class="forms-image-uploader" :label="label" :label-for="field">
+  <b-form-group :class="`forms-image-uploader ${validationStateClass}`" :label="label" :label-for="field">
     <div v-if="loading">
       <img src="/loading.svg">
     </div>
@@ -61,6 +61,11 @@ export default {
       required: false,
       default: false,
     },
+    state: {
+      type: Boolean,
+      required: false,
+      default: null,
+    },
     value: {
       type: Object,
       require: false,
@@ -75,11 +80,21 @@ export default {
       return !!this.$store.state.images.ajax;
     },
     validationState() {
-      if (!this.required && !this.value) {
+      if (!this.required && !this.value && this.state === null) {
         return null;
       }
 
-      return !this.errors && (!this.required || !!this.value);
+      return !this.errors && ((this.required && !!this.value) || this.state);
+    },
+    validationStateClass() {
+      switch (this.validationState) {
+        case true:
+          return 'is-valid';
+        case false:
+          return 'is-invalid';
+        default:
+          return '';
+      }
     },
   },
   methods: {
@@ -157,6 +172,10 @@ export default {
       min-width: 200px;
       margin: 0 auto;
     }
+  }
+
+  + .invalid-feedback {
+    margin-top: -40px;
   }
 }
 

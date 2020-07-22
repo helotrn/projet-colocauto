@@ -5,7 +5,8 @@
         @submit.stop.prevent="passes(submit)">
         <b-row>
           <b-col lg="4">
-            <forms-image-uploader field="avatar"
+            <forms-validated-input type="image" name="avatar"
+              :rules="form.general.avatar.rules"
               label="📷 Ajouter une photo de profil"
               v-model="user.avatar" />
           </b-col>

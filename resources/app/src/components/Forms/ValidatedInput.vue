@@ -68,6 +68,7 @@
       <forms-image-uploader v-else-if="type === 'image'"
         :id="name" :name="name" :field="name"
         :placeholder="placeholder" :disabled="disabled"
+        :state="getValidationState(validationContext)"
         :value="value"
         @input="emitChange" />
       <forms-relation-input v-else-if="type === 'relation'"
