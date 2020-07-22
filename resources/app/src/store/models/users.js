@@ -24,6 +24,7 @@ export default new RestModule('users', {
     'password',
     'phone',
     'postal_code',
+    'opt_in_newsletter',
     'communities.id',
     'communities.name',
     'communities.tags.id',
