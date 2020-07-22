@@ -26,6 +26,7 @@ export default {
       is_smart_phone: 'téléphone intelligent?',
       last_name: 'nom',
       name: 'prénom',
+      opt_in_newsletter: "j'accepte de recevoir l'infolettre LocoMotion",
       other_phone: 'autre numéro de téléphone',
       phone: 'téléphone',
       postal_code: 'code postal',

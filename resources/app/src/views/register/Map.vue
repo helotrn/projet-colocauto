@@ -2,21 +2,22 @@
   <div name="register-map" v-if="routeDataLoaded">
     <b-card class="register-map__community" v-if="community">
       <template v-slot:header>
-        <div class="register-map__community__buttons">
-          <b-button-group>
-            <b-button @click="previousCommunity">Précédente</b-button>
-            <b-button @click="nextCommunity">Suivante</b-button>
-          </b-button-group>
-        </div>
-
         <h4 class="card-title">
           {{ `Rejoindre le voisinage ${community ? community.name : ''}` }}
         </h4>
       </template>
       <b-card-text>
         <div class="register-map__community__description">
-          <p v-if="community">
+          <p v-if="community.description">
             {{ community.description }}
+          </p>
+        </div>
+
+        <div v-if="community.parent">
+          <p>
+            Ce voisinage est inclus dans un quartier.<br>
+            Si j'appartiens à ce voisinage alors j'appartiens également
+            au quartier {{ community.parent.name }}.
           </p>
         </div>
 
@@ -43,9 +44,33 @@
       </template>
       <b-card-text>
         <div class="register-map__borough__description">
-          <p v-if="borough">
+          <p v-if="borough.description">
             {{ borough.description }}
           </p>
+
+          <p>
+            Vous pouvez utiliser Locomotion dans votre Quartier!
+          </p>
+
+          <p>
+            Votre adresse ne fait pas encore partie d’un voisinage.
+          </p>
+          <p>
+            Voir la différence Quartier/Voisinage (FAQ)[LIEN].
+          </p>
+
+          <p>
+            Vous avez  donc accès:
+          </p>
+
+          <ul>
+            <li>
+              aux véhicules collectifs
+            </li>
+            <li>
+              aux véhicules des participants ayant accepté de partager à l'ensemble du quartier
+            </li>
+          </ul>
         </div>
 
         <b-form class="register-map__borough__submit"
@@ -66,17 +91,25 @@
       </template>
 
       <b-card-text>
-        <b-form class="register-map__postal_code__submit"
-          @submit.prevent="joinBorough" @reset.prevent="resetView">
+        <p>
+          Locomotion n’est pas encore accessible dans votre quartier.
+          Votre adresse est bien enregistrée.
+        </p>
+
+        <b-form class="register-map__postal_code__submit" @reset.prevent="resetView">
+          <forms-validated-input type="checkbox" name="opt_in_newsletter"
+            :label="$t('users.fields.opt_in_newsletter') | capitalize"
+            value="user.opt_in_newsletter"
+            @change="updateOptInNewsletter" />
+
           <b-button-group>
-            <b-button type="submit" variant="primary">Rejoindre ce quartier</b-button>
-            <b-button type="reset" variant="warning">Voir l'ensemble des voisinages</b-button>
+            <b-button type="reset" variant="warning">Revenir à la recherche par code postal</b-button>
           </b-button-group>
         </b-form>
       </b-card-text>
     </b-card>
 
-    <b-card title="Choisir un voisinage" class="register-map__form" v-else>
+    <b-card title="Recherche par code postal" class="register-map__form" v-else>
       <layout-loading v-if="postalCodeLoading" />
       <b-card-text v-else>
         <b-form @submit.prevent="searchPostalCode">
@@ -140,6 +173,8 @@
 <script>
 import { gmapApi } from 'vue2-google-maps';
 
+import FormsValidatedInput from '@/components/Forms/ValidatedInput.vue';
+
 import DataRouteGuards from '@/mixins/DataRouteGuards';
 import FormMixin from '@/mixins/FormMixin';
 
@@ -153,6 +188,9 @@ export default {
       required: false,
       default: 'me',
     },
+  },
+  components: {
+    FormsValidatedInput,
   },
   data() {
     return {
@@ -279,24 +317,6 @@ export default {
 
       this.$router.push('/register/3');
     },
-    nextCommunity() {
-      const index = this.communities.indexOf(this.community);
-
-      if (index + 1 >= this.communities.length) {
-        this.community = this.communities[0];
-      } else {
-        this.community = this.communities[index + 1];
-      }
-    },
-    previousCommunity() {
-      const index = this.communities.indexOf(this.community);
-
-      if (index - 1 < 0) {
-        this.community = this.communities[this.communities.length - 1];
-      } else {
-        this.community = this.communities[index - 1];
-      }
-    },
     resetCenter() {
       const { LatLngBounds } = this.google.maps;
       const bounds = new LatLngBounds();
@@ -310,6 +330,9 @@ export default {
     },
     resetCommunity() {
       this.community = null;
+      if (!this.borough) {
+        this.postalCodeCenter = null;
+      }
     },
     resetView() {
       this.borough = null;
@@ -412,6 +435,9 @@ export default {
       });
 
       return true;
+    },
+    updateOptInNewsletter(value) {
+      console.log(value);
     },
   },
   watch: {
