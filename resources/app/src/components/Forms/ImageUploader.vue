@@ -1,5 +1,6 @@
 <template>
-  <b-form-group :class="`forms-image-uploader ${validationStateClass}`" :label="label" :label-for="field">
+  <b-form-group :class="`forms-image-uploader ${validationStateClass}`"
+    :label="label" :label-for="field">
     <div v-if="loading">
       <img src="/loading.svg">
     </div>

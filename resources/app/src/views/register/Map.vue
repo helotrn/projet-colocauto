@@ -103,7 +103,9 @@
             @input="updateOptInNewsletter" />
 
           <b-button-group>
-            <b-button type="reset" variant="warning">Revenir à la recherche par code postal</b-button>
+            <b-button type="reset" variant="warning">
+              Revenir à la recherche par code postal
+            </b-button>
           </b-button-group>
         </b-form>
       </b-card-text>
@@ -412,7 +414,7 @@ export default {
 
         let nearestDistance = this.distance(
           this.postalCodeCenter,
-          this.boroughs[0].center_google
+          this.boroughs[0].center_google,
         );
         const nearestBorough = this.boroughs.reduce((acc, b) => {
           const boroughdistance = this.distance(

@@ -133,7 +133,6 @@
 
 <script>
 import FormsValidatedInput from '@/components/Forms/ValidatedInput.vue';
-import FormsImageUploader from '@/components/Forms/ImageUploader.vue';
 
 import FormLabelsMixin from '@/mixins/FormLabelsMixin';
 
@@ -143,7 +142,6 @@ export default {
   name: 'ProfileForm',
   mixins: [FormLabelsMixin],
   components: {
-    FormsImageUploader,
     FormsValidatedInput,
   },
   props: {
