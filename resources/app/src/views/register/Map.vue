@@ -1,22 +1,5 @@
 <template>
   <div name="register-map" v-if="routeDataLoaded">
-    <b-card title="Choisir un voisinage" class="register-map__form" v-if="!community">
-      <b-card-text>
-        <b-form @submit.prevent="searchPostalCode">
-          <b-form-group label="Code postal">
-            <b-input-group>
-              <b-form-input type="text" required placeholder="Code postal"
-                v-model="postalCode" />
-
-              <b-input-group-append>
-                <b-button variant="outline-success" type="submit">OK</b-button>
-              </b-input-group-append>
-            </b-input-group>
-          </b-form-group>
-        </b-form>
-      </b-card-text>
-    </b-card>
-
     <b-card class="register-map__community" v-if="community">
       <template v-slot:header>
         <div class="register-map__community__buttons">
@@ -41,8 +24,72 @@
           @submit.prevent="joinCommunity" @reset.prevent="resetCommunity">
           <b-button-group>
             <b-button type="submit" variant="primary">Rejoindre ce voisinage</b-button>
+            <b-button type="reset" variant="warning" v-if="borough">
+              Revenir au quartier
+            </b-button>
+            <b-button type="reset" variant="warning" v-else>
+              Voir l'ensemble des voisinages
+            </b-button>
+          </b-button-group>
+        </b-form>
+      </b-card-text>
+    </b-card>
+
+    <b-card class="register-map__borough" v-else-if="borough">
+      <template v-slot:header>
+        <h4 class="card-title">
+          {{ `Rejoindre le quartier ${borough ? borough.name : ''}` }}
+        </h4>
+      </template>
+      <b-card-text>
+        <div class="register-map__borough__description">
+          <p v-if="borough">
+            {{ borough.description }}
+          </p>
+        </div>
+
+        <b-form class="register-map__borough__submit"
+          @submit.prevent="joinBorough" @reset.prevent="resetBorough">
+          <b-button-group>
+            <b-button type="submit" variant="primary">Rejoindre ce quartier</b-button>
             <b-button type="reset" variant="warning">Voir l'ensemble des voisinages</b-button>
           </b-button-group>
+        </b-form>
+      </b-card-text>
+    </b-card>
+
+    <b-card class="register-map__postal_code" v-else-if="postalCodeCenter">
+      <template v-slot:header>
+        <h4 class="card-title">
+          Aucun voisinage
+        </h4>
+      </template>
+
+      <b-card-text>
+        <b-form class="register-map__postal_code__submit"
+          @submit.prevent="joinBorough" @reset.prevent="resetView">
+          <b-button-group>
+            <b-button type="submit" variant="primary">Rejoindre ce quartier</b-button>
+            <b-button type="reset" variant="warning">Voir l'ensemble des voisinages</b-button>
+          </b-button-group>
+        </b-form>
+      </b-card-text>
+    </b-card>
+
+    <b-card title="Choisir un voisinage" class="register-map__form" v-else>
+      <layout-loading v-if="postalCodeLoading" />
+      <b-card-text v-else>
+        <b-form @submit.prevent="searchPostalCode">
+          <b-form-group label="Code postal">
+            <b-input-group>
+              <b-form-input type="text" required placeholder="Code postal"
+                v-model="postalCode" />
+
+              <b-input-group-append>
+                <b-button variant="outline-success" type="submit">OK</b-button>
+              </b-input-group-append>
+            </b-input-group>
+          </b-form-group>
         </b-form>
       </b-card-text>
     </b-card>
@@ -55,6 +102,10 @@
         :center="center"
         :options="mapOptions"
         map-type-id="terrain">
+        <gmap-polygon v-if="borough"
+          :path="borough.area_google"
+          :label="borough.name"
+          :options="boroughPolygonOptions" />
         <gmap-polygon v-for="c in communities" :key="`polygon-${c.id}`"
           :path="c.area_google"
           :label="c.name"
@@ -70,6 +121,16 @@
           }"
           :clickable="false"
           :position="c.center_google" />
+        <gmap-marker v-if="postalCodeCenter"
+          :icon="{
+            url: '/pins/alternate-pin.svg',
+            scaledSize: {
+              width: 28,
+              height: 40,
+            },
+          }"
+          :clickable="false"
+          :position="postalCodeCenter" />
       </gmap-map>
     </div>
   </div>
@@ -82,6 +143,8 @@ import { gmapApi } from 'vue2-google-maps';
 import DataRouteGuards from '@/mixins/DataRouteGuards';
 import FormMixin from '@/mixins/FormMixin';
 
+import { distance } from '@/helpers';
+
 export default {
   name: 'Map',
   mixins: [DataRouteGuards, FormMixin],
@@ -93,6 +156,13 @@ export default {
   },
   data() {
     return {
+      boroughPolygonOptions: {
+        fillColor: '#f9ca51',
+        fillOpacity: 0.3,
+        strokeColor: '#f9ca51',
+        strokeOpacity: 0.7,
+        zIndex: 1,
+      },
       mapIcon: {
         url: 'perdu.com',
       },
@@ -113,21 +183,34 @@ export default {
         fillColor: '#16a59e',
         fillOpacity: 0.5,
         strokeOpacity: 0,
+        zIndex: 2,
       },
+      postalCodeCenter: null,
+      postalCodeLoading: true,
       zoom: 1,
     };
   },
   computed: {
     averageCommunitiesCenter() {
-      const { data: communities } = this.$store.state.communities;
-      const center = communities.reduce((acc, c) => [
+      const center = this.communities.reduce((acc, c) => [
         (acc[0] + c.center[0]) / 2,
         (acc[1] + c.center[1]) / 2,
-      ], communities[0].center);
+      ], this.communities[0].center);
       return {
         lat: center[0],
         lng: center[1],
       };
+    },
+    borough: {
+      get() {
+        return this.$store.state['register.map'].borough;
+      },
+      set(borough) {
+        this.$store.commit('register.map/borough', borough);
+      },
+    },
+    boroughs() {
+      return this.$store.state.communities.data.filter(c => c.type === 'borough');
     },
     center: {
       get() {
@@ -137,6 +220,10 @@ export default {
 
         if (this.community) {
           return this.community.center_google;
+        }
+
+        if (this.borough) {
+          return this.borough.center_google;
         }
 
         return this.averageCommunitiesCenter;
@@ -154,7 +241,11 @@ export default {
       },
     },
     communities() {
-      return this.$store.state.communities.data;
+      if (!this.$store.state.communities.data) {
+        return [];
+      }
+
+      return this.$store.state.communities.data.filter(c => c.type === 'neighborhood');
     },
     google: gmapApi,
     paths() {
@@ -177,6 +268,7 @@ export default {
       community.area_google.forEach(p => bounds.extend(p));
       this.$refs.map.fitBounds(bounds);
     },
+    distance,
     async joinCommunity() {
       await this.$store.dispatch('users/joinCommunity', {
         userId: this.$store.state.user.id,
@@ -212,44 +304,110 @@ export default {
       this.communities.forEach(c => bounds.extend(c.center_google));
       this.$refs.map.fitBounds(bounds);
     },
+    resetBorough() {
+      this.borough = null;
+      this.postalCodeCenter = null;
+    },
     resetCommunity() {
       this.community = null;
     },
+    resetView() {
+      this.borough = null;
+      this.community = null;
+      this.postalCodeCenter = null;
+
+      this.resetCenter();
+    },
     searchPostalCode() {
+      // Don't bother searching for invalid postal code
       if (!this.postalCode.match(/[a-z][0-9][a-z]\s*[0-9][a-z][0-9]/i)) {
         return false;
       }
 
-      const { Geocoder, LatLngBounds } = this.google.maps;
+      this.postalCodeLoading = true;
+      this.postalCodeCenter = null;
+
+      const {
+        Geocoder,
+        geometry: { poly: { containsLocation } },
+        LatLngBounds,
+        Polygon,
+      } = this.google.maps;
       const geocoder = new Geocoder();
 
       geocoder.geocode({ address: this.postalCode }, (results, status) => {
-        if (status === 'OK' && results.length > 0) {
-          const { location } = results[0].geometry;
+        // No results: do nothing
+        if (status === 'ZERO_RESULTS') {
+          this.postalCodeLoading = false;
+          return true;
+        }
 
-          for (let i = 0, len = this.communities.length; i < len; i += 1) {
-            const community = this.communities[i];
-            const bounds = new LatLngBounds();
+        if (status !== 'OK') {
+          return false;
+        }
 
-            community.area_google.forEach(p => bounds.extend(p));
-            if (bounds.contains(location)) {
-              this.center = null;
-              this.community = community;
-              return true;
-            }
+        // Results found: work on the first one (most likely candidate)
+        const { location } = results[0].geometry;
+        this.postalCodeCenter = {
+          lat: location.lat(),
+          lng: location.lng(),
+        };
+
+        // Is it in a community?
+        for (let i = 0, lenI = this.communities.length; i < lenI; i += 1) {
+          const community = this.communities[i];
+          const polygon = new Polygon({ paths: community.area_google });
+
+          if (containsLocation(location, polygon)) {
+            this.center = null;
+            this.community = community;
+
+            this.postalCodeLoading = false;
+            return true;
           }
         }
 
+        // Is it in a borough?
+        for (let j = 0, lenJ = this.boroughs.length; j < lenJ; j += 1) {
+          const borough = this.boroughs[j];
+          const polygon = new Polygon({ paths: borough.area_google });
+
+          if (containsLocation(location, polygon)) {
+            this.center = null;
+            this.borough = borough;
+
+            this.postalCodeLoading = false;
+            return true;
+          }
+        }
+
+        // If it's neither in a community or a borough:
+        // center the view on marker and nearest borough
         const bounds = new LatLngBounds();
-        bounds.extend(results[0].geometry.location);
-        const kmAway = {
-          lat: results[0].geometry.location.lat(),
-          lng: results[0].geometry.location.lng(),
-        };
-        kmAway.lat += 0.003;
-        bounds.extend(kmAway);
+        bounds.extend(location);
+
+        let nearestDistance = this.distance(
+          this.postalCodeCenter,
+          this.boroughs[0].center_google
+        );
+        const nearestBorough = this.boroughs.reduce((acc, b) => {
+          const boroughdistance = this.distance(
+            this.postalCodeCenter,
+            this.boroughs[0].center_google,
+          );
+          if (boroughdistance < nearestDistance) {
+            nearestDistance = boroughdistance;
+            return b;
+          }
+
+          return acc;
+        }, this.boroughs[0]);
+
+        bounds.extend(nearestBorough.center_google);
+
         this.$refs.map.fitBounds(bounds);
 
+        this.postalCodeLoading = false;
         return true;
       });
 
@@ -264,6 +422,10 @@ export default {
             this.resetCenter();
           } else {
             this.centerOnCommunity(this.community);
+          }
+
+          if (this.postalCode) {
+            this.searchPostalCode();
           }
         });
       }, 500);
@@ -284,6 +446,8 @@ export default {
 </script>
 
 <style lang="scss">
+@import "~bootstrap/scss/mixins/breakpoints";
+
 .register-map {
   position: relative;
 
@@ -291,6 +455,10 @@ export default {
     width: 100vw;
     height: calc(100vh - #{$layout-navbar-height + $footer-height} - 1px);
     z-index: 10;
+
+    @include media-breakpoint-down(lg) {
+      min-height: calc(100vh - #{$layout-navbar-height-mobile + $footer-height} - 1px);
+    }
   }
 
   .card {
@@ -304,7 +472,9 @@ export default {
     z-index: 100;
   }
 
-  &__community.card {
+  &__community.card,
+  &__borough.card,
+  &__postal_code.card {
     margin-top: 50px;
     margin-left: 30px;
     position: absolute;

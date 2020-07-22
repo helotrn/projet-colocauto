@@ -30,8 +30,8 @@ export default {
         data: {
           communities: {
             retrieve: {
-              fields: 'id,name,description,center,area_google,center_google',
-              type: 'neighborhood',
+              fields: 'id,name,type,description,center,area_google,center_google',
+              type: 'neighborhood,borough',
             },
           },
         },

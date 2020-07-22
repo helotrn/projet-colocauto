@@ -1,11 +1,15 @@
 export default {
   namespaced: true,
   state: {
+    borough: null,
     center: null,
     community: null,
     postalCode: '',
   },
   mutations: {
+    borough(state, value) {
+      state.borough = value;
+    },
     center(state, value) {
       state.center = value;
     },
