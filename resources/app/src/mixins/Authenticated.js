@@ -57,7 +57,7 @@ export default {
       return this.isLoggedIn && this.user.communities && this.user.communities.length > 0;
     },
     hasCompletedRegistration() {
-      return !!this.user.submitted_at;
+      return !!this.user.submitted_at || this.canLoanVehicle;
     },
     hasOngoingLoans() {
       return this.ongoingLoans.length > 0;

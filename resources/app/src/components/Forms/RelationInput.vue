@@ -12,6 +12,7 @@
 </template>
 
 <script>
+import Vue from 'vue';
 import vSelect from 'vue-select';
 
 export default {
@@ -51,6 +52,29 @@ export default {
       required: false,
       default: null,
     },
+    value: {
+      type: [String, Number],
+      required: false,
+      default: null,
+    },
+  },
+  mounted() {
+    if (this.value && !this.lastSelectedItem) {
+      Vue.axios.get(`/${this.slug}/${this.value}`, {
+        params: {
+          ...this.params,
+        },
+      })
+        .then(({ data }) => {
+          const value = this.dig(data, this.query.value);
+          const text = this.dig(data, this.query.text);
+
+          this.lastSelectedItem = {
+            value,
+            text,
+          };
+        });
+    }
   },
   data() {
     return {
