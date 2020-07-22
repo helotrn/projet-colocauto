@@ -1,4 +1,14 @@
 export default {
+  beforeRouteEnter(to, from, next) {
+    next((vm) => {
+      if (to.query) {
+        Object.keys(to.query).forEach(name => vm.setParam({
+          name,
+          value: to.query[name],
+        }));
+      }
+    });
+  },
   computed: {
     context() {
       return this.$store.state[this.slug];
@@ -69,7 +79,6 @@ export default {
   },
   data() {
     return {
-      firstLoad: true,
       selected: [],
       listDebounce: null,
     };
@@ -109,11 +118,6 @@ export default {
       );
     },
     loadListData() {
-      if (this.firstLoad && this.skipListMixinFirstLoad) {
-        this.firstLoad = false;
-        return false;
-      }
-
       if (this.listDebounce) {
         clearTimeout(this.listDebounce);
       }
@@ -173,6 +177,21 @@ export default {
       this.selected = items;
     },
     setParam({ name, value }) {
+      const query = {
+        ...this.$route.query,
+        [name]: value,
+      };
+
+      if (value === undefined) {
+        delete query[name];
+      }
+
+      if (JSON.stringify(this.$route.query) !== JSON.stringify(query)) {
+        this.$router.replace({
+          ...this.$route,
+          query,
+        });
+      }
       this.$store.commit(`${this.slug}/setParam`, { name, value });
     },
   },

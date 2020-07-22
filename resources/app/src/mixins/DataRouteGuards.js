@@ -84,6 +84,7 @@ export default {
               const params = {
                 ...zeroedOutFilters,
                 ...drillParams(routeParams, vm),
+                ...vm.contextParams,
               };
 
               if (routeParams.conditional && !routeParams.conditional({
