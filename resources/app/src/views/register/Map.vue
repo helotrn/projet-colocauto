@@ -99,8 +99,8 @@
         <b-form class="register-map__postal_code__submit" @reset.prevent="resetView">
           <forms-validated-input type="checkbox" name="opt_in_newsletter"
             :label="$t('users.fields.opt_in_newsletter') | capitalize"
-            value="user.opt_in_newsletter"
-            @change="updateOptInNewsletter" />
+            :value="user.opt_in_newsletter"
+            @input="updateOptInNewsletter" />
 
           <b-button-group>
             <b-button type="reset" variant="warning">Revenir à la recherche par code postal</b-button>
@@ -175,6 +175,7 @@ import { gmapApi } from 'vue2-google-maps';
 
 import FormsValidatedInput from '@/components/Forms/ValidatedInput.vue';
 
+import Authenticated from '@/mixins/Authenticated';
 import DataRouteGuards from '@/mixins/DataRouteGuards';
 import FormMixin from '@/mixins/FormMixin';
 
@@ -182,7 +183,7 @@ import { distance } from '@/helpers';
 
 export default {
   name: 'Map',
-  mixins: [DataRouteGuards, FormMixin],
+  mixins: [Authenticated, DataRouteGuards, FormMixin],
   props: {
     id: {
       required: false,
@@ -436,8 +437,16 @@ export default {
 
       return true;
     },
-    updateOptInNewsletter(value) {
-      console.log(value);
+    async updateOptInNewsletter(value) {
+      await this.$store.dispatch('users/update', {
+        id: this.user.id,
+        data: {
+          opt_in_newsletter: value,
+        },
+        params: {
+          fields: 'id,name,opt_in_newsletter',
+        },
+      });
     },
   },
   watch: {
