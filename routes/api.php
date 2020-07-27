@@ -43,6 +43,15 @@ Route::prefix('v1')->group(function () {
             RouteHelper::resource($entity);
         }
 
+        Route::put(
+            'users/sendPasswordResetEmail',
+            'UserController@sendPasswordResetEmail'
+        );
+        Route::put(
+            'users/sendWelcomeEmail',
+            'UserController@sendWelcomeEmail'
+        );
+
         RouteHelper::retrieve('borrower');
         RouteHelper::index('borrower');
         RouteHelper::retrieve('owner');

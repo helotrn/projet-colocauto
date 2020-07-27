@@ -5,21 +5,32 @@
         <h1>{{ $tc('model_name', 2) | capitalize }}</h1>
       </b-col>
       <b-col class="admin__buttons">
-        <b-btn v-if="creatable" :to="`/admin/${slug}/new`">
-          {{ $t('buttons.add') | capitalize }}
-        </b-btn>
+        <b-button variant="primary" v-if="creatable" :to="`/admin/${slug}/new`">
+          {{ $t('list.create') | capitalize }}
+        </b-button>
       </b-col>
     </b-row>
 
     <b-row>
       <b-col class="admin__selection">
-        <div v-if="selected.length > 0">
-          {{ $tc(
-            '{count} membre sélectionné',
-            selected.length,
-            { count: selected.length }
-          ) }}
-        </div>
+        <b-button-group variant="info">
+          <b-dropdown left :disabled="selected.length === 0" text="Actions groupées">
+            <b-dropdown-item @click="sendPasswordResetEmail">
+              Courriel de réinit. de mot de passe
+            </b-dropdown-item>
+            <b-dropdown-item @click="sendWelcomeEmail">
+              Courriel de bienvenue
+            </b-dropdown-item>
+            <b-dropdown-divider />
+            <b-dropdown-item disabled>{{
+              $tc(
+                'list.selected',
+                selected.length,
+                { count: selected.length }
+              )
+            }}</b-dropdown-item>
+          </b-dropdown>
+        </b-button-group>
       </b-col>
 
       <b-col class="admin__filters">
@@ -31,10 +42,19 @@
     <b-row>
       <b-col>
         <b-table
-          striped hover :items="data"
+          striped hover :items="data" ref="usersTable"
+          selectable select-mode="multi" @row-selected="rowSelected"
           :busy="loading" :fields="table" no-local-sorting
           :sort-by.sync="sortBy" :sort-desc.sync="sortDesc" no-sort-reset
           :show-empty="true" empty-text="Pas de membre">
+          <template v-slot:head(id)="data">
+            <b-form-checkbox inline
+              style="margin-right: 0;"
+              @input="toggleSelection"
+              :indeterminate="selectionIndeterminate"
+              :checked="selectionStatus" />
+            {{ data.label.toUpperCase() }}
+          </template>
           <template v-slot:cell(type)="row">
             {{ $t(`types.${row.item.type}`) | capitalize }}
           </template>
@@ -94,6 +114,25 @@ export default {
         { key: 'actions', label: 'Actions', tdClass: 'table__cell__actions' },
       ],
     };
+  },
+  methods: {
+    sendPasswordResetEmail() {
+      this.axios.put(
+        `/users/sendPasswordResetEmail?id=${this.selected.map(s => s.id).join(',')}`
+      );
+    },
+    sendWelcomeEmail() {
+      this.axios.put(
+        `/users/sendWelcomeEmail?id=${this.selected.map(s => s.id).join(',')}`
+      );
+    },
+    toggleSelection(val) {
+      if (val === true) {
+        this.$refs.usersTable.selectAllRows();
+      } else if (val === false) {
+        this.$refs.usersTable.clearSelected();
+      }
+    }
   },
   i18n: {
     messages: {

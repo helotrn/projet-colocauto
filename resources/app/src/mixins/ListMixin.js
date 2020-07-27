@@ -48,6 +48,24 @@ export default {
     routeParams() {
       return this.$route.meta.data[this.slug].retrieve || {};
     },
+    selectionIndeterminate() {
+      if (this.selectionStatus === true || this.selectionStatus === false) {
+        return false;
+      }
+
+      return true;
+    },
+    selectionStatus() {
+      if (this.selected.length === 0) {
+        return false;
+      }
+
+      if (this.selected.length === this.data.length) {
+        return true;
+      }
+
+      return undefined;
+    },
     slug() {
       return this.$route.meta.slug;
     },

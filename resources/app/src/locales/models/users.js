@@ -5,9 +5,6 @@ import paymentMethods from './paymentMethods';
 
 export default {
   fr: {
-    buttons: {
-      add: 'ajouter un membre',
-    },
     descriptions: {
       description: 'De quoi aimeriez-vous discuter avec vos voisins et voisines? En quelques'
         + 'mots, dites-nous qui vous êtes ou nommez une activité à faire dans votre quartier. '
@@ -29,6 +26,10 @@ export default {
       other_phone: 'autre numéro de téléphone',
       phone: 'téléphone',
       postal_code: 'code postal',
+    },
+    list: {
+      create: 'ajouter un membre',
+      selected: '{count} membre sélectionné | {count} membres sélectionnés',
     },
     model_name: 'membre | membres',
     payment_methods: paymentMethods.fr,
