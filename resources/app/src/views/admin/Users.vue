@@ -41,8 +41,8 @@
 
     <b-row>
       <b-col>
-        <b-table
-          striped hover :items="data" ref="usersTable"
+        <b-table ref="usersTable"
+          striped hover :items="data"
           selectable select-mode="multi" @row-selected="rowSelected"
           :busy="loading" :fields="table" no-local-sorting
           :sort-by.sync="sortBy" :sort-desc.sync="sortDesc" no-sort-reset
@@ -118,12 +118,12 @@ export default {
   methods: {
     sendPasswordResetEmail() {
       this.axios.put(
-        `/users/sendPasswordResetEmail?id=${this.selected.map(s => s.id).join(',')}`
+        `/users/sendPasswordResetEmail?id=${this.selected.map(s => s.id).join(',')}`,
       );
     },
     sendWelcomeEmail() {
       this.axios.put(
-        `/users/sendWelcomeEmail?id=${this.selected.map(s => s.id).join(',')}`
+        `/users/sendWelcomeEmail?id=${this.selected.map(s => s.id).join(',')}`,
       );
     },
     toggleSelection(val) {
@@ -132,7 +132,7 @@ export default {
       } else if (val === false) {
         this.$refs.usersTable.clearSelected();
       }
-    }
+    },
   },
   i18n: {
     messages: {
