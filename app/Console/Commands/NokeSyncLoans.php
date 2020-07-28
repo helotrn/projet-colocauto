@@ -90,7 +90,11 @@ class NokeSyncLoans extends Command
             }
 
             $columnDefinitions = Loan::getColumnsDefinition();
-            $query = Loan::where('departure_at', '<=', new \DateTime('- 15 minutes'))
+            $query = Loan::where(
+                'departure_at',
+                '<=',
+                date('Y-m-d H:i:s', strtotime('-15 minutes'))
+            )
                 ->whereHas('prePayment', function ($q) {
                     return $q->where('status', 'completed');
                 })
