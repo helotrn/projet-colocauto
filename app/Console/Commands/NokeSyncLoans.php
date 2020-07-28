@@ -163,9 +163,8 @@ class NokeSyncLoans extends Command
             if ($this->pretend) {
                 continue;
             }
-            var_dump('here');
 
-            //$this->service->updateGroup($data);
+            $this->service->updateGroup($data);
         }
     }
 }
