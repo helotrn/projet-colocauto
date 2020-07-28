@@ -313,15 +313,9 @@ class User extends AuthenticatableBaseModel
     }
 
     public function getNokeUser() {
-        if ($this->nokeUserMemo) {
-            return $this->nokeUserMemo;
-        }
-
         $nokeService = new NokeService(new HttpClient);
 
         $nokeUser = $nokeService->findOrCreateUser($this);
-
-        $this->nokeUserMemo = $nokeUser;
 
         return $nokeUser;
     }
