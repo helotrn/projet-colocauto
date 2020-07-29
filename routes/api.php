@@ -43,6 +43,8 @@ Route::prefix('v1')->group(function () {
             RouteHelper::resource($entity);
         }
 
+        Route::get('users/{id}', 'UserController@retrieve')->where('id', 'me');
+
         Route::put(
             'users/sendPasswordResetEmail',
             'UserController@sendPasswordResetEmail'
