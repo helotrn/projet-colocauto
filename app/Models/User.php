@@ -30,7 +30,7 @@ class User extends AuthenticatableBaseModel
         'date_of_birth' => [
             'nullable',
             'date',
-            'before:today'
+            'before:18 years ago',
         ],
         'description' => 'nullable',
         'email' => 'email',

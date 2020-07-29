@@ -7,6 +7,7 @@
           <b-col lg="4">
             <forms-validated-input type="image" name="avatar"
               :rules="form.general.avatar.rules"
+              :description="$t('descriptions.avatar')"
               label="📷 Ajouter une photo de profil"
               v-model="user.avatar" />
           </b-col>
@@ -43,41 +44,34 @@
         <hr>
 
         <b-alert variant="warning" show>
-          À partir d'ici, les données que vous entrez seront uniquement partagées avec
-          l'équipe de LocoMotion ou si vous mettez vos véhicules à disposition de la
-          communauté.<br>
+          Les données que vous entrez sont partagées avec l'équipe de LocoMotion et
+          Desjardins Assurances. On partage également votre courriel et numéro de téléphone
+          avec votre comité de voisinage et les personnes avec qui vous faites des
+          prêts/emprunts.
+
           Consultez notre <router-link to="/privacy">politique de confidentialité</router-link>.
         </b-alert>
 
         <b-row>
-          <b-col md="8">
+          <b-col>
             <forms-validated-input name="phone" :label="$t('fields.phone') | capitalize"
               :rules="form.general.phone.rules" type="text"
               mask="(###) ###-####"
               :placeholder="placeholderOrLabel('phone') | capitalize"
               v-model="user.phone" />
           </b-col>
-
-          <b-col md="4">
-            <forms-validated-input name="is_smart_phone"
-              :label="$t('fields.is_smart_phone') | capitalize" type="checkbox"
-              :placeholder="placeholderOrLabel('is_smart_phone') | capitalize"
-              v-model="user.is_smart_phone" />
-          </b-col>
         </b-row>
 
-        <hr>
-
-        <b-alert variant="warning" show>
-          À partir d'ici, les données que vous entrez sont strictement confidentielles.<br>
-          Consultez notre <router-link to="/privacy">politique de confidentialité</router-link>.
+        <b-alert :variant="age < 18 ? 'danger' : 'warning'" :show="age < 21">
+          L'âge minimal pour utiliser LocoMotion est de 18 ans pour les vélos et les
+          remorques; 21 ans pour les autos.
         </b-alert>
 
         <b-row>
           <b-col>
             <forms-validated-input name="date_of_birth"
               :label="$t('fields.date_of_birth') | capitalize"
-              :rules="form.general.date_of_birth.rules" type="date" initial-view="year"
+              :rules="dateOfBirthRules" type="date" initial-view="year"
               :placeholder="placeholderOrLabel('date_of_birth') | capitalize"
               :open-date="openDate" :disabled-dates="datesInTheFuture"
               v-model="user.date_of_birth" />
@@ -100,16 +94,6 @@
               :rules="form.general.postal_code.rules" type="text" mask="A#A #A#"
               :placeholder="placeholderOrLabel('postal_code') | capitalize"
               v-model="user.postal_code" />
-          </b-col>
-        </b-row>
-
-        <b-row>
-          <b-col>
-            <forms-validated-input name="other_phone"
-              :label="$t('fields.other_phone') | capitalize"
-              :rules="form.general.other_phone.rules" type="text" mask="(###) ###-####"
-              :placeholder="placeholderOrLabel('other_phone') | capitalize"
-              v-model="user.other_phone" />
           </b-col>
         </b-row>
 
@@ -194,6 +178,23 @@ export default {
         ...locales.fr.users,
         ...locales.fr.forms,
       },
+    },
+  },
+  computed: {
+    age() {
+      const age = this.$dayjs(this.$dayjs()).diff(this.user.date_of_birth, 'year');
+
+      if (Number.isNaN(age)) {
+        return Number.MAX_SAFE_INTEGER;
+      }
+
+      return age;
+    },
+    dateOfBirthRules() {
+      return {
+        ...this.form.general.date_of_birth.rules,
+        required: true,
+      };
     },
   },
   methods: {

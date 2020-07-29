@@ -1,6 +1,6 @@
 <template>
   <b-form-group :class="`forms-image-uploader ${validationStateClass}`"
-    :label="label" :label-for="field">
+    :label="label" :label-for="field" :description="description">
     <div v-if="loading">
       <img src="/loading.svg">
     </div>
@@ -39,6 +39,11 @@ export default {
     accept: {
       default: () => ['*.png', '*.jpg', '*.jpeg', 'image/png', 'image/jpg', 'image/jpeg'],
       type: Array,
+    },
+    description: {
+      type: String,
+      required: false,
+      default: '',
     },
     field: {
       required: true,
@@ -144,6 +149,10 @@ export default {
   width: 100%;
   min-height: 200px;
 
+  .custom-file {
+    min-height: 160px;
+  }
+
   .custom-file-label {
     overflow: hidden;
     height: calc(200px - 27px);
@@ -176,7 +185,7 @@ export default {
   }
 
   + .invalid-feedback {
-    margin-top: -40px;
+    margin-top: -20px;
   }
 }
 

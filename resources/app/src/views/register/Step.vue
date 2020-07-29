@@ -17,7 +17,8 @@
       <h2>Profil de membre</h2>
 
       <p class="register-step__profile__text">
-        Informez votre voisinage de qui vous êtes en remplisssant les champs suivants.
+        Pour faire connaissance, dites à vos voisines et vos voisins qui vous êtes en
+        remplissant les champs suivants.
       </p>
 
       <profile-form v-if="item"

@@ -5,7 +5,8 @@
     :rules="rulesOrNothing"
     v-slot="validationContext">
     <b-form-group :label="type !== 'checkbox' ? label : ''" :label-for="name" :label-cols="inline"
-      :description="description" v-b-tooltip.hover :title="disabled ? disabledTooltip : ''">
+      :description="type === 'image' ? null : description"
+      v-b-tooltip.hover :title="disabled ? disabledTooltip : ''">
       <b-form-select v-if="type === 'select'"
         :id="name" :name="name"
         :state="getValidationState(validationContext)"
@@ -67,6 +68,7 @@
         @input="emitInput" />
       <forms-image-uploader v-else-if="type === 'image'"
         :id="name" :name="name" :field="name"
+        :description="description"
         :placeholder="placeholder" :disabled="disabled"
         :state="getValidationState(validationContext)"
         :value="value"
