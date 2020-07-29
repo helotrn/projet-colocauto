@@ -2,11 +2,6 @@
 
 namespace App\Http\Requests;
 
-use Auth;
-use Illuminate\Foundation\Http\FormRequest;
-use Molotov\Traits\BaseRequest as BaseRequestTrait;
-
-class BaseRequest extends FormRequest
+class BaseRequest extends \Molotov\Request
 {
-    use BaseRequestTrait;
 }
