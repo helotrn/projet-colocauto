@@ -1,6 +1,6 @@
 <template>
   <div class="profile-form">
-    <validation-observer ref="observer" v-slot="{ passes }">
+    <validation-observer ref="profileFormObserver" v-slot="{ passes }">
       <b-form novalidate class="profile-form__form form"
         @submit.stop.prevent="passes(submit)">
         <b-row>
@@ -96,6 +96,8 @@
               v-model="user.postal_code" />
           </b-col>
         </b-row>
+
+        <slot />
 
         <div class="form__buttons" v-if="!hideButtons">
           <b-button-group v-if="showReset">

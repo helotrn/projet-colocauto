@@ -419,6 +419,7 @@ class UserController extends RestController
             'item' => [
                 'name' => '',
                 'borrower' => new \stdClass,
+                'accept_conditions' => false,
             ],
             'form' => [
                 'general' => [
@@ -458,6 +459,12 @@ class UserController extends RestController
                     ],
                     'other_phone' => [
                         'type' => 'text',
+                    ],
+                    'opt_in_newsletter' => [
+                        'type' => 'checkbox',
+                    ],
+                    'accept_conditions' => [
+                        'type' => 'checkbox',
                     ],
                 ],
                 'borrower' => [

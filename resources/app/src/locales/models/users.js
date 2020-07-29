@@ -12,6 +12,7 @@ export default {
         + 'Ça aide à se faire confiance et à mieux profiter des avantages du partage.'
     },
     fields: {
+      accept_conditions: "j'accepte les conditions générales d'utilisation",
       address: 'adresse',
       avatar: 'image de profil',
       communities: prefixFields(communities.fr.fields, '(Communauté)'),

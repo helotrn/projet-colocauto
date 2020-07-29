@@ -103,7 +103,7 @@
         :state="getValidationState(validationContext)"
         v-bind:value="value"
         v-on:input="emitInput"/>
-      <b-form-invalid-feedback>
+      <b-form-invalid-feedback :state="getValidationState(validationContext)">
         {{ validationContext.errors[0] }}
       </b-form-invalid-feedback>
     </b-form-group>

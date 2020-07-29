@@ -75,6 +75,10 @@ extend('date', (v) => {
 });
 extend('present', v => v !== null && v !== undefined);
 extend('boolean', v => typeof v === 'boolean');
+extend('accepted', {
+  validate: v => v === true,
+  message: 'Vous devez accepter la condition.',
+});
 extend('before', {
   validate: (v, args) => {
     const parsedDate = new Date(strtotime(args[0]) * 1000);
