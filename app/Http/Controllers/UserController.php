@@ -6,6 +6,7 @@ use App\Events\AddedToUserBalanceEvent;
 use App\Events\ClaimedUserBalanceEvent;
 use App\Events\RegistrationSubmittedEvent;
 use App\Exports\UsersExport;
+use App\Http\Requests\AdminRequest;
 use App\Http\Requests\BaseRequest as Request;
 use App\Http\Requests\User\BorrowerStatusRequest;
 use App\Http\Requests\User\AddBalanceRequest;
@@ -22,6 +23,7 @@ use App\Repositories\InvoiceRepository;
 use App\Repositories\UserRepository;
 use Cache;
 use Excel;
+use Mail;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Validation\ValidationException;
 
@@ -125,6 +127,52 @@ class UserController extends RestController
         $this->repo->updatePassword($request, $id, $request->get('new'));
 
         return response('', 204);
+    }
+
+    public function sendPasswordResetEmail(AdminRequest $request) {
+        try {
+            [$items, $total] = $this->repo->get($request);
+        } catch (ValidationException $e) {
+            return $this->respondWithErrors($e->errors(), $e->getMessage());
+        }
+
+        $report = [];
+        foreach ($items as $item) {
+            $authController = app(AuthController::class);
+            $passwordRequest = $request->redirectAs($item, Request::class);
+            $passwordRequest->merge([
+                'email' => $item->email,
+            ]);
+            $output = $authController->passwordRequest($passwordRequest);
+            $report[] = [
+                'id' => $item->id,
+                'response' => $output->getData(),
+            ];
+        }
+
+        return [ 'report' => $report ];
+    }
+
+    public function sendWelcomeEmail(AdminRequest $request) {
+        try {
+            [$items, $total] = $this->repo->get($request);
+        } catch (ValidationException $e) {
+            return $this->respondWithErrors($e->errors(), $e->getMessage());
+        }
+
+        $report = [];
+        foreach ($items as $item) {
+            Mail::to($item->email, $item->name . ' ' . $item->last_name)
+                ->send(new \App\Mail\RegistrationSubmitted($item));
+            $report[] = [
+                'id' => $item->id,
+                'response' => [
+                    'message' => 'sent',
+                ],
+            ];
+        }
+
+        return [ 'report' => $report ];
     }
 
     public function submit(Request $request, $id) {

@@ -115,9 +115,6 @@ class User extends AuthenticatableBaseModel
 
     public static $sizesByField = [];
 
-    private $stripeCustomerMemo;
-    private $nokeUserMemo;
-
     protected $fillable = [
         'name',
         'last_name',
@@ -283,20 +280,16 @@ class User extends AuthenticatableBaseModel
             return; // TODO mock
         }
 
-        if ($this->stripeCustomerMemo) {
-            return $this->stripeCustomerMemo;
-        }
-
         \Stripe\Stripe::setApiKey(config('services.stripe.secret'));
         $customers = \Stripe\Customer::all([
             'email' => $this->email,
             'limit' => 1,
         ]);
 
-        $newCustomer = array_pop($customers->data);
+        $customer = array_pop($customers->data);
 
-        if (!$newCustomer) {
-            $newCustomer = \Stripe\Customer::create([
+        if (!$customer) {
+            $customer = \Stripe\Customer::create([
                 'description' => "{$this->name} {$this->last_name} "
                     . "<{$this->email}> ({$this->id})",
                 'email' => $this->email,
@@ -309,21 +302,13 @@ class User extends AuthenticatableBaseModel
             ]);
         }
 
-        $this->stripeCustomerMemo = $newCustomer;
-
-        return $this->stripeCustomerMemo;
+        return $customer;
     }
 
     public function getNokeUser() {
-        if ($this->nokeUserMemo) {
-            return $this->nokeUserMemo;
-        }
-
         $nokeService = new NokeService(new HttpClient);
 
         $nokeUser = $nokeService->findOrCreateUser($this);
-
-        $this->nokeUserMemo = $nokeUser;
 
         return $nokeUser;
     }
