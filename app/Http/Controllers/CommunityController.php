@@ -147,7 +147,7 @@ class CommunityController extends RestController
     }
 
     public function indexUsers(Request $request, $id) {
-        $community = $this->repo->find($request, $id);
+        $community = $this->repo->find($request->redirectAuth(Request::class), $id);
 
         $request->merge([ 'communities.id' => $id ]);
 

@@ -131,18 +131,32 @@
               </template>
             </b-table>
 
-            <forms-validated-input type="relation"
-              name="community" label="Ajouter un membre"
-              :value="null" reset-after-select
-              :query="{
-                slug: 'users',
-                value: 'id',
-                text: 'full_name',
-                params: {
-                  'fields': 'id,full_name',
-                  '!id': users.map(u => u.id).join(','),
-                },
-              }" @relation="addUser" />
+            <b-row>
+              <b-col md="6">
+                <b-button class="mr-3" variant="outline-primary" @click="exportCSV">
+                  Générer (CSV)
+                </b-button>
+                <a variant="outline-primary" :href="usersExportUrl"
+                  target="_blank" v-if="usersExportUrl" @click="resetUsersExportUrl">
+                  Télécharger (CSV)
+                </a>
+              </b-col>
+
+              <b-col md="6">
+                <forms-validated-input type="relation"
+                  name="community" label="Ajouter un membre"
+                  :value="null" reset-after-select
+                  :query="{
+                    slug: 'users',
+                    value: 'id',
+                    text: 'full_name',
+                    params: {
+                      'fields': 'id,full_name',
+                      '!id': users.map(u => u.id).join(','),
+                    },
+                  }" @relation="addUser" />
+              </b-col>
+            </b-row>
           </div>
 
           <div class="form__buttons">
@@ -209,6 +223,9 @@ export default {
         };
         this.$store.commit(`${this.slug}/item`, newItem);
       },
+    },
+    usersExportUrl() {
+      return this.context.usersExportUrl;
     },
     formExceptArea() {
       const form = { ...this.form };
@@ -285,6 +302,15 @@ export default {
         return data;
       });
     },
+    async exportCSV() {
+      await this.$store.dispatch(
+        `${this.slug}/exportUsers`,
+        {
+          ...this.routeParams,
+          ...this.contextParams,
+        },
+      );
+    },
     localizedFilter(columns) {
       return (row, filter) => columns
         .map(c => row[c] || '')
@@ -308,6 +334,9 @@ export default {
         'users/data',
         this.$store.state.users.data.filter(u => u.id !== user.id),
       );
+    },
+    resetUsersExportUrl() {
+      this.$store.commit(`${this.slug}/usersExportUrl`, null);
     },
     async setUserRole(user, role) {
       await this.updateUser(user, (u) => {
