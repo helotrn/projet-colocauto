@@ -13,7 +13,7 @@
       </template>
     </b-pagination-nav>
 
-    <div v-if="currentPage == 2" class="register-step__profile">
+    <div v-if="item && currentPage == 2" class="register-step__profile">
       <h2>Profil de membre</h2>
 
       <p class="register-step__profile__text">
@@ -67,7 +67,7 @@
     </div>
 
     <div v-if="currentPage == 4" class="register-step__intents">
-      <h2>Que voulez-vous faire en premier?</h2>
+      <h2>Que voulez-vous faire?</h2>
 
       <register-intent-form :user="item" v-if="item" :loading="loading"
         @submit="submitOwnerDocumentsAndTags" />
@@ -77,7 +77,8 @@
     <div v-if="currentPage == 5" class="register-step__completed">
       <h2>Inscription complétée!</h2>
 
-      <div class="register-step__completed__text">
+      <layout-loading v-if="!item || loading" />
+      <div class="register-step__completed__text" v-else>
         <p>
           Votre inscrition sera validée par un membre de l'équipe et vous aurez alors accès à
           toutes les fonctionnalités de LocoMotion.
@@ -226,13 +227,12 @@ export default {
             }
           }
         }
-
-        await this.$store.dispatch('submitUser');
       }
     },
     async submitOwnerDocumentsAndTags() {
       try {
         await this.submit();
+        await this.$store.dispatch('submitUser');
 
         this.$router.push('/register/5');
       } catch (e) {
@@ -255,6 +255,10 @@ export default {
   width: 590px;
   max-width: 100%;
   margin: 50px auto;
+
+  &__intents > h2 {
+    margin-bottom: 50px;
+  }
 
   .register-step__title {
     text-align: center;

@@ -42,16 +42,6 @@
           </b-col>
         </b-row>
 
-        <b-row>
-          <b-col>
-            <forms-file-uploader field="insurance"
-              :disabled="disabled"
-              :label="$t('fields.insurance') | capitalize"
-              placeholder="Ex.: monfichier.pdf"
-              v-model="borrower.insurance" />
-          </b-col>
-        </b-row>
-
         <div class="form__buttons" v-if="!hideButtons">
           <b-button-group v-if="showReset">
             <b-button variant="success" type="submit" :disabled="!changed">
