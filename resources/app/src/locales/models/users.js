@@ -9,7 +9,7 @@ export default {
       description: 'Vos voisin-e-s ne vous connaissent pas encore! En quelques mots, dites-nous '
         + "qui vous êtes, on l'affichera sur votre profil. :-)",
       avatar: 'Ajoutez une photo de profil. On vous encourage à vous montrer la binette! '
-        + 'Ça aide à se faire confiance et à mieux profiter des avantages du partage.'
+        + 'Ça aide à se faire confiance et à mieux profiter des avantages du partage.',
     },
     fields: {
       accept_conditions: "j'accepte les conditions générales d'utilisation",
@@ -25,7 +25,7 @@ export default {
       is_smart_phone: 'téléphone intelligent?',
       last_name: 'nom',
       name: 'prénom',
-      opt_in_newsletter: "j'accepte de recevoir l'infolettre LocoMotion",
+      opt_in_newsletter: "j'accepte de recevoir les communications de LocoMotion (Solon) par courriel",
       other_phone: 'autre numéro de téléphone',
       phone: 'téléphone',
       postal_code: 'code postal',

@@ -3,35 +3,36 @@
     <b-card class="register-map__community" v-if="community">
       <template v-slot:header>
         <h4 class="card-title">
-          {{ `Rejoindre le voisinage ${community ? community.name : ''}` }}
+          {{ `Voisinage ${community ? community.name : ''}` }}
         </h4>
       </template>
       <b-card-text>
         <div class="register-map__community__description">
+          <p>
+            Youpie, vous pouvez rejoindre ce voisinage!
+          </p>
+
           <p v-if="community.description">
             {{ community.description }}
           </p>
         </div>
 
         <div v-if="community.parent">
-          <p>
+          <p><small>
             Ce voisinage est inclus dans un quartier.<br>
             Si j'appartiens à ce voisinage alors j'appartiens également
             au quartier {{ community.parent.name }}.
-          </p>
+          </small></p>
         </div>
 
-        <b-form class="register-map__community__submit"
+        <b-form class="register-map__community__submit text-center"
           @submit.prevent="joinCommunity" @reset.prevent="resetCommunity">
-          <b-button-group>
-            <b-button type="submit" variant="primary">Rejoindre ce voisinage</b-button>
-            <b-button type="reset" variant="warning" v-if="borough">
-              Revenir au quartier
-            </b-button>
-            <b-button type="reset" variant="warning" v-else>
-              Voir l'ensemble des voisinages
-            </b-button>
-          </b-button-group>
+          <b-button type="submit" variant="primary" class="mr-3 mb-3">Rejoindre</b-button>
+          <b-button type="reset" variant="warning" class="mb-3">Retour</b-button>
+          <br>
+          <b-button variant="outline-light" v-b-modal="'register-map-modal'">
+            Voisinage, quartier: quelle différence?
+          </b-button>
         </b-form>
       </b-card-text>
     </b-card>
@@ -39,46 +40,29 @@
     <b-card class="register-map__borough" v-else-if="borough">
       <template v-slot:header>
         <h4 class="card-title">
-          {{ `Rejoindre le quartier ${borough ? borough.name : ''}` }}
+          {{ `Quartier ${borough ? borough.name : ''}` }}
         </h4>
       </template>
       <b-card-text>
         <div class="register-map__borough__description">
+          <p>
+            Bravo, c'est un premier pas! Vous pourrez utiliser les vélos, remorques et autos
+            disponibles pour le quartier.
+          </p>
+
           <p v-if="borough.description">
             {{ borough.description }}
           </p>
-
-          <p>
-            Vous pouvez utiliser Locomotion dans votre Quartier!
-          </p>
-
-          <p>
-            Votre adresse ne fait pas encore partie d’un voisinage.
-          </p>
-          <p>
-            Voir la différence Quartier/Voisinage (FAQ)[LIEN].
-          </p>
-
-          <p>
-            Vous avez  donc accès:
-          </p>
-
-          <ul>
-            <li>
-              aux véhicules collectifs
-            </li>
-            <li>
-              aux véhicules des participants ayant accepté de partager à l'ensemble du quartier
-            </li>
-          </ul>
         </div>
 
-        <b-form class="register-map__borough__submit"
+        <b-form class="register-map__borough__submit text-center"
           @submit.prevent="joinBorough" @reset.prevent="resetBorough">
-          <b-button-group>
-            <b-button type="submit" variant="primary">Rejoindre ce quartier</b-button>
-            <b-button type="reset" variant="warning">Voir l'ensemble des voisinages</b-button>
-          </b-button-group>
+          <b-button type="submit" variant="primary" class="mr-3 mb-3">Rejoindre</b-button>
+          <b-button type="reset" variant="warning" class="mb-3">Retour</b-button>
+          <br>
+          <b-button variant="outline-light" v-b-modal="'register-map-modal'">
+            Voisinage, quartier: quelle différence?
+          </b-button>
         </b-form>
       </b-card-text>
     </b-card>
@@ -86,14 +70,17 @@
     <b-card class="register-map__postal_code" v-else-if="postalCodeCenter">
       <template v-slot:header>
         <h4 class="card-title">
-          Aucun voisinage
+          Oups!
         </h4>
       </template>
 
       <b-card-text>
-        <p>
-          Locomotion n’est pas encore accessible dans votre quartier.
-          Votre adresse est bien enregistrée.
+        <p class="text-center">
+          LocoMotion n’est pas encore ici.
+        </p>
+
+        <p class="text-center">
+          Aimeriez-vous connaître les futures possibilités LocoMotion dans votre quartier?
         </p>
 
         <b-form class="register-map__postal_code__submit" @reset.prevent="resetView">
@@ -102,32 +89,63 @@
             :value="user.opt_in_newsletter"
             @input="updateOptInNewsletter" />
 
-          <b-button-group>
-            <b-button type="reset" variant="warning">
-              Revenir à la recherche par code postal
-            </b-button>
-          </b-button-group>
+          <div class="text-center">
+            <b-button type="reset" variant="warning">Retour</b-button>
+          </div>
         </b-form>
       </b-card-text>
     </b-card>
 
-    <b-card title="Recherche par code postal" class="register-map__form" v-else>
+    <b-card title="Rejoindre mes voisin-e-s" class="register-map__form" v-else>
       <layout-loading v-if="postalCodeLoading" />
       <b-card-text v-else>
         <b-form @submit.prevent="searchPostalCode">
           <b-form-group label="Code postal">
             <b-input-group>
               <b-form-input type="text" required placeholder="Code postal"
-                v-model="postalCode" />
+                v-mask="'A#A #A#'" masked
+                v-model="postalCode" :state="postalCode ? status !== 'ZERO_RESULTS' : null" />
 
               <b-input-group-append>
                 <b-button variant="outline-success" type="submit">OK</b-button>
               </b-input-group-append>
             </b-input-group>
+
+            <b-form-invalid-feedback :state="status !== 'ZERO_RESULTS'">
+              Code postal non reconnu.
+            </b-form-invalid-feedback>
           </b-form-group>
         </b-form>
       </b-card-text>
     </b-card>
+
+    <b-modal size="lg" class="register-map__modal"
+      title="Voisinage, quartier: quelle différence?"
+      id="register-map-modal" footer-class="d-none">
+      <p>
+        Un voisinage LocoMotion existe quand des gens qui habitent à 5-10 minutes à pied
+        décident de s'impliquer ensemble dans le projet, pour le faire vivre  et
+        l'améliorer. L'organisme Solon les accompagne dans la démarche.
+      </p>
+
+      <p>
+        Le quartier est plus grand. Il réfère à un territoire urbain reconnu (ex.: La
+        Petite-Patrie) et peut contenir plusieurs voisinages. Participer à LocoMotion dans
+        son quartier, c'est avoir accès à certains véhciules et c'est une porte d'entrée
+        vers la création de son voisinage!
+      </p>
+
+      <p>
+        Les véhicules sont pour le voisinage ou le quartier? L'ensemble des participant-e-s
+        du quartier peut profiter des véhicules collectifs de Solon. Les propriétaires d'un
+        véhicule (auto, vélo-cargo ou autre) peuvent décider de le rendre disponible à leur
+        voisinage ou au quartier au complet.
+      </p>
+
+      <b-button variant="light" size="lg" @click="$bvModal.hide('register-map-modal')">
+        OK!
+      </b-button>
+    </b-modal>
 
     <div v-if="communities">
       <gmap-map
@@ -137,28 +155,19 @@
         :center="center"
         :options="mapOptions"
         map-type-id="terrain">
-        <gmap-polygon v-if="borough"
-          :path="borough.area_google"
-          :label="borough.name"
-          :options="boroughPolygonOptions" />
+        <gmap-polygon v-for="b in boroughs" :key="`polygon-${b.id}`"
+          :path="b.area_google"
+          :label="b.name"
+          :options="boroughPolygonOptions"
+          @click="borough = b" />
         <gmap-polygon v-for="c in communities" :key="`polygon-${c.id}`"
           :path="c.area_google"
           :label="c.name"
           :options="polygonOptions"
-          @click="community = c" />
-        <gmap-marker v-for="c in communities" :key="`marker-${c.id}`"
-          :icon="{
-            url: '/pins/default-pin.svg',
-            scaledSize: {
-              width: 28,
-              height: 40,
-            },
-          }"
-          :clickable="false"
-          :position="c.center_google" />
+          @click="community = c; borough = c.parent" />
         <gmap-marker v-if="postalCodeCenter"
           :icon="{
-            url: '/pins/alternate-pin.svg',
+            url: '/pins/default-pin.svg',
             scaledSize: {
               width: 28,
               height: 40,
@@ -198,9 +207,9 @@ export default {
   data() {
     return {
       boroughPolygonOptions: {
-        fillColor: '#f9ca51',
+        fillColor: '#16a59e',
         fillOpacity: 0.3,
-        strokeColor: '#f9ca51',
+        strokeColor: '#16a59e',
         strokeOpacity: 0.7,
         zIndex: 1,
       },
@@ -227,7 +236,8 @@ export default {
         zIndex: 2,
       },
       postalCodeCenter: null,
-      postalCodeLoading: true,
+      postalCodeLoading: false,
+      status: null,
       zoom: 1,
     };
   },
@@ -260,14 +270,23 @@ export default {
         }
 
         if (this.community) {
-          return this.community.center_google;
+          return {
+            ...this.community.center_google,
+            lng: this.community.center_google.lng - 0.007,
+          };
         }
 
         if (this.borough) {
-          return this.borough.center_google;
+          return {
+            ...this.borough.center_google,
+            lng: this.borough.center_google.lng - 0.007,
+          };
         }
 
-        return this.averageCommunitiesCenter;
+        return {
+          ...this.averageCommunitiesCenter,
+          lng: this.averageCommunitiesCenter.lng - 0.007,
+        };
       },
       set(center) {
         this.$store.commit('register.map/center', center);
@@ -341,6 +360,7 @@ export default {
       this.borough = null;
       this.community = null;
       this.postalCodeCenter = null;
+      this.postalCodeLoading = false;
 
       this.resetCenter();
     },
@@ -351,17 +371,19 @@ export default {
       }
 
       this.postalCodeLoading = true;
+      this.status = null;
       this.postalCodeCenter = null;
 
       const {
         Geocoder,
-        geometry: { poly: { containsLocation } },
         LatLngBounds,
         Polygon,
       } = this.google.maps;
       const geocoder = new Geocoder();
 
       geocoder.geocode({ address: this.postalCode }, (results, status) => {
+        this.status = status;
+
         // No results: do nothing
         if (status === 'ZERO_RESULTS') {
           this.postalCodeLoading = false;
@@ -384,7 +406,7 @@ export default {
           const community = this.communities[i];
           const polygon = new Polygon({ paths: community.area_google });
 
-          if (containsLocation(location, polygon)) {
+          if (this.google.maps.geometry.poly.containsLocation(location, polygon)) {
             this.center = null;
             this.community = community;
 
@@ -398,7 +420,7 @@ export default {
           const borough = this.boroughs[j];
           const polygon = new Polygon({ paths: borough.area_google });
 
-          if (containsLocation(location, polygon)) {
+          if (this.google.maps.geometry.poly.containsLocation(location, polygon)) {
             this.center = null;
             this.borough = borough;
 
@@ -430,6 +452,10 @@ export default {
         }, this.boroughs[0]);
 
         bounds.extend(nearestBorough.center_google);
+        bounds.extend({
+          ...nearestBorough.center_google,
+          lng: nearestBorough.center_google.lng + 0.007,
+        });
 
         this.$refs.map.fitBounds(bounds);
 
@@ -485,6 +511,10 @@ export default {
 <style lang="scss">
 @import "~bootstrap/scss/mixins/breakpoints";
 
+#register-map-modal {
+  text-align: center;
+}
+
 .register-map {
   position: relative;
 
@@ -496,10 +526,6 @@ export default {
     @include media-breakpoint-down(lg) {
       min-height: calc(100vh - #{$layout-navbar-height-mobile + $footer-height} - 1px);
     }
-  }
-
-  .card {
-    width: 190px;
   }
 
   &__form.card {
@@ -516,10 +542,11 @@ export default {
     margin-left: 30px;
     position: absolute;
     z-index: 100;
-    max-width: 50vw;
+    max-width: 500px;
 
-    .card-header {
+    .card-header, .card-header .card-title {
       margin-bottom: 0;
+      font-weight: bold;
     }
 
     .card-text {

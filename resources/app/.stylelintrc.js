@@ -6,6 +6,7 @@ module.exports = {
     'order/properties-order': null,
     'selector-max-type': null,
     'max-nesting-depth': 5,
+    'selector-max-id': 1,
     'selector-list-comma-newline-after': 'always-multi-line',
     'plugin/no-unsupported-browser-features': [
       'warn',
@@ -21,6 +22,6 @@ module.exports = {
       },
     ],
     'selector-max-compound-selectors': 4,
-    'selector-max-specificity': '0,5,0',
+    'selector-max-specificity': '1,5,0',
   },
 };
