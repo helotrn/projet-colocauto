@@ -1,5 +1,3 @@
-import store from '@/store';
-
 function drillParams(object, vm) {
   return Object.keys(object).reduce((p, k) => {
     const newAcc = { ...p };
