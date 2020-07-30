@@ -76,11 +76,11 @@
 
       <b-card-text>
         <p class="text-center">
-          LocoMotion n’est pas encore ici.
+          Locomotion n’est pas encore accessible dans votre quartier.
         </p>
 
         <p class="text-center">
-          Aimeriez-vous connaître les futures possibilités LocoMotion dans votre quartier?
+          Souhaitez-vous être informé-e du développement du projet dans votre quartier?
         </p>
 
         <b-form class="register-map__postal_code__submit" @reset.prevent="resetView">
@@ -123,23 +123,26 @@
       title="Voisinage, quartier: quelle différence?"
       id="register-map-modal" footer-class="d-none">
       <p>
-        Un voisinage LocoMotion existe quand des gens qui habitent à 5-10 minutes à pied
-        décident de s'impliquer ensemble dans le projet, pour le faire vivre  et
-        l'améliorer. L'organisme Solon les accompagne dans la démarche.
+        Un voisinage LocoMotion est créé à l'initiative des gens qui y habitent, qui veulent
+        s'impliquer dans ce système de partage et le faire évoluer. Être proche de ses voisin-e-s,
+        c'est la base de LocoMotion. C'est pour cette raison qu'un voisinage correspond à une zone
+        d'environ 500 mètres de diamètre. Comment favoriser les liens dans le voisinage?
+        Est-ce qu'on veut ajouter à notre flotte collective un vélo électrique ou des remorques?
+        Solon vous accompagne dans toutes ces questions! Du financement peut aussi être rendu
+        disponible.
       </p>
 
       <p>
-        Le quartier est plus grand. Il réfère à un territoire urbain reconnu (ex.: La
-        Petite-Patrie) et peut contenir plusieurs voisinages. Participer à LocoMotion dans
-        son quartier, c'est avoir accès à certains véhciules et c'est une porte d'entrée
-        vers la création de son voisinage!
+        Le quartier est plus grand et suit les limites administratives. Il peut donc contenir
+        plusieurs voisinages LocoMotion. Des personnes peuvent s'inscrire à LocoMotion dans leur
+        quartier sans appartenir à un voisinage.
       </p>
 
       <p>
-        Les véhicules sont pour le voisinage ou le quartier? L'ensemble des participant-e-s
-        du quartier peut profiter des véhicules collectifs de Solon. Les propriétaires d'un
-        véhicule (auto, vélo-cargo ou autre) peuvent décider de le rendre disponible à leur
-        voisinage ou au quartier au complet.
+        Et les véhicules sont pour le voisinage, le quartier? L'ensemble des participant-e-s du
+        quartier peut profiter des véhicules collectifs de Solon, l'organisme derrière LocoMotion.
+        Les propriétaires d'un véhicule (auto, vélo-cargo ou autre) peuvent décider de le mettre à
+        disposition de leur voisinage ou du quartier au complet.
       </p>
 
       <b-button variant="light" size="lg" @click="$bvModal.hide('register-map-modal')">
@@ -329,6 +332,16 @@ export default {
       this.$refs.map.fitBounds(bounds);
     },
     distance,
+    async joinBorough() {
+      await this.$store.dispatch('users/joinCommunity', {
+        userId: this.$store.state.user.id,
+        communityId: this.borough.id,
+      });
+
+      this.$store.commit('user', this.item);
+
+      this.$router.push('/register/3');
+    },
     async joinCommunity() {
       await this.$store.dispatch('users/joinCommunity', {
         userId: this.$store.state.user.id,
