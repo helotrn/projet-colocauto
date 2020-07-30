@@ -76,7 +76,7 @@ export default {
             acc.push(...actions.map((action) => {
               const routeParams = to.meta.data[collection][action];
 
-              const zeroedOutFilters = Object.keys(store.state[collection].filters)
+              const zeroedOutFilters = Object.keys(vm.$store.state[collection].filters || {})
                 .reduce((filters, k) => ({
                   ...filters,
                   [k]: undefined,
@@ -94,14 +94,14 @@ export default {
                 return null;
               }
 
-              return store.dispatch(
+              return vm.$store.dispatch(
                 `${collection}/${action}`,
                 params,
               ).then(() => {
                 if (routeParams.mapResults) {
-                  store.commit(
+                  vm.$store.commit(
                     `${collection}/data`,
-                    store.state[collection].data
+                    vm.$store.state[collection].data
                       .map(routeParams.mapResults.bind({
                         user: vm.user,
                         route: vm.$route,
