@@ -226,12 +226,13 @@ export default {
             }
           }
         }
+
+        await this.$store.dispatch('submitUser');
       }
     },
     async submitOwnerDocumentsAndTags() {
       try {
         await this.submit();
-        await this.$store.dispatch('submitUser');
 
         this.$router.push('/register/5');
       } catch (e) {
