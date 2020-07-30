@@ -116,19 +116,21 @@ export default {
       return this.loanableBoroughs.length > 0;
     },
     loanableBoroughs() {
-      const boroughs = [];
+      if (this.item.community) {
+        if (this.item.community.parent) {
+          return [this.item.community.parent];
+        }
 
-      if (this.item.community && this.item.community.parent) {
-        boroughs.push(this.item.community.parent);
+        return [];
       }
 
       if (this.item.owner) {
-        boroughs.push(...this.item.owner.user.communities
+        return this.item.owner.user.communities
           .filter(c => !!c.parent)
-          .map(c => c.parent));
+          .map(c => c.parent);
       }
 
-      return boroughs;
+      return [];
     },
     loanableBoroughsMessage() {
       return this.loanableBoroughs

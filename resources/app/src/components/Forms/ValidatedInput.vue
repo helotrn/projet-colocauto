@@ -80,6 +80,7 @@
         :state="getValidationState(validationContext)"
         :object-value="objectValue"
         :reset-after-select="resetAfterSelect"
+        :extra-params="extraParams"
         :value="value"
         @input="emitRelationChange"/>
       <b-form-input v-else-if="type === 'number'"
@@ -155,6 +156,11 @@ export default {
       type: String,
       required: false,
       default: '',
+    },
+    extraParams: {
+      type: Object,
+      requird: false,
+      default() { return {}; },
     },
     initialView: {
       type: String,

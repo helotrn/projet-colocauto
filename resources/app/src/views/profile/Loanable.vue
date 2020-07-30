@@ -64,10 +64,15 @@ export default {
     averageCommunitiesCenter() {
       const { communities } = this.user;
 
+      if (communities.length === 0) {
+        return null;
+      }
+
       const center = communities.reduce((acc, c) => [
         (acc[0] + c.center[0]) / 2,
         (acc[1] + c.center[1]) / 2,
       ], communities[0].center);
+
       return {
         lat: center[0],
         lng: center[1],

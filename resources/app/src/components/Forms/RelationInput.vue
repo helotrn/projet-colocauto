@@ -24,6 +24,11 @@ export default {
       required: false,
       default: false,
     },
+    extraParams: {
+      type: Object,
+      required: false,
+      default() { return {}; },
+    },
     name: {
       type: String,
       required: true,
@@ -120,7 +125,10 @@ export default {
       return !!this.context.searchAjax;
     },
     params() {
-      return this.query.params;
+      return {
+        ...this.query.params,
+        ...this.extraParams,
+      };
     },
     slug() {
       return this.query.slug;

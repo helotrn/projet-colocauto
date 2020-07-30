@@ -264,6 +264,17 @@ class LoanableController extends RestController
                             ],
                         ],
                     ],
+                    'community_id' => [
+                        'type' => 'relation',
+                        'query' => [
+                            'slug' => 'communities',
+                            'value' => 'id',
+                            'text' => 'name',
+                            'params' => [
+                                'fields' => 'id,name,parent.id,parent.name',
+                            ],
+                        ],
+                    ],
                     'owner_id' => [
                         'type' => 'relation',
                         'query' => [
@@ -274,18 +285,6 @@ class LoanableController extends RestController
                                 'fields' => 'id,user.full_name,'
                                     . 'user.communities.id,user.communities.name,'
                                     . 'user.communities.parent.id,user.communities.parent.name',
-                            ],
-                        ],
-                    ],
-                    'community_id' => [
-                        'type' => 'relation',
-                        'query' => [
-                            'slug' => 'communities',
-                            'value' => 'id',
-                            'text' => 'name',
-                            'params' => [
-                                'fields' => 'id,name,parent.id,parent.name',
-                                'users.id' => 'me',
                             ],
                         ],
                     ],

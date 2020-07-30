@@ -75,6 +75,8 @@
             :description="$t('descriptions.community_id')"
             :label="$t('fields.community_id') | capitalize"
             name="community_id" type="relation" v-bind="form.general.community_id"
+            :extra-params="{ 'users.id': 'me' }"
+            :placeholder="placeholderOrLabel('community_id') | capitalize"
             @relation="loanable.community = $event"
             v-model="loanable.community_id" />
 
