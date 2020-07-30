@@ -7,6 +7,7 @@ use Illuminate\Support\Str;
 
 $factory->define(User::class, function (Faker $faker) {
     return [
+        'accept_conditions' => true,
         'name' => $faker->name,
         'last_name' => '',
         'email' => $faker->unique()->safeEmail,
