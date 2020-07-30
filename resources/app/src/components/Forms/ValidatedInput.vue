@@ -40,6 +40,7 @@
       <forms-map-input v-else-if="type === 'point'"
         :center="center" :disabled="disabled"
         :state="getValidationState(validationContext)"
+        :polygons="polygons"
         v-bind:value="value"
         v-on:input="emitInput" />
       <forms-date-picker v-else-if="type === 'date'"
@@ -221,6 +222,11 @@ export default {
       type: String,
       required: false,
       default: '',
+    },
+    polygons: {
+      type: Array,
+      required: false,
+      default() { return []; },
     },
     query: {
       type: Object,

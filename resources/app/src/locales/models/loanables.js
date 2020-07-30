@@ -18,13 +18,16 @@ export default {
     'créer un véhicule': 'créer un véhicule',
     '{count} véhicule sélectionné': 'aucun véhicule sélectionné | 1 véhicule sélectionné | {count} véhicules sélectionnés',
     descriptions: {
+      community_id: 'Le partage de mon véhicule peut être restreint à un voisinage ou un '
+        + 'quartier. Par défaut, un véhicule est accessible à tous mes voisinages.',
+      instructions: 'Y a-t-il des choses à savoir sur ce véhicule?',
       location_description: 'Généralement, votre véhicule se trouve où? Cliquez sur la carte '
         + 'pour définir sa position.',
       name: "Merci de nommer votre véhicule pour en informer votre voisinage. Le nom n'a pas "
-        + "besoin d'être compliqué. Allez-y au plus simple... ou au plus drôle !",
+        + "besoin d'être compliqué. Allez-y au plus simple... ou au plus drôle!",
       share_with_parent_communities: 'Mon véhicule pourra être visible et demandé en réservation '
-      + "par des utilisateur du quartier en-dehors de mon voisinage. C'est l'occasion de "
-      + 'partager davantage!',
+        + "par des utilisateur du quartier en-dehors de mon voisinage. C'est l'occasion de "
+        + 'partager davantage!',
     },
     engines: cars.fr.engines,
     fields: {
@@ -32,7 +35,7 @@ export default {
       ...cars.fr.fields,
       ...trailers.fr.fields,
       comments: 'commentaires',
-      community_id: 'communauté',
+      community_id: 'voisinage',
       deleted_at: 'supprimé',
       image: 'photo du véhicule',
       instructions: 'instructions',

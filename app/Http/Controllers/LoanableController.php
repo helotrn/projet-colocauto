@@ -213,6 +213,7 @@ class LoanableController extends RestController
                 'type' => null,
                 'brand' => '',
                 'comments' => '',
+                'community' => null,
                 'engine' => '',
                 'instructions' => '',
                 'insurer' => '',
@@ -239,15 +240,12 @@ class LoanableController extends RestController
                     ],
                     'location_description' => [
                         'type' => 'textarea',
-                        'description' => 'Des indications qui pourraient aider les autres'
-                         . ' membres de LocoMotion à retrouver ce véhicule.',
                     ],
                     'comments' => [
                         'type' => 'textarea',
                     ],
                     'instructions' => [
                         'type' => 'textarea',
-                        'description' => 'Y a-t-il des choses à savoir sur ce véhicule?',
                     ],
                     'type' => [
                         'type' => 'select',
@@ -287,6 +285,7 @@ class LoanableController extends RestController
                             'text' => 'name',
                             'params' => [
                                 'fields' => 'id,name,parent.id,parent.name',
+                                'users.id' => 'me',
                             ],
                         ],
                     ],
