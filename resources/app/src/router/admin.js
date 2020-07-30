@@ -71,6 +71,7 @@ export default {
                 'id',
                 'full_name',
                 'communities.role',
+                'communities.proof',
                 'communities.approved_at',
                 'communities.suspended_at',
               ].join(','),
