@@ -307,7 +307,7 @@ class Loanable extends BaseModel
                     );
                 }
 
-                return $q->where(function ($q) use ($communityIds) {
+                $q = $q->where(function ($q) use ($communityIds) {
                     return $q
                         // ...loanables belonging to its accessible communities...
                         ->whereHas('community', function ($q) use ($communityIds) {
@@ -350,8 +350,21 @@ class Loanable extends BaseModel
                                 });
                             });
                         });
+                });
+
                 // ...and cars are only allowed if the borrower profile is approved
-                })->whereIn('type', $allowedTypes);
+                switch (get_class($this)) {
+                    case 'App\Models\Bike':
+                    case 'App\Models\Trailer':
+                        break;
+                    case 'App\Models\Car':
+                        if (!in_array('car', $allowedTypes)) {
+                            return $q->whereRaw('1=0');
+                        }
+                        break;
+                    default:
+                        return $q->whereIn('type', $allowedTypes);
+                }
             });
 
         if ($user->owner) {

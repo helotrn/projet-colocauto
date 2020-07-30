@@ -4,6 +4,7 @@ namespace Tests\Unit\Models;
 
 use App\Models\Borrower;
 use App\Models\Community;
+use App\Models\Bike;
 use App\Models\Car;
 use App\Models\Loanable;
 use App\Models\Owner;
@@ -72,7 +73,7 @@ class LoanableTest extends TestCase
             $this->otherMemberOfCommunity,
             $this->memberOfOtherCommunity
         ] as $member) {
-            $loanables = factory(Trailer::class)->create([
+            factory(Trailer::class)->create([
                 'owner_id' => $member->owner->id,
             ]);
         }
@@ -117,6 +118,114 @@ class LoanableTest extends TestCase
         );
     }
 
+    public function testCarBecomesAccessibleIfBorrowerIsApproved() {
+        $car = factory(Car::class)->create([
+          'owner_id' => $this->memberOfCommunity->owner->id,
+        ]);
+
+        $loanables = Loanable::accessibleBy($this->memberOfCommunity)->pluck('id');
+        $this->assertEquals(2, $loanables->count());
+
+        $loanables = Loanable::accessibleBy($this->otherMemberOfCommunity)->pluck('id');
+        $this->assertEquals(1, $loanables->count());
+        $this->assertEquals(
+            $this->otherMemberOfCommunity->loanables()->first()->id,
+            $loanables[0]
+        );
+
+        $this->community->users()->updateExistingPivot($this->otherMemberOfCommunity->id, [
+            'approved_at' => new \DateTime,
+        ]);
+
+        $this->otherMemberOfCommunity = $this->otherMemberOfCommunity->fresh();
+
+        $loanables = Loanable::accessibleBy($this->otherMemberOfCommunity)
+          ->orderBy('id')
+          ->pluck('id');
+        $this->assertEquals(2, $loanables->count());
+        $this->assertEquals(
+            $this->memberOfCommunity->loanables()->first()->id,
+            $loanables[0]
+        );
+        $this->assertEquals(
+            $this->otherMemberOfCommunity->loanables()->first()->id,
+            $loanables[1]
+        );
+
+        $borrower = new Borrower;
+        $borrower->user()->associate($this->otherMemberOfCommunity);
+        $borrower->approved_at = new \DateTime;
+        $borrower->save();
+
+        $this->otherMemberOfCommunity = $this->otherMemberOfCommunity->fresh();
+
+        $loanables = Loanable::accessibleBy($this->otherMemberOfCommunity)
+          ->orderBy('id')
+          ->pluck('id');
+        $this->assertEquals(3, $loanables->count());
+        $this->assertEquals(
+            $this->memberOfCommunity->loanables()->first()->id,
+            $loanables[0]
+        );
+        $this->assertEquals(
+            $this->otherMemberOfCommunity->loanables()->first()->id,
+            $loanables[1]
+        );
+        $this->assertEquals(
+            $car->id,
+            $loanables[2]
+        );
+    }
+
+    public function testLoanableAccessibleThroughInheritedClasses() {
+        factory(Car::class)->create([
+            'owner_id' => $this->memberOfCommunity->owner->id,
+        ]);
+
+        $bikes = Bike::accessibleBy($this->memberOfCommunity)
+            ->orderBy('id')
+            ->pluck('id');
+        $this->assertEquals(0, $bikes->count());
+
+        $trailers = Trailer::accessibleBy($this->memberOfCommunity)
+            ->orderBy('id')
+            ->pluck('id');
+        $this->assertEquals(1, $trailers->count());
+
+        $cars = Car::accessibleBy($this->memberOfCommunity)
+            ->orderBy('id')
+            ->pluck('id');
+        $this->assertEquals(1, $cars->count());
+
+        $cars = Car::accessibleBy($this->otherMemberOfCommunity)
+            ->orderBy('id')
+            ->pluck('id');
+        $this->assertEquals(0, $cars->count());
+
+        $this->community->users()->updateExistingPivot($this->otherMemberOfCommunity->id, [
+            'approved_at' => new \DateTime,
+        ]);
+
+        $this->otherMemberOfCommunity = $this->otherMemberOfCommunity->fresh();
+
+        $cars = Car::accessibleBy($this->otherMemberOfCommunity)
+            ->orderBy('id')
+            ->pluck('id');
+        $this->assertEquals(0, $cars->count());
+
+        $borrower = new Borrower;
+        $borrower->user()->associate($this->otherMemberOfCommunity);
+        $borrower->approved_at = new \DateTime;
+        $borrower->save();
+
+        $this->otherMemberOfCommunity = $this->otherMemberOfCommunity->fresh();
+
+        $cars = Car::accessibleBy($this->otherMemberOfCommunity)
+            ->orderBy('id')
+            ->pluck('id');
+        $this->assertEquals(1, $cars->count());
+    }
+
     public function testLoanableAccessibleDownFromBorough() {
         $loanables = Loanable::accessibleBy($this->memberOfCommunity)->pluck('id');
         $this->assertEquals(1, $loanables->count());
@@ -129,11 +238,15 @@ class LoanableTest extends TestCase
             'owner_id' => $this->memberOfBorough->owner->id,
         ]);
 
-        $loanables = Loanable::accessibleBy($this->memberOfCommunity)->pluck('id');
+        $loanables = Loanable::accessibleBy($this->memberOfCommunity)->orderBy('id')->pluck('id');
         $this->assertEquals(2, $loanables->count());
         $this->assertEquals(
             $this->memberOfCommunity->loanables()->first()->id,
-            $loanables->first()
+            $loanables[0]
+        );
+        $this->assertEquals(
+            $this->memberOfBorough->loanables()->first()->id,
+            $loanables[1]
         );
     }
 
