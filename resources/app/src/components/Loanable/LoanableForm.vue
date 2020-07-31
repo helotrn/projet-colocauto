@@ -80,7 +80,7 @@
             @relation="loanable.community = $event"
             v-model="loanable.community_id" />
 
-            <forms-validated-input v-if="loanableBoroughs.length > 0"
+          <forms-validated-input v-if="loanableBoroughs.length > 0"
             :description="$t('descriptions.share_with_parent_communities')"
             :label="$t(
               'fields.share_with_parent_communities_dynamic',
@@ -205,7 +205,6 @@ export default {
             strokeColor: '#16a59e',
             strokeOpacity: 0.35,
           };
-          break;
         case 'neighborhood':
         default:
           return {
@@ -214,7 +213,6 @@ export default {
             fillOpacity: 0.25,
             strokeOpacity: 0,
           };
-          break;
       }
     },
     submit(...params) {

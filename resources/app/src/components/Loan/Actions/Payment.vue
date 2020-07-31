@@ -113,7 +113,7 @@ import locales from '@/locales';
 const { currency } = filters;
 
 export default {
-  name: 'LoanActionsPrePayment',
+  name: 'LoanActionsPayment',
   mixins: [LoanActionsMixin],
   mounted() {
     this.action.platform_tip = parseFloat(this.platformTip, 10);

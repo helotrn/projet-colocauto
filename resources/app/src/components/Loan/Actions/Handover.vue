@@ -281,7 +281,7 @@ import FormsValidatedInput from '@/components/Forms/ValidatedInput.vue';
 import LoanActionsMixin from '@/mixins/LoanActionsMixin';
 
 export default {
-  name: 'LoanActionsPrePayment',
+  name: 'LoanActionsHandover',
   mixins: [LoanActionsMixin],
   components: {
     FormsImageUploader,

@@ -13,7 +13,7 @@
     <li :class="{
       'current-step': isCurrentStep('intention'),
       'reached-step': hasReachedStep('intention'),
-    }">
+    }" v-if="isOwnedLoanable">
       <svg-danger v-if="hasCanceledStep('intention')" />
       <svg-check v-else-if="hasReachedStep('intention')" />
       <svg-waiting v-else />
@@ -38,7 +38,8 @@
       <svg-check v-else-if="hasReachedStep('takeover')" />
       <svg-waiting v-else />
 
-      <span>Prise de possession</span>
+      <span v-if="isOwnedLoanable">Prise de possession</span>
+      <span v-else>Informations avant de partir</span>
     </li>
     <li v-for="incident in item.incidents" :key="incident.id" :class="{
       'current-step': incident.status === 'in_process',

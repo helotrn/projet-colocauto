@@ -42,7 +42,7 @@ export default {
 @import "~bootstrap/scss/mixins/breakpoints";
 
 .community-list {
-  @include media-breakpoint-down(lg) {
+  @include media-breakpoint-down(md) {
     margin-top: 45px;
   }
 }
