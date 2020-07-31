@@ -17,7 +17,7 @@
             <hr>
 
             <div :class="`community-view-${view}__form__sections__search`">
-              <loan-search-form v-if="loan" :loan="loan"
+              <loan-search-form v-if="loan" :item="loan"
                 :selected-loanable-types="selectedLoanableTypes"
                 @selectLoanableTypes="selectLoanableTypes"
                 @selectLoanable="selectLoanable"

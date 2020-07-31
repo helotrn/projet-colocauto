@@ -106,8 +106,8 @@ export default {
   },
   methods: {
     abortAction(action) {
-      const indexOfAction = this.actions.indexOf(action);
-      this.actions.splice(indexOfAction, 1);
+      const indexOfAction = this.item.actions.indexOf(action);
+      this.item.actions.splice(indexOfAction, 1);
     },
     emitLoad() {
       this.$emit('load');

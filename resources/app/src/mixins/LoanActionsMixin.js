@@ -70,9 +70,9 @@ export default {
     },
   },
   methods: {
-    abortAction(action) {
-      if (!action.id) {
-        this.$emit('aborted');
+    abortAction() {
+      if (!this.action.id) {
+        this.$emit('aborted', this.action);
       }
     },
     async createAction() {
