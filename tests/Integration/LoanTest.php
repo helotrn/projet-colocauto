@@ -102,4 +102,82 @@ class LoanTest extends TestCase
         $response->assertStatus(200)
             ->assertJson([ 'id' => $borrower->id ]);
     }
+
+    public function testCannotCreateConcurrentLoans() {
+        $borrower = factory(Borrower::class)->create(['user_id' => $this->user->id]);
+        $user = factory(User::class)->create();
+        $owner = factory(Owner::class)->create(['user_id' => $user->id]);
+        $loanable = factory(Bike::class)->create(['owner_id' => $owner->id]);
+
+        $departure = new \Carbon\Carbon;
+
+        $data = [
+            'departure_at' => $departure->toDateTimeString(),
+            'duration_in_minutes' => 60,
+            'estimated_distance' => 0,
+            'estimated_insurance' => 0,
+            'borrower_id' => $borrower->id,
+            'loanable_id' => $loanable->id,
+            'estimated_price' => 1,
+            'estimated_insurance' => 1,
+            'platform_tip' => 1,
+            'message_for_owner' => '',
+            'reason' => 'salut',
+        ];
+
+        // First loan
+        $response = $this->json('POST', '/api/v1/loans', $data);
+
+        $response->assertStatus(201)
+            ->assertJsonStructure(static::$getLoanResponseStructure);
+
+        // Exactly the same time: overlap
+        $response = $this->json('POST', '/api/v1/loans', $data);
+
+        $response->assertStatus(422)
+            ->assertJson([
+                'errors' => [
+                    'loanable_id' => ["Le véhicule n'est pas disponible sur cette période."],
+                ],
+            ]);
+
+        // 1 hour from 30 minutes later: overlap
+        $response = $this->json('POST', '/api/v1/loans', array_merge($data, [
+            'departure_at' => $departure->add(30, 'minutes')->toDateTimeString(),
+        ]));
+
+        $response->assertStatus(422)
+            ->assertJson([
+                'errors' => [
+                    'loanable_id' => ["Le véhicule n'est pas disponible sur cette période."],
+                ],
+            ]);
+
+        // 1 hour from 1 hour later: OK
+        $response = $this->json('POST', '/api/v1/loans', array_merge($data, [
+            'departure_at' => $departure->add(60, 'minutes')->toDateTimeString(),
+        ]));
+
+        $response->assertStatus(201);
+
+        // 1 hour from 30 minutes earlier: overlap
+        $response = $this->json('POST', '/api/v1/loans', array_merge($data, [
+            'departure_at' => $departure->subtract(30, 'minutes')->toDateTimeString(),
+        ]));
+
+        $response->assertStatus(422)
+            ->assertJson([
+                'errors' => [
+                    'loanable_id' => ["Le véhicule n'est pas disponible sur cette période."],
+                ],
+            ]);
+
+        // 30 minutes from 30 minutes earlier: OK
+        $response = $this->json('POST', '/api/v1/loans', array_merge($data, [
+            'departure_at' => $departure->subtract(30, 'minutes')->toDateTimeString(),
+            'duration_in_minutes' => 30,
+        ]));
+
+        $response->assertStatus(201);
+    }
 }

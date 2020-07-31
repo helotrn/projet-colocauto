@@ -211,6 +211,10 @@ class Loanable extends BaseModel
             'filterDaysAfter' => 365,
         ]);
 
+        if (!is_a(\Carbon\Carbon::class, $departureAt)) {
+            $departureAt = new \Carbon\Carbon($departureAt);
+        }
+
         $returnAt = $departureAt->copy()->add($durationInMinutes, 'minutes');
 
         $events = $ical->eventsFromRange($departureAt, $returnAt);

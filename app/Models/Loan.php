@@ -47,6 +47,7 @@ class Loan extends BaseModel
             'present',
             'min:0',
         ],
+        'loanable_id' => 'available',
         'message_for_owner' => [ 'present' ],
         'reason' => [ 'required' ],
     ];
@@ -143,6 +144,7 @@ class Loan extends BaseModel
         'estimated_distance',
         'estimated_insurance',
         'estimated_price',
+        'loanable_id',
         'platform_tip',
         'message_for_owner',
         'reason',

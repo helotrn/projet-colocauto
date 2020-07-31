@@ -42,6 +42,6 @@ class CommunityPricingRule implements Rule
 
     public function message() {
         return 'Spécifiez une tarification par défaut ou '
-                    . 'une tarification pour tous les autres types.';
+            . 'une tarification pour tous les autres types.';
     }
 }
