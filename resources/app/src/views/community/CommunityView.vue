@@ -1,5 +1,5 @@
 <template>
-  <layout-page :name="`community-view-${view}`" :loading="!routeDataLoaded && view !== 'map'"
+  <layout-page :name="`community-view-${view}`" :loading="!routeDataLoaded"
     :wide="view === 'map'">
     <div :class="mainDivClasses">
       <b-row>
@@ -75,10 +75,8 @@ export default {
   data() {
     return {
       lastLoanMerged: false,
+      reloading: false,
     };
-  },
-  mounted() {
-    this.setSelectedLoanableTypes();
   },
   computed: {
     ...buildComputed('community.view', [
@@ -141,12 +139,6 @@ export default {
 
       this.$router.push('/loans/new');
     },
-    setSelectedLoanableTypes() {
-      this.setParam({
-        name: 'type',
-        value: this.selectedLoanableTypes.join(','),
-      });
-    },
     async testLoanable(loanable) {
       await this.$store.dispatch(`${this.slug}/testOne`, {
         loanableId: loanable.id,
@@ -184,7 +176,11 @@ export default {
       },
     },
     selectedLoanableTypes() {
-      this.setSelectedLoanableTypes();
+      this.reloading = true;
+      this.setParam({
+        name: 'type',
+        value: this.selectedLoanableTypes.join(','),
+      });
     },
   },
 };

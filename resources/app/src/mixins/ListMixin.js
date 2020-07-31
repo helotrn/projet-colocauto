@@ -136,6 +136,10 @@ export default {
       );
     },
     loadListData() {
+      if (this.routeDataLoaded !== undefined && !this.routeDataLoaded) {
+        return true;
+      }
+
       if (this.listDebounce) {
         clearTimeout(this.listDebounce);
       }
@@ -210,6 +214,7 @@ export default {
           query,
         });
       }
+
       this.$store.commit(`${this.slug}/setParam`, { name, value });
     },
   },

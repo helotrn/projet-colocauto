@@ -85,6 +85,7 @@ export default {
                 ...zeroedOutFilters,
                 ...drillParams(routeParams, vm),
                 ...vm.contextParams,
+                ...vm.$route.query,
               };
 
               if (routeParams.conditional && !routeParams.conditional({
