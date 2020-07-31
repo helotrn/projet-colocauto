@@ -38,9 +38,6 @@ cache:
 
 locomotion:test:
   stage: test
-  only:
-    refs:
-      - master
   script:
     - cp .env.testing .env
     - php composer.phar install
