@@ -83,6 +83,14 @@
         :extra-params="extraParams"
         :value="value"
         @input="emitRelationChange"/>
+      <currency-input v-else-if="type === 'currency'"
+        :id="name" :name="name" :disabled="disabled"
+        :class="`form-control ${getValidationClass(getValidationState(validationContext))}`"
+        locale="fr" :currency="{ suffix: '$' }"
+        :value-range="{ min, max }"
+        :allow-negative="false"
+        v-bind:value="floatValue"
+        v-on:input="emitInput" />
       <b-form-input v-else-if="type === 'number'"
         :id="name" :name="name"
         type="number" :min="min" :max="max"
@@ -113,6 +121,8 @@
 </template>
 
 <script>
+import { CurrencyInput } from 'vue-currency-input';
+
 import FormsDatePicker from '@/components/Forms/DatePicker.vue';
 import FormsDateTimePicker from '@/components/Forms/DateTimePicker.vue';
 import FormsFileUploader from '@/components/Forms/FileUploader.vue';
@@ -189,7 +199,7 @@ export default {
     max: {
       type: Number,
       required: false,
-      default: null,
+      default: Number.MAX_SAFE_INTEGER,
     },
     maxRows: {
       type: Number,
@@ -199,7 +209,7 @@ export default {
     min: {
       type: Number,
       required: false,
-      default: null,
+      default: -Number.MAX_SAFE_INTEGER,
     },
     name: {
       type: String,
@@ -280,6 +290,7 @@ export default {
     },
   },
   components: {
+    CurrencyInput,
     FormsDatePicker,
     FormsDateTimePicker,
     FormsFileUploader,
@@ -288,6 +299,9 @@ export default {
     FormsRelationInput,
   },
   computed: {
+    floatValue() {
+      return parseFloat(this.value, 10);
+    },
     rulesOrNothing() {
       if (!this.rules) {
         return '';
@@ -320,6 +334,16 @@ export default {
       }
 
       return validated ? valid : null;
+    },
+    getValidationClass(state) {
+      switch (state) {
+        case true:
+          return 'is-valid';
+        case false:
+          return 'is-invalid';
+        default:
+          return '';
+      }
     },
   },
 };

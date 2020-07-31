@@ -108,7 +108,7 @@
                   :disabled="!!item.id"
                   :label="$t('fields.platform_tip') | capitalize"
                   :rules="{ required: true }"
-                  type="number" :min="0" :step="0.01"
+                  type="currency" :min="0" :step="0.01"
                   :placeholder="placeholderOrLabel('platform_tip') | capitalize"
                   v-model="item.platform_tip" />
               </b-col>
