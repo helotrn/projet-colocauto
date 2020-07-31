@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Action\PaymentRequest;
 use App\Http\Requests\BaseRequest as Request;
 use App\Models\Handover;
 use App\Repositories\HandoverRepository;
@@ -83,6 +84,16 @@ class HandoverController extends RestController
         $item->save();
 
         $this->repo->update($request, $actionId, $request->all());
+
+        if (!$loan->loanable->owner) {
+            $payment = $loan->payment()->first();
+            $paymentController = app(PaymentController::class);
+            $paymentController->complete(
+                $request->redirect(PaymentRequest::class),
+                $payment->id,
+                $loanId
+            );
+        }
 
         return $item;
     }

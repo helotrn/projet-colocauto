@@ -35,7 +35,7 @@
             <hr>
 
             <p>
-              Vous recevrez {{ loan.actual_price | currency }} pour l'emprunt.
+              Vous recevrez {{ item.actual_price | currency }} pour l'emprunt.
             </p>
           </div>
           <div v-if="userRole === 'borrower'" class="text-center">
@@ -123,13 +123,13 @@ export default {
   },
   data() {
     return {
-      platformTip: this.loan.platform_tip,
+      platformTip: this.item.platform_tip,
     };
   },
   computed: {
     finalPrice() {
-      return this.loan.actual_price
-        + this.loan.actual_insurance
+      return this.item.actual_price
+        + this.item.actual_insurance
         + parseFloat(this.platformTip, 10);
     },
     hasEnoughBalance() {
@@ -138,9 +138,9 @@ export default {
     priceTooltip() {
       const strParts = [];
 
-      strParts.push(`Trajet: ${currency(this.loan.actual_price)}`); // eslint-disable-line no-irregular-whitespace
-      if (this.loan.actual_insurance > 0) {
-        strParts.push(`Assurance: ${currency(this.loan.actual_insurance)}`); // eslint-disable-line no-irregular-whitespace
+      strParts.push(`Trajet: ${currency(this.item.actual_price)}`); // eslint-disable-line no-irregular-whitespace
+      if (this.item.actual_insurance > 0) {
+        strParts.push(`Assurance: ${currency(this.item.actual_insurance)}`); // eslint-disable-line no-irregular-whitespace
       }
       if (parseFloat(this.platformTip, 10) > 0) {
         strParts.push(`Contribution: ${currency(parseFloat(this.platformTip, 10))}`); // eslint-disable-line no-irregular-whitespace

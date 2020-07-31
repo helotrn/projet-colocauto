@@ -77,7 +77,7 @@
           <div v-else-if="!action.executed_at" class="text-center">
             <p>Demande d'extension jusqu'au {{ returnAt | datetime }}.</p>
             <p>Contactez le propriétaire pour qu'il confirme votre demande.</p>
-            <p>{{ loan.loanable.owner.user.phone }}</p>
+            <p>{{ item.loanable.owner.user.phone }}</p>
           </div>
         </div>
         <div v-else>
@@ -131,13 +131,13 @@ export default {
     disabledTimes,
     returnAt: {
       get() {
-        return this.$dayjs(this.loan.departure_at)
+        return this.$dayjs(this.item.departure_at)
           .add(this.action.new_duration, 'minute')
           .format('YYYY-MM-DD HH:mm:ss');
       },
       set(val) {
         this.action.new_duration = this.$dayjs(val)
-          .diff(this.$dayjs(this.loan.departure_at), 'minute');
+          .diff(this.$dayjs(this.item.departure_at), 'minute');
       },
     },
   },

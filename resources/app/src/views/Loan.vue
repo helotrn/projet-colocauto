@@ -30,7 +30,7 @@
           </div>
 
           <loan-actions :item="item" @load="loadItemAndUser" :form="loanForm"
-            :user="user" @submit="submitLoan" />
+            :user="user" @submit="submitLoan" @extension="addExtension" />
         </b-col>
       </b-row>
     </div>

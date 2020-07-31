@@ -55,6 +55,7 @@ const routes = [
       params: {
         fields: [
           '*',
+          'total_estimated_cost',
           'actions.*',
           'borrower.id',
           'borrower.user.avatar',

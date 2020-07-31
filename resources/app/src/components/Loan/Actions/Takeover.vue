@@ -53,7 +53,7 @@
           </b-col>
         </b-row>
 
-        <div v-if="loan.loanable.type === 'car'">
+        <div v-if="item.loanable.type === 'car'">
           <validation-observer ref="observer" v-slot="{ passes }">
             <b-row v-if="userRole === 'borrower'">
               <b-col>
@@ -117,7 +117,7 @@
           </validation-observer>
         </div>
 
-        <div v-else-if="loan.loanable.has_padlock">
+        <div v-else-if="item.loanable.has_padlock">
           <p>
             Le cadenas du véhicule sera automatiquement associé à votre application NOKE
             à temps pour la prise de possession.

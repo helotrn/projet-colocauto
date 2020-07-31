@@ -155,6 +155,7 @@ class Loan extends BaseModel
       'calendar_days',
       'canceled_at',
       'total_final_cost',
+      'total_estimated_cost',
     ];
 
     public $items = [

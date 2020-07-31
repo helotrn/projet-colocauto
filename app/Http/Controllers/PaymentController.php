@@ -74,7 +74,6 @@ class PaymentController extends RestController
     }
 
     public function complete(PaymentRequest $request, $actionId, $loanId) {
-        // Authentication
         $authRequest = $request->redirectAuth(Request::class);
 
         // Validation existence

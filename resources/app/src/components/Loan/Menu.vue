@@ -23,7 +23,7 @@
     <li :class="{
       'current-step': isCurrentStep('pre_payment'),
       'reached-step': hasReachedStep('pre_payment'),
-    }">
+    }" v-if="item.total_estimated_cost > 0">
       <svg-danger v-if="hasCanceledStep('pre_payment')" />
       <svg-check v-else-if="hasReachedStep('pre_payment')" />
       <svg-waiting v-else />
@@ -67,12 +67,13 @@
       <svg-check v-else-if="hasReachedStep('handover')" />
       <svg-waiting v-else />
 
-      <span>Remise du véhicule</span></li>
+      <span v-if="isOwnedLoanable">Remise du véhicule</span>
+      <span v-else>Retour du véhicule</span>
     </li>
     <li :class="{
       'current-step': isCurrentStep('payment'),
       'reached-step': hasReachedStep('payment'),
-    }">
+    }" v-if="isOwnedLoanable">
       <svg-danger v-if="hasCanceledStep('payment') || hasActiveIncidents || hasActiveExtensions" />
       <svg-check v-else-if="hasReachedStep('payment')" />
       <svg-waiting v-else />

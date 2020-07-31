@@ -12,7 +12,7 @@
 
       <span v-if="action.status == 'in_process'">En attente</span>
       <span v-else-if="action.status === 'completed'">
-        Lu &bull; {{ action.executed_at | datetime }}
+        Complété &bull; {{ action.executed_at | datetime }}
       </span>
       <span v-else-if="action.status === 'canceled'">
         Annulé &bull; {{ action.executed_at | datetime }}
@@ -28,7 +28,7 @@
           </b-col>
         </b-row>
 
-        <div v-if="loan.loanable.has_padlock">
+        <div v-if="item.loanable.has_padlock">
           <b-row>
             <b-col>
               <b-alert show variant="danger">
@@ -50,37 +50,41 @@
           <b-row>
             <b-col>
               <h4>Et après ?</h4>
+
               <p>
                 Après utilisation du véhicule, merci de venir clôturer votre emprunt sur la
-                plateforme via la section suivante Retour du véhicule;
+                plateforme via la section suivante &laquo;&nbsp;Retour du véhicule&nbsp;&raquo;.
               </p>
+
               <p>
-                Si vous avez du retard, utilisez le bouton "Signaler un retard" sur la
-                plateforme.
+                Si vous avez du retard, utilisez le bouton
+                &laquo;&nbsp;Signaler un retard&nbsp;&raquo; sur la plateforme.
               </p>
+
               <p>
                 Prenez soin
-                <span v-if="loan.loanable.type === 'bike'">du vélo.</span>
-                <span v-else-if="loan.loanable.type === 'trailer'">de la remorque.</span>
-                <span v-else-if="loan.loanable.type === 'car'">de la voiture.</span>
+                <span v-if="item.loanable.type === 'bike'">du vélo.</span>
+                <span v-else-if="item.loanable.type === 'trailer'">de la remorque.</span>
+                <span v-else-if="item.loanable.type === 'car'">de la voiture.</span>
                 <span v-else>du véhicule.</span>
-                Si vous identifiez un problème avec le véhicule, prenez une photo et/ou notez
+                <br>
+                Si vous identifiez un problème, prenez une photo et/ou notez
                 le problème, vous pourrez nous en aviser à votre retour.
               </p>
+
               <p>
                 En cas de problème, contactez
                 <a href="mailto:info@locomotion.app">info@locomotion.app</a>
               </p>
-              <p class="text-center">
-                <strong>Bonne route !</strong>
-              </p>
+
+              <p class="text-center"><strong>Bonne route !</strong></p>
             </b-col>
           </b-row>
 
           <b-row class="loan-actions-takeover-collective__buttons text-center"
             v-if="!action.executed_at">
             <b-col>
-              <b-button @click="completeAction" size="md" variant="success">
+              <b-button @click="completeAction" size="sm" variant="success">
                 J'ai bien lu ces infos!
               </b-button>
             </b-col>

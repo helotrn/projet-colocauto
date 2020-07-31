@@ -1,7 +1,8 @@
 <template>
   <b-card no-body class="loan-form loan-actions loan-actions-handover">
-    <b-card-header header-tag="header" role="tab" class="loan-actions__header">
-      <h2 v-b-toggle.loan-actions-handover>
+    <b-card-header header-tag="header" role="tab" class="loan-actions__header"
+      v-b-toggle.loan-actions-handover>
+      <h2>
         <svg-waiting v-if="action.status === 'in_process'" />
         <svg-check v-else-if="action.status === 'completed'" />
         <svg-danger v-else-if="action.status === 'canceled'" />

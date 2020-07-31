@@ -1,17 +1,18 @@
 <template>
   <b-card no-body class="loan-form loan-actions loan-actions-handover-collective">
-    <b-card-header header-tag="header" role="tab" class="loan-actions__header">
-      <h2 v-b-toggle.loan-actions-handover-collective>
+    <b-card-header header-tag="header" role="tab" class="loan-actions__header"
+      v-b-toggle.loan-actions-handover-collective>
+      <h2>
         <svg-waiting v-if="action.status === 'in_process'" />
         <svg-check v-else-if="action.status === 'completed'" />
         <svg-danger v-else-if="action.status === 'canceled'" />
 
-        Remise du véhicule
+        Retour du véhicule
       </h2>
 
       <span v-if="action.status == 'in_process'">En attente</span>
       <span v-else-if="action.status === 'completed'">
-        Rempli &bull; {{ action.executed_at | datetime }}
+        Complété &bull; {{ action.executed_at | datetime }}
       </span>
       <span v-else-if="action.status === 'canceled'">
         Contesté &bull; {{ action.executed_at | datetime }}
@@ -21,253 +22,156 @@
     <b-card-body>
       <b-collapse id="loan-actions-handover-collective" role="tabpanel" accordion="loan-actions"
         :visible="open">
-        <div v-if="loan.loanable.type === 'car'">
-          <validation-observer ref="observer" v-slot="{ passes }">
-            <b-form :novalidate="true" class="register-form__form"
-              @submit.stop.prevent="passes(completeAction)">
-              <b-row>
-                <b-col lg="6" v-if="!action.executed_at">
-                  <p>Envoyez une photo du tableau de bord.</p>
+        <div v-if="item.loanable.has_padlock">
+          <b-alert show variant="danger">
+            <div class="alert-heading"><h4>Attention</h4></div>
 
-                  <forms-image-uploader
-                    label="Photo du tableau de bord"
-                    field="image"
-                    v-model="action.image" />
+            <div>
+              <p class="mb-0">
+                En complétant cette étape, vous signalez que vous avez bien remis le
+                véhicule à son emplacement. Vous ne pourrez plus ouvrir le cadenas NOKE
+                associé au véhicule.
+              </p>
+            </div>
+          </b-alert>
 
-                  <p><small>
-                    On vous demande une preuve? Prenez une photo du tableau de bord de l'auto
-                    pour rentrer les bonnes informations (kilométrage, essence).
-                    Cette photo est facultative.
-                  </small></p>
-                </b-col>
-                <b-col lg="6" v-else-if="action.image">
-                  <a href="#" v-b-modal="'handover-collective-image'">
-                    <img :src="action.image ? action.image.sizes.thumbnail : ''">
-                  </a>
+          <b-alert show variant="warning">
+            <div class="alert-heading"><h4>En cas de retard</h4></div>
 
-                  <b-modal size="xl"
-                    title="Photo du tableau de bord"
-                    :id="'handover-collective-image'" footer-class="d-none">
-                    <img class="img-fit" :src="action.image.url">
-                  </b-modal>
-                </b-col>
+            <div>
+              <p class="mb-0">
+                Si vous avez un retard, utilisez le bouton
+                &laquo;&nbsp;Signaler un retard&nbsp;&raquo; sur la plateforme ou
+                <a @click.prevent="$emit('extension')" href="#">cliquez ici</a>.
+              </p>
+            </div>
+          </b-alert>
 
-                <b-col lg="6">
-                  <forms-validated-input
-                    id="mileage_end" name="mileage_end"
-                    type="number"
-                    label="KM au compteur, à la fin de la course"
-                    placholder="KM au compteur"
-                    :disabled="!!action.executed_at"
-                    v-model="action.mileage_end" />
-                </b-col>
-              </b-row>
+          <div class="loan-actions-handover-collective__text">
+            <p>
+              Vous avez ramené le véhicule? Alors, il ne vous reste plus qu'à clôturer
+              l'emprunt en remplissant cette étape.
+            </p>
 
-              <hr>
+            <p>
+              Un souci avec un véhicule?  Décrivez le problème et/ou chargez la photo
+              ci-dessous.
+            </p>
 
-              <b-row>
-                <b-col lg="6" v-if="!action.executed_at">
-                  <p>Envoyez une photo de vos dépenses.</p>
+            <p>
+              D'autres idées pour locomotion? Contactez
+              <a href="mailto:info@locomotion.app">info@locomotion.app</a>
+              ou faites-nous part de vos suggestions pour la plateforme par ici.
+            </p>
 
-                  <forms-image-uploader
-                    label="Photo des dépenses"
-                    field="expense"
-                    v-model="action.expense" />
+            <p class="text-center"><strong>Merci et à très bientôt !</strong></p>
 
-                  <p><small>
-                    Cette photo doit afficher le détails des dépenses.
-                  </small></p>
-                </b-col>
-                <b-col lg="6" v-else-if="action.expense">
-                  <a href="#" v-b-modal="'handover-collective-expense'">
-                    <img :src="action.expense ? action.expense.sizes.thumbnail : ''">
-                  </a>
+            <validation-observer ref="observer" v-slot="{ passes }">
+              <b-form :novalidate="true" class="register-form__form"
+                @submit.stop.prevent="passes(completeAction)">
+                <b-row v-if="!action.executed_at">
+                  <b-col lg="6">
+                    <forms-image-uploader
+                      label="Photo du véhicule"
+                      field="image"
+                      v-model="action.image" />
+                  </b-col>
 
-                  <b-modal size="xl"
-                    title="Photo des dépenses"
-                    :id="'handover-collective-expense'" footer-class="d-none">
-                    <img class="img-fit" :src="action.expense.url">
-                  </b-modal>
-                </b-col>
+                  <b-col lg="6">
+                    <forms-validated-input
+                      v-if="userRole === 'borrower'"
+                      id="comments_by_borrower" name="comments_by_borrower"
+                      type="textarea" :rows="6" :disabled="!!action.commented_by_borrower_at"
+                      label="Laissez un commentaire (facultatif)"
+                      placeholder="Commentaire sur l'emprunt"
+                      v-model="action.comments_by_borrower" />
+                  </b-col>
+                </b-row>
 
-                <b-col lg="6">
-                  <forms-validated-input
-                    id="purchases_amount" name="purchases_amount"
-                    type="number" :min="0" :step="0.01"
-                    label="Total des dépenses"
-                    placholder="Total des dépenses"
-                    :disabled="!!action.executed_at"
-                    v-model="action.purchases_amount" />
-                </b-col>
-              </b-row>
+                <b-row v-else>
+                  <b-col>
+                    <p>
+                      <a href="#" v-b-modal="'handover-collective-image'">
+                        <img :src="action.image ? action.image.sizes.thumbnail : ''">
+                      </a>
+                    </p>
 
-              <hr>
+                    <b-modal size="xl"
+                      title="Photo de l'état du véhicule"
+                      :id="'handover-collective-image'" footer-class="d-none">
+                      <img class="img-fit" :src="action.image.url">
+                    </b-modal>
+                  </b-col>
 
-              <b-row>
-                <b-col>
-                  <forms-validated-input
-                    v-if="userRole === 'borrower' && !action.executed_at"
-                    id="comments_by_borrower" name="comments_by_borrower"
-                    type="textarea" :rows="3" :disabled="!!action.commented_by_borrower_at"
-                    label="Laissez un message au propriétaire (facultatif)"
-                    placeholder="Commentaire sur la réservation"
-                    v-model="action.comments_by_borrower" />
-                  <blockquote v-else-if="action.comments_by_borrower">
-                    {{ action.comments_by_borrower }}
-                    <div class="user-avatar" :style="{ backgroundImage: borrowerAvatar }" />
-                  </blockquote>
-                </b-col>
-              </b-row>
+                  <b-col>
+                    <blockquote v-if="action.comments_by_borrower">
+                      {{ action.comments_by_borrower }}
+                      <div class="user-avatar" :style="{ backgroundImage: borrowerAvatar }" />
+                    </blockquote>
+                  </b-col>
+                </b-row>
 
-              <b-row>
-                <b-col>
-                  <forms-validated-input v-if="userRole === 'owner' && !action.executed_at"
-                    id="comments_by_owner" name="comments_by_owner"
-                    type="textarea" :rows="3" :disabled="!!action.commented_by_owner_at"
-                    label="Laissez un message à l'emprunteur (facultatif)"
-                    placeholder="Commentaire sur la réservation"
-                    v-model="action.comments_by_owner" />
-                  <blockquote v-else-if="action.comments_by_owner">
-                    {{ action.comments_by_owner }}
-                    <div class="user-avatar" :style="{ backgroundImage: ownerAvatar }" />
-                  </blockquote>
-                </b-col>
-              </b-row>
+                <b-row>
+                  <b-col cols="6">
+                    <forms-validated-input name="platform_tip"
+                      :disabled="!!action.executed_at"
+                      :label="$t('loans.fields.platform_tip') | capitalize"
+                      :rules="{ required: true }"
+                      type="currency" :min="0" :step="0.01"
+                      :placeholder="$t('loans.fields.platform_tip') | capitalize"
+                      v-model="action.platform_tip" />
+                  </b-col>
 
-              <b-row class="loan-actions-handover-collective__buttons text-center"
-                v-if="!action.executed_at">
-                <b-col>
-                  <b-button type="submit" size="sm" variant="success" class="mr-3">
-                    Enregistrer
+                  <b-col cols="6">
+                    <p>
+                      LocoMotion est un projet citoyen et collaboratif.
+                      Les contributions volontaires financent son développement.
+                    </p>
+                  </b-col>
+                </b-row>
+
+                <b-row>
+                  <b-col>
+                    <p class="text-center">
+                      Coût final du trajet:
+                      <span v-b-popover.hover="priceTooltip">{{ finalPrice | currency }}</span>.
+                    </p>
+                  </b-col>
+                </b-row>
+
+                <b-row v-if="!hasEnoughBalance">
+                  <b-col>
+                    <p>
+                      Il manque de crédits à votre compte pour payer cet emprunt.<br>
+                      <a href="#" v-b-modal.add-credit-modal>Ajoutez des crédits</a>
+                    </p>
+
+                    <b-modal id="add-credit-modal" title="Approvisionner mon compte" size="lg"
+                      footer-class="d-none">
+                      <user-add-credit-box :user="user"
+                        :minimum-required="finalPrice - user.balance"
+                        @bought="reloadUserAndCloseModal" @cancel="closeModal"/>
+                    </b-modal>
+                  </b-col>
+                </b-row>
+
+                <div v-if="!action.executed_at"
+                  class="loan-actions-handover-collective text-center">
+                  <b-button size="sm" variant="success" class="mr-3"
+                    :disabled="!hasEnoughBalance" @click="completeAction">
+                    Mon emprunt est terminé!
                   </b-button>
-                </b-col>
-              </b-row>
-            </b-form>
-          </validation-observer>
-        </div>
-
-        <div v-else-if="loan.loanable.has_padlock">
-          <p>
-            Le cadenas du véhicule sera automatiquement dissocié de application NOKE
-            lorsque vous aurez complété la remise du véhicule.
-          </p>
-
-          <p>
-            Si vous prévoyez avoir du retard, ajoutez une extension: d'autres membres
-            LocoMotion attendent peut-être ce véhicule.
-          </p>
-
-          <validation-observer ref="observer" v-slot="{ passes }">
-            <b-form :novalidate="true" class="register-form__form"
-              @submit.stop.prevent="passes(completeAction)">
-              <b-row v-if="!action.executed_at">
-                <b-col>
-                  <p>Envoyez une photo de l'état du véhicule.</p>
-
-                  <forms-image-uploader
-                    label="Photo du véhicule"
-                    field="image"
-                    v-model="action.image" />
-
-                  <p><small>
-                    Cette photo est optionnelle mais permet à LocoMotion de déterminer à quel
-                    moment un bris s'est produit, le cas échéant.
-                  </small></p>
-                </b-col>
-              </b-row>
-              <b-row v-else-if="action.image">
-                <b-col>
-                  <a href="#" v-b-modal="'handover-collective-image'">
-                    <img :src="action.image ? action.image.sizes.thumbnail : ''">
-                  </a>
-
-                  <b-modal size="xl"
-                    title="Photo de l'état du véhicule"
-                    :id="'handover-collective-image'" footer-class="d-none">
-                    <img class="img-fit" :src="action.image.url">
-                  </b-modal>
-                </b-col>
-              </b-row>
-
-              <b-row class="loan-actions-takeover__buttons text-center"
-                v-if="!action.executed_at">
-                <b-col>
-                  <b-button type="submit" size="sm" variant="success" class="mr-3">
-                    Enregistrer
-                  </b-button>
-                </b-col>
-              </b-row>
-            </b-form>
-          </validation-observer>
+                </div>
+              </b-form>
+            </validation-observer>
+          </div>
         </div>
 
         <div v-else>
-          <b-row v-if="!action.executed_at">
-            <b-col>
-              <p v-if="userRole === 'borrower'">
-                Rendez le véhicule au propriétaire.
-              </p>
-              <p v-else>
-                L'emprunteur vous contactera pour arranger la remise du véhicule.
-              </p>
-            </b-col>
-          </b-row>
-          <b-row v-else>
-            <b-col>
-              <p v-if="action.status !== 'canceled'">
-                La remise du véhicule a été effectuée.
-              </p>
-              <p v-else>
-                La remise du véhicule a été annulée.
-              </p>
-            </b-col>
-          </b-row>
-
-          <b-row class="loan-actions-takeover__buttons text-center"
-            v-if="!action.executed_at">
-            <b-col>
-              <b-button type="submit" size="sm" variant="success"
-                class="mr-3"
-                @click="completeAction">
-                C'est fait!
-              </b-button>
-            </b-col>
-          </b-row>
-        </div>
-
-        <div v-if="isContestable" >
-          <hr>
-
-          <b-row>
-            <b-col lg="6">
-              <p>
-                Cette information est-elle incorrecte?
-              </p>
-              <p>
-                Pour la modifier, vous pouvez procéder
-                à une "contestation". Par cette procédure, un membre de l'équipe LocoMotion
-                sera appelé à arbitrer la résolution du conflit entre l'emprunteur et le
-                propriétaire.
-              </p>
-            </b-col>
-
-            <b-col lg="6">
-              <forms-validated-input
-                id="comments_on_contestation" name="comments_on_contestation"
-                type="textarea" :rows="3"
-                label="Commentaires sur la contestation"
-                placeholder="Commentaire sur la contestation"
-                v-model="action.comments_on_contestation" />
-            </b-col>
-          </b-row>
-
-          <b-row class="loan-actions-handover-collective__buttons text-center">
-            <b-col>
-              <b-button size="sm" variant="outline-danger" @click="cancelAction">
-                Contester
-              </b-button>
-            </b-col>
-          </b-row>
+          <p>
+            Ce véhicule est mal configuré. Contactez le
+            <a href="mailto:support@locomotion.app">support</a>.
+          </p>
         </div>
       </b-collapse>
     </b-card-body>
@@ -278,14 +182,61 @@
 import FormsImageUploader from '@/components/Forms/ImageUploader.vue';
 import FormsValidatedInput from '@/components/Forms/ValidatedInput.vue';
 
+import UserAddCreditBox from '@/components/User/AddCreditBox.vue';
+
 import LoanActionsMixin from '@/mixins/LoanActionsMixin';
+
+import { filters } from '@/helpers';
+
+const { currency } = filters;
 
 export default {
   name: 'LoanActionsHandoverCollective',
   mixins: [LoanActionsMixin],
+  mounted() {
+    this.action.platform_tip = parseFloat(
+      this.item.final_platform_tip || this.item.platform_tip,
+      10
+    );
+  },
   components: {
     FormsImageUploader,
     FormsValidatedInput,
+    UserAddCreditBox,
+  },
+  computed: {
+    finalPrice() {
+      return this.item.actual_price
+        + this.item.actual_insurance
+        + this.action.platform_tip;
+    },
+    hasEnoughBalance() {
+      return this.user.balance >= this.finalPrice;
+    },
+    priceTooltip() {
+      const strParts = [];
+
+      strParts.push(`Trajet: ${currency(this.item.actual_price || 0)}`); // eslint-disable-line no-irregular-whitespace
+      if (this.item.actual_insurance > 0) {
+        strParts.push(`Assurance: ${currency(this.item.actual_insurance || 0)}`); // eslint-disable-line no-irregular-whitespace
+      }
+
+      const platformTip = parseFloat(this.item.final_platform_tip || this.action.platform_tip, 10);
+      if (platformTip > 0) {
+        strParts.push(`Contribution: ${currency(platformTip)}`); // eslint-disable-line no-irregular-whitespace
+      }
+
+      return strParts.join(' \\ ');
+    },
+  },
+  methods: {
+    closeModal() {
+      this.$bvModal.hide('add-credit-modal');
+    },
+    async reloadUserAndCloseModal() {
+      await this.$store.dispatch('loadUser');
+      this.closeModal();
+    },
   },
 };
 </script>
