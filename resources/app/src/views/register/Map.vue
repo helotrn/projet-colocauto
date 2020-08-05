@@ -329,6 +329,17 @@ export default {
       const bounds = new LatLngBounds();
 
       community.area_google.forEach(p => bounds.extend(p));
+
+      if (document.body.clientWidth >= 992) {
+        const sw = bounds.getSouthWest();
+        const ne = bounds.getNorthEast();
+        const leftPad = {
+          lat: sw.lat(),
+          lng: sw.lng() + (sw.lng() - ne.lng()),
+        };
+        bounds.extend(leftPad);
+      }
+
       this.$refs.map.fitBounds(bounds);
     },
     distance,

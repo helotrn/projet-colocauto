@@ -33,6 +33,13 @@ export default {
   components: {
     LoanableCard,
   },
+  mounted() {
+    setTimeout(() => {
+      this.$refs.map.$mapPromise.then(() => {
+        this.centerOnCommunities();
+      });
+    }, 500);
+  },
   props: {
     data: {
       type: Array,
@@ -100,6 +107,23 @@ export default {
       } else {
         this.selectedLoanable = l;
       }
+    },
+    centerOnCommunities() {
+      const { LatLngBounds } = this.google.maps;
+      const bounds = new LatLngBounds();
+      this.communities.forEach(c => c.area_google.forEach(p => bounds.extend(p)));
+
+      if (document.body.clientWidth >= 992) {
+        const sw = bounds.getSouthWest();
+        const ne = bounds.getNorthEast();
+        const leftPad = {
+          lat: sw.lat(),
+          lng: sw.lng() + (sw.lng() - ne.lng()),
+        };
+        bounds.extend(leftPad);
+      }
+
+      this.$refs.map.fitBounds(bounds);
     },
     iconFor(loanable) {
       const status = loanable.available === false ? '-unavailable-' : '-';
