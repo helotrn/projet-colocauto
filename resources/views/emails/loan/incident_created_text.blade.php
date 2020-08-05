@@ -1,4 +1,4 @@
-@extends('emails.layouts.main')
+@extends('emails.layouts.main_text')
 
 @section('content')
 Bonjour {{ $owner->user->name }},
