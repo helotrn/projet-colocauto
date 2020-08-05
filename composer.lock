@@ -2428,7 +2428,7 @@
             "source": {
                 "type": "git",
                 "url": "https://gitlab.com/molotovcoop/laravel-api-molotov.git",
-                "reference": "17be6b8e6da5bca48991987aeb0a88c379e344fd"
+                "reference": "822e47c8cffbec2909e02722365fe4caecbe8c38"
             },
             "require": {
                 "illuminate/auth": "^6.0",
@@ -2470,7 +2470,7 @@
                 }
             ],
             "description": "A set of helper classes for building Laravel APIs, built by Molotov cooperative.",
-            "time": "2020-07-29T19:30:50+00:00"
+            "time": "2020-08-05T21:42:08+00:00"
         },
         {
             "name": "monolog/monolog",
