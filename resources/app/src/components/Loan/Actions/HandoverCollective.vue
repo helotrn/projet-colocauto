@@ -112,25 +112,6 @@
                 </b-row>
 
                 <b-row>
-                  <b-col cols="6">
-                    <forms-validated-input name="platform_tip"
-                      :disabled="!!action.executed_at"
-                      :label="$t('loans.fields.platform_tip') | capitalize"
-                      :rules="{ required: true }"
-                      type="currency" :min="0" :step="0.01"
-                      :placeholder="$t('loans.fields.platform_tip') | capitalize"
-                      v-model="action.platform_tip" />
-                  </b-col>
-
-                  <b-col cols="6">
-                    <p>
-                      LocoMotion est un projet citoyen et collaboratif.
-                      Les contributions volontaires financent son développement.
-                    </p>
-                  </b-col>
-                </b-row>
-
-                <b-row>
                   <b-col>
                     <p class="text-center">
                       Coût final du trajet:
