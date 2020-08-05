@@ -30,35 +30,36 @@
       <div class="layout-navbar__collapse__illustration d-md-none" />
 
       <b-navbar-nav class="ml-auto" v-if="isLoggedIn">
-        <b-nav-item to="/app" v-if="isRegistered">
+        <b-nav-item to="/app" v-if="!isGlobalAdmin && isRegistered">
           <span class="nav-link__icon d-lg-none">
             <svg-dashboard />
           </span>
           <span class="nav-link__text">{{ $t('titles.dashboard') | capitalize }}</span>
         </b-nav-item>
 
-        <b-nav-item to="/community/map" v-if="canLoanVehicle">
+        <b-nav-item to="/community/map" v-if="!isGlobalAdmin && canLoanVehicle">
           <span class="nav-link__icon d-lg-none">
             <svg-location />
           </span>
           <span class="nav-link__text">Trouver un véhicule</span>
         </b-nav-item>
 
-        <b-nav-item to="/community" v-if="hasCommunity">
+        <b-nav-item to="/community" v-if="!isGlobalAdmin && hasCommunity">
           <span class="nav-link__icon d-lg-none">
             <svg-hand />
           </span>
           <span class="nav-link__text">Voisinage</span>
         </b-nav-item>
 
-        <b-nav-item to="/register" v-if="!isAdmin && !hasCompletedRegistration">
+        <b-nav-item to="/register" v-if="!isGlobalAdmin && !hasCompletedRegistration">
           <span class="nav-link__icon d-lg-none">
             <svg-hand />
           </span>
           <span class="nav-link__text">Inscription</span>
         </b-nav-item>
 
-        <b-nav-item to="/profile" class="d-block d-lg-none" v-if="hasCompletedRegistration">
+        <b-nav-item to="/profile" class="d-block d-lg-none"
+          v-if="!isGlobalAdmin && hasCompletedRegistration">
           <span class="nav-link__icon">
             <svg-profile />
           </span>
@@ -91,7 +92,7 @@
               <svg-profile />
             </b-badge>
           </template>
-          <b-dropdown-item to="/profile" v-if="hasCompletedRegistration">
+          <b-dropdown-item to="/profile" v-if="!isGlobalAdmin && hasCompletedRegistration">
             Profil
           </b-dropdown-item>
           <b-dropdown-item to="/faq">FAQ</b-dropdown-item>
