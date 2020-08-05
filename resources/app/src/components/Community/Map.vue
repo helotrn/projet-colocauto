@@ -6,6 +6,10 @@
     :options="mapOptions"
     @click="selectedLoanable = null"
     map-type-id="terrain">
+    <gmap-polygon v-for="c in communities" :key="`polygon-${c.id}`"
+      :path="c.area_google"
+      :label="c.name"
+      :options="polygonOptions" />
     <gmap-marker v-for="l in data" :key="`marker-${l.id}`"
       :icon="iconFor(l)" @click="activateLoanable(l)"
       :clickable="l.available !== false" :position="l.position_google">
@@ -54,6 +58,12 @@ export default {
             ],
           },
         ],
+      },
+      polygonOptions: {
+        fillColor: '#16a59e',
+        fillOpacity: 0.5,
+        strokeOpacity: 0,
+        zIndex: 2,
       },
       selectedLoanable: null,
     };
