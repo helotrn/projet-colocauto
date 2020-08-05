@@ -1,11 +1,11 @@
 <template>
   <div class="dashboard-release-info-box">
-    <b-alert variant="success" :show="!hasSeenVersion('1.1.0', '2020-08-24')"
+    <b-alert variant="success" :show="hasSeenVersion('1.1.0', '2020-08-24')"
       class="dashboard-release-info-box_changeset">
       <h2>LocoMotion évolue &mdash; 24 août 2020</h2>
 
       <p>
-        En plus de la refonte de la page Voisinage,vous pouvez maintenant partager votre auto ou
+        En plus de la refonte de la page Voisinage, vous pouvez maintenant partager votre auto ou
         votre vélo à tout le quartier! Par défaut, on met à disposition votre véhicule à la plus
         petite échelle, à votre voisinage. Après, vous avez le choix.
       </p>
@@ -28,7 +28,7 @@
       <div class="dashboard-release-info-box__question">
         <h3>Infolettre</h3>
 
-        <p>Présentation de l'infolettre</p>
+        <p>Désirez-vous recevoir l'infolettre LocoMotion?</p>
 
         <forms-validated-input type="checkbox" name="opt_in_newsletter"
           :label="$t('users.fields.opt_in_newsletter') | capitalize"
@@ -39,9 +39,12 @@
       <div class="dashboard-release-info-box__question" v-if="hasBorough">
         <h3>Accessibilité aux quartiers</h3>
 
-        <p>Les véhicules peuvent être rendus accessibles aux quartiers.</p>
-
-        <p>Vous faites partie de {{ boroughNames }}.</p>
+        <p>Les véhicules peuvent être mis à disposition au niveau du quartier.</p>
+        <p>
+          <b-button variant="light" v-b-modal="'borough-difference-modal'">
+            Voisinage, quartier: quelle différence?
+          </b-button>
+        </p>
 
         <div v-for="loanable in user.loanables" :key="loanable.id">
           <p><strong>{{ loanable.name }}</strong></p>
@@ -62,16 +65,22 @@
       <div class="dashboard-release-info-box__buttons">
         <b-button @click="seeVersion('1.1.0')">C'est compris!</b-button>
       </div>
+
+      <borough-difference-modal />
     </b-alert>
   </div>
 </template>
 
 <script>
 import FormsValidatedInput from '@/components/Forms/ValidatedInput.vue';
+import BoroughDifferenceModal from '@/components/Misc/BoroughDifferenceModal.vue';
 
 export default {
   name: 'DashboardReleaseInfoBox',
-  components: { FormsValidatedInput },
+  components: {
+    BoroughDifferenceModal,
+    FormsValidatedInput,
+  },
   props: {
     user: {
       type: Object,
@@ -79,15 +88,6 @@ export default {
     },
   },
   computed: {
-    boroughNames() {
-      return this.user.communities.reduce((acc, c) => {
-        if (c.parent) {
-          acc.push(c.parent.name);
-        }
-
-        return acc;
-      }, []).join(', ');
-    },
     hasBorough() {
       return this.user.communities.reduce((acc, c) => acc || !!c.parent, false);
     },
