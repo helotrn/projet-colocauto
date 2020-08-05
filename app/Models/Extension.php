@@ -60,6 +60,8 @@ class Extension extends Action
         ];
     }
 
+    public $computed = ['type'];
+
     public $readOnly = false;
 
     protected $fillable = [
@@ -71,5 +73,9 @@ class Extension extends Action
 
     public function loan() {
         return $this->belongsTo(Loan::class);
+    }
+
+    public function getTypeAttribute() {
+        return 'extension';
     }
 }

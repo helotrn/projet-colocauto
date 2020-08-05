@@ -11,11 +11,19 @@ class CustomValidationServiceProvider extends ServiceProvider
 {
     public function boot() {
         Validator::extend('available', function ($attribute, $value, $parameters, $validator) {
+            $validatorData = $validator->getData();
             [
                 'departure_at' => $departureAt,
-                'duration_in_minutes' => $durationInMinutes
-            ] = $validator->getData();
-            return Loanable::find($value)->isAvailable($departureAt, $durationInMinutes);
+                'duration_in_minutes' => $durationInMinutes,
+            ] = $validatorData;
+
+            $ignoreLoanIds = [];
+            if (isset($validatorData['id'])) {
+                $ignoreLoanIds = [$validatorData['id']];
+            }
+
+            return Loanable::find($value)
+                ->isAvailable($departureAt, $durationInMinutes, $ignoreLoanIds);
         });
 
         Validator::replacer('available', function () {

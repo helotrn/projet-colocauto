@@ -15,7 +15,7 @@ $factory->define(Bike::class, function (Faker $faker) {
         'model' => $faker->sentence,
         'bike_type' => $faker->randomElement(['regular', 'cargo','electric', 'fixed_wheel']),
         'size' => $faker->randomElement(['big' ,'medium', 'small', 'kid']),
-        'availability_ics' => $faker->sentence,
+        'availability_mode' => 'always',
         'owner_id' => 1,
     ];
 });

@@ -223,8 +223,11 @@ class Loanable extends BaseModel
             return false;
         }
 
-        $query = Loan::where('loanable_id', $this->id)
-            ->whereNotIn('loans.id', $ignoreLoanIds);
+        $query = Loan::where('loanable_id', $this->id);
+
+        if ($ignoreLoanIds) {
+            $query = $query->whereNotIn('loans.id', $ignoreLoanIds);
+        }
 
         $cDef = Loan::getColumnsDefinition();
         $query = $cDef['*']($query);

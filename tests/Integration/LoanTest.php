@@ -58,7 +58,12 @@ class LoanTest extends TestCase
 
     public function testUpdateLoans() {
         $borrower = factory(Borrower::class)->create(['user_id' => $this->user->id]);
-        $loan = factory(Loan::class)->create(['borrower_id' => $borrower->id]);
+        $owner = factory(Owner::class)->create(['user_id' => $this->user->id]);
+        $loanable = factory(Bike::class)->create(['owner_id' => $owner->id]);
+        $loan = factory(Loan::class)->create([
+            'borrower_id' => $borrower->id,
+            'loanable_id' => $loanable->id,
+        ]);
         $data = [
             'duration_in_minutes' => $this->faker->randomNumber($nbDigits = 4, $strict = false),
         ];
@@ -110,6 +115,8 @@ class LoanTest extends TestCase
         $loanable = factory(Bike::class)->create(['owner_id' => $owner->id]);
 
         $departure = new \Carbon\Carbon;
+        $departure->setSeconds(0);
+        $departure->setMilliseconds(0);
 
         $data = [
             'departure_at' => $departure->toDateTimeString(),
@@ -143,7 +150,7 @@ class LoanTest extends TestCase
 
         // 1 hour from 30 minutes later: overlap
         $response = $this->json('POST', '/api/v1/loans', array_merge($data, [
-            'departure_at' => $departure->add(30, 'minutes')->toDateTimeString(),
+            'departure_at' => $departure->copy()->add(30, 'minutes')->toDateTimeString(),
         ]));
 
         $response->assertStatus(422)
@@ -155,14 +162,14 @@ class LoanTest extends TestCase
 
         // 1 hour from 1 hour later: OK
         $response = $this->json('POST', '/api/v1/loans', array_merge($data, [
-            'departure_at' => $departure->add(60, 'minutes')->toDateTimeString(),
+            'departure_at' => $departure->copy()->add(60, 'minutes')->toDateTimeString(),
         ]));
 
         $response->assertStatus(201);
 
         // 1 hour from 30 minutes earlier: overlap
         $response = $this->json('POST', '/api/v1/loans', array_merge($data, [
-            'departure_at' => $departure->subtract(30, 'minutes')->toDateTimeString(),
+            'departure_at' => $departure->copy()->subtract(30, 'minutes')->toDateTimeString(),
         ]));
 
         $response->assertStatus(422)
@@ -174,7 +181,7 @@ class LoanTest extends TestCase
 
         // 30 minutes from 30 minutes earlier: OK
         $response = $this->json('POST', '/api/v1/loans', array_merge($data, [
-            'departure_at' => $departure->subtract(30, 'minutes')->toDateTimeString(),
+            'departure_at' => $departure->copy()->subtract(30, 'minutes')->toDateTimeString(),
             'duration_in_minutes' => 30,
         ]));
 
