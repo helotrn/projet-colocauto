@@ -3,11 +3,11 @@
     <h3>Ressources</h3>
 
     <ul class="dashboard-resources-list__resources">
-      <li class="dashboard-resources-list__resources__faq">
-        <router-link to="/faq">
-          <img src="/icons/faq.png">
+      <li class="dashboard-resources-list__resources__desjardins">
+        <router-link to="/assurances-desjardins">
+          <img src="/icons/assurances.png">
           <span>
-            Foire aux questions (FAQ)
+            Mon assurance
           </span>
         </router-link>
       </li>
@@ -20,10 +20,17 @@
           </span>
         </router-link>
       </li>
+    </ul>
 
-      <li class="dashboard-resources-list__resources__desjardins">
-        <router-link to="/assurances-desjardins">
-          <img src="/icons/desjardins-assurances.png">
+    <h3>Besoin d'aide?</h3>
+
+    <ul class="dashboard-resources-list__resources">
+      <li class="dashboard-resources-list__resources__faq">
+        <router-link to="/faq">
+          <img src="/icons/faq.png">
+          <span>
+            Foire aux questions (FAQ)
+          </span>
         </router-link>
       </li>
 
@@ -67,6 +74,10 @@
         </div>
       </li>
     </ul>
+
+    <p class="dashboard-resources-list__mailto text-center">
+      <a href="mailto:info@locomotion.app">Écrivez-nous!</a>
+    </p>
   </div>
 </template>
 
@@ -98,10 +109,23 @@ export default {
     font-weight: 600;
   }
 
+  &__mailto {
+    a {
+      color: $black;
+      text-decoration: underline;
+    }
+  }
+
   &__resources {
     list-style-type: none;
     padding: 0;
     margin: 0;
+
+    margin-bottom: 30px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
 
     li > a, li > div {
       color: $black;
@@ -119,13 +143,6 @@ export default {
       img {
         margin-right: 20px;
         flex: 0 0 58px;
-      }
-
-      &.dashboard-resources-list__resources__desjardins img {
-        margin-right: 0;
-        flex: 1 0 100%;
-        max-width: 300px;
-        max-height: 112px;
       }
 
       &.dashboard-resources-list__resources__messenger {
