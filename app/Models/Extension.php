@@ -8,7 +8,7 @@ class Extension extends Action
 {
     public static $rules = [
         'status' => 'required',
-        'new_duration' => 'required',//add validation
+        'new_duration' => 'required',
         'comments_on_extension' => 'required|string',
     ];
 

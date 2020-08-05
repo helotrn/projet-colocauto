@@ -104,7 +104,15 @@ Route::prefix('v1')->group(function () {
         Route::put('/pricings/{id}/evaluate', 'PricingController@evaluate')
           ->name('pricings.evaluate');
 
-        Route::get('/loanables/{id}/test', 'LoanableController@test');
+        Route::get('/loanables/{id}/test', 'LoanableController@test')
+            ->where('id', '[0-9]+');
+        Route::get(
+            '/loanables/{loanable_id}/loans/{loan_id}/next',
+            'LoanableController@retrieveNextLoan'
+        )
+            ->where('loanable_id', '[0-9]+')
+            ->where('loan_id', '[0-9]+');
+        RouteHelper::subresource('loanable', 'loan', null, ['create', 'update', 'destroy', 'restore']);
     });
 
     Route::get('/{any?}', 'StaticController@notFound')->where('any', '.*');

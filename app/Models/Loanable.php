@@ -323,10 +323,10 @@ class Loanable extends BaseModel
                         // ...or belonging to children communities that allow sharing with
                         // parent communities (share_with_parent_communities = true)
                         ->orWhereHas('community', function ($q) use ($communityIds) {
-                            $childrenCommunityIds = Community::childOf($communityIds->toArray());
+                            $childrenIds = Community::childOf($communityIds->toArray());
                             return $q->whereIn(
                                 'communities.id',
-                                $childrenCommunityIds->pluck('id')
+                                $childrenIds->pluck('id')
                             )->where('share_with_parent_communities', true);
                         })
                         // ...or belonging to owners of his accessible communities
@@ -346,10 +346,10 @@ class Loanable extends BaseModel
                                     }
                                 )
                                 ->orWhereHas('communities', function ($q) use ($communityIds) {
-                                    $childrenCommunityIds = Community::childOf($communityIds->toArray());
+                                    $childrenIds = Community::childOf($communityIds->toArray());
                                     return $q->whereIn(
                                         'communities.id',
-                                        $childrenCommunityIds->pluck('id')
+                                        $childrenIds->pluck('id')
                                     )->where('share_with_parent_communities', true);
                                 });
                             });

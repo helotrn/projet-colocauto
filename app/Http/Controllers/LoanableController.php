@@ -19,6 +19,7 @@ use App\Models\Car;
 use App\Models\Loan;
 use App\Models\Loanable;
 use App\Models\Pricing;
+use App\Repositories\LoanRepository;
 use App\Repositories\LoanableRepository;
 use Carbon\Carbon;
 use Excel;
@@ -31,18 +32,27 @@ class LoanableController extends RestController
     protected $carController;
     protected $trailerController;
 
+    protected $loanRepository;
+    protected $loanController;
+
     public function __construct(
         LoanableRepository $repository,
         Loanable $model,
         BikeController $bikeController,
         CarController $carController,
-        TrailerController $trailerController
+        TrailerController $trailerController,
+        LoanRepository $loanRepository,
+        LoanController $loanController
     ) {
         $this->repo = $repository;
         $this->model = $model;
+
         $this->bikeController = $bikeController;
         $this->carController = $carController;
         $this->trailerController = $trailerController;
+
+        $this->loanRepo = $loanRepository;
+        $this->loanController = $loanController;
     }
 
     public function create(Request $request) {
@@ -480,5 +490,30 @@ class LoanableController extends RestController
         }
 
         return $template;
+    }
+
+    public function indexLoans(Request $request, $id) {
+        $item = $this->repo->find($request->redirectAuth(), $id);
+
+        return $this->loanController->index($request->redirect(Request::class));
+    }
+
+    // WARN This bypasses "accessibleBy" checks on loans. Make sure
+    // that the transformers authorize the fields down the line.
+    public function retrieveNextLoan(Request $request, $loanableId, $loanId) {
+        $item = $this->repo->find($request, $loanableId);
+        $loan = $this->loanRepo->find($request, $loanId);
+
+        $nextLoan = $item->loans()
+            ->where('id', '!=', $loanId)
+            ->where('departure_at', '>=', new \DateTime)
+            ->orderBy('departure_at', 'asc')
+            ->first();
+
+        if (!$nextLoan) {
+            return abort(404);
+        }
+
+        return $this->respondWithItem($request, $nextLoan);
     }
 }

@@ -196,7 +196,7 @@ export default {
   mounted() {
     this.action.platform_tip = parseFloat(
       this.item.final_platform_tip || this.item.platform_tip,
-      10
+      10,
     );
   },
   components: {

@@ -55,6 +55,7 @@ class Loan extends BaseModel
     public static $transformer = LoanTransformer::class;
 
     public static $filterTypes = [
+        'departure_at' => 'date',
         'loanable.owner.user.full_name' => 'text',
         'borrower.user.full_name' => 'text',
         'incidents.status' => ['in_process', 'completed', 'canceled'],
