@@ -89,6 +89,11 @@
             :value="user.opt_in_newsletter"
             @input="updateOptInNewsletter" />
 
+          <p>
+            Vous pouvez changer d'avis à tout moment, en cliquant sur le lien "Me désinscrire",
+            présent dans tous les courriels que vous recevrez de notre part.
+          </p>
+
           <div class="text-center">
             <b-button type="reset" variant="warning">Retour</b-button>
           </div>
