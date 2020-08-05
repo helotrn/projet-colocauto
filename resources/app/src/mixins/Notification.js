@@ -2,7 +2,12 @@ import { mapState } from 'vuex';
 
 function displayNotifications(notifications) {
   notifications.forEach((notification) => {
-    this.$bvToast.toast(notification.content, {
+    const h = this.$createElement;
+    const vNodesMsg = h(
+      'div',
+      { domProps: { innerHTML: notification.content } }
+    );
+    this.$bvToast.toast([vNodesMsg], {
       solid: true,
       title: notification.title,
       toaster: 'b-toaster-top-right',
