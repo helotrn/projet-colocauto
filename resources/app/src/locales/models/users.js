@@ -6,8 +6,7 @@ import paymentMethods from './paymentMethods';
 export default {
   fr: {
     descriptions: {
-      description: 'Vos voisin-e-s ne vous connaissent pas encore! En quelques mots, dites-nous '
-        + "qui vous êtes, on l'affichera sur votre profil. :-)",
+      description: 'Décrivez-vous en quelques mots. Ce sera affiché sur votre profil LocoMotion.',
       avatar: 'Ajoutez une photo de profil. On vous encourage à vous montrer la binette! '
         + 'Ça aide à se faire confiance et à mieux profiter des avantages du partage.',
     },
