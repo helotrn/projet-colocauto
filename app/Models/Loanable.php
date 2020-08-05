@@ -203,7 +203,7 @@ class Loanable extends BaseModel
         return $this->hasMany(Loan::class);
     }
 
-    public function isAvailable($departureAt, $durationInMinutes) {
+    public function isAvailable($departureAt, $durationInMinutes, $ignoreLoanIds = []) {
         $ical = new \ICal\ICal([ 0 => [$this->availability_ics] ], [
             'defaultTimeZone' => 'America/Toronto',
             'defaultWeekStart' => 'SU',
@@ -223,7 +223,8 @@ class Loanable extends BaseModel
             return false;
         }
 
-        $query = Loan::where('loanable_id', $this->id);
+        $query = Loan::where('loanable_id', $this->id)
+            ->whereNotIn('loans.id', $ignoreLoanIds);
 
         $cDef = Loan::getColumnsDefinition();
         $query = $cDef['*']($query);

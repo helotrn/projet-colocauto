@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\Loan;
 use App\Models\Loanable;
 use Illuminate\Support\ServiceProvider;
 use Validator;
@@ -18,6 +19,18 @@ class CustomValidationServiceProvider extends ServiceProvider
         });
 
         Validator::replacer('available', function () {
+            return "Le véhicule n'est pas disponible sur cette période.";
+        });
+
+        Validator::extend('extendable', function ($attribute, $value, $parameters, $validator) {
+            [
+                'new_duration' => $newDuration,
+            ] = $validator->getData();
+            $loan = Loan::find($value);
+            return $loan->loanable->isAvailable($loan->departure_at, $newDuration, [$loan->id]);
+        });
+
+        Validator::replacer('extendable', function () {
             return "Le véhicule n'est pas disponible sur cette période.";
         });
     }

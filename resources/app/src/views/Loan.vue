@@ -109,7 +109,7 @@ export default {
         const indexOfHandover = this.item.actions.indexOf(handover);
         this.item.actions.splice(indexOfHandover, 0, {
           status: 'in_process',
-          new_duration: this.item.duration_in_minutes,
+          new_duration: this.item.actual_duration_in_minutes,
           comments_on_extension: '',
           type: 'extension',
           loan_id: this.item.id,

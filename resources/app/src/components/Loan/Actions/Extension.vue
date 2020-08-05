@@ -4,7 +4,7 @@
     <b-card-header header-tag="header" role="tab" class="loan-actions__header"
       v-b-toggle="`loan-actions-extension-${action.id || 'new'}`">
       <b-row>
-        <b-col lg="4">
+        <b-col>
           <h2>
             <svg-waiting v-if="action.status === 'in_process'" />
             <svg-check v-else-if="action.status === 'completed'" />
@@ -22,7 +22,7 @@
           </span>
         </b-col>
 
-        <b-col lg="8">
+        <b-col lg="8" v-if="!item.status === 'completed'">
           <loan-next-date :loanable-id="item.loanable.id" :loan-id="item.id" />
         </b-col>
       </b-row>

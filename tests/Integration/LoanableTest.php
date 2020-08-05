@@ -36,6 +36,7 @@ class LoanableTest extends TestCase
             'departure_at' => $departure->add(2, 'hour')->toDateTimeString(),
         ]));
         $response->assertStatus(201);
+        $nextNextLoanId = $response->json()['id'];
 
         $response = $this->json('POST', '/api/v1/loans', array_merge($data, [
             'departure_at' => $departure->subtract(4, 'hour')->toDateTimeString(),
@@ -48,7 +49,7 @@ class LoanableTest extends TestCase
             'departure_at' => $now->format('Y-m-d H:i:s') . ':',
             'per_page' => 1,
         ]);
-        $response->dump()->assertStatus(200)
+        $response->assertStatus(200)
             ->assertJson([ 'data' => [
                 [
                     'id' => $nextLoanId,
@@ -56,10 +57,10 @@ class LoanableTest extends TestCase
             ]]);
 
         // Shortcut request
-        $response = $this->json('GET', "/api/v1/loanables/{$loanable->id}/loans/next");
+        $response = $this->json('GET', "/api/v1/loanables/{$loanable->id}/loans/{$nextLoanId}/next");
         $response->assertStatus(200)
             ->assertJson([
-                'id' => $nextLoanId,
+                'id' => $nextNextLoanId,
             ]);
     }
 }
