@@ -1,22 +1,30 @@
 <template>
   <b-card no-body class="loan-form loan-actions loan-actions-extension"
     :id="`loan-extension-${action.id || 'new'}`">
-    <b-card-header header-tag="header" role="tab" class="loan-actions__header">
-      <h2 v-b-toggle="`loan-actions-extension-${action.id || 'new'}`">
-        <svg-waiting v-if="action.status === 'in_process'" />
-        <svg-check v-else-if="action.status === 'completed'" />
-        <svg-danger v-else-if="action.status === 'canceled'" />
+    <b-card-header header-tag="header" role="tab" class="loan-actions__header"
+      v-b-toggle="`loan-actions-extension-${action.id || 'new'}`">
+      <b-row>
+        <b-col lg="4">
+          <h2>
+            <svg-waiting v-if="action.status === 'in_process'" />
+            <svg-check v-else-if="action.status === 'completed'" />
+            <svg-danger v-else-if="action.status === 'canceled'" />
 
-        Retard
-      </h2>
+            Retard
+          </h2>
 
-      <span v-if="action.status == 'in_process'">En attente</span>
-      <span v-else-if="action.status === 'completed'">
-        Validé &bull; {{ action.executed_at | datetime }}
-      </span>
-      <span v-else-if="action.status === 'canceled'">
-        Contesté &bull; {{ action.executed_at | datetime }}
-      </span>
+          <span v-if="action.status == 'in_process'">En attente</span>
+          <span v-else-if="action.status === 'completed'">
+            Validé &bull; {{ action.executed_at | datetime }}
+          </span>
+          <span v-else-if="action.status === 'canceled'">
+            Contesté &bull; {{ action.executed_at | datetime }}
+          </span>
+        </b-col>
+
+        <b-col lg="8">
+        </b-col>
+      </b-row>
     </b-card-header>
 
 
@@ -39,8 +47,6 @@
         </div>
 
         <div v-else-if="userRole === 'borrower'">
-          <loan-next-date :loanable-id="item.loanable.id" />
-
           <div v-if="!action.id">
             <p>
               Indiquez une nouvelle heure de retour et laissez un message.
@@ -83,7 +89,7 @@
           <div v-else-if="!action.executed_at" class="text-center">
             <p>Demande d'extension jusqu'au {{ returnAt | datetime }}.</p>
             <p>Contactez le propriétaire pour qu'il confirme votre demande.</p>
-            <p>{{ item.loanable.owner.user.phone }}</p>
+            <p v-if="item.loanable.owner">{{ item.loanable.owner.user.phone | phone }}</p>
           </div>
         </div>
 

@@ -122,7 +122,7 @@
             </b-row>
 
             <b-row>
-              <b-col xl="6">
+              <b-col>
                 <forms-validated-input name="reason"
                   :disabled="!!item.id"
                   :label="$t('fields.reason') | capitalize"

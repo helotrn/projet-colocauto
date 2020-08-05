@@ -89,10 +89,10 @@
                 </b-row>
 
                 <b-row v-else>
-                  <b-col>
+                  <b-col v-if="action.image">
                     <p>
                       <a href="#" v-b-modal="'handover-collective-image'">
-                        <img :src="action.image ? action.image.sizes.thumbnail : ''">
+                        <img :src="action.image.sizes.thumbnail">
                       </a>
                     </p>
 
