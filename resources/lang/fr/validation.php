@@ -106,6 +106,13 @@ return [
     'url'         => "Le format de l'URL de :attribute n'est pas valide.",
     'uuid'        => 'Le champ :attribute doit être un UUID valide',
 
+    'custom' => [
+        'accept_conditions' => [
+            'accepted' => 'Vous devez accepter les <a href="/conditions">conditions '
+                . 'd\'utilisation</a> dans votre <a href="/profil">profil LocoMotion</a>.',
+        ],
+    ],
+
     'attributes' => [
         'name'                  => 'nom',
         'username'              => "nom d'utilisateur",
