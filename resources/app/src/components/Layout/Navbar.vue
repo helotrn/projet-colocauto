@@ -41,7 +41,7 @@
           <span class="nav-link__icon d-lg-none">
             <svg-location />
           </span>
-          <span class="nav-link__text">Trouver un véhicule</span>
+          <span class="nav-link__text">Réserver un véhicule</span>
         </b-nav-item>
 
         <b-nav-item to="/community" v-if="!isGlobalAdmin && hasCommunity">

@@ -113,7 +113,7 @@ export default {
       },
       make_reservation: {
         title: 'Faire une réservation',
-        content: '<p>En partant du tableau de bord, cliquez sur “Trouver un véhicule”. Arrivé'
+        content: '<p>En partant du tableau de bord, cliquez sur “Réserver un véhicule”. Arrivé'
         + ' sur la carte du quartier, assurez-vous de bien entrer le moment où vous aimeriez'
         + ' réserver. Vous pourrez ensuite voir sur la carte les autos ou les vélos'
         + ' disponibles dans votre coin pour la période de temps donnée. En cliquant sur'

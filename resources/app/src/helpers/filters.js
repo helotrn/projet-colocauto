@@ -51,7 +51,7 @@ const phone = (value) => {
   }
 
   return '';
-}
+};
 
 const time = (value) => {
   if (!value) {

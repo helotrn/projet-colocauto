@@ -5,7 +5,7 @@ function displayNotifications(notifications) {
     const h = this.$createElement;
     const vNodesMsg = h(
       'div',
-      { domProps: { innerHTML: notification.content } }
+      { domProps: { innerHTML: notification.content } },
     );
     this.$bvToast.toast([vNodesMsg], {
       solid: true,
