@@ -16,7 +16,7 @@ add('writable_dirs', []);
 
 host('production')
     ->hostname('vps.locomotion.app')
-    ->branch('production')
+    ->set('branch', 'production')
     ->stage('production')
     ->user('locomotion')
     ->set('deploy_path', '/var/www/locomotion.app');
