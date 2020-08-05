@@ -46,6 +46,7 @@ import Authenticated from '@/mixins/Authenticated';
 import DataRouteGuards from '@/mixins/DataRouteGuards';
 import ListMixin from '@/mixins/ListMixin';
 
+import { extractErrors } from '@/helpers';
 import locales from '@/locales';
 
 export default {
@@ -77,14 +78,33 @@ export default {
   },
   methods: {
     async createOwnerProfile() {
-      await this.$store.dispatch('users/update', {
-        id: this.user.id,
-        data: {
+      try {
+        await this.$store.dispatch('users/update', {
           id: this.user.id,
-          owner: {},
-        },
-        params: {},
-      });
+          data: {
+            id: this.user.id,
+            owner: {},
+          },
+          params: {},
+        });
+      } catch (e) {
+        if (e.request) {
+          switch (e.request.status) {
+            case 422:
+              this.$store.commit('addNotification', {
+                content: extractErrors(e.response.data).join(', '),
+                title: 'Erreur de validation',
+                variant: 'danger',
+                type: 'profile-loanables',
+              });
+              break;
+            default:
+              throw e;
+          }
+        } else {
+          throw e;
+        }
+      }
       await this.$store.dispatch('loadUser');
     },
   },
