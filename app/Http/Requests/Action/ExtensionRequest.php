@@ -19,7 +19,8 @@ class ExtensionRequest extends BaseRequest
             return true;
         }
 
-        if ($user->owner && $user->owner->id === $loan->loanable->owner->id) {
+        if ($loan->loanable->owner && $user->owner &&
+            $user->owner->id === $loan->loanable->owner->id) {
             return true;
         }
 
