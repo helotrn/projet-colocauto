@@ -2,7 +2,7 @@
   <div class="dashboard-release-info-box">
     <b-alert variant="success" :show="!hasSeenVersion('1.1.0', '2020-08-24')"
       class="dashboard-release-info-box_changeset">
-      <h2>LocoMotion évolue &emdash; 24 août 2020</h2>
+      <h2>LocoMotion évolue &mdash; 24 août 2020</h2>
 
       <p>
         En plus de la refonte de la page Voisinage,vous pouvez maintenant partager votre auto ou
