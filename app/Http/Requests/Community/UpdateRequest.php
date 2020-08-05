@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Community;
 
 use App\Http\Requests\BaseRequest;
+use App\Models\Community;
 use App\Models\Pricing;
 use App\Rules\CommunityPricingRule;
 
@@ -14,9 +15,17 @@ class UpdateRequest extends BaseRequest
     }
 
     public function rules() {
+        $parentIds = Community::parentOf($this->get('id'))->pluck('id')->toArray();
+        $childIds = Community::childOf($this->get('id'))->pluck('id')->toArray();
+
+        $ids = array_merge($parentIds, $childIds, [$this->get('id')]);
+
         $rules = [
             'pricings' => [
                 new CommunityPricingRule,
+            ],
+            'parent_id' => [
+                'not_in:' . implode(',', $ids),
             ],
         ];
 
@@ -27,6 +36,8 @@ class UpdateRequest extends BaseRequest
     }
 
     public function messages() {
-        return [];
+        return [
+            'parent_id.not_in' => "L'association à ce parent crée une boucle.",
+        ];
     }
 }

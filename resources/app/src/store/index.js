@@ -31,8 +31,6 @@ import Register from './pages/register';
 import RegisterIntent from './pages/register/intent';
 import RegisterMap from './pages/register/map';
 
-import ProfileLoanable from './pages/profile/loanable';
-
 const vuexPersist = new VuexPersist({
   key: 'locomotion',
   storage: window.localStorage,
@@ -72,6 +70,7 @@ const loadUserFields = [
   'avatar.*',
   'borrower.*',
   'communities.*',
+  'communities.parent.*',
   'loanables.*',
   '!loanables.events',
   'loanables.image.*',
@@ -234,7 +233,6 @@ export default new Vuex.Store({
     padlocks,
     password: passwordModule,
     paymentMethods,
-    'profile.loanable': ProfileLoanable,
     register: Register,
     'register.intent': RegisterIntent,
     'register.map': RegisterMap,

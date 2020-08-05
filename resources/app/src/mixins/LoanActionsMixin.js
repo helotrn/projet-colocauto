@@ -15,7 +15,7 @@ export default {
       type: Object,
       required: true,
     },
-    loan: {
+    item: {
       type: Object,
       required: true,
     },
@@ -31,7 +31,7 @@ export default {
   },
   computed: {
     borrower() {
-      return this.loan.borrower;
+      return this.item.borrower;
     },
     borrowerAvatar() {
       const { avatar } = this.borrower.user;
@@ -47,7 +47,7 @@ export default {
         && !!this.owner;
     },
     owner() {
-      return this.loan.loanable.owner;
+      return this.item.loanable.owner;
     },
     ownerAvatar() {
       if (!this.owner) {
@@ -70,9 +70,9 @@ export default {
     },
   },
   methods: {
-    abortAction(action) {
-      if (!action.id) {
-        this.$emit('aborted');
+    abortAction() {
+      if (!this.action.id) {
+        this.$emit('aborted', this.action);
       }
     },
     async createAction() {

@@ -16,6 +16,7 @@ add('writable_dirs', []);
 
 host('production')
     ->hostname('vps.locomotion.app')
+    ->branch('production')
     ->stage('production')
     ->user('locomotion')
     ->set('deploy_path', '/var/www/locomotion.app');
@@ -23,11 +24,6 @@ host('production')
 host('staging')
     ->hostname('vps.locomotion.app')
     ->stage('staging')
-    ->user('locomotion')
-    ->set('deploy_path', '/var/www/staging.locomotion.app');
-
-host('demo.locomotion.app')
-    ->stage('demo')
     ->user('locomotion')
     ->set('deploy_path', '/var/www/staging.locomotion.app');
 

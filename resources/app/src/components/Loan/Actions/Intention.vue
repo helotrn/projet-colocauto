@@ -30,16 +30,16 @@
           <p v-if="userRole === 'owner'">
             {{ borrower.user.name }} veut vous emprunter {{ loanablePrettyName }}.
           </p>
-          <p v-else-if="loan.loanable.owner">
-            Vous avez demandé à {{ loan.loanable.owner.user.name }} de lui
+          <p v-else-if="item.loanable.owner">
+            Vous avez demandé à {{ item.loanable.owner.user.name }} de lui
             emprunter {{ loanablePrettyName }}.
           </p>
 
           <label>Raison de l'emprunt</label>
-          <p>{{ loan.reason }}</p>
+          <p>{{ item.reason }}</p>
 
-          <blockquote v-if="loan.message_for_owner">
-            {{ loan.message_for_owner }}
+          <blockquote v-if="item.message_for_owner">
+            {{ item.message_for_owner }}
             <div class="user-avatar" :style="{ backgroundImage: borrowerAvatar }" />
           </blockquote>
 
@@ -74,9 +74,9 @@
               </b-button>
             </div>
           </div>
-          <div v-else-if="loan.loanable.owner" class="text-center">
+          <div v-else-if="item.loanable.owner" class="text-center">
             <p>Contactez le propriétaire pour qu'il confirme votre demande.</p>
-            <p>{{ loan.loanable.owner.user.phone }}</p>
+            <p>{{ item.loanable.owner.user.phone }}</p>
           </div>
         </div>
       </b-collapse>
@@ -100,7 +100,7 @@ export default {
       let article;
       let type;
 
-      switch (this.loan.loanable.type) {
+      switch (this.item.loanable.type) {
         case 'car':
           article = 'sa';
           type = 'voiture';

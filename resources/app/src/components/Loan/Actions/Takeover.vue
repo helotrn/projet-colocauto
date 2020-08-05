@@ -1,7 +1,8 @@
 <template>
   <b-card no-body class="loan-form loan-actions loan-actions-takeover">
-    <b-card-header header-tag="header" role="tab" class="loan-actions__header">
-      <h2 v-b-toggle.loan-actions-takeover>
+    <b-card-header header-tag="header" role="tab" class="loan-actions__header"
+      v-b-toggle.loan-actions-takeover>
+      <h2>
         <svg-waiting v-if="action.status === 'in_process'" />
         <svg-check v-else-if="action.status === 'completed'" />
         <svg-danger v-else-if="action.status === 'canceled'" />
@@ -52,7 +53,7 @@
           </b-col>
         </b-row>
 
-        <div v-if="loan.loanable.type === 'car'">
+        <div v-if="item.loanable.type === 'car'">
           <validation-observer ref="observer" v-slot="{ passes }">
             <b-row v-if="userRole === 'borrower'">
               <b-col>
@@ -116,7 +117,7 @@
           </validation-observer>
         </div>
 
-        <div v-else-if="loan.loanable.has_padlock">
+        <div v-else-if="item.loanable.has_padlock">
           <p>
             Le cadenas du véhicule sera automatiquement associé à votre application NOKE
             à temps pour la prise de possession.
@@ -246,7 +247,7 @@ import FormsValidatedInput from '@/components/Forms/ValidatedInput.vue';
 import LoanActionsMixin from '@/mixins/LoanActionsMixin';
 
 export default {
-  name: 'LoanActionsPrePayment',
+  name: 'LoanActionsTakeover',
   mixins: [LoanActionsMixin],
   components: {
     FormsImageUploader,

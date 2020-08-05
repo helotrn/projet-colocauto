@@ -8,8 +8,9 @@ class Extension extends Action
 {
     public static $rules = [
         'status' => 'required',
-        'new_duration' => 'required',//add validation
+        'new_duration' => 'required',
         'comments_on_extension' => 'required|string',
+        'loan_id' => 'extendable',
     ];
 
     public static function boot() {
@@ -18,6 +19,13 @@ class Extension extends Action
         self::saved(function ($model) {
             if (!$model->executed_at) {
                 switch ($model->status) {
+                    case 'in_process':
+                        if ($model->loan && !$model->loan->loanable->owner) {
+                            $model->status = 'completed';
+                            $model->executed_at = Carbon::now();
+                            $model->save();
+                        }
+                        break;
                     case 'completed':
                         $loanId = $model->loan->id;
 
@@ -52,15 +60,22 @@ class Extension extends Action
         ];
     }
 
+    public $computed = ['type'];
+
     public $readOnly = false;
 
     protected $fillable = [
-        'status',
-        'new_duration',
         'comments_on_extension',
+        'loan_id',
+        'new_duration',
+        'status',
     ];
 
     public function loan() {
         return $this->belongsTo(Loan::class);
+    }
+
+    public function getTypeAttribute() {
+        return 'extension';
     }
 }

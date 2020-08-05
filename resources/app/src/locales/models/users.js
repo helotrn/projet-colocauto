@@ -6,11 +6,13 @@ import paymentMethods from './paymentMethods';
 export default {
   fr: {
     descriptions: {
-      description: 'De quoi aimeriez-vous discuter avec vos voisins et voisines? En quelques'
-        + 'mots, dites-nous qui vous êtes ou nommez une activité à faire dans votre quartier. '
-        + 'On l\'affichera sur votre profil. :-)',
+      description: 'Vos voisin-e-s ne vous connaissent pas encore! En quelques mots, dites-nous '
+        + "qui vous êtes, on l'affichera sur votre profil. :-)",
+      avatar: 'Ajoutez une photo de profil. On vous encourage à vous montrer la binette! '
+        + 'Ça aide à se faire confiance et à mieux profiter des avantages du partage.',
     },
     fields: {
+      accept_conditions: "j'accepte les conditions générales d'utilisation",
       address: 'adresse',
       avatar: 'image de profil',
       communities: prefixFields(communities.fr.fields, '(Communauté)'),
@@ -23,6 +25,7 @@ export default {
       is_smart_phone: 'téléphone intelligent?',
       last_name: 'nom',
       name: 'prénom',
+      opt_in_newsletter: "j'accepte de recevoir les communications de LocoMotion (Solon) par courriel",
       other_phone: 'autre numéro de téléphone',
       phone: 'téléphone',
       postal_code: 'code postal',

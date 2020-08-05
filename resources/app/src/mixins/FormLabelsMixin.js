@@ -1,14 +1,14 @@
 export default {
   methods: {
-    placeholderOrLabel(key) {
-      if (this.$i18n.te(`placeholders.${key}`)) {
+    placeholderOrLabel(key, prefix) {
+      if (this.$i18n.te(`${prefix ? `${prefix}.` : ''}placeholders.${key}`)) {
         return this.$i18n.t(`placeholders.${key}`);
       }
 
-      return this.label(key);
+      return this.label(key, prefix);
     },
-    label(key) {
-      return this.$i18n.t(`fields.${key}`);
+    label(key, prefix) {
+      return this.$i18n.t(`${prefix ? `${prefix}.` : ''}fields.${key}`);
     },
   },
 };

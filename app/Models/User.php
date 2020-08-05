@@ -26,11 +26,12 @@ class User extends AuthenticatableBaseModel
     use HasApiTokens, Notifiable, SoftDeletes;
 
     public static $rules = [
+        'accept_conditions' => ['accepted'],
         'address' => ['nullable'],
         'date_of_birth' => [
             'nullable',
             'date',
-            'before:today'
+            'before:18 years ago',
         ],
         'description' => 'nullable',
         'email' => 'email',
@@ -116,6 +117,7 @@ class User extends AuthenticatableBaseModel
     public static $sizesByField = [];
 
     protected $fillable = [
+        'accept_conditions',
         'name',
         'last_name',
         'description',
@@ -124,14 +126,17 @@ class User extends AuthenticatableBaseModel
         'postal_code',
         'phone',
         'is_smart_phone',
+        'opt_in_newsletter',
         'other_phone',
     ];
 
     protected $hidden = ['password', 'current_bill'];
 
     protected $casts = [
+        'accept_conditions' => 'boolean',
         'balance' => 'decimal:2',
         'email_verified_at' => 'datetime',
+        'opt_in_newsletter' => 'boolean',
     ];
 
     protected $with = [];

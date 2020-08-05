@@ -41,7 +41,7 @@ export default {
         data: {
           communities: {
             retrieve: {
-              fields: 'id,name,type',
+              fields: 'id,name,type,parent.id,parent.name',
               for: 'edit',
             },
           },
@@ -60,6 +60,7 @@ export default {
           fields: [
             '*',
             'pricings.*',
+            'parent.*',
           ].join(','),
           for: 'edit',
         },
@@ -114,7 +115,9 @@ export default {
         auth: true,
         slug: 'loanables',
         params: {
-          fields: '*,owner.user.full_name,community.name,padlock.name,report.*',
+          fields: '*,owner.user.full_name,owner.user.communities.name,'
+            + 'owner.user.communities.parent.name,community.name,'
+            + 'community.parent.name,padlock.name,report.*',
         },
         title: 'titles.loanable',
       },

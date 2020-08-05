@@ -1,7 +1,8 @@
 <template>
   <b-card no-body class="loan-form loan-actions loan-actions-pre_payment">
-    <b-card-header header-tag="header" role="tab" class="loan-actions__header">
-      <h2 v-b-toggle.loan-actions-pre_payment>
+    <b-card-header header-tag="header" role="tab" class="loan-actions__header"
+      v-b-toggle.loan-actions-pre_payment>
+      <h2>
         <svg-waiting v-if="action.status === 'in_process'" />
         <svg-check v-else-if="action.status === 'completed'" />
         <svg-danger v-else-if="action.status === 'canceled'" />
@@ -26,7 +27,7 @@
           v-if="!action.executed_at">
           <div v-if="userRole === 'owner'">
             <p>
-              {{ loan.borrower.user.name }} doit ajouter des crédits à son compte.
+              {{ item.borrower.user.name }} doit ajouter des crédits à son compte.
             </p>
           </div>
           <div v-else>
@@ -39,7 +40,7 @@
               :user="user" @bought="completeAction" />
 
             <div class="loan-actions-intention__buttons text-center"
-              v-if="user.balance >= (loan.estimated_price + loan.estimated_insurance)">
+              v-if="user.balance >= (item.estimated_price + item.estimated_insurance)">
               <p>Ou compléter cette étape sans plus attendre.</p>
 
               <b-button size="sm" variant="success" class="mr-3" @click="completeAction">
@@ -74,9 +75,9 @@ export default {
   },
   computed: {
     minimumRequired() {
-      return parseFloat(this.loan.estimated_price)
-        + parseFloat(this.loan.estimated_insurance)
-        + parseFloat(this.loan.platform_tip);
+      return parseFloat(this.item.estimated_price, 10)
+        + parseFloat(this.item.estimated_insurance, 10)
+        + parseFloat(this.item.platform_tip, 10);
     },
   },
 };

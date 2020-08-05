@@ -47,6 +47,7 @@ class Loan extends BaseModel
             'present',
             'min:0',
         ],
+        'loanable_id' => 'available',
         'message_for_owner' => [ 'present' ],
         'reason' => [ 'required' ],
     ];
@@ -54,6 +55,7 @@ class Loan extends BaseModel
     public static $transformer = LoanTransformer::class;
 
     public static $filterTypes = [
+        'departure_at' => 'date',
         'loanable.owner.user.full_name' => 'text',
         'borrower.user.full_name' => 'text',
         'incidents.status' => ['in_process', 'completed', 'canceled'],
@@ -85,7 +87,10 @@ class Loan extends BaseModel
         parent::boot();
 
         self::saved(function ($model) {
-            if ($model->loanable && !$model->intention) {
+            if ($model->loanable
+                // Check existence on database because the model is
+                // not updated automatically in the request lifecycle
+                && !$model->intention()->first()) {
                 $intention = new Intention();
                 $intention->loan()->associate($model);
                 $intention->save();
@@ -138,11 +143,13 @@ class Loan extends BaseModel
     ];
 
     protected $fillable = [
+        'borrower_id',
         'departure_at',
         'duration_in_minutes',
         'estimated_distance',
         'estimated_insurance',
         'estimated_price',
+        'loanable_id',
         'platform_tip',
         'message_for_owner',
         'reason',
@@ -155,6 +162,7 @@ class Loan extends BaseModel
       'calendar_days',
       'canceled_at',
       'total_final_cost',
+      'total_estimated_cost',
     ];
 
     public $items = [

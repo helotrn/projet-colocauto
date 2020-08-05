@@ -22,9 +22,11 @@
       <b-col>
         <div class="community-proof-form__instructions">
           <p>
-            Merci de nous fournir un document avec votre nom et votre adresse.
-            Ça peut être: relevé de compte, un bail ou votre permis de conduire.
+            Merci de nous fournir un document avec votre nom et votre adresse émis par une
+            institution officielle. Ça peut être par ex.: facture d'Hydro-Québec, permis de
+            conduire, relevé bancaire, relevé de notes officiel.
           </p>
+
           <p>
             Soit en document numérisé ou simplement une photo prise avec votre téléphone.
           </p>

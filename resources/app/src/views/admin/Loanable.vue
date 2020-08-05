@@ -16,7 +16,21 @@
             <div class="form__section">
               <h2>Informations</h2>
 
-              <forms-builder :definition="form.general" v-model="item" entity="loanables" />
+              <forms-builder :definition="form.general" v-model="item" entity="loanables">
+                <template v-slot:share_with_parent_communities="{ def, item, property }">
+                  <forms-validated-input v-if="hasBoroughs"
+                    :description="$t(`descriptions.${property}`)"
+                    :label="$t(
+                      `fields.${property}_dynamic`,
+                      {
+                        shared_with: loanableBoroughsMessage,
+                      }
+                    ) | capitalize"
+                    :name="property" :rules="def.rules" :type="def.type"
+                    :options="def.options" :disabled="def.disabled"
+                    v-model="item[property]" />
+                </template>
+              </forms-builder>
             </div>
 
             <div class="form__section" v-if="item.type === 'bike'">
@@ -66,6 +80,7 @@
 </template>
 
 <script>
+import FormsValidatedInput from '@/components/Forms/ValidatedInput.vue';
 import FormsBuilder from '@/components/Forms/Builder.vue';
 import LoanableAvailabilityCalendar from '@/components/Loanable/AvailabilityCalendar.vue';
 
@@ -80,6 +95,7 @@ export default {
   mixins: [FormMixin],
   components: {
     FormsBuilder,
+    FormsValidatedInput,
     LoanableAvailabilityCalendar,
   },
   computed: {
@@ -95,6 +111,32 @@ export default {
       }
 
       return parts.reverse().join(' | ');
+    },
+    hasBoroughs() {
+      return this.loanableBoroughs.length > 0;
+    },
+    loanableBoroughs() {
+      if (this.item.community) {
+        if (this.item.community.parent) {
+          return [this.item.community.parent];
+        }
+
+        return [];
+      }
+
+      if (this.item.owner) {
+        return this.item.owner.user.communities
+          .filter(c => !!c.parent)
+          .map(c => c.parent);
+      }
+
+      return [];
+    },
+    loanableBoroughsMessage() {
+      return this.loanableBoroughs
+        .map(b => b.name)
+        .filter((item, i, arr) => arr.indexOf(item) === i)
+        .join(', ');
     },
     pageTitle() {
       return this.item.name || capitalize(this.$i18n.tc('véhicule', 1));

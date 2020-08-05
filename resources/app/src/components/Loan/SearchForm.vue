@@ -4,16 +4,16 @@
       <b-form :novalidate="true" class="form loan-search-form__form"
         @submit.stop.prevent="passes(submit)" @reset.stop.prevent="$emit('reset')">
         <div v-if="form">
-          <div v-if="loan.departure_at">
+          <div v-if="item.departure_at">
             <forms-validated-input name="departure_at"
               :label="$t('fields.departure_at') | capitalize"
               :rules="form.departure_at.rules" type="datetime"
               :disabled-dates="disabledDatesInThePast" :disabled-times="disabledTimesInThePast"
               :placeholder="placeholderOrLabel('departure_at') | capitalize"
-              v-model="loan.departure_at" />
+              v-model="item.departure_at" />
           </div>
 
-          <div v-if="loan.departure_at">
+          <div v-if="item.departure_at">
             <forms-validated-input name="return_at"
               :label="$t('fields.return_at') | capitalize"
               :rules="form.departure_at.rules" type="datetime"
@@ -33,7 +33,7 @@
             :label="$t('fields.estimated_distance') | capitalize"
             type="number" :min="10" :max="1000"
             :placeholder="placeholderOrLabel('estimated_distance') | capitalize"
-            v-model="loan.estimated_distance" />
+            v-model="item.estimated_distance" />
 
           <div class="form__buttons">
             <b-button size="sm" type="submit" variant="primary" class="mr-2 mb-2">
@@ -86,7 +86,7 @@ export default {
     },
   },
   watch: {
-    loan: {
+    item: {
       deep: true,
       handler() {
         this.$emit('changed');

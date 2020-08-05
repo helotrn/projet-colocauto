@@ -11,15 +11,19 @@
           {{ $t('car_borrower_intent') }}
         </b-form-checkbox>
 
-        <b-collapse role="tabpanel" v-model="carBorrowerIntent">
+        <b-collapse role="tabpanel" v-model="carBorrowerIntent"
+          class="register-intent-form__form__car_borrower_intent">
           <div class="register-intent-form__form__car_borrower_intent__text">
             <p>
-              Pour utiliser l'auto d'une personne du voisinage, vous devez compléter
-              <span class="no-break">« vos dossiers »</span> en y ajoutant les documents
-              relatifs à votre conduite automobile. Si vous ne les avez pas sous la main,
-              pas de panique! Commandez-les dès maintenant. D'ici à ce que vous les recevez,
-              vous pouvez toujours utiliser les vélos et remorques à vélo.
+              Pour utiliser l'auto d'un-e voisin-e, vous devez compléter votre dossier de
+              conduite avec les informations ci-dessous.
             </p>
+          </div>
+
+          <borrower-form v-if="borrower" :borrower="borrower" :loading="loading" hide-buttons />
+
+          <div class="register-intent-form__form__car_borrower_intent__text">
+            <p>Vous ne les avez pas sous la main  ? Pas de soucis.</p>
 
             <ul>
               <li>
@@ -36,8 +40,18 @@
                 Référez-vous à votre assurance pour retrouver votre contrat.
               </li>
             </ul>
+
+            <p>
+              Certains de ces documents doivent être commandés. Commandez-les dès
+              maintenant. Vous pourrez compléter votre dossier de conduite plus tard,
+              via "Mon profil".
+            </p>
+
+            <p><strong>
+              D'ici là, vous pourrez déjà utiliser les vélos et remorques à vélo.
+            </strong></p>
           </div>
-          <borrower-form v-if="borrower" :borrower="borrower" :loading="loading" hide-buttons />
+
         </b-collapse>
       </div>
 
@@ -50,10 +64,11 @@
           {{ $t('owner-intent') }}
         </b-form-checkbox>
 
-        <b-collapse id="owner-intent-section" role="tabpanel" v-model="ownerIntent">
-          <div class="register-intent-form__owner__text">
+        <b-collapse id="owner-intent-section" role="tabpanel" v-model="ownerIntent"
+          class="register-intent-form__form__owner_intent">
+          <div class="register-intent-form__form__owner_intent__text">
             <p>
-              Ça fera le bonheur de votre voisinage, c'est génial!
+              Ça fera le bonheur de vos voisin-e-s, c’est génial!
               Rendez-vous sur le tableau de bord pour ajouter votre véhicule.
             </p>
           </div>
@@ -69,8 +84,9 @@
           {{ $t('other-intent') }}
         </b-form-checkbox>
 
-        <b-collapse id="other-intent-section" role="tabpanel" v-model="otherIntent">
-          <div class="register-intent-form__other__text">
+        <b-collapse id="other-intent-section" role="tabpanel" v-model="otherIntent"
+          class="register-intent-form__form__other_intent">
+          <div class="register-intent-form__form__other_intent__text">
             <p>
               Excellent! Rendez-vous sur la carte pour trouver un véhicule.
             </p>
@@ -78,8 +94,8 @@
         </b-collapse>
       </div>
 
-      <div class="form__buttons">
-        <b-button variant="success" type="submit">
+      <div class="form__buttons text-center">
+        <b-button variant="success" type="submit" size="lg">
           {{ $t('continue') }}
         </b-button>
       </div>
@@ -90,9 +106,9 @@
 <i18n>
 fr:
   car_borrower_intent: J'aimerais utiliser une auto
-  continue: Continuer
-  owner-intent: Je veux partager mon auto, mon vélo...
-  other-intent: Je veux utiliser un vélo ou une remorque à vélo
+  continue: Terminer
+  owner-intent: J'aimerais partager mon auto, mon vélo...
+  other-intent: J'aimerais utiliser un vélo ou une remorque à vélo
 </i18n>
 
 <script>
@@ -154,7 +170,17 @@ export default {
 
 <style lang="scss">
 .register-intent-form {
+  &__form__car_borrower_intent,
+  &__form__other_intent,
+  &__form__owner_intent {
+    padding-left: 1.5rem;
+  }
+
   .form__section {
+    > .custom-checkbox {
+      color: $locomotion-light-green;
+    }
+
     > .custom-checkbox + .collapse {
       margin-top: 20px;
     }

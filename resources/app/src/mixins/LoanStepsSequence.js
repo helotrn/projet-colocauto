@@ -15,6 +15,9 @@ export default {
 
       return this.item.incidents.reduce((acc, i) => (acc || i.status !== 'completed'), false);
     },
+    isOwnedLoanable() {
+      return !!this.item.loanable.owner;
+    },
   },
   methods: {
     hasCanceledStep(step) {

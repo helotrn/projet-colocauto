@@ -42,7 +42,7 @@ export default {
       return_at: 'retour',
     },
     incidents: {
-      statuss: {
+      statuss: { // FIXME
         null: '-',
         in_process: 'En cours',
         canceled: 'Annulé',

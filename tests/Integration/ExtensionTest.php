@@ -2,85 +2,59 @@
 
 namespace Tests\Integration;
 
+use App\Models\Bike;
+use App\Models\Borrower;
 use App\Models\Extension;
+use App\Models\Loan;
+use App\Models\Owner;
 use Tests\TestCase;
 
 class ExtensionTest extends TestCase
 {
+    protected $loan;
+    protected $loanable;
+
+    public function setUp(): void {
+        parent::setUp();
+
+        $owner = factory(Owner::class)->create(['user_id' => $this->user->id]);
+        $borrower = factory(Borrower::class)->create([ 'user_id' => $this->user->id ]);
+        $this->loanable = factory(Bike::class)->create([ 'owner_id' => $owner->id ]);
+        $this->loan = factory(Loan::class)->create([
+            'loanable_id' => $this->loanable->id,
+            'borrower_id' => $borrower->id,
+            'duration_in_minutes' => 20,
+        ]);
+    }
+
     public function testCreateExtensions() {
-        $this->markTestIncomplete();
         $data = [
-            'executed_at' => $this->faker->dateTime($format = 'Y-m-d H:i:sO', $max = 'now'),
-            'status' => $this->faker->randomElement(['in_process', 'canceled', 'completed']),
-            'new_duration' => $this->faker->randomNumber($nbDigits = null, $strict = false),
+            'new_duration' => 30,
             'comments_on_extension' => $this->faker->paragraph,
-            'contested_at' => null,
-            'commments_on_contestation' => null,
+            'type' => 'extension',
+            'status' => 'in_process',
         ];
 
-        $response = $this->json('POST', route('extensions.create'), $data);
+        $response = $this->json('POST', "/api/v1/loans/{$this->loan->id}/actions", $data);
 
         $response->assertStatus(201)->assertJson($data);
     }
 
-    public function testShowExtensions() {
-        $this->markTestIncomplete();
-        $post = factory(Extension::class)->create();
+    public function testCreateExtensionsForCollectiveLoanable() {
+        $this->loanable->owner_id = null;
+        $this->loanable->save();
 
-        $response = $this->json('GET', route('extensions.retrieve', $post->id), $data);
-
-        $response->assertStatus(200)->assertJson($data);
-    }
-
-    public function testUpdateExtensions() {
-        $this->markTestIncomplete();
-        $post = factory(Extension::class)->create();
         $data = [
+            'new_duration' => 30,
             'comments_on_extension' => $this->faker->paragraph,
+            'type' => 'extension',
+            'status' => 'in_process',
         ];
 
-        $response = $this->json('PUT', route('extensions.update', $post->id), $data);
+        $response = $this->json('POST', "/api/v1/loans/{$this->loan->id}/actions", $data);
 
-        $response->assertStatus(200)->assertJson($data);
-    }
-
-    public function testDeleteExtensions() {
-        $this->markTestIncomplete();
-        $post = factory(Extension::class)->create();
-
-        $response = $this->json('DELETE', route('extensions.delete', $post->id), $data);
-
-        $response->assertStatus(204)->assertJson($data);
-    }
-
-    public function testListExtensions() {
-        $this->markTestIncomplete();
-        $extensions = factory(Extension::class, 2)->create()->map(function ($post) {
-            return $post->only([
-                'id',
-                'executed_at',
-                'status',
-                'new_duration',
-                'comments_on_extension',
-                'contested_at',
-                'commments_on_contestation',
-            ]);
-        });
-
-        $response = $this->json('GET', route('extensions.index'));
-
-        $response->assertStatus(200)
-                ->assertJson($extensions->toArray())
-                ->assertJsonStructure([
-                    '*' => [
-                        'id',
-                        'executed_at',
-                        'status',
-                        'new_duration',
-                        'comments_on_extension',
-                        'contested_at',
-                        'commments_on_contestation',
-                    ],
-                ]);
+        $response->assertStatus(201)->assertJson(array_merge($data, [
+            'status' => 'completed',
+        ]));
     }
 }

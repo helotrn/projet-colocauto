@@ -147,11 +147,18 @@ class CommunityController extends RestController
     }
 
     public function indexUsers(Request $request, $id) {
-        $community = $this->repo->find($request, $id);
+        $community = $this->repo->find($request->redirectAuth(Request::class), $id);
 
-        $request->merge([ 'communities.id' => $id ]);
+        $items = $community->users;
 
-        return $this->userController->index($request);
+        switch ($request->headers->get('accept')) {
+            case 'text/csv':
+                $filename = $this->respondWithCsv($request, $items, new User);
+                $base = app()->make('url')->to('/');
+                return response($base . $filename, 201);
+            default:
+                return $this->respondWithCollection($request, $items, $total);
+        }
     }
 
     public function retrieveUsers(Request $request, $id, $userId) {
@@ -246,6 +253,18 @@ class CommunityController extends RestController
                         [
                             'text' => 'Quartier',
                             'value' => 'borough',
+                        ],
+                    ],
+                ],
+                'parent_id' => [
+                    'type' => 'relation',
+                    'query' => [
+                        'slug' => 'communities',
+                        'value' => 'id',
+                        'text' => 'name',
+                        'params' => [
+                            'fields' => 'id,name',
+                            'type' => 'borough',
                         ],
                     ],
                 ],

@@ -13,16 +13,39 @@
       </template>
     </b-pagination-nav>
 
-    <div v-if="currentPage == 2" class="register-step__profile">
+    <div v-if="item && currentPage == 2" class="register-step__profile">
       <h2>Profil de membre</h2>
 
       <p class="register-step__profile__text">
-        Informez votre voisinage de qui vous êtes en remplisssant les champs suivants.
+        Pour faire connaissance, dites à vos voisines et vos voisins qui vous êtes en
+        remplissant les champs suivants.
       </p>
 
       <profile-form v-if="item"
         :form="form" :user="item" :loading="loading"
-        @submit="submitAndReload" />
+        @submit="submitAndReload">
+        <hr>
+
+        <b-row>
+          <b-col>
+            <forms-validated-input name="opt_in_newsletter"
+              :label="$t('users.fields.opt_in_newsletter') | capitalize"
+              :rules="form.general.opt_in_newsletter.rules" type="checkbox"
+              :placeholder="placeholderOrLabel('opt_in_newsletter', 'users') | capitalize"
+              v-model="item.opt_in_newsletter" />
+          </b-col>
+        </b-row>
+
+        <b-row>
+          <b-col>
+            <forms-validated-input name="accept_conditions"
+              :label="$t('users.fields.accept_conditions') | capitalize"
+              :rules="form.general.accept_conditions.rules" type="checkbox"
+              :placeholder="placeholderOrLabel('accept_conditions', 'users') | capitalize"
+              v-model="item.accept_conditions" />
+          </b-col>
+        </b-row>
+      </profile-form>
       <layout-loading v-else />
     </div>
 
@@ -44,7 +67,7 @@
     </div>
 
     <div v-if="currentPage == 4" class="register-step__intents">
-      <h2>Que voulez-vous faire en premier?</h2>
+      <h2>Que voulez-vous faire?</h2>
 
       <register-intent-form :user="item" v-if="item" :loading="loading"
         @submit="submitOwnerDocumentsAndTags" />
@@ -54,7 +77,8 @@
     <div v-if="currentPage == 5" class="register-step__completed">
       <h2>Inscription complétée!</h2>
 
-      <div class="register-step__completed__text">
+      <layout-loading v-if="!item || loading" />
+      <div class="register-step__completed__text" v-else>
         <p>
           Votre inscrition sera validée par un membre de l'équipe et vous aurez alors accès à
           toutes les fonctionnalités de LocoMotion.
@@ -80,17 +104,20 @@ import CommunityProofForm from '@/components/Community/ProofForm.vue';
 import ProfileForm from '@/components/Profile/ProfileForm.vue';
 import RegisterIntentForm from '@/components/Register/IntentForm.vue';
 
+import FormsValidatedInput from '@/components/Forms/ValidatedInput.vue';
+import FormLabelsMixin from '@/mixins/FormLabelsMixin';
 import FormMixin from '@/mixins/FormMixin';
 
 import { extractErrors } from '@/helpers';
 
 export default {
   name: 'RegisterStep',
-  mixins: [Authenticated, FormMixin, Notification],
+  mixins: [Authenticated, FormLabelsMixin, FormMixin, Notification],
   components: {
     CommunityProofForm,
-    RegisterIntentForm,
+    FormsValidatedInput,
     ProfileForm,
+    RegisterIntentForm,
   },
   beforeRouteEnter(to, from, next) {
     next((vm) => {
@@ -228,6 +255,10 @@ export default {
   width: 590px;
   max-width: 100%;
   margin: 50px auto;
+
+  &__intents > h2 {
+    margin-bottom: 50px;
+  }
 
   .register-step__title {
     text-align: center;

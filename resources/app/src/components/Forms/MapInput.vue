@@ -6,6 +6,10 @@
       <gmap-marker v-if="markerPosition"
         :clickable="false"
         :position="markerPosition" />
+      <gmap-polygon v-for="p in polygons" :key="`polygon-${p.id}`"
+        :path="p.area_google"
+        :label="p.name"
+        :options="p.options" />
     </gmap-map>
     <p v-if="description">{{ description }}</p>
   </div>
@@ -32,6 +36,11 @@ export default {
       type: Boolean,
       required: false,
       default: true,
+    },
+    polygons: {
+      type: Array,
+      required: false,
+      default() { return []; },
     },
     value: {
       required: true,

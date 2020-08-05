@@ -15,9 +15,11 @@ class PrePayment extends Action
             }
 
             $loan = $model->loan;
-            $borrowerUser = $loan->borrower->user;
-            if ($borrowerUser->balance >= $loan->total_estimated_cost) {
-                $model->status = 'completed';
+            if ($loan->borrower) {
+                $borrowerUser = $loan->borrower->user;
+                if ($borrowerUser->balance >= $loan->total_estimated_cost) {
+                    $model->status = 'completed';
+                }
             }
 
             switch ($model->status) {

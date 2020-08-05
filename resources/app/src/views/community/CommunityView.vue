@@ -1,5 +1,5 @@
 <template>
-  <layout-page :name="`community-view-${view}`" :loading="!routeDataLoaded && view !== 'map'"
+  <layout-page :name="`community-view-${view}`" :loading="!routeDataLoaded"
     :wide="view === 'map'">
     <div :class="mainDivClasses">
       <b-row>
@@ -17,7 +17,7 @@
             <hr>
 
             <div :class="`community-view-${view}__form__sections__search`">
-              <loan-search-form v-if="loan" :loan="loan"
+              <loan-search-form v-if="loan" :item="loan"
                 :selected-loanable-types="selectedLoanableTypes"
                 @selectLoanableTypes="selectLoanableTypes"
                 @selectLoanable="selectLoanable"
@@ -75,10 +75,8 @@ export default {
   data() {
     return {
       lastLoanMerged: false,
+      reloading: false,
     };
-  },
-  mounted() {
-    this.setSelectedLoanableTypes();
   },
   computed: {
     ...buildComputed('community.view', [
@@ -132,20 +130,16 @@ export default {
             full_name: this.user.full_name,
           },
         },
+        borrower_id: this.user.borrower.id,
         community_id: this.user.communities[0].id,
         loanable,
+        loanable_id: loanable.id,
         estimated_insurance: loanable.insurance,
         estimated_price: loanable.price,
         platform_tip: (loanable.price === 0 ? 0 : Math.max(loanable.price * 0.1, 2)).toFixed(2),
       });
 
       this.$router.push('/loans/new');
-    },
-    setSelectedLoanableTypes() {
-      this.setParam({
-        name: 'type',
-        value: this.selectedLoanableTypes.join(','),
-      });
     },
     async testLoanable(loanable) {
       await this.$store.dispatch(`${this.slug}/testOne`, {
@@ -184,7 +178,11 @@ export default {
       },
     },
     selectedLoanableTypes() {
-      this.setSelectedLoanableTypes();
+      this.reloading = true;
+      this.setParam({
+        name: 'type',
+        value: this.selectedLoanableTypes.join(','),
+      });
     },
   },
 };

@@ -15,7 +15,7 @@ class SendLoanExtensionCreatedEmails
         $borrower = $loan->borrower;
         $owner = $loan->loanable->owner;
 
-        if (!$owner->user) {
+        if (!$owner || !$owner->user) {
             return;
         }
 

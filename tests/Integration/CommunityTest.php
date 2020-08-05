@@ -179,4 +179,60 @@ class CommunityTest extends TestCase
         $response->assertStatus(200)
             ->assertJsonStructure($this->buildCollectionStructure(static::$getUserResponseStructure));
     }
+
+    public function testCommunityWithParent() {
+        $community = factory(Community::class)->create();
+        $borough = factory(Community::class)->create([
+            'type' => 'borough',
+        ]);
+        $subBorough = factory(Community::class)->create([
+            'type' => 'borough',
+            'parent_id' => $borough->id,
+        ]);
+
+        $newCommunity = factory(Community::class)->make();
+
+        // Parent doest not exists
+        $newCommunity->parent_id = $community->id - 1;
+        $this->json('POST', route('communities.create'), $newCommunity->toArray())
+            ->assertStatus(422)
+            ->assertJsonStructure([
+                'errors' => [ 'parent_id' ],
+            ]);
+
+        // Parent is not a borough
+        $newCommunity->parent_id = $community->id;
+        $this->json('POST', route('communities.create'), $newCommunity->toArray())
+            ->assertStatus(422)
+            ->assertJsonStructure([
+                'errors' => [ 'parent_id' ],
+            ]);
+
+        // Parent can be null
+        $newCommunity->parent_id = null;
+        $this->json('POST', route('communities.create'), $newCommunity->toArray())
+            ->assertStatus(201);
+
+        // Parent is valid
+        $newCommunity->parent_id = $borough->id;
+        $response = $this->json('POST', route('communities.create'), $newCommunity->toArray())
+            ->assertStatus(201);
+
+        // Parent cannot be self
+        $data = json_decode($response->getContent());
+        $data->parent_id = $data->id;
+        $response = $this->json('PUT', route('communities.update', $data->id), (array) $data)
+            ->assertStatus(422)
+            ->assertJsonStructure([
+                'errors' => [ 'parent_id' ],
+            ]);
+
+        // Parent cannot create loops
+        $borough->parent_id = $subBorough->id;
+        $this->json('PUT', route('communities.update', $borough->id), (array) $borough->toArray())
+            ->assertStatus(422)
+            ->assertJsonStructure([
+                'errors' => [ 'parent_id' ],
+            ]);
+    }
 }

@@ -15,6 +15,7 @@ import {
   extend,
   localize,
 } from 'vee-validate';
+import { strtotime } from 'locutus/php/datetime';
 
 import fr from 'vee-validate/dist/locale/fr.json';
 import * as rules from 'vee-validate/dist/rules';
@@ -74,18 +75,33 @@ extend('date', (v) => {
 });
 extend('present', v => v !== null && v !== undefined);
 extend('boolean', v => typeof v === 'boolean');
-extend('before', (v, args) => {
-  switch (args) {
-    case 'today': {
-      const parsedDate = new Date(v);
-      if (!Number.isNaN(parsedDate.getTime())) {
-        return parsedDate < new Date();
-      }
-      return false;
+extend('accepted', {
+  validate: v => v === true,
+  message: 'Vous devez accepter la condition.',
+});
+extend('before', {
+  validate: (v, args) => {
+    const parsedDate = new Date(strtotime(args[0]) * 1000);
+
+    if (!Number.isNaN(parsedDate.getTime())) {
+      return new Date(v) <= parsedDate;
     }
-    default:
-      return true; // Pass to backend if handling cannot be done in frontend
-  }
+
+    return false;
+  },
+  message: 'Le champ {_field_} est invalide.',
+});
+extend('after', {
+  validate: (v, args) => {
+    const parsedDate = new Date(strtotime(args[0]) * 1000);
+
+    if (!Number.isNaN(parsedDate.getTime())) {
+      return new Date(v) >= parsedDate;
+    }
+
+    return false;
+  },
+  message: 'Le champ {_field_} est invalide.',
 });
 
 localize('fr', fr);

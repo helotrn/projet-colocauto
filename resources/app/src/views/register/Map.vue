@@ -1,51 +1,154 @@
 <template>
   <div name="register-map" v-if="routeDataLoaded">
-    <b-card title="Choisir un voisinage" class="register-map__form" v-if="!community">
+    <b-card class="register-map__community" v-if="community">
+      <template v-slot:header>
+        <h4 class="card-title">
+          {{ `Voisinage ${community ? community.name : ''}` }}
+        </h4>
+      </template>
       <b-card-text>
+        <div class="register-map__community__description">
+          <p>
+            Youpie, vous pouvez rejoindre ce voisinage!
+          </p>
+
+          <p v-if="community.description">
+            {{ community.description }}
+          </p>
+        </div>
+
+        <div v-if="community.parent">
+          <p><small>
+            Ce voisinage est inclus dans un quartier.<br>
+            Si j'appartiens à ce voisinage alors j'appartiens également
+            au quartier {{ community.parent.name }}.
+          </small></p>
+        </div>
+
+        <b-form class="register-map__community__submit text-center"
+          @submit.prevent="joinCommunity" @reset.prevent="resetCommunity">
+          <b-button type="submit" variant="primary" class="mr-3 mb-3">Rejoindre</b-button>
+          <b-button type="reset" variant="warning" class="mb-3">Retour</b-button>
+          <br>
+          <b-button variant="outline-light" v-b-modal="'register-map-modal'">
+            Voisinage, quartier: quelle différence?
+          </b-button>
+        </b-form>
+      </b-card-text>
+    </b-card>
+
+    <b-card class="register-map__borough" v-else-if="borough">
+      <template v-slot:header>
+        <h4 class="card-title">
+          {{ `Quartier ${borough ? borough.name : ''}` }}
+        </h4>
+      </template>
+      <b-card-text>
+        <div class="register-map__borough__description">
+          <p>
+            Bravo, c'est un premier pas! Vous pourrez utiliser les vélos, remorques et autos
+            disponibles pour le quartier.
+          </p>
+
+          <p v-if="borough.description">
+            {{ borough.description }}
+          </p>
+        </div>
+
+        <b-form class="register-map__borough__submit text-center"
+          @submit.prevent="joinBorough" @reset.prevent="resetBorough">
+          <b-button type="submit" variant="primary" class="mr-3 mb-3">Rejoindre</b-button>
+          <b-button type="reset" variant="warning" class="mb-3">Retour</b-button>
+          <br>
+          <b-button variant="outline-light" v-b-modal="'register-map-modal'">
+            Voisinage, quartier: quelle différence?
+          </b-button>
+        </b-form>
+      </b-card-text>
+    </b-card>
+
+    <b-card class="register-map__postal_code" v-else-if="postalCodeCenter">
+      <template v-slot:header>
+        <h4 class="card-title">
+          Oups!
+        </h4>
+      </template>
+
+      <b-card-text>
+        <p class="text-center">
+          Locomotion n’est pas encore accessible dans votre quartier.
+        </p>
+
+        <p class="text-center">
+          Souhaitez-vous être informé-e du développement du projet dans votre quartier?
+        </p>
+
+        <b-form class="register-map__postal_code__submit" @reset.prevent="resetView">
+          <forms-validated-input type="checkbox" name="opt_in_newsletter"
+            :label="$t('users.fields.opt_in_newsletter') | capitalize"
+            :value="user.opt_in_newsletter"
+            @input="updateOptInNewsletter" />
+
+          <div class="text-center">
+            <b-button type="reset" variant="warning">Retour</b-button>
+          </div>
+        </b-form>
+      </b-card-text>
+    </b-card>
+
+    <b-card title="Rejoindre mes voisin-e-s" class="register-map__form" v-else>
+      <layout-loading v-if="postalCodeLoading" />
+      <b-card-text v-else>
         <b-form @submit.prevent="searchPostalCode">
           <b-form-group label="Code postal">
             <b-input-group>
               <b-form-input type="text" required placeholder="Code postal"
-                v-model="postalCode" />
+                v-mask="'A#A #A#'" masked
+                v-model="postalCode" :state="postalCode ? status !== 'ZERO_RESULTS' : null" />
 
               <b-input-group-append>
                 <b-button variant="outline-success" type="submit">OK</b-button>
               </b-input-group-append>
             </b-input-group>
+
+            <b-form-invalid-feedback :state="status !== 'ZERO_RESULTS'">
+              Code postal non reconnu.
+            </b-form-invalid-feedback>
           </b-form-group>
         </b-form>
       </b-card-text>
     </b-card>
 
-    <b-card class="register-map__community" v-if="community">
-      <template v-slot:header>
-        <div class="register-map__community__buttons">
-          <b-button-group>
-            <b-button @click="previousCommunity">Précédente</b-button>
-            <b-button @click="nextCommunity">Suivante</b-button>
-          </b-button-group>
-        </div>
+    <b-modal size="lg" class="register-map__modal"
+      title="Voisinage, quartier: quelle différence?"
+      id="register-map-modal" footer-class="d-none">
+      <p>
+        Un voisinage LocoMotion est créé à l'initiative des gens qui y habitent, qui veulent
+        s'impliquer dans ce système de partage et le faire évoluer. Être proche de ses voisin-e-s,
+        c'est la base de LocoMotion. C'est pour cette raison qu'un voisinage correspond à une zone
+        d'environ 500 mètres de diamètre. Comment favoriser les liens dans le voisinage?
+        Est-ce qu'on veut ajouter à notre flotte collective un vélo électrique ou des remorques?
+        Solon vous accompagne dans toutes ces questions! Du financement peut aussi être rendu
+        disponible.
+      </p>
 
-        <h4 class="card-title">
-          {{ `Rejoindre le voisinage ${community ? community.name : ''}` }}
-        </h4>
-      </template>
-      <b-card-text>
-        <div class="register-map__community__description">
-          <p v-if="community">
-            {{ community.description }}
-          </p>
-        </div>
+      <p>
+        Le quartier est plus grand et suit les limites administratives. Il peut donc contenir
+        plusieurs voisinages LocoMotion. Des personnes peuvent s'inscrire à LocoMotion dans leur
+        quartier sans appartenir à un voisinage.
+      </p>
 
-        <b-form class="register-map__community__submit"
-          @submit.prevent="joinCommunity" @reset.prevent="resetCommunity">
-          <b-button-group>
-            <b-button type="submit" variant="primary">Rejoindre ce voisinage</b-button>
-            <b-button type="reset" variant="warning">Voir l'ensemble des voisinages</b-button>
-          </b-button-group>
-        </b-form>
-      </b-card-text>
-    </b-card>
+      <p>
+        Et les véhicules sont pour le voisinage, le quartier? L'ensemble des participant-e-s du
+        quartier peut profiter des véhicules collectifs de Solon, l'organisme derrière LocoMotion.
+        Les propriétaires d'un véhicule (auto, vélo-cargo ou autre) peuvent décider de le mettre à
+        disposition de leur voisinage ou du quartier au complet.
+      </p>
+
+      <b-button variant="light" size="lg" @click="$bvModal.hide('register-map-modal')">
+        OK!
+      </b-button>
+    </b-modal>
 
     <div v-if="communities">
       <gmap-map
@@ -55,12 +158,17 @@
         :center="center"
         :options="mapOptions"
         map-type-id="terrain">
+        <gmap-polygon v-for="b in boroughs" :key="`polygon-${b.id}`"
+          :path="b.area_google"
+          :label="b.name"
+          :options="boroughPolygonOptions"
+          @click="borough = b" />
         <gmap-polygon v-for="c in communities" :key="`polygon-${c.id}`"
           :path="c.area_google"
           :label="c.name"
           :options="polygonOptions"
-          @click="community = c" />
-        <gmap-marker v-for="c in communities" :key="`marker-${c.id}`"
+          @click="community = c; borough = c.parent" />
+        <gmap-marker v-if="postalCodeCenter"
           :icon="{
             url: '/pins/default-pin.svg',
             scaledSize: {
@@ -69,7 +177,7 @@
             },
           }"
           :clickable="false"
-          :position="c.center_google" />
+          :position="postalCodeCenter" />
       </gmap-map>
     </div>
   </div>
@@ -79,20 +187,35 @@
 <script>
 import { gmapApi } from 'vue2-google-maps';
 
+import FormsValidatedInput from '@/components/Forms/ValidatedInput.vue';
+
+import Authenticated from '@/mixins/Authenticated';
 import DataRouteGuards from '@/mixins/DataRouteGuards';
 import FormMixin from '@/mixins/FormMixin';
 
+import { distance } from '@/helpers';
+
 export default {
   name: 'Map',
-  mixins: [DataRouteGuards, FormMixin],
+  mixins: [Authenticated, DataRouteGuards, FormMixin],
   props: {
     id: {
       required: false,
       default: 'me',
     },
   },
+  components: {
+    FormsValidatedInput,
+  },
   data() {
     return {
+      boroughPolygonOptions: {
+        fillColor: '#16a59e',
+        fillOpacity: 0.3,
+        strokeColor: '#16a59e',
+        strokeOpacity: 0.7,
+        zIndex: 1,
+      },
       mapIcon: {
         url: 'perdu.com',
       },
@@ -113,21 +236,35 @@ export default {
         fillColor: '#16a59e',
         fillOpacity: 0.5,
         strokeOpacity: 0,
+        zIndex: 2,
       },
+      postalCodeCenter: null,
+      postalCodeLoading: false,
+      status: null,
       zoom: 1,
     };
   },
   computed: {
     averageCommunitiesCenter() {
-      const { data: communities } = this.$store.state.communities;
-      const center = communities.reduce((acc, c) => [
+      const center = this.communities.reduce((acc, c) => [
         (acc[0] + c.center[0]) / 2,
         (acc[1] + c.center[1]) / 2,
-      ], communities[0].center);
+      ], this.communities[0].center);
       return {
         lat: center[0],
         lng: center[1],
       };
+    },
+    borough: {
+      get() {
+        return this.$store.state['register.map'].borough;
+      },
+      set(borough) {
+        this.$store.commit('register.map/borough', borough);
+      },
+    },
+    boroughs() {
+      return this.$store.state.communities.data.filter(c => c.type === 'borough');
     },
     center: {
       get() {
@@ -136,10 +273,23 @@ export default {
         }
 
         if (this.community) {
-          return this.community.center_google;
+          return {
+            ...this.community.center_google,
+            lng: this.community.center_google.lng - 0.007,
+          };
         }
 
-        return this.averageCommunitiesCenter;
+        if (this.borough) {
+          return {
+            ...this.borough.center_google,
+            lng: this.borough.center_google.lng - 0.007,
+          };
+        }
+
+        return {
+          ...this.averageCommunitiesCenter,
+          lng: this.averageCommunitiesCenter.lng - 0.007,
+        };
       },
       set(center) {
         this.$store.commit('register.map/center', center);
@@ -154,7 +304,11 @@ export default {
       },
     },
     communities() {
-      return this.$store.state.communities.data;
+      if (!this.$store.state.communities.data) {
+        return [];
+      }
+
+      return this.$store.state.communities.data.filter(c => c.type === 'neighborhood');
     },
     google: gmapApi,
     paths() {
@@ -177,6 +331,17 @@ export default {
       community.area_google.forEach(p => bounds.extend(p));
       this.$refs.map.fitBounds(bounds);
     },
+    distance,
+    async joinBorough() {
+      await this.$store.dispatch('users/joinCommunity', {
+        userId: this.$store.state.user.id,
+        communityId: this.borough.id,
+      });
+
+      this.$store.commit('user', this.item);
+
+      this.$router.push('/register/3');
+    },
     async joinCommunity() {
       await this.$store.dispatch('users/joinCommunity', {
         userId: this.$store.state.user.id,
@@ -187,24 +352,6 @@ export default {
 
       this.$router.push('/register/3');
     },
-    nextCommunity() {
-      const index = this.communities.indexOf(this.community);
-
-      if (index + 1 >= this.communities.length) {
-        this.community = this.communities[0];
-      } else {
-        this.community = this.communities[index + 1];
-      }
-    },
-    previousCommunity() {
-      const index = this.communities.indexOf(this.community);
-
-      if (index - 1 < 0) {
-        this.community = this.communities[this.communities.length - 1];
-      } else {
-        this.community = this.communities[index - 1];
-      }
-    },
     resetCenter() {
       const { LatLngBounds } = this.google.maps;
       const bounds = new LatLngBounds();
@@ -212,48 +359,135 @@ export default {
       this.communities.forEach(c => bounds.extend(c.center_google));
       this.$refs.map.fitBounds(bounds);
     },
+    resetBorough() {
+      this.borough = null;
+      this.postalCodeCenter = null;
+    },
     resetCommunity() {
       this.community = null;
+      if (!this.borough) {
+        this.postalCodeCenter = null;
+      }
+    },
+    resetView() {
+      this.borough = null;
+      this.community = null;
+      this.postalCodeCenter = null;
+      this.postalCodeLoading = false;
+
+      this.resetCenter();
     },
     searchPostalCode() {
+      // Don't bother searching for invalid postal code
       if (!this.postalCode.match(/[a-z][0-9][a-z]\s*[0-9][a-z][0-9]/i)) {
         return false;
       }
 
-      const { Geocoder, LatLngBounds } = this.google.maps;
+      this.postalCodeLoading = true;
+      this.status = null;
+      this.postalCodeCenter = null;
+
+      const {
+        Geocoder,
+        LatLngBounds,
+        Polygon,
+      } = this.google.maps;
       const geocoder = new Geocoder();
 
       geocoder.geocode({ address: this.postalCode }, (results, status) => {
-        if (status === 'OK' && results.length > 0) {
-          const { location } = results[0].geometry;
+        this.status = status;
 
-          for (let i = 0, len = this.communities.length; i < len; i += 1) {
-            const community = this.communities[i];
-            const bounds = new LatLngBounds();
+        // No results: do nothing
+        if (status === 'ZERO_RESULTS') {
+          this.postalCodeLoading = false;
+          return true;
+        }
 
-            community.area_google.forEach(p => bounds.extend(p));
-            if (bounds.contains(location)) {
-              this.center = null;
-              this.community = community;
-              return true;
-            }
+        if (status !== 'OK') {
+          return false;
+        }
+
+        // Results found: work on the first one (most likely candidate)
+        const { location } = results[0].geometry;
+        this.postalCodeCenter = {
+          lat: location.lat(),
+          lng: location.lng(),
+        };
+
+        // Is it in a community?
+        for (let i = 0, lenI = this.communities.length; i < lenI; i += 1) {
+          const community = this.communities[i];
+          const polygon = new Polygon({ paths: community.area_google });
+
+          if (this.google.maps.geometry.poly.containsLocation(location, polygon)) {
+            this.center = null;
+            this.community = community;
+
+            this.postalCodeLoading = false;
+            return true;
           }
         }
 
+        // Is it in a borough?
+        for (let j = 0, lenJ = this.boroughs.length; j < lenJ; j += 1) {
+          const borough = this.boroughs[j];
+          const polygon = new Polygon({ paths: borough.area_google });
+
+          if (this.google.maps.geometry.poly.containsLocation(location, polygon)) {
+            this.center = null;
+            this.borough = borough;
+
+            this.postalCodeLoading = false;
+            return true;
+          }
+        }
+
+        // If it's neither in a community or a borough:
+        // center the view on marker and nearest borough
         const bounds = new LatLngBounds();
-        bounds.extend(results[0].geometry.location);
-        const kmAway = {
-          lat: results[0].geometry.location.lat(),
-          lng: results[0].geometry.location.lng(),
-        };
-        kmAway.lat += 0.003;
-        bounds.extend(kmAway);
+        bounds.extend(location);
+
+        let nearestDistance = this.distance(
+          this.postalCodeCenter,
+          this.boroughs[0].center_google,
+        );
+        const nearestBorough = this.boroughs.reduce((acc, b) => {
+          const boroughdistance = this.distance(
+            this.postalCodeCenter,
+            this.boroughs[0].center_google,
+          );
+          if (boroughdistance < nearestDistance) {
+            nearestDistance = boroughdistance;
+            return b;
+          }
+
+          return acc;
+        }, this.boroughs[0]);
+
+        bounds.extend(nearestBorough.center_google);
+        bounds.extend({
+          ...nearestBorough.center_google,
+          lng: nearestBorough.center_google.lng + 0.007,
+        });
+
         this.$refs.map.fitBounds(bounds);
 
+        this.postalCodeLoading = false;
         return true;
       });
 
       return true;
+    },
+    async updateOptInNewsletter(value) {
+      await this.$store.dispatch('users/update', {
+        id: this.user.id,
+        data: {
+          opt_in_newsletter: value,
+        },
+        params: {
+          fields: 'id,name,opt_in_newsletter',
+        },
+      });
     },
   },
   watch: {
@@ -264,6 +498,10 @@ export default {
             this.resetCenter();
           } else {
             this.centerOnCommunity(this.community);
+          }
+
+          if (this.postalCode) {
+            this.searchPostalCode();
           }
         });
       }, 500);
@@ -284,6 +522,12 @@ export default {
 </script>
 
 <style lang="scss">
+@import "~bootstrap/scss/mixins/breakpoints";
+
+#register-map-modal {
+  text-align: center;
+}
+
 .register-map {
   position: relative;
 
@@ -291,10 +535,10 @@ export default {
     width: 100vw;
     height: calc(100vh - #{$layout-navbar-height + $footer-height} - 1px);
     z-index: 10;
-  }
 
-  .card {
-    width: 190px;
+    @include media-breakpoint-down(lg) {
+      min-height: calc(100vh - #{$layout-navbar-height-mobile + $footer-height} - 1px);
+    }
   }
 
   &__form.card {
@@ -304,15 +548,18 @@ export default {
     z-index: 100;
   }
 
-  &__community.card {
+  &__community.card,
+  &__borough.card,
+  &__postal_code.card {
     margin-top: 50px;
     margin-left: 30px;
     position: absolute;
     z-index: 100;
-    max-width: 50vw;
+    max-width: 500px;
 
-    .card-header {
+    .card-header, .card-header .card-title {
       margin-bottom: 0;
+      font-weight: bold;
     }
 
     .card-text {

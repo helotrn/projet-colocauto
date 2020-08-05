@@ -9,12 +9,14 @@ use App\Transformers\CommunityTransformer;
 use Auth;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Validation\Rule;
+use Molotov\Traits\TreeScopes;
 use Phaza\LaravelPostgis\Eloquent\PostgisTrait;
 use Vkovic\LaravelCustomCasts\HasCustomCasts;
 
 class Community extends BaseModel
 {
-    use HasCustomCasts, PostgisTrait, SoftDeletes;
+    use HasCustomCasts, PostgisTrait, SoftDeletes, TreeScopes;
 
     public static $rules = [
         'name' => 'required',
@@ -24,12 +26,29 @@ class Community extends BaseModel
             'nullable',
             'in:private,neighborhood,borough',
         ],
+        'parent_id' => [
+            'nullable',
+            'exists:communities,id',
+            'different:id',
+        ],
     ];
 
     public static $filterTypes = [
         'id' => 'number',
         'name' => 'text',
         'type' => ['neighborhood', 'borough', 'private'],
+        'parent.id' => [
+            'type' => 'relation',
+            'query' => [
+                'slug' => 'communities',
+                'value' => 'id',
+                'text' => 'name',
+                'params' => [
+                    'fields' => 'id,name',
+                    'type' => 'borough',
+                ],
+            ],
+        ]
     ];
 
     public static $transformer = CommunityTransformer::class;
@@ -38,11 +57,34 @@ class Community extends BaseModel
         switch ($action) {
             case 'destroy':
                 return [];
+            case 'update':
+                return array_merge(
+                    static::$rules,
+                    [
+                        'area' => ['nullable', new Polygon],
+                        'parent_id' => [
+                            'nullable',
+                            'different:id',
+                            'exists:communities,id',
+                            Rule::exists('communities', 'id')->where(function ($q) {
+                                return $q->where('type', 'borough');
+                            }),
+                        ],
+                    ]
+                );
+                break;
             default:
                 return array_merge(
                     static::$rules,
                     [
-                        'area' => ['nullable', new Polygon]
+                        'area' => ['nullable', new Polygon],
+                        'parent_id' => [
+                            'nullable',
+                            'exists:communities,id',
+                            Rule::exists('communities', 'id')->where(function ($q) {
+                                return $q->where('type', 'borough');
+                            }),
+                        ],
                     ]
                 );
         }
@@ -72,6 +114,7 @@ class Community extends BaseModel
         'description',
         'name',
         'type',
+        'parent_id',
     ];
 
     protected $postgisFields = [
@@ -93,9 +136,23 @@ class Community extends BaseModel
         'area' => PolygonCast::class,
     ];
 
+    public $items = ['parent'];
+
     public $collections = ['users', 'pricings', 'loanables'];
 
     public $computed =  ['area_google', 'center_google'];
+
+    public function parent() {
+        return $this->belongsTo(Community::class, 'parent_id');
+    }
+
+    public function loanables() {
+        return $this->hasMany(Loanable::class);
+    }
+
+    public function pricings() {
+        return $this->hasMany(Pricing::class)->orderBy('object_type', 'desc');
+    }
 
     public function users() {
         return $this->belongsToMany(User::class)
@@ -109,14 +166,6 @@ class Community extends BaseModel
         }
 
         return $relation->whereSuspendedAt(null);
-    }
-
-    public function pricings() {
-        return $this->hasMany(Pricing::class)->orderBy('object_type', 'desc');
-    }
-
-    public function loanables() {
-        return $this->hasMany(Loanable::class);
     }
 
     public function getPricingFor(Loanable $loanable) {

@@ -1,15 +1,19 @@
 <template>
   <div class="forms-builder">
-    <forms-validated-input v-for="(def, key) in definition" :key="key"
-      :description="descriptionOrNothing(key)"
-      :label="$t(`${entity}.fields.${key}`) | capitalize"
-      :name="key" :rules="def.rules" :type="def.type"
-      :options="def.options" :disabled="disabled || def.disabled"
-      :placeholder="placeholderOrLabel(key) | capitalize"
-      :initial-view="def.initial_view"
-      :query="def.query" :object-value="objectValue(key)"
-      @relation="updateObject($event, key)"
-      v-model="value[key]" />
+    <div class="forms-builder__field" v-for="(def, key) in definition" :key="key">
+      <slot :name="key" v-if="$scopedSlots[key]"
+        :def="def" :item="value" :property="key" />
+      <forms-validated-input v-else
+        :description="descriptionOrNothing(key)"
+        :label="$t(`${entity}.fields.${key}`) | capitalize"
+        :name="key" :rules="def.rules" :type="def.type"
+        :options="def.options" :disabled="disabled || def.disabled"
+        :placeholder="placeholderOrLabel(key) | capitalize"
+        :initial-view="def.initial_view"
+        :query="def.query" :object-value="objectValue(key)"
+        @relation="updateObject($event, key)"
+        v-model="value[key]" />
+    </div>
   </div>
 </template>
 

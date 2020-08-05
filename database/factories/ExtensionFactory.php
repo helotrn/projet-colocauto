@@ -12,6 +12,6 @@ $factory->define(Extension::class, function (Faker $faker) {
         'new_duration' => $faker->randomNumber($nbDigits = null, $strict = false),
         'comments_on_extension' => $faker->paragraph,
         'contested_at' => null,
-        'commments_on_contestation' => null,
+        'comments_on_contestation' => null,
     ];
 });

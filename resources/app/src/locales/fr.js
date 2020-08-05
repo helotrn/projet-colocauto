@@ -98,7 +98,7 @@ export default {
     privacy: "conditions générales d'utilisation",
     profile: 'Profil',
     register: "s'inscrire",
-    'register-map': 'choisir un voisinage',
+    'register-map': 'rejoindre mes voisin-e-s',
     tags: 'Mots-clés',
     tag: 'Mot-clé',
     user: 'membre',

@@ -19,6 +19,7 @@ use App\Models\Car;
 use App\Models\Loan;
 use App\Models\Loanable;
 use App\Models\Pricing;
+use App\Repositories\LoanRepository;
 use App\Repositories\LoanableRepository;
 use Carbon\Carbon;
 use Excel;
@@ -31,18 +32,27 @@ class LoanableController extends RestController
     protected $carController;
     protected $trailerController;
 
+    protected $loanRepository;
+    protected $loanController;
+
     public function __construct(
         LoanableRepository $repository,
         Loanable $model,
         BikeController $bikeController,
         CarController $carController,
-        TrailerController $trailerController
+        TrailerController $trailerController,
+        LoanRepository $loanRepository,
+        LoanController $loanController
     ) {
         $this->repo = $repository;
         $this->model = $model;
+
         $this->bikeController = $bikeController;
         $this->carController = $carController;
         $this->trailerController = $trailerController;
+
+        $this->loanRepo = $loanRepository;
+        $this->loanController = $loanController;
     }
 
     public function create(Request $request) {
@@ -213,6 +223,7 @@ class LoanableController extends RestController
                 'type' => null,
                 'brand' => '',
                 'comments' => '',
+                'community' => null,
                 'engine' => '',
                 'instructions' => '',
                 'insurer' => '',
@@ -222,6 +233,7 @@ class LoanableController extends RestController
                 'papers_location' => '',
                 'plate_number' => '',
                 'position' => [],
+                'share_with_parent_communities' => false,
                 'transmission_mode' => '',
                 'year_of_circulation' => '',
             ],
@@ -238,15 +250,12 @@ class LoanableController extends RestController
                     ],
                     'location_description' => [
                         'type' => 'textarea',
-                        'description' => 'Des indications qui pourraient aider les autres'
-                         . ' membres de LocoMotion à retrouver ce véhicule.',
                     ],
                     'comments' => [
                         'type' => 'textarea',
                     ],
                     'instructions' => [
                         'type' => 'textarea',
-                        'description' => 'Y a-t-il des choses à savoir sur ce véhicule?',
                     ],
                     'type' => [
                         'type' => 'select',
@@ -265,17 +274,6 @@ class LoanableController extends RestController
                             ],
                         ],
                     ],
-                    'owner_id' => [
-                        'type' => 'relation',
-                        'query' => [
-                            'slug' => 'owners',
-                            'value' => 'id',
-                            'text' => 'user.full_name',
-                            'params' => [
-                                'fields' => 'id,user.full_name',
-                            ],
-                        ],
-                    ],
                     'community_id' => [
                         'type' => 'relation',
                         'query' => [
@@ -283,9 +281,25 @@ class LoanableController extends RestController
                             'value' => 'id',
                             'text' => 'name',
                             'params' => [
-                                'fields' => 'id,name',
+                                'fields' => 'id,name,parent.id,parent.name',
                             ],
                         ],
+                    ],
+                    'owner_id' => [
+                        'type' => 'relation',
+                        'query' => [
+                            'slug' => 'owners',
+                            'value' => 'id',
+                            'text' => 'user.full_name',
+                            'params' => [
+                                'fields' => 'id,user.full_name,'
+                                    . 'user.communities.id,user.communities.name,'
+                                    . 'user.communities.parent.id,user.communities.parent.name',
+                            ],
+                        ],
+                    ],
+                    'share_with_parent_communities' => [
+                        'type' => 'checkbox',
                     ],
                     'padlock_id' => [
                         'type' => 'relation',
@@ -476,5 +490,32 @@ class LoanableController extends RestController
         }
 
         return $template;
+    }
+
+    public function indexLoans(Request $request, $id) {
+        $item = $this->repo->find($request->redirectAuth(), $id);
+
+        return $this->loanController->index($request->redirect(Request::class));
+    }
+
+    // WARN This bypasses "accessibleBy" checks on loans. Make sure
+    // that the transformers authorize the fields down the line.
+    public function retrieveNextLoan(Request $request, $loanableId, $loanId) {
+        $item = $this->repo->find($request, $loanableId);
+        $loan = $this->loanRepo->find($request, $loanId);
+
+        $loanReturnAt = (new Carbon($loan->departure_at))
+            ->add($loan->duration_in_minutes, 'minutes');
+        $nextLoan = $item->loans()
+            ->where('id', '!=', $loanId)
+            ->where('departure_at', '>=', $loanReturnAt)
+            ->orderBy('departure_at', 'asc')
+            ->first();
+
+        if (!$nextLoan) {
+            return abort(404);
+        }
+
+        return $this->respondWithItem($request, $nextLoan);
     }
 }

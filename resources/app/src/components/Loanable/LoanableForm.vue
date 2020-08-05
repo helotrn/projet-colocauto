@@ -30,6 +30,7 @@
                 :rules="form.general.position.rules" :center="center"
                 :label="$t('fields.position') | capitalize" type="point"
                 :placeholder="placeholderOrLabel('position') | capitalize"
+                :polygons="loanablePolygons"
                 v-model="loanable.position" />
             </b-col>
 
@@ -52,20 +53,43 @@
 
             <b-col lg="8">
               <forms-validated-input name="comments"
-                :description="form.general.comments.description"
                 :rules="form.general.comments.rules"
                 :label="$t('fields.comments') | capitalize" type="textarea"
                 :placeholder="placeholderOrLabel('comments') | capitalize"
                 v-model="loanable.comments" />
 
               <forms-validated-input name="instructions"
-                :description="form.general.instructions.description"
+                :description="$t('descriptions.instructions')"
                 :rules="form.general.instructions.rules"
                 :label="$t('fields.instructions') | capitalize" type="textarea"
                 :placeholder="placeholderOrLabel('instructions') | capitalize"
                 v-model="loanable.instructions" />
             </b-col>
           </b-row>
+        </div>
+
+        <div class="form__section">
+          <h2>Accessibilité</h2>
+
+          <forms-validated-input v-if="user.communities.length > 1"
+            :description="$t('descriptions.community_id')"
+            :label="$t('fields.community_id') | capitalize"
+            name="community_id" type="relation" v-bind="form.general.community_id"
+            :extra-params="{ 'users.id': 'me' }"
+            :placeholder="placeholderOrLabel('community_id') | capitalize"
+            @relation="loanable.community = $event"
+            v-model="loanable.community_id" />
+
+          <forms-validated-input v-if="loanableBoroughs.length > 0"
+            :description="$t('descriptions.share_with_parent_communities')"
+            :label="$t(
+              'fields.share_with_parent_communities_dynamic',
+              {
+                shared_with: loanableBoroughsMessage,
+              }
+            ) | capitalize"
+            name="share_with_parent_communities" type="checkbox"
+            v-model="loanable.share_with_parent_communities" />
         </div>
 
         <div class="form__section" v-if="loanable.type === 'bike'">
@@ -121,13 +145,14 @@ import FormsValidatedInput from '@/components/Forms/ValidatedInput.vue';
 import LoanableAvailabilityCalendar from '@/components/Loanable/AvailabilityCalendar.vue';
 import FormsImageUploader from '@/components/Forms/ImageUploader.vue';
 
+import Authenticated from '@/mixins/Authenticated';
 import FormLabelsMixin from '@/mixins/FormLabelsMixin';
 
 import locales from '@/locales';
 
 export default {
   name: 'LoanableForm',
-  mixins: [FormLabelsMixin],
+  mixins: [Authenticated, FormLabelsMixin],
   components: {
     FormsBuilder,
     FormsImageUploader,
@@ -170,10 +195,57 @@ export default {
     },
   },
   methods: {
+    polygonOptions(type) {
+      switch (type) {
+        case 'borough':
+          return {
+            clickable: false,
+            fillColor: '#16a59e',
+            fillOpacity: 0.15,
+            strokeColor: '#16a59e',
+            strokeOpacity: 0.35,
+          };
+        case 'neighborhood':
+        default:
+          return {
+            clickable: false,
+            fillColor: '#16a59e',
+            fillOpacity: 0.25,
+            strokeOpacity: 0,
+          };
+      }
+    },
     submit(...params) {
       const ownerId = this.$store.state.user.owner.id;
       this.$store.commit('loanables/mergeItem', { owner: { id: ownerId } });
       this.$emit('submit', ...params);
+    },
+  },
+  computed: {
+    hasBoroughs() {
+      return this.loanableBoroughs.length > 0;
+    },
+    loanableBoroughs() {
+      return this.loanableCommunities.map(c => c.parent).filter(c => !!c);
+    },
+    loanableBoroughsMessage() {
+      return this.loanableBoroughs
+        .map(b => b.name)
+        .filter((item, i, arr) => arr.indexOf(item) === i)
+        .join(', ');
+    },
+    loanableCommunities() {
+      if (this.loanable.community) {
+        return [this.loanable.community];
+      }
+
+      return this.user.communities;
+    },
+    loanablePolygons() {
+      return this.loanableCommunities.map(c => ({
+        ...c,
+        options: this.polygonOptions(c.type),
+      }));
     },
   },
   i18n: {

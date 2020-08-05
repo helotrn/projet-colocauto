@@ -37,6 +37,7 @@ class UserTest extends TestCase
 
     public function testCreateUsers() {
         $data = [
+            'accept_conditions' => true,
             'name' => $this->faker->name,
             'last_name' => $this->faker->name,
             'email' => $this->faker->unique()->safeEmail,
@@ -65,6 +66,7 @@ class UserTest extends TestCase
                 'phone',
                 'is_smart_phone',
                 'other_phone',
+                'accept_conditions',
                 'created_at',
                 'updated_at'
             ]);

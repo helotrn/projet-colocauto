@@ -84,6 +84,7 @@ class Car extends Loanable
         'plate_number',
         'position',
         'pricing_category',
+        'share_with_parent_communities',
         'transmission_mode',
         'year_of_circulation',
     ];
@@ -109,39 +110,5 @@ class Car extends Loanable
 
     public function padlock() {
         return $this->hasOne(Padlock::class, 'loanable_id')->where(\DB::raw('1 = 0'));
-    }
-
-    public function scopeAccessibleBy(Builder $query, $user) {
-        if ($user->isAdmin()) {
-            return $query;
-        }
-
-        if (!$user->borrower || !$user->borrower->validated) {
-            return $query->whereHas('owner', function ($q) use ($user) {
-                return $q->where('id', $user->owner->id);
-            });
-        }
-
-        // A user has access to...
-        $communityIds = $user->communities->pluck('id');
-        return $query->where(function ($q) use ($communityIds) {
-            return $q
-                // ...loanables belonging to its accessible communities...
-                ->whereHas('community', function ($q2) use ($communityIds) {
-                    return $q2->whereIn(
-                        'communities.id',
-                        $communityIds
-                    );
-                })
-                // ...or belonging to owners of his accessible communities
-                // (communities through user through owner)
-                ->orWhereHas('owner', function ($q3) use ($communityIds) {
-                    return $q3->whereHas('user', function ($q4) use ($communityIds) {
-                        return $q4->whereHas('communities', function ($q5) use ($communityIds) {
-                            return $q5->whereIn('community_user.community_id', $communityIds);
-                        });
-                    });
-                });
-        });
     }
 }

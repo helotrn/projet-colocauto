@@ -172,9 +172,10 @@ return [
         App\Providers\AppServiceProvider::class,
         App\Providers\AuthServiceProvider::class,
         // App\Providers\BroadcastServiceProvider::class,
+        App\Providers\CustomValidationServiceProvider::class,
         App\Providers\EventServiceProvider::class,
-        App\Providers\RouteServiceProvider::class,
         App\Providers\MaterializedViewServiceProvider::class,
+        App\Providers\RouteServiceProvider::class,
 
     ],
 

@@ -33,9 +33,18 @@
             {{ prettyType }} {{ loanableDescription }} {{ loanableOwnerText }}
           </a>
           <br>
-          {{ loan.departure_at | day | capitalize }} {{ loan.departure_at | date }}
-          &bull;
-          {{ loan.departure_at | time }} à {{ returnAt | time }}
+          <span v-if="singleDay">
+            {{ loan.departure_at | day | capitalize }} {{ loan.departure_at | date }}
+            &bull;
+            {{ loan.departure_at | time }} à {{ returnAt | time }}
+          </span>
+          <span v-else>
+            {{ loan.departure_at | day | capitalize }}
+            {{ loan.departure_at | date }} {{ loan.departure_at | time }}
+            à
+            {{ returnAt | day | capitalize }}
+            {{ returnAt | date }} {{ returnAt | time }}
+          </span>
         </p>
       </b-col>
     </b-row>
@@ -170,6 +179,10 @@ export default {
       return this.$dayjs(this.loan.departure_at)
         .add(duration, 'minute')
         .format('YYYY-MM-DD HH:mm:ss');
+    },
+    singleDay() {
+      return this.$dayjs(this.loan.departure_at).format('YYYY-MM-DD')
+        === this.$dayjs(this.returnAt).format('YYYY-MM-DD');
     },
     userRole() {
       if (this.loan.loanable.owner && this.user.id === this.loan.loanable.owner.user.id) {

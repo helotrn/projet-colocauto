@@ -42,6 +42,17 @@ const day = (value) => {
   return dayjs(value).format('dddd');
 };
 
+const phone = (value) => {
+  const m = value.toString()
+    .match(/^\(?([1-9][0-9]{2})([- ]*|\) ?)?([1-9][0-9]{2})[- ]?([0-9]{4})$/);
+
+  if (m) {
+    return `(${m[1]}) ${m[3]}-${m[4]}`;
+  }
+
+  return '';
+}
+
 const time = (value) => {
   if (!value) {
     return '';
@@ -66,6 +77,7 @@ export {
   date,
   datetime,
   day,
+  phone,
   time,
   titleize,
 };

@@ -5,20 +5,21 @@
     :rules="rulesOrNothing"
     v-slot="validationContext">
     <b-form-group :label="type !== 'checkbox' ? label : ''" :label-for="name" :label-cols="inline"
-      :description="description" v-b-tooltip.hover :title="disabled ? disabledTooltip : ''">
+      :description="type === 'image' ? null : description"
+      v-b-tooltip.hover :title="disabled ? disabledTooltip : ''">
       <b-form-select v-if="type === 'select'"
         :id="name" :name="name"
         :state="getValidationState(validationContext)"
         :options="options" :disabled="disabled"
         v-bind:value="value"
-        v-on:change="emitChange" />
+        v-on:change="emitInput" />
       <b-form-checkbox v-else-if="type === 'checkbox'"
         :id="name" :name="name"
         :value="true" :disabled="disabled"
         :unchecked-value="false"
         :state="getValidationState(validationContext)"
         :checked="value"
-        @change="emitChange">
+        @change="emitInput">
         {{ label }}
       </b-form-checkbox>
       <b-form-checkbox-group v-else-if="type === 'checkboxes'"
@@ -27,7 +28,7 @@
         :disabled="disabled" :options="options"
         :state="getValidationState(validationContext)"
         :checked="value"
-        @change="emitChange" />
+        @change="emitInput" />
       <b-form-textarea v-else-if="type === 'textarea'"
         :id="name" :name="name"
         :description="description"
@@ -35,49 +36,61 @@
         :rows="rows" :max-rows="maxRows"
         :state="getValidationState(validationContext)"
         v-bind:value="value"
-        v-on:input="emitChange" />
+        v-on:input="emitInput" />
       <forms-map-input v-else-if="type === 'point'"
         :center="center" :disabled="disabled"
         :state="getValidationState(validationContext)"
+        :polygons="polygons"
         v-bind:value="value"
-        v-on:input="emitChange" />
+        v-on:input="emitInput" />
       <forms-date-picker v-else-if="type === 'date'"
         :disabled-dates="disabledDates"
         :disabled="disabled" :initial-view="initialView"
         :state="getValidationState(validationContext)"
         :value="value" :open-date="openDate"
-        @input="emitChange" />
+        @input="emitInput" />
       <forms-date-time-picker v-else-if="type === 'datetime'"
         :disabled-dates="disabledDates"
         :disabled-times="disabledTimes"
         :disabled="disabled"
         :value="value"
-        @input="emitChange" />
+        @input="emitInput" />
       <b-form-input v-else-if="type === 'password'"
         :id="name" :name="name"
         type="password"
         :placeholder="placeholder" :disabled="disabled"
         :state="getValidationState(validationContext)"
         v-bind:value="value"
-        v-on:input="emitChange"/>
+        v-on:input="emitInput"/>
       <forms-file-uploader v-else-if="type === 'file'"
         :id="name" :name="name" :field="name"
         :placeholder="placeholder" :disabled="disabled"
         :value="value"
-        @input="emitChange" />
+        @input="emitInput" />
       <forms-image-uploader v-else-if="type === 'image'"
         :id="name" :name="name" :field="name"
+        :description="description"
         :placeholder="placeholder" :disabled="disabled"
+        :state="getValidationState(validationContext)"
         :value="value"
-        @input="emitChange" />
+        @input="emitInput" />
       <forms-relation-input v-else-if="type === 'relation'"
         :id="name" :name="name" :query="query"
         :placeholder="placeholder" :disabled="disabled"
         :state="getValidationState(validationContext)"
         :object-value="objectValue"
         :reset-after-select="resetAfterSelect"
+        :extra-params="extraParams"
         :value="value"
         @input="emitRelationChange"/>
+      <currency-input v-else-if="type === 'currency'"
+        :id="name" :name="name" :disabled="disabled"
+        :class="`form-control ${getValidationClass(getValidationState(validationContext))}`"
+        locale="fr" :currency="{ suffix: '$' }"
+        :value-range="{ min, max }"
+        :allow-negative="false"
+        v-bind:value="floatValue"
+        v-on:input="emitInput" />
       <b-form-input v-else-if="type === 'number'"
         :id="name" :name="name"
         type="number" :min="min" :max="max"
@@ -85,22 +98,22 @@
         :placeholder="placeholder" :disabled="disabled"
         :state="getValidationState(validationContext)"
         v-bind:value="value"
-        v-on:input="emitChange" />
+        v-on:input="emitInput" />
       <b-form-input v-else-if="!!mask"
         :id="name" :name="name"
         type="text" v-mask="mask" masked
         :placeholder="placeholder" :disabled="disabled"
         :state="getValidationState(validationContext)"
         :value="value"
-        @input="emitChange"/>
+        @input="emitInput"/>
       <b-form-input v-else
         :id="name" :name="name"
         type="text"
         :placeholder="placeholder" :disabled="disabled"
         :state="getValidationState(validationContext)"
         v-bind:value="value"
-        v-on:input="emitChange"/>
-      <b-form-invalid-feedback>
+        v-on:input="emitInput"/>
+      <b-form-invalid-feedback :state="getValidationState(validationContext)">
         {{ validationContext.errors[0] }}
       </b-form-invalid-feedback>
     </b-form-group>
@@ -108,6 +121,8 @@
 </template>
 
 <script>
+import { CurrencyInput } from 'vue-currency-input';
+
 import FormsDatePicker from '@/components/Forms/DatePicker.vue';
 import FormsDateTimePicker from '@/components/Forms/DateTimePicker.vue';
 import FormsFileUploader from '@/components/Forms/FileUploader.vue';
@@ -152,6 +167,11 @@ export default {
       required: false,
       default: '',
     },
+    extraParams: {
+      type: Object,
+      requird: false,
+      default() { return {}; },
+    },
     initialView: {
       type: String,
       required: false,
@@ -179,7 +199,7 @@ export default {
     max: {
       type: Number,
       required: false,
-      default: null,
+      default: Number.MAX_SAFE_INTEGER,
     },
     maxRows: {
       type: Number,
@@ -189,7 +209,7 @@ export default {
     min: {
       type: Number,
       required: false,
-      default: null,
+      default: -Number.MAX_SAFE_INTEGER,
     },
     name: {
       type: String,
@@ -218,6 +238,11 @@ export default {
       type: String,
       required: false,
       default: '',
+    },
+    polygons: {
+      type: Array,
+      required: false,
+      default() { return []; },
     },
     query: {
       type: Object,
@@ -265,6 +290,7 @@ export default {
     },
   },
   components: {
+    CurrencyInput,
     FormsDatePicker,
     FormsDateTimePicker,
     FormsFileUploader,
@@ -273,6 +299,9 @@ export default {
     FormsRelationInput,
   },
   computed: {
+    floatValue() {
+      return parseFloat(this.value, 10);
+    },
     rulesOrNothing() {
       if (!this.rules) {
         return '';
@@ -289,7 +318,7 @@ export default {
     },
   },
   methods: {
-    emitChange(value) {
+    emitInput(value) {
       this.$emit('input', value);
     },
     emitRelationChange(value) {
@@ -305,6 +334,16 @@ export default {
       }
 
       return validated ? valid : null;
+    },
+    getValidationClass(state) {
+      switch (state) {
+        case true:
+          return 'is-valid';
+        case false:
+          return 'is-invalid';
+        default:
+          return '';
+      }
     },
   },
 };

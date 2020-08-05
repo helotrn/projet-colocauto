@@ -203,13 +203,17 @@ class Loanable extends BaseModel
         return $this->hasMany(Loan::class);
     }
 
-    public function isAvailable($departureAt, $durationInMinutes) {
+    public function isAvailable($departureAt, $durationInMinutes, $ignoreLoanIds = []) {
         $ical = new \ICal\ICal([ 0 => [$this->availability_ics] ], [
             'defaultTimeZone' => 'America/Toronto',
             'defaultWeekStart' => 'SU',
             'filterDaysBefore' => 1,
             'filterDaysAfter' => 365,
         ]);
+
+        if (!is_a(\Carbon\Carbon::class, $departureAt)) {
+            $departureAt = new \Carbon\Carbon($departureAt);
+        }
 
         $returnAt = $departureAt->copy()->add($durationInMinutes, 'minutes');
 
@@ -220,6 +224,10 @@ class Loanable extends BaseModel
         }
 
         $query = Loan::where('loanable_id', $this->id);
+
+        if ($ignoreLoanIds) {
+            $query = $query->whereNotIn('loans.id', $ignoreLoanIds);
+        }
 
         $cDef = Loan::getColumnsDefinition();
         $query = $cDef['*']($query);
@@ -295,9 +303,19 @@ class Loanable extends BaseModel
         $query = $query
             // A user has access to...
             ->where(function ($q) use ($user, $allowedTypes) {
-                $communityIds = $user->communities->pluck('id');
+                // (Accessible communities are communities that you directly
+                // belong to and parent communities of these, recursively)
+                $communityIds = $user->communities
+                    ->whereNotNull('pivot.approved_at')
+                    ->whereNull('pivot.suspended_at')
+                    ->pluck('id');
+                if ($communityIds->count() > 0) {
+                    $communityIds = $communityIds->concat(
+                        Community::parentOf($communityIds->toArray())->pluck('id')
+                    );
+                }
 
-                return $q->where(function ($q) use ($communityIds) {
+                $q = $q->where(function ($q) use ($communityIds) {
                     return $q
                         // ...loanables belonging to its accessible communities...
                         ->whereHas('community', function ($q) use ($communityIds) {
@@ -306,6 +324,15 @@ class Loanable extends BaseModel
                                 $communityIds
                             );
                         })
+                        // ...or belonging to children communities that allow sharing with
+                        // parent communities (share_with_parent_communities = true)
+                        ->orWhereHas('community', function ($q) use ($communityIds) {
+                            $childrenIds = Community::childOf($communityIds->toArray());
+                            return $q->whereIn(
+                                'communities.id',
+                                $childrenIds->pluck('id')
+                            )->where('share_with_parent_communities', true);
+                        })
                         // ...or belonging to owners of his accessible communities
                         // (communities through user through owner)
                         ->orWhereHas('owner', function ($q) use ($communityIds) {
@@ -313,16 +340,39 @@ class Loanable extends BaseModel
                                 return $q->whereHas(
                                     'communities',
                                     function ($q) use ($communityIds) {
-                                        return $q->whereIn(
-                                            'community_user.community_id',
-                                            $communityIds
-                                        );
+                                        return $q
+                                            ->whereIn(
+                                                'community_user.community_id',
+                                                $communityIds
+                                            )
+                                            ->whereNotNull('community_user.approved_at')
+                                            ->whereNull('community_user.suspended_at');
                                     }
-                                );
+                                )
+                                ->orWhereHas('communities', function ($q) use ($communityIds) {
+                                    $childrenIds = Community::childOf($communityIds->toArray());
+                                    return $q->whereIn(
+                                        'communities.id',
+                                        $childrenIds->pluck('id')
+                                    )->where('share_with_parent_communities', true);
+                                });
                             });
                         });
+                });
+
                 // ...and cars are only allowed if the borrower profile is approved
-                })->whereIn('type', $allowedTypes);
+                switch (get_class($this)) {
+                    case 'App\Models\Bike':
+                    case 'App\Models\Trailer':
+                        break;
+                    case 'App\Models\Car':
+                        if (!in_array('car', $allowedTypes)) {
+                            return $q->whereRaw('1=0');
+                        }
+                        break;
+                    default:
+                        return $q->whereIn('type', $allowedTypes);
+                }
             });
 
         if ($user->owner) {
