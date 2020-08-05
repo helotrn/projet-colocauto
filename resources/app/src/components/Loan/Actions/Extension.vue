@@ -23,6 +23,7 @@
         </b-col>
 
         <b-col lg="8">
+          <loan-next-date :loanable-id="item.loanable.id" :loan-id="item.id" />
         </b-col>
       </b-row>
     </b-card-header>
