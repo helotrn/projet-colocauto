@@ -434,9 +434,6 @@ class UserController extends RestController
                     ],
                     'avatar' => [
                         'type' => 'image',
-                        'rules' => [
-                            'required' => true,
-                        ],
                     ],
                     'description' => [
                         'type' => 'textarea',

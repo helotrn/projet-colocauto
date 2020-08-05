@@ -71,7 +71,7 @@ class User extends AuthenticatableBaseModel
     public static function getRules($action = '', $auth = null) {
         switch ($action) {
             case 'submit':
-                return array_merge(static::$rules, [
+                $rules = array_merge(static::$rules, [
                     'address' => 'required',
                     'date_of_birth' => 'required',
                     'first_name' => 'required',
@@ -79,16 +79,25 @@ class User extends AuthenticatableBaseModel
                     'postal_code' => 'required',
                     'telephone' => 'required',
                 ]);
+                break;
             case 'template':
                 $rules = parent::getRules($action, $auth);
                 $rules['name'][] = 'required';
                 $rules['phone'][] = 'required';
                 $rules['address'][] = 'required';
                 $rules['postal_code'][] = 'required';
-                return $rules;
+                break;
             default:
-                return parent::getRules($action, $auth);
+                $rules = parent::getRules($action, $auth);
+                break;
         }
+
+        if ($auth && $auth->isAdmin()) {
+            unset($rules['accept_conditions']);
+            unset($rules['avatar']);
+        }
+
+        return $rules;
     }
 
     public static $transformer = UserTransformer::class;

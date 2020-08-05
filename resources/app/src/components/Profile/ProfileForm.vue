@@ -6,7 +6,7 @@
         <b-row>
           <b-col lg="4">
             <forms-validated-input type="image" name="avatar"
-              :rules="form.general.avatar.rules"
+              :rules="{ required: true }"
               :description="$t('descriptions.avatar')"
               label="📷 Ajouter une photo de profil"
               v-model="user.avatar" />
