@@ -87,7 +87,10 @@ class Loan extends BaseModel
         parent::boot();
 
         self::saved(function ($model) {
-            if ($model->loanable && !$model->intention) {
+            if ($model->loanable
+                // Check existence on database because the model is
+                // not updated automatically in the request lifecycle
+                && !$model->intention()->first()) {
                 $intention = new Intention();
                 $intention->loan()->associate($model);
                 $intention->save();
@@ -140,6 +143,7 @@ class Loan extends BaseModel
     ];
 
     protected $fillable = [
+        'borrower_id',
         'departure_at',
         'duration_in_minutes',
         'estimated_distance',

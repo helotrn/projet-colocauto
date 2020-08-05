@@ -180,4 +180,86 @@ class LoanTest extends TestCase
 
         $response->assertStatus(201);
     }
+
+    public function testCreateLoansOnlyBuildsOneIntention() {
+        $borrower = factory(Borrower::class)->create(['user_id' => $this->user->id]);
+        $user = factory(User::class)->create();
+        $owner = factory(Owner::class)->create(['user_id' => $user->id]);
+        $loanable = factory(Bike::class)->create(['owner_id' => $owner->id]);
+
+        $data = [
+            'departure_at' => now()->toDateTimeString(),
+            'duration_in_minutes' => $this->faker->randomNumber(4),
+            'estimated_distance' => $this->faker->randomNumber(4),
+            'estimated_insurance' => $this->faker->randomNumber(4),
+            'borrower_id' => $borrower->id,
+            'loanable_id' => $loanable->id,
+            'estimated_price' => 1,
+            'estimated_insurance' => 1,
+            'platform_tip' => 1,
+            'message_for_owner' => '',
+            'reason' => 'salut',
+        ];
+
+        $response = $this->json('POST', '/api/v1/loans', $data);
+
+        $response->assertStatus(201);
+        $data = json_decode($response->getContent());
+
+        $this->assertEquals(1, count($data->actions));
+    }
+
+    public function testCreateWithCollectiveLoanableIsAutomaticallyAccepted() {
+        $borrower = factory(Borrower::class)->create(['user_id' => $this->user->id]);
+        $user = factory(User::class)->create();
+        $loanable = factory(Bike::class)->create([ 'owner_id' => null ]);
+
+        $data = [
+            'departure_at' => now()->toDateTimeString(),
+            'duration_in_minutes' => $this->faker->randomNumber(4),
+            'estimated_distance' => $this->faker->randomNumber(4),
+            'estimated_insurance' => $this->faker->randomNumber(4),
+            'borrower_id' => $borrower->id,
+            'loanable_id' => $loanable->id,
+            'estimated_price' => 1,
+            'estimated_insurance' => 1,
+            'platform_tip' => 1,
+            'message_for_owner' => '',
+            'reason' => 'salut',
+        ];
+
+        $response = $this->json('POST', '/api/v1/loans', $data);
+
+        $response->assertStatus(201);
+        $data = json_decode($response->getContent());
+
+        $this->assertEquals(2, count($data->actions));
+    }
+
+    public function testCreateWithCollectiveLoanableAndEnoughBalanceAutomaticallyPrePaid() {
+        $borrower = factory(Borrower::class)->create(['user_id' => $this->user->id]);
+        $user = factory(User::class)->create();
+        $loanable = factory(Bike::class)->create([ 'owner_id' => null ]);
+
+        $data = [
+            'departure_at' => now()->toDateTimeString(),
+            'duration_in_minutes' => $this->faker->randomNumber(4),
+            'estimated_distance' => $this->faker->randomNumber(4),
+            'estimated_insurance' => $this->faker->randomNumber(4),
+            'borrower_id' => $borrower->id,
+            'loanable_id' => $loanable->id,
+            'estimated_price' => 0,
+            'estimated_insurance' => 0,
+            'platform_tip' => 0,
+            'message_for_owner' => '',
+            'reason' => 'salut',
+        ];
+
+        $response = $this->json('POST', '/api/v1/loans', $data);
+
+        $response->assertStatus(201);
+        $data = json_decode($response->getContent());
+
+        $this->assertEquals(3, count($data->actions));
+    }
 }
