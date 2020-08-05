@@ -45,6 +45,7 @@ const vuexPersist = new VuexPersist({
       email: state.login.email,
       rememberMe: state.login.rememberMe,
     },
+    seenVersions: state.seenVersions,
     stats: state.stats,
     'community.view': {
       ...state['community.view'],
@@ -201,6 +202,15 @@ const mutations = {
   },
   refreshToken(state, refreshToken) {
     state.refreshToken = refreshToken;
+  },
+  seeVersion(state, version) {
+    state.seenVersions.push(version);
+  },
+  unseeVersion(state, version) {
+    const index = state.seenVersions.indexOf(version);
+    if (index > -1) {
+      state.seenVersions.splice(index, 1);
+    }
   },
   token(state, token) {
     state.token = token;

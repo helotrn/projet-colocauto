@@ -5,7 +5,11 @@
         <h1>{{ $t('Bienvenue, {name}', { name: user.name })}}</h1>
 
         <section class="page__section">
-          <dashboard-covid-section />
+          <loan-covid-collapsible-section />
+        </section>
+
+        <section class="page__section">
+          <release-info-box :user="user" />
         </section>
 
         <section class="page__section" v-if="!hasCompletedRegistration">
@@ -130,11 +134,12 @@ en:
 import Authenticated from '@/mixins/Authenticated';
 
 import DashboardBalance from '@/components/Dashboard/Balance.vue';
-import DashboardCovidSection from '@/components/Dashboard/CovidSection.vue';
-import LoanInfoBox from '@/components/Loan/InfoBox.vue';
-import LoanableInfoBox from '@/components/Loanable/InfoBox.vue';
 import DashboardLoanHistory from '@/components/Dashboard/LoanHistory.vue';
 import DashboardResourcesList from '@/components/Dashboard/ResourcesList.vue';
+import LoanCovidCollapsibleSection from '@/components/Loan/CovidCollapsibleSection.vue';
+import LoanInfoBox from '@/components/Loan/InfoBox.vue';
+import LoanableInfoBox from '@/components/Loanable/InfoBox.vue';
+import ReleaseInfoBox from '@/components/Dashboard/ReleaseInfoBox.vue';
 import TutorialBlock from '@/components/Dashboard/TutorialBlock.vue';
 
 export default {
@@ -142,11 +147,12 @@ export default {
   mixins: [Authenticated],
   components: {
     DashboardBalance,
-    DashboardCovidSection,
+    LoanCovidCollapsibleSection,
     LoanInfoBox,
     LoanableInfoBox,
     DashboardLoanHistory,
     DashboardResourcesList,
+    ReleaseInfoBox,
     TutorialBlock,
   },
   beforeMount() {

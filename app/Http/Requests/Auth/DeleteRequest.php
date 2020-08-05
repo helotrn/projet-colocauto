@@ -15,8 +15,4 @@ class DeleteRequest extends BaseRequest
             'id' => 'required',
         ];
     }
-
-    public function messages() {
-        return [];
-    }
 }
