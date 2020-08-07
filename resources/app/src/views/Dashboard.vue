@@ -38,7 +38,7 @@
               </div>
 
               <div v-if="hasTutorial('find-vehicle')">
-                <tutorial-block title="Trouvez un véhicule"
+                <tutorial-block title="Réservez un véhicule"
                   to="/community/list"
                   bg-image="/img-vehicules.png" variant="light" />
               </div>
