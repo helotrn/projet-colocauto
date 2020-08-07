@@ -5,7 +5,7 @@
         <b-col class="text-center">
           <div class="layout-footer__logo">
             <a href="https://solon-collectif.org" target="_blank">
-              <img src="/partners/logo-solon.png" />
+              <img src="/partners/logo-solon.png" >
             </a>
           </div>
 
@@ -19,7 +19,7 @@
                 target="_blank">logiciel libre</a>.
               Vous pourrez bientôt
               <a href="https://gitlab.com/Solon-collectif/locomotion.app"
-                 target="_blank">contribuer</a>!<br>
+                target="_blank">contribuer</a>!<br>
 
               Version BETA &mdash; On expérimente ensemble sur locomotion.app.
               <a :href="googleFormUrl" target="_blank">
