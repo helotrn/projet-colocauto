@@ -1,123 +1,127 @@
 <template>
-  <layout-page name="dashboard">
-    <b-row class="page__section">
-      <b-col class="page__content__main" xl="9" lg="8" md="7">
-        <h1>{{ $t('Bienvenue, {name}', { name: user.name })}}</h1>
+  <layout-page name="dashboard" wide>
+    <b-container>
+      <b-row class="page__section">
+        <b-col class="page__content__main" xl="9" lg="8" md="7">
+          <h1>{{ $t('Bienvenue, {name}', { name: user.name })}}</h1>
 
-        <section class="page__section">
-          <loan-covid-collapsible-section />
-        </section>
+          <section class="page__section">
+            <loan-covid-collapsible-section />
+          </section>
 
-        <section class="page__section">
-          <release-info-box :user="user" />
-        </section>
+          <section class="page__section">
+            <release-info-box :user="user" />
+          </section>
 
-        <section class="page__section" v-if="!hasCompletedRegistration">
-          <b-jumbotron bg-variant="light"
-            header="Inscription"
-            :lead="$t('lead_text')">
-            <b-button to="/register">Compléter l'inscription</b-button>
-          </b-jumbotron>
-        </section>
+          <section class="page__section" v-if="!hasCompletedRegistration">
+            <b-jumbotron bg-variant="light"
+              header="Inscription"
+              :lead="$t('lead_text')">
+              <b-button to="/register">Compléter l'inscription</b-button>
+            </b-jumbotron>
+          </section>
 
-        <section class="page__section" v-if="hasTutorials">
-          <h2>Pour commencer</h2>
+          <section class="page__section" v-if="hasTutorials">
+            <h2>Pour commencer</h2>
 
-          <div class="page__section__tutorials">
-            <div v-if="hasTutorial('discover-community')">
-              <tutorial-block title="Découvrez votre voisinage"
-                to="/community"
-                bg-image="/img-tetes.png" variant="dark" />
+            <div class="page__section__tutorials">
+              <div v-if="hasTutorial('discover-community')">
+                <tutorial-block title="Découvrez votre voisinage"
+                  to="/community"
+                  bg-image="/img-tetes.png" variant="dark" />
+              </div>
+
+              <div v-if="hasTutorial('add-vehicle')">
+                <tutorial-block title="Inscrivez un véhicule"
+                  to="/profile/loanables/new"
+                  bg-image="/img-voiture.png" variant="dark" />
+              </div>
+
+              <div v-if="hasTutorial('find-vehicle')">
+                <tutorial-block title="Trouvez un véhicule"
+                  to="/community/list"
+                  bg-image="/img-vehicules.png" variant="light" />
+              </div>
+            </div>
+          </section>
+
+          <section class="page__section" v-if="hasWaitingLoans">
+            <h2>Nouvelles demandes d'emprunt</h2>
+
+            <div class="dashboard__waiting-loans" v-for="loan in waitingLoans" :key="loan.id">
+              <loan-info-box :loan="loan" :user="user" />
+            </div>
+          </section>
+
+          <section class="page__section" v-if="hasOngoingLoans">
+            <h2>Emprunts en cours</h2>
+
+            <div class="dashboard__ongoing-loans" v-for="loan in ongoingLoans" :key="loan.id">
+              <loan-info-box :loan="loan" :user="user" :buttons="['view']" />
+            </div>
+          </section>
+
+          <section class="page__section" v-if="hasUpcomingLoans">
+            <h2>Emprunts à venir</h2>
+
+            <div class="dashboard__upcoming-loans" v-for="loan in upcomingLoans" :key="loan.id">
+              <loan-info-box mode="upcoming"
+                :loan="loan" :user="user" :buttons="['view', 'cancel']" />
+            </div>
+          </section>
+
+          <section class="page__section" v-if="user.owner">
+            <b-row>
+              <b-col>
+                <h2>Mes véhicules</h2>
+              </b-col>
+              <b-col class="text-right">
+                <b-button variant="outline-primary" to="/profile/loanables">
+                  Gérer mes véhicules
+                </b-button>
+              </b-col>
+            </b-row>
+
+            <div class="dashboard__vehicles">
+              <div v-if="user.loanables.length > 0">
+                <loanable-info-box
+                  v-for="loanable in user.loanables" :key="loanable.id"
+                  v-bind="loanable" />
+              </div>
+              <div v-else>
+                Aucun véhicule.<br>
+                Ajoutez-en un <router-link to="/profile/loanables/new">ici</router-link>.
+              </div>
+            </div>
+          </section>
+        </b-col>
+
+        <b-col tag="aside" class="page__sidebar" xl="3" lg="4" md="5">
+          <b-card>
+            <div v-if="hasCompletedRegistration">
+              <dashboard-balance :user="user" />
+
+              <hr>
             </div>
 
-            <div v-if="hasTutorial('add-vehicle')">
-              <tutorial-block title="Inscrivez un véhicule"
-                to="/profile/loanables/new"
-                bg-image="/img-voiture.png" variant="dark" />
+            <div v-if="hasCompletedRegistration">
+              <dashboard-loan-history
+                :past-loans="pastLoans.slice(0, 3)"
+                :upcoming-loans="upcomingLoans.slice(0, 3)"
+                :ongoing-loans="ongoingLoans.slice(0, 3)"
+                :waiting-loans="waitingLoans.slice(0, 3)"
+                :borrower="user.borrower" />
+
+              <hr>
             </div>
 
-            <div v-if="hasTutorial('find-vehicle')">
-              <tutorial-block title="Trouvez un véhicule"
-                to="/community/list"
-                bg-image="/img-vehicules.png" variant="light" />
-            </div>
-          </div>
-        </section>
+            <dashboard-resources-list :user="user" />
+          </b-card>
+        </b-col>
+      </b-row>
+    </b-container>
 
-        <section class="page__section" v-if="hasWaitingLoans">
-          <h2>Nouvelles demandes d'emprunt</h2>
-
-          <div class="dashboard__waiting-loans" v-for="loan in waitingLoans" :key="loan.id">
-            <loan-info-box :loan="loan" :user="user" />
-          </div>
-        </section>
-
-        <section class="page__section" v-if="hasOngoingLoans">
-          <h2>Emprunts en cours</h2>
-
-          <div class="dashboard__ongoing-loans" v-for="loan in ongoingLoans" :key="loan.id">
-            <loan-info-box :loan="loan" :user="user" :buttons="['view']" />
-          </div>
-        </section>
-
-        <section class="page__section" v-if="hasUpcomingLoans">
-          <h2>Emprunts à venir</h2>
-
-          <div class="dashboard__upcoming-loans" v-for="loan in upcomingLoans" :key="loan.id">
-            <loan-info-box mode="upcoming"
-              :loan="loan" :user="user" :buttons="['view', 'cancel']" />
-          </div>
-        </section>
-
-        <section class="page__section" v-if="user.owner">
-          <b-row>
-            <b-col>
-              <h2>Mes véhicules</h2>
-            </b-col>
-            <b-col class="text-right">
-              <b-button variant="outline-primary" to="/profile/loanables">
-                Gérer mes véhicules
-              </b-button>
-            </b-col>
-          </b-row>
-
-          <div class="dashboard__vehicles">
-            <div v-if="user.loanables.length > 0">
-              <loanable-info-box
-                v-for="loanable in user.loanables" :key="loanable.id"
-                v-bind="loanable" />
-            </div>
-            <div v-else>
-              Aucun véhicule.<br>
-              Ajoutez-en un <router-link to="/profile/loanables/new">ici</router-link>.
-            </div>
-          </div>
-        </section>
-      </b-col>
-
-      <b-col tag="aside" class="page__sidebar" xl="3" lg="4" md="5">
-        <b-card>
-          <div v-if="hasCompletedRegistration">
-            <dashboard-balance :user="user" />
-
-            <hr>
-          </div>
-
-          <div v-if="hasCompletedRegistration">
-            <dashboard-loan-history
-              :past-loans="pastLoans.slice(0, 3)"
-              :upcoming-loans="upcomingLoans.slice(0, 3)"
-              :ongoing-loans="ongoingLoans.slice(0, 3)"
-              :waiting-loans="waitingLoans.slice(0, 3)"
-              :borrower="user.borrower" />
-
-            <hr>
-          </div>
-
-          <dashboard-resources-list :user="user" />
-        </b-card>
-      </b-col>
-    </b-row>
+    <partners-section />
   </layout-page>
 </template>
 
@@ -141,6 +145,7 @@ import LoanInfoBox from '@/components/Loan/InfoBox.vue';
 import LoanableInfoBox from '@/components/Loanable/InfoBox.vue';
 import ReleaseInfoBox from '@/components/Dashboard/ReleaseInfoBox.vue';
 import TutorialBlock from '@/components/Dashboard/TutorialBlock.vue';
+import PartnersSection from '@/components/Misc/PartnersSection.vue';
 
 export default {
   name: 'Dashboard',
@@ -152,6 +157,7 @@ export default {
     LoanableInfoBox,
     DashboardLoanHistory,
     DashboardResourcesList,
+    PartnersSection,
     ReleaseInfoBox,
     TutorialBlock,
   },
@@ -202,10 +208,14 @@ export default {
 
   .page__content {
     padding-top: 45px;
-    padding-bottom: 45px;
 
     &__main > h1 {
       margin-bottom: 60px;
+    }
+
+    .partners-section {
+      margin-top: 45px;
+      margin-bottom: 80px;
     }
   }
 

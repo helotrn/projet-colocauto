@@ -158,88 +158,16 @@
       </b-container>
     </section>
 
-    <section class="page__section page__section--faq">
-      <b-container>
-        <b-row>
-          <b-col>
-            <div class="page__section__header">
-              <h2 class="page__section__title">
-                {{ $t('faq.title') }}
-              </h2>
-              <b-button size="lg" variant="outline-secondary" to="faq">Visiter la FAQ</b-button>
-            </div>
-            <div class="page__section--faq__questions">
-              <div role="tablist">
-                <home-faq-item id="1"
-                  :title="$t('faq.sections.why.questions.0.title')">
-                  <p v-html="$t('faq.sections.why.questions.0.content')" />
-                </home-faq-item>
+    <main-faq />
 
-                <home-faq-item id="2" :title="$t('faq.sections.insurance.questions.0.title')">
-                  <div v-html="$t('faq.sections.insurance.questions.0.content')" />
-                </home-faq-item>
-
-                <home-faq-item id="3" :title="$t('faq.sections.costs.questions.0.title')">
-                  <div v-html="$t('faq.sections.costs.questions.0.content')" />
-                </home-faq-item>
-
-                <home-faq-item id="4" :title="$t('faq.sections.why.questions.1.title')">
-                  <p v-html="$t('faq.sections.why.questions.1.content')" />
-                </home-faq-item>
-
-                <home-faq-item id="5" :title="$t('faq.sections.participate.questions.0.title')">
-                  <div v-html="$t('faq.sections.participate.questions.0.content')" />
-                </home-faq-item>
-              </div>
-            </div>
-          </b-col>
-        </b-row>
-      </b-container>
-    </section>
-
-    <section class="page__section page__section--footer d-none d-lg-block">
-      <svg-footer-dot />
-    </section>
-
-    <section class="page__section page__section--partners">
-      <b-container>
-        <b-row>
-          <b-col>
-            <h2 class="page__section__title">Partenaires</h2>
-
-            <svg-footer-dot class="page__section--partners__dot d-lg-none" />
-
-            <div class="page__section--partners__partners">
-              <div class="page__section--partners__partners__partner">
-                <img src="/partners/Logo_Mtl_Ahuntsic-Cartierville.svg">
-              </div>
-
-              <div class="page__section--partners__partners__partner">
-                <img src="/partners/logo-chaire-mobilite.png">
-              </div>
-
-              <div class="page__section--partners__partners__partner">
-                <img src="/partners/f20-logo-n1-desjardins-v.svg">
-              </div>
-
-              <div class="page__section--partners__partners__partner">
-                <img src="/partners/FCM-logo-2018-col_fr.png">
-              </div>
-
-              <div class="page__section--partners__partners__partner">
-                <img src="/partners/Logo_Mtl_Rosemont-La-Petite-Patrie.svg">
-              </div>
-            </div>
-          </b-col>
-        </b-row>
-      </b-container>
-    </section>
+    <partners-section />
   </layout-page>
 </template>
 
 <script>
 import DashboardCovidSection from '@/components/Dashboard/CovidSection.vue';
-import HomeFaqItem from '@/components/Home/FaqItem.vue';
+import MainFaq from '@/components/Misc/MainFaq.vue';
+import PartnersSection from '@/components/Misc/PartnersSection.vue';
 
 import DataRouteGuards from '@/mixins/DataRouteGuards';
 
@@ -252,7 +180,6 @@ import CommunityDesktop from '@/assets/svg/home-community-desktop.svg';
 import Community from '@/assets/svg/home-community.svg';
 import DotDesktop from '@/assets/svg/home-dot-desktop.svg';
 import Dot from '@/assets/svg/home-dot.svg';
-import FooterDot from '@/assets/svg/home-footer-dot.svg';
 import Lend from '@/assets/svg/home-lend.svg';
 import Tridem from '@/assets/svg/home-tridem.svg';
 import WaveDesktop from '@/assets/svg/home-wave-desktop.svg';
@@ -263,7 +190,8 @@ export default {
   mixins: [DataRouteGuards],
   components: {
     DashboardCovidSection,
-    HomeFaqItem,
+    MainFaq,
+    PartnersSection,
     'svg-borrow': Borrow,
     'svg-city-desktop': CityDesktop,
     'svg-city': City,
@@ -273,7 +201,6 @@ export default {
     'svg-community': Community,
     'svg-dot-desktop': DotDesktop,
     'svg-dot': Dot,
-    'svg-footer-dot': FooterDot,
     'svg-lend': Lend,
     'svg-tridem': Tridem,
     'svg-wave-desktop': WaveDesktop,

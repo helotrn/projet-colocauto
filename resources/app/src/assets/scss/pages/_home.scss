@@ -204,7 +204,6 @@
       max-width: 100%;
       height: auto;
     }
-
   }
 
   .page__section--community {
@@ -226,92 +225,6 @@
       @include space("margin-top", -150px, "", "", -260px);
       @include position("left", 0, "", "", auto);
       @include position("right", auto, "", "", 10vw);
-    }
-  }
-
-  .page__section--faq {
-    background: #f5f8fb;
-    position: relative;
-    margin: 0;
-
-    .container {
-      max-width: 700px;
-      z-index: 2;
-      position: relative;
-    }
-
-    .page__section__header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-end;
-      margin-bottom: 35px;
-    }
-
-    background-image: url("/home-motif.png");
-    background-repeat: repeat;
-
-    .card-header {
-      margin: 0;
-      padding: 0;
-    }
-  }
-
-  .page__section--footer {
-    background-color: $white;
-    height: 136px;
-    overflow: hidden;
-    position: relative;
-    padding: 0;
-    margin: 0;
-
-    svg {
-      position: absolute;
-      left: 0;
-      bottom: 30px;
-    }
-  }
-
-  .page__section--partners {
-    background-color: $white;
-
-    h2 {
-      color: $locomotion-light-green;
-      font-size: 28px;
-    }
-
-    &__partners {
-      display: flex;
-      flex-direction: row;
-      justify-content: space-evenly;
-      flex-wrap: wrap;
-
-      &__partner {
-        margin: 20px;
-
-        img {
-          width: auto;
-          height: auto;
-
-          max-width: 200px;
-          max-height: 200px;
-        }
-
-        display: flex;
-        flex-direction: column;
-        justify-content: space-around;
-      }
-    }
-
-    @include media-breakpoint-down(lg) {
-      h2 {
-        margin-bottom: 80px;
-      }
-
-      &__dot {
-        position: absolute;
-        top: -150px;
-        left: -50%;
-      }
     }
   }
 }

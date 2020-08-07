@@ -1,5 +1,5 @@
 <template>
-  <b-card no-body class="home-faq-item">
+  <b-card no-body class="faq-item">
     <b-card-header header-tag="header" role="tab">
       <b-button size="lg" block href="#"
         v-b-toggle="`faq-${id}`" variant="white-secondary">
@@ -19,7 +19,7 @@
 
 <script>
 export default {
-  name: 'HomeFaqItem',
+  name: 'FaqItem',
   props: {
     id: {
       required: true,
