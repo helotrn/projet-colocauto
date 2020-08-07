@@ -1,18 +1,20 @@
 <template>
-  <div :class="`page ${name}`">
-    <vue-headful :title="fullTitle" />
+  <div class="layout-page">
+    <div :class="`page ${name}`">
+      <vue-headful :title="fullTitle" />
 
-    <layout-header class="page__header" :title="pageTitle" />
+        <layout-header class="page__header" :title="pageTitle" />
 
-    <div class="page__background">
-      <b-container :fluid="fluid" tag="main" :class="mainClass" v-if="!wide">
-        <layout-loading v-if="loading" />
-        <slot v-else />
-      </b-container>
-      <main :class="mainClass" v-else>
-        <layout-loading v-if="loading" />
-        <slot v-else />
-      </main>
+          <div class="page__background">
+            <b-container :fluid="fluid" tag="main" :class="mainClass" v-if="!wide">
+              <layout-loading v-if="loading" />
+                <slot v-else />
+            </b-container>
+            <main :class="mainClass" v-else>
+            <layout-loading v-if="loading" />
+              <slot v-else />
+            </main>
+          </div>
     </div>
 
     <layout-footer class="page__footer" />
