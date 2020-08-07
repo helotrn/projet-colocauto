@@ -29,7 +29,7 @@ class NokeSyncLocks extends Command
     }
 
     public function handle() {
-        if ($this->option('pretend') || app()->environment() !== 'production') {
+        if ($this->option('pretend')) {
             $this->pretend = true;
         }
 
