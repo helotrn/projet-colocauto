@@ -4,7 +4,7 @@
       <svg-footer-dot />
     </section>
 
-    <section class="page__section">
+    <section class="page__section partners-section__bottom">
       <b-container>
         <b-row>
           <b-col>
@@ -50,4 +50,9 @@ export default {
 </script>
 
 <style lang="scss">
+.partners-section {
+  &__top, &__bottom {
+    overflow: hidden;
+  }
+}
 </style>

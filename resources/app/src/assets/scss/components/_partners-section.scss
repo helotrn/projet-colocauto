@@ -21,6 +21,10 @@
       color: $locomotion-light-green;
       font-size: 28px;
       margin-bottom: 80px;
+
+      @include media-breakpoint-down(lg) {
+        margin-top: 120px;
+      }
     }
 
     &__partners {
