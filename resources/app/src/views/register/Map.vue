@@ -517,7 +517,7 @@ export default {
   position: relative;
 
   &__map {
-    width: 100vw;
+    width: 100%;
     height: calc(100vh - #{$layout-navbar-height} - 1px);
     z-index: 10;
 
