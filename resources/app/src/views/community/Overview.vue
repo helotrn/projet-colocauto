@@ -103,7 +103,7 @@ export default {
 .community-overview {
   &__map {
     width: 100vw;
-    height: calc(100vh - #{$layout-navbar-height + $footer-height} - 1px);
+    height: calc(100vh - #{$layout-navbar-height} - 1px);
     z-index: 10;
   }
 }

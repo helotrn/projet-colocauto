@@ -19,7 +19,7 @@ export default {
   iframe {
     border: 0;
     margin: 0;
-    height: calc(100vh - #{$layout-navbar-height + $footer-height});
+    height: calc(100vh - #{$layout-navbar-height});
   }
 }
 </style>

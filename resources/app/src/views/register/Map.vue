@@ -518,11 +518,11 @@ export default {
 
   &__map {
     width: 100vw;
-    height: calc(100vh - #{$layout-navbar-height + $footer-height} - 1px);
+    height: calc(100vh - #{$layout-navbar-height} - 1px);
     z-index: 10;
 
     @include media-breakpoint-down(lg) {
-      min-height: calc(100vh - #{$layout-navbar-height-mobile + $footer-height} - 1px);
+      min-height: calc(100vh - #{$layout-navbar-height-mobile} - 1px);
     }
   }
 
