@@ -283,6 +283,10 @@ class NokeService
         $url = "{$this->baseUrl}/group/edit/";
         Log::channel('noke')->info("Request to $url");
 
+        if (app()->environment() !== 'production') {
+            return;
+        }
+
         $response = $this->client->post(
             $url,
             [
