@@ -15,6 +15,7 @@ export default {
       address: 'adresse',
       avatar: 'image de profil',
       communities: prefixFields(communities.fr.fields, '(Communauté)'),
+      created_at: 'créé',
       date_of_birth: 'date de naissance',
       deleted_at: 'supprimé',
       description: 'description',

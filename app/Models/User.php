@@ -53,6 +53,7 @@ class User extends AuthenticatableBaseModel
 
     public static $filterTypes = [
         'id' => 'number',
+        'created_at' => 'date',
         'full_name' => 'text',
         'deleted_at' => 'date',
         'communities.id' => [
