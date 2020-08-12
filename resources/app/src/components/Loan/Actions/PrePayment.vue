@@ -32,7 +32,7 @@
           </div>
           <div v-else>
             <p>
-              Utilisez votre solde ou payez directement.
+              Utiliser votre solde ou payer directement.
             </p>
 
             <user-add-credit-box
