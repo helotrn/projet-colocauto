@@ -56,6 +56,7 @@ class Loan extends BaseModel
 
     public static $filterTypes = [
         'departure_at' => 'date',
+        'calendar_days' => 'number',
         'loanable.owner.user.full_name' => 'text',
         'borrower.user.full_name' => 'text',
         'incidents.status' => ['in_process', 'completed', 'canceled'],
@@ -118,9 +119,28 @@ class Loan extends BaseModel
 
                 return $query->selectRaw('loans.*');
             },
-            'loan_status' => function ($query = null) {
+            'calendar_days' => function ($query = null) {
+                $calendarDaysSql = <<<SQL
+extract(
+    'day'
+    from
+        date_trunc('day', departure_at + duration_in_minutes * interval '1 minute')
+        - date_trunc('day', departure_at)
+        + interval '1 day'
+)::integer
+SQL
+                ;
+
                 if (!$query) {
-                    return '(array_agg(all_actions.status ORDER BY all_actions.id DESC))[1]';
+                    return $calendarDaysSql;
+                }
+
+                return $query->selectRaw("$calendarDaysSql AS calendar_days");
+            },
+            'loan_status' => function ($query = null) {
+                $loanStatusSql = '(array_agg(all_actions.status ORDER BY all_actions.id DESC))[1]';
+                if (!$query) {
+                    return $loanStatusSql;
                 }
 
                 $query = static::addJoin($query, 'actions AS all_actions', function ($j) {
@@ -129,10 +149,8 @@ class Loan extends BaseModel
                 });
 
                 return $query
-                    ->selectRaw(
-                        '(array_agg(all_actions.status ORDER BY all_actions.id DESC))[1]'
-                            . ' AS loan_status'
-                    )->groupBy('loans.id');
+                    ->selectRaw("$loanStatusSql AS loan_status")
+                    ->groupBy('loans.id');
             }
         ];
     }
@@ -259,6 +277,10 @@ class Loan extends BaseModel
     }
 
     public function getCalendarDaysAttribute() {
+        if (isset($this->attributes['calendar_days'])) {
+            return $this->attributes['calendar_days'];
+        }
+
         $start = new Carbon($this->departure_at);
         $end = $start->copy()->add($this->actual_duration_in_minutes, 'minutes');
 

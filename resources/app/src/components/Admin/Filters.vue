@@ -30,7 +30,7 @@
               :id="key" :name="key" :query="def.query"
               :value="params[key]"
               @input="emitRelationChange(key, $event)" />
-            <b-form-input v-else-if="def.type === 'relation'" type="date"
+            <b-form-input v-else-if="def.type === 'relation'" type="text"
               :value="params[key]" @input="setParam(key, $event)"
               :name="key" :id="key" />
             <b-form-input v-else type="text"

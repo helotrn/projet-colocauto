@@ -32,6 +32,7 @@ export default {
       id: 'ID',
       borrower_id: 'emprunteur',
       borrower: borrowers.fr.fields,
+      calendar_days: 'jours calendaires',
       community_id: 'communauté',
       community: {
         ...prefixFields(communities.fr.fields, '(Communauté)'),
