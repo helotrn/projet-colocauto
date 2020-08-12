@@ -23,9 +23,11 @@
                 {{ $t(`${entity}.${key}s.${value}`) | capitalize }}
               </b-form-select-option>
             </b-form-select>
-            <b-form-input v-else-if="def === 'date'" type="date"
-              :value="params[key]" @input="setParam(key, $event)"
-              :name="key" :id="key" />
+            <div v-else-if="def === 'date'" type="date">
+              <forms-date-range-picker
+                :value="params[key]"
+                @input="setParam(key, $event)" />
+            </div>
             <forms-relation-input v-else-if="def.type === 'relation'"
               :id="key" :name="key" :query="def.query"
               :value="params[key]"
@@ -44,11 +46,15 @@
 </template>
 
 <script>
+import FormsDateRangePicker from '@/components/Forms/DateRangePicker.vue';
 import FormsRelationInput from '@/components/Forms/RelationInput.vue';
 
 export default {
   name: 'AdminFilters',
-  components: { FormsRelationInput },
+  components: {
+    FormsDateRangePicker,
+    FormsRelationInput,
+  },
   props: {
     entity: {
       type: String,
