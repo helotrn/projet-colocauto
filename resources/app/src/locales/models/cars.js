@@ -15,7 +15,7 @@ export default {
       engine: 'moteur',
       has_informed_insurer: "l'assureur a été informé",
       insurer: 'assureur',
-      is_value_over_fifty_thousand: 'la valeur de ce véhicule dépasse-t-elle 50 000$?',
+      is_value_over_fifty_thousand: 'cochez la case si la valeur à neuf de ce véhicule dépasse 50 000$',
       model: 'modèle',
       papers_location: 'emplacement des papiers',
       plate_number: 'numéro de plaque',
