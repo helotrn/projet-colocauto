@@ -5,7 +5,7 @@
     <b-row v-if="!!item.id">
       <b-col class="admin__buttons">
         <b-btn to="/profile/payment_methods/new">
-          {{ $t('ajouter une autre méthode de paiement') | capitalize }}
+          {{ $t('ajouter un autre mode de paiement') | capitalize }}
         </b-btn>
       </b-col>
     </b-row>
@@ -14,7 +14,7 @@
       <b-col>
         <h1 v-if="item.name">{{ item.name }}</h1>
         <h1 v-else>
-          <em>{{ $t('nouvelle') | capitalize }} {{ $tc('méthode de paiement', 1) }}</em>
+          <em>{{ $t('nouveau') | capitalize }} {{ $tc('model_name', 1) }}</em>
         </h1>
       </b-col>
     </b-row>
@@ -51,7 +51,7 @@ export default {
       const parts = [
         'LocoMotion',
         capitalize(this.$i18n.t('titles.profile')),
-        capitalize(this.$i18n.tc('méthode de paiement', 2)),
+        capitalize(this.$i18n.tc('model_name', 2)),
       ];
 
       if (this.pageTitle) {
@@ -61,7 +61,7 @@ export default {
       return parts.reverse().join(' | ');
     },
     pageTitle() {
-      return this.item.name || capitalize(this.$i18n.tc('méthode de paiement', 1));
+      return this.item.name || capitalize(this.$i18n.tc('model_name', 1));
     },
   },
   methods: {

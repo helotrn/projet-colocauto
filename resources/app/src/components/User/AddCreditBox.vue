@@ -181,8 +181,8 @@ export default {
         switch (e.response.data.message) {
           case 'no_payment_method':
             this.$store.commit('addNotification', {
-              content: "Vous n'avez pas configuré de méthode de paiement.",
-              title: 'Méthode de paiement par défaut manquante',
+              content: "Vous n'avez pas configuré de mode de paiement.",
+              title: 'Mode de paiement par défaut manquant',
               variant: 'warning',
               type: 'payment_method',
             });

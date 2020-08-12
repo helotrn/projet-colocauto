@@ -3,14 +3,14 @@
     <b-row>
       <b-col class="admin__buttons">
         <b-btn v-if="creatable" to="/profile/payment_methods/new">
-          {{ $t('ajouter une méthode de paiement') | capitalize }}
+          {{ $t('ajouter un mode de paiement') | capitalize }}
         </b-btn>
       </b-col>
     </b-row>
 
     <b-row v-if="data.length === 0">
       <p>
-        Vous pouvez ajouter une méthode de paiement pour accélérer l'ajout de crédits.
+        Vous pouvez ajouter un mode de paiement pour accélérer l'ajout de crédits.
         <router-link to="/profile/payment_methods/new">
           Cliquez ici
         </router-link> pour commencer!
