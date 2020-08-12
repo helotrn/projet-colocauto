@@ -12,7 +12,7 @@
       <b-row>
         <b-col>
           <h1 v-if="item.name">{{ item.name }}</h1>
-          <h1 v-else><em>{{ $tc('emprunt', 1) | capitalize }}</em></h1>
+          <h1 v-else><em>{{ $tc('model_name', 1) | capitalize }}</em></h1>
         </b-col>
       </b-row>
 
@@ -72,7 +72,7 @@ export default {
       const parts = [
         'LocoMotion',
         capitalize(this.$i18n.t('titles.admin')),
-        capitalize(this.$i18n.tc('emprunt', 2)),
+        capitalize(this.$i18n.tc('model_name', 2)),
       ];
 
       if (this.pageTitle) {
@@ -82,7 +82,7 @@ export default {
       return parts.reverse().join(' | ');
     },
     pageTitle() {
-      return this.item.name || capitalize(this.$i18n.tc('emprunt', 1));
+      return this.item.name || capitalize(this.$i18n.tc('model_name', 1));
     },
   },
   methods: {

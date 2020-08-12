@@ -2,7 +2,7 @@
   <b-container fluid>
     <b-row>
       <b-col>
-        <h1>{{ $tc('emprunt', 2) | capitalize }}</h1>
+        <h1>{{ $tc('model_name', 2) | capitalize }}</h1>
       </b-col>
       <b-col class="admin__buttons">
         <b-btn v-if="creatable" :to="`/admin/${slug}/new`">

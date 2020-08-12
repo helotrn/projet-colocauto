@@ -9,7 +9,7 @@ class BaseModel extends Model
 {
     use BaseModelTrait;
 
-    public static function addJoin($query, $table, $left, $operator, $right) {
+    public static function addJoin($query, $table, $left, $operator = null, $right = null) {
         if (!$query) {
             return $query;
         }
@@ -27,8 +27,13 @@ class BaseModel extends Model
                 break;
             }
         }
+
         if ($addJoin) {
-            $query = $query->leftJoin($table, $left, $operator, $right);
+            if (is_callable($left)) {
+                return $query->leftJoin($table, $left);
+            }
+
+            return $query->leftJoin($table, $left, $operator, $right);
         }
 
         return $query;

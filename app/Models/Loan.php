@@ -59,6 +59,17 @@ class Loan extends BaseModel
         'loanable.owner.user.full_name' => 'text',
         'borrower.user.full_name' => 'text',
         'incidents.status' => ['in_process', 'completed', 'canceled'],
+        'takeover.status' => ['in_process', 'completed', 'canceled'],
+        'loan_status' => ['in_process', 'completed', 'canceled'],
+        'current_step' => [
+            'intention',
+            'pre_payment',
+            'takeover',
+            'handover',
+            'payment',
+            'extension',
+            'incident'
+        ],
         'community.id' => [
             'type' => 'relation',
             'query' => [
@@ -112,7 +123,7 @@ class Loan extends BaseModel
                     return '(array_agg(all_actions.status ORDER BY all_actions.id DESC))[1]';
                 }
 
-                $query = $query->leftJoin('actions AS all_actions', function ($j) {
+                $query = static::addJoin($query, 'actions AS all_actions', function ($j) {
                     return $j->on('all_actions.loan_id', '=', 'loans.id')
                         ->whereNotIn('type', ['extension', 'incident']);
                 });
@@ -365,6 +376,36 @@ class Loan extends BaseModel
         });
 
         return $query;
+    }
+
+    public function scopeCurrentStep(Builder $query, $step, $negative = false) {
+        switch ($step) {
+            case 'pre_payment':
+                $step = 'prePayment';
+                // no break (just rename the step and carry on)
+            case 'intention':
+            case 'takeover':
+            case 'handover':
+            case 'payment':
+                return $query
+                    ->whereHas($step, function ($q) {
+                        return $q->where('status', 'in_process');
+                    })
+                    ->whereDoesntHave('incidents', function ($q) {
+                        return $q->where('status', 'in_process');
+                    })
+                    ->whereDoesntHave('extensions', function ($q) {
+                        return $q->where('status', 'in_process');
+                    });
+            case 'incident':
+            case 'extension':
+                return $query
+                    ->whereHas("{$step}s", function ($q) {
+                        return $q->where('status', 'in_process');
+                    });
+            default:
+                return $query;
+        }
     }
 
     protected function getFullLoanable() {
