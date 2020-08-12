@@ -12,19 +12,73 @@
         </router-link>
       </li>
 
-      <li class="dashboard-resources-list__resources__committee" v-if="hasCommunity()">
-        <router-link to="/community?tag=committee">
+      <li class="dashboard-resources-list__resources__motivate" v-if="hasCommunity()">
+        <a href="https://bit.ly/voisinage-LocoMotion" target="_blank">
           <img src="/icons/allo.png">
           <span>
             Motiver son quartier
           </span>
-        </router-link>
+        </a>
+      </li>
+
+      <li class="dashboard-resources-list__resources__kit" v-if="hasCommunity()">
+        <a href="https://bit.ly/locomotion-bienvenue" target="_blank">
+          <img src="/icons/allo.png">
+          <span>
+            Trousse de départ
+          </span>
+        </a>
       </li>
     </ul>
 
-    <h3>Besoin d'aide?</h3>
+    <h3>Des questions?</h3>
 
     <ul class="dashboard-resources-list__resources">
+      <li class="dashboard-resources-list__resources__messenger">
+        <div>
+          <img src="/icons/messenger.png">
+          <span>
+            Discuter avec mon voisinage
+          </span>
+        </div>
+
+        <div class="dashboard-resources-list__resources__messenger__list">
+          <span />
+          <ul>
+            <li v-if="hasCommunity(1)">
+              <a href="http://bit.ly/locomotion_bellechasse" target="_blank">
+                Bellechasse
+              </a>
+            </li>
+            <li v-if="hasCommunity(5)">
+              <a href="https://bit.ly/locomotion_fleury_est" target="_blank">
+                Fleury-Est
+              </a>
+            </li>
+            <li v-if="hasCommunity(7)">
+              <a href="http://bit.ly/locomotion_fleury_ouest" target="_blank">
+                Fleury-Ouest
+              </a>
+            </li>
+            <li v-if="hasCommunity(3)">
+              <a href="http://bit.ly/locomotion_papineau" target="_blank">
+                Papineau
+              </a>
+            </li>
+            <li v-if="hasCommunity(6)">
+              <a href="https://bit.ly/locomotion_youville" target="_blank">
+                Youville
+              </a>
+            </li>
+            <li v-if="hasNoCommunityIn([1, 5, 7, 3, 6])">
+              <a href="https://bit.ly/voisinage-LocoMotion" target="_blank">
+                LocoMotion
+              </a>
+            </li>
+          </ul>
+        </div>
+      </li>
+
       <li class="dashboard-resources-list__resources__faq">
         <router-link to="/faq">
           <img src="/icons/faq.png">
@@ -34,44 +88,14 @@
         </router-link>
       </li>
 
-      <li class="dashboard-resources-list__resources__messenger">
-        <div>
-          <img src="/icons/messenger.png">
+      <li class="dashboard-resources-list__resources__telephone">
+        <a href="tel:+14384763343">
           <span>
-            Discuter avec son voisinage
+            Numéro d'aide<br>
+            (pour cadenas uniquement)<br>
+            <strong>(438) 476-3343</strong>
           </span>
-        </div>
-
-        <div class="dashboard-resources-list__resources__messenger__list">
-          <span />
-          <ul>
-            <li v-if="hasCommunity(1)">
-              <a href="https://www.facebook.com/groups/2992806784171151" target="_blank">
-                Bellechasse
-              </a>
-            </li>
-            <li v-if="hasCommunity(5)">
-              <a href="https://www.facebook.com/groups/278871156602975" target="_blank">
-                Fleury-Est
-              </a>
-            </li>
-            <li v-if="hasCommunity(7)">
-              <a href="https://www.facebook.com/groups/292112945285190" target="_blank">
-                Fleury-Ouest
-              </a>
-            </li>
-            <li v-if="hasCommunity(3)">
-              <a href="https://www.facebook.com/groups/2304440433199032" target="_blank">
-                Papineau
-              </a>
-            </li>
-            <li v-if="hasCommunity(6)">
-              <a href="https://www.facebook.com/groups/2740404116192047" target="_blank">
-                Youville
-              </a>
-            </li>
-          </ul>
-        </div>
+        </a>
       </li>
     </ul>
 
@@ -97,6 +121,9 @@ export default {
       }
 
       return this.user.communities.find(c => c.id === id);
+    },
+    hasNoCommunityIn(ids) {
+      return ids.reduce((acc, id) => acc && !this.hasCommunity(id), true);
     },
   },
 };
