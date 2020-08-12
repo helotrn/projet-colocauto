@@ -23,7 +23,7 @@ export default [
     name: 'privacy',
     component: Privacy,
     meta: {
-      titles: 'titles.privacy',
+      title: 'titles.privacy',
     },
   },
   {
@@ -31,7 +31,7 @@ export default [
     name: 'conditions',
     component: Privacy,
     meta: {
-      titles: 'titles.privacy',
+      title: 'titles.privacy',
     },
   },
   {
@@ -39,7 +39,7 @@ export default [
     name: 'insurance',
     component: Insurance,
     meta: {
-      titles: 'titles.insurance',
+      title: 'titles.insurance',
     },
   },
   {
@@ -47,7 +47,7 @@ export default [
     name: 'faq',
     component: Faq,
     meta: {
-      titles: 'titles.faq',
+      title: 'titles.faq',
     },
   },
   {

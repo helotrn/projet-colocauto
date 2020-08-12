@@ -1,5 +1,7 @@
 <template>
   <layout-page name="faq" class="faq__content" padded>
+    <vue-headful :title="fullTitle" />
+
     <b-row tag="section" class="page__section">
       <b-col>
         <h1 class="page__section__title">
@@ -114,9 +116,21 @@
 <script>
 import Authenticated from '@/mixins/Authenticated';
 
+import { capitalize } from '@/helpers/filters';
+
 export default {
   name: 'Home',
   mixins: [Authenticated],
+  computed: {
+    fullTitle() {
+      const parts = [
+        'LocoMotion',
+        capitalize(this.$i18n.t('titles.faq')),
+      ];
+
+      return parts.reverse().join(' | ');
+    },
+  },
 };
 </script>
 

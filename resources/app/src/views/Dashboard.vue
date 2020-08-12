@@ -121,6 +121,8 @@
       </b-row>
     </b-container>
 
+    <main-faq />
+
     <partners-section />
   </layout-page>
 </template>
@@ -143,6 +145,7 @@ import DashboardResourcesList from '@/components/Dashboard/ResourcesList.vue';
 import LoanCovidCollapsibleSection from '@/components/Loan/CovidCollapsibleSection.vue';
 import LoanInfoBox from '@/components/Loan/InfoBox.vue';
 import LoanableInfoBox from '@/components/Loanable/InfoBox.vue';
+import MainFaq from '@/components/Misc/MainFaq.vue';
 import ReleaseInfoBox from '@/components/Dashboard/ReleaseInfoBox.vue';
 import TutorialBlock from '@/components/Dashboard/TutorialBlock.vue';
 import PartnersSection from '@/components/Misc/PartnersSection.vue';
@@ -152,11 +155,12 @@ export default {
   mixins: [Authenticated],
   components: {
     DashboardBalance,
+    DashboardLoanHistory,
+    DashboardResourcesList,
     LoanCovidCollapsibleSection,
     LoanInfoBox,
     LoanableInfoBox,
-    DashboardLoanHistory,
-    DashboardResourcesList,
+    MainFaq,
     PartnersSection,
     ReleaseInfoBox,
     TutorialBlock,
@@ -207,14 +211,18 @@ export default {
   }
 
   .page__content {
-    padding-top: 45px;
-
     &__main > h1 {
       margin-bottom: 60px;
     }
 
+    .main-faq {
+      padding-top: 65px;
+      padding-bottom: 65px;
+      margin-bottom: 0;
+    }
+
     .partners-section {
-      margin-top: 45px;
+      margin-top: 0;
       margin-bottom: 80px;
     }
   }

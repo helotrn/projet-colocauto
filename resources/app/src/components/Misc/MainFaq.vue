@@ -55,6 +55,12 @@ export default {
   background: #f5f8fb;
   position: relative;
   margin: 0;
+  margin-bottom: 0;
+
+  .page__section__title {
+    font-size: 50px;
+    color: $secondary;
+  }
 
   .container {
     max-width: 700px;
@@ -71,6 +77,29 @@ export default {
 
   background-image: url("/home-motif.png");
   background-repeat: repeat;
+
+  .card {
+    border: 0;
+    margin-bottom: 10px;
+
+    &-title {
+      color: $locomotion-green;
+      font-weight: bold;
+    }
+
+    &-body {
+      .form-group {
+        legend {
+          font-weight: bold;
+        }
+      }
+
+      p {
+        color: $secondary;
+        font-size: 20px;
+      }
+    }
+  }
 
   .card-header {
     margin: 0;

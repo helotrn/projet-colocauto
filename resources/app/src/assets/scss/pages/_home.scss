@@ -29,6 +29,10 @@
   .page__section {
     @include space("padding-top", 36px, "", "", 65px);
     @include space("padding-bottom", 36px, "", "", 65px);
+
+    &.main-faq {
+      margin-bottom: 0;
+    }
   }
 
   .page__section__title {
