@@ -5,6 +5,7 @@
       'is-valid': state === true,
       'is-invalid': state === false,
     }" :inline="inline"
+    :clear-button="clearButton"
     input-class="form-control"
     :format="format"
     :initial-view="initialView"
@@ -24,6 +25,11 @@ export default {
   name: 'FormsDatePicker',
   components: { Datepicker },
   props: {
+    clearButton: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
     disabled: {
       type: Boolean,
       required: false,
@@ -85,7 +91,7 @@ export default {
   },
   computed: {
     dateValue() {
-      if (!this.value) {
+      if (!this.value || this.value === 'null') {
         return null;
       }
 
@@ -97,7 +103,7 @@ export default {
   },
   methods: {
     emitInput(value) {
-      this.$emit('input', value.format('YYYY-MM-DD'));
+      this.$emit('input', value ? value.format('YYYY-MM-DD') : value);
     },
   },
 };
@@ -107,6 +113,18 @@ export default {
 .forms-datepicker {
   input.form-control[readonly]:not([disabled]) {
     background-color: $white;
+  }
+
+  .vdp-datepicker__clear-button {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    padding: 8px;
+    transition: transform $one-tick ease-in-out;
+
+    &:hover {
+      transform: scale(1.4);
+    }
   }
 }
 </style>
