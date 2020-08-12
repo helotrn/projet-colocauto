@@ -6,6 +6,7 @@ use App\Http\Requests\BaseRequest as Request;
 use App\Http\Requests\PaymentMethod\CreateRequest;
 use App\Models\PaymentMethod;
 use App\Repositories\PaymentMethodRepository;
+use Auth;
 
 class PaymentMethodController extends RestController
 {
@@ -105,16 +106,6 @@ class PaymentMethodController extends RestController
                 ],
                 'type' => [
                     'type' => 'select',
-                    'options' => [
-                        [
-                            'text' => 'Compte bancaire',
-                            'value' => 'bank_account',
-                        ],
-                        [
-                            'text' => 'Carte de crédit',
-                            'value' => 'credit_card',
-                        ],
-                    ],
                 ],
                 'credit_card_type' => [
                     'type' => 'text',
@@ -133,6 +124,19 @@ class PaymentMethodController extends RestController
                 continue;
             }
             $template['form'][$field]['rules'] = $this->formatRules($rules);
+        }
+
+        $template['form']['type']['options'] = [
+            [
+                'text' => 'Carte de crédit',
+                'value' => 'credit_card',
+            ],
+        ];
+        if (Auth::user()->isAdmin()) {
+            $template['form']['type']['options'][] = [
+                'text' => 'Compte bancaire',
+                'value' => 'bank_account',
+            ];
         }
 
         return $template;
