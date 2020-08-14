@@ -15,10 +15,16 @@ class UpdateRequest extends BaseRequest
     }
 
     public function rules() {
-        $parentIds = Community::parentOf($this->get('id'))->pluck('id')->toArray();
-        $childIds = Community::childOf($this->get('id'))->pluck('id')->toArray();
+        $id = $this->get('id');
+        $parentIds = Community::parentOf($id)->pluck('id')->toArray();
+        $childIds = Community::childOf($id)->pluck('id')->toArray();
 
         $ids = array_merge($parentIds, $childIds, [$this->get('id')]);
+
+        $currentCommunity = Community::find($id);
+        if ($currentCommunity && $currentCommunity->parent) {
+            $ids = array_diff($ids, [$currentCommunity->parent->id]);
+        }
 
         $rules = [
             'pricings' => [
