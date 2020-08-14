@@ -21,6 +21,7 @@ class Community extends BaseModel
     public static $rules = [
         'name' => 'required',
         'description' => 'nullable',
+        'long_description' => 'nullable',
         'area' => 'nullable',
         'type' => [
             'nullable',
@@ -112,6 +113,7 @@ class Community extends BaseModel
     protected $fillable = [
         'area',
         'description',
+        'long_description',
         'name',
         'type',
         'parent_id',

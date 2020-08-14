@@ -226,6 +226,7 @@ class CommunityController extends RestController
             'item' => [
                 'name' => '',
                 'description' => '',
+                'long_description' => '',
                 'area' => [],
                 'type' => 'neighborhood',
                 'pricings' => [],
@@ -237,6 +238,9 @@ class CommunityController extends RestController
                 ],
                 'description' => [
                     'type' => 'textarea',
+                ],
+                'long_description' => [
+                    'type' => 'html',
                 ],
                 'type' => [
                     'type' => 'select',

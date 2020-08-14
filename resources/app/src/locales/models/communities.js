@@ -10,6 +10,7 @@ const i18n = {
     fields: {
       description: 'description',
       id: 'ID',
+      long_description: 'texte de bienvenue / présentation',
       name: 'nom',
       proof: 'preuve de résidence',
       tags: {
