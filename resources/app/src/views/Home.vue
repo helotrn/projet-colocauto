@@ -58,7 +58,7 @@
                 </b-col>
                 <b-col md="12">
                   <p class="text-center mb-5">
-                    Empruntez une auto à 5 minutes à pied
+                    Empruntez une auto, un vélo, une remorque&ellips; à 5 minutes à pied!
                   </p>
                 </b-col>
               </b-row>
@@ -71,7 +71,7 @@
                 </b-col>
                 <b-col md="12">
                   <p class="text-center mb-5">
-                    Partagez votre auto à votre voisine
+                    Partagez votre auto avec vos voisin-e-s
                   </p>
                 </b-col>
               </b-row>
@@ -144,7 +144,7 @@
           </b-col>
           <b-col lg="6">
             <h2 class="mt-4 mb-4 page__section__title">
-              Rejoignez un voisinage
+              Rejoignez vos voisin-e-s
             </h2>
 
             <p class="mb-5">
