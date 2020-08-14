@@ -116,7 +116,7 @@
               <b-col cols="6">
                 <p>
                   LocoMotion est un projet citoyen et collaboratif.
-                  Les contributions volontaires financent son développement.
+                  Les contributions volontaires financent son fonctionnement.
                 </p>
               </b-col>
             </b-row>

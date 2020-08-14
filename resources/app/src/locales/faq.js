@@ -67,7 +67,7 @@ export default {
               + ' par les personnes qui utilisent mon auto?',
             content: "<p>Pas tout à fait, un petite portion va à l'assurance. La personne qui"
               + ' utilise votre auto peut aussi choisir de contribuer financièrement au'
-              + ' développement de la plateforme LocoMotion.</p>',
+              + ' fonctionnement de la plateforme LocoMotion.</p>',
           },
         },
       },

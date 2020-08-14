@@ -26,7 +26,7 @@ export default {
     },
     descriptions: {
       platform_tip: 'LocoMotion est un projet citoyen et collaboratif. Participez à son'
-        + 'développement en donnant une contribution volontaire.',
+        + 'fonctionnement en donnant une contribution volontaire.',
     },
     fields: {
       id: 'ID',
