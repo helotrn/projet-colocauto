@@ -8,9 +8,9 @@
 
           <h3>{{ user.full_name }}</h3>
 
-          <p>{{ user.description }}</p>
+          <p :title="user.description">{{ user.description }}</p>
 
-          <div v-if="isAdmin && communityId" class="user-card__admin-actions">
+          <div v-if="false && isAdmin && communityId" class="user-card__admin-actions">
             <a href="#" @click.prevent="unsetCommittee" v-if="isCommittee">
               Désaffecter du comité du voisinage
             </a>
@@ -103,6 +103,10 @@ export default {
     height: 100%;
   }
 
+  &__admin-actions {
+    margin-top: 1rem;
+  }
+
   &__content {
     &__avatar.col {
       border-radius: 15px 0 0 15px;
@@ -115,6 +119,16 @@ export default {
     &__details {
       > div {
         padding: 30px;
+      }
+
+      p {
+        margin-bottom: 0;
+
+        display: -webkit-box; /* stylelint-disable-line value-no-vendor-prefix */
+        overflow: hidden;
+        text-overflow: ellipsis;
+        -webkit-line-clamp: 3; /* stylelint-disable-line property-no-vendor-prefix */
+        -webkit-box-orient: vertical; /* stylelint-disable-line property-no-vendor-prefix */
       }
 
       i {

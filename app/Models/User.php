@@ -374,14 +374,10 @@ class User extends AuthenticatableBaseModel
         }
 
         return $query->where(function ($q2) use ($q) {
+            $sql = static::getColumnsDefinition()['full_name']();
             return $q2
                 ->where(
-                    \DB::raw('unaccent(name)'),
-                    'ILIKE',
-                    \DB::raw("unaccent('%$q%')")
-                )
-                ->orWhere(
-                    \DB::raw('unaccent(last_name)'),
+                    \DB::raw("unaccent($sql)"),
                     'ILIKE',
                     \DB::raw("unaccent('%$q%')")
                 );

@@ -108,6 +108,14 @@ class Community extends BaseModel
 
                 return $query->selectRaw('ST_Centroid(communities.area::geometry) AS center');
             },
+            'users_count' => function ($query = null) {
+                $usersCountSql = '(SELECT count(id) FROM users WHERE users.id = communities.id)';
+                if (!$query) {
+                    return $usersCountSql;
+                }
+
+                return $query->selectRaw("$usersCountSql AS users_count");
+            },
         ];
     }
 
@@ -144,7 +152,7 @@ class Community extends BaseModel
 
     public $collections = ['children', 'users', 'pricings', 'loanables'];
 
-    public $computed =  ['area_google', 'center_google'];
+    public $computed =  ['area_google', 'center_google', 'center', 'users_count'];
 
     public function parent() {
         return $this->belongsTo(Community::class, 'parent_id');
@@ -181,6 +189,18 @@ class Community extends BaseModel
             ?: $this->pricings->where('object_type', null)->first();
     }
 
+    public function getCenterAttribute() {
+        if (isset($this->attributes['center'])) {
+            if (isset(self::$memoCenter[$this->id])) {
+                return self::$memoCenter[$this->id];
+            }
+            $caster = new PointCast($this, 'center');
+            return $caster->castAttribute($this->attributes['center']);
+        }
+
+        return get_centroid_of_polygon($this->area);
+    }
+
     public function getAreaGoogleAttribute() {
         if (!$this->area) {
             return null;
@@ -199,6 +219,14 @@ class Community extends BaseModel
             'lat' => $this->center[0],
             'lng' => $this->center[1],
         ];
+    }
+
+    public function getUsersCountAttribute() {
+        if (isset($this->attributes['users_count'])) {
+            return $this->attributes['users_count'];
+        }
+
+        return $this->users->count();
     }
 
     public function scopeAccessibleBy(Builder $query, $user) {

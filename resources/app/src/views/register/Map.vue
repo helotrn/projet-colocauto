@@ -30,7 +30,7 @@
           <b-button type="submit" variant="primary" class="mr-3 mb-3">Rejoindre</b-button>
           <b-button type="reset" variant="warning" class="mb-3">Retour</b-button>
           <br>
-          <b-button variant="outline-light" v-b-modal="'borouh-difference-modal'">
+          <b-button variant="outline-light" v-b-modal="'borough-difference-modal'">
             Voisinage, quartier: quelle différence?
           </b-button>
         </b-form>
@@ -193,9 +193,6 @@ export default {
         strokeColor: '#16a59e',
         strokeOpacity: 0.7,
         zIndex: 1,
-      },
-      mapIcon: {
-        url: 'perdu.com',
       },
       mapOptions: {
         streetViewControl: false,
