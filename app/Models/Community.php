@@ -140,12 +140,16 @@ class Community extends BaseModel
 
     public $items = ['parent'];
 
-    public $collections = ['users', 'pricings', 'loanables'];
+    public $collections = ['children', 'users', 'pricings', 'loanables'];
 
     public $computed =  ['area_google', 'center_google'];
 
     public function parent() {
         return $this->belongsTo(Community::class, 'parent_id');
+    }
+
+    public function children() {
+        return $this->hasMany(Community::class, 'parent_id');
     }
 
     public function loanables() {
