@@ -225,6 +225,7 @@ class CommunityController extends RestController
         $template = [
             'item' => [
                 'name' => '',
+                'chat_group_url' => '',
                 'description' => '',
                 'long_description' => '',
                 'area' => [],
@@ -241,6 +242,9 @@ class CommunityController extends RestController
                 ],
                 'long_description' => [
                     'type' => 'html',
+                ],
+                'chat_group_url' => [
+                    'type' => 'text',
                 ],
                 'type' => [
                     'type' => 'select',

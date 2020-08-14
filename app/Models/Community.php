@@ -20,6 +20,7 @@ class Community extends BaseModel
 
     public static $rules = [
         'name' => 'required',
+        'chat_group_url' => 'nullable',
         'description' => 'nullable',
         'long_description' => 'nullable',
         'area' => 'nullable',
@@ -112,6 +113,7 @@ class Community extends BaseModel
 
     protected $fillable = [
         'area',
+        'chat_group_url',
         'description',
         'long_description',
         'name',

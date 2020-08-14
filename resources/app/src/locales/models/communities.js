@@ -8,6 +8,7 @@ const i18n = {
     'créer une communauté': 'créer une communauté',
     '{count} communauté sélectionnée': 'aucune communauté sélectionnée | {count} communauté sélectionnée | {count} communautés sélectionnées',
     fields: {
+      chat_group_url: 'URL du groupe de discussion',
       description: 'description',
       id: 'ID',
       long_description: 'texte de bienvenue / présentation',
