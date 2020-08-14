@@ -19,8 +19,12 @@ function wrap_array_keys($value) {
  * -GA
  */
 function get_area_of_polygon($geometry) {
+    if (!$geometry) {
+        return 0;
+    }
+
     $area = 0;
-    for ($vi=0, $vl=sizeof($geometry); $vi<$vl; $vi++) {
+    for ($vi=0, $vl = sizeof($geometry); $vi<$vl; $vi++) {
         $thisx = $geometry[$vi][0];
         $thisy = $geometry[$vi][1];
         $nextx = $geometry[($vi+1) % $vl][0];
@@ -32,10 +36,14 @@ function get_area_of_polygon($geometry) {
 }
 
 function get_centroid_of_polygon($geometry) {
+    if (!$geometry) {
+        return 0;
+    }
+
     $cx = 0;
     $cy = 0;
 
-    for ($vi=0, $vl=sizeof($geometry); $vi<$vl; $vi++) {
+    for ($vi=0, $vl = sizeof($geometry); $vi<$vl; $vi++) {
         $thisx = $geometry[$vi][0];
         $thisy = $geometry[$vi][1];
         $nextx = $geometry[($vi+1) % $vl][0];

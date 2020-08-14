@@ -12,13 +12,13 @@
         :options="mapOptions"
         map-type-id="terrain">
         <gmap-polygon
-        :path="borough.area_google"
-        :label="borough.name"
-        :options="boroughPolygonOptions" />
-          <gmap-polygon v-for="c in neighborhoods" :key="`polygon-${c.id}`"
-            :path="c.area_google"
-            :label="c.name"
-            :options="polygonOptions" />
+          :path="borough.area_google"
+          :label="borough.name"
+          :options="boroughPolygonOptions" />
+        <gmap-polygon v-for="c in neighborhoods" :key="`polygon-${c.id}`"
+          :path="c.area_google"
+          :label="c.name"
+          :options="polygonOptions" />
       </gmap-map>
     </b-col>
   </b-row>

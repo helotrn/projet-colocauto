@@ -87,11 +87,11 @@
           <schematized-community-map
             :borough="borough" :neighborhoods="neighborhoods" />
 
-            <div class="community__map__total">
-              {{ totalUsersCount }}<br>
-              voisines et voisins participent à
-              LocoMotion dans votre quartier!
-            </div>
+          <div class="community__map__total">
+            {{ totalUsersCount }}<br>
+            voisines et voisins participent à
+            LocoMotion dans votre quartier!
+          </div>
         </b-col>
       </b-row>
 
