@@ -105,7 +105,10 @@
         :placeholder="placeholder" :disabled="disabled"
         :state="getValidationState(validationContext)"
         :value="value"
-        @input="emitInput"/>
+        @input="emitInput" />
+      <vue-editor v-else-if="type === 'html'"
+        :value="value"
+        @input="emitInput" />
       <b-form-input v-else
         :id="name" :name="name"
         type="text"
@@ -122,6 +125,7 @@
 
 <script>
 import { CurrencyInput } from 'vue-currency-input';
+import { VueEditor } from 'vue2-editor';
 
 import FormsDatePicker from '@/components/Forms/DatePicker.vue';
 import FormsDateTimePicker from '@/components/Forms/DateTimePicker.vue';
@@ -297,6 +301,7 @@ export default {
     FormsImageUploader,
     FormsMapInput,
     FormsRelationInput,
+    VueEditor,
   },
   computed: {
     floatValue() {
