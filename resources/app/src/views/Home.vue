@@ -58,7 +58,7 @@
                 </b-col>
                 <b-col md="12">
                   <p class="text-center mb-5">
-                    Empruntez une auto, un vélo, une remorque&ellips; à 5 minutes à pied!
+                    Empruntez une auto, un vélo, une remorque&mldr; à 5 minutes à pied!
                   </p>
                 </b-col>
               </b-row>
