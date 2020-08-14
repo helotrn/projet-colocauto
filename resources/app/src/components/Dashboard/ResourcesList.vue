@@ -12,7 +12,7 @@
         </router-link>
       </li>
 
-      <li class="dashboard-resources-list__resources__motivate" v-if="hasCommunity()">
+      <li class="dashboard-resources-list__resources__motivate" v-if="hasCommunity">
         <a href="https://bit.ly/voisinage-LocoMotion" target="_blank">
           <img src="/icons/allo.png">
           <span>
@@ -21,7 +21,7 @@
         </a>
       </li>
 
-      <li class="dashboard-resources-list__resources__kit" v-if="hasCommunity()">
+      <li class="dashboard-resources-list__resources__kit" v-if="hasCommunity">
         <a href="https://bit.ly/locomotion-bienvenue" target="_blank">
           <img src="/icons/allo.png">
           <span>
@@ -44,33 +44,13 @@
 
         <div class="dashboard-resources-list__resources__messenger__list">
           <span />
-          <ul>
-            <li v-if="hasCommunity(1)">
-              <a href="http://bit.ly/locomotion_bellechasse" target="_blank">
-                Bellechasse
-              </a>
+          <ul v-if="communitiesWithChatGroup.length > 0">
+            <li v-for="c in communitiesWithChatGroup" :key="c.id">
+              <a :href="c.chat_group_url" target="_blank">{{ c.name }}</a>
             </li>
-            <li v-if="hasCommunity(5)">
-              <a href="https://bit.ly/locomotion_fleury_est" target="_blank">
-                Fleury-Est
-              </a>
-            </li>
-            <li v-if="hasCommunity(7)">
-              <a href="http://bit.ly/locomotion_fleury_ouest" target="_blank">
-                Fleury-Ouest
-              </a>
-            </li>
-            <li v-if="hasCommunity(3)">
-              <a href="http://bit.ly/locomotion_papineau" target="_blank">
-                Papineau
-              </a>
-            </li>
-            <li v-if="hasCommunity(6)">
-              <a href="https://bit.ly/locomotion_youville" target="_blank">
-                Youville
-              </a>
-            </li>
-            <li v-if="hasNoCommunityIn([1, 5, 7, 3, 6])">
+          </ul>
+          <ul v-else>
+            <li>
               <a href="https://bit.ly/voisinage-LocoMotion" target="_blank">
                 LocoMotion
               </a>
@@ -114,16 +94,12 @@ export default {
       type: Object,
     },
   },
-  methods: {
-    hasCommunity(id) {
-      if (!id) {
-        return this.user.communities.length > 0;
-      }
-
-      return this.user.communities.find(c => c.id === id);
+  computed: {
+    communitiesWithChatGroup() {
+      return this.user.communities.filter(c => !!c.chat_group_url);
     },
-    hasNoCommunityIn(ids) {
-      return ids.reduce((acc, id) => acc && !this.hasCommunity(id), true);
+    hasCommunity() {
+      return this.user.communities.length > 0;
     },
   },
 };
