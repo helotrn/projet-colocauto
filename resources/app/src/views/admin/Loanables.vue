@@ -37,7 +37,7 @@
           :sort-by.sync="sortBy" :sort-desc.sync="sortDesc" no-sort-reset
           :show-empty="true" empty-text="Pas de véhicule">
           <template v-slot:cell(type)="row">
-            {{ $t(`types.${row.item.type}`) | capitalize }}
+            {{ $t(`fields.types.${row.item.type}`) | capitalize }}
           </template>
           <template v-slot:cell(owner.user.full_name)="row">
             <span v-if="row.item.owner">

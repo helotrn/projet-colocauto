@@ -17,10 +17,10 @@
               :value="params[key]" @input="setParam(key, $event)"
               :id="key" :name="key">
               <b-form-select-option :value="null">
-                {{ $t(`${entity}.${key}s.null`) | capitalize }}
+                {{ $t(`${entity}.fields.${key}s.null`) | capitalize }}
               </b-form-select-option>
               <b-form-select-option v-for="value in def" :key="value" :value="value">
-                {{ $t(`${entity}.${key}s.${value}`) | capitalize }}
+                {{ $t(`${entity}.fields.${key}s.${value}`) | capitalize }}
               </b-form-select-option>
             </b-form-select>
             <div v-else-if="def === 'date'" type="date">

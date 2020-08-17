@@ -46,6 +46,7 @@ export default {
       estimated_price: 'coût estimé',
       incidents: {
         status: 'statut (Incident)',
+        statuss, // FIXME
       },
       loanable_id: loanables.fr.model.singular,
       loanable: {
@@ -53,6 +54,7 @@ export default {
         model_name: loanables.fr.model_name,
       },
       loan_status: "statut de l'emprunt",
+      loan_statuss: statuss,
       loanable_type: 'type de véhicule',
       message_for_owner: 'message pour le propriétaire',
       platform_tip: 'contribution volontaire LocoMotion',
@@ -61,19 +63,13 @@ export default {
       return_at: 'retour',
       takeover: {
         status: 'statut (Prise de possession)',
+        statuss, // FIXME
       },
     },
-    incidents: {
-      statuss, // FIXME
-    },
-    loan_statuss: statuss,
     model: {
       singular: 'emprunt',
     },
     model_name: 'emprunt | emprunts',
-    takeover: {
-      statuss, // FIXME
-    },
     placeholders: {
       reason: 'ex.: épicerie, déménagement, etc.',
     },

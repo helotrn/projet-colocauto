@@ -19,14 +19,14 @@ const i18n = {
         model_name: tags.fr.model_name,
       },
       type: 'type',
+      types: {
+        neighborhood: 'voisinage',
+        null: "n'importe quel type",
+        borough: 'quartier',
+        private: 'privée',
+      },
     },
     model_name: 'communauté | communautés',
-    types: {
-      neighborhood: 'voisinage',
-      null: "n'importe quel type",
-      borough: 'quartier',
-      private: 'privée',
-    },
   },
   en: {
     communauté: 'community | communities',
@@ -36,17 +36,17 @@ const i18n = {
       description: 'description',
       id: 'ID',
       name: 'name',
-      type: 'type',
       tags: {
         ...tags.fr.fields,
         model_name: tags.fr.model_name,
       },
-    },
-    types: {
-      neighborhood: 'neighborhood',
-      null: 'any type',
-      borough: 'borough',
-      private: 'private',
+      type: 'type',
+      types: {
+        neighborhood: 'neighborhood',
+        null: 'any type',
+        borough: 'borough',
+        private: 'private',
+      },
     },
   },
 };

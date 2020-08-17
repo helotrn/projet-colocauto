@@ -48,6 +48,12 @@ export default {
       share_with_parent_communities: "j'accepte que mon véhicule soit partagé au quartier d'appartenance",
       share_with_parent_communities_dynamic: "j'accepte que mon véhicule soit partagé avec {shared_with}",
       type: 'type de véhicule',
+      types: {
+        bike: 'vélo',
+        car: 'auto',
+        null: "n'importe quel type",
+        trailer: 'remorque',
+      },
     },
     model: {
       singular: 'véhicule',
@@ -72,12 +78,6 @@ export default {
       kid: 'enfant',
     },
     transmission_modes: cars.fr.transmission_modes,
-    types: {
-      bike: 'vélo',
-      car: 'auto',
-      null: "n'importe quel type",
-      trailer: 'remorque',
-    },
     véhicule: 'véhicule | véhicules',
   },
 };
