@@ -57,6 +57,7 @@ class Loan extends BaseModel
     public static $filterTypes = [
         'departure_at' => 'date',
         'calendar_days' => 'number',
+        'loanable.type' => ['car', 'bike', 'trailer'],
         'loanable.owner.user.full_name' => 'text',
         'borrower.user.full_name' => 'text',
         'incidents.status' => ['in_process', 'completed', 'canceled'],
