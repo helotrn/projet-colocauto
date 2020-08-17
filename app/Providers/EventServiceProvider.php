@@ -21,7 +21,7 @@ class EventServiceProvider extends ServiceProvider
         ],
         'App\Events\LoanCreatedEvent' => [
             'App\Listeners\SendLoanCreatedEmails',
-            'App\Listeners\SyncNokeUser',
+            'App\Listeners\CreateNokeUserIfNotExists',
         ],
         'App\Events\LoanIntentionAcceptedEvent' => [
             'App\Listeners\SendLoanIntentionAcceptedEmails',

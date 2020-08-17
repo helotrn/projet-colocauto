@@ -6,7 +6,7 @@ use App\Events\LoanCreatedEvent;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 
-class SyncNokeUser
+class CreateNokeUserIfNotExists
 {
     public function handle(LoanCreatedEvent $event) {
         if ($event->loan->loanable->padlock) {
