@@ -121,6 +121,29 @@ export default new RestModule('users', {
       throw e;
     }
   },
+  async updateEmail({ commit }, { userId, currentPassword, newEmail }) {
+    try {
+      const ajax = Vue.axios.post(`/users/${userId}/email`, {
+        password: currentPassword,
+        email: newEmail,
+      });
+
+      commit('ajax', ajax);
+
+      const { data: item } = await ajax;
+
+      commit('mergeItem', item);
+
+      commit('ajax', null);
+    } catch (e) {
+      commit('ajax', null);
+
+      const { request, response } = e;
+      commit('error', { request, response });
+
+      throw e;
+    }
+  },
   async updatePassword({ commit }, { userId, currentPassword, newPassword }) {
     try {
       const ajax = Vue.axios.post(`/users/${userId}/password`, {

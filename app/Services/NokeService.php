@@ -90,6 +90,40 @@ class NokeService
         return $newGroup;
     }
 
+    public function findUserByEmail($email, $force = false) {
+        $this->fetchUsers($force);
+
+        if (!isset($this->usersIndex[$email])) {
+            return null;
+        }
+
+        $user = $this->usersIndex[$email];
+
+        $url = "{$this->baseUrl}/user/profile/";
+        Log::channel('noke')->info("Request to $url for user ID $user->id");
+
+        $response = $this->client->post(
+            $url,
+            [
+                'json' => [
+                    'id' => $user->id,
+                ],
+                'headers' => [
+                    'Accept' => 'application/json',
+                    'Authorization' => "Bearer $this->token",
+                ],
+            ]
+        );
+
+        $result = json_decode($response->getBody());
+
+        if (isset($result->result) && $result->result === 'failure') {
+            return null;
+        }
+
+        return $result->data;
+    }
+
     public function findOrCreateUser(User $user) {
         if (!$this->users) {
             $this->fetchUsers();
@@ -281,6 +315,28 @@ class NokeService
 
     public function updateGroup($data) {
         $url = "{$this->baseUrl}/group/edit/";
+        Log::channel('noke')->info("Request to $url");
+
+        if (app()->environment() !== 'production') {
+            return;
+        }
+
+        $response = $this->client->post(
+            $url,
+            [
+                'json' => $data,
+                'headers' => [
+                    'Accept' => 'application/json',
+                    'Authorization' => "Bearer $this->token",
+                ],
+            ]
+        );
+
+        return json_decode($response->getBody());
+    }
+
+    public function updateUser($data) {
+        $url = "{$this->baseUrl}/user/edit/";
         Log::channel('noke')->info("Request to $url");
 
         if (app()->environment() !== 'production') {

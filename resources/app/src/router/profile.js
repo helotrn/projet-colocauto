@@ -1,14 +1,15 @@
-import Profile from '../views/Profile.vue';
-import ProfileLocomotion from '../views/profile/Locomotion.vue';
-import ProfileBorrower from '../views/profile/Borrower.vue';
-import ProfileCommunities from '../views/profile/Communities.vue';
-import ProfileInvoice from '../views/profile/Invoice.vue';
-import ProfileInvoices from '../views/profile/Invoices.vue';
-import ProfileLoans from '../views/profile/Loans.vue';
-import ProfileLoanables from '../views/profile/Loanables.vue';
-import ProfileLoanable from '../views/profile/Loanable.vue';
-import ProfilePaymentMethods from '../views/profile/PaymentMethods.vue';
-import ProfilePaymentMethod from '../views/profile/PaymentMethod.vue';
+import Profile from '@/views/Profile.vue';
+import ProfileAccount from '@/views/profile/Account.vue';
+import ProfileBorrower from '@/views/profile/Borrower.vue';
+import ProfileCommunities from '@/views/profile/Communities.vue';
+import ProfileInvoice from '@/views/profile/Invoice.vue';
+import ProfileInvoices from '@/views/profile/Invoices.vue';
+import ProfileLoans from '@/views/profile/Loans.vue';
+import ProfileLoanables from '@/views/profile/Loanables.vue';
+import ProfileLoanable from '@/views/profile/Loanable.vue';
+import ProfileLocomotion from '@/views/profile/Locomotion.vue';
+import ProfilePaymentMethods from '@/views/profile/PaymentMethods.vue';
+import ProfilePaymentMethod from '@/views/profile/PaymentMethod.vue';
 
 export default {
   path: '/profile',
@@ -19,6 +20,18 @@ export default {
     title: 'titles.profile',
   },
   children: [
+    {
+      path: 'account',
+      component: ProfileAccount,
+      meta: {
+        auth: true,
+        title: 'titles.account',
+        slug: 'users',
+        params: {
+          fields: 'id,name,email',
+        },
+      },
+    },
     {
       path: 'locomotion',
       component: ProfileLocomotion,
@@ -153,6 +166,18 @@ export default {
               ].join(','),
             },
           },
+        },
+      },
+    },
+    {
+      path: 'locomotion',
+      component: ProfileLocomotion,
+      meta: {
+        auth: true,
+        title: 'titles.profile',
+        slug: 'users',
+        params: {
+          fields: '*,avatar.*',
         },
       },
     },

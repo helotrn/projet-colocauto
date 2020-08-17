@@ -154,6 +154,11 @@ export default {
           title = 'Mauvaise requête';
           variant = 'warning';
           break;
+        case 401:
+          content = 'Mot de passe ou courriel invalide.';
+          title = "Erreur d'authentification";
+          variant = 'warning';
+          break;
         case 403:
           content = "Vous n'avez pas les permissions nécessaires pour effectuer cette action.";
           title = 'Permissions insuffisantes';
@@ -170,8 +175,7 @@ export default {
           variant = 'danger';
           break;
         default:
-          // 422 errors are managed at the request level
-          break;
+          return;
       }
 
       this.$store.commit('addNotification', {

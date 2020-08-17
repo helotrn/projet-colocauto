@@ -5,14 +5,17 @@ namespace App\Http\Controllers;
 use App\Events\AddedToUserBalanceEvent;
 use App\Events\ClaimedUserBalanceEvent;
 use App\Events\RegistrationSubmittedEvent;
+use App\Events\UserEmailUpdated;
 use App\Exports\UsersExport;
 use App\Http\Requests\AdminRequest;
+use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\BaseRequest as Request;
 use App\Http\Requests\User\BorrowerStatusRequest;
 use App\Http\Requests\User\AddBalanceRequest;
 use App\Http\Requests\User\CreateRequest;
 use App\Http\Requests\User\DestroyRequest;
 use App\Http\Requests\User\UpdateRequest;
+use App\Http\Requests\User\UpdateEmailRequest;
 use App\Http\Requests\User\UpdatePasswordRequest;
 use App\Http\Requests\User\UserTagRequest;
 use App\Models\Borrower;
@@ -109,6 +112,35 @@ class UserController extends RestController
         }
     }
 
+    public function updateEmail(UpdateEmailRequest $request, $id) {
+        $item = $this->repo->find($request->redirectAuth(Request::class), $id);
+
+        if (!$request->user()->isAdmin()) {
+            $currentPassword = $request->get('password');
+
+            $loginRequest = new LoginRequest();
+            $loginRequest->setMethod('POST');
+            $loginRequest->request->add([
+                'email' => $item->email,
+                'password' => $currentPassword,
+            ]);
+
+            $authController = app('App\Http\Controllers\AuthController');
+            $response = $authController->login($loginRequest);
+            if ($response->getStatusCode() !== 200) {
+                return $response;
+            }
+        }
+
+        $previousEmail = $item->email;
+
+        $user = $this->repo->update($request, $id, $request->only('email'));
+
+        event(new UserEmailUpdated($user, $previousEmail, $request->get('email')));
+
+        return $this->respondWithItem($request, $user);
+    }
+
     public function updatePassword(UpdatePasswordRequest $request, $id) {
         $item = $this->repo->find($request->redirectAuth(Request::class), $id);
 
@@ -121,7 +153,9 @@ class UserController extends RestController
                 'email' => $item->email,
                 'password' => $currentPassword,
             ]);
-            $response = $this->login($loginRequest);
+
+            $authController = app('App\Http\Controllers\AuthController');
+            $authController->login($loginRequest);
         }
 
         $this->repo->updatePassword($request, $id, $request->get('new'));

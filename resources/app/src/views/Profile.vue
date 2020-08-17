@@ -23,7 +23,7 @@ import Authenticated from '@/mixins/Authenticated';
 
 const routeGuard = (to, from, next) => {
   if (to.name === 'profile') {
-    next('/profile/account');
+    next('/profile/locomotion');
   } else {
     next();
   }

@@ -4,7 +4,7 @@ namespace App\Http\Requests\User;
 
 use App\Http\Requests\BaseRequest;
 
-class UpdatePasswordRequest extends BaseRequest
+class UpdateEmailRequest extends BaseRequest
 {
     public function authorize() {
         $user = $this->user();
@@ -16,13 +16,13 @@ class UpdatePasswordRequest extends BaseRequest
 
         if ($user && $user->isAdmin()) {
             return [
-                'new' => 'required',
+              'email' => [ 'required', 'email', "unique:users,email,$user->id" ],
             ];
         }
 
         return [
-            'current' => 'required',
-            'new' => [ 'required' ],
+            'password' => 'required',
+            'email' => [ 'required', 'email', "unique:users,email,$user->id" ],
         ];
     }
 }

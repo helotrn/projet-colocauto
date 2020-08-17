@@ -3,6 +3,9 @@
     <b-nav-item to="/profile/locomotion">
       {{ $t('profile.titles.profile') }}
     </b-nav-item>
+    <b-nav-item to="/profile/account">
+      {{ $t('profile.titles.account') }}
+    </b-nav-item>
     <b-nav-item to="/profile/communities">
       {{ $t('profile.titles.communities') }}
     </b-nav-item>

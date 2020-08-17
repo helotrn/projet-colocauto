@@ -50,6 +50,9 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\LoanableCreatedEvent' => [
             'App\Listeners\SendLoanableCreatedEmails',
         ],
+        'App\Events\UserEmailUpdated' => [
+            'App\Listeners\UpdateNokeUserEmail',
+        ],
     ];
 
     public function boot() {

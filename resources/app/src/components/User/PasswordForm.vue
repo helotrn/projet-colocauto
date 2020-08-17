@@ -1,22 +1,22 @@
 <template>
-  <div class="password-update-form">
+  <div class="password-form">
     <validation-observer ref="observer" v-slot="{ passes }">
-      <b-form :novalidate="true" class="password-update-form__form"
+      <b-form :novalidate="true" class="password-form__form"
         @submit.stop.prevent="passes(updatePassword)">
         <forms-validated-input v-if="!isAdmin" mode="lazy"
           name="current_password" :label="$t('current_password')"
-          :rules="{ required: !!newPassword }" type="password"
+          :rules="{ required: !isAdmin || !!newPassword }" type="password"
           :placeholder="$t('current_password')"
           v-model="currentPassword" />
 
         <forms-validated-input mode="lazy" name="new_password" :label="$t('new_password')"
-          :rules="{ required: !user.id, min: 8 }" type="password"
+          :rules="{ required: !user.id || !isAdmin, min: 8 }" type="password"
           :placeholder="$t('new_password')" description="Minimum 8 caractères"
           v-model="newPassword" />
 
         <forms-validated-input mode="lazy"
           name="new_password_repeat" :label="$t('new_password_repeat')"
-          :rules="{ required: !user.id, is: newPassword }" type="password"
+          :rules="{ required: !user.id || !isAdmin, is: newPassword }" type="password"
           :placeholder="$t('new_password_repeat')"
           v-model="newPasswordRepeat" />
 
@@ -76,6 +76,15 @@ export default {
         newPassword,
         userId,
       });
+
+      this.$store.commit('addNotification', {
+        content: 'Vous pouvez maintenant vous connecter avec votre nouveau mot de passe.',
+        title: 'Mot de passe mis-à-jour',
+        variant: 'success',
+        type: 'password',
+      });
+
+      this.$emit('updated');
     },
     reset() {
       this.currentPassword = '';
