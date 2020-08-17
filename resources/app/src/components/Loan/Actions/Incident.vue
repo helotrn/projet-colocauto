@@ -25,7 +25,7 @@
         role="tabpanel" accordion="loan-actions"
         :visible="open">
         <div v-if="!action.id">
-          <ol>
+          <ol v-if="item.loanable.type === 'car'">
             <li><strong>Asseyez-vous et respirez</strong>: voici les étapes à suivre.</li>
             <li>
               <strong>Sélectionnez le type d'incident</strong>:<br>
@@ -45,7 +45,8 @@
               @submit.stop.prevent="passes(createAction)"
               @reset.stop.prevent="$emit('reset')">
 
-              <forms-validated-input name="incident_type"
+              <forms-validated-input v-if="incidentTypes.length > 1"
+                name="incident_type"
                 :rules="{ required: true }"
                 label="Type d'incident" type="select"
                 :options="incidentTypes"
@@ -109,6 +110,14 @@
                 </li>
               </ol>
             </div>
+            <div v-else>
+              <h3>Incident avec une remorque our un vélo</h3>
+
+              <blockquote v-if="action.comments_on_incident">
+                {{ action.comments_on_incident }}
+                <div class="user-avatar" :style="{ backgroundImage: borrowerAvatar }" />
+              </blockquote>
+            </div>
           </div>
 
           <div v-if="userRole !== 'borrower'">
@@ -165,13 +174,25 @@ export default {
   components: {
     FormsValidatedInput,
   },
-  data() {
-    return {
-      incidentTypes: [
-        { value: 'accident', text: 'Voiture immobilisée' },
-        { value: 'small_incident', text: 'Dégâts mineurs' },
-      ],
-    };
+  mounted() {
+    if (this.item.loanable.type !== 'car') {
+      this.action.incident_type = 'general';
+    }
+  },
+  computed: {
+    incidentTypes() {
+      switch (this.item.loanable.type) {
+        case 'car':
+          return [
+            { value: 'accident', text: 'Voiture immobilisée', },
+            { value: 'small_incident', text: 'Dégâts mineurs', },
+          ];
+        default:
+          return [
+            { value: 'general', text: 'Incident avec une remorque ou un vélo' },
+          ];
+      }
+    },
   },
 };
 </script>

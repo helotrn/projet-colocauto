@@ -11,7 +11,7 @@ class Incident extends Action
     public static $rules = [
         'incident_type' => [
             'required',
-            'in:accident,small_incident',
+            'in:accident,small_incident,general',
         ],
     ];
 

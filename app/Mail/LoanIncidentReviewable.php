@@ -26,7 +26,7 @@ class LoanIncidentReviewable extends Mailable
         Incident $incident,
         Loan $loan,
         Borrower $borrower,
-        Owner $owner,
+        ?Owner $owner,
         Community $community
     ) {
          $this->borrower = $borrower;
