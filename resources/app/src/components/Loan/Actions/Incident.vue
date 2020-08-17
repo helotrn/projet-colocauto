@@ -184,8 +184,8 @@ export default {
       switch (this.item.loanable.type) {
         case 'car':
           return [
-            { value: 'accident', text: 'Voiture immobilisée', },
-            { value: 'small_incident', text: 'Dégâts mineurs', },
+            { value: 'accident', text: 'Voiture immobilisée' },
+            { value: 'small_incident', text: 'Dégâts mineurs' },
           ];
         default:
           return [
