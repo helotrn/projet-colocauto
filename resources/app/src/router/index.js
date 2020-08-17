@@ -2,6 +2,7 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 
 import Loan from '@/views/Loan.vue';
+import NotFound from '@/views/NotFound.vue';
 import CommunityOverview from '@/views/community/Overview.vue';
 
 import adminRoutes from './admin';
@@ -85,6 +86,12 @@ const routes = [
       },
     },
   },
+  {
+    path: '/404',
+    component: NotFound,
+    meta: {},
+  },
+  { path: '*', redirect: '/404' },
 ];
 
 const router = new VueRouter({
