@@ -1,5 +1,5 @@
 import Profile from '../views/Profile.vue';
-import ProfileAccount from '../views/profile/Account.vue';
+import ProfileLocomotion from '../views/profile/Locomotion.vue';
 import ProfileBorrower from '../views/profile/Borrower.vue';
 import ProfileCommunities from '../views/profile/Communities.vue';
 import ProfileInvoice from '../views/profile/Invoice.vue';
@@ -20,11 +20,11 @@ export default {
   },
   children: [
     {
-      path: 'account',
-      component: ProfileAccount,
+      path: 'locomotion',
+      component: ProfileLocomotion,
       meta: {
         auth: true,
-        title: 'titles.account',
+        title: 'titles.profile',
         slug: 'users',
         params: {
           fields: '*,avatar.*',

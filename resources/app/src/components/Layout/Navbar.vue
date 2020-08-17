@@ -58,7 +58,7 @@
           <span class="nav-link__text">Inscription</span>
         </b-nav-item>
 
-        <b-nav-item to="/profile" class="d-block d-lg-none"
+        <b-nav-item to="/profile/locomotion" class="d-block d-lg-none"
           v-if="!isGlobalAdmin && hasCompletedRegistration">
           <span class="nav-link__icon">
             <svg-profile />
@@ -92,7 +92,7 @@
               <svg-profile />
             </b-badge>
           </template>
-          <b-dropdown-item to="/profile" v-if="!isGlobalAdmin && hasCompletedRegistration">
+          <b-dropdown-item to="/profile/locomotion" v-if="!isGlobalAdmin && hasCompletedRegistration">
             Profil
           </b-dropdown-item>
           <b-dropdown-item to="/faq">FAQ</b-dropdown-item>

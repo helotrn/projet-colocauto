@@ -1,5 +1,5 @@
 <template>
-  <div class="profile-account" v-if="item">
+  <div class="profile-locomotion" v-if="item">
     <profile-form :loading="loading" :user="item" :form="form"
       @reset="reset" :changed="changed" show-reset
       @submit="submit" v-if="item" />
@@ -13,7 +13,7 @@ import ProfileForm from '@/components/Profile/ProfileForm.vue';
 import FormMixin from '@/mixins/FormMixin';
 
 export default {
-  name: 'ProfileAccount',
+  name: 'ProfileLocomotion',
   mixins: [FormMixin],
   components: { ProfileForm },
   props: {
@@ -26,7 +26,7 @@ export default {
 </script>
 
 <style lang="scss">
-.profile-account {
+.profile-locomotion {
   margin-bottom: 3em;
 }
 </style>

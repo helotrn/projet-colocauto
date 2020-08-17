@@ -57,7 +57,7 @@ export default {
   },
   profile: {
     titles: {
-      account: 'Mon profil LocoMotion',
+      account: 'Mon compte',
       borrower: 'Mon dossier de conduite',
       communities: 'Mes voisinages',
       invoice: 'Ma facture',
@@ -67,13 +67,14 @@ export default {
       loanables: 'Mes véhicules',
       payment_method: 'Mon mode de paiement',
       payment_methods: 'Mes modes de paiement',
+      profile: 'Mon profil LocoMotion',
     },
   },
   tags: tags.fr,
   titles: {
     account: 'compte',
     admin: 'administration',
-    borrower: 'emprunteur',
+    borrower: 'dossier de conduite',
     communities: 'voisinages',
     'communities-overview': 'voisinages',
     community: 'voisinage',
@@ -96,7 +97,7 @@ export default {
     payment_method: 'mode de paiement',
     payment_methods: 'modes de paiement',
     privacy: "conditions générales d'utilisation",
-    profile: 'Profil',
+    profile: 'profil',
     register: "s'inscrire",
     'register-map': 'rejoindre mes voisin-e-s',
     tags: 'Mots-clés',
