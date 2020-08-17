@@ -69,7 +69,7 @@
         </div>
 
         <div class="form__section"
-            v-if="!!loanable.type && (user.communities.length > 1 || loanableBoroughs.length > 0)">
+          v-if="!!loanable.type && (user.communities.length > 1 || loanableBoroughs.length > 0)">
           <h2>Accessibilité</h2>
 
           <forms-validated-input v-if="user.communities.length > 1"

@@ -1,8 +1,8 @@
 <template>
   <layout-page name="dashboard" wide>
     <b-container>
-      <b-row class="page__section">
-        <b-col class="page__content__main" xl="9" lg="8" md="7">
+      <b-row class="page__section page__section__main">
+        <b-col class="page__content" xl="9" lg="8" md="7">
           <h1>{{ $t('Bienvenue, {name}', { name: user.name })}}</h1>
 
           <section class="page__section">
@@ -205,13 +205,18 @@ export default {
 <style lang="scss">
 .dashboard {
   .page__section {
+    &__main {
+      padding-top: 45px;
+      padding-bottom: 45px;
+    }
+
     h2 {
       margin-bottom: 25px;
     }
   }
 
   .page__content {
-    &__main > h1 {
+    > h1 {
       margin-bottom: 60px;
     }
 
