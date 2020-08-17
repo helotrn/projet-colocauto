@@ -2,85 +2,118 @@
 
 namespace Tests\Integration;
 
+use Carbon\Carbon;
+use App\Models\Borrower;
+use App\Models\Car;
+use App\Models\Loan;
+use App\Models\Owner;
 use App\Models\Takeover;
+use App\Models\User;
 use Tests\TestCase;
 
 class TakeoverTest extends TestCase
 {
-    public function testCreateTakeovers() {
-        $this->markTestIncomplete();
-        $data = [
-            'executed_at' => $this->faker->dateTime($format = 'Y-m-d H:i:sO', $max = 'now'),
-            'status' => $this->faker->randomElement(['in_process' ,'canceled', 'completed']),
-            'mileage_beginning' => $this->faker->numberBetween($min = 0, $max = 300000),
-            'comments_on_vehicle' => $this->faker->sentence,
-            'contested_at' => null,
-            'comments_on_contestation' => null,
-        ];
+    public function testCreateTakeoversWithActionsFlow() {
+        $loan = $this->buildLoan();
 
-        $response = $this->json('POST', route('takeovers.create'), $data);
+        $takeover = $loan->takeover;
+        $response = $this->json('GET', "/api/v1/loans/$loan->id/actions/$takeover->id");
 
-        $response->assertStatus(201)->assertJson($data);
+        $json = $response->json();
+        $this->assertEquals($takeover->id, array_get($json, 'id'));
+        $this->assertEquals('in_process', array_get($json, 'status'));
     }
 
-    public function testShowTakeovers() {
-        $this->markTestIncomplete();
-        $post = factory(Takeover::class)->create();
+    public function testCompleteTakeovers() {
+        $executedAtDate = Carbon::now()->format('Y-m-d h:m:s');
+        Carbon::setTestNow($executedAtDate);
 
-        $response = $this->json('GET', route('takeovers.retrieve', $post->id), $data);
+        $loan = $this->buildLoan();
 
-        $response->assertStatus(200)->assertJson($data);
-    }
+        $takeover = $loan->takeover;
 
-    public function testUpdateTakeovers() {
-        $this->markTestIncomplete();
-        $post = factory(Takeover::class)->create();
-        $data = [
-            'comments_on_vehicle' => $this->faker->sentence,
-        ];
+        $this->assertNotNull($takeover);
 
-        $response = $this->json('PUT', route('takeovers.update', $post->id), $data);
+        $response = $this->json(
+            'PUT',
+            "/api/v1/loans/$loan->id/actions/$takeover->id/complete",
+            [
+                'type' => 'takeover',
+                'mileage_beginning' => 0,
+            ]
+        );
+        $response->assertStatus(200);
 
-        $response->assertStatus(200)->assertJson($data);
-    }
-
-    public function testDeleteTakeovers() {
-        $this->markTestIncomplete();
-        $post = factory(Takeover::class)->create();
-
-        $response = $this->json('DELETE', route('takeovers.delete', $post->id), $data);
-
-        $response->assertStatus(204)->assertJson($data);
-    }
-
-    public function testListTakeovers() {
-        $this->markTestIncomplete();
-        $takeovers = factory(Takeover::class, 2)->create()->map(function ($post) {
-            return $post->only([
-                'id',
-                'executed_at',
-                'status',
-                'mileage_beginning',
-                'comments_on_vehicle',
-                'contested_at',
-                'comments_on_contestation',
-            ]);
-        });
-
-        $response = $this->json('GET', route('takeovers.index'));
-
+        $response = $this->json('GET', "/api/v1/loans/$loan->id/actions/$takeover->id");
         $response->assertStatus(200)
-                ->assertJson($takeovers->toArray())
-                ->assertJsonStructure([
-                    '*' => [
-                        'id',
-                        'executed_at',
-                        'status',
-                        'mileage_beginning',
-                        'comments_on_vehicle',
-                        'contested_at',
-                        'comments_on_contestation',
-                    ],
-                ]);
+            ->assertJson(['status' => 'completed'])
+            ->assertJson(['executed_at' => $executedAtDate]);
+
+        $loan = $loan->fresh();
+
+        $takeover = $loan->takeover;
+
+        $this->assertNotNull($takeover);
+    }
+
+    public function testCancelTakeovers() {
+        $executedAtDate = Carbon::now()->format('Y-m-d h:m:s');
+        Carbon::setTestNow($executedAtDate);
+
+        $loan = $this->buildLoan();
+
+        $takeover = $loan->takeover;
+
+        $this->assertNotNull($takeover);
+
+        $response = $this->json(
+            'PUT',
+            "/api/v1/loans/$loan->id/actions/$takeover->id/cancel",
+            [
+                'type' => 'takeover',
+            ]
+        );
+        $response->assertStatus(200);
+
+        $response = $this->json('GET', "/api/v1/loans/$loan->id/actions/$takeover->id");
+        $response->assertStatus(200)
+            ->assertJson(['status' => 'canceled'])
+            ->assertJson(['executed_at' => $executedAtDate]);
+    }
+
+    private function buildLoan() {
+        $borrower = factory(Borrower::class)->create(['user_id' => $this->user->id]);
+        $user = factory(User::class)->create();
+        $owner = factory(Owner::class)->create([ 'user_id' => $user ]);
+        $loanable = factory(Car::class)->create([ 'owner_id' => $owner ]);
+
+        $loan = factory(Loan::class)->create([
+            'borrower_id' => $borrower->id,
+            'loanable_id' => $loanable->id,
+        ]);
+
+        $intention = $loan->intention;
+        $response = $this->json(
+            'PUT',
+            "/api/v1/loans/$loan->id/actions/$intention->id/complete",
+            [
+                'type' => 'intention',
+            ]
+        );
+        $response->assertStatus(200);
+
+        $prePayment = $loan->prePayment;
+        $response = $this->json(
+            'PUT',
+            "/api/v1/loans/$loan->id/actions/$prePayment->id/complete",
+            [
+                'type' => 'pre_payment',
+            ]
+        );
+        $response->assertStatus(200);
+
+        $loan = $loan->fresh();
+
+        return $loan;
     }
 }

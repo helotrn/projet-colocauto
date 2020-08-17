@@ -76,6 +76,8 @@ class ActionController extends RestController
                 return $this->paymentController->retrieve($request, $id);
             case 'takeover':
                 return $this->takeoverController->retrieve($request, $id);
+            case 'handover':
+                return $this->handoverController->retrieve($request, $id);
             case 'extension':
                 return $this->extensionController->retrieve($request, $id);
             case 'intention':

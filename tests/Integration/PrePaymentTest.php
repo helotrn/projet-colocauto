@@ -34,6 +34,7 @@ class PrePaymentTest extends TestCase
 
         $json = $response->json();
         $this->assertEquals($prePayment->id, array_get($json, 'id'));
+        $this->assertEquals('in_process', array_get($json, 'status'));
     }
 
     public function testCompletePrePayments() {
