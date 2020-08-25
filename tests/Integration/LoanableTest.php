@@ -4,6 +4,7 @@ namespace Tests\Integration;
 
 use App\Models\Bike;
 use App\Models\Borrower;
+use App\Models\Community;
 use App\Models\Loan;
 use App\Models\Owner;
 use App\Models\User;
@@ -14,7 +15,12 @@ class LoanableTest extends TestCase
 {
     public function testRetrieveNextLoan() {
         $borrower = factory(Borrower::class)->create(['user_id' => $this->user->id]);
+
+        $community = factory(Community::class)->create();
+
         $user = factory(User::class)->create();
+        $user->communities()->attach($community->id, [ 'approved_at' => new \DateTime ]);
+
         $owner = factory(Owner::class)->create(['user_id' => $user->id]);
         $loanable = factory(Bike::class)->create(['owner_id' => $owner->id]);
 
@@ -24,6 +30,7 @@ class LoanableTest extends TestCase
             'duration_in_minutes' => 30,
             'borrower_id' => $borrower->id,
             'loanable_id' => $loanable->id,
+            'community_id' => $community->id,
         ])->toArray();
 
         $response = $this->json('POST', '/api/v1/loans', array_merge($data, [

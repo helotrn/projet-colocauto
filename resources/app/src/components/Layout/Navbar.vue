@@ -92,7 +92,8 @@
               <svg-profile />
             </b-badge>
           </template>
-          <b-dropdown-item to="/profile/locomotion" v-if="!isGlobalAdmin && hasCompletedRegistration">
+          <b-dropdown-item to="/profile/locomotion"
+            v-if="!isGlobalAdmin && hasCompletedRegistration">
             Profil
           </b-dropdown-item>
           <b-dropdown-item to="/faq">FAQ</b-dropdown-item>

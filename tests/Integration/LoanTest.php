@@ -73,9 +73,9 @@ class LoanTest extends TestCase
         $owner = factory(Owner::class)->create(['user_id' => $this->user->id]);
         $loanable = factory(Bike::class)->create(['owner_id' => $owner->id]);
 
+        $departure = new \Carbon\Carbon;
         $baseData = [
-            'departure_at' => now()->toDateTimeString(),
-            'duration_in_minutes' => $this->faker->randomNumber(4),
+            'duration_in_minutes' => 60,
             'estimated_distance' => $this->faker->randomNumber(4),
             'estimated_insurance' => $this->faker->randomNumber(4),
             'borrower_id' => $borrower->id,
@@ -93,15 +93,24 @@ class LoanTest extends TestCase
         // 3. a new community
         $approvedData = array_merge(
             $baseData,
-            [ 'community_id' => $approvedCommunity->id ]
+            [
+                'community_id' => $approvedCommunity->id,
+                'departure_at' => $departure->add(2, 'hour')->toDateTimeString(),
+            ]
         );
         $suspendedData = array_merge(
             $baseData,
-            [ 'community_id' => $suspendedCommunity->id ]
+            [
+                'community_id' => $suspendedCommunity->id,
+                'departure_at' => $departure->add(2, 'hour')->toDateTimeString(),
+            ]
         );
         $justRegisteredData = array_merge(
             $baseData,
-            [ 'community_id' => $justRegisteredCommunity->id ]
+            [
+                'community_id' => $justRegisteredCommunity->id,
+                'departure_at' => $departure->add(2, 'hour')->toDateTimeString(),
+            ]
         );
 
         $this->json('POST', '/api/v1/loans', $approvedData)->assertStatus(201);
@@ -140,6 +149,8 @@ class LoanTest extends TestCase
 
     public function testUpdateLoans() {
         $borrower = factory(Borrower::class)->create(['user_id' => $this->user->id]);
+        $community = factory(Community::class)->create();
+        $this->user->communities()->attach($community->id, [ 'approved_at' => new \DateTime ]);
         $owner = factory(Owner::class)->create(['user_id' => $this->user->id]);
         $loanable = factory(Bike::class)->create(['owner_id' => $owner->id]);
         $loan = factory(Loan::class)->create([
@@ -192,7 +203,11 @@ class LoanTest extends TestCase
 
     public function testCannotCreateConcurrentLoans() {
         $borrower = factory(Borrower::class)->create(['user_id' => $this->user->id]);
+        $community = factory(Community::class)->create();
+
         $user = factory(User::class)->create();
+        $user->communities()->attach($community->id, [ 'approved_at' => new \DateTime ]);
+
         $owner = factory(Owner::class)->create(['user_id' => $user->id]);
         $loanable = factory(Bike::class)->create(['owner_id' => $owner->id]);
 
@@ -212,6 +227,7 @@ class LoanTest extends TestCase
             'platform_tip' => 1,
             'message_for_owner' => '',
             'reason' => 'salut',
+            'community_id' => $community->id,
         ];
 
         // First loan
@@ -272,7 +288,12 @@ class LoanTest extends TestCase
 
     public function testCreateLoansOnlyBuildsOneIntention() {
         $borrower = factory(Borrower::class)->create(['user_id' => $this->user->id]);
+
+        $community = factory(Community::class)->create();
+
         $user = factory(User::class)->create();
+        $user->communities()->attach($community->id, [ 'approved_at' => new \DateTime ]);
+
         $owner = factory(Owner::class)->create(['user_id' => $user->id]);
         $loanable = factory(Bike::class)->create(['owner_id' => $owner->id]);
 
@@ -288,6 +309,7 @@ class LoanTest extends TestCase
             'platform_tip' => 1,
             'message_for_owner' => '',
             'reason' => 'salut',
+            'community_id' => $community->id,
         ];
 
         $response = $this->json('POST', '/api/v1/loans', $data);
@@ -300,7 +322,12 @@ class LoanTest extends TestCase
 
     public function testCreateWithCollectiveLoanableIsAutomaticallyAccepted() {
         $borrower = factory(Borrower::class)->create(['user_id' => $this->user->id]);
+
+        $community = factory(Community::class)->create();
+
         $user = factory(User::class)->create();
+        $user->communities()->attach($community->id, [ 'approved_at' => new \DateTime ]);
+
         $loanable = factory(Bike::class)->create([ 'owner_id' => null ]);
 
         $data = [
@@ -315,6 +342,7 @@ class LoanTest extends TestCase
             'platform_tip' => 1,
             'message_for_owner' => '',
             'reason' => 'salut',
+            'community_id' => $community->id,
         ];
 
         $response = $this->json('POST', '/api/v1/loans', $data);
@@ -327,7 +355,12 @@ class LoanTest extends TestCase
 
     public function testCreateWithCollectiveLoanableAndEnoughBalanceAutomaticallyPrePaid() {
         $borrower = factory(Borrower::class)->create(['user_id' => $this->user->id]);
+
+        $community = factory(Community::class)->create();
+
         $user = factory(User::class)->create();
+        $user->communities()->attach($community->id, [ 'approved_at' => new \DateTime ]);
+
         $loanable = factory(Bike::class)->create([ 'owner_id' => null ]);
 
         $data = [
@@ -342,6 +375,7 @@ class LoanTest extends TestCase
             'platform_tip' => 0,
             'message_for_owner' => '',
             'reason' => 'salut',
+            'community_id' => $community->id,
         ];
 
         $response = $this->json('POST', '/api/v1/loans', $data);
