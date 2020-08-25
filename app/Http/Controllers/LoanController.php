@@ -6,6 +6,7 @@ use App\Events\LoanCreatedEvent;
 use App\Exports\LoansExport;
 use App\Http\Requests\Action\ActionRequest;
 use App\Http\Requests\Action\CreateRequest as ActionCreateRequest;
+use App\Http\Requests\Loan\CreateRequest;
 use App\Http\Requests\BaseRequest as Request;
 use App\Models\Loan;
 use App\Repositories\LoanRepository;
@@ -44,7 +45,7 @@ class LoanController extends RestController
         }
     }
 
-    public function create(Request $request) {
+    public function create(CreateRequest $request) {
         try {
             $item = parent::validateAndCreate($request);
         } catch (ValidationException $e) {

@@ -28,7 +28,8 @@ abstract class TestCase extends BaseTestCase
 
         $this->user = factory(User::class)->create();
         $this->user->role = "admin";
-        Passport::actingAs($this->user);
+
+        $this->actAs($this->user);
 
         \DB::statement(<<<SQL
 INSERT INTO oauth_clients
@@ -68,5 +69,9 @@ SQL
             'to',
             'total',
         ];
+    }
+
+    protected function actAs($user) {
+        Passport::actingAs($user);
     }
 }

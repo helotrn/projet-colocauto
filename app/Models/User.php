@@ -212,7 +212,11 @@ class User extends AuthenticatableBaseModel
             return $relation;
         }
 
-        return $relation->whereSuspendedAt(null);
+        return $relation;
+    }
+
+    public function approvedCommunities() {
+        return $this->communities()->whereNotNull('approved_at')->whereSuspendedAt(null);
     }
 
     public function defaultPaymentMethod() {
