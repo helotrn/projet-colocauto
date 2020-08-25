@@ -295,7 +295,7 @@ class Loanable extends BaseModel
         $query = $query
             // A user has access to...
             ->where(function ($q) use ($user, $allowedTypes) {
-                $communityIds = $user->communities->pluck('id');
+                $communityIds = $user->approvedCommunities->pluck('id');
 
                 return $q->where(function ($q) use ($communityIds) {
                     return $q

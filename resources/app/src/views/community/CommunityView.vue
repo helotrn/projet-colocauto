@@ -77,6 +77,21 @@ export default {
       lastLoanMerged: false,
     };
   },
+  beforeRouteEnter(to, from, next) {
+    next((vm) => {
+      if (vm.user.communities.filter(c => !!c.approved_at && !c.suspended_at).length === 0) {
+        vm.$store.commit('addNotification', {
+          content: "Vous n'avez accès à aucun voisinage ou quartier.",
+          title: 'Accès refusé',
+          variant: 'warning',
+          type: 'loan',
+        });
+        vm.$router.replace('/app', {});
+      }
+
+      next();
+    });
+  },
   mounted() {
     this.setSelectedLoanableTypes();
   },

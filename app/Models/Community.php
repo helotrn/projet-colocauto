@@ -179,6 +179,13 @@ class Community extends BaseModel
         }
 
         switch ($for) {
+            case 'loan':
+                return $query->whereHas('users', function ($q) use ($user) {
+                    return $q
+                        ->where('community_user.user_id', $user->id)
+                        ->whereNotNull('community_user.approved_at')
+                        ->whereNull('community_user.suspended_at');
+                });
             case 'edit':
                 return $query
                     ->whereHas('users', function ($q) use ($user) {
