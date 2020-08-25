@@ -63,10 +63,10 @@
 
             <div class="form__buttons">
               <b-button-group>
-                <b-button variant="success" type="submit" :disabled="!changed">
+                <b-button variant="success" type="submit" :disabled="!changed || loading">
                   Sauvegarder
                 </b-button>
-                <b-button type="reset" :disabled="!changed" @click="reset">
+                <b-button type="reset" :disabled="!changed || loading" @click="reset">
                   Réinitialiser
                 </b-button>
               </b-button-group>

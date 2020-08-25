@@ -124,10 +124,10 @@
 
         <div class="form__buttons" v-if="!hideButtons">
           <b-button-group v-if="showReset">
-            <b-button variant="success" type="submit" :disabled="!changed">
+            <b-button variant="success" type="submit" :disabled="!changed || loading">
               {{ $t('enregistrer') | capitalize }}
             </b-button>
-            <b-button type="reset" :disabled="!changed" @click="$emit('reset')">
+            <b-button type="reset" :disabled="!changed || loading" @click="$emit('reset')">
               {{ $t('réinitialiser') | capitalize }}
             </b-button>
           </b-button-group>
