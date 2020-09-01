@@ -12,7 +12,7 @@ module.exports = {
       'warn',
       {
         browsers: ['> 5%'],
-        ignore: ['rem', 'animation', 'css-transition'],
+        ignore: ['rem', 'animation', 'css-transition', 'css-gradients'],
       },
     ],
     'selector-no-qualifying-type': [

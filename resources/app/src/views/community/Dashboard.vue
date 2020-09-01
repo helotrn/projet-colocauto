@@ -5,7 +5,7 @@
     </div>
 
     <b-container>
-      <b-row class="community__description page__section">
+      <b-row class="community__description page__section" v-if="community.long_description">
         <b-col>
           <b-alert variant="info" show>
             <div v-html="community.long_description" />
@@ -20,8 +20,9 @@
       </b-row>
     </b-container>
 
-    <b-container fluid v-if="community.type === 'neighborhood'">
-      <b-row class="community__neighbors page__section">
+    <b-container fluid v-if="community.type === 'neighborhood'"
+      class="community__neighbors page__section">
+      <b-row no-gutters>
         <b-col>
           <div v-if="community.users">
             <b-container class="community__users-legend">
@@ -41,10 +42,18 @@
 
             <b-row class="community__users">
               <b-col>
-                <div class="community__users__slider">
+                <div class="community__users__before">
+                  <svg-arrow @click="slideUsers(-415)" />
+                </div>
+                <div class="community__users__slider" ref="users">
+                  <span class="community__users__slider__spacer" />
                   <user-card v-for="user in community.users" :key="user.id"
                     :user="user" :is-admin="isAdminOfCommunity(community)"
                     :community-id="community.id" @updated="reload" />
+                  <span class="community__users__slider__spacer" />
+                </div>
+                <div class="community__users__after">
+                  <svg-arrow @click="slideUsers(415)" />
                 </div>
               </b-col>
             </b-row>
@@ -119,6 +128,8 @@ import BoroughDifferenceModal from '@/components/Misc/BoroughDifferenceModal.vue
 import SchematizedCommunityMap from '@/components/Misc/SchematizedCommunityMap.vue';
 import UserCard from '@/components/User/UserCard.vue';
 
+import Arrow from '@/assets/svg/arrow.svg';
+
 import Authenticated from '@/mixins/Authenticated';
 import DataRouteGuards from '@/mixins/DataRouteGuards';
 
@@ -128,6 +139,7 @@ export default {
   components: {
     BoroughDifferenceModal,
     SchematizedCommunityMap,
+    'svg-arrow': Arrow,
     UserCard,
   },
   computed: {
@@ -154,6 +166,14 @@ export default {
       this.reloading = true;
       await this.loadDataRoutesData(this, this.$route);
       this.reloading = false;
+    },
+    slideUsers(increment) {
+      const { scrollLeft } = this.$refs.users;
+      this.$refs.users.scroll({
+        top: 0,
+        left: scrollLeft + increment,
+        behavior: 'smooth',
+      });
     },
   },
 };
@@ -182,6 +202,8 @@ export default {
     }
 
     &__neighbors {
+      padding: 0;
+
       &.page__section {
         margin-bottom: 60px;
       }
@@ -192,22 +214,68 @@ export default {
     }
 
     &__users {
+      max-width: 100vw;
+
+      &__before, &__after {
+        position: absolute;
+        top: 0;
+        height: 100%;
+        width: 60px;
+        background: $main-bg;
+        z-index: 10;
+
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+
+        svg {
+          width: 20px;
+          cursor: pointer;
+        }
+      }
+
+      &__before {
+        left: 15px;
+        background: linear-gradient(90deg, rgba(241, 241, 241, 1) 0%, rgba(241, 241, 241, 1) 75%, rgba(241, 241, 241, 0) 100%);
+
+        svg {
+          transform: rotate(180deg);
+          margin: auto 30px auto auto;
+        }
+      }
+
+      &__after {
+        right: 15px;
+        background: linear-gradient(270deg, rgba(241, 241, 241, 1) 0%, rgba(241, 241, 241, 1) 75%, rgba(241, 241, 241, 0) 100%);
+
+        svg {
+          margin: auto auto auto 30px;
+        }
+      }
+
       &__slider {
+        &__spacer {
+          width: 55px;
+          height: 100%;
+        }
+
         overflow-y: hidden;
         overflow-x: scroll;
 
         display: flex;
         flex-wrap: wrap;
         flex-direction: column;
+        position: relative;
 
         height: 410px;
 
         .user-card {
           height: 184px;
           width: 450px;
+          max-width: calc(100vw - 60px);
           margin: 0 30px 30px 0;
 
-          &:nth-child(2n) {
+          &:nth-child(2n + 1) {
             margin-bottom: 0;
           }
 
