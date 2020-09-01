@@ -9,7 +9,7 @@ use GuzzleHttp\Client;
 
 class NokeSyncUsers extends Command
 {
-    protected $signature = 'noke:sync:users;
+    protected $signature = 'noke:sync:users
                             {--pretend : Do not call remote API}';
 
     protected $description = 'Synchronize NOKE users';
@@ -47,6 +47,7 @@ class NokeSyncUsers extends Command
 
     private function createUsers() {
         $users = User::whereHas('borrower')
+            ->whereHas('approvedCommunities')
             ->whereNotNull('submitted_at')
             ->select('id', 'email', 'name', 'last_name', 'phone', 'is_smart_phone')
             ->get();
