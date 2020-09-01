@@ -8,7 +8,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class RegistrationSubmitted extends Mailable
+class Submitted extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -20,10 +20,10 @@ class RegistrationSubmitted extends Mailable
 
     public function build() {
         return $this->view('emails.registration.submitted')
-            ->subject('LocoMotion - Inscription complétée, bienvenue!')
+            ->subject('Bienvenue dans LocoMotion! Ça y est presque!')
             ->text('emails.registration.submitted_text')
             ->with([
-                'title' => 'Inscription complétée!',
+                'title' => 'Bienvenue dans LocoMotion!',
             ]);
     }
 }

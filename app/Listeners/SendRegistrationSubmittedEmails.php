@@ -3,8 +3,8 @@
 namespace App\Listeners;
 
 use App\Events\RegistrationSubmittedEvent;
-use App\Mail\RegistrationSubmitted;
-use App\Mail\RegistrationReviewable;
+use App\Mail\Registration\Submitted as RegistrationSubmitted;
+use App\Mail\Registration\Reviewable as RegistrationReviewable;
 use App\Models\User;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
