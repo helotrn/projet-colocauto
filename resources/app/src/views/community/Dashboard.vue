@@ -5,7 +5,7 @@
     </div>
 
     <b-container>
-      <b-row class="community__description page__section" v-if="community.long_description">
+      <b-row class="community__description page__section">
         <b-col>
           <b-alert variant="info" show>
             <div v-html="community.long_description" />
@@ -76,38 +76,40 @@
         </b-col>
       </b-row>
 
-      <b-row class="community__area page__section">
-        <b-col>
-          <h2>Les voisinages du quartier</h2>
-        </b-col>
-      </b-row>
+      <div v-if="borough && neighborhoods">
+        <b-row class="community__area page__section">
+          <b-col>
+            <h2>Les voisinages du quartier</h2>
+          </b-col>
+        </b-row>
 
-      <b-row v-if="borough && neighborhoods" class="page__section">
-        <b-col class="community__map">
-          <schematized-community-map
-            :borough="borough" :neighborhoods="neighborhoods" />
+        <b-row v-if="borough && neighborhoods" class="page__section">
+          <b-col class="community__map">
+            <schematized-community-map
+              :borough="borough" :neighborhoods="neighborhoods" />
 
-          <div class="community__map__total">
-            {{ totalUsersCount }}<br>
-            voisines et voisins participent à
-            LocoMotion dans votre quartier!
-          </div>
-        </b-col>
-      </b-row>
+            <div class="community__map__total">
+              {{ totalUsersCount }}<br>
+              voisines et voisins participent à
+              LocoMotion dans votre quartier!
+            </div>
+          </b-col>
+        </b-row>
 
-      <b-row class="text-center" v-if="community.type === 'borough'">
-        <b-col>
-          <p>
-            <b-button variant="success" size="lg">Créer un voisinage</b-button>
-            <br>
-            <a href="#" v-b-modal="'borough-difference-modal'">
-              <small>Voisinage, quartier: quelle différence?</small>
-            </a>
-          </p>
+        <b-row class="text-center" v-if="community.type === 'borough'">
+          <b-col>
+            <p>
+              <b-button variant="success" size="lg">Créer un voisinage</b-button>
+              <br>
+              <a href="#" v-b-modal="'borough-difference-modal'">
+                <small>Voisinage, quartier: quelle différence?</small>
+              </a>
+            </p>
 
-          <borough-difference-modal />
-        </b-col>
-      </b-row>
+            <borough-difference-modal />
+          </b-col>
+        </b-row>
+      </div>
     </b-container>
   </layout-page>
 </template>
@@ -165,16 +167,16 @@ export default {
     padding-bottom: 60px;
   }
 
+  .container .page__section:nth-child(1) {
+    margin-top: 60px;
+  }
+
   .page__section h2 {
     margin-bottom: 40px;
     text-align: center;
   }
 
   .community {
-    &__description {
-      margin-top: 60px;
-    }
-
     &__organize {
       margin-bottom: 0;
     }
