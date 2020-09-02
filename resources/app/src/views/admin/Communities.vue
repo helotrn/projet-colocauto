@@ -36,7 +36,7 @@
           :sort-by.sync="sortBy" :sort-desc.sync="sortDesc" no-sort-reset
           :show-empty="true" empty-text="Pas de communauté">
           <template v-slot:cell(type)="row">
-            {{ $t(`types.${row.item.type}`) | capitalize }}
+            {{ $t(`fields.types.${row.item.type}`) | capitalize }}
           </template>
           <template v-slot:cell(parent.name)="row">
             {{ row.item.parent ? row.item.parent.name : '-' }}
