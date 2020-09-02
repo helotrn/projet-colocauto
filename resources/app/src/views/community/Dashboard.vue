@@ -236,7 +236,13 @@ export default {
 
       &__before {
         left: 15px;
-        background: linear-gradient(90deg, rgba(241, 241, 241, 1) 0%, rgba(241, 241, 241, 1) 75%, rgba(241, 241, 241, 0) 100%);
+        background:
+          linear-gradient(
+            90deg,
+            rgba(241, 241, 241, 1) 0%,
+            rgba(241, 241, 241, 1) 75%,
+            rgba(241, 241, 241, 0) 100%
+          );
 
         svg {
           transform: rotate(180deg);
@@ -246,7 +252,13 @@ export default {
 
       &__after {
         right: 15px;
-        background: linear-gradient(270deg, rgba(241, 241, 241, 1) 0%, rgba(241, 241, 241, 1) 75%, rgba(241, 241, 241, 0) 100%);
+        background:
+          linear-gradient(
+            270deg,
+            rgba(241, 241, 241, 1) 0%,
+            rgba(241, 241, 241, 1) 75%,
+            rgba(241, 241, 241, 0) 100%
+          );
 
         svg {
           margin: auto auto auto 30px;

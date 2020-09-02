@@ -3,7 +3,7 @@
     <b-container>
       <b-row class="page__section page__section__main">
         <b-col class="page__content" xl="9" lg="8" md="7">
-          <h1>{{ $t('Bienvenue, {name}', { name: user.name })}}</h1>
+          <h1>{{ $t('welcome_text', { name: user.name })}}</h1>
 
           <section class="page__section">
             <loan-covid-collapsible-section />
@@ -129,11 +129,11 @@
 
 <i18n>
 fr:
-  'Bienvenue, {name}': Bienvenue, {name}
+  welcome_text: Bienvenue {name}!
   lead_text: |
     Vous y êtes presque. Il ne vous manque que quelques étapes, pour prendre la route!
 en:
-  'Bienvenue, {name}': Welcome, {name}
+  welcome_text: Welcome {name}!
 </i18n>
 
 <script>
