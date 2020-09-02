@@ -108,7 +108,9 @@
         <b-row class="text-center" v-if="community.type === 'borough'">
           <b-col>
             <p>
-              <b-button variant="success" size="lg">Créer un voisinage</b-button>
+              <b-button variant="success" size="lg" href="http://bit.ly/voisinage-LocoMotion">
+                Créer un voisinage
+              </b-button>
               <br>
               <a href="#" v-b-modal="'borough-difference-modal'">
                 <small>Voisinage, quartier: quelle différence?</small>
