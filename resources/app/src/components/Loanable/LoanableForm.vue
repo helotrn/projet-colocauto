@@ -15,7 +15,7 @@
 
             <b-col lg="4">
               <forms-validated-input name="type" :label="$t('fields.type') | capitalize"
-                :rules="form.general.type.rules" type="select" :options="form.general.type.options"
+                :rules="form.general.type.rules" type="select" :options="typeOptions"
                 :placeholder="placeholderOrLabel('type') | capitalize"
                 :disabled="!!loanable.id"
                 disabled-tooltip="On ne peut pas changer le type d'un véhicule existant."
@@ -247,6 +247,13 @@ export default {
         ...c,
         options: this.polygonOptions(c.type),
       }));
+    },
+    typeOptions() {
+      return [{
+        text: 'Types',
+        disabled: true,
+        value: null,
+      }, ...this.form.general.type.options];
     },
   },
   i18n: {
