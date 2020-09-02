@@ -17,8 +17,6 @@
       <div class="dashboard-release-info-box__question">
         <h3>Conditions d'utilisation</h3>
 
-        <p>Acceptez-vous les <a href="/conditions">conditions d'utilisation</a>?</p>
-
         <forms-validated-input type="checkbox" name="accept_conditions"
           :label="$t('users.fields.accept_conditions') | capitalize"
           :value="user.accept_conditions"

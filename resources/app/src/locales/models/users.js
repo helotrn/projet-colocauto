@@ -11,7 +11,8 @@ export default {
         + 'Ça aide à se faire confiance et à mieux profiter des avantages du partage.',
     },
     fields: {
-      accept_conditions: "j'accepte les conditions générales d'utilisation",
+      accept_conditions: "j'accepte les <a href=\"/conditions\" target=\"_blank\">conditions "
+        + "générales d'utilisation</a>",
       address: 'adresse',
       avatar: 'image de profil',
       communities: prefixFields(communities.fr.fields, '(Communauté)'),

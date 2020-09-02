@@ -17,8 +17,6 @@
     <div class="form__section">
       <h2>Conditions d'utilisation</h2>
 
-      <p>Acceptez-vous les <a href="/conditions">conditions d'utilisation</a>?</p>
-
       <forms-validated-input type="checkbox" name="accept_conditions"
         :label="$t('users.fields.accept_conditions') | capitalize"
         :value="item.accept_conditions"
@@ -58,9 +56,9 @@ export default {
     },
     async updateAcceptConditions(value) {
       await this.$store.dispatch('users/update', {
-        id: this.user.id,
+        id: this.item.id,
         data: {
-          id: this.user.id,
+          id: this.item.id,
           accept_conditions: value,
         },
         params: {

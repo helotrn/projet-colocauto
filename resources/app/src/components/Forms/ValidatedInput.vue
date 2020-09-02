@@ -20,7 +20,7 @@
         :state="getValidationState(validationContext)"
         :checked="value"
         @change="emitInput">
-        {{ label }}
+        <span v-html="label" />
       </b-form-checkbox>
       <b-form-checkbox-group v-else-if="type === 'checkboxes'"
         :switches="switches" :stacked="stacked"
