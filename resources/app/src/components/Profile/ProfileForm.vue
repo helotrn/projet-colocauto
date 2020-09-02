@@ -49,7 +49,7 @@
           avec votre comité de voisinage et les personnes avec qui vous faites des
           prêts/emprunts.
 
-          Consultez notre <router-link to="/privacy">politique de confidentialité</router-link>.
+          Consultez notre <a href="/privacy" target="_blank">politique de confidentialité</a>.
         </b-alert>
 
         <b-row>
