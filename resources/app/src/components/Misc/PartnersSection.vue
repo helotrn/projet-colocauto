@@ -30,6 +30,10 @@
               <div class="partners-section__partners__partner">
                 <img src="/partners/FCM-logo-2018-col_fr.png">
               </div>
+
+              <div class="partners-section__partners__partner">
+                <img src="/partners/logo-canada.png">
+              </div>
             </div>
           </b-col>
         </b-row>
