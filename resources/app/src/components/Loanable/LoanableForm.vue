@@ -1,8 +1,8 @@
 <template>
   <div class="loanable-form">
-    <validation-observer ref="observer" v-slot="{ passes }">
+    <validation-observer ref="observer" v-slot="{ passes, valid }">
       <b-form :novalidate="true" class="form loanable-form__form"
-        @submit.stop.prevent="passes(submit)">
+        @submit.stop.prevent="checkInvalidThenSubmit(passes, valid)">
         <div class="form__section">
           <b-row>
             <b-col lg="8">
@@ -131,7 +131,8 @@
               {{ $t('réinitialiser') | capitalize }}
             </b-button>
           </b-button-group>
-          <b-button variant="success" type="submit" v-else>
+          <b-button variant="success" type="submit" v-else
+            :disabled="!changed || loading">
             {{ $t('enregistrer') | capitalize }}
           </b-button>
         </div>
@@ -215,6 +216,20 @@ export default {
             strokeOpacity: 0,
           };
       }
+    },
+    checkInvalidThenSubmit(passes, isValid) {
+      passes().then(() => {
+        if (isValid) {
+          return this.submit();
+        }
+
+        const invalidItems = document.getElementsByClassName('is-invalid');
+        if (invalidItems.length > 0) {
+          invalidItems[0].scrollIntoView({
+            behavior: 'smooth',
+          });
+        }
+      });
     },
     submit(...params) {
       const ownerId = this.$store.state.user.owner.id;
