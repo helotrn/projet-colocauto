@@ -30,8 +30,8 @@
           <svg-clouds class="d-lg-none" />
           <svg-clouds-desktop class="d-none d-lg-block" />
           <p>
-            Partager avec ses voisin-e-s des voitures, vélos et remorques à
-            vélos de manière conviviale et sécuritaire.
+            Partager avec ses <span class="no-break">voisin-e-s</span> des voitures, vélos et
+            remorques à vélos de manière conviviale et sécuritaire.
           </p>
           <svg-city class="d-lg-none" />
           <svg-city-desktop class="d-none d-lg-block" />
@@ -71,7 +71,7 @@
                 </b-col>
                 <b-col md="12">
                   <p class="text-center mb-5">
-                    Partagez votre auto avec vos voisin-e-s
+                    Partagez votre auto avec vos <span class="no-break">voisin-e-s</span>
                   </p>
                 </b-col>
               </b-row>
@@ -144,7 +144,7 @@
           </b-col>
           <b-col lg="6">
             <h2 class="mt-4 mb-4 page__section__title">
-              Rejoignez vos voisin-e-s
+              Rejoignez vos <span class="no-break">voisin-e-s</span>
             </h2>
 
             <p class="mb-5">

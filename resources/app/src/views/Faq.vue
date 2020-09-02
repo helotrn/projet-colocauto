@@ -4,116 +4,36 @@
 
     <b-row tag="section" class="page__section">
       <b-col>
-        <h1 class="page__section__title">
-          {{ $t('faq.title') }}
-        </h1>
+        <p class="text-center">
+          <b-button class="faq__button" variant="success"
+            href="http://bit.ly/locomotion-bienvenue" target="_blank">
+            <img src="/icons/faq.png">
+            Guide de départ
+          </b-button>
+        </p>
 
-        <div class="page__section__content">
-          <h2>{{ $t('faq.sections.why.title') }}</h2>
+        <b-row>
+          <b-col lg="6" class="page__section__content" v-for="s in 10" :key="`section-${s}`">
+            <h2>{{ $t('faq.sections.' + (s - 1) + '.title') }}</h2>
 
-          <div>
-            <h3>{{ $t('faq.sections.why.questions.0.title') }}</h3>
-            <div v-html="$t('faq.sections.why.questions.0.content')" />
-          </div>
-
-          <div>
-            <h3>{{ $t('faq.sections.why.questions.1.title') }}</h3>
-            <div v-html="$t('faq.sections.why.questions.1.content')" />
-          </div>
-
-          <div>
-            <h3>{{ $t('faq.sections.why.questions.2.title') }}</h3>
-            <div v-html="$t('faq.sections.why.questions.2.content')" />
-          </div>
-
-          <div>
-            <h3>{{ $t('faq.sections.why.questions.3.title') }}</h3>
-            <div v-html="$t('faq.sections.why.questions.3.content')" />
-          </div>
-        </div>
-
-        <div class="page__section__content">
-          <h2>{{ $t('faq.sections.costs.title') }}</h2>
-
-          <div>
-            <h3>{{ $t('faq.sections.costs.questions.0.title') }}</h3>
-            <div v-html="$t('faq.sections.costs.questions.0.content')" />
-          </div>
-
-          <div>
-            <h3>{{ $t('faq.sections.costs.questions.1.title') }}</h3>
-            <div v-html="$t('faq.sections.costs.questions.1.content')" />
-          </div>
-        </div>
-
-        <div class="page__section__content">
-          <h2>{{ $t('faq.sections.insurance.title') }}</h2>
-
-          <div>
-            <h3>{{ $t('faq.sections.insurance.questions.0.title') }}</h3>
-            <div v-html="$t('faq.sections.insurance.questions.0.content')" />
-          </div>
-
-          <div>
-            <h3>{{ $t('faq.sections.insurance.questions.1.title') }}</h3>
-            <div v-html="$t('faq.sections.insurance.questions.1.content')" />
-          </div>
-
-          <div>
-            <h3>{{ $t('faq.sections.insurance.questions.2.title') }}</h3>
-            <div v-html="$t('faq.sections.insurance.questions.2.content')" />
-          </div>
-        </div>
-
-        <div class="page__section__content">
-          <h2>{{ $t('faq.sections.extension.title') }}</h2>
-
-          <div v-html="$t('faq.sections.extension.content')" />
-        </div>
-
-        <div class="page__section__content">
-          <h2>{{ $t('faq.sections.make_reservation.title') }}</h2>
-
-          <div v-html="$t('faq.sections.make_reservation.content')" />
-        </div>
-
-        <div class="page__section__content">
-          <h2>{{ $t('faq.sections.cancel_reservation.title') }}</h2>
-
-          <div v-html="$t('faq.sections.cancel_reservation.content')" />
-        </div>
-
-        <div class="page__section__content">
-          <h2>{{ $t('faq.sections.takeover.title') }}</h2>
-
-          <div v-html="$t('faq.sections.takeover.content')" />
-        </div>
-
-        <div class="page__section__content">
-          <h2>{{ $t('faq.sections.borough.title') }}</h2>
-
-          <div v-html="$t('faq.sections.borough.content')" />
-        </div>
-
-        <div class="page__section__content">
-          <h2>{{ $t('faq.sections.participate.title') }}</h2>
-
-          <div>
-            <h3>{{ $t('faq.sections.participate.questions.0.title') }}</h3>
-            <div v-html="$t('faq.sections.participate.questions.0.content')" />
-          </div>
-
-          <div>
-            <h3>{{ $t('faq.sections.participate.questions.1.title') }}</h3>
-            <div v-html="$t('faq.sections.participate.questions.1.content')" />
-          </div>
-        </div>
+            <div role="tablist">
+              <faq-item  v-for="q in parseInt($t('faq.sections.' + (s - 1) + '.count'), 10)"
+                :key="`section-${s}-question-${q}`"
+                :id="`section-${s}-question-${q}`"
+                :title="$t(`faq.sections.${s - 1}.questions.${q - 1}.title`)">
+                <div v-html="$t(`faq.sections.${s - 1}.questions.${q - 1}.content`)" />
+              </faq-item>
+            </div>
+          </b-col>
+        </b-row>
       </b-col>
     </b-row>
   </layout-page>
 </template>
 
 <script>
+import FaqItem from '@/components/Misc/FaqItem.vue';
+
 import Authenticated from '@/mixins/Authenticated';
 
 import { capitalize } from '@/helpers/filters';
@@ -121,6 +41,9 @@ import { capitalize } from '@/helpers/filters';
 export default {
   name: 'Home',
   mixins: [Authenticated],
+  components: {
+    FaqItem,
+  },
   computed: {
     fullTitle() {
       const parts = [
@@ -135,15 +58,49 @@ export default {
 </script>
 
 <style lang="scss">
-.faq__content {
-  h2 {
-    margin-bottom: 1.2rem;
-    margin-top: 2.4rem;
+.page.faq {
+  .page__background {
+    background: #f5f8fb;
+    background-image: url("/home-motif.png");
+    background-repeat: repeat;
   }
 
-  h3 {
-    margin-bottom: 1rem;
-    margin-top: 2rem;
+  .faq__button {
+    font-size: 18px;
+    height: 37px;
+    line-height: 37px;
+    padding: 0 100px;
+    position: relative;
+
+    img {
+      position: absolute;
+      left: -20px;
+      top: -20px;
+    }
+  }
+
+  .page__section__content {
+    margin-top: 60px;
+    margin-bottom: 60px;
+
+    h2 {
+      color: $secondary;
+    }
+  }
+
+  .card {
+    border: 0;
+    margin-bottom: 10px;
+
+    img {
+      width: 100%;
+      height: auto;
+    }
+  }
+
+  .card-header {
+    margin: 0;
+    padding: 0;
   }
 }
 </style>
