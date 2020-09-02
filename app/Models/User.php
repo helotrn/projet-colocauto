@@ -386,6 +386,13 @@ class User extends AuthenticatableBaseModel
         });
     }
 
+    public function scopeStalledAtRegistration(Builder $query) {
+        return $query
+            ->whereNull('submitted_at')
+            ->whereDoesntHave('approvedCommunities')
+            ->whereNull('suspended_at');
+    }
+
     public function sendPasswordResetNotification($token) {
         Mail::to($this->email, $this->name . ' ' . $this->last_name)
           ->queue(new PasswordRequest($this, $token));
