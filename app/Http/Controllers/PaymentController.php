@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Action\PaymentRequest;
 use App\Http\Requests\BaseRequest as Request;
+use App\Listeners\SendInvoiceEmail;
 use App\Models\Payment;
 use App\Repositories\LoanRepository;
 use App\Repositories\PaymentRepository;
@@ -137,8 +138,8 @@ class PaymentController extends RestController
         $borrowerInvoice->pay();
 
         if ($loan->loanable->owner) {
-            $owner = $loan->loanable->owner->user;
-            $ownerInvoice = $owner->getLastInvoiceOrCreate();
+            $ownerUser = $loan->loanable->owner->user;
+            $ownerInvoice = $ownerUser->getLastInvoiceOrCreate();
 
             if ($items['price']) {
                 $items['price']['amount'] = -$items['price']['amount'];
@@ -169,6 +170,13 @@ class PaymentController extends RestController
         }
         $payment->status = 'completed';
         $payment->save();
+
+        if ($loan->total_final_cost > 0) {
+            event(new LoanPaidEvent($borrower->user, $borrowerInvoice));
+            if ($loan->loanable->owner) {
+                event(new LoanPaidEvent($ownerUser, $ownerInvoice));
+            }
+        }
 
         return $payment;
     }

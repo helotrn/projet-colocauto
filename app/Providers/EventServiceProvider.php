@@ -14,7 +14,7 @@ class EventServiceProvider extends ServiceProvider
             SendEmailVerificationNotification::class,
         ],
         'App\Events\AddedToUserBalanceEvent' => [
-            'App\Listeners\SendAddedToUserBalanceEmails',
+            'App\Listeners\SendInvoiceEmail',
         ],
         'App\Events\ClaimedUserBalanceEvent' => [
             'App\Listeners\SendClaimedUserBalanceEmails',
@@ -43,6 +43,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         'App\Events\LoanExtensionRejectedEvent' => [
             'App\Listeners\SendLoanExtensionRejectedEmails',
+        ],
+        'App\Events\LoanPaidEvent' => [
+            'App\Listeners\SendInvoiceEmail',
         ],
         'App\Events\RegistrationSubmittedEvent' => [
             'App\Listeners\SendRegistrationSubmittedEmails',

@@ -2,15 +2,14 @@
 
 namespace App\Listeners;
 
-use App\Events\AddedToUserBalanceEvent;
 use App\Mail\InvoicePaid;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Mail;
 
-class SendAddedToUserBalanceEmails
+class SendInvoiceEmail
 {
-    public function handle(AddedToUserBalanceEvent $event) {
+    public function handle($event) {
         Mail::to($event->user->email, $event->user->name . ' ' . $event->user->last_name)
           ->queue(new InvoicePaid($event->user, $event->invoice));
     }
