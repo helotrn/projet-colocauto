@@ -26,7 +26,7 @@
 
             <div class="page__section__tutorials">
               <div v-if="hasTutorial('discover-community')">
-                <tutorial-block title="Découvrez votre voisinage"
+                <tutorial-block :title="discoverCommunityTitle"
                   to="/community"
                   bg-image="/img-tetes.png" variant="dark" />
               </div>
@@ -179,6 +179,13 @@ export default {
     }
   },
   computed: {
+    discoverCommunityTitle() {
+      if (this.user.communities[0].type === 'borough') {
+        return 'Découvrez votre quartier';
+      }
+
+      return 'Découvrez votre voisinage';
+    },
     hasTutorials() {
       return this.hasTutorial('add-vehicle') || this.hasTutorial('find-vehicle')
         || this.hasTutorial('discover-community');
