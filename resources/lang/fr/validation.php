@@ -109,7 +109,8 @@ return [
     'custom' => [
         'accept_conditions' => [
             'accepted' => 'Vous devez accepter les <a href="/conditions">conditions '
-                . 'd\'utilisation</a> dans votre <a href="/profil">profil LocoMotion</a>.',
+                . 'd\'utilisation</a> dans votre '
+                . '<a href="/profile/account">profil LocoMotion</a>.',
         ],
     ],
 
