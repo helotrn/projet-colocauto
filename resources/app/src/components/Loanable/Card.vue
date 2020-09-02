@@ -14,7 +14,7 @@
     <div class="loanable-card__tags">
       <div v-if="type === 'car'">
         <b-badge>
-          <svg-car /> Voiture
+          <svg-car /> Auto
         </b-badge>
       </div>
       <div v-else-if="type === 'bike'">

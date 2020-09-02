@@ -261,7 +261,7 @@ class LoanableController extends RestController
                         'type' => 'select',
                         'options' => [
                             [
-                                'text' => 'Voiture',
+                                'text' => 'Auto',
                                 'value' => 'car',
                             ],
                             [
