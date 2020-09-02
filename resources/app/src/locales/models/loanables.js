@@ -26,7 +26,7 @@ export default {
       name: "Merci de nommer votre véhicule pour en informer votre voisinage. Le nom n'a pas "
         + "besoin d'être compliqué. Allez-y au plus simple... ou au plus drôle!",
       share_with_parent_communities: 'Mon véhicule pourra être visible et demandé en réservation '
-        + "par des utilisateur du quartier en-dehors de mon voisinage. C'est l'occasion de "
+        + "par des voisin-e-s du quartier en-dehors de mon voisinage. C'est l'occasion de "
         + 'partager davantage!',
     },
     engines: cars.fr.engines,
