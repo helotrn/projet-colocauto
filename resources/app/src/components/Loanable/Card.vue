@@ -1,11 +1,10 @@
 <template>
   <b-card class="loanable-card" no-body>
     <div class="loanable-card__image">
-      <div class="loanable-card__image__user" :style="userAvatarStyle" v-if="owner" />
-      <div class="loanable-card__image__user" :style="loanableImageStyle" v-else />
+      <div class="loanable-card__image__loanable" :style="loanableImageStyle" />
 
-      <div class="loanable-card__image__loanable" v-if="owner">
-        <div :style="loanableImageStyle" />
+      <div class="loanable-card__image__user" v-if="owner">
+        <div :style="userAvatarStyle" />
       </div>
     </div>
 
@@ -200,20 +199,20 @@ export default {
     position: relative;
     width: 100%;
 
-    &__user, &__loanable > div {
+    &__loanable, &__user > div {
       background-size: cover;
       background-position: center center;
       background-repeat: no-repeat;
       border-radius: 100%;
     }
 
-    &__user {
+    &__loanable {
       height: 100%;
       width: 115px;
       margin: 0 auto;
     }
 
-    &__loanable {
+    &__user {
       position: absolute;
       bottom: 0;
       left: calc(50% + 30px);
