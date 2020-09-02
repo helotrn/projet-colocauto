@@ -13,11 +13,23 @@
       <user-email-form ref="emailForm"
         :user="item" :loading="loading" @updated="resetEmailForm" />
     </div>
+
+    <div class="form__section">
+      <h2>Conditions d'utilisation</h2>
+
+      <p>Acceptez-vous les <a href="/conditions">conditions d'utilisation</a>?</p>
+
+      <forms-validated-input type="checkbox" name="accept_conditions"
+        :label="$t('users.fields.accept_conditions') | capitalize"
+        :value="item.accept_conditions"
+        @input="updateAcceptConditions" :disabled="item.accept_conditions" />
+    </div>
   </div>
   <layout-loading v-else />
 </template>
 
 <script>
+import FormsValidatedInput from '@/components/Forms/ValidatedInput.vue';
 import UserEmailForm from '@/components/User/EmailForm.vue';
 import UserPasswordForm from '@/components/User/PasswordForm.vue';
 
@@ -27,6 +39,7 @@ export default {
   name: 'ProfileAccount',
   mixins: [FormMixin],
   components: {
+    FormsValidatedInput,
     UserEmailForm,
     UserPasswordForm,
   },
@@ -42,6 +55,18 @@ export default {
     },
     resetPasswordForm() {
       this.$refs.passwordForm.reset();
+    },
+    async updateAcceptConditions(value) {
+      await this.$store.dispatch('users/update', {
+        id: this.user.id,
+        data: {
+          id: this.user.id,
+          accept_conditions: value,
+        },
+        params: {
+          fields: 'id,name,accept_conditions',
+        },
+      });
     },
   },
 };

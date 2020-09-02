@@ -28,7 +28,7 @@ export default {
         title: 'titles.account',
         slug: 'users',
         params: {
-          fields: 'id,name,email',
+          fields: 'id,name,email,accept_conditions',
         },
       },
     },
