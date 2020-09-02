@@ -146,6 +146,7 @@ export default {
       img {
         margin-right: 20px;
         flex: 0 0 58px;
+        width: 58px;
       }
 
       &.dashboard-resources-list__resources__messenger {
