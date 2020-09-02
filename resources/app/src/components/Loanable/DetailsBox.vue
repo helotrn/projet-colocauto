@@ -78,7 +78,7 @@
       </b-col>
 
       <b-col lg="6">
-        <forms-map-input :value="loanable.position" disabled />
+        <forms-map-input :value="loanable.position" disabled bounded />
 
         <div class="mt-3 loanable-details-box__section" v-if="loanable.location_description">
           <h3>{{ $t('fields.location_description') | capitalize }}</h3>

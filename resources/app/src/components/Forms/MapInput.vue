@@ -16,9 +16,16 @@
 </template>
 
 <script>
+import { gmapApi } from 'vue2-google-maps';
+
 export default {
   name: 'FormsMapInput',
   props: {
+    bounded: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
     center: {
       type: Object,
       required: false,
@@ -68,6 +75,7 @@ export default {
     };
   },
   computed: {
+    google: gmapApi,
     markerPosition() {
       if (this.value.length === 2) {
         return {
@@ -98,6 +106,22 @@ export default {
       if (!this.disabled) {
         const lat = event.latLng.lat();
         const lng = event.latLng.lng();
+
+        if (this.bounded && this.polygons.length > 0) {
+          const { Polygon } = this.google.maps;
+
+          for (let i = 0, len = this.polygons.length; i < len; i++) {
+            const p = new Polygon({ paths: this.polygons[i].area_google });
+
+            if (this.google.maps.geometry.poly.containsLocation(event.latLng, p)) {
+              this.$emit('input', [lat, lng]);
+              return;
+            }
+
+            return;
+          }
+        }
+
         this.$emit('input', [lat, lng]);
       }
     },

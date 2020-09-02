@@ -38,6 +38,7 @@
         v-bind:value="value"
         v-on:input="emitInput" />
       <forms-map-input v-else-if="type === 'point'"
+        bounded
         :center="center" :disabled="disabled"
         :state="getValidationState(validationContext)"
         :polygons="polygons"
