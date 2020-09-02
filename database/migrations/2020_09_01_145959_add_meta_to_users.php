@@ -9,7 +9,7 @@ class AddMetaToUsers extends Migration
 {
     public function up() {
         Schema::table('users', function (Blueprint $table) {
-            $table->json('meta')->default(new Expression("'{}'::json"));
+            $table->jsonb('meta')->default(new Expression("'{}'::json"));
         });
     }
 
