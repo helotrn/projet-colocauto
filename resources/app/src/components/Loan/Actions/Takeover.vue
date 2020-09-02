@@ -7,7 +7,7 @@
         <svg-check v-else-if="action.status === 'completed'" />
         <svg-danger v-else-if="action.status === 'canceled'" />
 
-        Prise de possession
+        Informations avant de partir
       </h2>
 
       <span v-if="action.status == 'in_process'">En attente</span>

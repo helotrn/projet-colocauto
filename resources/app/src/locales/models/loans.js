@@ -14,16 +14,6 @@ const statuss = {
 export default {
   fr: {
     'créer un emprunt': 'créer un emprunt',
-    current_steps: {
-      null: '-',
-      extension: 'extension',
-      handover: 'remise du véhicule',
-      incident: 'incident',
-      intention: 'intention',
-      payment: 'conclusion',
-      pre_payment: 'prépaiement',
-      takeover: 'prise de possession',
-    },
     descriptions: {
       platform_tip: 'LocoMotion est un projet citoyen et collaboratif. Participez à son'
         + 'fonctionnement en donnant une contribution volontaire.',
