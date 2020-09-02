@@ -23,7 +23,7 @@
 
               Version BETA &mdash; On expérimente ensemble sur locomotion.app.
               <a :href="googleFormUrl" target="_blank">
-                Donnez nous votre avis ou signalez un bug!
+                Donnez-nous votre avis ou signalez un bug!
               </a>
             </p>
 
