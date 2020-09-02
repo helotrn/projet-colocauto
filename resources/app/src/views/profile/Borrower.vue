@@ -1,12 +1,5 @@
 <template>
   <div class="profile-borrower" v-if="item">
-    <b-alert variant="warning" show>
-      Les informations ci-contre ne sont requises que si vous désirez emprunter des voitures.<br>
-      Celles-ci ne seront accessibles que par l'équipe de LocoMotion ou les représentants
-      des assurances Desjardins.<br>
-      Consultez notre <router-link to="/privacy">politique de confidentialité</router-link>.
-    </b-alert>
-
     <div v-if="item.borrower.is_complete" class="profile-borrower__completed-alert">
       <b-alert v-if="!item.borrower.validated"
         variant="warning" show>
@@ -25,6 +18,12 @@
       </b-alert>
     </div>
 
+    <b-alert variant="info" show>
+      Les informations ci-contre ne sont requises que si vous désirez emprunter des voitures.<br>
+      Celles-ci ne seront accessibles que par l'équipe de LocoMotion ou les représentants
+      des assurances Desjardins.<br>
+      Consultez notre <router-link to="/privacy">politique de confidentialité</router-link>.
+    </b-alert>
 
     <borrower-form :loading="loading" :borrower="item.borrower"
       @reset="reset" :changed="changed" show-reset

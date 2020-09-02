@@ -61,7 +61,7 @@ class Borrower extends BaseModel
 
     public function getIsCompleteAttribute() {
         return !!$this->drivers_license_number && !$this->has_been_sued_last_ten_years
-            && !!$this->gaa && !!$this->saaq && !!$this->insurance;
+            && !!$this->gaa && !!$this->saaq;
     }
 
     public function getApprovedAttribute() {
