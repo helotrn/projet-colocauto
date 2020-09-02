@@ -110,7 +110,7 @@ export default {
         if (this.bounded && this.polygons.length > 0) {
           const { Polygon } = this.google.maps;
 
-          for (let i = 0, len = this.polygons.length; i < len; i++) {
+          for (let i = 0, len = this.polygons.length; i < len; i += 1) {
             const p = new Polygon({ paths: this.polygons[i].area_google });
 
             if (this.google.maps.geometry.poly.containsLocation(event.latLng, p)) {

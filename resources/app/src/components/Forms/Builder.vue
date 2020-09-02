@@ -10,6 +10,7 @@
         :options="def.options" :disabled="disabled || def.disabled"
         :placeholder="placeholderOrLabel(key) | capitalize"
         :initial-view="def.initial_view"
+        :max="def.max" :min="def.min"
         :query="def.query" :object-value="objectValue(key)"
         @relation="updateObject($event, key)"
         v-model="value[key]" />

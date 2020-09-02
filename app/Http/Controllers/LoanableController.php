@@ -383,6 +383,8 @@ class LoanableController extends RestController
                     ],
                     'year_of_circulation' => [
                         'type' => 'number',
+                        'max' => (int) date('Y') + 1,
+                        'min' => 1900,
                     ],
                     'transmission_mode' => [
                         'type' => 'select',

@@ -41,8 +41,15 @@ class Car extends Loanable
         'year_of_circulation' => [
             'required',
             'digits:4',
+            'numeric',
         ],
     ];
+
+    public static function getRules($action = '', $auth = null) {
+        $rules = parent::getRules($action, $auth);
+        $rules['year_of_circulation'][] = 'max:' . ((int) date('Y') + 1);
+        return $rules;
+    }
 
     public static function getColumnsDefinition() {
         return [
