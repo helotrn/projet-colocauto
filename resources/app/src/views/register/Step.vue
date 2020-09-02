@@ -53,7 +53,7 @@
       <h2>Preuve de résidence</h2>
 
       <p class="register-step__community__text">
-        Pour rejoindre un voisinage LocoMotion, il faut&hellip; habiter dedans! :-)
+        Pour rejoindre un quartier ou un voisinage LocoMotion, il faut&hellip; habiter dedans! :-)
         Merci de nous fournir une preuve de résidence.
       </p>
 
