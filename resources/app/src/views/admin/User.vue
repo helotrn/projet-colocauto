@@ -43,6 +43,7 @@
             </div>
 
             <div class="form__section" v-if="item.borrower">
+              <a id="borrower" />
               <h2>Profil d'emprunteur</h2>
 
               <p>

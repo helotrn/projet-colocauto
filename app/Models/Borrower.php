@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Events\BorrowerApprovedEvent;
+use App\Events\BorrowerCompletedEvent;
 use App\Models\Loan;
 use App\Models\User;
 use App\Utils\TimestampWithTimezone;
@@ -11,6 +13,22 @@ use Vkovic\LaravelCustomCasts\HasCustomCasts;
 class Borrower extends BaseModel
 {
     use HasCustomCasts, SoftDeletes;
+
+    public static function boot() {
+        parent::boot();
+
+        self::saved(function ($model) {
+            if (!!$model->suspended_at) {
+                return;
+            }
+
+            if (!!$model->approved_at) {
+                event(new BorrowerApprovedEvent($model->user));
+            } elseif ($model->is_complete) {
+                event(new BorrowerCompletedEvent($model->user));
+            }
+        });
+    }
 
     public static $rules = [
         'drivers_license_number' => [ 'nullable' ],

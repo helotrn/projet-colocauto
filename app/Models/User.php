@@ -146,6 +146,7 @@ class User extends AuthenticatableBaseModel
         'accept_conditions' => 'boolean',
         'balance' => 'decimal:2',
         'email_verified_at' => 'datetime',
+        'meta' => 'array',
         'opt_in_newsletter' => 'boolean',
     ];
 
