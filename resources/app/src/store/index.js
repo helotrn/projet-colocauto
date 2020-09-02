@@ -64,6 +64,7 @@ const initialState = {
   user: null,
   token: null,
   refreshToken: null,
+  seenVersions: [],
 };
 
 const loadUserFields = [

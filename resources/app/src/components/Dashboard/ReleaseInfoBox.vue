@@ -94,6 +94,10 @@ export default {
   },
   methods: {
     hasSeenVersion(version, releaseDate) {
+      if (!this.$store.state.seenVersions) {
+        return false;
+      }
+
       return this.$store.state.seenVersions.indexOf(version) !== -1
         || releaseDate <= `${this.user.created_at}`;
     },
