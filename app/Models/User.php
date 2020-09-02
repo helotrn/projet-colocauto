@@ -216,7 +216,7 @@ class User extends AuthenticatableBaseModel
     }
 
     public function approvedCommunities() {
-        return $this->communities()->whereNotNull('approved_at')->whereSuspendedAt(null);
+        return $this->communities()->whereNotNull('approved_at')->whereNull('suspended_at');
     }
 
     public function defaultPaymentMethod() {
@@ -325,9 +325,7 @@ class User extends AuthenticatableBaseModel
     public function getNokeUser() {
         $nokeService = new NokeService(new HttpClient);
 
-        $nokeUser = $nokeService->findOrCreateUser($this);
-
-        return $nokeUser;
+        return $nokeService->findOrCreateUser($this);
     }
 
     public function addToBalance($amount) {

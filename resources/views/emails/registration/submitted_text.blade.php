@@ -1,30 +1,16 @@
 @extends('emails.layouts.main_text')
 
 @section('content')
-Bonjour {{ $user->name }},
+Bonjour,
 
-Votre profil est complété. Bienvenue dans LocoMotion, c'est un départ!
+Merci de votre inscription à LocoMotion!
 
-Pour pouvoir utiliser les véhicules il vous faut maintenant:
+Votre preuve de résidence va être validée par un-e membre de l'équipe dans les prochains
+jours. Vous serez avisé-e par courriel lorsque que cela sera fait et vous pourrez alors
+démarrer votre participation à LocoMotion!
 
-1/ vous procurer votre trousse de départ
 
-un attache-remorque pour les vélos
-carnet de bord pour les autos
-un autocollant à afficher fièrement!
-2/ Installer Noke pro pour ouvrir les cadenas de nos 2 roues et les boîtes à clés.
-
-⚠️ Vous allez recevoir un message de Noke Pro(en anglais), il ne s'agit pas d'une tentative de hameçonnage! Le courriel (peut être dans le dossier « spam ») ou le texto servent à activer votre compte Noke Pro pour débarrer les cadenas.
-
-Voir la marche à suivre : [http://bit.ly/locomotion-bienvenue]
-
-Pour utiliser l'auto d'une personne du voisinage, ajoutez vos documents à Mon dossier de conduite. Commandez-les dès maintenant :
-
-Pour commander votre dossier de conduite SAAQ : [https://saaq.gouv.qc.ca/services-en-ligne/citoyens/demander-copie-dossier-conduite/]
-Pour commander votre rapport de sinistre GAA : [https://gaa.qc.ca/fr/fichier-central-des-sinistres-automobiles/votre-dossier-de-sinistres/]
-Vous aimeriez mettre en commun votre véhicule personnel (auto, vélo, remorques à vélo...)? Ajoutez-les à votre profil dans : Mes véhicules
-
-Vous voulez jaser et posez des questions? Envoyez-nous un courriel, il nous fera un plaisir de vous rencontrer!
+Vous allez recevoir un courriel de Noke Pro. Noke Pro, c’est l’application pour débarrer les cadenas. Le courriel reçu sert à activer votre compte Noke Pro. Vous pouvez aussi simplement « inscrire mot de passe oublié » lors de votre première connexion à Noke Pro depuis votre téléphone intelligent.
 
 À bientôt,
 

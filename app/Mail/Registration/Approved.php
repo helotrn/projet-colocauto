@@ -4,11 +4,10 @@ namespace App\Mail\Registration;
 
 use App\Models\User;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class Submitted extends Mailable
+class Approved extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -19,11 +18,11 @@ class Submitted extends Mailable
     }
 
     public function build() {
-        return $this->view('emails.registration.submitted')
-            ->subject('Bienvenue dans LocoMotion! Ça y est presque!')
-            ->text('emails.registration.submitted_text')
+        return $this->view('emails.registration.approved')
+            ->subject("Bienvenue dans LocoMotion, c'est parti!")
+            ->text('emails.registration.approved_text')
             ->with([
-                'title' => 'Bienvenue dans LocoMotion! Ça y est presque!',
+                'title' => "Bienvenue dans LocoMotion, c'est parti!",
             ]);
     }
 }

@@ -18,8 +18,14 @@
             <b-dropdown-item @click="sendPasswordResetEmail">
               Courriel de réinit. de mot de passe
             </b-dropdown-item>
-            <b-dropdown-item @click="sendWelcomeEmail">
-              Courriel de bienvenue
+            <b-dropdown-item @click="sendRegistrationSubmittedEmail">
+              Courriel de bienvenue (inscr. complétée)
+            </b-dropdown-item>
+            <b-dropdown-item @click="sendRegistrationApprovedEmail">
+              Courriel de bienvenue (approbation)
+            </b-dropdown-item>
+            <b-dropdown-item @click="sendRegistrationRejectedEmail">
+              Courriel de refus d'inscription
             </b-dropdown-item>
             <b-dropdown-divider />
             <b-dropdown-item disabled>{{
@@ -118,12 +124,22 @@ export default {
   methods: {
     sendPasswordResetEmail() {
       this.axios.put(
-        `/users/sendPasswordResetEmail?id=${this.selected.map(s => s.id).join(',')}`,
+        `/users/send/password_reset?id=${this.selected.map(s => s.id).join(',')}`,
       );
     },
-    sendWelcomeEmail() {
+    sendRegistrationSubmittedEmail() {
       this.axios.put(
-        `/users/sendWelcomeEmail?id=${this.selected.map(s => s.id).join(',')}`,
+        `/users/send/registration_submitted?id=${this.selected.map(s => s.id).join(',')}`,
+      );
+    },
+    sendRegistrationApprovedEmail() {
+      this.axios.put(
+        `/users/send/registration_approved?id=${this.selected.map(s => s.id).join(',')}`,
+      );
+    },
+    sendRegistrationRejectedEmail() {
+      this.axios.put(
+        `/users/send/registration_rejected?id=${this.selected.map(s => s.id).join(',')}`,
       );
     },
     toggleSelection(val) {

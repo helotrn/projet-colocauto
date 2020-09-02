@@ -2,6 +2,7 @@
 
 namespace App\Models\Pivots;
 
+use App\Events\RegistrationApprovedEvent;
 use App\Models\Community;
 use App\Models\Image;
 use App\Models\Tag;
@@ -18,8 +19,8 @@ class CommunityUser extends BasePivot
         parent::boot();
 
         self::saved(function ($model) {
-            if ($model->approved_at && !$model->suspended_at) {
-                $model->user->getNokeUser();
+            if (!!$model->approved_at && !$model->suspended_at) {
+                event(new RegistrationApprovedEvent($model->user));
             }
         });
     }

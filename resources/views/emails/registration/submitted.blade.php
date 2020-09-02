@@ -2,43 +2,22 @@
 
 @section('content')
 <p>
-    Bonjour {{ $user->name }},
+    Bonjour,
 </p>
 
-<p>Votre profil est complété. Bienvenue dans LocoMotion, c'est un départ!</p>
-
-<p>Pour pouvoir utiliser les véhicules il vous faut maintenant:</p>
-
-<p>1/ vous procurer votre trousse de départ</p>
-<ul>
-	<li>un attache-remorque pour les vélos</li>
-	<li>carnet de bord pour les autos</li>
-	<li>un autocollant à afficher fièrement!</li>
-</ul>
-
-<p>2/ Installer Noke pro pour ouvrir les cadenas de nos 2 roues et les boîtes à clés.</p>
-
-<p style="background:#F9CA51">⚠️ Vous allez recevoir un message de Noke Pro (en anglais), il ne s'agit pas d'une tentative de hameçonnage! Le courriel (peut être dans le dossier «&nbsp;spam&nbsp;») ou le texto servent à activer votre compte Noke Pro pour débarrer les cadenas.</p>
-	<p style="text-align: center;">
-		<a href="http://bit.ly/locomotion-bienvenue" style="display: inline-block; background-color: #246AEA; padding: 10px; border-radius: 3px; color: white; font-weight: bold; text-decoration: none;" target="_blank">
-		Voir la marche à suivre</a>
-	</p>
-</p>
-<p>Pour utiliser l'auto d'une personne du voisinage, ajoutez vos documents à <a href="{{ url('/profile/borrower') }}"  target="_blank">Mon dossier de conduite</a>. Commandez-les dès maintenant:</p>
-<ul>
-	<li>
-		<a href="https://saaq.gouv.qc.ca/services-en-ligne/citoyens/demander-copie-dossier-conduite/" target="_blank">Pour commander votre dossier de conduite SAAQ</a>
-	</li>
-	<li>
-		<a href="https://gaa.qc.ca/fr/fichier-central-des-sinistres-automobiles/votre-dossier-de-sinistres/" target="_blank">Pour commander votre rapport de sinistre GAA</a>
-	</li>
-</ul>
-
-<p>Vous aimeriez mettre en commun votre véhicule personnel (auto, vélo, remorques à vélo...)? Ajoutez-les à votre profil dans:
-	<a href="{{ url('/profile/loanables') }}"  target="_blank">Mes véhicules</a>
+<p>
+    Merci de votre inscription à LocoMotion!
 </p>
 
-<p>Vous voulez jaser et posez des questions? Envoyez-nous un courriel, il nous fera un plaisir de vous rencontrer!</p>
+<p>
+    Votre preuve de résidence va être validée par un-e membre de l'équipe dans les prochains
+    jours. Vous serez avisé-e par courriel lorsque que cela sera fait et vous pourrez alors
+    démarrer votre participation à LocoMotion!
+</p>
+
+
+<p style="background: #F9CA51;">⚠️Vous allez recevoir un courriel de Noke Pro. Noke Pro, c’est l’application pour débarrer les cadenas. Le courriel reçu sert à activer votre compte Noke Pro. Vous pouvez aussi simplement «&nbsp;inscrire mot de passe oublié&nbsp;» lors de votre première connexion à Noke Pro depuis votre téléphone intelligent.</p>
+</p>
 
 <p>À bientôt,</p>
 

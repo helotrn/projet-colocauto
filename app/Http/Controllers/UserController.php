@@ -201,8 +201,34 @@ class UserController extends RestController
                 }
 
                 return [ 'report' => $report ];
+            case 'registration_approved':
+                $report = [];
+                foreach ($items as $item) {
+                    Mail::to($item->email, $item->name . ' ' . $item->last_name)
+                        ->send(new \App\Mail\Registration\Approved($item));
+                    $report[] = [
+                        'id' => $item->id,
+                        'response' => [
+                            'message' => 'sent',
+                        ],
+                    ];
+                }
 
+                return [ 'report' => $report ];
+            case 'registration_rejected':
+                $report = [];
+                foreach ($items as $item) {
+                    Mail::to($item->email, $item->name . ' ' . $item->last_name)
+                        ->send(new \App\Mail\Registration\Rejected($item));
+                    $report[] = [
+                        'id' => $item->id,
+                        'response' => [
+                            'message' => 'sent',
+                        ],
+                    ];
+                }
 
+                return [ 'report' => $report ];
             default:
                 return abort(422);
         }
