@@ -163,50 +163,49 @@ class UserController extends RestController
         return response('', 204);
     }
 
-    public function sendPasswordResetEmail(AdminRequest $request) {
+    public function sendEmail(AdminRequest $request, $type) {
         try {
             [$items, $total] = $this->repo->get($request);
         } catch (ValidationException $e) {
             return $this->respondWithErrors($e->errors(), $e->getMessage());
         }
 
-        $report = [];
-        foreach ($items as $item) {
-            $authController = app(AuthController::class);
-            $passwordRequest = $request->redirectAs($item, Request::class);
-            $passwordRequest->merge([
-                'email' => $item->email,
-            ]);
-            $output = $authController->passwordRequest($passwordRequest);
-            $report[] = [
-                'id' => $item->id,
-                'response' => $output->getData(),
-            ];
+        switch ($type) {
+            case 'password_reset':
+                $report = [];
+                foreach ($items as $item) {
+                    $authController = app(AuthController::class);
+                    $passwordRequest = $request->redirectAs($item, Request::class);
+                    $passwordRequest->merge([
+                        'email' => $item->email,
+                    ]);
+                    $output = $authController->passwordRequest($passwordRequest);
+                    $report[] = [
+                        'id' => $item->id,
+                        'response' => $output->getData(),
+                    ];
+                }
+
+                return [ 'report' => $report ];
+            case 'registration_submitted':
+                $report = [];
+                foreach ($items as $item) {
+                    Mail::to($item->email, $item->name . ' ' . $item->last_name)
+                        ->send(new \App\Mail\Registration\Submitted($item));
+                    $report[] = [
+                        'id' => $item->id,
+                        'response' => [
+                            'message' => 'sent',
+                        ],
+                    ];
+                }
+
+                return [ 'report' => $report ];
+
+
+            default:
+                return abort(422);
         }
-
-        return [ 'report' => $report ];
-    }
-
-    public function sendWelcomeEmail(AdminRequest $request) {
-        try {
-            [$items, $total] = $this->repo->get($request);
-        } catch (ValidationException $e) {
-            return $this->respondWithErrors($e->errors(), $e->getMessage());
-        }
-
-        $report = [];
-        foreach ($items as $item) {
-            Mail::to($item->email, $item->name . ' ' . $item->last_name)
-                ->send(new \App\Mail\RegistrationSubmitted($item));
-            $report[] = [
-                'id' => $item->id,
-                'response' => [
-                    'message' => 'sent',
-                ],
-            ];
-        }
-
-        return [ 'report' => $report ];
     }
 
     public function submit(Request $request, $id) {

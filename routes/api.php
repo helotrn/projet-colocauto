@@ -46,12 +46,8 @@ Route::prefix('v1')->group(function () {
         Route::get('users/{me}', 'UserController@retrieve')->where('me', 'me');
 
         Route::put(
-            'users/sendPasswordResetEmail',
-            'UserController@sendPasswordResetEmail'
-        );
-        Route::put(
-            'users/sendWelcomeEmail',
-            'UserController@sendWelcomeEmail'
+            'users/send/{type}',
+            'UserController@sendEmail'
         );
 
         RouteHelper::retrieve('borrower');
