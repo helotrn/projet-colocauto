@@ -3,20 +3,15 @@
 namespace App\Events;
 
 use App\Models\User;
-use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
-use Illuminate\Foundation\Events\Dispatchable;
-use Illuminate\Queue\SerializesModels;
 
-class AddedToUserBalanceEvent
+class AddedToUserBalanceEvent extends SendInvoiceEmailEvent
 {
-    use Dispatchable, InteractsWithSockets, SerializesModels;
-
-    public $invoice;
-    public $user;
-
-    public function __construct(User $user, $invoice) {
-        $this->invoice = $invoice;
+    public function __construct(User $user, array $invoice) {
         $this->user = $user;
+        $this->invoice = $invoice;
+
+        $this->title = 'Facture payée';
+        $this->text = '<p>Vous trouvez ci-contre le relevé de votre plus récent paiement'
+           . ' sur LocoMotion.</p>';
     }
 }

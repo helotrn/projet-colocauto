@@ -6,7 +6,7 @@
 </p>
 
 <p>
-    Vous trouvez ci-contre le relevé de votre plus récent paiement sur LocoMotion.
+    {!! $text !!}
 </p>
 
 <table style="width: 100%;">

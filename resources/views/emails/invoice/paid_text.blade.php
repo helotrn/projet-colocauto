@@ -3,7 +3,7 @@
 @section('content')
 Bonjour {{ $user->name }},
 
-Vous trouvez ci-contre le relevé de votre plus récent paiement sur LocoMotion.
+{!! strip_tags($text) !!}
 
 LocoMotion
 Solon collectif (Celsius Mtl)
