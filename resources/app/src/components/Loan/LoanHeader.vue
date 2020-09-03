@@ -23,7 +23,7 @@
             v-b-modal="'owner-modal'" v-if="loan.loanable.owner && userRole !== 'owner'">
             {{ loan.loanable.owner.user.full_name }}
           </a>
-          <span v-else>
+          <span v-else-if="loan.loanable.community">
             {{ loan.loanable.community.name }}
           </span>
         </p>
