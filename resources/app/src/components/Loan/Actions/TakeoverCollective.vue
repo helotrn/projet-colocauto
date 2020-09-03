@@ -44,6 +44,12 @@
                   <p class="mb-0">Merci de le prendre en compte lors de votre réservation.</p>
                 </div>
               </b-alert>
+
+              <b-alert show variant="info">
+                <p>Vous avez un problème avec le cadenas?</p>
+                <p>Contactez-nous entre 9h et 20h au 438-476-3343</p>
+                <p>(cette ligne est dédiée uniquement aux problèmes liés aux cadenas)</p>
+              </b-alert>
             </b-col>
           </b-row>
 

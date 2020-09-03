@@ -4,7 +4,7 @@
       :number-of-pages="4" pills
       align="center" use-router
       :hide-goto-end-buttons="true"
-      :disabled="true">
+      disabled>
       <template v-slot:page="{ page, active }">
         <span v-if="page < currentPage" class="checked">
           <b-icon icon="check" font-scale="2" />

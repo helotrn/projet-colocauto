@@ -162,6 +162,12 @@
             lorsque vous aurez complété le retour du véhicule.
           </p>
 
+          <b-alert show variant="info">
+            <p>Vous avez un problème avec le cadenas?</p>
+            <p>Contactez-nous entre 9h et 20h au 438-476-3343</p>
+            <p>(cette ligne est dédiée uniquement aux problèmes liés aux cadenas)</p>
+          </b-alert>
+
           <p>
             Si vous prévoyez avoir du retard, ajoutez une extension: d'autres membres
             LocoMotion attendent peut-être ce véhicule.
