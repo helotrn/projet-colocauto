@@ -66,8 +66,7 @@
       <svg-check v-else-if="hasReachedStep('handover')" />
       <svg-waiting v-else />
 
-      <span v-if="isOwnedLoanable">Remise du véhicule</span>
-      <span v-else>Retour du véhicule</span>
+      <span>Retour</span>
     </li>
     <li :class="{
       'current-step': isCurrentStep('payment'),

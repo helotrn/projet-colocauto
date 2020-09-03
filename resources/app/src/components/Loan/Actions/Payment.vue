@@ -95,6 +95,15 @@
                 Accepter
               </b-button>
             </div>
+
+            <b-row class="loan-actions__alert">
+              <b-col>
+                <b-alert variant="warning" show>
+                  Dans 48h, vous ne pourrez plus modifier vos informations.
+                  Nous validerons le coût de l'emprunt avec les détails ci-dessus.
+                </b-alert>
+              </b-col>
+            </b-row>
           </div>
         </div>
       </b-collapse>

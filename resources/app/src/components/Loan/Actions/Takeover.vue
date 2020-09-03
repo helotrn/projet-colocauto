@@ -113,6 +113,15 @@
                   </b-button>
                 </b-col>
               </b-row>
+
+              <b-row class="loan-actions__alert" v-if="!action.executed_at">
+                <b-col>
+                  <b-alert variant="warning" show>
+                    Dans 48h, vous ne pourrez plus modifier vos informations.
+                    Nous validerons le coût de l'emprunt avec les détails ci-dessus.
+                  </b-alert>
+                </b-col>
+              </b-row>
             </b-form>
           </validation-observer>
         </div>
@@ -163,6 +172,15 @@
                   </b-button>
                 </b-col>
               </b-row>
+
+              <b-row class="loan-actions__alert" v-if="!action.executed_at">
+                <b-col>
+                  <b-alert variant="warning" show>
+                    Dans 48h, vous ne pourrez plus modifier vos informations.
+                    Nous validerons le coût de l'emprunt avec les détails ci-dessus.
+                  </b-alert>
+                </b-col>
+              </b-row>
             </b-form>
           </validation-observer>
         </div>
@@ -197,6 +215,15 @@
                 @click="completeAction">
                 C'est fait!
               </b-button>
+            </b-col>
+          </b-row>
+
+          <b-row class="loan-actions__alert" v-if="!action.executed_at">
+            <b-col>
+              <b-alert variant="warning" show>
+                Dans 48h, vous ne pourrez plus modifier vos informations.
+                Nous validerons le coût de l'emprunt avec les détails ci-dessus.
+              </b-alert>
             </b-col>
           </b-row>
         </div>

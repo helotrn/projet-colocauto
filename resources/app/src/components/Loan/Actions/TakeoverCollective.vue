@@ -53,7 +53,7 @@
 
               <p>
                 Après utilisation du véhicule, merci de venir clôturer votre emprunt sur la
-                plateforme via la section suivante &laquo;&nbsp;Retour du véhicule&nbsp;&raquo;.
+                plateforme via la section suivante &laquo;&nbsp;Retour&nbsp;&raquo;.
               </p>
 
               <p>
@@ -77,7 +77,7 @@
                 <a href="mailto:info@locomotion.app">info@locomotion.app</a>
               </p>
 
-              <p class="text-center"><strong>Bonne route !</strong></p>
+              <p class="text-center"><strong>Bonne route!</strong></p>
             </b-col>
           </b-row>
 

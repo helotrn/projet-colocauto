@@ -68,6 +68,7 @@ class ActionsComplete extends Command
                 case 'extension':
                     $request = new ActionRequest;
                     $request->setUserResolver(function () use ($loan) {
+                        // FIXME is this right? shouldn't it be the owner?
                         return $loan->borrower->user;
                     });
                     $request->merge([

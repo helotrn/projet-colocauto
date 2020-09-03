@@ -120,6 +120,13 @@
               Refuser
             </b-button>
           </div>
+
+          <div class="loan-actions__alert">
+            <b-alert variant="warning" show>
+              Dans 48h, vous ne pourrez plus modifier vos informations.
+              Nous validerons le coût de l'emprunt avec les détails ci-dessus.
+            </b-alert>
+          </div>
         </div>
       </b-collapse>
     </b-card-body>

@@ -7,7 +7,7 @@
         <svg-check v-else-if="action.status === 'completed'" />
         <svg-danger v-else-if="action.status === 'canceled'" />
 
-        Remise du véhicule
+        Retour
       </h2>
 
       <span v-if="action.status == 'in_process'">En attente</span>
@@ -143,6 +143,15 @@
                   </b-button>
                 </b-col>
               </b-row>
+
+              <b-row class="loan-actions__alert" v-if="!action.executed_at">
+                <b-col>
+                  <b-alert variant="warning" show>
+                    Dans 48h, vous ne pourrez plus modifier vos informations.
+                    Nous validerons le coût de l'emprunt avec les détails ci-dessus.
+                  </b-alert>
+                </b-col>
+              </b-row>
             </b-form>
           </validation-observer>
         </div>
@@ -150,7 +159,7 @@
         <div v-else-if="loan.loanable.has_padlock">
           <p>
             Le cadenas du véhicule sera automatiquement dissocié de application NOKE
-            lorsque vous aurez complété la remise du véhicule.
+            lorsque vous aurez complété le retour du véhicule.
           </p>
 
           <p>
@@ -198,6 +207,15 @@
                   </b-button>
                 </b-col>
               </b-row>
+
+              <b-row class="loan-actions__alert" v-if="!action.executed_at">
+                <b-col>
+                  <b-alert variant="warning" show>
+                    Dans 48h, vous ne pourrez plus modifier vos informations.
+                    Nous validerons le coût de l'emprunt avec les détails ci-dessus.
+                  </b-alert>
+                </b-col>
+              </b-row>
             </b-form>
           </validation-observer>
         </div>
@@ -209,17 +227,17 @@
                 Rendez le véhicule au propriétaire.
               </p>
               <p v-else>
-                L'emprunteur vous contactera pour arranger la remise du véhicule.
+                L'emprunteur vous contactera pour arranger le retour du véhicule.
               </p>
             </b-col>
           </b-row>
           <b-row v-else>
             <b-col>
               <p v-if="action.status !== 'canceled'">
-                La remise du véhicule a été effectuée.
+                Le retour du véhicule a été effectuée.
               </p>
               <p v-else>
-                La remise du véhicule a été annulée.
+                Le retour du véhicule a été annulée.
               </p>
             </b-col>
           </b-row>
@@ -232,6 +250,15 @@
                 @click="completeAction">
                 C'est fait!
               </b-button>
+            </b-col>
+          </b-row>
+
+          <b-row class="loan-actions__alert" v-if="!action.executed_at">
+            <b-col>
+              <b-alert variant="warning" show>
+                Dans 48h, vous ne pourrez plus modifier vos informations.
+                Nous validerons le coût de l'emprunt avec les détails ci-dessus.
+              </b-alert>
             </b-col>
           </b-row>
         </div>

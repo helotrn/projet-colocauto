@@ -7,7 +7,7 @@
         <svg-check v-else-if="action.status === 'completed'" />
         <svg-danger v-else-if="action.status === 'canceled'" />
 
-        Retour du véhicule
+        Retour
       </h2>
 
       <span v-if="action.status == 'in_process'">En attente</span>
@@ -143,6 +143,16 @@
                     Mon emprunt est terminé!
                   </b-button>
                 </div>
+
+                <b-row class="loan-actions__alert"
+                  v-if="!action.executed_at && hasEnoughBalance">
+                  <b-col>
+                    <b-alert variant="warning" show>
+                      Dans 48h, vous ne pourrez plus modifier vos informations.
+                      Nous validerons le coût de l'emprunt avec les détails ci-dessus.
+                    </b-alert>
+                  </b-col>
+                </b-row>
               </b-form>
             </validation-observer>
           </div>
