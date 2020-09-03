@@ -129,7 +129,13 @@ class Invoice extends BaseModel
 
     public $items = ['payment_method', 'user'];
 
-    public $computed = ['items_count', 'total', 'total_with_taxes'];
+    public $computed = [
+        'items_count',
+        'total',
+        'total_tps',
+        'total_tvq',
+        'total_with_taxes'
+    ];
 
     public function paymentMethod() {
         return $this->belongsTo(PaymentMethod::class);

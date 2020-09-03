@@ -90,6 +90,7 @@ class ActionsComplete extends Command
                             'type' => $action->type,
                             'loan_id' => $loan->id,
                             'platform_tip' => $loan->platform_tip,
+                            'automated' => true,
                         ]);
                         $this->controller->complete($request, $loan->id, $action->id);
                     }

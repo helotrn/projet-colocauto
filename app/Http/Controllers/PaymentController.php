@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\LoanPaidEvent;
 use App\Http\Requests\Action\PaymentRequest;
 use App\Http\Requests\BaseRequest as Request;
 use App\Listeners\SendInvoiceEmail;
+use App\Models\Invoice;
 use App\Models\Payment;
 use App\Repositories\LoanRepository;
 use App\Repositories\PaymentRepository;
@@ -128,8 +130,8 @@ class PaymentController extends RestController
         ];
 
         // Update invoices
-        $borrower = $loan->borrower->user;
-        $borrowerInvoice = $borrower->getLastInvoiceOrCreate();
+        $borrowerUser = $loan->borrower->user;
+        $borrowerInvoice = $borrowerUser->getLastInvoiceOrCreate();
         foreach ($items as $item) {
             if ($item) {
                 $borrowerInvoice->billItems()->create($item);
@@ -156,11 +158,10 @@ class PaymentController extends RestController
             $ownerInvoice->pay();
         }
 
-
         // Update balances
-        $borrower->removeFromBalance($price + $insurance + $platformTip - $expenses);
+        $borrowerUser->removeFromBalance($price + $insurance + $platformTip - $expenses);
         if ($loan->loanable->owner) {
-            $owner->addToBalance($price - $expenses);
+            $ownerUser->addToBalance($price - $expenses);
         }
 
         // Save payment
@@ -171,10 +172,43 @@ class PaymentController extends RestController
         $payment->status = 'completed';
         $payment->save();
 
+        // Send emails after an automated or manual action
+        $invoiceTransformer = new Invoice::$transformer;
         if ($loan->total_final_cost > 0) {
-            event(new LoanPaidEvent($borrower->user, $borrowerInvoice));
-            if ($loan->loanable->owner) {
-                event(new LoanPaidEvent($ownerUser, $ownerInvoice));
+            if ($request->get('automated')) {
+                event(new LoanPaidEvent(
+                    $borrowerUser,
+                    $invoiceTransformer->transform($borrowerInvoice, [
+                        'fields' => ['*' => '*'],
+                    ]),
+                    'Conclusion automatique de votre emprunt',
+                    '<p>Votre emprunt est terminé depuis 48h. Il est désormais clôturé!</p>'
+                ));
+                if ($loan->loanable->owner) {
+                    event(new LoanPaidEvent(
+                        $ownerUser,
+                        $invoiceTransformer->transform($ownerInvoice, [
+                            'fields' => ['*' => '*'],
+                        ]),
+                        null,
+                        '<p>Votre emprunt est désormais clôturé!</p>'
+                    ));
+                }
+            } else {
+                event(new LoanPaidEvent(
+                    $borrowerUser,
+                    $invoiceTransformer->transform($borrowerInvoice, [
+                        'fields' => ['*' => '*'],
+                    ])
+                ));
+                if ($loan->loanable->owner) {
+                    event(new LoanPaidEvent(
+                        $ownerUser,
+                        $invoiceTransformer->transform($ownerInvoice, [
+                            'fields' => ['*' => '*'],
+                        ])
+                    ));
+                }
             }
         }
 

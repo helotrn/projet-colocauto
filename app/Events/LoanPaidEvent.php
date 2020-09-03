@@ -9,15 +9,26 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class LoanPaidEvent
+class LoanPaidEvent extends SendInvoiceEmailEvent
 {
-    use Dispatchable, InteractsWithSockets, SerializesModels;
+    public static $defaultText = <<<HTML
+<p>
+Cela signifie que vous ne pouvez plus modifier les informations du trajet (km départ,
+km retour, achat carburant). Si vous vous rendez compte d’une erreur, dites-le à la personne
+qui vous a prêté son auto ou vélo et contactez info@locomotion.app, on vous aidera à
+ajuster vos factures.
+</p>
+<p>
+Merci d'avoir utilisé LocoMotion!
+</p>
+HTML
+        ;
 
-    public $invoice;
-    public $user;
-
-    public function __construct(User $user, Invoice $invoice) {
-        $this->invoice = $invoice;
+    public function __construct(User $user, array $invoice, $title = null, $text = null) {
         $this->user = $user;
+        $this->invoice = $invoice;
+
+        $this->title = $title ?: 'Facture de votre plus récent emprunt';
+        $this->text = $text ?: static::$defaultText;
     }
 }
