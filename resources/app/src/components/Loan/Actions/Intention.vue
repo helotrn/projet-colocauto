@@ -82,8 +82,16 @@
 
         <div class="loan-actions__alert" v-if="item.loanable.type === 'car'">
           <b-alert variant="warning" show>
-            Desjardins assurances ne couvrera le trajet que s'il est bien renseigné sur
-            LocoMotion! Pensez à accepter et vérifier le pré-paiement de la réservation ici.
+            <p>
+              Desjardins assurances ne couvrera le trajet que s'il est bien renseigné sur
+              LocoMotion! Pensez à accepter et vérifier le pré-paiement de la réservation ici.
+            </p>
+
+            <p>
+              <router-link to="/assurances-desjardins">
+                Voir les conditions d'assurances
+              </router-link>
+            </p>
           </b-alert>
         </div>
       </b-collapse>
