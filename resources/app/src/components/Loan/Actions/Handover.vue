@@ -22,7 +22,7 @@
     <b-card-body>
       <b-collapse id="loan-actions-handover" role="tabpanel" accordion="loan-actions"
         :visible="open">
-        <div v-if="loan.loanable.type === 'car'">
+        <div v-if="item.loanable.type === 'car'">
           <validation-observer ref="observer" v-slot="{ passes }">
             <b-form :novalidate="true" class="register-form__form"
               @submit.stop.prevent="passes(completeAction)">
@@ -156,7 +156,7 @@
           </validation-observer>
         </div>
 
-        <div v-else-if="loan.loanable.has_padlock">
+        <div v-else-if="item.loanable.has_padlock">
           <p>
             Le cadenas du véhicule sera automatiquement dissocié de application NOKE
             lorsque vous aurez complété le retour du véhicule.
@@ -311,6 +311,12 @@ import LoanActionsMixin from '@/mixins/LoanActionsMixin';
 export default {
   name: 'LoanActionsHandover',
   mixins: [LoanActionsMixin],
+  mounted() {
+    this.action.mileage_end = this.item.estimated_distance
+      + this.item.actions.find(a => a.type === 'takeover').mileage_beginning;
+
+    this.action.purchases_amount = 0;
+  },
   components: {
     FormsImageUploader,
     FormsValidatedInput,
