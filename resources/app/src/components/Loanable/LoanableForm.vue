@@ -220,14 +220,14 @@ export default {
     checkInvalidThenSubmit(passes, isValid) {
       passes().then(() => {
         if (isValid) {
-          return this.submit();
-        }
-
-        const invalidItems = document.getElementsByClassName('is-invalid');
-        if (invalidItems.length > 0) {
-          invalidItems[0].scrollIntoView({
-            behavior: 'smooth',
-          });
+          this.submit();
+        } else {
+          const invalidItems = document.getElementsByClassName('is-invalid');
+          if (invalidItems.length > 0) {
+            invalidItems[0].scrollIntoView({
+              behavior: 'smooth',
+            });
+          }
         }
       });
     },
