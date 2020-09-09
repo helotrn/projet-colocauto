@@ -17,14 +17,6 @@
           </p>
         </div>
 
-        <div v-if="community.parent">
-          <p><small>
-            Ce voisinage est inclus dans un quartier.<br>
-            Si j'appartiens à ce voisinage alors j'appartiens également
-            au quartier {{ community.parent.name }}.
-          </small></p>
-        </div>
-
         <b-form class="register-map__community__submit text-center"
           @submit.prevent="joinCommunity" @reset.prevent="resetCommunity">
           <b-button type="submit" variant="primary" class="mr-3 mb-3">Rejoindre</b-button>
