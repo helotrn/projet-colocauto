@@ -50,6 +50,9 @@ export default {
       parentPathParts.pop();
       return `/${parentPathParts.join('/')}`;
     },
+    parsedInitialItem() {
+      return JSON.parse(this.initialItem);
+    },
     slug() {
       return this.$route.meta.slug;
     },

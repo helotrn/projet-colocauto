@@ -2,7 +2,19 @@
   <div class="profile-locomotion" v-if="item">
     <profile-form :loading="loading" :user="item" :form="form"
       @reset="reset" :changed="changed" show-reset
-      @submit="submit" v-if="item" />
+      @submit="submit" v-if="item">
+      <template>
+        <b-row v-if="hasAddressChanged">
+          <b-col>
+            <b-alert variant="warning" show>
+              Si vous avez changé d'adresse et souhaitez rejoiundre une nouvelle communauté,
+              merci de prendre contact avec un administrateur à l'adresse
+              <a href="mailto:info@locomotion.app">info@locomotion.app</a> .
+            </b-alert>
+          </b-col>
+        </b-row>
+      </template>
+    </profile-form>
   </div>
   <layout-loading v-else />
 </template>
@@ -20,6 +32,12 @@ export default {
     id: {
       required: false,
       default: 'me',
+    },
+  },
+  computed: {
+    hasAddressChanged() {
+      return this.item.address !== this.parsedInitialItem.address
+        || this.item.postal_code !== this.parsedInitialItem.postal_code;
     },
   },
 };
