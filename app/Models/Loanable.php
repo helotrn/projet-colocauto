@@ -232,10 +232,13 @@ class Loanable extends BaseModel
         $cDef = Loan::getColumnsDefinition();
         $query = $cDef['*']($query);
         $query = $cDef['loan_status']($query);
+        $query = $cDef['actual_duration_in_minutes']($query);
 
         return $query->having(\DB::raw($cDef['loan_status']()), '!=', 'canceled')
-            ->whereRaw(
-                "(departure_at + duration_in_minutes * interval '1 minute') > ?",
+            ->havingRaw(
+                "(departure_at + "
+                  . "COALESCE({$cDef['actual_duration_in_minutes']()}, duration_in_minutes) "
+                  . "* interval '1 minute') > ?",
                 [$departureAt]
             )->where(
                 'departure_at',

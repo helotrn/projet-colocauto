@@ -146,12 +146,25 @@ SQL
 
                 $query = static::addJoin($query, 'actions AS all_actions', function ($j) {
                     return $j->on('all_actions.loan_id', '=', 'loans.id')
-                        ->whereNotIn('type', ['extension', 'incident']);
+                        ->whereNotIn('all_actions.type', ['extension', 'incident']);
                 });
 
                 return $query
                     ->selectRaw("$loanStatusSql AS loan_status")
                     ->groupBy('loans.id');
+            },
+            'actual_duration_in_minutes' => function ($query = null) {
+                if (!$query) {
+                    return 'max(all_extensions.new_duration)';
+                }
+
+                $query = static::addJoin($query, 'extensions AS all_extensions', function ($j) {
+                    return $j->on('all_extensions.loan_id', '=', 'loans.id')
+                        ->where('all_extensions.status', 'completed');
+                });
+
+                return $query
+                    ->selectRaw("max(all_extensions.new_duration) AS actual_duration_in_minutes");
             }
         ];
     }
@@ -265,6 +278,10 @@ SQL
     }
 
     public function getActualDurationInMinutesAttribute() {
+        if (isset($this->attributes['actual_duration_in_minutes'])) {
+            return $this->attributes['actual_duration_in_minutes'];
+        }
+
         $completedExtensions = $this->extensions->where('status', 'completed');
         if (!$completedExtensions->isEmpty()) {
             return $completedExtensions->reduce(function ($acc, $ext) {
