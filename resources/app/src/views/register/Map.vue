@@ -146,7 +146,6 @@
 import { gmapApi } from 'vue2-google-maps';
 
 import BoroughDifferenceModal from '@/components/Misc/BoroughDifferenceModal.vue';
-import FormsValidatedInput from '@/components/Forms/ValidatedInput.vue';
 import MailchimpNewsletter from '@/components/Misc/MailchimpNewsletter.vue';
 
 import Authenticated from '@/mixins/Authenticated';
@@ -166,7 +165,6 @@ export default {
   },
   components: {
     BoroughDifferenceModal,
-    FormsValidatedInput,
     MailchimpNewsletter,
   },
   data() {

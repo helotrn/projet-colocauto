@@ -1,12 +1,11 @@
 <template>
   <b-alert variant="info" show class="mailchimp-newsletter">
-    <form :action="'https://solon-collectif.us18.list-manage.com/subscribe/post' +
-      '?u=23711ba00aedd74268f1974a9&amp;id=0e5ad9b3b1'" method="post"
+    <form :action="mailchimpAction" method="post"
       name="mc-embedded-subscribe-form" novalidate="" target="_blank">
       <div>
         <label for="mce-EMAIL">Je veux recevoir des nouvelles!</label>
         <input v-model="item.email" name="EMAIL" required=""
-          type="email" placeholder="email address" style="display: none;" />
+          type="email" placeholder="email address" style="display: none;">
         <div>
           <div>
             <label>Consentement</label>
@@ -18,7 +17,7 @@
             <fieldset name="interestgroup_field">
               <label for="gdpr_28697">
                 <input name="gdpr[28697]" type="checkbox" value="Y"
-                  v-model="item.opt_in_newsletter" @click="emitOptIn" /> Courriel
+                  v-model="item.opt_in_newsletter" @click="emitOptIn"> Courriel
               </label>
             </fieldset>
 
@@ -43,7 +42,7 @@
 
         <div>
           <input tabindex="-1" name="b_23711ba00aedd74268f1974a9_0e5ad9b3b1"
-            type="hidden" value="" />
+            type="hidden" value="">
         </div>
 
         <div>
@@ -62,6 +61,12 @@ export default {
       type: Object,
       required: true,
     },
+  },
+  data() {
+    return {
+      mailchimpAction: 'https://solon-collectif.us18.list-manage.com/subscribe/post'
+        + '?u=23711ba00aedd74268f1974a9&amp;id=0e5ad9b3b1',
+    };
   },
   methods: {
     emitOptIn(val) {
