@@ -28,11 +28,7 @@
 
         <b-row>
           <b-col>
-            <forms-validated-input name="opt_in_newsletter"
-              :label="$t('users.fields.opt_in_newsletter') | capitalize"
-              :rules="form.general.opt_in_newsletter.rules" type="checkbox"
-              :placeholder="placeholderOrLabel('opt_in_newsletter', 'users') | capitalize"
-              v-model="item.opt_in_newsletter" />
+            <mailchimp-newsletter :item="user" @optin="item.opt_in_newsletter = $event" />
           </b-col>
         </b-row>
 
@@ -80,7 +76,7 @@
       <layout-loading v-if="!item || loading" />
       <div class="register-step__completed__text" v-else>
         <p>
-          Votre inscrition sera validée par un membre de l'équipe et vous aurez alors accès à
+          Votre inscription sera validée par un membre de l'équipe et vous aurez alors accès à
           toutes les fonctionnalités de LocoMotion.
         </p>
 
@@ -101,6 +97,7 @@ import Authenticated from '@/mixins/Authenticated';
 import Notification from '@/mixins/Notification';
 
 import CommunityProofForm from '@/components/Community/ProofForm.vue';
+import MailchimpNewsletter from '@/components/Misc/MailchimpNewsletter.vue';
 import ProfileForm from '@/components/Profile/ProfileForm.vue';
 import RegisterIntentForm from '@/components/Register/IntentForm.vue';
 
@@ -116,6 +113,7 @@ export default {
   components: {
     CommunityProofForm,
     FormsValidatedInput,
+    MailchimpNewsletter,
     ProfileForm,
     RegisterIntentForm,
   },

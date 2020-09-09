@@ -75,21 +75,11 @@
           Souhaitez-vous être informé-e du développement du projet dans votre quartier?
         </p>
 
-        <b-form class="register-map__postal_code__submit" @reset.prevent="resetView">
-          <forms-validated-input type="checkbox" name="opt_in_newsletter"
-            :label="$t('users.fields.opt_in_newsletter') | capitalize"
-            :value="user.opt_in_newsletter"
-            @input="updateOptInNewsletter" />
+        <mailchimp-newsletter :item="user" @optin="updateOptInNewsletter" />
 
-          <p>
-            Vous pouvez changer d'avis à tout moment, en cliquant sur le lien "Me désinscrire",
-            présent dans tous les courriels que vous recevrez de notre part.
-          </p>
-
-          <div class="text-center">
-            <b-button type="reset" variant="warning">Retour</b-button>
-          </div>
-        </b-form>
+        <div class="text-center">
+          <b-button @click.prevent="resetView" variant="warning">Retour</b-button>
+        </div>
       </b-card-text>
     </b-card>
 
@@ -157,6 +147,7 @@ import { gmapApi } from 'vue2-google-maps';
 
 import BoroughDifferenceModal from '@/components/Misc/BoroughDifferenceModal.vue';
 import FormsValidatedInput from '@/components/Forms/ValidatedInput.vue';
+import MailchimpNewsletter from '@/components/Misc/MailchimpNewsletter.vue';
 
 import Authenticated from '@/mixins/Authenticated';
 import DataRouteGuards from '@/mixins/DataRouteGuards';
@@ -176,6 +167,7 @@ export default {
   components: {
     BoroughDifferenceModal,
     FormsValidatedInput,
+    MailchimpNewsletter,
   },
   data() {
     return {
