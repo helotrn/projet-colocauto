@@ -170,9 +170,9 @@ class UserController extends RestController
             return $this->respondWithErrors($e->errors(), $e->getMessage());
         }
 
+        $report = [];
         switch ($type) {
             case 'password_reset':
-                $report = [];
                 foreach ($items as $item) {
                     $authController = app(AuthController::class);
                     $passwordRequest = $request->redirectAs($item, Request::class);
@@ -182,56 +182,45 @@ class UserController extends RestController
                     $output = $authController->passwordRequest($passwordRequest);
                     $report[] = [
                         'id' => $item->id,
-                        'response' => $output->getData(),
+                        'response' => array_merge(
+                            $output->getData(),
+                            [ 'status' => 'success' ]
+                        ),
                     ];
                 }
-
-                return [ 'report' => $report ];
+                break;
             case 'registration_submitted':
-                $report = [];
-                foreach ($items as $item) {
-                    Mail::to($item->email, $item->name . ' ' . $item->last_name)
-                        ->send(new \App\Mail\Registration\Submitted($item));
-                    $report[] = [
-                        'id' => $item->id,
-                        'response' => [
-                            'message' => 'sent',
-                        ],
-                    ];
-                }
-
-                return [ 'report' => $report ];
             case 'registration_approved':
-                $report = [];
-                foreach ($items as $item) {
-                    Mail::to($item->email, $item->name . ' ' . $item->last_name)
-                        ->send(new \App\Mail\Registration\Approved($item));
-                    $report[] = [
-                        'id' => $item->id,
-                        'response' => [
-                            'message' => 'sent',
-                        ],
-                    ];
-                }
-
-                return [ 'report' => $report ];
             case 'registration_rejected':
-                $report = [];
+            case 'registration_stalled':
                 foreach ($items as $item) {
-                    Mail::to($item->email, $item->name . ' ' . $item->last_name)
-                        ->send(new \App\Mail\Registration\Rejected($item));
-                    $report[] = [
-                        'id' => $item->id,
-                        'response' => [
-                            'message' => 'sent',
-                        ],
-                    ];
+                    $mailName = implode('\\', array_map('ucfirst', explode('_', $type)));
+                    $mailableName = "\\App\\Mail\\{$mailName}";
+                    try {
+                        Mail::to($item->email, $item->name . ' ' . $item->last_name)
+                            ->send(new $mailableName($item));
+                        $report[] = [
+                            'id' => $item->id,
+                            'response' => [
+                                'status' => 'success',
+                            ],
+                        ];
+                    } catch (\Exception $e) {
+                        $report[] = [
+                            'id' => $item->id,
+                            'response' => [
+                                'status' => 'error',
+                                'message' => $e->getMessage(),
+                            ],
+                        ];
+                    }
                 }
-
-                return [ 'report' => $report ];
+                break;
             default:
                 return abort(422);
         }
+
+        return [ 'report' => $report ];
     }
 
     public function submit(Request $request, $id) {

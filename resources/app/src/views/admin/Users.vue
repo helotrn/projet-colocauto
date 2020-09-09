@@ -24,6 +24,9 @@
             <b-dropdown-item @click="sendRegistrationApprovedEmail">
               Courriel de bienvenue (approbation)
             </b-dropdown-item>
+            <b-dropdown-item @click="sendRegistrationStalledEmail">
+              Courriel de relance
+            </b-dropdown-item>
             <b-dropdown-item @click="sendRegistrationRejectedEmail">
               Courriel de refus d'inscription
             </b-dropdown-item>
@@ -122,25 +125,51 @@ export default {
     };
   },
   methods: {
-    sendPasswordResetEmail() {
-      this.axios.put(
+    displayMailStatus(data) {
+      const { report } = data;
+
+      if (report) {
+        const succeeded = report
+          .reduce((acc, s) => acc + (s.response.status === 'success' ? 1 : 0), 0);
+        const failed = report
+          .reduce((acc, s) => acc + (s.response.status === 'error' ? 1 : 0), 0);
+        this.$store.commit('addNotification', {
+          content: `Résultat de l'envoi: ${succeeded} réussi(s) et ${failed} échoués`,
+          title: 'Accès refusé',
+          variant: 'success',
+          type: 'send_email',
+        });
+      }
+    },
+    async sendPasswordResetEmail() {
+      const { data } = await this.axios.put(
         `/users/send/password_reset?id=${this.selected.map(s => s.id).join(',')}`,
       );
+      this.displayMailStatus(data);
     },
-    sendRegistrationSubmittedEmail() {
-      this.axios.put(
+    async sendRegistrationStalledEmail() {
+      const { data } = await this.axios.put(
+        `/users/send/registration_stalled?id=${this.selected.map(s => s.id).join(',')}`,
+      );
+      this.displayMailStatus(data);
+    },
+    async sendRegistrationSubmittedEmail() {
+      const { data } = await this.axios.put(
         `/users/send/registration_submitted?id=${this.selected.map(s => s.id).join(',')}`,
       );
+      this.displayMailStatus(data);
     },
-    sendRegistrationApprovedEmail() {
-      this.axios.put(
+    async sendRegistrationApprovedEmail() {
+      const { data } = await this.axios.put(
         `/users/send/registration_approved?id=${this.selected.map(s => s.id).join(',')}`,
       );
+      this.displayMailStatus(data);
     },
-    sendRegistrationRejectedEmail() {
-      this.axios.put(
+    async sendRegistrationRejectedEmail() {
+      const { data } = await this.axios.put(
         `/users/send/registration_rejected?id=${this.selected.map(s => s.id).join(',')}`,
       );
+      this.displayMailStatus(data);
     },
     toggleSelection(val) {
       if (val === true) {
