@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\RegistrationRejectedEvent;
 use App\Exports\CommunitiesExport;
 use App\Http\Controllers\CommunityController;
 use App\Http\Requests\BaseRequest as Request;
@@ -213,7 +214,12 @@ class CommunityController extends RestController
             return $this->respondWithMessage(null, 404);
         }
 
+        $wasApproved = !!$community->users()->find($userId)->pivot->approved_at;
         $community->users()->detach($user);
+
+        if (!$wasApproved) {
+            event(new RegistrationRejectedEvent($user, $community));
+        }
 
         return $this->respondWithItem(
             $request,

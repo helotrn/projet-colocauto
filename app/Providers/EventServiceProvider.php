@@ -54,6 +54,9 @@ class EventServiceProvider extends ServiceProvider
             'App\Listeners\SendRegistrationApprovedEmails',
             'App\Listeners\CreateNokeUserIfNotExists',
         ],
+        'App\Events\RegistrationRejectedEvent' => [
+            'App\Listeners\SendRegistrationRejectedEmails',
+        ],
         'App\Events\BorrowerCompletedEvent' => [
             'App\Listeners\SendBorrowerCompletedEmails',
         ],
