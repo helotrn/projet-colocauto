@@ -22,12 +22,27 @@
               v-model="returnAt" />
           </div>
 
-          <forms-validated-input name="loanable_type"
-            :label="$t('fields.loanable_type') | capitalize"
-            type="checkboxes" :options="loanableTypes"
-            :placeholder="placeholderOrLabel('loanable_type') | capitalize"
-            :value="selectedLoanableTypes"
-            @input="emitLoanableTypes" />
+          <b-form-group :label="$t('fields.loanable_type') | capitalize"
+            label-for="loanable_type">
+            <b-form-checkbox-group stacked switches
+              id="loanable_type" name="loanable_type"
+              :options="loanableTypesExceptCar"
+              :checked="selectedLoanableTypes"
+              @change="emitLoanableTypes">
+              <template v-slot:first>
+                <b-checkbox value="car" :disabled="!canLoanCar">
+                  Auto
+
+                  <b-badge pill variant="light"  v-if="!canLoanCar"
+                    tabindex="0"  v-b-tooltip.hover
+                    :title="'Pour réserver une auto, remplissez le dossier de conduite ' +
+                      'de votre profil.'">
+                    ?
+                  </b-badge>
+                </b-checkbox>
+              </template>
+            </b-form-checkbox-group>
+          </b-form-group>
 
           <forms-validated-input name="estimated_distance"
             :label="$t('fields.estimated_distance') | capitalize"
@@ -65,6 +80,11 @@ export default {
   components: { FormsValidatedInput },
   mixins: [FormLabelsMixin, LoanFormMixin],
   props: {
+    canLoanCar: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
     loanableTypes: {
       type: Array,
       required: false,
@@ -83,6 +103,11 @@ export default {
     },
     submit() {
       this.$emit('submit');
+    },
+  },
+  computed: {
+    loanableTypesExceptCar() {
+      return this.loanableTypes.filter(t => t.value !== 'car');
     },
   },
   watch: {

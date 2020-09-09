@@ -46,12 +46,13 @@ export default {
       };
     },
     canLoanCar() {
-      return this.canLoanVehicle && this.user.borrower.approved_at;
+      return this.canLoanVehicle
+        && (!!this.user.borrower.approved_at && !this.user.borrower.suspended_at);
     },
     canLoanVehicle() {
       return this.user.borrower
         && this.user.communities
-          .reduce((acc, c) => acc || (c.approved_at && !c.suspended_at), false);
+          .reduce((acc, c) => acc || (!!c.approved_at && !c.suspended_at), false);
     },
     hasCommunity() {
       return this.isLoggedIn && this.user.communities && this.user.communities.length > 0;

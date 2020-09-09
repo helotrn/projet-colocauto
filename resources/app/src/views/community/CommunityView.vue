@@ -23,6 +23,7 @@
                 @selectLoanable="selectLoanable"
                 :loanable-types="loanableTypes"
                 :form="loanForm"
+                :can-loan-car="canLoanCar"
                 @changed="resetLoanables"
                 @hide="searched = true"
                 @reset="reset"
@@ -93,6 +94,11 @@ export default {
       next();
     });
   },
+  mounted() {
+    if (!this.canLoanCar) {
+      this.selectedLoanableTypes = this.selectedLoanableTypes.filter(t => t !== 'car');
+    }
+  },
   computed: {
     ...buildComputed('community.view', [
       'center',
@@ -119,7 +125,14 @@ export default {
         return [];
       }
 
-      return this.loanableForm.general.type.options;
+      const types = this.loanableForm.general.type.options;
+
+      if (!this.canLoanCar) {
+        const car = types.find(t => t.value === 'car');
+        car.disabled = true;
+      }
+
+      return types;
     },
   },
   methods: {
@@ -128,7 +141,12 @@ export default {
     },
     reset() {
       this.$store.commit('loans/item', { ...this.$store.state.loans.empty });
-      this.selectedLoanableTypes = ['bike', 'trailer', 'car'];
+
+      this.selectedLoanableTypes = ['bike', 'trailer'];
+
+      if (this.canLoanCar) {
+        this.selectedLoanableTypes.push('car');
+      }
     },
     resetLoanables() {
       this.$store.dispatch(`${this.slug}/reset`);
