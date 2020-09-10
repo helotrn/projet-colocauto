@@ -17,6 +17,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('actions:complete')->hourly();
         $schedule->command('email:registration:stalled')->dailyAt('08:30:00');
         $schedule->command('email:loan:upcoming')->everyMinute();
+        $schedule->command('email:loan:pre_payment_missing')->everyMinute();
     }
 
     protected function commands() {

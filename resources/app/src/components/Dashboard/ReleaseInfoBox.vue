@@ -24,7 +24,8 @@
       </ul>
 
       <b-modal id="version-2020-09-10" size="lg"
-        no-close-on-backdrop no-close-on-esc hide-header hide-footer>
+        no-close-on-backdrop no-close-on-esc
+        hide-header hide-footer>
         <h2>LocoMotion évolue</h2>
         <h3>Dernière mise à jour, 10 septembre 2020</h3>
 
