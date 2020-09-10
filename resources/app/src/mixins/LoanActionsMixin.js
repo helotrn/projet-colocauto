@@ -46,6 +46,11 @@ export default {
         && this.action.status !== 'canceled'
         && !!this.owner;
     },
+    isContested() {
+      return !!this.action.executed_at
+        && this.action.status === 'canceled'
+        && !!this.owner;
+    },
     owner() {
       return this.item.loanable.owner;
     },
