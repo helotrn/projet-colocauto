@@ -448,6 +448,17 @@ SQL
         }
     }
 
+    public function scopeDepartureInLessThan(Builder $query, $amount, $unit = 'minutes') {
+        if (!in_array($unit, ['minute', 'minutes', 'hour', 'hours', 'day', 'days'])) {
+            throw new \Exception('invalid unit');
+        }
+
+        return $query->whereRaw(
+            "(departure_at - $amount * interval '1 $unit') < ?",
+            [Carbon::now()]
+        )->whereRaw('departure_at > now()');
+    }
+
     protected function getFullLoanable() {
         switch ($this->loanable->type) {
             case 'car':

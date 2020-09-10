@@ -3,7 +3,7 @@
 namespace App\Listeners;
 
 use App\Events\LoanCreatedEvent;
-use App\Mail\LoanCreated;
+use App\Mail\Loan\Created as LoanCreated;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Mail;

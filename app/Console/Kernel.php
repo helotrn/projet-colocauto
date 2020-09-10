@@ -16,6 +16,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('noke:sync:loans')->everyFiveMinutes();
         $schedule->command('actions:complete')->hourly();
         $schedule->command('email:registration:stalled')->dailyAt('08:30:00');
+        $schedule->command('email:loan:upcoming')->everyMinute();
     }
 
     protected function commands() {

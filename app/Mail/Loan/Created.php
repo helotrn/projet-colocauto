@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Mail;
+namespace App\Mail\Loan;
 
 use App\Models\Borrower;
 use App\Models\Loan;
@@ -10,7 +10,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class LoanCreated extends Mailable
+class Created extends Mailable
 {
     use Queueable, SerializesModels;
 
