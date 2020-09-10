@@ -70,7 +70,7 @@ export default {
           {
             title: 'Comment débarrer le cadenas Noke Pro?',
             content: '<iframe width="560" height="315" src="https://www.youtube.com/embed/PvyJd2--0sw" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="margin: 0 auto;"></iframe><ol><li>Réservez la remorque sur locomotion.app au moins 15 min avant votre emprunt</li><li>Activez internet et la fonction bluetooth sur votre cellulaire</li><li>Si vous avez un système d’exploitation Android, activez la localisation (pas nécessaire avec Iphone)</li><li>Ouvrez l’application Noke Pro<br><em>Important: Ne cliquez sur rien à cette étape.</em><li>Si le cadenas est rond : Appuyez sur l’anneau du cadenas, vers le corps du cadenas, comme si vous vouliez le fermer.<br>Si le cadenas est carré : Pesez sur le bouton en-dessous</li><li>Dans l’application, une icône bleue apparaît, cliquez dessus pour déverrouiller le cadenas.</li></ul><p>Magie ! Le cadenas est ouvert :)</p>'
-            + '<div class="alert alert-info"><p>Vous avez un problème avec le cadenas?</p><p>Contactez-nous entre 9h et 20h au 438-476-3343</p><p>(cette ligne est dédiée uniquement aux problèmes liés aux cadenas)</p></div>'
+            + '<div class="alert alert-info"><p>Vous avez un problème avec le cadenas?</p><p>Contactez-nous entre 9h et 20h au 438-476-3343<br>(cette ligne est dédiée uniquement aux problèmes liés aux cadenas)</p></div>'
           },
           {
             title: 'Est-ce qu’il faut activer internet et le bluetooth de mon cellulaire?',
