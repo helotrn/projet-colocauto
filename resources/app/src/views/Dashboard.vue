@@ -10,7 +10,7 @@
           </section>
 
           <section class="page__section">
-            <release-info-box :user="user" />
+            <release-info-box />
           </section>
 
           <section class="page__section" v-if="!hasCompletedRegistration">
