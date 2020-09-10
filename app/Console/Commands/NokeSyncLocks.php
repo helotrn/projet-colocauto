@@ -96,7 +96,7 @@ class NokeSyncLocks extends Command
                 continue;
             }
 
-            $lock->destroy();
+            $lock->delete();
         }
     }
 
