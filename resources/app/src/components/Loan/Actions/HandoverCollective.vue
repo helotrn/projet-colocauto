@@ -119,7 +119,7 @@
                   </b-col>
                 </b-row>
 
-                <b-row>
+                <b-row v-if="finalPrice > 0">
                   <b-col>
                     <p class="text-center">
                       Coût final du trajet:
@@ -193,10 +193,16 @@ export default {
   name: 'LoanActionsHandoverCollective',
   mixins: [LoanActionsMixin],
   mounted() {
-    this.action.platform_tip = parseFloat(
-      this.item.final_platform_tip || this.item.platform_tip,
-      10,
-    );
+    const platformTip = parseFloat(this.item.final_platform_tip || this.item.platform_tip, 10);
+    this.action.platform_tip = Number.isNaN(platformTip) ? 0 : platformTip;
+
+    if (!this.item.actual_price) {
+      this.item.actual_price = 0;
+    }
+
+    if (!this.item.actual_insurance) {
+      this.item.actual_insurance = 0;
+    }
   },
   components: {
     FormsImageUploader,
