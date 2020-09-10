@@ -22,7 +22,7 @@
           </span>
         </b-col>
 
-        <b-col lg="8" v-if="!item.status === 'completed'">
+        <b-col lg="8" v-if="item.status !== 'completed'">
           <loan-next-date :loanable-id="item.loanable.id" :loan-id="item.id" />
         </b-col>
       </b-row>
