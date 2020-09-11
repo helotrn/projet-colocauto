@@ -37,6 +37,8 @@
 
         <b-col v-if="view === 'list'" lg="9">
           <community-list v-if="!loading" :data="data"
+            :page="params.page" :per-page="params.per_page" :total="total"
+            @page="setParam({ name: 'page', value: $event })"
             @select="selectLoanable" @test="testLoanable" />
           <layout-loading class="col-lg-9" v-else />
         </b-col>
@@ -98,6 +100,7 @@ export default {
     if (!this.canLoanCar) {
       this.selectedLoanableTypes = this.selectedLoanableTypes.filter(t => t !== 'car');
     }
+    this.resetPagination(this.view);
   },
   computed: {
     ...buildComputed('community.view', [
@@ -146,6 +149,18 @@ export default {
 
       if (this.canLoanCar) {
         this.selectedLoanableTypes.push('car');
+      }
+    },
+    resetPagination(val) {
+      this.setParam({ name: 'page', value: 1 });
+      switch (val) {
+        case 'list':
+          this.setParam({ name: 'per_page', value: 10 });
+          break;
+        case 'map':
+        default:
+          this.setParam({ name: 'per_page', value: 1000 });
+          break;
       }
     },
     resetLoanables() {
@@ -216,6 +231,9 @@ export default {
         name: 'type',
         value: this.selectedLoanableTypes.join(','),
       });
+    },
+    view(val) {
+      this.resetPagination(val);
     },
   },
 };

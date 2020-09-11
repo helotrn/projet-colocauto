@@ -6,7 +6,7 @@
     type="light">
     <div class="layout-navbar__brand-wrapper">
       <b-navbar-brand :to="isLoggedIn ? '/app' : '/'">
-        <svg-logo class="layout-navbar__logo" />
+        <img src="/logo.png" alt="Locomotion Beta" />
       </b-navbar-brand>
 
       <b-navbar-brand class="layout-navbar__separator d-none d-sm-block" v-if="title" />
@@ -133,7 +133,6 @@ import Hand from '@/assets/svg/hand.svg';
 import Help from '@/assets/svg/help.svg';
 import Location from '@/assets/svg/location.svg';
 import Login from '@/assets/svg/login.svg';
-import Logo from '@/assets/svg/logo.svg';
 import Logout from '@/assets/svg/logout.svg';
 import Profile from '@/assets/svg/profile.svg';
 import Register from '@/assets/svg/register.svg';
@@ -152,7 +151,6 @@ export default {
     'svg-help': Help,
     'svg-location': Location,
     'svg-login': Login,
-    'svg-logo': Logo,
     'svg-logout': Logout,
     'svg-profile': Profile,
     'svg-register': Register,
