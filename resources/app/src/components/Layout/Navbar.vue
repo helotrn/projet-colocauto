@@ -6,7 +6,7 @@
     type="light">
     <div class="layout-navbar__brand-wrapper">
       <b-navbar-brand :to="isLoggedIn ? '/app' : '/'">
-        <img src="/logo.png" alt="Locomotion Beta" />
+        <img src="/logo.png" alt="Locomotion Beta">
       </b-navbar-brand>
 
       <b-navbar-brand class="layout-navbar__separator d-none d-sm-block" v-if="title" />
