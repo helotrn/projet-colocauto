@@ -50,7 +50,7 @@ export default {
   },
   methods: {
     emitPage(page) {
-      this.$emit('page', page)
+      this.$emit('page', page);
     },
     emitSelect(loanable) {
       this.$emit('select', loanable);
