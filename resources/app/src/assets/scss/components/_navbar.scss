@@ -55,6 +55,8 @@
 
   .navbar-brand {
     font-size: 1rem;
+    position: relative;
+    top: 5px;
 
     @include media-breakpoint-up(lg) {
       font-size: 1.6rem;
@@ -65,6 +67,10 @@
       position: relative;
       top: 3px;
       line-height: 30px;
+    }
+
+    img {
+      max-width: 162px;
     }
   }
 
