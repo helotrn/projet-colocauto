@@ -73,6 +73,23 @@ export default {
 
       return (this.owner && this.user.id === this.owner.user.id) ? 'owner' : 'borrower';
     },
+    userIsAdmin() {
+      if ((this.item.loanable.owner && this.user.id === this.item.loanable.owner.user.id)
+        || this.user.id === this.item.borrower.user.id) {
+        return false; // Can't be admin on your own loans
+      }
+
+      if (this.user.role === 'admin') {
+        return true;
+      }
+
+      const community = this.user.communities.find(c => c.id === this.item.community_id);
+      if (community) {
+        return community.role === 'admin';
+      }
+
+      return false;
+    },
   },
   methods: {
     abortAction() {
