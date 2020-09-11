@@ -45,6 +45,12 @@ export default {
     loading() {
       return !!this.context.ajax;
     },
+    params() {
+      return {
+        ...this.routeParams,
+        ...this.contextParams,
+      };
+    },
     routeParams() {
       return this.$route.meta.data[this.slug].retrieve || {};
     },
