@@ -3,7 +3,7 @@ namespace Deployer;
 
 require 'recipe/laravel.php';
 
-function sendDiscordNotification($message) {
+function sendMattermostNotification($message) {
     $dotenv = \Dotenv\Dotenv::create(__DIR__);
     $dotenv->load();
 
@@ -138,7 +138,7 @@ task('deploy:notify_after', function () {
 
     sendMattermostNotification($message);
 });
-after('deploy:symlink', 'deploy:notify_success');
+after('deploy:symlink', 'deploy:notify_after');
 
 desc('Notify on Mattermost webhook on failed deploy');
 task('deploy:notify_failed', function () {
