@@ -82,3 +82,8 @@ task('deploy:copy', function () {
     run('rsync -rv {{release_path}}/resources/app/dist/* {{release_path}}/public/ --exclude=index.html');
 });
 after('deploy:build', 'deploy:copy');
+
+desc('Get currently deployed commit');
+task('status:revision', function () {
+    writeLn(run('cd {{release_path}} && git log -n1'));
+});
