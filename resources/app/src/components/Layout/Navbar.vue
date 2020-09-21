@@ -126,8 +126,6 @@
 </template>
 
 <script>
-import Authenticated from '@/mixins/Authenticated';
-
 import Dashboard from '@/assets/svg/dashboard.svg';
 import Hand from '@/assets/svg/hand.svg';
 import Help from '@/assets/svg/help.svg';
@@ -142,7 +140,6 @@ import LocaleSwitcher from '@/components/LocaleSwitcher.vue';
 
 export default {
   name: 'Navbar',
-  mixins: [Authenticated],
   components: {
     AdminSidebar,
     LocaleSwitcher,
@@ -166,6 +163,14 @@ export default {
     return {
       toggleMenu: false,
     };
+  },
+  computed: {
+    isLoggedIn() {
+      return !!this.user;
+    },
+    user() {
+      return this.$store.state.user;
+    },
   },
   watch: {
     toggleMenu(val) {
