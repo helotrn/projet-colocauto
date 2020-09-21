@@ -9,7 +9,9 @@ export default {
           }
         } catch (e) {
           this.$store.commit('user', null);
-          this.$router.push(`/login?r=${this.$route.fullPath}`);
+          if (this.$route.meta.auth) {
+            this.$router.push(`/login?r=${this.$route.fullPath}`);
+          }
         }
       }
     } else if (this.$route.meta.auth) {

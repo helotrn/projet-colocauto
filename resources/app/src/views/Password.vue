@@ -5,8 +5,6 @@
 </template>
 
 <script>
-import Authenticated from '@/mixins/Authenticated';
-
 const routeGuard = (to, from, next) => {
   if (to.name === 'password') {
     return next('/login');
@@ -17,7 +15,6 @@ const routeGuard = (to, from, next) => {
 
 export default {
   name: 'Password',
-  mixins: [Authenticated],
   beforeRouteEnter: routeGuard,
   beforeRouteUpdate: routeGuard,
 };
