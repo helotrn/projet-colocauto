@@ -50,11 +50,13 @@ host('production')
     ->user('locomotion')
     ->set('deploy_path', '/var/www/locomotion.app');
 
-host('staging')
-    ->hostname('vps.locomotion.app')
-    ->stage('staging')
-    ->user('locomotion')
-    ->set('deploy_path', '/var/www/staging.locomotion.app');
+foreach (['staging', 'demo'] as $env) {
+    host($env)
+        ->hostname('vps.locomotion.app')
+        ->stage('staging')
+        ->user('locomotion')
+        ->set('deploy_path', "/var/www/$env.locomotion.app");
+}
 
 after('deploy:failed', 'deploy:unlock');
 
