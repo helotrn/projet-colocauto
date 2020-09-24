@@ -8,6 +8,7 @@ import VueScrollTo from 'vue-scrollto';
 import VueTheMask from 'vue-the-mask';
 import * as Sentry from '@sentry/browser';
 import * as Integrations from '@sentry/integrations';
+import VueMatomo from 'vue-matomo';
 
 import {
   ValidationObserver,
@@ -57,6 +58,24 @@ Vue.use(VueGoogleMaps, {
     key: process.env.VUE_APP_GOOGLE_MAPS_API_KEY,
     libraries: 'drawing',
   },
+});
+
+Vue.use(VueMatomo, {
+  host: process.env.VUE_APP_MATOMO_HOST,
+  siteId: process.env.VUE_APP_MATOMO_SITEID,
+  trackerFileName: 'matomo',
+  router,
+  enableLinkTracking: true,
+  requireConsent: false,
+  trackInitialView: true,
+  disableCookies: false,
+  enableHeartBeatTimer: false,
+  heartBeatTimerInterval: 15,
+  debug: false,
+  userId: undefined,
+  cookieDomain: undefined,
+  domains: undefined,
+  preInitActions: [],
 });
 
 Vue.component('layout-footer', LayoutFooter);
