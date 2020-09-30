@@ -4,7 +4,7 @@ export default {
     title: 'FAQ',
     home: [
       {
-        title: 'lomotion.app ne se télécharge pas!',
+        title: 'locomotion.app ne se télécharge pas!',
         content: '<p>Il n’y a pas d’application à télécharger sur l’AppStore, GooglePlay ou d’autres magasins d’app. locomotion.app est simplement un site web et vous y êtes ! Il fonctionne à l’aide d’un navigateur (Firefox, Chrome, Safari…) sur votre ordinateur ou votre téléphone intelligent. Vous pouvez ajouter un raccourci sur votre téléphone intelligent, ça aurait l’air d’une app !</p>',
       },
       {
