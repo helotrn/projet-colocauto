@@ -18,9 +18,9 @@
         right: 0;
         z-index: 1000;
         background: $beige;
-        min-height: calc(100vh - #{$layout-navbar-height-mobile});
-        max-height: calc(100vh - #{$layout-navbar-height-mobile});
+        min-height: calc(100vh - #{$layout-navbar-height-mobile - 13});
         overflow-y: auto;
+        padding-bottom: #{$layout-navbar-height-mobile - 13};
       }
 
       &__illustration {
@@ -32,6 +32,13 @@
         svg {
           width: 100vw;
         }
+      }
+
+      &__buffer {
+        /* This is a patch so the last element of the menu
+           is always visible even if the mobile address
+           bar is not collapsed. */
+        height: #{$layout-navbar-height-mobile};
       }
     }
   }

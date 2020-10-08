@@ -121,6 +121,8 @@
 
         <locale-switcher />
       </b-navbar-nav>
+
+      <div class="layout-navbar__collapse__buffer" />
     </b-collapse>
   </b-navbar>
 </template>
