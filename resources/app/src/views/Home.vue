@@ -118,7 +118,7 @@
               </h2>
 
               <p class="mb-5">
-                Aujourd’hui, <span class="no-break">{{ communitiesCount }}</span> quartiers,
+                Aujourd’hui, <span class="no-break">{{ communitiesCount }}</span> voisinages,
                 soit plus de <span class="no-break">{{ stats.users }} participant•e•s</span>
                 partageant <span class="no-break">{{ stats.loanables }}</span> véhicules
                 expérimentent cette solution collective.
