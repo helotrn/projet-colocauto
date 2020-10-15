@@ -19,12 +19,13 @@
 
 <script>
 import Authenticated from '@/mixins/Authenticated';
+import UserMixin from '@/mixins/UserMixin';
 
 import RegisterForm from '@/components/Register/RegisterForm.vue';
 
 export default {
   name: 'RegisterIntro',
-  mixins: [Authenticated],
+  mixins: [Authenticated, UserMixin],
   components: {
     RegisterForm,
   },

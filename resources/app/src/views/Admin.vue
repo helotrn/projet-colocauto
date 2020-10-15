@@ -18,10 +18,11 @@
 import AdminSidebar from '@/components/Admin/Sidebar.vue';
 
 import Authenticated from '@/mixins/Authenticated';
+import UserMixin from '@/mixins/UserMixin';
 
 export default {
   name: 'Admin',
-  mixins: [Authenticated],
+  mixins: [Authenticated, UserMixin],
   components: { AdminSidebar },
   mounted() {
     if (!this.isAdmin) {

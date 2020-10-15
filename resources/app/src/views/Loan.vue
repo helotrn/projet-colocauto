@@ -46,12 +46,13 @@ import Authenticated from '@/mixins/Authenticated';
 import DataRouteGuards from '@/mixins/DataRouteGuards';
 import FormMixin from '@/mixins/FormMixin';
 import LoanStepsSequence from '@/mixins/LoanStepsSequence';
+import UserMixin from '@/mixins/UserMixin';
 
 import { capitalize } from '@/helpers/filters';
 
 export default {
   name: 'Loan',
-  mixins: [Authenticated, DataRouteGuards, FormMixin, LoanStepsSequence],
+  mixins: [Authenticated, DataRouteGuards, FormMixin, LoanStepsSequence, UserMixin],
   components: {
     LoanActions,
     LoanHeader,

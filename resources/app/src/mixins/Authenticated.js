@@ -22,7 +22,7 @@ export default {
   computed: {
     allLoans() {
       return [
-        ...this.user.loanables.reduce((acc, loanable) => {
+        ...(this.user.loanables || []).reduce((acc, loanable) => {
           acc.push(
             ...loanable.loans.filter(l => !l.canceled_at).map(l => ({
               ...l,
@@ -37,7 +37,7 @@ export default {
           );
           return acc;
         }, []),
-        ...this.user.loans.filter(l => !l.canceled_at),
+        ...(this.user.loans || []).filter(l => !l.canceled_at),
       ];
     },
     auth() {
@@ -47,21 +47,6 @@ export default {
         refreshToken,
       };
     },
-    canLoanCar() {
-      return this.canLoanVehicle
-        && (!!this.user.borrower.approved_at && !this.user.borrower.suspended_at);
-    },
-    canLoanVehicle() {
-      return this.user.borrower
-        && this.user.communities
-          .reduce((acc, c) => acc || (!!c.approved_at && !c.suspended_at), false);
-    },
-    hasCommunity() {
-      return this.isLoggedIn && this.user.communities && this.user.communities.length > 0;
-    },
-    hasCompletedRegistration() {
-      return !!this.user.submitted_at || this.canLoanVehicle;
-    },
     hasOngoingLoans() {
       return this.ongoingLoans.length > 0;
     },
@@ -70,32 +55,6 @@ export default {
     },
     hasWaitingLoans() {
       return this.waitingLoans.length > 0;
-    },
-    isGlobalAdmin() {
-      return this.isLoggedIn && this.user.role === 'admin';
-    },
-    isAdmin() {
-      return this.isLoggedIn && (
-        this.user.role === 'admin'
-        || !!this.user.communities.find(c => c.role === 'admin')
-      );
-    },
-    isLoggedIn() {
-      return !!this.user;
-    },
-    isRegistered() {
-      const requiredFields = [
-        'name', 'last_name', 'date_of_birth',
-        'address', 'postal_code', 'phone',
-      ];
-
-      for (let i = 0, len = requiredFields.length; i < len; i += 1) {
-        if (!this.user[requiredFields[i]]) {
-          return false;
-        }
-      }
-
-      return true;
     },
     ongoingLoans() {
       const now = this.$dayjs().format('YYYY-MM-DD HH:mm:ss');
@@ -138,21 +97,6 @@ export default {
     },
   },
   methods: {
-    isAdminOfCommunity(community) {
-      return !!this.user.communities.find(c => c.id === community.id && c.role === 'admin');
-    },
-    logout() {
-      this.$store.dispatch('logout');
-
-      this.$store.commit('addNotification', {
-        content: "Vous n'êtes plus connecté à LocoMotion. À bientôt!",
-        title: 'Déconnexion réussie.',
-        variant: 'success',
-        type: 'logout',
-      });
-
-      this.$router.push('/');
-    },
     skipToLogin() {
       this.$router.replace('/login');
     },

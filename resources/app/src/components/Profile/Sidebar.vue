@@ -32,11 +32,11 @@
 </template>
 
 <script>
-import Authenticated from '@/mixins/Authenticated';
+import UserMixin from '@/mixins/UserMixin';
 
 export default {
   name: 'ProfileSidebar',
-  mixins: [Authenticated],
+  mixins: [UserMixin],
 };
 </script>
 

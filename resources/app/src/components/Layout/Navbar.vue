@@ -140,8 +140,11 @@ import Register from '@/assets/svg/register.svg';
 import AdminSidebar from '@/components/Admin/Sidebar.vue';
 import LocaleSwitcher from '@/components/LocaleSwitcher.vue';
 
+import UserMixin from '@/mixins/UserMixin';
+
 export default {
   name: 'Navbar',
+  mixins: [UserMixin],
   components: {
     AdminSidebar,
     LocaleSwitcher,
@@ -166,45 +169,9 @@ export default {
       toggleMenu: false,
     };
   },
-  computed: {
-    canLoanVehicle() {
-      return this.user.borrower
-        && this.user.communities
-          .reduce((acc, c) => acc || (!!c.approved_at && !c.suspended_at), false);
-    },
-    hasCommunity() {
-      return this.isLoggedIn && this.user.communities && this.user.communities.length > 0;
-    },
-    hasCompletedRegistration() {
-      return !!this.user.submitted_at || this.canLoanVehicle;
-    },
-    isGlobalAdmin() {
-      return this.isLoggedIn && this.user.role === 'admin';
-    },
-    isLoggedIn() {
-      return !!this.user;
-    },
-    isRegistered() {
-      const requiredFields = [
-        'name', 'last_name', 'date_of_birth',
-        'address', 'postal_code', 'phone',
-      ];
-
-      for (let i = 0, len = requiredFields.length; i < len; i += 1) {
-        if (!this.user[requiredFields[i]]) {
-          return false;
-        }
-      }
-
-      return true;
-    },
-    user() {
-      return this.$store.state.user;
-    },
-  },
   methods: {
-    logout() {
-      this.$store.dispatch('logout');
+    async logout() {
+      await this.$store.dispatch('logout');
 
       this.$store.commit('addNotification', {
         content: "Vous n'êtes plus connecté à LocoMotion. À bientôt!",

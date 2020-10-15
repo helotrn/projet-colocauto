@@ -6,6 +6,7 @@
 
 <script>
 import Authenticated from '@/mixins/Authenticated';
+import UserMixin from '@/mixins/UserMixin';
 
 const routeGuard = (to, from, next) => {
   if (to.name === 'register') {
@@ -17,7 +18,7 @@ const routeGuard = (to, from, next) => {
 
 export default {
   name: 'Register',
-  mixins: [Authenticated],
+  mixins: [Authenticated, UserMixin],
   beforeRouteEnter: routeGuard,
   beforeRouteUpdate: routeGuard,
 };

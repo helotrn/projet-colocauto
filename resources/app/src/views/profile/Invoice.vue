@@ -10,10 +10,11 @@ import InvoiceSingle from '@/components/Invoice/Single.vue';
 
 import Authenticated from '@/mixins/Authenticated';
 import FormMixin from '@/mixins/FormMixin';
+import UserMixin from '@/mixins/UserMixin';
 
 export default {
   name: 'ProfileInvoice',
-  mixins: [Authenticated, FormMixin],
+  mixins: [Authenticated, FormMixin, UserMixin],
   components: { InvoiceSingle },
 };
 </script>

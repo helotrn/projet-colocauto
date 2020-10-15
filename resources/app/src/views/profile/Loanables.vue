@@ -45,13 +45,14 @@ import LoanableInfoBox from '@/components/Loanable/InfoBox.vue';
 import Authenticated from '@/mixins/Authenticated';
 import DataRouteGuards from '@/mixins/DataRouteGuards';
 import ListMixin from '@/mixins/ListMixin';
+import UserMixin from '@/mixins/UserMixin';
 
 import { extractErrors } from '@/helpers';
 import locales from '@/locales';
 
 export default {
   name: 'ProfileLoanables',
-  mixins: [Authenticated, DataRouteGuards, ListMixin],
+  mixins: [Authenticated, DataRouteGuards, ListMixin, UserMixin],
   components: { LoanableInfoBox },
   data() {
     return {

@@ -147,14 +147,14 @@ import FormsValidatedInput from '@/components/Forms/ValidatedInput.vue';
 import LoanableAvailabilityCalendar from '@/components/Loanable/AvailabilityCalendar.vue';
 import FormsImageUploader from '@/components/Forms/ImageUploader.vue';
 
-import Authenticated from '@/mixins/Authenticated';
 import FormLabelsMixin from '@/mixins/FormLabelsMixin';
+import UserMixin from '@/mixins/UserMixin';
 
 import locales from '@/locales';
 
 export default {
   name: 'LoanableForm',
-  mixins: [Authenticated, FormLabelsMixin],
+  mixins: [UserMixin, FormLabelsMixin],
   components: {
     FormsBuilder,
     FormsImageUploader,

@@ -21,10 +21,11 @@ import LoanInfoBox from '@/components/Loan/InfoBox.vue';
 import Authenticated from '@/mixins/Authenticated';
 import DataRouteGuards from '@/mixins/DataRouteGuards';
 import ListMixin from '@/mixins/ListMixin';
+import UserMixin from '@/mixins/UserMixin';
 
 export default {
   name: 'ProfileLoans',
-  mixins: [Authenticated, DataRouteGuards, ListMixin],
+  mixins: [Authenticated, DataRouteGuards, ListMixin, UserMixin],
   components: { LoanInfoBox },
 };
 </script>

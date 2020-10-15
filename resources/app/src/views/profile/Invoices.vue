@@ -31,12 +31,13 @@
 import Authenticated from '@/mixins/Authenticated';
 import DataRouteGuards from '@/mixins/DataRouteGuards';
 import ListMixin from '@/mixins/ListMixin';
+import UserMixin from '@/mixins/UserMixin';
 
 import locales from '@/locales';
 
 export default {
   name: 'ProfileInvoices',
-  mixins: [Authenticated, DataRouteGuards, ListMixin],
+  mixins: [Authenticated, DataRouteGuards, ListMixin, UserMixin],
   data() {
     return {
       fields: [

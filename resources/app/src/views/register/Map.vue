@@ -151,12 +151,13 @@ import MailchimpNewsletter from '@/components/Misc/MailchimpNewsletter.vue';
 import Authenticated from '@/mixins/Authenticated';
 import DataRouteGuards from '@/mixins/DataRouteGuards';
 import FormMixin from '@/mixins/FormMixin';
+import UserMixin from '@/mixins/UserMixin';
 
 import { distance } from '@/helpers';
 
 export default {
   name: 'Map',
-  mixins: [Authenticated, DataRouteGuards, FormMixin],
+  mixins: [Authenticated, DataRouteGuards, FormMixin, UserMixin],
   props: {
     id: {
       required: false,

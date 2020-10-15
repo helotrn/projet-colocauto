@@ -6,12 +6,13 @@
 
 <script>
 import Authenticated from '@/mixins/Authenticated';
+import UserMixin from '@/mixins/UserMixin';
 
 import LoginBox from '@/components/Login/Box.vue';
 
 export default {
   name: 'Login',
-  mixins: [Authenticated],
+  mixins: [Authenticated, UserMixin],
   beforeRouteEnter(to, from, next) {
     next((vm) => {
       if (vm.isLoggedIn) {

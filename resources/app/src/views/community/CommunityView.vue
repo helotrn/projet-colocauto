@@ -54,6 +54,7 @@
 import Authenticated from '@/mixins/Authenticated';
 import DataRouteGuards from '@/mixins/DataRouteGuards';
 import ListMixin from '@/mixins/ListMixin';
+import UserMixin from '@/mixins/UserMixin';
 
 import CommunityList from '@/components/Community/List.vue';
 import CommunityMap from '@/components/Community/Map.vue';
@@ -63,7 +64,7 @@ import { buildComputed } from '@/helpers';
 
 export default {
   name: 'CommunityView',
-  mixins: [Authenticated, DataRouteGuards, ListMixin],
+  mixins: [Authenticated, DataRouteGuards, ListMixin, UserMixin],
   components: {
     CommunityList,
     CommunityMap,

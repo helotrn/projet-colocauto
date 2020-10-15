@@ -138,6 +138,7 @@ en:
 
 <script>
 import Authenticated from '@/mixins/Authenticated';
+import UserMixin from '@/mixins/UserMixin';
 
 import DashboardBalance from '@/components/Dashboard/Balance.vue';
 import DashboardLoanHistory from '@/components/Dashboard/LoanHistory.vue';
@@ -152,7 +153,7 @@ import PartnersSection from '@/components/Misc/PartnersSection.vue';
 
 export default {
   name: 'Dashboard',
-  mixins: [Authenticated],
+  mixins: [Authenticated, UserMixin],
   components: {
     DashboardBalance,
     DashboardLoanHistory,

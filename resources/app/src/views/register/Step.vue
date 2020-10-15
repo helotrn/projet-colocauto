@@ -95,6 +95,7 @@
 <script>
 import Authenticated from '@/mixins/Authenticated';
 import Notification from '@/mixins/Notification';
+import UserMixin from '@/mixins/UserMixin';
 
 import CommunityProofForm from '@/components/Community/ProofForm.vue';
 import MailchimpNewsletter from '@/components/Misc/MailchimpNewsletter.vue';
@@ -109,7 +110,7 @@ import { extractErrors } from '@/helpers';
 
 export default {
   name: 'RegisterStep',
-  mixins: [Authenticated, FormLabelsMixin, FormMixin, Notification],
+  mixins: [Authenticated, FormLabelsMixin, FormMixin, Notification, UserMixin],
   components: {
     CommunityProofForm,
     FormsValidatedInput,
