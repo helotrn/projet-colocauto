@@ -2,7 +2,13 @@
 
 @section('content')
 Un·e nouveau·lle membre, {{ $user->name }}, a complété son profil d'emprunteur
-dans {{ $community->name }} et peut être validé·e.
+dans les communautés suivantes :
+
+@foreach ($communities as $community)
+  - {{ $community->name }}
+@endforeach
+
+Le profil peut maintenant être validé.
 
 Voir le profil [{{ url('/admin/users/' . $user->id) }}#borrower]
 @endsection
