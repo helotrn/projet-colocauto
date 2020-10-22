@@ -1,0 +1,48 @@
+ip: 192.168.10.10
+memory: 2048
+cpus: 2
+provider: virtualbox
+authorize: ~/.ssh/id_rsa.pub
+keys:
+    - ~/.ssh/id_rsa
+folders:
+    -
+        map: /Users/locomotion/Sites/locomotion.app/homestead
+        to: /home/vagrant/code
+sites:
+    -
+        map: homestead.test
+        to: /home/vagrant/code/public
+databases:
+    - locomotion
+features:
+    -
+        mariadb: false
+    -
+        ohmyzsh: false
+    -
+        webdriver: false
+name: homestead
+hostname: homestead
+variables:
+    -
+        key: DB_USERNAME
+        value: homestead
+    -
+        key: DB_PASSWORD
+        value: secret
+    -
+        key: VUE_APP_GOOGLE_MAPS_API_KEY
+        value: AIzaSyBJh_eLm28n5u4eQUq3aYije8VgXAd7Mlw
+    -
+        key: VUE_APP_API_URL
+        value: 'http://127.0.0.1:8000/api'
+    -
+        key: VUE_APP_STRIPE_KEY
+        value: pk_test_4lBQS366h37TcBC9IAvCaDEL00K5H3B8LH
+    -
+        key: VUE_APP_MATOMO_HOST
+        value: ''
+    -
+        key: VUE_APP_MATOMO_SITEID
+        value: ''
