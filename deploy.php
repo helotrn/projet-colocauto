@@ -101,7 +101,7 @@ before('deploy:symlink', 'deploy:build');
 
 desc('Set release version in .env file');
 task('deploy:set_release', function () {
-    run('sed -i -e 4,1000000d {{release_path}}/../../shared/resources/app/.env');
+    run('sed -i -e /^VUE_APP_RELEASE/d {{release_path}}/../../shared/resources/app/.env');
     run('cat {{release_path}}/resources/app/.release >> '
         . '{{release_path}}/../../shared/resources/app/.env');
 });
