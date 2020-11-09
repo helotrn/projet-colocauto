@@ -41,7 +41,7 @@ class EmailLoanPrePaymentMissing extends Command
         $query = $columnDefinitions['*']($query);
 
         $loans = $query
-            ->havingRaw("{$columnDefinitions['loan_status']()} = 'in_process'")
+            ->where($columnDefinitions['loan_status'](), '=', 'in_process')
             ->cursor();
 
         foreach ($loans as $loan) {

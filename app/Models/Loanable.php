@@ -234,8 +234,9 @@ class Loanable extends BaseModel
         $query = $cDef['loan_status']($query);
         $query = $cDef['actual_duration_in_minutes']($query);
 
-        return $query->having(\DB::raw($cDef['loan_status']()), '!=', 'canceled')
-            ->havingRaw(
+        $query
+            ->where(\DB::raw($cDef['loan_status']()), '!=', 'canceled')
+            ->whereRaw(
                 "(departure_at + "
                   . "COALESCE({$cDef['actual_duration_in_minutes']()}, duration_in_minutes) "
                   . "* interval '1 minute') > ?",
@@ -244,7 +245,9 @@ class Loanable extends BaseModel
                 'departure_at',
                 '<',
                 $returnAt
-            )->where('loanable_id', $this->id)->get()->count() === 0;
+            )->where('loanable_id', $this->id);
+
+        return ($query->get()->count() === 0);
     }
 
     public function getEventsAttribute() {
