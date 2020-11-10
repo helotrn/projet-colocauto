@@ -187,7 +187,93 @@ SQL
                     );
 
                 return $query;
-            }
+            },
+
+            'borrower_user_full_name' => function ($query = null) {
+                if (!$query) {
+                    return "CONCAT(borrower_users.name, ' ', borrower_users.last_name)";
+                }
+
+                $query
+                    ->selectRaw(
+                        "CONCAT(borrower_users.name, ' ', borrower_users.last_name)"
+                        . " AS borrower_user_full_name"
+                    );
+
+                $query = static::addJoin(
+                    $query,
+                    'borrowers',
+                    'borrowers.id',
+                    '=',
+                    'loans.borrower_id'
+                );
+
+                $query = static::addJoin(
+                    $query,
+                    'users as borrower_users',
+                    'borrower_users.id',
+                    '=',
+                    'borrowers.user_id'
+                );
+
+                return $query;
+            },
+
+            'loanable_owner_user_full_name' => function ($query = null) {
+                if (!$query) {
+                    return "CONCAT(owner_users.name, ' ', owner_users.last_name)";
+                }
+
+                $query
+                    ->selectRaw(
+                        "CONCAT(owner_users.name, ' ', owner_users.last_name)"
+                        . " AS loanable_owner_user_full_name"
+                    );
+
+                $query = static::addJoin(
+                    $query,
+                    'loanables as loanables_for_owner',
+                    'loanables_for_owner.id',
+                    '=',
+                    'loans.loanable_id'
+                );
+
+                $query = static::addJoin(
+                    $query,
+                    'owners',
+                    'owners.id',
+                    '=',
+                    'loanables_for_owner.owner_id'
+                );
+
+                $query = static::addJoin(
+                    $query,
+                    'users as owner_users',
+                    'owner_users.id',
+                    '=',
+                    'owners.user_id'
+                );
+
+                return $query;
+            },
+
+            'community_name' => function ($query = null) {
+                if (!$query) {
+                    return "communities.name";
+                }
+
+                $query->selectRaw("communities.name AS community_name");
+
+                $query = static::addJoin(
+                    $query,
+                    'communities',
+                    'communities.id',
+                    '=',
+                    'loans.community_id'
+                );
+
+                return $query;
+            },
         ];
     }
 

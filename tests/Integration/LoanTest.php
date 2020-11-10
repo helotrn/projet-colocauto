@@ -12,6 +12,21 @@ use Tests\TestCase;
 
 class LoanTest extends TestCase
 {
+    private static $getLoansResponseStructure = [
+        'current_page',
+        'data',
+        'first_page_url',
+        'from',
+        'last_page',
+        'last_page_url',
+        'next_page_url',
+        'path',
+        'per_page',
+        'prev_page_url',
+        'to',
+        'total',
+    ];
+
     private static $getLoanResponseStructure = [
         'id',
         'departure_at',
@@ -19,6 +34,76 @@ class LoanTest extends TestCase
         'borrower_id',
         'estimated_distance'
     ];
+
+    public function testOrderLoansById() {
+        $data = [
+          'order' => 'id',
+          'page' => 1,
+          'per_page' => 10,
+          'fields' => '*,borrower.user.full_name,loanable.owner.user.full_name,community.name',
+        ];
+        $response = $this->json('GET', "/api/v1/loans/", $data);
+        $response
+            ->assertStatus(200)
+            ->assertJsonStructure(static::$getLoansResponseStructure)
+            ;
+    }
+
+    public function testOrderLoansByDepartureAt() {
+        $data = [
+          'order' => 'departure_at',
+          'page' => 1,
+          'per_page' => 10,
+          'fields' => '*,borrower.user.full_name,loanable.owner.user.full_name,community.name',
+        ];
+        $response = $this->json('GET', "/api/v1/loans/", $data);
+        $response
+            ->assertStatus(200)
+            ->assertJsonStructure(static::$getLoansResponseStructure)
+            ;
+    }
+
+    public function testOrderLoansByBorrowerFullName() {
+        $data = [
+          'order' => 'borrower.user.full_name',
+          'page' => 1,
+          'per_page' => 10,
+          'fields' => '*,borrower.user.full_name,loanable.owner.user.full_name,community.name',
+        ];
+        $response = $this->json('GET', "/api/v1/loans/", $data);
+        $response
+            ->assertStatus(200)
+            ->assertJsonStructure(static::$getLoansResponseStructure)
+            ;
+    }
+
+    public function testOrderLoansByOwnerFullName() {
+        $data = [
+          'order' => 'loanable.owner.user.full_name',
+          'page' => 1,
+          'per_page' => 10,
+          'fields' => '*,borrower.user.full_name,loanable.owner.user.full_name,community.name',
+        ];
+        $response = $this->json('GET', "/api/v1/loans/", $data);
+        $response
+            ->assertStatus(200)
+            ->assertJsonStructure(static::$getLoansResponseStructure)
+            ;
+    }
+
+    public function testOrderLoansByCommunityName() {
+        $data = [
+          'order' => 'community.name',
+          'page' => 1,
+          'per_page' => 10,
+          'fields' => '*,borrower.user.full_name,loanable.owner.user.full_name,community.name',
+        ];
+        $response = $this->json('GET', "/api/v1/loans/", $data);
+        $response
+            ->assertStatus(200)
+            ->assertJsonStructure(static::$getLoansResponseStructure)
+            ;
+    }
 
     public function testCreateLoans() {
         $borrower = factory(Borrower::class)->create(['user_id' => $this->user->id]);
