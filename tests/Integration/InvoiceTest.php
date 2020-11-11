@@ -7,10 +7,95 @@ use Tests\TestCase;
 
 class InvoiceTest extends TestCase
 {
+    private static $getInvoicesResponseStructure = [
+        'current_page',
+        'data',
+        'first_page_url',
+        'from',
+        'last_page',
+        'last_page_url',
+        'next_page_url',
+        'path',
+        'per_page',
+        'prev_page_url',
+        'to',
+        'total',
+    ];
+
     private static $invoiceResponseStructure = [
         'id',
         'period',
     ];
+
+    public function testOrderInvoicesByUserFullName() {
+        $data = [
+          'order' => 'user.full_name',
+          'page' => 1,
+          'per_page' => 10,
+          'fields' => '*,user.id,user.full_name',
+        ];
+        $response = $this->json('GET', "/api/v1/invoices/", $data);
+        $response
+            ->assertStatus(200)
+            ->assertJsonStructure(static::$getInvoicesResponseStructure)
+            ;
+    }
+
+    public function testOrderInvoicesByCreatedAt() {
+        $data = [
+          'order' => 'created_at',
+          'page' => 1,
+          'per_page' => 10,
+          'fields' => '*,user.id,user.full_name',
+        ];
+        $response = $this->json('GET', "/api/v1/invoices/", $data);
+        $response
+            ->assertStatus(200)
+            ->assertJsonStructure(static::$getInvoicesResponseStructure)
+            ;
+    }
+
+    public function testOrderInvoicesByPaidAt() {
+        $data = [
+          'order' => 'paid_at',
+          'page' => 1,
+          'per_page' => 10,
+          'fields' => '*,user.id,user.full_name',
+        ];
+        $response = $this->json('GET', "/api/v1/invoices/", $data);
+        $response
+            ->assertStatus(200)
+            ->assertJsonStructure(static::$getInvoicesResponseStructure)
+            ;
+    }
+
+    public function testOrderInvoicesByTotal() {
+        $data = [
+          'order' => 'total',
+          'page' => 1,
+          'per_page' => 10,
+          'fields' => '*,user.id,user.full_name',
+        ];
+        $response = $this->json('GET', "/api/v1/invoices/", $data);
+        $response
+            ->assertStatus(200)
+            ->assertJsonStructure(static::$getInvoicesResponseStructure)
+            ;
+    }
+
+    public function testOrderInvoicesByTotalWithTaxes() {
+        $data = [
+          'order' => 'total_with_taxes',
+          'page' => 1,
+          'per_page' => 10,
+          'fields' => '*,user.id,user.full_name',
+        ];
+        $response = $this->json('GET', "/api/v1/invoices/", $data);
+        $response
+            ->assertStatus(200)
+            ->assertJsonStructure(static::$getInvoicesResponseStructure)
+            ;
+    }
 
     public function testCreateInvoices() {
         $data = [
