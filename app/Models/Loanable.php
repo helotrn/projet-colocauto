@@ -145,6 +145,42 @@ class Loanable extends BaseModel
         });
     }
 
+    public static function getColumnsDefinition() {
+        return [
+            '*' => function ($query = null) {
+                if (!$query) {
+                    return 'loanables.*';
+                }
+
+                return $query->selectRaw('loanables.*');
+            },
+
+            'owner_user_full_name' => function ($query = null) {
+                if (!$query) {
+                    return "CONCAT(owner_users.name, ' ', owner_users.last_name)";
+                }
+
+                $query
+                    ->selectRaw(
+                        "CONCAT(owner_users.name, ' ', owner_users.last_name)"
+                        . " AS owner_user_full_name"
+                    );
+
+                $query = static::addJoin($query, 'owners', 'owners.id', '=', 'loanables.owner_id');
+
+                $query = static::addJoin(
+                    $query,
+                    'users as owner_users',
+                    'owner_users.id',
+                    '=',
+                    'owners.user_id'
+                );
+
+                return $query;
+            },
+        ];
+    }
+
     protected $hidden = ['availability_ics'];
 
     protected $postgisFields = [
@@ -229,6 +265,7 @@ class Loanable extends BaseModel
             $query = $query->whereNotIn('loans.id', $ignoreLoanIds);
         }
 
+// Unit test...
         $cDef = Loan::getColumnsDefinition();
         $query = $cDef['*']($query);
         $query = $cDef['loan_status']($query);

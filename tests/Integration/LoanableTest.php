@@ -13,6 +13,77 @@ use Tests\TestCase;
 
 class LoanableTest extends TestCase
 {
+    private static $getLoanablesResponseStructure = [
+        'current_page',
+        'data',
+        'first_page_url',
+        'from',
+        'last_page',
+        'last_page_url',
+        'next_page_url',
+        'path',
+        'per_page',
+        'prev_page_url',
+        'to',
+        'total',
+    ];
+
+    public function testOrderLoanablesById() {
+        $data = [
+          'order' => 'id',
+          'page' => 1,
+          'per_page' => 10,
+          'fields' => 'id,name,type,owner.id,owner.user.full_name,owner.user.id,deleted_at',
+        ];
+        $response = $this->json('GET', "/api/v1/loanables/", $data);
+        $response
+            ->assertStatus(200)
+            ->assertJsonStructure(static::$getLoanablesResponseStructure)
+            ;
+    }
+
+    public function testOrderLoanablesByName() {
+        $data = [
+          'order' => 'name',
+          'page' => 1,
+          'per_page' => 10,
+          'fields' => 'id,name,type,owner.id,owner.user.full_name,owner.user.id,deleted_at',
+        ];
+        $response = $this->json('GET', "/api/v1/loanables/", $data);
+        $response
+            ->assertStatus(200)
+            ->assertJsonStructure(static::$getLoanablesResponseStructure)
+            ;
+    }
+
+    public function testOrderLoanablesByType() {
+        $data = [
+          'order' => 'type',
+          'page' => 1,
+          'per_page' => 10,
+          'fields' => 'id,name,type,owner.id,owner.user.full_name,owner.user.id,deleted_at',
+        ];
+        $response = $this->json('GET', "/api/v1/loanables/", $data);
+        $response
+            ->assertStatus(200)
+            ->assertJsonStructure(static::$getLoanablesResponseStructure)
+            ;
+    }
+
+    public function testOrderLoanablesByOwnerFullName() {
+        $data = [
+          'order' => 'owner.user.full_name',
+          'page' => 1,
+          'per_page' => 10,
+          'fields' => 'id,name,type,owner.id,owner.user.full_name,owner.user.id,deleted_at',
+        ];
+        $response = $this->json('GET', "/api/v1/loanables/", $data);
+        $response
+            ->assertStatus(200)
+            ->assertJsonStructure(static::$getLoanablesResponseStructure)
+            ;
+    }
+
     public function testRetrieveNextLoan() {
         $borrower = factory(Borrower::class)->create(['user_id' => $this->user->id]);
 
