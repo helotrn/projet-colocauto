@@ -31,6 +31,36 @@ class Padlock extends BaseModel
 
     public $items = ['loanable'];
 
+    public static function getColumnsDefinition() {
+        return [
+            '*' => function ($query = null) {
+                if (!$query) {
+                    return 'padlocks.*';
+                }
+
+                return $query->selectRaw('padlocks.*');
+            },
+
+            'loanable_name' => function ($query = null) {
+                if (!$query) {
+                    return 'loanables.name';
+                }
+
+                $query->selectRaw('loanables.name AS loanable_name');
+
+                $query = static::addJoin(
+                    $query,
+                    'loanables',
+                    'loanables.id',
+                    '=',
+                    'padlocks.loanable_id'
+                );
+
+                return $query;
+            },
+        ];
+    }
+
     public function loanable() {
         return $this->belongsTo(Loanable::class);
     }
