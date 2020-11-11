@@ -9,6 +9,21 @@ use Illuminate\Support\Str;
 
 class UserTest extends TestCase
 {
+    private static $getUsersResponseStructure = [
+        'current_page',
+        'data',
+        'first_page_url',
+        'from',
+        'last_page',
+        'last_page_url',
+        'next_page_url',
+        'path',
+        'per_page',
+        'prev_page_url',
+        'to',
+        'total',
+    ];
+
     private static $getUserResponseStructure = [
         'id',
         'name',
@@ -34,6 +49,48 @@ class UserTest extends TestCase
         'type',
         'center',
     ];
+
+    public function testOrderUsersById() {
+        $data = [
+          'order' => 'id',
+          'page' => 1,
+          'per_page' => 10,
+          'fields' => 'id,name,last_name,full_name,email',
+        ];
+        $response = $this->json('GET', "/api/v1/communities/", $data);
+        $response
+            ->assertStatus(200)
+            ->assertJsonStructure(static::$getUsersResponseStructure)
+            ;
+    }
+
+    public function testOrderUsersByFullName() {
+        $data = [
+          'order' => 'full_name',
+          'page' => 1,
+          'per_page' => 10,
+          'fields' => 'id,name,last_name,full_name,email',
+        ];
+        $response = $this->json('GET', "/api/v1/users/", $data);
+        $response
+            ->assertStatus(200)
+            ->assertJsonStructure(static::$getUsersResponseStructure)
+            ;
+    }
+
+    public function testOrderUsersByEmail() {
+        $data = [
+          'order' => 'email',
+          'page' => 1,
+          'per_page' => 10,
+          'fields' => 'id,name,last_name,full_name,email',
+        ];
+        $response = $this->json('GET', "/api/v1/users/", $data);
+        $response
+            ->assertStatus(200)
+            ->assertJsonStructure(static::$getUsersResponseStructure)
+            ;
+    }
 
     public function testCreateUsers() {
         $data = [
