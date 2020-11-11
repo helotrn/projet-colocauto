@@ -101,6 +101,7 @@ class Community extends BaseModel
 
                 return $query->selectRaw('communities.*');
             },
+
             'center' => function ($query = null) {
                 if (!$query) {
                     return 'ST_Centroid(communities.area::geometry)';
@@ -108,6 +109,7 @@ class Community extends BaseModel
 
                 return $query->selectRaw('ST_Centroid(communities.area::geometry) AS center');
             },
+
             'users_count' => function ($query = null) {
                 $usersCountSql = '(SELECT count(id) FROM users WHERE users.id = communities.id)';
                 if (!$query) {
@@ -115,6 +117,24 @@ class Community extends BaseModel
                 }
 
                 return $query->selectRaw("$usersCountSql AS users_count");
+            },
+
+            'parent_name' => function ($query = null) {
+                if (!$query) {
+                    return 'parent.name';
+                }
+
+                $query->selectRaw('parent.name AS parent_name');
+
+                $query = static::addJoin(
+                    $query,
+                    'communities AS parent',
+                    'parent.id',
+                    '=',
+                    'communities.parent_id'
+                );
+
+                return $query;
             },
         ];
     }
@@ -237,7 +257,7 @@ class Community extends BaseModel
         return $query->where(function ($q) use ($user) {
             return $q->whereHas('users', function ($q2) use ($user) {
                 return $q2->where('users.id', $user->id);
-            })->orWhere('type', '!=', 'private');
+            })->orWhere('communities.type', '!=', 'private');
         });
     }
 
