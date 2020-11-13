@@ -72,28 +72,8 @@ class Loan extends BaseModel
             'extension',
             'incident'
         ],
-        'community.id' => [
-            'type' => 'relation',
-            'query' => [
-                'slug' => 'communities',
-                'value' => 'id',
-                'text' => 'name',
-                'params' => [
-                    'fields' => 'id,name',
-                ],
-            ],
-        ],
-        'loanable.id' => [
-            'type' => 'relation',
-            'query' => [
-                'slug' => 'loanables',
-                'value' => 'id',
-                'text' => 'name',
-                'params' => [
-                    'fields' => 'id,name',
-                ],
-            ],
-        ],
+        'community.name' => 'text',
+        'loanable.name' => 'text',
     ];
 
     public static function boot() {

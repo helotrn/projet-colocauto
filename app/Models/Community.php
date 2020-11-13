@@ -39,18 +39,7 @@ class Community extends BaseModel
         'id' => 'number',
         'name' => 'text',
         'type' => ['neighborhood', 'borough', 'private'],
-        'parent.id' => [
-            'type' => 'relation',
-            'query' => [
-                'slug' => 'communities',
-                'value' => 'id',
-                'text' => 'name',
-                'params' => [
-                    'fields' => 'id,name',
-                    'type' => 'borough',
-                ],
-            ],
-        ]
+        'parent.name' => 'text',
     ];
 
     public static $transformer = CommunityTransformer::class;
