@@ -86,6 +86,116 @@ class PadlockTest extends TestCase
             ;
     }
 
+    public function testFilterPadlocksByExternalId() {
+        $data = [
+          'page' => 1,
+          'per_page' => 10,
+          'fields' => 'id,name,last_name,full_name,email',
+          'external_id' => '20345',
+        ];
+        $response = $this->json('GET', "/api/v1/padlocks/", $data);
+        $response
+            ->assertStatus(200)
+            ->assertJsonStructure(static::$getPadlocksResponseStructure)
+            ;
+    }
+
+    public function testFilterPadlocksByName() {
+        $data = [
+          'page' => 1,
+          'per_page' => 10,
+          'fields' => 'id,name,last_name,full_name,email',
+          'name' => 'Cadenas',
+        ];
+        $response = $this->json('GET', "/api/v1/users/", $data);
+        $response
+            ->assertStatus(200)
+            ->assertJsonStructure(static::$getPadlocksResponseStructure)
+            ;
+    }
+
+    public function testFilterPadlocksByLoanableId() {
+        $data = [
+          'page' => 1,
+          'per_page' => 10,
+          'fields' => 'id,name,last_name,full_name,email',
+          'loanable.id' => '4',
+        ];
+        $response = $this->json('GET', "/api/v1/users/", $data);
+        $response
+            ->assertStatus(200)
+            ->assertJsonStructure(static::$getPadlocksResponseStructure)
+            ;
+    }
+
+    public function testFilterPadlocksByLoanableName() {
+        $data = [
+          'page' => 1,
+          'per_page' => 10,
+          'fields' => 'id,name,last_name,full_name,email',
+          'loanable.name' => 'Auto',
+        ];
+        $response = $this->json('GET', "/api/v1/users/", $data);
+        $response
+            ->assertStatus(200)
+            ->assertJsonStructure(static::$getPadlocksResponseStructure)
+            ;
+    }
+
+    public function testFilterPadlocksByDeletedAt() {
+                             // Lower bound only
+        $data = [
+          'page' => 1,
+          'per_page' => 10,
+          'fields' => 'id,name,last_name,full_name,email',
+          'deleted_at' => '2020-11-10:',
+        ];
+        $response = $this->json('GET', "/api/v1/padlocks/", $data);
+        $response
+            ->assertStatus(200)
+            ->assertJsonStructure(static::$getPadlocksResponseStructure)
+            ;
+
+                             // Lower and upper bounds
+        $data = [
+          'page' => 1,
+          'per_page' => 10,
+          'fields' => 'id,name,last_name,full_name,email',
+          'deleted_at' => '2020-11-10:2020-11-12',
+        ];
+        $response = $this->json('GET', "/api/v1/padlocks/", $data);
+        $response
+            ->assertStatus(200)
+            ->assertJsonStructure(static::$getPadlocksResponseStructure)
+            ;
+
+                             // Upper bound only
+        $data = [
+          'page' => 1,
+          'per_page' => 10,
+          'fields' => 'id,name,last_name,full_name,email',
+          'deleted_at' => ':2020-11-12',
+        ];
+        $response = $this->json('GET', "/api/v1/padlocks/", $data);
+        $response
+            ->assertStatus(200)
+            ->assertJsonStructure(static::$getPadlocksResponseStructure)
+            ;
+
+                             // Degenerate case when bounds are removed
+        $data = [
+          'page' => 1,
+          'per_page' => 10,
+          'fields' => 'id,name,last_name,full_name,email',
+          'deleted_at' => ':',
+        ];
+        $response = $this->json('GET', "/api/v1/padlocks/", $data);
+        $response
+            ->assertStatus(200)
+            ->assertJsonStructure(static::$getPadlocksResponseStructure)
+            ;
+    }
+
     public function testUpdatePadlocks() {
         $padlock = factory(Padlock::class)->create();
         $data = [

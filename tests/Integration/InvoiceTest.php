@@ -97,6 +97,128 @@ class InvoiceTest extends TestCase
             ;
     }
 
+    public function testFilterInvoicesByCreatedAt() {
+                             // Lower bound only
+        $data = [
+          'page' => 1,
+          'per_page' => 10,
+          'fields' => 'id,name,last_name,full_name,email',
+          'created_at' => '2020-11-10:',
+        ];
+        $response = $this->json('GET', "/api/v1/invoices/", $data);
+        $response
+            ->assertStatus(200)
+            ->assertJsonStructure(static::$getInvoicesResponseStructure)
+            ;
+
+                             // Lower and upper bounds
+        $data = [
+          'page' => 1,
+          'per_page' => 10,
+          'fields' => 'id,name,last_name,full_name,email',
+          'created_at' => '2020-11-10:2020-11-12',
+        ];
+        $response = $this->json('GET', "/api/v1/invoices/", $data);
+        $response
+            ->assertStatus(200)
+            ->assertJsonStructure(static::$getInvoicesResponseStructure)
+            ;
+
+                             // Upper bound only
+        $data = [
+          'page' => 1,
+          'per_page' => 10,
+          'fields' => 'id,name,last_name,full_name,email',
+          'created_at' => ':2020-11-12',
+        ];
+        $response = $this->json('GET', "/api/v1/invoices/", $data);
+        $response
+            ->assertStatus(200)
+            ->assertJsonStructure(static::$getInvoicesResponseStructure)
+            ;
+
+                             // Degenerate case when bounds are removed
+        $data = [
+          'page' => 1,
+          'per_page' => 10,
+          'fields' => 'id,name,last_name,full_name,email',
+          'created_at' => ':',
+        ];
+        $response = $this->json('GET', "/api/v1/invoices/", $data);
+        $response
+            ->assertStatus(200)
+            ->assertJsonStructure(static::$getInvoicesResponseStructure)
+            ;
+    }
+
+    public function testFilterInvoicesByPaidAt() {
+                             // Lower bound only
+        $data = [
+          'page' => 1,
+          'per_page' => 10,
+          'fields' => 'id,name,last_name,full_name,email',
+          'paid_at' => '2020-11-10:',
+        ];
+        $response = $this->json('GET', "/api/v1/invoices/", $data);
+        $response
+            ->assertStatus(200)
+            ->assertJsonStructure(static::$getInvoicesResponseStructure)
+            ;
+
+                             // Lower and upper bounds
+        $data = [
+          'page' => 1,
+          'per_page' => 10,
+          'fields' => 'id,name,last_name,full_name,email',
+          'paid_at' => '2020-11-10:2020-11-12',
+        ];
+        $response = $this->json('GET', "/api/v1/invoices/", $data);
+        $response
+            ->assertStatus(200)
+            ->assertJsonStructure(static::$getInvoicesResponseStructure)
+            ;
+
+                             // Upper bound only
+        $data = [
+          'page' => 1,
+          'per_page' => 10,
+          'fields' => 'id,name,last_name,full_name,email',
+          'paid_at' => ':2020-11-12',
+        ];
+        $response = $this->json('GET', "/api/v1/invoices/", $data);
+        $response
+            ->assertStatus(200)
+            ->assertJsonStructure(static::$getInvoicesResponseStructure)
+            ;
+
+                             // Degenerate case when bounds are removed
+        $data = [
+          'page' => 1,
+          'per_page' => 10,
+          'fields' => 'id,name,last_name,full_name,email',
+          'paid_at' => ':',
+        ];
+        $response = $this->json('GET', "/api/v1/invoices/", $data);
+        $response
+            ->assertStatus(200)
+            ->assertJsonStructure(static::$getInvoicesResponseStructure)
+            ;
+    }
+
+    public function testFilterInvoicesByUserFullName() {
+        $data = [
+          'page' => 1,
+          'per_page' => 10,
+          'fields' => 'id,name,last_name,full_name,email',
+          'user.full_name' => 'Martine',
+        ];
+        $response = $this->json('GET', "/api/v1/invoices/", $data);
+        $response
+            ->assertStatus(200)
+            ->assertJsonStructure(static::$getInvoicesResponseStructure)
+            ;
+    }
+
     public function testCreateInvoices() {
         $data = [
             'period' => $this->faker->word,

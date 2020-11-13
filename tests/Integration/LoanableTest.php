@@ -84,6 +84,102 @@ class LoanableTest extends TestCase
             ;
     }
 
+    public function testFilterLoanablesById() {
+        $data = [
+          'page' => 1,
+          'per_page' => 10,
+          'fields' => 'id,name,type,parent.id,parent.name',
+          'id' => '4',
+        ];
+        $response = $this->json('GET', "/api/v1/loanables/", $data);
+        $response
+            ->assertStatus(200)
+            ->assertJsonStructure(static::$getLoanablesResponseStructure)
+            ;
+    }
+
+    public function testFilterLoanablesByName() {
+        $data = [
+          'page' => 1,
+          'per_page' => 10,
+          'fields' => 'id,name,type,parent.id,parent.name',
+          'name' => 'Vélo',
+        ];
+        $response = $this->json('GET', "/api/v1/loanables/", $data);
+        $response
+            ->assertStatus(200)
+            ->assertJsonStructure(static::$getLoanablesResponseStructure)
+            ;
+    }
+
+    public function testFilterLoanablesByType() {
+        $data = [
+          'page' => 1,
+          'per_page' => 10,
+          'fields' => 'id,name,type,parent.id,parent.name',
+          'type' => 'car',
+        ];
+        $response = $this->json('GET', "/api/v1/loanables/", $data);
+        $response
+            ->assertStatus(200)
+            ->assertJsonStructure(static::$getLoanablesResponseStructure)
+            ;
+    }
+
+    public function testFilterLoanablesByDeletedAt() {
+                             // Lower bound only
+        $data = [
+          'page' => 1,
+          'per_page' => 10,
+          'fields' => 'id,name,last_name,full_name,email',
+          'deleted_at' => '2020-11-10:',
+        ];
+        $response = $this->json('GET', "/api/v1/loanables/", $data);
+        $response
+            ->assertStatus(200)
+            ->assertJsonStructure(static::$getLoanablesResponseStructure)
+            ;
+
+                             // Lower and upper bounds
+        $data = [
+          'page' => 1,
+          'per_page' => 10,
+          'fields' => 'id,name,last_name,full_name,email',
+          'deleted_at' => '2020-11-10:2020-11-12',
+        ];
+        $response = $this->json('GET', "/api/v1/loanables/", $data);
+        $response
+            ->assertStatus(200)
+            ->assertJsonStructure(static::$getLoanablesResponseStructure)
+            ;
+
+                             // Upper bound only
+        $data = [
+          'page' => 1,
+          'per_page' => 10,
+          'fields' => 'id,name,last_name,full_name,email',
+          'deleted_at' => ':2020-11-12',
+        ];
+        $response = $this->json('GET', "/api/v1/loanables/", $data);
+        $response
+            ->assertStatus(200)
+            ->assertJsonStructure(static::$getLoanablesResponseStructure)
+            ;
+
+                             // Degenerate case when bounds are removed
+        $data = [
+          'page' => 1,
+          'per_page' => 10,
+          'fields' => 'id,name,last_name,full_name,email',
+          'deleted_at' => ':',
+        ];
+        $response = $this->json('GET', "/api/v1/loanables/", $data);
+        $response
+            ->assertStatus(200)
+            ->assertJsonStructure(static::$getLoanablesResponseStructure)
+            ;
+    }
+
     public function testRetrieveNextLoan() {
         $borrower = factory(Borrower::class)->create(['user_id' => $this->user->id]);
 
