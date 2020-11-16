@@ -26,18 +26,9 @@ class EmailLoanUpcoming extends Command
           . 'at least three hours before now...');
         $threeHoursAgo = (new Carbon())->subtract(3, 'hours');
 
-        $query = Loan::departureInLessThan(3, 'hours')
-            ->where('loans.created_at', '<', $threeHoursAgo)
-            ->where('meta->sent_loan_upcoming_email', null);
+        $query = $this->getQuery([ 'created_at' => $threeHoursAgo ]);
 
-        $columnDefinitions = Loan::getColumnsDefinition();
-        $query = $columnDefinitions['loan_status']($query);
-        $query = $columnDefinitions['*']($query);
-
-        $loans = $query
-            ->where($columnDefinitions['loan_status'](), '=', 'in_process')
-            ->cursor();
-
+        $loans = $query->cursor();
         foreach ($loans as $loan) {
             $user = $loan->borrower->user;
             if (!$this->pretend) {
@@ -72,5 +63,19 @@ class EmailLoanUpcoming extends Command
         }
 
         $this->info('Done.');
+    }
+
+    public static function getQuery($queryParams) {
+        $query = Loan::departureInLessThan(3, 'hours')
+            ->where('loans.created_at', '<', $queryParams['created_at'])
+            ->where('meta->sent_loan_upcoming_email', null);
+
+        $columnDefinitions = Loan::getColumnsDefinition();
+        $query = $columnDefinitions['loan_status']($query);
+        $query = $columnDefinitions['*']($query);
+
+        $query->where($columnDefinitions['loan_status'](), '=', 'in_process');
+
+        return $query;
     }
 }
