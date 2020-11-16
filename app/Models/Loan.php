@@ -72,28 +72,8 @@ class Loan extends BaseModel
             'extension',
             'incident'
         ],
-        'community.id' => [
-            'type' => 'relation',
-            'query' => [
-                'slug' => 'communities',
-                'value' => 'id',
-                'text' => 'name',
-                'params' => [
-                    'fields' => 'id,name',
-                ],
-            ],
-        ],
-        'loanable.id' => [
-            'type' => 'relation',
-            'query' => [
-                'slug' => 'loanables',
-                'value' => 'id',
-                'text' => 'name',
-                'params' => [
-                    'fields' => 'id,name',
-                ],
-            ],
-        ],
+        'community.name' => 'text',
+        'loanable.name' => 'text',
     ];
 
     public static function boot() {
@@ -139,33 +119,141 @@ SQL
                 return $query->selectRaw("$calendarDaysSql AS calendar_days");
             },
             'loan_status' => function ($query = null) {
-                $loanStatusSql = '(array_agg(all_actions.status ORDER BY all_actions.id DESC))[1]';
                 if (!$query) {
-                    return $loanStatusSql;
+                    return 'loan_status_subquery.status';
                 }
 
-                $query = static::addJoin($query, 'actions AS all_actions', function ($j) {
-                    return $j->on('all_actions.loan_id', '=', 'loans.id')
-                        ->whereNotIn('all_actions.type', ['extension', 'incident']);
-                });
+                $query
+                    ->selectRaw('loan_status_subquery.status AS loan_status')
+                    ->leftJoinSub(
+                        <<<SQL
+SELECT DISTINCT ON (loan_id)
+    loan_id,
+    status
+FROM actions
+WHERE actions.type NOT IN ('extension', 'incident')
+ORDER by loan_id ASC, id DESC
+SQL
+                        ,
+                        'loan_status_subquery',
+                        function ($j) {
+                            return $j->on('loan_status_subquery.loan_id', '=', 'loans.id');
+                        }
+                    );
 
-                return $query
-                    ->selectRaw("$loanStatusSql AS loan_status")
-                    ->groupBy('loans.id');
+                return $query;
             },
             'actual_duration_in_minutes' => function ($query = null) {
                 if (!$query) {
-                    return 'max(all_extensions.new_duration)';
+                    return 'extension_max_duration.max_duration';
                 }
 
-                $query = static::addJoin($query, 'extensions AS all_extensions', function ($j) {
-                    return $j->on('all_extensions.loan_id', '=', 'loans.id')
-                        ->where('all_extensions.status', 'completed');
-                });
+                $query
+                    ->selectRaw('extension_max_duration.max_duration as actual_duration_in_minutes')
+                    ->leftJoinSub(
+                        <<<SQL
+SELECT
+    max(new_duration) AS max_duration,
+    loan_id
+FROM extensions
+WHERE status = 'completed'
+GROUP BY loan_id
+SQL
+                        ,
+                        'extension_max_duration',
+                        function ($j) {
+                            return $j->on('extension_max_duration.loan_id', '=', 'loans.id');
+                        }
+                    );
 
-                return $query
-                    ->selectRaw("max(all_extensions.new_duration) AS actual_duration_in_minutes");
-            }
+                return $query;
+            },
+
+            'borrower_user_full_name' => function ($query = null) {
+                if (!$query) {
+                    return "CONCAT(borrower_users.name, ' ', borrower_users.last_name)";
+                }
+
+                $query
+                    ->selectRaw(
+                        "CONCAT(borrower_users.name, ' ', borrower_users.last_name)"
+                        . " AS borrower_user_full_name"
+                    );
+
+                $query = static::addJoin(
+                    $query,
+                    'borrowers',
+                    'borrowers.id',
+                    '=',
+                    'loans.borrower_id'
+                );
+
+                $query = static::addJoin(
+                    $query,
+                    'users as borrower_users',
+                    'borrower_users.id',
+                    '=',
+                    'borrowers.user_id'
+                );
+
+                return $query;
+            },
+
+            'loanable_owner_user_full_name' => function ($query = null) {
+                if (!$query) {
+                    return "CONCAT(owner_users.name, ' ', owner_users.last_name)";
+                }
+
+                $query
+                    ->selectRaw(
+                        "CONCAT(owner_users.name, ' ', owner_users.last_name)"
+                        . " AS loanable_owner_user_full_name"
+                    );
+
+                $query = static::addJoin(
+                    $query,
+                    'loanables as loanables_for_owner',
+                    'loanables_for_owner.id',
+                    '=',
+                    'loans.loanable_id'
+                );
+
+                $query = static::addJoin(
+                    $query,
+                    'owners',
+                    'owners.id',
+                    '=',
+                    'loanables_for_owner.owner_id'
+                );
+
+                $query = static::addJoin(
+                    $query,
+                    'users as owner_users',
+                    'owner_users.id',
+                    '=',
+                    'owners.user_id'
+                );
+
+                return $query;
+            },
+
+            'community_name' => function ($query = null) {
+                if (!$query) {
+                    return "communities.name";
+                }
+
+                $query->selectRaw("communities.name AS community_name");
+
+                $query = static::addJoin(
+                    $query,
+                    'communities',
+                    'communities.id',
+                    '=',
+                    'loans.community_id'
+                );
+
+                return $query;
+            },
         ];
     }
 

@@ -81,6 +81,36 @@ class NokeSyncLoans extends Command
         }
     }
 
+    public static function getLoansFromPadlockMacQuery($queryParams) {
+        $mac = $queryParams['mac_address'];
+
+        $columnDefinitions = Loan::getColumnsDefinition();
+        $query = Loan::where(
+            'departure_at',
+            '<=',
+            date('Y-m-d H:i:00', strtotime('+15 minutes'))
+        )
+            ->whereHas('prePayment', function ($q) {
+                return $q->where('status', 'completed');
+            })
+            ->where(function ($q) {
+                return $q->whereHas('payment', function ($q) {
+                    return $q->where('status', '!=', 'completed');
+                })->orWhereDoesntHave('payment');
+            })
+            ->whereHas('loanable', function ($q) use ($mac) {
+                return $q->whereHas('padlock', function ($q) use ($mac) {
+                    return $q->where('mac_address', $mac);
+                });
+            });
+        $query = $columnDefinitions['loan_status']($query);
+        $query = $columnDefinitions['*']($query);
+
+        $query->with('borrower', 'borrower.user');
+
+        return $query;
+    }
+
     private function buildLocksUsers() {
         $macAddresses = array_keys($this->locksIndex);
 
@@ -89,32 +119,9 @@ class NokeSyncLoans extends Command
                 $this->locksIndex[$mac]->users = [];
             }
 
-            $columnDefinitions = Loan::getColumnsDefinition();
-            $query = Loan::where(
-                'departure_at',
-                '<=',
-                date('Y-m-d H:i:00', strtotime('+15 minutes'))
-            )
-                ->whereHas('prePayment', function ($q) {
-                    return $q->where('status', 'completed');
-                })
-                ->where(function ($q) {
-                    return $q->whereHas('payment', function ($q) {
-                        return $q->where('status', '!=', 'completed');
-                    })->orWhereDoesntHave('payment');
-                })
-                ->whereHas('loanable', function ($q) use ($mac) {
-                    return $q->whereHas('padlock', function ($q) use ($mac) {
-                        return $q->where('mac_address', $mac);
-                    });
-                });
-            $query = $columnDefinitions['loan_status']($query);
-            $query = $columnDefinitions['*']($query);
-
-            $query->with('borrower', 'borrower.user');
+            $query = $this->getLoansFromPadlockMacQuery([ 'mac_address' => $mac ]);
 
             $loans = $query->get();
-
             if ($loans->count() > 0) {
                 foreach ($loans as $loan) {
                     $this->locksIndex[$mac]->users[] = $loan->borrower->user->email;

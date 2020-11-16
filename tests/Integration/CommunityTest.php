@@ -8,6 +8,21 @@ use Tests\TestCase;
 
 class CommunityTest extends TestCase
 {
+    private static $getCommunitiesResponseStructure = [
+        'current_page',
+        'data',
+        'first_page_url',
+        'from',
+        'last_page',
+        'last_page_url',
+        'next_page_url',
+        'path',
+        'per_page',
+        'prev_page_url',
+        'to',
+        'total',
+    ];
+
     private static $getUserResponseStructure = [
         'id',
         'name',
@@ -34,6 +49,119 @@ class CommunityTest extends TestCase
         'center',
     ];
 
+    public function testOrderCommunitiesById() {
+        $data = [
+          'order' => 'id',
+          'page' => 1,
+          'per_page' => 10,
+          'fields' => 'id,name,type,parent.id,parent.name',
+        ];
+        $response = $this->json('GET', "/api/v1/communities/", $data);
+        $response
+            ->assertStatus(200)
+            ->assertJsonStructure(static::$getCommunitiesResponseStructure)
+            ;
+    }
+
+    public function testOrderCommunitiesByName() {
+        $data = [
+          'order' => 'name',
+          'page' => 1,
+          'per_page' => 10,
+          'fields' => 'id,name,type,parent.id,parent.name',
+        ];
+        $response = $this->json('GET', "/api/v1/communities/", $data);
+        $response
+            ->assertStatus(200)
+            ->assertJsonStructure(static::$getCommunitiesResponseStructure)
+            ;
+    }
+
+    public function testOrderCommunitiesByParentName() {
+        $data = [
+          'order' => 'parent.name',
+          'page' => 1,
+          'per_page' => 10,
+          'fields' => 'id,name,type,parent.id,parent.name',
+        ];
+        $response = $this->json('GET', "/api/v1/communities/", $data);
+        $response
+            ->assertStatus(200)
+            ->assertJsonStructure(static::$getCommunitiesResponseStructure)
+            ;
+    }
+
+    public function testOrderCommunitiesByType() {
+        $data = [
+          'order' => 'type',
+          'page' => 1,
+          'per_page' => 10,
+          'fields' => 'id,name,type,parent.id,parent.name',
+        ];
+        $response = $this->json('GET', "/api/v1/communities/", $data);
+        $response
+            ->assertStatus(200)
+            ->assertJsonStructure(static::$getCommunitiesResponseStructure)
+            ;
+    }
+
+    public function testFilterCommunitiesById() {
+        $data = [
+          'page' => 1,
+          'per_page' => 10,
+          'fields' => 'id,name,type,parent.id,parent.name',
+          'id' => '4',
+        ];
+        $response = $this->json('GET', "/api/v1/communities/", $data);
+        $response
+            ->assertStatus(200)
+            ->assertJsonStructure(static::$getCommunitiesResponseStructure)
+            ;
+    }
+
+    public function testFilterCommunitiesByName() {
+        $data = [
+          'page' => 1,
+          'per_page' => 10,
+          'fields' => 'id,name,type,parent.id,parent.name',
+          'name' => 'Patrie',
+        ];
+        $response = $this->json('GET', "/api/v1/communities/", $data);
+        $response
+            ->assertStatus(200)
+            ->assertJsonStructure(static::$getCommunitiesResponseStructure)
+            ;
+    }
+
+
+    public function testFilterCommunitiesByParentId() {
+        $data = [
+          'page' => 1,
+          'per_page' => 10,
+          'fields' => 'id,name,type,parent.id,parent.name',
+          'parent.id' => '9',
+        ];
+        $response = $this->json('GET', "/api/v1/communities/", $data);
+        $response
+            ->assertStatus(200)
+            ->assertJsonStructure(static::$getCommunitiesResponseStructure)
+            ;
+    }
+
+    public function testFilterCommunitiesByParentName() {
+        $data = [
+          'page' => 1,
+          'per_page' => 10,
+          'fields' => 'id,name,type,parent.id,parent.name',
+          'parent.name' => 'Patrie',
+        ];
+        $response = $this->json('GET', "/api/v1/communities/", $data);
+        $response
+            ->assertStatus(200)
+            ->assertJsonStructure(static::$getCommunitiesResponseStructure)
+            ;
+    }
+
     public function testCreateCommunities() {
         $data = [
             'name' => $this->faker->name,
@@ -58,18 +186,6 @@ class CommunityTest extends TestCase
             'name' => null,
             'description' => $this->faker->sentence,
             'area' => null,
-        ];
-
-        $response = $this->json('POST', "/api/v1/communities/", $data);
-        $response->assertStatus(422);
-    }
-
-    public function testCreateCommunitiesWithInvalidType() {
-        $data = [
-            'name' => $this->faker->name,
-            'description' => $this->faker->sentence,
-            'area' => null,
-            'type' => 'something',
         ];
 
         $response = $this->json('POST', "/api/v1/communities/", $data);

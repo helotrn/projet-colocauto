@@ -31,7 +31,12 @@ export default {
         return this.value.split(':')[0];
       },
       set(val) {
-        this.$emit('input', `${val || ''}:${this.to}`);
+        // Remove colon when no date selected, to avoid counting empty filter as active
+        if (val || this.to) {
+          this.$emit('input', `${val || ''}:${this.to}`);
+        } else {
+          this.$emit('input', '');
+        }
       },
     },
     to: {
@@ -43,7 +48,12 @@ export default {
         return this.value.split(':')[1];
       },
       set(val) {
-        this.$emit('input', `${this.from}:${val || ''}`);
+        // Remove colon when no date selected, to avoid counting empty filter as active
+        if (this.from || val) {
+          this.$emit('input', `${this.from}:${val || ''}`);
+        } else {
+          this.$emit('input', '');
+        }
       },
     },
   },

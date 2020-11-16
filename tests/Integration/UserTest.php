@@ -9,6 +9,21 @@ use Illuminate\Support\Str;
 
 class UserTest extends TestCase
 {
+    private static $getUsersResponseStructure = [
+        'current_page',
+        'data',
+        'first_page_url',
+        'from',
+        'last_page',
+        'last_page_url',
+        'next_page_url',
+        'path',
+        'per_page',
+        'prev_page_url',
+        'to',
+        'total',
+    ];
+
     private static $getUserResponseStructure = [
         'id',
         'name',
@@ -34,6 +49,212 @@ class UserTest extends TestCase
         'type',
         'center',
     ];
+
+    public function testOrderUsersById() {
+        $data = [
+          'order' => 'id',
+          'page' => 1,
+          'per_page' => 10,
+          'fields' => 'id,name,last_name,full_name,email',
+        ];
+        $response = $this->json('GET', "/api/v1/communities/", $data);
+        $response
+            ->assertStatus(200)
+            ->assertJsonStructure(static::$getUsersResponseStructure)
+            ;
+    }
+
+    public function testOrderUsersByFullName() {
+        $data = [
+          'order' => 'full_name',
+          'page' => 1,
+          'per_page' => 10,
+          'fields' => 'id,name,last_name,full_name,email',
+        ];
+        $response = $this->json('GET', "/api/v1/users/", $data);
+        $response
+            ->assertStatus(200)
+            ->assertJsonStructure(static::$getUsersResponseStructure)
+            ;
+    }
+
+    public function testOrderUsersByEmail() {
+        $data = [
+          'order' => 'email',
+          'page' => 1,
+          'per_page' => 10,
+          'fields' => 'id,name,last_name,full_name,email',
+        ];
+        $response = $this->json('GET', "/api/v1/users/", $data);
+        $response
+            ->assertStatus(200)
+            ->assertJsonStructure(static::$getUsersResponseStructure)
+            ;
+    }
+
+    public function testFilterUsersById() {
+        $data = [
+          'page' => 1,
+          'per_page' => 10,
+          'fields' => 'id,name,last_name,full_name,email',
+          'id' => '3',
+        ];
+        $response = $this->json('GET', "/api/v1/users/", $data);
+        $response
+            ->assertStatus(200)
+            ->assertJsonStructure(static::$getUsersResponseStructure)
+            ;
+    }
+
+    public function testFilterUsersByCreatedAt() {
+                             // Lower bound only
+        $data = [
+          'page' => 1,
+          'per_page' => 10,
+          'fields' => 'id,name,last_name,full_name,email',
+          'created_at' => '2020-11-10:',
+        ];
+        $response = $this->json('GET', "/api/v1/users/", $data);
+        $response
+            ->assertStatus(200)
+            ->assertJsonStructure(static::$getUsersResponseStructure)
+            ;
+
+                             // Lower and upper bounds
+        $data = [
+          'page' => 1,
+          'per_page' => 10,
+          'fields' => 'id,name,last_name,full_name,email',
+          'created_at' => '2020-11-10:2020-11-12',
+        ];
+        $response = $this->json('GET', "/api/v1/users/", $data);
+        $response
+            ->assertStatus(200)
+            ->assertJsonStructure(static::$getUsersResponseStructure)
+            ;
+
+                             // Upper bound only
+        $data = [
+          'page' => 1,
+          'per_page' => 10,
+          'fields' => 'id,name,last_name,full_name,email',
+          'created_at' => ':2020-11-12',
+        ];
+        $response = $this->json('GET', "/api/v1/users/", $data);
+        $response
+            ->assertStatus(200)
+            ->assertJsonStructure(static::$getUsersResponseStructure)
+            ;
+
+                             // Degenerate case when bounds are removed
+        $data = [
+          'page' => 1,
+          'per_page' => 10,
+          'fields' => 'id,name,last_name,full_name,email',
+          'created_at' => ':',
+        ];
+        $response = $this->json('GET', "/api/v1/users/", $data);
+        $response
+            ->assertStatus(200)
+            ->assertJsonStructure(static::$getUsersResponseStructure)
+            ;
+    }
+
+    public function testFilterUsersByFullName() {
+        $data = [
+          'page' => 1,
+          'per_page' => 10,
+          'fields' => 'id,name,last_name,full_name,email',
+          'full_name' => 'Ariane',
+        ];
+        $response = $this->json('GET', "/api/v1/users/", $data);
+        $response
+            ->assertStatus(200)
+            ->assertJsonStructure(static::$getUsersResponseStructure)
+            ;
+    }
+
+    public function testFilterUsersByDeletedAt() {
+                             // Lower bound only
+        $data = [
+          'page' => 1,
+          'per_page' => 10,
+          'fields' => 'id,name,last_name,full_name,email',
+          'deleted_at' => '2020-11-10:',
+        ];
+        $response = $this->json('GET', "/api/v1/users/", $data);
+        $response
+            ->assertStatus(200)
+            ->assertJsonStructure(static::$getUsersResponseStructure)
+            ;
+
+                             // Lower and upper bounds
+        $data = [
+          'page' => 1,
+          'per_page' => 10,
+          'fields' => 'id,name,last_name,full_name,email',
+          'deleted_at' => '2020-11-10:2020-11-12',
+        ];
+        $response = $this->json('GET', "/api/v1/users/", $data);
+        $response
+            ->assertStatus(200)
+            ->assertJsonStructure(static::$getUsersResponseStructure)
+            ;
+
+                             // Upper bound only
+        $data = [
+          'page' => 1,
+          'per_page' => 10,
+          'fields' => 'id,name,last_name,full_name,email',
+          'deleted_at' => ':2020-11-12',
+        ];
+        $response = $this->json('GET', "/api/v1/users/", $data);
+        $response
+            ->assertStatus(200)
+            ->assertJsonStructure(static::$getUsersResponseStructure)
+            ;
+
+                             // Degenerate case when bounds are removed
+        $data = [
+          'page' => 1,
+          'per_page' => 10,
+          'fields' => 'id,name,last_name,full_name,email',
+          'deleted_at' => ':',
+        ];
+        $response = $this->json('GET', "/api/v1/users/", $data);
+        $response
+            ->assertStatus(200)
+            ->assertJsonStructure(static::$getUsersResponseStructure)
+            ;
+    }
+
+    public function testFilterUsersByCommunityId() {
+        $data = [
+          'page' => 1,
+          'per_page' => 10,
+          'fields' => 'id,name,last_name,full_name,email',
+          'communities.id' => '3',
+        ];
+        $response = $this->json('GET', "/api/v1/users/", $data);
+        $response
+            ->assertStatus(200)
+            ->assertJsonStructure(static::$getUsersResponseStructure)
+            ;
+    }
+
+    public function testFilterUsersByCommunityName() {
+        $data = [
+          'page' => 1,
+          'per_page' => 10,
+          'fields' => 'id,name,last_name,full_name,email',
+          'communities.name' => 'Patrie',
+        ];
+        $response = $this->json('GET', "/api/v1/users/", $data);
+        $response
+            ->assertStatus(200)
+            ->assertJsonStructure(static::$getUsersResponseStructure)
+            ;
+    }
 
     public function testCreateUsers() {
         $data = [

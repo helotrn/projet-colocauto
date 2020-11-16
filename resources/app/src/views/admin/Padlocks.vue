@@ -84,8 +84,8 @@ export default {
       table: [
         { key: 'external_id', label: 'ID', sortable: true },
         { key: 'name', label: 'Nom', sortable: true },
-        { key: 'mac_address', label: 'Adresse MAC', sortable: false },
-        { key: 'loanable.name', label: 'Objet', sortable: false },
+        { key: 'mac_address', label: 'Adresse MAC', sortable: true },
+        { key: 'loanable.name', label: 'Objet', sortable: true },
         { key: 'actions', label: 'Actions', tdClass: 'table__cell__actions' },
       ],
     };

@@ -30,6 +30,25 @@ class Invoice extends BaseModel
 
                 return $query->selectRaw('invoices.*');
             },
+
+            'user_full_name' => function ($query = null) {
+                if (!$query) {
+                    return "CONCAT(users.name, ' ', users.last_name)";
+                }
+
+                $query
+                    ->selectRaw(
+                        "CONCAT(users.name, ' ', users.last_name)"
+                        . " AS user_full_name"
+                    );
+
+                $query = static::addJoin($query, 'users', 'users.id', '=', 'invoices.user_id');
+
+                $query->groupBy('users.id');
+
+                return $query;
+            },
+
             'items_count' => function ($query = null) {
                 if (!$query) {
                     return 'count(bill_items_join.id)';

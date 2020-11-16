@@ -90,7 +90,7 @@ export default {
         { key: 'id', label: 'ID', sortable: true },
         { key: 'name', label: 'Nom', sortable: true },
         { key: 'parent.name', label: 'Quartier', sortable: true },
-        { key: 'type', label: 'Type', sortable: false },
+        { key: 'type', label: 'Type', sortable: true },
         { key: 'actions', label: 'Actions', tdClass: 'table__cell__actions' },
       ],
     };
