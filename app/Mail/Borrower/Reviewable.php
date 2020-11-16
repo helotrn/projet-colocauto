@@ -22,30 +22,29 @@ class Reviewable extends Mailable
     Accepts single Community object
     Accepts NULL to be more robust.
 */
-    public function __construct(User $user, $communities=NULL) {
+    public function __construct(User $user, $communities = null) {
          $this->user = $user;
 
-         if (NULL == $communities)
-           $communities = [];
-         elseif (!is_array($communities))
-           $communities = [$communities];
+        if (null == $communities) {
+            $communities = [];
+        } elseif (!is_array($communities)) {
+            $communities = [$communities];
+        }
 
          $this->communities = $communities;
     }
 
     public function build() {
         $n_communities = count($this->communities);
-        if ($n_communities > 1)
-        {
-          $subject = "Profil d'emprunteur complété dans ".$n_communities." communautés";
-        }
-        elseif (1 == $n_communities)
-        {
+        if ($n_communities > 1) {
+            $subject = "Profil d'emprunteur complété dans $n_communities communautés";
+        } elseif (1 == $n_communities) {
                              // Loop to accept any type of key.
-          foreach ($this->communities as $community)
-            $subject = "Profil d'emprunteur complété dans ".$community->name;
+            foreach ($this->communities as $community) {
+                $subject = "Profil d'emprunteur complété dans $community->name";
+            }
         } else {
-          $subject = "Profil d'emprunteur complété";
+            $subject = "Profil d'emprunteur complété";
         }
 
 
