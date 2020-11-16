@@ -77,7 +77,7 @@ export default {
     },
     sortDesc: {
       get() {
-                             // Remove field name to keep sign only.
+        // Remove field name to keep sign only.
         return this.contextParams.order[0] === '-';
       },
       set(desc) {
@@ -89,7 +89,7 @@ export default {
     },
     sortBy: {
       get() {
-                             // Remove the sign to keep field name only.
+        // Remove the sign to keep field name only.
         return this.contextParams.order.replace('-', '');
       },
       set(field) {
