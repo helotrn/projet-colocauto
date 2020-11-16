@@ -84,7 +84,7 @@ class File extends BaseModel
     }
 
     public function borrower() {
-        return $this->belongsTo(Borrower::class, 'fileable_id')
+        return $this->belongsTo(Borrower::class, 'id', 'fileable_id')
             ->whereFileableType(Borrower::class);
     }
 
