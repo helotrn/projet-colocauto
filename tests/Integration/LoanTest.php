@@ -243,6 +243,20 @@ class LoanTest extends TestCase
             ;
     }
 
+    public function testFilterLoansByLoanStatus() {
+        $data = [
+          'page' => 1,
+          'per_page' => 10,
+          'fields' => 'id,name,last_name,full_name,email',
+          'loan_status' => 'completed',
+        ];
+        $response = $this->json('GET', "/api/v1/loans/", $data);
+        $response
+            ->assertStatus(200)
+            ->assertJsonStructure(static::$getLoansResponseStructure)
+            ;
+    }
+
     public function testFilterLoansByCurrentStep() {
         $data = [
           'page' => 1,
