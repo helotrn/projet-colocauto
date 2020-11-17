@@ -123,10 +123,11 @@ SQL
                     return 'loan_status_subquery.status';
                 }
 
-                $query
-                    ->selectRaw('loan_status_subquery.status AS loan_status')
-                    ->leftJoinSub(
-                        <<<SQL
+                if (false === strpos($query->toSql(), 'loan_status_subquery')) {
+                    $query
+                        ->selectRaw('loan_status_subquery.status AS loan_status')
+                        ->leftJoinSub(
+                            <<<SQL
 SELECT DISTINCT ON (loan_id)
     loan_id,
     status
@@ -134,12 +135,13 @@ FROM actions
 WHERE actions.type NOT IN ('extension', 'incident')
 ORDER by loan_id ASC, id DESC
 SQL
-                        ,
-                        'loan_status_subquery',
-                        function ($j) {
-                            return $j->on('loan_status_subquery.loan_id', '=', 'loans.id');
-                        }
-                    );
+                            ,
+                            'loan_status_subquery',
+                            'loan_status_subquery.loan_id',
+                            '=',
+                            'loans.id'
+                        );
+                }
 
                 return $query;
             },
@@ -148,10 +150,13 @@ SQL
                     return 'extension_max_duration.max_duration';
                 }
 
-                $query
-                    ->selectRaw('extension_max_duration.max_duration as actual_duration_in_minutes')
-                    ->leftJoinSub(
-                        <<<SQL
+                if (false === strpos($query->toSql(), 'extension_max_duration')) {
+                    $query
+                        ->selectRaw(
+                            'extension_max_duration.max_duration as actual_duration_in_minutes'
+                        )
+                        ->leftJoinSub(
+                            <<<SQL
 SELECT
     max(new_duration) AS max_duration,
     loan_id
@@ -159,12 +164,13 @@ FROM extensions
 WHERE status = 'completed'
 GROUP BY loan_id
 SQL
-                        ,
-                        'extension_max_duration',
-                        function ($j) {
-                            return $j->on('extension_max_duration.loan_id', '=', 'loans.id');
-                        }
-                    );
+                            ,
+                            'extension_max_duration',
+                            'extension_max_duration.loan_id',
+                            '=',
+                            'loans.id'
+                        );
+                }
 
                 return $query;
             },
