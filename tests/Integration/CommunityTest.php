@@ -105,6 +105,48 @@ class CommunityTest extends TestCase
             ;
     }
 
+    public function testOrderCommunitiesByUsersCount() {
+        $community1 = factory(Community::class)->create();
+        $community2 = factory(Community::class)->create();
+
+        $user1 = factory(User::class)->create();
+        $user2 = factory(User::class)->create();
+        $user3 = factory(User::class)->create();
+
+        $community1->users()->sync([$user3->id]);
+        $community2->users()->sync([$user1->id, $user2->id]);
+
+        $data = [
+          'order' => 'users_count',
+          'page' => 1,
+          'per_page' => 10,
+          'fields' => 'id,name,type,parent.id,parent.name,users_count',
+        ];
+        $response = $this->json('GET', "/api/v1/communities/", $data);
+        $response
+            ->assertStatus(200)
+            ->assertJson([
+                'data' => [
+                    ['id' => $community1->id ],
+                    ['id' => $community2->id ],
+                ],
+            ])
+            ->assertJsonStructure(static::$getCommunitiesResponseStructure)
+            ;
+
+        $data['order'] = '-users_count';
+        $response = $this->json('GET', "/api/v1/communities/", $data);
+        $response
+            ->assertStatus(200)
+            ->assertJson([
+                'data' => [
+                    ['id' => $community2->id ],
+                    ['id' => $community1->id ],
+                ],
+            ])
+            ;
+    }
+
     public function testFilterCommunitiesById() {
         $data = [
           'page' => 1,

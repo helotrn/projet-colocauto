@@ -100,7 +100,11 @@ class Community extends BaseModel
             },
 
             'users_count' => function ($query = null) {
-                $usersCountSql = '(SELECT count(id) FROM users WHERE users.id = communities.id)';
+                $usersCountSql = <<<SQL
+(SELECT count(id) FROM community_user WHERE community_user.community_id = communities.id)
+SQL
+                ;
+
                 if (!$query) {
                     return $usersCountSql;
                 }
