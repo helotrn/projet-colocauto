@@ -336,7 +336,7 @@ class User extends AuthenticatableBaseModel
 
     public function updateBalance($amount) {
         if ($amount > 0) {
-            $this->updateBalance($amount);
+            $this->addToBalance($amount);
         } elseif ($amount < 0) {
             $this->removeFromBalance(-$amount);
         }
