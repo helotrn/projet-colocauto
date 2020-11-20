@@ -72,20 +72,27 @@
                       <validation-observer ref="observer" v-slot="{ passes }">
                         <b-form class="form" @submit.prevent="passes(addBillItemAndReset)">
                           <forms-validated-input label="Description" type="text"
-                            name="label" v-model="newBillItem.label" :rules="{ required: true }" />
+                            name="label" v-model="newBillItem.label"
+                            :rules="{ required: true }" />
                           <forms-validated-input label="Date" type="date"
-                            name="item_date" v-model="newBillItem.item_date" :rules="{ required: true }" />
+                            name="item_date" v-model="newBillItem.item_date"
+                            :rules="{ required: true }" />
                           <forms-validated-input label="Montant" type="number"
-                            name="amount" v-model="newBillItem.amount" :rules="{ required: true }" />
+                            name="amount" v-model="newBillItem.amount"
+                            :rules="{ required: true }" />
                           <forms-validated-input label="TPS" type="number"
-                            name="taxes_tps" v-model="newBillItem.taxes_tps" :rules="{ required: true }" />
+                            name="taxes_tps" v-model="newBillItem.taxes_tps"
+                            :rules="{ required: true }" />
                           <forms-validated-input label="TPS" type="number"
-                            name="taxes_tvq" v-model="newBillItem.taxes_tvq" :rules="{ required: true }" />
+                            name="taxes_tvq" v-model="newBillItem.taxes_tvq"
+                            :rules="{ required: true }" />
 
                           <div class="form__buttons">
                             <b-button-group>
                               <b-button type="submit">Ajouter l'item</b-button>
-                              <b-button variant="warning" @click="newBillItem = null">Annuler</b-button>
+                              <b-button variant="warning" @click="newBillItem = null">
+                                Annuler
+                              </b-button>
                             </b-button-group>
                           </div>
                         </b-form>
