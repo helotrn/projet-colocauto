@@ -62,6 +62,38 @@
               </template>
 
               <template v-slot:custom-foot>
+                <b-tr>
+                  <b-td colspan="4">
+                    <b-button block variant="light" size="sm"
+                      @click="createNewBillItem" v-if="!newBillItem">
+                      Nouvel item
+                    </b-button>
+                    <b-card id="new-item" v-else>
+                      <validation-observer ref="observer" v-slot="{ passes }">
+                        <b-form class="form" @submit.prevent="passes(addBillItemAndReset)">
+                          <forms-validated-input label="Description" type="text"
+                            name="label" v-model="newBillItem.label" :rules="{ required: true }" />
+                          <forms-validated-input label="Date" type="date"
+                            name="item_date" v-model="newBillItem.item_date" :rules="{ required: true }" />
+                          <forms-validated-input label="Montant" type="number"
+                            name="amount" v-model="newBillItem.amount" :rules="{ required: true }" />
+                          <forms-validated-input label="TPS" type="number"
+                            name="taxes_tps" v-model="newBillItem.taxes_tps" :rules="{ required: true }" />
+                          <forms-validated-input label="TPS" type="number"
+                            name="taxes_tvq" v-model="newBillItem.taxes_tvq" :rules="{ required: true }" />
+
+                          <div class="form__buttons">
+                            <b-button-group>
+                              <b-button type="submit">Ajouter l'item</b-button>
+                              <b-button variant="warning" @click="newBillItem = null">Annuler</b-button>
+                            </b-button-group>
+                          </div>
+                        </b-form>
+                      </validation-observer>
+                    </b-card>
+                  </b-td>
+                </b-tr>
+
                 <b-tr class="invoice-view__footer-row">
                   <b-td colspan="2">
                     Sous-total<br>
@@ -94,28 +126,7 @@
 
         <b-row>
           <b-col>
-            <b-card no-body class="mb-1">
-              <b-card-header header-tag="header" class="p-1" role="tab">
-                <b-button block v-b-toggle.new-item variant="light"><h3>Nouvel item</h3></b-button>
-              </b-card-header>
 
-              <b-collapse id="new-item" visible accordion="new-item" role="tabpanel">
-                <b-card-body>
-                  <forms-validated-input label="Description" type="text"
-                    name="label" v-model="newBillItem.label" :rules="{ required: true }" />
-                  <forms-validated-input label="Date" type="date"
-                    name="item_date" v-model="newBillItem.item_date" :rules="{ required: true }" />
-                  <forms-validated-input label="Montant" type="number"
-                    name="amount" v-model="newBillItem.amount" :rules="{ required: true }" />
-                  <forms-validated-input label="TPS" type="number"
-                    name="taxes_tps" v-model="newBillItem.taxes_tps" :rules="{ required: true }" />
-                  <forms-validated-input label="TPS" type="number"
-                    name="taxes_tvq" v-model="newBillItem.taxes_tvq" :rules="{ required: true }" />
-
-                  <b-button @click="addBillItemAndReset">Ajouter l'item</b-button>
-                </b-card-body>
-              </b-collapse>
-            </b-card>
           </b-col>
         </b-row>
 
@@ -163,7 +174,8 @@ export default {
         { key: 'amount', label: 'Montant', sortable: false },
         { key: 'actions', label: 'Actions', tdClass: 'table__cell__actions' },
       ],
-      newBillItem: {
+      newBillItem: null,
+      newBillItemTemplate: {
         item_date: this.$dayjs().format('YYYY-MM-DD'),
         label: '',
         amount: 0,
@@ -216,13 +228,10 @@ export default {
     addBillItemAndReset() {
       this.item.bill_items.push(this.newBillItem);
 
-      this.newBillItem = {
-        item_date: this.$dayjs().format('YYYY-MM-DD'),
-        label: '',
-        amount: 0,
-        taxes_tps: 0,
-        taxes_tvq: 0,
-      };
+      this.newBillItem = null;
+    },
+    createNewBillItem() {
+      this.newBillItem = { ...this.newBillItemTemplate };
     },
     async mergeUserAndSubmit() {
       this.item.user_id = this.user.id;
