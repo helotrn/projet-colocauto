@@ -320,8 +320,10 @@ export default {
   name: 'LoanActionsHandover',
   mixins: [LoanActionsMixin],
   mounted() {
-    this.action.mileage_end = this.item.estimated_distance
-      + this.item.actions.find(a => a.type === 'takeover').mileage_beginning;
+    if (!this.action.mileage_end) {
+      this.action.mileage_end = this.item.estimated_distance
+        + this.item.actions.find(a => a.type === 'takeover').mileage_beginning;
+    }
 
     this.action.purchases_amount = 0;
   },
