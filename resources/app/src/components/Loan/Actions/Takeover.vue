@@ -15,7 +15,9 @@
         Rempli &bull; {{ action.executed_at | datetime }}
       </span>
       <span v-else-if="action.status === 'canceled'">
-        Annulé &bull; {{ action.executed_at | datetime }}
+        <span v-if="action.comments_on_contestation">Contesté</span>
+        <span v-else>Annulé</span>
+        &bull; {{ action.executed_at | datetime }}
       </span>
     </b-card-header>
 
@@ -65,10 +67,12 @@
                 </p>
               </b-col>
             </b-row>
-            <b-form :novalidate="true" class="register-form__form"
+
+            <b-form :novalidate="true" class="loan-actions-takeover__form"
               @submit.stop.prevent="passes(completeAction)">
               <b-row>
-                <b-col lg="6" v-if="!action.executed_at">
+                <b-col lg="6" v-if="!action.executed_at || userIsAdmin"
+                  class="loan-actions-takeover__form__image">
                   <p>Envoyez une photo du tableau de bord.</p>
 
                   <forms-image-uploader
@@ -82,7 +86,8 @@
                     Cette photo est facultative.
                   </small></p>
                 </b-col>
-                <b-col lg="6" v-else-if="action.image">
+                <b-col lg="6" v-else-if="action.image"
+                  class="loan-actions-takeover__form__image">
                   <a href="#" v-b-modal="'takeover-image'">
                     <img :src="action.image ? action.image.sizes.thumbnail : ''">
                   </a>
@@ -99,14 +104,14 @@
                     id="mileage_beginning" name="mileage_beginning"
                     type="number" :rules="{ required: true }"
                     label="KM au compteur, au début de la course"
-                    placholder="KM au compteur"
-                    :disabled="!!action.executed_at"
+                    placeholder="KM au compteur"
+                    :disabled="!!action.executed_at && !userIsAdmin"
                     v-model="action.mileage_beginning" />
                 </b-col>
               </b-row>
 
               <b-row class="loan-actions-takeover__buttons text-center"
-                v-if="!action.executed_at">
+                v-if="!action.executed_at || userIsAdmin">
                 <b-col>
                   <b-button type="submit" size="sm" variant="success" class="mr-3">
                     Enregistrer
@@ -236,39 +241,61 @@
           </b-row>
         </div>
 
-        <div v-if="isContestable">
-          <hr>
+        <div v-if="!contestedPreviously">
+          <div v-if="isContestable">
+            <hr>
 
-          <b-row>
-            <b-col lg="6">
-              <p>
-                Cette information est-elle incorrecte?
-              </p>
-              <p>
-                Pour la modifier, vous pouvez procéder
-                à une "contestation". Par cette procédure, un membre de l'équipe LocoMotion
-                sera appelé à arbitrer la résolution du conflit entre l'emprunteur et le
-                propriétaire.
-              </p>
-            </b-col>
+            <validation-observer ref="observer" v-slot="{ passes }">
+              <b-form :novalidate="true" class="loan-actions-takeover__contestation"
+                @submit.stop.prevent="passes(cancelAction)">
+                <b-row>
+                  <b-col lg="6">
+                    <p>
+                      Cette information est-elle incorrecte?
+                    </p>
+                    <p>
+                      Pour la modifier, vous pouvez procéder
+                      à une "contestation". Par cette procédure, un membre de l'équipe LocoMotion
+                      sera appelé à arbitrer la résolution du conflit entre l'emprunteur et le
+                      propriétaire.
+                    </p>
+                  </b-col>
 
-            <b-col lg="6">
-              <forms-validated-input
-                id="comments_on_contestation" name="comments_on_contestation"
-                type="textarea" :rows="3"
-                label="Commentaires sur la contestation"
-                placeholder="Commentaire sur la contestation"
-                v-model="action.comments_on_contestation" />
-            </b-col>
-          </b-row>
+                  <b-col lg="6">
+                    <forms-validated-input
+                      id="comments_on_contestation" name="comments_on_contestation"
+                      :rules="{ required: true }"
+                      type="textarea" :rows="3"
+                      label="Commentaires sur la contestation"
+                      placeholder="Commentaire sur la contestation"
+                      v-model="action.comments_on_contestation" />
+                  </b-col>
+                </b-row>
 
-          <b-row class="loan-actions-takeover__buttons text-center">
-            <b-col>
-              <b-button size="sm" variant="outline-danger" @click="cancelAction">
-                Contester
-              </b-button>
-            </b-col>
-          </b-row>
+                <b-row class="loan-actions-takeover__buttons text-center">
+                  <b-col>
+                    <b-button size="sm" variant="outline-danger" type="submit">
+                      Contester
+                    </b-button>
+                  </b-col>
+                </b-row>
+              </b-form>
+            </validation-observer>
+          </div>
+          <div v-if="isContested">
+            <hr>
+
+            <p>Les données ont été contestées:</p>
+
+            <b-alert variant="warning" show>
+              {{ action.comments_on_contestation }}
+            </b-alert>
+
+            <p>
+              Un membre de l'équipe LocoMotion contactera les participant-e-s et
+              ajustera les données.
+            </p>
+          </div>
         </div>
       </b-collapse>
     </b-card-body>
@@ -288,8 +315,24 @@ export default {
     FormsImageUploader,
     FormsValidatedInput,
   },
+  mounted() {
+    this.contestedPreviously = !!this.action.comments_on_contestation;
+  },
+  data() {
+    return {
+      contestedPreviously: false,
+    };
+  },
 };
 </script>
 
 <style lang="scss">
+.loan-actions-takeover {
+  &__form {
+    &__image a {
+      display: inline-block;
+      margin-bottom: 1rem;
+    }
+  }
+}
 </style>

@@ -20,6 +20,7 @@
 import ProfileSidebar from '@/components/Profile/Sidebar.vue';
 
 import Authenticated from '@/mixins/Authenticated';
+import UserMixin from '@/mixins/UserMixin';
 
 const routeGuard = (to, from, next) => {
   if (to.name === 'profile') {
@@ -31,7 +32,7 @@ const routeGuard = (to, from, next) => {
 
 export default {
   name: 'Account',
-  mixins: [Authenticated],
+  mixins: [Authenticated, UserMixin],
   components: {
     ProfileSidebar,
   },

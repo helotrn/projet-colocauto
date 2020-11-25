@@ -89,9 +89,9 @@ export default {
       table: [
         { key: 'id', label: 'ID', sortable: true },
         { key: 'departure_at', label: 'Départ', sortable: true },
-        { key: 'borrower.user.full_name', label: 'Emprunteur' },
-        { key: 'loanable.owner.user.full_name', label: 'Propriétaire' },
-        { key: 'community.name', label: 'Communauté' },
+        { key: 'borrower.user.full_name', label: 'Emprunteur', sortable: true },
+        { key: 'loanable.owner.user.full_name', label: 'Propriétaire', sortable: true },
+        { key: 'community.name', label: 'Communauté', sortable: true },
         { key: 'actions', label: 'Actions', tdClass: 'table__cell__actions' },
       ],
     };

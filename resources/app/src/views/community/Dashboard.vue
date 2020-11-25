@@ -134,10 +134,11 @@ import Arrow from '@/assets/svg/arrow.svg';
 
 import Authenticated from '@/mixins/Authenticated';
 import DataRouteGuards from '@/mixins/DataRouteGuards';
+import UserMixin from '@/mixins/UserMixin';
 
 export default {
   name: 'CommunityDashboard',
-  mixins: [Authenticated, DataRouteGuards],
+  mixins: [Authenticated, DataRouteGuards, UserMixin],
   components: {
     BoroughDifferenceModal,
     SchematizedCommunityMap,

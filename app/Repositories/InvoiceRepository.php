@@ -27,4 +27,13 @@ class InvoiceRepository extends RestRepository
 
         return $this->model;
     }
+
+
+    protected function orderBy($query, $def) {
+                             // Replace '.' by '_' in column names. Eg.:
+                             //   user.full_name
+        $def = str_replace('.', '_', $def);
+
+        return parent::orderBy($query, $def);
+    }
 }

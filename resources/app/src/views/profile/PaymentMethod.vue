@@ -35,6 +35,7 @@ import PaymentMethodForm from '@/components/PaymentMethod/PaymentMethodForm.vue'
 import Authenticated from '@/mixins/Authenticated';
 import DataRouteGuards from '@/mixins/DataRouteGuards';
 import FormMixin from '@/mixins/FormMixin';
+import UserMixin from '@/mixins/UserMixin';
 
 import locales from '@/locales';
 
@@ -42,7 +43,7 @@ import { capitalize } from '@/helpers/filters';
 
 export default {
   name: 'ProfilePaymentMethod',
-  mixins: [Authenticated, DataRouteGuards, FormMixin],
+  mixins: [Authenticated, DataRouteGuards, FormMixin, UserMixin],
   components: {
     PaymentMethodForm,
   },

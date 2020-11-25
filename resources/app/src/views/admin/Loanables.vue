@@ -93,8 +93,8 @@ export default {
       table: [
         { key: 'id', label: 'ID', sortable: true },
         { key: 'name', label: 'Nom', sortable: true },
-        { key: 'type', label: 'Type', sortable: false },
-        { key: 'owner.user.full_name', label: 'Propriétaire', sortable: false },
+        { key: 'type', label: 'Type', sortable: true },
+        { key: 'owner.user.full_name', label: 'Propriétaire', sortable: true },
         { key: 'actions', label: 'Actions', tdClass: 'table__cell__actions' },
       ],
     };

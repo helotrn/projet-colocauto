@@ -102,14 +102,14 @@
 </template>
 
 <script>
-import Authenticated from '@/mixins/Authenticated';
+import UserMixin from '@/mixins/UserMixin';
 
 import FormsValidatedInput from '@/components/Forms/ValidatedInput.vue';
 import BoroughDifferenceModal from '@/components/Misc/BoroughDifferenceModal.vue';
 
 export default {
   name: 'DashboardReleaseInfoBox',
-  mixins: [Authenticated],
+  mixins: [UserMixin],
   components: {
     BoroughDifferenceModal,
     FormsValidatedInput,

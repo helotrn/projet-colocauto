@@ -49,6 +49,7 @@ import LoanHeader from '@/components/Loan/LoanHeader.vue';
 import Authenticated from '@/mixins/Authenticated';
 import FormMixin from '@/mixins/FormMixin';
 import LoanStepsSequence from '@/mixins/LoanStepsSequence';
+import UserMixin from '@/mixins/UserMixin';
 
 import locales from '@/locales';
 
@@ -56,7 +57,7 @@ import { capitalize } from '@/helpers/filters';
 
 export default {
   name: 'AdminLoan',
-  mixins: [Authenticated, FormMixin, LoanStepsSequence],
+  mixins: [Authenticated, FormMixin, LoanStepsSequence, UserMixin],
   components: {
     FormsBuilder,
     LoanActions,

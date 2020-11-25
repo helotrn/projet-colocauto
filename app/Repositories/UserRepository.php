@@ -62,6 +62,11 @@ class UserRepository extends RestRepository
 
         $this->model->save();
 
+        // Trigger borrower model 'saved' event
+        if ($this->model->borrower) {
+            $this->model->borrower->save();
+        }
+
         return $this->model->find($id);
     }
 

@@ -3,6 +3,34 @@ namespace Deployer;
 
 require 'recipe/laravel.php';
 
+function sendMattermostNotification($message) {
+    $dotenv = \Dotenv\Dotenv::create(__DIR__);
+    $dotenv->load();
+
+    $url = $_ENV['MATTERMOST_WEBHOOK'];
+
+    $options = array(
+        'http' => array(
+            'header'  => "Content-type: application/json\r\n",
+            'method'  => 'POST',
+            'content' => json_encode([
+                'text' => $message,
+            ]),
+        ),
+    );
+
+    $context = stream_context_create($options);
+    $result = @file_get_contents($url, false, $context);
+
+    if ($result === false) {
+        echo "Erreur d'envoi de notification à Mattermost...";
+        sleep(1);
+    } else {
+        // Rate-limiting
+        usleep(500 * 1000);
+    }
+}
+
 set('application', 'LocoMotion');
 
 set('repository', 'git@gitlab.com:Solon-collectif/locomotion.app.git');
@@ -22,7 +50,7 @@ host('production')
     ->user('locomotion')
     ->set('deploy_path', '/var/www/locomotion.app');
 
-foreach (['staging', 'demo'] as $env) {
+foreach (['staging', 'demo', 'cicdtest'] as $env) {
     host($env)
         ->hostname('vps.locomotion.app')
         ->stage('staging')
@@ -73,7 +101,7 @@ before('deploy:symlink', 'deploy:build');
 
 desc('Set release version in .env file');
 task('deploy:set_release', function () {
-    run('sed -i -e 4,1000000d {{release_path}}/../../shared/resources/app/.env');
+    run('sed -i -e /^VUE_APP_RELEASE/d {{release_path}}/../../shared/resources/app/.env');
     run('cat {{release_path}}/resources/app/.release >> '
         . '{{release_path}}/../../shared/resources/app/.env');
 });
@@ -89,3 +117,39 @@ desc('Get currently deployed commit');
 task('status:revision', function () {
     writeLn(run('cd {{release_path}} && git log -n1'));
 });
+
+desc('Notify on Mattermost webhook on upcoming deploy');
+task('deploy:notify_before', function () {
+    $username = system('whoami');
+    $branch = get('branch');
+    $commit = system("git log --oneline -n1 $branch | head -n1");
+
+    $message = "Un déploiement de $branch ('$commit') a été lancé par $username.";
+
+    sendMattermostNotification($message);
+});
+before('deploy:prepare', 'deploy:notify_before');
+
+desc('Notify on Mattermost webhook on completed deploy');
+task('deploy:notify_after', function () {
+    $username = system('whoami');
+    $branch = get('branch');
+    $commit = system("git log --oneline -n1 $branch | head -n1");
+
+    $message = "Un déploiement de $branch ('$commit') est terminé!";
+
+    sendMattermostNotification($message);
+});
+after('deploy:symlink', 'deploy:notify_after');
+
+desc('Notify on Mattermost webhook on failed deploy');
+task('deploy:notify_failed', function () {
+    $username = system('whoami');
+    $branch = get('branch');
+    $commit = system("git log --oneline -n1 $branch | head -n1");
+
+    $message = "Un déploiement de $branch ('$commit') a échoué.";
+
+    sendMattermostNotification($message);
+});
+after('deploy:failed', 'deploy:notify_failed');

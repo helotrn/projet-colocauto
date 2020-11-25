@@ -7,6 +7,77 @@ use Tests\TestCase;
 
 class TagTest extends TestCase
 {
+    private static $getTagsResponseStructure = [
+        'current_page',
+        'data',
+        'first_page_url',
+        'from',
+        'last_page',
+        'last_page_url',
+        'next_page_url',
+        'path',
+        'per_page',
+        'prev_page_url',
+        'to',
+        'total',
+    ];
+
+    public function testOrderTagsById() {
+        $data = [
+          'order' => 'id',
+          'page' => 1,
+          'per_page' => 10,
+          'fields' => '*',
+        ];
+        $response = $this->json('GET', "/api/v1/tags/", $data);
+        $response
+            ->assertStatus(200)
+            ->assertJsonStructure(static::$getTagsResponseStructure)
+            ;
+    }
+
+    public function testOrderTagsByName() {
+        $data = [
+          'order' => 'name',
+          'page' => 1,
+          'per_page' => 10,
+          'fields' => '*',
+        ];
+        $response = $this->json('GET', "/api/v1/tags/", $data);
+        $response
+            ->assertStatus(200)
+            ->assertJsonStructure(static::$getTagsResponseStructure)
+            ;
+    }
+
+    public function testOrderTagsByType() {
+        $data = [
+          'order' => 'type',
+          'page' => 1,
+          'per_page' => 10,
+          'fields' => '*',
+        ];
+        $response = $this->json('GET', "/api/v1/tags/", $data);
+        $response
+            ->assertStatus(200)
+            ->assertJsonStructure(static::$getTagsResponseStructure)
+            ;
+    }
+
+    public function testOrderTagsBySlug() {
+        $data = [
+          'order' => 'slug',
+          'page' => 1,
+          'per_page' => 10,
+          'fields' => '*',
+        ];
+        $response = $this->json('GET', "/api/v1/tags/", $data);
+        $response
+            ->assertStatus(200)
+            ->assertJsonStructure(static::$getTagsResponseStructure)
+            ;
+    }
+
     public function testCreateTags() {
         $data = [
             'name' => $this->faker->name,

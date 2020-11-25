@@ -4,7 +4,7 @@ export default {
     title: 'FAQ',
     home: [
       {
-        title: 'lomotion.app ne se télécharge pas!',
+        title: 'locomotion.app ne se télécharge pas!',
         content: '<p>Il n’y a pas d’application à télécharger sur l’AppStore, GooglePlay ou d’autres magasins d’app. locomotion.app est simplement un site web et vous y êtes ! Il fonctionne à l’aide d’un navigateur (Firefox, Chrome, Safari…) sur votre ordinateur ou votre téléphone intelligent. Vous pouvez ajouter un raccourci sur votre téléphone intelligent, ça aurait l’air d’une app !</p>',
       },
       {
@@ -114,7 +114,7 @@ export default {
         questions: [
           {
             title: 'Je suis en  un retard pour le retour d’un véhicule',
-            content: '<p>Par respect pour les autres, évitons les retards. :-) Mais évidemment, ce genre de choses peut arriver.</p><p style="text-decoration: underline;">S’il s’agit de l’auto d’un-e voisin-e</p><pAvertissez directement le ou la propriétaire du véhicule. Ensuite, vous pourrez indiquer l’heure réelle de votre retour en cliquant sur le bouton de la page de l’emprunt.</p><p style="text-decoration: underline;">S’il s’agit d’un véhicule collectif</p><p>Dès que possible, allez sur la page de l’emprunt de locomotion.app. Utilisez le bouton pour obtenir les coordonnées de la prochaine personne à emprunter. Vous devez la contacter si vous empiétez sur sa réservation. Indiquez votre heure réelle de retour.</p>',
+            content: '<p>Par respect pour les autres, évitons les retards. :-) Mais évidemment, ce genre de choses peut arriver.</p><p style="text-decoration: underline;">S’il s’agit de l’auto d’un-e voisin-e</p><p>Avertissez directement le ou la propriétaire du véhicule. Ensuite, vous pourrez indiquer l’heure réelle de votre retour en cliquant sur le bouton de la page de l’emprunt.</p><p style="text-decoration: underline;">S’il s’agit d’un véhicule collectif</p><p>Dès que possible, allez sur la page de l’emprunt de locomotion.app. Utilisez le bouton pour obtenir les coordonnées de la prochaine personne à emprunter. Vous devez la contacter si vous empiétez sur sa réservation. Indiquez votre heure réelle de retour.</p>',
           },
           {
             title: "J'ai annulé ma réservation d’auto, comment puis-je me faire rembourser ?",

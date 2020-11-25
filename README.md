@@ -77,4 +77,8 @@ Ajustez les noms d'hôtes des bases de données, en particulier `postgres` et `r
 Déploiement
 -----------
 
+Si l'interface publique a été mise à jour, il peut être pertinent d'augmenter le numéro de version
+dans `resources/app/.release` et de créer une version sur Gitlab. Le fichier `.release` ne doit
+contenir qu'une seule ligne commençant par `VUE_APP_RELEASE`.
+
 - `vendor/bin/dep deployer {staging,production}`
