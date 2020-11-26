@@ -22,7 +22,7 @@
 
     <p>
       Le quartier est plus grand. Il réfère à un territoire urbain reconnu par la population et
-      les institutions locales (par exemple, Petite-Patrie) et peut contenir plusieurs voisinages.
+      les institutions locales (par exemple, La Petite-Patrie) et peut contenir plusieurs voisinages.
       Participer à LocoMotion dans son quartier, c'est avoir accès à certains véhicules et c'est
       une porte d'entrée vers la création de son voisinage!
     </p>
