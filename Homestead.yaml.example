@@ -11,7 +11,7 @@ folders:
         to: /home/vagrant/code
 sites:
     -
-        map: homestead.test
+        map: locomotion.local
         to: /home/vagrant/code/public
 databases:
     - locomotion
@@ -22,9 +22,21 @@ features:
         ohmyzsh: false
     -
         webdriver: false
-name: homestead
+name: locomotion.local
 hostname: homestead
 variables:
+    -
+        key: IS_HOMESTEAD
+        value: 1
+    -
+        key: APP_ENV
+        value: local
+    -
+        key: DB_HOST
+        value: 127.0.0.1
+    -
+        key: DB_DATABASE
+        value: locomotion
     -
         key: DB_USERNAME
         value: homestead
@@ -32,11 +44,14 @@ variables:
         key: DB_PASSWORD
         value: secret
     -
+        key: APP_URL
+        value: 'http://locomotion.local:8080/'
+    -
         key: VUE_APP_GOOGLE_MAPS_API_KEY
         value: AIzaSyBJh_eLm28n5u4eQUq3aYije8VgXAd7Mlw
     -
         key: VUE_APP_API_URL
-        value: 'http://127.0.0.1:8000/api'
+        value: 'http://locomotion.local:8000/api'
     -
         key: VUE_APP_STRIPE_KEY
         value: pk_test_4lBQS366h37TcBC9IAvCaDEL00K5H3B8LH
