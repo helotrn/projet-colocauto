@@ -17,4 +17,10 @@ class CreateRequest extends BaseRequest
             'apply_to_balance' => 'required|boolean',
         ];
     }
+
+    public function attributes() {
+        return [
+            'period' => 'Titre',
+        ];
+    }
 }
