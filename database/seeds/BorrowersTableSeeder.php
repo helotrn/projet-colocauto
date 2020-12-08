@@ -23,7 +23,9 @@ class BorrowersTableSeeder extends Seeder
 
         foreach ($borrowers as $borrower) {
             if (!Borrower::where('id', $borrower{'id'})->exists()) {
-                Borrower::create($borrower);
+                Borrower::withoutEvents(function() use ($borrower) {
+                    Borrower::create($borrower);
+                });
             } else {
                 Borrower::where('id', $borrower['id'])->update($borrower);
             }
