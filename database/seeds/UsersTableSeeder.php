@@ -69,7 +69,9 @@ class UsersTableSeeder extends Seeder
         foreach ($memberships as $email => $communities) {
             $user = User::where('email', $email)->first();
 
-            $user->communities()->sync($communities);
+            User::withoutEvents(function() use ($user, $communities) {
+                $user->communities()->sync($communities);
+            });
         }
 
         \DB::statement("SELECT setval('users_id_seq'::regclass, (SELECT MAX(id) FROM users) + 1)");
