@@ -89,7 +89,11 @@
 
           <div v-else-if="!action.executed_at" class="text-center">
             <p>Demande d'extension jusqu'au {{ returnAt | datetime }}.</p>
-            <p>Contactez le propriétaire pour qu'il confirme votre demande.</p>
+            <p>
+              Merci d'avoir enregistré votre demande d'extension sur la
+              plateforme! Maintenant, contactez votre voisin-e pour voir
+              directement avec lui/elle si son véhicule est disponible.
+            </p>
             <p v-if="item.loanable.owner">{{ item.loanable.owner.user.phone | phone }}</p>
           </div>
         </div>

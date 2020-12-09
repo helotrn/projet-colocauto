@@ -7,7 +7,7 @@
       <p>Nouveautés:</p>
       <ul>
         <li>
-          Ouverture au quartier Petite-Patrie (nouvelle disponibilité des véhicule
+          Ouverture au quartier La Petite-Patrie (nouvelle disponibilité des véhicule
           collectifs)
         </li>
         <li>
@@ -32,7 +32,7 @@
         <p>Nouveautés:</p>
         <ul>
           <li>
-            Ouverture au quartier Petite-Patrie (nouvelle disponibilité des véhicule
+            Ouverture au quartier La Petite-Patrie (nouvelle disponibilité des véhicule
             collectifs)
           </li>
           <li>

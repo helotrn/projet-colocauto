@@ -25,7 +25,7 @@
         <a href="https://bit.ly/locomotion-bienvenue" target="_blank" class="dashboard-resources-list__item-title">
           <img class="dashboard-resources-list__item-title-icon" src="/icons/allo.png">
           <span class="dashboard-resources-list__item-title-text">
-            Trousse de départ
+            Guide de départ
           </span>
         </a>
       </li>

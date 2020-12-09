@@ -75,7 +75,11 @@
             </div>
           </div>
           <div v-else-if="item.loanable.owner" class="text-center">
-            <p>Contactez le propriétaire pour qu'il confirme votre demande.</p>
+            <p>
+              Merci d'avoir enregistré votre demande d'emprunt sur la
+              plateforme! Maintenant, contactez votre voisin-e pour voir
+              directement avec lui/elle si son véhicule est disponible.
+            </p>
             <p>{{ item.loanable.owner.user.phone }}</p>
           </div>
         </div>
