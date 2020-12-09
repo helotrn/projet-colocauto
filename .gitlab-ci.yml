@@ -43,6 +43,7 @@ locomotion:test:
     - php composer.phar install
     - php artisan migrate --env testing
     - php artisan passport:install --env testing
+    - export XDEBUG_MODE="coverage"
     - vendor/bin/phpunit --coverage-text --colors=never
     - vendor/bin/phpcs app/
     - cd resources/app && yarn && yarn lint
