@@ -1,7 +1,7 @@
 /* eslint-disable */
 export default {
   fr: {
-    title: 'FAQ',
+    title: '',
     home: [
       {
         title: 'locomotion.app ne se télécharge pas!',
