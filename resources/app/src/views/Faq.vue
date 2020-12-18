@@ -14,7 +14,7 @@
 
         <b-row>
           <b-col lg="6" class="page__section__content" v-for="s in 11" :key="`section-${s}`">
-            <h2>{{ $t('faq.sections.' + (s - 1) + '.title') }}</h2>
+            <h2 v-html="$t('faq.sections.' + (s - 1) + '.title')" />
 
             <div role="tablist">
               <faq-item  v-for="q in parseInt($t('faq.sections.' + (s - 1) + '.count'), 11)"
