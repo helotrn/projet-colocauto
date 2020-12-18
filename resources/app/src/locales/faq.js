@@ -46,6 +46,16 @@ export default {
     ],
     sections: [
       {
+        title: 'Je débute avec LocoMotion',
+        count: '1',
+        questions: [
+          {
+            title: 'Comment bien démarrer?',
+            content: "<p>Que vous vouliez prêter ou emprunter, toutes les infos pour bien commencer l’aventure se trouvent dans le <a href=\"http://bit.ly/locomotion-bienvenue\" target=\"_blank\">guide de départ</a>!</p>",
+          },
+        ],
+      },
+      {
         title: 'Réserver un véhicule',
         count: '1',
         questions: [

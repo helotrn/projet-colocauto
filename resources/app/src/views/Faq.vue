@@ -13,11 +13,11 @@
         </p>
 
         <b-row>
-          <b-col lg="6" class="page__section__content" v-for="s in 10" :key="`section-${s}`">
+          <b-col lg="6" class="page__section__content" v-for="s in 11" :key="`section-${s}`">
             <h2>{{ $t('faq.sections.' + (s - 1) + '.title') }}</h2>
 
             <div role="tablist">
-              <faq-item  v-for="q in parseInt($t('faq.sections.' + (s - 1) + '.count'), 10)"
+              <faq-item  v-for="q in parseInt($t('faq.sections.' + (s - 1) + '.count'), 11)"
                 :key="`section-${s}-question-${q}`"
                 :id="`section-${s}-question-${q}`"
                 :title="$t(`faq.sections.${s - 1}.questions.${q - 1}.title`)">
