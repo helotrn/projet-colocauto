@@ -56,12 +56,12 @@ export default {
         ],
       },
       {
-        title: 'Réserver un véhicule',
+        title: 'Réserver&nbsp;: auto, vélo, remorque à vélo',
         count: '1',
         questions: [
           {
             title: 'Comment faire une réservation?',
-            content: "<p>Sur la carte du quartier, assurez-vous de bien entrer le moment où vous aimeriez réserver. Vous pourrez ensuite voir sur la carte les autos ou les vélos et remorques disponibles dans votre coin pour la période de temps donnée. En cliquant sur l'icône de véhicule, faites votre demande de réservation.</p><p>Si le véhicule est collectif, c’est tout ce qu’il y a faire, il est réservé pour vous!</p><p>Si le véhicule appartient à une personne, contactez-la ! Texto, appel... profitez-en pour faire connaissance. Si son véhicule est disponible, la personne acceptera ensuite votre demande sur locomotion.app</p>",
+            content: "<p>Il y a deux affichages possibles&nbsp;: carte ou liste.</p><p>Indiquez la période de réservation souhaitée puis cliquez sur Rechercher. Les véhicules disponibles affichent alors le bouton &laquo;&nbsp;Demande d’emprunt&nbsp;&raquo;.</p><p>Si le véhicule est collectif, c’est tout ce qu’il y a à faire, il est réservé pour vous!</p><p>Si le véhicule appartient à une personne, contactez-la ! Texto, appel... Profitez-en pour faire connaissance. Si son véhicule est disponible, la personne acceptera votre demande sur locomotion.app. Vous pourrez alors pré-payer l’emprunt et poursuivre le processus sur locomotion.app jusqu’à la fin de l’emprunt.</p>",
           },
         ],
       },
