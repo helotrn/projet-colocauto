@@ -37,7 +37,7 @@ export default {
       },
       {
         title: "Qu'est-ce qui arrive en cas d'accident ?",
-        content: '<p>Respirez. Si vous avez un accident avec une auto empruntée avec LocoMotion, on a inscrit la marche à suivre dans le carnet de bord de l’auto ou dans votre trajet en cours sur locomotion.app</p><iframe width="560" height="315" src="https://www.youtube.com/embed/T1Cj8dLlKGY" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="margin: 0 auto;"></iframe><p>En cas d’accident, notre couverture Desjardins Assurances (spécialement conçue pour le projet) prend en charge la responsabilité civile et les réparations.<p><ul><li>Couverture responsabilité civile à hauteur de 2M$</li><li>Franchise de 100$ pour les dommages causés notamment par le feu, le vol, le vandalisme, le bris de vitres.</li><li>Franchise de 500$ pour les dommages causés par une collision ou un versement</li>',
+        content: '<p>Respirez. Si vous avez un accident avec une auto empruntée avec LocoMotion, on a inscrit la marche à suivre dans le carnet de bord de l’auto ou dans votre trajet en cours sur locomotion.app</p><p>En cas d’accident, notre couverture Desjardins Assurances (spécialement conçue pour le projet) prend en charge la responsabilité civile et les réparations.<p><ul><li>Couverture responsabilité civile à hauteur de 2M$</li><li>Franchise de 100$ pour les dommages causés notamment par le feu, le vol, le vandalisme, le bris de vitres.</li><li>Franchise de 500$ pour les dommages causés par une collision ou un versement</li>',
       },
       {
         title: 'Y-a-t’il d’autres véhicules que des autos à partager?',
