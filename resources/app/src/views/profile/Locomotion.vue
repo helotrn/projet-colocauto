@@ -1,5 +1,5 @@
 <template>
-  <div class="profile-locomotion" v-if="item">
+  <div class="profile-locomotion" v-if="item && routeDataLoaded">
     <profile-form :loading="loading" :user="item" :form="form"
       @reset="reset" :changed="changed" show-reset
       @submit="submit" v-if="item">
@@ -22,11 +22,12 @@
 <script>
 import ProfileForm from '@/components/Profile/ProfileForm.vue';
 
+import DataRouteGuards from '@/mixins/DataRouteGuards';
 import FormMixin from '@/mixins/FormMixin';
 
 export default {
   name: 'ProfileLocomotion',
-  mixins: [FormMixin],
+  mixins: [DataRouteGuards, FormMixin],
   components: { ProfileForm },
   props: {
     id: {

@@ -1,5 +1,5 @@
 <template>
-  <b-container fluid v-if="item">
+  <b-container fluid v-if="item && routeDataLoaded">
     <vue-headful :title="fullTitle" />
 
     <b-row>
@@ -84,6 +84,7 @@ import FormsValidatedInput from '@/components/Forms/ValidatedInput.vue';
 import FormsBuilder from '@/components/Forms/Builder.vue';
 import LoanableAvailabilityCalendar from '@/components/Loanable/AvailabilityCalendar.vue';
 
+import DataRouteGuards from '@/mixins/DataRouteGuards';
 import FormMixin from '@/mixins/FormMixin';
 
 import locales from '@/locales';
@@ -92,7 +93,7 @@ import { capitalize } from '@/helpers/filters';
 
 export default {
   name: 'AdminLoanable',
-  mixins: [FormMixin],
+  mixins: [DataRouteGuards, FormMixin],
   components: {
     FormsBuilder,
     FormsValidatedInput,

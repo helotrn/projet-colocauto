@@ -1,5 +1,5 @@
 <template>
-  <div class="profile-account" v-if="item">
+  <div class="profile-account" v-if="item && routeDataLoaded">
     <div class="form__section">
       <h2>Changer mon mot de passe</h2>
 
@@ -31,11 +31,12 @@ import FormsValidatedInput from '@/components/Forms/ValidatedInput.vue';
 import UserEmailForm from '@/components/User/EmailForm.vue';
 import UserPasswordForm from '@/components/User/PasswordForm.vue';
 
+import DataRouteGuards from '@/mixins/DataRouteGuards';
 import FormMixin from '@/mixins/FormMixin';
 
 export default {
   name: 'ProfileAccount',
-  mixins: [FormMixin],
+  mixins: [DataRouteGuards, FormMixin],
   components: {
     FormsValidatedInput,
     UserEmailForm,

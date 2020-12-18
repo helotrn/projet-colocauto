@@ -1,5 +1,5 @@
 <template>
-  <b-container fluid v-if="item">
+  <b-container fluid v-if="item && routeDataLoaded">
     <b-row>
       <b-col>
         <h1 v-if="item.name">{{ item.name }}</h1>
@@ -32,13 +32,14 @@
 <script>
 import FormsBuilder from '@/components/Forms/Builder.vue';
 
+import DataRouteGuards from '@/mixins/DataRouteGuards';
 import FormMixin from '@/mixins/FormMixin';
 
 import locales from '@/locales';
 
 export default {
   name: 'AdminTag',
-  mixins: [FormMixin],
+  mixins: [DataRouteGuards, FormMixin],
   components: {
     FormsBuilder,
   },

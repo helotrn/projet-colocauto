@@ -1,5 +1,5 @@
 <template>
-  <b-container fluid v-if="item">
+  <b-container fluid v-if="item && routeDataLoaded">
     <b-row>
       <b-col>
         <h1 v-if="item.name || item.last_name">{{ item.name }} {{ item.last_name }}</h1>
@@ -314,6 +314,7 @@ import FormsBuilder from '@/components/Forms/Builder.vue';
 import FormsValidatedInput from '@/components/Forms/ValidatedInput.vue';
 import UserPasswordForm from '@/components/User/PasswordForm.vue';
 
+import DataRouteGuards from '@/mixins/DataRouteGuards';
 import FormMixin from '@/mixins/FormMixin';
 
 import { filters } from '@/helpers';
@@ -323,7 +324,7 @@ const { capitalize } = filters;
 
 export default {
   name: 'AdminUser',
-  mixins: [FormMixin],
+  mixins: [DataRouteGuards, FormMixin],
   components: {
     FormsBuilder,
     FormsValidatedInput,
