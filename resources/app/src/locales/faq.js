@@ -67,7 +67,7 @@ export default {
       },
       {
         title: 'Remorques à vélo, attache-remorque et cadenas',
-        count: '6',
+        count: '7',
         questions: [
           {
             title: 'Les remorques sont disponibles durant quelle période?',
@@ -84,7 +84,11 @@ export default {
           {
             title: 'Comment débarrer le cadenas Noke Pro?',
             content: '<iframe width="560" height="315" src="https://www.youtube.com/embed/PvyJd2--0sw" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="margin: 0 auto; max-width: 100%;"></iframe><ol><li>Réservez la remorque sur locomotion.app au moins 15 min avant votre emprunt</li><li>Activez internet et la fonction bluetooth sur votre cellulaire</li><li>Si vous avez un système d’exploitation Android, activez la localisation (pas nécessaire avec Iphone)</li><li>Ouvrez l’application Noke Pro<br><em>Important: Ne cliquez sur rien à cette étape.</em><li>Si le cadenas est rond : Appuyez sur l’anneau du cadenas, vers le corps du cadenas, comme si vous vouliez le fermer.<br>Si le cadenas est carré : Pesez sur le bouton en-dessous</li><li>Dans l’application, une icône bleue apparaît, cliquez dessus pour déverrouiller le cadenas.</li></ul><p>Magie ! Le cadenas est ouvert :)</p>'
-            + '<div class="alert alert-info"><p>Vous avez un problème avec le cadenas?</p><p>Contactez-nous entre 9h et 20h au 438-476-3343<br>(cette ligne est dédiée uniquement aux problèmes liés aux cadenas)</p></div>'
+          },
+          {
+            title: 'J’ai un problème avec un cadenas Noke Pro',
+            content: '<p>Consultez la <a href=\"https://drive.google.com/file/d/1Zlt8fvoKJyZfxagttq-mZdNcIee9Utf2/view\" target=\"_blank\">documentation sur les problèmes fréquents et leurs solutions</a>.</p><p>Le problème persiste? Utilisez notre ligne téléphonique (d’avril à novembre).</p>'
+            + '<div class="alert alert-info"><p>Vous avez un problème avec le cadenas?</p><p>Contactez-nous entre 9h et 20h au <a href=\"tel:438-476-3343\" target=\"_blank\" rel=\"noopener noreferrer\">438&nbsp;476-3343</a><br>(cette ligne est dédiée uniquement aux problèmes liés aux cadenas)</p></div>'
           },
           {
             title: 'Est-ce qu’il faut activer internet et le bluetooth de mon cellulaire?',
