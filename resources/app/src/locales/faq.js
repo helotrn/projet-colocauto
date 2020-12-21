@@ -251,7 +251,7 @@ export default {
           },
           {
             title: 'On est une gang motivée de voisines et de voisins, comment partir un voisinage LocoMotion?',
-            content: '<p>La mise en oeuvre de LocoMotion dans de nouveaux voisinages demande du temps, des personnes motivées et de la persévérance ! Pour savoir si vous résidez dans un quartier où c’est possible et en  savoir plus sur comment faire, rendez-vous sur <a href="https://mailchi.mp/solon-collectif.org/comment-creer-un-voisinage" target="_blank">comment créer un voisinage</a>.</p>',
+            content: '<p>La mise en œuvre de LocoMotion dans de nouveaux voisinages demande du temps, des personnes motivées et de la persévérance ! Pour savoir si vous résidez dans un quartier où c’est possible et en  savoir plus sur comment faire, rendez-vous sur <a href="https://mailchi.mp/solon-collectif.org/comment-creer-un-voisinage" target="_blank">comment créer un voisinage</a>.</p>',
           },
         ],
       },
