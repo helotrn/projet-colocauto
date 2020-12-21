@@ -224,7 +224,7 @@ export default {
         questions: [
           {
             title: 'Je partage ma photo, mes infos… Est-ce que les gens de mon quartier sont fiables?',
-            content: '<p>Vos données personnelles, on en prend soin. Voir nos conditions d’utilisation.</p>',
+            content: '<p>Vos données personnelles, on en prend soin. Voir nos <a href="/conditions">conditions d’utilisation</a>.</p>',
           },
         ],
       },
