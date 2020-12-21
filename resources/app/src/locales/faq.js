@@ -158,7 +158,7 @@ export default {
           },
           {
             title: "Vérifier un prêt d'auto terminé (km, carburant, etc.)",
-            content: '<p>À la fin d’un prêt d’auto, il est important de vérifier les informations entrées par votre voisin-e dans les 48h. Après ce délai, ce ne sera plus possible de contester en cas d’erreur. Pour vérifier, consultez le menu à droite du tableau de bord</p>',
+            content: '<p>À la fin d’un prêt d’auto, il est important de vérifier les informations entrées par votre voisin-e dans les 48h. Après ce délai, il ne sera plus possible de contester en cas d’erreur. Pour vérifier, aller sur la page de l’emprunt, via le menu à droite du tableau de bord (&laquo;&nbsp;voir tous les trajets&nbsp;&raquo;) ou via votre profil (&laquo;&nbsp;Historiques des emprunts&nbsp;&raquo;).</p>',
           },
           {
             title: 'Annuler un prêt',
