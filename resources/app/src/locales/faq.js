@@ -146,7 +146,7 @@ export default {
       },
       {
         title: 'Prêter mon auto',
-        count: '5',
+        count: '6',
         questions: [
           {
             title: 'Combien je reçois lorsque je prête mon auto?',
@@ -167,6 +167,10 @@ export default {
           {
             title: 'Récupérer mon argent',
             content: '<p>Une fois le trajet terminé, vous recevrez l’argent du trajet sur votre compte LocoMotion. Dès que vous avez un minimum de 10$ sur votre compte, vous pouvez le récupérer en cliquant sur “Réclamer” (bouton sous l’information de votre solde, sur le tableau de bord).</p>'
+          },
+          {
+            title: 'Quoi faire si je reçois une facture liée à l’emprunt de mon auto par un-e voisin-e?',
+            content: "Si vous recevez une demande de paiement due à l'utilisation de votre auto par un-e voisin-e (pont payant, contravention, etc.), faites le paiement puis demandez le remboursement à l'emprunteur-se. Pour ce faire, soit vous contactez directement la personne, soit vous demandez à LocoMotion de faire l'intermédiaire en écrivant à <a href=\"mailto:info@locomotion.app\">info@locomotion.app</a>. Le remboursement se fera via un virement interac entre les deux personnes."
           }
         ]
       },
