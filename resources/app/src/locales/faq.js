@@ -180,8 +180,7 @@ export default {
         questions: [
           {
             title: "Je partage mon auto, est-ce que c’est mon assurance qui est considérée lors d'un accident?",
-            content: '<p>Non, lorsque vous prêtez votre auto avec LocoMotion, c’est l’assurance Desjardins qui protège votre auto. Vous devez envoyer <a href="https://drive.google.com/file/d/1SbPgPSAFRrFhjf4DhacrHUNbvWEmpHrl/view?platform=hootsuite" target="_blank">cette lettre</a> à votre assureur ou courtier d’assurance pour l’aviser (sauf si c’est Desjardins ou La Personnelle, directement). Ça n’a pas d’incidence sur votre contrat.</p>'
-            + '<iframe width="560" height="315" src="https://www.youtube.com/embed/T1Cj8dLlKGY" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="margin: 0 auto; max-width: 100%;"></iframe>'
+            content: '<p>Non, lorsque vous prêtez votre auto avec LocoMotion, c’est l’assurance Desjardins qui protège votre auto. Vous devez envoyer <a href="https://drive.google.com/file/d/1SbPgPSAFRrFhjf4DhacrHUNbvWEmpHrl/view?platform=hootsuite" target="_blank">cette lettre</a> à votre assureur ou courtier d’assurance pour l’aviser que vous participez à LocoMotion (sauf si c’est Desjardins ou La Personnelle, directement). Ça n’a pas d’incidence sur votre contrat.</p>',
           },
           {
             title: 'J’emprunte l’auto d’un-e voisin-e, comment suis-je assuré-e?',
