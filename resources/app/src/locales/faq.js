@@ -162,7 +162,7 @@ export default {
           },
           {
             title: 'Annuler un prêt',
-            content: '<p>Si vous devez annuler le partage de votre auto pour un trajet, contactez rapidement la personne qui pensait pouvoir emprunter votre auto. Elle devra se réorganiser rapidement. Ensuite, annulez l’emprunt sur locomotion.app. La page de l’emprunt est accessible via le tableau de bord.</p>',
+            content: '<p>Si vous devez annuler le partage de votre auto pour un trajet, contactez rapidement la personne qui pensait pouvoir emprunter votre auto. Elle devra se réorganiser rapidement. Ensuite, annulez l’emprunt sur locomotion.app. La page de l’emprunt est accessible via le tableau de bord, section &laquo;&nbsp;Emprunts en cours&nbsp;&raquo;.</p>',
           },
           {
             title: 'Récupérer mon argent',
