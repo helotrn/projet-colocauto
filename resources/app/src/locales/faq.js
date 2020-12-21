@@ -210,7 +210,7 @@ export default {
           },
           {
             title: 'Comment puis-je faire le suivi de mes paiements?',
-            content: '<p>À chaque nouveau trajet (prêt ou emprunt), vous pourrez visualiser une facture accessible dans votre profil. Un montant sera déduit ou ajouté à votre compte LocoMotion, dont le solde est visible sur le tableau de bord.</p>',
+            content: '<p>Vous trouverez vos factures dans &laquo;&nbsp;Mon profil&nbsp;&raquo;. Vous recevez une facture à chaque fois que votre solde LocoMotion change&nbsp;:</p><ul><li>pour chaque trajet (prêt ou emprunt), ou</li><li>quand vous approvisionnez ou réclamez l’argent de votre compte LocoMotion.</li></ul>',
           },
           {
             title: 'Pourquoi des contributions volontaires?',
