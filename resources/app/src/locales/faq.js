@@ -67,15 +67,19 @@ export default {
       },
       {
         title: 'Remorques à vélo, attache-remorque et cadenas',
-        count: '5',
+        count: '6',
         questions: [
           {
             title: 'Les remorques sont disponibles durant quelle période?',
             content: "Ça dépend de la météo ! (Les abris à remorques à vélo ne doivent pas gêner le déneigement) Environ de avril à novembre.",
           },
           {
-            title: "Est-ce qu'on reçoit une attache-remorque par personne ou par ménage?",
-            content: "<p>Vous recevrez une attache remorque par personne et c’est gratuit. Si vous avez plusieurs vélos, merci d’utiliser la même au besoin. Pour savoir où la trouver, rendez-vous sur le <a href=\"http://bit.ly/locomotion-bienvenue\" target=\"_blank\">Guide de départ</a>.</p>"
+            title: 'Comment installer l’attache-remorque sur mon vélo?',
+            content: "<p>Pour traîner la remorque, vous avez besoin d’une attache-remorque. Vous l’installez une fois sur votre vélo puis vous la laissez en place!</p><p>Vous pouvez prendre une attache-remorque par personne et c’est gratuit. Si vous avez plusieurs vélos, merci d’utiliser la même au besoin. Pour savoir où la trouver, rendez-vous sur le <a href=\"http://bit.ly/locomotion-bienvenue\" target=\"_blank\">Guide de départ</a>.</p><p>L’attache est compatible avec la majorité des vélos.</p><p>Pour installer l’attache-remorque&nbsp;:</p><img src=\"/FAQ-attache-remorque.png\" alt=\Exemple d'attache-remorque installé\" style=\"float: left; max-width: 12rem; margin-right: 1rem;\"/><ol style=\"list-style: inside decimal;\"><li>Enlevez le boulon de la roue arrière du vélo</li><li>Placez la pièce de façon (presque) parallèle au sol</li><li>Remplacez le boulon et serrez bien</li></ol><p>Lorsque vous n’utilisez pas la remorque, l’attache grisel reste dans la pièce fixe (généralement noire) sur votre vélo</p>",
+          },
+          {
+            title: 'Les cadenas Noke Pro : comment ça marche?',
+            content: "<p>Vous devez activer votre compte Noke Pro grâce un courriel de Noke Pro reçu au moment de votre inscription à LocoMotion. Vous devez ensuite installer l’application sur votre cellulaire.</p><p>Vous pourrez alors débarrer les cadenas avec votre téléphone lorsque vous avez une réservation en cours.</p><p>Si vous ne trouvez pas le courriel de Noke Pro, écrivez-vous&nbsp;: <a href=\"mailto:info@locomotion.app\">info@locomotion.app</a></p>",
           },
           {
             title: 'Comment débarrer le cadenas Noke Pro?',
