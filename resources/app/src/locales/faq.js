@@ -176,7 +176,7 @@ export default {
       },
       {
         title: 'Assurances pour les emprunts d’auto',
-        count: '2',
+        count: '3',
         questions: [
           {
             title: "Je partage mon auto, est-ce que c’est mon assurance qui est considérée lors d'un accident?",
@@ -185,6 +185,10 @@ export default {
           {
             title: 'J’emprunte l’auto d’un-e voisin-e, comment suis-je assuré-e?',
             content: "<p>Pas besoin de votre assurance personnelle (maison ou auto), dès que vous empruntez une auto avec LocoMotion, c'est notre assurance Desjardins qui couvre votre trajet.</p>",
+          },
+          {
+            title: 'Que se passe-t-il en cas de panne?',
+            content: "L’assurance Desjardins couvre les accidents mais pas les pannes. En cas de panne, le remorquage est aux frais de l’emprunteur-se et la réparation est aux frais du ou de la propriétaire.",
           },
         ],
       },
