@@ -102,8 +102,12 @@ export default {
       },
       {
         title: 'Emprunter une auto',
-        count: '5',
+        count: '6',
         questions: [
+          {
+            title: "Qui peut emprunter une auto?",
+            content: '<p>Il faut avoir au moins 21 ans et avoir complété son dossier de conduite sur LocoMotion.app (via Mon profil). Deux documents sont nécessaires&nbsp;:<ul><li><a href=\"https://services.saaq.gouv.qc.ca/FonctionsWeb/EtatDossierConduite.Web/\" target=\"_blank\">Dossier de conduite de la SAAQ</a></li><li><a href=\"https://mondossier.gaa.qc.ca/fr/DemandeWeb/DemandeReleve\" target=\"_blank\">Relevé de dossier de sinistres du GAA</a></li></ul><p>Votre dossier sera ensuite approuvé par notre équipe et vous pourrez commencer à faire des demandes d’emprunt pour les autos de vos voisin-e-s!</p>',
+          },
           {
             title: "Comment payer l’emprunt d’une auto?",
             content: '<p>Il faut payer l’emprunt avant de partir avec une auto. Approvisionnez votre compte via le tableau de bord ou faites-le via la page de votre emprunt (après acceptation de la demande d’emprunt de l’auto par son propriétaire).</p><p>Ce prépaiement est une estimation du coût, le montant exact sera pris de votre compte LocoMotion après l’emprunt (kilomètres parcourus réels, achat de carburant, etc.).</p>',
