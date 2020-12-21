@@ -109,12 +109,12 @@ export default {
             content: '<p>Il faut avoir au moins 21 ans et avoir complété son dossier de conduite sur LocoMotion.app (via Mon profil). Deux documents sont nécessaires&nbsp;:<ul><li><a href=\"https://services.saaq.gouv.qc.ca/FonctionsWeb/EtatDossierConduite.Web/\" target=\"_blank\">Dossier de conduite de la SAAQ</a></li><li><a href=\"https://mondossier.gaa.qc.ca/fr/DemandeWeb/DemandeReleve\" target=\"_blank\">Relevé de dossier de sinistres du GAA</a></li></ul><p>Votre dossier sera ensuite approuvé par notre équipe et vous pourrez commencer à faire des demandes d’emprunt pour les autos de vos voisin-e-s!</p>',
           },
           {
-            title: "Comment payer l’emprunt d’une auto?",
-            content: '<p>Il faut payer l’emprunt avant de partir avec une auto. Approvisionnez votre compte via le tableau de bord ou faites-le via la page de votre emprunt (après acceptation de la demande d’emprunt de l’auto par son propriétaire).</p><p>Ce prépaiement est une estimation du coût, le montant exact sera pris de votre compte LocoMotion après l’emprunt (kilomètres parcourus réels, achat de carburant, etc.).</p>',
+            title: 'Combien ça coûte?',
+            content: "<p>Pour que ça soit juste, on contribue&nbsp;:</p><ul><li>aux coûts de possession de l’auto (dépréciation, frais d’intérêt) selon la durée du trajet;</li><li>aux coûts d'utilisation (entretien, essence, etc.) selon la distance parcourue.</li></ul><p>À ça s’ajoute l’assurance.</p><p>En gros, la formule ressemble à&nbsp;:</p><blockquote style=\"text-align: center;\">Coût d’un emprunt = distance + durée + assurance</blockquote><p>Il y a deux catégories d’auto, qui correspondent à des coûts différents. Pour le détail des coûts, voir la <a href=\"http://bit.ly/locomotion-tarification\" target=\"_blank\">tarification LocoMotion</a>.</p><p>Tous autres frais encourus lors d’un emprunt sont à la charge de l’emprunteur-se (ex. pont payant, stationnement non payé, etc.)</p>",
           },
           {
-            title: 'Combien ça coûte?',
-            content: "<p>Pour que ça soit juste, on contribue aux coûts de l’auto  (dépréciation, …) selon la durée du trajet et aux coût d'utilisation (entretien, essence, …) selon la distance parcourue. À ça s’ajoute l’assurance. En gros, la formule ressemble à :</p><p class=\"text-center\">Coût d’un emprunt = distance + durée + assurance</p><p>Il y a deux catégories d’auto, qui correspondent à des coûts différents.</p><p>Pour le détail des coûts, voir la <a href=\"http://bit.ly/locomotion-tarification\" target=\"_blank\">tarification LocoMotion</a>.</p>",
+            title: "Comment payer l’emprunt d’une auto?",
+            content: '<p>Il faut payer l’emprunt avant de partir avec une auto. Approvisionnez votre compte via le tableau de bord ou faites-le via la page de votre emprunt (après acceptation de la demande d’emprunt de l’auto par son propriétaire).</p><p>Ce prépaiement est une estimation du coût, le montant exact sera pris de votre compte LocoMotion après l’emprunt (kilomètres parcourus réels, achat de carburant, etc.).</p>',
           },
           {
             title: 'Partir avec l’auto d’un-e voisin-e',
