@@ -83,7 +83,7 @@ export default {
           },
           {
             title: 'Comment débarrer le cadenas Noke Pro?',
-            content: '<iframe width="560" height="315" src="https://www.youtube.com/embed/PvyJd2--0sw" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="margin: 0 auto;"></iframe><ol><li>Réservez la remorque sur locomotion.app au moins 15 min avant votre emprunt</li><li>Activez internet et la fonction bluetooth sur votre cellulaire</li><li>Si vous avez un système d’exploitation Android, activez la localisation (pas nécessaire avec Iphone)</li><li>Ouvrez l’application Noke Pro<br><em>Important: Ne cliquez sur rien à cette étape.</em><li>Si le cadenas est rond : Appuyez sur l’anneau du cadenas, vers le corps du cadenas, comme si vous vouliez le fermer.<br>Si le cadenas est carré : Pesez sur le bouton en-dessous</li><li>Dans l’application, une icône bleue apparaît, cliquez dessus pour déverrouiller le cadenas.</li></ul><p>Magie ! Le cadenas est ouvert :)</p>'
+            content: '<iframe width="560" height="315" src="https://www.youtube.com/embed/PvyJd2--0sw" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="margin: 0 auto; max-width: 100%;"></iframe><ol><li>Réservez la remorque sur locomotion.app au moins 15 min avant votre emprunt</li><li>Activez internet et la fonction bluetooth sur votre cellulaire</li><li>Si vous avez un système d’exploitation Android, activez la localisation (pas nécessaire avec Iphone)</li><li>Ouvrez l’application Noke Pro<br><em>Important: Ne cliquez sur rien à cette étape.</em><li>Si le cadenas est rond : Appuyez sur l’anneau du cadenas, vers le corps du cadenas, comme si vous vouliez le fermer.<br>Si le cadenas est carré : Pesez sur le bouton en-dessous</li><li>Dans l’application, une icône bleue apparaît, cliquez dessus pour déverrouiller le cadenas.</li></ul><p>Magie ! Le cadenas est ouvert :)</p>'
             + '<div class="alert alert-info"><p>Vous avez un problème avec le cadenas?</p><p>Contactez-nous entre 9h et 20h au 438-476-3343<br>(cette ligne est dédiée uniquement aux problèmes liés aux cadenas)</p></div>'
           },
           {
@@ -169,7 +169,7 @@ export default {
           {
             title: "Je partage mon auto, est-ce que c’est mon assurance qui est considérée lors d'un accident?",
             content: '<p>Non, lorsque vous prêtez votre auto avec LocoMotion, c’est l’assurance Desjardins qui protège votre auto. Vous devez envoyer <a href="https://drive.google.com/file/d/1SbPgPSAFRrFhjf4DhacrHUNbvWEmpHrl/view?platform=hootsuite" target="_blank">cette lettre</a> à votre assureur ou courtier d’assurance pour l’aviser (sauf si c’est Desjardins ou La Personnelle, directement). Ça n’a pas d’incidence sur votre contrat.</p>'
-            + '<iframe width="560" height="315" src="https://www.youtube.com/embed/T1Cj8dLlKGY" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="margin: 0 auto;"></iframe>'
+            + '<iframe width="560" height="315" src="https://www.youtube.com/embed/T1Cj8dLlKGY" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="margin: 0 auto; max-width: 100%;"></iframe>'
           },
           {
             title: 'J’emprunte l’auto d’un-e voisin-e, comment suis-je assuré-e?',
