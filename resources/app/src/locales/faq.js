@@ -176,7 +176,7 @@ export default {
       },
       {
         title: 'Assurances pour les emprunts d’auto',
-        count: '3',
+        count: '4',
         questions: [
           {
             title: "Je partage mon auto, est-ce que c’est mon assurance qui est considérée lors d'un accident?",
@@ -189,6 +189,10 @@ export default {
           {
             title: 'Que se passe-t-il en cas de panne?',
             content: "L’assurance Desjardins couvre les accidents mais pas les pannes. En cas de panne, le remorquage est aux frais de l’emprunteur-se et la réparation est aux frais du ou de la propriétaire.",
+          },
+          {
+            title: 'Quoi faire en cas d’accident ou vandalisme lors d’un emprunt d’auto?',
+            content: "La procédure à suivre en cas d'accident ou vandalisme lors d’un emprunt d’auto est détaillée dans le document &laquo;&nbsp;<a href=\"https://drive.google.com/file/d/1755OkK35_aph-ol9LpB3BJ2JCnkvkIp1/view\" target=\"_blank\">En cas d'accident</a>&nbsp;&raquo;. Elle est également accessible via le carnet de bord de l'auto et via la page de l'emprunt.",
           },
         ],
       },
