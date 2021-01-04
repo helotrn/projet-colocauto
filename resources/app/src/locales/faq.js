@@ -265,20 +265,22 @@ export default {
         questions: [
           {
             title: 'Le comité de voisinage LocoMotion, qu’est-ce que ça implique?',
-            content: '<p>Pour que LocoMotion vive dans votre voisinage, en plus des gens qui se partagent autos et vélos, il faut également un noyau de personnes plus impliquées pour remplir les rôles suivants:</p>'
-            + '<table class="text-center"><tbody><tr>'
-            + '<td><strong>Rôles</strong></td><td>MENTOR 👋<br>(Accueille et explique)</td>'
-            + '<td>PORTE-PAROLE 📣<br>(Fait rayonner)</td>'
-            + '<td>MAESTRO  🎶<br>(Anime son voisinage)</td>'
-            + '<td>MÉCANO  🔧<br>(Veille sur les véhicules collectifs)</td>'
-            + '</tr><tr>'
-            + '<td><strong>Intérêts</strong>'
-            + '</td><td>Aime expliquer et répondre aux questions</td>'
-            + '<td>Veut faire connaître LocoMotion dans le voisinage</td>'
-            + '<td>Aime organiser et animer des événements</td>'
-            + '<td>Aime la mécanique de vélo et les tâches manuelles</td>'
-            + '</tr></tbody></table>'+
-            '<p>Pour rejoindre votre comité, contactez-les comme indiqué à la page Voisinage de locomotion.app.</p><p>Le comité fait régulièrement appel à tou-te-s participant-e-s pour contribuer de différentes façons. Par exemple pour construire des abris en bois pour les remorques ou encore pour contribuer à des ateliers de réflexion sur le projet et à des prises de décision collectives.</p>',
+            content: '<p>Pour que LocoMotion vive dans votre voisinage, en plus des gens qui se partagent autos et vélos, il faut également un noyau de personnes plus impliquées pour remplir les rôles suivants&nbsp;:</p>'
+            + '<dl>'
+            +   '<dt>MENTOR 👋</dt>'
+            +   '<dd>Accueille et explique.</dd>'
+            +   '<dd>Aime expliquer et répondre aux questions.</dd>'
+            +   '<dt>PORTE-PAROLE 📣</dt>'
+            +   '<dd>Fait rayonner.</dd>'
+            +   '<dd>Veut faire connaître LocoMotion dans le voisinage.</dd>'
+            +   '<dt>MAESTRO 🎶</dt>'
+            +   '<dd>Anime son voisinage.</dd>'
+            +   '<dd>Aime organiser et animer des événements.</dd>'
+            +   '<dt>MÉCANO 🔧</dt>'
+            +   '<dd>Veille sur les véhicules collectifs.</dd>'
+            +   '<dd>Aime la mécanique de vélo et les tâches manuelles.</dd>'
+            + '</dl>'
+            + '<p>Pour rejoindre votre comité, contactez-les comme indiqué à la page Voisinage de locomotion.app.</p><p>Le comité fait régulièrement appel à tou-te-s participant-e-s pour contribuer de différentes façons. Par exemple pour construire des abris en bois pour les remorques ou encore pour contribuer à des ateliers de réflexion sur le projet et à des prises de décision collectives.</p>',
           },
         ],
       },

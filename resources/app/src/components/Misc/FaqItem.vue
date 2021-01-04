@@ -34,4 +34,9 @@ export default {
 </script>
 
 <style lang="scss">
+.faq-item {
+  dd {
+    margin-left: 40px;
+  }
+}
 </style>
