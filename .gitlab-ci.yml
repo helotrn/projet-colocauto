@@ -47,6 +47,7 @@ test:phpunit:
     - cp .env.testing .env
     - php artisan migrate --env testing
     - php artisan passport:install --env testing
+    - export XDEBUG_MODE="coverage"
     - vendor/bin/phpunit --coverage-text --colors=never
 
 test:phpcs:
