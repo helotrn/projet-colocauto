@@ -14,15 +14,12 @@ class Cors
      * @return mixed
      */
     public function handle($request, Closure $next) {
-                             /* Cross-Origin Resource Sharing (CORS)
-                                is only allowed for local
-                                environment. */
+        /**
+         * Cross-Origin Resource Sharing (CORS)
+         * is only allowed for local
+         * environment. */
         if (app()->environment() === 'local') {
-            if ($request->getMethod() == "OPTIONS") {
-                $response = response('OK', 200);
-            } else {
-                $response = $next($request);
-            }
+            $response = $next($request);
 
             return $response
                 ->header('Access-Control-Allow-Origin', '*')
