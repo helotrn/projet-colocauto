@@ -267,7 +267,7 @@ class NokeService
         if ($users = Cache::get('noke:users')) {
             $this->users = json_decode($users);
         } else {
-            if (app()->environment() === 'testing') {
+            if (app()->environment() !== 'production') {
                 return; // TODO mock
             }
 
@@ -358,7 +358,7 @@ class NokeService
     }
 
     private function resetToken() {
-        if (app()->environment() === 'testing') {
+        if (app()->environment() !== 'production') {
             return; // TODO mock
         }
 

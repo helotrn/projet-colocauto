@@ -143,9 +143,11 @@ class LoanableTest extends TestCase
           ->orderBy('id')
           ->pluck('id');
         $this->assertEquals(2, $loanables->count());
+        $firstId = $this->memberOfCommunity->loanables()->first()->id;
         $this->assertEquals(
-            $this->memberOfCommunity->loanables()->first()->id,
-            $loanables[0]
+            $firstId,
+            $loanables[0],
+            "$firstId not in " . implode(',', $loanables->toArray())
         );
         $this->assertEquals(
             $this->otherMemberOfCommunity->loanables()->first()->id,

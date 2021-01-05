@@ -21,6 +21,7 @@ before_script:
   - php -r "if (hash_file('SHA384', 'composer-setup.php') === file_get_contents('installer.sig')) { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
   - php composer-setup.php
   - php -r "unlink('composer-setup.php'); unlink('installer.sig');"
+  - cp .env.testing .env
 
 cache:
   paths:
@@ -44,7 +45,6 @@ test:phpunit:
     - docker-php-ext-enable xdebug
     - psql -h postgis__postgis -U locomotion -w locomotion_test -c 'CREATE EXTENSION unaccent;';
     - psql -h postgis__postgis -U locomotion -w locomotion_test -c 'CREATE EXTENSION citext;';
-    - cp .env.testing .env
     - php artisan migrate --env testing
     - php artisan passport:install --env testing
     - export XDEBUG_MODE="coverage"
@@ -53,5 +53,6 @@ test:phpunit:
 test:phpcs:
   stage: test
   script:
+    - docker-php-ext-install gd zip
     - php composer.phar install
     - vendor/bin/phpcs app/
