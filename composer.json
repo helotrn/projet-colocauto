@@ -15,7 +15,6 @@
     ],
     "require": {
         "php": "^7.3",
-        "ext-pdo_pgsql": "^7.2",
         "doctrine/dbal": "^2.10",
         "eluceo/ical": "^0.16.0",
         "fideloper/proxy": "^4.0",

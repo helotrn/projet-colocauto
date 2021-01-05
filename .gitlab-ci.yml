@@ -21,7 +21,6 @@ before_script:
   - php -r "if (hash_file('SHA384', 'composer-setup.php') === file_get_contents('installer.sig')) { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
   - php composer-setup.php
   - php -r "unlink('composer-setup.php'); unlink('installer.sig');"
-  - php composer.phar install
 
 cache:
   paths:
@@ -40,7 +39,8 @@ test:phpunit:
   stage: test
   script:
     - pecl install xdebug
-    - docker-php-ext-install pdo_pgsql pgsql mysqli pdo_mysql gd zip
+    - docker-php-ext-install pdo_pgsql pgsql gd zip
+    - php composer.phar install
     - docker-php-ext-enable xdebug
     - psql -h postgis__postgis -U locomotion -w locomotion_test -c 'CREATE EXTENSION unaccent;';
     - psql -h postgis__postgis -U locomotion -w locomotion_test -c 'CREATE EXTENSION citext;';
@@ -53,4 +53,5 @@ test:phpunit:
 test:phpcs:
   stage: test
   script:
+    - php composer.phar install
     - vendor/bin/phpcs app/
