@@ -13,8 +13,8 @@ class CommunityRepository extends RestRepository
     }
 
     protected function orderBy($query, $def) {
-                             // Replace '.' by '_' in column names. Eg.:
-                             //   parent.name
+        // Replace '.' by '_' in column names. Eg.:
+        //   parent.name
         $def = str_replace('.', '_', $def);
 
         return parent::orderBy($query, $def);

@@ -164,7 +164,7 @@ SQL
 
     public $collections = ['children', 'users', 'pricings', 'loanables'];
 
-    public $computed =  ['area_google', 'center_google', 'center', 'users_count'];
+    public $computed =  ['area_google', 'center_google', 'users_count'];
 
     public function parent() {
         return $this->belongsTo(Community::class, 'parent_id');
@@ -199,18 +199,6 @@ SQL
     public function getPricingFor(Loanable $loanable) {
         return $this->pricings->where('object_type', $loanable->type)->first()
             ?: $this->pricings->where('object_type', null)->first();
-    }
-
-    public function getCenterAttribute() {
-        if (isset($this->attributes['center'])) {
-            if (isset(self::$memoCenter[$this->id])) {
-                return self::$memoCenter[$this->id];
-            }
-            $caster = new PointCast($this, 'center');
-            return $caster->castAttribute($this->attributes['center']);
-        }
-
-        return get_centroid_of_polygon($this->area);
     }
 
     public function getAreaGoogleAttribute() {
