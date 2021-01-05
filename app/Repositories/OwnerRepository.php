@@ -3,7 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Owner;
-use Molotov\Repositories\RestRepository;
+use Molotov\RestRepository;
 
 class OwnerRepository extends RestRepository
 {

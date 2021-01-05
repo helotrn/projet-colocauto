@@ -13,7 +13,6 @@ use App\Http\Requests\User\UpdateRequest as UserUpdateRequest;
 use App\Models\User;
 use App\Services\GoogleAccountService;
 use Illuminate\Contracts\Auth\Factory as Auth;
-use Illuminate\Foundation\Auth\SendsPasswordResetEmails;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
@@ -23,7 +22,7 @@ use Molotov\Traits\RespondsWithErrors;
 
 class AuthController extends RestController
 {
-    use RespondsWithErrors, SendsPasswordResetEmails;
+    use RespondsWithErrors;
 
     protected $auth;
     protected $tokens;
@@ -55,7 +54,15 @@ class AuthController extends RestController
         ];
 
         $req = Request::create('/oauth/token', 'POST', $data);
-        return app()->handle($req);
+        $response = app()->handle($req);
+        if ($response->getStatusCode() === 400) {
+            return response()->json([
+                'message' => 'Invalid username or password.',
+                'error' => 'invalid_username_or_password',
+                'error_description' => 'The username or password provided are invalid.',
+            ], 401);
+        }
+        return $response;
     }
 
     public function logout(Request $request) {
@@ -145,9 +152,17 @@ class AuthController extends RestController
         return $this->sendResetLinkEmail($request);
     }
 
-    public function passwordReset(ResetPasswordRequest $request) {
-        $broker = Password::broker();
+    public function sendResetLinkEmail(Request $request) {
+        $request->validate(['email' => 'required|email']);
 
+        $response = $this->broker()->sendResetLink($request->only('email'));
+
+        return $response == Password::RESET_LINK_SENT
+                    ? $this->sendResetLinkResponse($request, $response)
+                    : $this->sendResetLinkFailedResponse($request, $response);
+    }
+
+    public function passwordReset(ResetPasswordRequest $request) {
         $response = $this->broker()->reset(
             $request->only(
                 'email',
@@ -187,5 +202,9 @@ class AuthController extends RestController
         $user->setRememberToken(Str::random(60));
 
         $user->save();
+    }
+
+    private function broker() {
+        return Password::broker();
     }
 }

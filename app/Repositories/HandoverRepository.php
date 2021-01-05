@@ -3,7 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Handover;
-use Molotov\Repositories\RestRepository;
+use Molotov\RestRepository;
 
 class HandoverRepository extends RestRepository
 {

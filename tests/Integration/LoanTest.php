@@ -12,21 +12,6 @@ use Tests\TestCase;
 
 class LoanTest extends TestCase
 {
-    private static $getLoansResponseStructure = [
-        'current_page',
-        'data',
-        'first_page_url',
-        'from',
-        'last_page',
-        'last_page_url',
-        'next_page_url',
-        'path',
-        'per_page',
-        'prev_page_url',
-        'to',
-        'total',
-    ];
-
     private static $getLoanResponseStructure = [
         'id',
         'departure_at',
@@ -45,7 +30,7 @@ class LoanTest extends TestCase
         $response = $this->json('GET', "/api/v1/loans/", $data);
         $response
             ->assertStatus(200)
-            ->assertJsonStructure(static::$getLoansResponseStructure)
+            ->assertJsonStructure(TestCase::$collectionResponseStructure)
             ;
     }
 
@@ -59,7 +44,7 @@ class LoanTest extends TestCase
         $response = $this->json('GET', "/api/v1/loans/", $data);
         $response
             ->assertStatus(200)
-            ->assertJsonStructure(static::$getLoansResponseStructure)
+            ->assertJsonStructure(TestCase::$collectionResponseStructure)
             ;
     }
 
@@ -73,7 +58,7 @@ class LoanTest extends TestCase
         $response = $this->json('GET', "/api/v1/loans/", $data);
         $response
             ->assertStatus(200)
-            ->assertJsonStructure(static::$getLoansResponseStructure)
+            ->assertJsonStructure(TestCase::$collectionResponseStructure)
             ;
     }
 
@@ -87,7 +72,7 @@ class LoanTest extends TestCase
         $response = $this->json('GET', "/api/v1/loans/", $data);
         $response
             ->assertStatus(200)
-            ->assertJsonStructure(static::$getLoansResponseStructure)
+            ->assertJsonStructure(TestCase::$collectionResponseStructure)
             ;
     }
 
@@ -101,7 +86,7 @@ class LoanTest extends TestCase
         $response = $this->json('GET', "/api/v1/loans/", $data);
         $response
             ->assertStatus(200)
-            ->assertJsonStructure(static::$getLoansResponseStructure)
+            ->assertJsonStructure(TestCase::$collectionResponseStructure)
             ;
     }
 
@@ -116,7 +101,7 @@ class LoanTest extends TestCase
         $response = $this->json('GET', "/api/v1/loans/", $data);
         $response
             ->assertStatus(200)
-            ->assertJsonStructure(static::$getLoansResponseStructure)
+            ->assertJsonStructure(TestCase::$collectionResponseStructure)
             ;
 
                              // Lower and upper bounds
@@ -129,7 +114,7 @@ class LoanTest extends TestCase
         $response = $this->json('GET', "/api/v1/loans/", $data);
         $response
             ->assertStatus(200)
-            ->assertJsonStructure(static::$getLoansResponseStructure)
+            ->assertJsonStructure(TestCase::$collectionResponseStructure)
             ;
 
                              // Upper bound only
@@ -142,7 +127,7 @@ class LoanTest extends TestCase
         $response = $this->json('GET', "/api/v1/loans/", $data);
         $response
             ->assertStatus(200)
-            ->assertJsonStructure(static::$getLoansResponseStructure)
+            ->assertJsonStructure(TestCase::$collectionResponseStructure)
             ;
 
                              // Degenerate case when bounds are removed
@@ -155,7 +140,7 @@ class LoanTest extends TestCase
         $response = $this->json('GET', "/api/v1/loans/", $data);
         $response
             ->assertStatus(200)
-            ->assertJsonStructure(static::$getLoansResponseStructure)
+            ->assertJsonStructure(TestCase::$collectionResponseStructure)
             ;
     }
 
@@ -169,7 +154,7 @@ class LoanTest extends TestCase
         $response = $this->json('GET', "/api/v1/loans/", $data);
         $response
             ->assertStatus(200)
-            ->assertJsonStructure(static::$getLoansResponseStructure)
+            ->assertJsonStructure(TestCase::$collectionResponseStructure)
             ;
     }
 
@@ -183,7 +168,7 @@ class LoanTest extends TestCase
         $response = $this->json('GET', "/api/v1/loans/", $data);
         $response
             ->assertStatus(200)
-            ->assertJsonStructure(static::$getLoansResponseStructure)
+            ->assertJsonStructure(TestCase::$collectionResponseStructure)
             ;
     }
 
@@ -197,7 +182,7 @@ class LoanTest extends TestCase
         $response = $this->json('GET', "/api/v1/loans/", $data);
         $response
             ->assertStatus(200)
-            ->assertJsonStructure(static::$getLoansResponseStructure)
+            ->assertJsonStructure(TestCase::$collectionResponseStructure)
             ;
     }
 
@@ -211,7 +196,7 @@ class LoanTest extends TestCase
         $response = $this->json('GET', "/api/v1/loans/", $data);
         $response
             ->assertStatus(200)
-            ->assertJsonStructure(static::$getLoansResponseStructure)
+            ->assertJsonStructure(TestCase::$collectionResponseStructure)
             ;
     }
 
@@ -225,7 +210,7 @@ class LoanTest extends TestCase
         $response = $this->json('GET', "/api/v1/loans/", $data);
         $response
             ->assertStatus(200)
-            ->assertJsonStructure(static::$getLoansResponseStructure)
+            ->assertJsonStructure(TestCase::$collectionResponseStructure)
             ;
     }
 
@@ -239,7 +224,7 @@ class LoanTest extends TestCase
         $response = $this->json('GET', "/api/v1/loans/", $data);
         $response
             ->assertStatus(200)
-            ->assertJsonStructure(static::$getLoansResponseStructure)
+            ->assertJsonStructure(TestCase::$collectionResponseStructure)
             ;
     }
 
@@ -253,7 +238,7 @@ class LoanTest extends TestCase
         $response = $this->json('GET', "/api/v1/loans/", $data);
         $response
             ->assertStatus(200)
-            ->assertJsonStructure(static::$getLoansResponseStructure)
+            ->assertJsonStructure(TestCase::$collectionResponseStructure)
             ;
     }
 
@@ -267,7 +252,7 @@ class LoanTest extends TestCase
         $response = $this->json('GET', "/api/v1/loans/", $data);
         $response
             ->assertStatus(200)
-            ->assertJsonStructure(static::$getLoansResponseStructure)
+            ->assertJsonStructure(TestCase::$collectionResponseStructure)
             ;
     }
 
@@ -281,7 +266,7 @@ class LoanTest extends TestCase
         $response = $this->json('GET', "/api/v1/loans/", $data);
         $response
             ->assertStatus(200)
-            ->assertJsonStructure(static::$getLoansResponseStructure)
+            ->assertJsonStructure(TestCase::$collectionResponseStructure)
             ;
     }
 
@@ -295,7 +280,7 @@ class LoanTest extends TestCase
         $response = $this->json('GET', "/api/v1/loans/", $data);
         $response
             ->assertStatus(200)
-            ->assertJsonStructure(static::$getLoansResponseStructure)
+            ->assertJsonStructure(TestCase::$collectionResponseStructure)
             ;
     }
 
@@ -309,7 +294,7 @@ class LoanTest extends TestCase
         $response = $this->json('GET', "/api/v1/loans/", $data);
         $response
             ->assertStatus(200)
-            ->assertJsonStructure(static::$getLoansResponseStructure)
+            ->assertJsonStructure(TestCase::$collectionResponseStructure)
             ;
     }
 
@@ -323,7 +308,7 @@ class LoanTest extends TestCase
         $response = $this->json('GET', "/api/v1/loans/", $data);
         $response
             ->assertStatus(200)
-            ->assertJsonStructure(static::$getLoansResponseStructure)
+            ->assertJsonStructure(TestCase::$collectionResponseStructure)
             ;
     }
 

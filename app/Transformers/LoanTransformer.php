@@ -2,9 +2,9 @@
 
 namespace App\Transformers;
 
-use Molotov\Transformers\BaseTransformer;
+use Molotov\Transformer;
 
-class LoanTransformer extends BaseTransformer
+class LoanTransformer extends Transformer
 {
     public function transform($item, $options = []) {
         $output = parent::transform($item, $options);

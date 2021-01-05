@@ -9,22 +9,7 @@ use Illuminate\Support\Str;
 
 class UserTest extends TestCase
 {
-    private static $getUsersResponseStructure = [
-        'current_page',
-        'data',
-        'first_page_url',
-        'from',
-        'last_page',
-        'last_page_url',
-        'next_page_url',
-        'path',
-        'per_page',
-        'prev_page_url',
-        'to',
-        'total',
-    ];
-
-    private static $getUserResponseStructure = [
+    private static $userResponseStructure = [
         'id',
         'name',
         'email',
@@ -60,7 +45,7 @@ class UserTest extends TestCase
         $response = $this->json('GET', "/api/v1/communities/", $data);
         $response
             ->assertStatus(200)
-            ->assertJsonStructure(static::$getUsersResponseStructure)
+            ->assertJsonStructure(TestCase::$collectionResponseStructure)
             ;
     }
 
@@ -74,7 +59,7 @@ class UserTest extends TestCase
         $response = $this->json('GET', "/api/v1/users/", $data);
         $response
             ->assertStatus(200)
-            ->assertJsonStructure(static::$getUsersResponseStructure)
+            ->assertJsonStructure(TestCase::$collectionResponseStructure)
             ;
     }
 
@@ -88,7 +73,7 @@ class UserTest extends TestCase
         $response = $this->json('GET', "/api/v1/users/", $data);
         $response
             ->assertStatus(200)
-            ->assertJsonStructure(static::$getUsersResponseStructure)
+            ->assertJsonStructure(TestCase::$collectionResponseStructure)
             ;
     }
 
@@ -102,7 +87,7 @@ class UserTest extends TestCase
         $response = $this->json('GET', "/api/v1/users/", $data);
         $response
             ->assertStatus(200)
-            ->assertJsonStructure(static::$getUsersResponseStructure)
+            ->assertJsonStructure(TestCase::$collectionResponseStructure)
             ;
     }
 
@@ -117,7 +102,7 @@ class UserTest extends TestCase
         $response = $this->json('GET', "/api/v1/users/", $data);
         $response
             ->assertStatus(200)
-            ->assertJsonStructure(static::$getUsersResponseStructure)
+            ->assertJsonStructure(TestCase::$collectionResponseStructure)
             ;
 
                              // Lower and upper bounds
@@ -130,7 +115,7 @@ class UserTest extends TestCase
         $response = $this->json('GET', "/api/v1/users/", $data);
         $response
             ->assertStatus(200)
-            ->assertJsonStructure(static::$getUsersResponseStructure)
+            ->assertJsonStructure(TestCase::$collectionResponseStructure)
             ;
 
                              // Upper bound only
@@ -143,7 +128,7 @@ class UserTest extends TestCase
         $response = $this->json('GET', "/api/v1/users/", $data);
         $response
             ->assertStatus(200)
-            ->assertJsonStructure(static::$getUsersResponseStructure)
+            ->assertJsonStructure(TestCase::$collectionResponseStructure)
             ;
 
                              // Degenerate case when bounds are removed
@@ -156,7 +141,7 @@ class UserTest extends TestCase
         $response = $this->json('GET', "/api/v1/users/", $data);
         $response
             ->assertStatus(200)
-            ->assertJsonStructure(static::$getUsersResponseStructure)
+            ->assertJsonStructure(TestCase::$collectionResponseStructure)
             ;
     }
 
@@ -170,7 +155,7 @@ class UserTest extends TestCase
         $response = $this->json('GET', "/api/v1/users/", $data);
         $response
             ->assertStatus(200)
-            ->assertJsonStructure(static::$getUsersResponseStructure)
+            ->assertJsonStructure(TestCase::$collectionResponseStructure)
             ;
     }
 
@@ -185,7 +170,7 @@ class UserTest extends TestCase
         $response = $this->json('GET', "/api/v1/users/", $data);
         $response
             ->assertStatus(200)
-            ->assertJsonStructure(static::$getUsersResponseStructure)
+            ->assertJsonStructure(TestCase::$collectionResponseStructure)
             ;
 
                              // Lower and upper bounds
@@ -198,7 +183,7 @@ class UserTest extends TestCase
         $response = $this->json('GET', "/api/v1/users/", $data);
         $response
             ->assertStatus(200)
-            ->assertJsonStructure(static::$getUsersResponseStructure)
+            ->assertJsonStructure(TestCase::$collectionResponseStructure)
             ;
 
                              // Upper bound only
@@ -211,7 +196,7 @@ class UserTest extends TestCase
         $response = $this->json('GET', "/api/v1/users/", $data);
         $response
             ->assertStatus(200)
-            ->assertJsonStructure(static::$getUsersResponseStructure)
+            ->assertJsonStructure(TestCase::$collectionResponseStructure)
             ;
 
                              // Degenerate case when bounds are removed
@@ -224,7 +209,7 @@ class UserTest extends TestCase
         $response = $this->json('GET', "/api/v1/users/", $data);
         $response
             ->assertStatus(200)
-            ->assertJsonStructure(static::$getUsersResponseStructure)
+            ->assertJsonStructure(TestCase::$collectionResponseStructure)
             ;
     }
 
@@ -238,7 +223,7 @@ class UserTest extends TestCase
         $response = $this->json('GET', "/api/v1/users/", $data);
         $response
             ->assertStatus(200)
-            ->assertJsonStructure(static::$getUsersResponseStructure)
+            ->assertJsonStructure(TestCase::$collectionResponseStructure)
             ;
     }
 
@@ -252,7 +237,7 @@ class UserTest extends TestCase
         $response = $this->json('GET', "/api/v1/users/", $data);
         $response
             ->assertStatus(200)
-            ->assertJsonStructure(static::$getUsersResponseStructure)
+            ->assertJsonStructure(TestCase::$collectionResponseStructure)
             ;
     }
 
@@ -380,13 +365,13 @@ class UserTest extends TestCase
 
     public function testListUsers() {
         $users = factory(User::class, 2)->create()->map(function ($user) {
-            return $user->only(static::$getUserResponseStructure);
+            return $user->only(static::$userResponseStructure);
         });
 
         $response = $this->json('GET', "/api/v1/users");
 
         $response->assertStatus(200)
-            ->assertJsonStructure($this->buildCollectionStructure(static::$getUserResponseStructure));
+            ->assertJsonStructure($this->buildCollectionStructure(static::$userResponseStructure));
     }
 
     public function testAssociateUserToCommunity() {
@@ -406,7 +391,7 @@ class UserTest extends TestCase
         ];
 
         $response = $this->json('PUT', "/api/v1/users/$user->id", $data);
-        $response->assertStatus(200)->assertJsonStructure(static::$getUserResponseStructure);
+        $response->assertStatus(200)->assertJsonStructure(static::$userResponseStructure);
     }
 
     public function testShowUsersCommunities() {

@@ -3,7 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Padlock;
-use Molotov\Repositories\RestRepository;
+use Molotov\RestRepository;
 
 class PadlockRepository extends RestRepository
 {

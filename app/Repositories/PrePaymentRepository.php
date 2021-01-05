@@ -3,7 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\PrePayment;
-use Molotov\Repositories\RestRepository;
+use Molotov\RestRepository;
 
 class PrePaymentRepository extends RestRepository
 {

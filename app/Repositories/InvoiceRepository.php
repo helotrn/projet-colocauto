@@ -3,7 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Invoice;
-use Molotov\Repositories\RestRepository;
+use Molotov\RestRepository;
 
 class InvoiceRepository extends RestRepository
 {

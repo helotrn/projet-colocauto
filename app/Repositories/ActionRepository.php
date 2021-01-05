@@ -3,7 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Action;
-use Molotov\Repositories\RestRepository;
+use Molotov\RestRepository;
 
 class ActionRepository extends RestRepository
 {

@@ -3,13 +3,15 @@
 namespace App\Transformers;
 
 use Auth;
-use Molotov\Transformers\BaseTransformer;
+use Molotov\Transformer;
 
-class UserTransformer extends BaseTransformer
+class UserTransformer extends Transformer
 {
     protected $contexts = ['Community'];
 
-    public function authorize($item, $output, $options, $user = null) {
+    public function authorize($item, $output, $options) {
+        $user = Auth::user();
+
         // If the user is...
         if ($user) {
             // ...a global admin or itself
@@ -89,6 +91,6 @@ class UserTransformer extends BaseTransformer
             $output['balance'] = floatval($output['balance']);
         }
 
-        return $this->authorize($item, $output, $options, Auth::user());
+        return $this->authorize($item, $output, $options);
     }
 }

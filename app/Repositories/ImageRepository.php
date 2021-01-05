@@ -3,7 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Image;
-use Molotov\Repositories\RestRepository;
+use Molotov\RestRepository;
 
 class ImageRepository extends RestRepository
 {

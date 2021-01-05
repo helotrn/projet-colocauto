@@ -3,17 +3,14 @@
 namespace App\Models;
 
 use App\Models\Community;
-use App\Utils\ObjectTypeCast;
+use App\Casts\ObjectTypeCast;
 use App\Rules\PricingRule;
 use Carbon\Carbon;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 use Symfony\Component\ExpressionLanguage\SyntaxError;
-use Vkovic\LaravelCustomCasts\HasCustomCasts;
 
 class Pricing extends BaseModel
 {
-    use HasCustomCasts;
-
     public static $language;
 
     public static function evaluateRuleLine($line, $data) {

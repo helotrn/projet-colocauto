@@ -12,15 +12,14 @@ use App\Models\Loanable;
 use App\Models\Payment;
 use App\Models\Takeover;
 use App\Transformers\LoanTransformer;
-use App\Utils\TimestampWithTimezone;
+use App\Casts\TimestampWithTimezoneCast;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Vkovic\LaravelCustomCasts\HasCustomCasts;
 
 class Loan extends BaseModel
 {
-    use HasCustomCasts, SoftDeletes;
+    use SoftDeletes;
 
     public static $rules = [
         'departure_at' => [
@@ -276,7 +275,7 @@ SQL
     }
 
     protected $casts = [
-        'departure_at' => TimestampWithTimezone::class,
+        'departure_at' => TimestampWithTimezoneCast::class,
     ];
 
     protected $fillable = [

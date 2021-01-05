@@ -6,13 +6,12 @@ use App\Events\BorrowerApprovedEvent;
 use App\Events\BorrowerCompletedEvent;
 use App\Models\Loan;
 use App\Models\User;
-use App\Utils\TimestampWithTimezone;
+use App\Casts\TimestampWithTimezoneCast;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Vkovic\LaravelCustomCasts\HasCustomCasts;
 
 class Borrower extends BaseModel
 {
-    use HasCustomCasts, SoftDeletes;
+    use SoftDeletes;
 
     public static function boot() {
         parent::boot();
@@ -53,8 +52,8 @@ class Borrower extends BaseModel
     ];
 
     protected $casts = [
-        'approved_at' => TimestampWithTimezone::class,
-        'suspended_at' => TimestampWithTimezone::class,
+        'approved_at' => TimestampWithTimezoneCast::class,
+        'suspended_at' => TimestampWithTimezoneCast::class,
     ];
 
     public $items = ['user'];

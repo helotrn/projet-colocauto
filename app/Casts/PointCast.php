@@ -1,15 +1,17 @@
 <?php
 
-namespace App\Utils;
+namespace App\Casts;
 
-use Phaza\LaravelPostgis\Geometries\Point;
-use Vkovic\LaravelCustomCasts\CustomCastBase;
+use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
+use MStaack\LaravelPostgis\Geometries\Point;
 
 // Because of
 // https://stackoverflow.com/questions/7309121/preferred-order-of-writing-latitude-longitude-tuples
-class PointCast extends CustomCastBase
+class PointCast implements CastsAttributes
 {
-    public function setAttribute($point) {
+    public function set($model, $key, $value, $attributes) {
+        $point = $value;
+
         if (is_array($point) && isset($point['latitude']) && isset($point['longitude'])) {
             $latitude = $point['latitude'];
             $longitude = $point['longitude'];
@@ -26,10 +28,11 @@ class PointCast extends CustomCastBase
         return new Point($latitude, $longitude);
     }
 
-    public function castAttribute($point) {
-        if ($point) {
-            $latitude = $point->getLat();
-            $longitude = $point->getLng();
+    public function get($model, $key, $value, $attributes) {
+        if ($value) {
+            $latitude = $value->getLat();
+            $longitude = $value->getLng();
+
             return [$latitude, $longitude];
         }
     }

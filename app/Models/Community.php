@@ -3,20 +3,19 @@
 namespace App\Models;
 
 use App\Rules\Polygon;
-use App\Utils\PointCast;
-use App\Utils\PolygonCast;
+use App\Casts\PointCast;
+use App\Casts\PolygonCast;
 use App\Transformers\CommunityTransformer;
 use Auth;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Validation\Rule;
 use Molotov\Traits\TreeScopes;
-use Phaza\LaravelPostgis\Eloquent\PostgisTrait;
-use Vkovic\LaravelCustomCasts\HasCustomCasts;
+use MStaack\LaravelPostgis\Eloquent\PostgisTrait;
 
 class Community extends BaseModel
 {
-    use HasCustomCasts, PostgisTrait, SoftDeletes, TreeScopes;
+    use PostgisTrait, SoftDeletes, TreeScopes;
 
     public static $rules = [
         'name' => 'required',

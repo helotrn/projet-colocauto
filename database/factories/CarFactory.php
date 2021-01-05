@@ -3,7 +3,6 @@
 use App\Models\Car;
 use Illuminate\Support\Str;
 use Faker\Generator as Faker;
-use Phaza\LaravelPostgis\Geometries\Point;
 
 $factory->define(Car::class, function (Faker $faker) {
     return [
@@ -21,7 +20,7 @@ $factory->define(Car::class, function (Faker $faker) {
         'owner_id' => 1,
         'papers_location' => $faker->randomElement(['in_the_car', 'to_request_with_car']),
         'plate_number' => $faker->shuffle('9F29J2'),
-        'position' => new Point($faker->latitude, $faker->longitude),
+        'position' => [$faker->latitude, $faker->longitude],
         'pricing_category' => $faker->randomElement(['small', 'large']),
         'transmission_mode' => $faker->randomElement(['automatic' ,'manual']),
         'year_of_circulation' => $faker->year($max = 'now'),
