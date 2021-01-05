@@ -1,5 +1,5 @@
 <template>
-  <div class="profile-borrower" v-if="item">
+  <div class="profile-borrower" v-if="item && routeDataLoaded">
     <div v-if="item.borrower.is_complete" class="profile-borrower__completed-alert">
       <b-alert v-if="!item.borrower.validated"
         variant="warning" show>
@@ -36,11 +36,12 @@
 <script>
 import BorrowerForm from '@/components/Borrower/BorrowerForm.vue';
 
+import DataRouteGuards from '@/mixins/DataRouteGuards';
 import FormMixin from '@/mixins/FormMixin';
 
 export default {
   name: 'ProfileBorrower',
-  mixins: [FormMixin],
+  mixins: [DataRouteGuards, FormMixin],
   components: { BorrowerForm },
   props: {
     id: {

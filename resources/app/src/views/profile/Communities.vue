@@ -1,5 +1,5 @@
 <template>
-  <div class="profile-communities" v-if="item">
+  <div class="profile-communities" v-if="item && routeDataLoaded">
     <div class="profile-communities__communities" v-if="item.communities.length > 0">
       <div class="profile-communities__communities__community"
         v-for="community in item.communities" :key="community.id">
@@ -21,11 +21,12 @@
 <script>
 import CommunityProofForm from '@/components/Community/ProofForm.vue';
 
+import DataRouteGuards from '@/mixins/DataRouteGuards';
 import FormMixin from '@/mixins/FormMixin';
 
 export default {
   name: 'ProfileCommunities',
-  mixins: [FormMixin],
+  mixins: [DataRouteGuards, FormMixin],
   components: { CommunityProofForm },
   props: {
     id: {

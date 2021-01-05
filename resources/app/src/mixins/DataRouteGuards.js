@@ -1,19 +1,32 @@
+/*
+  drillParams recursively maps object properties onto a new object of the same
+  structures.
+
+  Function properties:
+    Functions will be called with params (user, route), and the return value
+    will be stored in the new object.
+*/
 function drillParams(object, vm) {
   return Object.keys(object).reduce((p, k) => {
     const newAcc = { ...p };
 
+    // Conditional and mapResults are called before and after action dispatch
+    // and are not part of params.
     if (['conditional', 'mapResults'].indexOf(k) > -1) {
       return newAcc;
     }
 
     if (typeof object[k] === 'function') {
+      // Call function and set result
       newAcc[k] = object[k]({
         user: vm.user,
         route: vm.$route,
       });
     } else if (typeof object[k] === 'object') {
+      // Recursively drill down object properties.
       newAcc[k] = drillParams(object[k], vm);
     } else {
+      // Keep arrays strings or singletons as they are.
       newAcc[k] = object[k];
     }
 
@@ -33,10 +46,14 @@ export default {
   },
   computed: {
     routeDataLoaded() {
+      // According to Molotov, this is a particular case and it was not kept in
+      // later versions of DataRouteGuards.
       if (this.reloading) {
         return true;
       }
 
+      // meta.data specifies what data should be loaded for a given route. No
+      // meta.data: noting to load, hence considered implicitely loaded.
       if (!this.$route.meta || !this.$route.meta.data) {
         return true;
       }
@@ -45,6 +62,7 @@ export default {
         $store: {
           state,
         },
+        $route,
         $route: {
           meta: {
             data,
@@ -54,11 +72,34 @@ export default {
 
       return Object.keys(data).reduce(
         (acc, collection) => {
-          if (Object.keys(data[collection]).indexOf('options') !== -1) {
+          // Each element of a collection is an action or options.
+          const actions = Object.keys(data[collection]);
+
+          if (actions.indexOf('options') !== -1) {
             return acc && !!state[collection].form;
           }
 
-          return acc && !!state[collection].loaded;
+          // For all actions regarding a collection (one expected, but who knows...):
+          // - if no conditional action, then data must be loaded;
+          // - if conditional action and condition evaluates to true, then data
+          //   must be loaded;
+          // - if conditional action and condition evaluates to false, then no
+          //   data must be loaded;
+          const collectionRequired = actions.reduce((required, action) => {
+            const routeParams = data[collection][action];
+
+            if (!routeParams.conditional || routeParams.conditional({
+              route: $route,
+            })) {
+              // Collection is required.
+              return required || true;
+            }
+
+            return required;
+          }, false);
+
+          // state[collection].loaded is set in src/store/RestModule.js
+          return acc && (!collectionRequired || !!state[collection].loaded);
         },
         true,
       );
@@ -69,6 +110,7 @@ export default {
       return Promise.all(
         Object.keys(to.meta.data)
           .reduce((acc, collection) => {
+            // Each element of the collection is an action.
             const actions = Object.keys(to.meta.data[collection]);
 
             acc.push(...actions.map((action) => {
@@ -79,6 +121,7 @@ export default {
                   ...filters,
                   [k]: undefined,
                 }), {});
+
               const params = {
                 ...zeroedOutFilters,
                 ...drillParams(routeParams, vm),
@@ -86,6 +129,7 @@ export default {
                 ...vm.$route.query,
               };
 
+              // Don't fetch data for conditional routes with false condition.
               if (routeParams.conditional && !routeParams.conditional({
                 user: vm.user,
                 route: vm.$route,
@@ -94,9 +138,11 @@ export default {
               }
 
               return vm.$store.dispatch(
+                // Dispatching this action fetches the data. See RestModule.
                 `${collection}/${action}`,
                 params,
               ).then(() => {
+                // Transform the item if necessary.
                 if (routeParams.mapResults) {
                   vm.$store.commit(
                     `${collection}/data`,
