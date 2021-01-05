@@ -60,23 +60,25 @@ Vue.use(VueGoogleMaps, {
   },
 });
 
-Vue.use(VueMatomo, {
-  host: process.env.VUE_APP_MATOMO_HOST,
-  siteId: process.env.VUE_APP_MATOMO_SITEID,
-  trackerFileName: 'matomo',
-  router,
-  enableLinkTracking: true,
-  requireConsent: false,
-  trackInitialView: true,
-  disableCookies: false,
-  enableHeartBeatTimer: false,
-  heartBeatTimerInterval: 15,
-  debug: false,
-  userId: undefined,
-  cookieDomain: undefined,
-  domains: undefined,
-  preInitActions: [],
-});
+if (process.env.VUE_APP_MATOMO_HOST && process.env.VUE_APP_MATOMO_SITEID) {
+  Vue.use(VueMatomo, {
+    host: process.env.VUE_APP_MATOMO_HOST,
+    siteId: process.env.VUE_APP_MATOMO_SITEID,
+    trackerFileName: 'matomo',
+    router,
+    enableLinkTracking: true,
+    requireConsent: false,
+    trackInitialView: true,
+    disableCookies: false,
+    enableHeartBeatTimer: false,
+    heartBeatTimerInterval: 15,
+    debug: false,
+    userId: undefined,
+    cookieDomain: undefined,
+    domains: undefined,
+    preInitActions: [],
+  });
+}
 
 Vue.component('layout-footer', LayoutFooter);
 Vue.component('layout-header', LayoutHeader);
