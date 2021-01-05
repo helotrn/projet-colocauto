@@ -14,35 +14,42 @@ stages:
   - test
 
 before_script:
-  - curl -sL https://deb.nodesource.com/setup_10.x | bash
-  - apt-get install curl git wget unzip libpq-dev nodejs libjpeg-dev libpng-dev libxpm-dev libzip-dev postgresql-client -yqq
-  - npm install -g yarn
+  - apt-get update -yqq
+  - apt-get install curl git wget unzip libpq-dev libjpeg-dev libpng-dev libxpm-dev libzip-dev postgresql-client -yqq
   - wget https://composer.github.io/installer.sig -O - -q | tr -d '\n' > installer.sig
   - php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
   - php -r "if (hash_file('SHA384', 'composer-setup.php') === file_get_contents('installer.sig')) { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
   - php composer-setup.php
   - php -r "unlink('composer-setup.php'); unlink('installer.sig');"
-  - pecl install xdebug
-  - docker-php-ext-install pdo_pgsql
-  - docker-php-ext-install pgsql
-  - docker-php-ext-install gd
-  - docker-php-ext-install zip
-  - docker-php-ext-enable xdebug
-  - psql -h postgis__postgis -U locomotion -w locomotion_test -c 'CREATE EXTENSION unaccent;';
-  - psql -h postgis__postgis -U locomotion -w locomotion_test -c 'CREATE EXTENSION citext;';
+  - php composer.phar install
 
 cache:
   paths:
     - resources/app/node_modules/
     - vendor/
 
-locomotion:test:
+test:yarn_lint:
   stage: test
   script:
+    - curl -sL https://deb.nodesource.com/setup_10.x | bash
+    - apt-get install nodejs -yqq
+    - npm install -g yarn
+    - cd resources/app && yarn && yarn lint
+
+test:phpunit:
+  stage: test
+  script:
+    - pecl install xdebug-2.9.8
+    - docker-php-ext-install pdo_pgsql pgsql mysqli pdo_mysql gd zip
+    - docker-php-ext-enable xdebug
+    - psql -h postgis__postgis -U locomotion -w locomotion_test -c 'CREATE EXTENSION unaccent;';
+    - psql -h postgis__postgis -U locomotion -w locomotion_test -c 'CREATE EXTENSION citext;';
     - cp .env.testing .env
-    - php composer.phar install
     - php artisan migrate --env testing
     - php artisan passport:install --env testing
     - vendor/bin/phpunit --coverage-text --colors=never
+
+test:phpcs:
+  stage: test
+  script:
     - vendor/bin/phpcs app/
-    - cd resources/app && yarn && yarn lint
