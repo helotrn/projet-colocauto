@@ -6,20 +6,9 @@
 </p>
 
 <p>
-    {{ $caller->name }} a contesté les données entrées lors de la prise de possession du
-    véhicule sur son emprunt de votre {{ $loan->loanable->name }} qui commençait
+    {{ $admin->name }} a ajusté les données entrées lors de la prise de possession du
+    véhicule sur l'emprunt de votre {{ $loan->loanable->name }} qui commençait
     à {{ $loan->departure_at }}.
-</p>
-
-@if (!!$takeover->comments_on_contestation)
-<p>
-    {{ $takeover->comments_on_contestation }}
-</p>
-@endif
-
-<p>
-    Un membre de l'équipe LocoMotion a été notifié et sera appelé à arbitrer la résolution du
-    problème.
 </p>
 
 <p style="text-align: center;">

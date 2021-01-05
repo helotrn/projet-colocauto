@@ -7,8 +7,6 @@ use App\Mail\Loan\TakeoverReviewable as LoanTakeoverReviewable;
 use App\Models\Takeover;
 use App\Models\User;
 use App\Events\LoanTakeoverContestedEvent;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
 use Mail;
 
 class SendLoanTakeoverContestedEmails

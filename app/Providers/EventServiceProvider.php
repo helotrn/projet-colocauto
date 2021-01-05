@@ -44,8 +44,14 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\LoanExtensionRejectedEvent' => [
             'App\Listeners\SendLoanExtensionRejectedEmails',
         ],
+        'App\Events\LoanHandoverContestedEvent' => [
+            'App\Listeners\SendLoanHandoverContestedEmails',
+        ],
         'App\Events\LoanTakeoverContestedEvent' => [
             'App\Listeners\SendLoanTakeoverContestedEmails',
+        ],
+        'App\Events\LoanTakeoverContestationResolvedEvent' => [
+            'App\Listeners\SendLoanTakeoverContestationResolvedEmails',
         ],
         'App\Events\LoanPaidEvent' => [
             'App\Listeners\SendInvoiceEmail',
