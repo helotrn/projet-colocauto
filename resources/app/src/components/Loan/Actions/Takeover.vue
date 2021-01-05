@@ -3,18 +3,20 @@
     <b-card-header header-tag="header" role="tab" class="loan-actions__header"
       v-b-toggle.loan-actions-takeover>
       <h2>
-        <svg-danger v-if="action.status === 'canceled' || item.contested_at" />
+        <svg-danger
+          v-if="action.status === 'canceled' ||
+            (item.contested_at && action.status === 'in_process')" />
         <svg-waiting v-else-if="action.status === 'in_process'" />
         <svg-check v-else-if="action.status === 'completed'" />
 
         Informations avant de partir
       </h2>
 
-      <span v-if="item.contested_at && !action.status === 'canceled'">Bloqué</span>
+      <span v-if="item.contested_at && action.status === 'in_process'">Bloqué</span>
       <span v-else>
         <span v-if="action.status == 'in_process'">En attente</span>
         <span v-else-if="action.status === 'completed'">
-          Rempli &bull; {{ action.executed_at | datetime }}
+          Complété &bull; {{ action.executed_at | datetime }}
         </span>
         <span v-else-if="action.status === 'canceled'">
           Contesté &bull; {{ action.executed_at | datetime }}

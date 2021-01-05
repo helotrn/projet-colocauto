@@ -3,13 +3,13 @@
 @section('content')
 Bonjour {{ $receiver->name }},
 
-{{ $caller->name }} a contesté les données entrées lors de la prise de possession du
+{{ $caller->name }} a contesté les données entrées lors de retour du
 véhicule sur son emprunt de votre {{ $loan->loanable->name }} qui commençait
 à {{ $loan->departure_at }}.
 
-@if (!!$takeover->comments_on_contestation)
+@if (!!$handover->comments_on_contestation)
 "
-{{ $takeover->comments_on_contestation }}
+{{ $handover->comments_on_contestation }}
 "
 @endif
 

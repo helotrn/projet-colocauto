@@ -2,7 +2,7 @@
 
 @section('content')
 <p>
-    {{ $caller->name }} a contesté les données de la prise de possession sur son emprunt
+    {{ $caller->name }} a contesté les données du retour sur son emprunt
     du {{ $loan->loanable->name }}
     @if ($loan->loanable->owner)
         appartenant à {{ $loan->loanable->owner->user->name }}.
@@ -11,9 +11,9 @@
     @endif
 </p>
 
-@if (!!$takeover->comments_on_contestation)
+@if (!!$handover->comments_on_contestation)
 <p>
-    {{ $takeover->comments_on_contestation }}
+    {{ $handover->comments_on_contestation }}
 </p>
 @endif
 

@@ -3,18 +3,20 @@
     <b-card-header header-tag="header" role="tab" class="loan-actions__header"
       v-b-toggle.loan-actions-handover>
       <h2>
-        <svg-danger v-if="action.status === 'canceled' || item.contested_at" />
+        <svg-danger
+          v-if="action.status === 'canceled' ||
+            (item.contested_at && action.status === 'in_process')" />
         <svg-waiting v-else-if="action.status === 'in_process'" />
         <svg-check v-else-if="action.status === 'completed'" />
 
         Retour
       </h2>
 
-      <span v-if="item.contested_at">Bloqué</span>
+      <span v-if="item.contested_at && action.status === 'in_process'">Bloqué</span>
       <span v-else>
         <span v-if="action.status == 'in_process'">En attente</span>
         <span v-else-if="action.status === 'completed'">
-          Rempli &bull; {{ action.executed_at | datetime }}
+          Complété &bull; {{ action.executed_at | datetime }}
         </span>
         <span v-else-if="action.status === 'canceled'">
           Contesté &bull; {{ action.executed_at | datetime }}
@@ -64,7 +66,7 @@
                     type="number"
                     label="KM au compteur, à la fin de la course"
                     placholder="KM au compteur"
-                    :disabled="!!action.executed_at"
+                    :disabled="!!action.executed_at && !userIsAdmin"
                     v-model="action.mileage_end" />
                 </b-col>
               </b-row>
@@ -102,7 +104,7 @@
                     type="number" :min="0" :step="0.01"
                     label="Total des dépenses"
                     placholder="Total des dépenses"
-                    :disabled="!!action.executed_at"
+                    :disabled="!!action.executed_at && !userIsAdmin"
                     v-model="action.purchases_amount" />
                 </b-col>
               </b-row>
@@ -278,39 +280,55 @@
           </b-row>
         </div>
 
-        <div v-if="isContestable" >
+        <div v-if="!isContested">
+          <div v-if="isContestable" >
+            <hr>
+
+            <b-row>
+              <b-col lg="6">
+                <p>
+                  Cette information est-elle incorrecte?
+                </p>
+                <p>
+                  Pour la modifier, vous pouvez procéder
+                  à une "contestation". Par cette procédure, un membre de l'équipe LocoMotion
+                  sera appelé à arbitrer la résolution du conflit entre l'emprunteur et le
+                  propriétaire.
+                </p>
+              </b-col>
+
+              <b-col lg="6">
+                <forms-validated-input
+                  id="comments_on_contestation" name="comments_on_contestation"
+                  type="textarea" :rows="3"
+                  label="Commentaires sur la contestation"
+                  placeholder="Commentaire sur la contestation"
+                  v-model="action.comments_on_contestation" />
+              </b-col>
+            </b-row>
+
+            <b-row class="loan-actions-handover__buttons text-center">
+              <b-col>
+                <b-button size="sm" variant="outline-danger" @click="cancelAction">
+                  Contester
+                </b-button>
+              </b-col>
+            </b-row>
+          </div>
+        </div>
+        <div v-else>
           <hr>
 
-          <b-row>
-            <b-col lg="6">
-              <p>
-                Cette information est-elle incorrecte?
-              </p>
-              <p>
-                Pour la modifier, vous pouvez procéder
-                à une "contestation". Par cette procédure, un membre de l'équipe LocoMotion
-                sera appelé à arbitrer la résolution du conflit entre l'emprunteur et le
-                propriétaire.
-              </p>
-            </b-col>
+          <p>Les données ont été contestées:</p>
 
-            <b-col lg="6">
-              <forms-validated-input
-                id="comments_on_contestation" name="comments_on_contestation"
-                type="textarea" :rows="3"
-                label="Commentaires sur la contestation"
-                placeholder="Commentaire sur la contestation"
-                v-model="action.comments_on_contestation" />
-            </b-col>
-          </b-row>
+          <b-alert variant="warning" show>
+            {{ action.comments_on_contestation }}
+          </b-alert>
 
-          <b-row class="loan-actions-handover__buttons text-center">
-            <b-col>
-              <b-button size="sm" variant="outline-danger" @click="cancelAction">
-                Contester
-              </b-button>
-            </b-col>
-          </b-row>
+          <p>
+            Un membre de l'équipe LocoMotion contactera les participant-e-s et
+            ajustera les données.
+          </p>
         </div>
       </b-collapse>
     </b-card-body>
@@ -332,7 +350,9 @@ export default {
         + this.item.actions.find(a => a.type === 'takeover').mileage_beginning;
     }
 
-    this.action.purchases_amount = 0;
+    if (!this.action.purchases_amount) {
+      this.action.purchases_amount = 0;
+    }
   },
   components: {
     FormsImageUploader,
