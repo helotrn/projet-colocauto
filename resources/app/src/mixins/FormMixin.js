@@ -65,6 +65,11 @@ export default {
     async loadItem() {
       const { dispatch } = this.$store;
 
+      if (this.$route.name === 'Login') {
+        // Redirected to login page, do nothing
+        return;
+      }
+
       try {
         if (!this.skipLoadItem
           || (typeof this.skipLoadItem === 'function' && !this.skipLoadItem())) {
