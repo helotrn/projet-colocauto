@@ -3,19 +3,22 @@
     <b-card-header header-tag="header" role="tab" class="loan-actions__header"
       v-b-toggle.loan-actions-handover>
       <h2>
-        <svg-waiting v-if="action.status === 'in_process'" />
+        <svg-danger v-if="action.status === 'canceled' || item.contested_at" />
+        <svg-waiting v-else-if="action.status === 'in_process'" />
         <svg-check v-else-if="action.status === 'completed'" />
-        <svg-danger v-else-if="action.status === 'canceled'" />
 
         Retour
       </h2>
 
-      <span v-if="action.status == 'in_process'">En attente</span>
-      <span v-else-if="action.status === 'completed'">
-        Rempli &bull; {{ action.executed_at | datetime }}
-      </span>
-      <span v-else-if="action.status === 'canceled'">
-        Contesté &bull; {{ action.executed_at | datetime }}
+      <span v-if="item.contested_at">Bloqué</span>
+      <span v-else>
+        <span v-if="action.status == 'in_process'">En attente</span>
+        <span v-else-if="action.status === 'completed'">
+          Rempli &bull; {{ action.executed_at | datetime }}
+        </span>
+        <span v-else-if="action.status === 'canceled'">
+          Contesté &bull; {{ action.executed_at | datetime }}
+        </span>
       </span>
     </b-card-header>
 
@@ -24,10 +27,11 @@
         :visible="open">
         <div v-if="item.loanable.type === 'car'">
           <validation-observer ref="observer" v-slot="{ passes }">
-            <b-form :novalidate="true" class="register-form__form"
+            <b-form :novalidate="true" class="loan-actions-handover__form"
               @submit.stop.prevent="passes(completeAction)">
               <b-row>
-                <b-col lg="6" v-if="!action.executed_at">
+                <b-col lg="6" v-if="!action.executed_at"
+                  class="loan-actions-handover__form__image">
                   <p>Envoyez une photo du tableau de bord.</p>
 
                   <forms-image-uploader
@@ -41,7 +45,8 @@
                     Cette photo est facultative.
                   </small></p>
                 </b-col>
-                <b-col lg="6" v-else-if="action.image">
+                <b-col lg="6" v-else-if="action.image"
+                  class="loan-actions-handover__form__image">
                   <a href="#" v-b-modal="'handover-image'">
                     <img :src="action.image ? action.image.sizes.thumbnail : ''">
                   </a>
@@ -136,10 +141,11 @@
               </b-row>
 
               <b-row class="loan-actions-handover__buttons text-center"
-                v-if="!action.executed_at">
+                v-if="(!action.executed_at && !item.contested_at) || userIsAdmin">
                 <b-col>
                   <b-button type="submit" size="sm" variant="success" class="mr-3">
-                    Enregistrer
+                    <span v-if="isContested">Corriger</span>
+                    <span v-else>Enregistrer</span>
                   </b-button>
                 </b-col>
               </b-row>
@@ -208,10 +214,11 @@
               </b-row>
 
               <b-row class="loan-actions-takeover__buttons text-center"
-                v-if="!action.executed_at">
+                v-if="(!action.executed_at && !item.contested_at) || userIsAdmin">
                 <b-col>
                   <b-button type="submit" size="sm" variant="success" class="mr-3">
-                    Enregistrer
+                    <span v-if="isContested">Corriger</span>
+                    <span v-else>Enregistrer</span>
                   </b-button>
                 </b-col>
               </b-row>
@@ -335,4 +342,12 @@ export default {
 </script>
 
 <style lang="scss">
+.loan-actions-handover {
+  &__form {
+    &__image a {
+      display: inline-block;
+      margin-bottom: 1rem;
+    }
+  }
+}
 </style>
