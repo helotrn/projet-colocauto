@@ -280,6 +280,7 @@ SQL
 
     protected $fillable = [
         'borrower_id',
+        'canceled_at',
         'departure_at',
         'duration_in_minutes',
         'estimated_distance',
@@ -296,7 +297,7 @@ SQL
       'actual_insurance',
       'actual_duration_in_minutes',
       'calendar_days',
-      'canceled_at',
+      'contested_at',
       'total_final_cost',
       'total_estimated_cost',
     ];
@@ -466,7 +467,8 @@ SQL
         return $this->final_price + $this->final_insurance + $this->final_platform_tip;
     }
 
-    public function getCanceledAtAttribute() {
+    public function getContestedAtAttribute() {
+        // The canceled status on an action indicates it was contested
         $canceledAction = $this->actions->where('status', 'canceled')->first();
 
         if ($canceledAction) {
