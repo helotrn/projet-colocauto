@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "71ef15657d5a6d7127e834ec70938af2",
+    "content-hash": "9d06a83e20d6216b06e32b611bece229",
     "packages": [
         {
             "name": "bosnadev/database",
@@ -3194,7 +3194,7 @@
             "source": {
                 "type": "git",
                 "url": "https://gitlab.com/molotovcoop/laravel-api-molotov.git",
-                "reference": "51d972084a95ee87fc87b35aa8ef44d959478703"
+                "reference": "4062aec99bb3de9c336ee1da3a6af008af2aebf4"
             },
             "require": {
                 "illuminate/auth": "^7.0",
@@ -3237,7 +3237,7 @@
                 }
             ],
             "description": "A set of helper classes for building Laravel APIs, built by Molotov cooperative.",
-            "time": "2021-01-05T17:08:11+00:00"
+            "time": "2021-01-06T17:18:37+00:00"
         },
         {
             "name": "monolog/monolog",
@@ -8338,62 +8338,6 @@
                 "source": "https://github.com/tijsverkoyen/CssToInlineStyles/tree/2.2.3"
             },
             "time": "2020-07-13T06:12:54+00:00"
-        },
-        {
-            "name": "vkovic/laravel-custom-casts",
-            "version": "v1.3.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/vkovic/laravel-custom-casts.git",
-                "reference": "fdd54fb5e2596db7b38b79b5c79ccd5337e10c58"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/vkovic/laravel-custom-casts/zipball/fdd54fb5e2596db7b38b79b5c79ccd5337e10c58",
-                "reference": "fdd54fb5e2596db7b38b79b5c79ccd5337e10c58",
-                "shasum": ""
-            },
-            "require": {
-                "php": "^7.1|^8.0"
-            },
-            "require-dev": {
-                "illuminate/database": "^5.5|^6.0|^8.20",
-                "orchestra/database": "^3.5|^4.0|^5.0",
-                "orchestra/testbench": "^3.5|^4.0|^6.0",
-                "phpunit/phpunit": "^6.3|^7.0|^8.0|^9.4"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Vkovic\\LaravelCustomCasts\\": "src"
-                },
-                "files": [
-                    "src/helpers.php"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Vladimir Ković",
-                    "email": "vlada.kovic@gmail.com"
-                }
-            ],
-            "description": "Make your own custom cast type for Laravel model attributes",
-            "keywords": [
-                "cast",
-                "casts",
-                "datatype",
-                "laravel",
-                "model"
-            ],
-            "support": {
-                "issues": "https://github.com/vkovic/laravel-custom-casts/issues",
-                "source": "https://github.com/vkovic/laravel-custom-casts/tree/v1.3.1"
-            },
-            "time": "2020-12-24T09:23:22+00:00"
         },
         {
             "name": "vlucas/phpdotenv",
