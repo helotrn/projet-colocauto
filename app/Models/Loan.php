@@ -557,7 +557,7 @@ SQL
         )->whereRaw('departure_at > now()');
     }
 
-    protected function getFullLoanable() {
+    public function getFullLoanable() {
         switch ($this->loanable->type) {
             case 'car':
                 return $this->car;

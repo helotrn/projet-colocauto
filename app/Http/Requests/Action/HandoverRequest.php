@@ -12,10 +12,29 @@ class HandoverRequest extends BaseRequest
         $loan = Loan::accessibleBy($this->user())->find($loanId);
 
         if ($loan->loanable->type === 'car') {
+            $loanable = $loan->getFullLoanable();
+            $pricing = $loan->community->getPricingFor($loanable);
+
+            if (!$pricing) {
+                $price = 0;
+            }
+
+            $values = $pricing->evaluateRule(
+                $this->get('mileage_end') - $loan->takeover->mileage_beginning,
+                $loan->actual_duration_in_minutes,
+                $loanable,
+                $loan
+            );
+            $price = max(0, is_array($values) ? $values[0] : $values);
+
             return [
                 'mileage_end' => [
                     'required',
                     'integer'
+                ],
+                'purchases_amount' => [
+                    'numeric',
+                    "lt:$price",
                 ],
             ];
         }
@@ -40,5 +59,11 @@ class HandoverRequest extends BaseRequest
         }
 
         return false;
+    }
+
+    public function attributes() {
+        return [
+            'purchases_amount' => 'Total des dépenses',
+        ];
     }
 }
