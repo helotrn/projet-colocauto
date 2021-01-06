@@ -24,6 +24,11 @@
         :visible="open">
         <div v-if="!!action.executed_at">
           <p>L'emprunt s'est conclu avec succès!</p>
+
+          <p>
+            Coût final du trajet:
+            <span v-b-popover.hover="priceTooltip">{{ item.total_final_cost | currency }}</span>.
+          </p>
         </div>
         <div v-else>
           <div v-if="userRole === 'owner'">
@@ -35,10 +40,11 @@
             <hr>
 
             <p>
-              Vous recevrez {{ item.actual_price | currency }} pour l'emprunt.
+              Vous recevrez {{ finalOwnerPart | currency }} pour l'emprunt.
             </p>
           </div>
-          <div v-if="userRole === 'borrower'" class="text-center">
+
+          <div v-else-if="userRole === 'borrower'" class="text-center">
             <p>
               Validez dès maintenant les informations sur votre trajet:
               le kilomètrage, la facture d'essence&hellip;
@@ -105,6 +111,24 @@
               </b-col>
             </b-row>
           </div>
+
+          <div v-else-if="userIsAdmin" class="text-center">
+            <p>
+              L'emprunt est en phase de validation par les participant-e-s.
+            </p>
+
+            <hr>
+
+            <p v-if="item.loanable.owner">
+              {{ item.loanable.owner.user.full_name }}
+              recevra {{ finalOwnerPart | currency }} pour l'emprunt.
+            </p>
+
+            <p>
+              {{ item.borrower.user.full_name }}
+              paiera {{ finalPrice | currency }} pour l'emprunt.
+            </p>
+          </div>
         </div>
       </b-collapse>
     </b-card-body>
@@ -136,10 +160,15 @@ export default {
     };
   },
   computed: {
+    finalOwnerPart() {
+      return this.item.actual_price
+        - this.item.handover.purchases_amount;
+    },
     finalPrice() {
       return this.item.actual_price
         + this.item.actual_insurance
-        + parseFloat(this.platformTip, 10);
+        + parseFloat(this.platformTip, 10)
+        - this.item.handover.purchases_amount;
     },
     hasEnoughBalance() {
       return this.user.balance >= this.finalPrice;
@@ -151,8 +180,14 @@ export default {
       if (this.item.actual_insurance > 0) {
         strParts.push(`Assurance: ${currency(this.item.actual_insurance)}`); // eslint-disable-line no-irregular-whitespace
       }
+
       if (parseFloat(this.platformTip, 10) > 0) {
         strParts.push(`Contribution: ${currency(parseFloat(this.platformTip, 10))}`); // eslint-disable-line no-irregular-whitespace
+      }
+
+      const purchasesAmount = parseFloat(this.item.handover.purchases_amount);
+      if (purchasesAmount > 0) {
+        strParts.push(`Achats: -${currency(purchasesAmount)}`); // eslint-disable-line no-irregular-whitespace
       }
 
       return strParts.join(' \\ ');

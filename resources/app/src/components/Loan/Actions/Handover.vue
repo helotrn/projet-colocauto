@@ -109,7 +109,8 @@
                 </b-col>
               </b-row>
 
-              <hr>
+              <hr v-if="(userRole === 'borrower' && !action.executed_at)
+                || action.comments_by_borrower">
 
               <b-row>
                 <b-col>

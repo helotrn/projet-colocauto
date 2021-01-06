@@ -464,7 +464,10 @@ SQL
     }
 
     public function getTotalFinalCostAttribute() {
-        return $this->final_price + $this->final_insurance + $this->final_platform_tip;
+        return $this->final_price
+            + $this->final_insurance
+            + $this->final_platform_tip
+            - $this->final_purchases_amount;
     }
 
     public function getContestedAtAttribute() {
