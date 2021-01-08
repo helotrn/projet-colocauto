@@ -12,15 +12,14 @@ use App\Models\Loanable;
 use App\Models\Payment;
 use App\Models\Takeover;
 use App\Transformers\LoanTransformer;
-use App\Utils\TimestampWithTimezone;
+use App\Casts\TimestampWithTimezoneCast;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Vkovic\LaravelCustomCasts\HasCustomCasts;
 
 class Loan extends BaseModel
 {
-    use HasCustomCasts, SoftDeletes;
+    use SoftDeletes;
 
     public static $rules = [
         'departure_at' => [
@@ -276,11 +275,12 @@ SQL
     }
 
     protected $casts = [
-        'departure_at' => TimestampWithTimezone::class,
+        'departure_at' => TimestampWithTimezoneCast::class,
     ];
 
     protected $fillable = [
         'borrower_id',
+        'canceled_at',
         'departure_at',
         'duration_in_minutes',
         'estimated_distance',
@@ -297,7 +297,7 @@ SQL
       'actual_insurance',
       'actual_duration_in_minutes',
       'calendar_days',
-      'canceled_at',
+      'contested_at',
       'total_final_cost',
       'total_estimated_cost',
     ];
@@ -464,10 +464,14 @@ SQL
     }
 
     public function getTotalFinalCostAttribute() {
-        return $this->final_price + $this->final_insurance + $this->final_platform_tip;
+        return $this->final_price
+            + $this->final_insurance
+            + $this->final_platform_tip
+            - $this->final_purchases_amount;
     }
 
-    public function getCanceledAtAttribute() {
+    public function getContestedAtAttribute() {
+        // The canceled status on an action indicates it was contested
         $canceledAction = $this->actions->where('status', 'canceled')->first();
 
         if ($canceledAction) {
@@ -553,7 +557,7 @@ SQL
         )->whereRaw('departure_at > now()');
     }
 
-    protected function getFullLoanable() {
+    public function getFullLoanable() {
         switch ($this->loanable->type) {
             case 'car':
                 return $this->car;

@@ -3,7 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Pricing;
-use Molotov\Repositories\RestRepository;
+use Molotov\RestRepository;
 
 class PricingRepository extends RestRepository
 {

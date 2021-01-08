@@ -7,7 +7,7 @@ use App\Models\Loan;
 use App\Models\Owner;
 use App\Models\User;
 use App\Transformers\LoanableTransformer;
-use App\Utils\PointCast;
+use App\Casts\PointCast;
 use Carbon\Carbon;
 use Eluceo\iCal\Component\Calendar;
 use Eluceo\iCal\Component\Event;
@@ -16,12 +16,11 @@ use Eluceo\iCal\Component\TimezoneRule;
 use Eluceo\iCal\Property\Event\RecurrenceRule;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Phaza\LaravelPostgis\Eloquent\PostgisTrait;
-use Vkovic\LaravelCustomCasts\HasCustomCasts;
+use MStaack\LaravelPostgis\Eloquent\PostgisTrait;
 
 class Loanable extends BaseModel
 {
-    use HasCustomCasts, PostgisTrait, SoftDeletes;
+    use PostgisTrait, SoftDeletes;
 
     public $readOnly = true;
 

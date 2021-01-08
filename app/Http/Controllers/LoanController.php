@@ -92,14 +92,8 @@ class LoanController extends RestController
     public function cancel(Request $request, $id) {
         $item = $this->repo->find($request, $id);
 
-        $lastAction = $item->actions->last();
-        $request->merge([ 'type' => $lastAction->type ]);
-
-        $lastAction = $this->actionController->cancel(
-            $request->redirect(ActionRequest::class, $request),
-            $id,
-            $lastAction->id
-        );
+        $item->canceled_at = now();
+        $item->save();
 
         try {
             $response = $this->respondWithItem($request, $item);

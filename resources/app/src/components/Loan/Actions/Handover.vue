@@ -3,19 +3,24 @@
     <b-card-header header-tag="header" role="tab" class="loan-actions__header"
       v-b-toggle.loan-actions-handover>
       <h2>
-        <svg-waiting v-if="action.status === 'in_process'" />
+        <svg-danger
+          v-if="action.status === 'canceled' ||
+            (item.contested_at && action.status === 'in_process')" />
+        <svg-waiting v-else-if="action.status === 'in_process'" />
         <svg-check v-else-if="action.status === 'completed'" />
-        <svg-danger v-else-if="action.status === 'canceled'" />
 
         Retour
       </h2>
 
-      <span v-if="action.status == 'in_process'">En attente</span>
-      <span v-else-if="action.status === 'completed'">
-        Rempli &bull; {{ action.executed_at | datetime }}
-      </span>
-      <span v-else-if="action.status === 'canceled'">
-        Contesté &bull; {{ action.executed_at | datetime }}
+      <span v-if="item.contested_at && action.status === 'in_process'">Bloqué</span>
+      <span v-else>
+        <span v-if="action.status == 'in_process'">En attente</span>
+        <span v-else-if="action.status === 'completed'">
+          Complété &bull; {{ action.executed_at | datetime }}
+        </span>
+        <span v-else-if="action.status === 'canceled'">
+          Contesté &bull; {{ action.executed_at | datetime }}
+        </span>
       </span>
     </b-card-header>
 
@@ -24,10 +29,11 @@
         :visible="open">
         <div v-if="item.loanable.type === 'car'">
           <validation-observer ref="observer" v-slot="{ passes }">
-            <b-form :novalidate="true" class="register-form__form"
+            <b-form :novalidate="true" class="loan-actions-handover__form"
               @submit.stop.prevent="passes(completeAction)">
               <b-row>
-                <b-col lg="6" v-if="!action.executed_at">
+                <b-col lg="6" v-if="!action.executed_at"
+                  class="loan-actions-handover__form__image">
                   <p>Envoyez une photo du tableau de bord.</p>
 
                   <forms-image-uploader
@@ -41,7 +47,8 @@
                     Cette photo est facultative.
                   </small></p>
                 </b-col>
-                <b-col lg="6" v-else-if="action.image">
+                <b-col lg="6" v-else-if="action.image"
+                  class="loan-actions-handover__form__image">
                   <a href="#" v-b-modal="'handover-image'">
                     <img :src="action.image ? action.image.sizes.thumbnail : ''">
                   </a>
@@ -59,7 +66,7 @@
                     type="number"
                     label="KM au compteur, à la fin de la course"
                     placholder="KM au compteur"
-                    :disabled="!!action.executed_at"
+                    :disabled="!!action.executed_at && !userIsAdmin"
                     v-model="action.mileage_end" />
                 </b-col>
               </b-row>
@@ -97,12 +104,13 @@
                     type="number" :min="0" :step="0.01"
                     label="Total des dépenses"
                     placholder="Total des dépenses"
-                    :disabled="!!action.executed_at"
+                    :disabled="!!action.executed_at && !userIsAdmin"
                     v-model="action.purchases_amount" />
                 </b-col>
               </b-row>
 
-              <hr>
+              <hr v-if="(userRole === 'borrower' && !action.executed_at)
+                || action.comments_by_borrower">
 
               <b-row>
                 <b-col>
@@ -136,10 +144,11 @@
               </b-row>
 
               <b-row class="loan-actions-handover__buttons text-center"
-                v-if="!action.executed_at">
+                v-if="(!action.executed_at && !item.contested_at) || userIsAdmin">
                 <b-col>
                   <b-button type="submit" size="sm" variant="success" class="mr-3">
-                    Enregistrer
+                    <span v-if="isContested">Corriger</span>
+                    <span v-else>Enregistrer</span>
                   </b-button>
                 </b-col>
               </b-row>
@@ -208,10 +217,11 @@
               </b-row>
 
               <b-row class="loan-actions-takeover__buttons text-center"
-                v-if="!action.executed_at">
+                v-if="(!action.executed_at && !item.contested_at) || userIsAdmin">
                 <b-col>
                   <b-button type="submit" size="sm" variant="success" class="mr-3">
-                    Enregistrer
+                    <span v-if="isContested">Corriger</span>
+                    <span v-else>Enregistrer</span>
                   </b-button>
                 </b-col>
               </b-row>
@@ -271,39 +281,55 @@
           </b-row>
         </div>
 
-        <div v-if="isContestable" >
+        <div v-if="!isContested">
+          <div v-if="isContestable" >
+            <hr>
+
+            <b-row>
+              <b-col lg="6">
+                <p>
+                  Cette information est-elle incorrecte?
+                </p>
+                <p>
+                  Pour la modifier, vous pouvez procéder
+                  à une "contestation". Par cette procédure, un membre de l'équipe LocoMotion
+                  sera appelé à arbitrer la résolution du conflit entre l'emprunteur et le
+                  propriétaire.
+                </p>
+              </b-col>
+
+              <b-col lg="6">
+                <forms-validated-input
+                  id="comments_on_contestation" name="comments_on_contestation"
+                  type="textarea" :rows="3"
+                  label="Commentaires sur la contestation"
+                  placeholder="Commentaire sur la contestation"
+                  v-model="action.comments_on_contestation" />
+              </b-col>
+            </b-row>
+
+            <b-row class="loan-actions-handover__buttons text-center">
+              <b-col>
+                <b-button size="sm" variant="outline-danger" @click="cancelAction">
+                  Contester
+                </b-button>
+              </b-col>
+            </b-row>
+          </div>
+        </div>
+        <div v-else>
           <hr>
 
-          <b-row>
-            <b-col lg="6">
-              <p>
-                Cette information est-elle incorrecte?
-              </p>
-              <p>
-                Pour la modifier, vous pouvez procéder
-                à une "contestation". Par cette procédure, un membre de l'équipe LocoMotion
-                sera appelé à arbitrer la résolution du conflit entre l'emprunteur et le
-                propriétaire.
-              </p>
-            </b-col>
+          <p>Les données ont été contestées:</p>
 
-            <b-col lg="6">
-              <forms-validated-input
-                id="comments_on_contestation" name="comments_on_contestation"
-                type="textarea" :rows="3"
-                label="Commentaires sur la contestation"
-                placeholder="Commentaire sur la contestation"
-                v-model="action.comments_on_contestation" />
-            </b-col>
-          </b-row>
+          <b-alert variant="warning" show>
+            {{ action.comments_on_contestation }}
+          </b-alert>
 
-          <b-row class="loan-actions-handover__buttons text-center">
-            <b-col>
-              <b-button size="sm" variant="outline-danger" @click="cancelAction">
-                Contester
-              </b-button>
-            </b-col>
-          </b-row>
+          <p>
+            Un membre de l'équipe LocoMotion contactera les participant-e-s et
+            ajustera les données.
+          </p>
         </div>
       </b-collapse>
     </b-card-body>
@@ -325,7 +351,9 @@ export default {
         + this.item.actions.find(a => a.type === 'takeover').mileage_beginning;
     }
 
-    this.action.purchases_amount = 0;
+    if (!this.action.purchases_amount) {
+      this.action.purchases_amount = 0;
+    }
   },
   components: {
     FormsImageUploader,
@@ -335,4 +363,12 @@ export default {
 </script>
 
 <style lang="scss">
+.loan-actions-handover {
+  &__form {
+    &__image a {
+      display: inline-block;
+      margin-bottom: 1rem;
+    }
+  }
+}
 </style>

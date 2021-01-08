@@ -1,17 +1,17 @@
 <?php
 
-namespace App\Utils;
+namespace App\Casts;
 
-use Phaza\LaravelPostgis\Geometries\LineString;
-use Phaza\LaravelPostgis\Geometries\Point;
-use Phaza\LaravelPostgis\Geometries\Polygon;
-use Vkovic\LaravelCustomCasts\CustomCastBase;
+use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
+use MStaack\LaravelPostgis\Geometries\LineString;
+use MStaack\LaravelPostgis\Geometries\Point;
+use MStaack\LaravelPostgis\Geometries\Polygon;
 
 // Because of
 // https://stackoverflow.com/questions/7309121/preferred-order-of-writing-latitude-longitude-tuples
-class PolygonCast extends CustomCastBase
+class PolygonCast implements CastsAttributes
 {
-    public function setAttribute($value) {
+    public function set($model, $key, $value, $attributes) {
         if (is_array($value)) {
             $lineString = new LineString(
                 array_map(function ($point) {
@@ -28,7 +28,9 @@ class PolygonCast extends CustomCastBase
         throw new \Exception('invalid'); // TODO
     }
 
-    public function castAttribute($polygon) {
+    public function get($model, $key, $value, $attributes) {
+        $polygon = $value;
+
         if (!$polygon) {
             return null;
         }

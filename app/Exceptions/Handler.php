@@ -2,7 +2,7 @@
 
 namespace App\Exceptions;
 
-use Exception;
+use Throwable;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Symfony\Component\Console\Exception\CommandNotFoundException;
 
@@ -17,7 +17,7 @@ class Handler extends ExceptionHandler
         'password_confirmation',
     ];
 
-    public function report(Exception $exception) {
+    public function report(Throwable $exception) {
         if (app()->bound('sentry') && $this->shouldReport($exception)) {
             app('sentry')->captureException($exception);
         }
@@ -26,7 +26,7 @@ class Handler extends ExceptionHandler
     }
 
 
-    public function render($request, Exception $exception) {
+    public function render($request, Throwable $exception) {
         return parent::render($request, $exception);
     }
 }

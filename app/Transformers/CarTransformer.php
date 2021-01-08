@@ -3,11 +3,12 @@
 namespace App\Transformers;
 
 use Auth;
-use Molotov\Transformers\BaseTransformer;
 
 class CarTransformer extends LoanableTransformer
 {
-    public function authorize($item, $output, $options, $user = null) {
+    public function authorize($item, $output, $options) {
+        $user = Auth::user();
+
         if ($user && ($user->isAdmin() || $user->id === $output['id'])) {
             return $output;
         }
@@ -38,6 +39,6 @@ class CarTransformer extends LoanableTransformer
     public function transform($item, $options = []) {
         $output = parent::transform($item, $options);
 
-        return $this->authorize($item, $output, $options, Auth::user());
+        return $this->authorize($item, $output, $options);
     }
 }

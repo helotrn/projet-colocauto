@@ -4,12 +4,12 @@ namespace Tests\Integration;
 
 use App\Models\Car;
 use App\Models\Owner;
-use Phaza\LaravelPostgis\Geometries\Point;
+use MStaack\LaravelPostgis\Geometries\Point;
 use Tests\TestCase;
 
 class CarTest extends TestCase
 {
-    private static $getCarResponseStructure = [
+    private static $carResponseStructure = [
         'brand',
         'comments',
         'engine',
@@ -52,7 +52,7 @@ class CarTest extends TestCase
 
         $response = $this->json('POST', '/api/v1/cars', $data);
         $response->assertStatus(201)
-            ->assertJsonStructure(static::$getCarResponseStructure)
+            ->assertJsonStructure(static::$carResponseStructure)
             ->assertJson([ 'pricing_category' => 'large']);
     }
 
@@ -63,7 +63,7 @@ class CarTest extends TestCase
         $response = $this->json('GET', "/api/v1/cars/$car->id");
 
         $response->assertStatus(200)
-            ->assertJsonStructure(static::$getCarResponseStructure);
+            ->assertJsonStructure(static::$carResponseStructure);
     }
 
     public function testUpdateCars() {
@@ -80,7 +80,7 @@ class CarTest extends TestCase
 
     public function testDeleteCars() {
         $owner = factory(Owner::class)->create(['user_id' => $this->user->id]);
-        $car = factory(Car::class)->create(['owner_id' => $owner->id]);
+        $car = factory(Car::class)->create([ 'owner_id' => $owner->id ]);
 
         $response = $this->json('DELETE', "/api/v1/cars/$car->id");
         $response->assertStatus(200);
@@ -93,13 +93,13 @@ class CarTest extends TestCase
         $owner = factory(Owner::class)->create(['user_id' => $this->user->id]);
         $cars = factory(Car::class, 2)->create(['owner_id' => $owner->id])
             ->map(function ($car) {
-                return $car->only(static::$getCarResponseStructure);
+                return $car->only(static::$carResponseStructure);
             });
 
         $response = $this->json('GET', "/api/v1/cars");
 
         $response->assertStatus(200)
             ->assertJson([ 'total' => 2 ])
-            ->assertJsonStructure($this->buildCollectionStructure(static::$getCarResponseStructure));
+            ->assertJsonStructure($this->buildCollectionStructure(static::$carResponseStructure));
     }
 }

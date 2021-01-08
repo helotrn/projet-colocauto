@@ -2,19 +2,12 @@
 
 namespace Tests\Integration;
 
-use App\Models\Borrower;
-use App\Models\Car;
-use App\Models\Loan;
-use App\Models\Owner;
-use App\Models\PrePayment;
-use App\Models\User;
 use Carbon\Carbon;
-use Tests\TestCase;
 
-class PrePaymentTest extends TestCase
+class PrePaymentTest extends ActionTestCase
 {
     public function testCreatePrePaymentsWithActionsFlow() {
-        $loan = $this->buildLoan();
+        $loan = $this->buildLoan('intention');
 
         $intention = $loan->intention;
 
@@ -38,22 +31,10 @@ class PrePaymentTest extends TestCase
     }
 
     public function testCompletePrePayments() {
-        $loan = $this->buildLoan();
+        $loan = $this->buildLoan('pre_payment');
 
         $executedAtDate = Carbon::now()->format('Y-m-d h:m:s');
         Carbon::setTestNow($executedAtDate);
-
-        $intention = $loan->intention;
-        $response = $this->json(
-            'PUT',
-            "/api/v1/loans/$loan->id/actions/$intention->id/complete",
-            [
-                'type' => 'intention',
-            ]
-        );
-        $response->assertStatus(200);
-
-        $loan = $loan->fresh();
 
         $prePayment = $loan->prePayment;
 
@@ -81,7 +62,7 @@ class PrePaymentTest extends TestCase
     }
 
     public function testCancelPrePayments() {
-        $loan = $this->buildLoan();
+        $loan = $this->buildLoan('pre_payment');
 
         $executedAtDate = Carbon::now()->format('Y-m-d h:m:s');
         Carbon::setTestNow($executedAtDate);
@@ -115,20 +96,5 @@ class PrePaymentTest extends TestCase
         $response->assertStatus(200)
             ->assertJson(['status' => 'canceled'])
             ->assertJson(['executed_at' => $executedAtDate]);
-    }
-
-    private function buildLoan() {
-        $borrower = factory(Borrower::class)->create(['user_id' => $this->user->id]);
-        $user = factory(User::class)->create();
-        $owner = factory(Owner::class)->create([ 'user_id' => $user ]);
-        $loanable = factory(Car::class)->create([ 'owner_id' => $owner ]);
-
-        $loan = factory(Loan::class)->create([
-            'borrower_id' => $borrower->id,
-            'loanable_id' => $loanable->id,
-        ]);
-        $loan = $loan->fresh();
-
-        return $loan;
     }
 }

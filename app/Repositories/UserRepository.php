@@ -4,7 +4,7 @@ namespace App\Repositories;
 
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
-use Molotov\Repositories\RestRepository;
+use Molotov\RestRepository;
 
 class UserRepository extends RestRepository
 {

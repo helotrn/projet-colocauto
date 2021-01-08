@@ -3,7 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Loanable;
-use Molotov\Repositories\RestRepository;
+use Molotov\RestRepository;
 
 class LoanableRepository extends RestRepository
 {

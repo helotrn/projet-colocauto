@@ -1,23 +1,25 @@
 export default {
-  async beforeMount() {
-    if (this.auth.token) {
-      if (!this.$store.state.loaded && !this.$store.state.loading) {
-        try {
-          await this.$store.dispatch('loadUser');
-          if (this.$route.name === 'login') {
-            this.skipToApp();
-          }
-        } catch (e) {
-          this.$store.commit('user', null);
-          if (this.$route.meta.auth) {
-            this.$router.push(`/login?r=${this.$route.fullPath}`);
+  beforeRouteEnter(to, from, next) {
+    next(async (vm) => {
+      if (vm.auth.token) {
+        if (!vm.$store.state.loaded && !vm.$store.state.loading) {
+          try {
+            await vm.$store.dispatch('loadUser');
+            if (to.name === 'login') {
+              vm.skipToApp();
+            }
+          } catch (e) {
+            vm.$store.commit('user', null);
+            if (to.meta.auth) {
+              vm.$router.push(`/login?r=${to.fullPath}`);
+            }
           }
         }
+      } else if (to.meta.auth) {
+        vm.$store.commit('user', null);
+        vm.$router.push(`/login?r=${to.fullPath}`);
       }
-    } else if (this.$route.meta.auth) {
-      this.$store.commit('user', null);
-      this.$router.push(`/login?r=${this.$route.fullPath}`);
-    }
+    });
   },
   computed: {
     allLoans() {

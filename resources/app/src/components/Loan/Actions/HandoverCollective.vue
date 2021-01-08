@@ -75,9 +75,10 @@
             <p class="text-center"><strong>Merci et à très bientôt !</strong></p>
 
             <validation-observer ref="observer" v-slot="{ passes }">
-              <b-form :novalidate="true" class="register-form__form"
+              <b-form :novalidate="true" class="loan-actions-handover__form"
                 @submit.stop.prevent="passes(completeAction)">
-                <b-row v-if="!action.executed_at">
+                <b-row v-if="!action.executed_at"
+                  class="loan-actions-handover__form__image">
                   <b-col lg="6">
                     <forms-image-uploader
                       label="Photo du véhicule"
@@ -95,8 +96,7 @@
                       v-model="action.comments_by_borrower" />
                   </b-col>
                 </b-row>
-
-                <b-row v-else>
+                <b-row v-else class="loan-actions-handover__form__image">
                   <b-col v-if="action.image">
                     <p>
                       <a href="#" v-b-modal="'handover-collective-image'">

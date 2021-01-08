@@ -9,7 +9,11 @@ du {{ $loan->loanable->name }}
     appartenant à la communauté.
 @endif
 
+@if (!!$takeover->comments_on_contestation)
+"
 {{ $takeover->comments_on_contestation }}
+"
+@endif
 
 Voir l'emprunt [{{ url('/loans/'. $loan->id) }}]
 @endsection

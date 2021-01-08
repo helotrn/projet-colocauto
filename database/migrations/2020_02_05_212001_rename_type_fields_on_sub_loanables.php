@@ -6,6 +6,13 @@ use Illuminate\Database\Migrations\Migration;
 
 class RenameTypeFieldsOnSubLoanables extends Migration
 {
+    public function __construct() {
+        DB::connection()
+            ->getDoctrineConnection()
+            ->getDatabasePlatform()
+            ->registerDoctrineTypeMapping('geography', 'array');
+    }
+
     public function up() {
         Schema::table('bikes', function (Blueprint $table) {
             $table->renameColumn('type', 'bike_type');

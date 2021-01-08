@@ -5,7 +5,7 @@ namespace Tests\Integration;
 use App\Models\Community;
 use App\Models\Owner;
 use App\Models\Trailer;
-use Phaza\LaravelPostgis\Geometries\Point;
+use MStaack\LaravelPostgis\Geometries\Point;
 use Tests\TestCase;
 
 class TrailerTest extends TestCase

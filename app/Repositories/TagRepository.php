@@ -3,7 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Tag;
-use Molotov\Repositories\RestRepository;
+use Molotov\RestRepository;
 
 class TagRepository extends RestRepository
 {

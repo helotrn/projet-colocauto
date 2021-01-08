@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Utils;
+namespace App\Casts;
 
-use Vkovic\LaravelCustomCasts\CustomCastBase;
+use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 
-class ObjectTypeCast extends CustomCastBase
+class ObjectTypeCast implements CastsAttributes
 {
-    public function setAttribute($objectType) {
-        switch ($objectType) {
+    public function set($model, $key, $value, $attributes) {
+        switch ($value) {
             case 'car':
                 return 'App\Models\Car';
             case 'trailer':
@@ -15,12 +15,12 @@ class ObjectTypeCast extends CustomCastBase
             case 'bike':
                 return 'App\Models\Bike';
             default:
-                return $objectType;
+                return $value;
         }
     }
 
-    public function castAttribute($objectType) {
-        switch ($objectType) {
+    public function get($model, $key, $value, $attributes) {
+        switch ($value) {
             case 'App\Models\Car':
                 return 'car';
             case 'App\Models\Trailer':
@@ -28,7 +28,7 @@ class ObjectTypeCast extends CustomCastBase
             case 'App\Models\Bike':
                 return 'bike';
             default:
-                return $objectType;
+                return $value;
         }
     }
 }

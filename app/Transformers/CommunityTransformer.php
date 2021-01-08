@@ -3,9 +3,9 @@
 namespace App\Transformers;
 
 use Auth;
-use Molotov\Transformers\BaseTransformer;
+use Molotov\Transformer;
 
-class CommunityTransformer extends BaseTransformer
+class CommunityTransformer extends Transformer
 {
     protected $contexts = ['User'];
 

@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\LoanHandoverContestationResolvedEvent;
+use App\Events\LoanHandoverContestedEvent;
+use App\Http\Requests\Action\HandoverRequest;
 use App\Http\Requests\Action\PaymentRequest;
 use App\Http\Requests\BaseRequest as Request;
 use App\Models\Handover;
@@ -73,17 +76,24 @@ class HandoverController extends RestController
         return $response;
     }
 
-    public function complete(Request $request, $actionId, $loanId) {
+    public function complete(HandoverRequest $request, $actionId, $loanId) {
         $authRequest = $request->redirectAuth(Request::class);
 
         $item = $this->repo->find($authRequest, $actionId);
         $loan = $this->loanRepo->find($authRequest, $loanId);
 
+        $wasContested = $item->status === 'canceled';
+
         $item->fill($request->all());
         $item->status = 'completed';
+        $item->comments_on_contestation = '';
         $item->save();
 
         $this->repo->update($request, $actionId, $request->all());
+
+        if ($wasContested) {
+            event(new LoanHandoverContestationResolvedEvent($item, $request->user()));
+        }
 
         if (!$loan->loanable->owner) {
             $payment = $loan->payment()->first();
@@ -104,9 +114,11 @@ class HandoverController extends RestController
         $item = $this->repo->find($authRequest, $actionId);
         $loan = $this->loanRepo->find($authRequest, $loanId);
 
-        $item->fill($request->all());
         $item->status = 'canceled';
+        $item->comments_on_contestation = $request->get('comments_on_contestation');
         $item->save();
+
+        event(new LoanHandoverContestedEvent($item, $request->user()));
 
         return $item;
     }

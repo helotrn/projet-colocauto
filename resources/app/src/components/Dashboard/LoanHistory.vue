@@ -31,7 +31,7 @@
             Payé {{ loan.total_final_cost | currency }}
           </span>
           <span v-else>
-            Reçu {{ loan.total_final_cost | currency }}
+            Reçu {{ (loan.final_price - loan.final_purchases_amount) | currency }}
           </span>
         </li>
       </ul>

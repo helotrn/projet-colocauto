@@ -3,21 +3,24 @@
     <b-card-header header-tag="header" role="tab" class="loan-actions__header"
       v-b-toggle.loan-actions-takeover>
       <h2>
-        <svg-waiting v-if="action.status === 'in_process'" />
+        <svg-danger
+          v-if="action.status === 'canceled' ||
+            (item.contested_at && action.status === 'in_process')" />
+        <svg-waiting v-else-if="action.status === 'in_process'" />
         <svg-check v-else-if="action.status === 'completed'" />
-        <svg-danger v-else-if="action.status === 'canceled'" />
 
         Informations avant de partir
       </h2>
 
-      <span v-if="action.status == 'in_process'">En attente</span>
-      <span v-else-if="action.status === 'completed'">
-        Rempli &bull; {{ action.executed_at | datetime }}
-      </span>
-      <span v-else-if="action.status === 'canceled'">
-        <span v-if="action.comments_on_contestation">Contesté</span>
-        <span v-else>Annulé</span>
-        &bull; {{ action.executed_at | datetime }}
+      <span v-if="item.contested_at && action.status === 'in_process'">Bloqué</span>
+      <span v-else>
+        <span v-if="action.status == 'in_process'">En attente</span>
+        <span v-else-if="action.status === 'completed'">
+          Complété &bull; {{ action.executed_at | datetime }}
+        </span>
+        <span v-else-if="action.status === 'canceled'">
+          Contesté &bull; {{ action.executed_at | datetime }}
+        </span>
       </span>
     </b-card-header>
 
@@ -111,10 +114,11 @@
               </b-row>
 
               <b-row class="loan-actions-takeover__buttons text-center"
-                v-if="!action.executed_at || userIsAdmin">
+                v-if="(!action.executed_at && !item.contested_at) || userIsAdmin">
                 <b-col>
                   <b-button type="submit" size="sm" variant="success" class="mr-3">
-                    Enregistrer
+                    <span v-if="isContested">Corriger</span>
+                    <span v-else>Enregistrer</span>
                   </b-button>
                 </b-col>
               </b-row>
@@ -178,10 +182,11 @@
               </b-row>
 
               <b-row class="loan-actions-takeover__buttons text-center"
-                v-if="!action.executed_at">
+                v-if="(!action.executed_at && !item.contested_at) || userIsAdmin">
                 <b-col>
                   <b-button type="submit" size="sm" variant="success" class="mr-3">
-                    Enregistrer
+                    <span v-if="isContested">Corriger</span>
+                    <span v-else>Enregistrer</span>
                   </b-button>
                 </b-col>
               </b-row>
@@ -241,7 +246,7 @@
           </b-row>
         </div>
 
-        <div v-if="!contestedPreviously">
+        <div v-if="!isContested">
           <div v-if="isContestable">
             <hr>
 
@@ -282,20 +287,20 @@
               </b-form>
             </validation-observer>
           </div>
-          <div v-if="isContested">
-            <hr>
+        </div>
+        <div v-else>
+          <hr>
 
-            <p>Les données ont été contestées:</p>
+          <p>Les données ont été contestées:</p>
 
-            <b-alert variant="warning" show>
-              {{ action.comments_on_contestation }}
-            </b-alert>
+          <b-alert variant="warning" show>
+            {{ action.comments_on_contestation }}
+          </b-alert>
 
-            <p>
-              Un membre de l'équipe LocoMotion contactera les participant-e-s et
-              ajustera les données.
-            </p>
-          </div>
+          <p>
+            Un membre de l'équipe LocoMotion contactera les participant-e-s et
+            ajustera les données.
+          </p>
         </div>
       </b-collapse>
     </b-card-body>
@@ -316,12 +321,9 @@ export default {
     FormsValidatedInput,
   },
   mounted() {
-    this.contestedPreviously = !!this.action.comments_on_contestation;
-  },
-  data() {
-    return {
-      contestedPreviously: false,
-    };
+    if (!this.action.mileage_beginning) {
+      this.action.mileage_beginning = 0;
+    }
   },
 };
 </script>

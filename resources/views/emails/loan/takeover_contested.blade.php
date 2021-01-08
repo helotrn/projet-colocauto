@@ -11,9 +11,11 @@
     à {{ $loan->departure_at }}.
 </p>
 
+@if (!!$takeover->comments_on_contestation)
 <p>
     {{ $takeover->comments_on_contestation }}
 </p>
+@endif
 
 <p>
     Un membre de l'équipe LocoMotion a été notifié et sera appelé à arbitrer la résolution du

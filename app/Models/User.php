@@ -14,7 +14,6 @@ use App\Services\NokeService;
 use App\Transformers\UserTransformer;
 use Auth;
 use GuzzleHttp\Client as HttpClient;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
@@ -96,6 +95,10 @@ class User extends AuthenticatableBaseModel
     public static function getColumnsDefinition() {
         return [
             '*' => function ($query = null) {
+                if (!$query) {
+                    return 'users.*';
+                }
+
                 return $query->selectRaw('users.*');
             },
             'full_name' => function ($query = null) {
