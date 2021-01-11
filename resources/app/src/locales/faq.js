@@ -5,15 +5,15 @@ export default {
     home: [
       {
         title: 'locomotion.app ne se télécharge pas!',
-        content: '<p>Il n’y a pas d’application à télécharger sur l’AppStore, GooglePlay ou d’autres magasins d’app. locomotion.app est simplement un site web et vous y êtes ! Il fonctionne à l’aide d’un navigateur (Firefox, Chrome, Safari…) sur votre ordinateur ou votre téléphone intelligent. Vous pouvez ajouter un raccourci sur votre téléphone intelligent, ça aurait l’air d’une app !</p>',
+        content: '<p>Il n’y a pas d’application à télécharger sur l’AppStore, GooglePlay ou d’autres magasins d’app. locomotion.app est simplement un site Web et vous y êtes! Il fonctionne à l’aide d’un navigateur (Firefox, Chrome, Safari…) sur votre ordinateur ou votre téléphone intelligent. Vous pouvez ajouter un raccourci sur votre téléphone intelligent, ça aurait l’air d’une app!</p>',
       },
       {
         title: 'Emprunter, ça coûte combien?',
-        content: '<p>L’inscription à LocoMotion est gratuite et il n’y a pas d’abonnement.</p> <p>✓ Vous utilisez un vélo ou une remorque à vélo ? C’est gratuit, profitez-en !</p> <p>Vous utilisez l’auto de votre voisin-e ? Coût d’un emprunt = distance + durée + assurance.</p> <p>Le prix est comparable ou parfois moins cher que les services d’autopartage du Québec.</p>',
+        content: '<p>L’inscription à LocoMotion est gratuite et il n’y a pas d’abonnement.</p> <p>✓ Vous utilisez un vélo ou une remorque à vélo? C’est gratuit, profitez-en!</p> <p>Vous utilisez l’auto de votre voisin-e? Coût d’un emprunt = distance + durée + assurance.</p> <p>Le prix est comparable ou parfois moins cher que les services d’autopartage du Québec.</p>',
       },
       {
         title: 'Partager mon auto, comment ça marche?',
-        content: '<p>Une personne au compte LocoMotion validé pièces d’identité et dossier de conduite validé) vous fera une demande. Vous pourrez ajuster les disponibilités de votre auto. Comme propriétaire d’une auto en partage, vous avez toujours le choix d’accepter ou non une demande de réservation. Aussi, en apprenant à connaître vos voisin-e-s, il est plus facile de se faire confiance. Vous recevrez une contribution financière de votre voisin-e. Et enfin, n’oubliez pas qu’il y a une assurance pour couvrir les trajets !</p>',
+        content: '<p>Une personne au compte LocoMotion validé (pièces d’identité et dossier de conduite validé) vous fera une demande. Vous pourrez ajuster les disponibilités de votre auto. Comme propriétaire d’une auto en partage, vous avez toujours le choix d’accepter ou non une demande de réservation. Aussi, en apprenant à connaître vos voisin-e-s, il est plus facile de se faire confiance. Vous recevrez une contribution financière de votre voisin-e. Et enfin, n’oubliez pas qu’il y a une assurance pour couvrir les trajets!</p>',
       },
       {
         title: 'Partager mon auto, combien je reçois?',
@@ -33,15 +33,15 @@ export default {
       },
       {
         title: 'Quels sont les critères pour partager mon auto?',
-        content: '<p>Votre auto doit avoir moins de 15 ans et une valeur à neuf maximale de 50 000 $. Vous devrez aussi aviser votre assureur (lettre fournie). Pas besoin de prévenir votre assureur si c’est Desjardins ou La Personnelle.</p>',
+        content: '<p>Votre auto doit avoir moins de 15 ans et une valeur à neuf maximale de 50&nbsp;000&nbsp;$. Vous devrez aussi aviser votre assureur (lettre fournie). Pas besoin de prévenir votre assureur si c’est Desjardins ou La Personnelle.</p>',
       },
       {
-        title: "Qu'est-ce qui arrive en cas d'accident ?",
-        content: '<p>Respirez. Si vous avez un accident avec une auto empruntée avec LocoMotion, on a inscrit la marche à suivre dans le carnet de bord de l’auto ou dans votre trajet en cours sur locomotion.app</p><p>En cas d’accident, notre couverture Desjardins Assurances (spécialement conçue pour le projet) prend en charge la responsabilité civile et les réparations.<p><ul><li>Couverture responsabilité civile à hauteur de 2M$</li><li>Franchise de 100$ pour les dommages causés notamment par le feu, le vol, le vandalisme, le bris de vitres.</li><li>Franchise de 500$ pour les dommages causés par une collision ou un versement</li>',
+        title: "Qu'est-ce qui arrive en cas d'accident?",
+        content: '<p>Respirez. Si vous avez un accident avec une auto empruntée avec LocoMotion, on a inscrit la marche à suivre dans le carnet de bord de l’auto ou dans votre trajet en cours sur locomotion.app</p><p>En cas d’accident, notre couverture Desjardins Assurances (spécialement conçue pour le projet) prend en charge la responsabilité civile et les réparations.<p><ul><li>Couverture responsabilité civile à hauteur de 2&nbsp;M$</li><li>Franchise de 100&nbsp;$ pour les dommages causés notamment par le feu, le vol, le vandalisme, le bris de vitres.</li><li>Franchise de 500&nbsp;$ pour les dommages causés par une collision ou un versement</li>',
       },
       {
         title: 'Y-a-t’il d’autres véhicules que des autos à partager?',
-        content: '<p>En plus des voitures variées de vos voisins et voisines, vous aurez accès à une variété de moyens de transport : vélo-cargo, vélo électrique, remorque à attacher à votre vélo…  Vous pourrez le choisir selon votre besoin. LocoMotion c’est la cerise de votre <a href="https://equiterre.org/solution/cocktail-transport" target="_blank">cocktail transport</a>!</p>',
+        content: '<p>En plus des voitures variées de vos voisins et voisines, vous aurez accès à une variété de moyens de transport&nbsp;: vélo-cargo, vélo électrique, remorque à attacher à votre vélo…  Vous pourrez le choisir selon votre besoin. LocoMotion c’est la cerise de votre <a href="https://equiterre.org/solution/cocktail-transport" target="_blank">cocktail transport</a>!</p>',
       }
     ],
     sections: [
@@ -61,7 +61,7 @@ export default {
         questions: [
           {
             title: 'Comment faire une réservation?',
-            content: "<p>Il y a deux affichages possibles&nbsp;: carte ou liste.</p><p>Indiquez la période de réservation souhaitée puis cliquez sur Rechercher. Les véhicules disponibles affichent alors le bouton &laquo;&nbsp;Demande d’emprunt&nbsp;&raquo;.</p><p>Si le véhicule est collectif, c’est tout ce qu’il y a à faire, il est réservé pour vous!</p><p>Si le véhicule appartient à une personne, contactez-la ! Texto, appel... Profitez-en pour faire connaissance. Si son véhicule est disponible, la personne acceptera votre demande sur locomotion.app. Vous pourrez alors pré-payer l’emprunt et poursuivre le processus sur locomotion.app jusqu’à la fin de l’emprunt.</p>",
+            content: "<p>Il y a deux affichages possibles&nbsp;: carte ou liste.</p><p>Indiquez la période de réservation souhaitée puis cliquez sur Rechercher. Les véhicules disponibles affichent alors le bouton &laquo;&nbsp;Demande d’emprunt&nbsp;&raquo;.</p><p>Si le véhicule est collectif, c’est tout ce qu’il y a à faire, il est réservé pour vous!</p><p>Si le véhicule appartient à une personne, contactez-la! Texto, appel... Profitez-en pour faire connaissance. Si son véhicule est disponible, la personne acceptera votre demande sur locomotion.app. Vous pourrez alors pré-payer l’emprunt et poursuivre le processus sur locomotion.app jusqu’à la fin de l’emprunt.</p>",
           },
         ],
       },
@@ -71,11 +71,11 @@ export default {
         questions: [
           {
             title: 'Les remorques sont disponibles durant quelle période?',
-            content: "Ça dépend de la météo ! (Les abris à remorques à vélo ne doivent pas gêner le déneigement) Environ de avril à novembre.",
+            content: "Ça dépend de la météo! (Les abris à remorques à vélo ne doivent pas gêner le déneigement). Environ de avril à novembre.",
           },
           {
             title: 'Comment installer l’attache-remorque sur mon vélo?',
-            content: "<p>Pour traîner la remorque, vous avez besoin d’une attache-remorque. Vous l’installez une fois sur votre vélo puis vous la laissez en place!</p><p>Vous pouvez prendre une attache-remorque par personne et c’est gratuit. Si vous avez plusieurs vélos, merci d’utiliser la même au besoin. Pour savoir où la trouver, rendez-vous sur le <a href=\"http://bit.ly/locomotion-bienvenue\" target=\"_blank\">Guide de départ</a>.</p><p>L’attache est compatible avec la majorité des vélos.</p><p>Pour installer l’attache-remorque&nbsp;:</p><img src=\"/FAQ-attache-remorque.png\" alt=\Exemple d'attache-remorque installé\" style=\"float: left; max-width: 12rem; margin-right: 1rem;\"/><ol style=\"list-style: inside decimal;\"><li>Enlevez le boulon de la roue arrière du vélo</li><li>Placez la pièce de façon (presque) parallèle au sol</li><li>Remplacez le boulon et serrez bien</li></ol><p>Lorsque vous n’utilisez pas la remorque, l’attache grisel reste dans la pièce fixe (généralement noire) sur votre vélo</p>",
+            content: "<p>Pour traîner la remorque, vous avez besoin d’une attache-remorque. Vous l’installez une fois sur votre vélo puis vous la laissez en place!</p><p>Vous pouvez prendre une attache-remorque par personne et c’est gratuit. Si vous avez plusieurs vélos, merci d’utiliser la même au besoin. Pour savoir où la trouver, rendez-vous sur le <a href=\"http://bit.ly/locomotion-bienvenue\" target=\"_blank\">Guide de départ</a>.</p><p>L’attache est compatible avec la majorité des vélos.</p><p>Pour installer l’attache-remorque&nbsp;:</p><img src=\"/FAQ-attache-remorque.png\" alt=\Exemple d'attache-remorque installé\" style=\"float: left; max-width: 12rem; margin-right: 1rem;\"/><ol style=\"list-style: inside decimal;\"><li>enlevez le boulon de la roue arrière du vélo;</li><li>placez la pièce de façon (presque) parallèle au sol;</li><li>remplacez le boulon et serrez bien.</li></ol><p>Lorsque vous n’utilisez pas la remorque, l’attache grisel reste dans la pièce fixe (généralement noire) sur votre vélo</p>",
           },
           {
             title: 'Les cadenas Noke Pro : comment ça marche?',
@@ -83,7 +83,7 @@ export default {
           },
           {
             title: 'Comment débarrer le cadenas Noke Pro?',
-            content: '<iframe width="560" height="315" src="https://www.youtube.com/embed/PvyJd2--0sw" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="margin: 0 auto; max-width: 100%;"></iframe><ol><li>Réservez la remorque sur locomotion.app au moins 15 min avant votre emprunt</li><li>Activez internet et la fonction bluetooth sur votre cellulaire</li><li>Si vous avez un système d’exploitation Android, activez la localisation (pas nécessaire avec Iphone)</li><li>Ouvrez l’application Noke Pro<br><em>Important: Ne cliquez sur rien à cette étape.</em><li>Si le cadenas est rond : Appuyez sur l’anneau du cadenas, vers le corps du cadenas, comme si vous vouliez le fermer.<br>Si le cadenas est carré : Pesez sur le bouton en-dessous</li><li>Dans l’application, une icône bleue apparaît, cliquez dessus pour déverrouiller le cadenas.</li></ul><p>Magie ! Le cadenas est ouvert :)</p>'
+            content: '<iframe width="560" height="315" src="https://www.youtube.com/embed/PvyJd2--0sw" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="margin: 0 auto; max-width: 100%;"></iframe><ol><li>Réservez la remorque sur locomotion.app au moins 15 min avant votre emprunt</li><li>Activez Internet et la fonction Bluetooth sur votre cellulaire</li><li>Si vous avez un système d’exploitation Android, activez la localisation (pas nécessaire avec iPhone)</li><li>Ouvrez l’application Noke Pro<br><em>Important&nbsp;: Ne cliquez sur rien à cette étape.</em><li>Si le cadenas est rond&nbsp;: Appuyez sur l’anneau du cadenas, vers le corps du cadenas, comme si vous vouliez le fermer.<br>Si le cadenas est carré&nbsp;: Pesez sur le bouton en-dessous</li><li>Dans l’application, une icône bleue apparaît, cliquez dessus pour déverrouiller le cadenas.</li></ul><p>Magie! Le cadenas est ouvert :)</p>'
           },
           {
             title: 'J’ai un problème avec un cadenas Noke Pro',
@@ -91,12 +91,12 @@ export default {
             + '<div class="alert alert-info"><p>Vous avez un problème avec le cadenas?</p><p>Contactez-nous entre 9h et 20h au <a href=\"tel:438-476-3343\" target=\"_blank\" rel=\"noopener noreferrer\">438&nbsp;476-3343</a><br>(cette ligne est dédiée uniquement aux problèmes liés aux cadenas)</p></div>'
           },
           {
-            title: 'Est-ce qu’il faut activer internet et le bluetooth de mon cellulaire?',
+            title: 'Est-ce qu’il faut activer Internet et le Bluetooth de mon cellulaire?',
             content: 'Oui!',
           },
           {
             title: "Si je n’ai pas de téléphone intelligent, qu’est-ce que je fais?",
-            content: '<p>Nous pourrons vous prêter une puce pour ouvrir les cadenas. En cas de bris ou de perte, elle doit nous être remboursée (30 $). Contactez notre équipe, info@locomotion.app!</p>'
+            content: '<p>Nous pourrons vous prêter une puce pour ouvrir les cadenas. En cas de bris ou de perte, elle doit nous être remboursée (30&nbsp;$). Contactez notre équipe, info@locomotion.app!</p>'
           },
         ],
       },
@@ -121,12 +121,12 @@ export default {
             content: '<p>Une fois la réservation acceptée, c’est la responsabilité de la personne qui emprunte de s’arranger avec le ou la propriétaire sur un lieu et une heure pour récupérer les clés de l’auto.</p>',
           },
           {
-            title: 'IMPORTANT - Vous avez 48h pour entrer les infos finales (km, essence)',
-            content: 'Une fois de retour, il est très important de mettre à jour le km parcouru et vos dépenses en essence.  Sans ces informations, il sera difficile de donner sa juste part au ou à la propriétaire de l’auto.',
+            title: 'IMPORTANT - Vous avez 48 h pour entrer les infos finales (km, essence)',
+            content: 'Une fois de retour, il est très important de mettre à jour le km parcouru et vos dépenses en essence. Sans ces informations, il sera difficile de donner sa juste part au ou à la propriétaire de l’auto.',
           },
           {
             title: 'Modifier les infos d’un emprunt passé  (km départ, km retour, achat carburant)',
-            content: "<p>Pour l'instant, il n'est pas possible de modifier les informations une fois l’emprunt terminé. Si vous vous rendez compte d’une erreur, dites-le à la personne qui vous a prêté son auto et contactez info@locomotion.app, on vous aidera à ajuster vos factures. ",
+            content: "<p>Pour l'instant, il n'est pas possible de modifier les informations une fois l’emprunt terminé. Si vous vous rendez compte d’une erreur, dites-le à la personne qui vous a prêté son auto et contactez info@locomotion.app, on vous aidera à ajuster vos factures.</p>",
           },
         ],
       },
@@ -139,8 +139,8 @@ export default {
             content: '<p>Par respect pour les autres, évitons les retards. :-) Mais évidemment, ce genre de choses peut arriver.</p><p style="text-decoration: underline;">S’il s’agit de l’auto d’un-e voisin-e</p><p>Avertissez directement le ou la propriétaire du véhicule. Ensuite, vous pourrez indiquer l’heure réelle de votre retour en cliquant sur le bouton de la page de l’emprunt.</p><p style="text-decoration: underline;">S’il s’agit d’un véhicule collectif</p><p>Dès que possible, allez sur la page de l’emprunt de locomotion.app. Utilisez le bouton &laquo;&nbsp;Signaler un retard&nbsp;&raquo; pour obtenir les coordonnées de la prochaine personne qui a réservé le véhicule. Vous devez la contacter si vous empiétez sur sa réservation. Indiquez votre heure réelle de retour.</p>',
           },
           {
-            title: "J'ai annulé ma réservation d’auto, comment puis-je me faire rembourser ?",
-            content: "<p>Si vous annulez votre réservation, l'argent est simplement remis sur votre compte LocoMotion.Vous pouvez retirer cet argent ou l’utiliser sur un prochain trajet. L'info sur l’argent disponible dans votre compte LocoMotion se retrouve sur le tableau de bord (solde).</p><p>Si vous annulez à moins de 24 heures de préavis ou vous ne vous présentez pas pour emprunter l’auto, vous paierez l’assurance.</p>"
+            title: "J'ai annulé ma réservation d’auto, comment puis-je me faire rembourser?",
+            content: "<p>Si vous annulez votre réservation, l'argent est simplement remis sur votre compte LocoMotion. Vous pouvez retirer cet argent ou l’utiliser sur un prochain trajet. L'info sur l’argent disponible dans votre compte LocoMotion se retrouve sur le tableau de bord (solde).</p><p>Si vous annulez à moins de 24 heures de préavis ou vous ne vous présentez pas pour emprunter l’auto, vous paierez l’assurance.</p>"
           },
         ],
       },
@@ -154,11 +154,11 @@ export default {
           },
           {
             title: 'Avant de remettre les clés, vérifier le prépaiement',
-            content: '<p>Avant de remettre les clés de votre auto à votre voisin-e, vérifiez si l’emprunt est prépayé. Si ce n’est pas le cas, rappelez-le gentiment ! Ça doit être un simple oubli et cette étape est nécessaire pour la suite :-)</p>',
+            content: '<p>Avant de remettre les clés de votre auto à votre voisin-e, vérifiez si l’emprunt est prépayé. Si ce n’est pas le cas, rappelez-le gentiment! Ça doit être un simple oubli et cette étape est nécessaire pour la suite :-)</p>',
           },
           {
             title: "Vérifier un prêt d'auto terminé (km, carburant, etc.)",
-            content: '<p>À la fin d’un prêt d’auto, il est important de vérifier les informations entrées par votre voisin-e dans les 48h. Après ce délai, il ne sera plus possible de contester en cas d’erreur. Pour vérifier, aller sur la page de l’emprunt, via le menu à droite du tableau de bord (&laquo;&nbsp;voir tous les trajets&nbsp;&raquo;) ou via votre profil (&laquo;&nbsp;Historiques des emprunts&nbsp;&raquo;).</p>',
+            content: '<p>À la fin d’un prêt d’auto, il est important de vérifier les informations entrées par votre voisin-e dans les 48&nbsp;h. Après ce délai, il ne sera plus possible de contester en cas d’erreur. Pour vérifier, aller sur la page de l’emprunt, via le menu à droite du tableau de bord (&laquo;&nbsp;voir tous les trajets&nbsp;&raquo;) ou via votre profil (&laquo;&nbsp;Historiques des emprunts&nbsp;&raquo;).</p>',
           },
           {
             title: 'Annuler un prêt',
@@ -166,7 +166,7 @@ export default {
           },
           {
             title: 'Récupérer mon argent',
-            content: '<p>Une fois le trajet terminé, vous recevrez l’argent du trajet sur votre compte LocoMotion. Dès que vous avez un minimum de 10$ sur votre compte, vous pouvez le récupérer en cliquant sur “Réclamer” (bouton sous l’information de votre solde, sur le tableau de bord).</p>'
+            content: '<p>Une fois le trajet terminé, vous recevrez l’argent du trajet sur votre compte LocoMotion. Dès que vous avez un minimum de 10&nbsp;$ sur votre compte, vous pouvez le récupérer en cliquant sur &laquo;&nbsp;Réclamer&nbsp;&raquo; (bouton sous l’information de votre solde, sur le tableau de bord).</p>'
           },
           {
             title: 'Quoi faire si je reçois une facture liée à l’emprunt de mon auto par un-e voisin-e?',
@@ -206,15 +206,15 @@ export default {
           },
           {
             title: 'Approvisionner mon compte LocoMotion',
-            content: '<p>Vous avez besoin d’approvisionner votre compte LocoMotion pour payer les emprunts d’auto et les contributions volontaires. Vous pouvez approvisionner votre compte via le tableau de bord (bouton “Approvisionner” sous l’information de votre solde) ou le faire via lors de l’emprunt.</p><p>Des frais de transactions sont prélevés (par Stripe), soit  2,2% + 0,30 $. Ainsi, si vous mettez 100$ sur votre compte LocoMotion, c’est 102,5$ qui seront facturés à votre carte de crédit. Vous pouvez réduire les frais de transaction en approvisionnant votre compte avec des montants plus élevés plutôt qu’en payant le montant exact à chaque emprunt.</p>',
+            content: '<p>Vous avez besoin d’approvisionner votre compte LocoMotion pour payer les emprunts d’auto et les contributions volontaires. Vous pouvez approvisionner votre compte via le tableau de bord (bouton &laquo;&nbsp;Approvisionner&nbsp;&raquo; sous l’information de votre solde) ou le faire via lors de l’emprunt.</p><p>Des frais de transactions sont prélevés (par Stripe), soit  2,2&nbsp;% + 0,30&nbsp;$. Ainsi, si vous mettez 100&nbsp;$ sur votre compte LocoMotion, c’est 102,50&nbsp;$ qui seront facturés à votre carte de crédit. Vous pouvez réduire les frais de transaction en approvisionnant votre compte avec des montants plus élevés plutôt qu’en payant le montant exact à chaque emprunt.</p>',
           },
           {
             title: 'Réclamer l’argent qui est sur mon compte LocoMotion',
-            content: '<p>Vous pouvez réclamer l’argent qui est sur votre compte en cliquant sur le bouton “Réclamer” sur le tableau de bord (sous l’information de votre solde) . Un montant minimal de 10$ est requis.</p>',
+            content: '<p>Vous pouvez réclamer l’argent qui est sur votre compte en cliquant sur le bouton &laquo;&nbsp;Réclamer&nbsp;&raquo; sur le tableau de bord (sous l’information de votre solde). Un montant minimal de 10&nbsp;$ est requis.</p>',
           },
           {
-            title: 'Compte bancaire, carte de crédit: quelle différence?',
-            content: '<p>Sur locomotion.app, la carte de crédit sert à mettre de l’argent sur votre compte LocoMotion et votre compte bancaire sert à récupérer votre argent (si un-e voisin-e vous a emprunté votre auto, par exemple.)</p>',
+            title: 'Compte bancaire, carte de crédit : quelle différence?',
+            content: '<p>Sur locomotion.app, la carte de crédit sert à mettre de l’argent sur votre compte LocoMotion et votre compte bancaire sert à récupérer votre argent (si un-e voisin-e vous a emprunté votre auto, par exemple).</p>',
           },
           {
             title: 'Comment puis-je faire le suivi de mes paiements?',
@@ -247,11 +247,11 @@ export default {
           {
             title: 'Voisinage, quartier : quelle différence?',
             content: '<p class="text-center"><img src="/schema-quartiers.png"></p>'
-            + "<p>Le voisinage est dans le quartier, le quartier est dans l’arrondissement… « L’arbre est dans ses feuilles, Marilon Marilé ! »</p><p>Être proche de ses voisin-e-s, c’est la base de LocoMotion. C’est pour cette raison qu’on privilégie la création de sous-groupes LocoMotion à l’échelle très très locale.</p><p>Un voisinage LocoMotion est créé par des gens qui habitent à 5-10 minutes à pied. Ça prend des personnes qui veulent s’impliquer dans le projet et le faire évoluer.</p><p>Comment favoriser les liens dans le voisinage ? Est-ce qu’on veut ajouter à notre flotte collective un vélo électrique ou des remorques ? Solon vous accompagne!</p><p>Le quartier est plus grand. Il réfère à un territoire urbain reconnu par la population et les institutions locales (par exemple, La Petite-Patrie) et peut contenir plusieurs voisinages. Participer à LocoMotion dans son quartier, c'est avoir accès à certains véhicules et c'est une porte d'entrée vers la création de son voisinage !</p><p>Les véhicules sont pour le voisinage ou le quartier ? L'ensemble des participant-e-s du quartier peut profiter des véhicules collectifs (appartiennent à Solon). Les propriétaires d'un véhicule (auto, vélo-cargo ou autre) peuvent décider de le rendre disponible à leur voisinage ou au quartier au complet.</p>"
+            + "<p>Le voisinage est dans le quartier, le quartier est dans l’arrondissement… &laquo;&nbsp;L’arbre est dans ses feuilles, Marilon Marilé!&nbsp;&raquo;</p><p>Être proche de ses voisin-e-s, c’est la base de LocoMotion. C’est pour cette raison qu’on privilégie la création de sous-groupes LocoMotion à l’échelle très très locale.</p><p>Un voisinage LocoMotion est créé par des gens qui habitent à 5-10 minutes à pied. Ça prend des personnes qui veulent s’impliquer dans le projet et le faire évoluer.</p><p>Comment favoriser les liens dans le voisinage? Est-ce qu’on veut ajouter à notre flotte collective un vélo électrique ou des remorques? Solon vous accompagne!</p><p>Le quartier est plus grand. Il réfère à un territoire urbain reconnu par la population et les institutions locales (par exemple, La Petite-Patrie) et peut contenir plusieurs voisinages. Participer à LocoMotion dans son quartier, c'est avoir accès à certains véhicules et c'est une porte d'entrée vers la création de son voisinage!</p><p>Les véhicules sont pour le voisinage ou le quartier? L'ensemble des participant-e-s du quartier peut profiter des véhicules collectifs (appartiennent à Solon). Les propriétaires d'un véhicule (auto, vélo-cargo ou autre) peuvent décider de le rendre disponible à leur voisinage ou au quartier au complet.</p>"
           },
           {
             title: 'Est-ce que LocoMotion est disponible là où je reste?',
-            content: '<p>LocoMotion est accessible seulement aux <a href="https://locomotion.app/communities" target="_blank">voisinages et quartiers visibles sur cette carte</a>. Si vous résidez dans un quartier où LocoMotion est disponible, mais qu’il n’y a pas encore de voisinage autour de chez vous, vous pourriez en créer un avec vos voisin-e-s ! En savoir plus sur <a href="https://mailchi.mp/solon-collectif.org/comment-creer-un-voisinage" target="_blank">comment créer un voisinage</a>.</p>',
+            content: '<p>LocoMotion est accessible seulement aux <a href="https://locomotion.app/communities" target="_blank">voisinages et quartiers visibles sur cette carte</a>. Si vous résidez dans un quartier où LocoMotion est disponible, mais qu’il n’y a pas encore de voisinage autour de chez vous, vous pourriez en créer un avec vos voisin-e-s! En savoir plus sur <a href="https://mailchi.mp/solon-collectif.org/comment-creer-un-voisinage" target="_blank">comment créer un voisinage</a>.</p>',
           },
           {
             title: 'Je partage mon véhicule au voisinage ou au quartier?',
@@ -259,12 +259,12 @@ export default {
           },
           {
             title: 'On est une gang motivée de voisines et de voisins, comment partir un voisinage LocoMotion?',
-            content: '<p>La mise en œuvre de LocoMotion dans de nouveaux voisinages demande du temps, des personnes motivées et de la persévérance ! Pour savoir si vous résidez dans un quartier où c’est possible et en  savoir plus sur comment faire, rendez-vous sur <a href="https://mailchi.mp/solon-collectif.org/comment-creer-un-voisinage" target="_blank">comment créer un voisinage</a>.</p>',
+            content: '<p>La mise en œuvre de LocoMotion dans de nouveaux voisinages demande du temps, des personnes motivées et de la persévérance! Pour savoir si vous résidez dans un quartier où c’est possible et en savoir plus sur comment faire, rendez-vous sur <a href="https://mailchi.mp/solon-collectif.org/comment-creer-un-voisinage" target="_blank">comment créer un voisinage</a>.</p>',
           },
         ],
       },
       {
-        title: 'Envie d’en faire plus ? Rejoignez votre comité de voisinage!',
+        title: 'Envie d’en faire plus? Rejoignez votre comité de voisinage!',
         count: '1',
         questions: [
           {
