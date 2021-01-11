@@ -198,8 +198,12 @@ export default {
       },
       {
         title: 'Compte LocoMotion, facturation et paiement',
-        count: '5',
+        count: '6',
         questions: [
+          {
+            title: 'Comment ça marche?',
+            content: '<p>Les transactions monétaires sur locomotion.app se font par l’intermédiaire de votre compte LocoMotion. Le solde de votre compte est visible en tout temps sur le Tableau de bord.</p><p>Votre solde augmente lorsque&nbsp;:</p><ul><li>Vous approvisionnez votre compte avec votre carte de crédit;</li><li>Vous prêtez votre auto&nbsp;: l’argent de l’emprunteur-se va sur votre compte LocoMotion.</li></ul><p>Votre solde diminue lorsque&nbsp;:</p><ul><li>Vous payez un emprunt (il faut avoir clôturé votre emprunt pour que la transaction se fasse);</li><li>Vous réclamez votre solde. L’argent quitte votre compte LocoMotion et est transféré sur votre compte bancaire.</li></ul>',
+          },
           {
             title: 'Approvisionner mon compte LocoMotion',
             content: '<p>Vous avez besoin d’approvisionner votre compte LocoMotion pour payer les emprunts d’auto et les contributions volontaires. Vous pouvez approvisionner votre compte via le tableau de bord (bouton “Approvisionner” sous l’information de votre solde) ou le faire via lors de l’emprunt.</p><p>Des frais de transactions sont prélevés (par Stripe), soit  2,2% + 0,30 $. Ainsi, si vous mettez 100$ sur votre compte LocoMotion, c’est 102,5$ qui seront facturés à votre carte de crédit. Vous pouvez réduire les frais de transaction en approvisionnant votre compte avec des montants plus élevés plutôt qu’en payant le montant exact à chaque emprunt.</p>',
