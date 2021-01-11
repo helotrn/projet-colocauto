@@ -71,7 +71,7 @@ export default {
         questions: [
           {
             title: 'Les remorques sont disponibles durant quelle période?',
-            content: "Ça dépend de la météo! (Les abris à remorques à vélo ne doivent pas gêner le déneigement). Environ de avril à novembre.",
+            content: "<p>Ça dépend de la météo! (Les abris à remorques à vélo ne doivent pas gêner le déneigement). Environ de avril à novembre.</p>",
           },
           {
             title: 'Comment installer l’attache-remorque sur mon vélo?',
@@ -122,7 +122,7 @@ export default {
           },
           {
             title: 'IMPORTANT - Vous avez 48 h pour entrer les infos finales (km, essence)',
-            content: 'Une fois de retour, il est très important de mettre à jour le km parcouru et vos dépenses en essence. Sans ces informations, il sera difficile de donner sa juste part au ou à la propriétaire de l’auto.',
+            content: '<p>Une fois de retour, il est très important de mettre à jour le km parcouru et vos dépenses en essence. Sans ces informations, il sera difficile de donner sa juste part au ou à la propriétaire de l’auto.</p>',
           },
           {
             title: 'Modifier les infos d’un emprunt passé  (km départ, km retour, achat carburant)',
@@ -170,7 +170,7 @@ export default {
           },
           {
             title: 'Quoi faire si je reçois une facture liée à l’emprunt de mon auto par un-e voisin-e?',
-            content: "Si vous recevez une demande de paiement due à l'utilisation de votre auto par un-e voisin-e (pont payant, contravention, etc.), faites le paiement puis demandez le remboursement à l'emprunteur-se. Pour ce faire, soit vous contactez directement la personne, soit vous demandez à LocoMotion de faire l'intermédiaire en écrivant à <a href=\"mailto:info@locomotion.app\">info@locomotion.app</a>. Le remboursement se fera via un virement interac entre les deux personnes."
+            content: "<p>Si vous recevez une demande de paiement due à l'utilisation de votre auto par un-e voisin-e (pont payant, contravention, etc.), faites le paiement puis demandez le remboursement à l'emprunteur-se. Pour ce faire, soit vous contactez directement la personne, soit vous demandez à LocoMotion de faire l'intermédiaire en écrivant à <a href=\"mailto:info@locomotion.app\">info@locomotion.app</a>. Le remboursement se fera via un virement interac entre les deux personnes.</p>"
           }
         ]
       },
@@ -188,11 +188,11 @@ export default {
           },
           {
             title: 'Que se passe-t-il en cas de panne?',
-            content: "L’assurance Desjardins couvre les accidents mais pas les pannes. En cas de panne, le remorquage est aux frais de l’emprunteur-se et la réparation est aux frais du ou de la propriétaire.",
+            content: "<p>L’assurance Desjardins couvre les accidents mais pas les pannes. En cas de panne, le remorquage est aux frais de l’emprunteur-se et la réparation est aux frais du ou de la propriétaire.</p>",
           },
           {
             title: 'Quoi faire en cas d’accident ou vandalisme lors d’un emprunt d’auto?',
-            content: "La procédure à suivre en cas d'accident ou vandalisme lors d’un emprunt d’auto est détaillée dans le document &laquo;&nbsp;<a href=\"https://drive.google.com/file/d/1755OkK35_aph-ol9LpB3BJ2JCnkvkIp1/view\" target=\"_blank\">En cas d'accident</a>&nbsp;&raquo;. Elle est également accessible via le carnet de bord de l'auto et via la page de l'emprunt.",
+            content: "<p>La procédure à suivre en cas d'accident ou vandalisme lors d’un emprunt d’auto est détaillée dans le document &laquo;&nbsp;<a href=\"https://drive.google.com/file/d/1755OkK35_aph-ol9LpB3BJ2JCnkvkIp1/view\" target=\"_blank\">En cas d'accident</a>&nbsp;&raquo;. Elle est également accessible via le carnet de bord de l'auto et via la page de l'emprunt.</p>",
           },
         ],
       },
