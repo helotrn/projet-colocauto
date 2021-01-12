@@ -17,7 +17,7 @@
     <b-row class="availability-calendar__calendars">
       <div v-if="changed" class="availability-calendar__calendars--changed">
         <div>
-          Sauvegardez pour mettre-à-jour l'aperçu des disponibilités.
+          Sauvegardez pour mettre à jour l'aperçu des disponibilités.
         </div>
       </div>
 

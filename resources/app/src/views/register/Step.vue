@@ -175,7 +175,7 @@ export default {
         if (!this.item.communities || this.item.communities.length === 0) {
           this.$store.commit('addNotification', {
             content: 'Il est temps de choisir un premier voisinage!',
-            title: 'Profil mis-à-jour',
+            title: 'Profil mis à jour',
             variant: 'success',
             type: 'register',
           });

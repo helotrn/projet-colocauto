@@ -32,10 +32,10 @@ class HandoverContestationResolved extends Mailable
 
     public function build() {
         return $this->view('emails.loan.handover_contestation_resolved')
-            ->subject("LocoMotion - Données de l'emprunt mises-à-jour")
+            ->subject("LocoMotion - Données de l'emprunt mises à jour")
             ->text('emails.loan.handover_contestation_resolved_text')
             ->with([
-                'title' => "Données de l'emprunt mises-à-jour"
+                'title' => "Données de l'emprunt mises à jour"
             ]);
     }
 }

@@ -82,7 +82,7 @@ export default {
 
         this.$store.commit('addNotification', {
           content: 'Vous pouvez maintenant vous connecter avec votre nouveau courriel.',
-          title: 'Courriel mis-à-jour',
+          title: 'Courriel mis à jour',
           variant: 'success',
           type: 'email',
         });

@@ -79,7 +79,7 @@ export default {
 
       this.$store.commit('addNotification', {
         content: 'Vous pouvez maintenant vous connecter avec votre nouveau mot de passe.',
-        title: 'Mot de passe mis-à-jour',
+        title: 'Mot de passe mis à jour',
         variant: 'success',
         type: 'password',
       });
