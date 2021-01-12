@@ -4,7 +4,7 @@ namespace Deployer;
 require 'recipe/laravel.php';
 
 function sendMattermostNotification($message) {
-    $dotenv = \Dotenv\Dotenv::create(__DIR__);
+    $dotenv = \Dotenv\Dotenv::createImmutable(__DIR__);
     $dotenv->load();
 
     $url = $_ENV['MATTERMOST_WEBHOOK'];
@@ -53,7 +53,7 @@ host('production')
 foreach (['staging', 'demo', 'cicdtest'] as $env) {
     host($env)
         ->hostname('vps.locomotion.app')
-        ->stage('staging')
+        ->stage($env)
         ->user('locomotion')
         ->set('deploy_path', "/var/www/$env.locomotion.app");
 }
