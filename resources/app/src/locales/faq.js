@@ -106,7 +106,7 @@ export default {
         questions: [
           {
             title: "Qui peut emprunter une auto?",
-            content: '<p>Il faut avoir au moins 21 ans et avoir complété son dossier de conduite sur LocoMotion.app (via Mon profil). Deux documents sont nécessaires&nbsp;:<ul><li><a href=\"https://services.saaq.gouv.qc.ca/FonctionsWeb/EtatDossierConduite.Web/\" target=\"_blank\">Dossier de conduite de la SAAQ</a></li><li><a href=\"https://mondossier.gaa.qc.ca/fr/DemandeWeb/DemandeReleve\" target=\"_blank\">Relevé de dossier de sinistres du GAA</a></li></ul><p>Votre dossier sera ensuite approuvé par notre équipe et vous pourrez commencer à faire des demandes d’emprunt pour les autos de vos voisin-e-s!</p>',
+            content: '<p>Il faut avoir au moins 21 ans et avoir complété son dossier de conduite sur locomotion.app (via Mon profil). Deux documents sont nécessaires&nbsp;:<ul><li><a href=\"https://services.saaq.gouv.qc.ca/FonctionsWeb/EtatDossierConduite.Web/\" target=\"_blank\">Dossier de conduite de la SAAQ</a></li><li><a href=\"https://mondossier.gaa.qc.ca/fr/DemandeWeb/DemandeReleve\" target=\"_blank\">Relevé de dossier de sinistres du GAA</a></li></ul><p>Votre dossier sera ensuite approuvé par notre équipe et vous pourrez commencer à faire des demandes d’emprunt pour les autos de vos voisin-e-s!</p>',
           },
           {
             title: 'Combien ça coûte?',
