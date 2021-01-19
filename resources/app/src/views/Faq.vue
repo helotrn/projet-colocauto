@@ -4,14 +4,6 @@
 
     <b-row tag="section" class="page__section">
       <b-col>
-        <p class="text-center">
-          <b-button class="faq__button" variant="success"
-            href="http://bit.ly/locomotion-bienvenue" target="_blank">
-            <img src="/icons/faq.png">
-            Guide de départ
-          </b-button>
-        </p>
-
         <b-row>
           <b-col lg="6" class="page__section__content" v-for="s in 11" :key="`section-${s}`">
             <h2 v-html="$t('faq.sections.' + (s - 1) + '.title')" />
@@ -63,20 +55,6 @@ export default {
     background: #f5f8fb;
     background-image: url("/home-motif.png");
     background-repeat: repeat;
-  }
-
-  .faq__button {
-    font-size: 18px;
-    height: 37px;
-    line-height: 37px;
-    padding: 0 100px;
-    position: relative;
-
-    img {
-      position: absolute;
-      left: -20px;
-      top: -20px;
-    }
   }
 
   .page__section__content {
