@@ -50,7 +50,14 @@ host('production')
     ->user('locomotion')
     ->set('deploy_path', '/var/www/locomotion.app');
 
-foreach (['staging', 'demo', 'cicdtest'] as $env) {
+host('staging')
+    ->hostname('vps.locomotion.app')
+    ->set('branch', 'staging')
+    ->stage('staging')
+    ->user('locomotion')
+    ->set('deploy_path', "/var/www/staging.locomotion.app");
+
+foreach (['demo', 'cicdtest'] as $env) {
     host($env)
         ->hostname('vps.locomotion.app')
         ->stage($env)
