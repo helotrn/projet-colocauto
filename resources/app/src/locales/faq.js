@@ -106,7 +106,7 @@ export default {
         questions: [
           {
             title: "Qui peut emprunter une auto?",
-            content: '<p>Il faut avoir au moins 21 ans et avoir complété son dossier de conduite sur LocoMotion.app (via Mon profil). Deux documents sont nécessaires&nbsp;:<ul><li><a href=\"https://services.saaq.gouv.qc.ca/FonctionsWeb/EtatDossierConduite.Web/\" target=\"_blank\">Dossier de conduite de la SAAQ</a></li><li><a href=\"https://mondossier.gaa.qc.ca/fr/DemandeWeb/DemandeReleve\" target=\"_blank\">Relevé de dossier de sinistres du GAA</a></li></ul><p>Votre dossier sera ensuite approuvé par notre équipe et vous pourrez commencer à faire des demandes d’emprunt pour les autos de vos voisin-e-s!</p>',
+            content: '<p>Il faut avoir au moins 21 ans et avoir complété son dossier de conduite sur locomotion.app (via Mon profil). Deux documents sont nécessaires&nbsp;:<ul><li><a href=\"https://services.saaq.gouv.qc.ca/FonctionsWeb/EtatDossierConduite.Web/\" target=\"_blank\">Dossier de conduite de la SAAQ</a></li><li><a href=\"https://mondossier.gaa.qc.ca/fr/DemandeWeb/DemandeReleve\" target=\"_blank\">Relevé de dossier de sinistres du GAA</a></li></ul><p>Votre dossier sera ensuite approuvé par notre équipe et vous pourrez commencer à faire des demandes d’emprunt pour les autos de vos voisin-e-s!</p>',
           },
           {
             title: 'Combien ça coûte?',
@@ -180,7 +180,7 @@ export default {
         questions: [
           {
             title: "Je partage mon auto, est-ce que c’est mon assurance qui est considérée lors d'un accident?",
-            content: '<p>Non, lorsque vous prêtez votre auto avec LocoMotion, c’est l’assurance Desjardins qui protège votre auto. Vous devez envoyer <a href="https://drive.google.com/file/d/1SbPgPSAFRrFhjf4DhacrHUNbvWEmpHrl/view?platform=hootsuite" target="_blank">cette lettre</a> à votre assureur ou courtier d’assurance pour l’aviser que vous participez à LocoMotion (sauf si c’est Desjardins ou La Personnelle, directement). Ça n’a pas d’incidence sur votre contrat.</p>',
+            content: '<p>Non, lorsque vous prêtez votre auto avec LocoMotion, c’est l’assurance Desjardins qui protège votre auto. Vous devez envoyer <a href="https://drive.google.com/file/d/1UPfFkgMRKajgYUtTG9LfpqVqvu75ML_h/view" target="_blank">cette lettre</a> à votre assureur ou courtier d’assurance pour l’aviser que vous participez à LocoMotion (sauf si c’est Desjardins ou La Personnelle, directement). Ça n’a pas d’incidence sur votre contrat.</p>',
           },
           {
             title: 'J’emprunte l’auto d’un-e voisin-e, comment suis-je assuré-e?',
@@ -250,7 +250,7 @@ export default {
             + "<p>Le voisinage est dans le quartier, le quartier est dans l’arrondissement… &laquo;&nbsp;L’arbre est dans ses feuilles, Marilon Marilé!&nbsp;&raquo;</p><p>Être proche de ses voisin-e-s, c’est la base de LocoMotion. C’est pour cette raison qu’on privilégie la création de sous-groupes LocoMotion à l’échelle très très locale.</p><p>Un voisinage LocoMotion est créé par des gens qui habitent à 5-10 minutes à pied. Ça prend des personnes qui veulent s’impliquer dans le projet et le faire évoluer.</p><p>Comment favoriser les liens dans le voisinage? Est-ce qu’on veut ajouter à notre flotte collective un vélo électrique ou des remorques? Solon vous accompagne!</p><p>Le quartier est plus grand. Il réfère à un territoire urbain reconnu par la population et les institutions locales (par exemple, La Petite-Patrie) et peut contenir plusieurs voisinages. Participer à LocoMotion dans son quartier, c'est avoir accès à certains véhicules et c'est une porte d'entrée vers la création de son voisinage!</p><p>Les véhicules sont pour le voisinage ou le quartier? L'ensemble des participant-e-s du quartier peut profiter des véhicules collectifs (appartiennent à Solon). Les propriétaires d'un véhicule (auto, vélo-cargo ou autre) peuvent décider de le rendre disponible à leur voisinage ou au quartier au complet.</p>"
           },
           {
-            title: 'Est-ce que LocoMotion est disponible là où je reste?',
+            title: 'Est-ce que LocoMotion est disponible là où j\'habite?',
             content: '<p>LocoMotion est accessible seulement aux <a href="https://locomotion.app/communities" target="_blank">voisinages et quartiers visibles sur cette carte</a>. Si vous résidez dans un quartier où LocoMotion est disponible, mais qu’il n’y a pas encore de voisinage autour de chez vous, vous pourriez en créer un avec vos voisin-e-s! En savoir plus sur <a href="https://mailchi.mp/solon-collectif.org/comment-creer-un-voisinage" target="_blank">comment créer un voisinage</a>.</p>',
           },
           {
