@@ -27,7 +27,7 @@
               </a>
             </li>
             <li>
-              <a href="/assurances/conditions_desjardins_1_2018-09_lettre_assureur_courtier.pdf">
+              <a href="/assurances/lettre_assureur_courtier.pdf">
                 Lettre courtier
               </a>
             </li>
