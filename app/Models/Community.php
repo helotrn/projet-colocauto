@@ -248,7 +248,7 @@ SQL
 
         return $query
             ->where(
-                \DB::raw('unaccent(name)'),
+                \DB::raw('unaccent(communities.name)'),
                 'ILIKE',
                 \DB::raw("unaccent('%$q%')")
             );
