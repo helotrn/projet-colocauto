@@ -77,13 +77,13 @@
                           <forms-validated-input label="Date" type="date"
                             name="item_date" v-model="newBillItem.item_date"
                             :rules="{ required: true }" />
-                          <forms-validated-input label="Montant" type="number"
+                          <forms-validated-input label="Montant" type="number" :step="0.01"
                             name="amount" v-model="newBillItem.amount"
                             :rules="{ required: true }" />
-                          <forms-validated-input label="TPS" type="number"
+                          <forms-validated-input label="TPS" type="number" :step="0.01"
                             name="taxes_tps" v-model="newBillItem.taxes_tps"
                             :rules="{ required: true }" />
-                          <forms-validated-input label="TPS" type="number"
+                          <forms-validated-input label="TPS" type="number" :step="0.01"
                             name="taxes_tvq" v-model="newBillItem.taxes_tvq"
                             :rules="{ required: true }" />
 
