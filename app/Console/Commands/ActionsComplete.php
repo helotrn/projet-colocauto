@@ -124,9 +124,9 @@ class ActionsComplete extends Command
                                 ->info("Autocompleted $action->type on loan ID $loan->id.");
                         } else {
                             Log::channel('actions')
-                                ->warning("Not autocompleting $action->type on loan ID $loan->id because "
-                                . 'the user balance is less than the total actual cost '
-                                . "({$loan->borrower->user->balance} < $totalActualCost)...");
+                                ->warning("Not autocompleting $action->type on loan ID $loan->id "
+                                    . 'because the user balance is less than the total actual cost '
+                                    . "({$loan->borrower->user->balance} < $totalActualCost)...");
                         }
                         break;
                     default:
