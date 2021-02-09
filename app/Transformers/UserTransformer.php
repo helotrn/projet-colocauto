@@ -71,7 +71,7 @@ class UserTransformer extends Transformer
 
         if (isset($item->pivot->tags)) {
             if ($this->shouldIncludeRelation('tags', $item, $options)) {
-                $transformer = new BaseTransformer;
+                $transformer = new Transformer;
 
                 $output['tags'] = array_merge(
                     $output['tags']->toArray(),

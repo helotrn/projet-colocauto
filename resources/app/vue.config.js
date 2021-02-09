@@ -1,3 +1,11 @@
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
+
+const plugins = [];
+
+if (process.env.WEBPACK_ANALYZE) {
+  plugins.push(new BundleAnalyzerPlugin());
+}
+
 module.exports = {
   chainWebpack: (config) => {
     const svgRule = config.module.rule('svg');
@@ -31,19 +39,22 @@ module.exports = {
     },
   },
 
-  devServer: {
-    proxy: {
-      '^/api': {
-        target: ((process.env.IS_HOMESTEAD)
-          ? 'http://locomotion.local:8000'
-          : 'http://localhost:8000'),
-        ws: true,
-        changeOrigin: true,
+  configureWebpack: {
+    devServer: {
+      proxy: {
+        '^/api': {
+          target: ((process.env.IS_HOMESTEAD)
+            ? 'http://locomotion.local:8000'
+            : 'http://localhost:8000'),
+          ws: true,
+          changeOrigin: true,
+        },
       },
+      public: ((process.env.IS_HOMESTEAD)
+        ? 'locomotion.local:8080'
+        : 'localhost:8080'),
     },
-    public: ((process.env.IS_HOMESTEAD)
-      ? 'locomotion.local:8080'
-      : 'localhost:8080'),
+    plugins,
   },
 
   assetsDir: 'dist/',

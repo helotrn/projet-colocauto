@@ -509,7 +509,7 @@ class LoanableController extends RestController
         $loanReturnAt = (new Carbon($loan->departure_at))
             ->add($loan->duration_in_minutes, 'minutes');
         $nextLoan = $item->loans()
-            ->where('id', '!=', $loanId)
+            ->where('loans.id', '!=', $loanId)
             ->where('departure_at', '>=', $loanReturnAt)
             ->orderBy('departure_at', 'asc')
             ->first();
