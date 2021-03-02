@@ -22,7 +22,7 @@ Nous sommes ouverts à une variété de contributions :
 - etc.
 
 Si vous débutez, nous maintenons une liste d'incidents à l'intention des
-néophytes : ~18243366.
+néophytes : ~18698008.
 
 Code de conduite
 ----------------
