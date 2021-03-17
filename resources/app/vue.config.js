@@ -44,14 +44,14 @@ module.exports = {
       proxy: {
         '^/api': {
           target: ((process.env.IS_HOMESTEAD)
-            ? 'http://locomotion.local:8000'
+            ? 'http://php:8000'
             : 'http://localhost:8000'),
           ws: true,
           changeOrigin: true,
         },
       },
       public: ((process.env.IS_HOMESTEAD)
-        ? 'locomotion.local:8080'
+        ? 'localhost:8080'
         : 'localhost:8080'),
     },
     plugins,
