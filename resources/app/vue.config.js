@@ -43,16 +43,12 @@ module.exports = {
     devServer: {
       proxy: {
         '^/api': {
-          target: ((process.env.IS_HOMESTEAD)
-            ? 'http://php:8000'
-            : 'http://localhost:8000'),
+          target: process.env.SERVER_URL,
           ws: true,
           changeOrigin: true,
         },
       },
-      public: ((process.env.IS_HOMESTEAD)
-        ? 'localhost:8080'
-        : 'localhost:8080'),
+      public: process.env.APP_URL,
     },
     plugins,
   },
