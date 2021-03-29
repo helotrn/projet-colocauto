@@ -546,6 +546,22 @@ SQL
         }
     }
 
+    public function scopePrepaid(Builder $query, $value = true, $negative = false) {
+        // Negative case
+        if (filter_var($value, FILTER_VALIDATE_BOOLEAN) === $negative) {
+            return $query->where(function ($q) {
+                return $q->whereHas('prePayment', function ($q) {
+                    return $q->where('status', '!=', 'completed');
+                })->orWhereDoesntHave('prePayment');
+            });
+        }
+
+        // Positive case
+        return $query->whereHas('prePayment', function ($q) {
+            return $q->where('status', 'completed');
+        });
+    }
+
     public function scopeCompleted(Builder $query, $value = true, $negative = false) {
         // Negative case
         if (filter_var($value, FILTER_VALIDATE_BOOLEAN) === $negative) {
