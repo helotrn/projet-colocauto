@@ -31,6 +31,7 @@ class Loanable extends BaseModel
         'name' => 'text',
         'type' => ['bike', 'car', 'trailer'],
         'deleted_at' => 'date',
+        'with_deleted' => 'boolean',
     ];
 
     public static $rules = [
@@ -330,6 +331,14 @@ class Loanable extends BaseModel
             'lat' => $this->position[0],
             'lng' => $this->position[1],
         ];
+    }
+
+    public function scopeWithDeleted(Builder $query, $value, $negative = false) {
+        if (filter_var($value, FILTER_VALIDATE_BOOLEAN) !== $negative) {
+            return $query->withTrashed()->where("{$this->getTable()}.deleted_at", '!=', null);
+        }
+
+        return $query;
     }
 
     public function scopeAccessibleBy(Builder $query, $user) {
