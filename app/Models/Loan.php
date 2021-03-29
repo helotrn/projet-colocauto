@@ -320,7 +320,7 @@ SQL
     }
 
     public function bike() {
-        return $this->belongsTo(Bike::class, 'loanable_id');
+        return $this->belongsTo(Bike::class, 'loanable_id')->withTrashed();
     }
 
     public function borrower() {
@@ -328,7 +328,7 @@ SQL
     }
 
     public function car() {
-        return $this->belongsTo(Car::class, 'loanable_id');
+        return $this->belongsTo(Car::class, 'loanable_id')->withTrashed();
     }
 
     public function community() {
@@ -352,7 +352,7 @@ SQL
     }
 
     public function loanable() {
-        return $this->belongsTo(Loanable::class);
+        return $this->belongsTo(Loanable::class)->withTrashed();
     }
 
     public function payment() {
@@ -368,7 +368,7 @@ SQL
     }
 
     public function trailer() {
-        return $this->belongsTo(Trailer::class, 'loanable_id');
+        return $this->belongsTo(Trailer::class, 'loanable_id')->withTrashed();
     }
 
     public function getActualDurationInMinutesAttribute() {
