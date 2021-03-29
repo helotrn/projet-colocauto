@@ -135,7 +135,9 @@ class BikeTest extends TestCase
 
         $response->assertStatus(200)
             ->assertJson([ 'total' => 2 ])
-            ->assertJsonStructure($this->buildCollectionStructure(static::$getBikeResponseStructure));
+            ->assertJsonStructure(
+                $this->buildCollectionStructure(static::$getBikeResponseStructure)
+            );
     }
 
     protected function buildLoan($upTo = null) {
