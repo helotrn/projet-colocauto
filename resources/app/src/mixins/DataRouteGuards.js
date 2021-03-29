@@ -19,7 +19,7 @@ function drillParams(object, vm) {
     if (typeof object[k] === 'function') {
       // Call function and set result
       newAcc[k] = object[k]({
-        user: vm.user,
+        user: vm.$store.state.user,
         route: vm.$route,
       });
     } else if (typeof object[k] === 'object') {
