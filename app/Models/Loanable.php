@@ -61,7 +61,7 @@ class Loanable extends BaseModel
         parent::boot();
 
         self::deleted(function ($model) {
-            $model->loans()->delete();
+            $model->loans()->completed(false)->delete();
         });
 
         self::restored(function ($model) {

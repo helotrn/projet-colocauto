@@ -546,6 +546,22 @@ SQL
         }
     }
 
+    public function scopeCompleted(Builder $query, $value = true, $negative = false) {
+        // Negative case
+        if (filter_var($value, FILTER_VALIDATE_BOOLEAN) === $negative) {
+            return $query->where(function ($q) {
+                return $q->whereHas('payment', function ($q) {
+                    return $q->where('status', '!=', 'completed');
+                })->orWhereDoesntHave('payment');
+            });
+        }
+
+        // Positive case
+        return $query->whereHas('payment', function ($q) {
+            return $q->where('status', 'completed');
+        });
+    }
+
     public function scopeDepartureInLessThan(Builder $query, $amount, $unit = 'minutes') {
         if (!in_array($unit, ['minute', 'minutes', 'hour', 'hours', 'day', 'days'])) {
             throw new \Exception('invalid unit');
