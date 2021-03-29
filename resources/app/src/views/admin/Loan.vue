@@ -94,7 +94,7 @@ export default {
           params: {
             fields: '*,owner.id,owner.user.id,owner.user.avatar,owner.user.name',
             '!fields': 'events',
-            with_deleted: true,
+            is_deleted: true,
           },
           id,
         });

@@ -151,7 +151,7 @@ export default {
           fields: '*,owner.id,owner.user.id,owner.user.avatar,owner.user.name,owner.user.phone,'
             + 'community.name',
           '!fields': 'events',
-          with_deleted: true,
+          is_deleted: true,
         },
         id,
       });
