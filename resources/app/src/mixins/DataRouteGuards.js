@@ -163,6 +163,25 @@ export default {
         .catch((e) => {
           if (e.request) {
             switch (e.request.status) {
+              case 404:
+                vm.$store.commit('addNotification', {
+                  content: 'Une ressource requise pour cette page est introuvable.',
+                  title: 'Ressource introuvable',
+                  variant: 'danger',
+                  type: 'route_data',
+                });
+                vm.$router.push('/app');
+                break;
+              case 422:
+              case 400:
+                vm.$store.commit('addNotification', {
+                  content: 'Une requête obligatoire pour une ressource de cette page a échoué.',
+                  title: 'Mauvaise requête',
+                  variant: 'danger',
+                  type: 'route_data',
+                });
+                vm.$router.push('/app');
+                break;
               case 401:
               default:
                 vm.$store.commit('user', null);
