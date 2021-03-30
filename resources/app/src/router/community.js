@@ -36,6 +36,10 @@ export default {
                   + 'users.owner.id,users.tags.*',
               },
               id({ user }) {
+                if (!user || !user.communities || !user.communities[0]) {
+                  return 0;
+                }
+
                 return user.communities[0].id;
               },
             },
