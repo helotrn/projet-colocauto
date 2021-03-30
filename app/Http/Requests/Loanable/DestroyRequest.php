@@ -3,7 +3,8 @@
 namespace App\Http\Requests\Loanable;
 
 use App\Http\Requests\BaseRequest;
-use App\Models\Loanable;
+use App\Models\Loan;
+use App\Models\PrePayment;
 
 class DestroyRequest extends BaseRequest
 {
@@ -11,7 +12,31 @@ class DestroyRequest extends BaseRequest
         $user = $this->user();
         return $user->isAdmin()
             || Loanable::where('owner_id', $user->owner->id)
-                ->where('id', $this->route('id'))
-                ->exists();
+            ->where('id', $this->route('id'))
+            ->exists();
+    }
+
+    public function rules() {
+        $prepaidLoansLoanableIds = Loan::prepaid()
+            ->completed(false)
+            ->pluck('loanable_id')
+            ->join(',');
+        return [
+            'id' => [
+                "not_in:$prepaidLoansLoanableIds",
+            ],
+        ];
+    }
+
+    public function messages() {
+        return [
+            'id.not_in' => 'Ce véhicule a des emprunts en cours.',
+        ];
+    }
+
+    public function prepareForValidation() {
+        $this->merge([
+            'id' => $this->route('id'),
+        ]);
     }
 }

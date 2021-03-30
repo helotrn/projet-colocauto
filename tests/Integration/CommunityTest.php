@@ -335,7 +335,9 @@ class CommunityTest extends TestCase
         ];
         $response = $this->json('GET', '/api/v1/users', $data);
         $response->assertStatus(200)
-            ->assertJsonStructure($this->buildCollectionStructure(static::$getUserResponseStructure));
+            ->assertJsonStructure(
+                $this->buildCollectionStructure(static::$getUserResponseStructure)
+            );
     }
 
     public function testCommunityWithParent() {

@@ -480,7 +480,9 @@ class LoanTest extends TestCase
 
         $response->assertStatus(200)
             ->assertJson([ 'total' => 2 ])
-            ->assertJsonStructure($this->buildCollectionStructure(static::$getLoanResponseStructure));
+            ->assertJsonStructure(
+                $this->buildCollectionStructure(static::$getLoanResponseStructure)
+            );
     }
 
     public function testShowLoansBorrower() {

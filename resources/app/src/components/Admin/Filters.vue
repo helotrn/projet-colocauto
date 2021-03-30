@@ -12,7 +12,8 @@
       <b-card no-body bg-variant="eggshell" border-variant="dark" class="shadow">
         <b-card-body>
           <b-form-group v-for="(def, key) in filters" :key="key"
-            :label="$t(`${entity}.fields.${key}`) | capitalize" :label-for="key">
+            :label="getLabelFor(def, key)"
+            :label-for="key">
             <b-form-select v-if="Array.isArray(def)"
               :value="params[key]" @input="setParam(key, $event)"
               :id="key" :name="key">
@@ -23,7 +24,17 @@
                 {{ $t(`${entity}.fields.${key}s.${value}`) | capitalize }}
               </b-form-select-option>
             </b-form-select>
-            <div v-else-if="def === 'date'" type="date">
+            <div v-else-if="def === 'boolean'">
+              <b-form-checkbox
+                :id="key" :name="key"
+                :value="true"
+                :unchecked-value="false"
+                :checked="params[key]"
+                @change="setParam(key, $event)">
+                <span v-html="$filters.capitalize($t(`${entity}.fields.${key}`))" />
+              </b-form-checkbox>
+            </div>
+            <div v-else-if="def === 'date'">
               <forms-date-range-picker
                 :value="params[key]"
                 @input="setParam(key, $event)" />
@@ -77,6 +88,11 @@ export default {
   methods: {
     emitRelationChange(name, event) {
       this.setParam(name, event ? event.value : null);
+    },
+    getLabelFor(type, key) {
+      return type !== 'boolean'
+        ? this.$filters.capitalize(this.$t(`${this.entity}.fields.${key}`))
+        : '';
     },
     setParam(name, value) {
       if (!value) {
