@@ -103,8 +103,8 @@ export default {
       return parseFloat(this.selectedAmount, 10);
     },
     amountWithFee() {
-                             // Passing fees on to customer:
-                             // https://support.stripe.com/questions/passing-the-stripe-fee-on-to-customers
+      // Passing fees on to customer:
+      // https://support.stripe.com/questions/passing-the-stripe-fee-on-to-customers
       return (this.amount + this.feeConstant) / (1 - this.feeRatio);
     },
     amounts() {
