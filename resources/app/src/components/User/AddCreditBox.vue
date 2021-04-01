@@ -12,10 +12,10 @@
         </p>
 
         <p>
-          Montant prélevé du mode de paiement: {{ amountWithFee | currency }}
+          Montant prélevé du mode de paiement&nbsp;: {{ amountWithFee | currency }}
         </p>
 
-        <p><small>Frais de transaction: 2,2% + 30¢</small></p>
+        <p><small>Frais de transaction&nbsp;: 2,2% + 30¢</small></p>
       </b-col>
 
       <b-col lg="4" class="user-add-credit-box__balance">
@@ -69,7 +69,7 @@ export default {
   data() {
     return {
       customAmount: this.minimumRequired ? (parseFloat(this.minimumRequired) * 2) : 20,
-      fee: 1.022,
+      feeRatio: 0.022,
       feeConstant: 0.30,
       loading: false,
       paymentMethodId: this.user.payment_methods
@@ -103,7 +103,9 @@ export default {
       return parseFloat(this.selectedAmount, 10);
     },
     amountWithFee() {
-      return (this.amount * this.fee + this.feeConstant);
+                             // Passing fees on to customer:
+                             // https://support.stripe.com/questions/passing-the-stripe-fee-on-to-customers
+      return (this.amount + this.feeConstant) / (1 - this.feeRatio);
     },
     amounts() {
       const options = [

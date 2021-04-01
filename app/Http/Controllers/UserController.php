@@ -384,7 +384,12 @@ class UserController extends RestController
 
         \Stripe\Stripe::setApiKey(config('services.stripe.secret'));
 
-        $amountWithFee = ($amount * 1.022 + 0.30);
+                             // Passing fees on to customer:
+                             // https://support.stripe.com/questions/passing-the-stripe-fee-on-to-customers
+        $feeRatio = 0.022;
+        $feeConstant = 0.3;
+
+        $amountWithFee = ($amount + $feeConstant) / (1 - $feeRatio);
         $amountWithFeeInCents = intval($amountWithFee * 100);
 
         if ($amountWithFeeInCents <= 0) {
