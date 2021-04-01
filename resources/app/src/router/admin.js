@@ -101,6 +101,7 @@ export default {
           loanables: {
             retrieve: {
               fields: 'id,name,type,owner.id,owner.user.full_name,owner.user.id,deleted_at',
+              with_deleted: true,
             },
           },
         },
@@ -118,6 +119,7 @@ export default {
           fields: '*,owner.user.full_name,owner.user.communities.name,'
             + 'owner.user.communities.parent.name,community.name,'
             + 'community.parent.name,padlock.name,report.*',
+          with_deleted: true,
         },
         title: 'titles.loanable',
       },
