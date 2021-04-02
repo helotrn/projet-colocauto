@@ -333,6 +333,14 @@ class Loanable extends BaseModel
         ];
     }
 
+    public function scopeWithDeleted(Builder $query, $value, $negative = false) {
+        if (filter_var($value, FILTER_VALIDATE_BOOLEAN) !== $negative) {
+            return $query->withTrashed();
+        }
+
+        return $query;
+    }
+
     public function scopeIsDeleted(Builder $query, $value, $negative = false) {
         if (filter_var($value, FILTER_VALIDATE_BOOLEAN) !== $negative) {
             return $query->withTrashed()->where("{$this->getTable()}.deleted_at", '!=', null);
