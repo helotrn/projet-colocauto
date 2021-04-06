@@ -33,6 +33,7 @@ export default {
     modifier: 'modifier',
     nouveau: 'nouveau',
     réinitialiser: 'réinitialiser',
+    restaurer: 'restaurer',
     rétablir: 'rétablir',
     retirer: 'retirer',
     suspendre: 'suspendre',

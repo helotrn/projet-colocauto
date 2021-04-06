@@ -51,14 +51,17 @@ class OwnerTest extends TestCase
     }
 
     public function testListOwners() {
-        $owners = factory(Owner::class, 2)->create(['user_id' => $this->user->id])->map(function ($owner) {
-            return $owner->only(static::$getOwnerResponseStructure);
-        });
+        $owners = factory(Owner::class, 2)
+            ->create(['user_id' => $this->user->id])->map(function ($owner) {
+                return $owner->only(static::$getOwnerResponseStructure);
+            });
 
         $response = $this->json('GET', '/api/v1/owners');
 
         $response->assertStatus(200)
             ->assertJson([ 'total' => 2 ])
-            ->assertJsonStructure($this->buildCollectionStructure(static::$getOwnerResponseStructure));
+            ->assertJsonStructure(
+                $this->buildCollectionStructure(static::$getOwnerResponseStructure)
+            );
     }
 }

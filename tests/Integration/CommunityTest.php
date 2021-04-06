@@ -234,6 +234,27 @@ class CommunityTest extends TestCase
         $response->assertStatus(422);
     }
 
+    public function testCreateCommunitiesEmptyArea() {
+                             // Inspecting API call showed empty area to be an
+                             // empty array, not null which used to cause a
+                             // problem.
+        $data = [
+            'area' => [],
+
+            'chat_group_url' => "",
+            'description' => "Test quartier",
+            'long_description' => "<p>Blabla</p>",
+            'name' => "Quartier",
+            'pricings' => [
+                [ 'name' => "Test", 'object_type' => null, 'rule' => "0"],
+            ],
+            'type' => "borough",
+        ];
+
+        $response = $this->json('POST', "/api/v1/communities/", $data);
+        $response->assertStatus(201);
+    }
+
     public function testShowCommunities() {
         $community = factory(Community::class)->create();
 
@@ -335,7 +356,9 @@ class CommunityTest extends TestCase
         ];
         $response = $this->json('GET', '/api/v1/users', $data);
         $response->assertStatus(200)
-            ->assertJsonStructure($this->buildCollectionStructure(static::$getUserResponseStructure));
+            ->assertJsonStructure(
+                $this->buildCollectionStructure(static::$getUserResponseStructure)
+            );
     }
 
     public function testCommunityWithParent() {

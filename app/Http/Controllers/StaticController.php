@@ -46,7 +46,13 @@ class StaticController extends Controller
                         'center_google' => $c->center_google,
                     ];
                 }),
-            'users' => User::whereRole(null)->whereSuspendedAt(null)->count(),
+                             // User is not super admin
+            'users' => User::whereRole(null)
+                             // User is not suspended
+                           ->whereSuspendedAt(null)
+                             // User is approved in at least one community
+                           ->whereHas('approvedCommunities')
+                           ->count(),
             'loanables' => Loanable::count(),
         ], 200);
     }

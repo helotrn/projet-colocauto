@@ -320,7 +320,7 @@ SQL
     }
 
     public function bike() {
-        return $this->belongsTo(Bike::class, 'loanable_id');
+        return $this->belongsTo(Bike::class, 'loanable_id')->withTrashed();
     }
 
     public function borrower() {
@@ -328,7 +328,7 @@ SQL
     }
 
     public function car() {
-        return $this->belongsTo(Car::class, 'loanable_id');
+        return $this->belongsTo(Car::class, 'loanable_id')->withTrashed();
     }
 
     public function community() {
@@ -352,7 +352,7 @@ SQL
     }
 
     public function loanable() {
-        return $this->belongsTo(Loanable::class);
+        return $this->belongsTo(Loanable::class)->withTrashed();
     }
 
     public function payment() {
@@ -368,7 +368,7 @@ SQL
     }
 
     public function trailer() {
-        return $this->belongsTo(Trailer::class, 'loanable_id');
+        return $this->belongsTo(Trailer::class, 'loanable_id')->withTrashed();
     }
 
     public function getActualDurationInMinutesAttribute() {
@@ -544,6 +544,38 @@ SQL
             default:
                 return $query;
         }
+    }
+
+    public function scopePrepaid(Builder $query, $value = true, $negative = false) {
+        // Negative case
+        if (filter_var($value, FILTER_VALIDATE_BOOLEAN) === $negative) {
+            return $query->where(function ($q) {
+                return $q->whereHas('prePayment', function ($q) {
+                    return $q->where('status', '!=', 'completed');
+                })->orWhereDoesntHave('prePayment');
+            });
+        }
+
+        // Positive case
+        return $query->whereHas('prePayment', function ($q) {
+            return $q->where('status', 'completed');
+        });
+    }
+
+    public function scopeCompleted(Builder $query, $value = true, $negative = false) {
+        // Negative case
+        if (filter_var($value, FILTER_VALIDATE_BOOLEAN) === $negative) {
+            return $query->where(function ($q) {
+                return $q->whereHas('payment', function ($q) {
+                    return $q->where('status', '!=', 'completed');
+                })->orWhereDoesntHave('payment');
+            });
+        }
+
+        // Positive case
+        return $query->whereHas('payment', function ($q) {
+            return $q->where('status', 'completed');
+        });
     }
 
     public function scopeDepartureInLessThan(Builder $query, $amount, $unit = 'minutes') {
