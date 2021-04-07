@@ -194,13 +194,11 @@ export default {
       await this.$store.dispatch(`${this.slug}/testOne`, {
         loanableId: loanable.id,
         loan: this.loan,
-        communityId: this.user.communities[0].id,
       });
     },
     async testLoanables() {
       await this.$store.dispatch(`${this.slug}/testAll`, {
         loan: this.loan,
-        communityId: this.user.communities[0].id,
       });
       this.searched = true;
     },

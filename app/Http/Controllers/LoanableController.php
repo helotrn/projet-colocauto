@@ -183,7 +183,11 @@ class LoanableController extends RestController
         $durationInMinutes = $request->get('duration_in_minutes');
 
         $communityId = $request->get('community_id');
-        $community = Community::accessibleBy($request->user())->find($communityId);
+        if ($communityId) {
+          $community = Community::accessibleBy($request->user())->find($communityId);
+        } else {
+          $community = $item->getCommunityForLoanBy($request->user());
+        }
         $pricing = $community->getPricingFor($item);
 
         $loanableData = json_decode($objectResponse->getContent());
@@ -209,6 +213,10 @@ class LoanableController extends RestController
         }
 
         return response([
+          'community' => [
+            'id' => $community->id,
+            'name' => $community->name,
+          ],
           'available' => $item->isAvailable($departureAt, $durationInMinutes),
           'price' => $price,
           'insurance' => $insurance,

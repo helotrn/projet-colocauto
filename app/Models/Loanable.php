@@ -287,6 +287,33 @@ class Loanable extends BaseModel
         return ($query->get()->count() === 0);
     }
 
+    public function getCommunityForLoanBy(User $user): Community {
+        // The reference community for a loan is...
+        // 1. The community of the loanable, if the user is an approved member as well
+        if ($this->community) {
+            if ($user->approvedCommunities->find($this->community->id)) {
+                return $this->community;
+            }
+
+            // 2. A children community that the user is a member of as well
+            // It is assumed that there is only one since children communities are exclusive area
+            if ($community = $this->community->children->whereIn(
+                'id',
+                $user->approvedCommunities->pluck('id')
+            )->first()) {
+                return $community;
+            }
+        }
+
+        // 3. The community of the loable owner that is common with the user
+        // It is assumed that there is one, otherwise the user wouldn't
+        // have access to that loanable at this point
+        return $this->owner->communities->where(
+            'id',
+            $user->approvedCommunities->pluck('id')
+        )->first();
+    }
+
     public function getEventsAttribute() {
         try {
             $ical = new \ICal\ICal([ 0 => [$this->availability_ics] ], [
