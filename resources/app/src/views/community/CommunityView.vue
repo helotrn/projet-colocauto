@@ -180,7 +180,6 @@ export default {
           },
         },
         borrower_id: this.user.borrower.id,
-        community_id: this.user.communities[0].id,
         loanable,
         loanable_id: loanable.id,
         estimated_insurance: loanable.insurance,

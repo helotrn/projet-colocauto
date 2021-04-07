@@ -47,6 +47,7 @@ class Loan extends BaseModel
             'min:0',
         ],
         'loanable_id' => 'available',
+        'community_id' => 'required',
         'message_for_owner' => [ 'present' ],
         'reason' => [ 'required' ],
     ];
