@@ -653,7 +653,7 @@ class LoanTest extends TestCase
         $borrower = factory(Borrower::class)->create(['user_id' => $this->user->id]);
 
         $community = factory(Community::class)->create([
-            'type' => 'private',
+            'type' => 'borough',
         ]);
 
         $user = factory(User::class)->create();
@@ -669,7 +669,7 @@ class LoanTest extends TestCase
 
         $data = [
             'departure_at' => now()->toDateTimeString(),
-            'duration_in_minutes' => $this->faker->randomNumber(4),
+            'duration_in_minutes' => 60,
             'estimated_distance' => $this->faker->randomNumber(4),
             'estimated_insurance' => $this->faker->randomNumber(4),
             'borrower_id' => $borrower->id,
@@ -685,9 +685,21 @@ class LoanTest extends TestCase
         $response = $this->json('POST', '/api/v1/loans', $data);
 
         $response->assertStatus(201);
-        $data = json_decode($response->getContent());
+        $responseData = json_decode($response->getContent());
 
-        $this->assertEquals(2, count($data->actions));
+        $this->assertEquals(1, count($responseData->actions));
+
+		// Community is private: intentions are automatically accepted
+		$community->type = 'private';
+		$community->save();
+
+		$data['departure_at'] = date('Y-m-d H:i:s', strtotime('tomorrow'));
+        $response = $this->json('POST', '/api/v1/loans', $data);
+
+        $response->assertStatus(201);
+        $responseData = json_decode($response->getContent());
+
+        $this->assertEquals(2, count($responseData->actions));
     }
 
     public function testCreateWithCollectiveLoanableAndEnoughBalanceAutomaticallyPrePaid() {
