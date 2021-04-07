@@ -15,7 +15,7 @@ class PolygonCastTest extends TestCase
         $cast = new PolygonCast();
 
         $this->assertNull($cast->set(null, 'polygon', null, []));
-        $this->assertNull($cast->set(null, 'polygon', [],   []));
+        $this->assertNull($cast->set(null, 'polygon', [], []));
     }
 
     public function testSetOnePoint() {
@@ -76,33 +76,33 @@ class PolygonCastTest extends TestCase
 
 
     public function testGetEmpty() {
-      $cast = new PolygonCast();
+        $cast = new PolygonCast();
 
-      $this->assertNull($cast->get(null, 'polygon', null, []));
-      $this->assertNull($cast->get(null, 'polygon', [],   []));
+        $this->assertNull($cast->get(null, 'polygon', null, []));
+        $this->assertNull($cast->get(null, 'polygon', [], []));
     }
 
     public function testGetTriangle() {
-      $cast = new PolygonCast();
+        $cast = new PolygonCast();
 
-      $polygon = new Polygon([
+        $polygon = new Polygon([
           new LineString([
               new Point(55.234567, -33.456789),
               new Point(56.789012, -34.567890),
               new Point(54.321098, -32.109876),
               new Point(55.234567, -33.456789),
           ])
-      ]);
+        ]);
 
-      $expected_coordinates = [
+        $expected_coordinates = [
         ['55.234567', '-33.456789'],
         ['56.789012', '-34.567890'],
         ['54.321098', '-32.109876'],
         ['55.234567', '-33.456789'],
-      ];
+        ];
 
-      $coordinates = $cast->get(null, 'polygon', $polygon, []);
-      $this->assertEquals($expected_coordinates, $coordinates);
+        $coordinates = $cast->get(null, 'polygon', $polygon, []);
+        $this->assertEquals($expected_coordinates, $coordinates);
     }
 
     public function testGetArray() {

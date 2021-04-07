@@ -47,7 +47,6 @@ class Loan extends BaseModel
             'min:0',
         ],
         'loanable_id' => 'available',
-        'community_id' => 'required',
         'message_for_owner' => [ 'present' ],
         'reason' => [ 'required' ],
     ];
@@ -274,6 +273,18 @@ SQL
 
         return 1 + $end->dayOfYear - $start->dayOfYear;
     }
+
+    public static function getRules($action = '', $auth = null) {
+        $rules = parent::getRules($action, $auth);
+        switch ($action) {
+            case 'create':
+                $rules['community_id'] = 'required';
+                return $rules;
+            default:
+                return $rules;
+        }
+    }
+
 
     protected $casts = [
         'departure_at' => TimestampWithTimezoneCast::class,

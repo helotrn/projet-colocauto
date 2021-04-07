@@ -184,9 +184,9 @@ class LoanableController extends RestController
 
         $communityId = $request->get('community_id');
         if ($communityId) {
-          $community = Community::accessibleBy($request->user())->find($communityId);
+            $community = Community::accessibleBy($request->user())->find($communityId);
         } else {
-          $community = $item->getCommunityForLoanBy($request->user());
+            $community = $item->getCommunityForLoanBy($request->user());
         }
         $pricing = $community->getPricingFor($item);
 

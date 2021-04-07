@@ -43,7 +43,7 @@ class PointCastTest extends TestCase
 
         $this->assertInstanceOf(\MStaack\LaravelPostgis\Geometries\Point::class, $point);
 
-        $this->assertEquals($coordinates['latitude'],  $point->getLat());
+        $this->assertEquals($coordinates['latitude'], $point->getLat());
         $this->assertEquals($coordinates['longitude'], $point->getLng());
     }
 
@@ -73,27 +73,27 @@ class PointCastTest extends TestCase
         $point = $cast->set(null, 'point', '-37.34567,77.23456', []);
         $this->assertInstanceOf(\MStaack\LaravelPostgis\Geometries\Point::class, $point);
         $this->assertEquals(-37.34567, $point->getLat());
-        $this->assertEquals( 77.23456, $point->getLng());
+        $this->assertEquals(77.23456, $point->getLng());
 
         $point = $cast->set(null, 'point', '-37.34567, 77.23456', []);
         $this->assertEquals(-37.34567, $point->getLat());
-        $this->assertEquals( 77.23456, $point->getLng());
+        $this->assertEquals(77.23456, $point->getLng());
 
         $point = $cast->set(null, 'point', '-37.34567,  77.23456', []);
         $this->assertEquals(-37.34567, $point->getLat());
-        $this->assertEquals( 77.23456, $point->getLng());
+        $this->assertEquals(77.23456, $point->getLng());
 
         $point = $cast->set(null, 'point', '-37.34567 77.23456', []);
         $this->assertEquals(-37.34567, $point->getLat());
-        $this->assertEquals( 77.23456, $point->getLng());
+        $this->assertEquals(77.23456, $point->getLng());
 
         $point = $cast->set(null, 'point', '-37.34567  77.23456', []);
         $this->assertEquals(-37.34567, $point->getLat());
-        $this->assertEquals( 77.23456, $point->getLng());
+        $this->assertEquals(77.23456, $point->getLng());
 
         $point = $cast->set(null, 'point', '-37,77', []);
         $this->assertEquals(-37, $point->getLat());
-        $this->assertEquals( 77, $point->getLng());
+        $this->assertEquals(77, $point->getLng());
     }
 
     public function testSetInvalidEmpty() {
@@ -127,8 +127,8 @@ class PointCastTest extends TestCase
     }
 
     public function testGetArrayEmpty() {
-      $cast = new PointCast();
+        $cast = new PointCast();
 
-      $this->assertEquals([], $cast->get(null, 'point', [], []));
+        $this->assertEquals([], $cast->get(null, 'point', [], []));
     }
 }
