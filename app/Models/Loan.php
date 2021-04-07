@@ -293,6 +293,7 @@ SQL
     protected $fillable = [
         'borrower_id',
         'canceled_at',
+        'community_id',
         'departure_at',
         'duration_in_minutes',
         'estimated_distance',

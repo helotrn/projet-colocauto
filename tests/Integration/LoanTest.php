@@ -649,6 +649,47 @@ class LoanTest extends TestCase
         $this->assertEquals(2, count($data->actions));
     }
 
+    public function testCreateWithLoanableOnPrivateCommunityIsAutomaticallyAccepted() {
+        $borrower = factory(Borrower::class)->create(['user_id' => $this->user->id]);
+
+        $community = factory(Community::class)->create([
+            'type' => 'private',
+        ]);
+
+        $user = factory(User::class)->create();
+        $user->communities()->attach($community->id, [ 'approved_at' => new \DateTime ]);
+
+        $this->user->communities()->attach(
+            $community->id,
+            [ 'approved_at' => new \DateTime ]
+        );
+
+        $owner = factory(Owner::class)->create([ 'user_id' => $user->id ]);
+        $loanable = factory(Bike::class)->create([ 'owner_id' => $owner->id ]);
+
+        $data = [
+            'departure_at' => now()->toDateTimeString(),
+            'duration_in_minutes' => $this->faker->randomNumber(4),
+            'estimated_distance' => $this->faker->randomNumber(4),
+            'estimated_insurance' => $this->faker->randomNumber(4),
+            'borrower_id' => $borrower->id,
+            'loanable_id' => $loanable->id,
+            'estimated_price' => 1,
+            'estimated_insurance' => 1,
+            'platform_tip' => 1,
+            'message_for_owner' => '',
+            'reason' => 'salut',
+            'community_id' => $community->id,
+        ];
+
+        $response = $this->json('POST', '/api/v1/loans', $data);
+
+        $response->assertStatus(201);
+        $data = json_decode($response->getContent());
+
+        $this->assertEquals(2, count($data->actions));
+    }
+
     public function testCreateWithCollectiveLoanableAndEnoughBalanceAutomaticallyPrePaid() {
         $borrower = factory(Borrower::class)->create(['user_id' => $this->user->id]);
 
