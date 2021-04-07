@@ -413,36 +413,39 @@ class Loanable extends BaseModel
                         // ...or belonging to children communities that allow sharing with
                         // parent communities (share_with_parent_communities = true)
                         ->orWhereHas('community', function ($q) use ($communityIds) {
-                            $childrenIds = Community::childOf($communityIds->toArray());
-                            return $q->whereIn(
-                                'communities.id',
-                                $childrenIds->pluck('id')
-                            )->where('share_with_parent_communities', true);
+                            $childrenIds = Community::childOf(
+                                $communityIds->toArray()
+                            )->pluck('id');
+                            return $q->whereIn('communities.id', $childrenIds)
+                                ->where('share_with_parent_communities', true);
                         })
                         // ...or belonging to owners of his accessible communities
+                        // that do not have a community specified directly
                         // (communities through user through owner)
-                        ->orWhereHas('owner', function ($q) use ($communityIds) {
-                            return $q->whereHas('user', function ($q) use ($communityIds) {
-                                return $q->whereHas(
-                                    'communities',
-                                    function ($q) use ($communityIds) {
-                                        return $q
-                                            ->whereIn(
-                                                'community_user.community_id',
-                                                $communityIds
-                                            )
-                                            ->whereNotNull('community_user.approved_at')
-                                            ->whereNull('community_user.suspended_at');
-                                    }
-                                )
-                                ->orWhereHas('communities', function ($q) use ($communityIds) {
-                                    $childrenIds = Community::childOf($communityIds->toArray());
-                                    return $q->whereIn(
-                                        'communities.id',
-                                        $childrenIds->pluck('id')
-                                    )->where('share_with_parent_communities', true);
+                        ->orWhere(function ($q) use ($communityIds) {
+                            return $q->whereHas('owner', function ($q) use ($communityIds) {
+                                return $q->whereHas('user', function ($q) use ($communityIds) {
+                                    return $q->whereHas(
+                                        'communities',
+                                        function ($q) use ($communityIds) {
+                                            return $q
+                                                ->whereIn(
+                                                    'community_user.community_id',
+                                                    $communityIds
+                                                )
+                                                ->whereNotNull('community_user.approved_at')
+                                                ->whereNull('community_user.suspended_at');
+                                        }
+                                    )
+                                    ->orWhereHas('communities', function ($q) use ($communityIds) {
+                                        $childrenIds = Community::childOf(
+                                            $communityIds->toArray()
+                                        )->pluck('id');
+                                        return $q->whereIn('communities.id', $childrenIds)
+                                            ->where('share_with_parent_communities', true);
+                                    });
                                 });
-                            });
+                            })->whereDoesntHave('community');
                         });
                 });
 
