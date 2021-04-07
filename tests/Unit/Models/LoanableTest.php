@@ -271,4 +271,41 @@ class LoanableTest extends TestCase
         $this->assertEquals(1, $loanables->count());
         $this->assertEquals($loanable->id, $loanables[0]);
     }
+
+    public function testLoanableMethodGetCommunityForLoanBy() {
+        $bike = factory(Bike::class)->create([
+            'owner_id' => $this->memberOfCommunity->owner->id,
+            'community_id' => $this->community->id,
+        ]);
+
+        // User is not approved on the loanable community
+        // (you normally wouldn't be able to see the loanable to begin with)
+        $community = $bike->getCommunityForLoanBy($this->otherMemberOfCommunity);
+        $this->assertEquals(null, $community);
+
+        // User is approved on the loanable community
+        $this->community->users()->updateExistingPivot($this->otherMemberOfCommunity->id, [
+            'approved_at' => new \DateTime,
+        ]);
+
+        $this->otherMemberOfCommunity = $this->otherMemberOfCommunity->fresh();
+
+        $community = $bike->getCommunityForLoanBy($this->otherMemberOfCommunity);
+        $this->assertEquals($this->community->id, $community->id);
+
+        // User is approved on a child community of the loanable community
+        $bike->community_id = $this->borough->id;
+        $bike->save();
+        $bike = $bike->fresh();
+        $community = $bike->getCommunityForLoanBy($this->otherMemberOfCommunity);
+        $this->assertEquals($this->community->id, $community->id);
+
+        // User is approved on community of the loanable's owner
+        $bike->community_id = null;
+        $bike->save();
+        $bike = $bike->fresh();
+
+        $community = $bike->getCommunityForLoanBy($this->otherMemberOfCommunity);
+        $this->assertEquals($this->community->id, $community->id);
+    }
 }

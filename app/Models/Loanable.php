@@ -287,7 +287,7 @@ class Loanable extends BaseModel
         return ($query->get()->count() === 0);
     }
 
-    public function getCommunityForLoanBy(User $user): Community {
+    public function getCommunityForLoanBy(User $user): ?Community {
         // The reference community for a loan is...
         // 1. The community of the loanable, if the user is an approved member as well
         if ($this->community) {
@@ -308,9 +308,9 @@ class Loanable extends BaseModel
         // 3. The community of the loable owner that is common with the user
         // It is assumed that there is one, otherwise the user wouldn't
         // have access to that loanable at this point
-        return $this->owner->communities->where(
+        return $this->owner->user->communities->whereIn(
             'id',
-            $user->approvedCommunities->pluck('id')
+            $user->approvedCommunities->pluck('id')->toArray()
         )->first();
     }
 
