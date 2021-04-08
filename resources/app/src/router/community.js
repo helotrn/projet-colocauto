@@ -60,7 +60,6 @@ export default {
           loanables: {
             retrieve: {
               fields: 'id,type,name,position_google,available,owner.user.id,owner.user.name,owner.user.full_name,owner.user.avatar,image.*',
-              '!owner.user.id': 'me',
               per_page: 100,
             },
           },
