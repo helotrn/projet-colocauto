@@ -35,6 +35,15 @@ class Intention extends Action
                     if (!$loan->loanable->owner) {
                         $model->status = 'completed';
                         $model->save();
+                    } elseif ($loan->loanable->owner->user->approvedCommunities
+                        ->where('type', 'private')
+                        ->pluck('id')->intersect(
+                            $loan->borrower->user->approvedCommunities
+                                ->where('type', 'private')
+                                ->pluck('id')
+                        )->intersect([$loan->community_id])->isNotEmpty()) {
+                        $model->status = 'completed';
+                        $model->save();
                     }
                     break;
             }
