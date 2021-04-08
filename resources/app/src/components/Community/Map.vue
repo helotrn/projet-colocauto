@@ -6,7 +6,7 @@
     :options="mapOptions"
     @click="selectedLoanable = null"
     map-type-id="terrain">
-    <gmap-polygon v-for="c in communities" :key="`polygon-${c.id}`"
+    <gmap-polygon v-for="c in communitiesWithArea" :key="`polygon-${c.id}`"
       :path="c.area_google"
       :label="c.name"
       :options="polygonOptions" />
@@ -77,7 +77,7 @@ export default {
   },
   computed: {
     averageCommunitiesCenter() {
-      const center = this.communities.reduce((acc, c) => [
+      const center = this.communitiesWithArea.reduce((acc, c) => [
         (acc[0] + c.center[0]) / 2,
         (acc[1] + c.center[1]) / 2,
       ], this.communities[0].center);
@@ -98,6 +98,9 @@ export default {
         this.$store.commit('community.view/center', center);
       },
     },
+    communitiesWithArea() {
+      return (this.communities || []).filter(c => !!c.area);
+    },
     google: gmapApi,
   },
   methods: {
@@ -111,7 +114,7 @@ export default {
     centerOnCommunities() {
       const { LatLngBounds } = this.google.maps;
       const bounds = new LatLngBounds();
-      this.communities.forEach(c => c.area_google.forEach(p => bounds.extend(p)));
+      this.communitiesWithArea.forEach(c => c.area_google.forEach(p => bounds.extend(p)));
 
       if (document.body.clientWidth >= 992) {
         const sw = bounds.getSouthWest();

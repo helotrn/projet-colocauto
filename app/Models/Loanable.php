@@ -287,6 +287,33 @@ class Loanable extends BaseModel
         return ($query->get()->count() === 0);
     }
 
+    public function getCommunityForLoanBy(User $user): ?Community {
+        // The reference community for a loan is...
+        // 1. The community of the loanable, if the user is an approved member as well
+        if ($this->community) {
+            if ($user->approvedCommunities->find($this->community->id)) {
+                return $this->community;
+            }
+
+            // 2. A children community that the user is a member of as well
+            // It is assumed that there is only one since children communities are exclusive area
+            if ($community = $this->community->children->whereIn(
+                'id',
+                $user->approvedCommunities->pluck('id')
+            )->first()) {
+                return $community;
+            }
+        }
+
+        // 3. The community of the loable owner that is common with the user
+        // It is assumed that there is one, otherwise the user wouldn't
+        // have access to that loanable at this point
+        return $this->owner->user->communities->whereIn(
+            'id',
+            $user->approvedCommunities->pluck('id')->toArray()
+        )->first();
+    }
+
     public function getEventsAttribute() {
         try {
             $ical = new \ICal\ICal([ 0 => [$this->availability_ics] ], [
@@ -386,36 +413,39 @@ class Loanable extends BaseModel
                         // ...or belonging to children communities that allow sharing with
                         // parent communities (share_with_parent_communities = true)
                         ->orWhereHas('community', function ($q) use ($communityIds) {
-                            $childrenIds = Community::childOf($communityIds->toArray());
-                            return $q->whereIn(
-                                'communities.id',
-                                $childrenIds->pluck('id')
-                            )->where('share_with_parent_communities', true);
+                            $childrenIds = Community::childOf(
+                                $communityIds->toArray()
+                            )->pluck('id');
+                            return $q->whereIn('communities.id', $childrenIds)
+                                ->where('share_with_parent_communities', true);
                         })
                         // ...or belonging to owners of his accessible communities
+                        // that do not have a community specified directly
                         // (communities through user through owner)
-                        ->orWhereHas('owner', function ($q) use ($communityIds) {
-                            return $q->whereHas('user', function ($q) use ($communityIds) {
-                                return $q->whereHas(
-                                    'communities',
-                                    function ($q) use ($communityIds) {
-                                        return $q
-                                            ->whereIn(
-                                                'community_user.community_id',
-                                                $communityIds
-                                            )
-                                            ->whereNotNull('community_user.approved_at')
-                                            ->whereNull('community_user.suspended_at');
-                                    }
-                                )
-                                ->orWhereHas('communities', function ($q) use ($communityIds) {
-                                    $childrenIds = Community::childOf($communityIds->toArray());
-                                    return $q->whereIn(
-                                        'communities.id',
-                                        $childrenIds->pluck('id')
-                                    )->where('share_with_parent_communities', true);
+                        ->orWhere(function ($q) use ($communityIds) {
+                            return $q->whereHas('owner', function ($q) use ($communityIds) {
+                                return $q->whereHas('user', function ($q) use ($communityIds) {
+                                    return $q->whereHas(
+                                        'communities',
+                                        function ($q) use ($communityIds) {
+                                            return $q
+                                                ->whereIn(
+                                                    'community_user.community_id',
+                                                    $communityIds
+                                                )
+                                                ->whereNotNull('community_user.approved_at')
+                                                ->whereNull('community_user.suspended_at');
+                                        }
+                                    )
+                                    ->orWhereHas('communities', function ($q) use ($communityIds) {
+                                        $childrenIds = Community::childOf(
+                                            $communityIds->toArray()
+                                        )->pluck('id');
+                                        return $q->whereIn('communities.id', $childrenIds)
+                                            ->where('share_with_parent_communities', true);
+                                    });
                                 });
-                            });
+                            })->whereDoesntHave('community');
                         });
                 });
 

@@ -4,6 +4,7 @@ namespace App\Http\Requests\Loan;
 
 use App\Http\Requests\BaseRequest;
 use App\Models\Community;
+use App\Models\Loanable;
 
 class CreateRequest extends BaseRequest
 {
@@ -16,10 +17,20 @@ class CreateRequest extends BaseRequest
                 ->pluck('id')
                 ->toArray()
         );
+        $accessibleLoanableIds = implode(
+            ',',
+            Loanable::accessibleBy($user)->pluck('id')->toArray()
+        );
 
         return [
-            'community_id' => [
+            'loanable_id' => [
+                'numeric',
                 'required',
+                "in:$accessibleLoanableIds",
+            ],
+            'community_id' => [
+                'numeric',
+                'filled',
                 "in:$accessibleCommunityIds",
             ],
         ];

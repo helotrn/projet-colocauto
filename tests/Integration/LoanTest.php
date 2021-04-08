@@ -362,6 +362,8 @@ class LoanTest extends TestCase
 
         $borrower = factory(Borrower::class)->create(['user_id' => $user->id]);
 
+        $this->user->communities()
+          ->attach($approvedCommunity->id, [ 'approved_at' => new \DateTime ]);
         $owner = factory(Owner::class)->create(['user_id' => $this->user->id]);
         $loanable = factory(Bike::class)->create(['owner_id' => $owner->id]);
 
