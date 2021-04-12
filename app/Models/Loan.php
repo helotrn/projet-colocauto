@@ -274,6 +274,18 @@ SQL
         return 1 + $end->dayOfYear - $start->dayOfYear;
     }
 
+    public static function getRules($action = '', $auth = null) {
+        $rules = parent::getRules($action, $auth);
+        switch ($action) {
+            case 'create':
+                $rules['community_id'] = 'required';
+                return $rules;
+            default:
+                return $rules;
+        }
+    }
+
+
     protected $casts = [
         'departure_at' => TimestampWithTimezoneCast::class,
     ];
@@ -281,6 +293,7 @@ SQL
     protected $fillable = [
         'borrower_id',
         'canceled_at',
+        'community_id',
         'departure_at',
         'duration_in_minutes',
         'estimated_distance',

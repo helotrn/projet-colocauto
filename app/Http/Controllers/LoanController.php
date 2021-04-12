@@ -9,6 +9,7 @@ use App\Http\Requests\Action\CreateRequest as ActionCreateRequest;
 use App\Http\Requests\Loan\CreateRequest;
 use App\Http\Requests\BaseRequest as Request;
 use App\Models\Loan;
+use App\Models\Loanable;
 use App\Repositories\LoanRepository;
 use Carbon\Carbon;
 use Excel;
@@ -46,6 +47,15 @@ class LoanController extends RestController
     }
 
     public function create(CreateRequest $request) {
+        if (!$request->get('community_id')) {
+            $loanable = Loanable::accessibleBy($request->user())
+                ->where('id', $request->get('loanable_id'))
+                ->firstOrFail();
+            $request->merge([
+                'community_id' => $loanable->getCommunityForLoanBy($request->user())->id,
+            ]);
+        }
+
         try {
             $item = parent::validateAndCreate($request);
         } catch (ValidationException $e) {
@@ -139,8 +149,6 @@ class LoanController extends RestController
                 'reason' => '',
                 'incidents' => [],
                 'actions' => [],
-                'community_id' => null,
-                'community' => null,
                 'borrower_id' => null,
                 'borrower' => null,
                 'loanable_id' => null,

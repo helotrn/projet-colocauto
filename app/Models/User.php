@@ -196,17 +196,10 @@ class User extends AuthenticatableBaseModel
     }
 
     public function communities() {
-        $relation = $this->belongsToMany(Community::class)
+        return $this->belongsToMany(Community::class)
             ->using(Pivots\CommunityUser::class)
             ->withTimestamps()
             ->withPivot(['id', 'approved_at', 'created_at', 'role', 'suspended_at', 'updated_at']);
-
-        $user = Auth::user();
-        if ($user && $user->isAdmin()) {
-            return $relation;
-        }
-
-        return $relation;
     }
 
     public function approvedCommunities() {

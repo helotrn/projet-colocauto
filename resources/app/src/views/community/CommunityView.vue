@@ -144,7 +144,11 @@ export default {
       this.$router.push(`/community/${view}`);
     },
     reset() {
-      this.$store.commit('loans/item', { ...this.$store.state.loans.empty });
+      const newLoan = { ...this.$store.state.loans.empty };
+      delete newLoan.community;
+      delete newLoan.community_id;
+
+      this.$store.commit('loans/item', newLoan);
 
       this.selectedLoanableTypes = ['bike', 'trailer'];
 
@@ -180,7 +184,6 @@ export default {
           },
         },
         borrower_id: this.user.borrower.id,
-        community_id: this.user.communities[0].id,
         loanable,
         loanable_id: loanable.id,
         estimated_insurance: loanable.insurance,
@@ -194,13 +197,11 @@ export default {
       await this.$store.dispatch(`${this.slug}/testOne`, {
         loanableId: loanable.id,
         loan: this.loan,
-        communityId: this.user.communities[0].id,
       });
     },
     async testLoanables() {
       await this.$store.dispatch(`${this.slug}/testAll`, {
         loan: this.loan,
-        communityId: this.user.communities[0].id,
       });
       this.searched = true;
     },
@@ -211,16 +212,24 @@ export default {
       handler(val) {
         if (this.lastLoanMerged) {
           this.lastLoan = { ...val };
-          this.$store.commit('loans/item', val);
+          delete this.lastLoan.community;
+          delete this.lastLoan.community_id;
+
+          this.$store.commit('loans/item', this.lastLoan);
         } else {
           this.lastLoanMerged = true;
 
           if (this.lastLoan) {
             if (this.$dayjs(this.lastLoan.departure_at).isAfter(this.$dayjs())) {
-              this.$store.commit('loans/item', {
+              const lastLoan = {
                 ...val,
                 ...this.lastLoan,
-              });
+              };
+
+              delete lastLoan.community;
+              delete lastLoan.community_id;
+
+              this.$store.commit('loans/item', lastLoan);
             }
           }
         }

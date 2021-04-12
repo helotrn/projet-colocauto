@@ -1,11 +1,13 @@
 <template>
   <div class="profile-communities" v-if="item && routeDataLoaded">
     <div class="profile-communities__communities" v-if="item.communities.length > 0">
-      <div class="profile-communities__communities__community"
+      <b-card class="profile-communities__communities__community"
         v-for="community in item.communities" :key="community.id">
-        <h3>{{ community.name }}</h3>
-        <community-proof-form :community="community" @submit="submit" />
-      </div>
+        <b-card-header header-tag="h3">{{ community.name }}</b-card-header>
+        <b-card-body>
+          <community-proof-form :community="community" @submit="submit" />
+        </b-card-body>
+      </b-card>
     </div>
     <div v-else>
       <p>
@@ -39,4 +41,9 @@ export default {
 </script>
 
 <style lang="scss">
+.profile-communities {
+  &__communities__community {
+    margin-bottom: 20px;
+  }
+}
 </style>

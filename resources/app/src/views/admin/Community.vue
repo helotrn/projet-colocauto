@@ -214,7 +214,7 @@ export default {
   computed: {
     area: {
       get() {
-        return this.item.area.join('\n');
+        return (this.item.area || []).join('\n');
       },
       set(area) {
         const newItem = {
