@@ -12,6 +12,11 @@ class OwnersTableSeeder extends Seeder
                 'user_id' => 2,
                 'submitted_at' => new DateTime,
             ],
+            [                // proprietairevoiture@locomotion.app
+                'id' => 4,
+                'user_id' => 4,
+                'submitted_at' => new DateTime,
+            ],
         ];
 
         foreach ($owners as $owner) {
