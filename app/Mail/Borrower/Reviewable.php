@@ -28,7 +28,7 @@ class Reviewable extends Mailable
         if (!$communities) {
             $communities = collect();
         } else {
-            $communities = collect($communities)->flatten();
+            $communities = collect([$communities])->flatten();
         }
 
         $this->communities = $communities;
