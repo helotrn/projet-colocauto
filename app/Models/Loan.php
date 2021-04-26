@@ -491,7 +491,7 @@ SQL
         }
 
         if ($action = $this->actions->last()) {
-          return $action->status;
+            return $action->status;
         }
 
         return null;
