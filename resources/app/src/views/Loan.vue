@@ -12,7 +12,7 @@
 
         <b-col lg="9" class="loan__actions">
           <div class="loan__actions__buttons text-right mb-3"
-            v-if="!!item.id && item.loan_status === 'in_process'">
+            v-if="!!item.id && item.loan_status === 'in_process' && !item.canceled_at">
             <b-button class="ml-3 mb-3" variant="danger" :disabled="hasReachedStep('takeover')"
               @click="cancelLoan">
               Annuler la réservation

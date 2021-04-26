@@ -56,6 +56,10 @@ export default {
           return false;
       }
 
+      if (this.item.canceled_at) {
+        return true;
+      }
+
       return false;
     },
     hasReachedStep(step) {
