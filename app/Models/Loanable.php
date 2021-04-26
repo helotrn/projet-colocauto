@@ -310,7 +310,7 @@ class Loanable extends BaseModel
         // have access to that loanable at this point
         return $this->owner->user->communities->whereIn(
             'id',
-            $user->approvedCommunities->pluck('id')->toArray()
+            $user->getAccessibleCommunityIds()->toArray()
         )->first();
     }
 
@@ -391,15 +391,7 @@ class Loanable extends BaseModel
             ->where(function ($q) use ($user, $allowedTypes) {
                 // (Accessible communities are communities that you directly
                 // belong to and parent communities of these, recursively)
-                $communityIds = $user->communities
-                    ->whereNotNull('pivot.approved_at')
-                    ->whereNull('pivot.suspended_at')
-                    ->pluck('id');
-                if ($communityIds->count() > 0) {
-                    $communityIds = $communityIds->concat(
-                        Community::parentOf($communityIds->toArray())->pluck('id')
-                    );
-                }
+                $communityIds = $user->approvedCommunities->pluck('id');
 
                 $q = $q->where(function ($q) use ($communityIds) {
                     return $q
@@ -425,6 +417,7 @@ class Loanable extends BaseModel
                         ->orWhere(function ($q) use ($communityIds) {
                             return $q->whereHas('owner', function ($q) use ($communityIds) {
                                 return $q->whereHas('user', function ($q) use ($communityIds) {
+                                    // (direct community)
                                     return $q->whereHas(
                                         'communities',
                                         function ($q) use ($communityIds) {
@@ -437,6 +430,7 @@ class Loanable extends BaseModel
                                                 ->whereNull('community_user.suspended_at');
                                         }
                                     )
+                                    // (parent community if shared with parent community)
                                     ->orWhereHas('communities', function ($q) use ($communityIds) {
                                         $childrenIds = Community::childOf(
                                             $communityIds->toArray()
