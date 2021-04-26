@@ -39,20 +39,28 @@ class LoanableTest extends TestCase
             'parent_id' => $this->borough->id,
         ]);
 
-        $this->memberOfBorough = factory(User::class)->create();
+        $this->memberOfBorough = factory(User::class)->create([
+            'name' => 'memberOfBorough',
+        ]);
         $this->borough->users()->attach($this->memberOfBorough, [
             'approved_at' => new \DateTime,
         ]);
 
-        $this->memberOfCommunity = factory(User::class)->create();
+        $this->memberOfCommunity = factory(User::class)->create([
+            'name' => 'memberOfCommunity',
+        ]);
         $this->community->users()->attach($this->memberOfCommunity, [
             'approved_at' => new \DateTime,
         ]);
 
-        $this->otherMemberOfCommunity = factory(User::class)->create();
+        $this->otherMemberOfCommunity = factory(User::class)->create([
+            'name' => 'otherMemberOfCommunity',
+        ]);
         $this->community->users()->attach($this->otherMemberOfCommunity);
 
-        $this->memberOfOtherCommunity = factory(User::class)->create();
+        $this->memberOfOtherCommunity = factory(User::class)->create([
+            'name' => 'memberOfOtherCommunity',
+        ]);
         $this->otherCommunity->users()->attach($this->memberOfOtherCommunity, [
             'approved_at' => new \DateTime,
         ]);
@@ -74,6 +82,7 @@ class LoanableTest extends TestCase
             $this->memberOfOtherCommunity
         ] as $member) {
             factory(Trailer::class)->create([
+                'name' => "$member->name trailer",
                 'owner_id' => $member->owner->id,
             ]);
         }
@@ -85,11 +94,16 @@ class LoanableTest extends TestCase
             $this->otherMemberOfCommunity,
             $this->memberOfOtherCommunity
         ] as $member) {
-            $loanables = Loanable::accessibleBy($member)->pluck('id');
-            $this->assertEquals(1, $loanables->count());
+            $loanables = Loanable::accessibleBy($member)->pluck('name');
+            $loanableIds = Loanable::accessibleBy($member)->pluck('id');
+            $this->assertEquals(
+              1,
+              $loanables->count(),
+              "too many loanables accessible to $member->name"
+            );
             $this->assertEquals(
                 $member->loanables()->first()->id,
-                $loanables->first()
+                $loanableIds->first()
             );
         }
     }

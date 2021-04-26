@@ -393,6 +393,10 @@ class Loanable extends BaseModel
                 // belong to and parent communities of these, recursively)
                 $communityIds = $user->approvedCommunities->pluck('id');
 
+                if ($communityIds->count() === 0) {
+                    $communityIds->push(0);
+                }
+
                 $q = $q->where(function ($q) use ($communityIds) {
                     return $q
                         // ...loanables belonging to its accessible communities...
@@ -430,13 +434,20 @@ class Loanable extends BaseModel
                                                 ->whereNull('community_user.suspended_at');
                                         }
                                     )
-                                    // (parent community if shared with parent community)
+                                    // (child community if shared with parent community)
                                     ->orWhereHas('communities', function ($q) use ($communityIds) {
                                         $childrenIds = Community::childOf(
                                             $communityIds->toArray()
                                         )->pluck('id');
                                         return $q->whereIn('communities.id', $childrenIds)
                                             ->where('share_with_parent_communities', true);
+                                    })
+                                    // (parent community downward)
+                                    ->orWhereHas('communities', function ($q) use ($communityIds) {
+                                        $parentIds = Community::parentOf(
+                                            $communityIds->toArray()
+                                        )->pluck('id');
+                                        return $q->whereIn('communities.id', $parentIds);
                                     });
                                 });
                             })->whereDoesntHave('community');
