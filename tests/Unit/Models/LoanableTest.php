@@ -6,6 +6,7 @@ use App\Models\Borrower;
 use App\Models\Community;
 use App\Models\Bike;
 use App\Models\Car;
+use App\Models\Loan;
 use App\Models\Loanable;
 use App\Models\Owner;
 use App\Models\Trailer;
@@ -321,5 +322,68 @@ class LoanableTest extends TestCase
 
         $community = $bike->getCommunityForLoanBy($this->otherMemberOfCommunity);
         $this->assertEquals($this->community->id, $community->id);
+    }
+
+    public function testIsAvailableEventIfLoanExistsWithIntentionInProcessOrCanceled() {
+        $bike = factory(Bike::class)->create([
+            'owner_id' => $this->memberOfCommunity->owner->id,
+            'community_id' => $this->community->id,
+        ]);
+
+        $user = factory(User::class)
+            ->states('withBorrower')
+            ->create();
+        $loan = factory(Loan::class)
+            ->states('withInProcessIntention')
+            ->create([
+                'borrower_id' => $user->borrower->id,
+                'loanable_id' => $bike->id,
+                'community_id' => $this->community->id,
+                'departure_at' => '3000-10-10 10:10:00',
+                'duration_in_minutes' => 60,
+            ]);
+
+        $canceledLoan = factory(Loan::class)
+            ->states('withCompletedIntention', 'withInProcessPrePayment')
+            ->create([
+                'borrower_id' => $user->borrower->id,
+                'loanable_id' => $bike->id,
+                'community_id' => $this->community->id,
+                'departure_at' => '3000-10-11 10:10:00',
+                'duration_in_minutes' => 60,
+                'canceled_at' => now(),
+            ]);
+
+        $canceledPrePaymentLoan = factory(Loan::class)
+            ->states('withCompletedIntention', 'withCanceledPrePayment')
+            ->create([
+                'borrower_id' => $user->borrower->id,
+                'loanable_id' => $bike->id,
+                'community_id' => $this->community->id,
+                'departure_at' => '3000-10-11 10:10:00',
+                'duration_in_minutes' => 60,
+            ]);
+
+        $confirmedLoan = factory(Loan::class)
+            ->states('withCompletedIntention', 'withInProcessPrePayment')
+            ->create([
+                'borrower_id' => $user->borrower->id,
+                'loanable_id' => $bike->id,
+                'community_id' => $this->community->id,
+                'departure_at' => '3000-10-12 10:10:00',
+                'duration_in_minutes' => 60,
+            ]);
+        $confirmedLoan->intention->status = 'completed';
+        $confirmedLoan->intention->save();
+        $confirmedLoan = $confirmedLoan->fresh();
+
+        $this->assertEquals(true, $bike->isAvailable('3000-10-10 10:20:00', 60));
+        $this->assertEquals(true, $bike->isAvailable('3000-10-10 11:20:00', 60));
+
+        $this->assertEquals(true, $bike->isAvailable('3000-10-11 10:20:00', 60));
+        $this->assertEquals(true, $bike->isAvailable('3000-10-11 11:20:00', 60));
+
+        $this->assertEquals(false, $bike->isAvailable('3000-10-12 10:20:00', 60));
+        $this->assertEquals(true, $bike->isAvailable('3000-10-12 11:20:00', 60));
     }
 }

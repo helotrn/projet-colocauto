@@ -265,7 +265,6 @@ class Loanable extends BaseModel
             $query = $query->whereNotIn('loans.id', $ignoreLoanIds);
         }
 
-// Unit test...
         $cDef = Loan::getColumnsDefinition();
         $query = $cDef['*']($query);
         $query = $cDef['loan_status']($query);
@@ -273,6 +272,9 @@ class Loanable extends BaseModel
 
         $query
             ->where(\DB::raw($cDef['loan_status']()), '!=', 'canceled')
+            ->whereHas('intention', function ($q) {
+                return $q->where('status', '=', 'completed');
+            })
             ->whereRaw(
                 "(departure_at + "
                   . "COALESCE({$cDef['actual_duration_in_minutes']()}, duration_in_minutes) "

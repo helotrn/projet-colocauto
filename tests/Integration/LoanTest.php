@@ -532,6 +532,17 @@ class LoanTest extends TestCase
         $response->assertStatus(201)
             ->assertJsonStructure(static::$getLoanResponseStructure);
 
+        $loanId = $response->json()['id'];
+        $intention = $response->json()['actions'][0];
+
+        // Confirm intention on first loan
+        $response = $this->json(
+          'PUT',
+          "/api/v1/loans/$loanId/actions/{$intention['id']}/complete",
+          array_merge($intention, [ 'status' => 'completed' ])
+        );
+        $response->assertStatus(200);
+
         // Exactly the same time: overlap
         $response = $this->json('POST', '/api/v1/loans', $data);
 
