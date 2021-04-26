@@ -9,7 +9,9 @@
         Confirmation de l'emprunt
       </h2>
 
-      <span v-if="action.status === 'in_process' && !item.canceled_at">En attente d'approbation</span>
+      <span v-if="action.status === 'in_process' && !item.canceled_at">
+        En attente d'approbation
+      </span>
       <span v-else-if="action.status === 'completed'">
         Approuvé &bull; {{ action.executed_at | datetime }}
       </span>
