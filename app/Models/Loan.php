@@ -118,13 +118,13 @@ SQL
                 return $query->selectRaw("$calendarDaysSql AS calendar_days");
             },
             'loan_status' => function ($query = null) {
-                $sql = <<<SQL
+                $sql = \DB::raw(<<<SQL
 CASE
 WHEN loans.canceled_at IS NOT NULL THEN 'canceled'
 ELSE loan_status_subquery.status
 END
 SQL
-                ;
+                );
 
                 if (!$query) {
                     return $sql;
@@ -132,7 +132,7 @@ SQL
 
                 if (false === strpos($query->toSql(), 'loan_status_subquery')) {
                     $query
-                        ->selectRaw("$sql AS loan_status")
+                        ->selectRaw(\DB::raw("$sql AS loan_status"))
                         ->leftJoinSub(
                             <<<SQL
 SELECT DISTINCT ON (loan_id)
@@ -490,7 +490,11 @@ SQL
             return true;
         }
 
-        return $this->actions->last()->status;
+        if ($action = $this->actions->last()) {
+          return $action->status;
+        }
+
+        return null;
     }
 
     public function getTotalActualCostAttribute() {
