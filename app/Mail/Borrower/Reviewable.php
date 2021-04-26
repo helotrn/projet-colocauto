@@ -25,24 +25,22 @@ class Reviewable extends Mailable
     public function __construct(User $user, $communities = null) {
         $this->user = $user;
 
-        if (null == $communities) {
-            $communities = [];
-        } elseif (!is_array($communities)) {
-            $communities = [$communities];
+        if (!$communities) {
+            $communities = collect();
+        } else {
+            $communities = collect($communities)->flatten();
         }
 
         $this->communities = $communities;
     }
 
     public function build() {
-        $n_communities = count($this->communities);
-        if ($n_communities > 1) {
-            $subject = "Profil d'emprunteur complété dans $n_communities communautés";
-        } elseif (1 == $n_communities) {
-            // Loop to accept any type of key.
-            foreach ($this->communities as $community) {
-                $subject = "Profil d'emprunteur complété dans $community->name";
-            }
+        $communitiesCount = count($this->communities);
+        if ($communitiesCount > 1) {
+            $subject = "Profil d'emprunteur complété dans $communitiesCount communautés";
+        } elseif (1 === $communitiesCount) {
+            $communityName = $this->communities->first()->name;
+            $subject = "Profil d'emprunteur complété dans {$communityName}";
         } else {
             $subject = "Profil d'emprunteur complété";
         }
