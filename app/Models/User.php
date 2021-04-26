@@ -3,13 +3,6 @@
 namespace App\Models;
 
 use App\Mail\PasswordRequest;
-use App\Models\Action;
-use App\Models\Borrower;
-use App\Models\File;
-use App\Models\Invoice;
-use App\Models\Loan;
-use App\Models\Owner;
-use App\Models\PaymentMethod;
 use App\Services\NokeService;
 use App\Transformers\UserTransformer;
 use Auth;
@@ -307,6 +300,21 @@ class User extends AuthenticatableBaseModel
         }
 
         return $customer;
+    }
+
+    public function getAccessibleCommunityIds() {
+        $communityIds = $this->communities
+            ->whereNotNull('pivot.approved_at')
+            ->whereNull('pivot.suspended_at')
+            ->pluck('id');
+
+        if ($communityIds->count() > 0) {
+            $communityIds = $communityIds->concat(
+                Community::parentOf($communityIds->toArray())->pluck('id')
+            );
+        }
+
+        return $communityIds;
     }
 
     public function getNokeUser() {

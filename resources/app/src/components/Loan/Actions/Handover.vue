@@ -5,21 +5,23 @@
       <h2>
         <svg-danger
           v-if="action.status === 'canceled' ||
-            (item.contested_at && action.status === 'in_process')" />
+            (item.contested_at && action.status === 'in_process') || item.canceled_at" />
         <svg-waiting v-else-if="action.status === 'in_process'" />
         <svg-check v-else-if="action.status === 'completed'" />
 
         Retour
       </h2>
 
-      <span v-if="item.contested_at && action.status === 'in_process'">Bloqué</span>
+      <span v-if="item.contested_at && action.status === 'in_process' && !item.canceled_at">
+        Bloqué
+      </span>
       <span v-else>
-        <span v-if="action.status == 'in_process'">En attente</span>
+        <span v-if="action.status == 'in_process' && !item.canceled_at">En attente</span>
         <span v-else-if="action.status === 'completed'">
           Complété &bull; {{ action.executed_at | datetime }}
         </span>
-        <span v-else-if="action.status === 'canceled'">
-          Contesté &bull; {{ action.executed_at | datetime }}
+        <span v-else-if="action.status === 'canceled' || item.canceled_at">
+          Contesté &bull; {{ action.executed_at || item.canceled_at | datetime }}
         </span>
       </span>
     </b-card-header>

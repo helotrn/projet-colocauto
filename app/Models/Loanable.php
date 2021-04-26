@@ -265,7 +265,6 @@ class Loanable extends BaseModel
             $query = $query->whereNotIn('loans.id', $ignoreLoanIds);
         }
 
-// Unit test...
         $cDef = Loan::getColumnsDefinition();
         $query = $cDef['*']($query);
         $query = $cDef['loan_status']($query);
@@ -273,6 +272,9 @@ class Loanable extends BaseModel
 
         $query
             ->where(\DB::raw($cDef['loan_status']()), '!=', 'canceled')
+            ->whereHas('intention', function ($q) {
+                return $q->where('status', '=', 'completed');
+            })
             ->whereRaw(
                 "(departure_at + "
                   . "COALESCE({$cDef['actual_duration_in_minutes']()}, duration_in_minutes) "
@@ -310,7 +312,7 @@ class Loanable extends BaseModel
         // have access to that loanable at this point
         return $this->owner->user->communities->whereIn(
             'id',
-            $user->approvedCommunities->pluck('id')->toArray()
+            $user->getAccessibleCommunityIds()->toArray()
         )->first();
     }
 
@@ -391,14 +393,10 @@ class Loanable extends BaseModel
             ->where(function ($q) use ($user, $allowedTypes) {
                 // (Accessible communities are communities that you directly
                 // belong to and parent communities of these, recursively)
-                $communityIds = $user->communities
-                    ->whereNotNull('pivot.approved_at')
-                    ->whereNull('pivot.suspended_at')
-                    ->pluck('id');
-                if ($communityIds->count() > 0) {
-                    $communityIds = $communityIds->concat(
-                        Community::parentOf($communityIds->toArray())->pluck('id')
-                    );
+                $communityIds = $user->approvedCommunities->pluck('id');
+
+                if ($communityIds->count() === 0) {
+                    $communityIds->push(0);
                 }
 
                 $q = $q->where(function ($q) use ($communityIds) {
@@ -425,6 +423,7 @@ class Loanable extends BaseModel
                         ->orWhere(function ($q) use ($communityIds) {
                             return $q->whereHas('owner', function ($q) use ($communityIds) {
                                 return $q->whereHas('user', function ($q) use ($communityIds) {
+                                    // (direct community)
                                     return $q->whereHas(
                                         'communities',
                                         function ($q) use ($communityIds) {
@@ -437,12 +436,20 @@ class Loanable extends BaseModel
                                                 ->whereNull('community_user.suspended_at');
                                         }
                                     )
+                                    // (child community if shared with parent community)
                                     ->orWhereHas('communities', function ($q) use ($communityIds) {
                                         $childrenIds = Community::childOf(
                                             $communityIds->toArray()
                                         )->pluck('id');
                                         return $q->whereIn('communities.id', $childrenIds)
                                             ->where('share_with_parent_communities', true);
+                                    })
+                                    // (parent community downward)
+                                    ->orWhereHas('communities', function ($q) use ($communityIds) {
+                                        $parentIds = Community::parentOf(
+                                            $communityIds->toArray()
+                                        )->pluck('id');
+                                        return $q->whereIn('communities.id', $parentIds);
                                     });
                                 });
                             })->whereDoesntHave('community');
@@ -481,8 +488,9 @@ class Loanable extends BaseModel
             return $query;
         }
 
+        $table = $this->getTable();
         return $query->where(
-            \DB::raw('unaccent(name)'),
+            \DB::raw("unaccent($table.name)"),
             'ILIKE',
             \DB::raw("unaccent('%$q%')")
         );

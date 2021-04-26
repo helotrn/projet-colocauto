@@ -2,19 +2,21 @@
   <b-card no-body class="loan-form loan-actions loan-actions-intention">
     <b-card-header header-tag="header" role="tab" class="loan-actions__header">
       <h2 v-b-toggle.loan-actions-intention>
-        <svg-waiting v-if="action.status === 'in_process'" />
+        <svg-waiting v-if="action.status === 'in_process' && !item.canceled_at" />
         <svg-check v-else-if="action.status === 'completed'" />
-        <svg-danger v-else-if="action.status === 'canceled'" />
+        <svg-danger v-else-if="action.status === 'canceled' || item.canceled_at" />
 
         Confirmation de l'emprunt
       </h2>
 
-      <span v-if="action.status == 'in_process'">En attente d'approbation</span>
+      <span v-if="action.status === 'in_process' && !item.canceled_at">
+        En attente d'approbation
+      </span>
       <span v-else-if="action.status === 'completed'">
         Approuvé &bull; {{ action.executed_at | datetime }}
       </span>
-      <span v-else-if="action.status === 'canceled'">
-        Refusé &bull; {{ action.executed_at | datetime }}
+      <span v-else-if="action.status === 'canceled' || item.canceled_at">
+        Refusé &bull; {{ action.executed_at || item.canceled_at | datetime }}
       </span>
     </b-card-header>
 
@@ -50,7 +52,7 @@
           </blockquote>
         </div>
 
-        <div v-if="!action.executed_at">
+        <div v-if="!action.executed_at && !item.canceled_at">
           <div class="loan-actions-intention__see-details text-center mb-3">
             <b-button size="sm" variant="outline-info" v-b-toggle.loan-actions-new>
               Voir les détails
@@ -82,21 +84,21 @@
             </p>
             <p>{{ item.loanable.owner.user.phone }}</p>
           </div>
-        </div>
 
-        <div class="loan-actions__alert" v-if="item.loanable.type === 'car'">
-          <b-alert variant="warning" show>
-            <p>
-              Desjardins assurances ne couvrera le trajet que s'il est bien renseigné sur
-              LocoMotion! Pensez à accepter et vérifier le pré-paiement de la réservation ici.
-            </p>
+          <div class="loan-actions__alert" v-if="item.loanable.type === 'car'">
+            <b-alert variant="warning" show>
+              <p>
+                Desjardins assurances ne couvrera le trajet que s'il est bien renseigné sur
+                LocoMotion! Pensez à accepter et vérifier le pré-paiement de la réservation ici.
+              </p>
 
-            <p>
-              <router-link to="/assurances-desjardins">
-                Voir les conditions d'assurances
-              </router-link>
-            </p>
-          </b-alert>
+              <p>
+                <router-link to="/assurances-desjardins">
+                  Voir les conditions d'assurances
+                </router-link>
+              </p>
+            </b-alert>
+          </div>
         </div>
       </b-collapse>
     </b-card-body>
