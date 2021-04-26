@@ -118,13 +118,21 @@ SQL
                 return $query->selectRaw("$calendarDaysSql AS calendar_days");
             },
             'loan_status' => function ($query = null) {
+                $sql = <<<SQL
+CASE
+WHEN loans.canceled_at IS NOT NULL THEN 'canceled'
+ELSE loan_status_subquery.status
+END
+SQL
+                ;
+
                 if (!$query) {
-                    return 'loan_status_subquery.status';
+                    return $sql;
                 }
 
                 if (false === strpos($query->toSql(), 'loan_status_subquery')) {
                     $query
-                        ->selectRaw('loan_status_subquery.status AS loan_status')
+                        ->selectRaw("$sql AS loan_status")
                         ->leftJoinSub(
                             <<<SQL
 SELECT DISTINCT ON (loan_id)
@@ -311,6 +319,7 @@ SQL
       'actual_duration_in_minutes',
       'calendar_days',
       'contested_at',
+      'loan_status',
       'total_final_cost',
       'total_estimated_cost',
     ];
@@ -470,6 +479,18 @@ SQL
         );
 
         return max(0, is_array($values) ? $values[1] : $values);
+    }
+
+    public function getLoanStatusAttribute() {
+        if (isset($this->attributes['loan_status'])) {
+            return $this->attributes['loan_status'];
+        }
+
+        if ($this->canceled_at) {
+            return true;
+        }
+
+        return $this->actions->last()->status;
     }
 
     public function getTotalActualCostAttribute() {
