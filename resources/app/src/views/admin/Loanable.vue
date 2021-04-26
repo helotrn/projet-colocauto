@@ -30,6 +30,20 @@
                     :options="def.options" :disabled="def.disabled"
                     v-model="item[property]" />
                 </template>
+                <template v-slot:owner_id="{ def, item, property }">
+                  <validation-provider class="forms-validated-input"
+                    mode="eager" name="owner_id"
+                    v-slot="validationContext">
+                    <b-form-group label="Propriétaire" label-for="owner_id">
+                      <forms-relation-input
+                        id="owner_id" name="owner_id" :query="ownerQuery"
+                        placeholder="Propriétaire"
+                        :object-value="itemOwner"
+                        :value="item.owner_id"
+                        @input="setLoanableOwner" />
+                    </b-form-group>
+                  </validation-provider>
+                </template>
               </forms-builder>
             </div>
 
@@ -82,6 +96,7 @@
 <script>
 import FormsValidatedInput from '@/components/Forms/ValidatedInput.vue';
 import FormsBuilder from '@/components/Forms/Builder.vue';
+import FormsRelationInput from '@/components/Forms/RelationInput.vue';
 import LoanableAvailabilityCalendar from '@/components/Loanable/AvailabilityCalendar.vue';
 
 import DataRouteGuards from '@/mixins/DataRouteGuards';
@@ -96,10 +111,35 @@ export default {
   mixins: [DataRouteGuards, FormMixin],
   components: {
     FormsBuilder,
+    FormsRelationInput,
     FormsValidatedInput,
     LoanableAvailabilityCalendar,
   },
+  data() {
+    return {
+      ownerQuery: {
+        slug: 'users',
+        value: 'owner.id',
+        text: 'full_name',
+        params: {
+          fields: 'full_name, owner.id',
+        },
+      },
+    };
+  },
   computed: {
+    itemOwner() {
+      if (this.item.owner) {
+        return {
+          ...this.item.owner.user,
+          owner: {
+            id: this.item.owner.id,
+          },
+        };
+      }
+
+      return null;
+    },
     fullTitle() {
       const parts = [
         'LocoMotion',
@@ -141,6 +181,48 @@ export default {
     },
     pageTitle() {
       return this.item.name || capitalize(this.$i18n.tc('véhicule', 1));
+    },
+  },
+  methods: {
+    async setLoanableOwner(user) {
+      if (!user.owner) {
+        await this.$store.dispatch('users/update', {
+          id: user.id,
+          data: {
+            id: user.id,
+            owner: {},
+          },
+          params: {
+            fields: 'owner.id,full_name',
+          },
+        });
+
+        const updatedUser = this.$store.state.users.item;
+
+        this.$store.commit('loanables/patchItem', {
+          owner: {
+            id: updatedUser.owner.id,
+            user: {
+              id: updatedUser.id,
+              full_name: updatedUser.full_name,
+            },
+          },
+          owner_id: updatedUser.owner_id,
+        });
+
+        return;
+      }
+
+      this.$store.commit('loanables/patchItem', {
+        owner: {
+          id: user.owner.id,
+          user: {
+            id: user.id,
+            full_name: user.full_name,
+          },
+        },
+        owner_id: user.owner_id,
+      });
     },
   },
   i18n: {
