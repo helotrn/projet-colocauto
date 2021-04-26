@@ -486,8 +486,9 @@ class Loanable extends BaseModel
             return $query;
         }
 
+        $table = $this->getTable();
         return $query->where(
-            \DB::raw('unaccent(name)'),
+            \DB::raw("unaccent($table.name)"),
             'ILIKE',
             \DB::raw("unaccent('%$q%')")
         );
