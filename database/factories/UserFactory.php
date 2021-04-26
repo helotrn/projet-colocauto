@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Borrower;
 use App\Models\User;
 use Carbon\Carbon;
 use Faker\Generator as Faker;
@@ -22,4 +23,8 @@ $factory->define(User::class, function (Faker $faker) {
         'other_phone' => '',
         'remember_token' => Str::random(10),
     ];
+});
+
+$factory->afterCreatingState(User::class, 'withBorrower', function ($user, $faker) {
+    $user->borrower()->save(factory(Borrower::class)->make());
 });

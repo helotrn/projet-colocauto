@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Hash;
 class UsersTableSeeder extends Seeder
 {
     public function run() {
-        $generic = [
+        $molotov = [
             'password' => 'molotov',
             'date_of_birth' => '2009-01-01',
             'address' => '2065 rue Parthenais',
@@ -16,34 +16,81 @@ class UsersTableSeeder extends Seeder
             'description' => 'Communications alternatives',
         ];
 
+        $solon = [
+            'password' => 'locomotion',
+            'date_of_birth' => '2018-06-04',
+            'address' => '6450 Christophe-Colomb, Montréal',
+            'postal_code' => 'H2S 2G7',
+            'phone' => '555 555-5555',
+            'accept_conditions' => true
+        ];
+
         $users = [
             'soutien@molotov.ca' => array_merge([
+                'id' => 1,
                 'role' => 'admin',
                 'name' => 'Molotov Communications',
-            ], $generic),
-            'emile@molotov.ca' => array_merge($generic, [
+            ], $molotov),
+            'emile@molotov.ca' => array_merge($molotov, [
+                'id' => 2,
                 'name' => 'Émile',
                 'last_name' => 'Plourde-Lavoie',
                 'description' => 'Salut tout le monde :)',
                 'submitted_at' => new \DateTime,
             ]),
-            'ariane@molotov.ca' => array_merge($generic, [
+            'ariane@molotov.ca' => array_merge($molotov, [
+                'id' => 3,
                 'name' => 'Ariane',
                 'last_name' => 'Mercier',
                 'submitted_at' => new \DateTime,
             ]),
+            'proprietairevoiture@locomotion.app' => array_merge(
+                $solon,
+                [
+                    'id' => 4,
+                    'name' => 'Propriétaire',
+                    'last_name' => 'Voiture',
+                    'description' => 'Sympatique propriétaire de voiture.',
+                    'date_of_birth' => '1984-08-21',
+                ]
+            ),
+            'emprunteurvoiture@locomotion.app' => array_merge(
+                $solon,
+                [
+                    'id' => 5,
+                    'name' => 'Propriétaire',
+                    'last_name' => 'Voiture',
+                    'description' => 'Emprunteur de voiture prudent.',
+                    'date_of_birth' => '1990-05-11',
+                ]
+            ),
         ];
 
+                             // Community memberships
         $memberships = [
             'soutien@molotov.ca' => [],
             'emile@molotov.ca' => [
+                             // 1: Bellechasse
                 1 => [
                     'role' => 'admin',
                     'approved_at' => new \DateTime,
                 ],
             ],
             'ariane@molotov.ca' => [
+                             // 1: Bellechasse
                 1 => [
+                    'approved_at' => new \DateTime,
+                ],
+            ],
+            'proprietairevoiture@locomotion.app' => [
+                             // 9: Petite-Patrie
+                9 => [
+                    'approved_at' => new \DateTime,
+                ],
+            ],
+            'emprunteurvoiture@locomotion.app' => [
+                             // 9: Petite-Patrie
+                9 => [
                     'approved_at' => new \DateTime,
                 ],
             ],
