@@ -66,12 +66,37 @@ export default {
 
       return `url('${avatar.sizes.thumbnail}')`;
     },
+    /*
+      Deprecated. User can have multiple roles esp. owner and borrower at the
+      same time. Use userRoles instead.
+    */
     userRole() {
       if (this.user.role === 'admin') {
         return 'admin';
       }
 
       return (this.owner && this.user.id === this.owner.user.id) ? 'owner' : 'borrower';
+    },
+    /*
+      Returns an array containing all roles.
+    */
+    userRoles() {
+      const roles = [];
+
+      if (this.user.role === 'admin') {
+        roles.push('admin');
+      }
+
+      // Owner may be null.
+      if (this.user.id === this.owner?.user?.id) {
+        roles.push('owner');
+      }
+
+      if (this.user.id === this.borrower.user.id) {
+        roles.push('borrower');
+      }
+
+      return roles;
     },
     userIsAdmin() {
       if ((this.item.loanable.owner && this.user.id === this.item.loanable.owner.user.id)
