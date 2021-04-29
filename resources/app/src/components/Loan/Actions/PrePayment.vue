@@ -25,12 +25,8 @@
         :visible="open">
         <div class="loan-actions-pre_payment__description text-center mb-3"
           v-if="!action.executed_at">
-          <div v-if="userRole === 'owner'">
-            <p>
-              {{ item.borrower.user.name }} doit ajouter des crédits à son compte.
-            </p>
-          </div>
-          <div v-else>
+          <!-- Action is not completed -->
+          <div v-if="userRoles.includes('borrower')">
             <p>
               Utiliser votre solde ou payer directement.
             </p>
@@ -52,10 +48,22 @@
               </b-button>
             </div>
           </div>
+          <div v-else-if="userRoles.includes('owner')">
+            <p>
+              {{ item.borrower.user.name }} doit ajouter des crédits à son compte.
+            </p>
+          </div>
         </div>
         <div v-else>
-          <p>Il y a assez de crédits à votre compte pour couvrir cette course.</p>
-          <p>Visitez votre profil pour ajouter des crédits à votre compte.</p>
+          <!-- Action is completed -->
+          <div v-if="userRoles.includes('borrower')">
+            <p>Il y a assez de crédits à votre compte pour couvrir cette course.</p>
+            <p>Visitez votre profil pour ajouter des crédits à votre compte.</p>
+          </div>
+          <div v-else-if="userRoles.includes('owner')">
+            <p>Il y a assez de crédits au compte de l'emprunteur-se pour couvrir cette course.</p>
+            <p>Visitez votre profil pour ajouter des crédits à votre compte.</p>
+          </div>
         </div>
       </b-collapse>
     </b-card-body>
