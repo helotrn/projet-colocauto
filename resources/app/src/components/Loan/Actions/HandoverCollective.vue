@@ -88,7 +88,7 @@
 
                   <b-col lg="6">
                     <forms-validated-input
-                      v-if="userRole === 'borrower'"
+                      v-if="userRole.includes('borrower')"
                       id="comments_by_borrower" name="comments_by_borrower"
                       type="textarea" :rows="6" :disabled="!!action.commented_by_borrower_at"
                       label="Laissez un commentaire (facultatif)"
