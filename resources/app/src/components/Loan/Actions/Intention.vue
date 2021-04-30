@@ -29,13 +29,15 @@
         </div>
 
         <div class="loan-actions-intention__description text-center mb-3">
-          <p v-if="userRole === 'owner'">
-            {{ borrower.user.name }} veut vous emprunter {{ loanablePrettyName }}.
-          </p>
-          <p v-else-if="item.loanable.owner">
-            Vous avez demandé à {{ item.loanable.owner.user.name }} de lui
-            emprunter {{ loanablePrettyName }}.
-          </p>
+          <div v-if="!loanableIsSelfService && !borrowerIsOwner">
+            <p v-if="userRoles.includes('borrower')">
+              Vous avez demandé à {{ item.loanable.owner.user.name }} de lui
+              emprunter {{ loanablePrettyNameBorrower }}.
+            </p>
+            <p v-else-if="userRoles.includes('owner')">
+              {{ borrower.user.name }} veut vous emprunter {{ loanablePrettyNameOwner }}.
+            </p>
+          </div>
 
           <label>Raison de l'emprunt</label>
           <p>{{ item.reason }}</p>
@@ -46,7 +48,7 @@
           </blockquote>
 
           <blockquote v-if="action.message_for_borrower
-            && (userRole !== 'owner' || !!action.executed_at)">
+            && (userRoles.includes('borrower') || !!action.executed_at)">
             {{ action.message_for_borrower }}
             <div class="user-avatar" :style="{ backgroundImage: ownerAvatar }" />
           </blockquote>
@@ -59,13 +61,16 @@
             </b-button>
           </div>
 
-          <div v-if="userRole === 'owner'">
+          <!-- No use in a borrower leaving a message to himself. -->
+          <div v-if="!userRoles.includes('borrower')">
             <div class="loan-actions-intention__message_for_borrower text-center mb-3">
               <forms-validated-input type="textarea" name="message_for_borrower"
                 v-model="action.message_for_borrower"
                 label="Laissez un message à l'emprunteur (facultatif)" />
             </div>
+          </div>
 
+          <div v-if="userRoles.includes('owner')">
             <div class="loan-actions-intention__buttons text-center">
               <b-button size="sm" variant="success" class="mr-3" @click="completeAction">
                 Accepter
@@ -76,7 +81,9 @@
               </b-button>
             </div>
           </div>
-          <div v-else-if="item.loanable.owner" class="text-center">
+
+          <div v-if="!loanableIsSelfService && !borrowerIsOwner && userRoles.includes('borrower')"
+            class="text-center">
             <p>
               Merci d'avoir enregistré votre demande d'emprunt sur la
               plateforme! Maintenant, contactez votre voisin-e pour voir
@@ -117,7 +124,7 @@ export default {
     FormsValidatedInput,
   },
   computed: {
-    loanablePrettyName() {
+    loanablePrettyNameBorrower() {
       let article;
       let type;
 
@@ -140,8 +147,25 @@ export default {
           break;
       }
 
-      if (this.userRole === 'owner') {
-        article = 'votre';
+      return `${article} ${type}`;
+    },
+    loanablePrettyNameOwner() {
+      const article = 'votre';
+      let type;
+
+      switch (this.item.loanable.type) {
+        case 'car':
+          type = 'voiture';
+          break;
+        case 'bike':
+          type = 'vélo';
+          break;
+        case 'trailer':
+          type = 'remorque';
+          break;
+        default:
+          type = 'objet';
+          break;
       }
 
       return `${article} ${type}`;
