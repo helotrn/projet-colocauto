@@ -69,7 +69,7 @@
             </b-form>
           </validation-observer>
         </div>
-        <div v-else-if="!action.completed_at">
+        <div v-else-if="!action.executed_at">
           <div v-if="userRole !== 'owner'">
             <div v-if="action.incident_type === 'accident'">
               <h3>Voiture immobilisée</h3>
