@@ -7,7 +7,7 @@
 
       <b-row>
         <b-col lg="3" class="loan__sidebar">
-          <loan-menu :item="item" />
+          <loan-menu :item="item" :user="user" />
         </b-col>
 
         <b-col lg="9" class="loan__actions">

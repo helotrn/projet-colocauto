@@ -1,7 +1,7 @@
 <template>
   <div class="loan-actions">
     <loan-form :item="item" :form="form" :open="isCurrentStep('creation')"
-      @submit="emitSubmit" />
+      @submit="emitSubmit" :user="user" />
 
     <div class="loan-actions__action" v-for="action in item.actions" :key="action.id">
       <div v-if="action.type === 'intention'">

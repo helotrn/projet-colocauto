@@ -101,6 +101,10 @@ export default {
       type: Object,
       required: true,
     },
+    user: {
+      type: Object,
+      required: true,
+    },
   },
   components: {
     'svg-check': Check,
