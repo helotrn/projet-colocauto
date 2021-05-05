@@ -13,7 +13,7 @@
     <li :class="{
       'current-step': isCurrentStep('intention'),
       'reached-step': hasReachedStep('intention'),
-    }" v-if="isOwnedLoanable">
+    }" v-if="!loanableIsSelfService">
       <svg-danger v-if="hasCanceledStep('intention')" />
       <svg-check v-else-if="hasReachedStep('intention')" />
       <svg-waiting v-else />
@@ -71,7 +71,7 @@
     <li :class="{
       'current-step': isCurrentStep('payment'),
       'reached-step': hasReachedStep('payment'),
-    }" v-if="isOwnedLoanable">
+    }" v-if="!loanableIsSelfService || item.final_price > 0">
       <svg-danger v-if="hasCanceledStep('payment') || hasActiveIncidents || hasActiveExtensions" />
       <svg-check v-else-if="hasReachedStep('payment')" />
       <svg-waiting v-else />

@@ -18,6 +18,15 @@ export default {
     isOwnedLoanable() {
       return !!this.item.loanable.owner;
     },
+    /*
+      For the time being, a loanable is self-service if it has no owner.
+      This definition is likely to change.
+    */
+    loanableIsSelfService() {
+      // If the loanable has no owner (Considered as belonging to
+      // the community, hence self-service)
+      return !this.item.loanable.owner;
+    },
     userIsOwner() {
       if (!this.item.loanable.owner) {
         return false;
