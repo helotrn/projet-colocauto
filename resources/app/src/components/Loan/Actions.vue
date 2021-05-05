@@ -4,19 +4,19 @@
       @submit="emitSubmit" :user="user" />
 
     <div class="loan-actions__action" v-for="action in item.actions" :key="action.id">
-      <div v-if="action.type === 'intention'">
-        <loan-actions-intention v-if="!loanableIsSelfService"
+      <div v-if="action.type === 'intention' && displayStep('intention')">
+        <loan-actions-intention
           :action="action" :item="item" :open="isCurrentStep('intention')"
           @completed="emitLoad" @canceled="emitLoad" :user="user" />
       </div>
 
-      <div v-else-if="action.type === 'pre_payment'">
-        <loan-actions-pre-payment v-if="item.total_estimated_cost > 0"
+      <div v-else-if="action.type === 'pre_payment' && displayStep('pre_payment')">
+        <loan-actions-pre-payment
           :action="action" :item="item" :open="isCurrentStep('pre_payment')"
           @completed="emitLoad" @canceled="emitLoad" :user="user" />
       </div>
 
-      <div v-else-if="action.type === 'takeover'">
+      <div v-else-if="action.type === 'takeover' && displayStep('takeover')">
         <loan-actions-takeover-self-service v-if="loanableIsSelfService"
           :action="action" :item="item" :open="isCurrentStep('takeover')"
           @completed="emitLoad" @canceled="emitLoad" :user="user" />
@@ -25,7 +25,7 @@
           @completed="emitLoad" @canceled="emitLoad" :user="user" />
       </div>
 
-      <div v-else-if="action.type === 'handover'">
+      <div v-else-if="action.type === 'handover' && displayStep('handover')">
         <loan-actions-handover-self-service v-if="loanableIsSelfService"
           :action="action" :item="item" :open="isCurrentStep('handover')"
           @completed="emitLoad" @canceled="emitLoad" :user="user"
@@ -35,8 +35,8 @@
           @completed="emitLoad" @canceled="emitLoad" :user="user" />
       </div>
 
-      <div v-else-if="action.type === 'payment'">
-        <loan-actions-payment v-if="!loanableIsSelfService || item.final_price > 0"
+      <div v-else-if="action.type === 'payment' && displayStep('payment')">
+        <loan-actions-payment
           :action="action" :item="item" :open="isCurrentStep('payment')"
           @completed="emitLoad" @canceled="emitLoad" :user="user" />
       </div>
@@ -52,11 +52,6 @@
         :action="action" :item="item" :user="user"
         @aborted="abortAction" @created="emitLoad" @completed="emitLoad"
         @canceled="emitLoad" />
-
-      <p v-else>
-        {{ action.type }} n'est pas supporté. Contactez le
-        <a href="mailto:support@locomotion.app">support</a>.
-      </p>
     </div>
   </div>
 </template>

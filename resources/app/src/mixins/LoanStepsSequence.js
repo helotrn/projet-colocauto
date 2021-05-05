@@ -34,6 +34,15 @@ export default {
 
       return this.user.id === this.item.loanable.owner.user.id;
     },
+    borrowerIsOwner() {
+      // If no owner, then false.
+      if (!this.item.loanable.owner) {
+        return false;
+      }
+
+      // Otherwise, is the borrower the owner?
+      return this.item.borrower.user.id === this.item.loanable.owner.user.id;
+    },
   },
   methods: {
     addExtension() {
@@ -165,6 +174,43 @@ export default {
           return handover && !handover.executed_at;
         case 'payment':
           return payment && !payment.executed_at;
+        default:
+          return false;
+      }
+    },
+    /*
+      This method determines whether a loan step should be displayed.
+
+      Visible steps should only depend on the loanable, who's involved in the
+      loan and the loan itself.
+      They should not depend on who the current user is.
+    */
+    displayStep(step) {
+      switch (step) {
+        case 'intention':
+          // Intention is required if loanable is not self-service
+          // As of now, it is required even if the borrower is the owner.
+          // This is likely to be reviewed.
+          return !this.loanableIsSelfService;
+
+        case 'pre_payment':
+          // Pre-payment should be displayed when the loan is not inherently free.
+          // As of now, this is when the loanable is not self-service.
+          // Don't show if borrower is owner.
+          return !this.loanableIsSelfService && !this.borrowerIsOwner;
+
+        case 'takeover':
+        case 'handover':
+          // Takeover and handover steps are always displayed.
+          return true;
+
+        case 'payment':
+          // Payment should be displayed when the loan is not inherently free.
+          // As of now, this is when the loanable is not self service.
+          // Show it anytime the final price is > 0 for whatever reason.
+          return !this.loanableIsSelfService
+            || this.item.final_price > 0;
+
         default:
           return false;
       }
