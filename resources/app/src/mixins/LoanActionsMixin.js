@@ -67,17 +67,6 @@ export default {
       return `url('${avatar.sizes.thumbnail}')`;
     },
     /*
-      Deprecated. User can have multiple roles esp. owner and borrower at the
-      same time. Use userRoles instead.
-    */
-    userRole() {
-      if (this.user.role === 'admin') {
-        return 'admin';
-      }
-
-      return (this.owner && this.user.id === this.owner.user.id) ? 'owner' : 'borrower';
-    },
-    /*
       Returns an array containing all roles.
     */
     userRoles() {
