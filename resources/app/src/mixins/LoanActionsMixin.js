@@ -115,6 +115,15 @@ export default {
 
       return false;
     },
+    borrowerIsOwner() {
+      // If no owner, then false.
+      if (!this.item.loanable.owner) {
+        return false;
+      }
+
+      // Otherwise, is the borrower the owner?
+      return this.item.borrower.user.id === this.item.loanable.owner.user.id;
+    },
     /*
       For the time being, a loanable is self-service if it has no owner.
       This definition is likely to change.
