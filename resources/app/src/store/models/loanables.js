@@ -22,6 +22,8 @@ export default new RestModule('loanables', {
     'owner.user.id',
     'owner.user.name',
     'owner.user.last_name',
+    'community.id',
+    'community.name',
   ],
   exportNotFields: [
     'events',
