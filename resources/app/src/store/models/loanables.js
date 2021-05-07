@@ -24,6 +24,7 @@ export default new RestModule('loanables', {
     'owner.user.last_name',
     'community.id',
     'community.name',
+    'car_insurer',
   ],
   exportNotFields: [
     'events',
