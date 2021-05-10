@@ -53,10 +53,15 @@ export default {
     }, 500);
   },
   data() {
-    const center = this.neighborhoods.reduce((acc, c) => [
-      (acc[0] + c.center[0]) / 2,
-      (acc[1] + c.center[1]) / 2,
-    ], this.neighborhoods[0].center);
+    const center = this.neighborhoods.reduce((acc, c) => ({
+      lat: acc.lat + c.center_google.lat,
+      lng: acc.lng + c.center_google.lng,
+      n: acc.n + 1,
+    }), { lat: 0, lng: 0, n: 0 });
+
+    // Average of n points.
+    center.lat /= center.n;
+    center.lng /= center.n;
 
     return {
       boroughPolygonOptions: {
@@ -66,10 +71,7 @@ export default {
         strokeOpacity: 0.7,
         zIndex: 1,
       },
-      center: {
-        lat: center[0],
-        lng: center[1],
-      },
+      center,
       loaded: false,
       mapOptions: {
         streetViewControl: false,
