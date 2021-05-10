@@ -537,9 +537,9 @@ class LoanTest extends TestCase
 
         // Confirm intention on first loan
         $response = $this->json(
-          'PUT',
-          "/api/v1/loans/$loanId/actions/{$intention['id']}/complete",
-          array_merge($intention, [ 'status' => 'completed' ])
+            'PUT',
+            "/api/v1/loans/$loanId/actions/{$intention['id']}/complete",
+            array_merge($intention, [ 'status' => 'completed' ])
         );
         $response->assertStatus(200);
 
@@ -700,11 +700,11 @@ class LoanTest extends TestCase
 
         $this->assertEquals(1, count($responseData->actions));
 
-		// Community is private: intentions are automatically accepted
-		$community->type = 'private';
-		$community->save();
+        // Community is private: intentions are automatically accepted
+        $community->type = 'private';
+        $community->save();
 
-		$data['departure_at'] = date('Y-m-d H:i:s', strtotime('tomorrow'));
+        $data['departure_at'] = date('Y-m-d H:i:s', strtotime('tomorrow'));
         $response = $this->json('POST', '/api/v1/loans', $data);
 
         $response->assertStatus(201);
