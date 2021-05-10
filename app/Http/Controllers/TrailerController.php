@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Events\LoanableCreatedEvent;
 use App\Http\Requests\BaseRequest as Request;
+use App\Http\Requests\Loanable\DestroyRequest as LoanableDestroyRequest;
 use App\Http\Requests\Trailer\CreateRequest;
-use App\Http\Requests\Trailer\DestroyRequest;
 use App\Http\Requests\Trailer\UpdateRequest;
 use App\Models\Trailer;
 use App\Repositories\TrailerRepository;
@@ -62,7 +62,7 @@ class TrailerController extends RestController
         return $response;
     }
 
-    public function destroy(DestroyRequest $request, $id) {
+    public function destroy(LoanableDestroyRequest $request, $id) {
         try {
             $response = parent::validateAndDestroy($request, $id);
         } catch (ValidationException $e) {

@@ -1,7 +1,7 @@
 <template>
-  <b-card no-body class="loan-form loan-actions loan-actions-handover-collective">
+  <b-card no-body class="loan-form loan-actions loan-actions-handover-self-service">
     <b-card-header header-tag="header" role="tab" class="loan-actions__header"
-      v-b-toggle.loan-actions-handover-collective>
+      v-b-toggle.loan-actions-handover-self-service>
       <h2>
         <svg-waiting v-if="action.status === 'in_process' && !item.canceled_at" />
         <svg-check v-else-if="action.status === 'completed'" />
@@ -20,7 +20,7 @@
     </b-card-header>
 
     <b-card-body>
-      <b-collapse id="loan-actions-handover-collective" role="tabpanel" accordion="loan-actions"
+      <b-collapse id="loan-actions-handover-self-service" role="tabpanel" accordion="loan-actions"
         :visible="open">
         <div v-if="item.loanable.has_padlock">
           <b-alert show variant="danger">
@@ -55,7 +55,7 @@
             </div>
           </b-alert>
 
-          <div class="loan-actions-handover-collective__text">
+          <div class="loan-actions-handover-self-service__text">
             <p>
               Vous avez ramené le véhicule? Alors, il ne vous reste plus qu'à clôturer
               l'emprunt en remplissant cette étape.
@@ -88,7 +88,7 @@
 
                   <b-col lg="6">
                     <forms-validated-input
-                      v-if="userRole === 'borrower'"
+                      v-if="userRoles.includes('borrower')"
                       id="comments_by_borrower" name="comments_by_borrower"
                       type="textarea" :rows="6" :disabled="!!action.commented_by_borrower_at"
                       label="Laissez un commentaire (facultatif)"
@@ -99,14 +99,14 @@
                 <b-row v-else class="loan-actions-handover__form__image">
                   <b-col v-if="action.image">
                     <p>
-                      <a href="#" v-b-modal="'handover-collective-image'">
+                      <a href="#" v-b-modal="'handover-self-service-image'">
                         <img :src="action.image.sizes.thumbnail">
                       </a>
                     </p>
 
                     <b-modal size="xl"
                       title="Photo de l'état du véhicule"
-                      :id="'handover-collective-image'" footer-class="d-none">
+                      :id="'handover-self-service-image'" footer-class="d-none">
                       <img class="img-fit" :src="action.image.url">
                     </b-modal>
                   </b-col>
@@ -145,7 +145,7 @@
                 </b-row>
 
                 <div v-if="!action.executed_at"
-                  class="loan-actions-handover-collective text-center">
+                  class="loan-actions-handover-self-service text-center">
                   <b-button size="sm" variant="success" class="mr-3"
                     :disabled="!hasEnoughBalance" @click="completeAction">
                     Mon emprunt est terminé!
@@ -190,7 +190,7 @@ import { filters } from '@/helpers';
 const { currency } = filters;
 
 export default {
-  name: 'LoanActionsHandoverCollective',
+  name: 'LoanActionsHandoverSelfService',
   mixins: [LoanActionsMixin],
   mounted() {
     const platformTip = parseFloat(this.item.final_platform_tip || this.item.platform_tip, 10);

@@ -98,9 +98,9 @@ class LoanableTest extends TestCase
             $loanables = Loanable::accessibleBy($member)->pluck('name');
             $loanableIds = Loanable::accessibleBy($member)->pluck('id');
             $this->assertEquals(
-              1,
-              $loanables->count(),
-              "too many loanables accessible to $member->name"
+                1,
+                $loanables->count(),
+                "too many loanables accessible to $member->name"
             );
             $this->assertEquals(
                 $member->loanables()->first()->id,

@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 use App\Events\LoanableCreatedEvent;
 use App\Http\Requests\BaseRequest as Request;
 use App\Http\Requests\Bike\CreateRequest;
-use App\Http\Requests\Bike\DestroyRequest;
 use App\Http\Requests\Bike\UpdateRequest;
+use App\Http\Requests\Loanable\DestroyRequest as LoanableDestroyRequest;
 use App\Models\Bike;
 use App\Repositories\BikeRepository;
 use Illuminate\Validation\ValidationException;
@@ -62,7 +62,7 @@ class BikeController extends RestController
         return $response;
     }
 
-    public function destroy(DestroyRequest $request, $id) {
+    public function destroy(LoanableDestroyRequest $request, $id) {
         try {
             $response = parent::validateAndDestroy($request, $id);
         } catch (ValidationException $e) {
