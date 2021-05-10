@@ -69,8 +69,9 @@
             </b-form>
           </validation-observer>
         </div>
-        <div v-else-if="!action.completed_at">
-          <div v-if="userRole !== 'owner'">
+        <div v-else-if="!action.executed_at">
+          <!-- Action has an id, hence not new, and it is not completed. -->
+          <div v-if="!userRoles.includes('owner')">
             <div v-if="action.incident_type === 'accident'">
               <h3>Voiture immobilisée</h3>
 
@@ -120,7 +121,7 @@
             </div>
           </div>
 
-          <div v-if="userRole !== 'borrower'">
+          <div v-if="!userRoles.includes('borrower')">
             <p>
               {{ borrower.user.name }} mentionne qu'un incident s'est produit.
             </p>
@@ -146,12 +147,13 @@
           </div>
         </div>
         <div v-else>
+          <!-- Action has an id, hence not new, and it is completed. -->
           <blockquote v-if="action.comments_on_incident">
             {{ action.comments_on_incident }}
             <div class="user-avatar" :style="{ backgroundImage: borrowerAvatar }" />
           </blockquote>
 
-          <p v-if="userRole === 'borrower'">
+          <p v-if="userRoles.includes('borrower')">
             Vous avez payé la franchise (ou le montant total de la réparation) et les réparations
             sont terminées. La voiture est remise à la disposition du propriétaire. Vous pouvez à
             nouveau emprunter le véhicule d’un voisin... en espérant que la prochaine fois,

@@ -62,7 +62,8 @@
 
         <div v-if="item.loanable.type === 'car'">
           <validation-observer ref="observer" v-slot="{ passes }">
-            <b-row v-if="userRole === 'borrower'">
+            <!-- Add message if user is borroweer, but not owner. -->
+            <b-row v-if="userRoles.includes('borrower') && !userRoles.includes('owner')">
               <b-col>
                 <p>
                   Avez-vous bien pris connaissance de l'état de cette auto?<br>
@@ -138,6 +139,7 @@
         </div>
 
         <div v-else-if="item.loanable.has_padlock">
+          <!-- Loanable is not a car and has a padlock. -->
           <p>
             Le cadenas du véhicule sera automatiquement associé à votre application NOKE
             à temps pour la prise de possession.
@@ -206,12 +208,13 @@
         </div>
 
         <div v-else>
+          <!-- Loanable is not a car and it does not have a padlock. -->
           <b-row v-if="!action.executed_at">
             <b-col>
-              <p v-if="userRole === 'borrower'">
+              <p v-if="userRoles.includes('borrower') && !userRoles.includes('owner')">
                 Demandez au propriétaire de récupérer le véhicule.
               </p>
-              <p v-else>
+              <p v-if="!userRoles.includes('borrower') && userRoles.includes('owner')">
                 L'emprunteur vous contactera pour arranger la prise de possession du véhicule.
               </p>
             </b-col>

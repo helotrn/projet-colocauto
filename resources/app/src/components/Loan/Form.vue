@@ -186,6 +186,10 @@ export default {
       required: false,
       default: false,
     },
+    user: {
+      type: Object,
+      required: true,
+    },
   },
   data() {
     return {

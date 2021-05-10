@@ -47,7 +47,7 @@
           </blockquote>
         </div>
 
-        <div v-else-if="userRole === 'borrower'">
+        <div v-else-if="userRoles.includes('borrower')">
           <div v-if="!action.id">
             <p>
               Indiquez une nouvelle heure de retour et laissez un message.

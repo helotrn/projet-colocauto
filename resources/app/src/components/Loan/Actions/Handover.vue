@@ -111,13 +111,21 @@
                 </b-col>
               </b-row>
 
-              <hr v-if="(userRole === 'borrower' && !action.executed_at)
-                || action.comments_by_borrower">
+              <!--
+                Display rule if actions not completed and not owner and borrower at the
+                same time or if message exists.
+              -->
+              <hr v-if="(!action.executed_at
+                && !(userRoles.includes('borrower') && !userRoles.includes('owner')))
+                || action.comments_by_borrower || action.comments_by_borrower
+              ">
 
               <b-row>
                 <b-col>
+                  <!-- Allow inputing a message to the owner if user is not the owner. -->
                   <forms-validated-input
-                    v-if="userRole === 'borrower' && !action.executed_at"
+                    v-if="!action.executed_at
+                      && userRoles.includes('borrower') && !userRoles.includes('owner')"
                     id="comments_by_borrower" name="comments_by_borrower"
                     type="textarea" :rows="3" :disabled="!!action.commented_by_borrower_at"
                     label="Laissez un message au propriétaire (facultatif)"
@@ -132,7 +140,10 @@
 
               <b-row>
                 <b-col>
-                  <forms-validated-input v-if="userRole === 'owner' && !action.executed_at"
+                  <!-- Allow inputing a message to the borrower if user is not the borrower. -->
+                  <forms-validated-input
+                    v-if="!action.executed_at
+                      && userRoles.includes('owner') && !userRoles.includes('borrower')"
                     id="comments_by_owner" name="comments_by_owner"
                     type="textarea" :rows="3" :disabled="!!action.commented_by_owner_at"
                     label="Laissez un message à l'emprunteur (facultatif)"
@@ -168,6 +179,7 @@
         </div>
 
         <div v-else-if="item.loanable.has_padlock">
+          <!-- Loanable is not a car and has a padlock. -->
           <p>
             Le cadenas du véhicule sera automatiquement dissocié de application NOKE
             lorsque vous aurez complété le retour du véhicule.
@@ -241,12 +253,13 @@
         </div>
 
         <div v-else>
+          <!-- Loanable is not a car and it does not have a padlock. -->
           <b-row v-if="!action.executed_at">
             <b-col>
-              <p v-if="userRole === 'borrower'">
+              <p v-if="userRoles.includes('borrower') && !userRoles.includes('owner')">
                 Rendez le véhicule au propriétaire.
               </p>
-              <p v-else>
+              <p v-if="!userRoles.includes('borrower') && userRoles.includes('owner')">
                 L'emprunteur vous contactera pour arranger le retour du véhicule.
               </p>
             </b-col>
