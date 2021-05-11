@@ -196,8 +196,7 @@ export default {
         case 'pre_payment':
           // Pre-payment should be displayed when the loan is not inherently free.
           // As of now, this is when the loanable is not self-service.
-          // Don't show if borrower is owner.
-          return !this.loanableIsSelfService && !this.borrowerIsOwner;
+          return !this.loanableIsSelfService;
 
         case 'takeover':
         case 'handover':
