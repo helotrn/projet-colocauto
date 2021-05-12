@@ -4,8 +4,8 @@
       v-b-toggle.loan-actions-takeover>
       <h2>
         <svg-danger
-          v-if="action.status === 'canceled' ||
-            (item.contested_at && action.status === 'in_process') || item.canceled_at" />
+          v-if="(action.status === 'in_process' && loanIsCanceled)
+            || (action.status === 'canceled' && item.contested_at)" />
         <svg-waiting v-else-if="action.status === 'in_process'" />
         <svg-check v-else-if="action.status === 'completed'" />
 
@@ -16,12 +16,19 @@
         Bloqué
       </span>
       <span v-else>
-        <span v-if="action.status == 'in_process' && !item.canceled_at">En attente</span>
+        <!-- Canceled loans: current step remains in-process. -->
+        <span v-if="(action.status === 'in_process' || action.status === 'canceled')
+          && loanIsCanceled">
+          Emprunt annulé &bull; {{ item.canceled_at | datetime }}
+        </span>
+        <span v-else-if="action.status == 'in_process'">
+          En attente
+        </span>
         <span v-else-if="action.status === 'completed'">
           Complété &bull; {{ action.executed_at | datetime }}
         </span>
-        <span v-else-if="action.status === 'canceled' || item.canceled_at">
-          Contesté &bull; {{ action.executed_at || item.canceled_at | datetime }}
+        <span v-else-if="action.status === 'canceled'">
+          Contesté &bull; {{ action.executed_at | datetime }}
         </span>
       </span>
     </b-card-header>

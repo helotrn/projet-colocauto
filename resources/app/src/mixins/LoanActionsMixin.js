@@ -122,6 +122,9 @@ export default {
       // the community, hence self-service)
       return !this.item.loanable.owner;
     },
+    loanIsCanceled() {
+      return !!this.item.canceled_at;
+    },
   },
   methods: {
     abortAction() {

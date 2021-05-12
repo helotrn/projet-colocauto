@@ -9,14 +9,18 @@
         Confirmation de l'emprunt
       </h2>
 
-      <span v-if="action.status === 'in_process' && !item.canceled_at">
+      <!-- Canceled loans: current step remains in-process. -->
+      <span v-if="action.status === 'in_process' && loanIsCanceled">
+        Emprunt annulé &bull; {{ item.canceled_at | datetime }}
+      </span>
+      <span v-else-if="action.status === 'in_process'">
         En attente d'approbation
       </span>
       <span v-else-if="action.status === 'completed'">
         Approuvé &bull; {{ action.executed_at | datetime }}
       </span>
-      <span v-else-if="action.status === 'canceled' || item.canceled_at">
-        Refusé &bull; {{ action.executed_at || item.canceled_at | datetime }}
+      <span v-else-if="action.status === 'canceled'">
+        Refusé &bull; {{ action.executed_at | datetime }}
       </span>
     </b-card-header>
 

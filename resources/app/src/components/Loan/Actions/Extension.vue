@@ -13,12 +13,18 @@
             Retard
           </h2>
 
-          <span v-if="action.status == 'in_process' & !item.canceled_at">En attente</span>
+          <!-- Canceled loans: current step remains in-process. -->
+          <span v-if="action.status === 'in_process' && loanIsCanceled">
+            Emprunt annulé &bull; {{ item.canceled_at | datetime }}
+          </span>
+          <span v-else-if="action.status == 'in_process' & !item.canceled_at">
+            En attente
+          </span>
           <span v-else-if="action.status === 'completed'">
             Validé &bull; {{ action.executed_at | datetime }}
           </span>
-          <span v-else-if="action.status === 'canceled' || item.canceled_at">
-            Contesté &bull; {{ action.executed_at || item.canceled_at | datetime }}
+          <span v-else-if="action.status === 'canceled'">
+            Contesté &bull; {{ action.executed_at | datetime }}
           </span>
         </b-col>
 
