@@ -215,7 +215,7 @@ export default {
           delete this.lastLoan.community;
           delete this.lastLoan.community_id;
 
-          this.$store.commit('loans/item', this.lastLoan);
+          this.$store.commit('loans/item', val);
         } else {
           this.lastLoanMerged = true;
 
