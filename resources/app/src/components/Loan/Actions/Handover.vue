@@ -16,7 +16,10 @@
         Bloqué
       </span>
       <span v-else>
-        <!-- Canceled loans: current step remains in-process. -->
+        <!--
+          Canceled loans: current step remains in-process.
+          Canceled action means contestation. Give way to canceled-loan status.
+        -->
         <span v-if="(action.status === 'in_process' || action.status === 'canceled')
           && loanIsCanceled">
           Emprunt annulé &bull; {{ item.canceled_at | datetime }}
@@ -36,12 +39,18 @@
     <b-card-body>
       <b-collapse id="loan-actions-handover" role="tabpanel" accordion="loan-actions"
         :visible="open">
-        <div v-if="item.loanable.type === 'car'">
+        <div v-if="(action.status === 'in_process' || action.status === 'canceled')
+          && loanIsCanceled">
+          <p>
+            L'emprunt a été annulé. Cette étape ne peut pas être complétée.
+          </p>
+        </div>
+        <div v-else-if="item.loanable.type === 'car'">
           <validation-observer ref="observer" v-slot="{ passes }">
             <b-form :novalidate="true" class="loan-actions-handover__form"
               @submit.stop.prevent="passes(completeAction)">
               <b-row>
-                <b-col lg="6" v-if="!action.executed_at"
+                <b-col lg="6" v-if="(!action.executed_at && !loanIsCanceled) || userIsAdmin"
                   class="loan-actions-handover__form__image">
                   <p>Envoyez une photo du tableau de bord.</p>
 
@@ -75,7 +84,7 @@
                     type="number"
                     label="KM au compteur, à la fin de la course"
                     placholder="KM au compteur"
-                    :disabled="!!action.executed_at && !userIsAdmin"
+                    :disabled="(!!action.executed_at || loanIsCanceled) && !userIsAdmin"
                     v-model="action.mileage_end" />
                 </b-col>
               </b-row>
@@ -83,7 +92,7 @@
               <hr>
 
               <b-row>
-                <b-col lg="6" v-if="!action.executed_at">
+                <b-col lg="6" v-if="(!action.executed_at && !loanIsCanceled) || userIsAdmin">
                   <p>Envoyez une photo de vos dépenses.</p>
 
                   <forms-image-uploader
@@ -113,7 +122,7 @@
                     type="number" :min="0" :step="0.01"
                     label="Total des dépenses"
                     placholder="Total des dépenses"
-                    :disabled="!!action.executed_at && !userIsAdmin"
+                    :disabled="(!!action.executed_at || loanIsCanceled) && !userIsAdmin"
                     v-model="action.purchases_amount" />
                 </b-col>
               </b-row>
@@ -122,16 +131,16 @@
                 Display rule if actions not completed and not owner and borrower at the
                 same time or if message exists.
               -->
-              <hr v-if="(!action.executed_at
-                && !(userRoles.includes('borrower') && !userRoles.includes('owner')))
-                || action.comments_by_borrower || action.comments_by_borrower
+              <hr v-if="(!action.executed_at && !loanIsCanceled
+                && !(userRoles.includes('borrower') && userRoles.includes('owner')))
+                || action.comments_by_borrower || action.comments_by_owner
               ">
 
               <b-row>
                 <b-col>
                   <!-- Allow inputing a message to the owner if user is not the owner. -->
                   <forms-validated-input
-                    v-if="!action.executed_at
+                    v-if="!action.executed_at && !loanIsCanceled
                       && userRoles.includes('borrower') && !userRoles.includes('owner')"
                     id="comments_by_borrower" name="comments_by_borrower"
                     type="textarea" :rows="3" :disabled="!!action.commented_by_borrower_at"
@@ -149,7 +158,7 @@
                 <b-col>
                   <!-- Allow inputing a message to the borrower if user is not the borrower. -->
                   <forms-validated-input
-                    v-if="!action.executed_at
+                    v-if="!action.executed_at && !loanIsCanceled
                       && userRoles.includes('owner') && !userRoles.includes('borrower')"
                     id="comments_by_owner" name="comments_by_owner"
                     type="textarea" :rows="3" :disabled="!!action.commented_by_owner_at"
@@ -164,7 +173,7 @@
               </b-row>
 
               <b-row class="loan-actions-handover__buttons text-center"
-                v-if="(!action.executed_at && !item.contested_at) || userIsAdmin">
+                v-if="(!action.executed_at && !loanIsCanceled && !item.contested_at) || userIsAdmin">
                 <b-col>
                   <b-button type="submit" size="sm" variant="success" class="mr-3">
                     <span v-if="isContested">Corriger</span>
@@ -173,7 +182,7 @@
                 </b-col>
               </b-row>
 
-              <b-row class="loan-actions__alert" v-if="!action.executed_at">
+              <b-row class="loan-actions__alert" v-if="!action.executed_at && !loanIsCanceled">
                 <b-col>
                   <b-alert variant="warning" show>
                     Dans 48h, vous ne pourrez plus modifier vos informations.
@@ -304,7 +313,7 @@
         </div>
 
         <div v-if="!isContested">
-          <div v-if="isContestable" >
+          <div v-if="isContestable && !loanIsCanceled">
             <hr>
 
             <b-row>
@@ -339,7 +348,7 @@
             </b-row>
           </div>
         </div>
-        <div v-else>
+        <div v-else-if="!loanIsCanceled">
           <hr>
 
           <p>Les données ont été contestées:</p>

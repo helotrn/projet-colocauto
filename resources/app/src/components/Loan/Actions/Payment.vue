@@ -36,8 +36,13 @@
             <span v-b-popover.hover="priceTooltip">{{ item.total_final_cost | currency }}</span>.
           </p>
         </div>
+        <div v-else-if="action.status === 'in_process' && loanIsCanceled">
+          <p>
+            L'emprunt a été annulé. Cette étape ne peut pas être complétée.
+          </p>
+        </div>
         <div v-else>
-
+          <!-- Action is not completed -->
           <!-- Whether userRoles includes 'borrower' or 'owner' -->
           <div v-if="['borrower', 'owner'].some(role => userRoles.includes(role))">
             <p>

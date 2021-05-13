@@ -28,7 +28,7 @@
           </span>
         </b-col>
 
-        <b-col lg="8" v-if="item.status !== 'completed'">
+        <b-col lg="8" v-if="item.status !== 'completed' && !loanIsCanceled">
           <loan-next-date :loanable-id="item.loanable.id" :loan-id="item.id" />
         </b-col>
       </b-row>
@@ -40,6 +40,7 @@
         role="tabpanel" accordion="loan-actions"
         :visible="open">
         <div v-if="!!action.executed_at">
+          <!-- Action is completed -->
           <p>Demande d'extension jusqu'au {{ returnAt | datetime }}.</p>
 
           <blockquote v-if="action.comments_on_extension">
@@ -52,7 +53,11 @@
             <div class="user-avatar" :style="{ backgroundImage: ownerAvatar }" />
           </blockquote>
         </div>
-
+        <div v-else-if="action.status === 'in_process' && loanIsCanceled">
+          <p>
+            L'emprunt a été annulé. Cette étape ne peut pas être complétée.
+          </p>
+        </div>
         <div v-else-if="userRoles.includes('borrower')">
           <div v-if="!action.id">
             <p>

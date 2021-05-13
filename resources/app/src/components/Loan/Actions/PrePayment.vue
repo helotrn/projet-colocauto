@@ -32,7 +32,12 @@
         <div class="loan-actions-pre_payment__description text-center mb-3"
           v-if="!action.executed_at">
           <!-- Action is not completed -->
-          <div v-if="userRoles.includes('borrower')">
+          <div v-if="action.status === 'in_process' && loanIsCanceled">
+            <p>
+              L'emprunt a été annulé. Cette étape ne peut pas être complétée.
+            </p>
+          </div>
+          <div v-else-if="userRoles.includes('borrower')">
             <p>
               Utiliser votre solde ou payer directement.
             </p>

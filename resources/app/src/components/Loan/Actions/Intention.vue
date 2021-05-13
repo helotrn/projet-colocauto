@@ -28,11 +28,19 @@
     <b-card-body>
       <b-collapse id="loan-actions-intention" role="tabpanel" accordion="loan-actions"
         :visible="open">
-        <div class="loan-actions-intention__image mb-3 text-center">
+        <div v-if="action.status === 'in_process' && loanIsCanceled">
+          <p>
+            L'emprunt a été annulé. Cette étape ne peut pas être complétée.
+          </p>
+        </div>
+
+        <div v-if="action.status !== 'in_process' || !loanIsCanceled"
+          class="loan-actions-intention__image mb-3 text-center">
           <div :style="{ backgroundImage: borrowerAvatar }" />
         </div>
 
-        <div class="loan-actions-intention__description text-center mb-3">
+        <div v-if="action.status !== 'in_process' || !loanIsCanceled"
+          class="loan-actions-intention__description text-center mb-3">
           <div v-if="!loanableIsSelfService && !borrowerIsOwner">
             <p v-if="userRoles.includes('borrower')">
               Vous avez demandé à {{ item.loanable.owner.user.name }} de lui

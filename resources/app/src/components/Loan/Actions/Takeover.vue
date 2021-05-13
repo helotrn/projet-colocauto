@@ -16,7 +16,10 @@
         Bloqué
       </span>
       <span v-else>
-        <!-- Canceled loans: current step remains in-process. -->
+        <!--
+          Canceled loans: current step remains in-process.
+          Canceled action means contestation. Give way to canceled-loan status.
+        -->
         <span v-if="(action.status === 'in_process' || action.status === 'canceled')
           && loanIsCanceled">
           Emprunt annulé &bull; {{ item.canceled_at | datetime }}
@@ -67,9 +70,15 @@
           </b-col>
         </b-row>
 
-        <div v-if="item.loanable.type === 'car'">
+        <div v-if="(action.status === 'in_process' || action.status === 'canceled')
+          && loanIsCanceled">
+          <p>
+            L'emprunt a été annulé. Cette étape ne peut pas être complétée.
+          </p>
+        </div>
+        <div v-else-if="item.loanable.type === 'car'">
           <validation-observer ref="observer" v-slot="{ passes }">
-            <!-- Add message if user is borroweer, but not owner. -->
+            <!-- Add message if user is borrower, but not owner. -->
             <b-row v-if="userRoles.includes('borrower') && !userRoles.includes('owner')">
               <b-col>
                 <p>
@@ -84,7 +93,7 @@
             <b-form :novalidate="true" class="loan-actions-takeover__form"
               @submit.stop.prevent="passes(completeAction)">
               <b-row>
-                <b-col lg="6" v-if="!action.executed_at || userIsAdmin"
+                <b-col lg="6" v-if="(!action.executed_at && !loanIsCanceled) || userIsAdmin"
                   class="loan-actions-takeover__form__image">
                   <p>Envoyez une photo du tableau de bord.</p>
 
@@ -118,13 +127,13 @@
                     type="number" :rules="{ required: true }"
                     label="KM au compteur, au début de la course"
                     placeholder="KM au compteur"
-                    :disabled="!!action.executed_at && !userIsAdmin"
+                    :disabled="(!!action.executed_at || loanIsCanceled) && !userIsAdmin"
                     v-model="action.mileage_beginning" />
                 </b-col>
               </b-row>
 
               <b-row class="loan-actions-takeover__buttons text-center"
-                v-if="(!action.executed_at && !item.contested_at) || userIsAdmin">
+                v-if="(!action.executed_at && !loanIsCanceled && !item.contested_at) || userIsAdmin">
                 <b-col>
                   <b-button type="submit" size="sm" variant="success" class="mr-3">
                     <span v-if="isContested">Corriger</span>
@@ -133,7 +142,7 @@
                 </b-col>
               </b-row>
 
-              <b-row class="loan-actions__alert" v-if="!action.executed_at">
+              <b-row class="loan-actions__alert" v-if="!action.executed_at && !loanIsCanceled">
                 <b-col>
                   <b-alert variant="warning" show>
                     Dans 48h, vous ne pourrez plus modifier vos informations.
@@ -259,7 +268,7 @@
         </div>
 
         <div v-if="!isContested">
-          <div v-if="isContestable">
+          <div v-if="isContestable && !loanIsCanceled">
             <hr>
 
             <validation-observer ref="observer" v-slot="{ passes }">
@@ -300,7 +309,7 @@
             </validation-observer>
           </div>
         </div>
-        <div v-else>
+        <div v-else-if="!loanIsCanceled">
           <hr>
 
           <p>Les données ont été contestées:</p>

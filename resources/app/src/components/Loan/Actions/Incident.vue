@@ -30,7 +30,7 @@
       <b-collapse :id="`loan-actions-incident-${action.id || 'new'}`"
         role="tabpanel" accordion="loan-actions"
         :visible="open">
-        <div v-if="!action.id">
+        <div v-if="!action.id && !loanIsCanceled">
           <ol v-if="item.loanable.type === 'car'">
             <li><strong>Asseyez-vous et respirez</strong>: voici les étapes à suivre.</li>
             <li>
@@ -75,7 +75,7 @@
             </b-form>
           </validation-observer>
         </div>
-        <div v-else-if="!action.executed_at">
+        <div v-else-if="!action.executed_at && !loanIsCanceled">
           <!-- Action has an id, hence not new, and it is not completed. -->
           <div v-if="!userRoles.includes('owner')">
             <div v-if="action.incident_type === 'accident'">
@@ -151,6 +151,11 @@
               Résoudre
             </b-button>
           </div>
+        </div>
+        <div v-else-if="action.status === 'in_process' && loanIsCanceled">
+          <p>
+            L'emprunt a été annulé. Cette étape ne peut pas être complétée.
+          </p>
         </div>
         <div v-else>
           <!-- Action has an id, hence not new, and it is completed. -->

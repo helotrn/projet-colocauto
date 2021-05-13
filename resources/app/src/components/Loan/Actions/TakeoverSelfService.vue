@@ -14,7 +14,7 @@
       <span v-if="action.status === 'in_process' && loanIsCanceled">
         Emprunt annulé &bull; {{ item.canceled_at | datetime }}
       </span>
-      <span v-else-if="action.status == 'in_process' && !loanIsCanceled">
+      <span v-else-if="action.status === 'in_process' && !loanIsCanceled">
         En attente
       </span>
       <span v-else-if="action.status === 'completed'">
@@ -28,13 +28,18 @@
     <b-card-body>
       <b-collapse id="loan-actions-takeover-self-service" role="tabpanel" accordion="loan-actions"
         :visible="open">
-        <b-row>
+        <b-row v-if="action.status !== 'in_process' || !loanIsCanceled">
           <b-col>
             <loan-covid-collapsible-section />
           </b-col>
         </b-row>
 
-        <div v-if="item.loanable.has_padlock">
+        <div v-if="action.status === 'in_process' && loanIsCanceled">
+          <p>
+            L'emprunt a été annulé. Cette étape ne peut pas être complétée.
+          </p>
+        </div>
+        <div v-else-if="item.loanable.has_padlock">
           <b-row>
             <b-col>
               <b-alert show variant="danger">
