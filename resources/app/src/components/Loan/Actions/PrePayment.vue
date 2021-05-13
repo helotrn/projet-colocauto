@@ -3,19 +3,25 @@
     <b-card-header header-tag="header" role="tab" class="loan-actions__header"
       v-b-toggle.loan-actions-pre_payment>
       <h2>
-        <svg-waiting v-if="action.status === 'in_process' && !item.canceled_at" />
+        <svg-waiting v-if="action.status === 'in_process' && !loanIsCanceled" />
         <svg-check v-else-if="action.status === 'completed'" />
-        <svg-danger v-else-if="action.status === 'canceled' || item.canceled_at" />
+        <svg-danger v-else-if="action.status === 'canceled' || loanIsCanceled" />
 
         Prépaiement
       </h2>
 
-      <span v-if="action.status == 'in_process' && !item.canceled_at">En attente</span>
+      <!-- Canceled loans: current step remains in-process. -->
+      <span v-if="action.status === 'in_process' && loanIsCanceled">
+        Emprunt annulé &bull; {{ item.canceled_at | datetime }}
+      </span>
+      <span v-else-if="action.status == 'in_process'">
+        En attente
+      </span>
       <span v-else-if="action.status === 'completed'">
         Complété &bull; {{ action.executed_at | datetime }}
       </span>
-      <span v-else-if="action.status === 'canceled' || item.canceled_at">
-        Annulé &bull; {{ action.executed_at || item.canceled_at | datetime }}
+      <span v-else-if="action.status === 'canceled'">
+        Annulé &bull; {{ action.executed_at | datetime }}
       </span>
     </b-card-header>
 
@@ -26,7 +32,12 @@
         <div class="loan-actions-pre_payment__description text-center mb-3"
           v-if="!action.executed_at">
           <!-- Action is not completed -->
-          <div v-if="userRoles.includes('borrower')">
+          <div v-if="action.status === 'in_process' && loanIsCanceled">
+            <p>
+              L'emprunt a été annulé. Cette étape ne peut pas être complétée.
+            </p>
+          </div>
+          <div v-else-if="userRoles.includes('borrower')">
             <p>
               Utiliser votre solde ou payer directement.
             </p>

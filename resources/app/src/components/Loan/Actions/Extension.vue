@@ -6,23 +6,29 @@
       <b-row>
         <b-col>
           <h2>
-            <svg-waiting v-if="action.status === 'in_process' && !item.canceled_at" />
+            <svg-waiting v-if="action.status === 'in_process' && !loanIsCanceled" />
             <svg-check v-else-if="action.status === 'completed'" />
-            <svg-danger v-else-if="action.status === 'canceled' || item.canceled_at" />
+            <svg-danger v-else-if="action.status === 'canceled' || loanIsCanceled" />
 
             Retard
           </h2>
 
-          <span v-if="action.status == 'in_process' & !item.canceled_at">En attente</span>
+          <!-- Canceled loans: current step remains in-process. -->
+          <span v-if="action.status === 'in_process' && loanIsCanceled">
+            Emprunt annulé &bull; {{ item.canceled_at | datetime }}
+          </span>
+          <span v-else-if="action.status == 'in_process' & !loanIsCanceled">
+            En attente
+          </span>
           <span v-else-if="action.status === 'completed'">
             Validé &bull; {{ action.executed_at | datetime }}
           </span>
-          <span v-else-if="action.status === 'canceled' || item.canceled_at">
-            Contesté &bull; {{ action.executed_at || item.canceled_at | datetime }}
+          <span v-else-if="action.status === 'canceled'">
+            Contesté &bull; {{ action.executed_at | datetime }}
           </span>
         </b-col>
 
-        <b-col lg="8" v-if="item.status !== 'completed'">
+        <b-col lg="8" v-if="item.status !== 'completed' && !loanIsCanceled">
           <loan-next-date :loanable-id="item.loanable.id" :loan-id="item.id" />
         </b-col>
       </b-row>
@@ -34,6 +40,7 @@
         role="tabpanel" accordion="loan-actions"
         :visible="open">
         <div v-if="!!action.executed_at">
+          <!-- Action is completed -->
           <p>Demande d'extension jusqu'au {{ returnAt | datetime }}.</p>
 
           <blockquote v-if="action.comments_on_extension">
@@ -46,7 +53,11 @@
             <div class="user-avatar" :style="{ backgroundImage: ownerAvatar }" />
           </blockquote>
         </div>
-
+        <div v-else-if="action.status === 'in_process' && loanIsCanceled">
+          <p>
+            L'emprunt a été annulé. Cette étape ne peut pas être complétée.
+          </p>
+        </div>
         <div v-else-if="userRoles.includes('borrower')">
           <div v-if="!action.id">
             <p>

@@ -44,7 +44,7 @@
       'current-step': incident.status === 'in_process',
       'reached-step': incident.status === 'completed',
     }">
-      <svg-danger v-if="incident.status === 'canceled'" />
+      <svg-danger v-if="incident.status === 'canceled' || loanIsCanceled" />
       <svg-check v-else-if="incident.status === 'completed'" />
       <svg-waiting v-else />
       <span>Incident ({{ prettyIncidentName(incident.incident_type) }})</span>
@@ -53,10 +53,10 @@
       'current-step': extension.status === 'in_process',
       'reached-step': extension.status === 'completed',
     }">
-      <svg-danger v-if="extension.status === 'canceled'" />
+      <svg-danger v-if="extension.status === 'canceled' || loanIsCanceled" />
       <svg-check v-else-if="extension.status === 'completed'" />
       <svg-waiting v-else />
-      <span>Extension</span>
+      <span>Retard</span>
     </li>
     <li :class="{
       'current-step': isCurrentStep('handover'),

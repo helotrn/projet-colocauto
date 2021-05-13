@@ -3,26 +3,38 @@
     <b-card-header header-tag="header" role="tab" class="loan-actions__header"
       v-b-toggle.loan-actions-handover-self-service>
       <h2>
-        <svg-waiting v-if="action.status === 'in_process' && !item.canceled_at" />
+        <svg-waiting v-if="action.status === 'in_process' && !loanIsCanceled" />
         <svg-check v-else-if="action.status === 'completed'" />
-        <svg-danger v-else-if="action.status === 'canceled' || item.canceled_at" />
+        <svg-danger v-else-if="action.status === 'canceled' || loanIsCanceled" />
 
         Retour
       </h2>
 
-      <span v-if="action.status == 'in_process' && !item.canceled_at">En attente</span>
+      <!-- Canceled loans: current step remains in-process. -->
+      <span v-if="action.status === 'in_process' && loanIsCanceled">
+        Emprunt annulé &bull; {{ item.canceled_at | datetime }}
+      </span>
+      <span v-else-if="action.status == 'in_process' && !loanIsCanceled">
+        En attente
+      </span>
       <span v-else-if="action.status === 'completed'">
         Complété &bull; {{ action.executed_at | datetime }}
       </span>
-      <span v-else-if="action.status === 'canceled' || item.canceled_at">
-        Contesté &bull; {{ action.executed_at || item.canceled_at | datetime }}
+      <span v-else-if="action.status === 'canceled'">
+        Contesté &bull; {{ action.executed_at | datetime }}
       </span>
     </b-card-header>
 
     <b-card-body>
       <b-collapse id="loan-actions-handover-self-service" role="tabpanel" accordion="loan-actions"
         :visible="open">
-        <div v-if="item.loanable.has_padlock">
+
+        <div v-if="action.status === 'in_process' && loanIsCanceled">
+          <p>
+            L'emprunt a été annulé. Cette étape ne peut pas être complétée.
+          </p>
+        </div>
+        <div v-else-if="item.loanable.has_padlock">
           <b-alert show variant="danger">
             <div class="alert-heading"><h4>Attention</h4></div>
 
@@ -77,7 +89,7 @@
             <validation-observer ref="observer" v-slot="{ passes }">
               <b-form :novalidate="true" class="loan-actions-handover__form"
                 @submit.stop.prevent="passes(completeAction)">
-                <b-row v-if="!action.executed_at"
+                <b-row v-if="!action.executed_at && !loanIsCanceled"
                   class="loan-actions-handover__form__image">
                   <b-col lg="6">
                     <forms-image-uploader
@@ -144,7 +156,7 @@
                   </b-col>
                 </b-row>
 
-                <div v-if="!action.executed_at"
+                <div v-if="!action.executed_at && !loanIsCanceled"
                   class="loan-actions-handover-self-service text-center">
                   <b-button size="sm" variant="success" class="mr-3"
                     :disabled="!hasEnoughBalance" @click="completeAction">
@@ -153,7 +165,7 @@
                 </div>
 
                 <b-row class="loan-actions__alert"
-                  v-if="!action.executed_at && hasEnoughBalance">
+                  v-if="!action.executed_at && !loanIsCanceled && hasEnoughBalance">
                   <b-col>
                     <b-alert variant="warning" show>
                       Dans 48h, vous ne pourrez plus modifier vos informations.

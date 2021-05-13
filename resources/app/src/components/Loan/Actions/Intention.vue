@@ -2,21 +2,25 @@
   <b-card no-body class="loan-form loan-actions loan-actions-intention">
     <b-card-header header-tag="header" role="tab" class="loan-actions__header">
       <h2 v-b-toggle.loan-actions-intention>
-        <svg-waiting v-if="action.status === 'in_process' && !item.canceled_at" />
+        <svg-waiting v-if="action.status === 'in_process' && !loanIsCanceled" />
         <svg-check v-else-if="action.status === 'completed'" />
-        <svg-danger v-else-if="action.status === 'canceled' || item.canceled_at" />
+        <svg-danger v-else-if="action.status === 'canceled' || loanIsCanceled" />
 
         Confirmation de l'emprunt
       </h2>
 
-      <span v-if="action.status === 'in_process' && !item.canceled_at">
+      <!-- Canceled loans: current step remains in-process. -->
+      <span v-if="action.status === 'in_process' && loanIsCanceled">
+        Emprunt annulé &bull; {{ item.canceled_at | datetime }}
+      </span>
+      <span v-else-if="action.status === 'in_process'">
         En attente d'approbation
       </span>
       <span v-else-if="action.status === 'completed'">
         Approuvé &bull; {{ action.executed_at | datetime }}
       </span>
-      <span v-else-if="action.status === 'canceled' || item.canceled_at">
-        Refusé &bull; {{ action.executed_at || item.canceled_at | datetime }}
+      <span v-else-if="action.status === 'canceled'">
+        Refusé &bull; {{ action.executed_at | datetime }}
       </span>
     </b-card-header>
 
@@ -24,11 +28,19 @@
     <b-card-body>
       <b-collapse id="loan-actions-intention" role="tabpanel" accordion="loan-actions"
         :visible="open">
-        <div class="loan-actions-intention__image mb-3 text-center">
+        <div v-if="action.status === 'in_process' && loanIsCanceled">
+          <p>
+            L'emprunt a été annulé. Cette étape ne peut pas être complétée.
+          </p>
+        </div>
+
+        <div v-if="action.status !== 'in_process' || !loanIsCanceled"
+          class="loan-actions-intention__image mb-3 text-center">
           <div :style="{ backgroundImage: borrowerAvatar }" />
         </div>
 
-        <div class="loan-actions-intention__description text-center mb-3">
+        <div v-if="action.status !== 'in_process' || !loanIsCanceled"
+          class="loan-actions-intention__description text-center mb-3">
           <div v-if="!loanableIsSelfService && !borrowerIsOwner">
             <p v-if="userRoles.includes('borrower')">
               Vous avez demandé à {{ item.loanable.owner.user.name }} de lui
@@ -54,7 +66,7 @@
           </blockquote>
         </div>
 
-        <div v-if="!action.executed_at && !item.canceled_at">
+        <div v-if="!action.executed_at && !loanIsCanceled">
           <div class="loan-actions-intention__see-details text-center mb-3">
             <b-button size="sm" variant="outline-info" v-b-toggle.loan-actions-new>
               Voir les détails
