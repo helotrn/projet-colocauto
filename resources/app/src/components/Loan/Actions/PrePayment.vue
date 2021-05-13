@@ -3,9 +3,9 @@
     <b-card-header header-tag="header" role="tab" class="loan-actions__header"
       v-b-toggle.loan-actions-pre_payment>
       <h2>
-        <svg-waiting v-if="action.status === 'in_process' && !item.canceled_at" />
+        <svg-waiting v-if="action.status === 'in_process' && !loanIsCanceled" />
         <svg-check v-else-if="action.status === 'completed'" />
-        <svg-danger v-else-if="action.status === 'canceled' || item.canceled_at" />
+        <svg-danger v-else-if="action.status === 'canceled' || loanIsCanceled" />
 
         Prépaiement
       </h2>

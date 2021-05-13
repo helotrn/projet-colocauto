@@ -12,7 +12,7 @@
         Informations avant de partir
       </h2>
 
-      <span v-if="item.contested_at && action.status === 'in_process' && !item.canceled_at">
+      <span v-if="item.contested_at && action.status === 'in_process' && !loanIsCanceled">
         Bloqué
       </span>
       <span v-else>

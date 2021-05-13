@@ -3,9 +3,9 @@
     :id="`loan-incident-${action.id || 'new'}`">
     <b-card-header header-tag="header" role="tab" class="loan-actions__header">
       <h2 v-b-toggle="`loan-actions-incident-${action.id || 'new'}`">
-        <svg-waiting v-if="action.status === 'in_process' && !item.canceled_at" />
+        <svg-waiting v-if="action.status === 'in_process' && !loanIsCanceled" />
         <svg-check v-else-if="action.status === 'completed'" />
-        <svg-danger v-else-if="action.status === 'canceled' || item.canceled_at" />
+        <svg-danger v-else-if="action.status === 'canceled' || loanIsCanceled" />
 
         Incident
       </h2>
@@ -14,7 +14,7 @@
       <span v-if="action.status === 'in_process' && loanIsCanceled">
         Emprunt annulé &bull; {{ item.canceled_at | datetime }}
       </span>
-      <span v-else-if="action.status == 'in_process' && !item.canceled_at">
+      <span v-else-if="action.status == 'in_process' && !loanIsCanceled">
         En attente
       </span>
       <span v-else-if="action.status === 'completed'">

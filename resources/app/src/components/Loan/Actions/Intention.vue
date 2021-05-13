@@ -2,9 +2,9 @@
   <b-card no-body class="loan-form loan-actions loan-actions-intention">
     <b-card-header header-tag="header" role="tab" class="loan-actions__header">
       <h2 v-b-toggle.loan-actions-intention>
-        <svg-waiting v-if="action.status === 'in_process' && !item.canceled_at" />
+        <svg-waiting v-if="action.status === 'in_process' && !loanIsCanceled" />
         <svg-check v-else-if="action.status === 'completed'" />
-        <svg-danger v-else-if="action.status === 'canceled' || item.canceled_at" />
+        <svg-danger v-else-if="action.status === 'canceled' || loanIsCanceled" />
 
         Confirmation de l'emprunt
       </h2>
@@ -58,7 +58,7 @@
           </blockquote>
         </div>
 
-        <div v-if="!action.executed_at && !item.canceled_at">
+        <div v-if="!action.executed_at && !loanIsCanceled">
           <div class="loan-actions-intention__see-details text-center mb-3">
             <b-button size="sm" variant="outline-info" v-b-toggle.loan-actions-new>
               Voir les détails
