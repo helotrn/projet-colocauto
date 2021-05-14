@@ -145,7 +145,7 @@ export default {
       }
 
       options.push({
-        text: "J'en profite pour ajouter",
+        text: "J'en profite pour ajouter...",
         value: 'other',
       });
 
