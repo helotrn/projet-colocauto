@@ -1,12 +1,12 @@
 <template>
   <div class="loan__actions__buttons text-right mb-3"
-    v-if="!!item.id && item.loan_status === 'in_process' && !item.canceled_at">
+    v-if="!!item.id && item.loan_status === 'in_process' && !loanIsCanceled">
     <b-button class="ml-3 mb-3" variant="danger"
-      :disabled="hasReachedStep('takeover') || item.canceled_at"
+      :disabled="hasReachedStep('takeover') || loanIsCanceled"
       @click="$emit('cancel')">
       Annuler la réservation
     </b-button>
-    <b-button class="ml-3 mb-3" variant="danger" :disabled="!item.canceled_at"
+    <b-button class="ml-3 mb-3" variant="danger" :disabled="!loanIsCanceled"
       @click="$emit('resume')" v-if="(isAdmin || isGlobalAdmin)">
       Réactiver la réservation
     </b-button>

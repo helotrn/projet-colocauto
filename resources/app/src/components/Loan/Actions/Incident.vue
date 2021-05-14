@@ -3,19 +3,25 @@
     :id="`loan-incident-${action.id || 'new'}`">
     <b-card-header header-tag="header" role="tab" class="loan-actions__header">
       <h2 v-b-toggle="`loan-actions-incident-${action.id || 'new'}`">
-        <svg-waiting v-if="action.status === 'in_process' && !item.canceled_at" />
+        <svg-waiting v-if="action.status === 'in_process' && !loanIsCanceled" />
         <svg-check v-else-if="action.status === 'completed'" />
-        <svg-danger v-else-if="action.status === 'canceled' || item.canceled_at" />
+        <svg-danger v-else-if="action.status === 'canceled' || loanIsCanceled" />
 
         Incident
       </h2>
 
-      <span v-if="action.status == 'in_process' && !item.canceled_at">En attente</span>
+      <!-- Canceled loans: current step remains in-process. -->
+      <span v-if="action.status === 'in_process' && loanIsCanceled">
+        Emprunt annulé &bull; {{ item.canceled_at | datetime }}
+      </span>
+      <span v-else-if="action.status == 'in_process' && !loanIsCanceled">
+        En attente
+      </span>
       <span v-else-if="action.status === 'completed'">
         Validé &bull; {{ action.executed_at | datetime }}
       </span>
-      <span v-else-if="action.status === 'canceled' || item.canceled_at">
-        Contesté &bull; {{ action.executed_at || item.canceled_at | datetime }}
+      <span v-else-if="action.status === 'canceled'">
+        Contesté &bull; {{ action.executed_at | datetime }}
       </span>
     </b-card-header>
 
@@ -24,7 +30,7 @@
       <b-collapse :id="`loan-actions-incident-${action.id || 'new'}`"
         role="tabpanel" accordion="loan-actions"
         :visible="open">
-        <div v-if="!action.id">
+        <div v-if="!action.id && !loanIsCanceled">
           <ol v-if="item.loanable.type === 'car'">
             <li><strong>Asseyez-vous et respirez</strong>: voici les étapes à suivre.</li>
             <li>
@@ -69,7 +75,7 @@
             </b-form>
           </validation-observer>
         </div>
-        <div v-else-if="!action.executed_at">
+        <div v-else-if="!action.executed_at && !loanIsCanceled">
           <!-- Action has an id, hence not new, and it is not completed. -->
           <div v-if="!userRoles.includes('owner')">
             <div v-if="action.incident_type === 'accident'">
@@ -145,6 +151,11 @@
               Résoudre
             </b-button>
           </div>
+        </div>
+        <div v-else-if="action.status === 'in_process' && loanIsCanceled">
+          <p>
+            L'emprunt a été annulé. Cette étape ne peut pas être complétée.
+          </p>
         </div>
         <div v-else>
           <!-- Action has an id, hence not new, and it is completed. -->

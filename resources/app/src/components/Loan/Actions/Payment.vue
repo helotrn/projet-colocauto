@@ -2,19 +2,25 @@
   <b-card no-body class="loan-form loan-actions loan-actions-payment">
     <b-card-header header-tag="header" role="tab" class="loan-actions__header">
       <h2 v-b-toggle.loan-actions-payment>
-        <svg-waiting v-if="action.status === 'in_process' && !item.canceled_at" />
+        <svg-waiting v-if="action.status === 'in_process' && !loanIsCanceled" />
         <svg-check v-else-if="action.status === 'completed'" />
-        <svg-danger v-else-if="action.status === 'canceled' || item.canceled_at" />
+        <svg-danger v-else-if="action.status === 'canceled' || loanIsCanceled" />
 
         Conclusion
       </h2>
 
-      <span v-if="action.status == 'in_process' && !item.canceled_at">En attente</span>
+      <!-- Canceled loans: current step remains in-process. -->
+      <span v-if="action.status === 'in_process' && loanIsCanceled">
+        Emprunt annulé &bull; {{ item.canceled_at | datetime }}
+      </span>
+      <span v-else-if="action.status === 'in_process'">
+        En attente
+      </span>
       <span v-else-if="action.status === 'completed'">
         Payé &bull; {{ action.executed_at | datetime }}
       </span>
-      <span v-else-if="action.status === 'canceled' || item.canceled_at">
-        Annulé &bull; {{ action.executed_at || item.canceled_at | datetime }}
+      <span v-else-if="action.status === 'canceled'">
+        Annulé &bull; {{ action.executed_at | datetime }}
       </span>
     </b-card-header>
 
@@ -30,8 +36,13 @@
             <span v-b-popover.hover="priceTooltip">{{ item.total_final_cost | currency }}</span>.
           </p>
         </div>
+        <div v-else-if="action.status === 'in_process' && loanIsCanceled">
+          <p>
+            L'emprunt a été annulé. Cette étape ne peut pas être complétée.
+          </p>
+        </div>
         <div v-else>
-
+          <!-- Action is not completed -->
           <!-- Whether userRoles includes 'borrower' or 'owner' -->
           <div v-if="['borrower', 'owner'].some(role => userRoles.includes(role))">
             <p>

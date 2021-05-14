@@ -2,7 +2,7 @@
   <div class="user-add-credit-box">
     <b-row>
       <b-col lg="8" class="user-add-credit-box__add">
-        <p>Ajouter</p>
+        <p>Ajouter&nbsp;:</p>
 
         <p><b-form-radio-group v-model="selectedAmount" :options="amounts" buttons /></p>
 
@@ -80,7 +80,7 @@ export default {
 
           return acc;
         }, null),
-      selectedAmount: this.minimumRequired ? this.floatMinimumRequired : 10,
+      selectedAmount: this.minimumRequired ? parseFloat(this.minimumRequired) : 10,
     };
   },
   props: {
@@ -145,7 +145,7 @@ export default {
       }
 
       options.push({
-        text: "J'en profite pour ajouter",
+        text: "J'en profite pour ajouter...",
         value: 'other',
       });
 

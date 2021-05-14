@@ -27,6 +27,9 @@ export default {
       // the community, hence self-service)
       return !this.item.loanable.owner;
     },
+    loanIsCanceled() {
+      return !!this.item.canceled_at;
+    },
     userIsOwner() {
       if (!this.item.loanable.owner) {
         return false;
@@ -98,32 +101,43 @@ export default {
       // all following steps if it has been canceled
       switch (step) {
         case 'payment': // eslint-disable-line no-fallthrough
-          if (payment && payment.status === 'canceled') {
+          if (handover?.status === 'canceled' && payment?.status !== 'canceled'
+            && !this.loanIsCanceled) {
+            return false;
+          }
+
+          if ((payment?.status === 'canceled')
+              || (payment?.status === 'in_process' && this.loanIsCanceled)) {
             return true;
           }
         case 'handover': // eslint-disable-line no-fallthrough
-          if (handover && handover.status === 'canceled') {
+          if (takeover?.status === 'canceled' && handover?.status !== 'canceled'
+            && !this.loanIsCanceled) {
+            return false;
+          }
+
+          if ((handover?.status === 'canceled')
+              || (handover?.status === 'in_process' && this.loanIsCanceled)) {
             return true;
           }
         case 'takeover': // eslint-disable-line no-fallthrough
-          if (takeover && takeover.status === 'canceled') {
+          if ((takeover?.status === 'canceled')
+              || (takeover?.status === 'in_process' && this.loanIsCanceled)) {
             return true;
           }
         case 'pre_payment': // eslint-disable-line no-fallthrough
-          if (prePayment && prePayment.status === 'canceled') {
+          if ((prePayment?.status === 'canceled')
+              || (prePayment?.status === 'in_process' && this.loanIsCanceled)) {
             return true;
           }
         case 'intention': // eslint-disable-line no-fallthrough
-          if (intention && intention.status === 'canceled') {
+          if ((intention?.status === 'canceled')
+              || (intention?.status === 'in_process' && this.loanIsCanceled)) {
             return true;
           }
           break;
         default:
           return false;
-      }
-
-      if (this.item.canceled_at) {
-        return true;
       }
 
       return false;
@@ -196,7 +210,18 @@ export default {
         case 'pre_payment':
           // Pre-payment should be displayed when the loan is not inherently free.
           // As of now, this is when the loanable is not self-service.
-          return !this.loanableIsSelfService;
+          // Also show when balance is not sufficient.
+
+          // Show for on-demand loans.
+          if (!this.loanableIsSelfService) {
+            return true;
+          }
+
+          // Show when balance is insufficient.
+          return parseFloat(this.user.balance)
+            < parseFloat(this.item.estimated_price)
+            + parseFloat(this.item.estimated_insurance)
+            + parseFloat(this.item.platform_tip);
 
         case 'takeover':
         case 'handover':
