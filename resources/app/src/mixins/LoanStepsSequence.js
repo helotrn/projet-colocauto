@@ -101,7 +101,8 @@ export default {
       // all following steps if it has been canceled
       switch (step) {
         case 'payment': // eslint-disable-line no-fallthrough
-          if (handover?.status === 'canceled' && payment?.status !== 'canceled') {
+          if (handover?.status === 'canceled' && payment?.status !== 'canceled'
+            && !this.loanIsCanceled) {
             return false;
           }
 
@@ -110,7 +111,8 @@ export default {
             return true;
           }
         case 'handover': // eslint-disable-line no-fallthrough
-          if (takeover?.status === 'canceled' && handover?.status !== 'canceled') {
+          if (takeover?.status === 'canceled' && handover?.status !== 'canceled'
+            && !this.loanIsCanceled) {
             return false;
           }
 
