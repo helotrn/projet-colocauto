@@ -29,7 +29,7 @@
     <b-card-body>
       <b-collapse id="loan-actions-pre_payment" role="tabpanel" accordion="loan-actions"
         :visible="open">
-        <div class="loan-actions-pre_payment__description text-center mb-3"
+        <div class="loan-actions-pre_payment__description mb-3"
           v-if="!action.executed_at">
           <!-- Action is not completed -->
           <div v-if="action.status === 'in_process' && loanIsCanceled">
@@ -46,7 +46,7 @@
               :minimumRequired="minimumRequired"
               :user="user" @bought="completeAction" />
 
-            <div class="loan-actions-intention__buttons text-center"
+            <div class="loan-actions-intention__buttons"
               v-if="user.balance >= (item.estimated_price + item.estimated_insurance)">
               <p>Ou compléter cette étape sans plus attendre.</p>
 

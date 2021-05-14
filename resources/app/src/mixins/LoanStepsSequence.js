@@ -101,7 +101,8 @@ export default {
       // all following steps if it has been canceled
       switch (step) {
         case 'payment': // eslint-disable-line no-fallthrough
-          if (handover?.status === 'canceled' && payment?.status !== 'canceled') {
+          if (handover?.status === 'canceled' && payment?.status !== 'canceled'
+            && !this.loanIsCanceled) {
             return false;
           }
 
@@ -110,7 +111,8 @@ export default {
             return true;
           }
         case 'handover': // eslint-disable-line no-fallthrough
-          if (takeover?.status === 'canceled' && handover?.status !== 'canceled') {
+          if (takeover?.status === 'canceled' && handover?.status !== 'canceled'
+            && !this.loanIsCanceled) {
             return false;
           }
 
@@ -208,7 +210,18 @@ export default {
         case 'pre_payment':
           // Pre-payment should be displayed when the loan is not inherently free.
           // As of now, this is when the loanable is not self-service.
-          return !this.loanableIsSelfService;
+          // Also show when balance is not sufficient.
+
+          // Show for on-demand loans.
+          if (!this.loanableIsSelfService) {
+            return true;
+          }
+
+          // Show when balance is insufficient.
+          return parseFloat(this.user.balance)
+            < parseFloat(this.item.estimated_price)
+            + parseFloat(this.item.estimated_insurance)
+            + parseFloat(this.item.platform_tip);
 
         case 'takeover':
         case 'handover':
