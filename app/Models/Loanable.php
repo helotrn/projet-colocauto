@@ -399,9 +399,24 @@ class Loanable extends BaseModel
         $query = $query
             // A user has access to...
             ->where(function ($q) use ($user, $allowedTypes) {
-                // (Accessible communities are communities that you directly
-                // belong to and parent communities of these, recursively)
-                $communityIds = $user->approvedCommunities->pluck('id');
+                // Communities that you directly belong to
+                $approvedCommunities = $user->approvedCommunities;
+
+                // Communities and parents, recursively.
+                $communityIds = collect();
+                foreach ($approvedCommunities as $community) {
+                    while ($community) {
+                        // Break the loop id community is already there.
+                        if ($communityIds->contains($community->id)) {
+                            break;
+                        }
+
+                        $communityIds->push($community->id);
+
+                        // Does this community have a parent?
+                        $community = $community->parent;
+                    }
+                }
 
                 if ($communityIds->count() === 0) {
                     $communityIds->push(0);
