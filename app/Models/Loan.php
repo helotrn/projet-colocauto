@@ -296,6 +296,7 @@ SQL
 
     protected $casts = [
         'departure_at' => TimestampWithTimezoneCast::class,
+        'meta' => 'array',
     ];
 
     protected $fillable = [
