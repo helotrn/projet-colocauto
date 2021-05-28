@@ -16,9 +16,11 @@ class SendRegistrationApprovedEmails
             Mail::to($user->email, $user->name . ' ' . $user->last_name)
                 ->queue(new RegistrationApproved($user));
 
-            $user->forceFill([
-                'meta' => [ 'sent_registration_approved_email' => true ],
-            ])->save();
+            $meta = $user->meta;
+            $meta['sent_registration_approved_email'] = true;
+            $user->meta = $meta;
+
+            $user->save();
         }
     }
 }

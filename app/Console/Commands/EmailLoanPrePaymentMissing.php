@@ -37,9 +37,11 @@ class EmailLoanPrePaymentMissing extends Command
                 Mail::to($user->email, $user->name . ' ' . $user->last_name)
                   ->send(new LoanPrePaymentMissing($user, $loan));
 
-                $loan->forceFill([
-                    'meta' => [ 'sent_loan_pre_payment_missing_email' => true ],
-                ])->save();
+                $meta = $loan->meta;
+                $meta['sent_loan_pre_payment_missing_email'] = true;
+                $loan->meta = $meta;
+
+                $loan->save();
             } else {
                 $this->info("Would have sent an email to {$user->email} for loan {$loan->id}");
             }
