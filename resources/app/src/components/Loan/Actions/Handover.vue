@@ -173,7 +173,8 @@
               </b-row>
 
               <b-row class="loan-actions-handover__buttons text-center"
-                v-if="(!action.executed_at && !loanIsCanceled && !item.contested_at) || userIsAdmin">
+                v-if="(!action.executed_at && !loanIsCanceled && !item.contested_at)
+                  || userIsAdmin">
                 <b-col>
                   <b-button type="submit" size="sm" variant="success" class="mr-3">
                     <span v-if="isContested">Corriger</span>
