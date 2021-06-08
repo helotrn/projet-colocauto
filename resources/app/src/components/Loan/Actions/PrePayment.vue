@@ -44,7 +44,7 @@
 
             <user-add-credit-box
               :minimumRequired="minimumRequired"
-              :user="user" @bought="completeAction" />
+              :user="user" @bought="completeAction" @cancel="cancelAction"/>
 
             <div class="loan-actions-intention__buttons"
               v-if="user.balance >= (item.estimated_price + item.estimated_insurance)">
