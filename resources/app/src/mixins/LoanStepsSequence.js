@@ -208,20 +208,12 @@ export default {
           return !this.loanableIsSelfService;
 
         case 'pre_payment':
-          // Pre-payment should be displayed when the loan is not inherently free.
-          // As of now, this is when the loanable is not self-service.
-          // Also show when balance is not sufficient.
-
-          // Show for on-demand loans.
-          if (!this.loanableIsSelfService) {
-            return true;
-          }
-
-          // Show when balance is insufficient.
-          return parseFloat(this.user.balance)
-            < parseFloat(this.item.estimated_price)
-            + parseFloat(this.item.estimated_insurance)
-            + parseFloat(this.item.platform_tip);
+          // Pre-payment should be displayed whenever the loan has an estimated
+          // cost over 0. This includes free loans for which the platform tip
+          // is greater than 0.
+          return parseFloat(this.item.estimated_price) > 0
+            || parseFloat(this.item.estimated_insurance) > 0
+            || parseFloat(this.item.platform_tip) > 0;
 
         case 'takeover':
         case 'handover':
