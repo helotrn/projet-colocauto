@@ -47,16 +47,18 @@
               :user="user" @bought="completeAction" @cancel="cancelAction"/>
 
             <div class="loan-actions-intention__buttons"
-              v-if="user.balance >= (item.estimated_price + item.estimated_insurance)">
+              v-if="canComplete">
               <p>Ou compléter cette étape sans plus attendre.</p>
 
-              <b-button size="sm" variant="success" class="mr-3" @click="completeAction">
-                Compléter
-              </b-button>
+              <div class="text-center">
+                <b-button size="sm" variant="success" class="mr-3" @click="completeAction">
+                  Compléter
+                </b-button>
 
-              <b-button size="sm" variant="outline-danger" @click="cancelAction">
-                Annuler
-              </b-button>
+                <b-button size="sm" variant="outline-danger" @click="cancelAction">
+                  Annuler
+                </b-button>
+              </div>
             </div>
           </div>
           <div v-else-if="userRoles.includes('owner')">
@@ -97,6 +99,15 @@ export default {
       return parseFloat(this.item.estimated_price, 10)
         + parseFloat(this.item.estimated_insurance, 10)
         + parseFloat(this.item.platform_tip, 10);
+    },
+    /*
+      Can complete if balance is sufficient to cover price and insurance.
+      It is not necessary to cover tip as it may be changed later.
+    */
+    canComplete() {
+      return parseFloat(this.user.balance)
+        >= (parseFloat(this.item.estimated_price)
+          + parseFloat(this.item.estimated_insurance));
     },
   },
 };
