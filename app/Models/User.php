@@ -259,17 +259,21 @@ class User extends AuthenticatableBaseModel
             ->exists();
     }
 
-    public function getLastInvoiceOrCreate() {
-        if ($this->currentInvoice) {
-            return $this->currentInvoice;
-        }
-
+    public function createInvoice() {
         $invoice = new Invoice;
         $invoice->user_id = $this->id;
         $invoice->period = \Carbon\Carbon::now()->locale('fr_FR')->format('m/Y');
         $invoice->save();
 
         return $invoice;
+    }
+
+    public function getLastInvoiceOrCreate() {
+        if ($this->currentInvoice) {
+            return $this->currentInvoice;
+        }
+
+        return $this->createInvoice();
     }
 
     public function getStripeCustomer() {
