@@ -178,12 +178,6 @@ class User extends AuthenticatableBaseModel
         return $this->hasMany(Invoice::class);
     }
 
-    public function currentInvoice() {
-        return $this->hasOne(Invoice::class)
-            ->orderBy('created_at', 'desc')
-            ->whereNull('paid_at');
-    }
-
     public function borrower() {
         return $this->hasOne(Borrower::class);
     }
@@ -266,14 +260,6 @@ class User extends AuthenticatableBaseModel
         $invoice->save();
 
         return $invoice;
-    }
-
-    public function getLastInvoiceOrCreate() {
-        if ($this->currentInvoice) {
-            return $this->currentInvoice;
-        }
-
-        return $this->createInvoice();
     }
 
     public function getStripeCustomer() {
