@@ -132,7 +132,7 @@ class PaymentController extends RestController
 
         // Update invoices
         $borrowerUser = $loan->borrower->user;
-        $borrowerInvoice = $borrowerUser->getLastInvoiceOrCreate();
+        $borrowerInvoice = $borrowerUser->createInvoice();
         foreach ($items as $item) {
             if ($item) {
                 $borrowerInvoice->billItems()->create($item);
@@ -142,7 +142,7 @@ class PaymentController extends RestController
 
         if ($loan->loanable->owner) {
             $ownerUser = $loan->loanable->owner->user;
-            $ownerInvoice = $ownerUser->getLastInvoiceOrCreate();
+            $ownerInvoice = $ownerUser->createInvoice();
 
             if ($items['price']) {
                 $items['price']['amount'] = -$items['price']['amount'];

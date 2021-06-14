@@ -178,12 +178,6 @@ class User extends AuthenticatableBaseModel
         return $this->hasMany(Invoice::class);
     }
 
-    public function currentInvoice() {
-        return $this->hasOne(Invoice::class)
-            ->orderBy('created_at', 'desc')
-            ->whereNull('paid_at');
-    }
-
     public function borrower() {
         return $this->hasOne(Borrower::class);
     }
@@ -259,11 +253,7 @@ class User extends AuthenticatableBaseModel
             ->exists();
     }
 
-    public function getLastInvoiceOrCreate() {
-        if ($this->currentInvoice) {
-            return $this->currentInvoice;
-        }
-
+    public function createInvoice() {
         $invoice = new Invoice;
         $invoice->user_id = $this->id;
         $invoice->period = \Carbon\Carbon::now()->locale('fr_FR')->format('m/Y');
