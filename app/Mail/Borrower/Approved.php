@@ -2,13 +2,13 @@
 
 namespace App\Mail\Borrower;
 
+use App\Mail\BaseMailable;
 use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class Approved extends Mailable
+class Approved extends BaseMailable
 {
     use Queueable, SerializesModels;
 

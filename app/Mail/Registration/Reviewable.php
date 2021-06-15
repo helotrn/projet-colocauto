@@ -2,14 +2,14 @@
 
 namespace App\Mail\Registration;
 
+use App\Mail\BaseMailable;
 use App\Models\Community;
 use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class Reviewable extends Mailable
+class Reviewable extends BaseMailable
 {
     use Queueable, SerializesModels;
 
