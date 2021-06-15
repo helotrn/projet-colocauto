@@ -2,15 +2,15 @@
 
 namespace App\Mail\Loan;
 
+use App\Mail\BaseMailable;
 use App\Models\Loan;
 use App\Models\Handover;
 use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class HandoverReviewable extends Mailable
+class HandoverReviewable extends BaseMailable
 {
     use Queueable, SerializesModels;
 

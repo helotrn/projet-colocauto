@@ -2,14 +2,14 @@
 
 namespace App\Mail\Loan;
 
+use App\Mail\BaseMailable;
 use App\Models\Loan;
 use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class Canceled extends Mailable
+class Canceled extends BaseMailable
 {
     use Queueable, SerializesModels;
 

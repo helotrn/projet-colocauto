@@ -6,10 +6,9 @@ use App\Models\Loanable;
 use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class LoanableCreated extends Mailable
+class LoanableCreated extends BaseMailable
 {
     use Queueable, SerializesModels;
 
