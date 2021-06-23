@@ -10,6 +10,7 @@ services:
       - 8000:8000
     environment:
       APP_ENV: docker
+      DB_HOST: postgres
   vue:
     build:
       context: ./resources/app
@@ -29,7 +30,7 @@ services:
       - ./psql/init:/docker-entrypoint-initdb.d
     ports: 
       - 5432:5432
-    environment: 
+    environment:
       POSTGRES_DB: locomotion
       POSTGRES_PASSWORD: locomotion
       POSTGRES_USER: locomotion
