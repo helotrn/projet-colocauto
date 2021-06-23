@@ -5,8 +5,11 @@ services:
       context: .
     volumes:
       - .:/app
+      - .env.docker:/.env
     ports: 
       - 8000:8000
+    environment:
+      APP_ENV: docker
   vue:
     build:
       context: ./resources/app
@@ -37,3 +40,4 @@ services:
 
 volumes:
   postgres-data:
+
