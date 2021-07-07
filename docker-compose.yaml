@@ -12,8 +12,21 @@ services:
     ports: 
       - 8000:8000
     environment:
-      APP_ENV: docker
+      APP_ENV: local
+      APP_KEY: base64:QV7VlghMwXOXokIRP1ARpfEuyIF46hfYC/Y/lxFxdVc=
+      APP_DEBUG: "true"
+      APP_URL: http://localhost
       DB_HOST: postgres
+      DB_PORT: 5432
+      DB_DATABASE: locomotion
+      DB_USERNAME: locomotion
+      DB_PASSWORD: locomotion
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: null
+      MAIL_DRIVER: log
+      PASSWORD_CLIENT_ID: pTrmRvquBD6mXlep
+      PASSWORD_CLIENT_SECRET: 1hu8xmgtXI8O6HRH4zIbRt92X6rSLCgY6NtTNyxN
       WAIT_HOSTS: postgres:5432, redis:6379
       WAIT_HOSTS_TIMEOUT: 120
   vue:
