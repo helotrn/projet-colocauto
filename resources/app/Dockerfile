@@ -1,0 +1,21 @@
+FROM node:15 as dev
+WORKDIR /app
+
+CMD bash -c "yarn install && yarn serve --host 0.0.0.0"
+
+##############################
+FROM dev as build
+
+COPY . .
+
+RUN yarn install
+RUN yarn run build
+#############################
+FROM node:15-alpine as prod
+
+WORKDIR /app
+
+RUN npm i -g serve
+COPY --from=build /app/build/ /app
+
+CMD serve -l tcp://0.0.0.0:80 -s /app
