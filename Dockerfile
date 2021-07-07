@@ -14,13 +14,7 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 
 ENV COMPOSER_MEMORY_LIMIT=-1
 
-# Add docker-compose-wait tool
-ENV WAIT_VERSION 2.7.2
-ADD https://github.com/ufoscout/docker-compose-wait/releases/download/$WAIT_VERSION/wait /wait
-RUN chmod +x /wait
-
-CMD bash -c "/wait && \
-             composer install && \
+CMD bash -c "composer install && \
              php artisan key:generate && \
              php artisan migrate --seed && \
              php artisan passport:install && \
