@@ -1,15 +1,15 @@
 FROM node:15 as dev
 WORKDIR /app
 
-CMD bash -c "npm i && npm run serve"
+CMD bash -c "yarn install && yarn serve --host 0.0.0.0"
 
 ##############################
 FROM dev as build
 
 COPY . .
 
-RUN npm i 
-RUN npm run build
+RUN yarn install
+RUN yarn run build
 #############################
 FROM node:15-alpine as prod
 
