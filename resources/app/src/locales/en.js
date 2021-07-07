@@ -12,6 +12,7 @@ export default {
   forms: {
     actions: 'actions',
     modifier: 'modify',
+    restaurer: 'restore',
     supprimer: 'delete',
   },
   loanables: loanables.en,

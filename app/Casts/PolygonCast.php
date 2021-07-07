@@ -13,6 +13,11 @@ class PolygonCast implements CastsAttributes
 {
     public function set($model, $key, $value, $attributes) {
         if (is_array($value)) {
+                             // Don't try to create a polygon from an empty array.
+            if (empty($value)) {
+                return null;
+            }
+
             $lineString = new LineString(
                 array_map(function ($point) {
                     [$latitude, $longitude] = $point;

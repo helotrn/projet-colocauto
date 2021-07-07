@@ -29,7 +29,32 @@ class FileController extends RestController
         }
 
         if (!$file || !$file->isValid()) {
-            abort(400);
+            switch ($file->getError()) {
+                case \UPLOAD_ERR_INI_SIZE:
+                case \UPLOAD_ERR_FORM_SIZE:
+                    $maxUpload = (int) ini_get('upload_max_filesize');
+                    $maxPost = (int) ini_get('post_max_size');
+                    $maxFileSize = min($maxUpload, $maxPost);
+                    return $this->respondWithMessage(
+                        "La taille du fichier dépasse la limite configurée à $maxFileSize Mo",
+                        422
+                    );
+                case \UPLOAD_ERR_PARTIAL:
+                case \UPLOAD_ERR_NO_FILE:
+                    return $this->respondWithMessage(
+                        "Le fichier n'a pas été reçu correctement. Veuillez réessayer.",
+                        422
+                    );
+                case \UPLOAD_ERR_NO_TMP_DIR:
+                case \UPLOAD_ERR_CANT_WRITE:
+                case \UPLOAD_ERR_EXTENSION:
+                    return $this->respondWithMessage(
+                        "Erreur serveur lors de l'enregistrement du fichier.",
+                        500
+                    );
+                default:
+                    return $this->respondWithMessage('Fichier invalide.', 422);
+            }
         }
 
         $fileData = $this->upload($file, $field);

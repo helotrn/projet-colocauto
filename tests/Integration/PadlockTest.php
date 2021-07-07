@@ -196,6 +196,43 @@ class PadlockTest extends TestCase
             ;
     }
 
+    public function testSearchPadlocks() {
+                             // Test searching for a padlock that does not exist.
+        $data = [
+          'fields' => 'id,name',
+          '!loanable' => '1',
+          'q' => 'Test padlock',
+        ];
+        $response = $this->json('GET', "/api/v1/padlocks/", $data);
+
+        $response
+            ->assertStatus(200)
+            ->assertJsonStructure(static::$getPadlocksResponseStructure)
+            ;
+
+
+                             // Test searching for a padlock that does exist.
+        $padlock_data = [
+            'name' => 'Test padlock to find',
+            'mac_address' => $this->faker->macAddress,
+        ];
+        $padlock = factory(Padlock::class)->create($padlock_data);
+
+        $data = [
+          'fields' => 'id,name',
+          '!loanable' => '1',
+          'q' => 'Test padlock',
+        ];
+        $response = $this->json('GET', "/api/v1/padlocks/", $data);
+
+        $response
+            ->assertStatus(200)
+            ->assertJsonStructure(static::$getPadlocksResponseStructure)
+                             // Assert that one padlock is returned.
+            ->assertJson([ 'total' => 1 ])
+            ;
+    }
+
     public function testUpdatePadlocks() {
         $padlock = factory(Padlock::class)->create();
         $data = [

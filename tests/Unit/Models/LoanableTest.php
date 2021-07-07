@@ -6,6 +6,7 @@ use App\Models\Borrower;
 use App\Models\Community;
 use App\Models\Bike;
 use App\Models\Car;
+use App\Models\Loan;
 use App\Models\Loanable;
 use App\Models\Owner;
 use App\Models\Trailer;
@@ -39,20 +40,28 @@ class LoanableTest extends TestCase
             'parent_id' => $this->borough->id,
         ]);
 
-        $this->memberOfBorough = factory(User::class)->create();
+        $this->memberOfBorough = factory(User::class)->create([
+            'name' => 'memberOfBorough',
+        ]);
         $this->borough->users()->attach($this->memberOfBorough, [
             'approved_at' => new \DateTime,
         ]);
 
-        $this->memberOfCommunity = factory(User::class)->create();
+        $this->memberOfCommunity = factory(User::class)->create([
+            'name' => 'memberOfCommunity',
+        ]);
         $this->community->users()->attach($this->memberOfCommunity, [
             'approved_at' => new \DateTime,
         ]);
 
-        $this->otherMemberOfCommunity = factory(User::class)->create();
+        $this->otherMemberOfCommunity = factory(User::class)->create([
+            'name' => 'otherMemberOfCommunity',
+        ]);
         $this->community->users()->attach($this->otherMemberOfCommunity);
 
-        $this->memberOfOtherCommunity = factory(User::class)->create();
+        $this->memberOfOtherCommunity = factory(User::class)->create([
+            'name' => 'memberOfOtherCommunity',
+        ]);
         $this->otherCommunity->users()->attach($this->memberOfOtherCommunity, [
             'approved_at' => new \DateTime,
         ]);
@@ -74,6 +83,7 @@ class LoanableTest extends TestCase
             $this->memberOfOtherCommunity
         ] as $member) {
             factory(Trailer::class)->create([
+                'name' => "$member->name trailer",
                 'owner_id' => $member->owner->id,
             ]);
         }
@@ -85,11 +95,16 @@ class LoanableTest extends TestCase
             $this->otherMemberOfCommunity,
             $this->memberOfOtherCommunity
         ] as $member) {
-            $loanables = Loanable::accessibleBy($member)->pluck('id');
-            $this->assertEquals(1, $loanables->count());
+            $loanables = Loanable::accessibleBy($member)->pluck('name');
+            $loanableIds = Loanable::accessibleBy($member)->pluck('id');
+            $this->assertEquals(
+                1,
+                $loanables->count(),
+                "too many loanables accessible to $member->name"
+            );
             $this->assertEquals(
                 $member->loanables()->first()->id,
-                $loanables->first()
+                $loanableIds->first()
             );
         }
     }
@@ -270,5 +285,105 @@ class LoanableTest extends TestCase
             ->pluck('id');
         $this->assertEquals(1, $loanables->count());
         $this->assertEquals($loanable->id, $loanables[0]);
+    }
+
+    public function testLoanableMethodGetCommunityForLoanBy() {
+        $bike = factory(Bike::class)->create([
+            'owner_id' => $this->memberOfCommunity->owner->id,
+            'community_id' => $this->community->id,
+        ]);
+
+        // User is not approved on the loanable community
+        // (you normally wouldn't be able to see the loanable to begin with)
+        $community = $bike->getCommunityForLoanBy($this->otherMemberOfCommunity);
+        $this->assertEquals(null, $community);
+
+        // User is approved on the loanable community
+        $this->community->users()->updateExistingPivot($this->otherMemberOfCommunity->id, [
+            'approved_at' => new \DateTime,
+        ]);
+
+        $this->otherMemberOfCommunity = $this->otherMemberOfCommunity->fresh();
+
+        $community = $bike->getCommunityForLoanBy($this->otherMemberOfCommunity);
+        $this->assertEquals($this->community->id, $community->id);
+
+        // User is approved on a child community of the loanable community
+        $bike->community_id = $this->borough->id;
+        $bike->save();
+        $bike = $bike->fresh();
+        $community = $bike->getCommunityForLoanBy($this->otherMemberOfCommunity);
+        $this->assertEquals($this->community->id, $community->id);
+
+        // User is approved on community of the loanable's owner
+        $bike->community_id = null;
+        $bike->save();
+        $bike = $bike->fresh();
+
+        $community = $bike->getCommunityForLoanBy($this->otherMemberOfCommunity);
+        $this->assertEquals($this->community->id, $community->id);
+    }
+
+    public function testIsAvailableEventIfLoanExistsWithIntentionInProcessOrCanceled() {
+        $bike = factory(Bike::class)->create([
+            'owner_id' => $this->memberOfCommunity->owner->id,
+            'community_id' => $this->community->id,
+        ]);
+
+        $user = factory(User::class)
+            ->states('withBorrower')
+            ->create();
+        $loan = factory(Loan::class)
+            ->states('withInProcessIntention')
+            ->create([
+                'borrower_id' => $user->borrower->id,
+                'loanable_id' => $bike->id,
+                'community_id' => $this->community->id,
+                'departure_at' => '3000-10-10 10:10:00',
+                'duration_in_minutes' => 60,
+            ]);
+
+        $canceledLoan = factory(Loan::class)
+            ->states('withCompletedIntention', 'withInProcessPrePayment')
+            ->create([
+                'borrower_id' => $user->borrower->id,
+                'loanable_id' => $bike->id,
+                'community_id' => $this->community->id,
+                'departure_at' => '3000-10-11 10:10:00',
+                'duration_in_minutes' => 60,
+                'canceled_at' => now(),
+            ]);
+
+        $canceledPrePaymentLoan = factory(Loan::class)
+            ->states('withCompletedIntention', 'withCanceledPrePayment')
+            ->create([
+                'borrower_id' => $user->borrower->id,
+                'loanable_id' => $bike->id,
+                'community_id' => $this->community->id,
+                'departure_at' => '3000-10-11 10:10:00',
+                'duration_in_minutes' => 60,
+            ]);
+
+        $confirmedLoan = factory(Loan::class)
+            ->states('withCompletedIntention', 'withInProcessPrePayment')
+            ->create([
+                'borrower_id' => $user->borrower->id,
+                'loanable_id' => $bike->id,
+                'community_id' => $this->community->id,
+                'departure_at' => '3000-10-12 10:10:00',
+                'duration_in_minutes' => 60,
+            ]);
+        $confirmedLoan->intention->status = 'completed';
+        $confirmedLoan->intention->save();
+        $confirmedLoan = $confirmedLoan->fresh();
+
+        $this->assertEquals(true, $bike->isAvailable('3000-10-10 10:20:00', 60));
+        $this->assertEquals(true, $bike->isAvailable('3000-10-10 11:20:00', 60));
+
+        $this->assertEquals(true, $bike->isAvailable('3000-10-11 10:20:00', 60));
+        $this->assertEquals(true, $bike->isAvailable('3000-10-11 11:20:00', 60));
+
+        $this->assertEquals(false, $bike->isAvailable('3000-10-12 10:20:00', 60));
+        $this->assertEquals(true, $bike->isAvailable('3000-10-12 11:20:00', 60));
     }
 }

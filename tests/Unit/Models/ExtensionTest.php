@@ -18,11 +18,13 @@ class ExtensionTest extends TestCase
         $owner = factory(Owner::class)->create(['user_id' => $this->user->id]);
         $borrower = factory(Borrower::class)->create([ 'user_id' => $this->user->id ]);
         $this->loanable = factory(Bike::class)->create([ 'owner_id' => $owner->id ]);
-        $this->loan = factory(Loan::class)->create([
-            'loanable_id' => $this->loanable->id,
-            'borrower_id' => $borrower->id,
-            'duration_in_minutes' => 20,
-        ]);
+        $this->loan = factory(Loan::class)
+            ->states('withCompletedIntention')
+            ->create([
+                'loanable_id' => $this->loanable->id,
+                'borrower_id' => $borrower->id,
+                'duration_in_minutes' => 20,
+            ]);
     }
 
     public function testExtensionMakeLoanableUnavailable() {

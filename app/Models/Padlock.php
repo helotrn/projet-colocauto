@@ -79,7 +79,7 @@ class Padlock extends BaseModel
         }
 
         return $query->where(
-            \DB::raw('unaccent(name)'),
+            \DB::raw('unaccent(padlocks.name)'),
             'ILIKE',
             \DB::raw("unaccent('%$q%')")
         );

@@ -6,10 +6,9 @@ use App\Models\Incident;
 use App\Models\Loan;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class LoanIncidentResolved extends Mailable
+class LoanIncidentResolved extends BaseMailable
 {
     use Queueable, SerializesModels;
 

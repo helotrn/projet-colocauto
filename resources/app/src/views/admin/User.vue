@@ -430,7 +430,8 @@ export default {
       return this.item.borrower.suspended ? 'Suspendu' : 'Approuvé';
     },
     loggedInUserIsAdmin() {
-      return this.$store.state.user.role === 'admin';
+      const { user } = this.$store.state;
+      return user && user.role === 'admin';
     },
     communitySelected() {
       return this.communitiesSelected[0];
