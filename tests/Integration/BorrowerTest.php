@@ -20,7 +20,10 @@ class BorrowerTest extends TestCase
 
     public function testCreateBorrowers() {
         $data = [
-            'drivers_license_number' => $this->faker->numberBetween($min = 1111111111, $max = 999999999),
+            'drivers_license_number' => $this->faker->numberBetween(
+                $min = 1111111111,
+                $max = 999999999
+            ),
             'has_been_sued_last_ten_years' => $this->faker->boolean,
             'noke_id' => $this->faker->numberBetween($min = 000000000, $max = 999999999),
             'submitted_at' => $this->faker->date($format = 'Y-m-d', $max = 'now'),
@@ -46,7 +49,10 @@ class BorrowerTest extends TestCase
     public function testUpdateBorrowers() {
         $borrower = factory(Borrower::class)->create(['user_id' => $this->user->id]);
         $data = [
-            'drivers_license_number' => $this->faker->numberBetween($min = 1111111111, $max = 999999999),
+            'drivers_license_number' => $this->faker->numberBetween(
+                $min = 1111111111,
+                $max = 999999999
+            ),
         ];
 
         $response = $this->json('PUT', "/api/v1/borrowers/$borrower->id", $data);
@@ -62,15 +68,18 @@ class BorrowerTest extends TestCase
     }
 
     public function testListBorrowers() {
-        $borrowers = factory(Borrower::class, 2)->create(['user_id' => $this->user->id])->map(function ($borrower) {
-            return $borrower->only(static::$getBorrowerResponseStructure);
-        });
+        $borrowers = factory(Borrower::class, 2)
+            ->create(['user_id' => $this->user->id])->map(function ($borrower) {
+                return $borrower->only(static::$getBorrowerResponseStructure);
+            });
 
         $response = $this->json('GET', "/api/v1/borrowers");
 
         $response->assertStatus(200)
             ->assertJson([ 'total' => 2 ])
-            ->assertJsonStructure($this->buildCollectionStructure(static::$getBorrowerResponseStructure));
+            ->assertJsonStructure(
+                $this->buildCollectionStructure(static::$getBorrowerResponseStructure)
+            );
     }
 
     public function testApproveBorrowers() {

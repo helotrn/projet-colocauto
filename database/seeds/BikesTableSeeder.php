@@ -6,6 +6,7 @@ use Illuminate\Database\Seeder;
 class BikesTableSeeder extends Seeder
 {
     public function run() {
+                             // Start cars at 1
         $bikes = [
             [
                 'id' => 1,

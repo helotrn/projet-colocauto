@@ -12,6 +12,7 @@ class CommunitiesTableSeeder extends Seeder
                 'name' => 'Bellechasse',
                 'description' => 'Saint-Denis / Christophe-Colomb / Saint-Zotique / Rosemont',
                 'area' => '0103000020E610000001000000060000001F2C6343B76652C0E3C1BB010BC54640A8195245F16652C094ED8D6B8DC4464046AFAB6E9A6652C05740A19E3EC44640566E58094C6652C09925A6B0F7C34640370076C9136652C07BC1A73979C446401F2C6343B76652C0E3C1BB010BC54640',
+                'type' => 'neighborhood',
             ],
             [
                 'id' => 2,
@@ -25,6 +26,7 @@ class CommunitiesTableSeeder extends Seeder
                 'name' => 'Papineau',
                 'description' => 'Papineau / Louis-Hémon / Saint-Zotique / Holt',
                 'area' => '0103000020E610000001000000080000009F06DBD3676652C04EB904B3B9C546403F2AA460346652C04FD9FDC52FC64640E78C28ED0D6652C0E78C28ED0DC64640AA80A71F746552C0C7EE1D0486C5464015F41E35886552C0197887005AC54640770FA78B8E6552C0BF66EFF642C5464091286085A36552C0A76082EA03C546409F06DBD3676652C04EB904B3B9C54640',
+                'type' => 'neighborhood',
             ],
             [
                 'id' => 4,
@@ -38,18 +40,21 @@ class CommunitiesTableSeeder extends Seeder
                 'name' => 'Fleury-Est',
                 'description' => '',
                 'area' => '0103000020E61000000100000006000000E7AD3613AE6A52C05FD7C7C476C7464068270AFB856A52C0BD9795B7E3C74640588CCAA8626A52C03D7599C8FDC7464076711B0DE06952C0A4198BA6B3C74640E79384B20D6A52C073DA6A861AC74640E7AD3613AE6A52C05FD7C7C476C74640',
+                'type' => 'neighborhood',
             ],
             [
                 'id' => 6,
                 'name' => 'Youville',
                 'description' => '',
                 'area' => '0103000020E610000001000000050000005A24A31CFA6852C066AFBB8CAAC5464061917750E76952C0B3D093A035C646401CDD595BB66952C0CBFDF38FE0C64640C7FACA16B36852C0B5B50DD74BC646405A24A31CFA6852C066AFBB8CAAC54640',
+                'type' => 'neighborhood',
             ],
             [
                 'id' => 7,
                 'name' => 'Fleury-Ouest/Tolhurst',
                 'description' => '',
                 'area' => '0103000020E610000001000000050000004D3D1C6E516B52C0EA46B30D37C54640174273428D6A52C016246C2EEDC446405D482CCE3D6A52C02E8C99E903C64640CD823FB2EF6A52C050BD7F3D70C646404D3D1C6E516B52C0EA46B30D37C54640',
+                'type' => 'neighborhood',
             ],
             [
                 'id' => 8,

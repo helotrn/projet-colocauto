@@ -86,9 +86,11 @@ class SendBorrowerCompletedEmails
             }
 
                              // Mark the emails as sent.
-            $user->forceFill([
-                'meta' => [ 'sent_borrower_completed_email' => true ],
-            ])->save();
+            $meta = $user->meta;
+            $meta['sent_borrower_completed_email'] = true;
+            $user->meta = $meta;
+
+            $user->save();
         }
     }
 }

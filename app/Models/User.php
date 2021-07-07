@@ -3,13 +3,6 @@
 namespace App\Models;
 
 use App\Mail\PasswordRequest;
-use App\Models\Action;
-use App\Models\Borrower;
-use App\Models\File;
-use App\Models\Invoice;
-use App\Models\Loan;
-use App\Models\Owner;
-use App\Models\PaymentMethod;
 use App\Services\NokeService;
 use App\Transformers\UserTransformer;
 use Auth;
@@ -185,28 +178,15 @@ class User extends AuthenticatableBaseModel
         return $this->hasMany(Invoice::class);
     }
 
-    public function currentInvoice() {
-        return $this->hasOne(Invoice::class)
-            ->orderBy('created_at', 'desc')
-            ->whereNull('paid_at');
-    }
-
     public function borrower() {
         return $this->hasOne(Borrower::class);
     }
 
     public function communities() {
-        $relation = $this->belongsToMany(Community::class)
+        return $this->belongsToMany(Community::class)
             ->using(Pivots\CommunityUser::class)
             ->withTimestamps()
             ->withPivot(['id', 'approved_at', 'created_at', 'role', 'suspended_at', 'updated_at']);
-
-        $user = Auth::user();
-        if ($user && $user->isAdmin()) {
-            return $relation;
-        }
-
-        return $relation;
     }
 
     public function approvedCommunities() {
@@ -273,11 +253,7 @@ class User extends AuthenticatableBaseModel
             ->exists();
     }
 
-    public function getLastInvoiceOrCreate() {
-        if ($this->currentInvoice) {
-            return $this->currentInvoice;
-        }
-
+    public function createInvoice() {
         $invoice = new Invoice;
         $invoice->user_id = $this->id;
         $invoice->period = \Carbon\Carbon::now()->locale('fr_FR')->format('m/Y');
@@ -314,6 +290,21 @@ class User extends AuthenticatableBaseModel
         }
 
         return $customer;
+    }
+
+    public function getAccessibleCommunityIds() {
+        $communityIds = $this->communities
+            ->whereNotNull('pivot.approved_at')
+            ->whereNull('pivot.suspended_at')
+            ->pluck('id');
+
+        if ($communityIds->count() > 0) {
+            $communityIds = $communityIds->concat(
+                Community::parentOf($communityIds->toArray())->pluck('id')
+            );
+        }
+
+        return $communityIds;
     }
 
     public function getNokeUser() {

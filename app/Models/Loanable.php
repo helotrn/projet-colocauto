@@ -31,6 +31,7 @@ class Loanable extends BaseModel
         'name' => 'text',
         'type' => ['bike', 'car', 'trailer'],
         'deleted_at' => 'date',
+        'is_deleted' => 'boolean',
     ];
 
     public static $rules = [
@@ -61,7 +62,7 @@ class Loanable extends BaseModel
         parent::boot();
 
         self::deleted(function ($model) {
-            $model->loans()->delete();
+            $model->loans()->completed(false)->delete();
         });
 
         self::restored(function ($model) {
@@ -198,7 +199,7 @@ class Loanable extends BaseModel
 
     protected $with = ['image'];
 
-    public $computed = ['events', 'has_padlock', 'position_google'];
+    public $computed = ['car_insurer', 'events', 'has_padlock', 'position_google'];
 
     public $items = ['owner', 'community', 'padlock'];
 
@@ -264,7 +265,6 @@ class Loanable extends BaseModel
             $query = $query->whereNotIn('loans.id', $ignoreLoanIds);
         }
 
-// Unit test...
         $cDef = Loan::getColumnsDefinition();
         $query = $cDef['*']($query);
         $query = $cDef['loan_status']($query);
@@ -272,6 +272,9 @@ class Loanable extends BaseModel
 
         $query
             ->where(\DB::raw($cDef['loan_status']()), '!=', 'canceled')
+            ->whereHas('intention', function ($q) {
+                return $q->where('status', '=', 'completed');
+            })
             ->whereRaw(
                 "(departure_at + "
                   . "COALESCE({$cDef['actual_duration_in_minutes']()}, duration_in_minutes) "
@@ -284,6 +287,33 @@ class Loanable extends BaseModel
             )->where('loanable_id', $this->id);
 
         return ($query->get()->count() === 0);
+    }
+
+    public function getCommunityForLoanBy(User $user): ?Community {
+        // The reference community for a loan is...
+        // 1. The community of the loanable, if the user is an approved member as well
+        if ($this->community) {
+            if ($user->approvedCommunities->find($this->community->id)) {
+                return $this->community;
+            }
+
+            // 2. A children community that the user is a member of as well
+            // It is assumed that there is only one since children communities are exclusive area
+            if ($community = $this->community->children->whereIn(
+                'id',
+                $user->approvedCommunities->pluck('id')
+            )->first()) {
+                return $community;
+            }
+        }
+
+        // 3. The community of the loable owner that is common with the user
+        // It is assumed that there is one, otherwise the user wouldn't
+        // have access to that loanable at this point
+        return $this->owner->user->communities->whereIn(
+            'id',
+            $user->getAccessibleCommunityIds()->toArray()
+        )->first();
     }
 
     public function getEventsAttribute() {
@@ -325,11 +355,35 @@ class Loanable extends BaseModel
         return !!$this->padlock;
     }
 
+    public function getCarInsurerAttribute() {
+        if ($this->type === 'car') {
+            return Car::find($this->id)->insurer;
+        }
+
+        return null;
+    }
+
     public function getPositionGoogleAttribute() {
         return [
             'lat' => $this->position[0],
             'lng' => $this->position[1],
         ];
+    }
+
+    public function scopeWithDeleted(Builder $query, $value, $negative = false) {
+        if (filter_var($value, FILTER_VALIDATE_BOOLEAN) !== $negative) {
+            return $query->withTrashed();
+        }
+
+        return $query;
+    }
+
+    public function scopeIsDeleted(Builder $query, $value, $negative = false) {
+        if (filter_var($value, FILTER_VALIDATE_BOOLEAN) !== $negative) {
+            return $query->withTrashed()->where("{$this->getTable()}.deleted_at", '!=', null);
+        }
+
+        return $query;
     }
 
     public function scopeAccessibleBy(Builder $query, $user) {
@@ -345,16 +399,27 @@ class Loanable extends BaseModel
         $query = $query
             // A user has access to...
             ->where(function ($q) use ($user, $allowedTypes) {
-                // (Accessible communities are communities that you directly
-                // belong to and parent communities of these, recursively)
-                $communityIds = $user->communities
-                    ->whereNotNull('pivot.approved_at')
-                    ->whereNull('pivot.suspended_at')
-                    ->pluck('id');
-                if ($communityIds->count() > 0) {
-                    $communityIds = $communityIds->concat(
-                        Community::parentOf($communityIds->toArray())->pluck('id')
-                    );
+                // Communities that you directly belong to
+                $approvedCommunities = $user->approvedCommunities;
+
+                // Communities and parents, recursively.
+                $communityIds = collect();
+                foreach ($approvedCommunities as $community) {
+                    while ($community) {
+                        // Break the loop id community is already there.
+                        if ($communityIds->contains($community->id)) {
+                            break;
+                        }
+
+                        $communityIds->push($community->id);
+
+                        // Does this community have a parent?
+                        $community = $community->parent;
+                    }
+                }
+
+                if ($communityIds->count() === 0) {
+                    $communityIds->push(0);
                 }
 
                 $q = $q->where(function ($q) use ($communityIds) {
@@ -369,36 +434,48 @@ class Loanable extends BaseModel
                         // ...or belonging to children communities that allow sharing with
                         // parent communities (share_with_parent_communities = true)
                         ->orWhereHas('community', function ($q) use ($communityIds) {
-                            $childrenIds = Community::childOf($communityIds->toArray());
-                            return $q->whereIn(
-                                'communities.id',
-                                $childrenIds->pluck('id')
-                            )->where('share_with_parent_communities', true);
+                            $childrenIds = Community::childOf(
+                                $communityIds->toArray()
+                            )->pluck('id');
+                            return $q->whereIn('communities.id', $childrenIds)
+                                ->where('share_with_parent_communities', true);
                         })
                         // ...or belonging to owners of his accessible communities
+                        // that do not have a community specified directly
                         // (communities through user through owner)
-                        ->orWhereHas('owner', function ($q) use ($communityIds) {
-                            return $q->whereHas('user', function ($q) use ($communityIds) {
-                                return $q->whereHas(
-                                    'communities',
-                                    function ($q) use ($communityIds) {
-                                        return $q
-                                            ->whereIn(
-                                                'community_user.community_id',
-                                                $communityIds
-                                            )
-                                            ->whereNotNull('community_user.approved_at')
-                                            ->whereNull('community_user.suspended_at');
-                                    }
-                                )
-                                ->orWhereHas('communities', function ($q) use ($communityIds) {
-                                    $childrenIds = Community::childOf($communityIds->toArray());
-                                    return $q->whereIn(
-                                        'communities.id',
-                                        $childrenIds->pluck('id')
-                                    )->where('share_with_parent_communities', true);
+                        ->orWhere(function ($q) use ($communityIds) {
+                            return $q->whereHas('owner', function ($q) use ($communityIds) {
+                                return $q->whereHas('user', function ($q) use ($communityIds) {
+                                    // (direct community)
+                                    return $q->whereHas(
+                                        'communities',
+                                        function ($q) use ($communityIds) {
+                                            return $q
+                                                ->whereIn(
+                                                    'community_user.community_id',
+                                                    $communityIds
+                                                )
+                                                ->whereNotNull('community_user.approved_at')
+                                                ->whereNull('community_user.suspended_at');
+                                        }
+                                    )
+                                    // (child community if shared with parent community)
+                                    ->orWhereHas('communities', function ($q) use ($communityIds) {
+                                        $childrenIds = Community::childOf(
+                                            $communityIds->toArray()
+                                        )->pluck('id');
+                                        return $q->whereIn('communities.id', $childrenIds)
+                                            ->where('share_with_parent_communities', true);
+                                    })
+                                    // (parent community downward)
+                                    ->orWhereHas('communities', function ($q) use ($communityIds) {
+                                        $parentIds = Community::parentOf(
+                                            $communityIds->toArray()
+                                        )->pluck('id');
+                                        return $q->whereIn('communities.id', $parentIds);
+                                    });
                                 });
-                            });
+                            })->whereDoesntHave('community');
                         });
                 });
 
@@ -434,8 +511,9 @@ class Loanable extends BaseModel
             return $query;
         }
 
+        $table = $this->getTable();
         return $query->where(
-            \DB::raw('unaccent(name)'),
+            \DB::raw("unaccent($table.name)"),
             'ILIKE',
             \DB::raw("unaccent('%$q%')")
         );

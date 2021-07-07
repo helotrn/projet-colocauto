@@ -10,6 +10,10 @@ export default {
         bank_account: 'compte de banque',
       },
     },
+    types: {
+      credit_card: 'carte de crédit',
+      bank_account: 'compte de banque',
+    },
     model_name: 'mode de paiement | modes de paiement',
   },
 };
