@@ -6,7 +6,6 @@ services:
     depends_on:
       - postgres
       - redis
-    command: sh -c "/wait"
     volumes:
       - .:/app
       - .env.docker:/.env
