@@ -1,3 +1,5 @@
+import { extractErrors } from '@/helpers';
+
 export default {
   beforeRouteEnter(to, from, next) {
     next((vm) => {
@@ -132,6 +134,24 @@ export default {
             await this.$store.dispatch(`${this.slug}/destroy`, item.id);
             await this.$store.dispatch(`${this.slug}/load`);
           }
+        })
+        .catch((e) => {
+          if (e.request) {
+            switch (e.request.status) {
+              case 422:
+                this.$store.commit('addNotification', {
+                  content: extractErrors(e.response.data).join(', '),
+                  title: 'Erreur de sauvegarde',
+                  variant: 'danger',
+                  type: 'form',
+                });
+                break;
+              default:
+                throw e;
+            }
+          }
+
+          throw e;
         });
     },
     async exportCSV() {

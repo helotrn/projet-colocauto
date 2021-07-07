@@ -8,10 +8,9 @@ use App\Models\Loan;
 use App\Models\Owner;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class LoanIntentionRejected extends Mailable
+class LoanIntentionRejected extends BaseMailable
 {
     use Queueable, SerializesModels;
 

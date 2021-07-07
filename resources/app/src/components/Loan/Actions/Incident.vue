@@ -3,14 +3,20 @@
     :id="`loan-incident-${action.id || 'new'}`">
     <b-card-header header-tag="header" role="tab" class="loan-actions__header">
       <h2 v-b-toggle="`loan-actions-incident-${action.id || 'new'}`">
-        <svg-waiting v-if="action.status === 'in_process'" />
+        <svg-waiting v-if="action.status === 'in_process' && !loanIsCanceled" />
         <svg-check v-else-if="action.status === 'completed'" />
-        <svg-danger v-else-if="action.status === 'canceled'" />
+        <svg-danger v-else-if="action.status === 'canceled' || loanIsCanceled" />
 
         Incident
       </h2>
 
-      <span v-if="action.status == 'in_process'">En attente</span>
+      <!-- Canceled loans: current step remains in-process. -->
+      <span v-if="action.status === 'in_process' && loanIsCanceled">
+        Emprunt annulé &bull; {{ item.canceled_at | datetime }}
+      </span>
+      <span v-else-if="action.status == 'in_process' && !loanIsCanceled">
+        En attente
+      </span>
       <span v-else-if="action.status === 'completed'">
         Validé &bull; {{ action.executed_at | datetime }}
       </span>
@@ -24,7 +30,7 @@
       <b-collapse :id="`loan-actions-incident-${action.id || 'new'}`"
         role="tabpanel" accordion="loan-actions"
         :visible="open">
-        <div v-if="!action.id">
+        <div v-if="!action.id && !loanIsCanceled">
           <ol v-if="item.loanable.type === 'car'">
             <li><strong>Asseyez-vous et respirez</strong>: voici les étapes à suivre.</li>
             <li>
@@ -69,8 +75,9 @@
             </b-form>
           </validation-observer>
         </div>
-        <div v-else-if="!action.completed_at">
-          <div v-if="userRole !== 'owner'">
+        <div v-else-if="!action.executed_at && !loanIsCanceled">
+          <!-- Action has an id, hence not new, and it is not completed. -->
+          <div v-if="!userRoles.includes('owner')">
             <div v-if="action.incident_type === 'accident'">
               <h3>Voiture immobilisée</h3>
 
@@ -120,7 +127,7 @@
             </div>
           </div>
 
-          <div v-if="userRole !== 'borrower'">
+          <div v-if="!userRoles.includes('borrower')">
             <p>
               {{ borrower.user.name }} mentionne qu'un incident s'est produit.
             </p>
@@ -145,13 +152,19 @@
             </b-button>
           </div>
         </div>
+        <div v-else-if="action.status === 'in_process' && loanIsCanceled">
+          <p>
+            L'emprunt a été annulé. Cette étape ne peut pas être complétée.
+          </p>
+        </div>
         <div v-else>
+          <!-- Action has an id, hence not new, and it is completed. -->
           <blockquote v-if="action.comments_on_incident">
             {{ action.comments_on_incident }}
             <div class="user-avatar" :style="{ backgroundImage: borrowerAvatar }" />
           </blockquote>
 
-          <p v-if="userRole === 'borrower'">
+          <p v-if="userRoles.includes('borrower')">
             Vous avez payé la franchise (ou le montant total de la réparation) et les réparations
             sont terminées. La voiture est remise à la disposition du propriétaire. Vous pouvez à
             nouveau emprunter le véhicule d’un voisin... en espérant que la prochaine fois,

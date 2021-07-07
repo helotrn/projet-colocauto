@@ -66,12 +66,26 @@ export default {
 
       return `url('${avatar.sizes.thumbnail}')`;
     },
-    userRole() {
+    /*
+      Returns an array containing all roles.
+    */
+    userRoles() {
+      const roles = [];
+
       if (this.user.role === 'admin') {
-        return 'admin';
+        roles.push('admin');
       }
 
-      return (this.owner && this.user.id === this.owner.user.id) ? 'owner' : 'borrower';
+      // Owner may be null.
+      if (this.user.id === this.owner?.user?.id) {
+        roles.push('owner');
+      }
+
+      if (this.user.id === this.borrower.user.id) {
+        roles.push('borrower');
+      }
+
+      return roles;
     },
     userIsAdmin() {
       if ((this.item.loanable.owner && this.user.id === this.item.loanable.owner.user.id)
@@ -89,6 +103,27 @@ export default {
       }
 
       return false;
+    },
+    borrowerIsOwner() {
+      // If no owner, then false.
+      if (!this.item.loanable.owner) {
+        return false;
+      }
+
+      // Otherwise, is the borrower the owner?
+      return this.item.borrower.user.id === this.item.loanable.owner.user.id;
+    },
+    /*
+      For the time being, a loanable is self-service if it has no owner.
+      This definition is likely to change.
+    */
+    loanableIsSelfService() {
+      // If the loanable has no owner (Considered as belonging to
+      // the community, hence self-service)
+      return !this.item.loanable.owner;
+    },
+    loanIsCanceled() {
+      return !!this.item.canceled_at;
     },
   },
   methods: {

@@ -2,12 +2,12 @@
 
 namespace App\Mail\Registration;
 
+use App\Mail\BaseMailable;
 use App\Models\User;
 use Illuminate\Bus\Queueable;
-use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class Rejected extends Mailable
+class Rejected extends BaseMailable
 {
     use Queueable, SerializesModels;
 

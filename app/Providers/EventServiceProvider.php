@@ -19,6 +19,9 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\ClaimedUserBalanceEvent' => [
             'App\Listeners\SendClaimedUserBalanceEmails',
         ],
+        'App\Events\Loan\CanceledEvent' => [
+            'App\Listeners\SendLoanCanceledEmails',
+        ],
         'App\Events\LoanCreatedEvent' => [
             'App\Listeners\SendLoanCreatedEmails',
             'App\Listeners\CreateNokeUserIfNotExists',

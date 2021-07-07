@@ -34,7 +34,7 @@ class HandoverRequest extends BaseRequest
                 ],
                 'purchases_amount' => [
                     'numeric',
-                    "lt:$price",
+                    "lte:$price",
                 ],
             ];
         }

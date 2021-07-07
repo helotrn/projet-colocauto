@@ -9,7 +9,11 @@ use App\Models\Loanable;
 class TestRequest extends BaseRequest
 {
     public function authorize() {
-        return true;
+        if (($user = $this->user()) && $user->borrower) {
+            return true;
+        }
+
+        return false;
     }
 
     public function rules() {
@@ -18,7 +22,7 @@ class TestRequest extends BaseRequest
             'duration_in_minutes' => ['integer', 'required', 'min:1'],
             'estimated_distance' => ['integer', 'required', 'min:0'],
             'loanable_id' => ['integer', 'required'],
-            'community_id' => ['integer', 'required']
+            'community_id' => ['integer', 'filled']
         ];
 
         $user = $this->user();

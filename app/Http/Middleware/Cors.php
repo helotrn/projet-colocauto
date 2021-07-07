@@ -18,7 +18,7 @@ class Cors
          * Cross-Origin Resource Sharing (CORS)
          * is only allowed for local
          * environment. */
-        if (app()->environment() === 'local') {
+        if (app()->environment() === 'local' && is_callable($request, 'header')) {
             $response = $next($request);
 
             return $response

@@ -4,17 +4,29 @@
       v-b-toggle.loan-actions-takeover>
       <h2>
         <svg-danger
-          v-if="action.status === 'canceled' ||
-            (item.contested_at && action.status === 'in_process')" />
+          v-if="(action.status === 'in_process' && loanIsCanceled)
+            || (action.status === 'canceled' && item.contested_at)" />
         <svg-waiting v-else-if="action.status === 'in_process'" />
         <svg-check v-else-if="action.status === 'completed'" />
 
         Informations avant de partir
       </h2>
 
-      <span v-if="item.contested_at && action.status === 'in_process'">Bloqué</span>
+      <span v-if="item.contested_at && action.status === 'in_process' && !loanIsCanceled">
+        Bloqué
+      </span>
       <span v-else>
-        <span v-if="action.status == 'in_process'">En attente</span>
+        <!--
+          Canceled loans: current step remains in-process.
+          Canceled action means contestation. Give way to canceled-loan status.
+        -->
+        <span v-if="(action.status === 'in_process' || action.status === 'canceled')
+          && loanIsCanceled">
+          Emprunt annulé &bull; {{ item.canceled_at | datetime }}
+        </span>
+        <span v-else-if="action.status == 'in_process'">
+          En attente
+        </span>
         <span v-else-if="action.status === 'completed'">
           Complété &bull; {{ action.executed_at | datetime }}
         </span>
@@ -58,9 +70,16 @@
           </b-col>
         </b-row>
 
-        <div v-if="item.loanable.type === 'car'">
+        <div v-if="(action.status === 'in_process' || action.status === 'canceled')
+          && loanIsCanceled">
+          <p>
+            L'emprunt a été annulé. Cette étape ne peut pas être complétée.
+          </p>
+        </div>
+        <div v-else-if="item.loanable.type === 'car'">
           <validation-observer ref="observer" v-slot="{ passes }">
-            <b-row v-if="userRole === 'borrower'">
+            <!-- Add message if user is borrower, but not owner. -->
+            <b-row v-if="userRoles.includes('borrower') && !userRoles.includes('owner')">
               <b-col>
                 <p>
                   Avez-vous bien pris connaissance de l'état de cette auto?<br>
@@ -74,7 +93,7 @@
             <b-form :novalidate="true" class="loan-actions-takeover__form"
               @submit.stop.prevent="passes(completeAction)">
               <b-row>
-                <b-col lg="6" v-if="!action.executed_at || userIsAdmin"
+                <b-col lg="6" v-if="(!action.executed_at && !loanIsCanceled) || userIsAdmin"
                   class="loan-actions-takeover__form__image">
                   <p>Envoyez une photo du tableau de bord.</p>
 
@@ -108,13 +127,14 @@
                     type="number" :rules="{ required: true }"
                     label="KM au compteur, au début de la course"
                     placeholder="KM au compteur"
-                    :disabled="!!action.executed_at && !userIsAdmin"
+                    :disabled="(!!action.executed_at || loanIsCanceled) && !userIsAdmin"
                     v-model="action.mileage_beginning" />
                 </b-col>
               </b-row>
 
               <b-row class="loan-actions-takeover__buttons text-center"
-                v-if="(!action.executed_at && !item.contested_at) || userIsAdmin">
+                v-if="(!action.executed_at && !loanIsCanceled && !item.contested_at)
+                  || userIsAdmin">
                 <b-col>
                   <b-button type="submit" size="sm" variant="success" class="mr-3">
                     <span v-if="isContested">Corriger</span>
@@ -123,7 +143,7 @@
                 </b-col>
               </b-row>
 
-              <b-row class="loan-actions__alert" v-if="!action.executed_at">
+              <b-row class="loan-actions__alert" v-if="!action.executed_at && !loanIsCanceled">
                 <b-col>
                   <b-alert variant="warning" show>
                     Dans 48h, vous ne pourrez plus modifier vos informations.
@@ -136,6 +156,7 @@
         </div>
 
         <div v-else-if="item.loanable.has_padlock">
+          <!-- Loanable is not a car and has a padlock. -->
           <p>
             Le cadenas du véhicule sera automatiquement associé à votre application NOKE
             à temps pour la prise de possession.
@@ -204,12 +225,13 @@
         </div>
 
         <div v-else>
+          <!-- Loanable is not a car and it does not have a padlock. -->
           <b-row v-if="!action.executed_at">
             <b-col>
-              <p v-if="userRole === 'borrower'">
+              <p v-if="userRoles.includes('borrower') && !userRoles.includes('owner')">
                 Demandez au propriétaire de récupérer le véhicule.
               </p>
-              <p v-else>
+              <p v-if="!userRoles.includes('borrower') && userRoles.includes('owner')">
                 L'emprunteur vous contactera pour arranger la prise de possession du véhicule.
               </p>
             </b-col>
@@ -247,7 +269,7 @@
         </div>
 
         <div v-if="!isContested">
-          <div v-if="isContestable">
+          <div v-if="isContestable && !loanIsCanceled">
             <hr>
 
             <validation-observer ref="observer" v-slot="{ passes }">
@@ -288,7 +310,7 @@
             </validation-observer>
           </div>
         </div>
-        <div v-else>
+        <div v-else-if="!loanIsCanceled">
           <hr>
 
           <p>Les données ont été contestées:</p>

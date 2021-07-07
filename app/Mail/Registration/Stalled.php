@@ -2,12 +2,12 @@
 
 namespace App\Mail\Registration;
 
+use App\Mail\BaseMailable;
 use App\Models\User;
 use Illuminate\Bus\Queueable;
-use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class Stalled extends Mailable
+class Stalled extends BaseMailable
 {
     use Queueable, SerializesModels;
 

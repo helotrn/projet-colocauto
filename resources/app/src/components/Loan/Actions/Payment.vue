@@ -2,14 +2,20 @@
   <b-card no-body class="loan-form loan-actions loan-actions-payment">
     <b-card-header header-tag="header" role="tab" class="loan-actions__header">
       <h2 v-b-toggle.loan-actions-payment>
-        <svg-waiting v-if="action.status === 'in_process'" />
+        <svg-waiting v-if="action.status === 'in_process' && !loanIsCanceled" />
         <svg-check v-else-if="action.status === 'completed'" />
-        <svg-danger v-else-if="action.status === 'canceled'" />
+        <svg-danger v-else-if="action.status === 'canceled' || loanIsCanceled" />
 
         Conclusion
       </h2>
 
-      <span v-if="action.status == 'in_process'">En attente</span>
+      <!-- Canceled loans: current step remains in-process. -->
+      <span v-if="action.status === 'in_process' && loanIsCanceled">
+        Emprunt annulé &bull; {{ item.canceled_at | datetime }}
+      </span>
+      <span v-else-if="action.status === 'in_process'">
+        En attente
+      </span>
       <span v-else-if="action.status === 'completed'">
         Payé &bull; {{ action.executed_at | datetime }}
       </span>
@@ -26,41 +32,43 @@
           <p>L'emprunt s'est conclu avec succès!</p>
 
           <p>
-            Coût final du trajet:
+            Coût final du trajet&nbsp;:
             <span v-b-popover.hover="priceTooltip">{{ item.total_final_cost | currency }}</span>.
           </p>
         </div>
+        <div v-else-if="action.status === 'in_process' && loanIsCanceled">
+          <p>
+            L'emprunt a été annulé. Cette étape ne peut pas être complétée.
+          </p>
+        </div>
         <div v-else>
-          <div v-if="userRole === 'owner'">
+          <!-- Action is not completed -->
+          <!-- Whether userRoles includes 'borrower' or 'owner' -->
+          <div v-if="['borrower', 'owner'].some(role => userRoles.includes(role))">
             <p>
-              Validez dès maintenant les informations sur ce trajet:
+              Validez dès maintenant les informations sur ce trajet&nbsp;:
               le kilomètrage, la facture d'essence&hellip;
-            </p>
-
-            <hr>
-
-            <p>
-              Vous recevrez {{ finalOwnerPart | currency }} pour l'emprunt.
             </p>
           </div>
 
-          <div v-else-if="userRole === 'borrower'" class="text-center">
+          <div v-if="userRoles.includes('owner')">
+            <hr>
             <p>
-              Validez dès maintenant les informations sur votre trajet:
-              le kilomètrage, la facture d'essence&hellip;
+              À titre de propriétaire, vous recevrez {{ finalOwnerPart | currency }} pour l'emprunt.
+            </p>
+          </div>
+
+          <div v-if="userRoles.includes('borrower')">
+            <hr>
+            <p>
+              À titre d'emprunteur ce trajet vous coûtera&nbsp;:
+              <span v-b-popover.hover="priceTooltip">{{ finalPrice | currency }}</span>.
             </p>
 
-            <hr>
-
             <b-row>
-              <b-col lg="6">
-                <p>
-                  Coût final du trajet:
-                  <span v-b-popover.hover="priceTooltip">{{ finalPrice | currency }}</span>.
-                </p>
-              </b-col>
+              <b-col lg=3 />
 
-              <b-col lg="6">
+              <b-col lg=6>
                 <div role="group" class="form-group">
                   <label for="platform_tip" class="d-block" id="__BVID__151__BV_label_">
                     {{ $t('fields.platform_tip') | capitalize }}
@@ -70,7 +78,7 @@
                     </b-badge>
                   </label>
 
-                  <div class="bv-no-focus-ring">
+                  <div class="bv-no-focus-ring text-center">
                     <b-form-input
                       id="platform_tip" name="platform_tip"
                       type="number" :min="0" :step="0.01"
@@ -78,6 +86,8 @@
                   </div>
                 </div>
               </b-col>
+
+              <b-col lg=3 />
             </b-row>
 
             <b-row v-if="!hasEnoughBalance">

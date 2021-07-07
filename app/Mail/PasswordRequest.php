@@ -5,10 +5,9 @@ namespace App\Mail;
 use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class PasswordRequest extends Mailable
+class PasswordRequest extends BaseMailable
 {
     use Queueable, SerializesModels;
 

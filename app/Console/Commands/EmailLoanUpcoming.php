@@ -46,9 +46,11 @@ class EmailLoanUpcoming extends Command
                       ->send(new LoanUpcoming($user, $loan));
                 }
 
-                $loan->forceFill([
-                    'meta' => [ 'sent_loan_upcoming_email' => true ],
-                ])->save();
+                $meta = $loan->meta;
+                $meta['sent_loan_upcoming_email'] = true;
+                $loan->meta = $meta;
+
+                $loan->save();
             } else {
                 $this->info("Would have sent an email to {$user->email} for loan {$loan->id}");
 

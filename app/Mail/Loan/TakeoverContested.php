@@ -2,14 +2,14 @@
 
 namespace App\Mail\Loan;
 
+use App\Mail\BaseMailable;
 use App\Models\Loan;
 use App\Models\Takeover;
 use App\Models\User;
 use Illuminate\Bus\Queueable;
-use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class TakeoverContested extends Mailable
+class TakeoverContested extends BaseMailable
 {
     use Queueable, SerializesModels;
 

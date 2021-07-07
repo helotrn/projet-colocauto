@@ -79,7 +79,7 @@
         </b-row>
         <b-row v-if="withSteps">
           <b-col class="loan-info-box__steps">
-            <loan-menu :item="loan" horizontal />
+            <loan-menu :item="loan" :user="user" horizontal />
           </b-col>
         </b-row>
       </router-link>
