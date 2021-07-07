@@ -1,10 +1,10 @@
 FROM php:7.3 as dev
 WORKDIR /app
 
-RUN apt-get update && apt-get install -y libmcrypt-dev \
-    default-mysql-client libmagickwand-dev --no-install-recommends \
-    git libzip-dev libpq-dev imagemagick \
-    && pecl install imagick 
+RUN apt-get update \
+ && apt-get install --yes --no-install-recommends \
+    libmcrypt-dev default-mysql-client libmagickwand-dev git libzip-dev libpq-dev imagemagick \
+ && pecl install imagick
 
 RUN docker-php-ext-enable imagick
 RUN docker-php-ext-install gd zip pdo pdo_pgsql
@@ -20,3 +20,4 @@ CMD bash -c "composer install && \
              php artisan passport:install && \
              php artisan migrate && \
              php artisan serve --host=0.0.0.0"
+
