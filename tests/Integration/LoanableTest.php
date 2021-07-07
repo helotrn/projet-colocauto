@@ -231,7 +231,10 @@ class LoanableTest extends TestCase
             ]]);
 
         // Shortcut request
-        $response = $this->json('GET', "/api/v1/loanables/{$loanable->id}/loans/{$nextLoanId}/next");
+        $response = $this->json(
+            'GET',
+            "/api/v1/loanables/{$loanable->id}/loans/{$nextLoanId}/next"
+        );
         $response->assertStatus(200)
             ->assertJson([
                 'id' => $nextNextLoanId,

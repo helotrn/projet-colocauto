@@ -15,9 +15,11 @@ class SendBorrowerApprovedEmails
             Mail::to($user->email, $user->name . ' ' . $user->last_name)
                 ->queue(new BorrowerApproved($user));
 
-            $user->forceFill([
-                'meta' => [ 'sent_borrower_approved_email' => true ],
-            ])->save();
+            $meta = $user->meta;
+            $meta['sent_borrower_approved_email'] = true;
+            $user->meta = $meta;
+
+            $user->save();
         }
     }
 }

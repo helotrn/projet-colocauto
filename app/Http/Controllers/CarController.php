@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Events\LoanableCreatedEvent;
 use App\Http\Requests\BaseRequest as Request;
 use App\Http\Requests\Car\CreateRequest;
+use App\Http\Requests\Loanable\DestroyRequest as LoanableDestroyRequest;
 use App\Http\Requests\Car\UpdateRequest;
 use App\Models\Car;
 use App\Repositories\CarRepository;
@@ -61,7 +62,7 @@ class CarController extends RestController
         return $response;
     }
 
-    public function destroy(Request $request, $id) {
+    public function destroy(LoanableDestroyRequest $request, $id) {
         try {
             $response = parent::validateAndDestroy($request, $id);
         } catch (ValidationException $e) {

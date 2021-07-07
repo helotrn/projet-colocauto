@@ -13,7 +13,7 @@
     <li :class="{
       'current-step': isCurrentStep('intention'),
       'reached-step': hasReachedStep('intention'),
-    }" v-if="isOwnedLoanable">
+    }" v-if="displayStep('intention')">
       <svg-danger v-if="hasCanceledStep('intention')" />
       <svg-check v-else-if="hasReachedStep('intention')" />
       <svg-waiting v-else />
@@ -23,7 +23,7 @@
     <li :class="{
       'current-step': isCurrentStep('pre_payment'),
       'reached-step': hasReachedStep('pre_payment'),
-    }" v-if="item.total_estimated_cost > 0">
+    }" v-if="displayStep('pre_payment')">
       <svg-danger v-if="hasCanceledStep('pre_payment')" />
       <svg-check v-else-if="hasReachedStep('pre_payment')" />
       <svg-waiting v-else />
@@ -33,7 +33,7 @@
     <li :class="{
       'current-step': isCurrentStep('takeover'),
       'reached-step': hasReachedStep('takeover'),
-    }">
+    }" v-if="displayStep('takeover')">
       <svg-danger v-if="hasCanceledStep('takeover')" />
       <svg-check v-else-if="hasReachedStep('takeover')" />
       <svg-waiting v-else />
@@ -44,7 +44,7 @@
       'current-step': incident.status === 'in_process',
       'reached-step': incident.status === 'completed',
     }">
-      <svg-danger v-if="incident.status === 'canceled'" />
+      <svg-danger v-if="incident.status === 'canceled' || loanIsCanceled" />
       <svg-check v-else-if="incident.status === 'completed'" />
       <svg-waiting v-else />
       <span>Incident ({{ prettyIncidentName(incident.incident_type) }})</span>
@@ -53,15 +53,15 @@
       'current-step': extension.status === 'in_process',
       'reached-step': extension.status === 'completed',
     }">
-      <svg-danger v-if="extension.status === 'canceled'" />
+      <svg-danger v-if="extension.status === 'canceled' || loanIsCanceled" />
       <svg-check v-else-if="extension.status === 'completed'" />
       <svg-waiting v-else />
-      <span>Extension</span>
+      <span>Retard</span>
     </li>
     <li :class="{
       'current-step': isCurrentStep('handover'),
       'reached-step': hasReachedStep('handover'),
-    }">
+    }" v-if="displayStep('handover')">
       <svg-danger v-if="hasCanceledStep('handover')" />
       <svg-check v-else-if="hasReachedStep('handover')" />
       <svg-waiting v-else />
@@ -71,7 +71,7 @@
     <li :class="{
       'current-step': isCurrentStep('payment'),
       'reached-step': hasReachedStep('payment'),
-    }" v-if="isOwnedLoanable">
+    }" v-if="displayStep('payment')">
       <svg-danger v-if="hasCanceledStep('payment') || hasActiveIncidents || hasActiveExtensions" />
       <svg-check v-else-if="hasReachedStep('payment')" />
       <svg-waiting v-else />
@@ -98,6 +98,10 @@ export default {
       default: false,
     },
     item: {
+      type: Object,
+      required: true,
+    },
+    user: {
       type: Object,
       required: true,
     },

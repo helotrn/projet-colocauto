@@ -86,10 +86,6 @@ export default {
       return !!this.$store.state.images.ajax;
     },
     validationState() {
-      if (!this.required && !this.value && this.state === null) {
-        return null;
-      }
-
       return !this.errors && ((this.required && !!this.value) || this.state);
     },
     validationStateClass() {
@@ -150,12 +146,12 @@ export default {
   min-height: 200px;
 
   .custom-file {
-    min-height: 160px;
+    min-height: 180px;
   }
 
   .custom-file-label {
     overflow: hidden;
-    height: calc(200px - 27px);
+    height: calc(200px - 20px);
     text-align: center;
 
     border: 1px dashed $light-grey;

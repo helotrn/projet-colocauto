@@ -118,13 +118,21 @@ SQL
                 return $query->selectRaw("$calendarDaysSql AS calendar_days");
             },
             'loan_status' => function ($query = null) {
+                $sql = \DB::raw(<<<SQL
+CASE
+WHEN loans.canceled_at IS NOT NULL THEN 'canceled'
+ELSE loan_status_subquery.status
+END
+SQL
+                );
+
                 if (!$query) {
-                    return 'loan_status_subquery.status';
+                    return $sql;
                 }
 
                 if (false === strpos($query->toSql(), 'loan_status_subquery')) {
                     $query
-                        ->selectRaw('loan_status_subquery.status AS loan_status')
+                        ->selectRaw(\DB::raw("$sql AS loan_status"))
                         ->leftJoinSub(
                             <<<SQL
 SELECT DISTINCT ON (loan_id)
@@ -274,13 +282,27 @@ SQL
         return 1 + $end->dayOfYear - $start->dayOfYear;
     }
 
+    public static function getRules($action = '', $auth = null) {
+        $rules = parent::getRules($action, $auth);
+        switch ($action) {
+            case 'create':
+                $rules['community_id'] = 'required';
+                return $rules;
+            default:
+                return $rules;
+        }
+    }
+
+
     protected $casts = [
         'departure_at' => TimestampWithTimezoneCast::class,
+        'meta' => 'array',
     ];
 
     protected $fillable = [
         'borrower_id',
         'canceled_at',
+        'community_id',
         'departure_at',
         'duration_in_minutes',
         'estimated_distance',
@@ -298,6 +320,7 @@ SQL
       'actual_duration_in_minutes',
       'calendar_days',
       'contested_at',
+      'loan_status',
       'total_final_cost',
       'total_estimated_cost',
     ];
@@ -320,7 +343,7 @@ SQL
     }
 
     public function bike() {
-        return $this->belongsTo(Bike::class, 'loanable_id');
+        return $this->belongsTo(Bike::class, 'loanable_id')->withTrashed();
     }
 
     public function borrower() {
@@ -328,7 +351,7 @@ SQL
     }
 
     public function car() {
-        return $this->belongsTo(Car::class, 'loanable_id');
+        return $this->belongsTo(Car::class, 'loanable_id')->withTrashed();
     }
 
     public function community() {
@@ -352,7 +375,7 @@ SQL
     }
 
     public function loanable() {
-        return $this->belongsTo(Loanable::class);
+        return $this->belongsTo(Loanable::class)->withTrashed();
     }
 
     public function payment() {
@@ -368,7 +391,7 @@ SQL
     }
 
     public function trailer() {
-        return $this->belongsTo(Trailer::class, 'loanable_id');
+        return $this->belongsTo(Trailer::class, 'loanable_id')->withTrashed();
     }
 
     public function getActualDurationInMinutesAttribute() {
@@ -459,6 +482,22 @@ SQL
         return max(0, is_array($values) ? $values[1] : $values);
     }
 
+    public function getLoanStatusAttribute() {
+        if (isset($this->attributes['loan_status'])) {
+            return $this->attributes['loan_status'];
+        }
+
+        if ($this->canceled_at) {
+            return true;
+        }
+
+        if ($action = $this->actions->last()) {
+            return $action->status;
+        }
+
+        return null;
+    }
+
     public function getTotalActualCostAttribute() {
         return $this->actual_price + $this->actual_insurance + $this->platform_tip;
     }
@@ -544,6 +583,38 @@ SQL
             default:
                 return $query;
         }
+    }
+
+    public function scopePrepaid(Builder $query, $value = true, $negative = false) {
+        // Negative case
+        if (filter_var($value, FILTER_VALIDATE_BOOLEAN) === $negative) {
+            return $query->where(function ($q) {
+                return $q->whereHas('prePayment', function ($q) {
+                    return $q->where('status', '!=', 'completed');
+                })->orWhereDoesntHave('prePayment');
+            });
+        }
+
+        // Positive case
+        return $query->whereHas('prePayment', function ($q) {
+            return $q->where('status', 'completed');
+        });
+    }
+
+    public function scopeCompleted(Builder $query, $value = true, $negative = false) {
+        // Negative case
+        if (filter_var($value, FILTER_VALIDATE_BOOLEAN) === $negative) {
+            return $query->where(function ($q) {
+                return $q->whereHas('payment', function ($q) {
+                    return $q->where('status', '!=', 'completed');
+                })->orWhereDoesntHave('payment');
+            });
+        }
+
+        // Positive case
+        return $query->whereHas('payment', function ($q) {
+            return $q->where('status', 'completed');
+        });
     }
 
     public function scopeDepartureInLessThan(Builder $query, $amount, $unit = 'minutes') {

@@ -1,16 +1,22 @@
 <template>
-  <b-card no-body class="loan-form loan-actions loan-actions-takeover-collective">
+  <b-card no-body class="loan-form loan-actions loan-actions-takeover-self-service">
     <b-card-header header-tag="header" role="tab" class="loan-actions__header"
-      v-b-toggle.loan-actions-takeover-collective>
+      v-b-toggle.loan-actions-takeover-self-service>
       <h2>
-        <svg-waiting v-if="action.status === 'in_process'" />
+        <svg-waiting v-if="action.status === 'in_process' && !loanIsCanceled" />
         <svg-check v-else-if="action.status === 'completed'" />
-        <svg-danger v-else-if="action.status === 'canceled'" />
+        <svg-danger v-else-if="action.status === 'canceled' || loanIsCanceled" />
 
         Informations avant de partir
       </h2>
 
-      <span v-if="action.status == 'in_process'">En attente</span>
+      <!-- Canceled loans: current step remains in-process. -->
+      <span v-if="action.status === 'in_process' && loanIsCanceled">
+        Emprunt annulé &bull; {{ item.canceled_at | datetime }}
+      </span>
+      <span v-else-if="action.status === 'in_process' && !loanIsCanceled">
+        En attente
+      </span>
       <span v-else-if="action.status === 'completed'">
         Complété &bull; {{ action.executed_at | datetime }}
       </span>
@@ -20,15 +26,20 @@
     </b-card-header>
 
     <b-card-body>
-      <b-collapse id="loan-actions-takeover-collective" role="tabpanel" accordion="loan-actions"
+      <b-collapse id="loan-actions-takeover-self-service" role="tabpanel" accordion="loan-actions"
         :visible="open">
-        <b-row>
+        <b-row v-if="action.status !== 'in_process' || !loanIsCanceled">
           <b-col>
             <loan-covid-collapsible-section />
           </b-col>
         </b-row>
 
-        <div v-if="item.loanable.has_padlock">
+        <div v-if="action.status === 'in_process' && loanIsCanceled">
+          <p>
+            L'emprunt a été annulé. Cette étape ne peut pas être complétée.
+          </p>
+        </div>
+        <div v-else-if="item.loanable.has_padlock">
           <b-row>
             <b-col>
               <b-alert show variant="danger">
@@ -89,7 +100,7 @@
             </b-col>
           </b-row>
 
-          <b-row class="loan-actions-takeover-collective__buttons text-center"
+          <b-row class="loan-actions-takeover-self-service__buttons text-center"
             v-if="!action.executed_at">
             <b-col>
               <b-button @click="completeAction" size="sm" variant="success">
@@ -115,7 +126,7 @@ import LoanCovidCollapsibleSection from '@/components/Loan/CovidCollapsibleSecti
 import LoanActionsMixin from '@/mixins/LoanActionsMixin';
 
 export default {
-  name: 'LoanActionsTakeoverCollective',
+  name: 'LoanActionsTakeoverSelfService',
   mixins: [LoanActionsMixin],
   components: {
     LoanCovidCollapsibleSection,

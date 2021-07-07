@@ -5,6 +5,10 @@
     <div v-if="item.id">
       <loan-header :user="user" :loan="item" />
 
+      <loan-action-buttons :item="item"
+        @extension="addExtension" @cancel="cancelLoan" @resume="resumeLoan"
+        @incident="addIncident('accident')" />
+
       <loan-actions :item="item" @load="loadItem" :form="form"
         :user="user" @submit="submit" />
     </div>
@@ -44,6 +48,7 @@
 <script>
 import FormsBuilder from '@/components/Forms/Builder.vue';
 import LoanActions from '@/components/Loan/Actions.vue';
+import LoanActionButtons from '@/components/Loan/ActionButtons.vue';
 import LoanHeader from '@/components/Loan/LoanHeader.vue';
 
 import Authenticated from '@/mixins/Authenticated';
@@ -61,6 +66,7 @@ export default {
   components: {
     FormsBuilder,
     LoanActions,
+    LoanActionButtons,
     LoanHeader,
   },
   data() {
@@ -94,6 +100,7 @@ export default {
           params: {
             fields: '*,owner.id,owner.user.id,owner.user.avatar,owner.user.name',
             '!fields': 'events',
+            with_deleted: true,
           },
           id,
         });
@@ -105,6 +112,17 @@ export default {
       }
 
       this.loadedFullLoanable = true;
+    },
+    async loadItemAndUser() {
+      this.loadedFullLoanable = false;
+
+      await this.loadItem();
+    },
+    async resumeLoan() {
+      this.$store.commit('loans/patchItem', {
+        canceled_at: null,
+      });
+      await this.$store.dispatch('loans/updateItem');
     },
     async submitAndReload() {
       await this.submit();

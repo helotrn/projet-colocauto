@@ -30,7 +30,7 @@ class ActionsComplete extends Command
         // Incidents have to be managed by an admin
         $finishableActions = Action::whereIn(
             'type',
-            ['takeover', 'handover', 'extension', 'payment']
+            [/*'takeover', 'handover', 'extension',*/ 'payment']
         )
             ->where('status', 'in_process')
             ->where('created_at', '<=', (new \DateTime('-48hours'))->format('Y-m-d H:i:s'))

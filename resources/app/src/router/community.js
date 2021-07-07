@@ -36,6 +36,10 @@ export default {
                   + 'users.owner.id,users.tags.*',
               },
               id({ user }) {
+                if (!user || !user.communities || !user.communities[0]) {
+                  return 0;
+                }
+
                 return user.communities[0].id;
               },
             },
@@ -56,7 +60,6 @@ export default {
           loanables: {
             retrieve: {
               fields: 'id,type,name,position_google,available,owner.user.id,owner.user.name,owner.user.full_name,owner.user.avatar,image.*',
-              '!owner.user.id': 'me',
               per_page: 100,
             },
           },
