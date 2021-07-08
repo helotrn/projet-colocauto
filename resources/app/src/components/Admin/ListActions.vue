@@ -11,7 +11,7 @@
     <b-button v-if="hasColumn('destroy') && !row.item.deleted_at"
       size="sm" class="mr-1" variant="danger"
       @click="$emit('destroy')">
-      {{ $t('supprimer') | capitalize }}
+      {{ $t('archiver') | capitalize }}
     </b-button>
     <b-button v-if="hasColumn('restore') && !!row.item.deleted_at"
       size="sm" class="mr-1" variant="warning"
