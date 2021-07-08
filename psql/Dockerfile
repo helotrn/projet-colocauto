@@ -10,4 +10,3 @@ RUN apt-get update \
 RUN mkdir -p /docker-entrypoint-initdb.d
 
 COPY ./init/initdb-postgis.sh /docker-entrypoint-initdb.d/postgis.sh
-COPY ./update-postgis.sh /usr/local/bin
