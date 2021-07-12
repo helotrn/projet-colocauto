@@ -47,6 +47,7 @@ class User extends AuthenticatableBaseModel
         'id' => 'number',
         'created_at' => 'date',
         'full_name' => 'text',
+        'email' => 'text',
         'deleted_at' => 'date',
         'communities.name' => 'text',
     ];
