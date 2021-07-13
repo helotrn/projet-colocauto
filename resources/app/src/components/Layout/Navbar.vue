@@ -95,13 +95,36 @@
               <svg-profile />
             </b-badge>
           </template>
+          <!-- a changer les endpoints plus tard -->
+          <b-dropdown-item to="/app"
+            v-if="!isGlobalAdmin && hasCompletedRegistration">
+            <svg-category />
+            Tableau de bord
+          </b-dropdown-item>
           <b-dropdown-item to="/profile/locomotion"
             v-if="!isGlobalAdmin && hasCompletedRegistration">
-            Profil
+            <svg-profile />
+            Mon profil
           </b-dropdown-item>
-          <b-dropdown-item to="/faq">FAQ</b-dropdown-item>
+          <b-dropdown-item to="/profile/locomotion"
+            v-if="!isGlobalAdmin && hasCompletedRegistration">
+            <svg-vector />
+            Mes biens
+          </b-dropdown-item>
+          <b-dropdown-item to="/profile/locomotion"
+            v-if="!isGlobalAdmin && hasCompletedRegistration">
+            <svg-heart />
+            Mes favoris
+          </b-dropdown-item>
+          <b-dropdown-item to="/faq"
+            v-if="!hasCompletedRegistration">
+            FAQ
+          </b-dropdown-item>
           <b-dropdown-divider />
-          <b-dropdown-item @click="logout">Déconnexion</b-dropdown-item>
+          <b-dropdown-item @click="logout">
+            <svg-logout />
+            Déconnexion
+          </b-dropdown-item>
         </b-nav-item-dropdown>
       </b-navbar-nav>
 
@@ -128,14 +151,17 @@
 </template>
 
 <script>
+import Category from '@/assets/svg/category.svg';
 import Dashboard from '@/assets/svg/dashboard.svg';
 import Hand from '@/assets/svg/hand.svg';
+import Heart from '@/assets/svg/heart.svg';
 import Help from '@/assets/svg/help.svg';
 import Location from '@/assets/svg/location.svg';
 import Login from '@/assets/svg/login.svg';
 import Logout from '@/assets/svg/logout.svg';
 import Profile from '@/assets/svg/profile.svg';
 import Register from '@/assets/svg/register.svg';
+import Vector from '@/assets/svg/vector.svg';
 
 import AdminSidebar from '@/components/Admin/Sidebar.vue';
 import LocaleSwitcher from '@/components/LocaleSwitcher.vue';
@@ -148,14 +174,17 @@ export default {
   components: {
     AdminSidebar,
     LocaleSwitcher,
+    'svg-category': Category,
     'svg-dashboard': Dashboard,
     'svg-hand': Hand,
+    'svg-heart': Heart,
     'svg-help': Help,
     'svg-location': Location,
     'svg-login': Login,
     'svg-logout': Logout,
     'svg-profile': Profile,
     'svg-register': Register,
+    'svg-vector': Vector,
   },
   props: {
     title: {
