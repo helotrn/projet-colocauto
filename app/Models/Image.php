@@ -8,6 +8,7 @@ use Auth;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Log;
 use Intervention\Image\ImageManager;
 use Laravel\Passport\Token;
 use Storage;
@@ -183,7 +184,7 @@ class Image extends BaseModel
     }
 
     public function getSizesAttribute() {
-        $base = app()->make('url')->to('/');
+        $base = env('APP_URL_EXTERNAL');
 
         $sizes = [
             'original' => "{$base}{$this->attributes['path']}/{$this->attributes['filename']}"
@@ -214,13 +215,10 @@ class Image extends BaseModel
     }
 
     public function getUrlAttribute() {
-        $base = app()->environment() === 'local'
-            ? app()->make('url')->to('/')
-            : env('CDN_URL');
-
         $tokenQueryString = $this->getTokenQueryString();
+        $appUrl = env('APP_URL_EXTERNAL');
 
-        return "{$base}{$this->path}/{$this->filename}" . $tokenQueryString;
+        return "{$appUrl}{$this->path}/{$this->filename}" . $tokenQueryString;
     }
 
     public function scopeAccessibleBy(Builder $query, $user) {
