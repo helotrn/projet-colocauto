@@ -15,6 +15,7 @@
     ],
     "require": {
         "php": "^7.3",
+        "coraxster/flysystem-aws-s3-v3-minio": "^1.0",
         "doctrine/dbal": "^2.10",
         "eluceo/ical": "^0.16.0",
         "fideloper/proxy": "^4.0",

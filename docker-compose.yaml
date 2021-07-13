@@ -31,7 +31,7 @@ services:
       PASSWORD_CLIENT_SECRET: 1hu8xmgtXI8O6HRH4zIbRt92X6rSLCgY6NtTNyxN
       S3_KEY: locomotion
       S3_SECRET: locomotion
-      S3_REGION: canada
+      S3_REGION: us-east-1
       S3_BUCKET: locomotion
       S3_URL: http://minio:9000
   vue:
@@ -63,7 +63,19 @@ services:
     image: redis
     ports: 
       - 6379:6379
+  minio:
+    image: minio/minio
+    ports: 
+      - 9000:9000
+      - 9001:9001
+    volumes: 
+      - minio-data:/data
+    environment: 
+      MINIO_ROOT_USER: locomotion
+      MINIO_ROOT_PASSWORD: locomotion
+    command: minio server --console-address :9001 /data
 
 volumes:
   postgres-data:
+  minio-data:
 
