@@ -92,7 +92,7 @@
         <b-nav-item-dropdown class="layout-navbar__dropdown d-none d-lg-block" text="" right>
           <template v-slot:button-content>
             <b-badge pill variant="locomotion" class="layout-navbar__dropdown__icon">
-              <b-img v-if=avatarUrl v-bind:src=avatarUrl rounded='circle' />
+              <b-img v-if=avatarUrl :src=avatarUrl rounded='circle' />
               <svg-profile v-if=!avatarUrl />
             </b-badge>
           </template>
