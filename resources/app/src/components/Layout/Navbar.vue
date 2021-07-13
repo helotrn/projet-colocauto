@@ -92,7 +92,8 @@
         <b-nav-item-dropdown class="layout-navbar__dropdown d-none d-lg-block" text="" right>
           <template v-slot:button-content>
             <b-badge pill variant="locomotion" class="layout-navbar__dropdown__icon">
-              <svg-profile />
+              <b-img v-if=avatarUrl v-bind:src=avatarUrl rounded='circle' />
+              <svg-profile v-if=!avatarUrl />
             </b-badge>
           </template>
           <b-dropdown-item to="/profile/locomotion"
@@ -181,6 +182,11 @@ export default {
       });
 
       this.$router.push('/');
+    },
+  },
+  computed: {
+    avatarUrl() {
+      return this?.$store?.state?.user?.avatar?.url;
     },
   },
   watch: {
