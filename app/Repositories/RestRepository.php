@@ -932,7 +932,7 @@ class RestRepository
         return [$query, $scopedParam];
     }
 
-    protected function applyWhereInFilter(
+    public static function applyWhereInFilter(
         $values,
         $aggregate,
         $negative,
