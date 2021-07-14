@@ -33,7 +33,7 @@ export default {
       set(val) {
         // Remove colon when no date selected, to avoid counting empty filter as active
         if (val || this.to) {
-          this.$emit('input', `${val ? new Date(val).toISOString() : ''}@${this.to ? new Date(this.to).toISOString() : ''}`);
+          this.$emit('input', `${val ? new Date(val).toISOString() : ''}@${this.to ? dayjs(this.to).add(1, 'day').toISOString() : ''}`);
         } else {
           this.$emit('input', '');
         }
