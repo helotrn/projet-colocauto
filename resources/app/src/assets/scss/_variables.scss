@@ -23,7 +23,6 @@ $info: #576194;
 $light: #cbe8e7;
 $dark: #343a40;
 
-$base-font-size: 16px;
 $h1-font-size: 36px;
 $h2-font-size: 28px;
 $h3-font-size: 22px;
@@ -55,7 +54,7 @@ $nav-link-padding-y: 0.5rem;
 $enable-shadows: true;
 
 // Keep sorted below this line
-//$b-toaster-offset-top: $layout-navbar-height + ($base-font-size / 2);
+//$b-toaster-offset-top: $layout-navbar-height + ($font-size-base / 2);
 $card-border-radius: 15px;
 $card-border-width: 0;
 $dropdown-box-shadow: 2px 2px 4px rgba($black, 0.12);
