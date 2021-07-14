@@ -3,7 +3,6 @@
 namespace App\Repositories;
 
 use App\Models\Car;
-use Molotov\RestRepository;
 
 class CarRepository extends RestRepository
 {

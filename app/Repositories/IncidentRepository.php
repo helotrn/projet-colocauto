@@ -3,7 +3,6 @@
 namespace App\Repositories;
 
 use App\Models\Incident;
-use Molotov\RestRepository;
 
 class IncidentRepository extends RestRepository
 {

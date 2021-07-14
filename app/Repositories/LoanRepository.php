@@ -3,7 +3,6 @@
 namespace App\Repositories;
 
 use App\Models\Loan;
-use Molotov\RestRepository;
 
 class LoanRepository extends RestRepository
 {
