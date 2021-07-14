@@ -8,6 +8,7 @@
 
 <script>
 import DatePicker from '@/components/Forms/DatePicker.vue';
+import dayjs from 'dayjs';
 
 export default {
   name: 'FormsDateRangePicker',
@@ -48,7 +49,7 @@ export default {
       set(val) {
         // Remove colon when no date selected, to avoid counting empty filter as active
         if (this.from || val) {
-          this.$emit('input', `${this.from ? new Date(this.from).toISOString() : ''}@${val ? new Date(val).toISOString() : ''}`);
+          this.$emit('input', `${this.from ? new Date(this.from).toISOString() : ''}@${val ? dayjs(val).add(1, 'day').toISOString() : ''}`);
         } else {
           this.$emit('input', '');
         }
