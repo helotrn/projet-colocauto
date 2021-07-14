@@ -1004,7 +1004,7 @@ class RestRepository
             return $query;
         }
 
-        $intervalRegex = '(?<start>[0-9TZ:-]*)@{0,1}(?<end>[0-9TZ:-]*)';
+        $intervalRegex = '(?<start>[0-9TZ\.:-]*)@{0,1}(?<end>[0-9TZ\.:-]*)';
 
         $timestampRegex
             =  '(?<year>[0-9]{4})'
