@@ -33,7 +33,7 @@ export default {
       set(val) {
         // Remove colon when no date selected, to avoid counting empty filter as active
         if (val || this.to) {
-          this.$emit('input', `${val || ''}:${this.to}`);
+          this.$emit('input', `${val ? new Date(val).toISOString() : ''}@${this.to ? new Date(this.to).toISOString(): ''}`);
         } else {
           this.$emit('input', '');
         }
@@ -48,9 +48,10 @@ export default {
         return this.value.split(':')[1];
       },
       set(val) {
+        console.log('1111111111111111', val, this.from);
         // Remove colon when no date selected, to avoid counting empty filter as active
         if (this.from || val) {
-          this.$emit('input', `${this.from}:${val || ''}`);
+          this.$emit('input', `${this.from ? new Date(this.from).toISOString(): ''}@${val ? new Date(val).toISOString() : ''}`);
         } else {
           this.$emit('input', '');
         }
