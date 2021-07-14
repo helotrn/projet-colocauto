@@ -3288,10 +3288,10 @@
     "fast-plural-rules" "^0.0.1"
     "timezone-support" "^1.8.0"
 
-"dayjs@^1.8.21":
-  "integrity" "sha512-ccnYgKC0/hPSGXxj7Ju6AV/BP4HUkXC2u15mikXT5mX9YorEaoi1bEKOmAqdkJHN4EEkmAf97SpH66Try5Mbeg=="
-  "resolved" "https://registry.npmjs.org/dayjs/-/dayjs-1.8.28.tgz"
-  "version" "1.8.28"
+"dayjs@^1.10.6":
+  "integrity" "sha512-AztC/IOW4L1Q41A86phW5Thhcrco3xuAA+YX/BLpLWWjRcTj5TOt/QImBLmCKlrF7u7k47arTnOyL6GnbG8Hvw=="
+  "resolved" "https://registry.npmjs.org/dayjs/-/dayjs-1.10.6.tgz"
+  "version" "1.10.6"
 
 "de-indent@^1.0.2":
   "integrity" "sha1-sgOOhG3DO6pXlhKNCAS0VbjB4h0="
