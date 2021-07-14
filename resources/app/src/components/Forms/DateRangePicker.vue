@@ -24,11 +24,10 @@ export default {
   computed: {
     from: {
       get() {
-        if (!this.value) {
+        if (!this.value || this.value === ':') {
           return null;
         }
-
-        return this.value.split(':')[0];
+        return this.value.match(/(.*?)T.*@/) ? this.value.match(/(.*?)T.*@/)[1] : null;
       },
       set(val) {
         // Remove colon when no date selected, to avoid counting empty filter as active
@@ -41,11 +40,10 @@ export default {
     },
     to: {
       get() {
-        if (!this.value) {
+        if (!this.value || this.value === ':') {
           return null;
         }
-
-        return this.value.split(':')[1];
+        return this.value.match(/.*@(.*?)T/) ? this.value.match(/.*@(.*?)T/)[1] : null;
       },
       set(val) {
         // Remove colon when no date selected, to avoid counting empty filter as active
