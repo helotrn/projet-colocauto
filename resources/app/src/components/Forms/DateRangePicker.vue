@@ -44,7 +44,7 @@ export default {
         if (!this.value || this.value === ':') {
           return null;
         }
-        return this.value.match(/.*@(.*?)T/) ? this.value.match(/.*@(.*?)T/)[1] : null;
+        return this.value.match(/.*@(.*?)T/) ? dayjs(this.value.match(/.*@(.*?)T/)[1]).subtract(1, 'day') : null;
       },
       set(val) {
         // Remove colon when no date selected, to avoid counting empty filter as active
