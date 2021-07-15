@@ -191,7 +191,7 @@ export default {
       return this?.$store?.state?.user?.avatar?.url;
     },
     userInitials() {
-      return 'MH';
+      return `${this.$store.state?.user?.name?.slice(0, 1)}${this.$store.state?.user?.last_name?.slice(0, 1)}`;
     },
   },
   watch: {
