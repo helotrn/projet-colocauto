@@ -17,7 +17,7 @@
     "bootstrap": "^4.4.1",
     "bootstrap-vue": "^2.7.0",
     "core-js": "^3.4.4",
-    "dayjs": "^1.8.21",
+    "dayjs": "^1.10.6",
     "dayjs-ext": "^2.2.0",
     "deepmerge": "^4.2.2",
     "locutus": "^2.0.11",
