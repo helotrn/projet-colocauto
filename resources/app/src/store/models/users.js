@@ -165,4 +165,34 @@ export default new RestModule('users', {
       throw e;
     }
   },
+  async update({ commit, state, rootState }, { id, data, params }) {
+    commit('loaded', false);
+    try {
+      const ajax = Vue.axios.put(`/${state.slug}/${id}`, data, {
+        params: {
+          ...params,
+        },
+      });
+
+      commit('ajax', ajax);
+      const { data: item } = await ajax;
+
+      if (rootState.user.id === item.id) {
+        commit('user', { ...item }, { root: true });
+      }
+      commit('item', item);
+      commit('initialItem', item);
+
+      commit('loaded', true);
+
+      commit('ajax', null);
+    } catch (e) {
+      commit('ajax', null);
+
+      const { request, response } = e;
+      commit('error', { request, response });
+
+      throw e;
+    }
+  },
 });

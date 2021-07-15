@@ -93,7 +93,9 @@
           <template v-slot:button-content>
             <b-badge pill variant="locomotion" class="layout-navbar__dropdown__icon">
               <b-img v-if=avatarUrl :src=avatarUrl rounded='circle' />
-              <svg-profile v-if=!avatarUrl />
+              <span v-if=!avatarUrl class='initials'>
+                {{userInitials}}
+              </span>
             </b-badge>
           </template>
           <b-dropdown-item to="/profile/locomotion"
@@ -188,6 +190,9 @@ export default {
     avatarUrl() {
       return this?.$store?.state?.user?.avatar?.url;
     },
+    userInitials() {
+      return 'MH';
+    },
   },
   watch: {
     toggleMenu(val) {
@@ -203,3 +208,11 @@ export default {
   },
 };
 </script>
+
+<style lang="scss">
+  .initials {
+    position: relative;
+    font-size: 18px;
+    top: 8px;
+  }
+</style>
