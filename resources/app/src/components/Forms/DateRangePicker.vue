@@ -32,7 +32,7 @@ export default {
       },
       set(val) {
         if (val || this.to) {
-          this.$emit('input', `${val ? dayjs(val).add(0, 'day').toISOString() : ''}@${this.to ? dayjs(this.to).add(1, 'day').toISOString() : ''}`);
+          this.$emit('input', `${val ? dayjs(val).toISOString() : ''}@${this.to ? dayjs(this.to).add(1, 'day').toISOString() : ''}`);
         } else {
           this.$emit('input', '');
         }
@@ -47,7 +47,7 @@ export default {
       },
       set(val) {
         if (this.from || val) {
-          this.$emit('input', `${this.from ? dayjs(this.from).add(0, 'day').toISOString() : ''}@${val ? dayjs(val).add(1, 'day').toISOString() : ''}`);
+          this.$emit('input', `${this.from ? dayjs(this.from).toISOString() : ''}@${val ? dayjs(val).add(1, 'day').toISOString() : ''}`);
         } else {
           this.$emit('input', '');
         }
