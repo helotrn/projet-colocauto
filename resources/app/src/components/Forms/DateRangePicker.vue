@@ -31,9 +31,8 @@ export default {
         return this.value.match(/(.*?)T.*@/) ? this.value.match(/(.*?)T.*@/)[1] : null;
       },
       set(val) {
-        // Remove colon when no date selected, to avoid counting empty filter as active
         if (val || this.to) {
-          this.$emit('input', `${val ? new Date(val).toISOString() : ''}@${this.to ? dayjs(this.to).add(1, 'day').toISOString() : ''}`);
+          this.$emit('input', `${val ? dayjs(val).add(0, 'day').toISOString() : ''}@${this.to ? dayjs(this.to).add(1, 'day').toISOString() : ''}`);
         } else {
           this.$emit('input', '');
         }
@@ -44,12 +43,11 @@ export default {
         if (!this.value || this.value === ':') {
           return null;
         }
-        return this.value.match(/.*@(.*?)T/) ? dayjs(this.value.match(/.*@(.*?)T/)[1]).subtract(1, 'day') : null;
+        return this.value.match(/.*@(.*?)T/) ? dayjs(this.value.match(/.*@(.*?)T/)[1]).subtract(1, 'day').format('YYYY-M-D') : null;
       },
       set(val) {
-        // Remove colon when no date selected, to avoid counting empty filter as active
         if (this.from || val) {
-          this.$emit('input', `${this.from ? new Date(this.from).toISOString() : ''}@${val ? dayjs(val).add(1, 'day').toISOString() : ''}`);
+          this.$emit('input', `${this.from ? dayjs(this.from).add(0, 'day').toISOString() : ''}@${val ? dayjs(val).add(1, 'day').toISOString() : ''}`);
         } else {
           this.$emit('input', '');
         }
