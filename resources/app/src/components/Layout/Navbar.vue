@@ -191,6 +191,7 @@ export default {
       return this?.$store?.state?.user?.avatar?.url;
     },
     userInitials() {
+      // eslint-disable-next-line
       return `${this.$store.state?.user?.name?.slice(0, 1)}${this.$store.state?.user?.last_name?.slice(0, 1)}`;
     },
   },
@@ -213,6 +214,21 @@ export default {
   .initials {
     position: relative;
     font-size: 18px;
-    top: 8px;
+    left: -5px;
   }
+
+  span.badge {
+    padding: 0;
+  }
+
+  .layout-navbar__dropdown {
+    img {
+      width: $line-height-base + (2 * $nav-link-padding-y);
+      height: $line-height-base + (2 * $nav-link-padding-y);
+      position: relative;
+      left: -9px;
+      top: -9px;
+    }
+  }
+
 </style>

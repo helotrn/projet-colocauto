@@ -124,11 +124,6 @@
       padding-left: 0;
     }
 
-    img {
-      width: $line-height-base + (2 * $nav-link-padding-y);
-      height: $line-height-base + (2 * $nav-link-padding-y);
-    }
-
     &__icon {
       width: $line-height-base + (2 * $nav-link-padding-y);
       height: $line-height-base + (2 * $nav-link-padding-y);
@@ -162,13 +157,5 @@
   .badge-pill path,
   .dropdown-toggle:hover path {
     fill: $light;
-  }
-
-  span.badge {
-    padding: 0;
-  }
-
-  span svg {
-    margin-top: 7px;
   }
 }
