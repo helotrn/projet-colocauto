@@ -267,7 +267,8 @@ export default {
   .initials {
     position: relative;
     font-size: 18px;
-    left: -5px;
+    left: -0.5px;
+    top: 11px;
   }
 
   span.badge {
@@ -278,9 +279,6 @@ export default {
     img {
       width: $line-height-base + (2 * $nav-link-padding-y);
       height: $line-height-base + (2 * $nav-link-padding-y);
-      position: relative;
-      left: -9px;
-      top: -9px;
     }
   }
 
