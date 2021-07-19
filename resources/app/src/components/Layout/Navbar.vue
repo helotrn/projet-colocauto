@@ -96,35 +96,59 @@
               <svg-profile v-if=!avatarUrl />
             </b-badge>
           </template>
-          <!-- a changer les endpoints plus tard -->
+          <b-dropdown-item
+            v-if="!isGlobalAdmin && hasCompletedRegistration">
+            <b-badge pill variant="locomotion" class="layout-navbar__dropdown__icon">
+              <b-img v-if=avatarUrl v-bind:src=avatarUrl rounded='circle' />
+              <svg-profile v-if=!avatarUrl />
+            </b-badge>
+            <span class="dropdown-container">
+              <span class="username"> {{ user.name }}</span>
+              <span class="username-title">Super voisine</span>
+            </span>
+          </b-dropdown-item>
+          <b-dropdown-divider v-if="!isGlobalAdmin && hasCompletedRegistration" />
           <b-dropdown-item to="/app"
             v-if="!isGlobalAdmin && hasCompletedRegistration">
-            <svg-category />
-            Tableau de bord
+            <span class="nav-link__icon">
+              <svg-category />
+            </span>
+            <span class="nav-link__text">Tableau de bord</span>
           </b-dropdown-item>
           <b-dropdown-item to="/profile/locomotion"
             v-if="!isGlobalAdmin && hasCompletedRegistration">
-            <svg-profile />
-            Mon profil
+            <span class="nav-link__icon">
+              <svg-profile />
+            </span>
+            <span class="nav-link__text">Mon profil</span>
           </b-dropdown-item>
-          <b-dropdown-item to="/profile/locomotion"
+          <b-dropdown-item to=""
             v-if="!isGlobalAdmin && hasCompletedRegistration">
-            <svg-vector />
-            Mes biens
+            <span class="nav-link__icon">
+              <svg-vector />
+            </span>
+            <span class="nav-link__text">Mes biens</span>
           </b-dropdown-item>
-          <b-dropdown-item to="/profile/locomotion"
+          <b-dropdown-item to=""
             v-if="!isGlobalAdmin && hasCompletedRegistration">
-            <svg-heart />
-            Mes favoris
+            <span class="nav-link__icon">
+              <svg-heart />
+            </span>
+            <span class="nav-link__text">Mes favoris</span>
           </b-dropdown-item>
           <b-dropdown-item to="/faq"
             v-if="!hasCompletedRegistration">
-            FAQ
+            <span class="nav-link__icon">
+              <svg-help />
+            </span>
+            <span class="nav-link__text">FAQ</span>
           </b-dropdown-item>
           <b-dropdown-divider />
           <b-dropdown-item @click="logout">
-            <svg-logout />
-            Déconnexion
+            <span class="nav-link__icon">
+              <svg-logout />
+            </span>
+            <span class="nav-link__text">Déconnexion</span>
           </b-dropdown-item>
         </b-nav-item-dropdown>
       </b-navbar-nav>

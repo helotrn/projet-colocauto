@@ -105,6 +105,13 @@
     align-items: center;
   }
 
+  .nav-link__text {
+    font-style: normal;
+    font-weight: normal;
+    font-size: 17px;
+    line-height: 24px;
+  }
+
   .navbar-nav .nav-link.router-link-exact-active,
   .navbar-nav .nav-link:hover {
     color: $locomotion-green;
@@ -125,8 +132,8 @@
     }
 
     img {
-      width: $line-height-base + (2 * $nav-link-padding-y);
-      height: $line-height-base + (2 * $nav-link-padding-y);
+      width: 40px;
+      height: 40px;
     }
 
     &__icon {
@@ -166,9 +173,46 @@
 
   span.badge {
     padding: 0;
+    width: 40px;
+    height: 40px;
   }
 
   span svg {
     margin-top: 7px;
   }
+
+  .dropdown-container {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .username {
+    padding-left: 0.5rem;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 17px;
+    line-height: 24px;
+    color: #343a40;
+  }
+
+  .username-title {
+    padding-left: 0.5rem;
+    font-style: normal;
+    font-weight: 390;
+    font-size: 13px;
+    line-height: 16px;
+    color: #67737f;
+  }
+}
+
+.dropdown-menu {
+  border-radius: 10px;
+}
+
+.dropdown-item {
+  padding: 0.25rem 3rem 0.25rem 0.5rem;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  color: #343a40;
 }
