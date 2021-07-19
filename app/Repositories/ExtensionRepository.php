@@ -3,7 +3,6 @@
 namespace App\Repositories;
 
 use App\Models\Extension;
-use Molotov\RestRepository;
 
 class ExtensionRepository extends RestRepository
 {

@@ -132,7 +132,7 @@ class LoanableTest extends TestCase
           'page' => 1,
           'per_page' => 10,
           'fields' => 'id,name,last_name,full_name,email',
-          'deleted_at' => '2020-11-10:',
+          'deleted_at' => '2020-11-10T01:23:45Z@',
         ];
         $response = $this->json('GET', "/api/v1/loanables/", $data);
         $response
@@ -145,7 +145,7 @@ class LoanableTest extends TestCase
           'page' => 1,
           'per_page' => 10,
           'fields' => 'id,name,last_name,full_name,email',
-          'deleted_at' => '2020-11-10:2020-11-12',
+          'deleted_at' => '2020-11-10T01:23:45Z@2020-11-12T01:23:45Z',
         ];
         $response = $this->json('GET', "/api/v1/loanables/", $data);
         $response
@@ -158,7 +158,7 @@ class LoanableTest extends TestCase
           'page' => 1,
           'per_page' => 10,
           'fields' => 'id,name,last_name,full_name,email',
-          'deleted_at' => ':2020-11-12',
+          'deleted_at' => '@2020-11-12T01:23:45Z',
         ];
         $response = $this->json('GET', "/api/v1/loanables/", $data);
         $response
@@ -171,7 +171,7 @@ class LoanableTest extends TestCase
           'page' => 1,
           'per_page' => 10,
           'fields' => 'id,name,last_name,full_name,email',
-          'deleted_at' => ':',
+          'deleted_at' => '@',
         ];
         $response = $this->json('GET', "/api/v1/loanables/", $data);
         $response
@@ -200,27 +200,33 @@ class LoanableTest extends TestCase
             'community_id' => $community->id,
         ])->toArray();
 
+        // Create a loan that departs in 1 hour and lasts 30 minutes.
         $response = $this->json('POST', '/api/v1/loans', array_merge($data, [
             'departure_at' => $departure->add(1, 'hour')->toDateTimeString(),
         ]));
         $response->assertStatus(201);
         $nextLoanId = $response->json()['id'];
 
+        // Create a loan that departs in 2 hours and lasts 30 minutes.
         $response = $this->json('POST', '/api/v1/loans', array_merge($data, [
             'departure_at' => $departure->add(2, 'hour')->toDateTimeString(),
         ]));
         $response->assertStatus(201);
         $nextNextLoanId = $response->json()['id'];
 
+        // Create a loan that departed 4 hours ago and lasts 30 minutes.
         $response = $this->json('POST', '/api/v1/loans', array_merge($data, [
             'departure_at' => $departure->subtract(4, 'hour')->toDateTimeString(),
         ]));
         $response->assertStatus(201);
+        $currentLoanId = $response->json()['id'];
 
         $now = new Carbon;
+
         $response = $this->json('GET', "/api/v1/loanables/{$loanable->id}/loans", [
             'order' => 'departure_at',
-            'departure_at' => $now->format('Y-m-d H:i:s') . ':',
+            'departure_at' => $now->toISOString() . '@',
+            '!id' => $currentLoanId,
             'per_page' => 1,
         ]);
         $response->assertStatus(200)

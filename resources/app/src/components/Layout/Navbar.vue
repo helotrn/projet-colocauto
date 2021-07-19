@@ -92,8 +92,10 @@
         <b-nav-item-dropdown class="layout-navbar__dropdown d-none d-lg-block" text="" right>
           <template v-slot:button-content>
             <b-badge pill variant="locomotion" class="layout-navbar__dropdown__icon">
-              <b-img v-if=avatarUrl v-bind:src=avatarUrl rounded='circle' />
-              <svg-profile v-if=!avatarUrl />
+              <b-img v-if=avatarUrl :src=avatarUrl rounded='circle' />
+              <span v-if=!avatarUrl class='initials'>
+                {{userInitials}}
+              </span>
             </b-badge>
           </template>
           <b-dropdown-item
@@ -241,6 +243,10 @@ export default {
     avatarUrl() {
       return this?.$store?.state?.user?.avatar?.url;
     },
+    userInitials() {
+      // eslint-disable-next-line
+      return `${this.$store.state?.user?.name?.slice(0, 1)}${this.$store.state?.user?.last_name?.slice(0, 1)}`;
+    },
   },
   watch: {
     toggleMenu(val) {
@@ -256,3 +262,26 @@ export default {
   },
 };
 </script>
+
+<style lang="scss">
+  .initials {
+    position: relative;
+    font-size: 18px;
+    left: -5px;
+  }
+
+  span.badge {
+    padding: 0;
+  }
+
+  .layout-navbar__dropdown {
+    img {
+      width: $line-height-base + (2 * $nav-link-padding-y);
+      height: $line-height-base + (2 * $nav-link-padding-y);
+      position: relative;
+      left: -9px;
+      top: -9px;
+    }
+  }
+
+</style>

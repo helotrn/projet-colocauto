@@ -96,7 +96,7 @@ class LoanTest extends TestCase
           'page' => 1,
           'per_page' => 10,
           'fields' => 'id,name,last_name,full_name,email',
-          'departure_at' => '2020-11-10:',
+          'departure_at' => '2020-11-10T01:23:45Z@',
         ];
         $response = $this->json('GET', "/api/v1/loans/", $data);
         $response
@@ -109,7 +109,7 @@ class LoanTest extends TestCase
           'page' => 1,
           'per_page' => 10,
           'fields' => 'id,name,last_name,full_name,email',
-          'departure_at' => '2020-11-10:2020-11-12',
+          'departure_at' => '2020-11-10T01:23:45Z@2020-11-12T01:23:45Z',
         ];
         $response = $this->json('GET', "/api/v1/loans/", $data);
         $response
@@ -122,7 +122,7 @@ class LoanTest extends TestCase
           'page' => 1,
           'per_page' => 10,
           'fields' => 'id,name,last_name,full_name,email',
-          'departure_at' => ':2020-11-12',
+          'departure_at' => '@2020-11-12T01:23:45Z',
         ];
         $response = $this->json('GET', "/api/v1/loans/", $data);
         $response
@@ -135,7 +135,7 @@ class LoanTest extends TestCase
           'page' => 1,
           'per_page' => 10,
           'fields' => 'id,name,last_name,full_name,email',
-          'departure_at' => ':',
+          'departure_at' => '@',
         ];
         $response = $this->json('GET', "/api/v1/loans/", $data);
         $response

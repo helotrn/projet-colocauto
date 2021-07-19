@@ -8,7 +8,6 @@ use Auth;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Log;
 use Intervention\Image\ImageManager;
 use Laravel\Passport\Token;
 use Storage;

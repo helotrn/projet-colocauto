@@ -3,7 +3,6 @@
 namespace App\Repositories;
 
 use App\Models\PaymentMethod;
-use Molotov\RestRepository;
 
 class PaymentMethodRepository extends RestRepository
 {

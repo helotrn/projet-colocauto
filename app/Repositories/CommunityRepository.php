@@ -3,7 +3,6 @@
 namespace App\Repositories;
 
 use App\Models\Community;
-use Molotov\RestRepository;
 
 class CommunityRepository extends RestRepository
 {

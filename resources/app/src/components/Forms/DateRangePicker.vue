@@ -8,6 +8,7 @@
 
 <script>
 import DatePicker from '@/components/Forms/DatePicker.vue';
+import dayjs from 'dayjs';
 
 export default {
   name: 'FormsDateRangePicker',
@@ -24,16 +25,14 @@ export default {
   computed: {
     from: {
       get() {
-        if (!this.value) {
+        if (!this.value || this.value === ':') {
           return null;
         }
-
-        return this.value.split(':')[0];
+        return this.value.match(/(.*?)T.*@/) ? this.value.match(/(.*?)T.*@/)[1] : null;
       },
       set(val) {
-        // Remove colon when no date selected, to avoid counting empty filter as active
         if (val || this.to) {
-          this.$emit('input', `${val || ''}:${this.to}`);
+          this.$emit('input', `${val ? dayjs(val).toISOString() : ''}@${this.to ? dayjs(this.to).add(1, 'day').toISOString() : ''}`);
         } else {
           this.$emit('input', '');
         }
@@ -41,16 +40,14 @@ export default {
     },
     to: {
       get() {
-        if (!this.value) {
+        if (!this.value || this.value === ':') {
           return null;
         }
-
-        return this.value.split(':')[1];
+        return this.value.match(/.*@(.*?)T/) ? dayjs(this.value.match(/.*@(.*?)T/)[1]).subtract(1, 'day').format('YYYY-M-D') : null;
       },
       set(val) {
-        // Remove colon when no date selected, to avoid counting empty filter as active
         if (this.from || val) {
-          this.$emit('input', `${this.from}:${val || ''}`);
+          this.$emit('input', `${this.from ? dayjs(this.from).toISOString() : ''}@${val ? dayjs(val).add(1, 'day').toISOString() : ''}`);
         } else {
           this.$emit('input', '');
         }

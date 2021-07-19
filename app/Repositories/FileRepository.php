@@ -3,7 +3,6 @@
 namespace App\Repositories;
 
 use App\Models\File;
-use Molotov\RestRepository;
 
 class FileRepository extends RestRepository
 {

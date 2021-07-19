@@ -103,7 +103,7 @@ class InvoiceTest extends TestCase
           'page' => 1,
           'per_page' => 10,
           'fields' => 'id,name,last_name,full_name,email',
-          'created_at' => '2020-11-10:',
+          'created_at' => '2020-11-10T01:23:45Z@',
         ];
         $response = $this->json('GET', "/api/v1/invoices/", $data);
         $response
@@ -116,7 +116,7 @@ class InvoiceTest extends TestCase
           'page' => 1,
           'per_page' => 10,
           'fields' => 'id,name,last_name,full_name,email',
-          'created_at' => '2020-11-10:2020-11-12',
+          'created_at' => '2020-11-10T01:23:45Z@2020-11-12T01:23:45Z',
         ];
         $response = $this->json('GET', "/api/v1/invoices/", $data);
         $response
@@ -129,7 +129,7 @@ class InvoiceTest extends TestCase
           'page' => 1,
           'per_page' => 10,
           'fields' => 'id,name,last_name,full_name,email',
-          'created_at' => ':2020-11-12',
+          'created_at' => '@2020-11-12T01:23:45Z',
         ];
         $response = $this->json('GET', "/api/v1/invoices/", $data);
         $response
@@ -142,7 +142,7 @@ class InvoiceTest extends TestCase
           'page' => 1,
           'per_page' => 10,
           'fields' => 'id,name,last_name,full_name,email',
-          'created_at' => ':',
+          'created_at' => '@',
         ];
         $response = $this->json('GET', "/api/v1/invoices/", $data);
         $response
@@ -157,7 +157,7 @@ class InvoiceTest extends TestCase
           'page' => 1,
           'per_page' => 10,
           'fields' => 'id,name,last_name,full_name,email',
-          'paid_at' => '2020-11-10:',
+          'paid_at' => '2020-11-10T01:23:45Z@',
         ];
         $response = $this->json('GET', "/api/v1/invoices/", $data);
         $response
@@ -170,7 +170,7 @@ class InvoiceTest extends TestCase
           'page' => 1,
           'per_page' => 10,
           'fields' => 'id,name,last_name,full_name,email',
-          'paid_at' => '2020-11-10:2020-11-12',
+          'paid_at' => '2020-11-10T01:23:45Z@2020-11-12T01:23:45Z',
         ];
         $response = $this->json('GET', "/api/v1/invoices/", $data);
         $response
@@ -183,7 +183,7 @@ class InvoiceTest extends TestCase
           'page' => 1,
           'per_page' => 10,
           'fields' => 'id,name,last_name,full_name,email',
-          'paid_at' => ':2020-11-12',
+          'paid_at' => '@2020-11-12T01:23:45Z',
         ];
         $response = $this->json('GET', "/api/v1/invoices/", $data);
         $response
@@ -196,7 +196,7 @@ class InvoiceTest extends TestCase
           'page' => 1,
           'per_page' => 10,
           'fields' => 'id,name,last_name,full_name,email',
-          'paid_at' => ':',
+          'paid_at' => '@',
         ];
         $response = $this->json('GET', "/api/v1/invoices/", $data);
         $response
