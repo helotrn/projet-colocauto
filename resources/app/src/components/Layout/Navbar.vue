@@ -124,19 +124,12 @@
             </span>
             <span class="nav-link__text">Mon profil</span>
           </b-dropdown-item>
-          <b-dropdown-item to=""
+          <b-dropdown-item to="/profile/loanables"
             v-if="!isGlobalAdmin && hasCompletedRegistration">
             <span class="nav-link__icon">
               <svg-vector />
             </span>
-            <span class="nav-link__text">Mes biens</span>
-          </b-dropdown-item>
-          <b-dropdown-item to=""
-            v-if="!isGlobalAdmin && hasCompletedRegistration">
-            <span class="nav-link__icon">
-              <svg-heart />
-            </span>
-            <span class="nav-link__text">Mes favoris</span>
+            <span class="nav-link__text">Mes véhicules</span>
           </b-dropdown-item>
           <b-dropdown-item to="/faq"
             v-if="!hasCompletedRegistration">
@@ -181,7 +174,6 @@
 import Category from '@/assets/svg/category.svg';
 import Dashboard from '@/assets/svg/dashboard.svg';
 import Hand from '@/assets/svg/hand.svg';
-import Heart from '@/assets/svg/heart.svg';
 import Help from '@/assets/svg/help.svg';
 import Location from '@/assets/svg/location.svg';
 import Login from '@/assets/svg/login.svg';
@@ -204,7 +196,6 @@ export default {
     'svg-category': Category,
     'svg-dashboard': Dashboard,
     'svg-hand': Hand,
-    'svg-heart': Heart,
     'svg-help': Help,
     'svg-location': Location,
     'svg-login': Login,
