@@ -1,4 +1,4 @@
-import Vue from 'vue';
+import Vue from "vue";
 
 export default {
   namespaced: true,
@@ -16,22 +16,22 @@ export default {
   },
   actions: {
     async upload({ commit }, formData) {
-      commit('errors', null);
+      commit("errors", null);
 
       try {
-        const ajax = Vue.axios.post('/images', formData);
+        const ajax = Vue.axios.post("/images", formData);
 
-        commit('ajax', ajax);
+        commit("ajax", ajax);
 
         const { data: image } = await ajax;
 
-        commit('ajax', null);
+        commit("ajax", null);
 
         return image;
       } catch (e) {
-        commit('errors', e.response.data);
+        commit("errors", e.response.data);
 
-        commit('ajax', null);
+        commit("ajax", null);
 
         return null;
       }

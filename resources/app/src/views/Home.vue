@@ -3,18 +3,17 @@
     <section class="page__section page__section--top mb-0">
       <b-container>
         <h1 class="page__section__title">
-          Communautés <br class="d-lg-none">mobiles <br>et solidaires
+          Communautés <br class="d-lg-none" />mobiles <br />et solidaires
         </h1>
 
         <div class="page__section__content">
-          <b-button size="lg" variant="warning" to="register"
-            v-if="!userRegistered">S'inscrire</b-button>
+          <b-button size="lg" variant="warning" to="register" v-if="!userRegistered"
+            >S'inscrire</b-button
+          >
           <b-button v-if="!userLoggedIn" size="lg" variant="outline-light" to="login">
             Se connecter
           </b-button>
-          <b-button v-else size="lg" variant="outline-light" to="/app">
-            Tableau de bord
-          </b-button>
+          <b-button v-else size="lg" variant="outline-light" to="/app"> Tableau de bord </b-button>
         </div>
       </b-container>
 
@@ -45,9 +44,7 @@
 
     <section class="page__section page__section--what-is-it">
       <b-container>
-        <h2 class="page__section__title mb-4">
-          C’est quoi<br>LocoMotion?
-        </h2>
+        <h2 class="page__section__title mb-4">C’est quoi<br />LocoMotion?</h2>
 
         <div class="page__section__content">
           <b-row align-v="end">
@@ -83,9 +80,7 @@
                   <svg-tridem class="svg-tridem" />
                 </b-col>
                 <b-col md="12">
-                  <p class="text-center mb-5">
-                    Faites partie d’un projet collectif ambitieux
-                  </p>
+                  <p class="text-center mb-5">Faites partie d’un projet collectif ambitieux</p>
                 </b-col>
               </b-row>
             </b-col>
@@ -100,13 +95,13 @@
           <b-col lg="6">
             <b-row class="page__section--participants__photos">
               <b-col col class="page__section--participants__photo">
-                <img src="/user1.png">
+                <img src="/user1.png" />
               </b-col>
               <b-col col class="page__section--participants__photo">
-                <img src="/user2.png">
+                <img src="/user2.png" />
               </b-col>
               <b-col col class="page__section--participants__photo">
-                <img src="/user3.png">
+                <img src="/user3.png" />
               </b-col>
             </b-row>
           </b-col>
@@ -118,10 +113,10 @@
               </h2>
 
               <p class="mb-5">
-                Aujourd’hui, <span class="no-break">{{ communitiesCount }}</span> voisinages,
-                soit plus de <span class="no-break">{{ stats.users }} participant•e•s</span>
-                partageant <span class="no-break">{{ stats.loanables }}</span> véhicules
-                expérimentent cette solution collective.
+                Aujourd’hui, <span class="no-break">{{ communitiesCount }}</span> voisinages, soit
+                plus de <span class="no-break">{{ stats.users }} participant•e•s</span> partageant
+                <span class="no-break">{{ stats.loanables }}</span> véhicules expérimentent cette
+                solution collective.
               </p>
 
               <div>
@@ -148,8 +143,8 @@
             </h2>
 
             <p class="mb-5">
-              Participez à la vie de quartier en vous déplaceant autrement.
-              Des voisins et des voisines s'activent, prenez part au mouvement!
+              Participez à la vie de quartier en vous déplaceant autrement. Des voisins et des
+              voisines s'activent, prenez part au mouvement!
             </p>
 
             <b-button size="lg" variant="warning" to="register">S'inscrire</b-button>
@@ -165,46 +160,46 @@
 </template>
 
 <script>
-import DashboardCovidSection from '@/components/Dashboard/CovidSection.vue';
-import MainFaq from '@/components/Misc/MainFaq.vue';
-import PartnersSection from '@/components/Misc/PartnersSection.vue';
+import DashboardCovidSection from "@/components/Dashboard/CovidSection.vue";
+import MainFaq from "@/components/Misc/MainFaq.vue";
+import PartnersSection from "@/components/Misc/PartnersSection.vue";
 
-import DataRouteGuards from '@/mixins/DataRouteGuards';
+import DataRouteGuards from "@/mixins/DataRouteGuards";
 
-import Borrow from '@/assets/svg/home-borrow.svg';
-import CityDesktop from '@/assets/svg/home-city-desktop.svg';
-import City from '@/assets/svg/home-city.svg';
-import CloudsDesktop from '@/assets/svg/home-clouds-desktop.svg';
-import Clouds from '@/assets/svg/home-clouds.svg';
-import CommunityDesktop from '@/assets/svg/home-community-desktop.svg';
-import Community from '@/assets/svg/home-community.svg';
-import DotDesktop from '@/assets/svg/home-dot-desktop.svg';
-import Dot from '@/assets/svg/home-dot.svg';
-import Lend from '@/assets/svg/home-lend.svg';
-import Tridem from '@/assets/svg/home-tridem.svg';
-import WaveDesktop from '@/assets/svg/home-wave-desktop.svg';
-import Wave from '@/assets/svg/home-wave.svg';
+import Borrow from "@/assets/svg/home-borrow.svg";
+import CityDesktop from "@/assets/svg/home-city-desktop.svg";
+import City from "@/assets/svg/home-city.svg";
+import CloudsDesktop from "@/assets/svg/home-clouds-desktop.svg";
+import Clouds from "@/assets/svg/home-clouds.svg";
+import CommunityDesktop from "@/assets/svg/home-community-desktop.svg";
+import Community from "@/assets/svg/home-community.svg";
+import DotDesktop from "@/assets/svg/home-dot-desktop.svg";
+import Dot from "@/assets/svg/home-dot.svg";
+import Lend from "@/assets/svg/home-lend.svg";
+import Tridem from "@/assets/svg/home-tridem.svg";
+import WaveDesktop from "@/assets/svg/home-wave-desktop.svg";
+import Wave from "@/assets/svg/home-wave.svg";
 
 export default {
-  name: 'Home',
+  name: "Home",
   mixins: [DataRouteGuards],
   components: {
     DashboardCovidSection,
     MainFaq,
     PartnersSection,
-    'svg-borrow': Borrow,
-    'svg-city-desktop': CityDesktop,
-    'svg-city': City,
-    'svg-clouds-desktop': CloudsDesktop,
-    'svg-clouds': Clouds,
-    'svg-community-desktop': CommunityDesktop,
-    'svg-community': Community,
-    'svg-dot-desktop': DotDesktop,
-    'svg-dot': Dot,
-    'svg-lend': Lend,
-    'svg-tridem': Tridem,
-    'svg-wave-desktop': WaveDesktop,
-    'svg-wave': Wave,
+    "svg-borrow": Borrow,
+    "svg-city-desktop": CityDesktop,
+    "svg-city": City,
+    "svg-clouds-desktop": CloudsDesktop,
+    "svg-clouds": Clouds,
+    "svg-community-desktop": CommunityDesktop,
+    "svg-community": Community,
+    "svg-dot-desktop": DotDesktop,
+    "svg-dot": Dot,
+    "svg-lend": Lend,
+    "svg-tridem": Tridem,
+    "svg-wave-desktop": WaveDesktop,
+    "svg-wave": Wave,
   },
   computed: {
     communitiesCount() {
@@ -233,8 +228,12 @@ export default {
       }
 
       const requiredFields = [
-        'name', 'last_name', 'date_of_birth',
-        'address', 'postal_code', 'phone',
+        "name",
+        "last_name",
+        "date_of_birth",
+        "address",
+        "postal_code",
+        "phone",
       ];
 
       for (let i = 0, len = requiredFields.length; i < len; i += 1) {
@@ -249,5 +248,4 @@ export default {
 };
 </script>
 
-<style lang="scss">
-</style>
+<style lang="scss"></style>

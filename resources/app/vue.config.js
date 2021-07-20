@@ -1,4 +1,4 @@
-const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
+const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer");
 
 const plugins = [];
 
@@ -8,26 +8,26 @@ if (process.env.WEBPACK_ANALYZE) {
 
 module.exports = {
   chainWebpack: (config) => {
-    const svgRule = config.module.rule('svg');
+    const svgRule = config.module.rule("svg");
 
     svgRule.uses.clear();
 
     svgRule
-      .use('babel-loader')
-      .loader('babel-loader')
+      .use("babel-loader")
+      .loader("babel-loader")
       .end()
-      .use('vue-svg-loader')
-      .loader('vue-svg-loader');
+      .use("vue-svg-loader")
+      .loader("vue-svg-loader");
 
     config.module
-      .rule('i18n')
+      .rule("i18n")
       .resourceQuery(/blockType=i18n/)
-      .type('javascript/auto')
-      .use('i18n')
-      .loader('@kazupon/vue-i18n-loader')
+      .type("javascript/auto")
+      .use("i18n")
+      .loader("@kazupon/vue-i18n-loader")
       .end()
-      .use('yaml')
-      .loader('yaml-loader')
+      .use("yaml")
+      .loader("yaml-loader")
       .end();
   },
 
@@ -42,7 +42,7 @@ module.exports = {
   configureWebpack: {
     devServer: {
       proxy: {
-        '^/api': {
+        "^/api": {
           target: process.env.SERVER_URL,
           ws: true,
           changeOrigin: true,
@@ -53,10 +53,10 @@ module.exports = {
     plugins,
   },
 
-  assetsDir: 'dist/',
+  assetsDir: "dist/",
 
   pluginOptions: {
-    lintStyleOnBuild: true,
+    lintStyleOnBuild: false,
     stylelint: {},
     webpackBundleAnalyzer: {
       openAnalyzer: true,

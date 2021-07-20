@@ -1,40 +1,59 @@
 <template>
   <div class="register-form">
-    <h2 class="text-center">{{ $t('register') }}</h2>
+    <h2 class="text-center">{{ $t("register") }}</h2>
 
     <div class="register-form__google">
       <b-button href="/auth/google" variant="primary" class="btn-google">
         <div class="btn-google__icon">
           <svg-google />
         </div>
-        {{ $t('google') }}
+        {{ $t("google") }}
       </b-button>
     </div>
 
     <div class="form__separator">
-      <span class="form__separator__text">{{ $t('or') }}</span>
+      <span class="form__separator__text">{{ $t("or") }}</span>
     </div>
 
     <validation-observer ref="observer" v-slot="{ passes }">
-      <b-form :novalidate="true" class="register-form__form"
-        @submit.stop.prevent="passes(register)">
-        <forms-validated-input mode="passive" name="email" :label="$t('email')"
-          :rules="{ required: true, email: true }" type="email"
+      <b-form
+        :novalidate="true"
+        class="register-form__form"
+        @submit.stop.prevent="passes(register)"
+      >
+        <forms-validated-input
+          mode="passive"
+          name="email"
+          :label="$t('email')"
+          :rules="{ required: true, email: true }"
+          type="email"
           :placeholder="$t('email')"
-          v-model="email" />
+          v-model="email"
+        />
 
-        <forms-validated-input mode="passive" name="password" :label="$t('password')"
-          :rules="{ required: true, min: 8 }" type="password"
-          :placeholder="$t('password')" description="Minimum 8 caractères"
-          v-model="password" />
+        <forms-validated-input
+          mode="passive"
+          name="password"
+          :label="$t('password')"
+          :rules="{ required: true, min: 8 }"
+          type="password"
+          :placeholder="$t('password')"
+          description="Minimum 8 caractères"
+          v-model="password"
+        />
 
-        <forms-validated-input mode="passive" name="password_repeat" :label="$t('password-repeat')"
-          :rules="{ required: true, is: password }" type="password"
+        <forms-validated-input
+          mode="passive"
+          name="password_repeat"
+          :label="$t('password-repeat')"
+          :rules="{ required: true, is: password }"
+          type="password"
           :placeholder="$t('password-repeat')"
-          v-model="passwordRepeat" />
+          v-model="passwordRepeat"
+        />
 
         <b-button type="submit" :disabled="loading" variant="primary" block>
-          {{ $t('register-submit') }}
+          {{ $t("register-submit") }}
         </b-button>
       </b-form>
     </validation-observer>
@@ -61,21 +80,21 @@ en:
 </i18n>
 
 <script>
-import FormsValidatedInput from '@/components/Forms/ValidatedInput.vue';
+import FormsValidatedInput from "@/components/Forms/ValidatedInput.vue";
 
-import { extractErrors } from '@/helpers';
-import Google from '@/assets/svg/google.svg';
+import { extractErrors } from "@/helpers";
+import Google from "@/assets/svg/google.svg";
 
 export default {
-  name: 'registerBox',
+  name: "registerBox",
   components: {
     FormsValidatedInput,
-    'svg-google': Google,
+    "svg-google": Google,
   },
   data() {
     return {
-      password: '',
-      passwordRepeat: '',
+      password: "",
+      passwordRepeat: "",
     };
   },
   computed: {
@@ -87,44 +106,44 @@ export default {
         return this.$store.state.register.email;
       },
       set(value) {
-        return this.$store.commit('register/email', value);
+        return this.$store.commit("register/email", value);
       },
     },
   },
   methods: {
     async register() {
-      this.$store.commit('register/loading', true);
+      this.$store.commit("register/loading", true);
 
       try {
-        await this.$store.dispatch('register', {
+        await this.$store.dispatch("register", {
           email: this.email,
           password: this.password,
         });
 
-        await this.$store.dispatch('login', {
+        await this.$store.dispatch("login", {
           email: this.email,
           password: this.password,
         });
 
-        this.$store.commit('register/loading', false);
+        this.$store.commit("register/loading", false);
 
-        this.$router.replace('/register/2');
+        this.$router.replace("/register/2");
       } catch (e) {
         if (e.request) {
           switch (e.request.status) {
             case 422:
             default:
-              this.$store.commit('addNotification', {
-                content: extractErrors(e.response.data).join(', '),
+              this.$store.commit("addNotification", {
+                content: extractErrors(e.response.data).join(", "),
                 title: "Erreur d'inscription",
-                variant: 'danger',
-                type: 'register',
+                variant: "danger",
+                type: "register",
               });
           }
         }
       }
 
-      this.$store.commit('register/loading', false);
+      this.$store.commit("register/loading", false);
     },
   },
 };

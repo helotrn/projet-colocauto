@@ -1,6 +1,5 @@
 <template>
-  <layout-page :name="`community-view-${view}`" :loading="!routeDataLoaded"
-    :wide="view === 'map'">
+  <layout-page :name="`community-view-${view}`" :loading="!routeDataLoaded" :wide="view === 'map'">
     <div :class="mainDivClasses">
       <b-row>
         <b-col lg="3">
@@ -14,10 +13,12 @@
               </b-form-group>
             </div>
 
-            <hr>
+            <hr />
 
             <div :class="`community-view-${view}__form__sections__search`">
-              <loan-search-form v-if="loan" :item="loan"
+              <loan-search-form
+                v-if="loan"
+                :item="loan"
                 :selected-loanable-types="selectedLoanableTypes"
                 @selectLoanableTypes="selectLoanableTypes"
                 @selectLoanable="selectLoanable"
@@ -27,7 +28,8 @@
                 @changed="resetLoanables"
                 @hide="searched = true"
                 @reset="reset"
-                @submit="testLoanables" />
+                @submit="testLoanables"
+              />
             </div>
           </b-card>
           <b-card :class="`community-view-${view}__form__toggler`">
@@ -36,34 +38,45 @@
         </b-col>
 
         <b-col v-if="view === 'list'" lg="9">
-          <community-list v-if="!loading" :data="data"
-            :page="params.page" :per-page="params.per_page" :total="total"
+          <community-list
+            v-if="!loading"
+            :data="data"
+            :page="params.page"
+            :per-page="params.per_page"
+            :total="total"
             @page="setParam({ name: 'page', value: $event })"
-            @select="selectLoanable" @test="testLoanable" />
+            @select="selectLoanable"
+            @test="testLoanable"
+          />
           <layout-loading class="col-lg-9" v-else />
         </b-col>
       </b-row>
     </div>
 
-    <community-map v-if="view === 'map'" :data="data" :communities="user.communities"
-      @test="testLoanable" @select="selectLoanable" />
+    <community-map
+      v-if="view === 'map'"
+      :data="data"
+      :communities="user.communities"
+      @test="testLoanable"
+      @select="selectLoanable"
+    />
   </layout-page>
 </template>
 
 <script>
-import Authenticated from '@/mixins/Authenticated';
-import DataRouteGuards from '@/mixins/DataRouteGuards';
-import ListMixin from '@/mixins/ListMixin';
-import UserMixin from '@/mixins/UserMixin';
+import Authenticated from "@/mixins/Authenticated";
+import DataRouteGuards from "@/mixins/DataRouteGuards";
+import ListMixin from "@/mixins/ListMixin";
+import UserMixin from "@/mixins/UserMixin";
 
-import CommunityList from '@/components/Community/List.vue';
-import CommunityMap from '@/components/Community/Map.vue';
-import LoanSearchForm from '@/components/Loan/SearchForm.vue';
+import CommunityList from "@/components/Community/List.vue";
+import CommunityMap from "@/components/Community/Map.vue";
+import LoanSearchForm from "@/components/Loan/SearchForm.vue";
 
-import { buildComputed } from '@/helpers';
+import { buildComputed } from "@/helpers";
 
 export default {
-  name: 'CommunityView',
+  name: "CommunityView",
   mixins: [Authenticated, DataRouteGuards, ListMixin, UserMixin],
   components: {
     CommunityList,
@@ -84,14 +97,14 @@ export default {
   },
   beforeRouteEnter(to, from, next) {
     next((vm) => {
-      if (vm.user.communities.filter(c => !!c.approved_at && !c.suspended_at).length === 0) {
-        vm.$store.commit('addNotification', {
+      if (vm.user.communities.filter((c) => !!c.approved_at && !c.suspended_at).length === 0) {
+        vm.$store.commit("addNotification", {
           content: "Vous n'avez accès à aucun voisinage ou quartier.",
-          title: 'Accès refusé',
-          variant: 'warning',
-          type: 'loan',
+          title: "Accès refusé",
+          variant: "warning",
+          type: "loan",
         });
-        vm.$router.replace('/app', {});
+        vm.$router.replace("/app", {});
       }
 
       next();
@@ -99,21 +112,19 @@ export default {
   },
   mounted() {
     if (!this.canLoanCar) {
-      this.selectedLoanableTypes = this.selectedLoanableTypes.filter(t => t !== 'car');
+      this.selectedLoanableTypes = this.selectedLoanableTypes.filter((t) => t !== "car");
     }
     this.resetPagination(this.view);
   },
   computed: {
-    ...buildComputed('community.view', [
-      'center',
-      'lastLoan',
-      'searched',
-      'selectedLoanableTypes',
-    ]),
+    ...buildComputed("community.view", ["center", "lastLoan", "searched", "selectedLoanableTypes"]),
     mainDivClasses() {
       const base = `community-view-${this.view}__form`;
-      return base + (this.searched ? ` ${base}--searched` : '')
-        + (this.view === 'map' ? ' container' : '');
+      return (
+        base +
+        (this.searched ? ` ${base}--searched` : "") +
+        (this.view === "map" ? " container" : "")
+      );
     },
     loan() {
       return this.$store.state.loans.item;
@@ -132,7 +143,7 @@ export default {
       const types = this.loanableForm.general.type.options;
 
       if (!this.canLoanCar) {
-        const car = types.find(t => t.value === 'car');
+        const car = types.find((t) => t.value === "car");
         car.disabled = true;
       }
 
@@ -148,23 +159,23 @@ export default {
       delete newLoan.community;
       delete newLoan.community_id;
 
-      this.$store.commit('loans/item', newLoan);
+      this.$store.commit("loans/item", newLoan);
 
-      this.selectedLoanableTypes = ['bike', 'trailer'];
+      this.selectedLoanableTypes = ["bike", "trailer"];
 
       if (this.canLoanCar) {
-        this.selectedLoanableTypes.push('car');
+        this.selectedLoanableTypes.push("car");
       }
     },
     resetPagination(val) {
-      this.setParam({ name: 'page', value: 1 });
+      this.setParam({ name: "page", value: 1 });
       switch (val) {
-        case 'list':
-          this.setParam({ name: 'per_page', value: 10 });
+        case "list":
+          this.setParam({ name: "per_page", value: 10 });
           break;
-        case 'map':
+        case "map":
         default:
-          this.setParam({ name: 'per_page', value: 1000 });
+          this.setParam({ name: "per_page", value: 1000 });
           break;
       }
     },
@@ -175,7 +186,7 @@ export default {
       this.selectedLoanableTypes = value.filter((item, i, ar) => ar.indexOf(item) === i);
     },
     async selectLoanable(loanable) {
-      this.$store.commit('loans/patchItem', {
+      this.$store.commit("loans/patchItem", {
         borrower: {
           ...this.user.borrower,
           user: {
@@ -191,7 +202,7 @@ export default {
         platform_tip: (loanable.price === 0 ? 0 : Math.max(loanable.price * 0.1, 2)).toFixed(2),
       });
 
-      this.$router.push('/loans/new');
+      this.$router.push("/loans/new");
     },
     async testLoanable(loanable) {
       await this.$store.dispatch(`${this.slug}/testOne`, {
@@ -215,7 +226,7 @@ export default {
           delete this.lastLoan.community;
           delete this.lastLoan.community_id;
 
-          this.$store.commit('loans/item', val);
+          this.$store.commit("loans/item", val);
         } else {
           this.lastLoanMerged = true;
 
@@ -229,7 +240,7 @@ export default {
               delete lastLoan.community;
               delete lastLoan.community_id;
 
-              this.$store.commit('loans/item', lastLoan);
+              this.$store.commit("loans/item", lastLoan);
             }
           }
         }
@@ -238,8 +249,8 @@ export default {
     selectedLoanableTypes() {
       this.reloading = true;
       this.setParam({
-        name: 'type',
-        value: this.selectedLoanableTypes.join(','),
+        name: "type",
+        value: this.selectedLoanableTypes.join(","),
       });
     },
     view(val) {
@@ -253,7 +264,8 @@ export default {
 @import "~bootstrap/scss/mixins/breakpoints";
 
 .community-view {
-  &-list, &-map {
+  &-list,
+  &-map {
     &__form {
       z-index: 20;
       position: relative;
@@ -269,7 +281,8 @@ export default {
         }
       }
 
-      &__sections.card, &__sections.card + .card {
+      &__sections.card,
+      &__sections.card + .card {
         transition: max-height $one-tick ease-in-out;
       }
 

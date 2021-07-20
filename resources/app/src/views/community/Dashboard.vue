@@ -20,8 +20,11 @@
       </b-row>
     </b-container>
 
-    <b-container fluid v-if="community.type === 'neighborhood'"
-      class="community__neighbors page__section">
+    <b-container
+      fluid
+      v-if="community.type === 'neighborhood'"
+      class="community__neighbors page__section"
+    >
       <b-row no-gutters>
         <b-col>
           <div v-if="community.users">
@@ -47,9 +50,14 @@
                 </div>
                 <div class="community__users__slider" ref="users">
                   <span class="community__users__slider__spacer" />
-                  <user-card v-for="user in community.users" :key="user.id"
-                    :user="user" :is-admin="isAdminOfCommunity(community)"
-                    :community-id="community.id" @updated="reload" />
+                  <user-card
+                    v-for="user in community.users"
+                    :key="user.id"
+                    :user="user"
+                    :is-admin="isAdminOfCommunity(community)"
+                    :community-id="community.id"
+                    @updated="reload"
+                  />
                   <span class="community__users__slider__spacer" />
                 </div>
                 <div class="community__users__after">
@@ -72,14 +80,14 @@
       <b-row class="page__section text-center" v-if="community.chat_group_url">
         <b-col>
           <p>
-            La prochaine fête de voisinage c’est quand? Besoin d’aide? Où proposer mon idée
-            pour améliorer la vie de quartier? Quand on ne se voit pas en personne, les
-            réponses à ces questions se trouvent sur notre groupe Facebook!
+            La prochaine fête de voisinage c’est quand? Besoin d’aide? Où proposer mon idée pour
+            améliorer la vie de quartier? Quand on ne se voit pas en personne, les réponses à ces
+            questions se trouvent sur notre groupe Facebook!
           </p>
 
           <p>
             <a :href="community.chat_group_url" target="_blank">
-              <img src="/icons/messenger.png">
+              <img src="/icons/messenger.png" />
             </a>
           </p>
         </b-col>
@@ -94,13 +102,11 @@
 
         <b-row v-if="borough && neighborhoods" class="page__section">
           <b-col class="community__map">
-            <schematized-community-map
-              :borough="borough" :neighborhoods="neighborhoods" />
+            <schematized-community-map :borough="borough" :neighborhoods="neighborhoods" />
 
             <div class="community__map__total">
-              {{ totalUsersCount }}<br>
-              voisines et voisins participent à
-              LocoMotion dans votre quartier!
+              {{ totalUsersCount }}<br />
+              voisines et voisins participent à LocoMotion dans votre quartier!
             </div>
           </b-col>
         </b-row>
@@ -111,7 +117,7 @@
               <b-button variant="success" size="lg" href="http://bit.ly/voisinage-LocoMotion">
                 Créer un voisinage
               </b-button>
-              <br>
+              <br />
               <a href="#" v-b-modal="'borough-difference-modal'">
                 <small>Voisinage, quartier: quelle différence?</small>
               </a>
@@ -126,42 +132,41 @@
 </template>
 
 <script>
-import BoroughDifferenceModal from '@/components/Misc/BoroughDifferenceModal.vue';
-import SchematizedCommunityMap from '@/components/Misc/SchematizedCommunityMap.vue';
-import UserCard from '@/components/User/UserCard.vue';
+import BoroughDifferenceModal from "@/components/Misc/BoroughDifferenceModal.vue";
+import SchematizedCommunityMap from "@/components/Misc/SchematizedCommunityMap.vue";
+import UserCard from "@/components/User/UserCard.vue";
 
-import Arrow from '@/assets/svg/arrow.svg';
+import Arrow from "@/assets/svg/arrow.svg";
 
-import Authenticated from '@/mixins/Authenticated';
-import DataRouteGuards from '@/mixins/DataRouteGuards';
-import UserMixin from '@/mixins/UserMixin';
+import Authenticated from "@/mixins/Authenticated";
+import DataRouteGuards from "@/mixins/DataRouteGuards";
+import UserMixin from "@/mixins/UserMixin";
 
 export default {
-  name: 'CommunityDashboard',
+  name: "CommunityDashboard",
   mixins: [Authenticated, DataRouteGuards, UserMixin],
   components: {
     BoroughDifferenceModal,
     SchematizedCommunityMap,
-    'svg-arrow': Arrow,
+    "svg-arrow": Arrow,
     UserCard,
   },
   computed: {
     borough() {
-      return this.community.type === 'borough'
-        ? this.community
-        : this.community.parent;
+      return this.community.type === "borough" ? this.community : this.community.parent;
     },
     community() {
       return this.$store.state.communities.item || {};
     },
     neighborhoods() {
-      return this.community.type === 'borough'
+      return this.community.type === "borough"
         ? this.community.children
         : this.community.parent.children;
     },
     totalUsersCount() {
-      return this.borough.users_count
-        + this.neighborhoods.reduce((acc, c) => acc + c.users_count, 0);
+      return (
+        this.borough.users_count + this.neighborhoods.reduce((acc, c) => acc + c.users_count, 0)
+      );
     },
   },
   methods: {
@@ -175,7 +180,7 @@ export default {
       this.$refs.users.scroll({
         top: 0,
         left: scrollLeft + increment,
-        behavior: 'smooth',
+        behavior: "smooth",
       });
     },
   },
@@ -219,7 +224,8 @@ export default {
     &__users {
       max-width: 100vw;
 
-      &__before, &__after {
+      &__before,
+      &__after {
         position: absolute;
         top: 0;
         height: 100%;
@@ -239,13 +245,12 @@ export default {
 
       &__before {
         left: 15px;
-        background:
-          linear-gradient(
-            90deg,
-            rgba(241, 241, 241, 1) 0%,
-            rgba(241, 241, 241, 1) 75%,
-            rgba(241, 241, 241, 0) 100%
-          );
+        background: linear-gradient(
+          90deg,
+          rgba(241, 241, 241, 1) 0%,
+          rgba(241, 241, 241, 1) 75%,
+          rgba(241, 241, 241, 0) 100%
+        );
 
         svg {
           transform: rotate(180deg);
@@ -255,13 +260,12 @@ export default {
 
       &__after {
         right: 15px;
-        background:
-          linear-gradient(
-            270deg,
-            rgba(241, 241, 241, 1) 0%,
-            rgba(241, 241, 241, 1) 75%,
-            rgba(241, 241, 241, 0) 100%
-          );
+        background: linear-gradient(
+          270deg,
+          rgba(241, 241, 241, 1) 0%,
+          rgba(241, 241, 241, 1) 75%,
+          rgba(241, 241, 241, 0) 100%
+        );
 
         svg {
           margin: auto auto auto 30px;
@@ -294,7 +298,8 @@ export default {
             margin-bottom: 0;
           }
 
-          &:nth-child(1), &:nth-child(2) {
+          &:nth-child(1),
+          &:nth-child(2) {
             margin-left: 0;
           }
         }

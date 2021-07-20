@@ -1,37 +1,37 @@
 @mixin letter-spacing(
-  $letter-spacing-xs: null,
-  $letter-spacing-sm: null,
-  $letter-spacing-md: null,
-  $letter-spacing-lg: null,
-  $letter-spacing-xl: null,
-  $letter-spacing-xxl: null
+    $letter-spacing-xs: null,
+    $letter-spacing-sm: null,
+    $letter-spacing-md: null,
+    $letter-spacing-lg: null,
+    $letter-spacing-xl: null,
+    $letter-spacing-xxl: null
 ) {
-  @if ($letter-spacing-xs != "") {
-    letter-spacing: $letter-spacing-xs;
-  }
-  @if ($letter-spacing-sm != "") {
-    @include media-breakpoint-up(sm) {
-      letter-spacing: $letter-spacing-sm;
+    @if ($letter-spacing-xs != "") {
+        letter-spacing: $letter-spacing-xs;
     }
-  }
-  @if ($letter-spacing-md != "") {
-    @include media-breakpoint-up(md) {
-      letter-spacing: $letter-spacing-md;
+    @if ($letter-spacing-sm != "") {
+        @include media-breakpoint-up(sm) {
+            letter-spacing: $letter-spacing-sm;
+        }
     }
-  }
-  @if ($letter-spacing-lg != "") {
-    @include media-breakpoint-up(lg) {
-      letter-spacing: $letter-spacing-lg;
+    @if ($letter-spacing-md != "") {
+        @include media-breakpoint-up(md) {
+            letter-spacing: $letter-spacing-md;
+        }
     }
-  }
-  @if ($letter-spacing-xl != "") {
-    @include media-breakpoint-up(xl) {
-      letter-spacing: $letter-spacing-xl;
+    @if ($letter-spacing-lg != "") {
+        @include media-breakpoint-up(lg) {
+            letter-spacing: $letter-spacing-lg;
+        }
     }
-  }
-  @if ($letter-spacing-xxl != "") {
-    @include media-breakpoint-up(xxl) {
-      letter-spacing: $letter-spacing-xxl;
+    @if ($letter-spacing-xl != "") {
+        @include media-breakpoint-up(xl) {
+            letter-spacing: $letter-spacing-xl;
+        }
     }
-  }
+    @if ($letter-spacing-xxl != "") {
+        @include media-breakpoint-up(xxl) {
+            letter-spacing: $letter-spacing-xxl;
+        }
+    }
 }

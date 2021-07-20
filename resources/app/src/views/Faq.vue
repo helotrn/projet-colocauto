@@ -9,10 +9,12 @@
             <h2 v-html="$t('faq.sections.' + (s - 1) + '.title')" />
 
             <div role="tablist">
-              <faq-item  v-for="q in parseInt($t('faq.sections.' + (s - 1) + '.count'), 11)"
+              <faq-item
+                v-for="q in parseInt($t('faq.sections.' + (s - 1) + '.count'), 11)"
                 :key="`section-${s}-question-${q}`"
                 :id="`section-${s}-question-${q}`"
-                :title="$t(`faq.sections.${s - 1}.questions.${q - 1}.title`)">
+                :title="$t(`faq.sections.${s - 1}.questions.${q - 1}.title`)"
+              >
                 <div v-html="$t(`faq.sections.${s - 1}.questions.${q - 1}.content`)" />
               </faq-item>
             </div>
@@ -24,26 +26,23 @@
 </template>
 
 <script>
-import FaqItem from '@/components/Misc/FaqItem.vue';
+import FaqItem from "@/components/Misc/FaqItem.vue";
 
-import Authenticated from '@/mixins/Authenticated';
+import Authenticated from "@/mixins/Authenticated";
 
-import { capitalize } from '@/helpers/filters';
+import { capitalize } from "@/helpers/filters";
 
 export default {
-  name: 'Home',
+  name: "Home",
   mixins: [Authenticated],
   components: {
     FaqItem,
   },
   computed: {
     fullTitle() {
-      const parts = [
-        'LocoMotion',
-        capitalize(this.$i18n.t('titles.faq')),
-      ];
+      const parts = ["LocoMotion", capitalize(this.$i18n.t("titles.faq"))];
 
-      return parts.reverse().join(' | ');
+      return parts.reverse().join(" | ");
     },
   },
 };
