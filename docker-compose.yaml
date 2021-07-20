@@ -12,10 +12,12 @@ services:
     ports: 
       - 8000:8000
     environment:
+      LOG_CHANNEL: stderr
       APP_ENV: local
       APP_KEY: base64:QV7VlghMwXOXokIRP1ARpfEuyIF46hfYC/Y/lxFxdVc=
       APP_DEBUG: "true"
       APP_URL: http://localhost
+      APP_URL_EXTERNAL: http://localhost:8000 #this is the url that the browser uses to call us
       DB_HOST: postgres
       DB_PORT: 5432
       DB_DATABASE: locomotion
@@ -27,6 +29,11 @@ services:
       MAIL_DRIVER: log
       PASSWORD_CLIENT_ID: pTrmRvquBD6mXlep
       PASSWORD_CLIENT_SECRET: 1hu8xmgtXI8O6HRH4zIbRt92X6rSLCgY6NtTNyxN
+      S3_KEY: locomotion
+      S3_SECRET: locomotion
+      S3_REGION: canada
+      S3_BUCKET: locomotion
+      S3_URL: http://minio:9000
   vue:
     depends_on:
       - php

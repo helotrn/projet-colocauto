@@ -3,7 +3,6 @@
 namespace App\Repositories;
 
 use App\Models\Intention;
-use Molotov\RestRepository;
 
 class IntentionRepository extends RestRepository
 {

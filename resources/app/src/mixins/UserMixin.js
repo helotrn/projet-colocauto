@@ -1,15 +1,17 @@
 export default {
   computed: {
     canLoanCar() {
-      return this.canLoanVehicle
-        && (!!this.user.borrower.approved_at && !this.user.borrower.suspended_at);
+      return (
+        this.canLoanVehicle && !!this.user.borrower.approved_at && !this.user.borrower.suspended_at
+      );
     },
     canLoanVehicle() {
-      return this.isLoggedIn
-        && this.user.borrower
-        && this.user.communities
-        && this.user.communities
-          .reduce((acc, c) => acc || (!!c.approved_at && !c.suspended_at), false);
+      return (
+        this.isLoggedIn &&
+        this.user.borrower &&
+        this.user.communities &&
+        this.user.communities.reduce((acc, c) => acc || (!!c.approved_at && !c.suspended_at), false)
+      );
     },
     hasCommunity() {
       return this.isLoggedIn && this.user.communities && this.user.communities.length > 0;
@@ -18,12 +20,13 @@ export default {
       return this.isLoggedIn && (!!this.user.submitted_at || this.canLoanVehicle);
     },
     isGlobalAdmin() {
-      return this.isLoggedIn && this.user.role === 'admin';
+      return this.isLoggedIn && this.user.role === "admin";
     },
     isAdmin() {
-      return this.isLoggedIn && (
-        this.user.role === 'admin'
-        || (this.user.communities && !!this.user.communities.find(c => c.role === 'admin'))
+      return (
+        this.isLoggedIn &&
+        (this.user.role === "admin" ||
+          (this.user.communities && !!this.user.communities.find((c) => c.role === "admin")))
       );
     },
     isLoggedIn() {
@@ -31,8 +34,12 @@ export default {
     },
     isRegistered() {
       const requiredFields = [
-        'name', 'last_name', 'date_of_birth',
-        'address', 'postal_code', 'phone',
+        "name",
+        "last_name",
+        "date_of_birth",
+        "address",
+        "postal_code",
+        "phone",
       ];
 
       for (let i = 0, len = requiredFields.length; i < len; i += 1) {
@@ -49,7 +56,7 @@ export default {
   },
   methods: {
     isAdminOfCommunity(community) {
-      return !!this.user.communities.find(c => c.id === community.id && c.role === 'admin');
+      return !!this.user.communities.find((c) => c.id === community.id && c.role === "admin");
     },
   },
 };

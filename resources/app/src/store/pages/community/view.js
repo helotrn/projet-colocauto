@@ -4,7 +4,7 @@ export default {
     center: null,
     lastLoan: {},
     searched: false,
-    selectedLoanableTypes: ['bike', 'trailer', 'car'],
+    selectedLoanableTypes: ["bike", "trailer", "car"],
   },
   mutations: {
     center(state, center) {

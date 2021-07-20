@@ -1,7 +1,11 @@
 <template>
   <b-card no-body class="loan-form loan-actions loan-actions-new">
-    <b-card-header header-tag="header" role="tab" class="loan-actions__header"
-      v-b-toggle.loan-actions-new>
+    <b-card-header
+      header-tag="header"
+      role="tab"
+      class="loan-actions__header"
+      v-b-toggle.loan-actions-new
+    >
       <h2>
         <svg-check v-if="item.id" />
         <svg-waiting v-else />
@@ -16,29 +20,39 @@
     <b-card-body>
       <b-collapse id="loan-actions-new" role="tabpanel" accordion="loan-actions" :visible="open">
         <validation-observer ref="observer" v-slot="{ passes }">
-          <b-form :novalidate="true" class="form loan-form__form"
+          <b-form
+            :novalidate="true"
+            class="form loan-form__form"
             @submit.stop.prevent="passes(submit)"
-            @reset.stop.prevent="$emit('reset')">
+            @reset.stop.prevent="$emit('reset')"
+          >
             <b-row>
               <b-col lg="6">
-                <forms-validated-input name="departure_at"
+                <forms-validated-input
+                  name="departure_at"
                   :disabled="!!item.id"
                   :label="$t('fields.departure_at') | capitalize"
-                  :rules="form.departure_at.rules" type="datetime"
+                  :rules="form.departure_at.rules"
+                  type="datetime"
                   :disabled-dates="disabledDatesInThePast"
                   :disabled-times="disabledTimesInThePast"
                   :placeholder="placeholderOrLabel('departure_at') | capitalize"
-                  v-model="item.departure_at" />
+                  v-model="item.departure_at"
+                />
               </b-col>
 
               <b-col lg="6">
-                <forms-validated-input name="return_at"
+                <forms-validated-input
+                  name="return_at"
                   :disabled="!!item.id"
                   :label="$t('fields.return_at') | capitalize"
-                  :rules="form.departure_at.rules" type="datetime"
-                  :disabled-dates="disabledDates" :disabled-times="disabledTimes"
+                  :rules="form.departure_at.rules"
+                  type="datetime"
+                  :disabled-dates="disabledDates"
+                  :disabled-times="disabledTimes"
                   :placeholder="placeholderOrLabel('return_at') | capitalize"
-                  v-model="returnAt" />
+                  v-model="returnAt"
+                />
               </b-col>
             </b-row>
 
@@ -47,20 +61,22 @@
                 <b-row>
                   <b-col cols="6">
                     <div class="form-group">
-                      <label>{{ $t('fields.duration_in_minutes') | capitalize }}</label>
-                      <div>
-                        {{ item.duration_in_minutes }} minutes
-                      </div>
+                      <label>{{ $t("fields.duration_in_minutes") | capitalize }}</label>
+                      <div>{{ item.duration_in_minutes }} minutes</div>
                     </div>
                   </b-col>
 
                   <b-col cols="6" v-if="item.loanable.type === 'car'">
-                    <forms-validated-input name="estimated_distance"
+                    <forms-validated-input
+                      name="estimated_distance"
                       :label="$t('fields.estimated_distance') | capitalize"
-                      type="number" :min="10" :max="1000"
+                      type="number"
+                      :min="10"
+                      :max="1000"
                       :disabled="!!item.id"
                       :placeholder="placeholderOrLabel('estimated_distance') | capitalize"
-                      v-model="item.estimated_distance" />
+                      v-model="item.estimated_distance"
+                    />
                   </b-col>
                 </b-row>
               </b-col>
@@ -69,9 +85,11 @@
                 <b-row>
                   <b-col cols="6">
                     <div class="form-group">
-                      <label>{{ $t('fields.estimated_price') | capitalize }}</label>
-                      <layout-loading v-if="priceUpdating"
-                        class="loan-form__estimations__loading" />
+                      <label>{{ $t("fields.estimated_price") | capitalize }}</label>
+                      <layout-loading
+                        v-if="priceUpdating"
+                        class="loan-form__estimations__loading"
+                      />
                       <div v-else-if="!item.id">
                         <i v-b-tooltip.hover :title="item.loanable.pricing">
                           {{ item.estimated_price | currency }}
@@ -85,9 +103,11 @@
 
                   <b-col cols="6">
                     <div class="form-group">
-                      <label>{{ $t('fields.estimated_insurance') | capitalize }}</label>
-                      <layout-loading v-if="priceUpdating"
-                        class="loan-form__estimations__loading" />
+                      <label>{{ $t("fields.estimated_insurance") | capitalize }}</label>
+                      <layout-loading
+                        v-if="priceUpdating"
+                        class="loan-form__estimations__loading"
+                      />
                       <div v-else-if="!item.id">
                         <i v-b-tooltip.hover :title="item.loanable.pricing">
                           {{ item.estimated_insurance | currency }}
@@ -104,41 +124,54 @@
 
             <b-row>
               <b-col cols="6">
-                <forms-validated-input name="platform_tip"
+                <forms-validated-input
+                  name="platform_tip"
                   :disabled="!!item.id"
                   :label="$t('fields.platform_tip') | capitalize"
                   :rules="{ required: true }"
-                  type="currency" :min="0" :step="0.01"
+                  type="currency"
+                  :min="0"
+                  :step="0.01"
                   :placeholder="placeholderOrLabel('platform_tip') | capitalize"
-                  v-model="item.platform_tip" />
+                  v-model="item.platform_tip"
+                />
               </b-col>
 
               <b-col cols="6">
                 <p>
-                  LocoMotion est un projet citoyen et collaboratif.
-                  Les contributions volontaires financent son fonctionnement.
+                  LocoMotion est un projet citoyen et collaboratif. Les contributions volontaires
+                  financent son fonctionnement.
                 </p>
               </b-col>
             </b-row>
 
             <b-row>
               <b-col>
-                <forms-validated-input name="reason"
+                <forms-validated-input
+                  name="reason"
                   :disabled="!!item.id"
                   :label="$t('fields.reason') | capitalize"
-                  :rules="form.reason.rules" type="textarea" :rows="3"
+                  :rules="form.reason.rules"
+                  type="textarea"
+                  :rows="3"
                   :placeholder="placeholderOrLabel('reason') | capitalize"
-                  v-model="item.reason" />
+                  v-model="item.reason"
+                />
               </b-col>
 
               <b-col xl="6" v-if="item.loanable.owner">
-                <forms-validated-input name="message_for_owner"
+                <forms-validated-input
+                  name="message_for_owner"
                   :disabled="!!item.id"
-                  :label="`${$t('fields.message_for_owner')} ` +
-                    `(${$t('facultatif')})`| capitalize"
-                  :rules="form.message_for_owner.rules" type="textarea" :rows="3"
+                  :label="
+                    (`${$t('fields.message_for_owner')} ` + `(${$t('facultatif')})`) | capitalize
+                  "
+                  :rules="form.message_for_owner.rules"
+                  type="textarea"
+                  :rows="3"
                   :placeholder="placeholderOrLabel('message_for_owner') | capitalize"
-                  v-model="item.message_for_owner" />
+                  v-model="item.message_for_owner"
+                />
               </b-col>
             </b-row>
 
@@ -161,24 +194,24 @@
 </template>
 
 <script>
-import FormsValidatedInput from '@/components/Forms/ValidatedInput.vue';
+import FormsValidatedInput from "@/components/Forms/ValidatedInput.vue";
 
-import FormLabelsMixin from '@/mixins/FormLabelsMixin';
-import LoanFormMixin from '@/mixins/LoanFormMixin';
-import LoanStepsSequence from '@/mixins/LoanStepsSequence';
+import FormLabelsMixin from "@/mixins/FormLabelsMixin";
+import LoanFormMixin from "@/mixins/LoanFormMixin";
+import LoanStepsSequence from "@/mixins/LoanStepsSequence";
 
-import Check from '@/assets/svg/check.svg';
-import Waiting from '@/assets/svg/waiting.svg';
+import Check from "@/assets/svg/check.svg";
+import Waiting from "@/assets/svg/waiting.svg";
 
-import locales from '@/locales';
+import locales from "@/locales";
 
 export default {
-  name: 'LoanForm',
+  name: "LoanForm",
   mixins: [FormLabelsMixin, LoanFormMixin, LoanStepsSequence],
   components: {
     FormsValidatedInput,
-    'svg-check': Check,
-    'svg-waiting': Waiting,
+    "svg-check": Check,
+    "svg-waiting": Waiting,
   },
   props: {
     open: {
@@ -198,7 +231,7 @@ export default {
   },
   methods: {
     submit() {
-      this.$emit('submit');
+      this.$emit("submit");
     },
   },
   computed: {
@@ -215,7 +248,7 @@ export default {
     async loanParams(newValue, oldValue) {
       if (newValue !== oldValue) {
         this.priceUpdating = true;
-        await this.$store.dispatch('loans/test', JSON.parse(newValue));
+        await this.$store.dispatch("loans/test", JSON.parse(newValue));
         this.priceUpdating = false;
       }
     },

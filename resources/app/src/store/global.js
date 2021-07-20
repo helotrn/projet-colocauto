@@ -1,4 +1,4 @@
-import Vue from 'vue';
+import Vue from "vue";
 
 export default {
   namespaced: true,
@@ -26,26 +26,28 @@ export default {
     async load({ commit, state }) {
       if (!state.loaded) {
         try {
-          const ajax = Vue.axios.get('/tags');
+          const ajax = Vue.axios.get("/tags");
 
-          commit('ajax', ajax);
+          commit("ajax", ajax);
 
-          const { data: { data: tags } } = await ajax;
+          const {
+            data: { data: tags },
+          } = await ajax;
 
-          commit('tags', tags);
-          commit('lastLoadedAt', Date.now());
+          commit("tags", tags);
+          commit("lastLoadedAt", Date.now());
 
-          commit('loaded', true);
+          commit("loaded", true);
 
-          commit('ajax', null);
+          commit("ajax", null);
         } catch (e) {
           throw e;
         }
       }
     },
     async reload({ commit, dispatch }) {
-      commit('loaded', false);
-      await dispatch('load');
+      commit("loaded", false);
+      await dispatch("load");
     },
   },
 };

@@ -1,5 +1,4 @@
-Contribuer à locomotion.app
-===========================
+# Contribuer à locomotion.app
 
 Bienvenue sur le guide de contribution de locomotion.app.
 
@@ -11,39 +10,39 @@ Nous avons instauré un code de conduite qu'il importe à tou-te-s de respecter
 dans le but de créer un espace sécuritaire pour tout le monde.
 
 Nous sommes ouverts à une variété de contributions :
-- soumission de bugs;
-- correction de bugs;
-- proposition de nouvelles fonctionnalités;
-- amélioration de la couverture par des tests automatisés;
-- proposition d'améliorations à la simplicité et la clarté du code;
-- proposition de bonnes pratiques et standards à adopter;
-- amélioration de la documentation
-- amélioration de l'accessibilité universelle et élaboration de bonne pratiques;
-- etc.
+
+-   soumission de bugs;
+-   correction de bugs;
+-   proposition de nouvelles fonctionnalités;
+-   amélioration de la couverture par des tests automatisés;
+-   proposition d'améliorations à la simplicité et la clarté du code;
+-   proposition de bonnes pratiques et standards à adopter;
+-   amélioration de la documentation
+-   amélioration de l'accessibilité universelle et élaboration de bonne pratiques;
+-   etc.
 
 Si vous débutez, nous maintenons une liste d'incidents à l'intention des
 néophytes : ~18698008.
 
-Code de conduite
-----------------
+## Code de conduite
 
 Nous souhaitons promouvoir un espace sécuritaire pour tou-te-s.
 
 Nous exigeons de nous-mêmes et de nos collaborateur-trice-s :
-- d'adopter un ton poli et respectueux des opinions différentes;
-- de faire preuve d'empathie et de bienveillance;
-- d'adopter une attitude d'apprentissage et d'entraide;
-- de ne pas tolérer les propos sexistes, racistes ou dénigrants, etc. ou le
-  harcèlement sous quelque forme que ce soit;
-- de tenter de régler les différends avec les personnes concernées et d'avoir
-  la décence d'offrir ses excuses le cas échéant.
+
+-   d'adopter un ton poli et respectueux des opinions différentes;
+-   de faire preuve d'empathie et de bienveillance;
+-   d'adopter une attitude d'apprentissage et d'entraide;
+-   de ne pas tolérer les propos sexistes, racistes ou dénigrants, etc. ou le
+    harcèlement sous quelque forme que ce soit;
+-   de tenter de régler les différends avec les personnes concernées et d'avoir
+    la décence d'offrir ses excuses le cas échéant.
 
 Nous nous réservons le droit de supprimer tout commentaire jugé contraire à ces
 principes, de révoquer l'accès de quiconque ou de contacter les autorités
 compétentes au besoin.
 
-Rapporter un bug
-----------------
+## Rapporter un bug
 
 Pour rapporter un bug, rendez vous sur notre [gestionnaire d'incidents](https://gitlab.com/Solon-collectif/locomotion.app/-/issues).
 
@@ -63,8 +62,7 @@ Utilisez les mots clés appropriés, qui faciliteront la recherche. Dans le mêm
 esprit, favorisez l'utilisation des mots en entier plutôt que leurs
 abréviations ou acronymes.
 
-Corriger un bug
----------------
+## Corriger un bug
 
 À moins qu'il ne s'agisse d'une erreur évidente, dont la correction n'ait pas
 besoin de mise en contexte (faute d'orthographe, etc.), les bugs doivent
@@ -76,17 +74,17 @@ contactez-nous, nous essaierons de vous donner les permissions nécessaires et
 vous assignerons l'incident.
 
 Bonnes pratiques de correction d'un bug :
-- créer un test unitaire qui met le bug en évidence;
-- corriger le bug;
-- valider la correction du bug avec le test.
+
+-   créer un test unitaire qui met le bug en évidence;
+-   corriger le bug;
+-   valider la correction du bug avec le test.
 
 Documentez et commentez le code autant que nécessaire.
 
 Une fois le problème corrigé, vous pourrez créer une demande de fusion (merge
 request).
 
-Proposer une fonctionnalité
----------------------------
+## Proposer une fonctionnalité
 
 Parce qu'on a quand même une idée d'où on s'en va et qu'on ne veut pas vous
 faire perdre votre temps, documentez toute proposition pour une nouvelle
@@ -99,21 +97,19 @@ simplement nous en faire la suggestion.
 
 Dans tous les cas, commençons par en discuter.
 
-Demandes de fusion (Merge Requests)
------------------------------------
+## Demandes de fusion (Merge Requests)
 
 Les demandes de fusion spontanées sont acceptables dans deux cas :
-- Vous corrigez un bug trivial (faute d'orthographe, erreur évidente, etc.)
-- Vous travaillez sur une contribution sur laquelle nous nous sommes mis
-  d'accord, et qui a été discutée dans un incident.
+
+-   Vous corrigez un bug trivial (faute d'orthographe, erreur évidente, etc.)
+-   Vous travaillez sur une contribution sur laquelle nous nous sommes mis
+    d'accord, et qui a été discutée dans un incident.
 
 Évitez de proposer une fonctionnalité à travers un merge request avant qu'on en
 ait d'abord discuté.
 
-Sécurité
---------
+## Sécurité
 
 N'envoyez rien qui soit lié à la sécurité numérique sur le gestionnaire
 d'incidents. Contactez-nous plutôt par courriel à
 [dev+securite@solon-collectif.org](mailto:dev+securite@solon-collectif.org).
-

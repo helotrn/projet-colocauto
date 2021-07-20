@@ -1,9 +1,9 @@
 .badge {
-  &-pill {
-    &.badge-locomotion {
-      svg {
-        fill: $light;
-      }
+    &-pill {
+        &.badge-locomotion {
+            svg {
+                fill: $light;
+            }
+        }
     }
-  }
 }

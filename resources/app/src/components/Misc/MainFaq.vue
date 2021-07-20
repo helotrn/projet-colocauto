@@ -5,14 +5,18 @@
         <b-col>
           <div class="page__section__header">
             <h2 class="page__section__title">
-              {{ $t('faq.title') }}
+              {{ $t("faq.title") }}
             </h2>
           </div>
 
           <div class="main-faq__questions">
             <div role="tablist">
-              <faq-item v-for="id in 10" :id="`${id}`" :key="`faq-${id}`"
-                :title="$t('faq.home.' + (id - 1) + '.title')">
+              <faq-item
+                v-for="id in 10"
+                :id="`${id}`"
+                :key="`faq-${id}`"
+                :title="$t('faq.home.' + (id - 1) + '.title')"
+              >
                 <div v-html="$t('faq.home.' + (id - 1) + '.content')" />
               </faq-item>
             </div>
@@ -24,10 +28,10 @@
 </template>
 
 <script>
-import FaqItem from '@/components/Misc/FaqItem.vue';
+import FaqItem from "@/components/Misc/FaqItem.vue";
 
 export default {
-  name: 'MainFaq',
+  name: "MainFaq",
   components: {
     FaqItem,
   },

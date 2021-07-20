@@ -3,7 +3,6 @@
 namespace App\Repositories;
 
 use App\Models\Trailer;
-use Molotov\RestRepository;
 
 class TrailerRepository extends RestRepository
 {

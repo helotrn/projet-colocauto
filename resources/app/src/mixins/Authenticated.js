@@ -4,19 +4,19 @@ export default {
       if (vm.auth.token) {
         if (!vm.$store.state.loaded && !vm.$store.state.loading) {
           try {
-            await vm.$store.dispatch('loadUser');
-            if (to.name === 'login') {
+            await vm.$store.dispatch("loadUser");
+            if (to.name === "login") {
               vm.skipToApp();
             }
           } catch (e) {
-            vm.$store.commit('user', null);
+            vm.$store.commit("user", null);
             if (to.meta.auth) {
               vm.$router.push(`/login?r=${to.fullPath}`);
             }
           }
         }
       } else if (to.meta.auth) {
-        vm.$store.commit('user', null);
+        vm.$store.commit("user", null);
         vm.$router.push(`/login?r=${to.fullPath}`);
       }
     });
@@ -26,20 +26,22 @@ export default {
       return [
         ...(this.user.loanables || []).reduce((acc, loanable) => {
           acc.push(
-            ...loanable.loans.filter(l => !l.canceled_at).map(l => ({
-              ...l,
-              loanable: {
-                ...loanable,
-                owner: {
-                  ...this.user.owner,
-                  user: this.user,
+            ...loanable.loans
+              .filter((l) => !l.canceled_at)
+              .map((l) => ({
+                ...l,
+                loanable: {
+                  ...loanable,
+                  owner: {
+                    ...this.user.owner,
+                    user: this.user,
+                  },
                 },
-              },
-            })),
+              }))
           );
           return acc;
         }, []),
-        ...(this.user.loans || []).filter(l => !l.canceled_at),
+        ...(this.user.loans || []).filter((l) => !l.canceled_at),
       ];
     },
     auth() {
@@ -59,30 +61,29 @@ export default {
       return this.waitingLoans.length > 0;
     },
     ongoingLoans() {
-      const now = this.$dayjs().format('YYYY-MM-DD HH:mm:ss');
+      const now = this.$dayjs().format("YYYY-MM-DD HH:mm:ss");
 
       return this.allLoans
-        .filter(l => l.loan_status !== 'canceled')
+        .filter((l) => l.loan_status !== "canceled")
         .filter((l) => {
           if (l.actions.length <= 1) {
             return false;
           }
 
-          const payment = l.actions.find(a => a.type === 'payment');
-          return l.departure_at < now
-            && (!payment || payment.status !== 'completed');
+          const payment = l.actions.find((a) => a.type === "payment");
+          return l.departure_at < now && (!payment || payment.status !== "completed");
         });
     },
     pastLoans() {
       return this.allLoans
-        .filter(l => l.loan_status !== 'canceled')
+        .filter((l) => l.loan_status !== "canceled")
         .filter((l) => {
           if (l.actions.length <= 1) {
             return false;
           }
 
-          const payment = l.actions.find(a => a.type === 'payment');
-          return !!payment && payment.status === 'completed';
+          const payment = l.actions.find((a) => a.type === "payment");
+          return !!payment && payment.status === "completed";
         })
         .slice(0, 3);
     },
@@ -90,28 +91,32 @@ export default {
       return this.$store.state.user;
     },
     upcomingLoans() {
-      const now = this.$dayjs().format('YYYY-MM-DD HH:mm:ss');
+      const now = this.$dayjs().format("YYYY-MM-DD HH:mm:ss");
 
       return this.allLoans
-        .filter(l => l.loan_status === 'in_process')
-        .filter(l => l.actions.length > 1 && l.departure_at > now
-          && !l.actions.find(a => a.type === 'payment'));
+        .filter((l) => l.loan_status === "in_process")
+        .filter(
+          (l) =>
+            l.actions.length > 1 &&
+            l.departure_at > now &&
+            !l.actions.find((a) => a.type === "payment")
+        );
     },
     waitingLoans() {
       return this.allLoans
-        .filter(l => l.loan_status !== 'canceled')
-        .filter(l => l.actions.length === 1);
+        .filter((l) => l.loan_status !== "canceled")
+        .filter((l) => l.actions.length === 1);
     },
   },
   methods: {
     skipToLogin() {
-      this.$router.replace('/login');
+      this.$router.replace("/login");
     },
     skipToApp() {
       if (this.$route.query.r) {
         this.$router.replace(this.$route.query.r);
       } else {
-        this.$router.replace('/app');
+        this.$router.replace("/app");
       }
     },
   },
