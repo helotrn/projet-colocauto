@@ -10,14 +10,22 @@ use Mail;
 
 class SendLoanExtensionRejectedEmails
 {
-    public function handle(LoanExtensionRejectedEvent $event) {
+    public function handle(LoanExtensionRejectedEvent $event)
+    {
         $loan = $event->extension->loan;
         $borrower = $loan->borrower;
         $owner = $loan->loanable->owner;
 
         Mail::to(
             $borrower->user->email,
-            $borrower->user->name . ' ' . $borrower->user->last_name
-        )->queue(new LoanExtensionRejected($event->extension, $loan, $borrower, $owner));
+            $borrower->user->name . " " . $borrower->user->last_name
+        )->queue(
+            new LoanExtensionRejected(
+                $event->extension,
+                $loan,
+                $borrower,
+                $owner
+            )
+        );
     }
 }

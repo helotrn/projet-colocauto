@@ -31,51 +31,64 @@ class AssetController extends Controller
         $this->fileRepo = $fileRepo;
     }
 
-    public function userFile(Request $request, $rest) {
-        $token = $request->get('token');
+    public function userFile(Request $request, $rest)
+    {
+        $token = $request->get("token");
 
-        $asset = $this->findAsset($rest, 'user');
+        $asset = $this->findAsset($rest, "user");
         $newRequest = $this->buildIntermediateRequest($token, $asset);
 
         switch ($asset->type) {
-            case 'image':
-                [$path, $filename] = explode('/', $rest);
-                $image = $this->imageRepo->find($newRequest, $asset->foreign_id);
+            case "image":
+                [$path, $filename] = explode("/", $rest);
+                $image = $this->imageRepo->find(
+                    $newRequest,
+                    $asset->foreign_id
+                );
                 $imageFile = $image->fetch("$image->path/$filename");
-                return response($imageFile->stream())
-                    ->header('Content-type', $imageFile->mime);
+                return response($imageFile->stream())->header(
+                    "Content-type",
+                    $imageFile->mime
+                );
                 break;
             default:
                 return abort(404);
         }
     }
 
-    public function communityUserFile(Request $request, $rest) {
-        $token = $request->get('token');
+    public function communityUserFile(Request $request, $rest)
+    {
+        $token = $request->get("token");
 
-        $asset = $this->findAsset($rest, 'communityuser');
+        $asset = $this->findAsset($rest, "communityuser");
         $newRequest = $this->buildIntermediateRequest($token, $asset);
 
         switch ($asset->type) {
-            case 'image':
-                $image = $this->imageRepo->find($newRequest, $asset->foreign_id);
+            case "image":
+                $image = $this->imageRepo->find(
+                    $newRequest,
+                    $asset->foreign_id
+                );
                 $imageFile = $image->fetch("$image->path/$image->filename");
-                return response($imageFile->stream())
-                    ->header('Content-type', $imageFile->mime);
+                return response($imageFile->stream())->header(
+                    "Content-type",
+                    $imageFile->mime
+                );
                 break;
             default:
                 return abort(404);
         }
     }
 
-    public function borrowerFile(Request $request, $rest) {
-        $token = $request->get('token');
+    public function borrowerFile(Request $request, $rest)
+    {
+        $token = $request->get("token");
 
-        $asset = $this->findAsset($rest, 'borrower');
+        $asset = $this->findAsset($rest, "borrower");
         $newRequest = $this->buildIntermediateRequest($token, $asset);
 
         switch ($asset->type) {
-            case 'file':
+            case "file":
                 $file = $this->fileRepo->find($newRequest, $asset->foreign_id);
                 $fileFile = $file->fetch("$file->path/$file->filename");
                 if (!$fileFile) {
@@ -88,38 +101,49 @@ class AssetController extends Controller
         }
     }
 
-    public function exportFile(Request $request, $rest) {
+    public function exportFile(Request $request, $rest)
+    {
         return response()
             ->download(storage_path("app/exports/$rest"), $rest, [
-                'Content-Type' => 'text/csv',
+                "Content-Type" => "text/csv",
             ])
             ->deleteFileAfterSend();
     }
 
-    private function findAsset($rest, $slug) {
-        [$path, $filename] = explode('/', $rest . '/');
+    private function findAsset($rest, $slug)
+    {
+        [$path, $filename] = explode("/", $rest . "/");
 
         $fullPath = "/$slug/" . $path;
 
         return $this->model
             ->wherePath($fullPath)
             ->where(function ($q) use ($filename) {
-                [$size, $filenameWithoutSize] = explode('_', $filename . '_', 2);
+                [$size, $filenameWithoutSize] = explode(
+                    "_",
+                    $filename . "_",
+                    2
+                );
 
-                return $q->whereFilename($filename)
-                    ->orWhere('filename', preg_replace('/_$/', '', $filenameWithoutSize));
+                return $q
+                    ->whereFilename($filename)
+                    ->orWhere(
+                        "filename",
+                        preg_replace('/_$/', "", $filenameWithoutSize)
+                    );
             })
             ->firstOrFail();
     }
 
-    private function buildIntermediateRequest($token, $userAsset) {
+    private function buildIntermediateRequest($token, $userAsset)
+    {
         $tokenObject = Token::findOrFail($token);
-        $newRequest = new Request;
+        $newRequest = new Request();
         $newRequest->setUserResolver(function () use ($tokenObject) {
             return $tokenObject->user;
         });
         $newRequest->merge([
-            'field' => $userAsset->field,
+            "field" => $userAsset->field,
         ]);
 
         return $newRequest;

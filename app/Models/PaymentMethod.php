@@ -11,66 +11,66 @@ class PaymentMethod extends BaseModel
     use SoftDeletes;
 
     public static $filterTypes = [
-        'name' => 'text',
-        'type' => ['credit_card', 'bank_account'],
-        'user_id' => User::class,
+        "name" => "text",
+        "type" => ["credit_card", "bank_account"],
+        "user_id" => User::class,
     ];
 
     public static $rules = [
-        'name' => 'required',
-        'external_id' => 'required',
-        'type' => 'required',
-        'four_last_digits' => [
-          'digits:4',
-          'nullable',
-        ],
-        'credit_card_type' => [
-          'nullable',
-        ],
-        'user_id' => [
-          'required',
-        ],
+        "name" => "required",
+        "external_id" => "required",
+        "type" => "required",
+        "four_last_digits" => ["digits:4", "nullable"],
+        "credit_card_type" => ["nullable"],
+        "user_id" => ["required"],
     ];
 
-    public static function getRules($action = '', $auth = null) {
+    public static function getRules($action = "", $auth = null)
+    {
         $rules = parent::getRules($action, $auth);
 
         if ($auth->isAdmin()) {
             return $rules;
         }
 
-        $rules['user_id'][] = "in:{$auth->id}";
+        $rules["user_id"][] = "in:{$auth->id}";
 
         return $rules;
     }
 
-    public static function boot() {
+    public static function boot()
+    {
         parent::boot();
 
         self::saving(function ($model) {
-            if (!PaymentMethod::whereUserId($model->user->id)
-                ->where('is_default', true)->exists()) {
+            if (
+                !PaymentMethod::whereUserId($model->user->id)
+                    ->where("is_default", true)
+                    ->exists()
+            ) {
                 $model->is_default = true;
             }
         });
     }
 
     protected $fillable = [
-        'credit_card_type',
-        'external_id',
-        'four_last_digits',
-        'name',
-        'type',
-        'user_id',
+        "credit_card_type",
+        "external_id",
+        "four_last_digits",
+        "name",
+        "type",
+        "user_id",
     ];
 
-    public $items = ['user'];
+    public $items = ["user"];
 
-    public function user() {
+    public function user()
+    {
         return $this->belongsTo(User::class);
     }
 
-    public function scopeAccessibleBy(Builder $query, $user) {
+    public function scopeAccessibleBy(Builder $query, $user)
+    {
         if ($user->isAdmin()) {
             return $query;
         }

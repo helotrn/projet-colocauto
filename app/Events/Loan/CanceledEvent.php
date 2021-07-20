@@ -16,7 +16,8 @@ class CanceledEvent
     public $user;
     public $loan;
 
-    public function __construct(User $user, Loan $loan) {
+    public function __construct(User $user, Loan $loan)
+    {
         $this->user = $user;
         $this->loan = $loan;
     }

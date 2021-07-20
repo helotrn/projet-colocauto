@@ -16,7 +16,8 @@ class LoanHandoverContestedEvent
     public $handover;
     public $user;
 
-    public function __construct(Handover $handover, User $user) {
+    public function __construct(Handover $handover, User $user)
+    {
         $this->handover = $handover;
         $this->user = $user;
     }

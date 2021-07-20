@@ -12,18 +12,20 @@ class Action extends BaseModel
     use SoftDeletes;
 
     protected $casts = [
-        'executed_at' => TimestampWithTimezoneCast::class,
+        "executed_at" => TimestampWithTimezoneCast::class,
     ];
 
     public $readOnly = true;
 
-    public $items = ['loan', 'user'];
+    public $items = ["loan", "user"];
 
-    public function loan() {
+    public function loan()
+    {
         return $this->belongsTo(Loan::class);
     }
 
-    public function user() {
+    public function user()
+    {
         return $this->belongsTo(User::class);
     }
 }

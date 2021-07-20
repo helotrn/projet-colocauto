@@ -6,7 +6,8 @@ use App\Http\Requests\BaseRequest;
 
 class UserTagRequest extends BaseRequest
 {
-    public function authorize() {
+    public function authorize()
+    {
         if ($this->user()->isAdmin()) {
             return true;
         }

@@ -13,12 +13,14 @@ use Illuminate\Validation\ValidationException;
 
 class BikeController extends RestController
 {
-    public function __construct(BikeRepository $repository, Bike $model) {
+    public function __construct(BikeRepository $repository, Bike $model)
+    {
         $this->repo = $repository;
         $this->model = $model;
     }
 
-    public function index(Request $request) {
+    public function index(Request $request)
+    {
         try {
             [$items, $total] = $this->repo->get($request);
         } catch (ValidationException $e) {
@@ -28,7 +30,8 @@ class BikeController extends RestController
         return $this->respondWithCollection($request, $items, $total);
     }
 
-    public function create(CreateRequest $request) {
+    public function create(CreateRequest $request)
+    {
         try {
             $item = parent::validateAndCreate($request);
         } catch (ValidationException $e) {
@@ -40,7 +43,8 @@ class BikeController extends RestController
         return $this->respondWithItem($request, $item, 201);
     }
 
-    public function update(UpdateRequest $request, $id) {
+    public function update(UpdateRequest $request, $id)
+    {
         try {
             $item = parent::validateAndUpdate($request, $id);
         } catch (ValidationException $e) {
@@ -50,7 +54,8 @@ class BikeController extends RestController
         return $this->respondWithItem($request, $item);
     }
 
-    public function retrieve(Request $request, $id) {
+    public function retrieve(Request $request, $id)
+    {
         $item = $this->repo->find($request, $id);
 
         try {
@@ -62,7 +67,8 @@ class BikeController extends RestController
         return $response;
     }
 
-    public function destroy(LoanableDestroyRequest $request, $id) {
+    public function destroy(LoanableDestroyRequest $request, $id)
+    {
         try {
             $response = parent::validateAndDestroy($request, $id);
         } catch (ValidationException $e) {
@@ -72,7 +78,8 @@ class BikeController extends RestController
         return $response;
     }
 
-    public function restore(Request $request, $id) {
+    public function restore(Request $request, $id)
+    {
         try {
             $response = parent::validateAndRestore($request, $id);
         } catch (ValidationException $e) {

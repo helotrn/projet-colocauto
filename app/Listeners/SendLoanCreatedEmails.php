@@ -10,7 +10,8 @@ use Mail;
 
 class SendLoanCreatedEmails
 {
-    public function handle(LoanCreatedEvent $event) {
+    public function handle(LoanCreatedEvent $event)
+    {
         $owner = $event->loan->loanable->owner;
 
         if (!$owner) {
@@ -18,7 +19,9 @@ class SendLoanCreatedEmails
         }
 
         $borrower = $event->loan->borrower;
-        Mail::to($owner->user->email, $owner->user->name . ' ' . $owner->user->last_name)
-          ->queue(new LoanCreated($borrower, $owner, $event->loan));
+        Mail::to(
+            $owner->user->email,
+            $owner->user->name . " " . $owner->user->last_name
+        )->queue(new LoanCreated($borrower, $owner, $event->loan));
     }
 }

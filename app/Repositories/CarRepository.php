@@ -6,7 +6,8 @@ use App\Models\Car;
 
 class CarRepository extends RestRepository
 {
-    public function __construct(Car $model) {
+    public function __construct(Car $model)
+    {
         $this->model = $model;
         $this->columnsDefinition = $model::getColumnsDefinition();
     }

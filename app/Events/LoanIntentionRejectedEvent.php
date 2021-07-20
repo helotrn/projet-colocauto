@@ -14,7 +14,8 @@ class LoanIntentionRejectedEvent
 
     public $intention;
 
-    public function __construct(Intention $intention) {
+    public function __construct(Intention $intention)
+    {
         $this->intention = $intention;
     }
 }

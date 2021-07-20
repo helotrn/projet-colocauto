@@ -16,7 +16,8 @@ class LoanableCreatedEvent
     public $user;
     public $loanable;
 
-    public function __construct(User $user, Loanable $loanable) {
+    public function __construct(User $user, Loanable $loanable)
+    {
         $this->user = $user;
         $this->loanable = $loanable;
     }

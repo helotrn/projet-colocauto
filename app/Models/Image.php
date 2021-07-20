@@ -15,51 +15,54 @@ use Storage;
 class Image extends BaseModel
 {
     public static $rules = [
-        'imageable_type' => 'nullable',
-        'imageable_id' => 'nullable',
-        'path' => 'required',
-        'filename' => 'required',
-        'original_filename' => 'required',
-        'field' => 'nullable',
-        'width' => 'required',
-        'height' => 'required',
-        'orientation' => 'required',
+        "imageable_type" => "nullable",
+        "imageable_id" => "nullable",
+        "path" => "required",
+        "filename" => "required",
+        "original_filename" => "required",
+        "field" => "nullable",
+        "width" => "required",
+        "height" => "required",
+        "orientation" => "required",
     ];
 
     protected $fillable = [
-        'field',
-        'filename',
-        'filesize',
-        'height',
-        'imageable_id',
-        'imageable_type',
-        'original_filename',
-        'path',
-        'width',
+        "field",
+        "filename",
+        "filesize",
+        "height",
+        "imageable_id",
+        "imageable_type",
+        "original_filename",
+        "path",
+        "width",
     ];
 
     public static $sizes = [
-        'thumbnail' => '256x@fit',
+        "thumbnail" => "256x@fit",
     ];
 
     public static $sizesByField = [];
 
-    public static function fetch($path) {
+    public static function fetch($path)
+    {
         try {
-            $file = Storage::disk('local')->get($path);
+            $file = Storage::disk("local")->get($path);
         } catch (FileNotFoundException $e) {
             return null;
         }
-        $manager = new ImageManager(array('driver' => 'imagick'));
+        $manager = new ImageManager(["driver" => "imagick"]);
         return $manager->make($file);
     }
 
-    public static function store($path, $image) {
+    public static function store($path, $image)
+    {
         $image->stream();
-        return Storage::disk('local')->put($path, $image->__toString());
+        return Storage::disk("local")->put($path, $image->__toString());
     }
 
-    public static function copy($source, $destination) {
+    public static function copy($source, $destination)
+    {
         $image = self::fetch($source);
         if (!$image) {
             return null;
@@ -67,7 +70,8 @@ class Image extends BaseModel
         return self::store($destination, $image);
     }
 
-    public static function boot() {
+    public static function boot()
+    {
         parent::boot();
 
         self::saving(function ($model) {
@@ -75,12 +79,19 @@ class Image extends BaseModel
                 $sizes = $model->imageable::$sizes;
 
                 if (isset($model->imageable::$sizesByField[$model->field])) {
-                    $sizes = array_merge($model->imageable::$sizesByField[$model->field], $sizes);
+                    $sizes = array_merge(
+                        $model->imageable::$sizesByField[$model->field],
+                        $sizes
+                    );
                 }
 
                 $imagePath = str_replace(
-                    'tmp',
-                    strtolower((new \ReflectionClass($model->imageable))->getShortName()),
+                    "tmp",
+                    strtolower(
+                        (new \ReflectionClass(
+                            $model->imageable
+                        ))->getShortName()
+                    ),
                     $model->path
                 );
             } else {
@@ -93,18 +104,19 @@ class Image extends BaseModel
 
             foreach ($sizes as $name => $size) {
                 // Custom image generation
-                if (strpos($size, '@') === false) {
+                if (strpos($size, "@") === false) {
                     $canvas = $model->imageable->{$size}($fullPath);
 
                     if (!$canvas) {
                         continue;
                     }
-                } else { // Generic image generation
-                    $properties = explode('@', $size);
+                } else {
+                    // Generic image generation
+                    $properties = explode("@", $size);
 
-                    $dimensions = explode('x', array_shift($properties));
+                    $dimensions = explode("x", array_shift($properties));
 
-                    $type = array_pop($properties) ?: 'fit';
+                    $type = array_pop($properties) ?: "fit";
 
                     $canvas = Image::fetch($fullPath);
 
@@ -112,16 +124,34 @@ class Image extends BaseModel
                         continue;
                     }
 
-                    if ($type === 'fit') {
-                        $width = isset($dimensions[0]) ? $dimensions[0] : null ?: null;
-                        $height = isset($dimensions[1]) ? $dimensions[1] : null ?: null;
+                    if ($type === "fit") {
+                        $width =
+                            isset($dimensions[0])
+                                ? $dimensions[0]
+                                : null ?:
+                            null;
+                        $height =
+                            isset($dimensions[1])
+                                ? $dimensions[1]
+                                : null ?:
+                            null;
 
-                        $canvas->resize($width, $height, function ($constraint) {
+                        $canvas->resize($width, $height, function (
+                            $constraint
+                        ) {
                             $constraint->aspectRatio();
                         });
-                    } elseif ($type === 'crop') {
-                        $width = isset($dimensions[0]) ? $dimensions[0] : null ?: null;
-                        $height = isset($dimensions[1]) ? $dimensions[1] : null ?: null;
+                    } elseif ($type === "crop") {
+                        $width =
+                            isset($dimensions[0])
+                                ? $dimensions[0]
+                                : null ?:
+                            null;
+                        $height =
+                            isset($dimensions[1])
+                                ? $dimensions[1]
+                                : null ?:
+                            null;
 
                         $x = $model->imageable->crop_x;
                         $y = $model->imageable->crop_y;
@@ -131,7 +161,7 @@ class Image extends BaseModel
 
                         if ($origHeight / $origWidth <= 1) {
                             $cropHeight = $origHeight;
-                            $cropWidth = intval($origHeight * 2 / 3);
+                            $cropWidth = intval(($origHeight * 2) / 3);
                         } else {
                             $cropWidth = $origWidth;
                             $cropHeight = intval($origWidth * 1.5);
@@ -140,22 +170,26 @@ class Image extends BaseModel
                         $canvas->crop($cropWidth, $cropHeight, $x, $y);
 
                         if ($width || $height) {
-                            $canvas->resize($width, $height, function ($constraint) {
+                            $canvas->resize($width, $height, function (
+                                $constraint
+                            ) {
                                 $constraint->aspectRatio();
                             });
                         }
                     }
 
-                    if ($model->imageable
-                        && method_exists($model->imageable, 'insertImageWatermark')) {
+                    if (
+                        $model->imageable &&
+                        method_exists($model->imageable, "insertImageWatermark")
+                    ) {
                         $canvas = $model->imageable->insertImageWatermark(
                             $canvas,
                             $model->imageable
                         );
                     }
-                };
+                }
 
-                $targetPath = $imagePath . $ds . $name . '_' . $model->filename;
+                $targetPath = $imagePath . $ds . $name . "_" . $model->filename;
                 Image::store($targetPath, $canvas);
             }
 
@@ -164,33 +198,44 @@ class Image extends BaseModel
         });
     }
 
-    protected $hidden = ['imageable', 'imageable_type', 'imageable_id'];
+    protected $hidden = ["imageable", "imageable_type", "imageable_id"];
 
-    protected $appends = ['sizes', 'url'];
+    protected $appends = ["sizes", "url"];
 
-    public function imageable() {
+    public function imageable()
+    {
         return $this->morphTo();
     }
 
-    public function user() {
-        return $this->belongsTo(User::class, 'imageable_id')
-            ->whereImageableType(User::class);
+    public function user()
+    {
+        return $this->belongsTo(
+            User::class,
+            "imageable_id"
+        )->whereImageableType(User::class);
     }
 
-    public function communityUser() {
-        return $this->belongsTo(CommunityUser::class, 'imageable_id')
-            ->whereImageableType(CommunityUser::class);
+    public function communityUser()
+    {
+        return $this->belongsTo(
+            CommunityUser::class,
+            "imageable_id"
+        )->whereImageableType(CommunityUser::class);
     }
 
-    public function getSizesAttribute() {
-        $base = env('APP_URL_EXTERNAL');
+    public function getSizesAttribute()
+    {
+        $base = env("APP_URL_EXTERNAL");
 
         $sizes = [
-            'original' => "{$base}{$this->attributes['path']}/{$this->attributes['filename']}"
+            "original" => "{$base}{$this->attributes["path"]}/{$this->attributes["filename"]}",
         ];
 
         if ($this->imageable) {
-            if ($this->imageable && isset($this->imageable::$sizesByField[$this->field])) {
+            if (
+                $this->imageable &&
+                isset($this->imageable::$sizesByField[$this->field])
+            ) {
                 $sizes = array_merge(
                     $this->imageable::$sizesByField[$this->field],
                     $this->imageable::$sizes
@@ -204,25 +249,32 @@ class Image extends BaseModel
 
         $tokenQueryString = $this->getTokenQueryString();
 
-        $encodedFilename = str_replace(' ', '%20', $this->attributes['filename']);
+        $encodedFilename = str_replace(
+            " ",
+            "%20",
+            $this->attributes["filename"]
+        );
         foreach (array_keys($sizes) as $name) {
-            $sizes[$name] =  "$base{$this->attributes['path']}/{$name}_{$encodedFilename}"
-                . $tokenQueryString;
+            $sizes[$name] =
+                "$base{$this->attributes["path"]}/{$name}_{$encodedFilename}" .
+                $tokenQueryString;
         }
 
         return $sizes;
     }
 
-    public function getUrlAttribute() {
+    public function getUrlAttribute()
+    {
         $tokenQueryString = $this->getTokenQueryString();
-        $appUrl = env('APP_URL_EXTERNAL');
+        $appUrl = env("APP_URL_EXTERNAL");
 
         return "{$appUrl}{$this->path}/{$this->filename}" . $tokenQueryString;
     }
 
-    public function scopeAccessibleBy(Builder $query, $user) {
+    public function scopeAccessibleBy(Builder $query, $user)
+    {
         if (!$user) {
-            return $query->where(\DB::raw('1 = 0'));
+            return $query->where(\DB::raw("1 = 0"));
         }
 
         if ($user->isAdmin()) {
@@ -233,13 +285,13 @@ class Image extends BaseModel
         return $query
             // ...associated to a user
             ->where(function ($q) use ($user) {
-                return $q->whereHas('user', function ($q) use ($user) {
+                return $q->whereHas("user", function ($q) use ($user) {
                     return $q->accessibleBy($user);
                 });
             })
             // ...or associated to a community user
             ->orWhere(function ($q) use ($user) {
-                return $q->whereHas('communityUser', function ($q) use ($user) {
+                return $q->whereHas("communityUser", function ($q) use ($user) {
                     return $q->accessibleBy($user);
                 });
             })
@@ -249,11 +301,12 @@ class Image extends BaseModel
             });
     }
 
-    protected function getTokenQueryString() {
+    protected function getTokenQueryString()
+    {
         if ($user = Auth::user()) {
             $token = Token::whereUserId($user->id)
                 ->whereRevoked(false)
-                ->orderBy('expires_at', 'desc')
+                ->orderBy("expires_at", "desc")
                 ->limit(1)
                 ->first();
             if ($token) {
@@ -261,6 +314,6 @@ class Image extends BaseModel
             }
         }
 
-        return '';
+        return "";
     }
 }

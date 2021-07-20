@@ -4,11 +4,13 @@ use Illuminate\Database\Seeder;
 
 class PassportSeeder extends Seeder
 {
-    public function run() {
+    public function run()
+    {
         // Only for development purposes, do not use in production
         // Prefer output of a command like `php artisan passport:install`
 
-        \DB::statement(<<<SQL
+        \DB::statement(
+            <<<SQL
 INSERT INTO oauth_clients
 (id, name, secret, redirect, personal_access_client, password_client, revoked,
     created_at, updated_at)

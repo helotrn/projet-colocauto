@@ -6,7 +6,8 @@ use App\Models\Action;
 
 class ActionRepository extends RestRepository
 {
-    public function __construct(Action $model) {
+    public function __construct(Action $model)
+    {
         $this->model = $model;
     }
 }

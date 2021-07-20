@@ -6,8 +6,8 @@ use Faker\Generator as Faker;
 
 $factory->define(Community::class, function (Faker $faker) {
     return [
-        'name' => $faker->name,
-        'description' => $faker->sentence,
-        'area' => null,
+        "name" => $faker->name,
+        "description" => $faker->sentence,
+        "area" => null,
     ];
 });

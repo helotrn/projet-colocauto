@@ -28,19 +28,20 @@ class LoanIncidentReviewable extends BaseMailable
         ?Owner $owner,
         Community $community
     ) {
-         $this->borrower = $borrower;
-         $this->incident = $incident;
-         $this->loan = $loan;
-         $this->owner = $owner;
-         $this->community = $community;
+        $this->borrower = $borrower;
+        $this->incident = $incident;
+        $this->loan = $loan;
+        $this->owner = $owner;
+        $this->community = $community;
     }
 
-    public function build() {
-        return $this->view('emails.loan.incident_reviewable')
+    public function build()
+    {
+        return $this->view("emails.loan.incident_reviewable")
             ->subject("LocoMotion - Rapport d'incident")
-            ->text('emails.loan.incident_reviewable_text')
+            ->text("emails.loan.incident_reviewable_text")
             ->with([
-                'title' => "Rapport d'incident",
+                "title" => "Rapport d'incident",
             ]);
     }
 }
