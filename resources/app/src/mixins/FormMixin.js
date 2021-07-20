@@ -91,13 +91,12 @@ export default {
           switch (e.request.status) {
             case 401:
               this.$store.commit('addNotification', {
-                content: "Vous n'êtes pas connecté.",
-                title: 'Non connecté',
+                content: `Erreur de chargement de données pour ${this.slug}`,
+                title: `${this.slug}`,
                 variant: 'warning',
-                type: 'login',
+                type: 'data',
               });
-              this.$store.commit('user', null);
-              this.$router.push(`/login?r=${this.$route.fullPath}`);
+              console.log(e);
               break;
             case 404:
               this.$router.push(`/${this.parentPath}`);

@@ -184,13 +184,12 @@ export default {
           this.listDebounce = null;
         } catch (e) {
           this.$store.commit('addNotification', {
-            content: "Vous n'êtes pas connecté.",
-            title: 'Non connecté',
+            content: `Erreur de chargement de données (${this.slug})`,
+            title: `${this.slug}`,
             variant: 'warning',
-            type: 'login',
+            type: 'data',
           });
-          this.$store.commit('user', null);
-          this.$router.push(`/login?r=${this.$route.fullPath}`);
+          console.log(e);
         }
       }, 250);
 
