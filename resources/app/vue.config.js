@@ -56,8 +56,6 @@ module.exports = {
   assetsDir: "dist/",
 
   pluginOptions: {
-    lintStyleOnBuild: false,
-    stylelint: {},
     webpackBundleAnalyzer: {
       openAnalyzer: true,
     },
