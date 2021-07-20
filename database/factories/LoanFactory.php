@@ -16,7 +16,7 @@ $factory->define(Loan::class, function (Faker $faker) {
         'estimated_insurance' => $faker->randomNumber($nbDigits = 4),
         'estimated_price' => $faker->randomNumber($nbDigits = 4),
         'reason' => $faker->text,
-        'message_for_owner' => '',
+        'message_for_owner' => $faker->paragraph,
         'platform_tip' => $faker->randomNumber($nbDigits = 4),
     ];
 });
