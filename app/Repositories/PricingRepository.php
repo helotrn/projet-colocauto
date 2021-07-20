@@ -6,7 +6,8 @@ use App\Models\Pricing;
 
 class PricingRepository extends RestRepository
 {
-    public function __construct(Pricing $model) {
+    public function __construct(Pricing $model)
+    {
         $this->model = $model;
     }
 }

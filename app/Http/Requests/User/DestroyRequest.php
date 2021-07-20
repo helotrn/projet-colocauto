@@ -6,7 +6,8 @@ use App\Http\Requests\BaseRequest;
 
 class DestroyRequest extends BaseRequest
 {
-    public function authorize() {
+    public function authorize()
+    {
         return $this->user()->isAdmin();
     }
 }

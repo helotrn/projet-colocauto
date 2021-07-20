@@ -6,31 +6,28 @@ use App\Http\Requests\BaseRequest;
 
 class CreateRequest extends BaseRequest
 {
-    public function authorize() {
+    public function authorize()
+    {
         return $this->user()->isAdmin();
     }
 
-    public function rules() {
+    public function rules()
+    {
         $rules = [
-            'email' => [
-                'email',
-                'unique:users,email',
-            ],
+            "email" => ["email", "unique:users,email"],
         ];
 
-        if ($userId = $this->get('id')) {
-            $rules['email'] = [
-                'email',
-                "unique:users,email,$userId",
-            ];
+        if ($userId = $this->get("id")) {
+            $rules["email"] = ["email", "unique:users,email,$userId"];
         }
 
         return $rules;
     }
 
-    public function messages() {
+    public function messages()
+    {
         return [
-            'email.unique' => 'Le courriel est déjà pris.',
+            "email.unique" => "Le courriel est déjà pris.",
         ];
     }
 }

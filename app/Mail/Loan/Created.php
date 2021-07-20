@@ -18,18 +18,20 @@ class Created extends BaseMailable
     public $loan;
     public $owner;
 
-    public function __construct(Borrower $borrower, Owner $owner, Loan $loan) {
-         $this->borrower = $borrower;
-         $this->owner = $owner;
-         $this->loan = $loan;
+    public function __construct(Borrower $borrower, Owner $owner, Loan $loan)
+    {
+        $this->borrower = $borrower;
+        $this->owner = $owner;
+        $this->loan = $loan;
     }
 
-    public function build() {
-        return $this->view('emails.loan.created')
-            ->subject('LocoMotion - Nouvel emprunt')
-            ->text('emails.loan.created_text')
+    public function build()
+    {
+        return $this->view("emails.loan.created")
+            ->subject("LocoMotion - Nouvel emprunt")
+            ->text("emails.loan.created_text")
             ->with([
-                'title' => 'Nouvel emprunt',
+                "title" => "Nouvel emprunt",
             ]);
     }
 }

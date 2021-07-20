@@ -6,7 +6,8 @@ use App\Http\Requests\BaseRequest;
 
 class IndexRequest extends BaseRequest
 {
-    public function authorize() {
+    public function authorize()
+    {
         $user = $this->user();
         if ($user->isAdmin()) {
             return true;

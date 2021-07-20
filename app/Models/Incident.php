@@ -9,30 +9,25 @@ use Carbon\Carbon;
 class Incident extends Action
 {
     public static $rules = [
-        'incident_type' => [
-            'required',
-            'in:accident,small_incident,general',
-        ],
+        "incident_type" => ["required", "in:accident,small_incident,general"],
     ];
 
-    protected $fillable = [
-        'incident_type',
-        'comments_on_incident',
-    ];
+    protected $fillable = ["incident_type", "comments_on_incident"];
 
-    public static function boot() {
+    public static function boot()
+    {
         parent::boot();
 
         self::saved(function ($model) {
             if (!$model->executed_at) {
                 switch ($model->status) {
-                    case 'completed':
+                    case "completed":
                         $loanId = $model->loan->id;
 
                         $model->executed_at = Carbon::now();
                         $model->save();
                         break;
-                    case 'canceled':
+                    case "canceled":
                         $model->executed_at = Carbon::now();
                         $model->save();
                         break;
@@ -41,28 +36,30 @@ class Incident extends Action
         });
     }
 
-    public static function getColumnsDefinition() {
+    public static function getColumnsDefinition()
+    {
         return [
-            '*' => function ($query = null) {
+            "*" => function ($query = null) {
                 if (!$query) {
-                    return 'incidents.*';
+                    return "incidents.*";
                 }
 
-                return $query->selectRaw('incidents.*');
+                return $query->selectRaw("incidents.*");
             },
-            'type' => function ($query = null) {
+            "type" => function ($query = null) {
                 if (!$query) {
                     return "'incident' AS type";
                 }
 
                 return $query->selectRaw("'incident' AS type");
-            }
+            },
         ];
     }
 
     public $readOnly = false;
 
-    public function loan() {
+    public function loan()
+    {
         return $this->belongsTo(Loan::class);
     }
 }

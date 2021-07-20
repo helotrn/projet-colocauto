@@ -15,29 +15,27 @@ class Kernel extends HttpKernel
     ];
 
     protected $middlewareGroups = [
-        'web' => [
+        "web" => [
             \App\Http\Middleware\EncryptCookies::class,
             \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],
 
-        'api' => [
-            'throttle:120,1',
-            'bindings',
-        ],
+        "api" => ["throttle:120,1", "bindings"],
     ];
 
     protected $routeMiddleware = [
-        'auth' => \App\Http\Middleware\Authenticate::class,
-        'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
-        'bindings' => \Illuminate\Routing\Middleware\SubstituteBindings::class,
-        'cache.headers' => \Illuminate\Http\Middleware\SetCacheHeaders::class,
-        'can' => \Illuminate\Auth\Middleware\Authorize::class,
-        'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
-        'signed' => \Illuminate\Routing\Middleware\ValidateSignature::class,
-        'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
-        'transaction' => \Molotov\Middleware\WrapInTransaction::class,
-        'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
+        "auth" => \App\Http\Middleware\Authenticate::class,
+        "auth.basic" =>
+            \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
+        "bindings" => \Illuminate\Routing\Middleware\SubstituteBindings::class,
+        "cache.headers" => \Illuminate\Http\Middleware\SetCacheHeaders::class,
+        "can" => \Illuminate\Auth\Middleware\Authorize::class,
+        "guest" => \App\Http\Middleware\RedirectIfAuthenticated::class,
+        "signed" => \Illuminate\Routing\Middleware\ValidateSignature::class,
+        "throttle" => \Illuminate\Routing\Middleware\ThrottleRequests::class,
+        "transaction" => \Molotov\Middleware\WrapInTransaction::class,
+        "verified" => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
     ];
 
     protected $middlewarePriority = [

@@ -6,15 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class GoogleAccount extends BaseModel
 {
-    protected $fillable = [
-        'user_id',
-        'provider_user_id',
-        'provider',
-    ];
+    protected $fillable = ["user_id", "provider_user_id", "provider"];
 
-    public $items = ['user'];
+    public $items = ["user"];
 
-    public function user() {
+    public function user()
+    {
         return $this->belongsTo(User::class);
     }
 }

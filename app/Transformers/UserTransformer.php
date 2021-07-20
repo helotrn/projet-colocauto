@@ -7,9 +7,10 @@ use Molotov\Transformer;
 
 class UserTransformer extends Transformer
 {
-    protected $contexts = ['Community'];
+    protected $contexts = ["Community"];
 
-    public function authorize($item, $output, $options) {
+    public function authorize($item, $output, $options)
+    {
         $user = Auth::user();
 
         // If the user is...
@@ -22,24 +23,24 @@ class UserTransformer extends Transformer
             // ...a community admin
             if ($user->isAdminOfCommunityFor($item->id)) {
                 $adminOfCommunityFields = [
-                    'id',
-                    'avatar',
-                    'communities',
-                    'date_of_birth',
-                    'address',
-                    'postal_code',
-                    'phone',
-                    'is_smart_phone',
-                    'other_phone',
-                    'description',
-                    'email',
-                    'full_name',
-                    'last_name',
-                    'loanables',
-                    'loans',
-                    'name',
-                    'owner',
-                    'tags',
+                    "id",
+                    "avatar",
+                    "communities",
+                    "date_of_birth",
+                    "address",
+                    "postal_code",
+                    "phone",
+                    "is_smart_phone",
+                    "other_phone",
+                    "description",
+                    "email",
+                    "full_name",
+                    "last_name",
+                    "loanables",
+                    "loans",
+                    "name",
+                    "owner",
+                    "tags",
                 ];
 
                 return $this->filterKeys($output, $adminOfCommunityFields);
@@ -48,47 +49,50 @@ class UserTransformer extends Transformer
 
         // ...otherwise, limit the visible fields...
         $publicFields = [
-            'id',
-            'name',
-            'last_name',
-            'full_name',
-            'avatar',
-            'tags',
-            'description',
-            'owner',
+            "id",
+            "name",
+            "last_name",
+            "full_name",
+            "avatar",
+            "tags",
+            "description",
+            "owner",
         ];
 
         // ...except when we are in the context of a loan
-        if (isset($options['context']['Loan'])) {
-            $publicFields[] = 'phone';
+        if (isset($options["context"]["Loan"])) {
+            $publicFields[] = "phone";
         }
 
         return $this->filterKeys($output, $publicFields);
     }
 
-    public function transform($item, $options = []) {
+    public function transform($item, $options = [])
+    {
         $output = parent::transform($item, $options);
 
         if (isset($item->pivot->tags)) {
-            if ($this->shouldIncludeRelation('tags', $item, $options)) {
-                $transformer = new Transformer;
+            if ($this->shouldIncludeRelation("tags", $item, $options)) {
+                $transformer = new Transformer();
 
-                $output['tags'] = array_merge(
-                    $output['tags']->toArray(),
-                    $item->pivot->tags->map(function ($t) use ($transformer) {
-                        return $transformer->transform($t);
-                    })->toArray()
+                $output["tags"] = array_merge(
+                    $output["tags"]->toArray(),
+                    $item->pivot->tags
+                        ->map(function ($t) use ($transformer) {
+                            return $transformer->transform($t);
+                        })
+                        ->toArray()
                 );
             }
         }
 
-        if ($this->shouldIncludeRelation('borrower', $item, $options)) {
-            $output['borrower'] = $item->borrower ?: new \stdClass;
+        if ($this->shouldIncludeRelation("borrower", $item, $options)) {
+            $output["borrower"] = $item->borrower ?: new \stdClass();
         }
 
-        if (isset($output['balance'])) {
+        if (isset($output["balance"])) {
             // Approximation but more convenient for display
-            $output['balance'] = floatval($output['balance']);
+            $output["balance"] = floatval($output["balance"]);
         }
 
         return $this->authorize($item, $output, $options);

@@ -13,29 +13,38 @@ use App\Repositories\PadlockRepository;
 
 class PadlockController extends RestController
 {
-    public function __construct(PadlockRepository $repository, Padlock $model) {
+    public function __construct(PadlockRepository $repository, Padlock $model)
+    {
         $this->repo = $repository;
         $this->model = $model;
     }
 
-    public function index(IndexRequest $request) {
+    public function index(IndexRequest $request)
+    {
         try {
             [$items, $total] = $this->repo->get($request);
         } catch (ValidationException $e) {
             return $this->respondWithErrors($e->errors(), $e->getMessage());
         }
 
-        switch ($request->headers->get('accept')) {
-            case 'text/csv':
-                $filename = $this->respondWithCsv($request, $items, $this->model);
-                $base = app()->make('url')->to('/');
+        switch ($request->headers->get("accept")) {
+            case "text/csv":
+                $filename = $this->respondWithCsv(
+                    $request,
+                    $items,
+                    $this->model
+                );
+                $base = app()
+                    ->make("url")
+                    ->to("/");
                 return response($base . $filename, 201);
             default:
                 return $this->respondWithCollection($request, $items, $total);
         }
     }
 
-    public function retrieve(RetrieveRequest $request, $id) {
+    public function retrieve(RetrieveRequest $request, $id)
+    {
         $item = $this->repo->find($request, $id);
 
         try {
@@ -46,7 +55,8 @@ class PadlockController extends RestController
         }
     }
 
-    public function update(UpdateRequest $request, $id) {
+    public function update(UpdateRequest $request, $id)
+    {
         try {
             $item = parent::validateAndUpdate($request, $id);
         } catch (ValidationException $e) {
@@ -56,7 +66,8 @@ class PadlockController extends RestController
         return $this->respondWithItem($request, $item);
     }
 
-    public function restore(RestoreRequest $request, $id) {
+    public function restore(RestoreRequest $request, $id)
+    {
         try {
             $response = parent::validateAndRestore($request, $id);
         } catch (ValidationException $e) {
@@ -66,43 +77,44 @@ class PadlockController extends RestController
         return $response;
     }
 
-    public function template(Request $request) {
+    public function template(Request $request)
+    {
         $template = [
-            'item' => [
-                'name' => '',
-                'mac_address' => '',
-                'external_id' => '',
-                'loanable_id' => null,
+            "item" => [
+                "name" => "",
+                "mac_address" => "",
+                "external_id" => "",
+                "loanable_id" => null,
             ],
-            'form' => [
-                'name' => [
-                    'type' => 'text',
+            "form" => [
+                "name" => [
+                    "type" => "text",
                 ],
-                'mac_address' => [
-                    'type' => 'text',
+                "mac_address" => [
+                    "type" => "text",
                 ],
-                'external_id' => [
-                    'type' => 'text',
+                "external_id" => [
+                    "type" => "text",
                 ],
-                'loanable_id' => [
-                    'type' => 'relation',
-                    'query' => [
-                        'slug' => 'loanables',
-                        'value' => 'id',
-                        'text' => 'name',
-                        'params' => [
-                            'fields' => 'id,name',
-                            '!type' => 'car',
+                "loanable_id" => [
+                    "type" => "relation",
+                    "query" => [
+                        "slug" => "loanables",
+                        "value" => "id",
+                        "text" => "name",
+                        "params" => [
+                            "fields" => "id,name",
+                            "!type" => "car",
                         ],
                     ],
-                ]
+                ],
             ],
-            'filters' => $this->model::$filterTypes,
+            "filters" => $this->model::$filterTypes,
         ];
 
-        $modelRules = $this->model->getRules('template', $request->user());
+        $modelRules = $this->model->getRules("template", $request->user());
         foreach ($modelRules as $field => $rules) {
-            $template['form'][$field]['rules'] = $this->formatRules($rules);
+            $template["form"][$field]["rules"] = $this->formatRules($rules);
         }
 
         return $template;

@@ -6,9 +6,11 @@ use Illuminate\Support\Facades\Schema;
 
 class FixViewBugOnDuplicateImages extends Migration
 {
-    public function up() {
-        \DB::statement('DROP MATERIALIZED VIEW loanables');
-        \DB::statement(<<<SQL
+    public function up()
+    {
+        \DB::statement("DROP MATERIALIZED VIEW loanables");
+        \DB::statement(
+            <<<SQL
 CREATE MATERIALIZED VIEW loanables
 (id, type, name, position, location_description, comments, instructions, availability_ics, owner_id, community_id, created_at, updated_at, deleted_at, image_id) AS
     SELECT DISTINCT ON (cars.id) cars.id, 'car' AS type, name, position, location_description, comments, instructions, availability_ics, owner_id, community_id, cars.created_at, cars.updated_at, cars.deleted_at, images.id AS image_id
@@ -24,16 +26,19 @@ UNION
     LEFT JOIN images ON images.imageable_id = trailers.id AND images.imageable_type = 'App\Models\Trailer'
 SQL
         );
-        \DB::statement(<<<SQL
+        \DB::statement(
+            <<<SQL
 CREATE UNIQUE INDEX loanables_index
 ON loanables (id, type);
 SQL
         );
     }
 
-    public function down() {
-        \DB::statement('DROP MATERIALIZED VIEW loanables');
-        \DB::statement(<<<SQL
+    public function down()
+    {
+        \DB::statement("DROP MATERIALIZED VIEW loanables");
+        \DB::statement(
+            <<<SQL
 CREATE MATERIALIZED VIEW loanables
 (id, type, name, position, location_description, comments, instructions, availability_ics, owner_id, community_id, created_at, updated_at, deleted_at, image_id) AS
     SELECT cars.id, 'car' AS type, name, position, location_description, comments, instructions, availability_ics, owner_id, community_id, cars.created_at, cars.updated_at, cars.deleted_at, images.id AS image_id

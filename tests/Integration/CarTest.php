@@ -17,176 +17,201 @@ use Tests\TestCase;
 class CarTest extends TestCase
 {
     private static $carResponseStructure = [
-        'brand',
-        'comments',
-        'engine',
-        'has_informed_insurer',
-        'instructions',
-        'insurer',
-        'is_value_over_fifty_thousand',
-        'location_description',
-        'model',
-        'name',
-        'papers_location',
-        'plate_number',
-        'position',
-        'transmission_mode',
-        'year_of_circulation',
+        "brand",
+        "comments",
+        "engine",
+        "has_informed_insurer",
+        "instructions",
+        "insurer",
+        "is_value_over_fifty_thousand",
+        "location_description",
+        "model",
+        "name",
+        "papers_location",
+        "plate_number",
+        "position",
+        "transmission_mode",
+        "year_of_circulation",
     ];
 
-    public function testCreateCars() {
-        $owner = factory(Owner::class)->create([ 'user_id' => $this->user->id ]);
+    public function testCreateCars()
+    {
+        $owner = factory(Owner::class)->create(["user_id" => $this->user->id]);
         $data = [
-            'brand' => $this->faker->word,
-            'comments' => $this->faker->paragraph,
-            'engine' => $this->faker->randomElement(['fuel' ,'diesel', 'electric', 'hybrid']),
-            'has_informed_insurer' => true,
-            'instructions' => $this->faker->paragraph,
-            'insurer' => $this->faker->word,
-            'is_value_over_fifty_thousand' => $this->faker->boolean,
-            'location_description' => $this->faker->sentence,
-            'model' => $this->faker->sentence,
-            'name' => $this->faker->name,
-            'owner_id' => $owner->id,
-            'papers_location' => $this->faker->randomElement(['in_the_car', 'to_request_with_car']),
-            'plate_number' => $this->faker->shuffle('9F29J2'),
-            'position' => [$this->faker->latitude, $this->faker->longitude],
-            'pricing_category' => 'large',
-            'transmission_mode' => $this->faker->randomElement(['automatic' ,'manual']),
-            'type' => 'car',
-            'year_of_circulation' => $this->faker->year($max = 'now'),
+            "brand" => $this->faker->word,
+            "comments" => $this->faker->paragraph,
+            "engine" => $this->faker->randomElement([
+                "fuel",
+                "diesel",
+                "electric",
+                "hybrid",
+            ]),
+            "has_informed_insurer" => true,
+            "instructions" => $this->faker->paragraph,
+            "insurer" => $this->faker->word,
+            "is_value_over_fifty_thousand" => $this->faker->boolean,
+            "location_description" => $this->faker->sentence,
+            "model" => $this->faker->sentence,
+            "name" => $this->faker->name,
+            "owner_id" => $owner->id,
+            "papers_location" => $this->faker->randomElement([
+                "in_the_car",
+                "to_request_with_car",
+            ]),
+            "plate_number" => $this->faker->shuffle("9F29J2"),
+            "position" => [$this->faker->latitude, $this->faker->longitude],
+            "pricing_category" => "large",
+            "transmission_mode" => $this->faker->randomElement([
+                "automatic",
+                "manual",
+            ]),
+            "type" => "car",
+            "year_of_circulation" => $this->faker->year($max = "now"),
         ];
 
-        $response = $this->json('POST', '/api/v1/cars', $data);
-        $response->assertStatus(201)
+        $response = $this->json("POST", "/api/v1/cars", $data);
+        $response
+            ->assertStatus(201)
             ->assertJsonStructure(static::$carResponseStructure)
-            ->assertJson([ 'pricing_category' => 'large']);
+            ->assertJson(["pricing_category" => "large"]);
     }
 
-    public function testShowCars() {
-        $owner = factory(Owner::class)->create(['user_id' => $this->user->id]);
-        $car = factory(Car::class)->create(['owner_id' => $owner->id]);
+    public function testShowCars()
+    {
+        $owner = factory(Owner::class)->create(["user_id" => $this->user->id]);
+        $car = factory(Car::class)->create(["owner_id" => $owner->id]);
 
-        $response = $this->json('GET', "/api/v1/cars/$car->id");
+        $response = $this->json("GET", "/api/v1/cars/$car->id");
 
-        $response->assertStatus(200)
+        $response
+            ->assertStatus(200)
             ->assertJsonStructure(static::$carResponseStructure);
     }
 
-    public function testUpdateCars() {
-        $owner = factory(Owner::class)->create(['user_id' => $this->user->id]);
-        $car = factory(Car::class)->create(['owner_id' => $owner->id]);
+    public function testUpdateCars()
+    {
+        $owner = factory(Owner::class)->create(["user_id" => $this->user->id]);
+        $car = factory(Car::class)->create(["owner_id" => $owner->id]);
         $data = [
-            'name' => $this->faker->name,
+            "name" => $this->faker->name,
         ];
 
-        $response = $this->json('PUT', "/api/v1/cars/$car->id", $data);
+        $response = $this->json("PUT", "/api/v1/cars/$car->id", $data);
 
         $response->assertStatus(200)->assertJson($data);
     }
 
-    public function testDeleteCars() {
-        $owner = factory(Owner::class)->create(['user_id' => $this->user->id]);
-        $car = factory(Car::class)->create([ 'owner_id' => $owner->id ]);
+    public function testDeleteCars()
+    {
+        $owner = factory(Owner::class)->create(["user_id" => $this->user->id]);
+        $car = factory(Car::class)->create(["owner_id" => $owner->id]);
 
-        $response = $this->json('DELETE', "/api/v1/cars/$car->id");
+        $response = $this->json("DELETE", "/api/v1/cars/$car->id");
         $response->assertStatus(200);
 
-        $response = $this->json('GET', "/api/v1/cars/$car->id");
+        $response = $this->json("GET", "/api/v1/cars/$car->id");
         $response->assertStatus(404);
     }
 
-    public function testDeleteCarsWithActiveLoan() {
+    public function testDeleteCarsWithActiveLoan()
+    {
         // No active loan
         $loan = $this->buildLoan();
         $car = $loan->loanable;
 
-        $response = $this->json('DELETE', "/api/v1/cars/$car->id");
+        $response = $this->json("DELETE", "/api/v1/cars/$car->id");
         $response->assertStatus(200);
 
-        $response = $this->json('GET', "/api/v1/cars/$car->id");
+        $response = $this->json("GET", "/api/v1/cars/$car->id");
         $response->assertStatus(404);
 
         // Prepaid (active) loan
         $loan = $this->buildLoan();
         $prePayment = factory(PrePayment::class)->create([
-          'loan_id' => $loan->id,
-          'status' => 'completed',
+            "loan_id" => $loan->id,
+            "status" => "completed",
         ]);
         $car = $loan->loanable;
         $loan = $loan->fresh();
 
-        $response = $this->json('DELETE', "/api/v1/cars/$car->id");
-        $response->assertStatus(422)
-          ->assertJson([
-            'errors' => [
-              'id' => [ 'Ce véhicule a des emprunts en cours.' ],
+        $response = $this->json("DELETE", "/api/v1/cars/$car->id");
+        $response->assertStatus(422)->assertJson([
+            "errors" => [
+                "id" => ["Ce véhicule a des emprunts en cours."],
             ],
-          ]);
+        ]);
 
         // Only completed loan
         $loan = $this->buildLoan();
         $prePayment = factory(PrePayment::class)->create([
-          'loan_id' => $loan->id,
-          'status' => 'completed',
+            "loan_id" => $loan->id,
+            "status" => "completed",
         ]);
         $payment = factory(Payment::class)->create([
-          'loan_id' => $loan->id,
-          'status' => 'completed',
+            "loan_id" => $loan->id,
+            "status" => "completed",
         ]);
         $car = $loan->loanable;
         $loan = $loan->fresh();
 
-        $response = $this->json('DELETE', "/api/v1/cars/$car->id");
+        $response = $this->json("DELETE", "/api/v1/cars/$car->id");
         $response->assertStatus(200);
     }
 
-    public function testListCars() {
-        $owner = factory(Owner::class)->create(['user_id' => $this->user->id]);
-        $cars = factory(Car::class, 2)->create(['owner_id' => $owner->id])
+    public function testListCars()
+    {
+        $owner = factory(Owner::class)->create(["user_id" => $this->user->id]);
+        $cars = factory(Car::class, 2)
+            ->create(["owner_id" => $owner->id])
             ->map(function ($car) {
                 return $car->only(static::$carResponseStructure);
             });
 
-        $response = $this->json('GET', "/api/v1/cars");
+        $response = $this->json("GET", "/api/v1/cars");
 
-        $response->assertStatus(200)
-            ->assertJson([ 'total' => 2 ])
-            ->assertJsonStructure($this->buildCollectionStructure(static::$carResponseStructure));
+        $response
+            ->assertStatus(200)
+            ->assertJson(["total" => 2])
+            ->assertJsonStructure(
+                $this->buildCollectionStructure(static::$carResponseStructure)
+            );
     }
 
-    protected function buildLoan($upTo = null) {
+    protected function buildLoan($upTo = null)
+    {
         $community = factory(Community::class)->create();
         $pricing = factory(Pricing::class)->create([
-            'community_id' => $community->id,
-            'object_type' => 'App\Models\Car',
+            "community_id" => $community->id,
+            "object_type" => "App\Models\Car",
         ]);
 
-        $borrower = factory(Borrower::class)->create(['user_id' => $this->user->id]);
+        $borrower = factory(Borrower::class)->create([
+            "user_id" => $this->user->id,
+        ]);
         $user = factory(User::class)->create();
-        $owner = factory(Owner::class)->create([ 'user_id' => $user ]);
+        $owner = factory(Owner::class)->create(["user_id" => $user]);
 
         $loanable = factory(Car::class)->create([
-            'owner_id' => $owner,
-            'community_id' => $community->id,
+            "owner_id" => $owner,
+            "community_id" => $community->id,
         ]);
 
         $loan = factory(Loan::class)->create([
-            'borrower_id' => $borrower->id,
-            'loanable_id' => $loanable->id,
-            'community_id' => $community->id,
+            "borrower_id" => $borrower->id,
+            "loanable_id" => $loanable->id,
+            "community_id" => $community->id,
         ]);
 
-        if ($upTo === 'intention') {
+        if ($upTo === "intention") {
             return $loan->fresh();
         }
 
         $intention = $loan->intention;
         $response = $this->json(
-            'PUT',
+            "PUT",
             "/api/v1/loans/$loan->id/actions/$intention->id/complete",
             [
-                'type' => 'intention',
+                "type" => "intention",
             ]
         );
         $response->assertStatus(200);

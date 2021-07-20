@@ -8,21 +8,30 @@ use Doctrine\DBAL\Types\Type;
 
 class AddDefaultToIntentionStatusEnum extends Migration
 {
-    public function __construct() {
-        if (!Type::hasType('enum')) {
-            Type::addType('enum', StringType::class);
+    public function __construct()
+    {
+        if (!Type::hasType("enum")) {
+            Type::addType("enum", StringType::class);
         }
     }
 
-    public function up() {
-        Schema::table('intentions', function (Blueprint $table) {
-            $table->enum('status', ['in_process', 'canceled', 'completed'])->default('in_process')->change();
+    public function up()
+    {
+        Schema::table("intentions", function (Blueprint $table) {
+            $table
+                ->enum("status", ["in_process", "canceled", "completed"])
+                ->default("in_process")
+                ->change();
         });
     }
 
-    public function down() {
-        Schema::table('intentions', function (Blueprint $table) {
-            $table->enum('status', ['in_process', 'canceled', 'completed'])->default(null)->change();
+    public function down()
+    {
+        Schema::table("intentions", function (Blueprint $table) {
+            $table
+                ->enum("status", ["in_process", "canceled", "completed"])
+                ->default(null)
+                ->change();
         });
     }
 }

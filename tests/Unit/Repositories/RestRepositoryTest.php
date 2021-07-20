@@ -8,55 +8,37 @@ use Tests\TestCase;
 
 class RestRepositoryTest extends TestCase
 {
-    public function testApplyDateRangeFilter() {
-                             // Empty string should not add condition.
+    public function testApplyDateRangeFilter()
+    {
+        // Empty string should not add condition.
         $query = new BaseModel();
-        RestRepository::applyDateRangeFilter('date', 'date', '', $query, false);
+        RestRepository::applyDateRangeFilter("date", "date", "", $query, false);
 
-        $this->assertEquals(
-            'select * from "base_models"',
-            $query->toSql()
-        );
+        $this->assertEquals('select * from "base_models"', $query->toSql());
 
-                             // Test bounded interval
+        // Test bounded interval
         $query = new BaseModel();
         RestRepository::applyDateRangeFilter(
-            'date',
-            'date',
-            '2021-06-01T14:00:00Z@2021-07-01T08:00:00Z',
+            "date",
+            "date",
+            "2021-06-01T14:00:00Z@2021-07-01T08:00:00Z",
             $query,
             false
         );
 
         $this->assertQuerySql(
-            'select * from "base_models"'
-            . ' where "date" >= \'2021-06-01T14:00:00Z\''
-            . ' and "date" < \'2021-07-01T08:00:00Z\'',
+            'select * from "base_models"' .
+                ' where "date" >= \'2021-06-01T14:00:00Z\'' .
+                ' and "date" < \'2021-07-01T08:00:00Z\'',
             $query
         );
 
-
-                             // Test left-bounded interval with @
+        // Test left-bounded interval with @
         $query = new BaseModel();
         RestRepository::applyDateRangeFilter(
-            'date',
-            'date',
-            '2021-06-01T14:00:00Z@',
-            $query,
-            false
-        );
-
-        $this->assertQuerySql(
-            'select * from "base_models" where "date" >= \'2021-06-01T14:00:00Z\'',
-            $query
-        );
-
-                             // Test left-bounded interval without @
-        $query = new BaseModel();
-        RestRepository::applyDateRangeFilter(
-            'date',
-            'date',
-            '2021-06-01T14:00:00Z',
+            "date",
+            "date",
+            "2021-06-01T14:00:00Z@",
             $query,
             false
         );
@@ -66,12 +48,27 @@ class RestRepositoryTest extends TestCase
             $query
         );
 
-                             // Test right-bounded interval
+        // Test left-bounded interval without @
         $query = new BaseModel();
         RestRepository::applyDateRangeFilter(
-            'date',
-            'date',
-            '@2021-07-01T08:00:00Z',
+            "date",
+            "date",
+            "2021-06-01T14:00:00Z",
+            $query,
+            false
+        );
+
+        $this->assertQuerySql(
+            'select * from "base_models" where "date" >= \'2021-06-01T14:00:00Z\'',
+            $query
+        );
+
+        // Test right-bounded interval
+        $query = new BaseModel();
+        RestRepository::applyDateRangeFilter(
+            "date",
+            "date",
+            "@2021-07-01T08:00:00Z",
             $query,
             false
         );
@@ -81,42 +78,42 @@ class RestRepositoryTest extends TestCase
             $query
         );
 
-                             // Test unbounded interval
+        // Test unbounded interval
         $query = new BaseModel();
         RestRepository::applyDateRangeFilter(
-            'date',
-            'date',
-            '@',
+            "date",
+            "date",
+            "@",
             $query,
             false
         );
 
-        $this->assertQuerySql(
-            'select * from "base_models"',
-            $query
-        );
+        $this->assertQuerySql('select * from "base_models"', $query);
 
-                             // Test bounded interval with aggregate
+        // Test bounded interval with aggregate
         $query = new BaseModel();
         RestRepository::applyDateRangeFilter(
-            'date',
-            'date',
-            '2021-06-01T14:00:00Z@2021-07-01T08:00:00Z',
+            "date",
+            "date",
+            "2021-06-01T14:00:00Z@2021-07-01T08:00:00Z",
             $query,
             true
         );
 
         $this->assertQuerySql(
-            'select * from "base_models"'
-            . ' having "date" >= \'2021-06-01T14:00:00Z\''
-            . ' and "date" < \'2021-07-01T08:00:00Z\'',
+            'select * from "base_models"' .
+                ' having "date" >= \'2021-06-01T14:00:00Z\'' .
+                ' and "date" < \'2021-07-01T08:00:00Z\'',
             $query
         );
     }
 
-
-    protected function assertQuerySql($expected_sql, $query, string $message = '') {
-        $query_str = str_replace(array('?'), array('\'%s\''), $query->toSql());
+    protected function assertQuerySql(
+        $expected_sql,
+        $query,
+        string $message = ""
+    ) {
+        $query_str = str_replace(["?"], ['\'%s\''], $query->toSql());
         $query_str = vsprintf($query_str, $query->getBindings());
 
         $this->assertEquals($expected_sql, $query_str, $message);

@@ -6,7 +6,8 @@ use App\Http\Requests\BaseRequest;
 
 class AddBalanceRequest extends BaseRequest
 {
-    public function authorize() {
+    public function authorize()
+    {
         $user = $this->user();
 
         if (!$user) {
@@ -17,24 +18,22 @@ class AddBalanceRequest extends BaseRequest
             return true;
         }
 
-        $routeUserId = $this->route('user_id') ?: $this->get('user_id');
+        $routeUserId = $this->route("user_id") ?: $this->get("user_id");
 
         return $user->id === $routeUserId;
     }
 
-    public function rules() {
+    public function rules()
+    {
         $user = $this->user();
 
         $rules = [
-            'amount' => [
-                'numeric',
-                'required',
+            "amount" => ["numeric", "required"],
+            "transaction_id" => [
+                "required",
+                "integer",
+                "gt:{$user->transaction_id}",
             ],
-            'transaction_id' => [
-                'required',
-                'integer',
-                "gt:{$user->transaction_id}"
-            ]
         ];
 
         return $rules;

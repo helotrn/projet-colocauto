@@ -12,29 +12,32 @@ class EmailRegistrationStalled extends Command
     protected $signature = 'email:registration:stalled
                             {--pretend : Do not send emails}';
 
-    protected $description = 'Send user registration stalled emails';
+    protected $description = "Send user registration stalled emails";
 
     private $pretend = false;
 
-    public function handle() {
-        if ($this->option('pretend')) {
+    public function handle()
+    {
+        if ($this->option("pretend")) {
             $this->pretend = true;
         }
 
-        $this->info('Fetching users stalled at registration...');
+        $this->info("Fetching users stalled at registration...");
         $users = User::stalledAtRegistration()
-            ->where('meta->sent_stalled_email', null)
+            ->where("meta->sent_stalled_email", null)
             ->cursor();
 
         foreach ($users as $user) {
             if (!$this->pretend) {
                 $this->info("Sending email to $user->email");
 
-                Mail::to($user->email, $user->name . ' ' . $user->last_name)
-                  ->send(new RegistrationStalled($user));
+                Mail::to(
+                    $user->email,
+                    $user->name . " " . $user->last_name
+                )->send(new RegistrationStalled($user));
 
                 $meta = $user->meta;
-                $meta['sent_stalled_email'] = true;
+                $meta["sent_stalled_email"] = true;
                 $user->meta = $meta;
 
                 $user->save();
@@ -43,6 +46,6 @@ class EmailRegistrationStalled extends Command
             }
         }
 
-        $this->info('Done.');
+        $this->info("Done.");
     }
 }
