@@ -6,7 +6,8 @@ use Carbon\Carbon;
 
 class PrePayment extends Action
 {
-    public static function boot() {
+    public static function boot()
+    {
         parent::boot();
 
         self::saved(function ($model) {
@@ -18,12 +19,12 @@ class PrePayment extends Action
             if ($loan->borrower) {
                 $borrowerUser = $loan->borrower->user;
                 if ($borrowerUser->balance >= $loan->total_estimated_cost) {
-                    $model->status = 'completed';
+                    $model->status = "completed";
                 }
             }
 
             switch ($model->status) {
-                case 'completed':
+                case "completed":
                     if (!$model->loan->takeover) {
                         $takeover = new Takeover();
                         $takeover->loan()->associate($model->loan);
@@ -33,7 +34,7 @@ class PrePayment extends Action
                     $model->executed_at = Carbon::now();
                     $model->save();
                     break;
-                case 'canceled':
+                case "canceled":
                     $model->executed_at = Carbon::now();
                     $model->save();
                     break;
@@ -43,22 +44,23 @@ class PrePayment extends Action
         });
     }
 
-    public static function getColumnsDefinition() {
+    public static function getColumnsDefinition()
+    {
         return [
-            '*' => function ($query = null) {
+            "*" => function ($query = null) {
                 if (!$query) {
-                    return 'pre_payments.*';
+                    return "pre_payments.*";
                 }
 
-                return $query->selectRaw('pre_payments.*');
+                return $query->selectRaw("pre_payments.*");
             },
-            'type' => function ($query = null) {
+            "type" => function ($query = null) {
                 if (!$query) {
                     return "'pre_payment' AS type";
                 }
 
                 return $query->selectRaw("'pre_payment' AS type");
-            }
+            },
         ];
     }
 
@@ -66,9 +68,10 @@ class PrePayment extends Action
 
     protected $fillable = [];
 
-    public $items = ['loan'];
+    public $items = ["loan"];
 
-    public function loan() {
+    public function loan()
+    {
         return $this->belongsTo(Loan::class);
     }
 }

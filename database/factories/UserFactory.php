@@ -25,6 +25,9 @@ $factory->define(User::class, function (Faker $faker) {
     ];
 });
 
-$factory->afterCreatingState(User::class, 'withBorrower', function ($user, $faker) {
+$factory->afterCreatingState(User::class, "withBorrower", function (
+    $user,
+    $faker
+) {
     $user->borrower()->save(factory(Borrower::class)->make());
 });

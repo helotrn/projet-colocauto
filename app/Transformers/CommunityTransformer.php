@@ -7,9 +7,10 @@ use Molotov\Transformer;
 
 class CommunityTransformer extends Transformer
 {
-    protected $contexts = ['User'];
+    protected $contexts = ["User"];
 
-    public function transform($item, $options = []) {
+    public function transform($item, $options = [])
+    {
         $output = parent::transform($item, $options);
 
         $user = Auth::user();
@@ -18,14 +19,14 @@ class CommunityTransformer extends Transformer
         }
 
         if (!$user) {
-            unset($output['users']);
+            unset($output["users"]);
         }
 
         $approvedCommunity = $user->communities
-            ->where('id', $item->id)
-            ->where('pivot.approved_at', '!=', null);
+            ->where("id", $item->id)
+            ->where("pivot.approved_at", "!=", null);
         if ($approvedCommunity->isEmpty()) {
-            unset($output['users']);
+            unset($output["users"]);
         }
 
         return $output;

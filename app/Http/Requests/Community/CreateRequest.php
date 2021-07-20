@@ -8,27 +8,31 @@ use App\Rules\CommunityPricingRule;
 
 class CreateRequest extends BaseRequest
 {
-    public function authorize() {
+    public function authorize()
+    {
         return $this->user()->isAdmin();
     }
 
-    public function rules() {
+    public function rules()
+    {
         $rules = [
-            'name' => 'string',
-            'pricings' => [
-                new CommunityPricingRule,
-            ],
+            "name" => "string",
+            "pricings" => [new CommunityPricingRule()],
         ];
 
-        $pricingRules = Pricing::getRules('update', $this->user());
-        $rules = array_merge($rules, static::rebaseRules('pricings.*', $pricingRules));
+        $pricingRules = Pricing::getRules("update", $this->user());
+        $rules = array_merge(
+            $rules,
+            static::rebaseRules("pricings.*", $pricingRules)
+        );
 
         return $rules;
     }
 
-    public function messages() {
+    public function messages()
+    {
         return [
-            'name.required' => 'Le nom est requis.'
+            "name.required" => "Le nom est requis.",
         ];
     }
 }

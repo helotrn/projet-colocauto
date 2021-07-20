@@ -6,15 +6,17 @@ use Illuminate\Support\Facades\Schema;
 
 class AddAcceptConditionsToUsers extends Migration
 {
-    public function up() {
-        Schema::table('users', function (Blueprint $table) {
-            $table->boolean('accept_conditions')->default(false);
+    public function up()
+    {
+        Schema::table("users", function (Blueprint $table) {
+            $table->boolean("accept_conditions")->default(false);
         });
     }
 
-    public function down() {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('accept_conditions');
+    public function down()
+    {
+        Schema::table("users", function (Blueprint $table) {
+            $table->dropColumn("accept_conditions");
         });
     }
 }

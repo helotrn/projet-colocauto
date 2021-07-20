@@ -9,8 +9,9 @@ use Laravel\Socialite\Contracts\User as ProviderUser;
 
 class GoogleAccountService
 {
-    public function createOrGetUser(ProviderUser $providerUser) {
-        $account = GoogleAccount::whereProvider('google')
+    public function createOrGetUser(ProviderUser $providerUser)
+    {
+        $account = GoogleAccount::whereProvider("google")
             ->whereProviderUserId($providerUser->getId())
             ->first();
 
@@ -19,14 +20,14 @@ class GoogleAccountService
         }
 
         $account = new GoogleAccount([
-            'provider_user_id' => $providerUser->getId(),
-            'provider' => 'google'
+            "provider_user_id" => $providerUser->getId(),
+            "provider" => "google",
         ]);
 
         $user = User::whereEmail($providerUser->getEmail())->first();
 
         if (!$user) {
-            $user = new User;
+            $user = new User();
             $user->email = $providerUser->getEmail();
             $user->name = $providerUser->getName();
             // Password should be a hashed string, this will fail login every time

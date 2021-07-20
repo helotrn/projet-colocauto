@@ -6,7 +6,8 @@ use App\Models\Handover;
 
 class HandoverRepository extends RestRepository
 {
-    public function __construct(Handover $model) {
+    public function __construct(Handover $model)
+    {
         $this->model = $model;
     }
 }

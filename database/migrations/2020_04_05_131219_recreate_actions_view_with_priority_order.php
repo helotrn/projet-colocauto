@@ -6,10 +6,12 @@ use Illuminate\Support\Facades\Schema;
 
 class RecreateActionsViewWithPriorityOrder extends Migration
 {
-    public function up() {
-        \DB::statement('DROP MATERIALIZED VIEW actions');
+    public function up()
+    {
+        \DB::statement("DROP MATERIALIZED VIEW actions");
 
-        \DB::statement(<<<SQL
+        \DB::statement(
+            <<<SQL
 CREATE MATERIALIZED VIEW actions
 (id, type, weight, executed_at, status, loan_id, created_at, updated_at, deleted_at) AS
     SELECT id, 'payment' AS type, 6 AS weight, executed_at, status, loan_id, created_at, updated_at, deleted_at FROM payments
@@ -28,17 +30,20 @@ UNION
 SQL
         );
 
-        \DB::statement(<<<SQL
+        \DB::statement(
+            <<<SQL
 CREATE UNIQUE INDEX actions_index
 ON actions (id, type);
 SQL
         );
     }
 
-    public function down() {
-        \DB::statement('DROP MATERIALIZED VIEW actions');
+    public function down()
+    {
+        \DB::statement("DROP MATERIALIZED VIEW actions");
 
-        \DB::statement(<<<SQL
+        \DB::statement(
+            <<<SQL
 CREATE MATERIALIZED VIEW actions
 (id, type, executed_at, status, loan_id, created_at, updated_at, deleted_at) AS
     SELECT id, 'payment' AS type, executed_at, status, loan_id, created_at, updated_at, deleted_at FROM payments
@@ -57,7 +62,8 @@ UNION
 SQL
         );
 
-        \DB::statement(<<<SQL
+        \DB::statement(
+            <<<SQL
 CREATE UNIQUE INDEX actions_index
 ON actions (id, type);
 SQL

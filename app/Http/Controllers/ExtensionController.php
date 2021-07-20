@@ -12,12 +12,16 @@ use App\Repositories\ExtensionRepository;
 
 class ExtensionController extends RestController
 {
-    public function __construct(ExtensionRepository $repository, Extension $model) {
+    public function __construct(
+        ExtensionRepository $repository,
+        Extension $model
+    ) {
         $this->repo = $repository;
         $this->model = $model;
     }
 
-    public function index(Request $request) {
+    public function index(Request $request)
+    {
         try {
             [$items, $total] = $this->repo->get($request);
         } catch (ValidationException $e) {
@@ -27,7 +31,8 @@ class ExtensionController extends RestController
         return $this->respondWithCollection($request, $items, $total);
     }
 
-    public function create(ExtensionRequest $request) {
+    public function create(ExtensionRequest $request)
+    {
         try {
             $item = parent::validateAndCreate($request);
         } catch (ValidationException $e) {
@@ -39,7 +44,8 @@ class ExtensionController extends RestController
         return $this->respondWithItem($request, $item, 201);
     }
 
-    public function update(Request $request, $id) {
+    public function update(Request $request, $id)
+    {
         try {
             $item = parent::validateAndUpdate($request, $id);
         } catch (ValidationException $e) {
@@ -49,7 +55,8 @@ class ExtensionController extends RestController
         return $this->respondWithItem($request, $item);
     }
 
-    public function retrieve(Request $request, $id) {
+    public function retrieve(Request $request, $id)
+    {
         $item = $this->repo->find($request, $id);
 
         try {
@@ -61,7 +68,8 @@ class ExtensionController extends RestController
         return $response;
     }
 
-    public function destroy(Request $request, $id) {
+    public function destroy(Request $request, $id)
+    {
         try {
             $response = parent::validateAndDestroy($request, $id);
         } catch (ValidationException $e) {
@@ -71,12 +79,13 @@ class ExtensionController extends RestController
         return $response;
     }
 
-    public function complete(ExtensionRequest $request, $actionId, $loanId) {
+    public function complete(ExtensionRequest $request, $actionId, $loanId)
+    {
         $authRequest = $request->redirectAuth(Request::class);
         $item = $this->repo->find($authRequest, $actionId);
 
-        $item->message_for_borrower = $request->get('message_for_borrower');
-        $item->status = 'completed';
+        $item->message_for_borrower = $request->get("message_for_borrower");
+        $item->status = "completed";
         $item->save();
 
         event(new LoanExtensionAcceptedEvent($item));
@@ -84,12 +93,13 @@ class ExtensionController extends RestController
         return $item;
     }
 
-    public function cancel(Request $request, $actionId, $loanId) {
+    public function cancel(Request $request, $actionId, $loanId)
+    {
         $authRequest = $request->redirectAuth(Request::class);
         $item = $this->repo->find($authRequest, $actionId);
 
-        $item->message_for_borrower = $request->get('message_for_borrower');
-        $item->status = 'canceled';
+        $item->message_for_borrower = $request->get("message_for_borrower");
+        $item->status = "canceled";
         $item->save();
 
         event(new LoanExtensionRejectedEvent($item));

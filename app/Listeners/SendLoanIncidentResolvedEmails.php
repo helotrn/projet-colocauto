@@ -12,17 +12,20 @@ use Mail;
 
 class SendLoanIncidentResolvedEmails
 {
-    public function handle(LoanIncidentResolvedEvent $event) {
+    public function handle(LoanIncidentResolvedEvent $event)
+    {
         $loan = $event->incident->loan;
         $borrower = $loan->borrower;
         $owner = $loan->loanable->owner;
 
-        Mail::to($owner->user->email, $owner->user->name . ' ' . $owner->user->last_name)
-            ->queue(new LoanIncidentResolved($event->incident, $loan, $owner));
+        Mail::to(
+            $owner->user->email,
+            $owner->user->name . " " . $owner->user->last_name
+        )->queue(new LoanIncidentResolved($event->incident, $loan, $owner));
 
         Mail::to(
             $borrower->user->email,
-            $borrower->user->name . ' ' . $borrower->user->last_name
+            $borrower->user->name . " " . $borrower->user->last_name
         )->queue(new LoanIncidentResolved($event->incident, $loan, $borrower));
     }
 }

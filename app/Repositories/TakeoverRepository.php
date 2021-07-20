@@ -6,7 +6,8 @@ use App\Models\Takeover;
 
 class TakeoverRepository extends RestRepository
 {
-    public function __construct(Takeover $model) {
+    public function __construct(Takeover $model)
+    {
         $this->model = $model;
     }
 }

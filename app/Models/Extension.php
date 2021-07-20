@@ -7,32 +7,33 @@ use Carbon\Carbon;
 class Extension extends Action
 {
     public static $rules = [
-        'status' => 'required',
-        'new_duration' => 'required',
-        'comments_on_extension' => 'required|string',
-        'loan_id' => 'extendable',
+        "status" => "required",
+        "new_duration" => "required",
+        "comments_on_extension" => "required|string",
+        "loan_id" => "extendable",
     ];
 
-    public static function boot() {
+    public static function boot()
+    {
         parent::boot();
 
         self::saved(function ($model) {
             if (!$model->executed_at) {
                 switch ($model->status) {
-                    case 'in_process':
+                    case "in_process":
                         if ($model->loan && !$model->loan->loanable->owner) {
-                            $model->status = 'completed';
+                            $model->status = "completed";
                             $model->executed_at = Carbon::now();
                             $model->save();
                         }
                         break;
-                    case 'completed':
+                    case "completed":
                         $loanId = $model->loan->id;
 
                         $model->executed_at = Carbon::now();
                         $model->save();
                         break;
-                    case 'canceled':
+                    case "canceled":
                         $model->executed_at = Carbon::now();
                         $model->save();
                         break;
@@ -41,41 +42,44 @@ class Extension extends Action
         });
     }
 
-    public static function getColumnsDefinition() {
+    public static function getColumnsDefinition()
+    {
         return [
-            '*' => function ($query = null) {
+            "*" => function ($query = null) {
                 if (!$query) {
-                    return 'extensions.*';
+                    return "extensions.*";
                 }
 
-                return $query->selectRaw('extensions.*');
+                return $query->selectRaw("extensions.*");
             },
-            'type' => function ($query = null) {
+            "type" => function ($query = null) {
                 if (!$query) {
                     return "'extension' AS type";
                 }
 
                 return $query->selectRaw("'extension' AS type");
-            }
+            },
         ];
     }
 
-    public $computed = ['type'];
+    public $computed = ["type"];
 
     public $readOnly = false;
 
     protected $fillable = [
-        'comments_on_extension',
-        'loan_id',
-        'new_duration',
-        'status',
+        "comments_on_extension",
+        "loan_id",
+        "new_duration",
+        "status",
     ];
 
-    public function loan() {
+    public function loan()
+    {
         return $this->belongsTo(Loan::class);
     }
 
-    public function getTypeAttribute() {
-        return 'extension';
+    public function getTypeAttribute()
+    {
+        return "extension";
     }
 }

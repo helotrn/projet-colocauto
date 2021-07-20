@@ -12,37 +12,51 @@ use Tests\TestCase;
 
 class ExtensionTest extends TestCase
 {
-    public function setUp():void {
+    public function setUp(): void
+    {
         parent::setUp();
 
-        $owner = factory(Owner::class)->create(['user_id' => $this->user->id]);
-        $borrower = factory(Borrower::class)->create([ 'user_id' => $this->user->id ]);
-        $this->loanable = factory(Bike::class)->create([ 'owner_id' => $owner->id ]);
+        $owner = factory(Owner::class)->create(["user_id" => $this->user->id]);
+        $borrower = factory(Borrower::class)->create([
+            "user_id" => $this->user->id,
+        ]);
+        $this->loanable = factory(Bike::class)->create([
+            "owner_id" => $owner->id,
+        ]);
         $this->loan = factory(Loan::class)
-            ->states('withCompletedIntention')
+            ->states("withCompletedIntention")
             ->create([
-                'loanable_id' => $this->loanable->id,
-                'borrower_id' => $borrower->id,
-                'duration_in_minutes' => 20,
+                "loanable_id" => $this->loanable->id,
+                "borrower_id" => $borrower->id,
+                "duration_in_minutes" => 20,
             ]);
     }
 
-    public function testExtensionMakeLoanableUnavailable() {
+    public function testExtensionMakeLoanableUnavailable()
+    {
         $departure = $this->loan->departure_at;
-        $anHourLater = (new \Carbon\Carbon($this->loan->departure_at))->add(1, 'hour');
-        $threeHoursLater = (new \Carbon\Carbon($this->loan->departure_at))->add(3, 'hour');
+        $anHourLater = (new \Carbon\Carbon($this->loan->departure_at))->add(
+            1,
+            "hour"
+        );
+        $threeHoursLater = (new \Carbon\Carbon($this->loan->departure_at))->add(
+            3,
+            "hour"
+        );
 
         $this->assertFalse($this->loanable->isAvailable($departure, 10));
-        $this->assertTrue($this->loanable->isAvailable($departure, 10, [$this->loan->id]));
+        $this->assertTrue(
+            $this->loanable->isAvailable($departure, 10, [$this->loan->id])
+        );
 
         $this->assertTrue($this->loanable->isAvailable($anHourLater, 10));
 
-        $extension = new Extension;
+        $extension = new Extension();
         $extension->fill([
-            'new_duration' => 170,
-            'comments_on_extension' => $this->faker->paragraph,
-            'type' => 'extension',
-            'status' => 'completed',
+            "new_duration" => 170,
+            "comments_on_extension" => $this->faker->paragraph,
+            "type" => "extension",
+            "status" => "completed",
         ]);
         $extension->loan_id = $this->loan->id;
         $extension->save();

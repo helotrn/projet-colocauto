@@ -9,13 +9,15 @@ class UserTest extends TestCase
 {
     public $model;
 
-    public function setUp():void {
+    public function setUp(): void
+    {
         parent::setUp();
 
-        $this->model = new User;
+        $this->model = new User();
     }
 
-    public function testUpdateBalance() {
+    public function testUpdateBalance()
+    {
         $user = factory(User::class)->create();
 
         $this->assertEquals(0, $user->balance);
@@ -33,9 +35,10 @@ class UserTest extends TestCase
         $this->assertEquals(2.3, $user->balance);
     }
 
-    public function testRemoveFromBalanceBelowZero() {
+    public function testRemoveFromBalanceBelowZero()
+    {
         $user = factory(User::class)->create([
-            'balance' => 1,
+            "balance" => 1,
         ]);
 
         $this->assertEquals(1, $user->balance);
@@ -49,7 +52,9 @@ class UserTest extends TestCase
         $this->assertEquals(1, $user->balance);
 
         // If the balance is not sufficient, abort
-        $this->expectException("Symfony\Component\HttpKernel\Exception\HttpException");
+        $this->expectException(
+            "Symfony\Component\HttpKernel\Exception\HttpException"
+        );
         $user->removeFromBalance(1.01);
         $this->assertEquals(0, 1); // Raised above
     }

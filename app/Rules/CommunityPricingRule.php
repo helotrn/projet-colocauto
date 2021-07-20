@@ -6,28 +6,33 @@ use Illuminate\Contracts\Validation\Rule;
 
 class CommunityPricingRule implements Rule
 {
-    public function passes($attribute, $value) {
+    public function passes($attribute, $value)
+    {
         if (empty($value)) {
             return false;
         }
 
-        $pricingsByType = array_reduce($value, function ($acc, $p) {
-            if ($p['object_type'] === null) {
-                $type = 'null';
-            } else {
-                $type = $p['object_type'];
-            }
+        $pricingsByType = array_reduce(
+            $value,
+            function ($acc, $p) {
+                if ($p["object_type"] === null) {
+                    $type = "null";
+                } else {
+                    $type = $p["object_type"];
+                }
 
-            if (!isset($acc[$type])) {
-                $acc[$type] = 0;
-            }
+                if (!isset($acc[$type])) {
+                    $acc[$type] = 0;
+                }
 
-            $acc[$type]++;
+                $acc[$type]++;
 
-            return $acc;
-        }, []);
+                return $acc;
+            },
+            []
+        );
 
-        if (count($value) < 3 && !isset($pricingsByType['null'])) {
+        if (count($value) < 3 && !isset($pricingsByType["null"])) {
             return false;
         }
 
@@ -40,8 +45,9 @@ class CommunityPricingRule implements Rule
         return true;
     }
 
-    public function message() {
-        return 'Spécifiez une tarification par défaut ou '
-            . 'une tarification pour tous les autres types.';
+    public function message()
+    {
+        return "Spécifiez une tarification par défaut ou " .
+            "une tarification pour tous les autres types.";
     }
 }

@@ -12,7 +12,7 @@ class NokeSyncLocks extends Command
     protected $signature = 'noke:sync:locks --debug
                             {--pretend : Do not call remote API}';
 
-    protected $description = 'Synchronize NOKE locks configuration';
+    protected $description = "Synchronize NOKE locks configuration";
 
     private $groups = [];
     private $groupsIndex = [];
@@ -21,36 +21,39 @@ class NokeSyncLocks extends Command
 
     private $pretend = false;
 
-    public function __construct(Client $client, NokeService $service) {
+    public function __construct(Client $client, NokeService $service)
+    {
         parent::__construct();
 
         $this->client = $client;
         $this->service = $service;
     }
 
-    public function handle() {
-        if ($this->option('pretend')) {
+    public function handle()
+    {
+        if ($this->option("pretend")) {
             $this->pretend = true;
         }
 
-        $this->info('Fetching locks...');
+        $this->info("Fetching locks...");
         $this->locks = $this->service->fetchLocks(true);
-        $this->info('Found ' . count($this->locks) . ' locks.');
+        $this->info("Found " . count($this->locks) . " locks.");
 
-        $this->info('Synchronizing local locks...');
+        $this->info("Synchronizing local locks...");
         $this->syncLocks();
 
-        $this->info('Fetching groups...');
+        $this->info("Fetching groups...");
         $this->getGroups();
-        $this->info('Found ' . count($this->groups) . ' groups.');
+        $this->info("Found " . count($this->groups) . " groups.");
 
-        $this->info('Creating remote groups...');
+        $this->info("Creating remote groups...");
         $this->createGroups();
 
-        $this->info('Done.');
+        $this->info("Done.");
     }
 
-    private function getGroups() {
+    private function getGroups()
+    {
         $this->groups = $this->service->fetchGroups(true);
 
         foreach ($this->groups as $group) {
@@ -58,15 +61,20 @@ class NokeSyncLocks extends Command
         }
     }
 
-    private function syncLocks() {
+    private function syncLocks()
+    {
         $lockIds = [];
         foreach ($this->locks as $nokeLock) {
             $lock = Padlock::whereExternalId($nokeLock->id)->first();
             if (!$lock) {
-                $lock = new Padlock;
-                $this->warn("Creating lock $nokeLock->name ({$lock->id} / {$nokeLock->id}).");
+                $lock = new Padlock();
+                $this->warn(
+                    "Creating lock $nokeLock->name ({$lock->id} / {$nokeLock->id})."
+                );
             } else {
-                $this->warn("Updating lock $nokeLock->name ({$lock->id} / {$nokeLock->id}).");
+                $this->warn(
+                    "Updating lock $nokeLock->name ({$lock->id} / {$nokeLock->id})."
+                );
             }
 
             $lock->external_id = $nokeLock->id;
@@ -83,14 +91,16 @@ class NokeSyncLocks extends Command
             }
         }
 
-        $this->info('Removing defunct locks...');
-        $removedLocks = Padlock::whereNotIn('id', $lockIds)->get();
+        $this->info("Removing defunct locks...");
+        $removedLocks = Padlock::whereNotIn("id", $lockIds)->get();
         if ($removedLocks->count() === 0) {
-              $this->warn('No lock to remove.');
+            $this->warn("No lock to remove.");
         }
 
         foreach ($removedLocks as $lock) {
-            $this->warn("Removing lock $nokeLock->name ({$lock->id} / {$nokeLock->id}).");
+            $this->warn(
+                "Removing lock $nokeLock->name ({$lock->id} / {$nokeLock->id})."
+            );
 
             if ($this->pretend) {
                 continue;
@@ -100,7 +110,8 @@ class NokeSyncLocks extends Command
         }
     }
 
-    private function createGroups() {
+    private function createGroups()
+    {
         $locks = Padlock::all();
 
         foreach ($locks as $lock) {
@@ -113,7 +124,10 @@ class NokeSyncLocks extends Command
                     continue;
                 }
 
-                $this->service->findOrCreateGroup($groupName, $lock->external_id);
+                $this->service->findOrCreateGroup(
+                    $groupName,
+                    $lock->external_id
+                );
             }
         }
     }

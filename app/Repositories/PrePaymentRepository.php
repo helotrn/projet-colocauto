@@ -6,7 +6,8 @@ use App\Models\PrePayment;
 
 class PrePaymentRepository extends RestRepository
 {
-    public function __construct(PrePayment $model) {
+    public function __construct(PrePayment $model)
+    {
         $this->model = $model;
     }
 }

@@ -6,7 +6,8 @@ use App\Models\PaymentMethod;
 
 class PaymentMethodRepository extends RestRepository
 {
-    public function __construct(PaymentMethod $model) {
+    public function __construct(PaymentMethod $model)
+    {
         $this->model = $model;
     }
 }

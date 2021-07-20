@@ -1,7 +1,6 @@
 <?php
 
 return [
-
     /*
     |--------------------------------------------------------------------------
     | Authentication Defaults
@@ -13,9 +12,9 @@ return [
     |
     */
 
-    'defaults' => [
-        'guard' => 'web',
-        'passwords' => 'users',
+    "defaults" => [
+        "guard" => "web",
+        "passwords" => "users",
     ],
 
     /*
@@ -35,16 +34,16 @@ return [
     |
     */
 
-    'guards' => [
-        'web' => [
-            'driver' => 'session',
-            'provider' => 'users',
+    "guards" => [
+        "web" => [
+            "driver" => "session",
+            "provider" => "users",
         ],
 
-        'api' => [
-            'driver' => 'passport',
-            'provider' => 'users',
-            'hash' => false,
+        "api" => [
+            "driver" => "passport",
+            "provider" => "users",
+            "hash" => false,
         ],
     ],
 
@@ -65,10 +64,10 @@ return [
     |
     */
 
-    'providers' => [
-        'users' => [
-            'driver' => 'eloquent',
-            'model' => App\Models\User::class,
+    "providers" => [
+        "users" => [
+            "driver" => "eloquent",
+            "model" => App\Models\User::class,
         ],
 
         // 'users' => [
@@ -92,17 +91,16 @@ return [
     |
     */
 
-    'passwords' => [
-        'users' => [
-            'provider' => 'users',
-            'table' => 'password_resets',
-            'expire' => 720,
+    "passwords" => [
+        "users" => [
+            "provider" => "users",
+            "table" => "password_resets",
+            "expire" => 720,
         ],
     ],
 
-    'client' => [
-        'id' => env('PASSWORD_CLIENT_ID'),
-        'secret' => env('PASSWORD_CLIENT_SECRET'),
+    "client" => [
+        "id" => env("PASSWORD_CLIENT_ID"),
+        "secret" => env("PASSWORD_CLIENT_SECRET"),
     ],
-
 ];

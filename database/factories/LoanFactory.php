@@ -21,26 +21,46 @@ $factory->define(Loan::class, function (Faker $faker) {
     ];
 });
 
-$factory->afterCreatingState(Loan::class, 'withCompletedIntention', function ($loan, $faker) {
-    $loan->intention()->save(factory(Intention::class)->make([
-        'status' => 'completed',
-    ]));
+$factory->afterCreatingState(Loan::class, "withCompletedIntention", function (
+    $loan,
+    $faker
+) {
+    $loan->intention()->save(
+        factory(Intention::class)->make([
+            "status" => "completed",
+        ])
+    );
 });
 
-$factory->afterCreatingState(Loan::class, 'withInProcessIntention', function ($loan, $faker) {
-    $loan->intention()->save(factory(Intention::class)->make([
-        'status' => 'in_process',
-    ]));
+$factory->afterCreatingState(Loan::class, "withInProcessIntention", function (
+    $loan,
+    $faker
+) {
+    $loan->intention()->save(
+        factory(Intention::class)->make([
+            "status" => "in_process",
+        ])
+    );
 });
 
-$factory->afterCreatingState(Loan::class, 'withInProcessPrePayment', function ($loan, $faker) {
-    $loan->prePayment()->save(factory(PrePayment::class)->make([
-        'status' => 'in_process',
-    ]));
+$factory->afterCreatingState(Loan::class, "withInProcessPrePayment", function (
+    $loan,
+    $faker
+) {
+    $loan->prePayment()->save(
+        factory(PrePayment::class)->make([
+            "status" => "in_process",
+        ])
+    );
 });
 
-$factory->afterCreatingState(Loan::class, 'withCanceledPrePayment', function ($loan, $faker) {
-    $loan->prePayment()->save(factory(PrePayment::class)->make([
-        'status' => 'canceled',
-    ]));
+$factory->afterCreatingState(Loan::class, "withCanceledPrePayment", function (
+    $loan,
+    $faker
+) {
+    $loan->prePayment()->save(
+        factory(PrePayment::class)->make([
+            "status" => "canceled",
+        ])
+    );
 });
