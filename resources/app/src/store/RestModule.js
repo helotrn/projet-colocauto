@@ -1,5 +1,5 @@
-import Vue from 'vue';
-import merge from 'deepmerge';
+import Vue from "vue";
+import merge from "deepmerge";
 
 export default function RestModule(slug, initialState, actions = {}, mutations = {}) {
   return {
@@ -10,12 +10,12 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
       deleted: null,
       empty: null,
       error: null,
-      exportFields: ['id'],
+      exportFields: ["id"],
       exportNotFields: [],
       exportUrl: null,
       filters: {},
       form: null,
-      initialItem: '',
+      initialItem: "",
       item: null,
       lastLoadedAt: null,
       lastPage: 1,
@@ -23,12 +23,12 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
       search: [],
       searchAjax: null,
       lastAjax: null,
-      lastSearchQuery: '',
+      lastSearchQuery: "",
       params: {
         page: 1,
         per_page: 10,
-        q: '',
-        order: 'id',
+        q: "",
+        order: "id",
       },
       slug,
       total: undefined,
@@ -105,10 +105,10 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
       },
       setOrder(state, { field, direction }) {
         switch (direction) {
-          case 'desc':
+          case "desc":
             state.params.order = `-${field}`;
             break;
-          case 'asc':
+          case "asc":
           default:
             state.params.order = `${field}`;
             break;
@@ -124,25 +124,25 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
     },
     actions: {
       async load({ dispatch, state }) {
-        await dispatch('retrieve', state.params);
+        await dispatch("retrieve", state.params);
       },
       async loadEmpty({ commit, dispatch, state }) {
-        commit('loaded', false);
+        commit("loaded", false);
 
         try {
-          await dispatch('options');
+          await dispatch("options");
 
-          commit('item', JSON.parse(JSON.stringify(state.empty)));
-          commit('initialItem', state.item);
+          commit("item", JSON.parse(JSON.stringify(state.empty)));
+          commit("initialItem", state.item);
 
-          commit('loaded', true);
+          commit("loaded", true);
 
-          commit('ajax', null);
+          commit("ajax", null);
         } catch (e) {
-          commit('ajax', null);
+          commit("ajax", null);
 
           const { request, response } = e;
-          commit('error', { request, response });
+          commit("error", { request, response });
 
           throw e;
         }
@@ -155,23 +155,21 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
           },
         });
 
-        commit('searchAjax', ajax);
+        commit("searchAjax", ajax);
 
         const {
-          data: {
-            data,
-          },
+          data: { data },
         } = await ajax;
 
-        commit('search', data);
+        commit("search", data);
 
-        commit('searchAjax', null);
+        commit("searchAjax", null);
       },
       async createItem({ dispatch, state }, params) {
-        await dispatch('create', { data: state.item, params });
+        await dispatch("create", { data: state.item, params });
       },
       async create({ commit, dispatch, state }, { data, params }) {
-        commit('loaded', false);
+        commit("loaded", false);
 
         try {
           const ajax = Vue.axios.post(`/${state.slug}`, data, {
@@ -180,21 +178,21 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
             },
           });
 
-          commit('ajax', ajax);
+          commit("ajax", ajax);
 
           const { data: item } = await ajax;
 
-          commit('item', item);
-          commit('initialItem', item);
+          commit("item", item);
+          commit("initialItem", item);
 
-          commit('ajax', null);
+          commit("ajax", null);
 
-          await dispatch('retrieve', state.params);
+          await dispatch("retrieve", state.params);
         } catch (e) {
-          commit('ajax', null);
+          commit("ajax", null);
 
           const { request, response } = e;
-          commit('error', { request, response });
+          commit("error", { request, response });
 
           throw e;
         }
@@ -204,23 +202,19 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
           const options = Vue.axios.options(`/${state.slug}`);
 
           const {
-            data: {
-              item: empty,
-              filters,
-              form,
-            },
+            data: { item: empty, filters, form },
           } = await options;
 
-          commit('empty', empty);
-          commit('filters', filters);
-          commit('form', form);
+          commit("empty", empty);
+          commit("filters", filters);
+          commit("form", form);
         }
       },
       async retrieveOne({ dispatch, commit, state }, { params, id }) {
-        commit('loaded', false);
+        commit("loaded", false);
 
         try {
-          await dispatch('options');
+          await dispatch("options");
 
           const ajax = Vue.axios.get(`/${state.slug}/${id}`, {
             params: {
@@ -228,30 +222,30 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
             },
           });
 
-          commit('ajax', ajax);
+          commit("ajax", ajax);
 
           const { data } = await ajax;
 
-          commit('item', data);
-          commit('initialItem', data);
+          commit("item", data);
+          commit("initialItem", data);
 
-          commit('loaded', true);
+          commit("loaded", true);
 
-          commit('ajax', null);
+          commit("ajax", null);
         } catch (e) {
-          commit('ajax', null);
+          commit("ajax", null);
 
           const { request, response } = e;
-          commit('error', { request, response });
+          commit("error", { request, response });
 
           throw e;
         }
       },
       async retrieve({ dispatch, state, commit }, params) {
-        commit('loaded', false);
+        commit("loaded", false);
 
         try {
-          await dispatch('options');
+          await dispatch("options");
 
           const ajax = Vue.axios.get(`/${state.slug}`, {
             params: {
@@ -260,38 +254,34 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
             },
           });
 
-          commit('ajax', ajax);
+          commit("ajax", ajax);
 
           const {
-            data: {
-              data,
-              total,
-              last_page: lastPage,
-            },
+            data: { data, total, last_page: lastPage },
           } = await ajax;
 
-          commit('data', data);
-          commit('total', total);
-          commit('lastPage', lastPage);
-          commit('lastLoadedAt', Date.now());
+          commit("data", data);
+          commit("total", total);
+          commit("lastPage", lastPage);
+          commit("lastLoadedAt", Date.now());
 
-          commit('loaded', true);
+          commit("loaded", true);
 
-          commit('ajax', null);
+          commit("ajax", null);
         } catch (e) {
-          commit('ajax', null);
+          commit("ajax", null);
 
           const { request, response } = e;
-          commit('error', { request, response });
+          commit("error", { request, response });
 
           throw e;
         }
       },
       async updateItem({ dispatch, state }, params) {
-        await dispatch('update', { id: state.item.id, data: state.item, params });
+        await dispatch("update", { id: state.item.id, data: state.item, params });
       },
       async update({ commit, state }, { id, data, params }) {
-        commit('loaded', false);
+        commit("loaded", false);
 
         try {
           const ajax = Vue.axios.put(`/${state.slug}/${id}`, data, {
@@ -300,21 +290,21 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
             },
           });
 
-          commit('ajax', ajax);
+          commit("ajax", ajax);
 
           const { data: item } = await ajax;
 
-          commit('item', item);
-          commit('initialItem', item);
+          commit("item", item);
+          commit("initialItem", item);
 
-          commit('loaded', true);
+          commit("loaded", true);
 
-          commit('ajax', null);
+          commit("ajax", null);
         } catch (e) {
-          commit('ajax', null);
+          commit("ajax", null);
 
           const { request, response } = e;
-          commit('error', { request, response });
+          commit("error", { request, response });
 
           throw e;
         }
@@ -323,18 +313,18 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
         try {
           const ajax = Vue.axios.delete(`/${state.slug}/${id}`);
 
-          commit('ajax', ajax);
+          commit("ajax", ajax);
 
           const { data: deleted } = await ajax;
 
-          commit('deleted', deleted);
+          commit("deleted", deleted);
 
-          commit('ajax', null);
+          commit("ajax", null);
         } catch (e) {
-          commit('ajax', null);
+          commit("ajax", null);
 
           const { request, response } = e;
-          commit('error', { request, response });
+          commit("error", { request, response });
 
           throw e;
         }
@@ -343,16 +333,16 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
         try {
           const ajax = Vue.axios.put(`/${state.slug}/${id}/restore`);
 
-          commit('ajax', ajax);
+          commit("ajax", ajax);
 
           await ajax;
 
-          commit('ajax', null);
+          commit("ajax", null);
         } catch (e) {
-          commit('ajax', null);
+          commit("ajax", null);
 
           const { request, response } = e;
-          commit('error', { request, response });
+          commit("error", { request, response });
 
           throw e;
         }
@@ -365,26 +355,26 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
               ...params,
               per_page: 1000000,
               page: 1,
-              fields: state.exportFields.join(','),
-              '!fields': state.exportNotFields.join(','),
+              fields: state.exportFields.join(","),
+              "!fields": state.exportNotFields.join(","),
             },
             headers: {
-              Accept: 'text/csv',
+              Accept: "text/csv",
             },
           });
 
-          commit('ajax', ajax);
+          commit("ajax", ajax);
 
           const { data: url } = await ajax;
 
-          commit('exportUrl', url);
+          commit("exportUrl", url);
 
-          commit('ajax', null);
+          commit("ajax", null);
         } catch (e) {
-          commit('ajax', null);
+          commit("ajax", null);
 
           const { request, response } = e;
-          commit('error', { request, response });
+          commit("error", { request, response });
 
           throw e;
         }

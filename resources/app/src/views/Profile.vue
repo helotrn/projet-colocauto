@@ -17,21 +17,21 @@
 </template>
 
 <script>
-import ProfileSidebar from '@/components/Profile/Sidebar.vue';
+import ProfileSidebar from "@/components/Profile/Sidebar.vue";
 
-import Authenticated from '@/mixins/Authenticated';
-import UserMixin from '@/mixins/UserMixin';
+import Authenticated from "@/mixins/Authenticated";
+import UserMixin from "@/mixins/UserMixin";
 
 const routeGuard = (to, from, next) => {
-  if (to.name === 'profile') {
-    next('/profile/locomotion');
+  if (to.name === "profile") {
+    next("/profile/locomotion");
   } else {
     next();
   }
 };
 
 export default {
-  name: 'Account',
+  name: "Account",
   mixins: [Authenticated, UserMixin],
   components: {
     ProfileSidebar,

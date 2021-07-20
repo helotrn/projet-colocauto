@@ -2,11 +2,10 @@
   <layout-page name="cgu" class="cgu__content" padded>
     <b-row tag="section" class="page__section">
       <b-col>
-
         <b-card>
           <p>
-            Pour participer au programme LocoMotion vous devez accepter les
-            conditions énoncées dans les documents suivants&nbsp;:
+            Pour participer au programme LocoMotion vous devez accepter les conditions énoncées dans
+            les documents suivants&nbsp;:
           </p>
           <ul>
             <li>
@@ -15,9 +14,7 @@
               </a>
             </li>
             <li>
-              <a href="/politique-confidentialite.html">
-                Politique de confidentialité
-              </a>
+              <a href="/politique-confidentialite.html"> Politique de confidentialité </a>
             </li>
             <li>
               <a href="/conditions-utilisation-desjardins-assurances.html">
@@ -26,7 +23,6 @@
             </li>
           </ul>
         </b-card>
-
       </b-col>
     </b-row>
   </layout-page>
@@ -34,7 +30,7 @@
 
 <script>
 export default {
-  name: 'Privacy',
+  name: "Privacy",
 };
 </script>
 <style lang="scss">

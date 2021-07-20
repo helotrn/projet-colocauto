@@ -6,25 +6,39 @@
           <div :style="{ backgroundImage: loanableImage }" />
         </b-col>
 
-        <b-col class="loanable-info-box__name"><span>{{ name }}</span></b-col>
+        <b-col class="loanable-info-box__name"
+          ><span>{{ name }}</span></b-col
+        >
 
         <b-col class="loanable-info-box__actions">
           <div>
-            <b-button class="ml-3 mb-3"
-              size="sm" variant="outline-primary" v-if="hasButton('availability')"
-              :to="`/profile/loanables/${id}#availability`">
+            <b-button
+              class="ml-3 mb-3"
+              size="sm"
+              variant="outline-primary"
+              v-if="hasButton('availability')"
+              :to="`/profile/loanables/${id}#availability`"
+            >
               Modifier les disponibilités
             </b-button>
 
-            <b-button class="ml-3 mb-3"
-              size="sm" variant="outline-dark" v-if="false && hasButton('unavailable24h')"
-              @click.prevent="makeLoanableUnavailableFor24h">
+            <b-button
+              class="ml-3 mb-3"
+              size="sm"
+              variant="outline-dark"
+              v-if="false && hasButton('unavailable24h')"
+              @click.prevent="makeLoanableUnavailableFor24h"
+            >
               Rendre indisponible (24h)
             </b-button>
 
-            <b-button class="ml-3 mb-3"
-              size="sm" variant="outline-danger" v-if="hasButton('remove')"
-              @click.prevent="disableLoanableModal">
+            <b-button
+              class="ml-3 mb-3"
+              size="sm"
+              variant="outline-danger"
+              v-if="hasButton('remove')"
+              @click.prevent="disableLoanableModal"
+            >
               Retirer
             </b-button>
           </div>
@@ -36,7 +50,7 @@
 
 <script>
 export default {
-  name: 'LoanableInfoBox',
+  name: "LoanableInfoBox",
   props: {
     id: {
       type: Number,
@@ -46,7 +60,7 @@ export default {
       type: Array,
       required: false,
       default() {
-        return ['availability', 'unavailable24h', 'remove'];
+        return ["availability", "unavailable24h", "remove"];
       },
     },
     image: {
@@ -62,7 +76,7 @@ export default {
   computed: {
     loanableImage() {
       if (!this.image) {
-        return '';
+        return "";
       }
 
       return `url('${this.image.sizes.thumbnail}')`;
@@ -70,26 +84,24 @@ export default {
   },
   methods: {
     async makeLoanableUnavailableFor24h() {
-      await this.$store.dispatch('loanables/makeUnavailableFor24h');
-      this.$bvModal.msgBoxOk('Ce véhicule est indisponible pour les prochaines 24h.', {
-        buttonSize: 'sm',
-        footerClass: 'd-none',
+      await this.$store.dispatch("loanables/makeUnavailableFor24h");
+      this.$bvModal.msgBoxOk("Ce véhicule est indisponible pour les prochaines 24h.", {
+        buttonSize: "sm",
+        footerClass: "d-none",
       });
     },
     disableLoanableModal() {
-      this.$bvModal.msgBoxConfirm(
-        'Êtes-vous sûr de vouloir retirer ce véhicule de la plateforme?',
-        {
-          size: 'sm',
-          buttonSize: 'sm',
-          okTitle: 'Oui, retirer',
-          cancelTitle: 'Annuler',
-          okVariant: 'danger',
-          cancelVariant: 'primary',
-          footerClass: 'p-2 border-top-0',
+      this.$bvModal
+        .msgBoxConfirm("Êtes-vous sûr de vouloir retirer ce véhicule de la plateforme?", {
+          size: "sm",
+          buttonSize: "sm",
+          okTitle: "Oui, retirer",
+          cancelTitle: "Annuler",
+          okVariant: "danger",
+          cancelVariant: "primary",
+          footerClass: "p-2 border-top-0",
           centered: true,
-        },
-      )
+        })
         .then((value) => {
           if (value) {
             this.disableLoanable();
@@ -97,8 +109,8 @@ export default {
         });
     },
     async disableLoanable() {
-      this.$store.dispatch('loanables/disable', this.id);
-      this.$emit('disabled');
+      this.$store.dispatch("loanables/disable", this.id);
+      this.$emit("disabled");
     },
     hasButton(name) {
       return this.buttons.indexOf(name) > -1;
@@ -109,7 +121,9 @@ export default {
 
 <style lang="scss">
 .loanable-info-box {
-  a:hover, a:active, a:focus {
+  a:hover,
+  a:active,
+  a:focus {
     text-decoration: none;
   }
 

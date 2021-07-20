@@ -1,7 +1,7 @@
 export default {
   namespaced: true,
   state: {
-    email: '',
+    email: "",
     loading: false,
     rememberMe: false,
   },

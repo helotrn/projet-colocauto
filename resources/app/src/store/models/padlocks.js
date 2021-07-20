@@ -1,20 +1,13 @@
-import RestModule from '../RestModule';
+import RestModule from "../RestModule";
 
-export default new RestModule('padlocks', {
+export default new RestModule("padlocks", {
   params: {
-    order: 'name',
+    order: "name",
     page: 1,
     per_page: 10,
-    q: '',
+    q: "",
     type: null,
     deleted_at: null,
   },
-  exportFields: [
-    'id',
-    'external_id',
-    'name',
-    'mac_addresss',
-    'loanable.id',
-    'loanable.name',
-  ],
+  exportFields: ["id", "external_id", "name", "mac_addresss", "loanable.id", "loanable.name"],
 });

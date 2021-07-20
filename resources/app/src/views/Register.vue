@@ -5,24 +5,23 @@
 </template>
 
 <script>
-import Authenticated from '@/mixins/Authenticated';
-import UserMixin from '@/mixins/UserMixin';
+import Authenticated from "@/mixins/Authenticated";
+import UserMixin from "@/mixins/UserMixin";
 
 const routeGuard = (to, from, next) => {
-  if (to.name === 'register') {
-    return next('/register/1');
+  if (to.name === "register") {
+    return next("/register/1");
   }
 
   return next();
 };
 
 export default {
-  name: 'Register',
+  name: "Register",
   mixins: [Authenticated, UserMixin],
   beforeRouteEnter: routeGuard,
   beforeRouteUpdate: routeGuard,
 };
 </script>
 
-<style lang="scss">
-</style>
+<style lang="scss"></style>

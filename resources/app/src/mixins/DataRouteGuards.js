@@ -12,17 +12,17 @@ function drillParams(object, vm) {
 
     // Conditional and mapResults are called before and after action dispatch
     // and are not part of params.
-    if (['conditional', 'mapResults'].indexOf(k) > -1) {
+    if (["conditional", "mapResults"].indexOf(k) > -1) {
       return newAcc;
     }
 
-    if (typeof object[k] === 'function') {
+    if (typeof object[k] === "function") {
       // Call function and set result
       newAcc[k] = object[k]({
         user: vm.$store.state.user,
         route: vm.$route,
       });
-    } else if (typeof object[k] === 'object') {
+    } else if (typeof object[k] === "object") {
       // Recursively drill down object properties.
       newAcc[k] = drillParams(object[k], vm);
     } else {
@@ -59,68 +59,68 @@ export default {
       }
 
       const {
-        $store: {
-          state,
-        },
+        $store: { state },
         $route,
         $route: {
-          meta: {
-            data,
-          },
+          meta: { data },
         },
       } = this;
 
-      return Object.keys(data).reduce(
-        (acc, collection) => {
-          // Each element of a collection is an action or options.
-          const actions = Object.keys(data[collection]);
+      return Object.keys(data).reduce((acc, collection) => {
+        // Each element of a collection is an action or options.
+        const actions = Object.keys(data[collection]);
 
-          if (actions.indexOf('options') !== -1) {
-            return acc && !!state[collection].form;
+        if (actions.indexOf("options") !== -1) {
+          return acc && !!state[collection].form;
+        }
+
+        // For all actions regarding a collection (one expected, but who knows...):
+        // - if no conditional action, then data must be loaded;
+        // - if conditional action and condition evaluates to true, then data
+        //   must be loaded;
+        // - if conditional action and condition evaluates to false, then no
+        //   data must be loaded;
+        const collectionRequired = actions.reduce((required, action) => {
+          const routeParams = data[collection][action];
+
+          if (
+            !routeParams.conditional ||
+            routeParams.conditional({
+              route: $route,
+            })
+          ) {
+            // Collection is required.
+            return required || true;
           }
 
-          // For all actions regarding a collection (one expected, but who knows...):
-          // - if no conditional action, then data must be loaded;
-          // - if conditional action and condition evaluates to true, then data
-          //   must be loaded;
-          // - if conditional action and condition evaluates to false, then no
-          //   data must be loaded;
-          const collectionRequired = actions.reduce((required, action) => {
-            const routeParams = data[collection][action];
+          return required;
+        }, false);
 
-            if (!routeParams.conditional || routeParams.conditional({
-              route: $route,
-            })) {
-              // Collection is required.
-              return required || true;
-            }
-
-            return required;
-          }, false);
-
-          // state[collection].loaded is set in src/store/RestModule.js
-          return acc && (!collectionRequired || !!state[collection].loaded);
-        },
-        true,
-      );
+        // state[collection].loaded is set in src/store/RestModule.js
+        return acc && (!collectionRequired || !!state[collection].loaded);
+      }, true);
     },
   },
   methods: {
     loadDataRoutesData(vm, to) {
       return Promise.all(
-        Object.keys(to.meta.data)
-          .reduce((acc, collection) => {
-            // Each element of the collection is an action.
-            const actions = Object.keys(to.meta.data[collection]);
+        Object.keys(to.meta.data).reduce((acc, collection) => {
+          // Each element of the collection is an action.
+          const actions = Object.keys(to.meta.data[collection]);
 
-            acc.push(...actions.map((action) => {
+          acc.push(
+            ...actions.map((action) => {
               const routeParams = to.meta.data[collection][action];
 
-              const zeroedOutFilters = Object.keys(vm.$store.state[collection].filters || {})
-                .reduce((filters, k) => ({
+              const zeroedOutFilters = Object.keys(
+                vm.$store.state[collection].filters || {}
+              ).reduce(
+                (filters, k) => ({
                   ...filters,
                   [k]: undefined,
-                }), {});
+                }),
+                {}
+              );
 
               const params = {
                 ...zeroedOutFilters,
@@ -130,61 +130,68 @@ export default {
               };
 
               // Don't fetch data for conditional routes with false condition.
-              if (routeParams.conditional && !routeParams.conditional({
-                user: vm.user,
-                route: vm.$route,
-              })) {
+              if (
+                routeParams.conditional &&
+                !routeParams.conditional({
+                  user: vm.user,
+                  route: vm.$route,
+                })
+              ) {
                 return null;
               }
 
-              return vm.$store.dispatch(
-                // Dispatching this action fetches the data. See RestModule.
-                `${collection}/${action}`,
-                params,
-              ).then(() => {
-                // Transform the item if necessary.
-                if (routeParams.mapResults) {
-                  vm.$store.commit(
-                    `${collection}/data`,
-                    vm.$store.state[collection].data
-                      .map(routeParams.mapResults.bind({
-                        user: vm.user,
-                        route: vm.$route,
-                      })),
-                  );
-                }
-              });
-            }));
+              return vm.$store
+                .dispatch(
+                  // Dispatching this action fetches the data. See RestModule.
+                  `${collection}/${action}`,
+                  params
+                )
+                .then(() => {
+                  // Transform the item if necessary.
+                  if (routeParams.mapResults) {
+                    vm.$store.commit(
+                      `${collection}/data`,
+                      vm.$store.state[collection].data.map(
+                        routeParams.mapResults.bind({
+                          user: vm.user,
+                          route: vm.$route,
+                        })
+                      )
+                    );
+                  }
+                });
+            })
+          );
 
-            return acc;
-          }, []),
+          return acc;
+        }, [])
       )
         .then(vm.dataRouteGuardsCallback)
         .catch((e) => {
           if (e.request) {
             switch (e.request.status) {
               case 404:
-                vm.$store.commit('addNotification', {
-                  content: 'Une ressource requise pour cette page est introuvable.',
-                  title: 'Ressource introuvable',
-                  variant: 'danger',
-                  type: 'route_data',
+                vm.$store.commit("addNotification", {
+                  content: "Une ressource requise pour cette page est introuvable.",
+                  title: "Ressource introuvable",
+                  variant: "danger",
+                  type: "route_data",
                 });
-                vm.$router.push('/app');
+                vm.$router.push("/app");
                 break;
               case 422:
               case 400:
-                vm.$store.commit('addNotification', {
-                  content: 'Une requête obligatoire pour une ressource de cette page a échoué.',
-                  title: 'Mauvaise requête',
-                  variant: 'danger',
-                  type: 'route_data',
+                vm.$store.commit("addNotification", {
+                  content: "Une requête obligatoire pour une ressource de cette page a échoué.",
+                  title: "Mauvaise requête",
+                  variant: "danger",
+                  type: "route_data",
                 });
-                vm.$router.push('/app');
+                vm.$router.push("/app");
                 break;
               case 401:
               default:
-                vm.$store.commit('user', null);
+                vm.$store.commit("user", null);
                 vm.$router.push(`/login?r=${vm.$route.fullPath}`);
             }
           }

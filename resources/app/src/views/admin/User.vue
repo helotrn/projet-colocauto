@@ -3,7 +3,9 @@
     <b-row>
       <b-col>
         <h1 v-if="item.name || item.last_name">{{ item.name }} {{ item.last_name }}</h1>
-        <h1 v-else><em>{{ $tc('model_name', 1) | capitalize }}</em></h1>
+        <h1 v-else>
+          <em>{{ $tc("model_name", 1) | capitalize }}</em>
+        </h1>
       </b-col>
     </b-row>
 
@@ -21,25 +23,31 @@
               <h2>Administrateur global</h2>
 
               <b-alert show variant="danger">
-                Attention! N'accordez pas le rôle d'administration globale à la légère:
-                un-e administrateur-rice global-e peut <strong>tout</strong> faire avec
-                un minimum de validations.
+                Attention! N'accordez pas le rôle d'administration globale à la légère: un-e
+                administrateur-rice global-e peut <strong>tout</strong> faire avec un minimum de
+                validations.
               </b-alert>
 
               <b-form-select
-                id="role" name="role"
+                id="role"
+                name="role"
                 :options="[
                   { value: null, text: 'Régulier' },
-                  { value: 'admin', text: 'Admin global' }
+                  { value: 'admin', text: 'Admin global' },
                 ]"
-                v-model="item.role" />
+                v-model="item.role"
+              />
             </div>
 
             <div class="form__section" v-show="loggedInUserIsAdmin">
               <h2>Mot de passe</h2>
 
-              <user-password-form :loading="loading" :is-admin="loggedInUserIsAdmin"
-                :user="item" ref="passwordForm" />
+              <user-password-form
+                :loading="loading"
+                :is-admin="loggedInUserIsAdmin"
+                :user="item"
+                ref="passwordForm"
+              />
             </div>
 
             <div class="form__section" v-if="item.borrower">
@@ -54,42 +62,64 @@
                 <strong>Statut:</strong>
                 {{ borrowerStatus }}
 
-                <b-button v-if="!item.borrower.approved_at"
-                  size="sm" class="ml-1" variant="primary"
+                <b-button
+                  v-if="!item.borrower.approved_at"
+                  size="sm"
+                  class="ml-1"
+                  variant="primary"
                   :disabled="loading"
-                  @click="approveBorrower(item)">
-                  {{ $t('approuver') | capitalize }}
+                  @click="approveBorrower(item)"
+                >
+                  {{ $t("approuver") | capitalize }}
                 </b-button>
-                <b-button v-else-if="!item.borrower.suspended_at"
-                  size="sm" class="ml-1" variant="warning"
+                <b-button
+                  v-else-if="!item.borrower.suspended_at"
+                  size="sm"
+                  class="ml-1"
+                  variant="warning"
                   :disabled="loading"
-                  @click="suspendBorrower(item)">
-                  {{ $t('suspendre') | capitalize }}
+                  @click="suspendBorrower(item)"
+                >
+                  {{ $t("suspendre") | capitalize }}
                 </b-button>
-                <b-button v-else
-                  size="sm" class="mr-1" variant="success"
+                <b-button
+                  v-else
+                  size="sm"
+                  class="mr-1"
+                  variant="success"
                   :disabled="loading"
-                  @click="unsuspendBorrower(item)">
-                  {{ $t('rétablir') | capitalize }}
+                  @click="unsuspendBorrower(item)"
+                >
+                  {{ $t("rétablir") | capitalize }}
                 </b-button>
               </p>
 
-              <forms-builder :definition="form.borrower" v-model="item.borrower"
-                entity="borrowers" />
+              <forms-builder
+                :definition="form.borrower"
+                v-model="item.borrower"
+                entity="borrowers"
+              />
             </div>
 
             <div class="form__section" v-if="!!item.id">
               <h2>Véhicules</h2>
 
               <b-table
-                striped hover :items="item.loanables"
-                selectable select-mode="multi" @row-selected="loanableRowSelected"
-                :fields="loanablesTable" no-sort-reset
-                :show-empty="true" empty-text="Pas de véhicules">
+                striped
+                hover
+                :items="item.loanables"
+                selectable
+                select-mode="multi"
+                @row-selected="loanableRowSelected"
+                :fields="loanablesTable"
+                no-sort-reset
+                :show-empty="true"
+                empty-text="Pas de véhicules"
+              >
                 <template v-slot:cell(actions)="row">
                   <div class="text-right">
                     <b-button size="sm" :to="`/admin/loanables/${row.item.id}`">
-                      {{ $t('modifier') | capitalize }}
+                      {{ $t("modifier") | capitalize }}
                     </b-button>
                   </div>
                 </template>
@@ -100,64 +130,89 @@
               <h2>Communautés</h2>
 
               <b-table
-                striped hover :items="item.communities"
-                selectable select-mode="single" @row-selected="communityRowSelected"
-                :fields="communitiesTable" no-sort-reset
-                :show-empty="true" empty-text="Pas de communauté">
+                striped
+                hover
+                :items="item.communities"
+                selectable
+                select-mode="single"
+                @row-selected="communityRowSelected"
+                :fields="communitiesTable"
+                no-sort-reset
+                :show-empty="true"
+                empty-text="Pas de communauté"
+              >
                 <template v-slot:cell(actions)="row">
                   <div class="text-right">
-                    <b-button variant="success" size="sm"
-                      @click="viewUserInCommunity(row.item)">
-                      {{ $t('afficher') | capitalize }} dans la communauté
+                    <b-button variant="success" size="sm" @click="viewUserInCommunity(row.item)">
+                      {{ $t("afficher") | capitalize }} dans la communauté
                     </b-button>
                   </div>
                 </template>
               </b-table>
 
-              <forms-validated-input type="relation"
-                name="community" label="Ajouter une communauté"
-                :value="null" reset-after-select
+              <forms-validated-input
+                type="relation"
+                name="community"
+                label="Ajouter une communauté"
+                :value="null"
+                reset-after-select
                 :query="{
                   slug: 'communities',
                   value: 'id',
                   text: 'name',
                   params: {
-                    '!id': item.communities.map(c => c.id).join(','),
+                    '!id': item.communities.map((c) => c.id).join(','),
                   },
-                }" @relation="addCommunity" />
+                }"
+                @relation="addCommunity"
+              />
             </div>
 
             <div class="form__section" v-if="!!item.id">
               <h2>
-                {{ $tc('fields.communities.tags.model_name', 2) | capitalize }}
+                {{ $tc("fields.communities.tags.model_name", 2) | capitalize }}
               </h2>
 
               <div v-if="communitySelected">
                 <b-table
-                  striped hover :items="communitySelected.tags"
-                  selectable select-mode="multi" @row-selected="tagRowSelected"
-                  :fields="tagsTable" no-sort-reset
-                  :show-empty="true" empty-text="Pas de mot-clé">
+                  striped
+                  hover
+                  :items="communitySelected.tags"
+                  selectable
+                  select-mode="multi"
+                  @row-selected="tagRowSelected"
+                  :fields="tagsTable"
+                  no-sort-reset
+                  :show-empty="true"
+                  empty-text="Pas de mot-clé"
+                >
                   <template v-slot:cell(actions)="row">
                     <div class="text-right">
                       <b-button size="sm" :to="`/admin/tags/${row.item.id}`">
-                        {{ $t('modifier') | capitalize }}
+                        {{ $t("modifier") | capitalize }}
                       </b-button>
                     </div>
                   </template>
                   <template v-slot:cell(actions)="row">
                     <div class="text-right">
-                      <b-button size="sm" class="mr-1" variant="danger"
-                        @click="removeCommunityTag(communitySelected, row.item)">
-                        {{ $t('retirer') | capitalize }}
+                      <b-button
+                        size="sm"
+                        class="mr-1"
+                        variant="danger"
+                        @click="removeCommunityTag(communitySelected, row.item)"
+                      >
+                        {{ $t("retirer") | capitalize }}
                       </b-button>
                     </div>
                   </template>
                 </b-table>
 
-                <forms-validated-input type="relation"
-                  name="community_tag" label="Ajouter un mot-clé"
-                  :value="null" reset-after-select
+                <forms-validated-input
+                  type="relation"
+                  name="community_tag"
+                  label="Ajouter un mot-clé"
+                  :value="null"
+                  reset-after-select
                   :query="{
                     slug: 'tags',
                     value: 'id',
@@ -165,7 +220,9 @@
                     params: {
                       '!id': communitySelectedTagIds,
                     },
-                  }" @relation="addCommunityTag(communitySelected, $event)" />
+                  }"
+                  @relation="addCommunityTag(communitySelected, $event)"
+                />
               </div>
               <div v-else>
                 <p>Sélectionnez une communauté pour voir les mots-clés de la communauté.</p>
@@ -176,10 +233,17 @@
               <h2>Emprunts</h2>
 
               <b-table
-                striped hover :items="allLoans"
-                selectable select-mode="multi" @row-selected="loanRowSelected"
-                :fields="loansTable" no-sort-reset
-                :show-empty="true" empty-text="Pas d'emprunt">
+                striped
+                hover
+                :items="allLoans"
+                selectable
+                select-mode="multi"
+                @row-selected="loanRowSelected"
+                :fields="loansTable"
+                no-sort-reset
+                :show-empty="true"
+                empty-text="Pas d'emprunt"
+              >
                 <template v-slot:cell(borrower)="row">
                   {{ row.item.borrower.user.full_name }}
                 </template>
@@ -188,18 +252,18 @@
                 </template>
                 <template v-slot:cell(date)="row">
                   <span v-if="isLoanMultipleDays(row.item)">
-                    {{ row.item.departure_at | date }} {{ row.item.departure_at | time }}<br>
+                    {{ row.item.departure_at | date }} {{ row.item.departure_at | time }}<br />
                     {{ computeReturnAt(row.item) | date }} {{ computeReturnAt(row.item) | time }}
                   </span>
                   <span v-else>
-                    {{ row.item.departure_at | date }}<br>
+                    {{ row.item.departure_at | date }}<br />
                     {{ row.item.departure_at | time }} à {{ computeReturnAt(row.item) | time }}
                   </span>
                 </template>
                 <template v-slot:cell(actions)="row">
                   <div class="text-right">
                     <b-button size="sm" :to="`/admin/loans/${row.item.id}`">
-                      {{ $t('modifier') | capitalize }}
+                      {{ $t("modifier") | capitalize }}
                     </b-button>
                   </div>
                 </template>
@@ -223,16 +287,23 @@
 
               <p v-if="false"><strong>Transactions</strong></p>
 
-              <b-table v-if="false"
-                striped hover :items="item.transactions"
-                selectable select-mode="multi" @row-selected="transactionRowSelected"
-                :fields="transactionsTable" no-sort-reset
-                :show-empty="true" empty-text="Pas de transaction">
+              <b-table
+                v-if="false"
+                striped
+                hover
+                :items="item.transactions"
+                selectable
+                select-mode="multi"
+                @row-selected="transactionRowSelected"
+                :fields="transactionsTable"
+                no-sort-reset
+                :show-empty="true"
+                empty-text="Pas de transaction"
+              >
                 <template v-slot:cell(actions)="row">
                   <div class="text-right">
-                    <b-button variant="success" size="sm"
-                      :to="`/admin/invoices/${row.item.id}`">
-                      {{ $t('afficher') | capitalize }}
+                    <b-button variant="success" size="sm" :to="`/admin/invoices/${row.item.id}`">
+                      {{ $t("afficher") | capitalize }}
                     </b-button>
                   </div>
                 </template>
@@ -241,10 +312,17 @@
               <p><strong>Factures</strong></p>
 
               <b-table
-                striped hover :items="item.invoices"
-                selectable select-mode="multi" @row-selected="invoiceRowSelected"
-                :fields="invoicesTable" no-sort-reset
-                :show-empty="true" empty-text="Pas de facture">
+                striped
+                hover
+                :items="item.invoices"
+                selectable
+                select-mode="multi"
+                @row-selected="invoiceRowSelected"
+                :fields="invoicesTable"
+                no-sort-reset
+                :show-empty="true"
+                empty-text="Pas de facture"
+              >
                 <template v-slot:cell(created_at)="row">
                   {{ row.item.created_at | date }}
                 </template>
@@ -257,7 +335,7 @@
                 <template v-slot:cell(actions)="row">
                   <div class="text-right">
                     <b-button variant="success" size="sm" :to="`/admin/invoices/${row.item.id}`">
-                      {{ $t('afficher') | capitalize }}
+                      {{ $t("afficher") | capitalize }}
                     </b-button>
                   </div>
                 </template>
@@ -272,9 +350,14 @@
               </b-row>
 
               <b-table
-                striped hover :items="item.payment_methods"
-                :fields="paymentMethodsTable" no-sort-reset
-                :show-empty="true" empty-text="Pas de mode de paiement">
+                striped
+                hover
+                :items="item.payment_methods"
+                :fields="paymentMethodsTable"
+                no-sort-reset
+                :show-empty="true"
+                empty-text="Pas de mode de paiement"
+              >
                 <template v-slot:cell(type)="row">
                   {{ $t(`payment_methods.types.${row.item.type}`) | capitalize }}
                 </template>
@@ -285,7 +368,7 @@
                   </span>
                   <span v-if="row.item.type === 'credit_card'">
                     {{ row.item.credit_card_type }} se terminant par
-                    {{ row.item.four_last_digits}} ({{ row.item.external_id }})
+                    {{ row.item.four_last_digits }} ({{ row.item.external_id }})
                   </span>
                 </template>
               </b-table>
@@ -310,20 +393,20 @@
 </template>
 
 <script>
-import FormsBuilder from '@/components/Forms/Builder.vue';
-import FormsValidatedInput from '@/components/Forms/ValidatedInput.vue';
-import UserPasswordForm from '@/components/User/PasswordForm.vue';
+import FormsBuilder from "@/components/Forms/Builder.vue";
+import FormsValidatedInput from "@/components/Forms/ValidatedInput.vue";
+import UserPasswordForm from "@/components/User/PasswordForm.vue";
 
-import DataRouteGuards from '@/mixins/DataRouteGuards';
-import FormMixin from '@/mixins/FormMixin';
+import DataRouteGuards from "@/mixins/DataRouteGuards";
+import FormMixin from "@/mixins/FormMixin";
 
-import { filters } from '@/helpers';
-import locales from '@/locales';
+import { filters } from "@/helpers";
+import locales from "@/locales";
 
 const { capitalize } = filters;
 
 export default {
-  name: 'AdminUser',
+  name: "AdminUser",
   mixins: [DataRouteGuards, FormMixin],
   components: {
     FormsBuilder,
@@ -334,70 +417,70 @@ export default {
     return {
       communitiesSelected: [],
       communitiesTable: [
-        { key: 'id', label: 'ID', sortable: true },
-        { key: 'name', label: 'Nom', sortable: true },
-        { key: 'actions', label: 'Actions', tdClass: 'table__cell__actions' },
+        { key: "id", label: "ID", sortable: true },
+        { key: "name", label: "Nom", sortable: true },
+        { key: "actions", label: "Actions", tdClass: "table__cell__actions" },
       ],
       invoicesSelected: [],
       invoicesTable: [
-        { key: 'created_at', label: 'Date', sortable: true },
-        { key: 'items_count', label: "Nb d'items", sortable: true },
+        { key: "created_at", label: "Date", sortable: true },
+        { key: "items_count", label: "Nb d'items", sortable: true },
         {
-          key: 'total',
-          label: 'Total',
+          key: "total",
+          label: "Total",
           sortable: true,
-          tdClass: 'text-right',
+          tdClass: "text-right",
         },
         {
-          key: 'total_with_taxes',
-          label: 'Total avec taxes',
+          key: "total_with_taxes",
+          label: "Total avec taxes",
           sortable: true,
-          tdClass: 'text-right',
+          tdClass: "text-right",
         },
-        { key: 'actions', label: 'Actions', tdClass: 'table__cell__actions' },
+        { key: "actions", label: "Actions", tdClass: "table__cell__actions" },
       ],
       loanablesSelected: [],
       loanablesTable: [
-        { key: 'id', label: 'ID', sortable: true },
-        { key: 'name', label: 'Nom', sortable: true },
-        { key: 'actions', label: 'Actions', tdClass: 'table__cell__actions' },
+        { key: "id", label: "ID", sortable: true },
+        { key: "name", label: "Nom", sortable: true },
+        { key: "actions", label: "Actions", tdClass: "table__cell__actions" },
       ],
       loansSelected: [],
       loansTable: [
-        { key: 'id', label: 'ID', sortable: true },
-        { key: 'borrower', label: 'Emprunteur', sortable: true },
-        { key: 'loanable', label: 'Objet', sortable: true },
-        { key: 'date', label: 'Date', sortable: true },
-        { key: 'actions', label: 'Actions', tdClass: 'table__cell__actions' },
+        { key: "id", label: "ID", sortable: true },
+        { key: "borrower", label: "Emprunteur", sortable: true },
+        { key: "loanable", label: "Objet", sortable: true },
+        { key: "date", label: "Date", sortable: true },
+        { key: "actions", label: "Actions", tdClass: "table__cell__actions" },
       ],
       paymentMethodsTable: [
-        { key: 'id', label: 'ID', sortable: true },
-        { key: 'name', label: 'Nom', sortable: true },
-        { key: 'type', label: 'Type', sortable: true },
-        { key: 'informations', label: 'Informations' },
+        { key: "id", label: "ID", sortable: true },
+        { key: "name", label: "Nom", sortable: true },
+        { key: "type", label: "Type", sortable: true },
+        { key: "informations", label: "Informations" },
       ],
       tagsSelected: [],
       tagsTable: [
         {
-          key: 'id',
-          label: capitalize(this.$t('fields.communities.tags.id')),
+          key: "id",
+          label: capitalize(this.$t("fields.communities.tags.id")),
           sortable: true,
         },
         {
-          key: 'name',
-          label: capitalize(this.$t('fields.communities.tags.name')),
+          key: "name",
+          label: capitalize(this.$t("fields.communities.tags.name")),
           sortable: true,
         },
         {
-          key: 'slug',
-          label: capitalize(this.$t('fields.communities.tags.slug')),
+          key: "slug",
+          label: capitalize(this.$t("fields.communities.tags.slug")),
           sortable: true,
         },
-        { key: 'actions', label: 'Actions', tdClass: 'table__cell__actions' },
+        { key: "actions", label: "Actions", tdClass: "table__cell__actions" },
       ],
       transactionsTable: [
-        { key: 'id', label: 'ID', sortable: true },
-        { key: 'actions', label: 'Actions', tdClass: 'table__cell__actions' },
+        { key: "id", label: "ID", sortable: true },
+        { key: "actions", label: "Actions", tdClass: "table__cell__actions" },
       ],
     };
   },
@@ -406,7 +489,7 @@ export default {
       return [
         ...this.item.loanables.reduce((acc, loanable) => {
           acc.push(
-            ...loanable.loans.map(l => ({
+            ...loanable.loans.map((l) => ({
               ...l,
               loanable: {
                 ...loanable,
@@ -415,7 +498,7 @@ export default {
                   user: this.item,
                 },
               },
-            })),
+            }))
           );
           return acc;
         }, []),
@@ -424,24 +507,24 @@ export default {
     },
     borrowerStatus() {
       if (!this.item.borrower.approved) {
-        return 'Non approuvé';
+        return "Non approuvé";
       }
 
-      return this.item.borrower.suspended ? 'Suspendu' : 'Approuvé';
+      return this.item.borrower.suspended ? "Suspendu" : "Approuvé";
     },
     loggedInUserIsAdmin() {
       const { user } = this.$store.state;
-      return user && user.role === 'admin';
+      return user && user.role === "admin";
     },
     communitySelected() {
       return this.communitiesSelected[0];
     },
     communitySelectedTagIds() {
       if (!this.communitySelected) {
-        return '0';
+        return "0";
       }
 
-      return this.communitySelected.tags.map(t => t.id).join(',') || '0';
+      return this.communitySelected.tags.map((t) => t.id).join(",") || "0";
     },
   },
   methods: {
@@ -464,15 +547,17 @@ export default {
     },
     computeReturnAt(loan) {
       return this.$dayjs(loan.departure_at)
-        .add(loan.duration_in_minutes, 'minute')
-        .format('YYYY-MM-DD HH:mm:ss');
+        .add(loan.duration_in_minutes, "minute")
+        .format("YYYY-MM-DD HH:mm:ss");
     },
     invoiceRowSelected(rows) {
       this.invoicesSelected = rows;
     },
     isLoanMultipleDays(loan) {
-      return this.$dayjs(loan.departure_at).format('YYYY-MM-DD')
-        !== this.$dayjs(this.computeReturnAt(loan)).format('YYYY-MM-DD');
+      return (
+        this.$dayjs(loan.departure_at).format("YYYY-MM-DD") !==
+        this.$dayjs(this.computeReturnAt(loan)).format("YYYY-MM-DD")
+      );
     },
     loanableRowSelected(rows) {
       this.loanablesSelected = rows;
@@ -497,7 +582,7 @@ export default {
       await this.$store.dispatch(`${this.slug}/unsuspendBorrower`, user.id);
     },
     viewUserInCommunity(community) {
-      this.$store.commit('admin.community/usersFilter', this.item.full_name);
+      this.$store.commit("admin.community/usersFilter", this.item.full_name);
       this.$router.push(`/admin/communities/${community.id}#members`);
     },
   },
@@ -516,5 +601,4 @@ export default {
 };
 </script>
 
-<style lang="scss">
-</style>
+<style lang="scss"></style>

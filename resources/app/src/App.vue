@@ -5,13 +5,12 @@
 </template>
 
 <script>
-import Notification from '@/mixins/Notification';
+import Notification from "@/mixins/Notification";
 
 export default {
-  name: 'LocoMotion',
+  name: "LocoMotion",
   mixins: [Notification],
 };
 </script>
 
-<style lang="scss">
-</style>
+<style lang="scss"></style>

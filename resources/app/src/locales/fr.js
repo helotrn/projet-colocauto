@@ -1,17 +1,17 @@
-import AdminFilters from '@/locales/components/Admin/Filters';
-import bikes from '@/locales/models/bikes';
-import borrowers from '@/locales/models/borrowers';
-import cars from '@/locales/models/cars';
-import communities from '@/locales/models/communities';
-import faq from '@/locales/faq';
-import invoices from '@/locales/models/invoices';
-import loans from '@/locales/models/loans';
-import loanables from '@/locales/models/loanables';
-import padlocks from '@/locales/models/padlocks';
-import paymentMethods from '@/locales/models/paymentMethods';
-import tags from '@/locales/models/tags';
-import trailers from '@/locales/models/trailers';
-import users from '@/locales/models/users';
+import AdminFilters from "@/locales/components/Admin/Filters";
+import bikes from "@/locales/models/bikes";
+import borrowers from "@/locales/models/borrowers";
+import cars from "@/locales/models/cars";
+import communities from "@/locales/models/communities";
+import faq from "@/locales/faq";
+import invoices from "@/locales/models/invoices";
+import loans from "@/locales/models/loans";
+import loanables from "@/locales/models/loanables";
+import padlocks from "@/locales/models/padlocks";
+import paymentMethods from "@/locales/models/paymentMethods";
+import tags from "@/locales/models/tags";
+import trailers from "@/locales/models/trailers";
+import users from "@/locales/models/users";
 
 export default {
   bikes: bikes.fr,
@@ -25,86 +25,86 @@ export default {
   },
   faq: faq.fr,
   forms: {
-    actions: 'actions',
-    afficher: 'afficher',
-    approuver: 'approuver',
-    enregistrer: 'enregistrer',
-    facultatif: 'facultatif',
-    modifier: 'modifier',
-    nouveau: 'nouveau',
-    réinitialiser: 'réinitialiser',
-    restaurer: 'restaurer',
-    rétablir: 'rétablir',
-    retirer: 'retirer',
-    suspendre: 'suspendre',
-    supprimer: 'supprimer',
+    actions: "actions",
+    afficher: "afficher",
+    approuver: "approuver",
+    enregistrer: "enregistrer",
+    facultatif: "facultatif",
+    modifier: "modifier",
+    nouveau: "nouveau",
+    réinitialiser: "réinitialiser",
+    restaurer: "restaurer",
+    rétablir: "rétablir",
+    retirer: "retirer",
+    suspendre: "suspendre",
+    supprimer: "supprimer",
   },
   invoices: invoices.fr,
   loans: loans.fr,
   loanables: loanables.fr,
   locales: {
-    en: 'English',
-    fr: 'Français',
+    en: "English",
+    fr: "Français",
   },
   padlocks: padlocks.fr,
   paymentMethods: paymentMethods.fr,
   pricings: {
     types: {
-      car: 'voiture',
-      bike: 'vélo',
-      trailer: 'remorque',
-      génerique: 'générique',
+      car: "voiture",
+      bike: "vélo",
+      trailer: "remorque",
+      génerique: "générique",
     },
   },
   profile: {
     titles: {
-      account: 'Mon compte',
-      borrower: 'Mon dossier de conduite',
-      communities: 'Mes voisinages',
-      invoice: 'Ma facture',
-      invoices: 'Mes factures',
+      account: "Mon compte",
+      borrower: "Mon dossier de conduite",
+      communities: "Mes voisinages",
+      invoice: "Ma facture",
+      invoices: "Mes factures",
       loans: "Historique d'emprunts",
-      loanable: 'Mon véhicule',
-      loanables: 'Mes véhicules',
-      payment_method: 'Mon mode de paiement',
-      payment_methods: 'Mes modes de paiement',
-      profile: 'Mon profil LocoMotion',
+      loanable: "Mon véhicule",
+      loanables: "Mes véhicules",
+      payment_method: "Mon mode de paiement",
+      payment_methods: "Mes modes de paiement",
+      profile: "Mon profil LocoMotion",
     },
   },
   tags: tags.fr,
   titles: {
-    account: 'compte',
-    admin: 'administration',
-    borrower: 'dossier de conduite',
-    communities: 'voisinages',
-    'communities-overview': 'voisinages',
-    community: 'voisinage',
-    dashboard: 'tableau de bord',
-    faq: 'foire aux questions',
-    find_vehicle: 'réserver un véhicule',
-    insurance: 'assurances Desjardins',
-    invoice: 'facture',
-    invoices: 'factures',
-    loan: 'emprunt',
-    loans: 'emprunts',
-    loanable: 'véhicule',
-    loanables: 'véhicules',
-    login: 'se connecter',
-    padlock: 'Cadenas',
-    padlocks: 'Cadenas',
-    password: 'Mot de passe',
-    'password-request': 'Réinitialisation de mot de passe',
-    'password-reset': 'Réinitialisation de mot de passe',
-    payment_method: 'mode de paiement',
-    payment_methods: 'modes de paiement',
+    account: "compte",
+    admin: "administration",
+    borrower: "dossier de conduite",
+    communities: "voisinages",
+    "communities-overview": "voisinages",
+    community: "voisinage",
+    dashboard: "tableau de bord",
+    faq: "foire aux questions",
+    find_vehicle: "réserver un véhicule",
+    insurance: "assurances Desjardins",
+    invoice: "facture",
+    invoices: "factures",
+    loan: "emprunt",
+    loans: "emprunts",
+    loanable: "véhicule",
+    loanables: "véhicules",
+    login: "se connecter",
+    padlock: "Cadenas",
+    padlocks: "Cadenas",
+    password: "Mot de passe",
+    "password-request": "Réinitialisation de mot de passe",
+    "password-reset": "Réinitialisation de mot de passe",
+    payment_method: "mode de paiement",
+    payment_methods: "modes de paiement",
     privacy: "conditions générales d'utilisation",
-    profile: 'profil',
+    profile: "profil",
     register: "s'inscrire",
-    'register-map': 'rejoindre mes voisin-e-s',
-    tags: 'Mots-clés',
-    tag: 'Mot-clé',
-    user: 'membre',
-    users: 'membres',
+    "register-map": "rejoindre mes voisin-e-s",
+    tags: "Mots-clés",
+    tag: "Mot-clé",
+    user: "membre",
+    users: "membres",
   },
   trailers: trailers.fr,
   users: users.fr,

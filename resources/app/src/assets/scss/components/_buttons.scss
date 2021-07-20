@@ -1,29 +1,30 @@
 .btn-google {
-  padding: 3px 18px 3px 3px;
+    padding: 3px 18px 3px 3px;
 
-  &__icon {
-    padding: 7px;
-    background: $white;
-    border-radius: 4px;
-    display: inline-block;
-    margin-right: 13px;
-  }
+    &__icon {
+        padding: 7px;
+        background: $white;
+        border-radius: 4px;
+        display: inline-block;
+        margin-right: 13px;
+    }
 }
 
 .btn-outline-light {
-  color: darken($light, 40);
+    color: darken($light, 40);
 }
 
 .btn-white-secondary {
-  color: $secondary;
-  background: $white;
-  border: 0;
+    color: $secondary;
+    background: $white;
+    border: 0;
 }
 
 .clickable-shadow {
-  @extend .shadow;
+    @extend .shadow;
 
-  &:active, &:focus {
-    @extend .shadow-none;
-  }
+    &:active,
+    &:focus {
+        @extend .shadow-none;
+    }
 }

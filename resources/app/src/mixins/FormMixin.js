@@ -1,11 +1,11 @@
-import { extractErrors } from '@/helpers';
+import { extractErrors } from "@/helpers";
 
 export default {
   beforeRouteLeave(to, from, next) {
     const guard = from.meta.skipCleanup;
-    if (!((typeof guard === 'function' && guard(to, from)) || !!guard)) {
+    if (!((typeof guard === "function" && guard(to, from)) || !!guard)) {
       this.$store.commit(`${this.slug}/item`, null);
-      this.$store.commit(`${this.slug}/initialItem`, '');
+      this.$store.commit(`${this.slug}/initialItem`, "");
     }
 
     next();
@@ -46,9 +46,9 @@ export default {
       return this.$route.meta.params;
     },
     parentPath() {
-      const parentPathParts = this.$route.path.split('/').filter(p => !!p);
+      const parentPathParts = this.$route.path.split("/").filter((p) => !!p);
       parentPathParts.pop();
-      return `/${parentPathParts.join('/')}`;
+      return `/${parentPathParts.join("/")}`;
     },
     parsedInitialItem() {
       return JSON.parse(this.initialItem);
@@ -59,21 +59,23 @@ export default {
   },
   methods: {
     async destroy() {
-      await this.$store.dispatch('paymentMethods/destroy', this.item.id);
+      await this.$store.dispatch("paymentMethods/destroy", this.item.id);
       this.$router.push(this.parentPath);
     },
     async loadItem() {
       const { dispatch } = this.$store;
 
-      if (this.$route.name === 'Login') {
+      if (this.$route.name === "Login") {
         // Redirected to login page, do nothing
         return;
       }
 
       try {
-        if (!this.skipLoadItem
-          || (typeof this.skipLoadItem === 'function' && !this.skipLoadItem())) {
-          if (this.id === 'new') {
+        if (
+          !this.skipLoadItem ||
+          (typeof this.skipLoadItem === "function" && !this.skipLoadItem())
+        ) {
+          if (this.id === "new") {
             await dispatch(`${this.slug}/loadEmpty`);
           } else {
             await dispatch(`${this.slug}/retrieveOne`, {
@@ -83,20 +85,20 @@ export default {
           }
         }
 
-        if (this.formMixinCallback && typeof this.formMixinCallback === 'function') {
+        if (this.formMixinCallback && typeof this.formMixinCallback === "function") {
           this.formMixinCallback();
         }
       } catch (e) {
         if (e.request) {
           switch (e.request.status) {
             case 401:
-              this.$store.commit('addNotification', {
+              this.$store.commit("addNotification", {
                 content: "Vous n'êtes pas connecté.",
-                title: 'Non connecté',
-                variant: 'warning',
-                type: 'login',
+                title: "Non connecté",
+                variant: "warning",
+                type: "login",
               });
-              this.$store.commit('user', null);
+              this.$store.commit("user", null);
               this.$router.push(`/login?r=${this.$route.fullPath}`);
               break;
             case 404:
@@ -117,22 +119,22 @@ export default {
       try {
         if (!this.item.id) {
           await this.$store.dispatch(`${this.slug}/createItem`, this.params);
-          this.$router.replace(this.$route.fullPath.replace('new', this.item.id));
+          this.$router.replace(this.$route.fullPath.replace("new", this.item.id));
         } else {
           await this.$store.dispatch(`${this.slug}/updateItem`, this.params);
         }
-        if (typeof this.afterSubmit === 'function') {
+        if (typeof this.afterSubmit === "function") {
           this.afterSubmit();
         }
       } catch (e) {
         if (e.request) {
           switch (e.request.status) {
             case 422:
-              this.$store.commit('addNotification', {
-                content: extractErrors(e.response.data).join(', '),
-                title: 'Erreur de sauvegarde',
-                variant: 'danger',
-                type: 'form',
+              this.$store.commit("addNotification", {
+                content: extractErrors(e.response.data).join(", "),
+                title: "Erreur de sauvegarde",
+                variant: "danger",
+                type: "form",
               });
               break;
             default:
@@ -158,35 +160,35 @@ export default {
 
       switch (newError.response.status) {
         case 400:
-          content = 'Erreur dans la requête.';
-          title = 'Mauvaise requête';
-          variant = 'warning';
+          content = "Erreur dans la requête.";
+          title = "Mauvaise requête";
+          variant = "warning";
           break;
         case 401:
-          content = 'Mot de passe ou courriel invalide.';
+          content = "Mot de passe ou courriel invalide.";
           title = "Erreur d'authentification";
-          variant = 'warning';
+          variant = "warning";
           break;
         case 403:
           content = "Vous n'avez pas les permissions nécessaires pour effectuer cette action.";
-          title = 'Permissions insuffisantes';
-          variant = 'warning';
+          title = "Permissions insuffisantes";
+          variant = "warning";
           break;
         case 404:
-          content = 'La page que vous avez demandée est introuvable.';
-          title = 'Page introuvable';
-          variant = 'warning';
+          content = "La page que vous avez demandée est introuvable.";
+          title = "Page introuvable";
+          variant = "warning";
           break;
         case 500:
           content = "Une erreur sytème s'est produite.";
-          title = 'Erreur fatale';
-          variant = 'danger';
+          title = "Erreur fatale";
+          variant = "danger";
           break;
         default:
           return;
       }
 
-      this.$store.commit('addNotification', {
+      this.$store.commit("addNotification", {
         content,
         title,
         variant,

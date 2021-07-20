@@ -5,13 +5,13 @@
 </template>
 
 <script>
-import Authenticated from '@/mixins/Authenticated';
-import UserMixin from '@/mixins/UserMixin';
+import Authenticated from "@/mixins/Authenticated";
+import UserMixin from "@/mixins/UserMixin";
 
-import LoginBox from '@/components/Login/Box.vue';
+import LoginBox from "@/components/Login/Box.vue";
 
 export default {
-  name: 'Login',
+  name: "Login",
   mixins: [Authenticated, UserMixin],
   beforeRouteEnter(to, from, next) {
     next((vm) => {
@@ -20,8 +20,8 @@ export default {
       }
 
       if (to.query.token) {
-        vm.$store.commit('token', to.query.token);
-        vm.$router.replace('/');
+        vm.$store.commit("token", to.query.token);
+        vm.$router.replace("/");
       }
     });
   },
@@ -29,5 +29,4 @@ export default {
 };
 </script>
 
-<style lang="scss">
-</style>
+<style lang="scss"></style>

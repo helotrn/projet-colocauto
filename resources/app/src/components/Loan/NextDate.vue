@@ -3,18 +3,27 @@
     <div v-if="loaded">
       <div v-if="nextLoan">
         <div v-if="nextDate">
-          <b-alert variant="warning" show
-            v-b-modal="'next-borrower-modal'" @click.native.stop.prevent>
+          <b-alert
+            variant="warning"
+            show
+            v-b-modal="'next-borrower-modal'"
+            @click.native.stop.prevent
+          >
             La prochaine réservation pour ce véhicule est
-            <span class="no-break">à {{ nextDate | time }} le {{ nextDate | date }}</span>.
-            Cliquez ici pour voir les coordonnées de la personne sur cette réservation.
+            <span class="no-break">à {{ nextDate | time }} le {{ nextDate | date }}</span
+            >. Cliquez ici pour voir les coordonnées de la personne sur cette réservation.
           </b-alert>
         </div>
 
-        <b-modal size="sm"
+        <b-modal
+          size="sm"
           title="Prochain emprunteur"
-          id="next-borrower-modal" footer-class="d-none">
-          <p><strong>{{ nextLoan.borrower.user.full_name }}</strong></p>
+          id="next-borrower-modal"
+          footer-class="d-none"
+        >
+          <p>
+            <strong>{{ nextLoan.borrower.user.full_name }}</strong>
+          </p>
 
           <dl>
             <dt>Téléphone</dt>
@@ -28,10 +37,10 @@
 </template>
 
 <script>
-import Vue from 'vue';
+import Vue from "vue";
 
 export default {
-  name: 'LoanNextDate',
+  name: "LoanNextDate",
   props: {
     loanId: {
       type: Number,
@@ -69,9 +78,10 @@ export default {
           `/loanables/${this.loanableId}/loans/${this.loanId}/next`,
           {
             params: {
-              fields: 'id,departure_at,duration_in_minutes,borrower.user.full_name,borrower.user.phone',
+              fields:
+                "id,departure_at,duration_in_minutes,borrower.user.full_name,borrower.user.phone",
             },
-          },
+          }
         );
 
         this.loaded = true;

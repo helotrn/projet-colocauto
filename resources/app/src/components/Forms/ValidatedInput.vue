@@ -1,122 +1,194 @@
 <template>
-  <validation-provider class="forms-validated-input"
+  <validation-provider
+    class="forms-validated-input"
     :mode="mode"
     :name="label"
     :rules="rulesOrNothing"
-    v-slot="validationContext">
-    <b-form-group :label="type !== 'checkbox' ? label : ''" :label-for="name" :label-cols="inline"
+    v-slot="validationContext"
+  >
+    <b-form-group
+      :label="type !== 'checkbox' ? label : ''"
+      :label-for="name"
+      :label-cols="inline"
       :description="type === 'image' ? null : description"
-      v-b-tooltip.hover :title="disabled ? disabledTooltip : ''">
-      <b-form-select v-if="type === 'select'"
-        :id="name" :name="name"
+      v-b-tooltip.hover
+      :title="disabled ? disabledTooltip : ''"
+    >
+      <b-form-select
+        v-if="type === 'select'"
+        :id="name"
+        :name="name"
         :state="getValidationState(validationContext)"
-        :options="options" :disabled="disabled"
+        :options="options"
+        :disabled="disabled"
         v-bind:value="value"
-        v-on:change="emitInput" />
-      <b-form-checkbox v-else-if="type === 'checkbox'"
-        :id="name" :name="name"
-        :value="true" :disabled="disabled"
+        v-on:change="emitInput"
+      />
+      <b-form-checkbox
+        v-else-if="type === 'checkbox'"
+        :id="name"
+        :name="name"
+        :value="true"
+        :disabled="disabled"
         :unchecked-value="false"
         :state="getValidationState(validationContext)"
         :checked="value"
-        @change="emitInput">
+        @change="emitInput"
+      >
         <span v-html="label" />
       </b-form-checkbox>
-      <b-form-checkbox-group v-else-if="type === 'checkboxes'"
-        :switches="switches" :stacked="stacked"
-        :id="name" :name="name"
-        :disabled="disabled" :options="options"
+      <b-form-checkbox-group
+        v-else-if="type === 'checkboxes'"
+        :switches="switches"
+        :stacked="stacked"
+        :id="name"
+        :name="name"
+        :disabled="disabled"
+        :options="options"
         :state="getValidationState(validationContext)"
         :checked="value"
-        @change="emitInput" />
-      <b-form-textarea v-else-if="type === 'textarea'"
-        :id="name" :name="name"
+        @change="emitInput"
+      />
+      <b-form-textarea
+        v-else-if="type === 'textarea'"
+        :id="name"
+        :name="name"
         :description="description"
-        :placeholder="placeholder" :disabled="disabled"
-        :rows="rows" :max-rows="maxRows"
+        :placeholder="placeholder"
+        :disabled="disabled"
+        :rows="rows"
+        :max-rows="maxRows"
         :state="getValidationState(validationContext)"
         v-bind:value="value"
-        v-on:input="emitInput" />
-      <forms-map-input v-else-if="type === 'point'"
+        v-on:input="emitInput"
+      />
+      <forms-map-input
+        v-else-if="type === 'point'"
         bounded
-        :center="center" :disabled="disabled"
+        :center="center"
+        :disabled="disabled"
         :state="getValidationState(validationContext)"
         :polygons="polygons"
         v-bind:value="value"
-        v-on:input="emitInput" />
-      <forms-date-picker v-else-if="type === 'date'"
+        v-on:input="emitInput"
+      />
+      <forms-date-picker
+        v-else-if="type === 'date'"
         :disabled-dates="disabledDates"
-        :disabled="disabled" :initial-view="initialView"
+        :disabled="disabled"
+        :initial-view="initialView"
         :state="getValidationState(validationContext)"
-        :value="value" :open-date="openDate"
-        @input="emitInput" />
-      <forms-date-time-picker v-else-if="type === 'datetime'"
+        :value="value"
+        :open-date="openDate"
+        @input="emitInput"
+      />
+      <forms-date-time-picker
+        v-else-if="type === 'datetime'"
         :disabled-dates="disabledDates"
         :disabled-times="disabledTimes"
         :disabled="disabled"
         :value="value"
-        @input="emitInput" />
-      <b-form-input v-else-if="type === 'password'"
-        :id="name" :name="name"
+        @input="emitInput"
+      />
+      <b-form-input
+        v-else-if="type === 'password'"
+        :id="name"
+        :name="name"
         type="password"
-        :placeholder="placeholder" :disabled="disabled"
+        :placeholder="placeholder"
+        :disabled="disabled"
         :state="getValidationState(validationContext)"
         v-bind:value="value"
-        v-on:input="emitInput"/>
-      <forms-file-uploader v-else-if="type === 'file'"
-        :id="name" :name="name" :field="name"
-        :placeholder="placeholder" :disabled="disabled"
+        v-on:input="emitInput"
+      />
+      <forms-file-uploader
+        v-else-if="type === 'file'"
+        :id="name"
+        :name="name"
+        :field="name"
+        :placeholder="placeholder"
+        :disabled="disabled"
         :value="value"
-        @input="emitInput" />
-      <forms-image-uploader v-else-if="type === 'image'"
-        :id="name" :name="name" :field="name"
+        @input="emitInput"
+      />
+      <forms-image-uploader
+        v-else-if="type === 'image'"
+        :id="name"
+        :name="name"
+        :field="name"
         :description="description"
-        :placeholder="placeholder" :disabled="disabled"
+        :placeholder="placeholder"
+        :disabled="disabled"
         :state="getValidationState(validationContext)"
         :value="value"
-        @input="emitInput" />
-      <forms-relation-input v-else-if="type === 'relation'"
-        :id="name" :name="name" :query="query"
-        :placeholder="placeholder" :disabled="disabled"
+        @input="emitInput"
+      />
+      <forms-relation-input
+        v-else-if="type === 'relation'"
+        :id="name"
+        :name="name"
+        :query="query"
+        :placeholder="placeholder"
+        :disabled="disabled"
         :state="getValidationState(validationContext)"
         :object-value="objectValue"
         :reset-after-select="resetAfterSelect"
         :extra-params="extraParams"
         :value="value"
-        @input="emitRelationChange"/>
-      <currency-input v-else-if="type === 'currency'"
-        :id="name" :name="name" :disabled="disabled"
+        @input="emitRelationChange"
+      />
+      <currency-input
+        v-else-if="type === 'currency'"
+        :id="name"
+        :name="name"
+        :disabled="disabled"
         :class="`form-control ${getValidationClass(getValidationState(validationContext))}`"
-        locale="fr" :currency="{ suffix: '$' }"
+        locale="fr"
+        :currency="{ suffix: '$' }"
         :value-range="{ min, max }"
         :allow-negative="false"
         v-bind:value="floatValue"
-        v-on:input="emitInput" />
-      <b-form-input v-else-if="type === 'number'"
-        :id="name" :name="name"
-        type="number" :min="min" :max="max"
+        v-on:input="emitInput"
+      />
+      <b-form-input
+        v-else-if="type === 'number'"
+        :id="name"
+        :name="name"
+        type="number"
+        :min="min"
+        :max="max"
         :step="step"
-        :placeholder="placeholder" :disabled="disabled"
+        :placeholder="placeholder"
+        :disabled="disabled"
         :state="getValidationState(validationContext)"
         v-bind:value="value"
-        v-on:input="emitInput" />
-      <b-form-input v-else-if="!!mask"
-        :id="name" :name="name"
-        type="text" v-mask="mask" masked
-        :placeholder="placeholder" :disabled="disabled"
-        :state="getValidationState(validationContext)"
-        :value="value"
-        @input="emitInput" />
-      <vue-editor v-else-if="type === 'html'"
-        :value="value"
-        @input="emitInput" />
-      <b-form-input v-else
-        :id="name" :name="name"
+        v-on:input="emitInput"
+      />
+      <b-form-input
+        v-else-if="!!mask"
+        :id="name"
+        :name="name"
         type="text"
-        :placeholder="placeholder" :disabled="disabled"
+        v-mask="mask"
+        masked
+        :placeholder="placeholder"
+        :disabled="disabled"
+        :state="getValidationState(validationContext)"
+        :value="value"
+        @input="emitInput"
+      />
+      <vue-editor v-else-if="type === 'html'" :value="value" @input="emitInput" />
+      <b-form-input
+        v-else
+        :id="name"
+        :name="name"
+        type="text"
+        :placeholder="placeholder"
+        :disabled="disabled"
         :state="getValidationState(validationContext)"
         v-bind:value="value"
-        v-on:input="emitInput"/>
+        v-on:input="emitInput"
+      />
       <b-form-invalid-feedback :state="getValidationState(validationContext)">
         {{ validationContext.errors[0] }}
       </b-form-invalid-feedback>
@@ -125,18 +197,18 @@
 </template>
 
 <script>
-import { CurrencyInput } from 'vue-currency-input';
-import { VueEditor } from 'vue2-editor';
+import { CurrencyInput } from "vue-currency-input";
+import { VueEditor } from "vue2-editor";
 
-import FormsDatePicker from '@/components/Forms/DatePicker.vue';
-import FormsDateTimePicker from '@/components/Forms/DateTimePicker.vue';
-import FormsFileUploader from '@/components/Forms/FileUploader.vue';
-import FormsImageUploader from '@/components/Forms/ImageUploader.vue';
-import FormsMapInput from '@/components/Forms/MapInput.vue';
-import FormsRelationInput from '@/components/Forms/RelationInput.vue';
+import FormsDatePicker from "@/components/Forms/DatePicker.vue";
+import FormsDateTimePicker from "@/components/Forms/DateTimePicker.vue";
+import FormsFileUploader from "@/components/Forms/FileUploader.vue";
+import FormsImageUploader from "@/components/Forms/ImageUploader.vue";
+import FormsMapInput from "@/components/Forms/MapInput.vue";
+import FormsRelationInput from "@/components/Forms/RelationInput.vue";
 
 export default {
-  name: 'FormsValidatedInput',
+  name: "FormsValidatedInput",
   props: {
     center: {
       type: Object,
@@ -146,7 +218,7 @@ export default {
     description: {
       type: String,
       required: false,
-      default: '',
+      default: "",
     },
     disabled: {
       type: Boolean,
@@ -170,12 +242,14 @@ export default {
     disabledTooltip: {
       type: String,
       required: false,
-      default: '',
+      default: "",
     },
     extraParams: {
       type: Object,
       requird: false,
-      default() { return {}; },
+      default() {
+        return {};
+      },
     },
     initialView: {
       type: String,
@@ -194,12 +268,12 @@ export default {
     mode: {
       required: false,
       type: String,
-      default: 'eager',
+      default: "eager",
     },
     mask: {
       required: false,
       type: String,
-      default: '',
+      default: "",
     },
     max: {
       type: Number,
@@ -242,12 +316,14 @@ export default {
     placeholder: {
       type: String,
       required: false,
-      default: '',
+      default: "",
     },
     polygons: {
       type: Array,
       required: false,
-      default() { return []; },
+      default() {
+        return [];
+      },
     },
     query: {
       type: Object,
@@ -310,10 +386,10 @@ export default {
     },
     rulesOrNothing() {
       if (!this.rules) {
-        return '';
+        return "";
       }
 
-      if (this.type === 'point') {
+      if (this.type === "point") {
         return {
           ...this.rules,
           length: 2,
@@ -325,13 +401,13 @@ export default {
   },
   methods: {
     emitInput(value) {
-      this.$emit('input', value);
+      this.$emit("input", value);
     },
     emitRelationChange(value) {
-      this.$emit('relation', value);
+      this.$emit("relation", value);
     },
     getValidationState({ dirty, validated, valid = null }) {
-      if (this.rulesOrNothing === '') {
+      if (this.rulesOrNothing === "") {
         return null;
       }
 
@@ -344,16 +420,15 @@ export default {
     getValidationClass(state) {
       switch (state) {
         case true:
-          return 'is-valid';
+          return "is-valid";
         case false:
-          return 'is-invalid';
+          return "is-invalid";
         default:
-          return '';
+          return "";
       }
     },
   },
 };
 </script>
 
-<style lang="scss">
-</style>
+<style lang="scss"></style>

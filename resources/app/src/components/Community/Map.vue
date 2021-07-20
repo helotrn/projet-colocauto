@@ -1,21 +1,33 @@
 <template>
-  <gmap-map class="community-map"
+  <gmap-map
+    class="community-map"
     ref="map"
     :center="center"
     :zoom="14"
     :options="mapOptions"
     @click="selectedLoanable = null"
-    map-type-id="terrain">
-    <gmap-polygon v-for="c in communitiesWithArea" :key="`polygon-${c.id}`"
+    map-type-id="terrain"
+  >
+    <gmap-polygon
+      v-for="c in communitiesWithArea"
+      :key="`polygon-${c.id}`"
       :path="c.area_google"
       :label="c.name"
-      :options="polygonOptions" />
-    <gmap-marker v-for="l in data" :key="`marker-${l.id}`"
-      :icon="iconFor(l)" @click="activateLoanable(l)"
-      :clickable="l.available !== false" :position="l.position_google">
-      <gmap-info-window v-if="selectedLoanable && selectedLoanable.id === l.id"
-        @closeclick="selectedLoanable = null">
-        <div class="info-box-content" style="width: 270px;">
+      :options="polygonOptions"
+    />
+    <gmap-marker
+      v-for="l in data"
+      :key="`marker-${l.id}`"
+      :icon="iconFor(l)"
+      @click="activateLoanable(l)"
+      :clickable="l.available !== false"
+      :position="l.position_google"
+    >
+      <gmap-info-window
+        v-if="selectedLoanable && selectedLoanable.id === l.id"
+        @closeclick="selectedLoanable = null"
+      >
+        <div class="info-box-content" style="width: 270px">
           <loanable-card v-bind="l" @select="$emit('select', l)" @test="$emit('test', l)" />
         </div>
       </gmap-info-window>
@@ -24,12 +36,12 @@
 </template>
 
 <script>
-import { gmapApi } from 'vue2-google-maps';
+import { gmapApi } from "vue2-google-maps";
 
-import LoanableCard from '@/components/Loanable/Card.vue';
+import LoanableCard from "@/components/Loanable/Card.vue";
 
 export default {
-  name: 'CommunityMap',
+  name: "CommunityMap",
   components: {
     LoanableCard,
   },
@@ -59,15 +71,13 @@ export default {
         streetViewControl: false,
         styles: [
           {
-            featureType: 'poi',
-            stylers: [
-              { visibility: 'off' },
-            ],
+            featureType: "poi",
+            stylers: [{ visibility: "off" }],
           },
         ],
       },
       polygonOptions: {
-        fillColor: '#16a59e',
+        fillColor: "#16a59e",
         fillOpacity: 0.5,
         strokeOpacity: 0,
         zIndex: 2,
@@ -77,10 +87,10 @@ export default {
   },
   computed: {
     averageCommunitiesCenter() {
-      const center = this.communitiesWithArea.reduce((acc, c) => [
-        (acc[0] + c.center[0]) / 2,
-        (acc[1] + c.center[1]) / 2,
-      ], this.communities[0].center);
+      const center = this.communitiesWithArea.reduce(
+        (acc, c) => [(acc[0] + c.center[0]) / 2, (acc[1] + c.center[1]) / 2],
+        this.communities[0].center
+      );
       return {
         lat: center[0],
         lng: center[1],
@@ -88,18 +98,18 @@ export default {
     },
     center: {
       get() {
-        if (this.$store.state['community.view'].center) {
-          return this.$store.state['community.view'].center;
+        if (this.$store.state["community.view"].center) {
+          return this.$store.state["community.view"].center;
         }
 
         return this.averageCommunitiesCenter;
       },
       set(center) {
-        this.$store.commit('community.view/center', center);
+        this.$store.commit("community.view/center", center);
       },
     },
     communitiesWithArea() {
-      return (this.communities || []).filter(c => !!c.area);
+      return (this.communities || []).filter((c) => !!c.area);
     },
     google: gmapApi,
   },
@@ -114,7 +124,7 @@ export default {
     centerOnCommunities() {
       const { LatLngBounds } = this.google.maps;
       const bounds = new LatLngBounds();
-      this.communitiesWithArea.forEach(c => c.area_google.forEach(p => bounds.extend(p)));
+      this.communitiesWithArea.forEach((c) => c.area_google.forEach((p) => bounds.extend(p)));
 
       if (document.body.clientWidth >= 992) {
         const sw = bounds.getSouthWest();
@@ -129,13 +139,13 @@ export default {
       this.$refs.map.fitBounds(bounds);
     },
     iconFor(loanable) {
-      const status = loanable.available === false ? '-unavailable-' : '-';
+      const status = loanable.available === false ? "-unavailable-" : "-";
 
       let url;
       switch (loanable.type) {
-        case 'car':
-        case 'bike':
-        case 'trailer':
+        case "car":
+        case "bike":
+        case "trailer":
           url = `/pins/${loanable.type}${status}pin.svg`;
           break;
         default:
@@ -158,10 +168,10 @@ export default {
     },
     markerClasses(loanable) {
       if (loanable.available === false) {
-        return 'unavailable';
+        return "unavailable";
       }
 
-      return '';
+      return "";
     },
   },
   watch: {
