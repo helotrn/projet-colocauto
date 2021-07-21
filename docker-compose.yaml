@@ -23,6 +23,7 @@ services:
             DB_DATABASE: locomotion
             DB_USERNAME: locomotion
             DB_PASSWORD: locomotion
+            ENABLE_TEST_ROUTES:true
             REDIS_HOST: redis
             REDIS_PORT: 6379
             REDIS_PASSWORD: null
