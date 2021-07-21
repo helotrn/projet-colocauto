@@ -41,18 +41,11 @@
         "yaml-loader": "^0.5.0"
     },
     "devDependencies": {
-        "@ascendancyy/vue-cli-plugin-stylelint": "^1.1.2",
         "@vue/cli-plugin-babel": "^4.1.0",
-        "@vue/cli-plugin-eslint": "^4.1.0",
         "@vue/cli-service": "^4.1.0",
-        "@vue/eslint-config-airbnb": "^4.0.0",
-        "babel-eslint": "^10.0.3",
-        "eslint": "^5.16.0",
-        "eslint-plugin-vue": "^5.0.0",
         "prettier": "1.19.1",
         "sass": "^1.23.7",
         "sass-loader": "^8.0.0",
-        "stylelint-config-primer": "^2.2.5",
         "vue-template-compiler": "^2.6.10",
         "webpack-bundle-analyzer": "^4.3.0"
     }
