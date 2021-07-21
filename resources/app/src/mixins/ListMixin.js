@@ -175,11 +175,11 @@ export default {
           });
           this.listDebounce = null;
         } catch (e) {
-          this.$store.commit('addNotification', {
+          this.$store.commit("addNotification", {
             content: `Erreur de chargement de données (${this.slug})`,
             title: `${this.slug}`,
-            variant: 'warning',
-            type: 'data',
+            variant: "warning",
+            type: "data",
           });
           console.log(e);
         }

@@ -92,11 +92,11 @@ export default {
         if (e.request) {
           switch (e.request.status) {
             case 401:
-              this.$store.commit('addNotification', {
+              this.$store.commit("addNotification", {
                 content: `Erreur de chargement de données pour ${this.slug}`,
                 title: `${this.slug}`,
-                variant: 'warning',
-                type: 'data',
+                variant: "warning",
+                type: "data",
               });
               console.log(e);
               break;
