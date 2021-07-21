@@ -1,58 +1,67 @@
 <template>
   <div class="borrower-form">
     <validation-observer ref="observer" v-slot="{ passes }">
-      <b-form :novalidate="true" class="borrower-form__form"
-        @submit.stop.prevent="passes(submit)">
+      <b-form :novalidate="true" class="borrower-form__form" @submit.stop.prevent="passes(submit)">
         <b-row>
           <b-col>
-            <forms-validated-input name="drivers_license_number" type="text"
+            <forms-validated-input
+              name="drivers_license_number"
+              type="text"
               :disabled="disabled"
               :label="$t('fields.drivers_license_number') | capitalize"
               :placeholder="placeholderOrLabel('drivers_license_number') | capitalize"
-              v-model="borrower.drivers_license_number" />
+              v-model="borrower.drivers_license_number"
+            />
           </b-col>
         </b-row>
 
         <b-row>
           <b-col>
-            <forms-validated-input name="has_been_sued_last_ten_years" type="checkbox"
+            <forms-validated-input
+              name="has_been_sued_last_ten_years"
+              type="checkbox"
               :disabled="disabled"
               label="Je confirme n'avoir reçu aucune poursuite au cours des 10 dernières années"
-              v-model="reverseHasBeenSuedLastTenYears" />
+              v-model="reverseHasBeenSuedLastTenYears"
+            />
           </b-col>
         </b-row>
 
         <b-row>
           <b-col>
-            <forms-file-uploader field="saaq"
+            <forms-file-uploader
+              field="saaq"
               :disabled="disabled"
               :label="$t('fields.saaq') | capitalize"
               placeholder="Ex.: monfichier.pdf"
-              v-model="borrower.saaq" />
+              v-model="borrower.saaq"
+            />
           </b-col>
         </b-row>
 
         <b-row>
           <b-col>
-            <forms-file-uploader field="gaa"
+            <forms-file-uploader
+              field="gaa"
               :disabled="disabled"
               :label="$t('fields.gaa') | capitalize"
               placeholder="Ex.: monfichier.pdf"
-              v-model="borrower.gaa" />
+              v-model="borrower.gaa"
+            />
           </b-col>
         </b-row>
 
         <div class="form__buttons" v-if="!hideButtons">
           <b-button-group v-if="showReset">
             <b-button variant="success" type="submit" :disabled="!changed">
-              {{ $t('enregistrer') | capitalize }}
+              {{ $t("enregistrer") | capitalize }}
             </b-button>
             <b-button type="reset" :disabled="!changed" @click="$emit('reset')">
-              {{ $t('réinitialiser') | capitalize }}
+              {{ $t("réinitialiser") | capitalize }}
             </b-button>
           </b-button-group>
           <b-button variant="success" type="submit" v-else>
-            {{ $t('enregistrer') | capitalize }}
+            {{ $t("enregistrer") | capitalize }}
           </b-button>
         </div>
       </b-form>
@@ -61,15 +70,15 @@
 </template>
 
 <script>
-import FormsValidatedInput from '@/components/Forms/ValidatedInput.vue';
-import FormsFileUploader from '@/components/Forms/FileUploader.vue';
+import FormsValidatedInput from "@/components/Forms/ValidatedInput.vue";
+import FormsFileUploader from "@/components/Forms/FileUploader.vue";
 
-import FormLabelsMixin from '@/mixins/FormLabelsMixin';
+import FormLabelsMixin from "@/mixins/FormLabelsMixin";
 
-import locales from '@/locales';
+import locales from "@/locales";
 
 export default {
-  name: 'BorrowerForm',
+  name: "BorrowerForm",
   mixins: [FormLabelsMixin],
   components: {
     FormsFileUploader,
@@ -118,7 +127,7 @@ export default {
   },
   methods: {
     submit(...params) {
-      this.$emit('submit', ...params);
+      this.$emit("submit", ...params);
     },
   },
   computed: {
@@ -134,5 +143,4 @@ export default {
 };
 </script>
 
-<style lang="scss">
-</style>
+<style lang="scss"></style>

@@ -5,18 +5,23 @@
     <div v-if="item.id">
       <loan-header :user="user" :loan="item" />
 
-      <loan-action-buttons :item="item"
-        @extension="addExtension" @cancel="cancelLoan" @resume="resumeLoan"
-        @incident="addIncident('accident')" />
+      <loan-action-buttons
+        :item="item"
+        @extension="addExtension"
+        @cancel="cancelLoan"
+        @resume="resumeLoan"
+        @incident="addIncident('accident')"
+      />
 
-      <loan-actions :item="item" @load="loadItem" :form="form"
-        :user="user" @submit="submit" />
+      <loan-actions :item="item" @load="loadItem" :form="form" :user="user" @submit="submit" />
     </div>
     <div v-else-if="form">
       <b-row>
         <b-col>
           <h1 v-if="item.name">{{ item.name }}</h1>
-          <h1 v-else><em>{{ $tc('model_name', 1) | capitalize }}</em></h1>
+          <h1 v-else>
+            <em>{{ $tc("model_name", 1) | capitalize }}</em>
+          </h1>
         </b-col>
       </b-row>
 
@@ -46,22 +51,22 @@
 </template>
 
 <script>
-import FormsBuilder from '@/components/Forms/Builder.vue';
-import LoanActions from '@/components/Loan/Actions.vue';
-import LoanActionButtons from '@/components/Loan/ActionButtons.vue';
-import LoanHeader from '@/components/Loan/LoanHeader.vue';
+import FormsBuilder from "@/components/Forms/Builder.vue";
+import LoanActions from "@/components/Loan/Actions.vue";
+import LoanActionButtons from "@/components/Loan/ActionButtons.vue";
+import LoanHeader from "@/components/Loan/LoanHeader.vue";
 
-import Authenticated from '@/mixins/Authenticated';
-import FormMixin from '@/mixins/FormMixin';
-import LoanStepsSequence from '@/mixins/LoanStepsSequence';
-import UserMixin from '@/mixins/UserMixin';
+import Authenticated from "@/mixins/Authenticated";
+import FormMixin from "@/mixins/FormMixin";
+import LoanStepsSequence from "@/mixins/LoanStepsSequence";
+import UserMixin from "@/mixins/UserMixin";
 
-import locales from '@/locales';
+import locales from "@/locales";
 
-import { capitalize } from '@/helpers/filters';
+import { capitalize } from "@/helpers/filters";
 
 export default {
-  name: 'AdminLoan',
+  name: "AdminLoan",
   mixins: [Authenticated, FormMixin, LoanStepsSequence, UserMixin],
   components: {
     FormsBuilder,
@@ -77,19 +82,19 @@ export default {
   computed: {
     fullTitle() {
       const parts = [
-        'LocoMotion',
-        capitalize(this.$i18n.t('titles.admin')),
-        capitalize(this.$i18n.tc('model_name', 2)),
+        "LocoMotion",
+        capitalize(this.$i18n.t("titles.admin")),
+        capitalize(this.$i18n.tc("model_name", 2)),
       ];
 
       if (this.pageTitle) {
         parts.push(this.pageTitle);
       }
 
-      return parts.reverse().join(' | ');
+      return parts.reverse().join(" | ");
     },
     pageTitle() {
-      return this.item.name || capitalize(this.$i18n.tc('model_name', 1));
+      return this.item.name || capitalize(this.$i18n.tc("model_name", 1));
     },
   },
   methods: {
@@ -98,8 +103,8 @@ export default {
         const { id, type } = this.item.loanable;
         await this.$store.dispatch(`${type}s/retrieveOne`, {
           params: {
-            fields: '*,owner.id,owner.user.id,owner.user.avatar,owner.user.name',
-            '!fields': 'events',
+            fields: "*,owner.id,owner.user.id,owner.user.avatar,owner.user.name",
+            "!fields": "events",
             with_deleted: true,
           },
           id,
@@ -119,10 +124,10 @@ export default {
       await this.loadItem();
     },
     async resumeLoan() {
-      this.$store.commit('loans/patchItem', {
+      this.$store.commit("loans/patchItem", {
         canceled_at: null,
       });
-      await this.$store.dispatch('loans/updateItem');
+      await this.$store.dispatch("loans/updateItem");
     },
     async submitAndReload() {
       await this.submit();
@@ -146,5 +151,4 @@ export default {
 };
 </script>
 
-<style lang="scss">
-</style>
+<style lang="scss"></style>

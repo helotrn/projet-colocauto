@@ -1,10 +1,14 @@
 <template>
   <div class="register-intro">
-    <b-pagination-nav v-bind:value="currentPage"
-      :number-of-pages="4" pills
-      align="center" use-router
+    <b-pagination-nav
+      v-bind:value="currentPage"
+      :number-of-pages="4"
+      pills
+      align="center"
+      use-router
       :hide-goto-end-buttons="true"
-      :disabled="true">
+      :disabled="true"
+    >
       <template v-slot:page="{ page, active }">
         <span v-if="page < currentPage" class="checked">
           <b-icon icon="check" font-scale="2" />
@@ -18,13 +22,13 @@
 </template>
 
 <script>
-import Authenticated from '@/mixins/Authenticated';
-import UserMixin from '@/mixins/UserMixin';
+import Authenticated from "@/mixins/Authenticated";
+import UserMixin from "@/mixins/UserMixin";
 
-import RegisterForm from '@/components/Register/RegisterForm.vue';
+import RegisterForm from "@/components/Register/RegisterForm.vue";
 
 export default {
-  name: 'RegisterIntro',
+  name: "RegisterIntro",
   mixins: [Authenticated, UserMixin],
   components: {
     RegisterForm,
@@ -33,26 +37,26 @@ export default {
     next((vm) => {
       if (vm.isLoggedIn) {
         if (!vm.isRegistered) {
-          if (vm.$route.path !== '/register/2') {
-            return vm.$router.replace('/register/2');
+          if (vm.$route.path !== "/register/2") {
+            return vm.$router.replace("/register/2");
           }
 
           return null;
         }
 
         if (vm.user.communities.length === 0) {
-          if (vm.$route.path !== '/register/map') {
-            return vm.$router.replace('/register/map');
+          if (vm.$route.path !== "/register/map") {
+            return vm.$router.replace("/register/map");
           }
 
           return null;
         }
 
-        return vm.$router.replace('/register/3');
+        return vm.$router.replace("/register/3");
       }
 
-      if (vm.$route.path !== '/register/1') {
-        return vm.$router.replace('/register/1');
+      if (vm.$route.path !== "/register/1") {
+        return vm.$router.replace("/register/1");
       }
 
       return null;

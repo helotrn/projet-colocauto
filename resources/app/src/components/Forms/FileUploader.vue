@@ -1,21 +1,29 @@
 <template>
   <b-form-group class="forms-file-uploader" :label="label" :label-for="field">
     <div v-if="loading">
-      <img src="/loading.svg">
+      <img src="/loading.svg" />
     </div>
     <div v-else-if="!value">
-      <b-form-file :value="value" :state="validationState" :id="field"
-        :ref="`${field}fileinput`" :placeholder="placeholder" :disabled="disabled"
-        :name="field" :accept="accept.join(',')" browse-text="Sélectionner"
+      <b-form-file
+        :value="value"
+        :state="validationState"
+        :id="field"
+        :ref="`${field}fileinput`"
+        :placeholder="placeholder"
+        :disabled="disabled"
+        :name="field"
+        :accept="accept.join(',')"
+        browse-text="Sélectionner"
         drop-placeholder="Déposer le fichier ici..."
-        @change="handleChange"/>
+        @change="handleChange"
+      />
       <div class="invalid-feedback" v-if="errors">
         {{ errors.message }}
       </div>
     </div>
     <div v-else>
       <figure class="preview">
-        <img v-if="!value" src="/loading.svg" >
+        <img v-if="!value" src="/loading.svg" />
 
         <figcaption>
           <a :href="value.url" target="_blank">
@@ -32,13 +40,18 @@
 
 <script>
 export default {
-  name: 'FormsFileUploader',
+  name: "FormsFileUploader",
   props: {
     accept: {
       default: () => [
-        '*.png', '*.jpg', '*.jpeg',
-        'image/png', 'image/jpg', 'image/jpeg',
-        '*.pdf', 'application/pdf',
+        "*.png",
+        "*.jpg",
+        "*.jpeg",
+        "image/png",
+        "image/jpg",
+        "image/jpeg",
+        "*.pdf",
+        "application/pdf",
       ],
       type: Array,
     },
@@ -54,14 +67,14 @@ export default {
     label: {
       required: false,
       type: String,
-      default: '',
+      default: "",
     },
     placeholder: {
-      default: 'Téléverser...',
+      default: "Téléverser...",
       type: String,
     },
     removeFileText: {
-      default: 'Retirer le fichier',
+      default: "Retirer le fichier",
       type: String,
     },
     required: {
@@ -93,8 +106,8 @@ export default {
   methods: {
     handleChange(event) {
       switch (event.type) {
-        case 'drop':
-          this.uploadFile(event.target.getAttribute('for'), event.dataTransfer.files);
+        case "drop":
+          this.uploadFile(event.target.getAttribute("for"), event.dataTransfer.files);
           break;
         default:
           this.uploadFile(event.target.name, event.target.files);
@@ -102,7 +115,7 @@ export default {
       }
     },
     removeFile() {
-      this.$emit('input', null);
+      this.$emit("input", null);
 
       if (this.$refs[`${this.field}fileinput`]) {
         this.$refs[`${this.field}fileinput`].reset();
@@ -115,15 +128,15 @@ export default {
         return null;
       }
 
-      Array
-        .from(Array(fileList.length).keys())
-        .map(x => formData.append(fieldName, fileList[x], fileList[x].name));
+      Array.from(Array(fileList.length).keys()).map((x) =>
+        formData.append(fieldName, fileList[x], fileList[x].name)
+      );
 
-      formData.append('field', fieldName);
+      formData.append("field", fieldName);
 
-      const file = await this.$store.dispatch('files/upload', formData);
+      const file = await this.$store.dispatch("files/upload", formData);
 
-      this.$emit('input', file);
+      this.$emit("input", file);
 
       return file;
     },

@@ -6,30 +6,33 @@ use Illuminate\Database\Migrations\Migration;
 
 class RenameTypeFieldsOnSubLoanables extends Migration
 {
-    public function __construct() {
+    public function __construct()
+    {
         DB::connection()
             ->getDoctrineConnection()
             ->getDatabasePlatform()
-            ->registerDoctrineTypeMapping('geography', 'array');
+            ->registerDoctrineTypeMapping("geography", "array");
     }
 
-    public function up() {
-        Schema::table('bikes', function (Blueprint $table) {
-            $table->renameColumn('type', 'bike_type');
+    public function up()
+    {
+        Schema::table("bikes", function (Blueprint $table) {
+            $table->renameColumn("type", "bike_type");
         });
 
-        Schema::table('trailers', function (Blueprint $table) {
-            $table->dropColumn('type');
+        Schema::table("trailers", function (Blueprint $table) {
+            $table->dropColumn("type");
         });
     }
 
-    public function down() {
-        Schema::table('bikes', function (Blueprint $table) {
-            $table->renameColumn('bike_type', 'type');
+    public function down()
+    {
+        Schema::table("bikes", function (Blueprint $table) {
+            $table->renameColumn("bike_type", "type");
         });
 
-        Schema::table('trailers', function (Blueprint $table) {
-            $table->enum('type', ['regular', 'electric', 'fixed_wheel']);
+        Schema::table("trailers", function (Blueprint $table) {
+            $table->enum("type", ["regular", "electric", "fixed_wheel"]);
         });
     }
 }

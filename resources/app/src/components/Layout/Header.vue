@@ -7,10 +7,10 @@
 </template>
 
 <script>
-import LayoutNavbar from '@/components/Layout/Navbar.vue';
+import LayoutNavbar from "@/components/Layout/Navbar.vue";
 
 export default {
-  name: 'Header',
+  name: "Header",
   components: {
     LayoutNavbar,
   },
@@ -18,11 +18,10 @@ export default {
     title: {
       type: String,
       require: false,
-      default: '',
+      default: "",
     },
   },
 };
 </script>
 
-<style lang="scss">
-</style>
+<style lang="scss"></style>

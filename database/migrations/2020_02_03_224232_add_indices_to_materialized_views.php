@@ -6,22 +6,26 @@ use Illuminate\Database\Migrations\Migration;
 
 class AddIndicesToMaterializedViews extends Migration
 {
-    public function up() {
-        \DB::statement(<<<SQL
+    public function up()
+    {
+        \DB::statement(
+            <<<SQL
 CREATE UNIQUE INDEX actions_index
 ON actions (id, type);
 SQL
         );
 
-        \DB::statement(<<<SQL
+        \DB::statement(
+            <<<SQL
 CREATE UNIQUE INDEX loanables_index
 ON loanables (id, type);
 SQL
         );
     }
 
-    public function down() {
-        \DB::statement('DROP INDEX actions_index');
-        \DB::statement('DROP INDEX loanables_index');
+    public function down()
+    {
+        \DB::statement("DROP INDEX actions_index");
+        \DB::statement("DROP INDEX loanables_index");
     }
 }

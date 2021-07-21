@@ -9,14 +9,19 @@ use Mail;
 
 class SendInvoiceEmail
 {
-    public function handle($event) {
-        Mail::to($event->user->email, $event->user->name . ' ' . $event->user->last_name)
-            ->queue(new InvoicePaid(
+    public function handle($event)
+    {
+        Mail::to(
+            $event->user->email,
+            $event->user->name . " " . $event->user->last_name
+        )->queue(
+            new InvoicePaid(
                 $event->user,
                 $event->invoice,
                 $event->title,
                 $event->text,
                 $event->subject
-            ));
+            )
+        );
     }
 }

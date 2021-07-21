@@ -1,8 +1,15 @@
 <template>
-  <v-select class="forms-relation-input" label="text" :options="data"
-    :placeholder="placeholder" @search="setQ" :loading="loading"
+  <v-select
+    class="forms-relation-input"
+    label="text"
+    :options="data"
+    :placeholder="placeholder"
+    @search="setQ"
+    :loading="loading"
     :filterable="false"
-    :value="convertedObjectValue" @input="emitInput">
+    :value="convertedObjectValue"
+    @input="emitInput"
+  >
     <template #no-options>
       <span v-if="!q || q.length < 3">Tapez quelque chose pour commencer à chercher...</span>
       <span v-else-if="searchDebounce">Chargement...</span>
@@ -12,11 +19,11 @@
 </template>
 
 <script>
-import Vue from 'vue';
-import vSelect from 'vue-select';
+import Vue from "vue";
+import vSelect from "vue-select";
 
 export default {
-  name: 'RelationInput',
+  name: "RelationInput",
   components: { vSelect },
   props: {
     disabled: {
@@ -27,7 +34,9 @@ export default {
     extraParams: {
       type: Object,
       required: false,
-      default() { return {}; },
+      default() {
+        return {};
+      },
     },
     name: {
       type: String,
@@ -65,11 +74,12 @@ export default {
   },
   mounted() {
     if (this.value && !this.lastSelectedItem) {
-      Vue.axios.get(`/${this.slug}/${this.value}`, {
-        params: {
-          ...this.params,
-        },
-      })
+      Vue.axios
+        .get(`/${this.slug}/${this.value}`, {
+          params: {
+            ...this.params,
+          },
+        })
         .then(({ data }) => {
           const value = this.dig(data, this.query.value);
           const text = this.dig(data, this.query.text);
@@ -85,7 +95,7 @@ export default {
     return {
       lastSelectedItem: null,
       searchDebounce: null,
-      q: '',
+      q: "",
     };
   },
   computed: {
@@ -136,7 +146,7 @@ export default {
   },
   methods: {
     dig(target, key) {
-      const parts = key.split('.');
+      const parts = key.split(".");
 
       return parts.reduce((acc, k) => {
         if (!acc) {
@@ -148,7 +158,7 @@ export default {
     },
     emitInput(value) {
       this.lastSelectedItem = value;
-      this.$emit('input', value);
+      this.$emit("input", value);
 
       if (this.resetAfterSelect) {
         this.reset();

@@ -10,16 +10,17 @@ use Tests\TestCase;
 
 class EmailLoanPrePaymentMissingTest extends TestCase
 {
-    public function testgetQuery() {
-        $createdAt = (new Carbon())->subtract(3, 'hours');
+    public function testgetQuery()
+    {
+        $createdAt = (new Carbon())->subtract(3, "hours");
 
-        $query = EmailLoanPrePaymentMissingCommand::getQuery(
-            [ 'created_at' => $createdAt ]
-        );
+        $query = EmailLoanPrePaymentMissingCommand::getQuery([
+            "created_at" => $createdAt,
+        ]);
 
         $query->get();
 
-                             // Assert that we ended up here.
+        // Assert that we ended up here.
         $this->assertTrue(true);
     }
 }

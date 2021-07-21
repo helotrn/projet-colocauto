@@ -1,65 +1,66 @@
-.page.home, .page.dashboard {
-  .partners-section {
-    background-color: $white;
+.page.home,
+.page.dashboard {
+    .partners-section {
+        background-color: $white;
 
-    &__top {
-      background-color: $white;
-      height: 136px;
-      overflow: hidden;
-      position: relative;
-      padding: 0;
-      margin: 0;
+        &__top {
+            background-color: $white;
+            height: 136px;
+            overflow: hidden;
+            position: relative;
+            padding: 0;
+            margin: 0;
 
-      svg {
-        position: absolute;
-        left: 0;
-        bottom: 30px;
-      }
-    }
-
-    h2 {
-      color: $locomotion-light-green;
-      font-size: 28px;
-      margin-bottom: 80px;
-
-      @include media-breakpoint-down(lg) {
-        margin-top: 120px;
-      }
-    }
-
-    &__partners {
-      display: flex;
-      flex-direction: row;
-      justify-content: space-evenly;
-      flex-wrap: wrap;
-
-      &__line-break {
-        flex-basis: 100%;
-      }
-
-      &__partner {
-        margin: 20px;
-
-        img {
-          width: auto;
-          height: auto;
-
-          max-width: 200px;
-          max-height: 200px;
+            svg {
+                position: absolute;
+                left: 0;
+                bottom: 30px;
+            }
         }
 
-        display: flex;
-        flex-direction: column;
-        justify-content: space-around;
-      }
-    }
+        h2 {
+            color: $locomotion-light-green;
+            font-size: 28px;
+            margin-bottom: 80px;
 
-    @include media-breakpoint-down(lg) {
-      &__dot {
-        position: absolute;
-        top: -150px;
-        left: -50%;
-      }
+            @include media-breakpoint-down(lg) {
+                margin-top: 120px;
+            }
+        }
+
+        &__partners {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-evenly;
+            flex-wrap: wrap;
+
+            &__line-break {
+                flex-basis: 100%;
+            }
+
+            &__partner {
+                margin: 20px;
+
+                img {
+                    width: auto;
+                    height: auto;
+
+                    max-width: 200px;
+                    max-height: 200px;
+                }
+
+                display: flex;
+                flex-direction: column;
+                justify-content: space-around;
+            }
+        }
+
+        @include media-breakpoint-down(lg) {
+            &__dot {
+                position: absolute;
+                top: -150px;
+                left: -50%;
+            }
+        }
     }
-  }
 }

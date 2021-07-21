@@ -17,18 +17,27 @@ class LoanableReviewable extends BaseMailable
     public $loanable;
     public $user;
 
-    public function __construct(User $user, Community $community, Loanable $loanable) {
-         $this->user = $user;
-         $this->community = $community;
-         $this->loanable = $loanable;
+    public function __construct(
+        User $user,
+        Community $community,
+        Loanable $loanable
+    ) {
+        $this->user = $user;
+        $this->community = $community;
+        $this->loanable = $loanable;
     }
 
-    public function build() {
-        return $this->view('emails.loanable.reviewable')
-            ->subject('LocoMotion - Nouveau véhicule ajouté dans ' . $this->community->name)
-            ->text('emails.loanable.reviewable_text')
+    public function build()
+    {
+        return $this->view("emails.loanable.reviewable")
+            ->subject(
+                "LocoMotion - Nouveau véhicule ajouté dans " .
+                    $this->community->name
+            )
+            ->text("emails.loanable.reviewable_text")
             ->with([
-                'title' => 'Nouveau véhicule ajouté dans ' . $this->community->name,
+                "title" =>
+                    "Nouveau véhicule ajouté dans " . $this->community->name,
             ]);
     }
 }

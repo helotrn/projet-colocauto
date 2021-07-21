@@ -2,11 +2,11 @@
   <b-container fluid>
     <b-row>
       <b-col>
-        <h1>{{ $tc('model_name', 2) | capitalize }}</h1>
+        <h1>{{ $tc("model_name", 2) | capitalize }}</h1>
       </b-col>
       <b-col class="admin__buttons">
         <b-button variant="primary" v-if="creatable" :to="`/admin/${slug}/new`">
-          {{ $t('list.create') | capitalize }}
+          {{ $t("list.create") | capitalize }}
         </b-button>
       </b-col>
     </b-row>
@@ -32,36 +32,49 @@
             </b-dropdown-item>
             <b-dropdown-divider />
             <b-dropdown-item disabled>{{
-              $tc(
-                'list.selected',
-                selected.length,
-                { count: selected.length }
-              )
+              $tc("list.selected", selected.length, { count: selected.length })
             }}</b-dropdown-item>
           </b-dropdown>
         </b-button-group>
       </b-col>
 
       <b-col class="admin__filters">
-        <admin-filters entity="users" :filters="filters" :params="contextParams"
-          @change="setParam" />
+        <admin-filters
+          entity="users"
+          :filters="filters"
+          :params="contextParams"
+          @change="setParam"
+        />
       </b-col>
     </b-row>
 
     <b-row>
       <b-col>
-        <b-table ref="usersTable"
-          striped hover :items="data"
-          selectable select-mode="multi" @row-selected="rowSelected"
-          :busy="loading" :fields="table" no-local-sorting
-          :sort-by.sync="sortBy" :sort-desc.sync="sortDesc" no-sort-reset
-          :show-empty="true" empty-text="Pas de membre">
+        <b-table
+          ref="usersTable"
+          striped
+          hover
+          :items="data"
+          selectable
+          select-mode="multi"
+          @row-selected="rowSelected"
+          :busy="loading"
+          :fields="table"
+          no-local-sorting
+          :sort-by.sync="sortBy"
+          :sort-desc.sync="sortDesc"
+          no-sort-reset
+          :show-empty="true"
+          empty-text="Pas de membre"
+        >
           <template v-slot:head(id)="data">
-            <b-form-checkbox inline
-              style="margin-right: 0;"
+            <b-form-checkbox
+              inline
+              style="margin-right: 0"
               @input="toggleSelection"
               :indeterminate="selectionIndeterminate"
-              :checked="selectionStatus" />
+              :checked="selectionStatus"
+            />
             {{ data.label.toUpperCase() }}
           </template>
           <template v-slot:cell(type)="row">
@@ -84,8 +97,13 @@
         <b-button class="mr-3" variant="outline-primary" @click="exportCSV">
           Générer (CSV)
         </b-button>
-        <a variant="outline-primary" :href="exportUrl"
-          target="_blank" v-if="context.exportUrl" @click="resetExportUrl">
+        <a
+          variant="outline-primary"
+          :href="exportUrl"
+          target="_blank"
+          v-if="context.exportUrl"
+          @click="resetExportUrl"
+        >
           Télécharger (CSV)
         </a>
       </b-col>
@@ -98,16 +116,16 @@
 </template>
 
 <script>
-import AdminFilters from '@/components/Admin/Filters.vue';
-import AdminListActions from '@/components/Admin/ListActions.vue';
-import AdminPagination from '@/components/Admin/Pagination.vue';
+import AdminFilters from "@/components/Admin/Filters.vue";
+import AdminListActions from "@/components/Admin/ListActions.vue";
+import AdminPagination from "@/components/Admin/Pagination.vue";
 
-import DataRouteGuards from '@/mixins/DataRouteGuards';
-import ListMixin from '@/mixins/ListMixin';
-import locales from '@/locales';
+import DataRouteGuards from "@/mixins/DataRouteGuards";
+import ListMixin from "@/mixins/ListMixin";
+import locales from "@/locales";
 
 export default {
-  name: 'AdminUsers',
+  name: "AdminUsers",
   mixins: [DataRouteGuards, ListMixin],
   components: {
     AdminFilters,
@@ -117,10 +135,10 @@ export default {
   data() {
     return {
       table: [
-        { key: 'id', label: 'ID', sortable: true },
-        { key: 'full_name', label: 'Nom', sortable: true },
-        { key: 'email', label: 'Courriel', sortable: true },
-        { key: 'actions', label: 'Actions', tdClass: 'table__cell__actions' },
+        { key: "id", label: "ID", sortable: true },
+        { key: "full_name", label: "Nom", sortable: true },
+        { key: "email", label: "Courriel", sortable: true },
+        { key: "actions", label: "Actions", tdClass: "table__cell__actions" },
       ],
     };
   },
@@ -129,45 +147,46 @@ export default {
       const { report } = data;
 
       if (report) {
-        const succeeded = report
-          .reduce((acc, s) => acc + (s.response.status === 'success' ? 1 : 0), 0);
-        const failed = report
-          .reduce((acc, s) => acc + (s.response.status === 'error' ? 1 : 0), 0);
-        this.$store.commit('addNotification', {
+        const succeeded = report.reduce(
+          (acc, s) => acc + (s.response.status === "success" ? 1 : 0),
+          0
+        );
+        const failed = report.reduce((acc, s) => acc + (s.response.status === "error" ? 1 : 0), 0);
+        this.$store.commit("addNotification", {
           content: `Résultat de l'envoi: ${succeeded} réussi(s) et ${failed} échoués`,
-          title: 'Accès refusé',
-          variant: 'success',
-          type: 'send_email',
+          title: "Accès refusé",
+          variant: "success",
+          type: "send_email",
         });
       }
     },
     async sendPasswordResetEmail() {
       const { data } = await this.axios.put(
-        `/users/send/password_reset?id=${this.selected.map(s => s.id).join(',')}`,
+        `/users/send/password_reset?id=${this.selected.map((s) => s.id).join(",")}`
       );
       this.displayMailStatus(data);
     },
     async sendRegistrationStalledEmail() {
       const { data } = await this.axios.put(
-        `/users/send/registration_stalled?id=${this.selected.map(s => s.id).join(',')}`,
+        `/users/send/registration_stalled?id=${this.selected.map((s) => s.id).join(",")}`
       );
       this.displayMailStatus(data);
     },
     async sendRegistrationSubmittedEmail() {
       const { data } = await this.axios.put(
-        `/users/send/registration_submitted?id=${this.selected.map(s => s.id).join(',')}`,
+        `/users/send/registration_submitted?id=${this.selected.map((s) => s.id).join(",")}`
       );
       this.displayMailStatus(data);
     },
     async sendRegistrationApprovedEmail() {
       const { data } = await this.axios.put(
-        `/users/send/registration_approved?id=${this.selected.map(s => s.id).join(',')}`,
+        `/users/send/registration_approved?id=${this.selected.map((s) => s.id).join(",")}`
       );
       this.displayMailStatus(data);
     },
     async sendRegistrationRejectedEmail() {
       const { data } = await this.axios.put(
-        `/users/send/registration_rejected?id=${this.selected.map(s => s.id).join(',')}`,
+        `/users/send/registration_rejected?id=${this.selected.map((s) => s.id).join(",")}`
       );
       this.displayMailStatus(data);
     },
@@ -194,5 +213,4 @@ export default {
 };
 </script>
 
-<style lang="scss">
-</style>
+<style lang="scss"></style>

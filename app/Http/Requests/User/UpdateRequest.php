@@ -6,25 +6,26 @@ use App\Http\Requests\BaseRequest;
 
 class UpdateRequest extends BaseRequest
 {
-    public function authorize() {
-        if ($this->user()->isAdmin()
-            || $this->user()->isAdminOfCommunityFor($this->route('id'))) {
+    public function authorize()
+    {
+        if (
+            $this->user()->isAdmin() ||
+            $this->user()->isAdminOfCommunityFor($this->route("id"))
+        ) {
             return true;
         }
 
-        return $this->user()->id === (int) $this->route('id');
+        return $this->user()->id === (int) $this->route("id");
     }
 
-    public function rules() {
+    public function rules()
+    {
         $rules = [
-            'email' => 'email',
+            "email" => "email",
         ];
 
-        if ($userId = $this->get('id')) {
-            $rules['email'] = [
-                'email',
-                "unique:users,email,$userId",
-            ];
+        if ($userId = $this->get("id")) {
+            $rules["email"] = ["email", "unique:users,email,$userId"];
         }
 
         return $rules;

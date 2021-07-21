@@ -6,8 +6,10 @@ use Illuminate\Database\Migrations\Migration;
 
 class AddActionsMaterializedView extends Migration
 {
-    public function up() {
-        \DB::statement(<<<SQL
+    public function up()
+    {
+        \DB::statement(
+            <<<SQL
 CREATE MATERIALIZED VIEW actions
 (id, type, executed_at, status, loan_id, created_at, updated_at, deleted_at) AS
     SELECT id, 'payment' AS type, executed_at, status, loan_id, created_at, updated_at, deleted_at FROM payments
@@ -25,7 +27,8 @@ SQL
         );
     }
 
-    public function down() {
-        \DB::statement('DROP MATERIALIZED VIEW actions');
+    public function down()
+    {
+        \DB::statement("DROP MATERIALIZED VIEW actions");
     }
 }

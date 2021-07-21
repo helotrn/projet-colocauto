@@ -9,7 +9,7 @@ use Log;
 
 class NokeService
 {
-    private $baseUrl = 'https://v1-api-nokepro.appspot.com';
+    private $baseUrl = "https://v1-api-nokepro.appspot.com";
     private $token;
 
     private $groups = [];
@@ -23,17 +23,19 @@ class NokeService
 
     private $client;
 
-    public function __construct(Client $client) {
+    public function __construct(Client $client)
+    {
         $this->client = $client;
 
-        $this->token = Cache::get('noke:token');
+        $this->token = Cache::get("noke:token");
 
         if (!$this->token) {
             $this->resetToken();
         }
     }
 
-    public function findOrCreateGroup($groupName, $lockExternalId) {
+    public function findOrCreateGroup($groupName, $lockExternalId)
+    {
         if (!$this->groups) {
             $this->fetchGroups();
         }
@@ -43,41 +45,38 @@ class NokeService
         }
 
         $url = "{$this->baseUrl}/group/create/";
-        Log::channel('noke')->info("Request to $url for group $groupName");
+        Log::channel("noke")->info("Request to $url for group $groupName");
 
-        if (app()->environment() !== 'production') {
+        if (app()->environment() !== "production") {
             return;
         }
 
-        $this->client->post(
-            $url,
-            [
-                'json' => [
-                    'name' => $groupName,
-                    'groupType' => 'online',
-                    'lockIds' => [ intval($lockExternalId) ],
-                    'userIds' => [ intval(config('services.noke.api_user_id')) ],
-                    'schedule' => [
-                        [
-                            'startDate' => '2020-05-01T00:00:00-04:00',
-                            'endDate' => '2030-05-01T23:59:59-04:00',
-                            'expiration' => '2030-05-01T23:59:59-04:00',
-                            'repeatType' => 'none',
-                            'dayOfWeek' => '',
-                            'name' => strval(time()),
-                        ]
+        $this->client->post($url, [
+            "json" => [
+                "name" => $groupName,
+                "groupType" => "online",
+                "lockIds" => [intval($lockExternalId)],
+                "userIds" => [intval(config("services.noke.api_user_id"))],
+                "schedule" => [
+                    [
+                        "startDate" => "2020-05-01T00:00:00-04:00",
+                        "endDate" => "2030-05-01T23:59:59-04:00",
+                        "expiration" => "2030-05-01T23:59:59-04:00",
+                        "repeatType" => "none",
+                        "dayOfWeek" => "",
+                        "name" => strval(time()),
                     ],
                 ],
-                'headers' => [
-                    'Accept' => 'application/json',
-                    'Authorization' => "Bearer $this->token",
-                ],
-            ]
-        );
+            ],
+            "headers" => [
+                "Accept" => "application/json",
+                "Authorization" => "Bearer $this->token",
+            ],
+        ]);
 
         $result = json_decode($response->getBody());
 
-        if (isset($result->result) && $result->result === 'failure') {
+        if (isset($result->result) && $result->result === "failure") {
             return null;
         }
 
@@ -85,12 +84,13 @@ class NokeService
         $this->groupsIndex[$groupName] = $newGroup;
         array_push($this->groups, $newGroup);
 
-        Cache::set('noke:groups', json_encode($this->groups), 14400);
+        Cache::set("noke:groups", json_encode($this->groups), 14400);
 
         return $newGroup;
     }
 
-    public function findUserByEmail($email, $force = false) {
+    public function findUserByEmail($email, $force = false)
+    {
         $this->fetchUsers($force);
 
         if (!isset($this->usersIndex[$email])) {
@@ -100,31 +100,29 @@ class NokeService
         $user = $this->usersIndex[$email];
 
         $url = "{$this->baseUrl}/user/profile/";
-        Log::channel('noke')->info("Request to $url for user ID $user->id");
+        Log::channel("noke")->info("Request to $url for user ID $user->id");
 
-        $response = $this->client->post(
-            $url,
-            [
-                'json' => [
-                    'id' => $user->id,
-                ],
-                'headers' => [
-                    'Accept' => 'application/json',
-                    'Authorization' => "Bearer $this->token",
-                ],
-            ]
-        );
+        $response = $this->client->post($url, [
+            "json" => [
+                "id" => $user->id,
+            ],
+            "headers" => [
+                "Accept" => "application/json",
+                "Authorization" => "Bearer $this->token",
+            ],
+        ]);
 
         $result = json_decode($response->getBody());
 
-        if (isset($result->result) && $result->result === 'failure') {
+        if (isset($result->result) && $result->result === "failure") {
             return null;
         }
 
         return $result->data;
     }
 
-    public function findOrCreateUser(User $user) {
+    public function findOrCreateUser(User $user)
+    {
         if (!$this->users) {
             $this->fetchUsers();
         }
@@ -134,42 +132,39 @@ class NokeService
         }
 
         $data = [
-            'city' => '',
-            'company' => '',
-            'mobilePhone' => $user->is_smart_phone ? $user->phone : '',
-            'name' => "{$user->name} {$user->last_name}",
-            'notifyEmail' => 1,
-            'notifySMS' => $user->is_smart_phone ? 1 : 0,
-            'permissions' => ['app_flag'],
-            'phoneCountryCode' => '1',
-            'state' => '',
-            'streetAddress' => '',
-            'title' => '',
-            'username' => $user->email,
-            'zip' => '',
+            "city" => "",
+            "company" => "",
+            "mobilePhone" => $user->is_smart_phone ? $user->phone : "",
+            "name" => "{$user->name} {$user->last_name}",
+            "notifyEmail" => 1,
+            "notifySMS" => $user->is_smart_phone ? 1 : 0,
+            "permissions" => ["app_flag"],
+            "phoneCountryCode" => "1",
+            "state" => "",
+            "streetAddress" => "",
+            "title" => "",
+            "username" => $user->email,
+            "zip" => "",
         ];
 
         $url = "{$this->baseUrl}/user/create/";
-        Log::channel('noke')->info("Request to $url for user ID $user->id");
+        Log::channel("noke")->info("Request to $url for user ID $user->id");
 
-        if (app()->environment() !== 'production') {
+        if (app()->environment() !== "production") {
             return;
         }
 
-        $response = $this->client->post(
-            $url,
-            [
-                'json' => $data,
-                'headers' => [
-                    'Accept' => 'application/json',
-                    'Authorization' => "Bearer $this->token",
-                ],
-            ]
-        );
+        $response = $this->client->post($url, [
+            "json" => $data,
+            "headers" => [
+                "Accept" => "application/json",
+                "Authorization" => "Bearer $this->token",
+            ],
+        ]);
 
         $result = json_decode($response->getBody());
 
-        if (isset($result->result) && $result->result === 'failure') {
+        if (isset($result->result) && $result->result === "failure") {
             return null;
         }
 
@@ -177,17 +172,18 @@ class NokeService
         $this->usersIndex[$user->email] = $newUser;
         array_push($this->users, $newUser);
 
-        Cache::set('noke:users', json_encode($this->users), 14400);
+        Cache::set("noke:users", json_encode($this->users), 14400);
 
         return $newUser;
     }
 
-    public function fetchGroups($force = false) {
+    public function fetchGroups($force = false)
+    {
         if ($force) {
-            Cache::forget('noke:groups');
+            Cache::forget("noke:groups");
         }
 
-        if ($groupsJson = Cache::get('noke:groups')) {
+        if ($groupsJson = Cache::get("noke:groups")) {
             $this->groups = json_decode($groupsJson);
         } else {
             $page = 0;
@@ -195,25 +191,27 @@ class NokeService
                 $page += 1;
 
                 $url = "{$this->baseUrl}/group/get/all/";
-                Log::channel('noke')
-                    ->info("Request to $url with page $page");
+                Log::channel("noke")->info("Request to $url with page $page");
 
                 $groupsResponse = $this->client->post($url, [
-                    'json' => [
-                        'page' => $page,
+                    "json" => [
+                        "page" => $page,
                     ],
-                    'headers' => [
-                        'Accept' => 'application/json',
-                        'Authorization' => "Bearer $this->token",
+                    "headers" => [
+                        "Accept" => "application/json",
+                        "Authorization" => "Bearer $this->token",
                     ],
                 ]);
                 $groupsResult = json_decode($groupsResponse->getBody());
 
-                $this->groups = array_merge($groupsResult->data->groups, $this->groups);
+                $this->groups = array_merge(
+                    $groupsResult->data->groups,
+                    $this->groups
+                );
                 $maxPage = intval($groupsResult->data->pageCount);
             } while ($maxPage > $page);
 
-            Cache::set('noke:groups', json_encode($this->groups), 14400);
+            Cache::set("noke:groups", json_encode($this->groups), 14400);
         }
 
         foreach ($this->groups as $group) {
@@ -223,31 +221,32 @@ class NokeService
         return $this->groups;
     }
 
-    public function fetchLocks($force = false) {
+    public function fetchLocks($force = false)
+    {
         if ($force) {
-            Cache::forget('noke:locks');
+            Cache::forget("noke:locks");
         }
 
-        if ($locks = Cache::get('noke:locks')) {
+        if ($locks = Cache::get("noke:locks")) {
             return json_decode($locks);
         }
 
         $url = "{$this->baseUrl}/lock/get/list/";
-        Log::channel('noke')->info("Request to $url");
+        Log::channel("noke")->info("Request to $url");
 
         $locksResponse = $this->client->post($url, [
-            'json' => [
-                'page' => 1,
+            "json" => [
+                "page" => 1,
             ],
-            'headers' => [
-                'Accept' => 'application/json',
-                'Authorization' => "Bearer $this->token",
+            "headers" => [
+                "Accept" => "application/json",
+                "Authorization" => "Bearer $this->token",
             ],
         ]);
 
         $locksResult = json_decode($locksResponse->getBody());
 
-        Cache::put('noke:locks', json_encode($locksResult->data), 14400);
+        Cache::put("noke:locks", json_encode($locksResult->data), 14400);
 
         $this->locks = $locksResult->data;
 
@@ -259,32 +258,33 @@ class NokeService
         return $this->locks;
     }
 
-    public function fetchUsers($force = false) {
+    public function fetchUsers($force = false)
+    {
         if ($force) {
-            Cache::forget('noke:users');
+            Cache::forget("noke:users");
         }
 
-        if ($users = Cache::get('noke:users')) {
+        if ($users = Cache::get("noke:users")) {
             $this->users = json_decode($users);
         } else {
-            if (app()->environment() !== 'production') {
+            if (app()->environment() !== "production") {
                 return; // TODO mock
             }
 
             $url = "{$this->baseUrl}/user/get/list/";
-            Log::channel('noke')->info("Request to $url");
+            Log::channel("noke")->info("Request to $url");
 
             $usersResponse = $this->client->post($url, [
-                'headers' => [
-                    'Accept' => 'application/json',
-                    'Authorization' => "Bearer $this->token",
+                "headers" => [
+                    "Accept" => "application/json",
+                    "Authorization" => "Bearer $this->token",
                 ],
             ]);
             $usersResults = json_decode($usersResponse->getBody());
 
             $this->users = $usersResults->data;
 
-            Cache::set('noke:users', json_encode($this->users), 14400);
+            Cache::set("noke:users", json_encode($this->users), 14400);
         }
 
         foreach ($this->users as $user) {
@@ -294,17 +294,18 @@ class NokeService
         return $this->users;
     }
 
-    public function getGroupProfile($id) {
+    public function getGroupProfile($id)
+    {
         $url = "{$this->baseUrl}/group/profile/";
-        Log::channel('noke')->info("Request to $url");
+        Log::channel("noke")->info("Request to $url");
 
         $response = $this->client->post($url, [
-            'json' => [
-                'id' => $id,
+            "json" => [
+                "id" => $id,
             ],
-            'headers' => [
-                'Accept' => 'application/json',
-                'Authorization' => "Bearer $this->token",
+            "headers" => [
+                "Accept" => "application/json",
+                "Authorization" => "Bearer $this->token",
             ],
         ]);
 
@@ -313,73 +314,70 @@ class NokeService
         return $result->data;
     }
 
-    public function updateGroup($data) {
+    public function updateGroup($data)
+    {
         $url = "{$this->baseUrl}/group/edit/";
-        Log::channel('noke')->info("Request to $url");
+        Log::channel("noke")->info("Request to $url");
 
-        if (app()->environment() !== 'production') {
+        if (app()->environment() !== "production") {
             return;
         }
 
-        $response = $this->client->post(
-            $url,
-            [
-                'json' => $data,
-                'headers' => [
-                    'Accept' => 'application/json',
-                    'Authorization' => "Bearer $this->token",
-                ],
-            ]
-        );
+        $response = $this->client->post($url, [
+            "json" => $data,
+            "headers" => [
+                "Accept" => "application/json",
+                "Authorization" => "Bearer $this->token",
+            ],
+        ]);
 
         return json_decode($response->getBody());
     }
 
-    public function updateUser($data) {
+    public function updateUser($data)
+    {
         $url = "{$this->baseUrl}/user/edit/";
-        Log::channel('noke')->info("Request to $url");
+        Log::channel("noke")->info("Request to $url");
 
-        if (app()->environment() !== 'production') {
+        if (app()->environment() !== "production") {
             return;
         }
 
-        $response = $this->client->post(
-            $url,
-            [
-                'json' => $data,
-                'headers' => [
-                    'Accept' => 'application/json',
-                    'Authorization' => "Bearer $this->token",
-                ],
-            ]
-        );
+        $response = $this->client->post($url, [
+            "json" => $data,
+            "headers" => [
+                "Accept" => "application/json",
+                "Authorization" => "Bearer $this->token",
+            ],
+        ]);
 
         return json_decode($response->getBody());
     }
 
-    private function resetToken() {
-        if (app()->environment() !== 'production') {
+    private function resetToken()
+    {
+        if (app()->environment() !== "production") {
             return; // TODO mock
         }
 
         $url = "{$this->baseUrl}/company/web/login/";
-        Log::channel('noke')->info("Request to $url");
+        Log::channel("noke")->info("Request to $url");
 
         $loginResponse = $this->client->post($url, [
-            'json' => [
-                'username' => config('services.noke.username'),
-                'password' => config('services.noke.password'),
+            "json" => [
+                "username" => config("services.noke.username"),
+                "password" => config("services.noke.password"),
             ],
         ]);
 
         $loginResult = json_decode($loginResponse->getBody());
 
-        if ($loginResult->result === 'failure') {
-            throw new \Exception('login error');
+        if ($loginResult->result === "failure") {
+            throw new \Exception("login error");
         }
 
         $this->token = $loginResult->token;
 
-        Cache::set('noke:token', $this->token, 3600);
+        Cache::set("noke:token", $this->token, 3600);
     }
 }

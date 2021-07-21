@@ -25,17 +25,18 @@ class InvoicePaid extends BaseMailable
         $text = null,
         $subject = null
     ) {
-         $this->user = $user;
-         $this->invoice = $invoice;
+        $this->user = $user;
+        $this->invoice = $invoice;
 
-         $this->title = $title;
-         $this->text = $text;
-         $this->subject = $subject ?: "Locomotion - $this->title";
+        $this->title = $title;
+        $this->text = $text;
+        $this->subject = $subject ?: "Locomotion - $this->title";
     }
 
-    public function build() {
-        return $this->view('emails.invoice.paid')
+    public function build()
+    {
+        return $this->view("emails.invoice.paid")
             ->subject($this->subject)
-            ->text('emails.invoice.paid_text');
+            ->text("emails.invoice.paid_text");
     }
 }

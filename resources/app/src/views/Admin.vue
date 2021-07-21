@@ -15,18 +15,18 @@
 </template>
 
 <script>
-import AdminSidebar from '@/components/Admin/Sidebar.vue';
+import AdminSidebar from "@/components/Admin/Sidebar.vue";
 
-import Authenticated from '@/mixins/Authenticated';
-import UserMixin from '@/mixins/UserMixin';
+import Authenticated from "@/mixins/Authenticated";
+import UserMixin from "@/mixins/UserMixin";
 
 export default {
-  name: 'Admin',
+  name: "Admin",
   mixins: [Authenticated, UserMixin],
   components: { AdminSidebar },
   mounted() {
     if (!this.isAdmin) {
-      this.$router.replace('/app');
+      this.$router.replace("/app");
     }
   },
 };

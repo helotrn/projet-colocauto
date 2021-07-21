@@ -16,16 +16,22 @@
 
     <b-row class="availability-calendar__calendars">
       <div v-if="changed" class="availability-calendar__calendars--changed">
-        <div>
-          Sauvegardez pour mettre à jour l'aperçu des disponibilités.
-        </div>
+        <div>Sauvegardez pour mettre à jour l'aperçu des disponibilités.</div>
       </div>
 
       <b-col lg="6">
-        <vue-cal class="vuecal--rounded-theme" locale="fr" small
-          :events="loanable.events" :selected-date="selectedMonth"
-          hide-view-selector :time="false" start-week-on-sunday
-          default-view="month" :disable-views="['years', 'year', 'week', 'day']">
+        <vue-cal
+          class="vuecal--rounded-theme"
+          locale="fr"
+          small
+          :events="loanable.events"
+          :selected-date="selectedMonth"
+          hide-view-selector
+          :time="false"
+          start-week-on-sunday
+          default-view="month"
+          :disable-views="['years', 'year', 'week', 'day']"
+        >
           <template v-slot:cell-content="{ cell, view, events }">
             <span :class="`vuecal__cell-date ${availabilityClass(events, cell)}`">
               {{ cell.content }}
@@ -34,10 +40,18 @@
         </vue-cal>
       </b-col>
       <b-col lg="6">
-        <vue-cal class="vuecal--rounded-theme" locale="fr" small
-          :events="loanable.events" :selected-date="followingMonth"
-          hide-view-selector :time="false" start-week-on-sunday
-          default-view="month" :disable-views="['years', 'year', 'week', 'day']">
+        <vue-cal
+          class="vuecal--rounded-theme"
+          locale="fr"
+          small
+          :events="loanable.events"
+          :selected-date="followingMonth"
+          hide-view-selector
+          :time="false"
+          start-week-on-sunday
+          default-view="month"
+          :disable-views="['years', 'year', 'week', 'day']"
+        >
           <template v-slot:cell-content="{ cell, view, events }">
             <span :class="`vuecal__cell-date ${availabilityClass(events, cell)}`">
               {{ cell.content }}
@@ -70,8 +84,12 @@
       <b-col>
         <div class="form-inline availability-calendar__description__default">
           <b-form-group label="Par défaut:" label-for="availability_mode" inline>
-            <b-select v-model="loanable.availability_mode" @change="exceptions = []"
-              id="availability_mode" name="availability_mode">
+            <b-select
+              v-model="loanable.availability_mode"
+              @change="exceptions = []"
+              id="availability_mode"
+              name="availability_mode"
+            >
               <option value="never" selected>Toujours indisponible</option>
               <option value="always" selected>Toujours disponible</option>
             </b-select>
@@ -80,8 +98,11 @@
 
         <b-row>
           <b-col>
-            <loanable-exceptions :mode="loanable.availability_mode"
-              :exceptions="exceptions" @input="exceptions = $event" />
+            <loanable-exceptions
+              :mode="loanable.availability_mode"
+              :exceptions="exceptions"
+              @input="exceptions = $event"
+            />
           </b-col>
         </b-row>
 
@@ -96,13 +117,13 @@
 </template>
 
 <script>
-import VueCal from 'vue-cal';
-import 'vue-cal/dist/i18n/fr';
+import VueCal from "vue-cal";
+import "vue-cal/dist/i18n/fr";
 
-import LoanableExceptions from '@/components/Loanable/Exceptions.vue';
+import LoanableExceptions from "@/components/Loanable/Exceptions.vue";
 
 export default {
-  name: 'LoanableAvailabilityCalendar',
+  name: "LoanableAvailabilityCalendar",
   components: { LoanableExceptions, VueCal },
   props: {
     changed: {
@@ -122,7 +143,7 @@ export default {
   },
   data() {
     return {
-      selectedDate: this.$dayjs().format('YYYY-MM-DD'),
+      selectedDate: this.$dayjs().format("YYYY-MM-DD"),
     };
   },
   computed: {
@@ -135,52 +156,53 @@ export default {
       },
     },
     selectedMonth() {
-      return this.$dayjs(this.selectedDate).format('YYYY-MM-DD');
+      return this.$dayjs(this.selectedDate).format("YYYY-MM-DD");
     },
     followingMonth() {
-      return this.$dayjs(this.selectedDate).add(1, 'month').format('YYYY-MM-DD');
+      return this.$dayjs(this.selectedDate).add(1, "month").format("YYYY-MM-DD");
     },
   },
   methods: {
     addException() {
-      this.exceptions = [...this.exceptions, {
-        available: this.loanable.availability_mode === 'never',
-        type: null,
-        scope: [],
-        period: '00:00-23:59',
-      }];
+      this.exceptions = [
+        ...this.exceptions,
+        {
+          available: this.loanable.availability_mode === "never",
+          type: null,
+          scope: [],
+          period: "00:00-23:59",
+        },
+      ];
     },
     availabilityClass(events, cell) {
-      const now = this.$dayjs().format('YYYY-MM-DD');
-      const inAYear = this.$dayjs().add(365, 'day').format('YYYY-MM-DD');
-      if (cell.startDate.format('YYYY-MM-DD') < now) {
-        return 'unavailable';
+      const now = this.$dayjs().format("YYYY-MM-DD");
+      const inAYear = this.$dayjs().add(365, "day").format("YYYY-MM-DD");
+      if (cell.startDate.format("YYYY-MM-DD") < now) {
+        return "unavailable";
       }
 
-      if (cell.startDate.format('YYYY-MM-DD') >= inAYear) {
-        return 'unknown';
+      if (cell.startDate.format("YYYY-MM-DD") >= inAYear) {
+        return "unknown";
       }
 
       if (events.length === 0) {
-        return 'available';
+        return "available";
       }
 
-      if (events.find(e => e.period === '00:00-00:00')) {
-        return 'unavailable';
+      if (events.find((e) => e.period === "00:00-00:00")) {
+        return "unavailable";
       }
 
-      return 'limited';
+      return "limited";
     },
     nextMonth() {
-      this.selectedDate = this.$dayjs(this.selectedDate)
-        .add(1, 'month').format('YYYY-MM-DD');
+      this.selectedDate = this.$dayjs(this.selectedDate).add(1, "month").format("YYYY-MM-DD");
     },
     prevMonth() {
-      this.selectedDate = this.$dayjs(this.selectedDate)
-        .subtract(1, 'month').format('YYYY-MM-DD');
+      this.selectedDate = this.$dayjs(this.selectedDate).subtract(1, "month").format("YYYY-MM-DD");
     },
     resetDate() {
-      this.selectedDate = this.$dayjs().format('YYYY-MM-DD');
+      this.selectedDate = this.$dayjs().format("YYYY-MM-DD");
     },
   },
 };
@@ -236,7 +258,6 @@ export default {
     li {
       display: inline-block;
       margin-right: 30px;
-
     }
 
     span {

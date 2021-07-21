@@ -9,59 +9,69 @@ use Tests\TestCase;
 class OwnerTest extends TestCase
 {
     private static $getOwnerResponseStructure = [
-        'id',
-        'submitted_at',
-        'approved_at',
+        "id",
+        "submitted_at",
+        "approved_at",
     ];
 
-    public function testCreateOwners() {
-        $response = $this->json('POST', '/api/v1/owners', []);
+    public function testCreateOwners()
+    {
+        $response = $this->json("POST", "/api/v1/owners", []);
 
         $response->assertStatus(405);
     }
 
-    public function testShowOwners() {
-        $owner = factory(Owner::class)->create(['user_id' => $this->user->id]);
+    public function testShowOwners()
+    {
+        $owner = factory(Owner::class)->create(["user_id" => $this->user->id]);
 
-        $response = $this->json('GET', "/api/v1/owners/$owner->id");
+        $response = $this->json("GET", "/api/v1/owners/$owner->id");
 
-        $response->assertStatus(200)
-            ->assertJson(['id' => $owner->id])
+        $response
+            ->assertStatus(200)
+            ->assertJson(["id" => $owner->id])
             ->assertJsonStructure(static::$getOwnerResponseStructure);
     }
 
-    public function testUpdateOwners() {
-        $owner = factory(Owner::class)->create(['user_id' => $this->user->id]);
+    public function testUpdateOwners()
+    {
+        $owner = factory(Owner::class)->create(["user_id" => $this->user->id]);
 
         $approvedAt = now()->toIsoString();
         $data = [
-            'approved_at' => $approvedAt,
+            "approved_at" => $approvedAt,
         ];
 
-        $response = $this->json('PUT', "/api/v1/owners/$owner->id", $data);
+        $response = $this->json("PUT", "/api/v1/owners/$owner->id", $data);
 
         $response->assertStatus(405);
     }
 
-    public function testDeleteOwners() {
-        $owner = factory(Owner::class)->create(['user_id' => $this->user->id]);
+    public function testDeleteOwners()
+    {
+        $owner = factory(Owner::class)->create(["user_id" => $this->user->id]);
 
-        $response = $this->json('DELETE', "/api/v1/owners/$owner->id");
+        $response = $this->json("DELETE", "/api/v1/owners/$owner->id");
         $response->assertStatus(405);
     }
 
-    public function testListOwners() {
+    public function testListOwners()
+    {
         $owners = factory(Owner::class, 2)
-            ->create(['user_id' => $this->user->id])->map(function ($owner) {
+            ->create(["user_id" => $this->user->id])
+            ->map(function ($owner) {
                 return $owner->only(static::$getOwnerResponseStructure);
             });
 
-        $response = $this->json('GET', '/api/v1/owners');
+        $response = $this->json("GET", "/api/v1/owners");
 
-        $response->assertStatus(200)
-            ->assertJson([ 'total' => 2 ])
+        $response
+            ->assertStatus(200)
+            ->assertJson(["total" => 2])
             ->assertJsonStructure(
-                $this->buildCollectionStructure(static::$getOwnerResponseStructure)
+                $this->buildCollectionStructure(
+                    static::$getOwnerResponseStructure
+                )
             );
     }
 }

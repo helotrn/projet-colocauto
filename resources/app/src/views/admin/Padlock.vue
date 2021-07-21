@@ -3,7 +3,9 @@
     <b-row>
       <b-col>
         <h1 v-if="item.name">{{ item.name }}</h1>
-        <h1 v-else><em>{{ $tc('cadenas', 1) | capitalize }}</em></h1>
+        <h1 v-else>
+          <em>{{ $tc("cadenas", 1) | capitalize }}</em>
+        </h1>
       </b-col>
     </b-row>
 
@@ -17,9 +19,7 @@
               <b-button variant="success" type="submit" :disabled="!changed || loading">
                 Sauvegarder
               </b-button>
-              <b-button type="reset" :disabled="!changed" @click="reset">
-                Réinitialiser
-              </b-button>
+              <b-button type="reset" :disabled="!changed" @click="reset"> Réinitialiser </b-button>
             </b-button-group>
           </div>
         </b-form>
@@ -30,15 +30,15 @@
 </template>
 
 <script>
-import FormsBuilder from '@/components/Forms/Builder.vue';
+import FormsBuilder from "@/components/Forms/Builder.vue";
 
-import DataRouteGuards from '@/mixins/DataRouteGuards';
-import FormMixin from '@/mixins/FormMixin';
+import DataRouteGuards from "@/mixins/DataRouteGuards";
+import FormMixin from "@/mixins/FormMixin";
 
-import locales from '@/locales';
+import locales from "@/locales";
 
 export default {
-  name: 'AdminPadlock',
+  name: "AdminPadlock",
   mixins: [DataRouteGuards, FormMixin],
   components: {
     FormsBuilder,
@@ -58,5 +58,4 @@ export default {
 };
 </script>
 
-<style lang="scss">
-</style>
+<style lang="scss"></style>

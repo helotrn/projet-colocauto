@@ -13,12 +13,14 @@ use Illuminate\Validation\ValidationException;
 
 class IncidentController extends RestController
 {
-    public function __construct(IncidentRepository $repository, Incident $model) {
+    public function __construct(IncidentRepository $repository, Incident $model)
+    {
         $this->repo = $repository;
         $this->model = $model;
     }
 
-    public function index(Request $request) {
+    public function index(Request $request)
+    {
         try {
             [$items, $total] = $this->repo->get($request);
         } catch (ValidationException $e) {
@@ -28,7 +30,8 @@ class IncidentController extends RestController
         return $this->respondWithCollection($request, $items, $total);
     }
 
-    public function create(Request $request) {
+    public function create(Request $request)
+    {
         try {
             $item = parent::validateAndCreate($request);
         } catch (ValidationException $e) {
@@ -40,7 +43,8 @@ class IncidentController extends RestController
         return $this->respondWithItem($request, $item, 201);
     }
 
-    public function update(Request $request, $id) {
+    public function update(Request $request, $id)
+    {
         try {
             $item = parent::validateAndUpdate($request, $id);
         } catch (ValidationException $e) {
@@ -50,7 +54,8 @@ class IncidentController extends RestController
         return $this->respondWithItem($request, $item);
     }
 
-    public function retrieve(Request $request, $id) {
+    public function retrieve(Request $request, $id)
+    {
         $item = $this->repo->find($request, $id);
 
         try {
@@ -62,7 +67,8 @@ class IncidentController extends RestController
         return $response;
     }
 
-    public function destroy(Request $request, $id) {
+    public function destroy(Request $request, $id)
+    {
         try {
             $response = parent::validateAndDestroy($request, $id);
         } catch (ValidationException $e) {
@@ -72,11 +78,12 @@ class IncidentController extends RestController
         return $response;
     }
 
-    public function complete(IncidentRequest $request, $actionId, $loanId) {
+    public function complete(IncidentRequest $request, $actionId, $loanId)
+    {
         $authRequest = $request->redirectAuth(Request::class);
         $item = $this->repo->find($authRequest, $actionId);
 
-        $item->status = 'completed';
+        $item->status = "completed";
         $item->save();
 
         event(new LoanIncidentResolvedEvent($item));
@@ -84,11 +91,12 @@ class IncidentController extends RestController
         return $item;
     }
 
-    public function cancel(IncidentRequest $request, $actionId, $loanId) {
+    public function cancel(IncidentRequest $request, $actionId, $loanId)
+    {
         $authRequest = $request->redirectAuth(Request::class);
         $item = $this->repo->find($authRequest, $actionId);
 
-        $item->status = 'canceled';
+        $item->status = "canceled";
         $item->save();
 
         event(new LoanIncidentRejectedEvent($item));

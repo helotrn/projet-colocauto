@@ -7,30 +7,29 @@ use App\Models\Loan;
 
 class TakeoverRequest extends BaseRequest
 {
-    public function rules() {
-        $loanId = $this->route('loan_id') ?: $this->get('loan_id');
+    public function rules()
+    {
+        $loanId = $this->route("loan_id") ?: $this->get("loan_id");
         $loan = Loan::accessibleBy($this->user())->find($loanId);
 
-        if ($loan->loanable->type === 'car') {
+        if ($loan->loanable->type === "car") {
             return [
-                'mileage_beginning' => [
-                    'required',
-                    'integer'
-                ],
+                "mileage_beginning" => ["required", "integer"],
             ];
         }
 
         return [];
     }
 
-    public function authorize() {
+    public function authorize()
+    {
         $user = $this->user();
 
         if ($user->isAdmin()) {
             return true;
         }
 
-        $loan = Loan::find($this->get('loan_id'));
+        $loan = Loan::find($this->get("loan_id"));
 
         if ($user->borrower && $user->borrower->id === $loan->borrower->id) {
             return true;

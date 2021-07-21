@@ -21,14 +21,17 @@ ajuster vos factures.
 <p>
 Merci d'avoir utilisé LocoMotion!
 </p>
-HTML
-        ;
-
-    public function __construct(User $user, array $invoice, $title = null, $text = null) {
+HTML;
+    public function __construct(
+        User $user,
+        array $invoice,
+        $title = null,
+        $text = null
+    ) {
         $this->user = $user;
         $this->invoice = $invoice;
 
-        $this->title = $title ?: 'Facture de votre plus récent emprunt';
+        $this->title = $title ?: "Facture de votre plus récent emprunt";
         $this->text = $text ?: static::$defaultText;
     }
 }

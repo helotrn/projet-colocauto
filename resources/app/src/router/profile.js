@@ -1,214 +1,215 @@
-import Profile from '@/views/Profile.vue';
-import ProfileAccount from '@/views/profile/Account.vue';
-import ProfileBorrower from '@/views/profile/Borrower.vue';
-import ProfileCommunities from '@/views/profile/Communities.vue';
-import ProfileInvoice from '@/views/profile/Invoice.vue';
-import ProfileInvoices from '@/views/profile/Invoices.vue';
-import ProfileLoans from '@/views/profile/Loans.vue';
-import ProfileLoanables from '@/views/profile/Loanables.vue';
-import ProfileLoanable from '@/views/profile/Loanable.vue';
-import ProfileLocomotion from '@/views/profile/Locomotion.vue';
-import ProfilePaymentMethods from '@/views/profile/PaymentMethods.vue';
-import ProfilePaymentMethod from '@/views/profile/PaymentMethod.vue';
+import Profile from "@/views/Profile.vue";
+import ProfileAccount from "@/views/profile/Account.vue";
+import ProfileBorrower from "@/views/profile/Borrower.vue";
+import ProfileCommunities from "@/views/profile/Communities.vue";
+import ProfileInvoice from "@/views/profile/Invoice.vue";
+import ProfileInvoices from "@/views/profile/Invoices.vue";
+import ProfileLoans from "@/views/profile/Loans.vue";
+import ProfileLoanables from "@/views/profile/Loanables.vue";
+import ProfileLoanable from "@/views/profile/Loanable.vue";
+import ProfileLocomotion from "@/views/profile/Locomotion.vue";
+import ProfilePaymentMethods from "@/views/profile/PaymentMethods.vue";
+import ProfilePaymentMethod from "@/views/profile/PaymentMethod.vue";
 
 export default {
-  path: '/profile',
-  name: 'profile',
+  path: "/profile",
+  name: "profile",
   component: Profile,
   meta: {
     auth: true,
-    title: 'titles.profile',
+    title: "titles.profile",
   },
   children: [
     {
-      path: 'account',
+      path: "account",
       component: ProfileAccount,
       meta: {
         auth: true,
-        title: 'titles.account',
-        slug: 'users',
+        title: "titles.account",
+        slug: "users",
         params: {
-          fields: 'id,name,email,accept_conditions',
+          fields: "id,name,email,accept_conditions",
         },
       },
     },
     {
-      path: 'locomotion',
+      path: "locomotion",
       component: ProfileLocomotion,
       meta: {
         auth: true,
-        title: 'titles.profile',
-        slug: 'users',
+        title: "titles.profile",
+        slug: "users",
         params: {
-          fields: '*,avatar.*',
+          fields: "*,avatar.*",
         },
       },
     },
     {
-      path: 'borrower',
+      path: "borrower",
       component: ProfileBorrower,
       meta: {
         auth: true,
-        title: 'titles.borrower',
-        slug: 'users',
+        title: "titles.borrower",
+        slug: "users",
         params: {
-          fields: 'id,borrower.*,borrower.gaa.*,borrower.saaq.*,borrower.insurance.*',
+          fields: "id,borrower.*,borrower.gaa.*,borrower.saaq.*,borrower.insurance.*",
         },
       },
     },
     {
-      path: 'communities',
+      path: "communities",
       component: ProfileCommunities,
       meta: {
         auth: true,
-        title: 'titles.communities',
-        slug: 'users',
+        title: "titles.communities",
+        slug: "users",
         params: {
-          fields: 'id,communities.id,communities.name,communities.requirements,communities.proof',
+          fields: "id,communities.id,communities.name,communities.requirements,communities.proof",
         },
       },
     },
     {
-      path: 'invoices',
+      path: "invoices",
       component: ProfileInvoices,
       meta: {
         auth: true,
-        title: 'titles.invoices',
-        slug: 'invoices',
+        title: "titles.invoices",
+        slug: "invoices",
         data: {
           invoices: {
             retrieve: {
-              fields: '*',
+              fields: "*",
             },
           },
         },
       },
     },
     {
-      path: 'invoices/:id',
+      path: "invoices/:id",
       component: ProfileInvoice,
       props: true,
       meta: {
         auth: true,
-        title: 'titles.invoice',
-        slug: 'invoices',
+        title: "titles.invoice",
+        slug: "invoices",
         params: {
-          fields: '*,bill_items.*,user.*',
+          fields: "*,bill_items.*,user.*",
         },
       },
     },
     {
-      path: 'loanables',
+      path: "loanables",
       component: ProfileLoanables,
       meta: {
         auth: true,
         creatable: true,
-        title: 'titles.loanables',
-        slug: 'loanables',
+        title: "titles.loanables",
+        slug: "loanables",
         data: {
           loanables: {
             retrieve: {
-              fields: 'id,name,type,image.*',
-              'owner.user.id': 'me',
+              fields: "id,name,type,image.*",
+              "owner.user.id": "me",
             },
           },
         },
       },
     },
     {
-      path: 'loanables/:id',
+      path: "loanables/:id",
       component: ProfileLoanable,
       props: true,
       meta: {
         auth: true,
-        slug: 'loanables',
+        slug: "loanables",
         params: {
-          fields: '*,events,type,community.id,community.center,owner.id,owner.user.id,'
-            + 'owner.user.communities.center',
+          fields:
+            "*,events,type,community.id,community.center,owner.id,owner.user.id," +
+            "owner.user.communities.center",
         },
-        title: 'titles.loanable',
+        title: "titles.loanable",
         data: {
           communities: {
             retrieve: {
-              fields: 'id,name,center',
+              fields: "id,name,center",
             },
           },
         },
       },
     },
     {
-      path: 'loans',
+      path: "loans",
       component: ProfileLoans,
       meta: {
         auth: true,
-        title: 'titles.loans',
-        slug: 'loans',
+        title: "titles.loans",
+        slug: "loans",
         data: {
           loans: {
             retrieve: {
               fields: [
-                '*',
-                'actions.*',
-                'incidents.*',
-                'extensions.*',
-                'borrower.id',
-                'borrower.user.avatar',
-                'borrower.user.full_name',
-                'borrower.user.id',
-                'loanable.id',
-                'loanable.image.*',
-                'loanable.name',
-                'loanable.owner.id',
-                'loanable.owner.user.avatar.*',
-                'loanable.owner.user.full_name',
-                'loanable.owner.user.id',
-                'loanable.type',
-              ].join(','),
+                "*",
+                "actions.*",
+                "incidents.*",
+                "extensions.*",
+                "borrower.id",
+                "borrower.user.avatar",
+                "borrower.user.full_name",
+                "borrower.user.id",
+                "loanable.id",
+                "loanable.image.*",
+                "loanable.name",
+                "loanable.owner.id",
+                "loanable.owner.user.avatar.*",
+                "loanable.owner.user.full_name",
+                "loanable.owner.user.id",
+                "loanable.type",
+              ].join(","),
             },
           },
         },
       },
     },
     {
-      path: 'locomotion',
+      path: "locomotion",
       component: ProfileLocomotion,
       meta: {
         auth: true,
-        title: 'titles.profile',
-        slug: 'users',
+        title: "titles.profile",
+        slug: "users",
         params: {
-          fields: '*,avatar.*',
+          fields: "*,avatar.*",
         },
       },
     },
     {
-      path: 'payment_methods',
+      path: "payment_methods",
       component: ProfilePaymentMethods,
       meta: {
         auth: true,
         creatable: true,
-        title: 'titles.payment_methods',
-        slug: 'paymentMethods',
+        title: "titles.payment_methods",
+        slug: "paymentMethods",
         data: {
           paymentMethods: {
             retrieve: {
-              fields: '*',
+              fields: "*",
             },
           },
         },
       },
     },
     {
-      path: 'payment_methods/:id',
+      path: "payment_methods/:id",
       component: ProfilePaymentMethod,
       props: true,
       meta: {
         auth: true,
-        slug: 'paymentMethods',
+        slug: "paymentMethods",
         params: {
-          fields: '*',
+          fields: "*",
         },
-        title: 'titles.payment_method',
+        title: "titles.payment_method",
       },
     },
   ],

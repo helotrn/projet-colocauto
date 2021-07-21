@@ -1,7 +1,11 @@
 <template>
   <b-card no-body class="loan-form loan-actions loan-actions-handover-self-service">
-    <b-card-header header-tag="header" role="tab" class="loan-actions__header"
-      v-b-toggle.loan-actions-handover-self-service>
+    <b-card-header
+      header-tag="header"
+      role="tab"
+      class="loan-actions__header"
+      v-b-toggle.loan-actions-handover-self-service
+    >
       <h2>
         <svg-waiting v-if="action.status === 'in_process' && !loanIsCanceled" />
         <svg-check v-else-if="action.status === 'completed'" />
@@ -14,9 +18,7 @@
       <span v-if="action.status === 'in_process' && loanIsCanceled">
         Emprunt annulé &bull; {{ item.canceled_at | datetime }}
       </span>
-      <span v-else-if="action.status == 'in_process' && !loanIsCanceled">
-        En attente
-      </span>
+      <span v-else-if="action.status == 'in_process' && !loanIsCanceled"> En attente </span>
       <span v-else-if="action.status === 'completed'">
         Complété &bull; {{ action.executed_at | datetime }}
       </span>
@@ -26,13 +28,14 @@
     </b-card-header>
 
     <b-card-body>
-      <b-collapse id="loan-actions-handover-self-service" role="tabpanel" accordion="loan-actions"
-        :visible="open">
-
+      <b-collapse
+        id="loan-actions-handover-self-service"
+        role="tabpanel"
+        accordion="loan-actions"
+        :visible="open"
+      >
         <div v-if="action.status === 'in_process' && loanIsCanceled">
-          <p>
-            L'emprunt a été annulé. Cette étape ne peut pas être complétée.
-          </p>
+          <p>L'emprunt a été annulé. Cette étape ne peut pas être complétée.</p>
         </div>
         <div v-else-if="item.loanable.has_padlock">
           <b-alert show variant="danger">
@@ -40,9 +43,8 @@
 
             <div>
               <p class="mb-0">
-                En complétant cette étape, vous signalez que vous avez bien remis le
-                véhicule à son emplacement. Vous ne pourrez plus ouvrir le cadenas NOKE
-                associé au véhicule.
+                En complétant cette étape, vous signalez que vous avez bien remis le véhicule à son
+                emplacement. Vous ne pourrez plus ouvrir le cadenas NOKE associé au véhicule.
               </p>
             </div>
           </b-alert>
@@ -50,7 +52,7 @@
           <b-alert show variant="info">
             <p>Vous avez un problème avec le cadenas?</p>
             <p>
-              Contactez-nous entre 9h et 20h au 438-476-3343<br>
+              Contactez-nous entre 9h et 20h au 438-476-3343<br />
               (cette ligne est dédiée uniquement aux problèmes liés aux cadenas)
             </p>
           </b-alert>
@@ -60,8 +62,8 @@
 
             <div>
               <p class="mb-0">
-                Si vous avez un retard, utilisez le bouton
-                &laquo;&nbsp;Signaler un retard&nbsp;&raquo; sur la plateforme ou
+                Si vous avez un retard, utilisez le bouton &laquo;&nbsp;Signaler un
+                retard&nbsp;&raquo; sur la plateforme ou
                 <a @click.prevent="$emit('extension')" href="#">cliquez ici</a>.
               </p>
             </div>
@@ -69,13 +71,12 @@
 
           <div class="loan-actions-handover-self-service__text">
             <p>
-              Vous avez ramené le véhicule? Alors, il ne vous reste plus qu'à clôturer
-              l'emprunt en remplissant cette étape.
+              Vous avez ramené le véhicule? Alors, il ne vous reste plus qu'à clôturer l'emprunt en
+              remplissant cette étape.
             </p>
 
             <p>
-              Un souci avec un véhicule?  Décrivez le problème et/ou chargez la photo
-              ci-dessous.
+              Un souci avec un véhicule? Décrivez le problème et/ou chargez la photo ci-dessous.
             </p>
 
             <p>
@@ -87,39 +88,52 @@
             <p class="text-center"><strong>Merci et à très bientôt !</strong></p>
 
             <validation-observer ref="observer" v-slot="{ passes }">
-              <b-form :novalidate="true" class="loan-actions-handover__form"
-                @submit.stop.prevent="passes(completeAction)">
-                <b-row v-if="!action.executed_at && !loanIsCanceled"
-                  class="loan-actions-handover__form__image">
+              <b-form
+                :novalidate="true"
+                class="loan-actions-handover__form"
+                @submit.stop.prevent="passes(completeAction)"
+              >
+                <b-row
+                  v-if="!action.executed_at && !loanIsCanceled"
+                  class="loan-actions-handover__form__image"
+                >
                   <b-col lg="6">
                     <forms-image-uploader
                       label="Photo du véhicule"
                       field="image"
-                      v-model="action.image" />
+                      v-model="action.image"
+                    />
                   </b-col>
 
                   <b-col lg="6">
                     <forms-validated-input
                       v-if="userRoles.includes('borrower')"
-                      id="comments_by_borrower" name="comments_by_borrower"
-                      type="textarea" :rows="6" :disabled="!!action.commented_by_borrower_at"
+                      id="comments_by_borrower"
+                      name="comments_by_borrower"
+                      type="textarea"
+                      :rows="6"
+                      :disabled="!!action.commented_by_borrower_at"
                       label="Laissez un commentaire (facultatif)"
                       placeholder="Commentaire sur l'emprunt"
-                      v-model="action.comments_by_borrower" />
+                      v-model="action.comments_by_borrower"
+                    />
                   </b-col>
                 </b-row>
                 <b-row v-else class="loan-actions-handover__form__image">
                   <b-col v-if="action.image">
                     <p>
                       <a href="#" v-b-modal="'handover-self-service-image'">
-                        <img :src="action.image.sizes.thumbnail">
+                        <img :src="action.image.sizes.thumbnail" />
                       </a>
                     </p>
 
-                    <b-modal size="xl"
+                    <b-modal
+                      size="xl"
                       title="Photo de l'état du véhicule"
-                      :id="'handover-self-service-image'" footer-class="d-none">
-                      <img class="img-fit" :src="action.image.url">
+                      :id="'handover-self-service-image'"
+                      footer-class="d-none"
+                    >
+                      <img class="img-fit" :src="action.image.url" />
                     </b-modal>
                   </b-col>
 
@@ -135,7 +149,8 @@
                   <b-col>
                     <p class="text-center">
                       Coût final du trajet:
-                      <span v-b-popover.hover="priceTooltip">{{ finalPrice | currency }}</span>.
+                      <span v-b-popover.hover="priceTooltip">{{ finalPrice | currency }}</span
+                      >.
                     </p>
                   </b-col>
                 </b-row>
@@ -143,33 +158,49 @@
                 <b-row v-if="!hasEnoughBalance">
                   <b-col>
                     <p>
-                      Il manque de crédits à votre compte pour payer cet emprunt.<br>
+                      Il manque de crédits à votre compte pour payer cet emprunt.<br />
                       <a href="#" v-b-modal.add-credit-modal>Ajoutez des crédits</a>
                     </p>
 
-                    <b-modal id="add-credit-modal" title="Approvisionner mon compte" size="lg"
-                      footer-class="d-none">
-                      <user-add-credit-box :user="user"
+                    <b-modal
+                      id="add-credit-modal"
+                      title="Approvisionner mon compte"
+                      size="lg"
+                      footer-class="d-none"
+                    >
+                      <user-add-credit-box
+                        :user="user"
                         :minimum-required="finalPrice - user.balance"
-                        @bought="reloadUserAndCloseModal" @cancel="closeModal"/>
+                        @bought="reloadUserAndCloseModal"
+                        @cancel="closeModal"
+                      />
                     </b-modal>
                   </b-col>
                 </b-row>
 
-                <div v-if="!action.executed_at && !loanIsCanceled"
-                  class="loan-actions-handover-self-service text-center">
-                  <b-button size="sm" variant="success" class="mr-3"
-                    :disabled="!hasEnoughBalance" @click="completeAction">
+                <div
+                  v-if="!action.executed_at && !loanIsCanceled"
+                  class="loan-actions-handover-self-service text-center"
+                >
+                  <b-button
+                    size="sm"
+                    variant="success"
+                    class="mr-3"
+                    :disabled="!hasEnoughBalance"
+                    @click="completeAction"
+                  >
                     Mon emprunt est terminé!
                   </b-button>
                 </div>
 
-                <b-row class="loan-actions__alert"
-                  v-if="!action.executed_at && !loanIsCanceled && hasEnoughBalance">
+                <b-row
+                  class="loan-actions__alert"
+                  v-if="!action.executed_at && !loanIsCanceled && hasEnoughBalance"
+                >
                   <b-col>
                     <b-alert variant="warning" show>
-                      Dans 48h, vous ne pourrez plus modifier vos informations.
-                      Nous validerons le coût de l'emprunt avec les détails ci-dessus.
+                      Dans 48h, vous ne pourrez plus modifier vos informations. Nous validerons le
+                      coût de l'emprunt avec les détails ci-dessus.
                     </b-alert>
                   </b-col>
                 </b-row>
@@ -190,19 +221,19 @@
 </template>
 
 <script>
-import FormsImageUploader from '@/components/Forms/ImageUploader.vue';
-import FormsValidatedInput from '@/components/Forms/ValidatedInput.vue';
+import FormsImageUploader from "@/components/Forms/ImageUploader.vue";
+import FormsValidatedInput from "@/components/Forms/ValidatedInput.vue";
 
-import UserAddCreditBox from '@/components/User/AddCreditBox.vue';
+import UserAddCreditBox from "@/components/User/AddCreditBox.vue";
 
-import LoanActionsMixin from '@/mixins/LoanActionsMixin';
+import LoanActionsMixin from "@/mixins/LoanActionsMixin";
 
-import { filters } from '@/helpers';
+import { filters } from "@/helpers";
 
 const { currency } = filters;
 
 export default {
-  name: 'LoanActionsHandoverSelfService',
+  name: "LoanActionsHandoverSelfService",
   mixins: [LoanActionsMixin],
   mounted() {
     const platformTip = parseFloat(this.item.final_platform_tip || this.item.platform_tip, 10);
@@ -223,9 +254,7 @@ export default {
   },
   computed: {
     finalPrice() {
-      return this.item.actual_price
-        + this.item.actual_insurance
-        + this.action.platform_tip;
+      return this.item.actual_price + this.item.actual_insurance + this.action.platform_tip;
     },
     hasEnoughBalance() {
       return this.user.balance >= this.finalPrice;
@@ -243,20 +272,19 @@ export default {
         strParts.push(`Contribution: ${currency(platformTip)}`); // eslint-disable-line no-irregular-whitespace
       }
 
-      return strParts.join(' \\ ');
+      return strParts.join(" \\ ");
     },
   },
   methods: {
     closeModal() {
-      this.$bvModal.hide('add-credit-modal');
+      this.$bvModal.hide("add-credit-modal");
     },
     async reloadUserAndCloseModal() {
-      await this.$store.dispatch('loadUser');
+      await this.$store.dispatch("loadUser");
       this.closeModal();
     },
   },
 };
 </script>
 
-<style lang="scss">
-</style>
+<style lang="scss"></style>

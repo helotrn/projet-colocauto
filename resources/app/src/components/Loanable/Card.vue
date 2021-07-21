@@ -12,38 +12,35 @@
 
     <div class="loanable-card__tags">
       <div v-if="type === 'car'">
-        <b-badge>
-          <svg-car /> Auto
-        </b-badge>
+        <b-badge> <svg-car /> Auto </b-badge>
       </div>
       <div v-else-if="type === 'bike'">
-        <b-badge>
-          <svg-bike /> Vélo
-        </b-badge>
+        <b-badge> <svg-bike /> Vélo </b-badge>
       </div>
       <div v-else-if="type === 'trailer'">
-        <b-badge>
-          <svg-trailer /> Remorque
-        </b-badge>
+        <b-badge> <svg-trailer /> Remorque </b-badge>
       </div>
 
       <div v-if="isElectric">
-        <img src="/icons/electric.png">
+        <img src="/icons/electric.png" />
       </div>
     </div>
 
-    <div class="loanable-card__estimated-fare" v-if="price !== null || price !== undefined"
-      v-b-tooltip.hover :title="pricing">
-      <i>
-        Coût estimé: {{ price | currency }}
-      </i>
-      <i v-if="insurance">
-        Assurance: {{ insurance | currency }}
-      </i>
+    <div
+      class="loanable-card__estimated-fare"
+      v-if="price !== null || price !== undefined"
+      v-b-tooltip.hover
+      :title="pricing"
+    >
+      <i> Coût estimé: {{ price | currency }} </i>
+      <i v-if="insurance"> Assurance: {{ insurance | currency }} </i>
     </div>
     <div v-else class="loanable-card__estimated-fare">
-      <i class="muted" v-b-tooltip.hover
-        title="Recherchez pour valider la disponibilité et le coût">
+      <i
+        class="muted"
+        v-b-tooltip.hover
+        title="Recherchez pour valider la disponibilité et le coût"
+      >
         Coût estimé: N/A
       </i>
     </div>
@@ -52,29 +49,33 @@
       <b-button variant="outline-primary" v-if="available" @click="$emit('select')">
         Demande d'emprunt
       </b-button>
-      <b-button v-else-if="!tested" variant="outline-warning" v-b-tooltip.hover
-        :title="`Cliquez pour valider la disponibilité avec les paramètres ` +
-          `d'emprunt sélectionnés`" @click.stop.prevent="$emit('test')">
+      <b-button
+        v-else-if="!tested"
+        variant="outline-warning"
+        v-b-tooltip.hover
+        :title="
+          `Cliquez pour valider la disponibilité avec les paramètres ` + `d'emprunt sélectionnés`
+        "
+        @click.stop.prevent="$emit('test')"
+      >
         Valider la disponibilité
       </b-button>
-      <b-button variant="outline-info" v-else disabled>
-        Indisponible
-      </b-button>
+      <b-button variant="outline-info" v-else disabled> Indisponible </b-button>
     </div>
   </b-card>
 </template>
 
 <script>
-import Bike from '@/assets/svg/bike.svg';
-import Car from '@/assets/svg/car.svg';
-import Trailer from '@/assets/svg/trailer.svg';
+import Bike from "@/assets/svg/bike.svg";
+import Car from "@/assets/svg/car.svg";
+import Trailer from "@/assets/svg/trailer.svg";
 
 export default {
-  name: 'LoanableCard',
+  name: "LoanableCard",
   components: {
-    'svg-bike': Bike,
-    'svg-car': Car,
-    'svg-trailer': Trailer,
+    "svg-bike": Bike,
+    "svg-car": Car,
+    "svg-trailer": Trailer,
   },
   props: {
     available: {
@@ -128,7 +129,7 @@ export default {
     pricing: {
       type: String,
       required: false,
-      default: '',
+      default: "",
     },
     tested: {
       type: Boolean,
@@ -143,10 +144,10 @@ export default {
   computed: {
     isElectric() {
       switch (this.type) {
-        case 'bike':
-          return this.bike_type === 'electric';
-        case 'car':
-          return this.engine === 'electric';
+        case "bike":
+          return this.bike_type === "electric";
+        case "car":
+          return this.engine === "electric";
         default:
           return false;
       }
@@ -190,7 +191,10 @@ export default {
     margin-bottom: 10px;
   }
 
-  &__title, &__estimated-fare, &__tags, &__buttons {
+  &__title,
+  &__estimated-fare,
+  &__tags,
+  &__buttons {
     text-align: center;
   }
 
@@ -199,7 +203,8 @@ export default {
     position: relative;
     width: 100%;
 
-    &__loanable, &__user > div {
+    &__loanable,
+    &__user > div {
       background-size: cover;
       background-position: center center;
       background-repeat: no-repeat;

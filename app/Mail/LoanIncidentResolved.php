@@ -16,22 +16,20 @@ class LoanIncidentResolved extends BaseMailable
     public $loan;
     public $target;
 
-    public function __construct(
-        Incident $incident,
-        Loan $loan,
-        $target
-    ) {
-         $this->incident = $incident;
-         $this->loan = $loan;
-         $this->target = $target;
+    public function __construct(Incident $incident, Loan $loan, $target)
+    {
+        $this->incident = $incident;
+        $this->loan = $loan;
+        $this->target = $target;
     }
 
-    public function build() {
-        return $this->view('emails.loan.incident_resolved')
-            ->subject('LocoMotion - Incident résolu')
-            ->text('emails.loan.incident_resolved_text')
+    public function build()
+    {
+        return $this->view("emails.loan.incident_resolved")
+            ->subject("LocoMotion - Incident résolu")
+            ->text("emails.loan.incident_resolved_text")
             ->with([
-                'title' => 'Incident résolu',
+                "title" => "Incident résolu",
             ]);
     }
 }

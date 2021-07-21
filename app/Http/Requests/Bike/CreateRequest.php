@@ -6,28 +6,31 @@ use App\Http\Requests\BaseRequest;
 
 class CreateRequest extends BaseRequest
 {
-    public function authorize() {
+    public function authorize()
+    {
         return true;
     }
 
-    public function rules() {
+    public function rules()
+    {
         $rules = [
-            'bike_type' => 'required',
-            'comments' => 'present',
-            'instructions' => 'present',
-            'location_description' => 'present',
-            'model' => 'required',
-            'name' => 'required',
-            'position' => 'required',
-            'size' => 'required',
+            "bike_type" => "required",
+            "comments" => "present",
+            "instructions" => "present",
+            "location_description" => "present",
+            "model" => "required",
+            "name" => "required",
+            "position" => "required",
+            "size" => "required",
         ];
 
         return $rules;
     }
 
-    public function messages() {
+    public function messages()
+    {
         return [
-            'name.required' => 'Le nom est requis.'
+            "name.required" => "Le nom est requis.",
         ];
     }
 }

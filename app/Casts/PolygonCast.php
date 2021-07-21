@@ -11,9 +11,10 @@ use MStaack\LaravelPostgis\Geometries\Polygon;
 // https://stackoverflow.com/questions/7309121/preferred-order-of-writing-latitude-longitude-tuples
 class PolygonCast implements CastsAttributes
 {
-    public function set($model, $key, $value, $attributes) {
+    public function set($model, $key, $value, $attributes)
+    {
         if (is_array($value)) {
-                             // Don't try to create a polygon from an empty array.
+            // Don't try to create a polygon from an empty array.
             if (empty($value)) {
                 return null;
             }
@@ -30,10 +31,11 @@ class PolygonCast implements CastsAttributes
         if (is_null($value) || is_string($value)) {
             return $value;
         }
-        throw new \Exception('invalid'); // TODO
+        throw new \Exception("invalid"); // TODO
     }
 
-    public function get($model, $key, $value, $attributes) {
+    public function get($model, $key, $value, $attributes)
+    {
         $polygon = $value;
 
         if (!$polygon) {

@@ -3,7 +3,9 @@
     <b-row>
       <b-col>
         <h1 v-if="item.name">{{ item.name }}</h1>
-        <h1 v-else><em>{{ $tc('communauté', 1) | capitalize }}</em></h1>
+        <h1 v-else>
+          <em>{{ $tc("communauté", 1) | capitalize }}</em>
+        </h1>
       </b-col>
     </b-row>
 
@@ -19,13 +21,13 @@
           <div class="form__section">
             <h2>Zone géographique</h2>
             <b-form-group
-              :description="`Zone géographique sous la forme d'une liste de tuples ` +
-                '(latitude, longitude), un par ligne.'"
-              label-for="area">
-              <b-form-textarea
-                id="area" name="area"
-                v-model="area"
-                rows="6" max-rows="12" />
+              :description="
+                `Zone géographique sous la forme d'une liste de tuples ` +
+                '(latitude, longitude), un par ligne.'
+              "
+              label-for="area"
+            >
+              <b-form-textarea id="area" name="area" v-model="area" rows="6" max-rows="12" />
             </b-form-group>
           </div>
 
@@ -34,17 +36,21 @@
 
             <pricing-language-definition />
 
-            <div v-for="(pricing, index) in item.pricings"
-              :key="pricing.id || `idx-${index}`">
-              <pricing-form  :pricing="pricing"
+            <div v-for="(pricing, index) in item.pricings" :key="pricing.id || `idx-${index}`">
+              <pricing-form
+                :pricing="pricing"
                 @remove="removePricing(pricing)"
-                @change="updatePricing(pricing, $event)" />
+                @change="updatePricing(pricing, $event)"
+              />
             </div>
 
             <p class="form-inline" v-if="remainingPricingTypes.length > 0">
               Ajouter une tarification pour
-              <b-select class="ml-1 mr-1"
-                :options="remainingPricingTypes" v-model="newPricingType" />
+              <b-select
+                class="ml-1 mr-1"
+                :options="remainingPricingTypes"
+                v-model="newPricingType"
+              />
               <b-button @click="addPricing">OK</b-button>
             </p>
           </div>
@@ -61,26 +67,38 @@
               </b-col>
             </b-row>
 
-            <b-table :busy="usersLoading"
-              :filter="usersFilter" empty-filtered-text="Pas de membre correspondant"
+            <b-table
+              :busy="usersLoading"
+              :filter="usersFilter"
+              empty-filtered-text="Pas de membre correspondant"
               :filter-function="localizedFilter(userTableFilterFields)"
-              striped hover :items="users"
-              sort-by="full_name" no-sort-reset
-              :fields="userTable" sticky-header="500px"
-              :show-empty="true" empty-text="Pas de membre">
+              striped
+              hover
+              :items="users"
+              sort-by="full_name"
+              no-sort-reset
+              :fields="userTable"
+              sticky-header="500px"
+              :show-empty="true"
+              empty-text="Pas de membre"
+            >
               <template v-slot:table-busy>
                 <span>Chargement...</span>
               </template>
               <template v-slot:cell(full_name)="row">
                 <router-link :to="`/admin/users/${row.item.id}`">
-                  {{ row.item.full_name}}
+                  {{ row.item.full_name }}
                 </router-link>
               </template>
               <template v-slot:cell(role)="row">
-                <b-select :options="[
-                  { value: null, text: 'Membre' },
-                  { value: 'admin', text: 'Admin' }
-                ]" :value="row.item.role" @change="setUserRole(row.item, $event)" />
+                <b-select
+                  :options="[
+                    { value: null, text: 'Membre' },
+                    { value: 'admin', text: 'Admin' },
+                  ]"
+                  :value="row.item.role"
+                  @change="setUserRole(row.item, $event)"
+                />
               </template>
               <template v-slot:cell(approved_at)="row">
                 <small class="muted" v-if="!row.item.approved_at">N/A</small>
@@ -96,36 +114,59 @@
                     {{ row.item.proof.original_filename }}
                   </a>
 
-                  <b-modal size="xl"
+                  <b-modal
+                    size="xl"
                     :title="`Preuve de résidence (${row.item.full_name})`"
-                    :id="`proof-${row.item.id}`" footer-class="d-none">
-                    <img class="img-fit" :src="row.item.proof.url">
+                    :id="`proof-${row.item.id}`"
+                    footer-class="d-none"
+                  >
+                    <img class="img-fit" :src="row.item.proof.url" />
                   </b-modal>
                 </span>
               </template>
               <template v-slot:cell(actions)="row">
                 <div class="text-right">
                   <div v-if="!row.item._new">
-                    <b-button v-if="!row.item.approved_at" :disabled="usersLoading || loading"
-                      size="sm" class="ml-1 mb-1" variant="primary"
-                      @click="approveUser(row.item)">
-                      {{ $t('approuver') | capitalize }}
+                    <b-button
+                      v-if="!row.item.approved_at"
+                      :disabled="usersLoading || loading"
+                      size="sm"
+                      class="ml-1 mb-1"
+                      variant="primary"
+                      @click="approveUser(row.item)"
+                    >
+                      {{ $t("approuver") | capitalize }}
                     </b-button>
-                    <b-button v-else-if="!row.item.suspended_at" :disabled="usersLoading || loading"
-                      size="sm" class="ml-1 mb-1" variant="warning"
-                      @click="suspendUser(row.item)">
-                      {{ $t('suspendre') | capitalize }}
+                    <b-button
+                      v-else-if="!row.item.suspended_at"
+                      :disabled="usersLoading || loading"
+                      size="sm"
+                      class="ml-1 mb-1"
+                      variant="warning"
+                      @click="suspendUser(row.item)"
+                    >
+                      {{ $t("suspendre") | capitalize }}
                     </b-button>
-                    <b-button v-else :disabled="usersLoading || loading"
-                      size="sm" class="ml-1 mb-1" variant="success"
-                      @click="unsuspendUser(row.item)">
-                      {{ $t('rétablir') | capitalize }}
+                    <b-button
+                      v-else
+                      :disabled="usersLoading || loading"
+                      size="sm"
+                      class="ml-1 mb-1"
+                      variant="success"
+                      @click="unsuspendUser(row.item)"
+                    >
+                      {{ $t("rétablir") | capitalize }}
                     </b-button>
                   </div>
 
-                  <b-button size="sm" variant="danger" class="ml-1 mb-1"
-                    :disabled="usersLoading || loading" @click="removeUser(row.item)">
-                    {{ $t('retirer') | capitalize }}
+                  <b-button
+                    size="sm"
+                    variant="danger"
+                    class="ml-1 mb-1"
+                    :disabled="usersLoading || loading"
+                    @click="removeUser(row.item)"
+                  >
+                    {{ $t("retirer") | capitalize }}
                   </b-button>
                 </div>
               </template>
@@ -136,25 +177,35 @@
                 <b-button class="mr-3" variant="outline-primary" @click="exportCSV">
                   Générer (CSV)
                 </b-button>
-                <a variant="outline-primary" :href="usersExportUrl"
-                  target="_blank" v-if="usersExportUrl" @click="resetUsersExportUrl">
+                <a
+                  variant="outline-primary"
+                  :href="usersExportUrl"
+                  target="_blank"
+                  v-if="usersExportUrl"
+                  @click="resetUsersExportUrl"
+                >
                   Télécharger (CSV)
                 </a>
               </b-col>
 
               <b-col md="6">
-                <forms-validated-input type="relation"
-                  name="community" label="Ajouter un membre"
-                  :value="null" reset-after-select
+                <forms-validated-input
+                  type="relation"
+                  name="community"
+                  label="Ajouter un membre"
+                  :value="null"
+                  reset-after-select
                   :query="{
                     slug: 'users',
                     value: 'id',
                     text: 'full_name',
                     params: {
-                      'fields': 'id,full_name',
-                      '!id': users.map(u => u.id).join(','),
+                      fields: 'id,full_name',
+                      '!id': users.map((u) => u.id).join(','),
                     },
-                  }" @relation="addUser" />
+                  }"
+                  @relation="addUser"
+                />
               </b-col>
             </b-row>
           </div>
@@ -177,18 +228,18 @@
 </template>
 
 <script>
-import FormsBuilder from '@/components/Forms/Builder.vue';
-import PricingForm from '@/components/Pricing/PricingForm.vue';
-import PricingLanguageDefinition from '@/components/Pricing/LanguageDefinition.vue';
-import FormsValidatedInput from '@/components/Forms/ValidatedInput.vue';
+import FormsBuilder from "@/components/Forms/Builder.vue";
+import PricingForm from "@/components/Pricing/PricingForm.vue";
+import PricingLanguageDefinition from "@/components/Pricing/LanguageDefinition.vue";
+import FormsValidatedInput from "@/components/Forms/ValidatedInput.vue";
 
-import FormMixin from '@/mixins/FormMixin';
-import DataRouteGuards from '@/mixins/DataRouteGuards';
+import FormMixin from "@/mixins/FormMixin";
+import DataRouteGuards from "@/mixins/DataRouteGuards";
 
-import locales from '@/locales';
+import locales from "@/locales";
 
 export default {
-  name: 'AdminCommunity',
+  name: "AdminCommunity",
   mixins: [DataRouteGuards, FormMixin],
   components: {
     FormsBuilder,
@@ -200,26 +251,26 @@ export default {
     return {
       newPricingType: null,
       userTable: [
-        { key: 'id', label: 'ID', sortable: true },
-        { key: 'full_name', label: 'Nom complet', sortable: true },
-        { key: 'role', label: 'Rôle', sortable: true },
-        { key: 'approved_at', label: 'Approuvé', sortable: true },
-        { key: 'suspended_at', label: 'Suspendu', sortable: true },
-        { key: 'proof', label: 'Preuve', sortable: false },
-        { key: 'actions', label: 'Actions', tdClass: 'table__cell__actions' },
+        { key: "id", label: "ID", sortable: true },
+        { key: "full_name", label: "Nom complet", sortable: true },
+        { key: "role", label: "Rôle", sortable: true },
+        { key: "approved_at", label: "Approuvé", sortable: true },
+        { key: "suspended_at", label: "Suspendu", sortable: true },
+        { key: "proof", label: "Preuve", sortable: false },
+        { key: "actions", label: "Actions", tdClass: "table__cell__actions" },
       ],
-      userTableFilterFields: ['full_name'],
+      userTableFilterFields: ["full_name"],
     };
   },
   computed: {
     area: {
       get() {
-        return (this.item.area || []).join('\n');
+        return (this.item.area || []).join("\n");
       },
       set(area) {
         const newItem = {
           ...this.item,
-          area: area.split('\n').map(t => t.split(',')),
+          area: area.split("\n").map((t) => t.split(",")),
         };
         this.$store.commit(`${this.slug}/item`, newItem);
       },
@@ -233,35 +284,35 @@ export default {
       return form;
     },
     remainingPricingTypes() {
-      const currentPricingTypes = this.item.pricings.map(p => p.object_type);
+      const currentPricingTypes = this.item.pricings.map((p) => p.object_type);
       return [
         {
           value: null,
-          text: 'Générique',
+          text: "Générique",
         },
         {
-          value: 'car',
-          text: 'Voiture',
+          value: "car",
+          text: "Voiture",
         },
         {
-          value: 'bike',
-          text: 'Vélo',
+          value: "bike",
+          text: "Vélo",
         },
         {
-          value: 'trailer',
-          text: 'Remorque',
+          value: "trailer",
+          text: "Remorque",
         },
-      ].filter(p => currentPricingTypes.indexOf(p.value) === -1);
+      ].filter((p) => currentPricingTypes.indexOf(p.value) === -1);
     },
     users() {
       return this.$store.state.users.data.filter(() => true);
     },
     usersFilter: {
       get() {
-        return this.$store.state['admin.community'].usersFilter;
+        return this.$store.state["admin.community"].usersFilter;
       },
       set(val) {
-        this.$store.commit('admin.community/usersFilter', val);
+        this.$store.commit("admin.community/usersFilter", val);
       },
     },
     usersLoading() {
@@ -271,11 +322,13 @@ export default {
   methods: {
     addPricing() {
       this.$store.commit(`${this.slug}/mergeItem`, {
-        pricings: [{
-          object_type: this.newPricingType,
-          rule: '',
-          name: '',
-        }],
+        pricings: [
+          {
+            object_type: this.newPricingType,
+            rule: "",
+            name: "",
+          },
+        ],
       });
     },
     async addUser(user) {
@@ -287,7 +340,7 @@ export default {
       });
 
       this.$store.state.communities.lastAjax.then(({ data }) => {
-        this.$store.commit('users/addData', [data]);
+        this.$store.commit("users/addData", [data]);
       });
     },
     async approveUser(user) {
@@ -296,31 +349,29 @@ export default {
           ...u,
         };
 
-        const community = data.communities.find(c => c.id === this.item.id);
+        const community = data.communities.find((c) => c.id === this.item.id);
         community.approved_at = new Date();
 
         return data;
       });
     },
     async exportCSV() {
-      await this.$store.dispatch(
-        `${this.slug}/exportUsers`,
-        {
-          ...this.routeParams,
-          ...this.contextParams,
-        },
-      );
+      await this.$store.dispatch(`${this.slug}/exportUsers`, {
+        ...this.routeParams,
+        ...this.contextParams,
+      });
     },
     localizedFilter(columns) {
-      return (row, filter) => columns
-        .map(c => row[c] || '')
-        .join(',')
-        .normalize('NFD')
-        .replace(/[\u0300-\u036f]/g, '')
-        .match(new RegExp(filter.normalize('NFD').replace(/[\u0300-\u036f]/g, ''), 'i'));
+      return (row, filter) =>
+        columns
+          .map((c) => row[c] || "")
+          .join(",")
+          .normalize("NFD")
+          .replace(/[\u0300-\u036f]/g, "")
+          .match(new RegExp(filter.normalize("NFD").replace(/[\u0300-\u036f]/g, ""), "i"));
     },
     removePricing(pricing) {
-      const pricings = this.item.pricings.filter(p => p !== pricing);
+      const pricings = this.item.pricings.filter((p) => p !== pricing);
 
       this.$store.commit(`${this.slug}/patchItem`, { pricings });
     },
@@ -331,8 +382,8 @@ export default {
       });
 
       this.$store.commit(
-        'users/data',
-        this.$store.state.users.data.filter(u => u.id !== user.id),
+        "users/data",
+        this.$store.state.users.data.filter((u) => u.id !== user.id)
       );
     },
     resetUsersExportUrl() {
@@ -344,7 +395,7 @@ export default {
           ...u,
         };
 
-        const community = data.communities.find(c => c.id === this.item.id);
+        const community = data.communities.find((c) => c.id === this.item.id);
         community.role = role;
 
         return data;
@@ -356,7 +407,7 @@ export default {
           ...u,
         };
 
-        const community = data.communities.find(c => c.id === this.item.id);
+        const community = data.communities.find((c) => c.id === this.item.id);
         community.suspended_at = new Date();
 
         return data;
@@ -368,7 +419,7 @@ export default {
           ...u,
         };
 
-        const community = data.communities.find(c => c.id === this.item.id);
+        const community = data.communities.find((c) => c.id === this.item.id);
         community.suspended_at = null;
 
         return data;
@@ -390,19 +441,17 @@ export default {
       });
 
       this.$store.state.communities.lastAjax.then(({ data: d }) => {
-        const item = this.$store.state.users.data.find(u => u.id === d.id);
+        const item = this.$store.state.users.data.find((u) => u.id === d.id);
         const index = this.$store.state.users.data.indexOf(item);
 
-        const newData = [
-          ...this.$store.state.users.data,
-        ];
+        const newData = [...this.$store.state.users.data];
         newData.splice(index, 1, {
           ...item,
           ...d,
           id: item.id,
         });
 
-        this.$store.commit('users/data', newData);
+        this.$store.commit("users/data", newData);
       });
     },
   },

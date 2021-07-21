@@ -14,53 +14,48 @@ class Owner extends BaseModel
     use SoftDeletes;
 
     public static $rules = [
-        'approved_at' => 'nullable|date',
-        'submitted_at' => 'nullable|date',
+        "approved_at" => "nullable|date",
+        "submitted_at" => "nullable|date",
     ];
 
-    protected $fillable = [
-        'approved_at',
-        'submitted_at',
-        'user_id',
-    ];
+    protected $fillable = ["approved_at", "submitted_at", "user_id"];
 
-    public $collections = [
-      'loanables',
-      'cars',
-      'bikes',
-      'trailers',
-    ];
+    public $collections = ["loanables", "cars", "bikes", "trailers"];
 
-    public $items = [
-      'user',
-    ];
+    public $items = ["user"];
 
     public $morphOnes = [
-        'licence' => 'imageable',
+        "licence" => "imageable",
     ];
 
-    public function user() {
+    public function user()
+    {
         return $this->belongsTo(User::class);
     }
 
-    public function loanables() {
+    public function loanables()
+    {
         return $this->hasMany(Loanable::class);
     }
 
-    public function cars() {
+    public function cars()
+    {
         return $this->hasMany(Car::class);
     }
 
-    public function bikes() {
+    public function bikes()
+    {
         return $this->hasMany(Bike::class);
     }
 
-    public function trailers() {
+    public function trailers()
+    {
         return $this->hasMany(Trailer::class);
     }
 
-    public function scopeSearch(Builder $query, $q) {
-        return $query->whereHas('user', function ($q2) use ($q) {
+    public function scopeSearch(Builder $query, $q)
+    {
+        return $query->whereHas("user", function ($q2) use ($q) {
             return $q2->search($q);
         });
     }
