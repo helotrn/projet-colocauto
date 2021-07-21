@@ -24,7 +24,7 @@ class TestEmailController extends Controller
 {
     protected $emailBasePath = 'emails';
 
-    protected $faker = NULL;
+    protected $faker = null;
 
     public function show($name) {
         $viewData = [];
@@ -191,7 +191,7 @@ class TestEmailController extends Controller
                 $viewData = $this->getUserClaimedBalanceTestData();
                 break;
 
-            default;
+            default:
                 break;
         }
 
@@ -199,7 +199,7 @@ class TestEmailController extends Controller
     }
 
     protected function getFaker() {
-        if ($this->faker === NULL) {
+        if ($this->faker === null) {
             $this->faker = Factory::create('fr_CA');
         }
 
@@ -525,7 +525,10 @@ class TestEmailController extends Controller
                 'expiration' => (int)$faker->numberBetween(1, 12),
                 'route' => url(
                     '/password/reset/'
-                    . '?token='.$faker->shuffle('b3eb295e335b70c2dfab62d2c58c674da63dc88bac039d6e1471d81c89842987')
+                    . '?token='.$faker->shuffle(
+                        'b3eb295e335b70c2dfab62d2c58c674d'
+                        . 'a63dc88bac039d6e1471d81c89842987'
+                    )
                     . '&email='.$faker->email
                 ),
             ]
