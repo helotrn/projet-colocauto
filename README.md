@@ -79,3 +79,25 @@ dans `resources/app/.release` et de créer une version sur Gitlab. Le fichier `.
 contenir qu'une seule ligne commençant par `VUE_APP_RELEASE`.
 
 -   `vendor/bin/dep deployer {staging,production}`
+
+## Utilisation de prettier
+
+Nous utilisons prettier pour le formattage du code. Vous devez l'installer sur vos machine.
+Il est possible de mettre un pre-commit-hook dans git pour qu'il soit lancé automatiquement.
+Comme il n'est pas recommandé de mettre les hook dans le dépôt, voici les instructions pour
+le faire.
+
+Installer prettier et prettier-php
+
+```
+sudo npm install --global prettier @prettier/plugin-php
+```
+
+Créer un fichier .git/HOOKS/pre-commit avec dedans
+
+```
+#!/usr/bin/sh
+#
+
+npx prettier --write .
+```
