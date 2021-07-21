@@ -6,7 +6,8 @@ use App\Models\Owner;
 
 class OwnerRepository extends RestRepository
 {
-    public function __construct(Owner $model) {
+    public function __construct(Owner $model)
+    {
         $this->model = $model;
     }
 }

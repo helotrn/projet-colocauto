@@ -6,7 +6,8 @@ use App\Http\Requests\BaseRequest;
 
 class IncidentRequest extends BaseRequest
 {
-    public function authorize() {
+    public function authorize()
+    {
         if ($this->user()->isAdmin()) {
             return true;
         }

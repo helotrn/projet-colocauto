@@ -11,29 +11,31 @@ class BillItem extends BaseModel
     use SoftDeletes;
 
     public static $rules = [
-        'label' => 'required',
-        'amount' => 'required|numeric',
-        'taxes_tps' => 'required|numeric',
-        'taxes_tvq' => 'required|numeric',
+        "label" => "required",
+        "amount" => "required|numeric",
+        "taxes_tps" => "required|numeric",
+        "taxes_tvq" => "required|numeric",
     ];
 
     protected $fillable = [
-        'label',
-        'amount',
-        'invoice_id',
-        'payment_id',
-        'item_date',
-        'taxes_tps',
-        'taxes_tvq',
+        "label",
+        "amount",
+        "invoice_id",
+        "payment_id",
+        "item_date",
+        "taxes_tps",
+        "taxes_tvq",
     ];
 
-    public $items = ['invoice', 'payment'];
+    public $items = ["invoice", "payment"];
 
-    public function invoice() {
+    public function invoice()
+    {
         return $this->belongsTo(Invoice::class);
     }
 
-    public function payment() {
+    public function payment()
+    {
         return $this->hasOne(Payment::class);
     }
 }

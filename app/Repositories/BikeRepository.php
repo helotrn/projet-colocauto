@@ -6,7 +6,8 @@ use App\Models\Bike;
 
 class BikeRepository extends RestRepository
 {
-    public function __construct(Bike $model) {
+    public function __construct(Bike $model)
+    {
         $this->model = $model;
         $this->columnsDefinition = $model::getColumnsDefinition();
     }

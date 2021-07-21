@@ -15,7 +15,8 @@ class RegistrationRejectedEvent
     public $user;
     public $community;
 
-    public function __construct(User $user, Community $community) {
+    public function __construct(User $user, Community $community)
+    {
         $this->user = $user;
         $this->community = $community;
     }

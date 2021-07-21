@@ -4,10 +4,11 @@ use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
-    public function run() {
+    public function run()
+    {
         switch (app()->environment()) {
-            case 'local':
-            case 'staging':
+            case "local":
+            case "staging":
                 $this->call(CommunitiesTableSeeder::class);
                 $this->call(TagsTableSeeder::class);
 
@@ -21,7 +22,7 @@ class DatabaseSeeder extends Seeder
 
                 $this->call(ProductionPricingsTableSeeder::class);
                 break;
-            case 'production':
+            case "production":
                 //$this->call(CommunitiesTableSeeder::class);
                 //$this->call(TagsTableSeeder::class);
                 //$this->call(ProductionPricingsTableSeeder::class);
@@ -29,7 +30,7 @@ class DatabaseSeeder extends Seeder
                 break;
         }
 
-        if (app()->environment() === 'local') {
+        if (app()->environment() === "local") {
             $this->call(PassportSeeder::class);
         }
     }

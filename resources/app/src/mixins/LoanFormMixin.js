@@ -15,17 +15,17 @@ export default {
   computed: {
     disabledDates() {
       return {
-        to: this.$dayjs(this.item.departure_at).subtract(1, 'day').toDate(),
+        to: this.$dayjs(this.item.departure_at).subtract(1, "day").toDate(),
       };
     },
     disabledDatesInThePast() {
       return {
-        to: this.$dayjs().subtract(1, 'day').toDate(),
+        to: this.$dayjs().subtract(1, "day").toDate(),
       };
     },
     disabledTimes() {
       const departure = this.$dayjs(this.item.departure_at);
-      if (departure.format('YYYY-MM-DD') < this.$dayjs(this.returnAt).format('YYYY-MM-DD')) {
+      if (departure.format("YYYY-MM-DD") < this.$dayjs(this.returnAt).format("YYYY-MM-DD")) {
         return {};
       }
 
@@ -51,7 +51,7 @@ export default {
     disabledTimesInThePast() {
       const departure = this.$dayjs(this.item.departure_at);
 
-      if (departure.format('YYYY-MM-DD') > this.$dayjs().format('YYYY-MM-DD')) {
+      if (departure.format("YYYY-MM-DD") > this.$dayjs().format("YYYY-MM-DD")) {
         return {};
       }
 
@@ -77,12 +77,14 @@ export default {
     returnAt: {
       get() {
         return this.$dayjs(this.item.departure_at)
-          .add(this.item.duration_in_minutes, 'minute')
-          .format('YYYY-MM-DD HH:mm:ss');
+          .add(this.item.duration_in_minutes, "minute")
+          .format("YYYY-MM-DD HH:mm:ss");
       },
       set(val) {
-        this.item.duration_in_minutes = this.$dayjs(val)
-          .diff(this.$dayjs(this.item.departure_at), 'minute');
+        this.item.duration_in_minutes = this.$dayjs(val).diff(
+          this.$dayjs(this.item.departure_at),
+          "minute"
+        );
       },
     },
   },
@@ -90,7 +92,7 @@ export default {
     item: {
       deep: true,
       handler(item) {
-        this.$store.commit('loans/item', item);
+        this.$store.commit("loans/item", item);
       },
     },
   },

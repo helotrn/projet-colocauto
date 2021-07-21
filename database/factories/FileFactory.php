@@ -5,6 +5,5 @@ use Illuminate\Support\Str;
 use Faker\Generator as Faker;
 
 $factory->define(File::class, function (Faker $faker) {
-    return [
-    ];
+    return [];
 });

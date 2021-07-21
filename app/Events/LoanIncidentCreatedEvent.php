@@ -14,7 +14,8 @@ class LoanIncidentCreatedEvent
 
     public $incident;
 
-    public function __construct(Incident $incident) {
+    public function __construct(Incident $incident)
+    {
         $this->incident = $incident;
     }
 }

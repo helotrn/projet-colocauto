@@ -3,15 +3,23 @@
     <div v-if="data.length > 0">
       <b-row>
         <b-col v-for="loanable in data" :key="loanable.id" lg="4" md="6">
-          <loanable-card v-bind="loanable"
-            @test="emitTest(loanable)" @select="emitSelect(loanable)" class="mb-3" />
+          <loanable-card
+            v-bind="loanable"
+            @test="emitTest(loanable)"
+            @select="emitSelect(loanable)"
+            class="mb-3"
+          />
         </b-col>
       </b-row>
       <b-row>
         <b-col>
-          <b-pagination align="right" :value="page"
-            :total-rows="total" :per-page="perPage"
-            @input="emitPage" />
+          <b-pagination
+            align="right"
+            :value="page"
+            :total-rows="total"
+            :per-page="perPage"
+            @input="emitPage"
+          />
         </b-col>
       </b-row>
     </div>
@@ -23,10 +31,10 @@
 </template>
 
 <script>
-import LoanableCard from '@/components/Loanable/Card.vue';
+import LoanableCard from "@/components/Loanable/Card.vue";
 
 export default {
-  name: 'List',
+  name: "List",
   components: {
     LoanableCard,
   },
@@ -50,13 +58,13 @@ export default {
   },
   methods: {
     emitPage(page) {
-      this.$emit('page', page);
+      this.$emit("page", page);
     },
     emitSelect(loanable) {
-      this.$emit('select', loanable);
+      this.$emit("select", loanable);
     },
     emitTest(loanable) {
-      this.$emit('test', loanable);
+      this.$emit("test", loanable);
     },
   },
 };

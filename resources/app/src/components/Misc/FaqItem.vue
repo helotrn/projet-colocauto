@@ -1,8 +1,7 @@
 <template>
   <b-card no-body class="faq-item">
     <b-card-header header-tag="header" role="tab">
-      <b-button size="lg" block href="#"
-        v-b-toggle="`faq-${id}`" variant="white-secondary">
+      <b-button size="lg" block href="#" v-b-toggle="`faq-${id}`" variant="white-secondary">
         {{ title }}
       </b-button>
     </b-card-header>
@@ -14,12 +13,11 @@
       </b-card-body>
     </b-collapse>
   </b-card>
-
 </template>
 
 <script>
 export default {
-  name: 'FaqItem',
+  name: "FaqItem",
   props: {
     id: {
       required: true,

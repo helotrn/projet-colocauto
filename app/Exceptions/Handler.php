@@ -8,25 +8,21 @@ use Symfony\Component\Console\Exception\CommandNotFoundException;
 
 class Handler extends ExceptionHandler
 {
-    protected $dontReport = [
-        CommandNotFoundException::class,
-    ];
+    protected $dontReport = [CommandNotFoundException::class];
 
-    protected $dontFlash = [
-        'password',
-        'password_confirmation',
-    ];
+    protected $dontFlash = ["password", "password_confirmation"];
 
-    public function report(Throwable $exception) {
-        if (app()->bound('sentry') && $this->shouldReport($exception)) {
-            app('sentry')->captureException($exception);
+    public function report(Throwable $exception)
+    {
+        if (app()->bound("sentry") && $this->shouldReport($exception)) {
+            app("sentry")->captureException($exception);
         }
 
         parent::report($exception);
     }
 
-
-    public function render($request, Throwable $exception) {
+    public function render($request, Throwable $exception)
+    {
         return parent::render($request, $exception);
     }
 }

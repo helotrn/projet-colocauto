@@ -19,45 +19,54 @@ class RestRepository
     protected $connectionQueries = [];
 
     protected $reserved = [
-        '!fields',
-        'fields',
-        'for',
-        'order',
-        'page',
-        'per_page',
-        'q',
+        "!fields",
+        "fields",
+        "for",
+        "order",
+        "page",
+        "per_page",
+        "q",
     ];
 
-    public function get($request) {
+    public function get($request)
+    {
         $query = $this->model;
 
-        if (method_exists($this->model, 'scopeAccessibleBy')) {
+        if (method_exists($this->model, "scopeAccessibleBy")) {
             $query = $query->accessibleBy($request->user());
         }
 
-        if (method_exists($this->model, 'scopeFor')) {
-            $query = $query->for($request->get('for'), $request->user());
+        if (method_exists($this->model, "scopeFor")) {
+            $query = $query->for($request->get("for"), $request->user());
         }
 
-        $params = $this->parseQueryString(array_get($request->server->all(), 'QUERY_STRING'))
-            ?: $request->all();
+        $params =
+            $this->parseQueryString(
+                array_get($request->server->all(), "QUERY_STRING")
+            ) ?:
+            $request->all();
 
         $extraParams = array_diff_key($request->all(), $params);
         $paramKeys = array_keys($params);
         foreach ($extraParams as $extraParam => $value) {
-            if (strpos($extraParam, '_')) {
-                $parts = explode('_', $extraParam);
+            if (strpos($extraParam, "_")) {
+                $parts = explode("_", $extraParam);
                 for ($i = 1; $i < count($parts); $i++) {
-                    $relation = implode('_', array_slice($parts, 0, $i));
-                    if (in_array(
-                        $relation,
-                        array_merge($this->model->collections, $this->model->items)
-                    )) {
+                    $relation = implode("_", array_slice($parts, 0, $i));
+                    if (
+                        in_array(
+                            $relation,
+                            array_merge(
+                                $this->model->collections,
+                                $this->model->items
+                            )
+                        )
+                    ) {
                         continue 2;
                     }
                 }
 
-                if (in_array(str_replace('_', '.', $extraParam), $paramKeys)) {
+                if (in_array(str_replace("_", ".", $extraParam), $paramKeys)) {
                     continue;
                 }
             }
@@ -70,31 +79,33 @@ class RestRepository
                 continue;
             }
 
-            $query = $this->applyFilter($this->model, $param, $value, $query, $request);
+            $query = $this->applyFilter(
+                $this->model,
+                $param,
+                $value,
+                $query,
+                $request
+            );
         }
 
         foreach ($this->connectionQueries as $connection => $queries) {
             foreach ($queries as $foreignKeyName => $subquery) {
                 $rawSql = $this->queryToRawSql($subquery);
 
-                $keys = array_map(
-                    function ($obj) {
-                        return $obj->id;
-                    },
-                    \DB::connection($connection)->select($rawSql)
-                );
+                $keys = array_map(function ($obj) {
+                    return $obj->id;
+                }, \DB::connection($connection)->select($rawSql));
 
                 $query = $query->whereIn($foreignKeyName, $keys);
             }
         }
 
-        if (isset($params['q'])
-            && method_exists($this->model, 'scopeSearch')) {
-            $query = $query->search($params['q']);
+        if (isset($params["q"]) && method_exists($this->model, "scopeSearch")) {
+            $query = $query->search($params["q"]);
         }
 
-        if (isset($params['order'])) {
-            $query = $this->orderBy($query, $params['order']);
+        if (isset($params["order"])) {
+            $query = $this->orderBy($query, $params["order"]);
         }
 
         if ($fields = $request->getFields()) {
@@ -104,24 +115,34 @@ class RestRepository
         $columns = $this->columnsDefinition;
         foreach ($columns as $paramName => $column) {
             // FIXME Should not query all columns all the time
-            [$query, $_] = $this->addColumnDefinition($query, $columns, $paramName);
+            [$query, $_] = $this->addColumnDefinition(
+                $query,
+                $columns,
+                $paramName
+            );
         }
 
         // TODO Move to controller
-        $perPage = $request->get('per_page') ?: 10;
-        $page = $request->get('page') ?: 1;
+        $perPage = $request->get("per_page") ?: 10;
+        $page = $request->get("page") ?: 1;
 
-        if (strpos($query->toSql(), 'group by') !== false) {
-            $total = $this->wrapQueryForRealTotal($this->model->getConnectionName(), $query);
+        if (strpos($query->toSql(), "group by") !== false) {
+            $total = $this->wrapQueryForRealTotal(
+                $this->model->getConnectionName(),
+                $query
+            );
         } else {
             try {
                 $total = $query->count();
             } catch (\Illuminate\Database\QueryException $e) {
-                $total = $this->wrapQueryForRealTotal($this->model->getConnectionName(), $query);
+                $total = $this->wrapQueryForRealTotal(
+                    $this->model->getConnectionName(),
+                    $query
+                );
             }
         }
 
-        if ($perPage === '*') {
+        if ($perPage === "*") {
             $perPage = -1;
         } else {
             $query = $query->take($perPage)->skip($perPage * ($page - 1));
@@ -131,26 +152,27 @@ class RestRepository
             $items = $query->cursor();
         } catch (RelationNotFoundException $e) {
             throw new ValidationException([
-                'includes' => 'relationship does not exist',
+                "includes" => "relationship does not exist",
             ]);
         }
 
         return [$items, $total];
     }
 
-    public function find($request, $id) {
+    public function find($request, $id)
+    {
         if (!intval($id)) {
-            return abort(422, 'Numeric ids.');
+            return abort(422, "Numeric ids.");
         }
 
         $query = $this->model;
 
-        if (method_exists($this->model, 'scopeAccessibleBy')) {
+        if (method_exists($this->model, "scopeAccessibleBy")) {
             $query = $query->accessibleBy($request->user());
         }
 
-        if (method_exists($this->model, 'scopeFor')) {
-            $query = $query->for($request->get('for'), $request->user());
+        if (method_exists($this->model, "scopeFor")) {
+            $query = $query->for($request->get("for"), $request->user());
         }
 
         $params = $request->all();
@@ -159,7 +181,13 @@ class RestRepository
                 continue;
             }
 
-            $query = $this->applyFilter($this->model, $param, $value, $query, $request);
+            $query = $this->applyFilter(
+                $this->model,
+                $param,
+                $value,
+                $query,
+                $request
+            );
         }
 
         if ($fields = $request->getFields()) {
@@ -168,13 +196,18 @@ class RestRepository
 
         $columns = $this->columnsDefinition;
         foreach ($columns as $paramName => $column) {
-            [$query, $_] = $this->addColumnDefinition($query, $columns, $paramName);
+            [$query, $_] = $this->addColumnDefinition(
+                $query,
+                $columns,
+                $paramName
+            );
         }
 
         return $query->findOrFail($id);
     }
 
-    public function create($data) {
+    public function create($data)
+    {
         $this->model->fill($data);
 
         $this->model->save();
@@ -186,15 +219,16 @@ class RestRepository
         $model = $this->model;
 
         $className = get_class($this->model);
-        $this->model = new $className;
+        $this->model = new $className();
 
         return $model;
     }
 
-    public function update($request, $id, $data) {
+    public function update($request, $id, $data)
+    {
         $query = $this->model;
 
-        if (method_exists($query, 'scopeAccessibleBy')) {
+        if (method_exists($query, "scopeAccessibleBy")) {
             $query = $query->accessibleBy($request->user());
         }
 
@@ -209,15 +243,16 @@ class RestRepository
         $this->model->save();
 
         $className = get_class($this->model);
-        $this->model = new $className;
+        $this->model = new $className();
 
         return $this->model->find($id);
     }
 
-    public function destroy($request, $id) {
+    public function destroy($request, $id)
+    {
         $query = $this->model;
 
-        if (method_exists($query, 'scopeAccessibleBy')) {
+        if (method_exists($query, "scopeAccessibleBy")) {
             $query = $query->accessibleBy($request->user());
         }
 
@@ -228,10 +263,11 @@ class RestRepository
         return $this->model;
     }
 
-    public function restore($request, $id) {
+    public function restore($request, $id)
+    {
         $query = $this->model->withTrashed();
 
-        if (method_exists($query, 'scopeAccessibleBy')) {
+        if (method_exists($query, "scopeAccessibleBy")) {
             $query = $query->accessibleBy($request->user());
         }
 
@@ -242,19 +278,20 @@ class RestRepository
         return $this->model;
     }
 
-    protected function orderBy($query, $def) {
-        if ($def === '') {
+    protected function orderBy($query, $def)
+    {
+        if ($def === "") {
             return $query;
         }
 
-        $columns = explode(',', $def);
+        $columns = explode(",", $def);
 
         foreach ($columns as $column) {
-            if (strpos($column, '-') === 0) {
-                $direction = 'desc';
+            if (strpos($column, "-") === 0) {
+                $direction = "desc";
                 $column = substr($column, 1);
             } else {
-                $direction = 'asc';
+                $direction = "asc";
             }
 
             if (in_array($column, array_keys($this->columnsDefinition))) {
@@ -268,20 +305,25 @@ class RestRepository
         return $query;
     }
 
-    protected function saveRelations($data) {
+    protected function saveRelations($data)
+    {
         $this->saveItems($data);
         $this->saveCollections($data);
     }
 
-    protected function saveItems($data) {
+    protected function saveItems($data)
+    {
         $skipObjectRelation = [];
-        foreach (array_diff(array_keys($data), $this->model->getFillable()) as $field) {
-            if ($field === 'id') {
+        foreach (
+            array_diff(array_keys($data), $this->model->getFillable())
+            as $field
+        ) {
+            if ($field === "id") {
                 continue;
             }
 
             if (preg_match('/_id$/', $field)) {
-                $relationName = str_replace('_id', '', $field);
+                $relationName = str_replace("_id", "", $field);
 
                 if (in_array($relationName, $skipObjectRelation)) {
                     continue;
@@ -303,20 +345,36 @@ class RestRepository
                         }
                     } else {
                         if ($newAssoc) {
-                            $newData = [ 'id' => $newAssoc ];
-                            $this->saveRelatedItem($this->model, $relationName, $newData);
+                            $newData = ["id" => $newAssoc];
+                            $this->saveRelatedItem(
+                                $this->model,
+                                $relationName,
+                                $newData
+                            );
                         } else {
-                            $this->deleteRelatedItem($this->model, $relationName);
+                            $this->deleteRelatedItem(
+                                $this->model,
+                                $relationName
+                            );
                         }
                     }
                 }
-            } elseif (in_array($field, $this->model->items) && is_array($data[$field])) {
+            } elseif (
+                in_array($field, $this->model->items) &&
+                is_array($data[$field])
+            ) {
                 $camelField = Str::camel($field);
-                $related = $this->saveRelatedItem($this->model, $field, $data[$field]);
+                $related = $this->saveRelatedItem(
+                    $this->model,
+                    $field,
+                    $data[$field]
+                );
                 $relation = $this->model->{$camelField}();
 
-                if ($this->model->{$camelField}
-                    && $this->model->{$camelField}->id !== $related->id) {
+                if (
+                    $this->model->{$camelField} &&
+                    $this->model->{$camelField}->id !== $related->id
+                ) {
                     if (is_a($relation, HasOne::class)) {
                         $this->model->{$camelField}[
                             $this->model->{$camelField}()->getForeignKeyName()
@@ -328,17 +386,25 @@ class RestRepository
                 }
 
                 foreach (array_keys($related->morphOnes) as $morphOne) {
-                    $this->savePolymorphicRelation($related, $morphOne, $data[$field]);
+                    $this->savePolymorphicRelation(
+                        $related,
+                        $morphOne,
+                        $data[$field]
+                    );
                 }
 
                 if (is_a($relation, BelongsTo::class)) {
                     $relation->associate($related);
                 }
-            } elseif (in_array($field, array_keys($this->model->morphOnes))
-                && array_key_exists($field, $data)) {
+            } elseif (
+                in_array($field, array_keys($this->model->morphOnes)) &&
+                array_key_exists($field, $data)
+            ) {
                 if (is_array($data[$field]) && !!$data[$field]) {
-                    if ($this->model->{$field}
-                        && $this->model->{$field}->id !== $data[$field]['id']) {
+                    if (
+                        $this->model->{$field} &&
+                        $this->model->{$field}->id !== $data[$field]["id"]
+                    ) {
                         $this->model->{$field}->delete();
                     }
 
@@ -350,9 +416,13 @@ class RestRepository
         }
     }
 
-    protected function saveCollections($data) {
-        foreach (array_diff(array_keys($data), $this->model->getFillable()) as $field) {
-            if ($field === 'id') {
+    protected function saveCollections($data)
+    {
+        foreach (
+            array_diff(array_keys($data), $this->model->getFillable())
+            as $field
+        ) {
+            if ($field === "id") {
                 continue;
             }
 
@@ -371,9 +441,9 @@ class RestRepository
 
                         $ids = [];
 
-                        if (method_exists($relation, 'getPivotClass')) {
+                        if (method_exists($relation, "getPivotClass")) {
                             $pivotClass = $relation->getPivotClass();
-                            $pivot = new $pivotClass;
+                            $pivot = new $pivotClass();
                             $pivotAttributes = $pivot->getFillable();
 
                             $isExtendedPivot = $this->isBaseModel($pivot);
@@ -396,31 +466,43 @@ class RestRepository
                                 $pivotItemData = [];
 
                                 foreach ($pivotAttributes as $pivotAttribute) {
-                                    if (!array_key_exists($pivotAttribute, $element)) {
+                                    if (
+                                        !array_key_exists(
+                                            $pivotAttribute,
+                                            $element
+                                        )
+                                    ) {
                                         continue;
                                     }
 
-                                    $pivotData[$pivotAttribute] = $element[$pivotAttribute];
+                                    $pivotData[$pivotAttribute] =
+                                        $element[$pivotAttribute];
                                     unset($element[$pivotAttribute]);
                                 }
 
                                 foreach ($pivotItems as $pivotItem) {
-                                    if (!array_key_exists($pivotItem, $element)) {
+                                    if (
+                                        !array_key_exists($pivotItem, $element)
+                                    ) {
                                         continue;
                                     }
 
-                                    $pivotItemData[$pivotItem] = $element[$pivotItem];
+                                    $pivotItemData[$pivotItem] =
+                                        $element[$pivotItem];
                                     unset($element[$pivotItem]);
                                 }
 
-                                if (array_key_exists('id', $element) && $element['id']) {
+                                if (
+                                    array_key_exists("id", $element) &&
+                                    $element["id"]
+                                ) {
                                     $sync = [];
-                                    $sync[$element['id']] = $pivotData;
+                                    $sync[$element["id"]] = $pivotData;
                                     $relation->syncWithoutDetaching($sync);
 
-                                    $targetPivot = $this->model->{Str::camel($field)}()
-                                        ->find($element['id'])
-                                        ->pivot;
+                                    $targetPivot = $this->model
+                                        ->{Str::camel($field)}()
+                                        ->find($element["id"])->pivot;
 
                                     foreach ($pivotItems as $pivotItem) {
                                         $this->savePolymorphicRelation(
@@ -430,23 +512,33 @@ class RestRepository
                                         );
                                     }
 
-                                    foreach ($pivotCollections as $pivotCollection) {
+                                    foreach (
+                                        $pivotCollections
+                                        as $pivotCollection
+                                    ) {
                                         if (isset($element[$pivotCollection])) {
-                                            $targetPivot->{$pivotCollection}()->sync(
-                                                array_map(function ($i) {
-                                                    return $i['id'];
-                                                }, $element[$pivotCollection])
-                                            );
+                                            $targetPivot
+                                                ->{$pivotCollection}()
+                                                ->sync(
+                                                    array_map(function ($i) {
+                                                        return $i["id"];
+                                                    }, $element[
+                                                        $pivotCollection
+                                                    ])
+                                                );
                                         }
                                     }
 
-                                    $ids[] = $element['id'];
+                                    $ids[] = $element["id"];
                                 }
                             }
                         } else {
                             foreach ($data[$field] as $element) {
-                                if (array_key_exists('id', $element) && $element['id']) {
-                                    $ids[] = $element['id'];
+                                if (
+                                    array_key_exists("id", $element) &&
+                                    $element["id"]
+                                ) {
+                                    $ids[] = $element["id"];
                                 }
                             }
                         }
@@ -466,22 +558,33 @@ class RestRepository
                         } elseif (is_a($relation, HasMany::class)) {
                             $newItems = [];
                             foreach ($data[$field] as $element) {
-                                if (array_key_exists('id', $element) && $element['id']) {
-                                    $existingItem = $relatedClass->find($element['id']);
+                                if (
+                                    array_key_exists("id", $element) &&
+                                    $element["id"]
+                                ) {
+                                    $existingItem = $relatedClass->find(
+                                        $element["id"]
+                                    );
                                     $existingItem->fill($element);
                                     $newItems[] = $existingItem;
                                 } else {
-                                    $newItem = new $relatedClass;
+                                    $newItem = new $relatedClass();
                                     $newItem->fill($element);
                                     $newItems[] = $newItem;
                                 }
                             }
 
-                            $existingIds = $relation->get()->pluck('id')->toArray();
+                            $existingIds = $relation
+                                ->get()
+                                ->pluck("id")
+                                ->toArray();
                             $removedIds = array_diff($existingIds, $ids);
 
                             if (!empty($removedIds)) {
-                                $relation->getRelated()->whereIn('id', $removedIds)->delete();
+                                $relation
+                                    ->getRelated()
+                                    ->whereIn("id", $removedIds)
+                                    ->delete();
                             }
 
                             $relation->saveMany($newItems);
@@ -510,14 +613,20 @@ class RestRepository
       @param request
         Instance of Molotov\Request which exends Laravel's FormRequest.
     */
-    protected function applyFilter(&$model, $param, $value, $query, $request) {
-        $negative = $param[0] === '!';
-        $paramName = str_replace('!', '', $param);
+    protected function applyFilter(&$model, $param, $value, $query, $request)
+    {
+        $negative = $param[0] === "!";
+        $paramName = str_replace("!", "", $param);
 
-        if (strpos($paramName, '.') !== false) {
-            [$relation, $field] = explode('.', $paramName, 2);
+        if (strpos($paramName, ".") !== false) {
+            [$relation, $field] = explode(".", $paramName, 2);
 
-            if (in_array($relation, array_merge($model->collections, $model->items))) {
+            if (
+                in_array(
+                    $relation,
+                    array_merge($model->collections, $model->items)
+                )
+            ) {
                 $camelRelation = Str::camel($relation);
                 $targetRelation = $model->{$camelRelation}();
                 $targetModel = $targetRelation->getRelated();
@@ -529,62 +638,78 @@ class RestRepository
                     $keyName = $targetModel->getKeyName();
                     $foreignKeyName = $targetRelation->getForeignKeyName();
 
-                    if (!isset($this->connectionQueries[$targetConnectionName])) {
+                    if (
+                        !isset($this->connectionQueries[$targetConnectionName])
+                    ) {
                         $this->connectionQueries[$targetConnectionName] = [];
                     }
 
-                    if (!isset($this->connectionQueries[$targetConnectionName][$foreignKeyName])) {
-                        $this->connectionQueries[$targetConnectionName][$foreignKeyName]
-                            = $targetModel->select(\DB::raw("{$keyName} AS id"));
+                    if (
+                        !isset(
+                            $this->connectionQueries[$targetConnectionName][
+                                $foreignKeyName
+                            ]
+                        )
+                    ) {
+                        $this->connectionQueries[$targetConnectionName][
+                            $foreignKeyName
+                        ] = $targetModel->select(\DB::raw("{$keyName} AS id"));
                     }
 
-                    $subquery = $this->connectionQueries[$targetConnectionName][$foreignKeyName];
+                    $subquery =
+                        $this->connectionQueries[$targetConnectionName][
+                            $foreignKeyName
+                        ];
 
                     if (is_a($targetRelation, BelongsTo::class)) {
-                        $this->connectionQueries[$targetConnectionName][$foreignKeyName]
-                            = $subquery->where(
-                                function ($q) use ($targetModel, $fieldQuery, $value, $request) {
-                                    return $this->applyFilter(
-                                        $targetModel,
-                                        $fieldQuery,
-                                        $value,
-                                        $q,
-                                        $request
-                                    );
-                                }
+                        $this->connectionQueries[$targetConnectionName][
+                            $foreignKeyName
+                        ] = $subquery->where(function ($q) use (
+                            $targetModel,
+                            $fieldQuery,
+                            $value,
+                            $request
+                        ) {
+                            return $this->applyFilter(
+                                $targetModel,
+                                $fieldQuery,
+                                $value,
+                                $q,
+                                $request
                             );
+                        });
                         return $query;
                     }
                 }
 
-                return $query->where(
-                    function ($q) use (
-                        $camelRelation,
+                return $query->where(function ($q) use (
+                    $camelRelation,
+                    $targetModel,
+                    $fieldQuery,
+                    $value,
+                    $request
+                ) {
+                    $q = $q->whereHas($camelRelation, function ($q) use (
                         $targetModel,
                         $fieldQuery,
                         $value,
                         $request
                     ) {
-                        $q = $q->whereHas(
-                            $camelRelation,
-                            function ($q) use ($targetModel, $fieldQuery, $value, $request) {
-                                return $this->applyFilter(
-                                    $targetModel,
-                                    $fieldQuery,
-                                    $value,
-                                    $q,
-                                    $request
-                                );
-                            }
+                        return $this->applyFilter(
+                            $targetModel,
+                            $fieldQuery,
+                            $value,
+                            $q,
+                            $request
                         );
+                    });
 
-                        if ($fieldQuery[0] === '!') {
-                            $q = $q->orDoesntHave($camelRelation);
-                        }
-
-                        return $q;
+                    if ($fieldQuery[0] === "!") {
+                        $q = $q->orDoesntHave($camelRelation);
                     }
-                );
+
+                    return $q;
+                });
             }
 
             return $query;
@@ -606,20 +731,24 @@ class RestRepository
         $columns = $model::getColumnsDefinition();
         $aggregate = false;
         if (in_array($paramName, array_keys($columns))) {
-            [$query, $scopedParam] = $this->addColumnDefinition($query, $columns, $paramName);
+            [$query, $scopedParam] = $this->addColumnDefinition(
+                $query,
+                $columns,
+                $paramName
+            );
 
-            if (preg_match('/(array_agg|sum)\(/i', "$scopedParam")) {
+            if (preg_match("/(array_agg|sum)\(/i", "$scopedParam")) {
                 $aggregate = true;
             }
         } else {
             $scopedParam = "{$query->getModel()->getTable()}.$paramName";
         }
 
-        if ($paramName === 'id' && $value === 'me') {
+        if ($paramName === "id" && $value === "me") {
             $value = $request->user()->id;
         }
 
-        if ($paramName === 'deleted_at' && !!$value) {
+        if ($paramName === "deleted_at" && !!$value) {
             $query = $query->withTrashed();
         }
 
@@ -627,15 +756,15 @@ class RestRepository
         // language, otherwise fallback to default Laravel filtering
         $filterType = array_get($model::$filterTypes, $paramName);
         if (is_array($filterType)) {
-            $filterType = 'enum';
+            $filterType = "enum";
         }
-        if (!$filterType && $paramName === 'id') {
-            $filterType = 'number';
+        if (!$filterType && $paramName === "id") {
+            $filterType = "number";
         }
 
         switch ($filterType) {
-            case 'enum':
-                $values = explode(',', $value);
+            case "enum":
+                $values = explode(",", $value);
                 return $this->applyWhereInFilter(
                     $values,
                     $aggregate,
@@ -644,24 +773,24 @@ class RestRepository
                     $paramName,
                     $query
                 );
-            case 'boolean':
+            case "boolean":
                 return $query->where(
                     $scopedParam,
-                    $negative ? '!=' : '=',
-                    filter_var($value, FILTER_VALIDATE_BOOLEAN) || $value === ''
+                    $negative ? "!=" : "=",
+                    filter_var($value, FILTER_VALIDATE_BOOLEAN) || $value === ""
                 );
-            case 'number':
+            case "number":
                 if (is_array($value)) {
-                    $value = implode(',', $value);
+                    $value = implode(",", $value);
                 }
 
-                if ($value === '') {
+                if ($value === "") {
                     return $query;
                 }
 
-                if (strpos($value, ':') !== false) {
+                if (strpos($value, ":") !== false) {
                     $matches = [];
-                    $regex = '(\d*)?';
+                    $regex = "(\d*)?";
                     preg_match("/^$regex:$regex$/", $value, $matches);
 
                     $start = $end = null;
@@ -683,15 +812,12 @@ class RestRepository
                 }
 
                 $values = array_map(
-                    'intval',
+                    "intval",
                     array_map(
-                        'trim',
-                        array_filter(
-                            explode(',', $value),
-                            function ($i) {
-                                return $i !== '';
-                            }
-                        )
+                        "trim",
+                        array_filter(explode(",", $value), function ($i) {
+                            return $i !== "";
+                        })
                     )
                 );
 
@@ -704,20 +830,23 @@ class RestRepository
                     $query
                 );
                 break;
-            case 'text':
-                if ($this->model->getConnection()->getConfig()['driver'] === 'pgsql') {
+            case "text":
+                if (
+                    $this->model->getConnection()->getConfig()["driver"] ===
+                    "pgsql"
+                ) {
                     $escapedValue = pg_escape_string($value);
                     return $query->where(
                         \DB::raw("unaccent($scopedParam)"),
-                        'ILIKE',
+                        "ILIKE",
                         \DB::raw("unaccent('%$escapedValue%')")
                     );
                 } else {
-                    return $query->where($scopedParam, 'LIKE', "%$value%");
+                    return $query->where($scopedParam, "LIKE", "%$value%");
                 }
                 break;
 
-            case 'date':
+            case "date":
                 return $this->applyDateRangeFilter(
                     $scopedParam,
                     $paramName,
@@ -730,9 +859,9 @@ class RestRepository
             default:
                 if ($negative) {
                     if ($aggregate) {
-                        return $query->having($scopedParam, '!=', $value);
+                        return $query->having($scopedParam, "!=", $value);
                     }
-                    return $query->where($scopedParam, '!=', $value);
+                    return $query->where($scopedParam, "!=", $value);
                 }
 
                 if ($aggregate) {
@@ -745,7 +874,8 @@ class RestRepository
         return $query;
     }
 
-    protected function applyWithFromQuery($fields, &$query) {
+    protected function applyWithFromQuery($fields, &$query)
+    {
         foreach (array_keys($fields) as $field) {
             $relations = array_merge(
                 $this->model->items,
@@ -758,7 +888,8 @@ class RestRepository
         }
     }
 
-    protected function deletePolymorphicRelation(&$model, $field) {
+    protected function deletePolymorphicRelation(&$model, $field)
+    {
         if ($currentRelation = $model->{$field}()->first()) {
             $currentRelation->delete();
         }
@@ -766,7 +897,8 @@ class RestRepository
         return $currentRelation;
     }
 
-    protected function savePolymorphicRelation(&$model, $field, &$data) {
+    protected function savePolymorphicRelation(&$model, $field, &$data)
+    {
         if (!array_key_exists($field, $data)) {
             return $model->{$field};
         }
@@ -781,9 +913,11 @@ class RestRepository
             }
         }
 
-        if (array_key_exists('id', $data[$field])) {
-            $newRelation = $model->{$field}()
-                ->getRelated()->find($data[$field]['id']);
+        if (array_key_exists("id", $data[$field])) {
+            $newRelation = $model
+                ->{$field}()
+                ->getRelated()
+                ->find($data[$field]["id"]);
         } else {
             $newRelation = $model->{$field}()->getRelated();
         }
@@ -792,8 +926,8 @@ class RestRepository
             return null;
         }
 
-        $morphId = $model->morphOnes[$field] . '_id';
-        $morphType = $model->morphOnes[$field] . '_type';
+        $morphId = $model->morphOnes[$field] . "_id";
+        $morphType = $model->morphOnes[$field] . "_type";
 
         $newRelation->{$morphId} = $model->id;
         $newRelation->{$morphType} = get_class($model);
@@ -803,7 +937,8 @@ class RestRepository
         return $newRelation;
     }
 
-    protected function deleteRelatedItem(&$model, $field) {
+    protected function deleteRelatedItem(&$model, $field)
+    {
         $relation = $model->{$field}();
         $related = $model->{$field};
 
@@ -820,13 +955,14 @@ class RestRepository
         return $related;
     }
 
-    protected function saveRelatedItem(&$model, $field, &$data) {
+    protected function saveRelatedItem(&$model, $field, &$data)
+    {
         $camelField = Str::camel($field);
         $relation = $model->{$camelField}();
-        if (!array_key_exists('id', $data)) {
+        if (!array_key_exists("id", $data)) {
             $related = $relation->getRelated();
         } else {
-            $related = $relation->getRelated()->find($data['id']);
+            $related = $relation->getRelated()->find($data["id"]);
         }
 
         if ($related->readOnly) {
@@ -861,18 +997,18 @@ class RestRepository
             return $query;
         } elseif (!$start) {
             if ($aggregate) {
-                return $query->having($paramName, '<=', $end);
+                return $query->having($paramName, "<=", $end);
             }
-            return $query->where($scopedParam, '<=', $end);
+            return $query->where($scopedParam, "<=", $end);
         } elseif (!$end) {
             if ($aggregate) {
-                return $query->having($paramName, '>=', $start);
+                return $query->having($paramName, ">=", $start);
             }
-            return $query->where($scopedParam, '>=', $start);
+            return $query->where($scopedParam, ">=", $start);
         }
 
         if ($aggregate) {
-            throw new \Exception('aggregate between not supported yet');
+            throw new \Exception("aggregate between not supported yet");
         }
 
         return $query->whereBetween($scopedParam, [$start, $end]);
@@ -880,27 +1016,38 @@ class RestRepository
 
     // PHP's default query string parser replaces . by _
     // which would break our query language
-    protected function parseQueryString($data) {
-        $data = preg_replace_callback('/(?:^|(?<=&))[^=[]+/', function ($match) {
-            return bin2hex(urldecode($match[0]));
-        }, $data);
+    protected function parseQueryString($data)
+    {
+        $data = preg_replace_callback(
+            "/(?:^|(?<=&))[^=[]+/",
+            function ($match) {
+                return bin2hex(urldecode($match[0]));
+            },
+            $data
+        );
 
         parse_str($data, $values);
 
-        return array_combine(array_map('hex2bin', array_keys($values)), $values);
+        return array_combine(
+            array_map("hex2bin", array_keys($values)),
+            $values
+        );
     }
 
     // FIXME Virtual columns can mess with count
-    protected function wrapQueryForRealTotal($connection, $query) {
+    protected function wrapQueryForRealTotal($connection, $query)
+    {
         $subquery = $this->queryToRawSql($query);
 
         return \DB::connection($connection)->select(
-            \DB::connection($connection)
-                ->raw("SELECT COUNT(*) AS cnt FROM ($subquery) AS query")
+            \DB::connection($connection)->raw(
+                "SELECT COUNT(*) AS cnt FROM ($subquery) AS query"
+            )
         )[0]->cnt;
     }
 
-    protected function isBaseModel($class, $autoload = true) {
+    protected function isBaseModel($class, $autoload = true)
+    {
         $traits = [];
         do {
             $traits = array_merge(class_uses($class, $autoload), $traits);
@@ -908,13 +1055,17 @@ class RestRepository
         foreach ($traits as $trait => $same) {
             $traits = array_merge(class_uses($trait, $autoload), $traits);
         }
-        return in_array('Molotov\Traits\BaseModel', $traits);
+        return in_array("Molotov\Traits\BaseModel", $traits);
     }
 
-    protected function addColumnDefinition($query, $definition, $column) {
-        $currentColumns = array_map(function ($c) {
-            return "$c";
-        }, $query->getQuery()->columns ?: []);
+    protected function addColumnDefinition($query, $definition, $column)
+    {
+        $currentColumns = array_map(
+            function ($c) {
+                return "$c";
+            },
+            $query->getQuery()->columns ?: []
+        );
 
         if (is_callable($definition[$column])) {
             $scopedParam = \DB::raw($definition[$column]());
@@ -924,7 +1075,9 @@ class RestRepository
             }
         } else {
             $scopedParam = \DB::raw($definition[$column]);
-            if (!in_array("{$definition[$column]} AS $column", $currentColumns)) {
+            if (
+                !in_array("{$definition[$column]} AS $column", $currentColumns)
+            ) {
                 $query = $query->selectRaw("{$definition[$column]} AS $column");
             }
         }
@@ -941,16 +1094,24 @@ class RestRepository
         &$query
     ) {
         if ($aggregate) {
-            $placeholders = implode(',', array_map(function () {
-                return '?';
-            }, $values));
+            $placeholders = implode(
+                ",",
+                array_map(function () {
+                    return "?";
+                }, $values)
+            );
 
             if ($negative) {
-                return $query->whereNot(
-                    function ($q) use ($scopedParam, $placeholders, $values) {
-                        return $q->havingRaw("$paramName in ($placeholders)", $values);
-                    }
-                );
+                return $query->whereNot(function ($q) use (
+                    $scopedParam,
+                    $placeholders,
+                    $values
+                ) {
+                    return $q->havingRaw(
+                        "$paramName in ($placeholders)",
+                        $values
+                    );
+                });
             }
 
             return $query->havingRaw("$paramName in ($placeholders)", $values);
@@ -999,61 +1160,80 @@ class RestRepository
         &$query,
         $aggregate
     ) {
-                             // Don't filter if value is empty.
-        if ($value === '') {
+        // Don't filter if value is empty.
+        if ($value === "") {
             return $query;
         }
 
-        $intervalRegex = '(?<start>[0-9TZ\.:-]*)@{0,1}(?<end>[0-9TZ\.:-]*)';
+        $intervalRegex = "(?<start>[0-9TZ\.:-]*)@{0,1}(?<end>[0-9TZ\.:-]*)";
 
-        $timestampRegex
-            =  '(?<year>[0-9]{4})'
-            .  '-(?<month>[0-9]{2})'
-            .  '-(?<day>[0-9]{2})'
-            .  'T(?<hour>[0-9]{2})'
-            .  ':(?<minute>[0-9]{2})'
-            .  ':(?<second>[0-9]{2})'
-            .  '\.{0,1}(?<millisecond>[0-9]*)'
-            .  '(?<timezone>Z)'
-            ;
+        $timestampRegex =
+            "(?<year>[0-9]{4})" .
+            "-(?<month>[0-9]{2})" .
+            "-(?<day>[0-9]{2})" .
+            "T(?<hour>[0-9]{2})" .
+            ":(?<minute>[0-9]{2})" .
+            ":(?<second>[0-9]{2})" .
+            "\.{0,1}(?<millisecond>[0-9]*)" .
+            "(?<timezone>Z)";
 
         $intervalMatches = [];
         $timestampMatches = [];
 
         if (preg_match("/^$intervalRegex?$/", $value, $intervalMatches)) {
-                             // Apply left boundary if exists
-            if ($intervalMatches['start']) {
-                if (preg_match(
-                    "/^$timestampRegex?$/",
-                    $intervalMatches['start'],
-                    $timestampMatches
-                )) {
-                             // Match found, then add constraint.
+            // Apply left boundary if exists
+            if ($intervalMatches["start"]) {
+                if (
+                    preg_match(
+                        "/^$timestampRegex?$/",
+                        $intervalMatches["start"],
+                        $timestampMatches
+                    )
+                ) {
+                    // Match found, then add constraint.
                     if ($aggregate) {
-                        $query = $query->having($scopedParam, '>=', $intervalMatches['start']);
+                        $query = $query->having(
+                            $scopedParam,
+                            ">=",
+                            $intervalMatches["start"]
+                        );
                     } else {
-                        $query = $query->where($scopedParam, '>=', $intervalMatches['start']);
+                        $query = $query->where(
+                            $scopedParam,
+                            ">=",
+                            $intervalMatches["start"]
+                        );
                     }
                 } else {
-                    throw new \Exception('Malformed timestamp.');
+                    throw new \Exception("Malformed timestamp.");
                 }
             }
 
-                             // Apply right boundary if exists
-            if ($intervalMatches['end']) {
-                if (preg_match(
-                    "/^$timestampRegex?$/",
-                    $intervalMatches['end'],
-                    $timestampMatches
-                )) {
-                             // Match found, then add constraint.
+            // Apply right boundary if exists
+            if ($intervalMatches["end"]) {
+                if (
+                    preg_match(
+                        "/^$timestampRegex?$/",
+                        $intervalMatches["end"],
+                        $timestampMatches
+                    )
+                ) {
+                    // Match found, then add constraint.
                     if ($aggregate) {
-                        $query = $query->having($scopedParam, '<', $intervalMatches['end']);
+                        $query = $query->having(
+                            $scopedParam,
+                            "<",
+                            $intervalMatches["end"]
+                        );
                     } else {
-                        $query = $query->where($scopedParam, '<', $intervalMatches['end']);
+                        $query = $query->where(
+                            $scopedParam,
+                            "<",
+                            $intervalMatches["end"]
+                        );
                     }
                 } else {
-                    throw new \Exception('Malformed timestamp.');
+                    throw new \Exception("Malformed timestamp.");
                 }
             }
         }
@@ -1061,7 +1241,8 @@ class RestRepository
         return $query;
     }
 
-    protected function queryToRawSql($query) {
+    protected function queryToRawSql($query)
+    {
         $sql = $query->toSql();
 
         $bindings = array_map(function ($p) {
@@ -1069,10 +1250,10 @@ class RestRepository
             return "'$escapedP'";
         }, $query->getBindings());
 
-        $sql = str_replace('%', '~!~!~', $sql);
-        $sql = str_replace('?', '%s', $sql);
+        $sql = str_replace("%", "~!~!~", $sql);
+        $sql = str_replace("?", "%s", $sql);
         $subquery = vsprintf($sql, $bindings);
-        $subquery = str_replace('~!~!~', '%', $subquery);
+        $subquery = str_replace("~!~!~", "%", $subquery);
 
         return $subquery;
     }

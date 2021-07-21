@@ -6,9 +6,11 @@ use Illuminate\Support\Facades\Schema;
 
 class AddImageIdToMaterializedView extends Migration
 {
-    public function up() {
-        \DB::statement('DROP MATERIALIZED VIEW loanables');
-        \DB::statement(<<<SQL
+    public function up()
+    {
+        \DB::statement("DROP MATERIALIZED VIEW loanables");
+        \DB::statement(
+            <<<SQL
 CREATE MATERIALIZED VIEW loanables
 (id, type, name, position, location_description, comments, instructions, availability_ics, owner_id, community_id, created_at, updated_at, deleted_at, image_id) AS
     SELECT cars.id, 'car' AS type, name, position, location_description, comments, instructions, availability_ics, owner_id, community_id, cars.created_at, cars.updated_at, cars.deleted_at, images.id AS image_id
@@ -26,9 +28,11 @@ SQL
         );
     }
 
-    public function down() {
-        \DB::statement('DROP MATERIALIZED VIEW loanables');
-        \DB::statement(<<<SQL
+    public function down()
+    {
+        \DB::statement("DROP MATERIALIZED VIEW loanables");
+        \DB::statement(
+            <<<SQL
 CREATE MATERIALIZED VIEW loanables
 (id, type, name, position, location_description, comments, instructions, availability_ics, owner_id, community_id, created_at, updated_at, deleted_at) AS
     SELECT id, 'car' AS type, name, position, location_description, comments, instructions, availability_ics, owner_id, community_id, created_at, updated_at, deleted_at FROM cars

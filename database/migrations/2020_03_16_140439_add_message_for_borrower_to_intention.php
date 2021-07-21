@@ -8,15 +8,18 @@ class AddMessageForBorrowerToIntention extends Migration
 {
     public function up()
     {
-        Schema::table('intentions', function (Blueprint $table) {
-            $table->text('message_for_borrower')->default('')->nullable();
+        Schema::table("intentions", function (Blueprint $table) {
+            $table
+                ->text("message_for_borrower")
+                ->default("")
+                ->nullable();
         });
     }
 
     public function down()
     {
-        Schema::table('intentions', function (Blueprint $table) {
-            $table->dropColumn('message_for_borrower');
+        Schema::table("intentions", function (Blueprint $table) {
+            $table->dropColumn("message_for_borrower");
         });
     }
 }

@@ -25,18 +25,19 @@ class LoanIntentionRejected extends BaseMailable
         Borrower $borrower,
         Owner $owner
     ) {
-         $this->intention = $intention;
-         $this->loan = $loan;
-         $this->borrower = $borrower;
-         $this->owner = $owner;
+        $this->intention = $intention;
+        $this->loan = $loan;
+        $this->borrower = $borrower;
+        $this->owner = $owner;
     }
 
-    public function build() {
-        return $this->view('emails.loan.intention_rejected')
-            ->subject('LocoMotion - Emprunt refusé')
-            ->text('emails.loan.intention_rejected_text')
+    public function build()
+    {
+        return $this->view("emails.loan.intention_rejected")
+            ->subject("LocoMotion - Emprunt refusé")
+            ->text("emails.loan.intention_rejected_text")
             ->with([
-                'title' => 'Emprunt refusé',
+                "title" => "Emprunt refusé",
             ]);
     }
 }

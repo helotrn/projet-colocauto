@@ -3,11 +3,12 @@
     <vue-headful :title="fullTitle" />
 
     <b-container fluid>
-
       <b-row>
         <b-col>
           <h1 v-if="item.period">{{ item.period }}</h1>
-          <h1 v-else><em>{{ $tc('facture', 1) | capitalize }}</em></h1>
+          <h1 v-else>
+            <em>{{ $tc("facture", 1) | capitalize }}</em>
+          </h1>
         </b-col>
       </b-row>
 
@@ -19,18 +20,18 @@
               <b-row>
                 <b-col sm="6">
                   <p class="text-left">
-                    LocoMotion<br>
-                    Solon collectif (Celsius Mtl)<br>
-                    5985, rue St-Hubert<br>
-                    Montréal, QC<br>
+                    LocoMotion<br />
+                    Solon collectif (Celsius Mtl)<br />
+                    5985, rue St-Hubert<br />
+                    Montréal, QC<br />
                     H2S 2L8
                   </p>
                 </b-col>
 
                 <b-col sm="6">
                   <p class="text-right">
-                    {{ user.full_name }}<br>
-                    {{ user.address }}<br>
+                    {{ user.full_name }}<br />
+                    {{ user.address }}<br />
                     {{ user.postal_code }}
                   </p>
                 </b-col>
@@ -41,51 +42,82 @@
 
         <b-row class="mt-3 mb-3">
           <b-col>
-            <forms-validated-input inline="auto" label="Titre" type="text"
-              name="period" v-model="item.period" :rules="{ required: true }" />
+            <forms-validated-input
+              inline="auto"
+              label="Titre"
+              type="text"
+              name="period"
+              v-model="item.period"
+              :rules="{ required: true }"
+            />
           </b-col>
         </b-row>
 
         <b-row>
           <b-col>
-            <b-table
-              :items="item.bill_items" :fields="fields"
-              no-local-sorting no-sort-reset>
+            <b-table :items="item.bill_items" :fields="fields" no-local-sorting no-sort-reset>
               <template v-slot:cell(amount)="row">
                 {{ row.item.amount | currency }}
               </template>
               <template v-slot:cell(actions)="row">
-                <b-button size="sm" class="mr-1" variant="danger"
-                  @click="removeBillItem(row.item)">
-                  {{ $t('supprimer') | capitalize }}
+                <b-button size="sm" class="mr-1" variant="danger" @click="removeBillItem(row.item)">
+                  {{ $t("supprimer") | capitalize }}
                 </b-button>
               </template>
 
               <template v-slot:custom-foot>
                 <b-tr>
                   <b-td colspan="4">
-                    <b-button block variant="light" size="sm"
-                      @click="createNewBillItem" v-if="!newBillItem">
+                    <b-button
+                      block
+                      variant="light"
+                      size="sm"
+                      @click="createNewBillItem"
+                      v-if="!newBillItem"
+                    >
                       Nouvel item
                     </b-button>
                     <b-card id="new-item" v-else>
                       <validation-observer ref="observer" v-slot="{ passes }">
                         <b-form class="form" @submit.prevent="passes(addBillItemAndReset)">
-                          <forms-validated-input label="Description" type="text"
-                            name="label" v-model="newBillItem.label"
-                            :rules="{ required: true }" />
-                          <forms-validated-input label="Date" type="date"
-                            name="item_date" v-model="newBillItem.item_date"
-                            :rules="{ required: true }" />
-                          <forms-validated-input label="Montant" type="number" :step="0.01"
-                            name="amount" v-model="newBillItem.amount"
-                            :rules="{ required: true }" />
-                          <forms-validated-input label="TPS" type="number" :step="0.01"
-                            name="taxes_tps" v-model="newBillItem.taxes_tps"
-                            :rules="{ required: true }" />
-                          <forms-validated-input label="TPS" type="number" :step="0.01"
-                            name="taxes_tvq" v-model="newBillItem.taxes_tvq"
-                            :rules="{ required: true }" />
+                          <forms-validated-input
+                            label="Description"
+                            type="text"
+                            name="label"
+                            v-model="newBillItem.label"
+                            :rules="{ required: true }"
+                          />
+                          <forms-validated-input
+                            label="Date"
+                            type="date"
+                            name="item_date"
+                            v-model="newBillItem.item_date"
+                            :rules="{ required: true }"
+                          />
+                          <forms-validated-input
+                            label="Montant"
+                            type="number"
+                            :step="0.01"
+                            name="amount"
+                            v-model="newBillItem.amount"
+                            :rules="{ required: true }"
+                          />
+                          <forms-validated-input
+                            label="TPS"
+                            type="number"
+                            :step="0.01"
+                            name="taxes_tps"
+                            v-model="newBillItem.taxes_tps"
+                            :rules="{ required: true }"
+                          />
+                          <forms-validated-input
+                            label="TPS"
+                            type="number"
+                            :step="0.01"
+                            name="taxes_tvq"
+                            v-model="newBillItem.taxes_tvq"
+                            :rules="{ required: true }"
+                          />
 
                           <div class="form__buttons">
                             <b-button-group>
@@ -103,15 +135,15 @@
 
                 <b-tr class="invoice-view__footer-row">
                   <b-td colspan="2">
-                    Sous-total<br>
-                    TPS<br>
-                    TVQ<br>
+                    Sous-total<br />
+                    TPS<br />
+                    TVQ<br />
                     Total
                   </b-td>
                   <b-td>
-                    {{ itemTotal | currency }}<br>
-                    {{ itemTotalTps | currency }}<br>
-                    {{ itemTotalTvq | currency }}<br>
+                    {{ itemTotal | currency }}<br />
+                    {{ itemTotalTps | currency }}<br />
+                    {{ itemTotalTvq | currency }}<br />
                     {{ itemTotalWithTaxes | currency }}
                   </b-td>
                 </b-tr>
@@ -122,12 +154,21 @@
 
         <b-row>
           <b-col>
-            <forms-validated-input label="Payée" type="checkbox" :value="true"
-              name="paid_at" disabled
-              description="Les factures créées manuellement sont présumées déjà payées." />
+            <forms-validated-input
+              label="Payée"
+              type="checkbox"
+              :value="true"
+              name="paid_at"
+              disabled
+              description="Les factures créées manuellement sont présumées déjà payées."
+            />
 
-            <forms-validated-input label="Appliquer au solde" type="checkbox"
-              name="apply_to_balance" v-model="item.apply_to_balance" />
+            <forms-validated-input
+              label="Appliquer au solde"
+              type="checkbox"
+              name="apply_to_balance"
+              v-model="item.apply_to_balance"
+            />
           </b-col>
         </b-row>
 
@@ -139,8 +180,12 @@
           <b-col>
             <div class="form__buttons mt-3">
               <b-button-group>
-                <b-button variant="success" type="submit"
-                  @click="mergeUserAndSubmit" :disabled="!changed || loading">
+                <b-button
+                  variant="success"
+                  type="submit"
+                  @click="mergeUserAndSubmit"
+                  :disabled="!changed || loading"
+                >
                   Sauvegarder
                 </b-button>
               </b-button-group>
@@ -154,18 +199,18 @@
 </template>
 
 <script>
-import FormsValidatedInput from '@/components/Forms/ValidatedInput.vue';
-import InvoiceSingle from '@/components/Invoice/Single.vue';
+import FormsValidatedInput from "@/components/Forms/ValidatedInput.vue";
+import InvoiceSingle from "@/components/Invoice/Single.vue";
 
-import DataRouteGuards from '@/mixins/DataRouteGuards';
-import FormMixin from '@/mixins/FormMixin';
+import DataRouteGuards from "@/mixins/DataRouteGuards";
+import FormMixin from "@/mixins/FormMixin";
 
-import locales from '@/locales';
+import locales from "@/locales";
 
-import { capitalize } from '@/helpers/filters';
+import { capitalize } from "@/helpers/filters";
 
 export default {
-  name: 'AdminInvoice',
+  name: "AdminInvoice",
   mixins: [DataRouteGuards, FormMixin],
   components: {
     FormsValidatedInput,
@@ -174,15 +219,15 @@ export default {
   data() {
     return {
       fields: [
-        { key: 'item_date', label: 'Date', sortable: false },
-        { key: 'label', label: 'Description', sortable: false },
-        { key: 'amount', label: 'Montant', sortable: false },
-        { key: 'actions', label: 'Actions', tdClass: 'table__cell__actions' },
+        { key: "item_date", label: "Date", sortable: false },
+        { key: "label", label: "Description", sortable: false },
+        { key: "amount", label: "Montant", sortable: false },
+        { key: "actions", label: "Actions", tdClass: "table__cell__actions" },
       ],
       newBillItem: null,
       newBillItemTemplate: {
-        item_date: this.$dayjs().format('YYYY-MM-DD'),
-        label: '',
+        item_date: this.$dayjs().format("YYYY-MM-DD"),
+        label: "",
         amount: 0,
         taxes_tps: 0,
         taxes_tvq: 0,
@@ -192,28 +237,25 @@ export default {
   computed: {
     fullTitle() {
       const parts = [
-        'LocoMotion',
-        capitalize(this.$i18n.t('titles.admin')),
-        capitalize(this.$i18n.tc('facture', 2)),
+        "LocoMotion",
+        capitalize(this.$i18n.t("titles.admin")),
+        capitalize(this.$i18n.tc("facture", 2)),
       ];
 
       if (this.pageTitle) {
         parts.push(this.pageTitle);
       }
 
-      return parts.reverse().join(' | ');
+      return parts.reverse().join(" | ");
     },
     itemTotal() {
-      return this.item.bill_items
-        .reduce((acc, i) => (parseFloat(i.amount, 10) + acc), 0);
+      return this.item.bill_items.reduce((acc, i) => parseFloat(i.amount, 10) + acc, 0);
     },
     itemTotalTps() {
-      return this.item.bill_items
-        .reduce((acc, i) => (parseFloat(i.taxes_tps, 10) + acc), 0);
+      return this.item.bill_items.reduce((acc, i) => parseFloat(i.taxes_tps, 10) + acc, 0);
     },
     itemTotalTvq() {
-      return this.item.bill_items
-        .reduce((acc, i) => (parseFloat(i.taxes_tvq, 10) + acc), 0);
+      return this.item.bill_items.reduce((acc, i) => parseFloat(i.taxes_tvq, 10) + acc, 0);
     },
     itemTotalWithTaxes() {
       return this.itemTotal + this.itemTotalTps + this.itemTotalTvq;
@@ -223,7 +265,7 @@ export default {
       return parseFloat(amount, 10) + parseFloat(tps, 10) + parseFloat(tvq, 10);
     },
     pageTitle() {
-      return this.item.name || capitalize(this.$i18n.tc('facture', 1));
+      return this.item.name || capitalize(this.$i18n.tc("facture", 1));
     },
     user() {
       return this.$store.state.users.item;
@@ -265,5 +307,4 @@ export default {
 };
 </script>
 
-<style lang="scss">
-</style>
+<style lang="scss"></style>

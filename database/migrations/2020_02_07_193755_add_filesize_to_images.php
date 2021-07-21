@@ -6,15 +6,17 @@ use Illuminate\Database\Migrations\Migration;
 
 class AddFilesizeToImages extends Migration
 {
-    public function up() {
-        Schema::table('images', function (Blueprint $table) {
-            $table->string('filesize');
+    public function up()
+    {
+        Schema::table("images", function (Blueprint $table) {
+            $table->string("filesize");
         });
     }
 
-    public function down() {
-        Schema::table('images', function (Blueprint $table) {
-            $table->dropColumn('filesize');
+    public function down()
+    {
+        Schema::table("images", function (Blueprint $table) {
+            $table->dropColumn("filesize");
         });
     }
 }

@@ -1,16 +1,16 @@
-import Vue from 'vue';
-import VueRouter from 'vue-router';
+import Vue from "vue";
+import VueRouter from "vue-router";
 
-import Loan from '@/views/Loan.vue';
-import NotFound from '@/views/NotFound.vue';
-import CommunityOverview from '@/views/community/Overview.vue';
+import Loan from "@/views/Loan.vue";
+import NotFound from "@/views/NotFound.vue";
+import CommunityOverview from "@/views/community/Overview.vue";
 
-import adminRoutes from './admin';
-import authRoutes from './auth';
-import baseRoutes from './base';
-import communityRoutes from './community';
-import profileRoutes from './profile';
-import registerRoutes from './register';
+import adminRoutes from "./admin";
+import authRoutes from "./auth";
+import baseRoutes from "./base";
+import communityRoutes from "./community";
+import profileRoutes from "./profile";
+import registerRoutes from "./register";
 
 Vue.use(VueRouter);
 
@@ -22,31 +22,31 @@ const routes = [
   profileRoutes,
   registerRoutes,
   {
-    path: '/communities',
-    name: 'communities-overview',
+    path: "/communities",
+    name: "communities-overview",
     component: CommunityOverview,
     meta: {
-      slug: 'communities',
+      slug: "communities",
       skipCleanup: true,
       data: {
         stats: {
           retrieve: {
-            type: 'neighborhood',
+            type: "neighborhood",
           },
         },
       },
-      title: 'titles.communities-overview',
+      title: "titles.communities-overview",
     },
   },
   {
-    path: '/loans/:id',
+    path: "/loans/:id",
     component: Loan,
     props: true,
     meta: {
       auth: true,
-      slug: 'loans',
+      slug: "loans",
       skipCleanup(to) {
-        return to.name === 'community-view';
+        return to.name === "community-view";
       },
       data: {
         loans: {
@@ -55,47 +55,47 @@ const routes = [
       },
       params: {
         fields: [
-          '*',
-          'total_estimated_cost',
-          'actions.*',
-          'borrower.id',
-          'borrower.user.avatar',
-          'borrower.user.name',
-          'borrower.user.full_name',
-          'borrower.user.phone',
-          'extensions.*',
-          'handover.*',
-          'handover.image.*',
-          'handover.expense.*',
-          'incidents.*',
-          'intention.*',
-          'loanable.name',
-          'loanable.community.name',
-          'loanable.owner.user.avatar',
-          'loanable.owner.user.name',
-          'loanable.owner.user.full_name',
-          'loanable.owner.user.phone',
-          'loanable.padlock.name',
-          'loanable.type',
-          'loanable.has_padlock',
-          'payment.*',
-          'pre_payment.*',
-          'takeover.*',
-          'takeover.image.*',
-        ].join(','),
+          "*",
+          "total_estimated_cost",
+          "actions.*",
+          "borrower.id",
+          "borrower.user.avatar",
+          "borrower.user.name",
+          "borrower.user.full_name",
+          "borrower.user.phone",
+          "extensions.*",
+          "handover.*",
+          "handover.image.*",
+          "handover.expense.*",
+          "incidents.*",
+          "intention.*",
+          "loanable.name",
+          "loanable.community.name",
+          "loanable.owner.user.avatar",
+          "loanable.owner.user.name",
+          "loanable.owner.user.full_name",
+          "loanable.owner.user.phone",
+          "loanable.padlock.name",
+          "loanable.type",
+          "loanable.has_padlock",
+          "payment.*",
+          "pre_payment.*",
+          "takeover.*",
+          "takeover.image.*",
+        ].join(","),
       },
     },
   },
   {
-    path: '/404',
+    path: "/404",
     component: NotFound,
     meta: {},
   },
-  { path: '*', redirect: '/404' },
+  { path: "*", redirect: "/404" },
 ];
 
 const router = new VueRouter({
-  mode: 'history',
+  mode: "history",
   base: process.env.BASE_URL,
   routes,
   scrollBehavior(to) {
@@ -108,10 +108,12 @@ const router = new VueRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  const { body: { style } } = document;
+  const {
+    body: { style },
+  } = document;
 
-  style.overflow = 'auto';
-  style.height = 'auto';
+  style.overflow = "auto";
+  style.height = "auto";
 
   next();
 });

@@ -15,21 +15,24 @@ class PrePaymentMissing extends BaseMailable
     public $user;
     public $loan;
 
-    public function __construct(User $user, Loan $loan) {
-         $this->user = $user;
-         $this->loan = $loan;
+    public function __construct(User $user, Loan $loan)
+    {
+        $this->user = $user;
+        $this->loan = $loan;
     }
 
-    public function build() {
-        return $this->view('emails.loan.pre_payment_missing')
+    public function build()
+    {
+        return $this->view("emails.loan.pre_payment_missing")
             ->subject(
-                "LocoMotion - Merci de faire le pré-paiement avant d'emprunter la "
-                . "voiture de votre voisin-e"
+                "LocoMotion - Merci de faire le pré-paiement avant d'emprunter la " .
+                    "voiture de votre voisin-e"
             )
-            ->text('emails.loan.pre_payment_missing_text')
+            ->text("emails.loan.pre_payment_missing_text")
             ->with([
-                'title' => "Merci de faire le pré-paiement avant d'emprunter la "
-                . "voiture de votre voisin-e"
+                "title" =>
+                    "Merci de faire le pré-paiement avant d'emprunter la " .
+                    "voiture de votre voisin-e",
             ]);
     }
 }

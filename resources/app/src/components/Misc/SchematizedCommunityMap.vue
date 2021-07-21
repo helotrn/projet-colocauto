@@ -10,25 +10,30 @@
         ref="schemamap"
         :center="center"
         :options="mapOptions"
-        map-type-id="terrain">
+        map-type-id="terrain"
+      >
         <gmap-polygon
           :path="borough.area_google"
           :label="borough.name"
-          :options="boroughPolygonOptions" />
-        <gmap-polygon v-for="c in neighborhoods" :key="`polygon-${c.id}`"
+          :options="boroughPolygonOptions"
+        />
+        <gmap-polygon
+          v-for="c in neighborhoods"
+          :key="`polygon-${c.id}`"
           :path="c.area_google"
           :label="c.name"
-          :options="polygonOptions" />
+          :options="polygonOptions"
+        />
       </gmap-map>
     </b-col>
   </b-row>
 </template>
 
 <script>
-import { gmapApi } from 'vue2-google-maps';
+import { gmapApi } from "vue2-google-maps";
 
 export default {
-  name: 'SchematizedCommunityMap',
+  name: "SchematizedCommunityMap",
   props: {
     borough: {
       required: true,
@@ -45,7 +50,7 @@ export default {
         const { LatLngBounds } = this.google.maps;
         const bounds = new LatLngBounds();
 
-        this.neighborhoods.forEach(n => n.area_google.forEach(p => bounds.extend(p)));
+        this.neighborhoods.forEach((n) => n.area_google.forEach((p) => bounds.extend(p)));
 
         this.$refs.schemamap.fitBounds(bounds);
         this.loaded = true;
@@ -53,11 +58,14 @@ export default {
     }, 500);
   },
   data() {
-    const center = this.neighborhoods.reduce((acc, c) => ({
-      lat: acc.lat + c.center_google.lat,
-      lng: acc.lng + c.center_google.lng,
-      n: acc.n + 1,
-    }), { lat: 0, lng: 0, n: 0 });
+    const center = this.neighborhoods.reduce(
+      (acc, c) => ({
+        lat: acc.lat + c.center_google.lat,
+        lng: acc.lng + c.center_google.lng,
+        n: acc.n + 1,
+      }),
+      { lat: 0, lng: 0, n: 0 }
+    );
 
     // Average of n points.
     center.lat /= center.n;
@@ -65,9 +73,9 @@ export default {
 
     return {
       boroughPolygonOptions: {
-        fillColor: '#16a59e',
+        fillColor: "#16a59e",
         fillOpacity: 0.3,
-        strokeColor: '#16a59e',
+        strokeColor: "#16a59e",
         strokeOpacity: 0.7,
         zIndex: 1,
       },
@@ -79,15 +87,13 @@ export default {
         mapTypeControl: false,
         styles: [
           {
-            featureType: 'poi',
-            stylers: [
-              { visibility: 'off' },
-            ],
+            featureType: "poi",
+            stylers: [{ visibility: "off" }],
           },
         ],
       },
       polygonOptions: {
-        fillColor: '#16a59e',
+        fillColor: "#16a59e",
         fillOpacity: 0.5,
         strokeOpacity: 0,
         zIndex: 2,

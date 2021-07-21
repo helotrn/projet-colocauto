@@ -14,16 +14,21 @@ class Approved extends BaseMailable
 
     public $user;
 
-    public function __construct(User $user) {
-         $this->user = $user;
+    public function __construct(User $user)
+    {
+        $this->user = $user;
     }
 
-    public function build() {
-        return $this->view('emails.borrower.approved')
-            ->subject('LocoMotion - Empruntez dès maintenant la voiture de vos voisin-e-s!')
-            ->text('emails.borrower.approved_text')
+    public function build()
+    {
+        return $this->view("emails.borrower.approved")
+            ->subject(
+                "LocoMotion - Empruntez dès maintenant la voiture de vos voisin-e-s!"
+            )
+            ->text("emails.borrower.approved_text")
             ->with([
-                'title' => 'Empruntez dès maintenant la voiture de vos voisin-e-s!',
+                "title" =>
+                    "Empruntez dès maintenant la voiture de vos voisin-e-s!",
             ]);
     }
 }

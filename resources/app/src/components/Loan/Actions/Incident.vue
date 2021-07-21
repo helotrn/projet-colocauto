@@ -1,6 +1,9 @@
 <template>
-  <b-card no-body class="loan-form loan-actions loan-actions-incident"
-    :id="`loan-incident-${action.id || 'new'}`">
+  <b-card
+    no-body
+    class="loan-form loan-actions loan-actions-incident"
+    :id="`loan-incident-${action.id || 'new'}`"
+  >
     <b-card-header header-tag="header" role="tab" class="loan-actions__header">
       <h2 v-b-toggle="`loan-actions-incident-${action.id || 'new'}`">
         <svg-waiting v-if="action.status === 'in_process' && !loanIsCanceled" />
@@ -14,9 +17,7 @@
       <span v-if="action.status === 'in_process' && loanIsCanceled">
         Emprunt annulé &bull; {{ item.canceled_at | datetime }}
       </span>
-      <span v-else-if="action.status == 'in_process' && !loanIsCanceled">
-        En attente
-      </span>
+      <span v-else-if="action.status == 'in_process' && !loanIsCanceled"> En attente </span>
       <span v-else-if="action.status === 'completed'">
         Validé &bull; {{ action.executed_at | datetime }}
       </span>
@@ -25,19 +26,21 @@
       </span>
     </b-card-header>
 
-
     <b-card-body>
-      <b-collapse :id="`loan-actions-incident-${action.id || 'new'}`"
-        role="tabpanel" accordion="loan-actions"
-        :visible="open">
+      <b-collapse
+        :id="`loan-actions-incident-${action.id || 'new'}`"
+        role="tabpanel"
+        accordion="loan-actions"
+        :visible="open"
+      >
         <div v-if="!action.id && !loanIsCanceled">
           <ol v-if="item.loanable.type === 'car'">
             <li><strong>Asseyez-vous et respirez</strong>: voici les étapes à suivre.</li>
             <li>
-              <strong>Sélectionnez le type d'incident</strong>:<br>
+              <strong>Sélectionnez le type d'incident</strong>:<br />
 
               Si la voiture est immobilisée et n’est plus en état de rouler, sélectionnez
-              <em>Voiture immobilisée</em><br>
+              <em>Voiture immobilisée</em><br />
 
               Si les dégâts sont mineurs et que la voiture peut encore rouler, sélectionnez
               <em>Dégâts mineurs</em>
@@ -47,26 +50,33 @@
           </ol>
 
           <validation-observer ref="observer" v-slot="{ passes }">
-            <b-form :novalidate="true" class="form loan-actions-incident__form"
+            <b-form
+              :novalidate="true"
+              class="form loan-actions-incident__form"
               @submit.stop.prevent="passes(createAction)"
-              @reset.stop.prevent="$emit('reset')">
-
-              <forms-validated-input v-if="incidentTypes.length > 1"
+              @reset.stop.prevent="$emit('reset')"
+            >
+              <forms-validated-input
+                v-if="incidentTypes.length > 1"
                 name="incident_type"
                 :rules="{ required: true }"
-                label="Type d'incident" type="select"
+                label="Type d'incident"
+                type="select"
                 :options="incidentTypes"
-                v-model="action.incident_type" />
+                v-model="action.incident_type"
+              />
 
-              <forms-validated-input name="comments_on_incident"
+              <forms-validated-input
+                name="comments_on_incident"
                 :rules="{ required: true }"
-                label="Commentaire" type="textarea" :rows="3"
-                v-model="action.comments_on_incident" />
+                label="Commentaire"
+                type="textarea"
+                :rows="3"
+                v-model="action.comments_on_incident"
+              />
 
               <div class="loan-actions-incident__buttons text-center">
-                <b-button size="sm" type="submit" variant="success" class="mr-3">
-                  Créer
-                </b-button>
+                <b-button size="sm" type="submit" variant="success" class="mr-3"> Créer </b-button>
 
                 <b-button size="sm" variant="outline-warning" @click="abortAction">
                   Annuler
@@ -83,19 +93,18 @@
 
               <ol>
                 <li>
-                  Prévenez Desjardins Assurances en précisant que vous louez la voiture
-                  dans le cadre de LocoMotion<br>
-                  <strong>Numéro de téléphone pour Desjardins Assurances</strong><br>
-                  1 888 PROTÉGÉ (1 888 776-8343)<br>
-                  option #4  “Assurance des entreprises”<br>
-                  <strong>Numéro du contrat d’assurance (Solon / LocoMotion)</strong><br>
+                  Prévenez Desjardins Assurances en précisant que vous louez la voiture dans le
+                  cadre de LocoMotion<br />
+                  <strong>Numéro de téléphone pour Desjardins Assurances</strong><br />
+                  1 888 PROTÉGÉ (1 888 776-8343)<br />
+                  option #4 “Assurance des entreprises”<br />
+                  <strong>Numéro du contrat d’assurance (Solon / LocoMotion)</strong><br />
                   59189530
                 </li>
                 <li>Prévenez le-la propriétaire qu’un dossier est ouvert chez Desjardins</li>
                 <li>
-                  Desjardins Assurances propose un carrossier pour réaliser les réparations
-                  (et éventuellement proposer une voiture de courtoisie au propriétaire,
-                  au besoin).
+                  Desjardins Assurances propose un carrossier pour réaliser les réparations (et
+                  éventuellement proposer une voiture de courtoisie au propriétaire, au besoin).
                 </li>
               </ol>
             </div>
@@ -128,9 +137,7 @@
           </div>
 
           <div v-if="!userRoles.includes('borrower')">
-            <p>
-              {{ borrower.user.name }} mentionne qu'un incident s'est produit.
-            </p>
+            <p>{{ borrower.user.name }} mentionne qu'un incident s'est produit.</p>
 
             <div v-if="action.incident_type === 'accident'">
               <h3>Voiture immobilisée</h3>
@@ -145,17 +152,14 @@
             </blockquote>
           </div>
 
-          <div class="loan-actions-incident__buttons text-center"
-            v-if="user.role === 'admin'">
+          <div class="loan-actions-incident__buttons text-center" v-if="user.role === 'admin'">
             <b-button size="sm" variant="success" class="mr-3" @click="completeAction">
               Résoudre
             </b-button>
           </div>
         </div>
         <div v-else-if="action.status === 'in_process' && loanIsCanceled">
-          <p>
-            L'emprunt a été annulé. Cette étape ne peut pas être complétée.
-          </p>
+          <p>L'emprunt a été annulé. Cette étape ne peut pas être complétée.</p>
         </div>
         <div v-else>
           <!-- Action has an id, hence not new, and it is completed. -->
@@ -167,8 +171,8 @@
           <p v-if="userRoles.includes('borrower')">
             Vous avez payé la franchise (ou le montant total de la réparation) et les réparations
             sont terminées. La voiture est remise à la disposition du propriétaire. Vous pouvez à
-            nouveau emprunter le véhicule d’un voisin... en espérant que la prochaine fois,
-            tout se passe comme sur des roulettes !
+            nouveau emprunter le véhicule d’un voisin... en espérant que la prochaine fois, tout se
+            passe comme sur des roulettes !
           </p>
         </div>
       </b-collapse>
@@ -177,38 +181,35 @@
 </template>
 
 <script>
-import FormsValidatedInput from '@/components/Forms/ValidatedInput.vue';
+import FormsValidatedInput from "@/components/Forms/ValidatedInput.vue";
 
-import LoanActionsMixin from '@/mixins/LoanActionsMixin';
+import LoanActionsMixin from "@/mixins/LoanActionsMixin";
 
 export default {
-  name: 'LoanActionsIncident',
+  name: "LoanActionsIncident",
   mixins: [LoanActionsMixin],
   components: {
     FormsValidatedInput,
   },
   mounted() {
-    if (this.item.loanable.type !== 'car') {
-      this.action.incident_type = 'general';
+    if (this.item.loanable.type !== "car") {
+      this.action.incident_type = "general";
     }
   },
   computed: {
     incidentTypes() {
       switch (this.item.loanable.type) {
-        case 'car':
+        case "car":
           return [
-            { value: 'accident', text: 'Voiture immobilisée' },
-            { value: 'small_incident', text: 'Dégâts mineurs' },
+            { value: "accident", text: "Voiture immobilisée" },
+            { value: "small_incident", text: "Dégâts mineurs" },
           ];
         default:
-          return [
-            { value: 'general', text: 'Incident avec une remorque ou un vélo' },
-          ];
+          return [{ value: "general", text: "Incident avec une remorque ou un vélo" }];
       }
     },
   },
 };
 </script>
 
-<style lang="scss">
-</style>
+<style lang="scss"></style>

@@ -12,10 +12,11 @@ use Illuminate\Database\Eloquent\Builder;
 class CommunityUser extends BasePivot
 {
     public static $sizes = [
-        'thumbnail' => '256x@fit',
+        "thumbnail" => "256x@fit",
     ];
 
-    public static function boot() {
+    public static function boot()
+    {
         parent::boot();
 
         self::saved(function ($model) {
@@ -26,45 +27,53 @@ class CommunityUser extends BasePivot
     }
 
     protected $fillable = [
-        'approved_at',
-        'community_id',
-        'role',
-        'suspended_at',
-        'user_id',
+        "approved_at",
+        "community_id",
+        "role",
+        "suspended_at",
+        "user_id",
     ];
 
-    protected $with = ['proof', 'tags'];
+    protected $with = ["proof", "tags"];
 
     public $morphOnes = [
-        'proof' => 'imageable',
+        "proof" => "imageable",
     ];
 
     public $morphManys = [
-        'tags' => 'taggable',
+        "tags" => "taggable",
     ];
 
-    public function user() {
+    public function user()
+    {
         return $this->belongsTo(User::class);
     }
 
-    public function community() {
+    public function community()
+    {
         return $this->belongsTo(Community::class);
     }
 
-    public function proof() {
-        return $this->morphOne(Image::class, 'imageable')->where('field', 'proof');
+    public function proof()
+    {
+        return $this->morphOne(Image::class, "imageable")->where(
+            "field",
+            "proof"
+        );
     }
 
-    public function tags() {
-        return $this->morphToMany(Tag::class, 'taggable');
+    public function tags()
+    {
+        return $this->morphToMany(Tag::class, "taggable");
     }
 
-    public function scopeAccessibleBy(Builder $query, $user) {
+    public function scopeAccessibleBy(Builder $query, $user)
+    {
         if ($user->isAdmin()) {
             return $query;
         }
 
-        return $query->whereHas('user', function ($q) use ($user) {
+        return $query->whereHas("user", function ($q) use ($user) {
             return $q->accessibleBy($user);
         });
     }

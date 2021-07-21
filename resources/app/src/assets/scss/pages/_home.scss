@@ -1,234 +1,233 @@
 .page.home {
-  .card {
-    border: 0;
-    margin-bottom: 10px;
+    .card {
+        border: 0;
+        margin-bottom: 10px;
 
-    &-title {
-      color: $locomotion-green;
-      font-weight: bold;
-    }
-
-    &-body {
-      .form-group {
-        legend {
-          font-weight: bold;
+        &-title {
+            color: $locomotion-green;
+            font-weight: bold;
         }
-      }
+
+        &-body {
+            .form-group {
+                legend {
+                    font-weight: bold;
+                }
+            }
+        }
     }
-  }
 
-  .btn-outline-light {
-    border-color: $white;
-    color: $white;
-  }
-
-  .page__content {
-    overflow: hidden;
-  }
-
-  .page__section {
-    @include space("padding-top", 36px, "", "", 65px);
-    @include space("padding-bottom", 36px, "", "", 65px);
-
-    &.main-faq {
-      margin-bottom: 0;
+    .btn-outline-light {
+        border-color: $white;
+        color: $white;
     }
-  }
 
-  .page__section__title {
-    @include font-size(28px, "", "", 50px);
-    color: $secondary;
-  }
-
-  p {
-    color: $secondary;
-    @include font-size(18px, "", "", 20px);
-  }
-
-  .dashboard-covid-section {
-    text-align: center;
-
-    p {
-      color: inherit;
+    .page__content {
+        overflow: hidden;
     }
-  }
 
-  .page__section--top {
-    height: calc(100vh - #{$layout-navbar-height});
-    min-height: 604px;
-    background: url("/home-top.jpg") center top;
-    background-size: cover;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    position: relative;
-    overflow: hidden;
-    @include space("padding-bottom", 122px, "", "", 80px);
+    .page__section {
+        @include space("padding-top", 36px, "", "", 65px);
+        @include space("padding-bottom", 36px, "", "", 65px);
+
+        &.main-faq {
+            margin-bottom: 0;
+        }
+    }
 
     .page__section__title {
-      color: $white;
-      @include font-size(36px, "", "", 65px);
-      @include space("margin-bottom", 20px, "", "", 0);
-    }
-
-    .wave-svg {
-      position: absolute;
-      bottom: -2px;
-      max-height: 50%;
-      left: 0;
-      width: 100%;
-    }
-
-    .wave-dot {
-      position: absolute;
-      z-index: 2;
-      bottom: 50px;
-      width: 100%;
-      height: auto;
-      left: 0;
-      @include position("bottom", 50px, "", "", 165px);
-    }
-
-    .container {
-      position: relative;
-      z-index: 3;
-      @include media-breakpoint-up(lg) {
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-end;
-      }
-    }
-
-    .btn {
-      margin-right: 10px;
-    }
-  }
-
-  .page__section--hero {
-    background-color: $locomotion-light-green;
-    text-align: center;
-
-    p {
-      color: $white;
-      @include font-size(22px, "", "", 30px);
-      max-width: 611px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-
-    svg {
-      margin: 0 auto;
-    }
-  }
-
-  .page__section--what-is-it {
-    background: #f5f8fb;
-    margin-bottom: 0;
-    text-align: center;
-    @include space("padding-bottom", 136px, "", "", 65px);
-
-    .page__section__title {
-      @include space("margin-bottom", 15px, "", "", 30px);
+        @include font-size(28px, "", "", 50px);
+        color: $secondary;
     }
 
     p {
-      max-width: 250px;
-      margin: 20px auto;
-      text-align: left;
+        color: $secondary;
+        @include font-size(18px, "", "", 20px);
+    }
 
-      &:last-child {
-        margin-bottom: 0;
-      }
-
-      @include media-breakpoint-up(md) {
+    .dashboard-covid-section {
         text-align: center;
-      }
 
+        p {
+            color: inherit;
+        }
     }
-  }
 
-  .page__section--participants {
-    background: #1e4847;
-    text-align: center;
-    @include space("padding-top", 65px, "", "", 0);
-    @include space("padding-bottom", 90px, "", "", 0);
+    .page__section--top {
+        height: calc(100vh - #{$layout-navbar-height});
+        min-height: 604px;
+        background: url("/home-top.jpg") center top;
+        background-size: cover;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        position: relative;
+        overflow: hidden;
+        @include space("padding-bottom", 122px, "", "", 80px);
 
-    &__text {
-      @include media-breakpoint-up(lg) {
-        h2 {
-          padding-top: 90px;
+        .page__section__title {
+            color: $white;
+            @include font-size(36px, "", "", 65px);
+            @include space("margin-bottom", 20px, "", "", 0);
         }
 
-        div {
-          padding-bottom: 120px;
+        .wave-svg {
+            position: absolute;
+            bottom: -2px;
+            max-height: 50%;
+            left: 0;
+            width: 100%;
         }
-      }
 
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
+        .wave-dot {
+            position: absolute;
+            z-index: 2;
+            bottom: 50px;
+            width: 100%;
+            height: auto;
+            left: 0;
+            @include position("bottom", 50px, "", "", 165px);
+        }
+
+        .container {
+            position: relative;
+            z-index: 3;
+            @include media-breakpoint-up(lg) {
+                display: flex;
+                justify-content: space-between;
+                align-items: flex-end;
+            }
+        }
+
+        .btn {
+            margin-right: 10px;
+        }
     }
 
-    .col-lg-6:nth-child(1) {
-      display: flex;
-      flex-direction: column;
-      justify-content: space-around;
+    .page__section--hero {
+        background-color: $locomotion-light-green;
+        text-align: center;
+
+        p {
+            color: $white;
+            @include font-size(22px, "", "", 30px);
+            max-width: 611px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        svg {
+            margin: 0 auto;
+        }
     }
 
-    .container {
-      position: relative;
-      z-index: 2;
+    .page__section--what-is-it {
+        background: #f5f8fb;
+        margin-bottom: 0;
+        text-align: center;
+        @include space("padding-bottom", 136px, "", "", 65px);
+
+        .page__section__title {
+            @include space("margin-bottom", 15px, "", "", 30px);
+        }
+
+        p {
+            max-width: 250px;
+            margin: 20px auto;
+            text-align: left;
+
+            &:last-child {
+                margin-bottom: 0;
+            }
+
+            @include media-breakpoint-up(md) {
+                text-align: center;
+            }
+        }
     }
 
-    .page__section__title {
-      color: $locomotion-light-green;
+    .page__section--participants {
+        background: #1e4847;
+        text-align: center;
+        @include space("padding-top", 65px, "", "", 0);
+        @include space("padding-bottom", 90px, "", "", 0);
+
+        &__text {
+            @include media-breakpoint-up(lg) {
+                h2 {
+                    padding-top: 90px;
+                }
+
+                div {
+                    padding-bottom: 120px;
+                }
+            }
+
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .col-lg-6:nth-child(1) {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+        }
+
+        .container {
+            position: relative;
+            z-index: 2;
+        }
+
+        .page__section__title {
+            color: $locomotion-light-green;
+        }
+
+        .page__section--participants__photos {
+            @include space("margin", -125px auto 30px, "", "", 0);
+
+            img {
+                width: 150px;
+                height: auto;
+            }
+        }
+
+        .page__section--participants__photo {
+            padding: 0 5px;
+        }
+
+        p {
+            color: $white;
+            max-width: 375px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+        }
     }
 
-    .page__section--participants__photos {
-      @include space("margin", -125px auto 30px, "", "", 0);
+    .page__section--community {
+        background: none;
+        text-align: center;
 
-      img {
-        width: 150px;
-        height: auto;
-      }
+        padding-bottom: 36px;
+
+        p {
+            max-width: 450px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .svg-community {
+            position: relative;
+            pointer-events: none;
+            @include size("width", auto, "", "", 820px);
+            @include space("margin-top", -150px, "", "", -260px);
+            @include position("left", 0, "", "", auto);
+            @include position("right", auto, "", "", 10vw);
+        }
     }
-
-    .page__section--participants__photo {
-      padding: 0 5px;
-    }
-
-    p {
-      color: $white;
-      max-width: 375px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-
-    img {
-      max-width: 100%;
-      height: auto;
-    }
-  }
-
-  .page__section--community {
-    background: none;
-    text-align: center;
-
-    padding-bottom: 36px;
-
-    p {
-      max-width: 450px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-
-    .svg-community {
-      position: relative;
-      pointer-events: none;
-      @include size("width", auto, "", "", 820px);
-      @include space("margin-top", -150px, "", "", -260px);
-      @include position("left", 0, "", "", auto);
-      @include position("right", auto, "", "", 10vw);
-    }
-  }
 }

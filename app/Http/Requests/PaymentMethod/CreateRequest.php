@@ -6,9 +6,10 @@ use App\Http\Requests\BaseRequest;
 
 class CreateRequest extends BaseRequest
 {
-    public function rules() {
+    public function rules()
+    {
         return [
-            'external_id' => 'required',
+            "external_id" => "required",
         ];
     }
 }

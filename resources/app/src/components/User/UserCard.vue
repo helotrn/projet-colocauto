@@ -14,9 +14,7 @@
             <a href="#" @click.prevent="unsetCommittee" v-if="isCommittee">
               Désaffecter du comité du voisinage
             </a>
-            <a href="#" @click.prevent="setCommittee" v-else>
-              Affecter au comité du voisinage
-            </a>
+            <a href="#" @click.prevent="setCommittee" v-else> Affecter au comité du voisinage </a>
           </div>
         </div>
       </b-col>
@@ -30,7 +28,7 @@
 
 <script>
 export default {
-  name: 'UserCard',
+  name: "UserCard",
   props: {
     communityId: {
       type: Number,
@@ -49,14 +47,14 @@ export default {
   },
   computed: {
     committeeTag() {
-      return this.$store.state.global.tags.find(t => t.slug === 'committee');
+      return this.$store.state.global.tags.find((t) => t.slug === "committee");
     },
     isCommittee() {
-      return this.user.tags.find(t => t.slug === 'committee');
+      return this.user.tags.find((t) => t.slug === "committee");
     },
     userAvatarStyle() {
       if (!this.user.avatar) {
-        return '';
+        return "";
       }
 
       return `url('${this.user.avatar.sizes.thumbnail}')`;
@@ -64,20 +62,20 @@ export default {
   },
   methods: {
     async setCommittee() {
-      await this.$store.dispatch('communities/setCommittee', {
+      await this.$store.dispatch("communities/setCommittee", {
         communityId: this.communityId,
         tagId: this.committeeTag.id,
         userId: this.user.id,
       });
-      this.$emit('updated');
+      this.$emit("updated");
     },
     async unsetCommittee() {
-      await this.$store.dispatch('communities/unsetCommittee', {
+      await this.$store.dispatch("communities/unsetCommittee", {
         communityId: this.communityId,
         tagId: this.committeeTag.id,
         userId: this.user.id,
       });
-      this.$emit('updated');
+      this.$emit("updated");
     },
   },
 };

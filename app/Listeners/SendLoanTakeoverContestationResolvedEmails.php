@@ -10,7 +10,8 @@ use Mail;
 
 class SendLoanTakeoverContestationResolvedEmails
 {
-    public function handle(LoanTakeoverContestationResolvedEvent $event) {
+    public function handle(LoanTakeoverContestationResolvedEvent $event)
+    {
         $loan = $event->takeover->loan;
         $admin = $event->user;
         $borrower = $loan->borrower;
@@ -18,24 +19,28 @@ class SendLoanTakeoverContestationResolvedEmails
 
         Mail::to(
             $borrower->user->email,
-            $borrower->user->name . ' ' . $borrower->user->last_name
-        )->queue(new LoanTakeoverContestationResolved(
-            $event->takeover,
-            $loan,
-            $borrower->user,
-            $admin
-        ));
+            $borrower->user->name . " " . $borrower->user->last_name
+        )->queue(
+            new LoanTakeoverContestationResolved(
+                $event->takeover,
+                $loan,
+                $borrower->user,
+                $admin
+            )
+        );
 
         if ($owner) {
             Mail::to(
                 $owner->user->email,
-                $owner->user->name . ' ' . $owner->user->last_name
-            )->queue(new LoanTakeoverContestationResolved(
-                $event->takeover,
-                $loan,
-                $owner->user,
-                $admin
-            ));
+                $owner->user->name . " " . $owner->user->last_name
+            )->queue(
+                new LoanTakeoverContestationResolved(
+                    $event->takeover,
+                    $loan,
+                    $owner->user,
+                    $admin
+                )
+            );
         }
     }
 }

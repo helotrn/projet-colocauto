@@ -6,8 +6,8 @@ use Faker\Generator as Faker;
 
 $factory->define(Tag::class, function (Faker $faker) {
     return [
-        'name' => $faker->name,
-        'slug' => $faker->name,
-        'type' => $faker->randomElement(['tag']),
+        "name" => $faker->name,
+        "slug" => $faker->name,
+        "type" => $faker->randomElement(["tag"]),
     ];
 });

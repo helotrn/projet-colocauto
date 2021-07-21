@@ -27,42 +27,44 @@ class Loanable extends BaseModel
     public static $transformer = LoanableTransformer::class;
 
     public static $filterTypes = [
-        'id' => 'number',
-        'name' => 'text',
-        'type' => ['bike', 'car', 'trailer'],
-        'deleted_at' => 'date',
-        'is_deleted' => 'boolean',
+        "id" => "number",
+        "name" => "text",
+        "type" => ["bike", "car", "trailer"],
+        "deleted_at" => "date",
+        "is_deleted" => "boolean",
     ];
 
     public static $rules = [
-        'comments' => [ 'present' ],
-        'instructions' => [ 'present' ],
-        'location_description' => [ 'present' ],
-        'name' => [ 'required' ],
-        'position' => [ 'required' ],
-        'type' => [
-            'required',
-            'in:car,bike,trailer',
-        ],
+        "comments" => ["present"],
+        "instructions" => ["present"],
+        "location_description" => ["present"],
+        "name" => ["required"],
+        "position" => ["required"],
+        "type" => ["required", "in:car,bike,trailer"],
     ];
 
     public static $sizes = [
-        'thumbnail' => '256x@fit',
+        "thumbnail" => "256x@fit",
     ];
 
-    public static function getRules($action = '', $auth = null) {
-        if ($action === 'update') {
-            return array_diff_key(static::$rules, [ 'type' => false ]);
+    public static function getRules($action = "", $auth = null)
+    {
+        if ($action === "update") {
+            return array_diff_key(static::$rules, ["type" => false]);
         }
 
         return parent::getRules($action, $auth);
     }
 
-    public static function boot() {
+    public static function boot()
+    {
         parent::boot();
 
         self::deleted(function ($model) {
-            $model->loans()->completed(false)->delete();
+            $model
+                ->loans()
+                ->completed(false)
+                ->delete();
         });
 
         self::restored(function ($model) {
@@ -75,23 +77,25 @@ class Loanable extends BaseModel
                 return $model;
             }
 
-            $calendar = new Calendar("locomotion.app/api/loanables/{$model->id}.ics");
+            $calendar = new Calendar(
+                "locomotion.app/api/loanables/{$model->id}.ics"
+            );
 
             $baseEvent = new Event();
 
             $tz = $model::buildTimezone();
-            $dtz = new \DateTimeZone('America/Montreal');
+            $dtz = new \DateTimeZone("America/Montreal");
             $calendar->setTimezone($tz);
 
-            $byDays = ['SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA'];
+            $byDays = ["SU", "MO", "TU", "WE", "TH", "FR", "SA"];
 
             switch ($model->availability_mode) {
-                case 'always':
+                case "always":
                     $exceptions = json_decode($model->availability_json) ?: [];
 
                     foreach ($exceptions as $exception) {
                         switch ($exception->type) {
-                            case 'dates':
+                            case "dates":
                                 static::addDates($model, $exception, $calendar);
                                 break;
                             default:
@@ -99,11 +103,15 @@ class Loanable extends BaseModel
                         }
                     }
                     break;
-                case 'never':
+                case "never":
                 default:
                     $baseEvent
-                        ->setDtStart(new \DateTime($model->created_at->format('Y-m-d')))
-                        ->setDtEnd(new \DateTime($model->created_at->format('Y-m-d')))
+                        ->setDtStart(
+                            new \DateTime($model->created_at->format("Y-m-d"))
+                        )
+                        ->setDtEnd(
+                            new \DateTime($model->created_at->format("Y-m-d"))
+                        )
                         ->setNoTime(true);
 
                     $recurrence = new RecurrenceRule();
@@ -113,13 +121,20 @@ class Loanable extends BaseModel
 
                     foreach ($exceptions as $exception) {
                         switch ($exception->type) {
-                            case 'dates':
-                                static::addDatesException($baseEvent, $exception, $calendar);
+                            case "dates":
+                                static::addDatesException(
+                                    $baseEvent,
+                                    $exception,
+                                    $calendar
+                                );
                                 break;
-                            case 'weekdays':
-                                $byDays = array_diff($byDays, $exception->scope);
+                            case "weekdays":
+                                $byDays = array_diff(
+                                    $byDays,
+                                    $exception->scope
+                                );
 
-                                if ($exception->period !== '00:00-23:59') {
+                                if ($exception->period !== "00:00-23:59") {
                                     static::addWeekdaysExceptionScope(
                                         $model,
                                         $exception,
@@ -131,7 +146,7 @@ class Loanable extends BaseModel
                     }
 
                     if (!empty($byDays)) {
-                        $recurrence->setByDay(join(',', $byDays));
+                        $recurrence->setByDay(join(",", $byDays));
                     }
                     $baseEvent->setRecurrenceRule($recurrence);
                     $calendar->addComponent($baseEvent);
@@ -145,35 +160,41 @@ class Loanable extends BaseModel
         });
     }
 
-    public static function getColumnsDefinition() {
+    public static function getColumnsDefinition()
+    {
         return [
-            '*' => function ($query = null) {
+            "*" => function ($query = null) {
                 if (!$query) {
-                    return 'loanables.*';
+                    return "loanables.*";
                 }
 
-                return $query->selectRaw('loanables.*');
+                return $query->selectRaw("loanables.*");
             },
 
-            'owner_user_full_name' => function ($query = null) {
+            "owner_user_full_name" => function ($query = null) {
                 if (!$query) {
                     return "CONCAT(owner_users.name, ' ', owner_users.last_name)";
                 }
 
-                $query
-                    ->selectRaw(
-                        "CONCAT(owner_users.name, ' ', owner_users.last_name)"
-                        . " AS owner_user_full_name"
-                    );
-
-                $query = static::addJoin($query, 'owners', 'owners.id', '=', 'loanables.owner_id');
+                $query->selectRaw(
+                    "CONCAT(owner_users.name, ' ', owner_users.last_name)" .
+                        " AS owner_user_full_name"
+                );
 
                 $query = static::addJoin(
                     $query,
-                    'users as owner_users',
-                    'owner_users.id',
-                    '=',
-                    'owners.user_id'
+                    "owners",
+                    "owners.id",
+                    "=",
+                    "loanables.owner_id"
+                );
+
+                $query = static::addJoin(
+                    $query,
+                    "users as owner_users",
+                    "owner_users.id",
+                    "=",
+                    "owners.user_id"
                 );
 
                 return $query;
@@ -181,77 +202,89 @@ class Loanable extends BaseModel
         ];
     }
 
-    protected $hidden = ['availability_ics'];
+    protected $hidden = ["availability_ics"];
 
-    protected $postgisFields = [
-        'position',
-    ];
+    protected $postgisFields = ["position"];
 
     protected $postgisTypes = [
-        'position' => [
-            'geomtype' => 'geography',
+        "position" => [
+            "geomtype" => "geography",
         ],
     ];
 
     protected $casts = [
-        'position' => PointCast::class,
+        "position" => PointCast::class,
     ];
 
-    protected $with = ['image'];
+    protected $with = ["image"];
 
-    public $computed = ['car_insurer', 'events', 'has_padlock', 'position_google'];
+    public $computed = [
+        "car_insurer",
+        "events",
+        "has_padlock",
+        "position_google",
+    ];
 
-    public $items = ['owner', 'community', 'padlock'];
+    public $items = ["owner", "community", "padlock"];
 
     public $morphOnes = [
-        'image' => 'imageable',
+        "image" => "imageable",
     ];
 
-    public function community() {
+    public function community()
+    {
         return $this->belongsTo(Community::class);
     }
 
-    public function image() {
-        return $this->hasOne(Image::class, 'imageable_id')
-            ->where('field', 'image')
-            ->whereIn(
-                'imageable_type',
-                [
-                    'App\Models\Bike',
-                    'App\Models\Car',
-                    'App\Models\Loanable',
-                    'App\Models\Trailer'
-                ]
-            );
+    public function image()
+    {
+        return $this->hasOne(Image::class, "imageable_id")
+            ->where("field", "image")
+            ->whereIn("imageable_type", [
+                "App\Models\Bike",
+                "App\Models\Car",
+                "App\Models\Loanable",
+                "App\Models\Trailer",
+            ]);
     }
 
-    public function owner() {
+    public function owner()
+    {
         return $this->belongsTo(Owner::class);
     }
 
-    public function padlock() {
-        return $this->hasOne(Padlock::class, 'loanable_id');
+    public function padlock()
+    {
+        return $this->hasOne(Padlock::class, "loanable_id");
     }
 
-    public $collections = ['loans'];
+    public $collections = ["loans"];
 
-    public function loans() {
+    public function loans()
+    {
         return $this->hasMany(Loan::class);
     }
 
-    public function isAvailable($departureAt, $durationInMinutes, $ignoreLoanIds = []) {
-        $ical = new \ICal\ICal([ 0 => [$this->availability_ics] ], [
-            'defaultTimeZone' => 'America/Toronto',
-            'defaultWeekStart' => 'SU',
-            'filterDaysBefore' => 1,
-            'filterDaysAfter' => 365,
-        ]);
+    public function isAvailable(
+        $departureAt,
+        $durationInMinutes,
+        $ignoreLoanIds = []
+    ) {
+        $ical = new \ICal\ICal(
+            [0 => [$this->availability_ics]],
+            [
+                "defaultTimeZone" => "America/Toronto",
+                "defaultWeekStart" => "SU",
+                "filterDaysBefore" => 1,
+                "filterDaysAfter" => 365,
+            ]
+        );
 
         if (!is_a(\Carbon\Carbon::class, $departureAt)) {
             $departureAt = new \Carbon\Carbon($departureAt);
         }
 
-        $returnAt = $departureAt->copy()->add($durationInMinutes, 'minutes');
+        $returnAt = $departureAt->copy()->add($durationInMinutes, "minutes");
 
         $events = $ical->eventsFromRange($departureAt, $returnAt);
 
@@ -259,37 +292,36 @@ class Loanable extends BaseModel
             return false;
         }
 
-        $query = Loan::where('loanable_id', $this->id);
+        $query = Loan::where("loanable_id", $this->id);
 
         if ($ignoreLoanIds) {
-            $query = $query->whereNotIn('loans.id', $ignoreLoanIds);
+            $query = $query->whereNotIn("loans.id", $ignoreLoanIds);
         }
 
         $cDef = Loan::getColumnsDefinition();
-        $query = $cDef['*']($query);
-        $query = $cDef['loan_status']($query);
-        $query = $cDef['actual_duration_in_minutes']($query);
+        $query = $cDef["*"]($query);
+        $query = $cDef["loan_status"]($query);
+        $query = $cDef["actual_duration_in_minutes"]($query);
 
         $query
-            ->where(\DB::raw($cDef['loan_status']()), '!=', 'canceled')
-            ->whereHas('intention', function ($q) {
-                return $q->where('status', '=', 'completed');
+            ->where(\DB::raw($cDef["loan_status"]()), "!=", "canceled")
+            ->whereHas("intention", function ($q) {
+                return $q->where("status", "=", "completed");
             })
             ->whereRaw(
-                "(departure_at + "
-                  . "COALESCE({$cDef['actual_duration_in_minutes']()}, duration_in_minutes) "
-                  . "* interval '1 minute') > ?",
+                "(departure_at + " .
+                    "COALESCE({$cDef["actual_duration_in_minutes"]()}, duration_in_minutes) " .
+                    "* interval '1 minute') > ?",
                 [$departureAt]
-            )->where(
-                'departure_at',
-                '<',
-                $returnAt
-            )->where('loanable_id', $this->id);
+            )
+            ->where("departure_at", "<", $returnAt)
+            ->where("loanable_id", $this->id);
 
-        return ($query->get()->count() === 0);
+        return $query->get()->count() === 0;
     }
 
-    public function getCommunityForLoanBy(User $user): ?Community {
+    public function getCommunityForLoanBy(User $user): ?Community
+    {
         // The reference community for a loan is...
         // 1. The community of the loanable, if the user is an approved member as well
         if ($this->community) {
@@ -299,10 +331,11 @@ class Loanable extends BaseModel
 
             // 2. A children community that the user is a member of as well
             // It is assumed that there is only one since children communities are exclusive area
-            if ($community = $this->community->children->whereIn(
-                'id',
-                $user->approvedCommunities->pluck('id')
-            )->first()) {
+            if (
+                $community = $this->community->children
+                    ->whereIn("id", $user->approvedCommunities->pluck("id"))
+                    ->first()
+            ) {
                 return $community;
             }
         }
@@ -310,39 +343,49 @@ class Loanable extends BaseModel
         // 3. The community of the loable owner that is common with the user
         // It is assumed that there is one, otherwise the user wouldn't
         // have access to that loanable at this point
-        return $this->owner->user->communities->whereIn(
-            'id',
-            $user->getAccessibleCommunityIds()->toArray()
-        )->first();
+        return $this->owner->user->communities
+            ->whereIn("id", $user->getAccessibleCommunityIds()->toArray())
+            ->first();
     }
 
-    public function getEventsAttribute() {
+    public function getEventsAttribute()
+    {
         try {
-            $ical = new \ICal\ICal([ 0 => [$this->availability_ics] ], [
-                'defaultTimeZone' => 'America/Toronto',
-                'defaultWeekStart' => 'SU',
-                'filterDaysBefore' => 1,
-                'filterDaysAfter' => 365,
-            ]);
+            $ical = new \ICal\ICal(
+                [0 => [$this->availability_ics]],
+                [
+                    "defaultTimeZone" => "America/Toronto",
+                    "defaultWeekStart" => "SU",
+                    "filterDaysBefore" => 1,
+                    "filterDaysAfter" => 365,
+                ]
+            );
 
             $events = [];
             foreach ($ical->events() as $event) {
                 $startDate = new Carbon($event->dtstart);
                 $endDate = new Carbon($event->dtend);
-                $period = $startDate->format('H:i') . '-' . $endDate->format('H:i');
+                $period =
+                    $startDate->format("H:i") . "-" . $endDate->format("H:i");
 
-                $fullDay = $period === '00:00-00:00';
+                $fullDay = $period === "00:00-00:00";
 
                 $events[] = $fullDay
                     ? [
-                        'start' => $startDate->format('Y-m-d'),
-                        'end' => $endDate->format('Y-m-d'),
-                        'period' => $startDate->format('H:i') . '-' . $endDate->format('H:i'),
+                        "start" => $startDate->format("Y-m-d"),
+                        "end" => $endDate->format("Y-m-d"),
+                        "period" =>
+                            $startDate->format("H:i") .
+                            "-" .
+                            $endDate->format("H:i"),
                     ]
                     : [
-                        'start' => $startDate->format('Y-m-d H:i'),
-                        'end' => $endDate->format('Y-m-d H:i'),
-                        'period' => $startDate->format('H:i') . '-' . $endDate->format('H:i'),
+                        "start" => $startDate->format("Y-m-d H:i"),
+                        "end" => $endDate->format("Y-m-d H:i"),
+                        "period" =>
+                            $startDate->format("H:i") .
+                            "-" .
+                            $endDate->format("H:i"),
                     ];
             }
             return $events;
@@ -351,26 +394,30 @@ class Loanable extends BaseModel
         }
     }
 
-    public function getHasPadlockAttribute() {
+    public function getHasPadlockAttribute()
+    {
         return !!$this->padlock;
     }
 
-    public function getCarInsurerAttribute() {
-        if ($this->type === 'car') {
+    public function getCarInsurerAttribute()
+    {
+        if ($this->type === "car") {
             return Car::find($this->id)->insurer;
         }
 
         return null;
     }
 
-    public function getPositionGoogleAttribute() {
+    public function getPositionGoogleAttribute()
+    {
         return [
-            'lat' => $this->position[0],
-            'lng' => $this->position[1],
+            "lat" => $this->position[0],
+            "lng" => $this->position[1],
         ];
     }
 
-    public function scopeWithDeleted(Builder $query, $value, $negative = false) {
+    public function scopeWithDeleted(Builder $query, $value, $negative = false)
+    {
         if (filter_var($value, FILTER_VALIDATE_BOOLEAN) !== $negative) {
             return $query->withTrashed();
         }
@@ -378,22 +425,26 @@ class Loanable extends BaseModel
         return $query;
     }
 
-    public function scopeIsDeleted(Builder $query, $value, $negative = false) {
+    public function scopeIsDeleted(Builder $query, $value, $negative = false)
+    {
         if (filter_var($value, FILTER_VALIDATE_BOOLEAN) !== $negative) {
-            return $query->withTrashed()->where("{$this->getTable()}.deleted_at", '!=', null);
+            return $query
+                ->withTrashed()
+                ->where("{$this->getTable()}.deleted_at", "!=", null);
         }
 
         return $query;
     }
 
-    public function scopeAccessibleBy(Builder $query, $user) {
+    public function scopeAccessibleBy(Builder $query, $user)
+    {
         if ($user->isAdmin()) {
             return $query;
         }
 
-        $allowedTypes = ['bike', 'trailer'];
+        $allowedTypes = ["bike", "trailer"];
         if ($user->borrower && $user->borrower->validated) {
-            $allowedTypes[] = 'car';
+            $allowedTypes[] = "car";
         }
 
         $query = $query
@@ -425,80 +476,112 @@ class Loanable extends BaseModel
                 $q = $q->where(function ($q) use ($communityIds) {
                     return $q
                         // ...loanables belonging to its accessible communities...
-                        ->whereHas('community', function ($q) use ($communityIds) {
-                            return $q->whereIn(
-                                'communities.id',
-                                $communityIds
-                            );
+                        ->whereHas("community", function ($q) use (
+                            $communityIds
+                        ) {
+                            return $q->whereIn("communities.id", $communityIds);
                         })
                         // ...or belonging to children communities that allow sharing with
                         // parent communities (share_with_parent_communities = true)
-                        ->orWhereHas('community', function ($q) use ($communityIds) {
+                        ->orWhereHas("community", function ($q) use (
+                            $communityIds
+                        ) {
                             $childrenIds = Community::childOf(
                                 $communityIds->toArray()
-                            )->pluck('id');
-                            return $q->whereIn('communities.id', $childrenIds)
-                                ->where('share_with_parent_communities', true);
+                            )->pluck("id");
+                            return $q
+                                ->whereIn("communities.id", $childrenIds)
+                                ->where("share_with_parent_communities", true);
                         })
                         // ...or belonging to owners of his accessible communities
                         // that do not have a community specified directly
                         // (communities through user through owner)
                         ->orWhere(function ($q) use ($communityIds) {
-                            return $q->whereHas('owner', function ($q) use ($communityIds) {
-                                return $q->whereHas('user', function ($q) use ($communityIds) {
-                                    // (direct community)
-                                    return $q->whereHas(
-                                        'communities',
-                                        function ($q) use ($communityIds) {
-                                            return $q
-                                                ->whereIn(
-                                                    'community_user.community_id',
+                            return $q
+                                ->whereHas("owner", function ($q) use (
+                                    $communityIds
+                                ) {
+                                    return $q->whereHas("user", function (
+                                        $q
+                                    ) use ($communityIds) {
+                                        // (direct community)
+                                        return $q
+                                            ->whereHas("communities", function (
+                                                $q
+                                            ) use ($communityIds) {
+                                                return $q
+                                                    ->whereIn(
+                                                        "community_user.community_id",
+                                                        $communityIds
+                                                    )
+                                                    ->whereNotNull(
+                                                        "community_user.approved_at"
+                                                    )
+                                                    ->whereNull(
+                                                        "community_user.suspended_at"
+                                                    );
+                                            })
+                                            // (child community if shared with parent community)
+                                            ->orWhereHas(
+                                                "communities",
+                                                function ($q) use (
                                                     $communityIds
-                                                )
-                                                ->whereNotNull('community_user.approved_at')
-                                                ->whereNull('community_user.suspended_at');
-                                        }
-                                    )
-                                    // (child community if shared with parent community)
-                                    ->orWhereHas('communities', function ($q) use ($communityIds) {
-                                        $childrenIds = Community::childOf(
-                                            $communityIds->toArray()
-                                        )->pluck('id');
-                                        return $q->whereIn('communities.id', $childrenIds)
-                                            ->where('share_with_parent_communities', true);
-                                    })
-                                    // (parent community downward)
-                                    ->orWhereHas('communities', function ($q) use ($communityIds) {
-                                        $parentIds = Community::parentOf(
-                                            $communityIds->toArray()
-                                        )->pluck('id');
-                                        return $q->whereIn('communities.id', $parentIds);
+                                                ) {
+                                                    $childrenIds = Community::childOf(
+                                                        $communityIds->toArray()
+                                                    )->pluck("id");
+                                                    return $q
+                                                        ->whereIn(
+                                                            "communities.id",
+                                                            $childrenIds
+                                                        )
+                                                        ->where(
+                                                            "share_with_parent_communities",
+                                                            true
+                                                        );
+                                                }
+                                            )
+                                            // (parent community downward)
+                                            ->orWhereHas(
+                                                "communities",
+                                                function ($q) use (
+                                                    $communityIds
+                                                ) {
+                                                    $parentIds = Community::parentOf(
+                                                        $communityIds->toArray()
+                                                    )->pluck("id");
+                                                    return $q->whereIn(
+                                                        "communities.id",
+                                                        $parentIds
+                                                    );
+                                                }
+                                            );
                                     });
-                                });
-                            })->whereDoesntHave('community');
+                                })
+                                ->whereDoesntHave("community");
                         });
                 });
 
                 // ...and cars are only allowed if the borrower profile is approved
                 switch (get_class($this)) {
-                    case 'App\Models\Bike':
-                    case 'App\Models\Trailer':
+                    case "App\Models\Bike":
+                    case "App\Models\Trailer":
                         break;
-                    case 'App\Models\Car':
-                        if (!in_array('car', $allowedTypes)) {
-                            return $q->whereRaw('1=0');
+                    case "App\Models\Car":
+                        if (!in_array("car", $allowedTypes)) {
+                            return $q->whereRaw("1=0");
                         }
                         break;
                     default:
-                        return $q->whereIn('type', $allowedTypes);
+                        return $q->whereIn("type", $allowedTypes);
                 }
             });
 
         if ($user->owner) {
             // ...and his/her own cars even if the borrower profile is not approved
             $query = $query->orWhere(function ($q) use ($user) {
-                return $q->whereHas('owner', function ($q) use ($user) {
-                    return $q->where('owners.id', $user->owner->id);
+                return $q->whereHas("owner", function ($q) use ($user) {
+                    return $q->where("owners.id", $user->owner->id);
                 });
             });
         }
@@ -506,7 +589,8 @@ class Loanable extends BaseModel
         return $query;
     }
 
-    public function scopeSearch(Builder $query, $q) {
+    public function scopeSearch(Builder $query, $q)
+    {
         if (!$q) {
             return $query;
         }
@@ -514,38 +598,39 @@ class Loanable extends BaseModel
         $table = $this->getTable();
         return $query->where(
             \DB::raw("unaccent($table.name)"),
-            'ILIKE',
+            "ILIKE",
             \DB::raw("unaccent('%$q%')")
         );
     }
 
-    protected static function buildTimezone() {
-        $tzName  = 'America/Montreal';
+    protected static function buildTimezone()
+    {
+        $tzName = "America/Montreal";
         $dtz = new \DateTimeZone($tzName);
         date_default_timezone_set($tzName);
 
         $tzRuleDst = new TimezoneRule(TimezoneRule::TYPE_DAYLIGHT);
-        $tzRuleDst->setTzName('EDT');
-        $tzRuleDst->setDtStart(new \DateTime('2007-11-04 02:00:00', $dtz));
-        $tzRuleDst->setTzOffsetFrom('-0400');
-        $tzRuleDst->setTzOffsetTo('-0500');
+        $tzRuleDst->setTzName("EDT");
+        $tzRuleDst->setDtStart(new \DateTime("2007-11-04 02:00:00", $dtz));
+        $tzRuleDst->setTzOffsetFrom("-0400");
+        $tzRuleDst->setTzOffsetTo("-0500");
 
         $dstRecurrenceRule = new RecurrenceRule();
         $dstRecurrenceRule->setFreq(RecurrenceRule::FREQ_YEARLY);
         $dstRecurrenceRule->setByMonth(3);
-        $dstRecurrenceRule->setByDay('2SU');
+        $dstRecurrenceRule->setByDay("2SU");
         $tzRuleDst->setRecurrenceRule($dstRecurrenceRule);
 
         $tzRuleStd = new TimezoneRule(TimezoneRule::TYPE_STANDARD);
-        $tzRuleStd->setTzName('EST');
-        $tzRuleStd->setDtStart(new \DateTime('2007-03-11 02:00:00', $dtz));
-        $tzRuleStd->setTzOffsetFrom('-0500');
-        $tzRuleStd->setTzOffsetTo('-0400');
+        $tzRuleStd->setTzName("EST");
+        $tzRuleStd->setDtStart(new \DateTime("2007-03-11 02:00:00", $dtz));
+        $tzRuleStd->setTzOffsetFrom("-0500");
+        $tzRuleStd->setTzOffsetTo("-0400");
 
         $stdRecurrenceRule = new RecurrenceRule();
         $stdRecurrenceRule->setFreq(RecurrenceRule::FREQ_YEARLY);
         $stdRecurrenceRule->setByMonth(10);
-        $stdRecurrenceRule->setByDay('2SU');
+        $stdRecurrenceRule->setByDay("2SU");
         $tzRuleStd->setRecurrenceRule($stdRecurrenceRule);
 
         $tz = new Timezone($tzName);
@@ -555,45 +640,46 @@ class Loanable extends BaseModel
         return $tz;
     }
 
-    protected static function getFirstDateOnA($day, $model) {
+    protected static function getFirstDateOnA($day, $model)
+    {
         $date = new Carbon($model->created_at);
         $days = [
-            'SU' => 'sunday',
-            'MO' => 'monday',
-            'TU' => 'tuesday',
-            'WE' => 'wednesday',
-            'TH' => 'thursday',
-            'FR' => 'friday',
-            'SA' => 'saturday',
+            "SU" => "sunday",
+            "MO" => "monday",
+            "TU" => "tuesday",
+            "WE" => "wednesday",
+            "TH" => "thursday",
+            "FR" => "friday",
+            "SA" => "saturday",
         ];
         $strDay = $days[$day];
         return $date->modify("next $strDay");
     }
 
-    protected static function getPeriodLimits($baseDate, $startTime, $endTime) {
+    protected static function getPeriodLimits($baseDate, $startTime, $endTime)
+    {
         return [
             $baseDate->copy()->setTime(0, 0, 0),
-            $baseDate->copy()->setTime(
-                $startTime[0],
-                $startTime[1],
-                0
-            ),
-            $baseDate->copy()->setTime(
-                $endTime[0],
-                $endTime[1],
-                0
-            ),
+            $baseDate->copy()->setTime($startTime[0], $startTime[1], 0),
+            $baseDate->copy()->setTime($endTime[0], $endTime[1], 0),
             $baseDate->copy()->setTime(23, 59, 59),
         ];
     }
 
-    protected static function addDatesException(&$baseEvent, &$exception, &$calendar) {
+    protected static function addDatesException(
+        &$baseEvent,
+        &$exception,
+        &$calendar
+    ) {
         foreach ($exception->scope as $date) {
             switch ($exception->available) {
                 case false:
-                    $baseDate = new Carbon($date, new \DateTimeZone('America/Montreal'));
+                    $baseDate = new Carbon(
+                        $date,
+                        new \DateTimeZone("America/Montreal")
+                    );
                     switch ($exception->period) {
-                        case '00:00-23:59':
+                        case "00:00-23:59":
                             $event = new Event();
                             $event
                                 ->setDtStart($baseDate)
@@ -605,12 +691,23 @@ class Loanable extends BaseModel
                             $startDayEvent = new Event();
                             $endDayEvent = new Event();
 
-                            [$startTime, $endTime] = explode('-', $exception->period);
-                            $startTime = explode(':', $startTime);
-                            $endTime = explode(':', $endTime);
+                            [$startTime, $endTime] = explode(
+                                "-",
+                                $exception->period
+                            );
+                            $startTime = explode(":", $startTime);
+                            $endTime = explode(":", $endTime);
 
-                            [$startOfDay, $startOfPeriod, $endOfPeriod, $endOfDay]
-                                = static::getPeriodLimits($baseDate, $startTime, $endTime);
+                            [
+                                $startOfDay,
+                                $startOfPeriod,
+                                $endOfPeriod,
+                                $endOfDay,
+                            ] = static::getPeriodLimits(
+                                $baseDate,
+                                $startTime,
+                                $endTime
+                            );
 
                             $startDayEvent
                                 ->setUseTimezone(true)
@@ -630,16 +727,27 @@ class Loanable extends BaseModel
                 default:
                     $baseEvent->addExDate(new Carbon($date));
 
-                    if ($exception->period !== '00:00-23:59') {
+                    if ($exception->period !== "00:00-23:59") {
                         $startDayEvent = new Event();
                         $endDayEvent = new Event();
 
-                        [$startTime, $endTime] = explode('-', $exception->period);
-                        $startTime = explode(':', $startTime);
-                        $endTime = explode(':', $endTime);
+                        [$startTime, $endTime] = explode(
+                            "-",
+                            $exception->period
+                        );
+                        $startTime = explode(":", $startTime);
+                        $endTime = explode(":", $endTime);
 
-                        [$startOfDay, $startOfPeriod, $endOfPeriod, $endOfDay]
-                            = static::getPeriodLimits(new Carbon($date), $startTime, $endTime);
+                        [
+                            $startOfDay,
+                            $startOfPeriod,
+                            $endOfPeriod,
+                            $endOfDay,
+                        ] = static::getPeriodLimits(
+                            new Carbon($date),
+                            $startTime,
+                            $endTime
+                        );
 
                         $startDayEvent
                             ->setDtStart($startOfDay)
@@ -656,23 +764,31 @@ class Loanable extends BaseModel
         }
     }
 
-    protected static function addWeekdaysExceptionScope(&$model, &$exception, &$calendar) {
+    protected static function addWeekdaysExceptionScope(
+        &$model,
+        &$exception,
+        &$calendar
+    ) {
         foreach ($exception->scope as $day) {
             $startDayEvent = new Event();
             $endDayEvent = new Event();
 
-            [$startTime, $endTime] = explode('-', $exception->period);
-            $startTime = explode(':', $startTime);
-            $endTime = explode(':', $endTime);
+            [$startTime, $endTime] = explode("-", $exception->period);
+            $startTime = explode(":", $startTime);
+            $endTime = explode(":", $endTime);
 
             $baseDate = $model::getFirstDateOnA($day, $model);
-            [$startOfDay, $startOfPeriod, $endOfPeriod, $endOfDay]
-                = $model::getPeriodLimits($baseDate, $startTime, $endTime);
+            [
+                $startOfDay,
+                $startOfPeriod,
+                $endOfPeriod,
+                $endOfDay,
+            ] = $model::getPeriodLimits($baseDate, $startTime, $endTime);
 
             $recurrence = new RecurrenceRule();
             $recurrence
                 ->setFreq(RecurrenceRule::FREQ_MONTHLY)
-                ->setByDay(join(',', $exception->scope));
+                ->setByDay(join(",", $exception->scope));
 
             $startDayEvent
                 ->setUseTimezone(true)
@@ -690,20 +806,28 @@ class Loanable extends BaseModel
         }
     }
 
-    protected static function addDates(&$model, &$exception, &$calendar) {
+    protected static function addDates(&$model, &$exception, &$calendar)
+    {
         foreach ($exception->scope as $date) {
-            $baseDate = new Carbon($date, new \DateTimeZone('America/Montreal'));
+            $baseDate = new Carbon(
+                $date,
+                new \DateTimeZone("America/Montreal")
+            );
 
-            if ($exception->period !== '00:00-23:59') {
+            if ($exception->period !== "00:00-23:59") {
                 $startDayEvent = new Event();
                 $endDayEvent = new Event();
 
-                [$startTime, $endTime] = explode('-', $exception->period);
-                $startTime = explode(':', $startTime);
-                $endTime = explode(':', $endTime);
+                [$startTime, $endTime] = explode("-", $exception->period);
+                $startTime = explode(":", $startTime);
+                $endTime = explode(":", $endTime);
 
-                [$startOfDay, $startOfPeriod, $endOfPeriod, $endOfDay]
-                    = $model::getPeriodLimits($baseDate, $startTime, $endTime);
+                [
+                    $startOfDay,
+                    $startOfPeriod,
+                    $endOfPeriod,
+                    $endOfDay,
+                ] = $model::getPeriodLimits($baseDate, $startTime, $endTime);
 
                 $startDayEvent
                     ->setUseTimezone(true)

@@ -25,18 +25,19 @@ class LoanExtensionCreated extends BaseMailable
         Borrower $borrower,
         Owner $owner
     ) {
-         $this->borrower = $borrower;
-         $this->extension = $extension;
-         $this->loan = $loan;
-         $this->owner = $owner;
+        $this->borrower = $borrower;
+        $this->extension = $extension;
+        $this->loan = $loan;
+        $this->owner = $owner;
     }
 
-    public function build() {
-        return $this->view('emails.loan.extension_created')
+    public function build()
+    {
+        return $this->view("emails.loan.extension_created")
             ->subject("LocoMotion - Demande d'extension")
-            ->text('emails.loan.extension_created_text')
+            ->text("emails.loan.extension_created_text")
             ->with([
-                'title' => "Demande d'extension",
+                "title" => "Demande d'extension",
             ]);
     }
 }

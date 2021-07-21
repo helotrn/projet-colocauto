@@ -1,30 +1,25 @@
 <template>
   <div class="password-request">
-    <h1 class="password-request__title">{{ $t('request_password') }}</h1>
+    <h1 class="password-request__title">{{ $t("request_password") }}</h1>
 
     <b-alert variant="success" v-if="sent" show>
-      {{ $t('request_response') }}
+      {{ $t("request_response") }}
     </b-alert>
 
     <b-alert variant="danger" v-if="error" show>
-      {{ $t('request_response_error') }}
+      {{ $t("request_response_error") }}
     </b-alert>
 
-    <p>{{ $t('instructions') }}</p>
+    <p>{{ $t("instructions") }}</p>
 
     <b-form class="password-request__form" @submit.prevent="passwordRequest" novalidate>
       <b-form-group :label="$t('email')">
-        <b-form-input
-          type="email"
-          required
-          :placeholder="$t('email')"
-          v-model="email"
-        />
+        <b-form-input type="email" required :placeholder="$t('email')" v-model="email" />
       </b-form-group>
 
       <b-form-group>
         <b-button type="submit" :disabled="loading" variant="primary" block>
-          {{ $t('submit') }}
+          {{ $t("submit") }}
         </b-button>
       </b-form-group>
     </b-form>
@@ -47,10 +42,10 @@ fr:
 
 <script>
 export default {
-  name: 'PasswordRequest',
+  name: "PasswordRequest",
   data() {
     return {
-      email: '',
+      email: "",
       error: false,
       loading: false,
       sent: false,
@@ -63,7 +58,7 @@ export default {
       this.error = false;
 
       try {
-        await this.$store.dispatch('password/request', {
+        await this.$store.dispatch("password/request", {
           email: this.email,
         });
         this.sent = true;

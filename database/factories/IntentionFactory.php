@@ -7,7 +7,11 @@ use Illuminate\Support\Str;
 
 $factory->define(Intention::class, function (Faker $faker) {
     return [
-        'executed_at' => Carbon::now(),
-        'status' => $faker->randomElement(['in_process', 'canceled', 'completed']),
+        "executed_at" => Carbon::now(),
+        "status" => $faker->randomElement([
+            "in_process",
+            "canceled",
+            "completed",
+        ]),
     ];
 });

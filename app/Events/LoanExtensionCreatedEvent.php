@@ -14,7 +14,8 @@ class LoanExtensionCreatedEvent
 
     public $extension;
 
-    public function __construct(Extension $extension) {
+    public function __construct(Extension $extension)
+    {
         $this->extension = $extension;
     }
 }

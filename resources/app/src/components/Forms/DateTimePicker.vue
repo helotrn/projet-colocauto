@@ -5,26 +5,30 @@
         :disabled="disabled"
         :disabled-dates="disabledDates"
         :value="dateValue"
-        @input="emitChangeDate" />
+        @input="emitChangeDate"
+      />
     </b-col>
 
     <b-col col lg="12">
-      <timeselector :h24="true"
+      <timeselector
+        :h24="true"
         :disabled="disabled"
         :disable="disabledTimes"
         :displayFormat="'HH[h]mm'"
-        :value="timeValue" @input="emitChangeTime" />
+        :value="timeValue"
+        @input="emitChangeTime"
+      />
     </b-col>
   </b-row>
 </template>
 
 <script>
-import Timeselector from 'vue-timeselector';
+import Timeselector from "vue-timeselector";
 
-import FormsDatePicker from '@/components/Forms/DatePicker.vue';
+import FormsDatePicker from "@/components/Forms/DatePicker.vue";
 
 export default {
-  name: 'FormsDateTimePicker',
+  name: "FormsDateTimePicker",
   props: {
     disabled: {
       type: Boolean,
@@ -62,16 +66,16 @@ export default {
       return this.$dayjs(this.value).toDate();
     },
     parts() {
-      return this.value.split(' ');
+      return this.value.split(" ");
     },
   },
   methods: {
     emitChangeDate(value) {
-      this.$emit('input', `${value} ${this.parts[1]}`);
+      this.$emit("input", `${value} ${this.parts[1]}`);
     },
     emitChangeTime(value) {
-      const newTime = this.$dayjs(value).format('HH:mm');
-      this.$emit('input', `${this.parts[0]} ${newTime}:00`);
+      const newTime = this.$dayjs(value).format("HH:mm");
+      this.$emit("input", `${this.parts[0]} ${newTime}:00`);
     },
   },
 };
