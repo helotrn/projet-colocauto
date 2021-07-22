@@ -56,10 +56,9 @@ class CommunityUser extends BasePivot
 
     public function proof()
     {
-        return $this->morphOne(Image::class, "imageable")->where(
-            "field",
-            "proof"
-        );
+        return $this->morphOne(Image::class, "imageable")
+            ->where("field", "proof")
+            ->orderBy("updated_at", "desc");
     }
 
     public function tags()
