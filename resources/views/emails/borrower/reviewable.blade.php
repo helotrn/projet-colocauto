@@ -3,7 +3,7 @@
 @section('content')
 
 <p style="text-align: justify; margin-top: 0; font-weight: 390; font-size: 17px; line-height: 24px; color: #343A40;">
-    Un.e nouveau.lle membre, {{ $user->name }}, a complété son profil d'emprunteur
+    Un-e nouveau-lle membre, {{ $user->name }}, a complété son profil d'emprunteur
     dans les communautés suivantes&nbsp;:
 </p>
 <ul>
