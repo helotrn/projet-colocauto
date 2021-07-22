@@ -10,12 +10,9 @@
         <table style="width: 100%; max-width: 536px; background-color: white; padding: 44px 32px;">
             <tr>
                 <td>
-                    <h1 style="text-align: center; padding-bottom: 16px; font-weight: 420; font-size: 32px; line-height: 40px; color: #343A40;">
+                    <h1 style="text-align: center; margin: 0; padding: 0; font-weight: 420; font-size: 32px; line-height: 40px; color: #343A40;">
                         {{ $title }}
                     </h1>
-                    <p style="text-align: center; font-weight: 390; font-size: 17px; line-height: 24px; color: #343A40;">
-                        Bonjour {{ $user->name }},
-                    </p>
                 </td>
             </tr>
         </table>
