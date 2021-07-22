@@ -1,20 +1,17 @@
 @extends('emails.layouts.main')
 
 @section('content')
-<p>
+<p style="font-weight: 390; font-size: 17px; line-height: 24px; color: #343A40;">
     Bonjour {{ $receiver->name }},
 </p>
 
-<p>
+<p style="text-align: justify; font-weight: 390; font-size: 17px; line-height: 24px; color: #343A40;">
     {{ $sender->name }} a annulé l'emprunt à votre {{ $loan->loanable->name }}
     à partir de {{ $loan->departure_at }} et pour une durée de {{ $loan->duration_in_minutes }} minutes.
 </p>
 
-<p style="text-align: center;">
-<a href="{{ url('/loans/' . $loan->id) }}" style="display: inline-block; background-color: #246AEA; padding: 10px; border-radius: 3px; color: white; font-weight: bold; text-decoration: none;" target="_blank">Voir l'emprunt</a>
+<p style="text-align: center; margin-top: 32px;">
+    <a href="{{ url('/loans/' . $loan->id) }}" style="display: inline-block; background-color: #246AEA; padding: 8px 16px; border-radius: 5px; color: white; font-weight: bold; font-size: 17px; line-height: 24px; text-decoration: none;" target="_blank">Voir l'emprunt</a>
 </p>
 
-<p style="text-align: right;">
-    <em>- L'équipe LocoMotion</em>
-</p>
 @endsection

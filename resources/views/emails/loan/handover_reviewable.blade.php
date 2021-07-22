@@ -1,7 +1,7 @@
 @extends('emails.layouts.main')
 
 @section('content')
-<p>
+<p style="text-align: justify; margin-top: 0; font-weight: 390; font-size: 17px; line-height: 24px; color: #343A40;">
     {{ $caller->name }} a contesté les données du retour sur son emprunt
     du {{ $loan->loanable->name }}
     @if ($loan->loanable->owner)
@@ -12,12 +12,15 @@
 </p>
 
 @if (!!$handover->comments_on_contestation)
-<p>
+<p style="text-align: justify; margin-top: 0; font-weight: 390; font-size: 17px; line-height: 24px; color: #343A40;">
+    Commentaires:
+</p>
+<p style="text-align: justify; margin-top: 0; font-weight: 390; font-size: 17px; line-height: 24px; color: #343A40;">
     {{ $handover->comments_on_contestation }}
 </p>
 @endif
 
-<p style="text-align: center;">
-<a href="{{ url('/loans/'. $loan->id) }}" style="display: inline-block; background-color: #246AEA; padding: 10px; border-radius: 3px; color: white; font-weight: bold; text-decoration: none;" target="_blank">Voir l'emprunt</a>
+<p style="text-align: center; margin: 32px auto 0 auto;">
+    <a href="{{ url('/loans/'. $loan->id) }}" style="display: inline-block; background-color: #246AEA; padding: 8px 16px; border-radius: 5px; color: white; font-weight: bold; font-size: 17px; line-height: 24px; text-decoration: none;" target="_blank">Voir l'emprunt</a>
 </p>
 @endsection

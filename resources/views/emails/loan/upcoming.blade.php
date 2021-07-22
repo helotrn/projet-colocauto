@@ -1,29 +1,26 @@
 @extends('emails.layouts.main')
 
 @section('content')
-<p>
+<p style="text-align: justify; margin-top: 0; font-weight: 390; font-size: 17px; line-height: 24px; color: #343A40;">
     Bonjour {{ $user->name }},
 </p>
 
-<p>
+<p style="text-align: justify; margin-top: 0; font-weight: 390; font-size: 17px; line-height: 24px; color: #343A40;">
     Merci d'utiliser le programme LocoMotion!
 </p>
 
-<p>
+<p style="text-align: justify; margin-top: 0; font-weight: 390; font-size: 17px; line-height: 24px; color: #343A40;">
     Votre réservation commence dans 3 heures environ, veuillez prendre connaisance de la marche
     à suivre si ce n'est pas déjà fait.
 </p>
 
-<p>
+<p style="text-align: justify; margin-top: 0; font-weight: 390; font-size: 17px; line-height: 24px; color: #343A40;">
     Si vous ne prévoyez pas utiliser le véhicule, vous pouvez annuler la réservation
     <a href="{{ url('/loans/' . $loan->id) }}">ici</a>.
 </p>
 
-<p>
+<p style="text-align: justify; margin-top: 0; font-weight: 390; font-size: 17px; line-height: 24px; color: #343A40;">
     Merci de votre participation!
 </p>
 
-<p style="text-align: right;">
-    <em>- L'équipe LocoMotion</em>
-</p>
 @endsection

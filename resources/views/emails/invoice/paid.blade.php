@@ -102,13 +102,10 @@
 
 <br>
 
-<p style="text-align: center; font-size: 17px; line-height: 24px; color: #343A40;">
+<p style="text-align: center; margin-bottom: 0; font-size: 17px; line-height: 24px; color: #343A40;">
   Merci!
 </p>
 
 <br>
 
-<p style="text-align: right; padding-right: 10px font-size: 17px; line-height: 24px; color: #343A40;">
-  <em>- L'équipe LocoMotion</em>
-</p>
 @endsection
