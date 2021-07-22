@@ -6,15 +6,19 @@
     .monospace {
         font-family: "SFMono-Regular", 'Menlo', 'Monaco', 'Consolas', "Liberation Mono", "Courier New", 'monospace';
     }
+
+    td {
+        padding: 0;
+    }
 </style>
 <body style="background-color: #F5F8FB;">
-    <table style="width: 100%;">
+    <table style="width: 100%; border-collapse: collapse;">
         <tbody>
             @include('emails.partials.header')
 
             <tr>
                 <td style="text-align: center;">
-                    <table style="background-color: white; width: 100%; margin: 0 auto 32px auto; padding: 40px 0; max-width: 536px;">
+                    <table style="background-color: white; width: 100%; margin: 0 auto 32px auto; padding: 0px 32px 44px 32px; max-width: 536px;">
                         <tr>
                             <td>
                                 @yield('content')
