@@ -40,9 +40,9 @@ CMD bash -c "composer install && \
 ###################
 FROM dev as prod
 COPY . .
-RUN composer install
 
-CMD bash -c "php artisan key:generate && \
+CMD bash -c "composer install \
+             php artisan key:generate && \
              php artisan migrate --seed && \
              php artisan passport:install && \
              php artisan migrate && \
