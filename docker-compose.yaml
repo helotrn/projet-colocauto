@@ -3,12 +3,13 @@ services:
     php:
         build:
             context: .
+            target: prod
         depends_on:
             - postgres
             - redis
-        volumes:
-            - .:/app
-            - .env.docker:/app/.env
+        # volumes:
+        #     - .:/app
+        #     - .env.docker:/app/.env
         ports:
             - 8000:8000
         environment:
@@ -20,6 +21,7 @@ services:
             APP_URL_EXTERNAL: http://localhost:8000 #this is the url that the browser uses to call us
             DB_HOST: postgres
             DB_PORT: 5432
+            DB_CONNECTION: pgsql
             DB_DATABASE: locomotion
             DB_USERNAME: locomotion
             DB_PASSWORD: locomotion
@@ -34,6 +36,16 @@ services:
             S3_REGION: canada
             S3_BUCKET: locomotion
             S3_URL: http://minio:9000
+            APP_NAME: Locomotion
+            BROADCAST_DRIVER: log
+            CACHE_DRIVER: redis
+            QUEUE_CONNECTION: redis
+            SESSION_DRIVER: array
+            SESSION_LIFETIME: 120
+            REDIS_QUEUE: default
+            MAIL_FROM_ADDRESS: no-reply@locomotion.app
+            MAIL_FROM_NAME: LocoMotion
+
     vue:
         depends_on:
             - php
