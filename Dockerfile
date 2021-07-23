@@ -37,3 +37,12 @@ CMD bash -c "composer install && \
              php artisan migrate && \
              php artisan serve --host=0.0.0.0"
 
+###################
+FROM dev as prod
+COPY . .
+CMD bash -c "composer install && \
+             php artisan key:generate && \
+             php artisan migrate --seed && \
+             php artisan passport:install && \
+             php artisan migrate && \
+             php artisan serve --host=0.0.0.0"
