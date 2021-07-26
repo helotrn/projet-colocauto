@@ -60,7 +60,7 @@ export default {
         null: "n'importe quel type",
         trailer: "remorque",
       },
-      is_deleted: "supprimés?",
+      is_deleted: "afficher les véhicules archivés",
     },
     model: {
       singular: "véhicule",
