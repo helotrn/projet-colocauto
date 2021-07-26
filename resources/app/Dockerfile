@@ -8,8 +8,8 @@ FROM dev as build
 
 COPY . .
 
-RUN yarn install
-RUN yarn run build
+RUN npm install
+RUN npm run build
 #############################
 FROM node:15-alpine as prod
 
