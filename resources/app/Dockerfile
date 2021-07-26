@@ -8,7 +8,7 @@ CMD bash -c "npm install && npm run serve -- --host 0.0.0.0"
 
 # COPY . .
 
-# RUN npm install
+# RUN npm ci
 # RUN npm run build
 # #############################
 # FROM node:15-alpine as prod
@@ -18,4 +18,4 @@ CMD bash -c "npm install && npm run serve -- --host 0.0.0.0"
 # RUN npm i -g serve
 # COPY --from=build /app/dist/ /app
 
-# CMD serve -l tcp://0.0.0.0:80 -s /app
+# CMD serve -l tcp://0.0.0.0:8080 -s /app
