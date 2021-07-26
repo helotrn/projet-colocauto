@@ -44,6 +44,7 @@ services:
             target: dev
         volumes:
             - ./resources/app:/app
+            - ./resources/app/nginx.conf.template:/etc/nginx/nginx.conf.template
         ports:
             - 8080:80
         environment:

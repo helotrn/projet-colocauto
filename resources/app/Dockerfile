@@ -8,15 +8,16 @@ FROM dev as build
 
 COPY . .
 
+ENV VUE_APP_API_URL /api
+
 RUN npm ci
-# RUN npm run build
-CMD bash -c "npm run serve -- --host 0.0.0.0"
+RUN npm run build
 ###############################
-# FROM node:15-alpine as prod
+FROM nginx as prod
 
-# WORKDIR /app
+COPY --from=build /app/dist/ /usr/share/nginx/html
+COPY nginx.conf.template /etc/nginx/nginx.conf.template
 
-# RUN npm i -g serve
-# COPY --from=build /app/dist/ /app
-
-# CMD serve -l tcp://0.0.0.0:8080 -s /app
+COPY docker-entrypoint.sh /
+ENTRYPOINT ["/docker-entrypoint.sh"]
+CMD ["nginx", "-g", "daemon off;"]
