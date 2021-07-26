@@ -1,15 +1,17 @@
 <template>
   <b-navbar class="layout-navbar" toggleable="lg" variant="transparent" type="light">
-    <div class="layout-navbar__brand-wrapper">
-      <b-navbar-brand :to="isLoggedIn ? '/app' : '/'">
-        <img src="/logo.svg" alt="Locomotion Beta" />
-      </b-navbar-brand>
+    <b-collapse id="nav-collapse" class="layout-navbar__collapse" is-nav>
+      <b-navbar-nav class="mr-auto">
+        <b-navbar-brand :to="isLoggedIn ? '/app' : '/'">
+          <img src="/logo.svg" alt="Locomotion Beta" />
+        </b-navbar-brand>
 
-      <b-navbar-brand class="layout-navbar__separator d-none d-sm-block" v-if="title" />
-      <b-navbar-brand class="navbar-brand--title d-none d-sm-block" v-if="title">
-        {{ title }}
-      </b-navbar-brand>
-    </div>
+        <b-navbar-brand class="layout-navbar__separator d-none d-sm-block" v-if="title" />
+        <b-navbar-brand class="navbar-brand--title d-none d-sm-block" v-if="title">
+          {{ title }}
+        </b-navbar-brand>
+      </b-navbar-nav>
+    </b-collapse>
 
     <div
       :class="{
