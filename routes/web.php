@@ -21,6 +21,11 @@ Route::get("/user/{any?}", "AssetController@userFile")
 
 Route::get("/password/reset", "StaticController@app")->name("password.reset");
 Route::get("/status", "StaticController@status")->name("status");
-Route::get("/{any?}", "StaticController@app")
-    ->where("any", ".*")
-    ->name("app");
+
+// Email test routes
+if (env("ENABLE_TEST_ROUTES", false)) {
+    Route::get("/test/email/{name}", "TestEmailController@show")->where(
+        "name",
+        ".*"
+    );
+}
