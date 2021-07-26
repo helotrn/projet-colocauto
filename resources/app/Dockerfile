@@ -1,7 +1,7 @@
 FROM node:15 as dev
 WORKDIR /app
 
-CMD bash -c "npm install && npm run serve -- --host 0.0.0.0 --port $PORT"
+CMD bash -c "npm install && npm run serve -- --host 0.0.0.0"
 
 ##############################
 # FROM dev as build
