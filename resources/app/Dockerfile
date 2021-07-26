@@ -16,6 +16,6 @@ FROM node:15-alpine as prod
 WORKDIR /app
 
 RUN npm i -g serve
-COPY --from=build /app/build/ /app
+COPY --from=build /app/dist/ /app
 
 CMD serve -l tcp://0.0.0.0:80 -s /app
