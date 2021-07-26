@@ -5,7 +5,7 @@ http {
     listen  80;
     root    /usr/share/nginx/html;
     location /api {
-        proxy_pass http://php:8000/api;
+        proxy_pass ${SERVER_URL}/api;
     }
   }
 }
