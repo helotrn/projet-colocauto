@@ -14,16 +14,18 @@ class Completed extends BaseMailable
 
     public $user;
 
-    public function __construct(User $user) {
-         $this->user = $user;
+    public function __construct(User $user)
+    {
+        $this->user = $user;
     }
 
-    public function build() {
-        return $this->view('emails.borrower.completed')
-            ->subject('Dossier de conduite complété')
-            ->text('emails.borrower.completed_text')
+    public function build()
+    {
+        return $this->view("emails.borrower.completed")
+            ->subject("Dossier de conduite complété")
+            ->text("emails.borrower.completed_text")
             ->with([
-                'title' => 'Dossier de conduite complété',
+                "title" => "Dossier de conduite complété",
             ]);
     }
 }

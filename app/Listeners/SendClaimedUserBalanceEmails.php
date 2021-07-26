@@ -11,14 +11,18 @@ use Mail;
 
 class SendClaimedUserBalanceEmails
 {
-    public function handle(ClaimedUserBalanceEvent $event) {
-        $admins = User::whereRole('admin')
-            ->select('name', 'last_name', 'email')->get()
+    public function handle(ClaimedUserBalanceEvent $event)
+    {
+        $admins = User::whereRole("admin")
+            ->select("name", "last_name", "email")
+            ->get()
             ->toArray();
 
         foreach ($admins as $admin) {
-            Mail::to($admin['email'], $admin['name'] . ' ' . $admin['last_name'])
-                ->queue(new UserClaimedBalance($event->user));
+            Mail::to(
+                $admin["email"],
+                $admin["name"] . " " . $admin["last_name"]
+            )->queue(new UserClaimedBalance($event->user));
         }
     }
 }

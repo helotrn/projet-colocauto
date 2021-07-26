@@ -11,26 +11,26 @@ use Illuminate\Support\Facades\Validator;
 class ImportLegacyMembers extends Command
 {
     private static $headers = [
-        'id (ignored)',
-        'last_name',
-        'first_name',
-        'date_of_birth',
-        'phone',
-        'email',
-        'age (not used)',
-        'address',
-        'postal_code',
+        "id (ignored)",
+        "last_name",
+        "first_name",
+        "date_of_birth",
+        "phone",
+        "email",
+        "age (not used)",
+        "address",
+        "postal_code",
         'is_smart_phone ("oui" === true)',
-        'description',
-        'communities (comma-separated names)',
-        'drivers_license_number',
+        "description",
+        "communities (comma-separated names)",
+        "drivers_license_number",
     ];
 
     protected $signature = 'import:legacy:members {filename : The TSV filename}
                             {--pretend : Do not actually import anything}
                             {--debug : Print out more information}';
 
-    protected $description = 'Import legacy members from a provided TSV file';
+    protected $description = "Import legacy members from a provided TSV file";
 
     protected $filename;
 
@@ -39,31 +39,32 @@ class ImportLegacyMembers extends Command
     private $pretend;
     private $communitiesByName = [];
 
-    public function handle() {
-        $this->debug = $this->option('debug');
-        $this->pretend = $this->option('pretend');
+    public function handle()
+    {
+        $this->debug = $this->option("debug");
+        $this->pretend = $this->option("pretend");
 
-        $this->filename = $this->argument('filename');
+        $this->filename = $this->argument("filename");
 
-        $this->info('Reading file...');
-        $this->file = fopen(base_path() . "/{$this->filename}", 'r');
+        $this->info("Reading file...");
+        $this->file = fopen(base_path() . "/{$this->filename}", "r");
 
         if (!$this->file) {
-            $this->error('File not found');
+            $this->error("File not found");
             return;
         }
 
-        $this->info('Fetching communities...');
+        $this->info("Fetching communities...");
         $this->fetchCommunities();
 
-        $this->info('Syncing users...');
+        $this->info("Syncing users...");
         $headers = fgetcsv($this->file, null, "\t");
         if ($this->debug) {
             $this->echoLine(static::$headers, $headers);
         }
 
         while ($line = fgetcsv($this->file, null, "\t")) {
-            $line = array_map('trim', $line);
+            $line = array_map("trim", $line);
             if ($this->debug) {
                 $this->echoLine($headers, $line);
             }
@@ -76,21 +77,21 @@ class ImportLegacyMembers extends Command
             }
 
             $data = [
-                'last_name' => $line[1],
-                'name' => $line[2],
-                'date_of_birth' => \Carbon\Carbon::createFromFormat(
-                    'd/m/Y H:m:i',
-                    $line[3] . ' 00:00:00'
+                "last_name" => $line[1],
+                "name" => $line[2],
+                "date_of_birth" => \Carbon\Carbon::createFromFormat(
+                    "d/m/Y H:m:i",
+                    $line[3] . " 00:00:00"
                 ),
-                'phone' => $line[4],
-                'email' => $line[5],
-                'address' => $line[7],
-                'postal_code' => $line[8],
-                'is_smart_phone' => strtolower($line[9]) === 'oui',
-                'description' => $line[10],
-                'communities' => $this->getUserCommunities($line[11]),
-                'borrower' => [
-                    'drivers_license_number' => $line[12],
+                "phone" => $line[4],
+                "email" => $line[5],
+                "address" => $line[7],
+                "postal_code" => $line[8],
+                "is_smart_phone" => strtolower($line[9]) === "oui",
+                "description" => $line[10],
+                "communities" => $this->getUserCommunities($line[11]),
+                "borrower" => [
+                    "drivers_license_number" => $line[12],
                 ],
             ];
 
@@ -98,12 +99,12 @@ class ImportLegacyMembers extends Command
 
             $validator = Validator::make(
                 $data,
-                User::getRules('create'),
+                User::getRules("create"),
                 User::$validationMessages
             );
 
             if ($validator->fails()) {
-                $this->error("Invalid member {$line['id']}: skipping...");
+                $this->error("Invalid member {$line["id"]}: skipping...");
                 continue;
             }
 
@@ -111,40 +112,47 @@ class ImportLegacyMembers extends Command
                 continue;
             }
 
-            $user = User::where('email', $data['email'])->first();
+            $user = User::where("email", $data["email"])->first();
 
             if (!$user) {
-                $user = new User;
+                $user = new User();
             }
             $user->fill($data);
-            $user->email = $data['email'];
+            $user->email = $data["email"];
             $user->password = base64_encode(random_bytes(32));
             $user->save();
 
             $borrower = $user->borrower;
             if (!$borrower) {
-                $borrower = new Borrower;
+                $borrower = new Borrower();
             }
 
-            $borrower->fill($data['borrower']);
+            $borrower->fill($data["borrower"]);
             $borrower->user()->associate($user);
             $borrower->save();
 
-            $user->communities()->syncWithoutDetaching($data['communities']);
+            $user->communities()->syncWithoutDetaching($data["communities"]);
         }
 
-        $this->info('Done.');
+        $this->info("Done.");
     }
 
-    private function echoLine($headers, $line) {
+    private function echoLine($headers, $line)
+    {
         foreach ($headers as $index => $title) {
-            echo sprintf("%2d %-s: %s", $index, trim($title), $line[$index] ? $line[$index] : '×');
+            echo sprintf(
+                "%2d %-s: %s",
+                $index,
+                trim($title),
+                $line[$index] ? $line[$index] : "×"
+            );
             echo "\n";
         }
         echo "===\n";
     }
 
-    private function fetchCommunities() {
+    private function fetchCommunities()
+    {
         $communities = Community::all();
 
         foreach ($communities as $community) {
@@ -152,13 +160,14 @@ class ImportLegacyMembers extends Command
         }
     }
 
-    private function getUserCommunities(string $names): array {
-        $parts = array_map('trim', explode(',', str_replace('et', '', $names)));
+    private function getUserCommunities(string $names): array
+    {
+        $parts = array_map("trim", explode(",", str_replace("et", "", $names)));
 
         $output = [];
 
         foreach ($parts as $name) {
-            if ($name === '') {
+            if ($name === "") {
                 continue;
             }
 
@@ -168,12 +177,12 @@ class ImportLegacyMembers extends Command
             }
 
             $output[$this->communitiesByName[$name]->id] = [
-                'approved_at' => new \DateTime,
+                "approved_at" => new \DateTime(),
             ];
         }
 
         if (empty($output)) {
-            $this->warn('Not associated to any community');
+            $this->warn("Not associated to any community");
         }
 
         return $output;

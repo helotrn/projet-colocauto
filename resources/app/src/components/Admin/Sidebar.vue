@@ -1,6 +1,6 @@
 <template>
   <div class="admin-sidebar">
-    <b-nav-item to="/admin">{{ $t('titles.dashboard') | capitalize }}</b-nav-item>
+    <b-nav-item to="/admin">{{ $t("titles.dashboard") | capitalize }}</b-nav-item>
     <b-nav-item to="/admin/communities">Communautés</b-nav-item>
     <b-nav-item to="/admin/users">Membres</b-nav-item>
     <b-nav-item to="/admin/loanables">Véhicules</b-nav-item>
@@ -13,7 +13,7 @@
 
 <script>
 export default {
-  name: 'AdminSidebar',
+  name: "AdminSidebar",
   props: {
     isGlobalAdmin: {
       required: true,
@@ -32,7 +32,8 @@ export default {
       color: $grey;
     }
 
-    &.router-link-exact-active, &:hover {
+    &.router-link-exact-active,
+    &:hover {
       color: $locomotion-green;
     }
   }

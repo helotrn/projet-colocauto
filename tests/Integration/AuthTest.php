@@ -9,108 +9,123 @@ use Tests\TestCase;
 class AuthTest extends TestCase
 {
     private static $authErrorStructure = [
-        'message',
-        'error',
-        'error_description',
+        "message",
+        "error",
+        "error_description",
     ];
 
     private static $loginResponseStructure = [
-        'token_type',
-        'expires_in',
-        'access_token',
-        'refresh_token'
+        "token_type",
+        "expires_in",
+        "access_token",
+        "refresh_token",
     ];
 
-    public function testBasicLogin() {
+    public function testBasicLogin()
+    {
         $this->createTestUser();
 
         $data = [
-            'email' => 'emile@molotov.ca',
-            'password' => 'molotov'
+            "email" => "emile@molotov.ca",
+            "password" => "molotov",
         ];
-        $response = $this->json('POST', '/api/v1/auth/login', $data);
+        $response = $this->json("POST", "/api/v1/auth/login", $data);
 
-        $response->assertStatus(200)->assertJsonStructure(static::$loginResponseStructure);
+        $response
+            ->assertStatus(200)
+            ->assertJsonStructure(static::$loginResponseStructure);
     }
 
-    public function testLoginWithNonExistentUser() {
+    public function testLoginWithNonExistentUser()
+    {
         $data = [
-            'email' => 'asdf@molotov.ca',
-            'password' => 'molotov'
+            "email" => "asdf@molotov.ca",
+            "password" => "molotov",
         ];
 
-        $response = $this->json('POST', '/api/v1/auth/login', $data);
+        $response = $this->json("POST", "/api/v1/auth/login", $data);
 
-        $response->assertStatus(401)
+        $response
+            ->assertStatus(401)
             ->assertJsonStructure(static::$authErrorStructure);
     }
 
-    public function testLoginWithInvalidPassword() {
+    public function testLoginWithInvalidPassword()
+    {
         $this->createTestUser();
 
         $data = [
-            'email' => 'emile@molotov.ca',
-            'password' => 'laskjdflaksd'
+            "email" => "emile@molotov.ca",
+            "password" => "laskjdflaksd",
         ];
-        $response = $this->json('POST', '/api/v1/auth/login', $data);
+        $response = $this->json("POST", "/api/v1/auth/login", $data);
 
-        $response->assertStatus(401)
+        $response
+            ->assertStatus(401)
             ->assertJsonStructure(static::$authErrorStructure);
     }
 
-    public function testRegister() {
+    public function testRegister()
+    {
         $data = [
-            'email' => $this->faker->unique()->safeEmail,
-            'password' => 'molotov'
+            "email" => $this->faker->unique()->safeEmail,
+            "password" => "molotov",
         ];
-        $response = $this->json('POST', '/api/v1/auth/register', $data);
-        $response->assertStatus(200)->assertJsonStructure(static::$loginResponseStructure);
+        $response = $this->json("POST", "/api/v1/auth/register", $data);
+        $response
+            ->assertStatus(200)
+            ->assertJsonStructure(static::$loginResponseStructure);
     }
 
-    public function testRegisterWithMissingFields() {
-        $response = $this->json('POST', '/api/v1/auth/register', [
-            'machin' => 'chouette',
+    public function testRegisterWithMissingFields()
+    {
+        $response = $this->json("POST", "/api/v1/auth/register", [
+            "machin" => "chouette",
         ]);
 
-        $response->assertStatus(422)
+        $response
+            ->assertStatus(422)
             ->assertJsonStructure(TestCase::$validationErrorStructure);
 
-        $response = $this->json('POST', '/api/v1/auth/register', [
-            'email' => 'chouette@machin.com',
+        $response = $this->json("POST", "/api/v1/auth/register", [
+            "email" => "chouette@machin.com",
         ]);
 
-        $response->assertStatus(422)
+        $response
+            ->assertStatus(422)
             ->assertJsonStructure(TestCase::$validationErrorStructure);
 
-        $response = $this->json('POST', '/api/v1/auth/register', [
-            'password' => 'asdfsdaf',
+        $response = $this->json("POST", "/api/v1/auth/register", [
+            "password" => "asdfsdaf",
         ]);
 
-        $response->assertStatus(422)
+        $response
+            ->assertStatus(422)
             ->assertJsonStructure(TestCase::$validationErrorStructure);
     }
 
-
-    public function testUpdateFromAuthEndpoint() {
-        $response = $this->json('GET', '/api/v1/auth/user');
+    public function testUpdateFromAuthEndpoint()
+    {
+        $response = $this->json("GET", "/api/v1/auth/user");
         $response->assertStatus(200)->assertJson([
-            'last_name' => $this->user->last_name,
+            "last_name" => $this->user->last_name,
         ]);
 
         $data = [
-            'last_name' => 'ceci est un test',
+            "last_name" => "ceci est un test",
         ];
-        $response = $this->json('PUT', '/api/v1/auth/user', $data);
+        $response = $this->json("PUT", "/api/v1/auth/user", $data);
         $response->assertStatus(200)->assertJson($data);
 
-        $response = $this->json('GET', '/api/v1/auth/user');
+        $response = $this->json("GET", "/api/v1/auth/user");
         $response->assertStatus(200)->assertJson($data);
     }
 
-    private function createTestUser() {
+    private function createTestUser()
+    {
         $user = new User();
-        $user->email = 'emile@molotov.ca';
-        $user->password = Hash::make('molotov');
+        $user->email = "emile@molotov.ca";
+        $user->password = Hash::make("molotov");
         $user->save();
 
         return $user;

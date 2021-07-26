@@ -1,59 +1,61 @@
-import { prefixFields } from '@/helpers';
+import { prefixFields } from "@/helpers";
 
-import tags from './tags';
+import tags from "./tags";
 
 const i18n = {
   fr: {
-    communauté: 'communauté | communautés',
-    'créer une communauté': 'créer une communauté',
-    '{count} communauté sélectionnée': 'aucune communauté sélectionnée | {count} communauté sélectionnée | {count} communautés sélectionnées',
+    communauté: "communauté | communautés",
+    "créer une communauté": "créer une communauté",
+    "{count} communauté sélectionnée":
+      "aucune communauté sélectionnée | {count} communauté sélectionnée | {count} communautés sélectionnées",
     fields: {
-      chat_group_url: 'URL du groupe de discussion',
-      description: 'description',
-      id: 'ID',
-      long_description: 'texte de bienvenue / présentation',
-      name: 'nom',
-      proof: 'preuve de résidence',
+      chat_group_url: "URL du groupe de discussion",
+      description: "description",
+      id: "ID",
+      long_description: "texte de bienvenue / présentation",
+      name: "nom",
+      proof: "preuve de résidence",
       tags: {
-        ...prefixFields(tags.fr.fields, '(Mot-clé)'),
+        ...prefixFields(tags.fr.fields, "(Mot-clé)"),
         model_name: tags.fr.model_name,
       },
-      type: 'type',
+      type: "type",
       types: {
-        neighborhood: 'voisinage',
+        neighborhood: "voisinage",
         null: "n'importe quel type",
-        borough: 'quartier',
-        private: 'privée',
+        borough: "quartier",
+        private: "privée",
       },
     },
-    model_name: 'communauté | communautés',
+    model_name: "communauté | communautés",
   },
   en: {
-    communauté: 'community | communities',
-    'créer une communauté': 'create a community',
-    '{count} communauté sélectionnée': 'no community selected | {count} community selected | {count} communities selected',
+    communauté: "community | communities",
+    "créer une communauté": "create a community",
+    "{count} communauté sélectionnée":
+      "no community selected | {count} community selected | {count} communities selected",
     fields: {
-      description: 'description',
-      id: 'ID',
-      name: 'name',
+      description: "description",
+      id: "ID",
+      name: "name",
       tags: {
         ...tags.fr.fields,
         model_name: tags.fr.model_name,
       },
-      type: 'type',
+      type: "type",
       types: {
-        neighborhood: 'neighborhood',
-        null: 'any type',
-        borough: 'borough',
-        private: 'private',
+        neighborhood: "neighborhood",
+        null: "any type",
+        borough: "borough",
+        private: "private",
       },
     },
   },
 };
 
-i18n.fr.fields.parent_id = 'quartier';
+i18n.fr.fields.parent_id = "quartier";
 i18n.fr.fields.parent = {
-  ...prefixFields(i18n.fr.fields, '(Quartier)'),
+  ...prefixFields(i18n.fr.fields, "(Quartier)"),
   model_name: i18n.fr.model_name,
 };
 

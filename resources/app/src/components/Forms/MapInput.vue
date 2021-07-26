@@ -1,25 +1,32 @@
 <template>
   <div :class="`forms-map-input ${stateClass}`">
-    <gmap-map class="forms-map-input__map" ref="map"
-      :center="markerPositionOrCenter" :zoom="14" :options="mapOptions"
-      map-type-id="terrain" @click="savePosition">
-      <gmap-marker v-if="markerPosition"
-        :clickable="false"
-        :position="markerPosition" />
-      <gmap-polygon v-for="p in polygons" :key="`polygon-${p.id}`"
+    <gmap-map
+      class="forms-map-input__map"
+      ref="map"
+      :center="markerPositionOrCenter"
+      :zoom="14"
+      :options="mapOptions"
+      map-type-id="terrain"
+      @click="savePosition"
+    >
+      <gmap-marker v-if="markerPosition" :clickable="false" :position="markerPosition" />
+      <gmap-polygon
+        v-for="p in polygons"
+        :key="`polygon-${p.id}`"
         :path="p.area_google"
         :label="p.name"
-        :options="p.options" />
+        :options="p.options"
+      />
     </gmap-map>
     <p v-if="description">{{ description }}</p>
   </div>
 </template>
 
 <script>
-import { gmapApi } from 'vue2-google-maps';
+import { gmapApi } from "vue2-google-maps";
 
 export default {
-  name: 'FormsMapInput',
+  name: "FormsMapInput",
   props: {
     bounded: {
       type: Boolean,
@@ -47,7 +54,9 @@ export default {
     polygons: {
       type: Array,
       required: false,
-      default() { return []; },
+      default() {
+        return [];
+      },
     },
     value: {
       required: true,
@@ -57,7 +66,7 @@ export default {
   data() {
     return {
       mapIcon: {
-        url: 'perdu.com',
+        url: "perdu.com",
       },
       mapOptions: {
         streetViewControl: false,
@@ -65,10 +74,8 @@ export default {
         mapTypeControl: false,
         styles: [
           {
-            featureType: 'poi',
-            stylers: [
-              { visibility: 'off' },
-            ],
+            featureType: "poi",
+            stylers: [{ visibility: "off" }],
           },
         ],
       },
@@ -91,14 +98,14 @@ export default {
     },
     stateClass() {
       if (this.state === null) {
-        return '';
+        return "";
       }
 
       if (this.state) {
-        return 'is-valid';
+        return "is-valid";
       }
 
-      return 'is-invalid';
+      return "is-invalid";
     },
   },
   methods: {
@@ -114,7 +121,7 @@ export default {
             const p = new Polygon({ paths: this.polygons[i].area_google });
 
             if (this.google.maps.geometry.poly.containsLocation(event.latLng, p)) {
-              this.$emit('input', [lat, lng]);
+              this.$emit("input", [lat, lng]);
               return;
             }
 
@@ -122,7 +129,7 @@ export default {
           }
         }
 
-        this.$emit('input', [lat, lng]);
+        this.$emit("input", [lat, lng]);
       }
     },
   },

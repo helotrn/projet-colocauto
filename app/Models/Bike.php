@@ -8,58 +8,57 @@ use Illuminate\Database\Eloquent\Builder;
 class Bike extends Loanable
 {
     public static $rules = [
-        'bike_type' => [ 'required' ],
-        'comments' => [ 'present' ],
-        'instructions' => [ 'present' ],
-        'location_description' => [ 'present' ],
-        'model' => [ 'required' ],
-        'name' => [ 'required' ],
-        'position' => [ 'required' ],
-        'size' => [ 'required' ],
-        'type' => [
-            'required',
-            'in:bike',
-        ],
+        "bike_type" => ["required"],
+        "comments" => ["present"],
+        "instructions" => ["present"],
+        "location_description" => ["present"],
+        "model" => ["required"],
+        "name" => ["required"],
+        "position" => ["required"],
+        "size" => ["required"],
+        "type" => ["required", "in:bike"],
     ];
 
     protected $fillable = [
-        'availability_json',
-        'availability_mode',
-        'bike_type',
-        'comments',
-        'instructions',
-        'location_description',
-        'model',
-        'name',
-        'position',
-        'share_with_parent_communities',
-        'size',
+        "availability_json",
+        "availability_mode",
+        "bike_type",
+        "comments",
+        "instructions",
+        "location_description",
+        "model",
+        "name",
+        "position",
+        "share_with_parent_communities",
+        "size",
     ];
 
-    public static function getColumnsDefinition() {
+    public static function getColumnsDefinition()
+    {
         return [
-            '*' => function ($query = null) {
+            "*" => function ($query = null) {
                 if (!$query) {
-                    return 'bikes.*';
+                    return "bikes.*";
                 }
 
-                return $query->selectRaw('bikes.*');
+                return $query->selectRaw("bikes.*");
             },
-            'type' => function ($query = null) {
+            "type" => function ($query = null) {
                 if (!$query) {
                     return "'bike' AS type";
                 }
 
                 return $query->selectRaw("'bike' AS type");
-            }
+            },
         ];
     }
 
-    protected $table = 'bikes';
+    protected $table = "bikes";
 
     public $readOnly = false;
 
-    public function loans() {
-        return $this->hasMany(Loan::class, 'loanable_id');
+    public function loans()
+    {
+        return $this->hasMany(Loan::class, "loanable_id");
     }
 }

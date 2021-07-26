@@ -11,12 +11,17 @@ class UpdateNokeUserEmail
 {
     private $service;
 
-    public function __construct(NokeService $service) {
+    public function __construct(NokeService $service)
+    {
         $this->service = $service;
     }
 
-    public function handle(UserEmailUpdated $event) {
-        $nokeUser = $this->service->findUserByEmail($event->previousEmail, true);
+    public function handle(UserEmailUpdated $event)
+    {
+        $nokeUser = $this->service->findUserByEmail(
+            $event->previousEmail,
+            true
+        );
 
         if ($nokeUser) {
             $nokeUser->username = $event->newEmail;

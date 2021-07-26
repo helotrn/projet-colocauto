@@ -8,12 +8,14 @@ use App\Repositories\TagRepository;
 
 class TagController extends RestController
 {
-    public function __construct(TagRepository $repository, Tag $model) {
+    public function __construct(TagRepository $repository, Tag $model)
+    {
         $this->repo = $repository;
         $this->model = $model;
     }
 
-    public function index(Request $request) {
+    public function index(Request $request)
+    {
         try {
             [$items, $total] = $this->repo->get($request);
         } catch (ValidationException $e) {
@@ -23,7 +25,8 @@ class TagController extends RestController
         return $this->respondWithCollection($request, $items, $total);
     }
 
-    public function retrieve(Request $request, $id) {
+    public function retrieve(Request $request, $id)
+    {
         $item = $this->repo->find($request, $id);
 
         try {
@@ -35,7 +38,8 @@ class TagController extends RestController
         return $response;
     }
 
-    public function create(Request $request) {
+    public function create(Request $request)
+    {
         try {
             $item = parent::validateAndCreate($request);
         } catch (ValidationException $e) {
@@ -45,7 +49,8 @@ class TagController extends RestController
         return $this->respondWithItem($request, $item, 201);
     }
 
-    public function update(Request $request, $id) {
+    public function update(Request $request, $id)
+    {
         try {
             $item = parent::validateAndUpdate($request, $id);
         } catch (ValidationException $e) {
@@ -55,7 +60,8 @@ class TagController extends RestController
         return $this->respondWithItem($request, $item);
     }
 
-    public function destroy(Request $request, $id) {
+    public function destroy(Request $request, $id)
+    {
         try {
             $response = parent::validateAndDestroy($request, $id);
         } catch (ValidationException $e) {
@@ -65,36 +71,37 @@ class TagController extends RestController
         return $response;
     }
 
-    public function template(Request $request) {
+    public function template(Request $request)
+    {
         $template = [
-            'item' => [
-                'name' => '',
-                'slug' => '',
-                'type' => '',
+            "item" => [
+                "name" => "",
+                "slug" => "",
+                "type" => "",
             ],
-            'form' => [
-                'name' => [
-                    'type' => 'text',
+            "form" => [
+                "name" => [
+                    "type" => "text",
                 ],
-                'slug' => [
-                    'type' => 'text',
+                "slug" => [
+                    "type" => "text",
                 ],
-                'type' => [
-                    'type' => 'select',
-                    'options' => [
+                "type" => [
+                    "type" => "select",
+                    "options" => [
                         [
-                            'text' => 'Mot-clé',
-                            'value' => 'tag',
+                            "text" => "Mot-clé",
+                            "value" => "tag",
                         ],
                     ],
                 ],
             ],
-            'filters' => $this->model::$filterTypes ?: new \stdClass,
+            "filters" => $this->model::$filterTypes ?: new \stdClass(),
         ];
 
-        $modelRules = $this->model->getRules('template', $request->user());
+        $modelRules = $this->model->getRules("template", $request->user());
         foreach ($modelRules as $field => $rules) {
-            $template['form'][$field]['rules'] = $this->formatRules($rules);
+            $template["form"][$field]["rules"] = $this->formatRules($rules);
         }
 
         return $template;

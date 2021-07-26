@@ -2,11 +2,11 @@
   <b-container fluid>
     <b-row>
       <b-col>
-        <h1>{{ $tc('facture', 2) | capitalize }}</h1>
+        <h1>{{ $tc("facture", 2) | capitalize }}</h1>
       </b-col>
       <b-col class="admin__buttons">
         <b-btn v-if="creatable" :to="`/admin/${slug}/new`">
-          {{ $t('créer une facture') | capitalize }}
+          {{ $t("créer une facture") | capitalize }}
         </b-btn>
       </b-col>
     </b-row>
@@ -14,33 +14,43 @@
     <b-row>
       <b-col class="admin__selection">
         <div v-if="selected.length > 0">
-          {{ $tc(
-            '{count} facture sélectionnée',
-            selected.length,
-            { count: selected.length }
-          ) }}
+          {{ $tc("{count} facture sélectionnée", selected.length, { count: selected.length }) }}
         </div>
       </b-col>
 
       <b-col class="admin__filters">
-        <admin-filters entity="invoices" :filters="filters" :params="contextParams"
-          @change="setParam" />
+        <admin-filters
+          entity="invoices"
+          :filters="filters"
+          :params="contextParams"
+          @change="setParam"
+        />
       </b-col>
     </b-row>
 
     <b-row>
       <b-col>
         <b-table
-          striped hover :items="data"
-          selectable select-mode="multi" @row-selected="rowSelected"
-          :busy="loading" :fields="table" no-local-sorting
-          :sort-by.sync="sortBy" :sort-desc.sync="sortDesc" no-sort-reset
-          :show-empty="true" empty-text="Pas de facture">
+          striped
+          hover
+          :items="data"
+          selectable
+          select-mode="multi"
+          @row-selected="rowSelected"
+          :busy="loading"
+          :fields="table"
+          no-local-sorting
+          :sort-by.sync="sortBy"
+          :sort-desc.sync="sortDesc"
+          no-sort-reset
+          :show-empty="true"
+          empty-text="Pas de facture"
+        >
           <template v-slot:cell(user.full_name)="row">
             {{ row.item.user.full_name }}
           </template>
           <template v-slot:cell(paid_at)="row">
-            {{ row.item.paid_at ? '✓' : '✗' }}
+            {{ row.item.paid_at ? "✓" : "✗" }}
           </template>
           <template v-slot:cell(created_at)="row">
             {{ row.item.created_at | date }}
@@ -63,8 +73,13 @@
         <b-button class="mr-3" variant="outline-primary" @click="exportCSV">
           Générer (CSV)
         </b-button>
-        <a variant="outline-primary" :href="exportUrl"
-          target="_blank" v-if="context.exportUrl" @click="resetExportUrl">
+        <a
+          variant="outline-primary"
+          :href="exportUrl"
+          target="_blank"
+          v-if="context.exportUrl"
+          @click="resetExportUrl"
+        >
           Télécharger (CSV)
         </a>
       </b-col>
@@ -77,16 +92,16 @@
 </template>
 
 <script>
-import AdminFilters from '@/components/Admin/Filters.vue';
-import AdminListActions from '@/components/Admin/ListActions.vue';
-import AdminPagination from '@/components/Admin/Pagination.vue';
+import AdminFilters from "@/components/Admin/Filters.vue";
+import AdminListActions from "@/components/Admin/ListActions.vue";
+import AdminPagination from "@/components/Admin/Pagination.vue";
 
-import DataRouteGuards from '@/mixins/DataRouteGuards';
-import ListMixin from '@/mixins/ListMixin';
-import locales from '@/locales';
+import DataRouteGuards from "@/mixins/DataRouteGuards";
+import ListMixin from "@/mixins/ListMixin";
+import locales from "@/locales";
 
 export default {
-  name: 'AdminInvoices',
+  name: "AdminInvoices",
   mixins: [DataRouteGuards, ListMixin],
   components: {
     AdminListActions,
@@ -96,22 +111,22 @@ export default {
   data() {
     return {
       table: [
-        { key: 'user.full_name', label: 'Membre', sortable: true },
-        { key: 'created_at', label: 'Date', sortable: true },
-        { key: 'paid_at', label: 'Payée', sortable: true },
+        { key: "user.full_name", label: "Membre", sortable: true },
+        { key: "created_at", label: "Date", sortable: true },
+        { key: "paid_at", label: "Payée", sortable: true },
         {
-          key: 'total',
-          label: 'Total',
+          key: "total",
+          label: "Total",
           sortable: true,
-          tdClass: 'text-right',
+          tdClass: "text-right",
         },
         {
-          key: 'total_with_taxes',
-          label: 'Total avec taxes',
+          key: "total_with_taxes",
+          label: "Total avec taxes",
           sortable: true,
-          tdClass: 'text-right',
+          tdClass: "text-right",
         },
-        { key: 'actions', label: 'Actions', tdClass: 'table__cell__actions' },
+        { key: "actions", label: "Actions", tdClass: "table__cell__actions" },
       ],
     };
   },
@@ -130,5 +145,4 @@ export default {
 };
 </script>
 
-<style lang="scss">
-</style>
+<style lang="scss"></style>

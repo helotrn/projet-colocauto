@@ -6,19 +6,18 @@
 
 <script>
 const routeGuard = (to, from, next) => {
-  if (to.name === 'password') {
-    return next('/login');
+  if (to.name === "password") {
+    return next("/login");
   }
 
   return next();
 };
 
 export default {
-  name: 'Password',
+  name: "Password",
   beforeRouteEnter: routeGuard,
   beforeRouteUpdate: routeGuard,
 };
 </script>
 
-<style lang="scss">
-</style>
+<style lang="scss"></style>

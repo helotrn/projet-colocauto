@@ -7,13 +7,10 @@
         <p><b-form-radio-group v-model="selectedAmount" :options="amounts" buttons /></p>
 
         <p v-if="selectedAmount === 'other'" class="user-add-credit-box__add__custom">
-          <b-form-input type="number" :min="minimumRequired" :step="0.01"
-            v-model="customAmount" />
+          <b-form-input type="number" :min="minimumRequired" :step="0.01" v-model="customAmount" />
         </p>
 
-        <p>
-          Montant prélevé du mode de paiement&nbsp;: {{ amountWithFee | currency }}
-        </p>
+        <p>Montant prélevé du mode de paiement&nbsp;: {{ amountWithFee | currency }}</p>
 
         <p><small>Frais de transaction&nbsp;: 2,2% + 30¢</small></p>
       </b-col>
@@ -27,8 +24,12 @@
 
     <b-row>
       <b-col lg="6" class="user-add-credit-box__payment-methods">
-        <b-form-select id="payment_method_id" name="payment_method_id"
-          :options="paymentMethods" v-model="paymentMethodId">
+        <b-form-select
+          id="payment_method_id"
+          name="payment_method_id"
+          :options="paymentMethods"
+          v-model="paymentMethodId"
+        >
           <template v-slot:first>
             <b-form-select-option :value="null" disabled>
               Choisir votre mode de paiement
@@ -44,16 +45,19 @@
       </b-col>
 
       <b-col class="user-add-credit-box__explanations">
-        <p>
-          Approvisionnez votre compte pour économiser sur les frais de transaction.
-        </p>
+        <p>Approvisionnez votre compte pour économiser sur les frais de transaction.</p>
       </b-col>
     </b-row>
 
     <b-row class="user-add-credit-box__buttons" tag="p">
       <b-col class="text-center">
-        <b-button class="mr-3" type="submit" variant="primary"
-          @click="buyCredit" :disabled="amount < floatMinimumRequired || loading">
+        <b-button
+          class="mr-3"
+          type="submit"
+          variant="primary"
+          @click="buyCredit"
+          :disabled="amount < floatMinimumRequired || loading"
+        >
           Valider
         </b-button>
 
@@ -65,21 +69,20 @@
 
 <script>
 export default {
-  name: 'UserAddCreditBox',
+  name: "UserAddCreditBox",
   data() {
     return {
-      customAmount: this.minimumRequired ? (parseFloat(this.minimumRequired) * 2) : 20,
+      customAmount: this.minimumRequired ? parseFloat(this.minimumRequired) * 2 : 20,
       feeRatio: 0.022,
-      feeConstant: 0.30,
+      feeConstant: 0.3,
       loading: false,
-      paymentMethodId: this.user.payment_methods
-        .reduce((acc, p) => {
-          if (p.is_default) {
-            return p.id;
-          }
+      paymentMethodId: this.user.payment_methods.reduce((acc, p) => {
+        if (p.is_default) {
+          return p.id;
+        }
 
-          return acc;
-        }, null),
+        return acc;
+      }, null),
       selectedAmount: this.minimumRequired ? parseFloat(this.minimumRequired) : 10,
     };
   },
@@ -96,7 +99,7 @@ export default {
   },
   computed: {
     amount() {
-      if (this.selectedAmount === 'other') {
+      if (this.selectedAmount === "other") {
         return parseFloat(this.customAmount, 10);
       }
 
@@ -108,45 +111,46 @@ export default {
       return (this.amount + this.feeConstant) / (1 - this.feeRatio);
     },
     amounts() {
-      const options = [
-      ];
+      const options = [];
 
       if (this.minimumRequired) {
         options.push({
-          text: 'Je paie juste pour ce trajet',
+          text: "Je paie juste pour ce trajet",
           value: this.floatMinimumRequired,
         });
       }
 
       const standardOptions = [
         {
-          text: '10$',
+          text: "10$",
           value: 10,
         },
         {
-          text: '20$',
+          text: "20$",
           value: 20,
         },
         {
-          text: '50$',
+          text: "50$",
           value: 50,
         },
         {
-          text: '100$',
+          text: "100$",
           value: 100,
         },
       ];
 
       for (let i = 0, len = standardOptions.length; i < len; i += 1) {
-        if (!this.minimumRequired
-          || standardOptions[i].value > parseFloat(this.minimumRequired, 10)) {
+        if (
+          !this.minimumRequired ||
+          standardOptions[i].value > parseFloat(this.minimumRequired, 10)
+        ) {
           options.push(standardOptions[i]);
         }
       }
 
       options.push({
         text: "J'en profite pour ajouter...",
-        value: 'other',
+        value: "other",
       });
 
       return options;
@@ -167,26 +171,26 @@ export default {
   },
   methods: {
     emitCancel() {
-      this.$emit('cancel');
+      this.$emit("cancel");
     },
     async buyCredit() {
       this.loading = true;
 
       try {
         const { amount, paymentMethodId } = this;
-        await this.$store.dispatch('account/buyCredit', {
+        await this.$store.dispatch("account/buyCredit", {
           amount,
           paymentMethodId,
         });
-        this.$emit('bought');
+        this.$emit("bought");
       } catch (e) {
         switch (e.response.data.message) {
-          case 'no_payment_method':
-            this.$store.commit('addNotification', {
+          case "no_payment_method":
+            this.$store.commit("addNotification", {
               content: "Vous n'avez pas configuré de mode de paiement.",
-              title: 'Mode de paiement par défaut manquant',
-              variant: 'warning',
-              type: 'payment_method',
+              title: "Mode de paiement par défaut manquant",
+              variant: "warning",
+              type: "payment_method",
             });
             break;
           default:
@@ -215,7 +219,8 @@ export default {
   }
 
   &__balance {
-    &__initial, &__added {
+    &__initial,
+    &__added {
       font-size: 24px;
       font-weight: bold;
     }

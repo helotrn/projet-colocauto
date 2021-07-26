@@ -6,14 +6,15 @@ use App\Http\Requests\BaseRequest;
 
 class CommunityUserTagRequest extends BaseRequest
 {
-    public function authorize() {
+    public function authorize()
+    {
         $user = $this->user();
 
         if ($user->isAdmin()) {
             return true;
         }
 
-        if ($user->isAdminOfCommunity($this->route('community_id'))) {
+        if ($user->isAdminOfCommunity($this->route("community_id"))) {
             return true;
         }
 

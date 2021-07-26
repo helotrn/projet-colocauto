@@ -16,7 +16,8 @@ class LoanTakeoverContestationResolvedEvent
     public $takeover;
     public $user;
 
-    public function __construct(Takeover $takeover, User $user) {
+    public function __construct(Takeover $takeover, User $user)
+    {
         $this->takeover = $takeover;
         $this->user = $user;
     }

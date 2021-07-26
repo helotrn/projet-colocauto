@@ -11,12 +11,21 @@
         </b-col>
 
         <b-col lg="9" class="loan__actions">
-          <loan-action-buttons :item="item"
-            @extension="addExtension" @cancel="cancelLoan"
-            @incident="addIncident('accident')" />
+          <loan-action-buttons
+            :item="item"
+            @extension="addExtension"
+            @cancel="cancelLoan"
+            @incident="addIncident('accident')"
+          />
 
-          <loan-actions :item="item" @load="loadItemAndUser" :form="loanForm"
-            :user="user" @submit="submitLoan" @extension="addExtension" />
+          <loan-actions
+            :item="item"
+            @load="loadItemAndUser"
+            :form="loanForm"
+            :user="user"
+            @submit="submitLoan"
+            @extension="addExtension"
+          />
         </b-col>
       </b-row>
     </div>
@@ -24,21 +33,21 @@
 </template>
 
 <script>
-import LoanActions from '@/components/Loan/Actions.vue';
-import LoanActionButtons from '@/components/Loan/ActionButtons.vue';
-import LoanHeader from '@/components/Loan/LoanHeader.vue';
-import LoanMenu from '@/components/Loan/Menu.vue';
+import LoanActions from "@/components/Loan/Actions.vue";
+import LoanActionButtons from "@/components/Loan/ActionButtons.vue";
+import LoanHeader from "@/components/Loan/LoanHeader.vue";
+import LoanMenu from "@/components/Loan/Menu.vue";
 
-import Authenticated from '@/mixins/Authenticated';
-import DataRouteGuards from '@/mixins/DataRouteGuards';
-import FormMixin from '@/mixins/FormMixin';
-import LoanStepsSequence from '@/mixins/LoanStepsSequence';
-import UserMixin from '@/mixins/UserMixin';
+import Authenticated from "@/mixins/Authenticated";
+import DataRouteGuards from "@/mixins/DataRouteGuards";
+import FormMixin from "@/mixins/FormMixin";
+import LoanStepsSequence from "@/mixins/LoanStepsSequence";
+import UserMixin from "@/mixins/UserMixin";
 
-import { capitalize } from '@/helpers/filters';
+import { capitalize } from "@/helpers/filters";
 
 export default {
-  name: 'Loan',
+  name: "Loan",
   mixins: [Authenticated, DataRouteGuards, FormMixin, LoanStepsSequence, UserMixin],
   components: {
     LoanActions,
@@ -48,8 +57,8 @@ export default {
   },
   beforeRouteEnter(to, from, next) {
     next((vm) => {
-      if (vm.id === 'new' && !vm.item.loanable) {
-        vm.$router.replace('/community/list');
+      if (vm.id === "new" && !vm.item.loanable) {
+        vm.$router.replace("/community/list");
       }
     });
   },
@@ -60,16 +69,13 @@ export default {
   },
   computed: {
     fullTitle() {
-      const parts = [
-        'LocoMotion',
-        capitalize(this.$i18n.tc('titles.loan', 2)),
-      ];
+      const parts = ["LocoMotion", capitalize(this.$i18n.tc("titles.loan", 2))];
 
       if (this.pageTitle) {
         parts.push(this.pageTitle);
       }
 
-      return parts.reverse().join(' | ');
+      return parts.reverse().join(" | ");
     },
     loanForm() {
       return this.$store.state.loans.form;
@@ -78,9 +84,9 @@ export default {
       return this.routeDataLoaded && this.item && this.loadedFullLoanable;
     },
     pageTitle() {
-      return (this.item && this.item.loanable)
+      return this.item && this.item.loanable
         ? this.item.loanable.name
-        : capitalize(this.$i18n.tc('titles.loanable', 1));
+        : capitalize(this.$i18n.tc("titles.loanable", 1));
     },
   },
   methods: {
@@ -88,9 +94,10 @@ export default {
       const { id, type } = this.item.loanable;
       await this.$store.dispatch(`${type}s/retrieveOne`, {
         params: {
-          fields: '*,owner.id,owner.user.id,owner.user.avatar,owner.user.name,owner.user.phone,'
-            + 'community.name',
-          '!fields': 'events',
+          fields:
+            "*,owner.id,owner.user.id,owner.user.avatar,owner.user.name,owner.user.phone," +
+            "community.name",
+          "!fields": "events",
           with_deleted: true,
         },
         id,
@@ -106,13 +113,10 @@ export default {
     async loadItemAndUser() {
       this.loadedFullLoanable = false;
 
-      await Promise.all([
-        this.loadItem(),
-        this.$store.dispatch('loadUser'),
-      ]);
+      await Promise.all([this.loadItem(), this.$store.dispatch("loadUser")]);
     },
     skipLoadItem() {
-      if (this.id === 'new') {
+      if (this.id === "new") {
         return true;
       }
 

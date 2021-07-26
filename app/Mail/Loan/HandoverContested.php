@@ -24,18 +24,19 @@ class HandoverContested extends BaseMailable
         User $receiver,
         User $caller
     ) {
-         $this->handover = $handover;
-         $this->loan = $loan;
-         $this->receiver = $receiver;
-         $this->caller = $caller;
+        $this->handover = $handover;
+        $this->loan = $loan;
+        $this->receiver = $receiver;
+        $this->caller = $caller;
     }
 
-    public function build() {
-        return $this->view('emails.loan.handover_contested')
-            ->subject('LocoMotion - Données de retour du véhicule contestées')
-            ->text('emails.loan.handover_contested_text')
+    public function build()
+    {
+        return $this->view("emails.loan.handover_contested")
+            ->subject("LocoMotion - Données de retour du véhicule contestées")
+            ->text("emails.loan.handover_contested_text")
             ->with([
-                'title' => 'Données de retour du véhicule contestées'
+                "title" => "Données de retour du véhicule contestées",
             ]);
     }
 }

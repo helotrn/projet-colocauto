@@ -6,16 +6,20 @@
           <b-col lg="6">
             <b-row>
               <b-col class="loan-info-box__image" v-if="otherUser">
-                <div class="loan-info-box__image__user"
-                  :style="{ backgroundImage: loanPersonImage }" />
+                <div
+                  class="loan-info-box__image__user"
+                  :style="{ backgroundImage: loanPersonImage }"
+                />
 
                 <div class="loan-info-box__image__loanable">
                   <div :style="{ backgroundImage: loanableImage }" />
                 </div>
               </b-col>
               <b-col class="loan-info-box__image" v-else>
-                <div class="loan-info-box__image__user"
-                  :style="{ backgroundImage: loanableImage }" />
+                <div
+                  class="loan-info-box__image__user"
+                  :style="{ backgroundImage: loanableImage }"
+                />
 
                 <div class="loan-info-box__image__loanable" v-if="otherUser">
                   <div :style="{ backgroundImage: loanableImage }" />
@@ -31,7 +35,7 @@
                     {{ loan.loanable.community.name }}
                   </span>
 
-                  <br>
+                  <br />
                   <span class="loan-info-box__name__loanable">{{ loan.loanable.name }}</span>
                 </span>
               </b-col>
@@ -41,11 +45,11 @@
           <b-col class="loan-info-box__details mb-2 mt-2" lg>
             <span>
               <span v-if="multipleDays">
-                {{ loan.departure_at | date }} {{ loan.departure_at | time }}<br>
+                {{ loan.departure_at | date }} {{ loan.departure_at | time }}<br />
                 {{ returnAt | date }} {{ returnAt | time }}
               </span>
               <span v-else>
-                {{ loan.departure_at | date }}<br>
+                {{ loan.departure_at | date }}<br />
                 {{ loan.departure_at | time }} à {{ returnAt | time }}
               </span>
             </span>
@@ -53,25 +57,39 @@
 
           <b-col class="loan-info-box__actions" lg>
             <div>
-              <b-button size="sm" variant="success"
+              <b-button
+                size="sm"
+                variant="success"
                 v-if="hasButton('accept') && userRole === 'owner'"
-                @click.prevent="acceptLoan">
+                @click.prevent="acceptLoan"
+              >
                 Accepter
               </b-button>
 
-              <b-button size="sm" variant="outline-primary" v-if="hasButton('view')"
-                :to="`/loans/${this.loan.id}`">
+              <b-button
+                size="sm"
+                variant="outline-primary"
+                v-if="hasButton('view')"
+                :to="`/loans/${this.loan.id}`"
+              >
                 Consulter
               </b-button>
 
-              <b-button size="sm" variant="outline-danger"
+              <b-button
+                size="sm"
+                variant="outline-danger"
                 v-if="hasButton('deny') && userRole === 'owner'"
-                @click.prevent="denyLoan">
+                @click.prevent="denyLoan"
+              >
                 Refuser
               </b-button>
 
-              <b-button size="sm" variant="outline-danger" v-if="hasButton('cancel')"
-                @click.prevent="cancelLoan">
+              <b-button
+                size="sm"
+                variant="outline-danger"
+                v-if="hasButton('cancel')"
+                @click.prevent="cancelLoan"
+              >
                 Annuler
               </b-button>
             </div>
@@ -89,24 +107,24 @@
         Cette personne devrait entrer en contact avec vous sous peu.
       </p>
       <p class="loan-info-box__instructions muted" v-else>
-        La demande est envoyée! Maintenant contactez la personne propriétaire
-        pour valider votre demande.
+        La demande est envoyée! Maintenant contactez la personne propriétaire pour valider votre
+        demande.
       </p>
     </div>
   </div>
 </template>
 
 <script>
-import LoanMenu from '@/components/Loan/Menu.vue';
+import LoanMenu from "@/components/Loan/Menu.vue";
 
 export default {
-  name: 'LoanInfoBox',
+  name: "LoanInfoBox",
   props: {
     buttons: {
       type: Array,
       required: false,
       default() {
-        return ['accept', 'deny'];
+        return ["accept", "deny"];
       },
     },
     loan: {
@@ -129,12 +147,12 @@ export default {
   computed: {
     loanPersonImage() {
       if (!this.otherUser) {
-        return '';
+        return "";
       }
 
       const { avatar } = this.otherUser;
       if (!avatar) {
-        return '';
+        return "";
       }
 
       return `url('${avatar.sizes.thumbnail}')`;
@@ -142,14 +160,16 @@ export default {
     loanableImage() {
       const { image } = this.loan.loanable;
       if (!image) {
-        return '';
+        return "";
       }
 
       return `url('${image.sizes.thumbnail}')`;
     },
     multipleDays() {
-      return this.$dayjs(this.loan.departure_at).format('YYYY-MM-DD')
-        !== this.$dayjs(this.returnAt).format('YYYY-MM-DD');
+      return (
+        this.$dayjs(this.loan.departure_at).format("YYYY-MM-DD") !==
+        this.$dayjs(this.returnAt).format("YYYY-MM-DD")
+      );
     },
     otherUser() {
       if (this.user.id === this.loan.borrower.user.id) {
@@ -164,50 +184,50 @@ export default {
     },
     returnAt() {
       return this.$dayjs(this.loan.departure_at)
-        .add(this.loan.duration_in_minutes, 'minute')
-        .format('YYYY-MM-DD HH:mm:ss');
+        .add(this.loan.duration_in_minutes, "minute")
+        .format("YYYY-MM-DD HH:mm:ss");
     },
     userRole() {
       if (this.loan.loanable.owner && this.user.id === this.loan.loanable.owner.user.id) {
-        return 'owner';
+        return "owner";
       }
 
       if (this.user.id === this.loan.borrower.user.id) {
-        return 'borrower';
+        return "borrower";
       }
 
-      return 'other';
+      return "other";
     },
   },
   methods: {
     async makeloanUnavailableFor24h() {
-      await this.$store.dispatch('loans/makeUnavailableFor24h');
-      this.$bvModal.msgBoxOk('Ce véhicule est indisponible pour les prochaines 24h.', {
-        buttonSize: 'sm',
-        footerClass: 'd-none',
+      await this.$store.dispatch("loans/makeUnavailableFor24h");
+      this.$bvModal.msgBoxOk("Ce véhicule est indisponible pour les prochaines 24h.", {
+        buttonSize: "sm",
+        footerClass: "d-none",
       });
     },
     async acceptLoan() {
-      const intention = this.loan.actions.find(a => a.type === 'intention');
+      const intention = this.loan.actions.find((a) => a.type === "intention");
       try {
-        await this.$store.dispatch('loans/completeAction', intention);
-        await this.$store.dispatch('loadUser');
+        await this.$store.dispatch("loans/completeAction", intention);
+        await this.$store.dispatch("loadUser");
       } catch (e) {
         throw e;
       }
     },
     async cancelLoan() {
-      const intention = this.loan.actions.find(a => a.type === 'intention');
+      const intention = this.loan.actions.find((a) => a.type === "intention");
       try {
-        await this.$store.dispatch('loans/cancelAction', intention);
-        await this.$store.dispatch('loadUser');
+        await this.$store.dispatch("loans/cancelAction", intention);
+        await this.$store.dispatch("loadUser");
       } catch (e) {
         throw e;
       }
     },
     async denyLoan() {
-      await this.$store.dispatch('loans/cancel', this.loan.id);
-      await this.$store.dispatch('loadUser');
+      await this.$store.dispatch("loans/cancel", this.loan.id);
+      await this.$store.dispatch("loadUser");
     },
     hasButton(name) {
       return this.buttons.indexOf(name) > -1;
@@ -222,7 +242,9 @@ export default {
     margin-bottom: 20px;
   }
 
-  a:hover, a:active, a:focus {
+  a:hover,
+  a:active,
+  a:focus {
     text-decoration: none;
   }
 
@@ -238,7 +260,8 @@ export default {
     flex: 0 1 115px;
 
     .loan-info-box__image {
-      &__user, &__loanable > div {
+      &__user,
+      &__loanable > div {
         background-size: cover;
         background-position: center center;
         background-repeat: no-repeat;

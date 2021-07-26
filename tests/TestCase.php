@@ -13,31 +13,28 @@ abstract class TestCase extends BaseTestCase
 {
     use CreatesApplication, DatabaseTransactions;
 
-    public static $validationErrorStructure = [
-        'message',
-        'errors' => []
-    ];
+    public static $validationErrorStructure = ["message", "errors" => []];
 
     public static $collectionResponseStructure = [
-        'current_page',
-        'data',
-        'first_page_url',
-        'from',
-        'last_page',
-        'last_page_url',
-        'next_page_url',
-        'path',
-        'per_page',
-        'prev_page_url',
-        'to',
-        'total',
+        "current_page",
+        "data",
+        "first_page_url",
+        "from",
+        "last_page",
+        "last_page_url",
+        "next_page_url",
+        "path",
+        "per_page",
+        "prev_page_url",
+        "to",
+        "total",
     ];
-
 
     protected $faker;
     protected $user;
 
-    public function setUp(): void {
+    public function setUp(): void
+    {
         parent::setUp();
 
         $this->faker = Factory::create();
@@ -47,7 +44,8 @@ abstract class TestCase extends BaseTestCase
 
         $this->actAs($this->user);
 
-        \DB::statement(<<<SQL
+        \DB::statement(
+            <<<SQL
 INSERT INTO oauth_clients
 (id, name, secret, redirect, personal_access_client, password_client, revoked,
     created_at, updated_at)
@@ -68,26 +66,28 @@ SQL
         Carbon::setTestNow();
     }
 
-    protected function buildCollectionStructure(array $template) {
+    protected function buildCollectionStructure(array $template)
+    {
         return [
-            'current_page',
-            'data' => [
-                '*' => $template,
+            "current_page",
+            "data" => [
+                "*" => $template,
             ],
-            'first_page_url',
-            'from',
-            'last_page',
-            'last_page_url',
-            'next_page_url',
-            'path',
-            'per_page',
-            'prev_page_url',
-            'to',
-            'total',
+            "first_page_url",
+            "from",
+            "last_page",
+            "last_page_url",
+            "next_page_url",
+            "path",
+            "per_page",
+            "prev_page_url",
+            "to",
+            "total",
         ];
     }
 
-    protected function actAs($user) {
+    protected function actAs($user)
+    {
         Passport::actingAs($user);
     }
 }

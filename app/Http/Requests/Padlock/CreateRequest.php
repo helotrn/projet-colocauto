@@ -6,7 +6,8 @@ use App\Http\Requests\BaseRequest;
 
 class CreateRequest extends BaseRequest
 {
-    public function authorize() {
+    public function authorize()
+    {
         $user = $this->user();
         if ($user->isAdmin()) {
             return true;
@@ -15,11 +16,12 @@ class CreateRequest extends BaseRequest
         return false;
     }
 
-    public function rules() {
+    public function rules()
+    {
         return [
-            'external_id' => 'required',
-            'mac_address' => 'required',
-            'name' => 'required',
+            "external_id" => "required",
+            "mac_address" => "required",
+            "name" => "required",
         ];
     }
 }

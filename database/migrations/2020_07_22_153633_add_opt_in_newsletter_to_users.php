@@ -6,15 +6,17 @@ use Illuminate\Support\Facades\Schema;
 
 class AddOptInNewsletterToUsers extends Migration
 {
-    public function up() {
-        Schema::table('users', function (Blueprint $table) {
-            $table->boolean('opt_in_newsletter')->default(false);
+    public function up()
+    {
+        Schema::table("users", function (Blueprint $table) {
+            $table->boolean("opt_in_newsletter")->default(false);
         });
     }
 
-    public function down() {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('opt_in_newsletter');
+    public function down()
+    {
+        Schema::table("users", function (Blueprint $table) {
+            $table->dropColumn("opt_in_newsletter");
         });
     }
 }

@@ -16,41 +16,50 @@ use Tests\TestCase;
 
 class HandoverTest extends ActionTestCase
 {
-    public function testCreateHandoversWithActionsFlow() {
-        $loan = $this->buildLoan('handover');
+    public function testCreateHandoversWithActionsFlow()
+    {
+        $loan = $this->buildLoan("handover");
 
         $handover = $loan->handover;
-        $response = $this->json('GET', "/api/v1/loans/$loan->id/actions/$handover->id");
+        $response = $this->json(
+            "GET",
+            "/api/v1/loans/$loan->id/actions/$handover->id"
+        );
 
         $json = $response->json();
-        $this->assertEquals($handover->id, array_get($json, 'id'));
-        $this->assertEquals('in_process', array_get($json, 'status'));
+        $this->assertEquals($handover->id, array_get($json, "id"));
+        $this->assertEquals("in_process", array_get($json, "status"));
     }
 
-    public function testCompleteHandovers() {
-        $executedAtDate = Carbon::now()->format('Y-m-d h:m:s');
+    public function testCompleteHandovers()
+    {
+        $executedAtDate = Carbon::now()->format("Y-m-d h:m:s");
         Carbon::setTestNow($executedAtDate);
 
-        $loan = $this->buildLoan('handover');
+        $loan = $this->buildLoan("handover");
 
         $handover = $loan->handover;
 
         $this->assertNotNull($handover);
 
         $response = $this->json(
-            'PUT',
+            "PUT",
             "/api/v1/loans/$loan->id/actions/$handover->id/complete",
             [
-                'type' => 'handover',
-                'mileage_end' => 0,
+                "type" => "handover",
+                "mileage_end" => 0,
             ]
         );
         $response->assertStatus(200);
 
-        $response = $this->json('GET', "/api/v1/loans/$loan->id/actions/$handover->id");
-        $response->assertStatus(200)
-            ->assertJson(['status' => 'completed'])
-            ->assertJson(['executed_at' => $executedAtDate]);
+        $response = $this->json(
+            "GET",
+            "/api/v1/loans/$loan->id/actions/$handover->id"
+        );
+        $response
+            ->assertStatus(200)
+            ->assertJson(["status" => "completed"])
+            ->assertJson(["executed_at" => $executedAtDate]);
 
         $loan = $loan->fresh();
 
@@ -59,28 +68,33 @@ class HandoverTest extends ActionTestCase
         $this->assertNotNull($handover);
     }
 
-    public function testCancelHandovers() {
-        $executedAtDate = Carbon::now()->format('Y-m-d h:m:s');
+    public function testCancelHandovers()
+    {
+        $executedAtDate = Carbon::now()->format("Y-m-d h:m:s");
         Carbon::setTestNow($executedAtDate);
 
-        $loan = $this->buildLoan('handover');
+        $loan = $this->buildLoan("handover");
 
         $handover = $loan->handover;
 
         $this->assertNotNull($handover);
 
         $response = $this->json(
-            'PUT',
+            "PUT",
             "/api/v1/loans/$loan->id/actions/$handover->id/cancel",
             [
-                'type' => 'handover',
+                "type" => "handover",
             ]
         );
         $response->assertStatus(200);
 
-        $response = $this->json('GET', "/api/v1/loans/$loan->id/actions/$handover->id");
-        $response->assertStatus(200)
-            ->assertJson(['status' => 'canceled'])
-            ->assertJson(['executed_at' => $executedAtDate]);
+        $response = $this->json(
+            "GET",
+            "/api/v1/loans/$loan->id/actions/$handover->id"
+        );
+        $response
+            ->assertStatus(200)
+            ->assertJson(["status" => "canceled"])
+            ->assertJson(["executed_at" => $executedAtDate]);
     }
 }

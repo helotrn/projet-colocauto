@@ -1,55 +1,45 @@
 <template>
   <b-card no-body variant="info" class="pricing-language-definition">
     <template v-slot:header>
-      <b-button size="lg" block href="#"
-        v-b-toggle.language-definition variant="transparent">
+      <b-button size="lg" block href="#" v-b-toggle.language-definition variant="transparent">
         Définition du langage de tarification
       </b-button>
     </template>
 
     <b-collapse id="language-definition">
       <div class="card-body">
-        <p>
-          Une règle par ligne.
-        </p>
+        <p>Une règle par ligne.</p>
 
         <p>
           Une règle est de la forme <code>SI condition ALORS expression</code> (forme dite
-          conditionnelle) ou <code>expression</code> où<br>
+          conditionnelle) ou <code>expression</code> où<br />
         </p>
 
         <ul>
           <li>
-            <code>condition</code> est de la forme <code>expression comparateur expression
-              (opérateur_logique condition)*</code>;
+            <code>condition</code> est de la forme
+            <code>expression comparateur expression (opérateur_logique condition)*</code>;
           </li>
 
           <li>
-            <code>expression</code> est un équation mathématique composée d'une ou
-            plusieurs variables, <code>opérateur</code> et de constantes;
+            <code>expression</code> est un équation mathématique composée d'une ou plusieurs
+            variables, <code>opérateur</code> et de constantes;
           </li>
 
-          <li>
-            <code>opérateur</code> est un opérateur arithmétique;
-          </li>
+          <li><code>opérateur</code> est un opérateur arithmétique;</li>
 
-          <li>
-            <code>opérateur_logique</code> est un opérateur logique;
-          </li>
+          <li><code>opérateur_logique</code> est un opérateur logique;</li>
 
-          <li>
-            <code>comparateur</code> est un opérateur de comparaison;
-          </li>
+          <li><code>comparateur</code> est un opérateur de comparaison;</li>
         </ul>
 
         <p>
-          Un tableau est une liste entre crochets de valeurs séparées par des virgules,
-          par ex. <code>[1,2,3]</code>.
+          Un tableau est une liste entre crochets de valeurs séparées par des virgules, par ex.
+          <code>[1,2,3]</code>.
         </p>
 
         <p>
-          La dernière règle ne peut pas être conditionnelle
-          (doit être une <code>expression</code>).
+          La dernière règle ne peut pas être conditionnelle (doit être une <code>expression</code>).
         </p>
 
         <h4>Valeurs de retour</h4>
@@ -57,8 +47,8 @@
         <p>
           Chaque ligne doit retourner une valeur numérique ou un tableau avec deux valeurs
           numériques. Dans ce cas, la première valeur est le prix et la deuxième valeur est
-          l'assurance. Si une seule valeur numérique est fournie, l'assurance est considérée
-          être zéro.
+          l'assurance. Si une seule valeur numérique est fournie, l'assurance est considérée être
+          zéro.
         </p>
 
         <h4>Opérateurs disponibles</h4>
@@ -71,9 +61,7 @@
             <li><code>*</code> (multiplication)</li>
             <li><code>/</code> (division)</li>
             <li><code>%</code> (modulo)</li>
-            <li>
-              <code>**</code> (exponentiation e.g. <code>2**3</code> = 2<sup>3</sup> = 8)
-            </li>
+            <li><code>**</code> (exponentiation e.g. <code>2**3</code> = 2<sup>3</sup> = 8)</li>
           </ul>
 
           <li>Comparaison</li>
@@ -101,15 +89,13 @@
 
           <li>Autres</li>
           <ul>
-            <li>
-              <code>..</code> (plage e.g. <code>2..4</code> veut dire <code>[2, 3, 4]</code>)
-            </li>
+            <li><code>..</code> (plage e.g. <code>2..4</code> veut dire <code>[2, 3, 4]</code>)</li>
           </ul>
         </ul>
 
         <p>
-          Les règles de priorité des opérateurs s'appliquent. Utilisez des parenthèses
-          pour forcer un ordre.
+          Les règles de priorité des opérateurs s'appliquent. Utilisez des parenthèses pour forcer
+          un ordre.
         </p>
 
         <p>
@@ -132,10 +118,11 @@
 
         <ul>
           <li><code>$KM</code>, un entier représentant le kilométrage de l'emprunt;</li>
-          <li><code>$MINUTES</code>, un entier représentant la durée de l'emprunt en
-            minutes;</li>
-          <li><code>$OBJET</code>, une entité donnant accès à l'objet touché par la
-            tarification (non accessible pour la tarification générique).</li>
+          <li><code>$MINUTES</code>, un entier représentant la durée de l'emprunt en minutes;</li>
+          <li>
+            <code>$OBJET</code>, une entité donnant accès à l'objet touché par la tarification (non
+            accessible pour la tarification générique).
+          </li>
           <li><code>$EMPRUNT</code>, un objet contenant les valeurs:</li>
           <ul>
             <li><code>days</code>: le nombre de jours de calendriers</li>
@@ -154,15 +141,14 @@
         </ul>
 
         <p>
-          En ce qui concerne <code>$OBJET</code> et <code>$EMPRUNT</code>, on peut accéder à
-          leurs propriétés avec un point. Par exemple <code>OBJET.engine</code> pour le
-          mode de combustion d'une voiture ou <code>OBJET.size</code> pour la taille d'un
-          vélo.
+          En ce qui concerne <code>$OBJET</code> et <code>$EMPRUNT</code>, on peut accéder à leurs
+          propriétés avec un point. Par exemple <code>OBJET.engine</code> pour le mode de combustion
+          d'une voiture ou <code>OBJET.size</code> pour la taille d'un vélo.
         </p>
 
         <p>
-          Se référer à <a :href="unitTestUrl" target="_blank">ce fichier</a> pour
-          des exemple d'utilisation.
+          Se référer à <a :href="unitTestUrl" target="_blank">ce fichier</a> pour des exemple
+          d'utilisation.
         </p>
       </div>
     </b-collapse>
@@ -171,11 +157,12 @@
 
 <script>
 export default {
-  name: 'LanguageDefinition',
+  name: "LanguageDefinition",
   data() {
     return {
-      unitTestUrl: 'https://gitlab.com/Solon-collectif/locomotion.app/'
-        + '-/blob/master/tests/Unit/PricingTest.php',
+      unitTestUrl:
+        "https://gitlab.com/Solon-collectif/locomotion.app/" +
+        "-/blob/master/tests/Unit/PricingTest.php",
     };
   },
 };

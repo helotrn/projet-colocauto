@@ -10,21 +10,24 @@ use Mail;
 
 class SendLoanCanceledEmails
 {
-    public function handle(CanceledEvent $event) {
+    public function handle(CanceledEvent $event)
+    {
         $sender = $event->user;
         $loan = $event->loan;
         $owner = $loan->loanable->owner;
         $borrower = $loan->borrower;
 
         if ($owner && $owner->user->id !== $sender->id) {
-            Mail::to($owner->user->email, $owner->user->name . ' ' . $owner->user->last_name)
-              ->queue(new LoanCanceled($sender, $owner->user, $loan));
+            Mail::to(
+                $owner->user->email,
+                $owner->user->name . " " . $owner->user->last_name
+            )->queue(new LoanCanceled($sender, $owner->user, $loan));
         }
 
         if ($borrower && $borrower->user->id !== $sender->id) {
             Mail::to(
                 $borrower->user->email,
-                $borrower->user->name . ' ' . $borrower->user->last_name
+                $borrower->user->name . " " . $borrower->user->last_name
             )->queue(new LoanCanceled($sender, $borrower->user, $loan));
         }
     }

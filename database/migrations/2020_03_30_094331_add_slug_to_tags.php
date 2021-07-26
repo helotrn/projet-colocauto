@@ -8,15 +8,15 @@ class AddSlugToTags extends Migration
 {
     public function up()
     {
-        Schema::table('tags', function (Blueprint $table) {
-            $table->string('slug');
+        Schema::table("tags", function (Blueprint $table) {
+            $table->string("slug");
         });
     }
 
     public function down()
     {
-        Schema::table('tags', function (Blueprint $table) {
-            $table->dropColumn('slug');
+        Schema::table("tags", function (Blueprint $table) {
+            $table->dropColumn("slug");
         });
     }
 }

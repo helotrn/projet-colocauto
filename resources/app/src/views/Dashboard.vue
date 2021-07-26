@@ -3,7 +3,7 @@
     <b-container>
       <b-row class="page__section page__section__main">
         <b-col class="page__content" xl="9" lg="8" md="7">
-          <h1>{{ $t('welcome_text', { name: user.name })}}</h1>
+          <h1>{{ $t("welcome_text", { name: user.name }) }}</h1>
 
           <section class="page__section">
             <loan-covid-collapsible-section />
@@ -14,9 +14,7 @@
           </section>
 
           <section class="page__section" v-if="!hasCompletedRegistration">
-            <b-jumbotron bg-variant="light"
-              header="Inscription"
-              :lead="$t('lead_text')">
+            <b-jumbotron bg-variant="light" header="Inscription" :lead="$t('lead_text')">
               <b-button to="/register">Compléter l'inscription</b-button>
             </b-jumbotron>
           </section>
@@ -26,21 +24,30 @@
 
             <div class="page__section__tutorials">
               <div v-if="hasTutorial('discover-community')">
-                <tutorial-block :title="discoverCommunityTitle"
+                <tutorial-block
+                  :title="discoverCommunityTitle"
                   to="/community"
-                  bg-image="/img-tetes.png" variant="dark" />
+                  bg-image="/img-tetes.png"
+                  variant="dark"
+                />
               </div>
 
               <div v-if="hasTutorial('add-vehicle')">
-                <tutorial-block title="Inscrivez un véhicule"
+                <tutorial-block
+                  title="Inscrivez un véhicule"
                   to="/profile/loanables/new"
-                  bg-image="/img-voiture.png" variant="dark" />
+                  bg-image="/img-voiture.png"
+                  variant="dark"
+                />
               </div>
 
               <div v-if="hasTutorial('find-vehicle')">
-                <tutorial-block title="Réservez un véhicule"
+                <tutorial-block
+                  title="Réservez un véhicule"
                   to="/community/list"
-                  bg-image="/img-vehicules.png" variant="light" />
+                  bg-image="/img-vehicules.png"
+                  variant="light"
+                />
               </div>
             </div>
           </section>
@@ -65,8 +72,12 @@
             <h2>Emprunts à venir</h2>
 
             <div class="dashboard__upcoming-loans" v-for="loan in upcomingLoans" :key="loan.id">
-              <loan-info-box mode="upcoming"
-                :loan="loan" :user="user" :buttons="['view', 'cancel']" />
+              <loan-info-box
+                mode="upcoming"
+                :loan="loan"
+                :user="user"
+                :buttons="['view', 'cancel']"
+              />
             </div>
           </section>
 
@@ -85,11 +96,13 @@
             <div class="dashboard__vehicles">
               <div v-if="user.loanables.length > 0">
                 <loanable-info-box
-                  v-for="loanable in user.loanables" :key="loanable.id"
-                  v-bind="loanable" />
+                  v-for="loanable in user.loanables"
+                  :key="loanable.id"
+                  v-bind="loanable"
+                />
               </div>
               <div v-else>
-                Aucun véhicule.<br>
+                Aucun véhicule.<br />
                 Ajoutez-en un <router-link to="/profile/loanables/new">ici</router-link>.
               </div>
             </div>
@@ -101,7 +114,7 @@
             <div v-if="hasCompletedRegistration">
               <dashboard-balance :user="user" />
 
-              <hr>
+              <hr />
             </div>
 
             <div v-if="hasCompletedRegistration">
@@ -110,9 +123,10 @@
                 :upcoming-loans="upcomingLoans.slice(0, 3)"
                 :ongoing-loans="ongoingLoans.slice(0, 3)"
                 :waiting-loans="waitingLoans.slice(0, 3)"
-                :borrower="user.borrower" />
+                :borrower="user.borrower"
+              />
 
-              <hr>
+              <hr />
             </div>
 
             <dashboard-resources-list :user="user" />
@@ -137,22 +151,22 @@ en:
 </i18n>
 
 <script>
-import Authenticated from '@/mixins/Authenticated';
-import UserMixin from '@/mixins/UserMixin';
+import Authenticated from "@/mixins/Authenticated";
+import UserMixin from "@/mixins/UserMixin";
 
-import DashboardBalance from '@/components/Dashboard/Balance.vue';
-import DashboardLoanHistory from '@/components/Dashboard/LoanHistory.vue';
-import DashboardResourcesList from '@/components/Dashboard/ResourcesList.vue';
-import LoanCovidCollapsibleSection from '@/components/Loan/CovidCollapsibleSection.vue';
-import LoanInfoBox from '@/components/Loan/InfoBox.vue';
-import LoanableInfoBox from '@/components/Loanable/InfoBox.vue';
-import MainFaq from '@/components/Misc/MainFaq.vue';
-import ReleaseInfoBox from '@/components/Dashboard/ReleaseInfoBox.vue';
-import TutorialBlock from '@/components/Dashboard/TutorialBlock.vue';
-import PartnersSection from '@/components/Misc/PartnersSection.vue';
+import DashboardBalance from "@/components/Dashboard/Balance.vue";
+import DashboardLoanHistory from "@/components/Dashboard/LoanHistory.vue";
+import DashboardResourcesList from "@/components/Dashboard/ResourcesList.vue";
+import LoanCovidCollapsibleSection from "@/components/Loan/CovidCollapsibleSection.vue";
+import LoanInfoBox from "@/components/Loan/InfoBox.vue";
+import LoanableInfoBox from "@/components/Loanable/InfoBox.vue";
+import MainFaq from "@/components/Misc/MainFaq.vue";
+import ReleaseInfoBox from "@/components/Dashboard/ReleaseInfoBox.vue";
+import TutorialBlock from "@/components/Dashboard/TutorialBlock.vue";
+import PartnersSection from "@/components/Misc/PartnersSection.vue";
 
 export default {
-  name: 'Dashboard',
+  name: "Dashboard",
   mixins: [Authenticated, UserMixin],
   components: {
     DashboardBalance,
@@ -172,36 +186,41 @@ export default {
     }
 
     if (!this.user.name) {
-      this.$router.replace('/register');
+      this.$router.replace("/register");
     }
 
-    if (this.user.role === 'admin') {
-      this.$router.replace('/admin');
+    if (this.user.role === "admin") {
+      this.$router.replace("/admin");
     }
   },
   computed: {
     discoverCommunityTitle() {
-      if (this.user.communities[0].type === 'borough') {
-        return 'Découvrez votre quartier';
+      if (this.user.communities[0].type === "borough") {
+        return "Découvrez votre quartier";
       }
 
-      return 'Découvrez votre voisinage';
+      return "Découvrez votre voisinage";
     },
     hasTutorials() {
-      return this.hasTutorial('add-vehicle') || this.hasTutorial('find-vehicle')
-        || this.hasTutorial('discover-community');
+      return (
+        this.hasTutorial("add-vehicle") ||
+        this.hasTutorial("find-vehicle") ||
+        this.hasTutorial("discover-community")
+      );
     },
   },
   methods: {
     hasTutorial(name) {
       switch (name) {
-        case 'add-vehicle':
+        case "add-vehicle":
           return this.user.owner && this.user.loanables && this.user.loanables.length === 0;
-        case 'find-vehicle':
+        case "find-vehicle":
           return !!this.user.borrower && this.hasCommunity;
-        case 'discover-community':
-          return this.hasCommunity && this.user.created_at
-            >= this.$dayjs().subtract(2, 'week').format('YYYY-MM-DD HH:mm:ss');
+        case "discover-community":
+          return (
+            this.hasCommunity &&
+            this.user.created_at >= this.$dayjs().subtract(2, "week").format("YYYY-MM-DD HH:mm:ss")
+          );
         default:
           return false;
       }

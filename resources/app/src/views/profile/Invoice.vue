@@ -6,19 +6,18 @@
 </template>
 
 <script>
-import InvoiceSingle from '@/components/Invoice/Single.vue';
+import InvoiceSingle from "@/components/Invoice/Single.vue";
 
-import Authenticated from '@/mixins/Authenticated';
-import DataRouteGuards from '@/mixins/DataRouteGuards';
-import FormMixin from '@/mixins/FormMixin';
-import UserMixin from '@/mixins/UserMixin';
+import Authenticated from "@/mixins/Authenticated";
+import DataRouteGuards from "@/mixins/DataRouteGuards";
+import FormMixin from "@/mixins/FormMixin";
+import UserMixin from "@/mixins/UserMixin";
 
 export default {
-  name: 'ProfileInvoice',
+  name: "ProfileInvoice",
   mixins: [Authenticated, DataRouteGuards, FormMixin, UserMixin],
   components: { InvoiceSingle },
 };
 </script>
 
-<style lang="scss">
-</style>
+<style lang="scss"></style>

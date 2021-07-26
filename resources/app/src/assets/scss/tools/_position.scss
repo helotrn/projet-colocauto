@@ -17,53 +17,53 @@
  */
 
 @mixin position(
-  $type: null,
-  $position-xs: null,
-  $position-sm: null,
-  $position-md: null,
-  $position-lg: null,
-  $position-xl: null,
-  $position-xxl: null
+    $type: null,
+    $position-xs: null,
+    $position-sm: null,
+    $position-md: null,
+    $position-lg: null,
+    $position-xl: null,
+    $position-xxl: null
 ) {
-  @if ($type == "t") {
-    $type: "top";
-  }
-  @if ($type == "b") {
-    $type: "bottom";
-  }
-  @if ($type == "l") {
-    $type: "left";
-  }
-  @if ($type == "r") {
-    $type: "right";
-  }
+    @if ($type == "t") {
+        $type: "top";
+    }
+    @if ($type == "b") {
+        $type: "bottom";
+    }
+    @if ($type == "l") {
+        $type: "left";
+    }
+    @if ($type == "r") {
+        $type: "right";
+    }
 
-  @if ($position-xs != "") {
-    #{$type}: $position-xs;
-  }
-  @if ($position-sm != "") {
-    @include media-breakpoint-up(sm) {
-      #{$type}: $position-sm;
+    @if ($position-xs != "") {
+        #{$type}: $position-xs;
     }
-  }
-  @if ($position-md != "") {
-    @include media-breakpoint-up(md) {
-      #{$type}: $position-md;
+    @if ($position-sm != "") {
+        @include media-breakpoint-up(sm) {
+            #{$type}: $position-sm;
+        }
     }
-  }
-  @if ($position-lg != "") {
-    @include media-breakpoint-up(lg) {
-      #{$type}: $position-lg;
+    @if ($position-md != "") {
+        @include media-breakpoint-up(md) {
+            #{$type}: $position-md;
+        }
     }
-  }
-  @if ($position-xl != "") {
-    @include media-breakpoint-up(xl) {
-      #{$type}: $position-xl;
+    @if ($position-lg != "") {
+        @include media-breakpoint-up(lg) {
+            #{$type}: $position-lg;
+        }
     }
-  }
-  @if ($position-xxl != "") {
-    @include media-breakpoint-up(xxl) {
-      #{$type}: $position-xxl;
+    @if ($position-xl != "") {
+        @include media-breakpoint-up(xl) {
+            #{$type}: $position-xl;
+        }
     }
-  }
+    @if ($position-xxl != "") {
+        @include media-breakpoint-up(xxl) {
+            #{$type}: $position-xxl;
+        }
+    }
 }

@@ -7,16 +7,17 @@ use Carbon\Carbon;
 class Takeover extends Action
 {
     public static $rules = [
-        'status' => 'required',
-        'mileage_beginning' => [ 'nullable' ],
-        'comments_on_vehicle' => [ 'nullable' ],
+        "status" => "required",
+        "mileage_beginning" => ["nullable"],
+        "comments_on_vehicle" => ["nullable"],
     ];
 
     public static $sizes = [
-        'thumbnail' => '256x@fit',
+        "thumbnail" => "256x@fit",
     ];
 
-    public static function boot() {
+    public static function boot()
+    {
         parent::boot();
 
         self::saved(function ($model) {
@@ -25,9 +26,9 @@ class Takeover extends Action
             }
 
             switch ($model->status) {
-                case 'completed':
+                case "completed":
                     if (!$model->loan->handover) {
-                        $handover = new Handover;
+                        $handover = new Handover();
                         $handover->loan()->associate($model->loan);
                         $handover->save();
                     }
@@ -35,7 +36,7 @@ class Takeover extends Action
                     $model->executed_at = Carbon::now();
                     $model->save();
                     break;
-                case 'canceled':
+                case "canceled":
                     $model->executed_at = Carbon::now();
                     $model->save();
                     break;
@@ -45,41 +46,41 @@ class Takeover extends Action
         });
     }
 
-    public static function getColumnsDefinition() {
+    public static function getColumnsDefinition()
+    {
         return [
-            '*' => function ($query = null) {
+            "*" => function ($query = null) {
                 if (!$query) {
-                    return 'takeovers.*';
+                    return "takeovers.*";
                 }
 
-                return $query->selectRaw('takeovers.*');
+                return $query->selectRaw("takeovers.*");
             },
-            'type' => function ($query = null) {
+            "type" => function ($query = null) {
                 if (!$query) {
                     return "'takeover' AS type";
                 }
 
                 return $query->selectRaw("'takeover' AS type");
-            }
+            },
         ];
     }
 
-    protected $fillable = [
-        'mileage_beginning',
-        'comments_on_vehicle',
-    ];
+    protected $fillable = ["mileage_beginning", "comments_on_vehicle"];
 
     public $readOnly = false;
 
     public $morphOnes = [
-        'image' => 'imageable',
+        "image" => "imageable",
     ];
 
-    public function image() {
-        return $this->morphOne(Image::class, 'imageable');
+    public function image()
+    {
+        return $this->morphOne(Image::class, "imageable");
     }
 
-    public function loan() {
+    public function loan()
+    {
         return $this->belongsTo(Loan::class);
     }
 }

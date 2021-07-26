@@ -6,15 +6,23 @@ use Illuminate\Support\Facades\Schema;
 
 class MakeLoanIdNullableOnExtensions extends Migration
 {
-    public function up() {
-        Schema::table('extensions', function (Blueprint $table) {
-            $table->unsignedBigInteger('loan_id')->nullable()->change();
+    public function up()
+    {
+        Schema::table("extensions", function (Blueprint $table) {
+            $table
+                ->unsignedBigInteger("loan_id")
+                ->nullable()
+                ->change();
         });
     }
 
-    public function down() {
-        Schema::table('extensions', function (Blueprint $table) {
-            $table->unsignedBigInteger('loan_id')->nullable(false)->change();
+    public function down()
+    {
+        Schema::table("extensions", function (Blueprint $table) {
+            $table
+                ->unsignedBigInteger("loan_id")
+                ->nullable(false)
+                ->change();
         });
     }
 }

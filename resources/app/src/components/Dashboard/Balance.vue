@@ -2,46 +2,52 @@
   <div class="dashboard-balance">
     <h3>
       Solde
-      <b-badge pill variant="light" v-b-popover.hover="$t('approvisionner_popover')">
-        ?
-      </b-badge></h3>
+      <b-badge pill variant="light" v-b-popover.hover="$t('approvisionner_popover')"> ? </b-badge>
+    </h3>
 
-    <div class="dashboard-balance__balance">
-      {{ roundedBalance }}&nbsp;$
-    </div>
+    <div class="dashboard-balance__balance">{{ roundedBalance }}&nbsp;$</div>
 
     <div class="dashboard-balance__buttons">
       <b-button class="mr-3" size="sm" variant="primary" v-b-modal.add-credit-modal>
-        {{ $t('approvisionner') }}
+        {{ $t("approvisionner") }}
       </b-button>
 
-      <span v-if="user.balance < 10"
-        tabindex="0"  v-b-tooltip.hover :title="$t('reclamer_tooltip')">
+      <span v-if="user.balance < 10" tabindex="0" v-b-tooltip.hover :title="$t('reclamer_tooltip')">
         <b-button size="sm" variant="outline-primary" disabled>
-          {{ $t('reclamer') }}
+          {{ $t("reclamer") }}
         </b-button>
       </span>
       <b-button v-else size="sm" variant="outline-primary" v-b-modal.claim-modal>
-        {{ $t('reclamer') }}
+        {{ $t("reclamer") }}
       </b-button>
     </div>
 
     <p class="dashboard-balance__payment-methods">
       <router-link to="/profile/payment_methods">
-        {{ $t('modify_payment_method') }}
+        {{ $t("modify_payment_method") }}
       </router-link>
     </p>
 
-    <b-modal id="add-credit-modal" title="Approvisionner mon compte" size="lg"
-      footer-class="d-none">
-      <user-add-credit-box :user="user"
-        @bought="reloadUserAndCloseModal" @cancel="closeModal"/>
+    <b-modal
+      id="add-credit-modal"
+      title="Approvisionner mon compte"
+      size="lg"
+      footer-class="d-none"
+    >
+      <user-add-credit-box :user="user" @bought="reloadUserAndCloseModal" @cancel="closeModal" />
     </b-modal>
 
-    <b-modal id="claim-modal" title="Réclamer l'argent au compte LocoMotion" size="md"
-      footer-class="d-none">
-      <user-claim-credits-box :user="user"
-        @claimed="reloadUserAndCloseModal" @cancel="closeModal" />
+    <b-modal
+      id="claim-modal"
+      title="Réclamer l'argent au compte LocoMotion"
+      size="md"
+      footer-class="d-none"
+    >
+      <user-claim-credits-box
+        :user="user"
+        @claimed="reloadUserAndCloseModal"
+        @cancel="closeModal"
+      />
     </b-modal>
   </div>
 </template>
@@ -57,11 +63,11 @@ fr:
 </i18n>
 
 <script>
-import UserAddCreditBox from '@/components/User/AddCreditBox.vue';
-import UserClaimCreditsBox from '@/components/User/ClaimCreditsBox.vue';
+import UserAddCreditBox from "@/components/User/AddCreditBox.vue";
+import UserClaimCreditsBox from "@/components/User/ClaimCreditsBox.vue";
 
 export default {
-  name: 'DashboardBalance',
+  name: "DashboardBalance",
   components: {
     UserAddCreditBox,
     UserClaimCreditsBox,
@@ -79,11 +85,11 @@ export default {
   },
   methods: {
     closeModal() {
-      this.$bvModal.hide('add-credit-modal');
-      this.$bvModal.hide('claim-modal');
+      this.$bvModal.hide("add-credit-modal");
+      this.$bvModal.hide("claim-modal");
     },
     async reloadUser() {
-      await this.$store.dispatch('loadUser');
+      await this.$store.dispatch("loadUser");
     },
     async reloadUserAndCloseModal() {
       this.closeModal();

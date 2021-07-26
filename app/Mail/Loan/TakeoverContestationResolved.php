@@ -24,18 +24,19 @@ class TakeoverContestationResolved extends BaseMailable
         User $receiver,
         User $admin
     ) {
-         $this->takeover = $takeover;
-         $this->loan = $loan;
-         $this->receiver = $receiver;
-         $this->admin = $admin;
+        $this->takeover = $takeover;
+        $this->loan = $loan;
+        $this->receiver = $receiver;
+        $this->admin = $admin;
     }
 
-    public function build() {
-        return $this->view('emails.loan.takeover_contestation_resolved')
+    public function build()
+    {
+        return $this->view("emails.loan.takeover_contestation_resolved")
             ->subject("LocoMotion - Données de l'emprunt mises à jour")
-            ->text('emails.loan.takeover_contestation_resolved_text')
+            ->text("emails.loan.takeover_contestation_resolved_text")
             ->with([
-                'title' => "Données de l'emprunt mises à jour"
+                "title" => "Données de l'emprunt mises à jour",
             ]);
     }
 }

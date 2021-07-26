@@ -6,27 +6,31 @@ use Illuminate\Database\Migrations\Migration;
 
 class CreateIncidentsTable extends Migration
 {
-    public function up() {
-        Schema::create('incidents', function (Blueprint $table) {
-            $table->bigIncrements('id');
+    public function up()
+    {
+        Schema::create("incidents", function (Blueprint $table) {
+            $table->bigIncrements("id");
 
-            $table->dateTimeTz('executed_at');
-            $table->enum('status', ['in_process', 'canceled', 'completed']);
-            $table->unsignedBigInteger('loan_id');
+            $table->dateTimeTz("executed_at");
+            $table->enum("status", ["in_process", "canceled", "completed"]);
+            $table->unsignedBigInteger("loan_id");
 
             //Incident-specific fields
-            $table->enum('incident_type', ['accident']);
+            $table->enum("incident_type", ["accident"]);
 
             $table->timestamps();
             $table->softDeletes();
 
-            $table->foreign('loan_id')
-                ->references('id')->on('loans')
-                ->onDelete('cascade');
+            $table
+                ->foreign("loan_id")
+                ->references("id")
+                ->on("loans")
+                ->onDelete("cascade");
         });
     }
 
-    public function down() {
-        Schema::dropIfExists('incidents');
+    public function down()
+    {
+        Schema::dropIfExists("incidents");
     }
 }
