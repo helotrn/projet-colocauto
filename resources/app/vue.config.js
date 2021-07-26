@@ -49,6 +49,7 @@ module.exports = {
         },
       },
       public: process.env.APP_URL,
+      disableHostCheck: true
     },
     plugins,
   },
