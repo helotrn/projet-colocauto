@@ -12,23 +12,49 @@
     <b-row>
       <b-col class="loan-header__description">
         <p class="loan-header__description__people">
-          <a href="#" v-b-modal="'borrower-modal'" v-if="userRole !== 'borrower'">
-            {{ loan.borrower.user.full_name }}
-          </a>
+          <span v-if="userRole !== 'borrower'">
+            Emprunteur-se&nbsp;:
+            <a v-if=borrowerUrl :href=borrowerUrl>
+              {{ loan.borrower.user.full_name }}
+            </a>
+            <span v-else>
+              {{ loan.borrower.user.full_name }}
+            </span>
+            <span class="badge badge-light badge-pill" v-b-modal="'borrower-modal'">
+              ?
+            </span>
+          </span>
 
           <br v-if="userRole === 'other'" />
 
-          <a href="#" v-b-modal="'owner-modal'" v-if="loan.loanable.owner && userRole !== 'owner'">
-            {{ loan.loanable.owner.user.full_name }}
-          </a>
+          <span v-if="loan.loanable.owner && userRole !== 'owner'">
+            Propriétaire&nbsp;:
+            <a v-if=ownerUrl :href=ownerUrl>
+              {{ loan.loanable.owner.user.full_name }}
+            </a>
+            <span v-else v-b-modal="'owner-modal'">
+              {{ loan.loanable.owner.user.full_name }}
+            </span>
+            <span class="badge badge-light badge-pill" v-b-modal="'owner-modal'">
+              ?
+            </span>
+          </span>
           <span v-else-if="loan.loanable.community">
+            Communauté&nbsp;:
             {{ loan.loanable.community.name }}
           </span>
         </p>
         <p class="loan-header__description__loan">
-          <a href="#" v-b-modal="'loanable-modal'">
+          Véhicule&nbsp;:
+          <a v-if=loanableUrl :href=loanableUrl>
             {{ prettyType }} {{ loanableDescription }} {{ loanableOwnerText }}
           </a>
+          <span v-else>
+            {{ prettyType }} {{ loanableDescription }} {{ loanableOwnerText }}
+          </span>
+          <span class="badge badge-light badge-pill" v-b-modal="'loanable-modal'">
+            ?
+          </span>
           <br />
           <span v-if="singleDay">
             {{ loan.departure_at | day | capitalize }} {{ loan.departure_at | date }}
@@ -198,6 +224,41 @@ export default {
       }
 
       return "other";
+    },
+    userIsAdmin() {
+      // User is global admin
+      if (this?.user?.role === "admin")
+        return true;
+
+      // User is admin of the community to which the loanable belongs.
+      const community = this?.user?.communities?.find(
+        (c) => c.id && c.id === this?.loan?.loanable?.community_id);
+
+      return community?.role === "admin";
+    },
+    borrowerUrl() {
+      const borrowerId = this?.loan?.borrower?.user?.id;
+
+      if (this.userIsAdmin && borrowerId)
+        return '/admin/users/'+borrowerId
+
+      return "";
+    },
+    ownerUrl() {
+      const ownerId = this?.loan?.loanable?.owner?.user?.id;
+
+      if (this.userIsAdmin && ownerId)
+        return '/admin/users/'+ownerId;
+
+      return "";
+    },
+    loanableUrl() {
+      const loanableId = this?.loan?.loanable?.id;
+
+      if (this.userIsAdmin && loanableId)
+        return '/admin/loanables/'+loanableId;
+
+      return "";
     },
   },
 };

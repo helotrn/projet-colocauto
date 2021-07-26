@@ -1,20 +1,61 @@
-@extends('emails.layouts.main')
+@extends('emails.layouts.main') @section('content')
 
-@section('content')
-<p>
-    Un&bull;e nouveau&bull;lle membre, {{ $user->name }}, a complété son profil d'emprunteur
-    dans les communautés suivantes&nbsp;:
+<p
+    style="
+        text-align: justify;
+        margin-top: 0;
+        font-weight: 390;
+        font-size: 17px;
+        line-height: 24px;
+        color: #343a40;
+    "
+>
+    Un-e nouveau-lle membre, {{ $user->name }}, a complété son profil
+    d'emprunteur dans les communautés suivantes&nbsp;:
 </p>
 <ul>
     @foreach ($communities as $community)
-        <li>{{ $community->name }}</li>
+    <li
+        style="
+            text-align: justify;
+            font-weight: 390;
+            font-size: 17px;
+            line-height: 24px;
+            color: #343a40;
+        "
+    >
+        {{ $community->name }}
+    </li>
     @endforeach
 </ul>
-<p>
+<p
+    style="
+        text-align: justify;
+        font-weight: 390;
+        font-size: 17px;
+        line-height: 24px;
+        color: #343a40;
+    "
+>
     Le profil peut maintenant être validé.
 </p>
-
-<p style="text-align: center;">
-<a href="{{ url('/admin/users/' . $user->id) }}#borrower" style="display: inline-block; background-color: #246AEA; padding: 10px; border-radius: 3px; color: white; font-weight: bold; text-decoration: none;" target="_blank">Voir le profil</a>
+<p style="text-align: center; margin-bottom: 0">
+    <a
+        href="{{ url('/admin/users/' . $user->id) }}#borrower"
+        style="
+            display: inline-block;
+            background-color: #246aea;
+            padding: 8px 16px;
+            border-radius: 5px;
+            color: white;
+            font-weight: bold;
+            font-size: 17px;
+            line-height: 24px;
+            text-decoration: none;
+        "
+        target="_blank"
+        >Voir le profil</a
+    >
 </p>
+
 @endsection
