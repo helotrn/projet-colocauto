@@ -45,10 +45,11 @@ services:
         volumes:
             - ./resources/app:/app
         ports:
-            - 8080:8080
+            - 8080:80
         environment:
             SERVER_URL: http://php:8000
             APP_URL: localhost:8080
+            PORT: 80
     postgres:
         build:
             context: psql
