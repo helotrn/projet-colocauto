@@ -64,7 +64,7 @@
     .navbar-brand {
         font-size: 1rem;
         position: relative;
-        top: 5px;
+        top: 0;
 
         @include media-breakpoint-up(lg) {
             font-size: 1.6rem;
@@ -73,7 +73,7 @@
         &--title {
             padding-bottom: 0;
             position: relative;
-            top: 3px;
+            top: 0.12em;
             line-height: 30px;
         }
 
@@ -204,6 +204,14 @@
         line-height: 16px;
         color: #67737f;
     }
+}
+
+.navbar-collapse {
+    height: 70px;
+}
+
+.mr-auto {
+    height: 40px;
 }
 
 .dropdown-menu {
