@@ -49,7 +49,7 @@ module.exports = {
         },
       },
       public: process.env.FRONTEND_URL,
-      disableHostCheck: true
+      disableHostCheck: true,
     },
     plugins,
   },
