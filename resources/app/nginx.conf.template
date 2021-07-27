@@ -1,11 +1,11 @@
-events {}
-http {
-  include    mime.types;
-  server {
-    listen  80;
-    root    /usr/share/nginx/html;
-    location /api {
-        proxy_pass ${SERVER_URL}/api;
-    }
+server {
+  listen  ${PORT};
+  root    /usr/share/nginx/html;
+
+  location / {
+    try_files $uri /index.html =404;
+  }
+  location /api {
+      proxy_pass ${BACKEND_URL}/api;
   }
 }
