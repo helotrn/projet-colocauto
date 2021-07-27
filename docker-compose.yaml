@@ -12,6 +12,11 @@ services:
             - .env.docker:/app/.env
         ports:
             - 8000:8000
+        secrets:
+          - source: oauth-private
+            target: /app/storage/oauth-private.key
+          - source: oauth-public
+            target: /app/storage/oauth-public.key
         environment:
             LOG_CHANNEL: stderr
             APP_ENV: local
@@ -37,8 +42,6 @@ services:
             S3_REGION: canada
             S3_BUCKET: locomotion
             S3_URL: http://minio:9000
-            OAUTH_PRIVATE: -----BEGIN RSA PRIVATE KEY-----\n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\n-----END RSA PRIVATE KEY-----
-            OAUTH_PUBLIC: -----BEGIN PUBLIC KEY-----\nMIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAnOYR+HAlHC2h+XRKcbUZ\ntN7UETreaxQEdalKqE9uEdIPr79is7MO0jHu3jfUqMnyjBGYohzEsRiSDRW3rh71\n7e62dhO7eEodWpALTuX/L7FrQKVI2L2j7TJ07OhiEVYqx6+dyrPtU5wwTgJLxUbV\nWn8ExKRY7iyJok6PgiFn146WWDKboQBdz5KXuUXcZbUbSy+6SHEWNqevbs20cgOj\norD291K+S7L55d2N2n6vhZpnWRzrXXn5HFRyzvXjRD9ks5611JjpMceBLhpIFdZS\n2jj9/w+u2htZne1ap+UD6QVRmpyBil/3DGzHzsSJf/a6+a/VLYu53KOQuy+HGYE1\ngh4KONGrMlaS8u83l36KsUuGlz11qDAu/ZYwJFtvP50avUq4R7jtKFzIJt+65uIQ\ngUWMDq+gd434xw97Im27DqQB3EtW4qzK1mQOlO+lt4pni2JjI9xCKDKS+XiNsntC\nB0+6BPFP97XaOkb3t4l8zhuIKtB5MVD59lCnqYQOUaW5iOGrEcETFQzWVmCMa5CE\nLNGM9tD6c4l1dO0wastc6NXNO08ZYdRggDlgETrByW3Kb8VKZLor6wrwEvRpZZoO\npzWn5PjiTYdehunx8LbVYDVwI/vFxkuNwA18uGDfngvY+bXcndcyDeKNE8KGEX9R\nJFFPLQm2GUHWM8KnBzmyrp8CAwEAAQ==\n-----END PUBLIC KEY-----
     vue:
         depends_on:
             - php
@@ -72,3 +75,8 @@ services:
 
 volumes:
     postgres-data:
+secrets:
+  oauth-private:
+    file: ./secrets/oauth-private.key
+  oauth-public:
+    file: ./secrets/oauth-public.key
