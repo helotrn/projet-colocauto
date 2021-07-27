@@ -31,6 +31,7 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 ENV COMPOSER_MEMORY_LIMIT=-1
 
 CMD bash -c "php artisan key:generate && \
+             php artisan passport:install && \
              composer install && \
              php artisan migrate && \
              php artisan serve --host=0.0.0.0"
@@ -41,5 +42,6 @@ COPY . .
 RUN composer install
 
 CMD bash -c "php artisan key:generate && \
+             php artisan passport:install && \
              php artisan migrate && \
              php artisan serve --host=0.0.0.0"
