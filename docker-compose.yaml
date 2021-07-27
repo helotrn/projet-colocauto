@@ -37,6 +37,73 @@ services:
             S3_REGION: canada
             S3_BUCKET: locomotion
             S3_URL: http://minio:9000
+            OAUTH_PRIVATE: > 
+              -----BEGIN RSA PRIVATE KEY-----
+              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
+              -----END RSA PRIVATE KEY-----
+            OAUTH_PUBLIC: >
+              -----BEGIN PUBLIC KEY-----
+              MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAtuuycJYXxnHGzg9XdA3w
+              gWwb9JdkvtBHtlX5QPQMxPcb4UFxZ5ExbgUVyjeluAROrhNU22Nyf24mx+DcG5EI
+              5CmoS2H241GP648f4Lluz2YEgMgwA429cmiUEDk+Mz+2+kDacGy3tgtbF2UE5MOv
+              SgOJDeN/VMlCo190CBiptJC8uer2NrLWpMlfc05GxH8vJKLDqcS5Y5dCf0Zitker
+              v/zTtU3u3+eZLyU/vJ/J2lH7FKflajozZjJWF5Zdn+4nZz4ec7zd8VkDWi7kogTv
+              VE1zdNKHDnO8C+AARIFN5pi5uBQ3EsZbOeOnq980/6eoRZK9p2E2E30eR7e/g501
+              6zOnrkWtB6toqzddjmJ3a7qrtt4xDcYuev2EUx8IltkItvrmKTLrQP5v9BYXeyCb
+              /Bnf6g1QXanUlJJ5v1k3pzJcuRkSSw0JyRnHMW8al3RrUJP6nEWCB4i4ui/OTpPu
+              uVlLwaiC/8Rzy2BFUXPWUTb+JbyNtzAIaGG293PqMw+J/jt5O9trIXKlwIEr2W8o
+              Y/2AE1hNTxRSuEI+hSmpSZOREzuQEH/cXRgXDhj878JTkiRRA3DaTriMiWIbcXwV
+              T1Fuzx7phxJECWYGdXjNeuDnPC5MkxL07fGKNMPCVAEaqe97KWjVqhZRom0dDZ4D
+              DjmjZSi60jrAy7LeVb9rehcCAwEAAQ==
+              -----END PUBLIC KEY-----
     vue:
         depends_on:
             - php
