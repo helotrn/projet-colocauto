@@ -79,6 +79,6 @@ volumes:
     postgres-data:
 secrets:
     oauth-private:
-        file: ./secrets/oauth-private.key
+        file: ./secrets/oauth-private-dev.key
     oauth-public:
-        file: ./secrets/oauth-public.key
+        file: ./secrets/oauth-public-dev.key
