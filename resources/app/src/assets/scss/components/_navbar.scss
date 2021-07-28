@@ -13,7 +13,7 @@
         &__collapse {
             @include media-breakpoint-down(md) {
                 position: absolute;
-                top: #{$layout-navbar-height-mobile - 13};
+                top: #{$layout-navbar-height-mobile - 15};
                 left: 0;
                 right: 0;
                 z-index: 1000;
@@ -148,13 +148,17 @@
         margin-left: -12px;
         margin-right: 27px;
         padding-left: $grid-gutter-width / 2;
-    }
 
+    }
+    
     .navbar-toggler {
         border: 0;
         display: flex;
         justify-content: center;
         align-items: center;
+        @include media-breakpoint-up(lg) {
+            display: none;
+        }
     }
 
     .navbar-toggler-icon {
@@ -163,7 +167,7 @@
         background-image: url("/menu.svg");
     }
 
-    .navbar-toggle-wrapper--active .navbar-toggler-icon {
+    .not-collapsed .navbar-toggler-icon  {
         background-image: url("/menu-open.svg");
     }
 
