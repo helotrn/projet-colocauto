@@ -105,16 +105,10 @@ class File extends BaseModel
 
     public function getUrlAttribute()
     {
-        $base =
-            app()->environment() === "local"
-                ? app()
-                    ->make("url")
-                    ->to("/")
-                : env("CDN_URL");
-
         $tokenQueryString = $this->getTokenQueryString();
+        $appUrl = env("BACKEND_URL_FROM_BROWSER");
 
-        return "{$base}{$this->path}/{$this->filename}" . $tokenQueryString;
+        return "{$appUrl}{$this->path}/{$this->filename}" . $tokenQueryString;
     }
 
     protected function getTokenQueryString()
