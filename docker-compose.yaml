@@ -13,10 +13,10 @@ services:
         ports:
             - 8000:8000
         secrets:
-          - source: oauth-private
-            target: /app/storage/oauth-private
-          - source: oauth-public
-            target: /app/storage/oauth-public
+            - source: oauth-private
+              target: /app/storage/oauth-private
+            - source: oauth-public
+              target: /app/storage/oauth-public
         environment:
             LOG_CHANNEL: stderr
             APP_ENV: local
@@ -43,7 +43,7 @@ services:
             S3_BUCKET: locomotion
             S3_URL: http://minio:9000
             oauth_private_PATH: /app/storage/oauth-private
-            oauth_public_PATH: /app/storage/oauth-public            
+            oauth_public_PATH: /app/storage/oauth-public
     vue:
         depends_on:
             - php
@@ -78,7 +78,7 @@ services:
 volumes:
     postgres-data:
 secrets:
-  oauth-private:
-    file: ./secrets/oauth-private.key
-  oauth-public:
-    file: ./secrets/oauth-public.key
+    oauth-private:
+        file: ./secrets/oauth-private.key
+    oauth-public:
+        file: ./secrets/oauth-public.key
