@@ -136,8 +136,9 @@
             <b-row class="loan-actions__alert">
               <b-col>
                 <b-alert variant="warning" show>
-                  Dans 48h, vous ne pourrez plus modifier vos informations. Nous validerons le coût
-                  de l'emprunt avec les détails ci-dessus.
+                  Les informations de l'emprunt peuvent être modifiées jusqu'à 48h après sa
+                  conclusion. À partir de ce moment, le coût de l'emprunt sera validé avec les
+                  détails ci-dessus.
                 </b-alert>
               </b-col>
             </b-row>

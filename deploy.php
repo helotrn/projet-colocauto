@@ -40,7 +40,6 @@ set("git_tty", true);
 set("default_timeout", 600);
 
 add("shared_files", ["resources/app/.env"]);
-add("shared_dirs", ["resources/app/node_modules"]);
 
 add("writable_dirs", []);
 
@@ -103,7 +102,8 @@ after("deploy:reload", "deploy:reload:queue");
 
 desc("Build frontend application");
 task("deploy:build", function () {
-    run("cd {{release_path}}/resources/app && yarn && yarn build");
+    run("cd {{release_path}}/resources/app && npm install");
+    run("cd {{release_path}}/resources/app && npm run build");
 });
 before("deploy:symlink", "deploy:build");
 
