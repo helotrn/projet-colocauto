@@ -41,6 +41,6 @@ FROM dev as prod
 COPY . .
 RUN composer install
 
-CMD bash -c "./docker-entrypoint.sh && \
-             php artisan migrate && \
+CMD bash -c "php artisan migrate && \
+            ./docker-entrypoint.sh && \
              php artisan serve --host=0.0.0.0"
