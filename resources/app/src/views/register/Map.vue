@@ -8,7 +8,7 @@
       </template>
       <b-card-text>
         <div class="register-map__community__description">
-          <p>Youpie, vous pouvez rejoindre ce voisinage!</p>
+          <p>Youpi, vous pouvez rejoindre ce voisinage!</p>
 
           <p v-if="community.description">
             {{ community.description }}
