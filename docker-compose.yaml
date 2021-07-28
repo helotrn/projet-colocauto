@@ -14,9 +14,9 @@ services:
             - 8000:8000
         secrets:
           - source: oauth-private
-            target: /app/storage/oauth-private.key
+            target: /app/storage/oauth-private
           - source: oauth-public
-            target: /app/storage/oauth-public.key
+            target: /app/storage/oauth-public
         environment:
             LOG_CHANNEL: stderr
             APP_ENV: local
@@ -42,6 +42,8 @@ services:
             S3_REGION: canada
             S3_BUCKET: locomotion
             S3_URL: http://minio:9000
+            oauth_private_PATH: /app/storage/oauth-private
+            oauth_public_PATH: /app/storage/oauth-public            
     vue:
         depends_on:
             - php
