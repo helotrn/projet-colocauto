@@ -18,6 +18,7 @@ use Illuminate\Support\Str;
 use Laravel\Passport\TokenRepository;
 use Laravel\Socialite\Facades\Socialite;
 use Molotov\Traits\RespondsWithErrors;
+use Illuminate\Support\Facades\Log;
 
 class AuthController extends RestController
 {
@@ -42,6 +43,10 @@ class AuthController extends RestController
 
     public function login(LoginRequest $request)
     {
+        $public_key = file_get_contents('/app/storage/oauth-public.key');
+        $private_key = file_get_contents('/app/storage/oauth-private.key');
+        Log::info(json_encode(['public' => $public_key]));
+        Log::info(json_encode(['private' => $private_key]));
         $email = $request->get("email");
         $password = $request->get("password");
 
