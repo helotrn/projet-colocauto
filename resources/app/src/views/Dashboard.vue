@@ -41,7 +41,7 @@
                 />
               </div>
 
-              <div v-if="hasTutorial("find-vehicle")">
+              <div v-if="hasTutorial('find-vehicle')">
                 <tutorial-block
                   title="Réservez un véhicule"
                   to="/community/list"
