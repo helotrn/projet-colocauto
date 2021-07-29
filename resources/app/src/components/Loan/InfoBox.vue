@@ -219,7 +219,7 @@ export default {
     async cancelLoan() {
       const intention = this.loan.actions.find((a) => a.type === "intention");
       try {
-        await this.$store.dispatch("loans/cancelAction", intention);
+        await this.$store.dispatch("loans/cancel", this.loan.id);
         await this.$store.dispatch("loadUser");
       } catch (e) {
         throw e;
