@@ -87,7 +87,7 @@
               <b-button
                 size="sm"
                 variant="outline-danger"
-                v-if="userRole !== 'owner'"
+                v-if="hasButton('cancel')"
                 @click.prevent="cancelLoan"
               >
                 Annuler
