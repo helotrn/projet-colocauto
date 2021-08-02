@@ -215,7 +215,7 @@ export default {
         case "add-vehicle":
           return this.user.owner && this.user.loanables && this.user.loanables.length === 0;
         case "find-vehicle":
-          return !!this.user.borrower && this.hasCommunity;
+          return this.canLoanVehicle;
         case "discover-community":
           return (
             this.hasCommunity &&
