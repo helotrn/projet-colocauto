@@ -30,7 +30,6 @@ services:
             DB_USERNAME: locomotion
             DB_PASSWORD: locomotion
             ENABLE_TEST_ROUTES: "true"
-            CACHE_DRIVER: "database"
             MAIL_DRIVER: log
             PASSWORD_CLIENT_ID: pTrmRvquBD6mXlep
             PASSWORD_CLIENT_SECRET: 1hu8xmgtXI8O6HRH4zIbRt92X6rSLCgY6NtTNyxN
