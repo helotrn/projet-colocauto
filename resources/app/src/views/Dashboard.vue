@@ -56,7 +56,12 @@
             <h2>Nouvelles demandes d'emprunt</h2>
 
             <div class="dashboard__waiting-loans" v-for="loan in waitingLoans" :key="loan.id">
-              <loan-info-box v-if="isBorrower(loan)" :loan="loan" :user="user" :buttons="['view', 'cancel']" />
+              <loan-info-box
+                v-if="isBorrower(loan)"
+                :loan="loan"
+                :user="user"
+                :buttons="['view', 'cancel']"
+              />
               <loan-info-box v-else :loan="loan" :user="user" />
             </div>
           </section>

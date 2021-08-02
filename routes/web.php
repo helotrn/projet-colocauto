@@ -30,4 +30,6 @@ if (env("ENABLE_TEST_ROUTES", false)) {
     );
 }
 
-Route::get("/{any?}", "StaticController@app")->where("any", ".*")->name("app");
+Route::get("/{any?}", "StaticController@app")
+    ->where("any", ".*")
+    ->name("app");
