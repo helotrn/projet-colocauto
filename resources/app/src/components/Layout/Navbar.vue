@@ -97,7 +97,7 @@
             </b-badge>
             <span class="dropdown-container">
               <span class="username"> {{ user.name }}</span>
-              <span class="username-title">Super voisine</span>
+              <span class="username-title"></span>
             </span>
           </b-dropdown-item>
           <b-dropdown-divider v-if="!isGlobalAdmin && hasCompletedRegistration" />
