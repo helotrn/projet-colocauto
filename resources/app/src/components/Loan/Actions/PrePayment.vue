@@ -1,7 +1,11 @@
 <template>
   <b-card no-body class="loan-form loan-actions loan-actions-pre_payment">
-    <b-card-header header-tag="header" role="tab" class="loan-actions__header"
-      v-b-toggle.loan-actions-pre_payment>
+    <b-card-header
+      header-tag="header"
+      role="tab"
+      class="loan-actions__header"
+      v-b-toggle.loan-actions-pre_payment
+    >
       <h2>
         <svg-waiting v-if="action.status === 'in_process' && !loanIsCanceled" />
         <svg-check v-else-if="action.status === 'completed'" />
@@ -14,9 +18,7 @@
       <span v-if="action.status === 'in_process' && loanIsCanceled">
         Emprunt annulé &bull; {{ item.canceled_at | datetime }}
       </span>
-      <span v-else-if="action.status == 'in_process'">
-        En attente
-      </span>
+      <span v-else-if="action.status == 'in_process'"> En attente </span>
       <span v-else-if="action.status === 'completed'">
         Complété &bull; {{ action.executed_at | datetime }}
       </span>
@@ -25,44 +27,44 @@
       </span>
     </b-card-header>
 
-
     <b-card-body>
-      <b-collapse id="loan-actions-pre_payment" role="tabpanel" accordion="loan-actions"
-        :visible="open">
-        <div class="loan-actions-pre_payment__description mb-3"
-          v-if="!action.executed_at">
+      <b-collapse
+        id="loan-actions-pre_payment"
+        role="tabpanel"
+        accordion="loan-actions"
+        :visible="open"
+      >
+        <div class="loan-actions-pre_payment__description mb-3" v-if="!action.executed_at">
           <!-- Action is not completed -->
           <div v-if="action.status === 'in_process' && loanIsCanceled">
-            <p>
-              L'emprunt a été annulé. Cette étape ne peut pas être complétée.
-            </p>
+            <p>L'emprunt a été annulé. Cette étape ne peut pas être complétée.</p>
           </div>
           <div v-else-if="userRoles.includes('borrower')">
-            <p>
-              Utiliser votre solde ou payer directement.
-            </p>
+            <p>Utiliser votre solde ou payer directement.</p>
 
             <user-add-credit-box
               :minimumRequired="minimumRequired"
-              :user="user" @bought="completeAction" />
+              :user="user"
+              @bought="completeAction"
+              @cancel="cancelAction"
+            />
 
-            <div class="loan-actions-intention__buttons"
-              v-if="user.balance >= (item.estimated_price + item.estimated_insurance)">
+            <div class="loan-actions-intention__buttons" v-if="canComplete">
               <p>Ou compléter cette étape sans plus attendre.</p>
 
-              <b-button size="sm" variant="success" class="mr-3" @click="completeAction">
-                Compléter
-              </b-button>
+              <div class="text-center">
+                <b-button size="sm" variant="success" class="mr-3" @click="completeAction">
+                  Compléter
+                </b-button>
 
-              <b-button size="sm" variant="outline-danger" @click="cancelAction">
-                Annuler
-              </b-button>
+                <b-button size="sm" variant="outline-danger" @click="cancelAction">
+                  Annuler
+                </b-button>
+              </div>
             </div>
           </div>
           <div v-else-if="userRoles.includes('owner')">
-            <p>
-              {{ item.borrower.user.name }} doit ajouter des crédits à son compte.
-            </p>
+            <p>{{ item.borrower.user.name }} doit ajouter des crédits à son compte.</p>
           </div>
         </div>
         <div v-else>
@@ -82,25 +84,36 @@
 </template>
 
 <script>
-import UserAddCreditBox from '@/components/User/AddCreditBox.vue';
+import UserAddCreditBox from "@/components/User/AddCreditBox.vue";
 
-import LoanActionsMixin from '@/mixins/LoanActionsMixin';
+import LoanActionsMixin from "@/mixins/LoanActionsMixin";
 
 export default {
-  name: 'LoanActionsPrePayment',
+  name: "LoanActionsPrePayment",
   mixins: [LoanActionsMixin],
   components: {
     UserAddCreditBox,
   },
   computed: {
     minimumRequired() {
-      return parseFloat(this.item.estimated_price, 10)
-        + parseFloat(this.item.estimated_insurance, 10)
-        + parseFloat(this.item.platform_tip, 10);
+      return (
+        parseFloat(this.item.estimated_price, 10) +
+        parseFloat(this.item.estimated_insurance, 10) +
+        parseFloat(this.item.platform_tip, 10)
+      );
+    },
+    /*
+      Can complete if balance is sufficient to cover price and insurance.
+      It is not necessary to cover tip as it may be changed later.
+    */
+    canComplete() {
+      return (
+        parseFloat(this.user.balance) >=
+        parseFloat(this.item.estimated_price) + parseFloat(this.item.estimated_insurance)
+      );
     },
   },
 };
 </script>
 
-<style lang="scss">
-</style>
+<style lang="scss"></style>

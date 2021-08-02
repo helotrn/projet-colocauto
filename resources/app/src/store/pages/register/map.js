@@ -4,7 +4,7 @@ export default {
     borough: null,
     center: null,
     community: null,
-    postalCode: '',
+    postalCode: "",
   },
   mutations: {
     borough(state, value) {

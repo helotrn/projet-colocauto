@@ -9,7 +9,7 @@ export default function buildComputed(id, fields) {
           this.$store.commit(`${i}/${f}`, value);
         },
       };
-    }(id, field));
+    })(id, field);
 
     return acc;
   }, {});

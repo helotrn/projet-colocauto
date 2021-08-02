@@ -1,15 +1,12 @@
 <template>
-  <router-link
-    :to="to"
-    :class="`tutorial-block variant-${variant}`"
-    :style="{ backgroundImage, }">
+  <router-link :to="to" :class="`tutorial-block variant-${variant}`" :style="{ backgroundImage }">
     <h2>{{ title }}</h2>
   </router-link>
 </template>
 
 <script>
 export default {
-  name: 'TutorialBlock',
+  name: "TutorialBlock",
   props: {
     bgImage: {
       type: String,
@@ -27,7 +24,7 @@ export default {
     variant: {
       type: String,
       required: false,
-      default: 'light',
+      default: "light",
     },
   },
   computed: {
@@ -56,7 +53,9 @@ export default {
   background-size: cover;
   background-position: center right;
 
-  &:hover, &:active, &:focus {
+  &:hover,
+  &:active,
+  &:focus {
     text-decoration: none;
   }
 

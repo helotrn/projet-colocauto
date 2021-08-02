@@ -6,15 +6,17 @@ use Illuminate\Database\Migrations\Migration;
 
 class AddRoleOnUser extends Migration
 {
-    public function up() {
-        Schema::table('users', function (Blueprint $table) {
-            $table->string('role')->nullable();
+    public function up()
+    {
+        Schema::table("users", function (Blueprint $table) {
+            $table->string("role")->nullable();
         });
     }
 
-    public function down() {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('role');
+    public function down()
+    {
+        Schema::table("users", function (Blueprint $table) {
+            $table->dropColumn("role");
         });
     }
 }

@@ -12,27 +12,50 @@
     <b-row>
       <b-col class="loan-header__description">
         <p class="loan-header__description__people">
-          <a href="#"
-            v-b-modal="'borrower-modal'" v-if="userRole !== 'borrower'">
-            {{ loan.borrower.user.full_name }}
-          </a>
+          <span v-if="userRole !== 'borrower'">
+            Emprunteur-se&nbsp;:
+            <a v-if=borrowerUrl :href=borrowerUrl>
+              {{ loan.borrower.user.full_name }}
+            </a>
+            <span v-else>
+              {{ loan.borrower.user.full_name }}
+            </span>
+            <span class="badge badge-light badge-pill" v-b-modal="'borrower-modal'">
+              ?
+            </span>
+          </span>
 
-          <br v-if="userRole === 'other'">
+          <br v-if="userRole === 'other'" />
 
-          <a href="#"
-            v-b-modal="'owner-modal'" v-if="loan.loanable.owner && userRole !== 'owner'">
-            {{ loan.loanable.owner.user.full_name }}
-          </a>
+          <span v-if="loan.loanable.owner && userRole !== 'owner'">
+            Propriétaire&nbsp;:
+            <a v-if=ownerUrl :href=ownerUrl>
+              {{ loan.loanable.owner.user.full_name }}
+            </a>
+            <span v-else v-b-modal="'owner-modal'">
+              {{ loan.loanable.owner.user.full_name }}
+            </span>
+            <span class="badge badge-light badge-pill" v-b-modal="'owner-modal'">
+              ?
+            </span>
+          </span>
           <span v-else-if="loan.loanable.community">
+            Communauté&nbsp;:
             {{ loan.loanable.community.name }}
           </span>
         </p>
         <p class="loan-header__description__loan">
-          <a href="#"
-            v-b-modal="'loanable-modal'">
+          Véhicule&nbsp;:
+          <a v-if=loanableUrl :href=loanableUrl>
             {{ prettyType }} {{ loanableDescription }} {{ loanableOwnerText }}
           </a>
-          <br>
+          <span v-else>
+            {{ prettyType }} {{ loanableDescription }} {{ loanableOwnerText }}
+          </span>
+          <span class="badge badge-light badge-pill" v-b-modal="'loanable-modal'">
+            ?
+          </span>
+          <br />
           <span v-if="singleDay">
             {{ loan.departure_at | day | capitalize }} {{ loan.departure_at | date }}
             &bull;
@@ -49,15 +72,16 @@
       </b-col>
     </b-row>
 
-    <b-modal size="xl"
+    <b-modal
+      size="xl"
       :title="`${prettyType} ${loanableDescription} ${loanableOwnerText}`"
-      id="loanable-modal" footer-class="d-none">
+      id="loanable-modal"
+      footer-class="d-none"
+    >
       <loanable-details-box :loanable="loan.loanable" />
     </b-modal>
 
-    <b-modal size="md"
-      title="Coordonnées du propriétaire"
-      id="owner-modal" footer-class="d-none">
+    <b-modal size="md" title="Coordonnées du propriétaire" id="owner-modal" footer-class="d-none">
       <p v-if="loan.loanable.owner">
         <strong>{{ loan.loanable.owner.user.full_name }}</strong>
       </p>
@@ -68,9 +92,12 @@
       </dl>
     </b-modal>
 
-    <b-modal size="md"
+    <b-modal
+      size="md"
       title="Coordonnées de l'emprunteur"
-      id="borrower-modal" footer-class="d-none">
+      id="borrower-modal"
+      footer-class="d-none"
+    >
       <p>
         <strong>{{ loan.borrower.user.full_name }}</strong>
       </p>
@@ -84,10 +111,10 @@
 </template>
 
 <script>
-import LoanableDetailsBox from '@/components/Loanable/DetailsBox.vue';
+import LoanableDetailsBox from "@/components/Loanable/DetailsBox.vue";
 
 export default {
-  name: 'LoanHeader',
+  name: "LoanHeader",
   components: {
     LoanableDetailsBox,
   },
@@ -104,20 +131,22 @@ export default {
   computed: {
     loanableDescription() {
       switch (this.loan.loanable.type) {
-        case 'car':
-          return `${this.loan.loanable.brand} ${this.loan.loanable.model} `
-            + `${this.loan.loanable.year_of_circulation}`;
-        case 'bike':
+        case "car":
+          return (
+            `${this.loan.loanable.brand} ${this.loan.loanable.model} ` +
+            `${this.loan.loanable.year_of_circulation}`
+          );
+        case "bike":
           return `${this.loan.loanable.model}`;
-        case 'trailer':
-          return '';
+        case "trailer":
+          return "";
         default:
-          return '';
+          return "";
       }
     },
     loanableOwnerText() {
-      if (this.userRole === 'owner') {
-        return '';
+      if (this.userRole === "owner") {
+        return "";
       }
 
       let ownerName;
@@ -127,9 +156,8 @@ export default {
         ownerName = `${this.loan.loanable.community.name} (${this.loan.loanable.name})`;
       }
 
-      const particle = ['a', 'e', 'i', 'o', 'u', 'é', 'è']
-        .indexOf(ownerName[0]
-          .toLowerCase()) > -1 ? "d'" : 'de ';
+      const particle =
+        ["a", "e", "i", "o", "u", "é", "è"].indexOf(ownerName[0].toLowerCase()) > -1 ? "d'" : "de ";
       return `${particle}${ownerName}`;
     },
     loanablePrettyName() {
@@ -137,26 +165,26 @@ export default {
       let type;
 
       switch (this.loan.loanable.type) {
-        case 'car':
-          particle = 'de la ';
-          type = 'voiture';
+        case "car":
+          particle = "de la ";
+          type = "voiture";
           break;
-        case 'bike':
-          particle = 'du ';
-          type = 'vélo';
+        case "bike":
+          particle = "du ";
+          type = "vélo";
           break;
-        case 'trailer':
-          particle = 'de la ';
-          type = 'remorque';
+        case "trailer":
+          particle = "de la ";
+          type = "remorque";
           break;
         default:
           particle = "de l'";
-          type = 'objet';
+          type = "objet";
           break;
       }
 
       if (this.loan.loanable.owner && this.user.id === this.loan.loanable.owner.user.id) {
-        particle = 'de votre ';
+        particle = "de votre ";
       }
 
       const description = `${particle}${type}`;
@@ -164,36 +192,73 @@ export default {
     },
     prettyType() {
       switch (this.loan.loanable.type) {
-        case 'car':
-          return 'Voiture';
-        case 'bike':
-          return 'Vélo';
-        case 'trailer':
-          return 'Remorque';
+        case "car":
+          return "Voiture";
+        case "bike":
+          return "Vélo";
+        case "trailer":
+          return "Remorque";
         default:
-          return 'Objet';
+          return "Objet";
       }
     },
     returnAt() {
       const duration = this.loan.actual_duration_in_minutes || this.loan.duration_in_minutes;
       return this.$dayjs(this.loan.departure_at)
-        .add(duration, 'minute')
-        .format('YYYY-MM-DD HH:mm:ss');
+        .add(duration, "minute")
+        .format("YYYY-MM-DD HH:mm:ss");
     },
     singleDay() {
-      return this.$dayjs(this.loan.departure_at).format('YYYY-MM-DD')
-        === this.$dayjs(this.returnAt).format('YYYY-MM-DD');
+      return (
+        this.$dayjs(this.loan.departure_at).format("YYYY-MM-DD") ===
+        this.$dayjs(this.returnAt).format("YYYY-MM-DD")
+      );
     },
     userRole() {
       if (this.loan.loanable.owner && this.user.id === this.loan.loanable.owner.user.id) {
-        return 'owner';
+        return "owner";
       }
 
       if (this.user.id === this.loan.borrower.user.id) {
-        return 'borrower';
+        return "borrower";
       }
 
-      return 'other';
+      return "other";
+    },
+    userIsAdmin() {
+      // User is global admin
+      if (this?.user?.role === "admin")
+        return true;
+
+      // User is admin of the community to which the loanable belongs.
+      const community = this?.user?.communities?.find(
+        (c) => c.id && c.id === this?.loan?.loanable?.community_id);
+
+      return community?.role === "admin";
+    },
+    borrowerUrl() {
+      const borrowerId = this?.loan?.borrower?.user?.id;
+
+      if (this.userIsAdmin && borrowerId)
+        return '/admin/users/'+borrowerId
+
+      return "";
+    },
+    ownerUrl() {
+      const ownerId = this?.loan?.loanable?.owner?.user?.id;
+
+      if (this.userIsAdmin && ownerId)
+        return '/admin/users/'+ownerId;
+
+      return "";
+    },
+    loanableUrl() {
+      const loanableId = this?.loan?.loanable?.id;
+
+      if (this.userIsAdmin && loanableId)
+        return '/admin/loanables/'+loanableId;
+
+      return "";
     },
   },
 };

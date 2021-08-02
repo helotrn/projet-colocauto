@@ -6,8 +6,10 @@ use Illuminate\Database\Migrations\Migration;
 
 class AddLoanablesMaterializedView extends Migration
 {
-    public function up() {
-        \DB::statement(<<<SQL
+    public function up()
+    {
+        \DB::statement(
+            <<<SQL
 CREATE MATERIALIZED VIEW loanables
 (id, type, name, position, location_description, comments, instructions, availability_ics, owner_id, community_id, created_at, updated_at, deleted_at) AS
     SELECT id, 'car' AS type, name, position, location_description, comments, instructions, availability_ics, owner_id, community_id, created_at, updated_at, deleted_at FROM cars
@@ -19,7 +21,8 @@ SQL
         );
     }
 
-    public function down() {
-        \DB::statement('DROP MATERIALIZED VIEW loanables');
+    public function down()
+    {
+        \DB::statement("DROP MATERIALIZED VIEW loanables");
     }
 }

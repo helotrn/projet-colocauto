@@ -5,7 +5,9 @@
     <b-row>
       <b-col>
         <h1 v-if="item.name">{{ item.name }}</h1>
-        <h1 v-else><em>{{ $tc('véhicule', 1) | capitalize }}</em></h1>
+        <h1 v-else>
+          <em>{{ $tc("véhicule", 1) | capitalize }}</em>
+        </h1>
       </b-col>
     </b-row>
 
@@ -18,29 +20,39 @@
 
               <forms-builder :definition="form.general" v-model="item" entity="loanables">
                 <template v-slot:share_with_parent_communities="{ def, item, property }">
-                  <forms-validated-input v-if="hasBoroughs"
+                  <forms-validated-input
+                    v-if="hasBoroughs"
                     :description="$t(`descriptions.${property}`)"
-                    :label="$t(
-                      `fields.${property}_dynamic`,
-                      {
+                    :label="
+                      $t(`fields.${property}_dynamic`, {
                         shared_with: loanableBoroughsMessage,
-                      }
-                    ) | capitalize"
-                    :name="property" :rules="def.rules" :type="def.type"
-                    :options="def.options" :disabled="def.disabled"
-                    v-model="item[property]" />
+                      }) | capitalize
+                    "
+                    :name="property"
+                    :rules="def.rules"
+                    :type="def.type"
+                    :options="def.options"
+                    :disabled="def.disabled"
+                    v-model="item[property]"
+                  />
                 </template>
                 <template v-slot:owner_id="{ def, item, property }">
-                  <validation-provider class="forms-validated-input"
-                    mode="eager" name="owner_id"
-                    v-slot="validationContext">
+                  <validation-provider
+                    class="forms-validated-input"
+                    mode="eager"
+                    name="owner_id"
+                    v-slot="validationContext"
+                  >
                     <b-form-group label="Propriétaire" label-for="owner_id">
                       <forms-relation-input
-                        id="owner_id" name="owner_id" :query="ownerQuery"
+                        id="owner_id"
+                        name="owner_id"
+                        :query="ownerQuery"
                         placeholder="Propriétaire"
                         :object-value="itemOwner"
                         :value="item.owner_id"
-                        @input="setLoanableOwner" />
+                        @input="setLoanableOwner"
+                      />
                     </b-form-group>
                   </validation-provider>
                 </template>
@@ -63,16 +75,15 @@
               <forms-builder :definition="form.trailer" v-model="item" entity="trailers" />
             </div>
             <div class="form__section text-center" v-else>
-              <span>
-                Sélectionnez un type de véhicule pour poursuivre la configuration.
-              </span>
+              <span> Sélectionnez un type de véhicule pour poursuivre la configuration. </span>
             </div>
 
             <div class="form__section" v-if="item.type && item.id">
               <loanable-availability-calendar
                 :changed="changed"
                 :loanable="item"
-                :loading="loading" />
+                :loading="loading"
+              />
             </div>
 
             <div class="form__buttons">
@@ -94,20 +105,20 @@
 </template>
 
 <script>
-import FormsValidatedInput from '@/components/Forms/ValidatedInput.vue';
-import FormsBuilder from '@/components/Forms/Builder.vue';
-import FormsRelationInput from '@/components/Forms/RelationInput.vue';
-import LoanableAvailabilityCalendar from '@/components/Loanable/AvailabilityCalendar.vue';
+import FormsValidatedInput from "@/components/Forms/ValidatedInput.vue";
+import FormsBuilder from "@/components/Forms/Builder.vue";
+import FormsRelationInput from "@/components/Forms/RelationInput.vue";
+import LoanableAvailabilityCalendar from "@/components/Loanable/AvailabilityCalendar.vue";
 
-import DataRouteGuards from '@/mixins/DataRouteGuards';
-import FormMixin from '@/mixins/FormMixin';
+import DataRouteGuards from "@/mixins/DataRouteGuards";
+import FormMixin from "@/mixins/FormMixin";
 
-import locales from '@/locales';
+import locales from "@/locales";
 
-import { capitalize } from '@/helpers/filters';
+import { capitalize } from "@/helpers/filters";
 
 export default {
-  name: 'AdminLoanable',
+  name: "AdminLoanable",
   mixins: [DataRouteGuards, FormMixin],
   components: {
     FormsBuilder,
@@ -118,11 +129,11 @@ export default {
   data() {
     return {
       ownerQuery: {
-        slug: 'users',
-        value: 'owner.id',
-        text: 'full_name',
+        slug: "users",
+        value: "owner.id",
+        text: "full_name",
         params: {
-          fields: 'full_name, owner.id',
+          fields: "full_name, owner.id",
         },
       },
     };
@@ -142,16 +153,16 @@ export default {
     },
     fullTitle() {
       const parts = [
-        'LocoMotion',
-        capitalize(this.$i18n.t('titles.admin')),
-        capitalize(this.$i18n.tc('véhicule', 2)),
+        "LocoMotion",
+        capitalize(this.$i18n.t("titles.admin")),
+        capitalize(this.$i18n.tc("véhicule", 2)),
       ];
 
       if (this.pageTitle) {
         parts.push(this.pageTitle);
       }
 
-      return parts.reverse().join(' | ');
+      return parts.reverse().join(" | ");
     },
     hasBoroughs() {
       return this.loanableBoroughs.length > 0;
@@ -166,40 +177,38 @@ export default {
       }
 
       if (this.item.owner) {
-        return this.item.owner.user.communities
-          .filter(c => !!c.parent)
-          .map(c => c.parent);
+        return this.item.owner.user.communities.filter((c) => !!c.parent).map((c) => c.parent);
       }
 
       return [];
     },
     loanableBoroughsMessage() {
       return this.loanableBoroughs
-        .map(b => b.name)
+        .map((b) => b.name)
         .filter((item, i, arr) => arr.indexOf(item) === i)
-        .join(', ');
+        .join(", ");
     },
     pageTitle() {
-      return this.item.name || capitalize(this.$i18n.tc('véhicule', 1));
+      return this.item.name || capitalize(this.$i18n.tc("véhicule", 1));
     },
   },
   methods: {
     async setLoanableOwner(user) {
       if (!user.owner) {
-        await this.$store.dispatch('users/update', {
+        await this.$store.dispatch("users/update", {
           id: user.id,
           data: {
             id: user.id,
             owner: {},
           },
           params: {
-            fields: 'owner.id,full_name',
+            fields: "owner.id,full_name",
           },
         });
 
         const updatedUser = this.$store.state.users.item;
 
-        this.$store.commit('loanables/patchItem', {
+        this.$store.commit("loanables/patchItem", {
           owner: {
             id: updatedUser.owner.id,
             user: {
@@ -213,7 +222,7 @@ export default {
         return;
       }
 
-      this.$store.commit('loanables/patchItem', {
+      this.$store.commit("loanables/patchItem", {
         owner: {
           id: user.owner.id,
           user: {
@@ -244,5 +253,4 @@ export default {
 };
 </script>
 
-<style lang="scss">
-</style>
+<style lang="scss"></style>

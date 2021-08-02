@@ -8,10 +8,9 @@ use App\Models\Loan;
 use App\Models\Owner;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class LoanExtensionAccepted extends Mailable
+class LoanExtensionAccepted extends BaseMailable
 {
     use Queueable, SerializesModels;
 
@@ -26,18 +25,19 @@ class LoanExtensionAccepted extends Mailable
         Borrower $borrower,
         Owner $owner
     ) {
-         $this->borrower = $borrower;
-         $this->extension = $extension;
-         $this->loan = $loan;
-         $this->owner = $owner;
+        $this->borrower = $borrower;
+        $this->extension = $extension;
+        $this->loan = $loan;
+        $this->owner = $owner;
     }
 
-    public function build() {
-        return $this->view('emails.loan.extension_accepted')
+    public function build()
+    {
+        return $this->view("emails.loan.extension_accepted")
             ->subject("LocoMotion - Demande d'extension")
-            ->text('emails.loan.extension_accepted_text')
+            ->text("emails.loan.extension_accepted_text")
             ->with([
-                'title' => "Demande d'extension acceptée",
+                "title" => "Demande d'extension acceptée",
             ]);
     }
 }

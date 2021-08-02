@@ -13,9 +13,7 @@
       <span v-if="action.status === 'in_process' && loanIsCanceled">
         Emprunt annulé &bull; {{ item.canceled_at | datetime }}
       </span>
-      <span v-else-if="action.status === 'in_process'">
-        En attente d'approbation
-      </span>
+      <span v-else-if="action.status === 'in_process'"> En attente d'approbation </span>
       <span v-else-if="action.status === 'completed'">
         Approuvé &bull; {{ action.executed_at | datetime }}
       </span>
@@ -24,27 +22,32 @@
       </span>
     </b-card-header>
 
-
     <b-card-body>
-      <b-collapse id="loan-actions-intention" role="tabpanel" accordion="loan-actions"
-        :visible="open">
+      <b-collapse
+        id="loan-actions-intention"
+        role="tabpanel"
+        accordion="loan-actions"
+        :visible="open"
+      >
         <div v-if="action.status === 'in_process' && loanIsCanceled">
-          <p>
-            L'emprunt a été annulé. Cette étape ne peut pas être complétée.
-          </p>
+          <p>L'emprunt a été annulé. Cette étape ne peut pas être complétée.</p>
         </div>
 
-        <div v-if="action.status !== 'in_process' || !loanIsCanceled"
-          class="loan-actions-intention__image mb-3 text-center">
+        <div
+          v-if="action.status !== 'in_process' || !loanIsCanceled"
+          class="loan-actions-intention__image mb-3 text-center"
+        >
           <div :style="{ backgroundImage: borrowerAvatar }" />
         </div>
 
-        <div v-if="action.status !== 'in_process' || !loanIsCanceled"
-          class="loan-actions-intention__description text-center mb-3">
+        <div
+          v-if="action.status !== 'in_process' || !loanIsCanceled"
+          class="loan-actions-intention__description text-center mb-3"
+        >
           <div v-if="!loanableIsSelfService && !borrowerIsOwner">
             <p v-if="userRoles.includes('borrower')">
-              Vous avez demandé à {{ item.loanable.owner.user.name }} de lui
-              emprunter {{ loanablePrettyNameBorrower }}.
+              Vous avez demandé à {{ item.loanable.owner.user.name }} de lui emprunter
+              {{ loanablePrettyNameBorrower }}.
             </p>
             <p v-else-if="userRoles.includes('owner')">
               {{ borrower.user.name }} veut vous emprunter {{ loanablePrettyNameOwner }}.
@@ -59,8 +62,12 @@
             <div class="user-avatar" :style="{ backgroundImage: borrowerAvatar }" />
           </blockquote>
 
-          <blockquote v-if="action.message_for_borrower
-            && (userRoles.includes('borrower') || !!action.executed_at)">
+          <blockquote
+            v-if="
+              action.message_for_borrower &&
+              (userRoles.includes('borrower') || !!action.executed_at)
+            "
+          >
             {{ action.message_for_borrower }}
             <div class="user-avatar" :style="{ backgroundImage: ownerAvatar }" />
           </blockquote>
@@ -76,9 +83,12 @@
           <!-- No use in a borrower leaving a message to himself. -->
           <div v-if="!userRoles.includes('borrower')">
             <div class="loan-actions-intention__message_for_borrower text-center mb-3">
-              <forms-validated-input type="textarea" name="message_for_borrower"
+              <forms-validated-input
+                type="textarea"
+                name="message_for_borrower"
                 v-model="action.message_for_borrower"
-                label="Laissez un message à l'emprunteur (facultatif)" />
+                label="Laissez un message à l'emprunteur (facultatif)"
+              />
             </div>
           </div>
 
@@ -94,12 +104,14 @@
             </div>
           </div>
 
-          <div v-if="!loanableIsSelfService && !borrowerIsOwner && userRoles.includes('borrower')"
-            class="text-center">
+          <div
+            v-if="!loanableIsSelfService && !borrowerIsOwner && userRoles.includes('borrower')"
+            class="text-center"
+          >
             <p>
-              Merci d'avoir enregistré votre demande d'emprunt sur la
-              plateforme! Maintenant, contactez votre voisin-e pour voir
-              directement avec lui/elle si son véhicule est disponible.
+              Merci d'avoir enregistré votre demande d'emprunt sur la plateforme! Maintenant,
+              contactez votre voisin-e pour voir directement avec lui/elle si son véhicule est
+              disponible.
             </p>
             <p>{{ item.loanable.owner.user.phone }}</p>
           </div>
@@ -125,12 +137,12 @@
 </template>
 
 <script>
-import FormsValidatedInput from '@/components/Forms/ValidatedInput.vue';
+import FormsValidatedInput from "@/components/Forms/ValidatedInput.vue";
 
-import LoanActionsMixin from '@/mixins/LoanActionsMixin';
+import LoanActionsMixin from "@/mixins/LoanActionsMixin";
 
 export default {
-  name: 'LoanActionsIntention',
+  name: "LoanActionsIntention",
   mixins: [LoanActionsMixin],
   components: {
     FormsValidatedInput,
@@ -141,42 +153,42 @@ export default {
       let type;
 
       switch (this.item.loanable.type) {
-        case 'car':
-          article = 'sa';
-          type = 'voiture';
+        case "car":
+          article = "sa";
+          type = "voiture";
           break;
-        case 'bike':
-          article = 'son';
-          type = 'vélo';
+        case "bike":
+          article = "son";
+          type = "vélo";
           break;
-        case 'trailer':
-          article = 'sa';
-          type = 'remorque';
+        case "trailer":
+          article = "sa";
+          type = "remorque";
           break;
         default:
-          article = 'son';
-          type = 'objet';
+          article = "son";
+          type = "objet";
           break;
       }
 
       return `${article} ${type}`;
     },
     loanablePrettyNameOwner() {
-      const article = 'votre';
+      const article = "votre";
       let type;
 
       switch (this.item.loanable.type) {
-        case 'car':
-          type = 'voiture';
+        case "car":
+          type = "voiture";
           break;
-        case 'bike':
-          type = 'vélo';
+        case "bike":
+          type = "vélo";
           break;
-        case 'trailer':
-          type = 'remorque';
+        case "trailer":
+          type = "remorque";
           break;
         default:
-          type = 'objet';
+          type = "objet";
           break;
       }
 

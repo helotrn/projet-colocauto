@@ -6,13 +6,15 @@ use App\Http\Requests\BaseRequest;
 
 class DeleteRequest extends BaseRequest
 {
-    public function authorize() {
+    public function authorize()
+    {
         return true;
     }
 
-    public function rules() {
+    public function rules()
+    {
         return [
-            'id' => 'required',
+            "id" => "required",
         ];
     }
 }

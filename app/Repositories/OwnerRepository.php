@@ -3,11 +3,11 @@
 namespace App\Repositories;
 
 use App\Models\Owner;
-use Molotov\RestRepository;
 
 class OwnerRepository extends RestRepository
 {
-    public function __construct(Owner $model) {
+    public function __construct(Owner $model)
+    {
         $this->model = $model;
     }
 }

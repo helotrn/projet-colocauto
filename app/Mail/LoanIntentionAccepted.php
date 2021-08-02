@@ -8,10 +8,9 @@ use App\Models\Loan;
 use App\Models\Owner;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class LoanIntentionAccepted extends Mailable
+class LoanIntentionAccepted extends BaseMailable
 {
     use Queueable, SerializesModels;
 
@@ -26,18 +25,19 @@ class LoanIntentionAccepted extends Mailable
         Borrower $borrower,
         Owner $owner
     ) {
-         $this->intention = $intention;
-         $this->loan = $loan;
-         $this->borrower = $borrower;
-         $this->owner = $owner;
+        $this->intention = $intention;
+        $this->loan = $loan;
+        $this->borrower = $borrower;
+        $this->owner = $owner;
     }
 
-    public function build() {
-        return $this->view('emails.loan.intention_accepted')
-            ->subject('LocoMotion - Emprunt accepté')
-            ->text('emails.loan.intention_accepted_text')
+    public function build()
+    {
+        return $this->view("emails.loan.intention_accepted")
+            ->subject("LocoMotion - Emprunt accepté")
+            ->text("emails.loan.intention_accepted_text")
             ->with([
-                'title' => 'Emprunt accepté',
+                "title" => "Emprunt accepté",
             ]);
     }
 }

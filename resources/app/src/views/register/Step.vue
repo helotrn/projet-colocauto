@@ -1,10 +1,14 @@
 <template>
   <div class="register-step">
-    <b-pagination-nav v-bind:value="currentPage"
-      :number-of-pages="4" pills
-      align="center" use-router
+    <b-pagination-nav
+      v-bind:value="currentPage"
+      :number-of-pages="4"
+      pills
+      align="center"
+      use-router
       :hide-goto-end-buttons="true"
-      disabled>
+      disabled
+    >
       <template v-slot:page="{ page, active }">
         <span v-if="page < currentPage" class="checked">
           <b-icon icon="check" font-scale="2" />
@@ -17,14 +21,18 @@
       <h2>Profil de membre</h2>
 
       <p class="register-step__profile__text">
-        Pour faire connaissance, dites à vos voisines et vos voisins qui vous êtes en
-        remplissant les champs suivants.
+        Pour faire connaissance, dites à vos voisines et vos voisins qui vous êtes en remplissant
+        les champs suivants.
       </p>
 
-      <profile-form v-if="item"
-        :form="form" :user="item" :loading="loading"
-        @submit="submitAndReload">
-        <hr>
+      <profile-form
+        v-if="item"
+        :form="form"
+        :user="item"
+        :loading="loading"
+        @submit="submitAndReload"
+      >
+        <hr />
 
         <b-row>
           <b-col>
@@ -34,11 +42,14 @@
 
         <b-row>
           <b-col>
-            <forms-validated-input name="accept_conditions"
+            <forms-validated-input
+              name="accept_conditions"
               :label="$t('users.fields.accept_conditions') | capitalize"
-              :rules="form.general.accept_conditions.rules" type="checkbox"
+              :rules="form.general.accept_conditions.rules"
+              type="checkbox"
               :placeholder="placeholderOrLabel('accept_conditions', 'users') | capitalize"
-              v-model="item.accept_conditions" />
+              v-model="item.accept_conditions"
+            />
           </b-col>
         </b-row>
       </profile-form>
@@ -54,10 +65,13 @@
       </p>
 
       <div v-if="item && item.communities">
-        <community-proof-form v-for="community in item.communities"
-          :key="community.id" :community="community"
+        <community-proof-form
+          v-for="community in item.communities"
+          :key="community.id"
+          :community="community"
           :loading="!hasAllProofs"
-          @submit="submitCommunityProof" />
+          @submit="submitCommunityProof"
+        />
       </div>
       <layout-loading v-else />
     </div>
@@ -65,8 +79,12 @@
     <div v-if="currentPage == 4" class="register-step__intents">
       <h2>Que voulez-vous faire?</h2>
 
-      <register-intent-form :user="item" v-if="item" :loading="loading"
-        @submit="submitOwnerDocumentsAndTags" />
+      <register-intent-form
+        :user="item"
+        v-if="item"
+        :loading="loading"
+        @submit="submitOwnerDocumentsAndTags"
+      />
       <layout-loading v-else />
     </div>
 
@@ -93,23 +111,23 @@
 </template>
 
 <script>
-import Authenticated from '@/mixins/Authenticated';
-import Notification from '@/mixins/Notification';
-import UserMixin from '@/mixins/UserMixin';
+import Authenticated from "@/mixins/Authenticated";
+import Notification from "@/mixins/Notification";
+import UserMixin from "@/mixins/UserMixin";
 
-import CommunityProofForm from '@/components/Community/ProofForm.vue';
-import MailchimpNewsletter from '@/components/Misc/MailchimpNewsletter.vue';
-import ProfileForm from '@/components/Profile/ProfileForm.vue';
-import RegisterIntentForm from '@/components/Register/IntentForm.vue';
+import CommunityProofForm from "@/components/Community/ProofForm.vue";
+import MailchimpNewsletter from "@/components/Misc/MailchimpNewsletter.vue";
+import ProfileForm from "@/components/Profile/ProfileForm.vue";
+import RegisterIntentForm from "@/components/Register/IntentForm.vue";
 
-import FormsValidatedInput from '@/components/Forms/ValidatedInput.vue';
-import FormLabelsMixin from '@/mixins/FormLabelsMixin';
-import FormMixin from '@/mixins/FormMixin';
+import FormsValidatedInput from "@/components/Forms/ValidatedInput.vue";
+import FormLabelsMixin from "@/mixins/FormLabelsMixin";
+import FormMixin from "@/mixins/FormMixin";
 
-import { extractErrors } from '@/helpers';
+import { extractErrors } from "@/helpers";
 
 export default {
-  name: 'RegisterStep',
+  name: "RegisterStep",
   mixins: [Authenticated, FormLabelsMixin, FormMixin, Notification, UserMixin],
   components: {
     CommunityProofForm,
@@ -122,21 +140,21 @@ export default {
     next((vm) => {
       if (vm.isLoggedIn) {
         if (!vm.isRegistered) {
-          if (vm.$route.path !== '/register/2') {
-            vm.$router.replace('/register/2');
+          if (vm.$route.path !== "/register/2") {
+            vm.$router.replace("/register/2");
           }
         } else if (vm.user.communities.length === 0) {
-          if (vm.$route.path !== '/register/map') {
-            vm.$router.replace('/register/map');
+          if (vm.$route.path !== "/register/map") {
+            vm.$router.replace("/register/map");
           }
         } else if (!vm.user.communities.reduce((acc, c) => acc && !!c.proof, true)) {
-          if (vm.$route.path !== '/register/3') {
-            vm.$router.replace('/register/3');
+          if (vm.$route.path !== "/register/3") {
+            vm.$router.replace("/register/3");
           }
         } else if (!vm.hasCompletedRegistration) {
-          vm.$router.replace('/register/4');
-        } else if (vm.$route.path !== '/register/5') {
-          vm.$router.replace('/register/5');
+          vm.$router.replace("/register/4");
+        } else if (vm.$route.path !== "/register/5") {
+          vm.$router.replace("/register/5");
         }
       }
     });
@@ -144,7 +162,7 @@ export default {
   props: {
     id: {
       required: false,
-      default: 'me',
+      default: "me",
     },
     step: {
       type: String,
@@ -170,30 +188,30 @@ export default {
       try {
         await this.submit();
 
-        this.$store.commit('user', this.item);
+        this.$store.commit("user", this.item);
 
         if (!this.item.communities || this.item.communities.length === 0) {
-          this.$store.commit('addNotification', {
-            content: 'Il est temps de choisir un premier voisinage!',
-            title: 'Profil mis à jour',
-            variant: 'success',
-            type: 'register',
+          this.$store.commit("addNotification", {
+            content: "Il est temps de choisir un premier voisinage!",
+            title: "Profil mis à jour",
+            variant: "success",
+            type: "register",
           });
 
-          this.$router.push('/register/map');
+          this.$router.push("/register/map");
         } else {
-          this.$router.push('/register/3');
+          this.$router.push("/register/3");
         }
       } catch (e) {
         if (e.request) {
           switch (e.request.status) {
             case 422:
             default:
-              this.$store.commit('addNotification', {
-                content: extractErrors(e.response.data).join(', '),
+              this.$store.commit("addNotification", {
+                content: extractErrors(e.response.data).join(", "),
                 title: "Erreur d'inscription",
-                variant: 'danger',
-                type: 'register',
+                variant: "danger",
+                type: "register",
               });
           }
         }
@@ -201,27 +219,27 @@ export default {
     },
     async submitCommunityProof() {
       if (!this.hasAllProofs) {
-        this.$store.commit('addNotification', {
-          content: 'Fournissez toutes les preuves requises.',
-          title: 'Données incomplètes',
-          variant: 'warning',
-          type: 'register',
+        this.$store.commit("addNotification", {
+          content: "Fournissez toutes les preuves requises.",
+          title: "Données incomplètes",
+          variant: "warning",
+          type: "register",
         });
       } else {
         try {
           await this.submit();
 
-          this.$router.push('/register/4');
+          this.$router.push("/register/4");
         } catch (e) {
           if (e.request) {
             switch (e.request.status) {
               case 422:
               default:
-                this.$store.commit('addNotification', {
-                  content: extractErrors(e.response.data).join(', '),
+                this.$store.commit("addNotification", {
+                  content: extractErrors(e.response.data).join(", "),
                   title: "Erreur d'inscription",
-                  variant: 'danger',
-                  type: 'register',
+                  variant: "danger",
+                  type: "register",
                 });
             }
           }
@@ -231,15 +249,15 @@ export default {
     async submitOwnerDocumentsAndTags() {
       try {
         await this.submit();
-        await this.$store.dispatch('submitUser');
+        await this.$store.dispatch("submitUser");
 
-        this.$router.push('/register/5');
+        this.$router.push("/register/5");
       } catch (e) {
-        this.$store.commit('addNotification', {
-          content: 'Erreur fatale',
+        this.$store.commit("addNotification", {
+          content: "Erreur fatale",
           title: "Erreur d'inscription",
-          variant: 'danger',
-          type: 'register',
+          variant: "danger",
+          type: "register",
         });
       }
     },

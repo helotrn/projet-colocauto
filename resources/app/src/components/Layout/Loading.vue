@@ -1,12 +1,12 @@
 <template>
   <div class="layout-loading">
-    <img src="/loading.svg">
+    <img src="/loading.svg" />
   </div>
 </template>
 
 <script>
 export default {
-  name: 'LayoutLoading',
+  name: "LayoutLoading",
 };
 </script>
 

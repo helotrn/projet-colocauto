@@ -13,9 +13,7 @@
       <span v-if="action.status === 'in_process' && loanIsCanceled">
         Emprunt annulé &bull; {{ item.canceled_at | datetime }}
       </span>
-      <span v-else-if="action.status === 'in_process'">
-        En attente
-      </span>
+      <span v-else-if="action.status === 'in_process'"> En attente </span>
       <span v-else-if="action.status === 'completed'">
         Payé &bull; {{ action.executed_at | datetime }}
       </span>
@@ -24,90 +22,113 @@
       </span>
     </b-card-header>
 
-
     <b-card-body>
-      <b-collapse id="loan-actions-payment" role="tabpanel" accordion="loan-actions"
-        :visible="open">
+      <b-collapse
+        id="loan-actions-payment"
+        role="tabpanel"
+        accordion="loan-actions"
+        :visible="open"
+      >
         <div v-if="!!action.executed_at">
           <p>L'emprunt s'est conclu avec succès!</p>
 
           <p>
             Coût final du trajet&nbsp;:
-            <span v-b-popover.hover="priceTooltip">{{ item.total_final_cost | currency }}</span>.
+            <span v-b-popover.hover="priceTooltip">{{ item.total_final_cost | currency }}</span
+            >.
           </p>
         </div>
         <div v-else-if="action.status === 'in_process' && loanIsCanceled">
-          <p>
-            L'emprunt a été annulé. Cette étape ne peut pas être complétée.
-          </p>
+          <p>L'emprunt a été annulé. Cette étape ne peut pas être complétée.</p>
         </div>
         <div v-else>
           <!-- Action is not completed -->
           <!-- Whether userRoles includes 'borrower' or 'owner' -->
-          <div v-if="['borrower', 'owner'].some(role => userRoles.includes(role))">
+          <div v-if="['borrower', 'owner'].some((role) => userRoles.includes(role))">
             <p>
-              Validez dès maintenant les informations sur ce trajet&nbsp;:
-              le kilomètrage, la facture d'essence&hellip;
+              Validez dès maintenant les informations sur ce trajet&nbsp;: le kilomètrage, la
+              facture d'essence&hellip;
             </p>
           </div>
 
           <div v-if="userRoles.includes('owner')">
-            <hr>
+            <hr />
             <p>
               À titre de propriétaire, vous recevrez {{ finalOwnerPart | currency }} pour l'emprunt.
             </p>
           </div>
 
           <div v-if="userRoles.includes('borrower')">
-            <hr>
+            <hr />
             <p>
               À titre d'emprunteur ce trajet vous coûtera&nbsp;:
-              <span v-b-popover.hover="priceTooltip">{{ finalPrice | currency }}</span>.
+              <span v-b-popover.hover="priceTooltip">{{ finalPrice | currency }}</span
+              >.
             </p>
 
             <b-row>
-              <b-col lg=3 />
+              <b-col lg="3" />
 
-              <b-col lg=6>
+              <b-col lg="6">
                 <div role="group" class="form-group">
                   <label for="platform_tip" class="d-block" id="__BVID__151__BV_label_">
-                    {{ $t('fields.platform_tip') | capitalize }}
-                    <b-badge pill variant="light"
-                      v-b-popover.hover="$t('descriptions.platform_tip')">
+                    {{ $t("fields.platform_tip") | capitalize }}
+                    <b-badge
+                      pill
+                      variant="light"
+                      v-b-popover.hover="$t('descriptions.platform_tip')"
+                    >
                       ?
                     </b-badge>
                   </label>
 
                   <div class="bv-no-focus-ring text-center">
                     <b-form-input
-                      id="platform_tip" name="platform_tip"
-                      type="number" :min="0" :step="0.01"
-                      v-model="platformTip" />
+                      id="platform_tip"
+                      name="platform_tip"
+                      type="number"
+                      :min="0"
+                      :step="0.01"
+                      v-model="platformTip"
+                    />
                   </div>
                 </div>
               </b-col>
 
-              <b-col lg=3 />
+              <b-col lg="3" />
             </b-row>
 
             <b-row v-if="!hasEnoughBalance">
               <b-col>
                 <p>
-                  Il manque de crédits à votre compte pour payer cet emprunt.<br>
+                  Il manque de crédits à votre compte pour payer cet emprunt.<br />
                   <a href="#" v-b-modal.add-credit-modal>Ajoutez des crédits</a>
                 </p>
 
-                <b-modal id="add-credit-modal" title="Approvisionner mon compte" size="lg"
-                  footer-class="d-none">
-                  <user-add-credit-box :user="user" :minimum-required="finalPrice - user.balance"
-                    @bought="reloadUserAndCloseModal" @cancel="closeModal"/>
+                <b-modal
+                  id="add-credit-modal"
+                  title="Approvisionner mon compte"
+                  size="lg"
+                  footer-class="d-none"
+                >
+                  <user-add-credit-box
+                    :user="user"
+                    :minimum-required="finalPrice - user.balance"
+                    @bought="reloadUserAndCloseModal"
+                    @cancel="closeModal"
+                  />
                 </b-modal>
               </b-col>
             </b-row>
 
             <div class="loan-actions-payment__buttons text-center">
-              <b-button size="sm" variant="success" class="mr-3"
-                :disabled="!hasEnoughBalance" @click="completeAction">
+              <b-button
+                size="sm"
+                variant="success"
+                class="mr-3"
+                :disabled="!hasEnoughBalance"
+                @click="completeAction"
+              >
                 Accepter
               </b-button>
             </div>
@@ -115,19 +136,18 @@
             <b-row class="loan-actions__alert">
               <b-col>
                 <b-alert variant="warning" show>
-                  Dans 48h, vous ne pourrez plus modifier vos informations.
-                  Nous validerons le coût de l'emprunt avec les détails ci-dessus.
+                  Les informations de l'emprunt peuvent être modifiées jusqu'à 48h après sa
+                  conclusion. À partir de ce moment, le coût de l'emprunt sera validé avec les
+                  détails ci-dessus.
                 </b-alert>
               </b-col>
             </b-row>
           </div>
 
           <div v-else-if="userIsAdmin" class="text-center">
-            <p>
-              L'emprunt est en phase de validation par les participant-e-s.
-            </p>
+            <p>L'emprunt est en phase de validation par les participant-e-s.</p>
 
-            <hr>
+            <hr />
 
             <p v-if="item.loanable.owner">
               {{ item.loanable.owner.user.full_name }}
@@ -146,17 +166,17 @@
 </template>
 
 <script>
-import UserAddCreditBox from '@/components/User/AddCreditBox.vue';
+import UserAddCreditBox from "@/components/User/AddCreditBox.vue";
 
-import LoanActionsMixin from '@/mixins/LoanActionsMixin';
+import LoanActionsMixin from "@/mixins/LoanActionsMixin";
 
-import { filters } from '@/helpers';
-import locales from '@/locales';
+import { filters } from "@/helpers";
+import locales from "@/locales";
 
 const { currency } = filters;
 
 export default {
-  name: 'LoanActionsPayment',
+  name: "LoanActionsPayment",
   mixins: [LoanActionsMixin],
   mounted() {
     this.action.platform_tip = parseFloat(this.platformTip, 10);
@@ -171,14 +191,15 @@ export default {
   },
   computed: {
     finalOwnerPart() {
-      return this.item.actual_price
-        - this.item.handover.purchases_amount;
+      return this.item.actual_price - this.item.handover.purchases_amount;
     },
     finalPrice() {
-      return this.item.actual_price
-        + this.item.actual_insurance
-        + parseFloat(this.platformTip, 10)
-        - this.item.handover.purchases_amount;
+      return (
+        this.item.actual_price +
+        this.item.actual_insurance +
+        parseFloat(this.platformTip, 10) -
+        this.item.handover.purchases_amount
+      );
     },
     hasEnoughBalance() {
       return this.user.balance >= this.finalPrice;
@@ -200,15 +221,15 @@ export default {
         strParts.push(`Achats: -${currency(purchasesAmount)}`); // eslint-disable-line no-irregular-whitespace
       }
 
-      return strParts.join(' \\ ');
+      return strParts.join(" \\ ");
     },
   },
   methods: {
     closeModal() {
-      this.$bvModal.hide('add-credit-modal');
+      this.$bvModal.hide("add-credit-modal");
     },
     async reloadUserAndCloseModal() {
-      await this.$store.dispatch('loadUser');
+      await this.$store.dispatch("loadUser");
       this.closeModal();
     },
   },
@@ -232,5 +253,4 @@ export default {
 };
 </script>
 
-<style lang="scss">
-</style>
+<style lang="scss"></style>

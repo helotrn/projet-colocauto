@@ -7,7 +7,9 @@ use Faker\Generator as Faker;
 
 $factory->define(Invoice::class, function (Faker $faker) {
     return [
-        'period' => $faker->word,
-        'paid_at' => Carbon::now(),
+        "period" => \Carbon\Carbon::now()
+            ->locale("fr_FR")
+            ->isoFormat("LLLL"),
+        "paid_at" => Carbon::now(),
     ];
 });

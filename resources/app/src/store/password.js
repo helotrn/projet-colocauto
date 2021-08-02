@@ -1,4 +1,4 @@
-import Vue from 'vue';
+import Vue from "vue";
 
 export default {
   namespaced: true,
@@ -21,48 +21,43 @@ export default {
   actions: {
     async request({ commit }, request) {
       try {
-        const ajax = Vue.axios.post('/auth/password/request', request);
+        const ajax = Vue.axios.post("/auth/password/request", request);
 
-        commit('ajax', ajax);
+        commit("ajax", ajax);
 
         const { data } = await ajax;
 
-        commit('data', data);
+        commit("data", data);
 
-        commit('ajax', null);
+        commit("ajax", null);
       } catch (e) {
-        commit('ajax', null);
+        commit("ajax", null);
 
-        commit('error', e.response.data);
+        commit("error", e.response.data);
 
         throw e;
       }
     },
-    async reset({ commit }, {
-      email,
-      newPassword,
-      newPasswordRepeat,
-      token,
-    }) {
+    async reset({ commit }, { email, newPassword, newPasswordRepeat, token }) {
       try {
-        const ajax = Vue.axios.post('/auth/password/reset', {
+        const ajax = Vue.axios.post("/auth/password/reset", {
           email,
           password: newPassword,
           password_confirmation: newPasswordRepeat,
           token,
         });
 
-        commit('ajax', ajax);
+        commit("ajax", ajax);
 
         const { data } = await ajax;
 
-        commit('data', data);
+        commit("data", data);
 
-        commit('ajax', null);
+        commit("ajax", null);
       } catch (e) {
-        commit('ajax', null);
+        commit("ajax", null);
 
-        commit('error', e.response.data);
+        commit("error", e.response.data);
 
         throw e;
       }

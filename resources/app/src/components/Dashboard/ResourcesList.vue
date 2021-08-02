@@ -5,28 +5,30 @@
     <ul class="dashboard-resources-list__list">
       <li class="dashboard-resources-list__item">
         <router-link to="/assurances-desjardins" class="dashboard-resources-list__item-title">
-          <img class="dashboard-resources-list__item-title-icon" src="/icons/assurances.png">
-          <span class="dashboard-resources-list__item-title-text">
-            Mon assurance
-          </span>
+          <img class="dashboard-resources-list__item-title-icon" src="/icons/assurances.png" />
+          <span class="dashboard-resources-list__item-title-text"> Mon assurance </span>
         </router-link>
       </li>
 
       <li class="dashboard-resources-list__item" v-if="hasCommunity">
-        <a href="https://bit.ly/voisinage-LocoMotion" target="_blank" class="dashboard-resources-list__item-title">
-          <img class="dashboard-resources-list__item-title-icon" src="/icons/allo.png">
-          <span class="dashboard-resources-list__item-title-text">
-            Motiver son quartier
-          </span>
+        <a
+          href="https://bit.ly/voisinage-LocoMotion"
+          target="_blank"
+          class="dashboard-resources-list__item-title"
+        >
+          <img class="dashboard-resources-list__item-title-icon" src="/icons/allo.png" />
+          <span class="dashboard-resources-list__item-title-text"> Motiver son quartier </span>
         </a>
       </li>
 
       <li class="dashboard-resources-list__item" v-if="hasCommunity">
-        <a href="https://bit.ly/locomotion-bienvenue" target="_blank" class="dashboard-resources-list__item-title">
-          <img class="dashboard-resources-list__item-title-icon" src="/icons/allo.png">
-          <span class="dashboard-resources-list__item-title-text">
-            Guide de départ
-          </span>
+        <a
+          href="https://bit.ly/locomotion-bienvenue"
+          target="_blank"
+          class="dashboard-resources-list__item-title"
+        >
+          <img class="dashboard-resources-list__item-title-icon" src="/icons/allo.png" />
+          <span class="dashboard-resources-list__item-title-text"> Guide de départ </span>
         </a>
       </li>
     </ul>
@@ -36,7 +38,7 @@
     <ul class="dashboard-resources-list__list">
       <li class="dashboard-resources-list__item">
         <div class="dashboard-resources-list__item-title">
-          <img class="dashboard-resources-list__item-title-icon" src="/icons/messenger.png">
+          <img class="dashboard-resources-list__item-title-icon" src="/icons/messenger.png" />
           <span class="dashboard-resources-list__item-title-text">
             Discuter avec mon voisinage
           </span>
@@ -49,9 +51,7 @@
           </ul>
           <ul v-else>
             <li>
-              <a href="https://bit.ly/voisinage-LocoMotion" target="_blank">
-                LocoMotion
-              </a>
+              <a href="https://bit.ly/voisinage-LocoMotion" target="_blank"> LocoMotion </a>
             </li>
           </ul>
         </div>
@@ -59,10 +59,8 @@
 
       <li class="dashboard-resources-list__item">
         <router-link to="/faq" class="dashboard-resources-list__item-title">
-          <img class="dashboard-resources-list__item-title-icon" src="/icons/faq.png">
-          <span class="dashboard-resources-list__item-title-text">
-            Foire aux questions (FAQ)
-          </span>
+          <img class="dashboard-resources-list__item-title-icon" src="/icons/faq.png" />
+          <span class="dashboard-resources-list__item-title-text"> Foire aux questions (FAQ) </span>
         </router-link>
       </li>
     </ul>
@@ -75,7 +73,7 @@
           <strong>(438) 476-3343</strong>
         </a>
       </span>
-      <br>
+      <br />
       <span class="dashboard-resources-list__mailto text-center">
         <a href="mailto:info@locomotion.app">Écrivez-nous!</a>
       </span>
@@ -85,7 +83,7 @@
 
 <script>
 export default {
-  name: 'DashboardResourcesList',
+  name: "DashboardResourcesList",
   props: {
     user: {
       required: true,
@@ -94,7 +92,7 @@ export default {
   },
   computed: {
     communitiesWithChatGroup() {
-      return this.user.communities.filter(c => !!c.chat_group_url);
+      return this.user.communities.filter((c) => !!c.chat_group_url);
     },
     hasCommunity() {
       return this.user.communities.length > 0;
@@ -111,7 +109,10 @@ export default {
   }
 
   a {
-    &, &:hover, &:active, &:focus {
+    &,
+    &:hover,
+    &:active,
+    &:focus {
       color: $locomotion-green;
     }
   }
@@ -127,7 +128,8 @@ export default {
       margin-bottom: 0;
     }
 
-    li > a, li > div {
+    li > a,
+    li > div {
       display: flex;
       flex-direction: row;
     }
@@ -145,7 +147,7 @@ export default {
   }
 
   &__item-title-icon {
-    height: 3.625rem;          /* Was 58px initially. */
+    height: 3.625rem; /* Was 58px initially. */
     width: 3.625rem;
   }
 
@@ -155,7 +157,7 @@ export default {
 
   &__item-content {
     display: block;
-    margin-left: 4.875rem;      /* Was 58px initially. */
+    margin-left: 4.875rem; /* Was 58px initially. */
 
     ul {
       padding-left: 1rem;

@@ -2,11 +2,11 @@
   <b-container fluid>
     <b-row>
       <b-col>
-        <h1>{{ $tc('communauté', 2) | capitalize }}</h1>
+        <h1>{{ $tc("communauté", 2) | capitalize }}</h1>
       </b-col>
       <b-col class="admin__buttons">
         <b-btn v-if="creatable" :to="`/admin/${slug}/new`">
-          {{ $t('créer une communauté') | capitalize }}
+          {{ $t("créer une communauté") | capitalize }}
         </b-btn>
       </b-col>
     </b-row>
@@ -14,32 +14,40 @@
     <b-row>
       <b-col class="admin__selection">
         <div v-if="selected.length > 0">
-          {{ $tc(
-            '{count} communauté sélectionnée',
-            selected.length,
-            { count: selected.length }
-          ) }}
+          {{ $tc("{count} communauté sélectionnée", selected.length, { count: selected.length }) }}
         </div>
       </b-col>
 
       <b-col class="admin__filters">
-        <admin-filters entity="communities" :filters="filters" :params="contextParams"
-          @change="setParam" />
+        <admin-filters
+          entity="communities"
+          :filters="filters"
+          :params="contextParams"
+          @change="setParam"
+        />
       </b-col>
     </b-row>
 
     <b-row>
       <b-col>
         <b-table
-          striped hover :items="data"
-          :busy="loading" :fields="fields" no-local-sorting
-          :sort-by.sync="sortBy" :sort-desc.sync="sortDesc" no-sort-reset
-          :show-empty="true" empty-text="Pas de communauté">
+          striped
+          hover
+          :items="data"
+          :busy="loading"
+          :fields="fields"
+          no-local-sorting
+          :sort-by.sync="sortBy"
+          :sort-desc.sync="sortDesc"
+          no-sort-reset
+          :show-empty="true"
+          empty-text="Pas de communauté"
+        >
           <template v-slot:cell(type)="row">
             {{ $t(`fields.types.${row.item.type}`) | capitalize }}
           </template>
           <template v-slot:cell(parent.name)="row">
-            {{ row.item.parent ? row.item.parent.name : '-' }}
+            {{ row.item.parent ? row.item.parent.name : "-" }}
           </template>
           <template v-slot:cell(actions)="row">
             <admin-list-actions :columns="['edit']" :row="row" :slug="slug" />
@@ -53,8 +61,13 @@
         <b-button class="mr-3" variant="outline-primary" @click="exportCSV">
           Générer (CSV)
         </b-button>
-        <a variant="outline-primary" :href="exportUrl"
-          target="_blank" v-if="context.exportUrl" @click="resetExportUrl">
+        <a
+          variant="outline-primary"
+          :href="exportUrl"
+          target="_blank"
+          v-if="context.exportUrl"
+          @click="resetExportUrl"
+        >
           Télécharger (CSV)
         </a>
       </b-col>
@@ -67,16 +80,16 @@
 </template>
 
 <script>
-import AdminFilters from '@/components/Admin/Filters.vue';
-import AdminListActions from '@/components/Admin/ListActions.vue';
-import AdminPagination from '@/components/Admin/Pagination.vue';
+import AdminFilters from "@/components/Admin/Filters.vue";
+import AdminListActions from "@/components/Admin/ListActions.vue";
+import AdminPagination from "@/components/Admin/Pagination.vue";
 
-import DataRouteGuards from '@/mixins/DataRouteGuards';
-import ListMixin from '@/mixins/ListMixin';
-import locales from '@/locales';
+import DataRouteGuards from "@/mixins/DataRouteGuards";
+import ListMixin from "@/mixins/ListMixin";
+import locales from "@/locales";
 
 export default {
-  name: 'AdminCommunities',
+  name: "AdminCommunities",
   mixins: [DataRouteGuards, ListMixin],
   components: {
     AdminFilters,
@@ -87,11 +100,11 @@ export default {
     return {
       selected: [],
       fields: [
-        { key: 'id', label: 'ID', sortable: true },
-        { key: 'name', label: 'Nom', sortable: true },
-        { key: 'parent.name', label: 'Quartier', sortable: true },
-        { key: 'type', label: 'Type', sortable: true },
-        { key: 'actions', label: 'Actions', tdClass: 'table__cell__actions' },
+        { key: "id", label: "ID", sortable: true },
+        { key: "name", label: "Nom", sortable: true },
+        { key: "parent.name", label: "Quartier", sortable: true },
+        { key: "type", label: "Type", sortable: true },
+        { key: "actions", label: "Actions", tdClass: "table__cell__actions" },
       ],
     };
   },
@@ -110,5 +123,4 @@ export default {
 };
 </script>
 
-<style lang="scss">
-</style>
+<style lang="scss"></style>

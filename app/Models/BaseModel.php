@@ -9,20 +9,26 @@ class BaseModel extends Model
 {
     use BaseModelTrait;
 
-    public static function addJoin($query, $table, $left, $operator = null, $right = null) {
-                             // Don't join on empty query.
+    public static function addJoin(
+        $query,
+        $table,
+        $left,
+        $operator = null,
+        $right = null
+    ) {
+        // Don't join on empty query.
         if (!$query) {
             return $query;
         }
 
-                             // Get joins from query if any.
+        // Get joins from query if any.
         if (isset($query->getQuery()->joins)) {
             $joins = $query->getQuery()->joins ?: [];
         } else {
             $joins = [];
         }
 
-                             // Don't add join if exists already.
+        // Don't add join if exists already.
         $addJoin = true;
         foreach ($joins as $join) {
             if ($join->table === $table) {

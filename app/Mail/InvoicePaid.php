@@ -6,10 +6,9 @@ use App\Models\Invoice;
 use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class InvoicePaid extends Mailable
+class InvoicePaid extends BaseMailable
 {
     use Queueable, SerializesModels;
 
@@ -26,17 +25,18 @@ class InvoicePaid extends Mailable
         $text = null,
         $subject = null
     ) {
-         $this->user = $user;
-         $this->invoice = $invoice;
+        $this->user = $user;
+        $this->invoice = $invoice;
 
-         $this->title = $title;
-         $this->text = $text;
-         $this->subject = $subject ?: "Locomotion - $this->title";
+        $this->title = $title;
+        $this->text = $text;
+        $this->subject = $subject ?: "Locomotion - $this->title";
     }
 
-    public function build() {
-        return $this->view('emails.invoice.paid')
+    public function build()
+    {
+        return $this->view("emails.invoice.paid")
             ->subject($this->subject)
-            ->text('emails.invoice.paid_text');
+            ->text("emails.invoice.paid_text");
     }
 }

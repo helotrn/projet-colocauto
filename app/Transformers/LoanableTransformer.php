@@ -7,7 +7,8 @@ use Molotov\Transformer;
 
 class LoanableTransformer extends Transformer
 {
-    public function transform($item, $options = []) {
+    public function transform($item, $options = [])
+    {
         $output = parent::transform($item, $options);
 
         $user = Auth::user();
@@ -15,7 +16,7 @@ class LoanableTransformer extends Transformer
             return $output;
         }
 
-        unset($output['padlock']);
+        unset($output["padlock"]);
 
         return $output;
     }

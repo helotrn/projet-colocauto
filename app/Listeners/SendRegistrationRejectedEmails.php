@@ -9,10 +9,12 @@ use Mail;
 
 class SendRegistrationRejectedEmails
 {
-    public function handle(RegistrationRejectedEvent $event) {
+    public function handle(RegistrationRejectedEvent $event)
+    {
         $user = $event->user;
 
-        Mail::to($user->email, $user->name . ' ' . $user->last_name)
-            ->queue(new RegistrationRejected($user));
+        Mail::to($user->email, $user->name . " " . $user->last_name)->queue(
+            new RegistrationRejected($user)
+        );
     }
 }

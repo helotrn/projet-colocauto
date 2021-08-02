@@ -2,11 +2,8 @@
   <layout-page name="insurance" class="insurance__content" padded>
     <b-row tag="section" class="page__section">
       <b-col>
-
         <b-card>
-          <p>
-            Pour faciliter la lecture, nous avons simplifié le texte&nbsp;:
-          </p>
+          <p>Pour faciliter la lecture, nous avons simplifié le texte&nbsp;:</p>
           <ul>
             <li>
               <a href="/conditions-utilisation-desjardins-assurances.html">
@@ -16,9 +13,9 @@
           </ul>
 
           <p>
-            Cependant, le texte de la loi, du règlement ou du contrat
-            d’assurance sont prioritaires s’il y a une différence.  Vous pouvez
-            accéder aux documents de références en suivant ces liens&nbsp;:
+            Cependant, le texte de la loi, du règlement ou du contrat d’assurance sont prioritaires
+            s’il y a une différence. Vous pouvez accéder aux documents de références en suivant ces
+            liens&nbsp;:
           </p>
           <ul>
             <li>
@@ -27,13 +24,10 @@
               </a>
             </li>
             <li>
-              <a href="/assurances/lettre_assureur_courtier.pdf">
-                Lettre courtier
-              </a>
+              <a href="/assurances/lettre_assureur_courtier.pdf"> Lettre courtier </a>
             </li>
           </ul>
         </b-card>
-
       </b-col>
     </b-row>
   </layout-page>
@@ -41,7 +35,7 @@
 
 <script>
 export default {
-  name: 'Privacy',
+  name: "Privacy",
 };
 </script>
 

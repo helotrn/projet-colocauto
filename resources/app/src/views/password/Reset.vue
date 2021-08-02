@@ -1,32 +1,42 @@
 <template>
   <div class="password-reset">
-    <h1 class="password-reset__title">{{ $t('reset_password') }}</h1>
+    <h1 class="password-reset__title">{{ $t("reset_password") }}</h1>
 
     <b-alert variant="danger" v-if="error" show>
-      {{ $t('reset_response_error') }}
+      {{ $t("reset_response_error") }}
     </b-alert>
 
-    <p>{{ $t('instructions') }}</p>
+    <p>{{ $t("instructions") }}</p>
 
     <b-form class="password-reset__form" @submit.prevent="passwordReset" novalidate>
       <b-form-group :label="$t('email')">
         <b-form-input type="email" disabled :value="email" />
       </b-form-group>
 
-      <forms-validated-input mode="lazy" name="new_password" :label="$t('new_password')"
-        :rules="{ required: true, min: 8 }" type="password"
-        :placeholder="$t('new_password')" description="Minimum 8 caractères"
-        v-model="newPassword" />
+      <forms-validated-input
+        mode="lazy"
+        name="new_password"
+        :label="$t('new_password')"
+        :rules="{ required: true, min: 8 }"
+        type="password"
+        :placeholder="$t('new_password')"
+        description="Minimum 8 caractères"
+        v-model="newPassword"
+      />
 
-      <forms-validated-input mode="lazy"
-        name="new_password_repeat" :label="$t('new_password_repeat')"
-        :rules="{ required: true, is: newPassword }" type="password"
+      <forms-validated-input
+        mode="lazy"
+        name="new_password_repeat"
+        :label="$t('new_password_repeat')"
+        :rules="{ required: true, is: newPassword }"
+        type="password"
         :placeholder="$t('new_password_repeat')"
-        v-model="newPasswordRepeat" />
+        v-model="newPasswordRepeat"
+      />
 
       <b-form-group>
         <b-button type="submit" :disabled="loading" variant="primary" block>
-          {{ $t('submit') }}
+          {{ $t("submit") }}
         </b-button>
       </b-form-group>
     </b-form>
@@ -45,17 +55,17 @@ fr:
 </i18n>
 
 <script>
-import FormsValidatedInput from '@/components/Forms/ValidatedInput.vue';
+import FormsValidatedInput from "@/components/Forms/ValidatedInput.vue";
 
 export default {
-  name: 'PasswordReset',
+  name: "PasswordReset",
   components: { FormsValidatedInput },
   data() {
     return {
       error: false,
       loading: false,
-      newPassword: '',
-      newPasswordRepeat: '',
+      newPassword: "",
+      newPasswordRepeat: "",
     };
   },
   computed: {
@@ -79,29 +89,24 @@ export default {
       this.loading = true;
       this.error = false;
 
-      const {
-        email,
-        token,
-        newPassword,
-        newPasswordRepeat,
-      } = this;
+      const { email, token, newPassword, newPasswordRepeat } = this;
 
       try {
-        await this.$store.dispatch('password/reset', {
+        await this.$store.dispatch("password/reset", {
           email,
           newPassword,
           newPasswordRepeat,
           token,
         });
 
-        this.$store.commit('addNotification', {
-          content: 'Vous pouvez maintenant vous connecter avec votre nouveau mot de passe.',
-          title: 'Mot de passe mis à jour',
-          variant: 'success',
-          type: 'password',
+        this.$store.commit("addNotification", {
+          content: "Vous pouvez maintenant vous connecter avec votre nouveau mot de passe.",
+          title: "Mot de passe mis à jour",
+          variant: "success",
+          type: "password",
         });
 
-        this.$router.push('/login');
+        this.$router.push("/login");
       } catch (e) {
         this.error = true;
       }

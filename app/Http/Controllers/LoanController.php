@@ -30,30 +30,40 @@ class LoanController extends RestController
         $this->actionController = $actionController;
     }
 
-    public function index(Request $request) {
+    public function index(Request $request)
+    {
         try {
             [$items, $total] = $this->repo->get($request);
         } catch (ValidationException $e) {
             return $this->respondWithErrors($e->errors(), $e->getMessage());
         }
 
-        switch ($request->headers->get('accept')) {
-            case 'text/csv':
-                $filename = $this->respondWithCsv($request, $items, $this->model);
-                $base = app()->make('url')->to('/');
+        switch ($request->headers->get("accept")) {
+            case "text/csv":
+                $filename = $this->respondWithCsv(
+                    $request,
+                    $items,
+                    $this->model
+                );
+                $base = app()
+                    ->make("url")
+                    ->to("/");
                 return response($base . $filename, 201);
             default:
                 return $this->respondWithCollection($request, $items, $total);
         }
     }
 
-    public function create(CreateRequest $request) {
-        if (!$request->get('community_id')) {
+    public function create(CreateRequest $request)
+    {
+        if (!$request->get("community_id")) {
             $loanable = Loanable::accessibleBy($request->user())
-                ->where('id', $request->get('loanable_id'))
+                ->where("id", $request->get("loanable_id"))
                 ->firstOrFail();
             $request->merge([
-                'community_id' => $loanable->getCommunityForLoanBy($request->user())->id,
+                "community_id" => $loanable->getCommunityForLoanBy(
+                    $request->user()
+                )->id,
             ]);
         }
 
@@ -68,7 +78,8 @@ class LoanController extends RestController
         return $this->respondWithItem($request, $item, 201);
     }
 
-    public function update(Request $request, $id) {
+    public function update(Request $request, $id)
+    {
         try {
             $item = parent::validateAndUpdate($request, $id);
         } catch (ValidationException $e) {
@@ -78,7 +89,8 @@ class LoanController extends RestController
         return $this->respondWithItem($request, $item);
     }
 
-    public function retrieve(Request $request, $id) {
+    public function retrieve(Request $request, $id)
+    {
         $item = $this->repo->find($request, $id);
 
         try {
@@ -90,7 +102,8 @@ class LoanController extends RestController
         return $response;
     }
 
-    public function destroy(Request $request, $id) {
+    public function destroy(Request $request, $id)
+    {
         try {
             $response = parent::validateAndDestroy($request, $id);
         } catch (ValidationException $e) {
@@ -100,7 +113,8 @@ class LoanController extends RestController
         return $response;
     }
 
-    public function cancel(Request $request, $id) {
+    public function cancel(Request $request, $id)
+    {
         $item = $this->repo->find($request, $id);
 
         $item->canceled_at = now();
@@ -117,111 +131,115 @@ class LoanController extends RestController
         return $response;
     }
 
-    public function retrieveBorrower(Request $request, $loanId) {
+    public function retrieveBorrower(Request $request, $loanId)
+    {
         $item = $this->repo->find($request, $loanId);
 
         return $this->respondWithItem($request, $item->borrower);
     }
 
-    public function retrieveAction(Request $request, $loanId, $actionId) {
-        $request->merge([ 'loan_id' => $loanId ]);
+    public function retrieveAction(Request $request, $loanId, $actionId)
+    {
+        $request->merge(["loan_id" => $loanId]);
         return $this->actionController->retrieve($request, $actionId);
     }
 
-    public function createAction(ActionCreateRequest $request, $id) {
+    public function createAction(ActionCreateRequest $request, $id)
+    {
         $item = $this->repo->find($request->redirectAuth(Request::class), $id);
 
-        $request->merge([ 'loan_id' => $id ]);
+        $request->merge(["loan_id" => $id]);
 
         return $this->actionController->create($request);
     }
 
-    public function template(Request $request) {
-        $defaultDeparture = new Carbon;
+    public function template(Request $request)
+    {
+        $defaultDeparture = new Carbon();
         $defaultDeparture->minute = floor($defaultDeparture->minute / 10) * 10;
         $defaultDeparture->second = 0;
 
         $template = [
-            'item' => [
-                'departure_at' => $defaultDeparture->format('Y-m-d H:i:s'),
-                'duration_in_minutes' => 60,
-                'estimated_distance' => 10,
-                'estimated_price' => 0,
-                'platform_tip' => 0,
-                'message_for_owner' => '',
-                'reason' => '',
-                'incidents' => [],
-                'actions' => [],
-                'borrower_id' => null,
-                'borrower' => null,
-                'loanable_id' => null,
-                'loanable' => null,
+            "item" => [
+                "departure_at" => $defaultDeparture->format("Y-m-d H:i:s"),
+                "duration_in_minutes" => 60,
+                "estimated_distance" => 10,
+                "estimated_price" => 0,
+                "platform_tip" => 0,
+                "message_for_owner" => "",
+                "reason" => "",
+                "incidents" => [],
+                "actions" => [],
+                "borrower_id" => null,
+                "borrower" => null,
+                "loanable_id" => null,
+                "loanable" => null,
             ],
-            'form' => [
-                'departure_at' => [
-                    'type' => 'datetime',
+            "form" => [
+                "departure_at" => [
+                    "type" => "datetime",
                 ],
-                'duration_in_minutes' => [
-                    'type' => 'number',
+                "duration_in_minutes" => [
+                    "type" => "number",
                 ],
-                'estimated_distance' => [
-                    'type' => 'number',
+                "estimated_distance" => [
+                    "type" => "number",
                 ],
-                'estimated_insurance' => [
-                    'type' => 'number',
+                "estimated_insurance" => [
+                    "type" => "number",
                 ],
-                'estimated_price' => [
-                    'type' => 'number',
+                "estimated_price" => [
+                    "type" => "number",
                 ],
-                'platform_tip' => [
-                    'type' => 'number',
+                "platform_tip" => [
+                    "type" => "number",
                 ],
-                'message_for_owner' => [
-                  'type' => 'textarea',
+                "message_for_owner" => [
+                    "type" => "textarea",
                 ],
-                'reason' => [
-                  'type' => 'textarea',
+                "reason" => [
+                    "type" => "textarea",
                 ],
-                'community_id' => [
-                    'type' => 'relation',
-                    'query' => [
-                        'slug' => 'communities',
-                        'value' => 'id',
-                        'text' => 'name',
-                        'params' => [
-                            'fields' => 'id,name',
+                "community_id" => [
+                    "type" => "relation",
+                    "query" => [
+                        "slug" => "communities",
+                        "value" => "id",
+                        "text" => "name",
+                        "params" => [
+                            "fields" => "id,name",
                         ],
                     ],
                 ],
-                'loanable_id' => [
-                    'type' => 'relation',
-                    'query' => [
-                        'slug' => 'loanables',
-                        'value' => 'id',
-                        'text' => 'name',
-                        'params' => [
-                            'fields' => 'id,name',
+                "loanable_id" => [
+                    "type" => "relation",
+                    "query" => [
+                        "slug" => "loanables",
+                        "value" => "id",
+                        "text" => "name",
+                        "params" => [
+                            "fields" => "id,name",
                         ],
                     ],
                 ],
-                'borrower_id' => [
-                    'type' => 'relation',
-                    'query' => [
-                        'slug' => 'borrowers',
-                        'value' => 'id',
-                        'text' => 'user.full_name',
-                        'params' => [
-                            'fields' => 'id,user.full_name',
+                "borrower_id" => [
+                    "type" => "relation",
+                    "query" => [
+                        "slug" => "borrowers",
+                        "value" => "id",
+                        "text" => "user.full_name",
+                        "params" => [
+                            "fields" => "id,user.full_name",
                         ],
                     ],
                 ],
             ],
-            'filters' => $this->model::$filterTypes,
+            "filters" => $this->model::$filterTypes,
         ];
 
-        $modelRules = $this->model->getRules('template', $request->user());
+        $modelRules = $this->model->getRules("template", $request->user());
         foreach ($modelRules as $field => $rules) {
-            $template['form'][$field]['rules'] = $this->formatRules($rules);
+            $template["form"][$field]["rules"] = $this->formatRules($rules);
         }
 
         return $template;

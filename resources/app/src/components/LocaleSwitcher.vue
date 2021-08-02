@@ -1,7 +1,6 @@
 <template>
   <b-nav-item-dropdown class="locale-switcher d-none" :text="currentLocale" right>
-    <b-dropdown-item @click="currentLocale = locale"
-      v-for="locale in otherLocales" :key="locale">
+    <b-dropdown-item @click="currentLocale = locale" v-for="locale in otherLocales" :key="locale">
       {{ $t(`locales.${locale}`) }}
     </b-dropdown-item>
   </b-nav-item-dropdown>
@@ -9,10 +8,10 @@
 
 <script>
 export default {
-  name: 'LocaleSwitcher',
+  name: "LocaleSwitcher",
   data() {
     return {
-      locales: ['en', 'fr'],
+      locales: ["en", "fr"],
     };
   },
   computed: {
@@ -25,7 +24,7 @@ export default {
       },
     },
     otherLocales() {
-      return this.locales.filter(l => l !== this.currentLocale);
+      return this.locales.filter((l) => l !== this.currentLocale);
     },
   },
 };

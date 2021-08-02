@@ -10,7 +10,8 @@ use Mail;
 
 class SendLoanIntentionRejectedEmails
 {
-    public function handle(LoanIntentionRejectedEvent $event) {
+    public function handle(LoanIntentionRejectedEvent $event)
+    {
         $loan = $event->intention->loan;
         $borrower = $loan->borrower;
         $owner = $loan->loanable->owner;
@@ -21,7 +22,7 @@ class SendLoanIntentionRejectedEmails
 
         Mail::to(
             $borrower->user->email,
-            $borrower->user->name . ' ' . $borrower->user->last_name
+            $borrower->user->name . " " . $borrower->user->last_name
         )->queue(
             new LoanIntentionRejected(
                 $event->intention,

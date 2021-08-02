@@ -1,14 +1,14 @@
-import Dashboard from '../views/Dashboard.vue';
-import Faq from '../views/Faq.vue';
-import Help from '../views/Help.vue';
-import Home from '../views/Home.vue';
-import Insurance from '../views/Insurance.vue';
-import Privacy from '../views/Privacy.vue';
+import Dashboard from "../views/Dashboard.vue";
+import Faq from "../views/Faq.vue";
+import Help from "../views/Help.vue";
+import Home from "../views/Home.vue";
+import Insurance from "../views/Insurance.vue";
+import Privacy from "../views/Privacy.vue";
 
 export default [
   {
-    path: '/',
-    name: 'home',
+    path: "/",
+    name: "home",
     component: Home,
     meta: {
       data: {
@@ -19,52 +19,52 @@ export default [
     },
   },
   {
-    path: '/privacy',
-    name: 'privacy',
+    path: "/privacy",
+    name: "privacy",
     component: Privacy,
     meta: {
-      title: 'titles.privacy',
+      title: "titles.privacy",
     },
   },
   {
-    path: '/conditions',
-    name: 'conditions',
+    path: "/conditions",
+    name: "conditions",
     component: Privacy,
     meta: {
-      title: 'titles.privacy',
+      title: "titles.privacy",
     },
   },
   {
-    path: '/assurances-desjardins',
-    name: 'insurance',
+    path: "/assurances-desjardins",
+    name: "insurance",
     component: Insurance,
     meta: {
-      title: 'titles.insurance',
+      title: "titles.insurance",
     },
   },
   {
-    path: '/faq',
-    name: 'faq',
+    path: "/faq",
+    name: "faq",
     component: Faq,
     meta: {
-      title: 'titles.faq',
+      title: "titles.faq",
     },
   },
   {
-    path: '/app',
-    name: 'dashboard',
+    path: "/app",
+    name: "dashboard",
     component: Dashboard,
     meta: {
       auth: true,
-      title: 'titles.dashboard',
+      title: "titles.dashboard",
     },
   },
   {
-    path: '/help',
-    name: 'help',
+    path: "/help",
+    name: "help",
     component: Help,
     meta: {
-      title: 'Aide de LocoMotion',
+      title: "Aide de LocoMotion",
     },
   },
 ];

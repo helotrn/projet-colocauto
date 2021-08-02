@@ -1,54 +1,56 @@
-import Register from '../views/Register.vue';
-import RegisterIntro from '../views/register/Intro.vue';
-import RegisterStep from '../views/register/Step.vue';
-import RegisterMap from '../views/register/Map.vue';
+import Register from "../views/Register.vue";
+import RegisterIntro from "../views/register/Intro.vue";
+import RegisterStep from "../views/register/Step.vue";
+import RegisterMap from "../views/register/Map.vue";
 
 export default {
-  path: '/register',
-  name: 'register',
+  path: "/register",
+  name: "register",
   component: Register,
   meta: {
-    title: 'titles.register',
+    title: "titles.register",
   },
   children: [
     {
-      path: '1',
-      name: 'register-intro',
+      path: "1",
+      name: "register-intro",
       component: RegisterIntro,
       meta: {
-        title: 'titles.register',
+        title: "titles.register",
       },
     },
     {
-      path: 'map',
-      name: 'register-map',
+      path: "map",
+      name: "register-map",
       component: RegisterMap,
       meta: {
         auth: true,
-        slug: 'users',
+        slug: "users",
         skipCleanup: true,
         data: {
           communities: {
             retrieve: {
-              fields: 'id,name,type,description,center,area_google,center_google,'
-                + 'parent.id,parent.name,parent.center_google',
-              type: 'neighborhood,borough',
+              fields:
+                "id,name,type,description,center,area_google,center_google," +
+                "parent.id,parent.name,parent.center_google",
+              type: "neighborhood,borough",
             },
           },
         },
-        title: 'titles.register-map',
+        title: "titles.register-map",
       },
     },
     {
-      path: ':step',
-      name: 'register-step',
+      path: ":step",
+      name: "register-step",
       component: RegisterStep,
       props: true,
       meta: {
         auth: true,
-        slug: 'users',
+        slug: "users",
         params: {
-          fields: '*,avatar.*,owner.*,borrower.*.*,communities.id,communities.name,communities.role,communities.proof',
+          fields:
+            "*,avatar.*,owner.*,borrower.*.*,communities.id,communities.name,communities.role,communities.proof",
         },
       },
     },

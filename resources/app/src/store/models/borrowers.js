@@ -1,13 +1,12 @@
-import RestModule from '../RestModule';
+import RestModule from "../RestModule";
 
-export default new RestModule('borrowers', {
+export default new RestModule("borrowers", {
   params: {
-    order: 'id',
+    order: "id",
     page: 1,
     per_page: 10,
-    q: '',
+    q: "",
     type: null,
     deleted_at: null,
   },
 });
-

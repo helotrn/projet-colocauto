@@ -6,18 +6,21 @@ use App\Http\Requests\BaseRequest;
 
 class LoginRequest extends BaseRequest
 {
-    public function authorize() {
+    public function authorize()
+    {
         return true;
     }
 
-    public function rules() {
+    public function rules()
+    {
         return [
-            'email' => 'required|email',
-            'password' => 'required'
+            "email" => "required|email",
+            "password" => "required",
         ];
     }
 
-    public function message() {
+    public function message()
+    {
         return [];
     }
 }

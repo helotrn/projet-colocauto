@@ -14,7 +14,7 @@ class NokeSyncLoans extends Command
     protected $signature = 'noke:sync:loans
                             {--pretend : Do not call remote API}';
 
-    protected $description = 'Synchronize NOKE loans';
+    protected $description = "Synchronize NOKE loans";
 
     protected $groups = [];
     protected $groupsIndex = [];
@@ -26,37 +26,40 @@ class NokeSyncLoans extends Command
 
     private $pretend = false;
 
-    public function __construct(Client $client, NokeService $service) {
+    public function __construct(Client $client, NokeService $service)
+    {
         parent::__construct();
 
         $this->client = $client;
         $this->service = $service;
     }
 
-    public function handle() {
-        if ($this->option('pretend')) {
+    public function handle()
+    {
+        if ($this->option("pretend")) {
             $this->pretend = true;
         }
 
-        $this->info('Fetching locks...');
+        $this->info("Fetching locks...");
         $this->getLocks();
 
-        $this->info('Fetching users...');
+        $this->info("Fetching users...");
         $this->getUsers();
 
-        $this->info('Fetching groups...');
+        $this->info("Fetching groups...");
         $this->getGroups();
 
-        $this->info('Building locks users...');
+        $this->info("Building locks users...");
         $this->buildLocksUsers();
 
-        $this->info('Updating locks users...');
+        $this->info("Updating locks users...");
         $this->updateLocksUsers();
 
-        $this->info('Done.');
+        $this->info("Done.");
     }
 
-    protected function getLocks($force = false) {
+    protected function getLocks($force = false)
+    {
         $this->locks = $this->service->fetchLocks($force);
 
         foreach ($this->locks as $lock) {
@@ -65,7 +68,8 @@ class NokeSyncLoans extends Command
         }
     }
 
-    protected function getGroups($force = false) {
+    protected function getGroups($force = false)
+    {
         $this->groups = $this->service->fetchGroups($force);
 
         foreach ($this->groups as $group) {
@@ -73,7 +77,8 @@ class NokeSyncLoans extends Command
         }
     }
 
-    protected function getUsers($force = false) {
+    protected function getUsers($force = false)
+    {
         $this->users = $this->service->fetchUsers($force);
 
         foreach ($this->users as $user) {
@@ -81,37 +86,41 @@ class NokeSyncLoans extends Command
         }
     }
 
-    public static function getLoansFromPadlockMacQuery($queryParams) {
-        $mac = $queryParams['mac_address'];
+    public static function getLoansFromPadlockMacQuery($queryParams)
+    {
+        $mac = $queryParams["mac_address"];
 
         $columnDefinitions = Loan::getColumnsDefinition();
         $query = Loan::where(
-            'departure_at',
-            '<=',
-            date('Y-m-d H:i:00', strtotime('+15 minutes'))
+            "departure_at",
+            "<=",
+            date("Y-m-d H:i:00", strtotime("+15 minutes"))
         )
-            ->whereHas('prePayment', function ($q) {
-                return $q->where('status', 'completed');
+            ->whereHas("prePayment", function ($q) {
+                return $q->where("status", "completed");
             })
             ->where(function ($q) {
-                return $q->whereHas('payment', function ($q) {
-                    return $q->where('status', '!=', 'completed');
-                })->orWhereDoesntHave('payment');
+                return $q
+                    ->whereHas("payment", function ($q) {
+                        return $q->where("status", "!=", "completed");
+                    })
+                    ->orWhereDoesntHave("payment");
             })
-            ->whereHas('loanable', function ($q) use ($mac) {
-                return $q->whereHas('padlock', function ($q) use ($mac) {
-                    return $q->where('mac_address', $mac);
+            ->whereHas("loanable", function ($q) use ($mac) {
+                return $q->whereHas("padlock", function ($q) use ($mac) {
+                    return $q->where("mac_address", $mac);
                 });
             });
-        $query = $columnDefinitions['loan_status']($query);
-        $query = $columnDefinitions['*']($query);
+        $query = $columnDefinitions["loan_status"]($query);
+        $query = $columnDefinitions["*"]($query);
 
-        $query->with('borrower', 'borrower.user');
+        $query->with("borrower", "borrower.user");
 
         return $query;
     }
 
-    private function buildLocksUsers() {
+    private function buildLocksUsers()
+    {
         $macAddresses = array_keys($this->locksIndex);
 
         foreach ($macAddresses as $mac) {
@@ -119,18 +128,22 @@ class NokeSyncLoans extends Command
                 $this->locksIndex[$mac]->users = [];
             }
 
-            $query = $this->getLoansFromPadlockMacQuery([ 'mac_address' => $mac ]);
+            $query = $this->getLoansFromPadlockMacQuery([
+                "mac_address" => $mac,
+            ]);
 
             $loans = $query->get();
             if ($loans->count() > 0) {
                 foreach ($loans as $loan) {
-                    $this->locksIndex[$mac]->users[] = $loan->borrower->user->email;
+                    $this->locksIndex[$mac]->users[] =
+                        $loan->borrower->user->email;
                 }
             }
         }
     }
 
-    private function updateLocksUsers() {
+    private function updateLocksUsers()
+    {
         $macAddresses = array_keys($this->locksIndex);
 
         foreach ($macAddresses as $mac) {
@@ -152,24 +165,28 @@ class NokeSyncLoans extends Command
                 }
             }
 
-            $data->userIds[] = $this->usersIndex['api@locomotion.app']->id;
+            $data->userIds[] = $this->usersIndex["api@locomotion.app"]->id;
             $data->lockIds = [$this->locksIndex[$mac]->id];
 
             $group = $this->service->getGroupProfile($data->id);
             $currentUserIds = array_map(function ($u) {
                 return $u->id;
             }, $group->users);
-            Log::channel('noke')->info("Group $groupName has " . join(',', $currentUserIds));
+            Log::channel("noke")->info(
+                "Group $groupName has " . join(",", $currentUserIds)
+            );
 
             $data->userIds = array_values(array_unique($data->userIds));
-            if (empty(array_diff($data->userIds, $currentUserIds))
-                && count($data->userIds) === count($currentUserIds)) {
+            if (
+                empty(array_diff($data->userIds, $currentUserIds)) &&
+                count($data->userIds) === count($currentUserIds)
+            ) {
                 continue;
             }
 
             $this->warn("Updating group {$groupName} users.");
-            $userIds = join(',', $data->userIds);
-            Log::channel('noke')->info("Updating $groupName with $userIds");
+            $userIds = join(",", $data->userIds);
+            Log::channel("noke")->info("Updating $groupName with $userIds");
 
             if ($this->pretend) {
                 continue;

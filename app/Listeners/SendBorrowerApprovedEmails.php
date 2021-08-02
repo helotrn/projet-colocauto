@@ -8,16 +8,20 @@ use Mail;
 
 class SendBorrowerApprovedEmails
 {
-    public function handle(BorrowerApprovedEvent $event) {
+    public function handle(BorrowerApprovedEvent $event)
+    {
         $user = $event->user;
 
-        if (!isset($user->meta['sent_borrower_approved_email'])) {
-            Mail::to($user->email, $user->name . ' ' . $user->last_name)
-                ->queue(new BorrowerApproved($user));
+        if (!isset($user->meta["sent_borrower_approved_email"])) {
+            Mail::to($user->email, $user->name . " " . $user->last_name)->queue(
+                new BorrowerApproved($user)
+            );
 
-            $user->forceFill([
-                'meta' => [ 'sent_borrower_approved_email' => true ],
-            ])->save();
+            $meta = $user->meta;
+            $meta["sent_borrower_approved_email"] = true;
+            $user->meta = $meta;
+
+            $user->save();
         }
     }
 }

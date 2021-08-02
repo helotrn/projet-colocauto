@@ -11,12 +11,16 @@ use Stripe\Exception\CardException;
 
 class PaymentMethodController extends RestController
 {
-    public function __construct(PaymentMethodRepository $repository, PaymentMethod $model) {
+    public function __construct(
+        PaymentMethodRepository $repository,
+        PaymentMethod $model
+    ) {
         $this->repo = $repository;
         $this->model = $model;
     }
 
-    public function index(Request $request) {
+    public function index(Request $request)
+    {
         try {
             [$items, $total] = $this->repo->get($request);
         } catch (ValidationException $e) {
@@ -26,27 +30,27 @@ class PaymentMethodController extends RestController
         return $this->respondWithCollection($request, $items, $total);
     }
 
-    public function create(CreateRequest $request) {
+    public function create(CreateRequest $request)
+    {
         $user = $request->user();
 
-        if ($request->get('type') === 'credit_card') {
+        if ($request->get("type") === "credit_card") {
             $customer = $user->getStripeCustomer();
             try {
-                $card = \Stripe\Customer::createSource(
-                    $customer->id,
-                    [ 'source' => $request->get('external_id'), ]
-                );
+                $card = \Stripe\Customer::createSource($customer->id, [
+                    "source" => $request->get("external_id"),
+                ]);
             } catch (CardException $e) {
                 return $this->respondWithErrors([
-                    'id' => [$e->getMessage()],
+                    "id" => [$e->getMessage()],
                 ]);
             }
 
-            $request->merge([ 'external_id' => $card->id ]);
+            $request->merge(["external_id" => $card->id]);
         }
 
-        if (!$request->get('user_id')) {
-            $request->merge([ 'user_id' => $request->user()->id ]);
+        if (!$request->get("user_id")) {
+            $request->merge(["user_id" => $request->user()->id]);
         }
 
         try {
@@ -58,7 +62,8 @@ class PaymentMethodController extends RestController
         return $this->respondWithItem($request, $item, 201);
     }
 
-    public function update(Request $request, $id) {
+    public function update(Request $request, $id)
+    {
         try {
             $item = parent::validateAndUpdate($request, $id);
         } catch (ValidationException $e) {
@@ -68,7 +73,8 @@ class PaymentMethodController extends RestController
         return $this->respondWithItem($request, $item);
     }
 
-    public function retrieve(Request $request, $id) {
+    public function retrieve(Request $request, $id)
+    {
         $item = $this->repo->find($request, $id);
 
         try {
@@ -80,10 +86,11 @@ class PaymentMethodController extends RestController
         return $response;
     }
 
-    public function destroy(Request $request, $id) {
+    public function destroy(Request $request, $id)
+    {
         $item = $this->repo->find($request, $id);
 
-        if ($item->type === 'credit_card') {
+        if ($item->type === "credit_card") {
             $user = $request->user();
             $customer = $user->getStripeCustomer();
             \Stripe\Customer::deleteSource($customer->id, $item->external_id);
@@ -98,51 +105,52 @@ class PaymentMethodController extends RestController
         return $response;
     }
 
-    public function template(Request $request) {
+    public function template(Request $request)
+    {
         $template = [
-            'item' => [
-                'name' => '',
-                'type' => '',
+            "item" => [
+                "name" => "",
+                "type" => "",
             ],
-            'form' => [
-                'name' => [
-                    'type' => 'text',
+            "form" => [
+                "name" => [
+                    "type" => "text",
                 ],
-                'external_id' => [
-                    'type' => 'text',
+                "external_id" => [
+                    "type" => "text",
                 ],
-                'type' => [
-                    'type' => 'select',
+                "type" => [
+                    "type" => "select",
                 ],
-                'credit_card_type' => [
-                    'type' => 'text',
+                "credit_card_type" => [
+                    "type" => "text",
                 ],
-                'four_last_digits' => [
-                    'type' => 'number',
-                    'disabled' => true,
+                "four_last_digits" => [
+                    "type" => "number",
+                    "disabled" => true,
                 ],
             ],
-            'filters' => $this->model::$filterTypes,
+            "filters" => $this->model::$filterTypes,
         ];
 
-        $modelRules = $this->model->getRules('template', $request->user());
+        $modelRules = $this->model->getRules("template", $request->user());
         foreach ($modelRules as $field => $rules) {
-            if (!isset($template['form'][$field])) {
+            if (!isset($template["form"][$field])) {
                 continue;
             }
-            $template['form'][$field]['rules'] = $this->formatRules($rules);
+            $template["form"][$field]["rules"] = $this->formatRules($rules);
         }
 
-        $template['form']['type']['options'] = [
+        $template["form"]["type"]["options"] = [
             [
-                'text' => 'Carte de crédit',
-                'value' => 'credit_card',
+                "text" => "Carte de crédit",
+                "value" => "credit_card",
             ],
         ];
         if (Auth::user()->isAdmin()) {
-            $template['form']['type']['options'][] = [
-                'text' => 'Compte bancaire',
-                'value' => 'bank_account',
+            $template["form"]["type"]["options"][] = [
+                "text" => "Compte bancaire",
+                "value" => "bank_account",
             ];
         }
 

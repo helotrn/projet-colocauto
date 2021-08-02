@@ -14,14 +14,16 @@ class FileController extends RestController
 
     protected $repo;
 
-    protected $types = ['user'];
+    protected $types = ["user"];
 
-    public function __construct(FileRepository $file) {
+    public function __construct(FileRepository $file)
+    {
         $this->repo = $file;
     }
 
-    public function create(Request $request) {
-        $field = $request->input('field');
+    public function create(Request $request)
+    {
+        $field = $request->input("field");
         $file = $request->file($field);
 
         if (is_array($file)) {
@@ -32,8 +34,8 @@ class FileController extends RestController
             switch ($file->getError()) {
                 case \UPLOAD_ERR_INI_SIZE:
                 case \UPLOAD_ERR_FORM_SIZE:
-                    $maxUpload = (int) ini_get('upload_max_filesize');
-                    $maxPost = (int) ini_get('post_max_size');
+                    $maxUpload = (int) ini_get("upload_max_filesize");
+                    $maxPost = (int) ini_get("post_max_size");
                     $maxFileSize = min($maxUpload, $maxPost);
                     return $this->respondWithMessage(
                         "La taille du fichier dépasse la limite configurée à $maxFileSize Mo",
@@ -53,7 +55,7 @@ class FileController extends RestController
                         500
                     );
                 default:
-                    return $this->respondWithMessage('Fichier invalide.', 422);
+                    return $this->respondWithMessage("Fichier invalide.", 422);
             }
         }
 
@@ -70,21 +72,26 @@ class FileController extends RestController
         return $this->repo->create($fileData);
     }
 
-    public function update(Request $request, $id) {
+    public function update(Request $request, $id)
+    {
         abort(405);
     }
 
-    public function delete(Request $request, $id) {
+    public function delete(Request $request, $id)
+    {
         $file = $this->repo->delete($id);
         $path = $file->path;
         $filename = $file->filename;
 
-        IlluminateFile::delete(storage_path() . $path . DIRECTORY_SEPARATOR . $filename);
+        IlluminateFile::delete(
+            storage_path() . $path . DIRECTORY_SEPARATOR . $filename
+        );
 
         return $file;
     }
 
-    protected function upload($file, $field) {
+    protected function upload($file, $field)
+    {
         $uniq = uniqid();
         $uri = "/tmp/$uniq";
 
@@ -95,19 +102,24 @@ class FileController extends RestController
 
         $request = new Request();
         $request->merge([
-            'path' => $uri,
-            'original_filename' => $originalFilename,
-            'filename' => $filename,
-            'field' => $field,
-            'filesize' => $file->getSize(),
+            "path" => $uri,
+            "original_filename" => $originalFilename,
+            "filename" => $filename,
+            "field" => $field,
+            "filesize" => $file->getSize(),
         ]);
 
         return $request->input();
     }
 
-    protected function cleanupFilename($filename) {
-        $filename = mb_ereg_replace("([^\w\s\d\-_~,;\[\]\(\).])", '', $filename);
-        $filename = mb_ereg_replace("([\.]{2,})", '', $filename);
+    protected function cleanupFilename($filename)
+    {
+        $filename = mb_ereg_replace(
+            "([^\w\s\d\-_~,;\[\]\(\).])",
+            "",
+            $filename
+        );
+        $filename = mb_ereg_replace("([\.]{2,})", "", $filename);
         return $filename;
     }
 }

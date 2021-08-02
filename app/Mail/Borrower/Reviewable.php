@@ -2,14 +2,14 @@
 
 namespace App\Mail\Borrower;
 
+use App\Mail\BaseMailable;
 use App\Models\Community;
 use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class Reviewable extends Mailable
+class Reviewable extends BaseMailable
 {
     use Queueable, SerializesModels;
 
@@ -22,7 +22,8 @@ class Reviewable extends Mailable
         Accepts single Community object
         Accepts NULL to be more robust.
      */
-    public function __construct(User $user, $communities = null) {
+    public function __construct(User $user, $communities = null)
+    {
         $this->user = $user;
 
         if (!$communities) {
@@ -34,7 +35,8 @@ class Reviewable extends Mailable
         $this->communities = $communities;
     }
 
-    public function build() {
+    public function build()
+    {
         $communitiesCount = count($this->communities);
         if ($communitiesCount > 1) {
             $subject = "Profil d'emprunteur complété dans $communitiesCount communautés";
@@ -45,11 +47,11 @@ class Reviewable extends Mailable
             $subject = "Profil d'emprunteur complété";
         }
 
-        return $this->view('emails.borrower.reviewable')
+        return $this->view("emails.borrower.reviewable")
             ->subject($subject)
-            ->text('emails.borrower.reviewable_text')
+            ->text("emails.borrower.reviewable_text")
             ->with([
-                'title' => $subject,
+                "title" => $subject,
             ]);
     }
 }
