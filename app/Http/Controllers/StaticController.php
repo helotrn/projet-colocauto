@@ -29,6 +29,7 @@ class StaticController extends Controller
     {
         return view("status", [
             "database" => DB::statement("SELECT 1") ? "OK" : "Erreur",
+            "version" => "1.0",
         ]);
     }
 
