@@ -18,7 +18,6 @@ use Illuminate\Support\Str;
 use Laravel\Passport\TokenRepository;
 use Laravel\Socialite\Facades\Socialite;
 use Molotov\Traits\RespondsWithErrors;
-use Illuminate\Support\Facades\Log;
 
 class AuthController extends RestController
 {

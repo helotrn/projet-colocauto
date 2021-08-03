@@ -38,8 +38,8 @@ services:
             S3_REGION: canada
             S3_BUCKET: locomotion
             S3_URL: http://minio:9000
-            oauth_private_PATH: /app/storage/oauth-private
-            oauth_public_PATH: /app/storage/oauth-public
+            OAUTH_PRIVATE_PATH: /app/storage/oauth-private
+            OAUTH_PUBLIC_PATH: /app/storage/oauth-public
     vue:
         depends_on:
             - php
