@@ -44,7 +44,7 @@ variables:
         key: DB_PASSWORD
         value: secret
     -
-        key: APP_URL
+        key: FRONTEND_URL
         value: 'http://locomotion.local:8080/'
     -
         key: VUE_APP_GOOGLE_MAPS_API_KEY

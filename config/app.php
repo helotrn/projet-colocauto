@@ -51,7 +51,7 @@ return [
     |
     */
 
-    "url" => env("APP_URL", "http://localhost"),
+    "url" => env("FRONTEND_URL", "http://localhost"),
 
     "asset_url" => env("ASSET_URL", null),
 
@@ -159,6 +159,7 @@ return [
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
+        App\Providers\MinioStorageServiceProvider::class,
 
         /*
          * Package Service Providers...

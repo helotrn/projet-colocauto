@@ -13,15 +13,7 @@
       </b-navbar-nav>
     </b-collapse>
 
-    <div
-      :class="{
-        'navbar-toggle-wrapper': true,
-        'navbar-toggle-wrapper--active': toggleMenu,
-        'd-lg-none': true,
-      }"
-    >
-      <b-navbar-toggle target="nav-collapse" @click="toggleMenu = !toggleMenu" />
-    </div>
+      <b-navbar-toggle target="nav-collapse"  />
 
     <b-collapse id="nav-collapse" class="layout-navbar__collapse" is-nav v-model="toggleMenu">
       <div class="layout-navbar__collapse__illustration d-md-none" />
@@ -105,7 +97,7 @@
             </b-badge>
             <span class="dropdown-container">
               <span class="username"> {{ user.name }}</span>
-              <span class="username-title">Super voisine</span>
+              <span class="username-title"></span>
             </span>
           </b-dropdown-item>
           <b-dropdown-divider v-if="!isGlobalAdmin && hasCompletedRegistration" />
@@ -212,11 +204,6 @@ export default {
       default: "",
     },
   },
-  data() {
-    return {
-      toggleMenu: false,
-    };
-  },
   methods: {
     async logout() {
       await this.$store.dispatch("logout");
@@ -241,20 +228,6 @@ export default {
         0,
         1
       )}${this.$store.state?.user?.last_name?.slice(0, 1)}`;
-    },
-  },
-  watch: {
-    toggleMenu(val) {
-      const {
-        body: { style },
-      } = document;
-      if (val) {
-        style.overflow = "hidden";
-        style.height = "100vh";
-      } else {
-        style.overflow = "auto";
-        style.height = "auto";
-      }
     },
   },
 };

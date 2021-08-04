@@ -3,3 +3,4 @@ node_modules
 bootstrap/cache
 storage
 *_text.blade.php
+resources/app/dist
