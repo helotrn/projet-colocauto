@@ -1,16 +1,16 @@
 Servers and environment
 =======================
 
-Our unit of deployement are docker images for every microservices. 
+Our unit of deployement are docker images for every microservice. 
 
 Dev environment
 ---------------
-The dev environment is described by the docker-compose file of the project
+The dev environment is described by the docker-compose file of the project.
 
 Production and other environments
 ------------------
 Phase 1:
-For ease of setup, monitoring and cost, we deploy everything on Google cloud run to start with. We use the following services
+For ease of setup, monitoring and cost, we deploy everything on Google cloud run to start with. We use the following services:
 
 * Google cloud Run to run our services
 * Google cloud SQL for the manage database
