@@ -3,30 +3,33 @@ services:
     php:
         build:
             context: .
+            target: dev
         depends_on:
             - postgres
-            - redis
         volumes:
             - .:/app
             - .env.docker:/app/.env
         ports:
             - 8000:8000
+        secrets:
+            - source: oauth-private
+              target: /app/storage/oauth-private
+            - source: oauth-public
+              target: /app/storage/oauth-public
         environment:
             LOG_CHANNEL: stderr
             APP_ENV: local
             APP_KEY: base64:QV7VlghMwXOXokIRP1ARpfEuyIF46hfYC/Y/lxFxdVc=
             APP_DEBUG: "true"
-            APP_URL: http://localhost
+            FRONTEND_URL: http://localhost
             APP_URL_EXTERNAL: http://localhost:8000 #this is the url that the browser uses to call us
             DB_HOST: postgres
             DB_PORT: 5432
+            DB_CONNECTION: pgsql
             DB_DATABASE: locomotion
             DB_USERNAME: locomotion
             DB_PASSWORD: locomotion
             ENABLE_TEST_ROUTES: "true"
-            REDIS_HOST: redis
-            REDIS_PORT: 6379
-            REDIS_PASSWORD: null
             MAIL_DRIVER: log
             PASSWORD_CLIENT_ID: pTrmRvquBD6mXlep
             PASSWORD_CLIENT_SECRET: 1hu8xmgtXI8O6HRH4zIbRt92X6rSLCgY6NtTNyxN
@@ -35,6 +38,8 @@ services:
             S3_REGION: canada
             S3_BUCKET: locomotion
             S3_URL: http://minio:9000
+            OAUTH_PRIVATE_PATH: /app/storage/oauth-private
+            OAUTH_PUBLIC_PATH: /app/storage/oauth-public
     vue:
         depends_on:
             - php
@@ -44,10 +49,11 @@ services:
         volumes:
             - ./resources/app:/app
         ports:
-            - 8080:8080
+            - 8080:80
         environment:
-            SERVER_URL: http://php:8000
-            APP_URL: localhost:8080
+            BACKEND_URL: http://php:8000
+            FRONTEND_URL: localhost:8080
+            PORT: 80
     postgres:
         build:
             context: psql
@@ -60,10 +66,11 @@ services:
             POSTGRES_DB: locomotion
             POSTGRES_PASSWORD: locomotion
             POSTGRES_USER: locomotion
-    redis:
-        image: redis
-        ports:
-            - 6379:6379
 
 volumes:
     postgres-data:
+secrets:
+    oauth-private:
+        file: ./secrets/oauth-private-dev.key
+    oauth-public:
+        file: ./secrets/oauth-public-dev.key

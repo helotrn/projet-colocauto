@@ -43,12 +43,13 @@ module.exports = {
     devServer: {
       proxy: {
         "^/api": {
-          target: process.env.SERVER_URL,
+          target: process.env.BACKEND_URL,
           ws: true,
           changeOrigin: true,
         },
       },
-      public: process.env.APP_URL,
+      public: process.env.FRONTEND_URL,
+      disableHostCheck: true,
     },
     plugins,
   },
