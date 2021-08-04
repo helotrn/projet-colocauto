@@ -1,21 +1,20 @@
 FROM node:15 as dev
 WORKDIR /app
 
-CMD bash -c "npm install && npm run serve -- --host 0.0.0.0"
+CMD bash -c "npm ci && npm run serve -- --host 0.0.0.0"
 
 ##############################
 FROM dev as build
 
 COPY . .
 
-RUN yarn install
-RUN yarn run build
-#############################
-FROM node:15-alpine as prod
+ENV VUE_APP_API_URL /api
 
-WORKDIR /app
+RUN npm ci
+RUN npm run build
+###############################
+FROM nginx as prod
 
-RUN npm i -g serve
-COPY --from=build /app/build/ /app
+COPY --from=build /app/dist/ /usr/share/nginx/html
+COPY nginx.conf.template /etc/nginx/templates/default.conf.template
 
-CMD serve -l tcp://0.0.0.0:80 -s /app

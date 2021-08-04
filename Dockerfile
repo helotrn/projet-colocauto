@@ -29,11 +29,21 @@ RUN update-alternatives --set php /usr/bin/php7.3
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer --version=1.10.20
 
 ENV COMPOSER_MEMORY_LIMIT=-1
+ENV CACHE_DRIVER=file
+COPY ./docker-entrypoint.sh .
 
-CMD bash -c "composer install && \
-             php artisan key:generate && \
-             php artisan migrate --seed && \
-             php artisan passport:install && \
+CMD bash -c "./docker-entrypoint.sh && \
+             composer install && \
              php artisan migrate && \
+             export CACHE_DRIVER=database && \
              php artisan serve --host=0.0.0.0"
 
+###################
+FROM dev as prod
+COPY . .
+RUN composer install
+
+CMD bash -c "./docker-entrypoint.sh && \
+             php artisan migrate && \
+             export CACHE_DRIVER=database && \
+             php artisan serve --host=0.0.0.0"
