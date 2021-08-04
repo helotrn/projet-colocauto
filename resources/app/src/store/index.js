@@ -182,6 +182,7 @@ const actions = {
 
     commit("loaded", true);
     commit("loading", false);
+    commit("reset");
   },
 };
 
@@ -223,6 +224,9 @@ const mutations = {
   user(state, user) {
     state.user = user;
   },
+  reset(state) {
+    Object.assign(state, initialState);
+  }
 };
 
 export default new Vuex.Store({
