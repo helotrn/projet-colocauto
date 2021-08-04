@@ -225,7 +225,7 @@ class Image extends BaseModel
 
     public function getSizesAttribute()
     {
-        $base = env("APP_URL_EXTERNAL");
+        $base = env("BACKEND_URL_FROM_BROWSER");
 
         $sizes = [
             "original" => "{$base}{$this->attributes["path"]}/{$this->attributes["filename"]}",
@@ -266,7 +266,7 @@ class Image extends BaseModel
     public function getUrlAttribute()
     {
         $tokenQueryString = $this->getTokenQueryString();
-        $appUrl = env("APP_URL_EXTERNAL");
+        $appUrl = env("BACKEND_URL_FROM_BROWSER");
 
         return "{$appUrl}{$this->path}/{$this->filename}" . $tokenQueryString;
     }
