@@ -8,7 +8,6 @@ use App\Http\Requests\BaseRequest as Request;
 use Intervention\Image\Exception\NotReadableException;
 use Intervention\Image\Exception\NotSupportedException;
 use Intervention\Image\ImageManager as ImageManager;
-use Log;
 
 class ImageController extends FileController
 {
