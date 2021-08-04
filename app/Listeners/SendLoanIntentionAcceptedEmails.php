@@ -10,14 +10,15 @@ use Mail;
 
 class SendLoanIntentionAcceptedEmails
 {
-    public function handle(LoanIntentionAcceptedEvent $event) {
+    public function handle(LoanIntentionAcceptedEvent $event)
+    {
         $loan = $event->intention->loan;
         $borrower = $loan->borrower;
         $owner = $loan->loanable->owner;
 
         Mail::to(
             $borrower->user->email,
-            $borrower->user->name . ' ' . $borrower->user->last_name
+            $borrower->user->name . " " . $borrower->user->last_name
         )->queue(
             new LoanIntentionAccepted(
                 $event->intention,

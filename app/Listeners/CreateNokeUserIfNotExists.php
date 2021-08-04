@@ -9,7 +9,8 @@ use Illuminate\Queue\InteractsWithQueue;
 
 class CreateNokeUserIfNotExists
 {
-    public function handle($event) {
+    public function handle($event)
+    {
         if ($event instanceof LoanCreatedEvent) {
             if ($event->loan->loanable->padlock) {
                 $event->loan->borrower->user->getNokeUser();

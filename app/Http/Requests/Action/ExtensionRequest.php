@@ -10,7 +10,8 @@ class ExtensionRequest extends BaseRequest
 {
     private $loanMemo;
 
-    public function authorize() {
+    public function authorize()
+    {
         $loan = $this->fetchLoan();
 
         $user = $this->user();
@@ -19,8 +20,11 @@ class ExtensionRequest extends BaseRequest
             return true;
         }
 
-        if ($loan->loanable->owner && $user->owner &&
-            $user->owner->id === $loan->loanable->owner->id) {
+        if (
+            $loan->loanable->owner &&
+            $user->owner &&
+            $user->owner->id === $loan->loanable->owner->id
+        ) {
             return true;
         }
 
@@ -31,33 +35,34 @@ class ExtensionRequest extends BaseRequest
         return false;
     }
 
-    public function rules() {
+    public function rules()
+    {
         $loan = $this->fetchLoan();
 
-        $min = max(
-            $loan->duration_in_minutes,
-            $loan->extensions()
-                ->where('status', '!=', 'in_process')
-                ->max('new_duration')
-        ) + 10;
+        $min =
+            max(
+                $loan->duration_in_minutes,
+                $loan
+                    ->extensions()
+                    ->where("status", "!=", "in_process")
+                    ->max("new_duration")
+            ) + 10;
 
         return [
-            'new_duration' => [
-                "min:$min",
-                'numeric',
-            ],
+            "new_duration" => ["min:$min", "numeric"],
         ];
     }
 
-    private function fetchLoan() {
+    private function fetchLoan()
+    {
         if ($this->loanMemo) {
             return $this->loanMemo;
         }
 
-        $loanRepository = new LoanRepository(new Loan);
+        $loanRepository = new LoanRepository(new Loan());
         $this->loanMemo = $loanRepository->find(
             $this->redirectAuth(BaseRequest::class),
-            $this->route('loan_id')
+            $this->route("loan_id")
         );
 
         return $this->loanMemo;

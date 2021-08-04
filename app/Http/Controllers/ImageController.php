@@ -14,41 +14,43 @@ class ImageController extends FileController
 {
     protected $imageableId;
 
-    protected $types = ['user'];
+    protected $types = ["user"];
 
-    public function __construct(ImageRepository $image) {
+    public function __construct(ImageRepository $image)
+    {
         $this->repo = $image;
     }
 
-    protected function upload($file, $field) {
+    protected function upload($file, $field)
+    {
         $uniq = uniqid();
         $uri = "/tmp/$uniq";
 
         $originalFilename = $file->getClientOriginalName();
         $filename = $this->cleanupFilename($originalFilename);
 
-        $manager = new ImageManager(array('driver' => 'imagick'));
+        $manager = new ImageManager(["driver" => "imagick"]);
         try {
             $image = $manager->make($file)->orientate();
         } catch (NotReadableException $e) {
-            return $this->respondWithMessage('Fichier illisible.', 422);
+            return $this->respondWithMessage("Fichier illisible.", 422);
         }
 
         try {
             Image::store($uri . DIRECTORY_SEPARATOR . $filename, $image);
         } catch (NotSupportedException $e) {
-            return $this->respondWithMessage('Format non supporté.', 422);
+            return $this->respondWithMessage("Format non supporté.", 422);
         }
 
         $request = new Request();
         $request->merge([
-            'path' => $uri,
-            'original_filename' => $originalFilename,
-            'filename' => $filename,
-            'width' => $image->width(),
-            'height' => $image->height(),
-            'field' => $field,
-            'filesize' => $image->filesize(),
+            "path" => $uri,
+            "original_filename" => $originalFilename,
+            "filename" => $filename,
+            "width" => $image->width(),
+            "height" => $image->height(),
+            "field" => $field,
+            "filesize" => $image->filesize(),
         ]);
 
         return $request->input();

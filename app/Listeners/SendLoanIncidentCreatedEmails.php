@@ -12,33 +12,50 @@ use Mail;
 
 class SendLoanIncidentCreatedEmails
 {
-    public function handle(LoanIncidentCreatedEvent $event) {
+    public function handle(LoanIncidentCreatedEvent $event)
+    {
         $loan = $event->incident->loan;
         $borrower = $loan->borrower;
         $owner = $loan->loanable->owner;
 
         if ($owner) {
-            Mail::to($owner->user->email, $owner->user->name . ' ' . $owner->user->last_name)
-                ->queue(new LoanIncidentCreated($event->incident, $loan, $borrower, $owner));
+            Mail::to(
+                $owner->user->email,
+                $owner->user->name . " " . $owner->user->last_name
+            )->queue(
+                new LoanIncidentCreated(
+                    $event->incident,
+                    $loan,
+                    $borrower,
+                    $owner
+                )
+            );
         }
 
-        $admins = User::whereRole('admin')
-            ->select('name', 'last_name', 'email')->get()
+        $admins = User::whereRole("admin")
+            ->select("name", "last_name", "email")
+            ->get()
             ->toArray();
-        $communityAdmins = $loan->community->users()
-            ->select('name', 'last_name', 'email')
-            ->where('community_user.role', 'admin')->get()
+        $communityAdmins = $loan->community
+            ->users()
+            ->select("name", "last_name", "email")
+            ->where("community_user.role", "admin")
+            ->get()
             ->toArray();
 
         foreach (array_merge($admins, $communityAdmins) as $admin) {
-            Mail::to($admin['email'], $admin['name'] . ' ' . $admin['last_name'])
-                ->queue(new LoanIncidentReviewable(
+            Mail::to(
+                $admin["email"],
+                $admin["name"] . " " . $admin["last_name"]
+            )->queue(
+                new LoanIncidentReviewable(
                     $event->incident,
                     $loan,
                     $borrower,
                     $owner,
                     $loan->community
-                ));
+                )
+            );
         }
     }
 }

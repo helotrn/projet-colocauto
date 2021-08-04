@@ -7,15 +7,17 @@ use Illuminate\Support\Facades\Schema;
 
 class AddMetaToUsers extends Migration
 {
-    public function up() {
-        Schema::table('users', function (Blueprint $table) {
-            $table->jsonb('meta')->default(new Expression("'{}'::json"));
+    public function up()
+    {
+        Schema::table("users", function (Blueprint $table) {
+            $table->jsonb("meta")->default(new Expression("'{}'::json"));
         });
     }
 
-    public function down() {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('meta');
+    public function down()
+    {
+        Schema::table("users", function (Blueprint $table) {
+            $table->dropColumn("meta");
         });
     }
 }

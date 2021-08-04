@@ -1,6 +1,6 @@
-import communities from '@/locales/models/communities';
-import loanables from '@/locales/models/loanables';
-import AdminFilters from './components/Admin/Filters';
+import communities from "@/locales/models/communities";
+import loanables from "@/locales/models/loanables";
+import AdminFilters from "./components/Admin/Filters";
 
 export default {
   communities: communities.fr,
@@ -10,28 +10,28 @@ export default {
     },
   },
   forms: {
-    actions: 'actions',
-    modifier: 'modify',
-    restaurer: 'restore',
-    supprimer: 'delete',
+    actions: "actions",
+    modifier: "modify",
+    restaurer: "restore",
+    supprimer: "delete",
   },
   loanables: loanables.en,
   locales: {
-    en: 'English',
-    fr: 'Français',
+    en: "English",
+    fr: "Français",
   },
   profile: {
     titles: {
-      account: 'Account informations',
-      payment: 'Payment',
-      reservations: 'Reservations',
-      vehicles: 'Vehicles',
+      account: "Account informations",
+      payment: "Payment",
+      reservations: "Reservations",
+      vehicles: "Vehicles",
     },
   },
   titles: {
-    community: 'community | communities',
-    dashboard: 'dashboard',
-    login: 'login',
-    account: 'Account',
+    community: "community | communities",
+    dashboard: "dashboard",
+    login: "login",
+    account: "Account",
   },
 };

@@ -1,7 +1,11 @@
 <template>
   <b-card no-body class="loan-form loan-actions loan-actions-takeover-self-service">
-    <b-card-header header-tag="header" role="tab" class="loan-actions__header"
-      v-b-toggle.loan-actions-takeover-self-service>
+    <b-card-header
+      header-tag="header"
+      role="tab"
+      class="loan-actions__header"
+      v-b-toggle.loan-actions-takeover-self-service
+    >
       <h2>
         <svg-waiting v-if="action.status === 'in_process' && !loanIsCanceled" />
         <svg-check v-else-if="action.status === 'completed'" />
@@ -14,9 +18,7 @@
       <span v-if="action.status === 'in_process' && loanIsCanceled">
         Emprunt annulé &bull; {{ item.canceled_at | datetime }}
       </span>
-      <span v-else-if="action.status === 'in_process' && !loanIsCanceled">
-        En attente
-      </span>
+      <span v-else-if="action.status === 'in_process' && !loanIsCanceled"> En attente </span>
       <span v-else-if="action.status === 'completed'">
         Complété &bull; {{ action.executed_at | datetime }}
       </span>
@@ -26,8 +28,12 @@
     </b-card-header>
 
     <b-card-body>
-      <b-collapse id="loan-actions-takeover-self-service" role="tabpanel" accordion="loan-actions"
-        :visible="open">
+      <b-collapse
+        id="loan-actions-takeover-self-service"
+        role="tabpanel"
+        accordion="loan-actions"
+        :visible="open"
+      >
         <b-row v-if="action.status !== 'in_process' || !loanIsCanceled">
           <b-col>
             <loan-covid-collapsible-section />
@@ -35,9 +41,7 @@
         </b-row>
 
         <div v-if="action.status === 'in_process' && loanIsCanceled">
-          <p>
-            L'emprunt a été annulé. Cette étape ne peut pas être complétée.
-          </p>
+          <p>L'emprunt a été annulé. Cette étape ne peut pas être complétée.</p>
         </div>
         <div v-else-if="item.loanable.has_padlock">
           <b-row>
@@ -47,9 +51,9 @@
 
                 <div>
                   <p>
-                    Le cadenas du véhicule sera automatiquement associé à votre application Noke
-                    Pro pour la durée de votre réservation. Il peut y avoir un délai de quelques
-                    minutes entre la réservation et la synchronisation de vos accès aux cadenas.
+                    Le cadenas du véhicule sera automatiquement associé à votre application Noke Pro
+                    pour la durée de votre réservation. Il peut y avoir un délai de quelques minutes
+                    entre la réservation et la synchronisation de vos accès aux cadenas.
                   </p>
 
                   <p class="mb-0">Merci de le prendre en compte lors de votre réservation.</p>
@@ -59,7 +63,7 @@
               <b-alert show variant="info">
                 <p>Vous avez un problème avec le cadenas?</p>
                 <p>
-                  Contactez-nous entre 9h et 20h au 438-476-3343<br>
+                  Contactez-nous entre 9h et 20h au 438-476-3343<br />
                   (cette ligne est dédiée uniquement aux problèmes liés aux cadenas)
                 </p>
               </b-alert>
@@ -76,8 +80,8 @@
               </p>
 
               <p>
-                Si vous avez du retard, utilisez le bouton
-                &laquo;&nbsp;Signaler un retard&nbsp;&raquo; sur la plateforme.
+                Si vous avez du retard, utilisez le bouton &laquo;&nbsp;Signaler un
+                retard&nbsp;&raquo; sur la plateforme.
               </p>
 
               <p>
@@ -86,9 +90,9 @@
                 <span v-else-if="item.loanable.type === 'trailer'">de la remorque.</span>
                 <span v-else-if="item.loanable.type === 'car'">de la voiture.</span>
                 <span v-else>du véhicule.</span>
-                <br>
-                Si vous identifiez un problème, prenez une photo et/ou notez
-                le problème, vous pourrez nous en aviser à votre retour.
+                <br />
+                Si vous identifiez un problème, prenez une photo et/ou notez le problème, vous
+                pourrez nous en aviser à votre retour.
               </p>
 
               <p>
@@ -100,8 +104,10 @@
             </b-col>
           </b-row>
 
-          <b-row class="loan-actions-takeover-self-service__buttons text-center"
-            v-if="!action.executed_at">
+          <b-row
+            class="loan-actions-takeover-self-service__buttons text-center"
+            v-if="!action.executed_at"
+          >
             <b-col>
               <b-button @click="completeAction" size="sm" variant="success">
                 J'ai bien lu ces infos!
@@ -121,12 +127,12 @@
 </template>
 
 <script>
-import LoanCovidCollapsibleSection from '@/components/Loan/CovidCollapsibleSection.vue';
+import LoanCovidCollapsibleSection from "@/components/Loan/CovidCollapsibleSection.vue";
 
-import LoanActionsMixin from '@/mixins/LoanActionsMixin';
+import LoanActionsMixin from "@/mixins/LoanActionsMixin";
 
 export default {
-  name: 'LoanActionsTakeoverSelfService',
+  name: "LoanActionsTakeoverSelfService",
   mixins: [LoanActionsMixin],
   components: {
     LoanCovidCollapsibleSection,
@@ -134,5 +140,4 @@ export default {
 };
 </script>
 
-<style lang="scss">
-</style>
+<style lang="scss"></style>

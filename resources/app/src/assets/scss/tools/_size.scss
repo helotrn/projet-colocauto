@@ -19,58 +19,58 @@
  */
 
 @mixin size(
-  $type: null,
-  $size-xs: null,
-  $size-sm: null,
-  $size-md: null,
-  $size-lg: null,
-  $size-xl: null,
-  $size-xxl: null
+    $type: null,
+    $size-xs: null,
+    $size-sm: null,
+    $size-md: null,
+    $size-lg: null,
+    $size-xl: null,
+    $size-xxl: null
 ) {
-  @if ($type == "h") {
-    $type: "height";
-  }
-  @if ($type == "w") {
-    $type: "width";
-  }
-  @if ($type == "minh") {
-    $type: "min-height";
-  }
-  @if ($type == "minw") {
-    $type: "min-width";
-  }
-  @if ($type == "maxh") {
-    $type: "max-height";
-  }
-  @if ($type == "maxw") {
-    $type: "max-width";
-  }
-  @if ($size-xs != "") {
-    #{$type}: $size-xs;
-  }
-  @if ($size-sm != "") {
-    @include media-breakpoint-up(sm) {
-      #{$type}: $size-sm;
+    @if ($type == "h") {
+        $type: "height";
     }
-  }
-  @if ($size-md != "") {
-    @include media-breakpoint-up(md) {
-      #{$type}: $size-md;
+    @if ($type == "w") {
+        $type: "width";
     }
-  }
-  @if ($size-lg != "") {
-    @include media-breakpoint-up(lg) {
-      #{$type}: $size-lg;
+    @if ($type == "minh") {
+        $type: "min-height";
     }
-  }
-  @if ($size-xl != "") {
-    @include media-breakpoint-up(xl) {
-      #{$type}: $size-xl;
+    @if ($type == "minw") {
+        $type: "min-width";
     }
-  }
-  @if ($size-xxl != "") {
-    @include media-breakpoint-up(xxl) {
-      #{$type}: $size-xxl;
+    @if ($type == "maxh") {
+        $type: "max-height";
     }
-  }
+    @if ($type == "maxw") {
+        $type: "max-width";
+    }
+    @if ($size-xs != "") {
+        #{$type}: $size-xs;
+    }
+    @if ($size-sm != "") {
+        @include media-breakpoint-up(sm) {
+            #{$type}: $size-sm;
+        }
+    }
+    @if ($size-md != "") {
+        @include media-breakpoint-up(md) {
+            #{$type}: $size-md;
+        }
+    }
+    @if ($size-lg != "") {
+        @include media-breakpoint-up(lg) {
+            #{$type}: $size-lg;
+        }
+    }
+    @if ($size-xl != "") {
+        @include media-breakpoint-up(xl) {
+            #{$type}: $size-xl;
+        }
+    }
+    @if ($size-xxl != "") {
+        @include media-breakpoint-up(xxl) {
+            #{$type}: $size-xxl;
+        }
+    }
 }

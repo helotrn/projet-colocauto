@@ -6,7 +6,8 @@ use Carbon\Carbon;
 
 class Intention extends Action
 {
-    public static function boot() {
+    public static function boot()
+    {
         parent::boot();
 
         self::saved(function ($model) {
@@ -17,7 +18,7 @@ class Intention extends Action
             }
 
             switch ($model->status) {
-                case 'completed':
+                case "completed":
                     if (!$model->loan->prePayment) {
                         $prePayment = new PrePayment();
                         $prePayment->loan()->associate($model->loan);
@@ -27,22 +28,27 @@ class Intention extends Action
                     $model->executed_at = Carbon::now();
                     $model->save();
                     break;
-                case 'canceled':
+                case "canceled":
                     $model->executed_at = Carbon::now();
                     $model->save();
                     break;
                 default:
                     if (!$loan->loanable->owner) {
-                        $model->status = 'completed';
+                        $model->status = "completed";
                         $model->save();
-                    } elseif ($loan->loanable->owner->user->approvedCommunities
-                        ->where('type', 'private')
-                        ->pluck('id')->intersect(
-                            $loan->borrower->user->approvedCommunities
-                                ->where('type', 'private')
-                                ->pluck('id')
-                        )->intersect([$loan->community_id])->isNotEmpty()) {
-                        $model->status = 'completed';
+                    } elseif (
+                        $loan->loanable->owner->user->approvedCommunities
+                            ->where("type", "private")
+                            ->pluck("id")
+                            ->intersect(
+                                $loan->borrower->user->approvedCommunities
+                                    ->where("type", "private")
+                                    ->pluck("id")
+                            )
+                            ->intersect([$loan->community_id])
+                            ->isNotEmpty()
+                    ) {
+                        $model->status = "completed";
                         $model->save();
                     }
                     break;
@@ -50,34 +56,34 @@ class Intention extends Action
         });
     }
 
-    public static function getColumnsDefinition() {
+    public static function getColumnsDefinition()
+    {
         return [
-            '*' => function ($query = null) {
+            "*" => function ($query = null) {
                 if (!$query) {
-                    return 'intentions.*';
+                    return "intentions.*";
                 }
 
-                return $query->selectRaw('intentions.*');
+                return $query->selectRaw("intentions.*");
             },
-            'type' => function ($query = null) {
+            "type" => function ($query = null) {
                 if (!$query) {
                     return "'intention' AS type";
                 }
 
                 return $query->selectRaw("'intention' AS type");
-            }
+            },
         ];
     }
 
-    protected $fillable = [
-        'message_for_borrower',
-    ];
+    protected $fillable = ["message_for_borrower"];
 
     public $readOnly = false;
 
-    public $items = ['loan'];
+    public $items = ["loan"];
 
-    public function loan() {
+    public function loan()
+    {
         return $this->belongsTo(Loan::class);
     }
 }

@@ -3,16 +3,16 @@
     <b-row>
       <b-col>
         <validation-observer ref="observer" v-slot="{ passes }">
-          <b-form :novalidate="true" class="community-proof-form__form"
-            @submit.stop.prevent="passes(submit)">
-            <forms-image-uploader
-              :label="community.name"
-              field="proof"
-              v-model="community.proof" />
+          <b-form
+            :novalidate="true"
+            class="community-proof-form__form"
+            @submit.stop.prevent="passes(submit)"
+          >
+            <forms-image-uploader :label="community.name" field="proof" v-model="community.proof" />
 
             <div class="form__buttons">
               <b-button variant="success" type="submit" :disabled="loading">
-                {{ $t('enregistrer') | capitalize }}
+                {{ $t("enregistrer") | capitalize }}
               </b-button>
             </div>
           </b-form>
@@ -27,9 +27,7 @@
             conduire, relevé bancaire, relevé de notes officiel.
           </p>
 
-          <p>
-            Soit en document numérisé ou simplement une photo prise avec votre téléphone.
-          </p>
+          <p>Soit en document numérisé ou simplement une photo prise avec votre téléphone.</p>
         </div>
 
         <div class="community-proof-form__requirements">
@@ -41,12 +39,12 @@
 </template>
 
 <script>
-import FormsImageUploader from '@/components/Forms/ImageUploader.vue';
+import FormsImageUploader from "@/components/Forms/ImageUploader.vue";
 
-import locales from '@/locales';
+import locales from "@/locales";
 
 export default {
-  name: 'CommunityProofForm',
+  name: "CommunityProofForm",
   components: {
     FormsImageUploader,
   },
@@ -75,11 +73,10 @@ export default {
   },
   methods: {
     submit(...params) {
-      this.$emit('submit', ...params);
+      this.$emit("submit", ...params);
     },
   },
 };
 </script>
 
-<style lang="scss">
-</style>
+<style lang="scss"></style>

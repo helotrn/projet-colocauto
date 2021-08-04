@@ -1,174 +1,232 @@
 .navbar.layout-navbar {
-  flex-direction: row-reverse;
-  justify-content: flex-end;
+    flex-direction: row-reverse;
+    justify-content: flex-end;
 
-  @include media-breakpoint-up(lg) {
-    flex-direction: row;
-    justify-content: space-between;
-    padding-left: $grid-gutter-width / 2;
-    padding-right: $grid-gutter-width / 2;
-  }
+    @include media-breakpoint-up(lg) {
+        flex-direction: row;
+        justify-content: space-between;
+        padding-left: $grid-gutter-width / 2;
+        padding-right: $grid-gutter-width / 2;
+    }
 
-  .layout-navbar {
-    &__collapse {
-      @include media-breakpoint-down(md) {
-        position: absolute;
-        top: #{$layout-navbar-height-mobile - 13};
-        left: 0;
-        right: 0;
-        z-index: 1000;
-        background: $beige;
-        min-height: calc(100vh - #{$layout-navbar-height-mobile - 13});
-        overflow-y: auto;
-        padding-bottom: #{$layout-navbar-height-mobile - 13};
-      }
+    .layout-navbar {
+        &__collapse {
+            @include media-breakpoint-down(md) {
+                position: absolute;
+                top: #{$layout-navbar-height-mobile - 15};
+                left: 0;
+                right: 0;
+                z-index: 1000;
+                background: $beige;
+                min-height: calc(100vh - #{$layout-navbar-height-mobile - 13});
+                overflow-y: auto;
+                padding-bottom: #{$layout-navbar-height-mobile - 13};
+            }
 
-      &__illustration {
-        background: url("/mobile-menu-illustration.png") center no-repeat;
-        background-size: cover;
-        height: 44vw;
-        margin-bottom: 52px;
+            &__illustration {
+                background: url("/mobile-menu-illustration.png") center
+                    no-repeat;
+                background-size: cover;
+                height: 44vw;
+                margin-bottom: 52px;
 
-        svg {
-          width: 100vw;
-        }
-      }
+                svg {
+                    width: 100vw;
+                }
+            }
 
-      &__buffer {
-        /* This is a patch so the last element of the menu
+            &__buffer {
+                /* This is a patch so the last element of the menu
            is always visible even if the mobile address
            bar is not collapsed. */
-        height: #{$layout-navbar-height-mobile};
-      }
-    }
-  }
-
-  .nav-link__icon path {
-    fill: $locomotion-grey;
-  }
-
-  .layout-navbar__brand-wrapper {
-    display: flex;
-    align-items: flex-end;
-  }
-
-  .layout-navbar__separator {
-    width: 1px;
-    height: 36px;
-    background-color: $locomotion-green;
-    position: relative;
-    top: 5px;
-  }
-
-  .navbar-brand {
-    font-size: 1rem;
-    position: relative;
-    top: 5px;
-
-    @include media-breakpoint-up(lg) {
-      font-size: 1.6rem;
+                height: #{$layout-navbar-height-mobile};
+            }
+        }
     }
 
-    &--title {
-      padding-bottom: 0;
-      position: relative;
-      top: 3px;
-      line-height: 30px;
+    .nav-link__icon path {
+        fill: $locomotion-grey;
     }
 
-    img {
-      max-width: 162px;
+    .layout-navbar__brand-wrapper {
+        display: flex;
+        align-items: flex-end;
     }
-  }
 
-  .nav-item {
-    margin-left: 10px;
-  }
-
-  .nav-link {
-    font-size: 24px;
-    padding: 20px $grid-gutter-width / 2;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-    display: flex;
-    align-items: center;
-
-    @include media-breakpoint-up(lg) {
-      padding: 0.5rem 1.5rem;
-      font-size: $base-font-size;
-      border-bottom: 0;
+    .layout-navbar__separator {
+        width: 1px;
+        height: 36px;
+        background-color: $locomotion-green;
+        position: relative;
+        top: 5px;
     }
-  }
 
-  .nav-link__icon {
-    width: 40px;
-    display: flex;
-    align-items: center;
-  }
+    .navbar-brand {
+        font-size: 1rem;
+        position: relative;
+        top: 0;
 
-  .navbar-nav .nav-link.router-link-exact-active,
-  .navbar-nav .nav-link:hover {
-    color: $locomotion-green;
-  }
+        @include media-breakpoint-up(lg) {
+            font-size: 1.6rem;
+        }
 
-  .router-link-exact-active path,
-  .nav-link:hover path {
-    fill: $locomotion-green;
-  }
+        &--title {
+            padding-bottom: 0;
+            position: relative;
+            top: 0.12em;
+            line-height: 30px;
+        }
 
-  .layout-navbar__dropdown {
-    margin-left: 60px;
+        img {
+            max-width: 162px;
+        }
+    }
+
+    .nav-item {
+        margin-left: 10px;
+    }
 
     .nav-link {
-      padding: 0;
-      padding-right: 0;
-      padding-left: 0;
+        font-size: 24px;
+        padding: 20px $grid-gutter-width / 2;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        display: flex;
+        align-items: center;
+
+        @include media-breakpoint-up(lg) {
+            padding: 0.5rem 1.5rem;
+            font-size: $font-size-base;
+            border-bottom: 0;
+        }
     }
 
-    img {
-      width: $line-height-base + (2 * $nav-link-padding-y);
-      height: $line-height-base + (2 * $nav-link-padding-y);
+    .nav-link__icon {
+        width: 40px;
+        display: flex;
+        align-items: center;
     }
 
-    &__icon {
-      width: $line-height-base + (2 * $nav-link-padding-y);
-      height: $line-height-base + (2 * $nav-link-padding-y);
-      padding: 9px;
+    .nav-link__text {
+        font-style: normal;
+        font-weight: normal;
+        font-size: 17px;
+        line-height: 24px;
     }
-  }
 
-  .navbar-toggle-wrapper {
-    margin-left: -12px;
-    margin-right: 27px;
-    padding-left: $grid-gutter-width / 2;
-  }
+    .navbar-nav .nav-link.router-link-exact-active,
+    .navbar-nav .nav-link:hover {
+        color: $locomotion-green;
+    }
 
-  .navbar-toggler {
-    border: 0;
+    .router-link-exact-active path,
+    .nav-link:hover path {
+        fill: $locomotion-green;
+    }
+
+    .layout-navbar__dropdown {
+        margin-left: 60px;
+
+        .nav-link {
+            padding: 0;
+            padding-right: 0;
+            padding-left: 0;
+        }
+
+        img {
+            width: 40px;
+            height: 40px;
+        }
+
+        &__icon {
+            width: $line-height-base + (2 * $nav-link-padding-y);
+            height: $line-height-base + (2 * $nav-link-padding-y);
+            padding: 9px;
+        }
+    }
+
+    .navbar-toggle-wrapper {
+        margin-left: -12px;
+        margin-right: 27px;
+        padding-left: $grid-gutter-width / 2;
+
+    }
+    
+    .navbar-toggler {
+        border: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        @include media-breakpoint-up(lg) {
+            display: none;
+        }
+    }
+
+    .navbar-toggler-icon {
+        width: 22px;
+        height: 15px;
+        background-image: url("/menu.svg");
+    }
+
+    .not-collapsed .navbar-toggler-icon  {
+        background-image: url("/menu-open.svg");
+    }
+
+    .badge-pill path,
+    .dropdown-toggle:hover path {
+        fill: $light;
+    }
+
+    span.badge {
+        padding: 0;
+        width: 40px;
+        height: 40px;
+    }
+
+    span svg {
+        margin-top: 7px;
+    }
+
+    .dropdown-container {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .username {
+        padding-left: 0.5rem;
+        font-style: normal;
+        font-weight: bold;
+        font-size: 17px;
+        line-height: 24px;
+        color: #343a40;
+    }
+
+    .username-title {
+        padding-left: 0.5rem;
+        font-style: normal;
+        font-weight: 390;
+        font-size: 13px;
+        line-height: 16px;
+        color: #67737f;
+        height: 16px;
+    }
+}
+
+.navbar-collapse {
+    height: 70px;
+}
+
+.mr-auto {
+    height: 40px;
+}
+
+.dropdown-menu {
+    border-radius: 10px;
+}
+
+.dropdown-item {
+    padding: 0.25rem 3rem 0.25rem 0.5rem;
     display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
-  .navbar-toggler-icon {
-    width: 22px;
-    height: 15px;
-    background-image: url("/menu.svg");
-  }
-
-  .navbar-toggle-wrapper--active .navbar-toggler-icon {
-    background-image: url("/menu-open.svg");
-  }
-
-  .badge-pill path,
-  .dropdown-toggle:hover path {
-    fill: $light;
-  }
-
-  span.badge {
-    padding: 0;
-  }
-
-  span svg {
-    margin-top: 7px;
-  }
+    flex-direction: row;
+    align-items: flex-end;
+    color: #343a40;
 }

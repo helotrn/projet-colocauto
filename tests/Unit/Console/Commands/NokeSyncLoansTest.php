@@ -10,14 +10,15 @@ use Tests\TestCase;
 
 class NokeSyncLoansTest extends TestCase
 {
-    public function testGetLoansFromPadlockMacQuery() {
-        $query = NokeSyncLoansCommand::getLoansFromPadlockMacQuery(
-            [ 'mac_address' => '0D:34:F2:3E:0F:2F' ]
-        );
+    public function testGetLoansFromPadlockMacQuery()
+    {
+        $query = NokeSyncLoansCommand::getLoansFromPadlockMacQuery([
+            "mac_address" => "0D:34:F2:3E:0F:2F",
+        ]);
 
         $query->get();
 
-                             // Assert that we ended up here.
+        // Assert that we ended up here.
         $this->assertTrue(true);
     }
 }

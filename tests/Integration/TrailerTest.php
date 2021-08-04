@@ -17,156 +17,173 @@ use Tests\TestCase;
 class TrailerTest extends TestCase
 {
     private static $getTrailerResponseStructure = [
-        'id',
-        'name',
-        'comments',
-        'instructions',
-        'location_description',
-        'maximum_charge',
-        'position',
+        "id",
+        "name",
+        "comments",
+        "instructions",
+        "location_description",
+        "maximum_charge",
+        "position",
     ];
 
-    public function testCreateTrailers() {
+    public function testCreateTrailers()
+    {
         $data = [
-            'name' => $this->faker->name,
-            'position' => [$this->faker->latitude, $this->faker->longitude],
-            'location_description' => $this->faker->sentence,
-            'comments' => $this->faker->paragraph,
-            'instructions' => $this->faker->paragraph,
-            'maximum_charge' => $this->faker->numberBetween($min = 1000, $max = 9000),
-            'type' => 'trailer',
+            "name" => $this->faker->name,
+            "position" => [$this->faker->latitude, $this->faker->longitude],
+            "location_description" => $this->faker->sentence,
+            "comments" => $this->faker->paragraph,
+            "instructions" => $this->faker->paragraph,
+            "maximum_charge" => $this->faker->numberBetween(
+                $min = 1000,
+                $max = 9000
+            ),
+            "type" => "trailer",
         ];
 
-        $response = $this->json('POST', '/api/v1/trailers', $data);
-        $response->assertStatus(201)
+        $response = $this->json("POST", "/api/v1/trailers", $data);
+        $response
+            ->assertStatus(201)
             ->assertJsonStructure(static::$getTrailerResponseStructure);
     }
 
-    public function testShowTrailers() {
-        $owner = factory(Owner::class)->create(['user_id' => $this->user->id]);
-        $trailer = factory(Trailer::class)->create(['owner_id' => $owner->id]);
+    public function testShowTrailers()
+    {
+        $owner = factory(Owner::class)->create(["user_id" => $this->user->id]);
+        $trailer = factory(Trailer::class)->create(["owner_id" => $owner->id]);
 
-        $response = $this->json('GET', "/api/v1/trailers/$trailer->id");
+        $response = $this->json("GET", "/api/v1/trailers/$trailer->id");
 
-        $response->assertStatus(200)
+        $response
+            ->assertStatus(200)
             ->assertJsonStructure(static::$getTrailerResponseStructure);
     }
 
-    public function testUpdateTrailers() {
-        $owner = factory(Owner::class)->create(['user_id' => $this->user->id]);
-        $trailer = factory(Trailer::class)->create(['owner_id' => $owner->id]);
+    public function testUpdateTrailers()
+    {
+        $owner = factory(Owner::class)->create(["user_id" => $this->user->id]);
+        $trailer = factory(Trailer::class)->create(["owner_id" => $owner->id]);
         $data = [
-            'name' => $this->faker->name,
+            "name" => $this->faker->name,
         ];
 
-        $response = $this->json('PUT', "/api/v1/trailers/$trailer->id", $data);
+        $response = $this->json("PUT", "/api/v1/trailers/$trailer->id", $data);
 
         $response->assertStatus(200)->assertJson($data);
     }
 
-    public function testDeleteTrailers() {
-        $owner = factory(Owner::class)->create(['user_id' => $this->user->id]);
-        $trailer = factory(Trailer::class)->create(['owner_id' => $owner->id]);
+    public function testDeleteTrailers()
+    {
+        $owner = factory(Owner::class)->create(["user_id" => $this->user->id]);
+        $trailer = factory(Trailer::class)->create(["owner_id" => $owner->id]);
 
-        $response = $this->json('DELETE', "/api/v1/trailers/$trailer->id");
+        $response = $this->json("DELETE", "/api/v1/trailers/$trailer->id");
         $response->assertStatus(200);
 
-        $response = $this->json('GET', "/api/v1/trailers/$trailer->id");
+        $response = $this->json("GET", "/api/v1/trailers/$trailer->id");
         $response->assertStatus(404);
     }
 
-    public function testDeleteTrailersWithActiveLoan() {
+    public function testDeleteTrailersWithActiveLoan()
+    {
         // No active loan
         $loan = $this->buildLoan();
         $trailer = $loan->loanable;
 
-        $response = $this->json('DELETE', "/api/v1/trailers/$trailer->id");
+        $response = $this->json("DELETE", "/api/v1/trailers/$trailer->id");
         $response->assertStatus(200);
 
-        $response = $this->json('GET', "/api/v1/trailers/$trailer->id");
+        $response = $this->json("GET", "/api/v1/trailers/$trailer->id");
         $response->assertStatus(404);
 
         // Prepaid (active) loan
         $loan = $this->buildLoan();
         $prePayment = factory(PrePayment::class)->create([
-          'loan_id' => $loan->id,
-          'status' => 'completed',
+            "loan_id" => $loan->id,
+            "status" => "completed",
         ]);
         $trailer = $loan->loanable;
         $loan = $loan->fresh();
 
-        $response = $this->json('DELETE', "/api/v1/trailers/$trailer->id");
-        $response->assertStatus(422)
-          ->assertJson([
-            'errors' => [
-              'id' => [ 'Ce véhicule a des emprunts en cours.' ],
+        $response = $this->json("DELETE", "/api/v1/trailers/$trailer->id");
+        $response->assertStatus(422)->assertJson([
+            "errors" => [
+                "id" => ["Ce véhicule a des emprunts en cours."],
             ],
-          ]);
+        ]);
 
         // Only completed loan
         $loan = $this->buildLoan();
         $prePayment = factory(PrePayment::class)->create([
-          'loan_id' => $loan->id,
-          'status' => 'completed',
+            "loan_id" => $loan->id,
+            "status" => "completed",
         ]);
         $payment = factory(Payment::class)->create([
-          'loan_id' => $loan->id,
-          'status' => 'completed',
+            "loan_id" => $loan->id,
+            "status" => "completed",
         ]);
         $trailer = $loan->loanable;
         $loan = $loan->fresh();
 
-        $response = $this->json('DELETE', "/api/v1/trailers/$trailer->id");
+        $response = $this->json("DELETE", "/api/v1/trailers/$trailer->id");
         $response->assertStatus(200);
     }
-    public function testListTrailers() {
-        $owner = factory(Owner::class)->create(['user_id' => $this->user->id]);
-        $trailers = factory(Trailer::class, 2)->create(['owner_id' => $owner->id])
+    public function testListTrailers()
+    {
+        $owner = factory(Owner::class)->create(["user_id" => $this->user->id]);
+        $trailers = factory(Trailer::class, 2)
+            ->create(["owner_id" => $owner->id])
             ->map(function ($trailer) {
                 return $trailer->only(static::$getTrailerResponseStructure);
             });
 
-        $response = $this->json('GET', "/api/v1/trailers");
+        $response = $this->json("GET", "/api/v1/trailers");
 
-        $response->assertStatus(200)
-            ->assertJson([ 'total' => 2 ])
+        $response
+            ->assertStatus(200)
+            ->assertJson(["total" => 2])
             ->assertJsonStructure(
-                $this->buildCollectionStructure(static::$getTrailerResponseStructure)
+                $this->buildCollectionStructure(
+                    static::$getTrailerResponseStructure
+                )
             );
     }
 
-    protected function buildLoan($upTo = null) {
+    protected function buildLoan($upTo = null)
+    {
         $community = factory(Community::class)->create();
         $pricing = factory(Pricing::class)->create([
-            'community_id' => $community->id,
-            'object_type' => 'App\Models\Trailer',
+            "community_id" => $community->id,
+            "object_type" => "App\Models\Trailer",
         ]);
 
-        $borrower = factory(Borrower::class)->create(['user_id' => $this->user->id]);
+        $borrower = factory(Borrower::class)->create([
+            "user_id" => $this->user->id,
+        ]);
         $user = factory(User::class)->create();
-        $owner = factory(Owner::class)->create([ 'user_id' => $user ]);
+        $owner = factory(Owner::class)->create(["user_id" => $user]);
 
         $loanable = factory(Trailer::class)->create([
-            'owner_id' => $owner,
-            'community_id' => $community->id,
+            "owner_id" => $owner,
+            "community_id" => $community->id,
         ]);
 
         $loan = factory(Loan::class)->create([
-            'borrower_id' => $borrower->id,
-            'loanable_id' => $loanable->id,
-            'community_id' => $community->id,
+            "borrower_id" => $borrower->id,
+            "loanable_id" => $loanable->id,
+            "community_id" => $community->id,
         ]);
 
-        if ($upTo === 'intention') {
+        if ($upTo === "intention") {
             return $loan->fresh();
         }
 
         $intention = $loan->intention;
         $response = $this->json(
-            'PUT',
+            "PUT",
             "/api/v1/loans/$loan->id/actions/$intention->id/complete",
             [
-                'type' => 'intention',
+                "type" => "intention",
             ]
         );
         $response->assertStatus(200);

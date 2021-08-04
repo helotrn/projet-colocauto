@@ -16,58 +16,65 @@ use Mail;
 */
 class SendBorrowerCompletedEmails
 {
-    public function handle(BorrowerCompletedEvent $event) {
+    public function handle(BorrowerCompletedEvent $event)
+    {
         $user = $event->user;
         $communities = $user->communities;
 
+        // Don't send if already sent.
+        if (!isset($user->meta["sent_borrower_completed_email"])) {
+            // Send confirmation to borrower.
+            Mail::to($user->email, $user->name . " " . $user->last_name)->queue(
+                new BorrowerCompleted($user)
+            );
 
-                             // Don't send if already sent.
-        if (!isset($user->meta['sent_borrower_completed_email'])) {
-                             // Send confirmation to borrower.
-            Mail::to($user->email, $user->name.' '.$user->last_name)
-                ->queue(new BorrowerCompleted($user));
-
-
-                             // Send a notification to all global admins.
-            $global_admins = User::whereRole('admin')
-                ->select('name', 'last_name', 'email')->get()
+            // Send a notification to all global admins.
+            $global_admins = User::whereRole("admin")
+                ->select("name", "last_name", "email")
+                ->get()
                 ->toArray();
 
             foreach ($global_admins as $admin) {
-                Mail::to($admin['email'], $admin['name'] . ' ' . $admin['last_name'])
-                  ->queue(new BorrowerReviewable($event->user, $communities));
+                Mail::to(
+                    $admin["email"],
+                    $admin["name"] . " " . $admin["last_name"]
+                )->queue(new BorrowerReviewable($event->user, $communities));
             }
 
-
-                             // As we try to find community admins for the user
-                             // we try to avoid sending to the same community
-                             // twice. As an example when the user is member of
-                             // both a community and it's parent.
+            // As we try to find community admins for the user
+            // we try to avoid sending to the same community
+            // twice. As an example when the user is member of
+            // both a community and it's parent.
             $sent_to_communities = [];
             $found_admins = false;
 
-                             // For all user communities.
+            // For all user communities.
             foreach ($communities as $community) {
-                             // While we go up the chain of parents...
+                // While we go up the chain of parents...
                 while ($community) {
-                    $community_id = $community['id'];
+                    $community_id = $community["id"];
 
-                             // Did we check this community already?
+                    // Did we check this community already?
                     if (in_array($community_id, $sent_to_communities)) {
                         break;
                     }
                     $sent_to_communities[] = $community_id;
 
-
-                             // Does this community have admins?
-                    $community_admins = $community->users()
-                        ->select('name', 'last_name', 'email')
-                        ->where('community_user.role', 'admin')->get()
+                    // Does this community have admins?
+                    $community_admins = $community
+                        ->users()
+                        ->select("name", "last_name", "email")
+                        ->where("community_user.role", "admin")
+                        ->get()
                         ->toArray();
 
                     foreach ($community_admins as $admin) {
-                        Mail::to($admin['email'], $admin['name'].' '.$admin['last_name'])
-                          ->queue(new BorrowerReviewable($event->user, $community));
+                        Mail::to(
+                            $admin["email"],
+                            $admin["name"] . " " . $admin["last_name"]
+                        )->queue(
+                            new BorrowerReviewable($event->user, $community)
+                        );
                     }
 
                     if (!empty($community_admins)) {
@@ -75,8 +82,7 @@ class SendBorrowerCompletedEmails
                         break;
                     }
 
-
-                             // Does this community have a parent?
+                    // Does this community have a parent?
                     $community = $community->parent;
                 }
 
@@ -85,9 +91,9 @@ class SendBorrowerCompletedEmails
                 }
             }
 
-                             // Mark the emails as sent.
+            // Mark the emails as sent.
             $meta = $user->meta;
-            $meta['sent_borrower_completed_email'] = true;
+            $meta["sent_borrower_completed_email"] = true;
             $user->meta = $meta;
 
             $user->save();

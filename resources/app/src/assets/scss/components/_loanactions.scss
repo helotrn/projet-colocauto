@@ -1,84 +1,84 @@
 .loan-actions {
-  &__alert .alert {
-    margin-bottom: 0;
-    margin-top: 1rem;
+    &__alert .alert {
+        margin-bottom: 0;
+        margin-top: 1rem;
 
-    p:last-child {
-      margin-bottom: 0;
-    }
-  }
-
-  .card-body {
-    padding: 0;
-
-    > div {
-      padding: 1.25rem;
+        p:last-child {
+            margin-bottom: 0;
+        }
     }
 
-    blockquote {
-      padding: 1rem;
-      position: relative;
-      border: 1px solid $grey;
-      border-radius: 15px;
-      padding-left: 100px;
-      @extend .shadow;
+    .card-body {
+        padding: 0;
 
-      &::before {
-        content: "«";
-        font-size: 80px;
-        color: $grey;
-        display: block;
-        position: absolute;
-        left: 0;
-        top: 5px;
-        line-height: 10px;
-      }
+        > div {
+            padding: 1.25rem;
+        }
 
-      > .user-avatar {
-        position: absolute;
-        height: 45px;
-        width: 45px;
-        border-radius: 100%;
-        top: 3px;
-        left: 40px;
+        blockquote {
+            padding: 1rem;
+            position: relative;
+            border: 1px solid $grey;
+            border-radius: 15px;
+            padding-left: 100px;
+            @extend .shadow;
 
-        background-size: cover;
-        background-repeat: no-repeat;
-      }
-    }
-  }
+            &::before {
+                content: "«";
+                font-size: 80px;
+                color: $grey;
+                display: block;
+                position: absolute;
+                left: 0;
+                top: 5px;
+                line-height: 10px;
+            }
 
-  &__header {
-    &.card-header {
-      background-color: transparent;
-      cursor: pointer;
-      padding-top: 20px;
-      padding-bottom: 20px;
-    }
+            > .user-avatar {
+                position: absolute;
+                height: 45px;
+                width: 45px;
+                border-radius: 100%;
+                top: 3px;
+                left: 40px;
 
-    line-height: 43px;
-    flex-wrap: wrap;
-    justify-content: space-between;
-
-    h2 {
-      font-size: 28px;
-      margin-bottom: 0;
-
-      padding-left: 69px;
-
-      svg {
-        margin-right: 30px;
-        width: 39px;
-        height: 39px;
-        position: absolute;
-        left: 20px;
-      }
+                background-size: cover;
+                background-repeat: no-repeat;
+            }
+        }
     }
 
-    span {
-      font-size: 13px;
-      text-align: right;
-      flex-grow: 1;
+    &__header {
+        &.card-header {
+            background-color: transparent;
+            cursor: pointer;
+            padding-top: 20px;
+            padding-bottom: 20px;
+        }
+
+        line-height: 43px;
+        flex-wrap: wrap;
+        justify-content: space-between;
+
+        h2 {
+            font-size: 28px;
+            margin-bottom: 0;
+
+            padding-left: 69px;
+
+            svg {
+                margin-right: 30px;
+                width: 39px;
+                height: 39px;
+                position: absolute;
+                left: 20px;
+            }
+        }
+
+        span {
+            font-size: 13px;
+            text-align: right;
+            flex-grow: 1;
+        }
     }
-  }
 }

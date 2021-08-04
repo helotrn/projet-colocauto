@@ -23,27 +23,34 @@ $info: #576194;
 $light: #cbe8e7;
 $dark: #343a40;
 
-$base-font-size: 16px;
-$h1-font-size: 36px;
-$h2-font-size: 28px;
-$h3-font-size: 22px;
+$h1-font-size: 48px;
+$h2-font-size: 32px;
+$h3-font-size: 26px;
+$h4-font-size: 20px;
+$h5-font-size: 17px;
+
+$h1-line-height: 56px;
+$h2-line-height: 40px;
+$h3-line-height: 32px;
+$h4-line-height: 24px;
+$h5-line-height: 24px;
 
 $layout-navbar-height: 86px;
 $layout-navbar-height-mobile: 70px;
 
 $theme-colors: (
-  "locomotion": $locomotion-green,
-  "locomotion-dark": $locomotion-dark-green,
-  "grey": $grey,
-  "eggshell": $eggshell,
+    "locomotion": $locomotion-green,
+    "locomotion-dark": $locomotion-dark-green,
+    "grey": $grey,
+    "eggshell": $eggshell,
 );
 
 $grid-breakpoints: (
-  xs: 0,
-  sm: 576px,
-  md: 768px,
-  lg: 992px,
-  xl: 1200px
+    xs: 0,
+    sm: 576px,
+    md: 768px,
+    lg: 992px,
+    xl: 1200px,
 );
 
 $grid-gutter-width: 30px;
@@ -55,13 +62,15 @@ $nav-link-padding-y: 0.5rem;
 $enable-shadows: true;
 
 // Keep sorted below this line
-//$b-toaster-offset-top: $layout-navbar-height + ($base-font-size / 2);
+//$b-toaster-offset-top: $layout-navbar-height + ($font-size-base / 2);
 $card-border-radius: 15px;
 $card-border-width: 0;
 $dropdown-box-shadow: 2px 2px 4px rgba($black, 0.12);
 $dropdown-link-hover-bg: rgba($locomotion-green, 0.08);
 $dropdown-link-active-bg: $locomotion-green;
-$font-family-sans-serif: "BrandonText", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+$font-family-sans-serif: "BrandonText", -apple-system, BlinkMacSystemFont,
+    "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif,
+    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 $form-group-margin-bottom: 20px;
 $navbar-brand-font-size: 1.6rem;
 $navbar-light-color: $black;

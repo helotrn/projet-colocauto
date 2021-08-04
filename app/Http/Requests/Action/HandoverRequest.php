@@ -7,11 +7,12 @@ use App\Models\Loan;
 
 class HandoverRequest extends BaseRequest
 {
-    public function rules() {
-        $loanId = $this->route('loan_id') ?: $this->get('loan_id');
+    public function rules()
+    {
+        $loanId = $this->route("loan_id") ?: $this->get("loan_id");
         $loan = Loan::accessibleBy($this->user())->find($loanId);
 
-        if ($loan->loanable->type === 'car') {
+        if ($loan->loanable->type === "car") {
             $loanable = $loan->getFullLoanable();
             $pricing = $loan->community->getPricingFor($loanable);
 
@@ -20,7 +21,7 @@ class HandoverRequest extends BaseRequest
             }
 
             $values = $pricing->evaluateRule(
-                $this->get('mileage_end') - $loan->takeover->mileage_beginning,
+                $this->get("mileage_end") - $loan->takeover->mileage_beginning,
                 $loan->actual_duration_in_minutes,
                 $loanable,
                 $loan
@@ -28,28 +29,23 @@ class HandoverRequest extends BaseRequest
             $price = max(0, is_array($values) ? $values[0] : $values);
 
             return [
-                'mileage_end' => [
-                    'required',
-                    'integer'
-                ],
-                'purchases_amount' => [
-                    'numeric',
-                    "lte:$price",
-                ],
+                "mileage_end" => ["required", "integer"],
+                "purchases_amount" => ["numeric", "lte:$price"],
             ];
         }
 
         return [];
     }
 
-    public function authorize() {
+    public function authorize()
+    {
         $user = $this->user();
 
         if ($user->isAdmin()) {
             return true;
         }
 
-        $loan = Loan::find($this->get('loan_id'));
+        $loan = Loan::find($this->get("loan_id"));
         if ($user->borrower && $user->borrower->id === $loan->borrower->id) {
             return true;
         }
@@ -61,9 +57,10 @@ class HandoverRequest extends BaseRequest
         return false;
     }
 
-    public function attributes() {
+    public function attributes()
+    {
         return [
-            'purchases_amount' => 'Total des dépenses',
+            "purchases_amount" => "Total des dépenses",
         ];
     }
 }

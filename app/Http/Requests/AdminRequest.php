@@ -4,7 +4,8 @@ namespace App\Http\Requests;
 
 class AdminRequest extends BaseRequest
 {
-    public function authorize() {
+    public function authorize()
+    {
         if (!$this->user()) {
             return false;
         }

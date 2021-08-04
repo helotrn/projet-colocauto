@@ -4,7 +4,8 @@
       'forms-datepicker': true,
       'is-valid': state === true,
       'is-invalid': state === false,
-    }" :inline="inline"
+    }"
+    :inline="inline"
     :clear-button="clearButton"
     input-class="form-control"
     :format="format"
@@ -14,15 +15,16 @@
     :disabled-dates="disabledDates"
     :disabled="disabled"
     :value="dateValue"
-    @selected="emitInput($event)" />
+    @selected="emitInput($event)"
+  />
 </template>
 
 <script>
-import Datepicker from 'vuejs-datepicker';
-import { fr } from 'vuejs-datepicker/dist/locale';
+import Datepicker from "vuejs-datepicker";
+import { fr } from "vuejs-datepicker/dist/locale";
 
 export default {
-  name: 'FormsDatePicker',
+  name: "FormsDatePicker",
   components: { Datepicker },
   props: {
     clearButton: {
@@ -48,17 +50,17 @@ export default {
       default() {
         return (val) => {
           if (!val) {
-            return '';
+            return "";
           }
 
-          return this.$dayjs(val).format('D MMMM YYYY').toLowerCase();
+          return this.$dayjs(val).format("D MMMM YYYY").toLowerCase();
         };
       },
     },
     initialView: {
       type: String,
       required: false,
-      default: 'day',
+      default: "day",
     },
     inline: {
       type: Boolean,
@@ -91,11 +93,11 @@ export default {
   },
   computed: {
     dateValue() {
-      if (!this.value || this.value === 'null') {
+      if (!this.value || this.value === "null") {
         return null;
       }
 
-      return this.$dayjs(this.value, { timeZone: 'America/Montreal' }).toDate();
+      return this.$dayjs(this.value, { timeZone: "America/Montreal" }).toDate();
     },
     language() {
       return fr;
@@ -103,7 +105,7 @@ export default {
   },
   methods: {
     emitInput(value) {
-      this.$emit('input', value ? value.format('YYYY-MM-DD') : value);
+      this.$emit("input", value ? value.format("YYYY-MM-DD") : value);
     },
   },
 };

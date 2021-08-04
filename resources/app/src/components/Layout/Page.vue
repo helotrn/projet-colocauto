@@ -22,15 +22,15 @@
 </template>
 
 <script>
-import { capitalize } from '@/helpers/filters';
+import { capitalize } from "@/helpers/filters";
 
 export default {
-  name: 'LayoutPage',
+  name: "LayoutPage",
   props: {
     bgColor: {
       type: String,
       required: false,
-      default: '',
+      default: "",
     },
     bgImage: {
       type: Boolean,
@@ -64,7 +64,7 @@ export default {
     title: {
       type: String,
       require: false,
-      default: '',
+      default: "",
     },
     wide: {
       type: Boolean,
@@ -78,16 +78,18 @@ export default {
         return `${this.treeTitle} | LocoMotion`;
       }
 
-      return 'LocoMotion';
+      return "LocoMotion";
     },
     mainClass() {
       return [
-        'page__content',
+        "page__content",
         this.bgColor,
-        this.bgImage ? 'with-tiled-bg' : '',
-        this.centered ? 'centered' : '',
-        this.padded ? 'padded' : '',
-      ].filter(c => !!c).join(' ');
+        this.bgImage ? "with-tiled-bg" : "",
+        this.centered ? "centered" : "",
+        this.padded ? "padded" : "",
+      ]
+        .filter((c) => !!c)
+        .join(" ");
     },
     treeTitle() {
       const firstMatchedParts = this.$route.matched.slice(0, this.$route.matched.length - 1);
@@ -102,7 +104,7 @@ export default {
         parts.push(this.pageTitle);
       }
 
-      return parts.reverse().join(' | ');
+      return parts.reverse().join(" | ");
     },
     pageTitle() {
       if (this.title) {
@@ -113,7 +115,7 @@ export default {
         return capitalize(this.$i18n.t(this.$route.meta.title));
       }
 
-      return '';
+      return "";
     },
   },
 };

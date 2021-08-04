@@ -6,7 +6,8 @@ use Carbon\Carbon;
 
 class Payment extends Action
 {
-    public static function boot() {
+    public static function boot()
+    {
         parent::boot();
 
         self::saved(function ($model) {
@@ -15,11 +16,11 @@ class Payment extends Action
             }
 
             switch ($model->status) {
-                case 'completed':
+                case "completed":
                     $model->executed_at = Carbon::now();
                     $model->save();
                     break;
-                case 'canceled':
+                case "canceled":
                     $model->executed_at = Carbon::now();
                     $model->save();
                     break;
@@ -27,42 +28,44 @@ class Payment extends Action
         });
     }
 
-    public static function getColumnsDefinition() {
+    public static function getColumnsDefinition()
+    {
         return [
-            '*' => function ($query = null) {
+            "*" => function ($query = null) {
                 if (!$query) {
-                    return 'payments.*';
+                    return "payments.*";
                 }
 
-                return $query->selectRaw('payments.*');
+                return $query->selectRaw("payments.*");
             },
-            'type' => function ($query = null) {
+            "type" => function ($query = null) {
                 if (!$query) {
                     return "'payment' AS type";
                 }
 
                 return $query->selectRaw("'payment' AS type");
-            }
+            },
         ];
     }
 
-    protected $fillable = [
-        'loan_id',
-    ];
+    protected $fillable = ["loan_id"];
 
     public $readOnly = false;
 
-    public $items = ['borrower_invoice', 'owner_invoice', 'loan'];
+    public $items = ["borrower_invoice", "owner_invoice", "loan"];
 
-    public function borrowerInvoice() {
-        return $this->belongsTo(Invoice::class, 'borrower_invoice_id');
+    public function borrowerInvoice()
+    {
+        return $this->belongsTo(Invoice::class, "borrower_invoice_id");
     }
 
-    public function ownerInvoice() {
-        return $this->belongsTo(Invoice::class, 'owner_invoice_id');
+    public function ownerInvoice()
+    {
+        return $this->belongsTo(Invoice::class, "owner_invoice_id");
     }
 
-    public function loan() {
+    public function loan()
+    {
         return $this->belongsTo(Loan::class);
     }
 }

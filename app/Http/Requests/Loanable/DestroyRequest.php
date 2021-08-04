@@ -8,35 +8,37 @@ use App\Models\PrePayment;
 
 class DestroyRequest extends BaseRequest
 {
-    public function authorize() {
+    public function authorize()
+    {
         $user = $this->user();
-        return $user->isAdmin()
-            || Loanable::where('owner_id', $user->owner->id)
-            ->where('id', $this->route('id'))
-            ->exists();
+        return $user->isAdmin() ||
+            Loanable::where("owner_id", $user->owner->id)
+                ->where("id", $this->route("id"))
+                ->exists();
     }
 
-    public function rules() {
+    public function rules()
+    {
         $prepaidLoansLoanableIds = Loan::prepaid()
             ->completed(false)
-            ->pluck('loanable_id')
-            ->join(',');
+            ->pluck("loanable_id")
+            ->join(",");
         return [
-            'id' => [
-                "not_in:$prepaidLoansLoanableIds",
-            ],
+            "id" => ["not_in:$prepaidLoansLoanableIds"],
         ];
     }
 
-    public function messages() {
+    public function messages()
+    {
         return [
-            'id.not_in' => 'Ce véhicule a des emprunts en cours.',
+            "id.not_in" => "Ce véhicule a des emprunts en cours.",
         ];
     }
 
-    public function prepareForValidation() {
+    public function prepareForValidation()
+    {
         $this->merge([
-            'id' => $this->route('id'),
+            "id" => $this->route("id"),
         ]);
     }
 }

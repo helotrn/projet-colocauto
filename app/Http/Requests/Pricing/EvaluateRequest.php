@@ -6,7 +6,8 @@ use App\Http\Requests\BaseRequest;
 
 class EvaluateRequest extends BaseRequest
 {
-    public function authorize() {
+    public function authorize()
+    {
         $user = $this->user();
 
         if ($user->isAdmin()) {
@@ -16,16 +17,18 @@ class EvaluateRequest extends BaseRequest
         return false;
     }
 
-    public function rules() {
+    public function rules()
+    {
         return [
-            'km' => ['integer', 'required'],
-            'minutes' => ['integer', 'required'],
-            'loanable' => ['nullable'],
-            'loan' => ['nullable'],
+            "km" => ["integer", "required"],
+            "minutes" => ["integer", "required"],
+            "loanable" => ["nullable"],
+            "loan" => ["nullable"],
         ];
     }
 
-    public function messages() {
+    public function messages()
+    {
         return [];
     }
 }

@@ -11,50 +11,58 @@ use Storage;
 class File extends BaseModel
 {
     public static $rules = [
-        'fileable_type' => 'nullable',
-        'fileable_id' => 'nullable',
-        'path' => 'required',
-        'filename' => 'required',
-        'original_filename' => 'required',
-        'filesize' => 'required',
-        'field' => 'nullable',
+        "fileable_type" => "nullable",
+        "fileable_id" => "nullable",
+        "path" => "required",
+        "filename" => "required",
+        "original_filename" => "required",
+        "filesize" => "required",
+        "field" => "nullable",
     ];
 
     protected $fillable = [
-        'field',
-        'fileable_id',
-        'fileable_type',
-        'filename',
-        'filesize',
-        'original_filename',
-        'path',
+        "field",
+        "fileable_id",
+        "fileable_type",
+        "filename",
+        "filesize",
+        "original_filename",
+        "path",
     ];
 
-    protected $hidden = ['fileable', 'fileable_type', 'fileable_id'];
+    protected $hidden = ["fileable", "fileable_type", "fileable_id"];
 
-    protected $appends = ['url'];
+    protected $appends = ["url"];
 
-    public static function fetch($path) {
+    public static function fetch($path)
+    {
         try {
-            $file = Storage::disk('local')->get($path);
+            $file = Storage::disk("local")->get($path);
         } catch (FileNotFoundException $e) {
             return null;
         }
         return $file;
     }
 
-    public static function store($path, $file) {
-        return Storage::disk('local')->putFileAs(dirname($path), $file, basename($path));
+    public static function store($path, $file)
+    {
+        return Storage::disk("local")->putFileAs(
+            dirname($path),
+            $file,
+            basename($path)
+        );
     }
 
-    public static function copy($source, $destination) {
+    public static function copy($source, $destination)
+    {
         if ($source === $destination) {
             return true;
         }
-        return Storage::disk('local')->copy($source, $destination);
+        return Storage::disk("local")->copy($source, $destination);
     }
 
-    public static function boot() {
+    public static function boot()
+    {
         parent::boot();
 
         self::saving(function ($model) {
@@ -63,8 +71,10 @@ class File extends BaseModel
 
             if ($model->fileable) {
                 $filePath = str_replace(
-                    'tmp',
-                    strtolower((new \ReflectionClass($model->fileable))->getShortName()),
+                    "tmp",
+                    strtolower(
+                        (new \ReflectionClass($model->fileable))->getShortName()
+                    ),
                     $model->path
                 );
             } else {
@@ -77,32 +87,42 @@ class File extends BaseModel
         });
     }
 
-    public $items = ['user'];
+    public $items = ["user"];
 
-    public function fileable() {
+    public function fileable()
+    {
         return $this->morphTo();
     }
 
-    public function borrower() {
-        return $this->belongsTo(Borrower::class, 'id', 'fileable_id')
-            ->whereFileableType(Borrower::class);
+    public function borrower()
+    {
+        return $this->belongsTo(
+            Borrower::class,
+            "id",
+            "fileable_id"
+        )->whereFileableType(Borrower::class);
     }
 
-    public function getUrlAttribute() {
-        $base = app()->environment() === 'local'
-            ? app()->make('url')->to('/')
-            : env('CDN_URL');
+    public function getUrlAttribute()
+    {
+        $base =
+            app()->environment() === "local"
+                ? app()
+                    ->make("url")
+                    ->to("/")
+                : env("CDN_URL");
 
         $tokenQueryString = $this->getTokenQueryString();
 
         return "{$base}{$this->path}/{$this->filename}" . $tokenQueryString;
     }
 
-    protected function getTokenQueryString() {
+    protected function getTokenQueryString()
+    {
         if ($user = Auth::user()) {
             $token = Token::whereUserId($user->id)
                 ->whereRevoked(false)
-                ->orderBy('expires_at', 'desc')
+                ->orderBy("expires_at", "desc")
                 ->limit(1)
                 ->first();
             if ($token) {
@@ -110,10 +130,11 @@ class File extends BaseModel
             }
         }
 
-        return '';
+        return "";
     }
 
-    public function scopeAccessibleBy(Builder $query, $user) {
+    public function scopeAccessibleBy(Builder $query, $user)
+    {
         if ($user->isAdmin()) {
             return $query;
         }
@@ -122,8 +143,8 @@ class File extends BaseModel
         return $query
             // ...associated to a borrower
             ->where(function ($q) use ($user) {
-                return $q->whereHas('borrower', function ($q) use ($user) {
-                    return $q->whereHas('user', function ($q) use ($user) {
+                return $q->whereHas("borrower", function ($q) use ($user) {
+                    return $q->whereHas("user", function ($q) use ($user) {
                         return $q->accessibleBy($user);
                     });
                 });

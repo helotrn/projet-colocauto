@@ -1,23 +1,45 @@
 <html>
-<body style="margin: 0; padding: 0;">
-    <table style="width: 100%;">
-        <tbody>
-            @include('emails.partials.header')
+    <style type="text/css">
+        * {
+            font-family: "BrandonText", "-apple-system", "BlinkMacSystemFont",
+                "Segoe UI", "Roboto", "Helvetica Neue", "Arial", "Noto Sans",
+                "sans-serif", "Apple Color Emoji", "Segoe UI Emoji",
+                "Segoe UI Symbol", "Noto Color emoji";
+        }
+        .monospace {
+            font-family: "SFMono-Regular", "Menlo", "Monaco", "Consolas",
+                "Liberation Mono", "Courier New", "monospace";
+        }
 
-            <tr>
-                <td style="text-align: center;">
-                    <table style="width: 600px; margin: 0 auto; padding: 40px 0 40px 0;">
-                        <tr>
-                            <td>
-                                @yield('content')
-                            </td>
-                        </tr>
-                    </table>
-                </td>
-            </tr>
+        td {
+            padding: 0;
+        }
+    </style>
+    <body style="background-color: #f5f8fb">
+        <table style="width: 100%; border-collapse: collapse">
+            <tbody>
+                @include('emails.partials.header')
 
-            @include('emails.partials.footer')
-        </tbody>
-    </table>
-</body>
+                <tr>
+                    <td style="text-align: center">
+                        <table
+                            style="
+                                background-color: white;
+                                width: 100%;
+                                margin: 0 auto 32px auto;
+                                padding: 0px 32px 44px 32px;
+                                max-width: 536px;
+                            "
+                        >
+                            <tr>
+                                <td>@yield('content')</td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+
+                @include('emails.partials.footer')
+            </tbody>
+        </table>
+    </body>
 </html>

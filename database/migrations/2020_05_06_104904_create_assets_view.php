@@ -6,8 +6,10 @@ use Illuminate\Support\Facades\Schema;
 
 class CreateAssetsView extends Migration
 {
-    public function up() {
-        \DB::statement(<<<SQL
+    public function up()
+    {
+        \DB::statement(
+            <<<SQL
 CREATE MATERIALIZED VIEW assets
 (path, type, field, filename, foreign_id) AS
     SELECT
@@ -21,14 +23,16 @@ UNION
     FROM files
 SQL
         );
-        \DB::statement(<<<SQL
+        \DB::statement(
+            <<<SQL
 CREATE UNIQUE INDEX assets_index
 ON assets (path, type);
 SQL
         );
     }
 
-    public function down() {
-        \DB::statement('DROP MATERIALIZED VIEW assets');
+    public function down()
+    {
+        \DB::statement("DROP MATERIALIZED VIEW assets");
     }
 }

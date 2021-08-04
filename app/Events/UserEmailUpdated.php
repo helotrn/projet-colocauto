@@ -16,7 +16,11 @@ class UserEmailUpdated
     public $previousEmail;
     public $newEmail;
 
-    public function __construct(User $user, string $previousEmail, string $newEmail) {
+    public function __construct(
+        User $user,
+        string $previousEmail,
+        string $newEmail
+    ) {
         $this->user = $user;
         $this->previousEmail = $previousEmail;
         $this->newEmail = $newEmail;

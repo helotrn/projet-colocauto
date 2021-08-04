@@ -3,8 +3,8 @@
     <b-row>
       <b-col>
         <p>
-          Par cette action, un courriel sera envoyé à l'équipe LocoMotion pour qu'elle vous
-          envoie le solde de votre compte.
+          Par cette action, un courriel sera envoyé à l'équipe LocoMotion pour qu'elle vous envoie
+          le solde de votre compte.
         </p>
         <p>
           Assurez-vous d'avoir configuré un autre mode de paiement qu'une carte de crédit ou
@@ -15,8 +15,13 @@
 
     <b-row class="user-claim-credits-box__buttons" tag="p">
       <b-col class="text-center">
-        <b-button class="mr-3" type="submit" variant="primary"
-          @click="claimCredit" :disabled="loading">
+        <b-button
+          class="mr-3"
+          type="submit"
+          variant="primary"
+          @click="claimCredit"
+          :disabled="loading"
+        >
           Confirmer
         </b-button>
 
@@ -28,7 +33,7 @@
 
 <script>
 export default {
-  name: 'UserClaimCreditsBox',
+  name: "UserClaimCreditsBox",
   data() {
     return {
       loading: false,
@@ -42,33 +47,33 @@ export default {
   },
   methods: {
     emitCancel() {
-      this.$emit('cancel');
+      this.$emit("cancel");
     },
     async claimCredit() {
       this.loading = true;
 
       try {
-        await this.$store.dispatch('account/claimCredit');
+        await this.$store.dispatch("account/claimCredit");
 
-        this.$emit('claimed');
+        this.$emit("claimed");
 
-        this.$store.commit('addNotification', {
-          content: 'Votre demande a bien été envoyée. Vous recevrez une réponse sous peu.',
-          title: 'Demande envoyée',
-          variant: 'success',
-          type: 'balance_claim',
+        this.$store.commit("addNotification", {
+          content: "Votre demande a bien été envoyée. Vous recevrez une réponse sous peu.",
+          title: "Demande envoyée",
+          variant: "success",
+          type: "balance_claim",
         });
       } catch (e) {
         switch (e.request.status) {
           case 429:
-            this.$store.commit('addNotification', {
-              content: 'Votre demande a déjà été envoyée. Vous recevrez une réponse sous peu.',
-              title: 'Demande déjà envoyée',
-              variant: 'warning',
-              type: 'balance_claim',
+            this.$store.commit("addNotification", {
+              content: "Votre demande a déjà été envoyée. Vous recevrez une réponse sous peu.",
+              title: "Demande déjà envoyée",
+              variant: "warning",
+              type: "balance_claim",
             });
 
-            this.$emit('cancel');
+            this.$emit("cancel");
 
             break;
           default:
@@ -82,5 +87,4 @@ export default {
 };
 </script>
 
-<style lang="scss">
-</style>
+<style lang="scss"></style>

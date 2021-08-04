@@ -1,21 +1,21 @@
-import Community from '@/views/Community.vue';
-import CommunityDashboard from '@/views/community/Dashboard.vue';
-import CommunityView from '@/views/community/CommunityView.vue';
+import Community from "@/views/Community.vue";
+import CommunityDashboard from "@/views/community/Dashboard.vue";
+import CommunityView from "@/views/community/CommunityView.vue";
 
 export default {
-  path: '/community',
+  path: "/community",
   component: Community,
   meta: {
     auth: true,
-    titles: 'titles.community',
+    titles: "titles.community",
   },
   children: [
     {
-      path: '',
+      path: "",
       component: CommunityDashboard,
       meta: {
         auth: true,
-        title: 'titles.community',
+        title: "titles.community",
         data: {
           global: {
             load: {},
@@ -23,17 +23,18 @@ export default {
           communities: {
             retrieveOne: {
               params: {
-                fields: 'id,name,long_description,chat_group_url,type,parent.id,parent.name,'
-                  + 'area,area_google,center,center_google,users_count,'
-                  + 'parent.area,parent.center,parent.area_google,parent.center_google,'
-                  + 'parent.children.id,parent.children.name,parent.children.area,'
-                  + 'parent.children.center,parent.children.area_google,'
-                  + 'parent.children.users_count,'
-                  + 'parent.children.center_google,parent.users_count,'
-                  + 'children.id,children.name,children.area,children.center,'
-                  + 'children.area_google,children.center_google,children.users_count,'
-                  + 'users.id,users.full_name,users.avatar,users.description,'
-                  + 'users.owner.id,users.tags.*',
+                fields:
+                  "id,name,long_description,chat_group_url,type,parent.id,parent.name," +
+                  "area,area_google,center,center_google,users_count," +
+                  "parent.area,parent.center,parent.area_google,parent.center_google," +
+                  "parent.children.id,parent.children.name,parent.children.area," +
+                  "parent.children.center,parent.children.area_google," +
+                  "parent.children.users_count," +
+                  "parent.children.center_google,parent.users_count," +
+                  "children.id,children.name,children.area,children.center," +
+                  "children.area_google,children.center_google,children.users_count," +
+                  "users.id,users.full_name,users.avatar,users.description," +
+                  "users.owner.id,users.tags.*",
               },
               id({ user }) {
                 if (!user || !user.communities || !user.communities[0]) {
@@ -48,18 +49,19 @@ export default {
       },
     },
     {
-      path: ':view',
-      name: 'community-view',
+      path: ":view",
+      name: "community-view",
       component: CommunityView,
       props: true,
       meta: {
         auth: true,
-        title: 'titles.find_vehicle',
-        slug: 'loanables',
+        title: "titles.find_vehicle",
+        slug: "loanables",
         data: {
           loanables: {
             retrieve: {
-              fields: 'id,type,name,position_google,available,owner.user.id,owner.user.name,owner.user.full_name,owner.user.avatar,image.*',
+              fields:
+                "id,type,name,position_google,available,owner.user.id,owner.user.name,owner.user.full_name,owner.user.avatar,image.*",
               per_page: 100,
             },
           },

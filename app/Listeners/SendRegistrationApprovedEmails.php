@@ -9,15 +9,17 @@ use Mail;
 
 class SendRegistrationApprovedEmails
 {
-    public function handle(RegistrationApprovedEvent $event) {
+    public function handle(RegistrationApprovedEvent $event)
+    {
         $user = $event->user;
 
-        if (!isset($user->meta['sent_registration_approved_email'])) {
-            Mail::to($user->email, $user->name . ' ' . $user->last_name)
-                ->queue(new RegistrationApproved($user));
+        if (!isset($user->meta["sent_registration_approved_email"])) {
+            Mail::to($user->email, $user->name . " " . $user->last_name)->queue(
+                new RegistrationApproved($user)
+            );
 
             $meta = $user->meta;
-            $meta['sent_registration_approved_email'] = true;
+            $meta["sent_registration_approved_email"] = true;
             $user->meta = $meta;
 
             $user->save();

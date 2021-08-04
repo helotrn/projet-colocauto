@@ -1,23 +1,34 @@
 <template>
-  <b-form-group :class="`forms-image-uploader ${validationStateClass}`"
-    :label="label" :label-for="field" :description="description">
+  <b-form-group
+    :class="`forms-image-uploader ${validationStateClass}`"
+    :label="label"
+    :label-for="field"
+    :description="description"
+  >
     <div v-if="loading">
-      <img src="/loading.svg">
+      <img src="/loading.svg" />
     </div>
     <div class="mb-3" v-else-if="!value">
-      <b-form-file :value="value" :state="validationState" :id="field"
-        :ref="`${field}imageinput`" :placeholder="placeholder"
-        :name="field" :accept="accept.join(',')" browse-text="Sélectionner"
+      <b-form-file
+        :value="value"
+        :state="validationState"
+        :id="field"
+        :ref="`${field}imageinput`"
+        :placeholder="placeholder"
+        :name="field"
+        :accept="accept.join(',')"
+        browse-text="Sélectionner"
         drop-placeholder="Déposer l'image ici..."
-        @change="handleChange" />
+        @change="handleChange"
+      />
       <div class="invalid-feedback" v-if="errors">
         {{ errors.message }}
       </div>
     </div>
     <div v-else>
       <figure class="preview">
-        <img v-if="value.sizes" :src="value.sizes.thumbnail" >
-        <img src="/loading.svg" v-else>
+        <img v-if="value.sizes" :src="value.sizes.thumbnail" />
+        <img src="/loading.svg" v-else />
 
         <figcaption>
           <a :href="value.url" target="_blank">
@@ -34,16 +45,16 @@
 
 <script>
 export default {
-  name: 'FormsImageUploader',
+  name: "FormsImageUploader",
   props: {
     accept: {
-      default: () => ['*.png', '*.jpg', '*.jpeg', 'image/png', 'image/jpg', 'image/jpeg'],
+      default: () => ["*.png", "*.jpg", "*.jpeg", "image/png", "image/jpg", "image/jpeg"],
       type: Array,
     },
     description: {
       type: String,
       required: false,
-      default: '',
+      default: "",
     },
     field: {
       required: true,
@@ -52,10 +63,10 @@ export default {
     label: {
       required: false,
       type: String,
-      default: '',
+      default: "",
     },
     placeholder: {
-      default: 'Téléverser...',
+      default: "Téléverser...",
       type: String,
     },
     removeImageText: {
@@ -91,19 +102,19 @@ export default {
     validationStateClass() {
       switch (this.validationState) {
         case true:
-          return 'is-valid';
+          return "is-valid";
         case false:
-          return 'is-invalid';
+          return "is-invalid";
         default:
-          return '';
+          return "";
       }
     },
   },
   methods: {
     handleChange(event) {
       switch (event.type) {
-        case 'drop':
-          this.uploadImage(event.target.getAttribute('for'), event.dataTransfer.files);
+        case "drop":
+          this.uploadImage(event.target.getAttribute("for"), event.dataTransfer.files);
           break;
         default:
           this.uploadImage(event.target.name, event.target.files);
@@ -111,7 +122,7 @@ export default {
       }
     },
     removeImage() {
-      this.$emit('input', null);
+      this.$emit("input", null);
 
       if (this.$refs[`${this.field}imageinput`]) {
         this.$refs[`${this.field}imageinput`].reset();
@@ -124,15 +135,15 @@ export default {
         return null;
       }
 
-      Array
-        .from(Array(fileList.length).keys())
-        .map(x => formData.append(fieldName, fileList[x], fileList[x].name));
+      Array.from(Array(fileList.length).keys()).map((x) =>
+        formData.append(fieldName, fileList[x], fileList[x].name)
+      );
 
-      formData.append('field', fieldName);
+      formData.append("field", fieldName);
 
-      const image = await this.$store.dispatch('images/upload', formData);
+      const image = await this.$store.dispatch("images/upload", formData);
 
-      this.$emit('input', image);
+      this.$emit("input", image);
 
       return image;
     },

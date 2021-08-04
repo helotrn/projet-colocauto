@@ -1,10 +1,14 @@
 <template>
-  <b-modal size="lg" class="borough-difference-modal"
+  <b-modal
+    size="lg"
+    class="borough-difference-modal"
     title="Voisinage, quartier: quelle différence?"
-    id="borough-difference-modal" footer-class="d-none">
+    id="borough-difference-modal"
+    footer-class="d-none"
+  >
     <p>
-      Le voisinage est dans le quartier, le quartier est dans l'arrondissement…
-      «L'arbre est dans ses feuilles, Marilon Marilé !»
+      Le voisinage est dans le quartier, le quartier est dans l'arrondissement… «L'arbre est dans
+      ses feuilles, Marilon Marilé !»
     </p>
 
     <p>
@@ -14,17 +18,17 @@
     </p>
 
     <p>
-      Un voisinage LocoMotion est créé par des gens qui habitent à 5-10 minutes à pied. Ça prend
-      des personnes qui veulent s'impliquer dans le projet et le faire évoluer. Comment favoriser
-      les liens dans le voisinage? Est-ce qu'on veut ajouter à notre flotte collective un vélo
+      Un voisinage LocoMotion est créé par des gens qui habitent à 5-10 minutes à pied. Ça prend des
+      personnes qui veulent s'impliquer dans le projet et le faire évoluer. Comment favoriser les
+      liens dans le voisinage? Est-ce qu'on veut ajouter à notre flotte collective un vélo
       électrique ou des remorques? Solon vous accompagne!
     </p>
 
     <p>
-      Le quartier est plus grand. Il réfère à un territoire urbain reconnu par la population et
-      les institutions locales (par exemple, La Petite-Patrie) et peut contenir plusieurs
-      voisinages. Participer à LocoMotion dans son quartier, c'est avoir accès à certains
-      véhicules et c'est une porte d'entrée vers la création de son voisinage!
+      Le quartier est plus grand. Il réfère à un territoire urbain reconnu par la population et les
+      institutions locales (par exemple, La Petite-Patrie) et peut contenir plusieurs voisinages.
+      Participer à LocoMotion dans son quartier, c'est avoir accès à certains véhicules et c'est une
+      porte d'entrée vers la création de son voisinage!
     </p>
 
     <p>
@@ -42,7 +46,7 @@
 
 <script>
 export default {
-  name: 'BoroughDifferenceModal',
+  name: "BoroughDifferenceModal",
 };
 </script>
 
@@ -50,5 +54,4 @@ export default {
 #borough-difference-modal {
   text-align: center;
 }
-
 </style>
