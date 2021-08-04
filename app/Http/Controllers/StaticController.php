@@ -34,7 +34,7 @@ class StaticController extends Controller
 
     public function stats()
     {
-        $communityQuery = Community::whereIn("type", ["neighborhood"]);
+        $communityQuery = Community::whereIn("type", ["neighborhood", "borough", "private"]);
         $columnsDefinition = Community::getColumnsDefinition();
 
         $communityQuery = $columnsDefinition["*"]($communityQuery);
@@ -49,6 +49,7 @@ class StaticController extends Controller
                         "center" => $c->center,
                         "area_google" => $c->area_google,
                         "center_google" => $c->center_google,
+                        "type" => $c->type,
                     ];
                 }),
                 // User is not super admin
