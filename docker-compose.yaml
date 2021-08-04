@@ -66,9 +66,21 @@ services:
             POSTGRES_DB: locomotion
             POSTGRES_PASSWORD: locomotion
             POSTGRES_USER: locomotion
+    minio:
+        image: minio/minio
+        ports:
+            - 9000:9000
+            - 9001:9001
+        volumes:
+            - minio-data:/data
+        environment:
+            MINIO_ROOT_USER: locomotion
+            MINIO_ROOT_PASSWORD: locomotion
+        command: minio server --console-address :9001 /data
 
 volumes:
     postgres-data:
+    minio-data:
 secrets:
     oauth-private:
         file: ./secrets/oauth-private-dev.key
