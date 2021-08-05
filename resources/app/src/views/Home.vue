@@ -121,7 +121,7 @@
 
               <div>
                 <b-button size="lg" variant="outline-light" to="/communities">
-                  Situer les voisinages
+                  LocoMotion sur la carte
                 </b-button>
               </div>
             </div>
