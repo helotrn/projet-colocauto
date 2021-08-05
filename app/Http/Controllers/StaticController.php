@@ -34,7 +34,11 @@ class StaticController extends Controller
 
     public function stats()
     {
-        $communityQuery = Community::whereIn("type", ["neighborhood", "borough", "private"]);
+        $communityQuery = Community::whereIn("type", [
+            "neighborhood",
+            "borough",
+            "private",
+        ]);
         $columnsDefinition = Community::getColumnsDefinition();
 
         $communityQuery = $columnsDefinition["*"]($communityQuery);

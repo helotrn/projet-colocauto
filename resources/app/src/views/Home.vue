@@ -113,8 +113,9 @@
               </h2>
 
               <p class="mb-5">
-                Aujourd’hui, <span class="no-break">{{ boroughsCount }}</span> voisinages et <span class="no-break">{{ neighborhoodsCount }}</span> quartiers, soit
-                plus de <span class="no-break">{{ stats.users }} participant•e•s</span> partageant
+                Aujourd’hui, <span class="no-break">{{ boroughsCount }}</span> voisinages et
+                <span class="no-break">{{ neighborhoodsCount }}</span> quartiers, soit plus de
+                <span class="no-break">{{ stats.users }} participant•e•s</span> partageant
                 <span class="no-break">{{ stats.loanables }}</span> véhicules expérimentent cette
                 solution collective.
               </p>
@@ -211,23 +212,23 @@ export default {
     },
     neighborhoodsCount() {
       const neighborhoods = this.stats.communities.reduce((acc, r) => {
-        if (r.type && r.type === 'neighborhood') {
+        if (r.type && r.type === "neighborhood") {
           acc++;
         }
         return acc;
       }, []);
 
-      return (!!neighborhoods ? neighborhoods : -1);
+      return !!neighborhoods ? neighborhoods : -1;
     },
     boroughsCount() {
       const boroughs = this.stats.communities.reduce((acc, r) => {
-        if (r.type && r.type === 'borough') {
+        if (r.type && r.type === "borough") {
           acc++;
         }
         return acc;
       }, []);
 
-      return (!!boroughs ? boroughs : -1);
+      return !!boroughs ? boroughs : -1;
     },
     roundedStatsUsers() {
       if (this.stats.users) {
