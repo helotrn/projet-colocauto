@@ -175,7 +175,7 @@ class AuthController extends RestController
         );
         auth()->login($user);
         $token = $user->createToken("API Token")->accessToken;
-        return redirect()->to("/login/callback?token=" . $token);
+        return redirect()->to("http://localhost:8080/login/callback?token=" . $token);
     }
 
     public function passwordRequest(Request $request)
