@@ -148,9 +148,8 @@
         margin-left: -12px;
         margin-right: 27px;
         padding-left: $grid-gutter-width / 2;
-
     }
-    
+
     .navbar-toggler {
         border: 0;
         display: flex;
@@ -167,7 +166,7 @@
         background-image: url("/menu.svg");
     }
 
-    .not-collapsed .navbar-toggler-icon  {
+    .not-collapsed .navbar-toggler-icon {
         background-image: url("/menu-open.svg");
     }
 
