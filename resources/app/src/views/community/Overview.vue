@@ -79,7 +79,14 @@ export default {
       };
     },
     communities() {
-      return this.$store.state.stats.data.communities;
+      const communities = this.$store.state.stats.data.communities.reduce((acc, c) => {
+        if(c.type !== 'private')
+          acc.push(c);
+
+          return acc;
+      }, []);
+
+      return communities;
     },
     google: gmapApi,
   },
