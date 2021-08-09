@@ -169,8 +169,8 @@
 
 <i18n>
 fr:
-  borough: 'aucun voisinage | un voisinage | {count} voisinages'
-  neighborhood: 'aucun quartier | un quartier | {count} quartiers'
+  neighborhood: 'aucun voisinage | un voisinage | {count} voisinages'
+  borough: 'aucun quartier | un quartier | {count} quartiers'
 </i18n>
 
 <script>
