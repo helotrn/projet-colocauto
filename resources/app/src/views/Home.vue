@@ -213,7 +213,7 @@ export default {
     "svg-lend": Lend,
     "svg-tridem": Tridem,
     "svg-wave-desktop": WaveDesktop,
-    "svg-wave": Wave
+    "svg-wave": Wave,
   },
   computed: {
     communitiesCount() {
@@ -267,7 +267,7 @@ export default {
         "date_of_birth",
         "address",
         "postal_code",
-        "phone"
+        "phone",
       ];
 
       for (let i = 0, len = requiredFields.length; i < len; i += 1) {
@@ -277,8 +277,8 @@ export default {
       }
 
       return true;
-    }
-  }
+    },
+  },
 };
 </script>
 
