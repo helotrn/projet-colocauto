@@ -113,8 +113,15 @@
               </h2>
 
               <p class="mb-5">
-                Aujourd’hui, <span class="no-break">{{ boroughsCount }}</span> voisinages et
-                <span class="no-break">{{ neighborhoodsCount }}</span> quartiers, soit plus de
+                Aujourd’hui,
+                <span class="no-break">{{
+                  $tc("borough", boroughsCount, { count: boroughsCount })
+                }}</span>
+                et
+                <span class="no-break">{{
+                  $tc("neighborhood", neighborhoodsCount, { count: neighborhoodsCount })
+                }}</span
+                >, soit plus de
                 <span class="no-break">{{ stats.users }} participant•e•s</span> partageant
                 <span class="no-break">{{ stats.loanables }}</span> véhicules expérimentent cette
                 solution collective.
@@ -160,6 +167,12 @@
   </layout-page>
 </template>
 
+<i18n>
+fr:
+  borough: 'aucun voisinage | un voisinage | {count} voisinages'
+  neighborhood: 'aucun quartier | un quartier | {count} quartiers'
+</i18n>
+
 <script>
 import DashboardCovidSection from "@/components/Dashboard/CovidSection.vue";
 import MainFaq from "@/components/Misc/MainFaq.vue";
@@ -200,7 +213,7 @@ export default {
     "svg-lend": Lend,
     "svg-tridem": Tridem,
     "svg-wave-desktop": WaveDesktop,
-    "svg-wave": Wave,
+    "svg-wave": Wave
   },
   computed: {
     communitiesCount() {
@@ -216,9 +229,9 @@ export default {
           acc++;
         }
         return acc;
-      }, []);
+      }, 0);
 
-      return !!neighborhoods ? neighborhoods : -1;
+      return neighborhoods;
     },
     boroughsCount() {
       const boroughs = this.stats.communities.reduce((acc, r) => {
@@ -226,9 +239,9 @@ export default {
           acc++;
         }
         return acc;
-      }, []);
+      }, 0);
 
-      return !!boroughs ? boroughs : -1;
+      return boroughs;
     },
     roundedStatsUsers() {
       if (this.stats.users) {
@@ -254,7 +267,7 @@ export default {
         "date_of_birth",
         "address",
         "postal_code",
-        "phone",
+        "phone"
       ];
 
       for (let i = 0, len = requiredFields.length; i < len; i += 1) {
@@ -264,8 +277,8 @@ export default {
       }
 
       return true;
-    },
-  },
+    }
+  }
 };
 </script>
 
