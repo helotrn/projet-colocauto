@@ -29,6 +29,7 @@
         "mstaack/laravel-postgis": "^5",
         "predis/predis": "^1.1",
         "sentry/sentry-laravel": "^1.7",
+        "stackkit/laravel-google-cloud-scheduler": "^1.0",
         "stripe/stripe-php": "^7.27",
         "symfony/expression-language": "^4"
     },
