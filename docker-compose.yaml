@@ -40,6 +40,7 @@ services:
             S3_URL: http://minio:9000
             OAUTH_PRIVATE_PATH: /app/storage/oauth-private
             OAUTH_PUBLIC_PATH: /app/storage/oauth-public
+            QUEUE_CONNECTION: database
     vue:
         depends_on:
             - php
