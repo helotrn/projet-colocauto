@@ -19,7 +19,7 @@
         class="community-overview__borough"
         v-else-if="borough"
         :title="`Voisinage ${borough ? borough.name : ''}`"
-      > 
+      >
         <b-card-text>
           <div class="community-overview__description">
             <p v-if="borough.description">
@@ -28,7 +28,7 @@
           </div>
         </b-card-text>
       </b-card>
-      
+
       <gmap-map
         class="community-overview__map"
         ref="map"
@@ -183,15 +183,14 @@ export default {
       this.neighborhood = null;
     },
     setCommunity(c) {
-      if(c.type === 'borough') {
+      if (c.type === "borough") {
         this.neighborhood = c;
         this.borough = null;
-      }
-      else {
+      } else {
         this.neighborhood = null;
         this.borough = c;
       }
-    }
+    },
   },
   watch: {
     routeDataLoaded() {

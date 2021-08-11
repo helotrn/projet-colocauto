@@ -227,7 +227,7 @@ const mutations = {
   },
   reset(state) {
     Object.assign(state, initialState);
-  }
+  },
 };
 
 export default new Vuex.Store({
