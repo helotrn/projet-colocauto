@@ -54,6 +54,7 @@ class StaticController extends Controller
                         "area_google" => $c->area_google,
                         "center_google" => $c->center_google,
                         "type" => $c->type,
+                        "description" => $c->description,
                     ];
                 }),
                 // User is not super admin

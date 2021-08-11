@@ -25,6 +25,7 @@ import owners from "./models/owners";
 import users from "./models/users";
 
 import AdminCommunity from "./pages/admin/community";
+import CommunityMap from "./pages/community/map";
 import CommunityView from "./pages/community/view";
 import Login from "./pages/login";
 import Register from "./pages/register";
@@ -240,6 +241,7 @@ export default new Vuex.Store({
     borrowers,
     cars,
     communities,
+    "community.map": CommunityMap,
     "community.view": CommunityView,
     files,
     global,
