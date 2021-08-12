@@ -7,8 +7,8 @@
         :title="`Quartier ${neighborhood ? neighborhood.name : ''}`"
       >
         <b-card-text>
-          <div class="community-overview__description">
-            <p v-if="neighborhood.description">
+          <div>
+            <p class="community-overview__description" v-if="neighborhood.description">
               {{ neighborhood.description }}
             </p>
           </div>
@@ -21,8 +21,8 @@
         :title="`Voisinage ${borough ? borough.name : ''}`"
       >
         <b-card-text>
-          <div class="community-overview__description">
-            <p v-if="borough.description">
+          <div>
+            <p class="community-overview__description" v-if="borough.description">
               {{ borough.description }}
             </p>
           </div>
@@ -222,6 +222,8 @@ export default {
 </script>
 
 <style lang="scss">
+@import "~bootstrap/scss/mixins/breakpoints";
+
 .community-overview {
   &__map {
     width: 100vw;
@@ -237,9 +239,15 @@ export default {
     z-index: 100;
     max-width: 500px;
 
+    @include media-breakpoint-down(lg) {
+      margin: 5%;
+      min-width: 90%;
+    }
+
     .card-header,
     .card-title {
       font-weight: bold;
+      margin: 0;
     }
 
     .card-text {
@@ -249,6 +257,7 @@ export default {
       .community-overview__description {
         flex-grow: 1;
         max-height: 120px;
+        margin: 0;
       }
     }
 
