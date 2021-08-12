@@ -574,9 +574,6 @@ class UserController extends RestController
                     "has_been_sued_last_ten_years" => [
                         "type" => "checkbox",
                     ],
-                    "insurance" => [
-                        "type" => "file",
-                    ],
                     "gaa" => [
                         "type" => "file",
                     ],
