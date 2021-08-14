@@ -21,7 +21,7 @@ services:
             APP_ENV: local
             APP_KEY: base64:QV7VlghMwXOXokIRP1ARpfEuyIF46hfYC/Y/lxFxdVc=
             APP_DEBUG: "true"
-            FRONTEND_URL: http://localhost
+            FRONTEND_URL: http://localhost:8080
             BACKEND_URL_FROM_BROWSER: http://localhost:8000 #this is the url that the browser uses to call us
             DB_HOST: postgres
             DB_PORT: 5432
@@ -38,6 +38,9 @@ services:
             S3_REGION: canada
             S3_BUCKET: locomotion
             S3_URL: http://minio:9000
+            GOOGLE_CLIENT_ID: 406326292737-7hbogvat3i32ungfngc8f0qn56cudbqr.apps.googleusercontent.com  #dev id
+            GOOGLE_CLIENT_SECRET: 3M4rv8_3L6iL7AcCcuN6nJsa # dev secret
+            GOOGLE_REDIRECT: http://localhost:8000/auth/callback
             OAUTH_PRIVATE_PATH: /app/storage/oauth-private
             OAUTH_PUBLIC_PATH: /app/storage/oauth-public
     vue:
@@ -51,8 +54,8 @@ services:
         ports:
             - 8080:80
         environment:
-            BACKEND_URL: http://php:8000
-            FRONTEND_URL: localhost:8080
+            VUE_APP_BACKEND_URL: http://php:8000
+            VUE_APP_FRONTEND_URL: localhost:8080
             PORT: 80
     postgres:
         build:

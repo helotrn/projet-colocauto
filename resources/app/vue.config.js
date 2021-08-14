@@ -43,12 +43,12 @@ module.exports = {
     devServer: {
       proxy: {
         "^/api": {
-          target: process.env.BACKEND_URL,
+          target: process.env.VUE_APP_BACKEND_URL,
           ws: true,
           changeOrigin: true,
         },
       },
-      public: process.env.FRONTEND_URL,
+      public: process.env.VUE_APP_FRONTEND_URL,
       disableHostCheck: true,
     },
     plugins,
