@@ -47,7 +47,7 @@ class Image extends BaseModel
     public static function fetch($path)
     {
         try {
-            $file = Storage::disk("local")->get($path);
+            $file = Storage::disk("s3")->get($path);
         } catch (FileNotFoundException $e) {
             return null;
         }
@@ -58,7 +58,7 @@ class Image extends BaseModel
     public static function store($path, $image)
     {
         $image->stream();
-        return Storage::disk("local")->put($path, $image->__toString());
+        return Storage::disk("s3")->put($path, $image->__toString());
     }
 
     public static function copy($source, $destination)
