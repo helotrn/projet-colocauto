@@ -39,6 +39,9 @@ services:
             S3_REGION: canada
             S3_BUCKET: locomotion
             S3_URL: http://minio:9000
+            REDIS_HOST: redis
+            REDIS_PORT: 6379
+            REDIS_PASSWORD: null
             OAUTH_PRIVATE_PATH: /app/storage/oauth-private
             OAUTH_PUBLIC_PATH: /app/storage/oauth-public
     vue:
@@ -78,6 +81,10 @@ services:
             MINIO_ROOT_USER: locomotion
             MINIO_ROOT_PASSWORD: locomotion
         command: minio server --console-address :9001 /data
+    redis:
+        image: redis
+        ports:
+            - 6379:6379
 
 volumes:
     postgres-data:
