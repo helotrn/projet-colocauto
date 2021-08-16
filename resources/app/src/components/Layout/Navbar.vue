@@ -13,7 +13,7 @@
       </b-navbar-nav>
     </b-collapse>
 
-      <b-navbar-toggle target="nav-collapse"  />
+    <b-navbar-toggle target="nav-collapse" />
 
     <b-collapse id="nav-collapse" class="layout-navbar__collapse" is-nav v-model="toggleMenu">
       <div class="layout-navbar__collapse__illustration d-md-none" />
