@@ -224,7 +224,7 @@ export default {
       return 5;
     },
     neighborhoodsCount() {
-      const neighborhoods = this.stats.communities.reduce((acc, r) => {
+      const neighborhoods = this?.stats?.communities?.reduce((acc, r) => {
         if (r.type && r.type === "neighborhood") {
           acc++;
         }
@@ -234,7 +234,7 @@ export default {
       return neighborhoods;
     },
     boroughsCount() {
-      const boroughs = this.stats.communities.reduce((acc, r) => {
+      const boroughs = this?.stats?.communities?.reduce((acc, r) => {
         if (r.type && r.type === "borough") {
           acc++;
         }
