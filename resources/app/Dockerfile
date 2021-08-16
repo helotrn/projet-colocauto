@@ -6,11 +6,13 @@ CMD bash -c "npm ci && npm run serve -- --host 0.0.0.0"
 ##############################
 FROM dev as build
 ARG VUE_APP_GOOGLE_MAPS_API_KEY
+ARG VIEW_APP_BACKEND_URL
 
 COPY . .
 
 ENV VUE_APP_API_URL /api
 ENV VUE_APP_GOOGLE_MAPS_API_KEY ${VUE_APP_GOOGLE_MAPS_API_KEY}
+ENV VIEW_APP_BACKEND_URL ${VIEW_APP_BACKEND_URL}
 
 RUN npm ci
 RUN npm run build
