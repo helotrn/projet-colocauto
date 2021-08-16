@@ -169,8 +169,8 @@
 
 <i18n>
 fr:
-  borough: 'aucun voisinage | un voisinage | {count} voisinages'
-  neighborhood: 'aucun quartier | un quartier | {count} quartiers'
+  neighborhood: 'aucun voisinage | un voisinage | {count} voisinages'
+  borough: 'aucun quartier | un quartier | {count} quartiers'
 </i18n>
 
 <script>
@@ -213,7 +213,7 @@ export default {
     "svg-lend": Lend,
     "svg-tridem": Tridem,
     "svg-wave-desktop": WaveDesktop,
-    "svg-wave": Wave
+    "svg-wave": Wave,
   },
   computed: {
     communitiesCount() {
@@ -224,7 +224,7 @@ export default {
       return 5;
     },
     neighborhoodsCount() {
-      const neighborhoods = this.stats.communities.reduce((acc, r) => {
+      const neighborhoods = this?.stats?.communities?.reduce((acc, r) => {
         if (r.type && r.type === "neighborhood") {
           acc++;
         }
@@ -234,7 +234,7 @@ export default {
       return neighborhoods;
     },
     boroughsCount() {
-      const boroughs = this.stats.communities.reduce((acc, r) => {
+      const boroughs = this?.stats?.communities?.reduce((acc, r) => {
         if (r.type && r.type === "borough") {
           acc++;
         }
@@ -267,7 +267,7 @@ export default {
         "date_of_birth",
         "address",
         "postal_code",
-        "phone"
+        "phone",
       ];
 
       for (let i = 0, len = requiredFields.length; i < len; i += 1) {
@@ -277,8 +277,8 @@ export default {
       }
 
       return true;
-    }
-  }
+    },
+  },
 };
 </script>
 
