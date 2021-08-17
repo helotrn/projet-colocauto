@@ -15,7 +15,7 @@
 
     <b-navbar-toggle target="nav-collapse" />
 
-    <b-collapse id="nav-collapse" class="layout-navbar__collapse" is-nav v-model="toggleMenu">
+    <b-collapse id="nav-collapse" class="layout-navbar__collapse" is-nav>
       <div class="layout-navbar__collapse__illustration d-md-none" />
 
       <b-navbar-nav class="ml-auto" v-if="isLoggedIn">
