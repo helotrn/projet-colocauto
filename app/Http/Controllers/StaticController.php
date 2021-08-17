@@ -76,7 +76,7 @@ class StaticController extends Controller
     public function storage($path)
     {
         try {
-            $file = Storage::disk("s3")->get('/storage/'.$path);
+            $file = Storage::disk()->get("/storage/" . $path);
         } catch (FileNotFoundException $e) {
             return null;
         }

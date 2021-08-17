@@ -37,7 +37,7 @@ class File extends BaseModel
     public static function fetch($path)
     {
         try {
-            $file = Storage::disk("s3")->get($path);
+            $file = Storage::disk()->get($path);
         } catch (FileNotFoundException $e) {
             return null;
         }
@@ -46,7 +46,7 @@ class File extends BaseModel
 
     public static function store($path, $file)
     {
-        return Storage::disk("s3")->putFileAs(
+        return Storage::disk()->putFileAs(
             dirname($path),
             $file,
             basename($path)
@@ -58,7 +58,7 @@ class File extends BaseModel
         if ($source === $destination) {
             return true;
         }
-        return Storage::disk("s3")->copy($source, $destination);
+        return Storage::disk()->copy($source, $destination);
     }
 
     public static function boot()
