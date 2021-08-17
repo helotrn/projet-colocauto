@@ -77,10 +77,10 @@ export default {
 
       // uc: User's community.
       // ac: Ahuntsic's community.
-      for (let uc = 0, uclen = this.user.communities.length; uc < uclen; uc += 1) {
+      for (let uc = 0, uclen = this?.user?.communities?.length; uc < uclen; uc += 1) {
         for (let ac = 0, aclen = ahuntsicCommunityNames.length; ac < aclen; ac += 1) {
           if (
-            this.user.communities[uc].name === ahuntsicCommunityNames[ac] &&
+            this?.user?.communities[uc]?.name === ahuntsicCommunityNames[ac] &&
             !!this.user.communities[uc].approved_at &&
             !this.user.communities[uc].suspended_at
           ) {
