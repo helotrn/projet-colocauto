@@ -47,7 +47,7 @@ class Image extends BaseModel
     public static function fetch($path)
     {
         try {
-            $file = Storage::disk()->get($path);
+            $file = Storage::disk(env("FILESYSTEM_DRIVER"))->get($path);
         } catch (FileNotFoundException $e) {
             return null;
         }
@@ -58,7 +58,7 @@ class Image extends BaseModel
     public static function store($path, $image)
     {
         $image->stream();
-        return Storage::disk()->put($path, $image->__toString());
+        return Storage::disk(env("FILESYSTEM_DRIVER"))->put($path, $image->__toString());
     }
 
     public static function copy($source, $destination)
