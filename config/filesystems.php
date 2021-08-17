@@ -66,6 +66,7 @@ return [
             "driver" => "gcs",
             "project_id" => env("GOOGLE_CLOUD_PROJECT_ID", "your-project-id"),
             "bucket" => env("GOOGLE_CLOUD_STORAGE_BUCKET", "your-bucket"),
+            "key_file" => env('GOOGLE_CLOUD_KEY_FILE', null),
             "storage_api_uri" => env("GOOGLE_CLOUD_STORAGE_API_URI", null), // see: Public URLs below
         ],
     ],
