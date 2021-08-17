@@ -11,8 +11,8 @@ export default {
   name: "LocoMotion",
   mixins: [Notification],
   mounted() {
-    this.$store.dispatch('loadUser');
-  }
+    this.$store.dispatch("loadUser");
+  },
 };
 </script>
 

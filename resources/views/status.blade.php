@@ -8,7 +8,7 @@
 
     <body>
         <ul>
-        <li class="status {{ strtolower($database) }}">
+            <li class="status {{ strtolower($database) }}">
                 <span>Base de données :</span>
                 <span>{{ $database }}</span>
             </li>

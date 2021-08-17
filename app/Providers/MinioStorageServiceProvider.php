@@ -18,23 +18,25 @@ class MinioStorageServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-      Storage::extend('minio', function ($app, $config) {
-          $client = new S3Client([
-              'credentials' => [
-                  'key'    => env('S3_KEY'),
-                  'secret' => env('S3_SECRET')
-              ],
-              'region'      => env('S3_REGION'),
-              'version'     => "latest",
-              'bucket_endpoint' => false,
-              'use_path_style_endpoint' => true,
-              'endpoint'    => env('S3_URL'),
-          ]);
-          $options = [
-              'override_visibility_on_copy' => true
-          ];
-          return new Filesystem(new AwsS3Adapter($client, $config["bucket"], '', $options));
-      });
+        Storage::extend("minio", function ($app, $config) {
+            $client = new S3Client([
+                "credentials" => [
+                    "key" => env("S3_KEY"),
+                    "secret" => env("S3_SECRET"),
+                ],
+                "region" => env("S3_REGION"),
+                "version" => "latest",
+                "bucket_endpoint" => false,
+                "use_path_style_endpoint" => true,
+                "endpoint" => env("S3_URL"),
+            ]);
+            $options = [
+                "override_visibility_on_copy" => true,
+            ];
+            return new Filesystem(
+                new AwsS3Adapter($client, $config["bucket"], "", $options)
+            );
+        });
     }
 
     /**
@@ -44,6 +46,5 @@ class MinioStorageServiceProvider extends ServiceProvider
      */
     public function register()
     {
-
     }
 }
