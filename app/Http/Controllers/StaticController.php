@@ -77,7 +77,9 @@ class StaticController extends Controller
     public function storage($path)
     {
         try {
-            $file = Storage::disk(env("FILESYSTEM_DRIVER"))->get("/storage/" . $path);
+            $file = Storage::disk(env("FILESYSTEM_DRIVER"))->get(
+                "/storage/" . $path
+            );
         } catch (FileNotFoundException $e) {
             return null;
         }
