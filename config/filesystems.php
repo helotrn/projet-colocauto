@@ -54,12 +54,20 @@ return [
         ],
 
         "s3" => [
-            "driver" => "s3",
-            "key" => env("AWS_ACCESS_KEY_ID"),
-            "secret" => env("AWS_SECRET_ACCESS_KEY"),
-            "region" => env("AWS_DEFAULT_REGION"),
-            "bucket" => env("AWS_BUCKET"),
-            "url" => env("AWS_URL"),
+            "driver" => env("S3_DRIVER"),
+            "key" => env("S3_ACCESS_KEY_ID"),
+            "secret" => env("S3_SECRET_ACCESS_KEY"),
+            "region" => env("S3_REGION"),
+            "bucket" => env("S3_BUCKET"),
+            "endpoint" => env("S3_URL"),
+            "url" => env("S3_URL"),
+        ],
+        "gcs" => [
+            "driver" => "gcs",
+            "project_id" => env("GOOGLE_CLOUD_PROJECT_ID", "your-project-id"),
+            "bucket" => env("GOOGLE_CLOUD_STORAGE_BUCKET", "your-bucket"),
+            "key_file" => env('GOOGLE_CLOUD_KEY_FILE', null),
+            "storage_api_uri" => env("GOOGLE_CLOUD_STORAGE_API_URI", null), // see: Public URLs below
         ],
     ],
 ];

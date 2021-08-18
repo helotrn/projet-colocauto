@@ -3,10 +3,14 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Routing\Controller;
+use Illuminate\Http\Response;
 use App\Models\Community;
 use App\Models\Loanable;
 use App\Models\User;
+use Intervention\Image\ImageManager as ImageManager;
+use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use DB;
+use Storage;
 
 class StaticController extends Controller
 {
@@ -68,6 +72,17 @@ class StaticController extends Controller
             ],
             200
         );
+    }
+
+    public function storage($path)
+    {
+        try {
+            $file = Storage::disk(env("FILESYSTEM_DRIVER"))->get("/storage/" . $path);
+        } catch (FileNotFoundException $e) {
+            return null;
+        }
+        $manager = new ImageManager(["driver" => "imagick"]);
+        return (new Response($file, 200))->header("Content-Type", "file-jpeg");
     }
 
     public function app()
