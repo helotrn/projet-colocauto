@@ -7,7 +7,7 @@
             <forms-validated-input
               type="image"
               name="avatar"
-              :rules="{ required: true }"
+              :rules="{ required: false }"
               :description="$t('descriptions.avatar')"
               label="📷 Ajouter une photo de profil"
               v-model="user.avatar"

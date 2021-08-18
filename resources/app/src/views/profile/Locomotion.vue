@@ -14,8 +14,8 @@
         <b-row v-if="hasAddressChanged">
           <b-col>
             <b-alert variant="warning" show>
-              Si vous avez changé d'adresse et souhaitez rejoindre une nouvelle communauté, merci
-              de prendre contact avec un administrateur à l'adresse
+              Si vous avez changé d'adresse et souhaitez rejoindre une nouvelle communauté, merci de
+              prendre contact avec un administrateur à l'adresse
               <a href="mailto:info@locomotion.app">info@locomotion.app</a> .
             </b-alert>
           </b-col>

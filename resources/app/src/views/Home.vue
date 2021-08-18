@@ -113,15 +113,23 @@
               </h2>
 
               <p class="mb-5">
-                Aujourd’hui, <span class="no-break">{{ communitiesCount }}</span> voisinages, soit
-                plus de <span class="no-break">{{ stats.users }} participant•e•s</span> partageant
+                Aujourd’hui,
+                <span class="no-break">{{
+                  $tc("borough", boroughsCount, { count: boroughsCount })
+                }}</span>
+                et
+                <span class="no-break">{{
+                  $tc("neighborhood", neighborhoodsCount, { count: neighborhoodsCount })
+                }}</span
+                >, soit plus de
+                <span class="no-break">{{ stats.users }} participant•e•s</span> partageant
                 <span class="no-break">{{ stats.loanables }}</span> véhicules expérimentent cette
                 solution collective.
               </p>
 
               <div>
                 <b-button size="lg" variant="outline-light" to="/communities">
-                  Situer les voisinages
+                  LocoMotion sur la carte
                 </b-button>
               </div>
             </div>
@@ -158,6 +166,12 @@
     <partners-section />
   </layout-page>
 </template>
+
+<i18n>
+fr:
+  neighborhood: 'aucun voisinage | un voisinage | {count} voisinages'
+  borough: 'aucun quartier | un quartier | {count} quartiers'
+</i18n>
 
 <script>
 import DashboardCovidSection from "@/components/Dashboard/CovidSection.vue";
@@ -208,6 +222,26 @@ export default {
       }
 
       return 5;
+    },
+    neighborhoodsCount() {
+      const neighborhoods = this?.stats?.communities?.reduce((acc, r) => {
+        if (r.type && r.type === "neighborhood") {
+          acc++;
+        }
+        return acc;
+      }, 0);
+
+      return neighborhoods;
+    },
+    boroughsCount() {
+      const boroughs = this?.stats?.communities?.reduce((acc, r) => {
+        if (r.type && r.type === "borough") {
+          acc++;
+        }
+        return acc;
+      }, 0);
+
+      return boroughs;
     },
     roundedStatsUsers() {
       if (this.stats.users) {
