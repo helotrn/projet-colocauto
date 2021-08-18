@@ -9,8 +9,7 @@ class PadlocksTableSeeder extends Seeder
     {
         $nUnaffectedPadlocks = 100;
 
-        for ($p=0; $p<$nUnaffectedPadlocks; ++$p)
-        {
+        for ($p = 0; $p < $nUnaffectedPadlocks; ++$p) {
             factory(Padlock::class)->create();
         }
 

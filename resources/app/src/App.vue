@@ -10,6 +10,9 @@ import Notification from "@/mixins/Notification";
 export default {
   name: "LocoMotion",
   mixins: [Notification],
+  mounted() {
+    this.$store.dispatch("loadUser");
+  },
 };
 </script>
 

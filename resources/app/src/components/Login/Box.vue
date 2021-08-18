@@ -3,7 +3,7 @@
     <h1 class="login-box__title">{{ $t("login") }}</h1>
 
     <div class="google-login">
-      <b-button href="/auth/google" variant="primary" class="btn-google">
+      <b-button :href="authUrl" variant="primary" class="btn-google">
         <div class="btn-google__icon">
           <svg-google />
         </div>
@@ -81,6 +81,9 @@ export default {
   computed: {
     loading() {
       return this.$store.state.login.loading;
+    },
+    authUrl() {
+      return `${process.env.VUE_APP_BACKEND_URL}/auth/google`;
     },
     email: {
       get() {

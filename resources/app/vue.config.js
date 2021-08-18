@@ -48,7 +48,7 @@ module.exports = {
           changeOrigin: true,
         },
       },
-      public: process.env.FRONTEND_URL,
+      public: process.env.VUE_APP_FRONTEND_URL,
       disableHostCheck: true,
     },
     plugins,
