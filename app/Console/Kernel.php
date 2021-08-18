@@ -11,7 +11,7 @@ class Kernel extends ConsoleKernel
 
     protected function schedule(Schedule $schedule)
     {
-        // should be removed. I keep them here just for reference until we switch 
+        // should be removed. I keep them here just for reference until we switch
         // to an external scheduler
 
         // $schedule->command("noke:sync:locks")->dailyAt("02:00:00");

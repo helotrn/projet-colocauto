@@ -154,5 +154,12 @@ Route::prefix("v1")->group(function () {
         ]);
     });
 
+    Route::get("/scheduler/noke/sync/locks", "SchedulerController@nokeLocks");
+    Route::get("/scheduler/noke/sync/users", "SchedulerController@nokeUsers");
+    Route::get("/scheduler/noke/sync/loans", "SchedulerController@nokeLoans");
+    Route::get("/scheduler/actions/complete", "SchedulerController@actionsComplete");
+    Route::get("/scheduler/email/loan/upcoming", "SchedulerController@emailLoanUpcoming");
+    Route::get("/scheduler/email/loan/prepayement", "SchedulerController@emailPrePayement");
+
     Route::get("/{any?}", "StaticController@notFound")->where("any", ".*");
 });
