@@ -42,7 +42,6 @@
               <li>
                 <a :href="gaaUrl" target="_blank"> Pour commander votre rapport de sinistre GAA </a>
               </li>
-              <li>Référez-vous à votre assurance pour retrouver votre contrat.</li>
             </ul>
 
             <p>
