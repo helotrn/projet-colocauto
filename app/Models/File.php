@@ -58,7 +58,10 @@ class File extends BaseModel
         if ($source === $destination) {
             return true;
         }
-        return Storage::disk(env("FILESYSTEM_DRIVER"))->copy($source, $destination);
+        return Storage::disk(env("FILESYSTEM_DRIVER"))->copy(
+            $source,
+            $destination
+        );
     }
 
     public static function boot()
@@ -108,7 +111,14 @@ class File extends BaseModel
         $tokenQueryString = $this->getTokenQueryString();
         $appUrl = env("BACKEND_URL_FROM_BROWSER");
 
-        return "{$appUrl}{$this->path}/{$this->filename}" . $tokenQueryString;
+        // We check the presence of the /storage prefix for compatibility with old data
+        // We add it if it is not there
+        if (preg_match('/^\/storage\/.*$/m', $this->path)) {
+            return "{$appUrl}{$this->path}/{$this->filename}" .
+                $tokenQueryString;
+        }
+        return "{$appUrl}/storage{$this->path}/{$this->filename}" .
+            $tokenQueryString;
     }
 
     protected function getTokenQueryString()

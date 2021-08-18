@@ -58,7 +58,10 @@ class Image extends BaseModel
     public static function store($path, $image)
     {
         $image->stream();
-        return Storage::disk(env("FILESYSTEM_DRIVER"))->put($path, $image->__toString());
+        return Storage::disk(env("FILESYSTEM_DRIVER"))->put(
+            $path,
+            $image->__toString()
+        );
     }
 
     public static function copy($source, $destination)
@@ -255,9 +258,17 @@ class Image extends BaseModel
             $this->attributes["filename"]
         );
         foreach (array_keys($sizes) as $name) {
-            $sizes[$name] =
-                "$base{$this->attributes["path"]}/{$name}_{$encodedFilename}" .
-                $tokenQueryString;
+            // We check the presence of the /storage prefix for compatibility with old data
+            // We add it if it is not there
+            if (preg_match('/^\/storage\/.*$/m', $this->path)) {
+                $sizes[$name] =
+                    "$base{$this->attributes["path"]}/{$name}_{$encodedFilename}" .
+                    $tokenQueryString;
+            } else {
+                $sizes[$name] =
+                    "$base/storage{$this->attributes["path"]}/{$name}_{$encodedFilename}" .
+                    $tokenQueryString;
+            }
         }
 
         return $sizes;
@@ -268,7 +279,14 @@ class Image extends BaseModel
         $tokenQueryString = $this->getTokenQueryString();
         $appUrl = env("BACKEND_URL_FROM_BROWSER");
 
-        return "{$appUrl}{$this->path}/{$this->filename}" . $tokenQueryString;
+        // We check the presence of the /storage prefix for compatibility with old data
+        // We add it if it is not there
+        if (preg_match('/^\/storage\/.*$/m', $this->path)) {
+            return "{$appUrl}{$this->path}/{$this->filename}" .
+                $tokenQueryString;
+        }
+        return "{$appUrl}/storage{$this->path}/{$this->filename}" .
+            $tokenQueryString;
     }
 
     public function scopeAccessibleBy(Builder $query, $user)
