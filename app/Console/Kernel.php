@@ -11,12 +11,15 @@ class Kernel extends ConsoleKernel
 
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command("noke:sync:locks")->dailyAt("02:00:00");
-        $schedule->command("noke:sync:users")->dailyAt("02:30:00");
-        $schedule->command("noke:sync:loans")->everyFiveMinutes();
-        $schedule->command("actions:complete")->hourly();
-        $schedule->command("email:loan:upcoming")->everyMinute();
-        $schedule->command("email:loan:pre_payment_missing")->everyMinute();
+        // should be removed. I keep them here just for reference until we switch 
+        // to an external scheduler
+
+        // $schedule->command("noke:sync:locks")->dailyAt("02:00:00");
+        // $schedule->command("noke:sync:users")->dailyAt("02:30:00");
+        // $schedule->command("noke:sync:loans")->everyFiveMinutes();
+        // $schedule->command("actions:complete")->hourly();
+        // $schedule->command("email:loan:upcoming")->everyMinute();
+        // $schedule->command("email:loan:pre_payment_missing")->everyMinute();
     }
 
     protected function commands()
