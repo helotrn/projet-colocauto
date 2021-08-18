@@ -154,5 +154,30 @@ Route::prefix("v1")->group(function () {
         ]);
     });
 
+    Route::get(
+        "/scheduler/noke/sync/locks/{appKey?}",
+        "SchedulerController@nokeLocks"
+    )->where("appKey", ".*");
+    Route::get(
+        "/scheduler/noke/sync/users/{appKey?}",
+        "SchedulerController@nokeUsers"
+    )->where("appKey", ".*");
+    Route::get(
+        "/scheduler/noke/sync/loans/{appKey?}",
+        "SchedulerController@nokeLoans"
+    )->where("appKey", ".*");
+    Route::get(
+        "/scheduler/actions/complete/{appKey?}",
+        "SchedulerController@actionsComplete"
+    )->where("appKey", ".*");
+    Route::get(
+        "/scheduler/email/loan/upcoming/{appKey?}",
+        "SchedulerController@emailLoanUpcoming"
+    )->where("appKey", ".*");
+    Route::get(
+        "/scheduler/email/loan/prepayement/{appKey?}",
+        "SchedulerController@emailPrePayement"
+    )->where("appKey", ".*");
+
     Route::get("/{any?}", "StaticController@notFound")->where("any", ".*");
 });
