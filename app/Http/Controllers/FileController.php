@@ -93,7 +93,7 @@ class FileController extends RestController
     protected function upload($file, $field)
     {
         $uniq = uniqid();
-        $uri = "/tmp/$uniq";
+        $uri = "/storage/tmp/$uniq";
 
         $originalFilename = $file->getClientOriginalName();
         $filename = $this->cleanupFilename($originalFilename);
