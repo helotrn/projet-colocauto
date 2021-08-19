@@ -3,7 +3,7 @@
     <h2 class="text-center">{{ $t("register") }}</h2>
 
     <div class="register-form__google">
-      <b-button href="/auth/google" variant="primary" class="btn-google">
+      <b-button :href="authUrl" variant="primary" class="btn-google">
         <div class="btn-google__icon">
           <svg-google />
         </div>
@@ -108,6 +108,9 @@ export default {
       set(value) {
         return this.$store.commit("register/email", value);
       },
+    },
+    authUrl() {
+      return `${process.env.VUE_APP_BACKEND_URL}/auth/google`;
     },
   },
   methods: {
