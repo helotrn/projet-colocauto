@@ -51,7 +51,7 @@
 >
     Si vous ne prévoyez pas utiliser le véhicule, vous pouvez annuler la
     réservation
-    <a href="{{ url('/loans/' . $loan->id) }}">ici</a>.
+    <a href="{{ env('FRONTEND_URL') . '/loans/' . $loan->id }}">ici</a>.
 </p>
 
 <p

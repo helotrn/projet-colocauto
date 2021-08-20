@@ -10,5 +10,5 @@ appartenant à la communauté.
 
 {{ $incident->comments_on_incident }}
 
-Voir l'emprunt [{{ url('/loans/'. $loan->id) }}]
+Voir l'emprunt [{{ env('FRONTEND_URL') . '/loans/'. $loan->id }}]
 @endsection

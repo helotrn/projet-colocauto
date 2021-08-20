@@ -27,7 +27,7 @@
 </p>
 <p style="text-align: center; margin-top: 32px; margin-bottom: 0">
     <a
-        href="{{ url('/community/list') }}"
+        href="{{ env('FRONTEND_URL') . '/community/list' }}"
         style="
             display: inline-block;
             background-color: #246aea;

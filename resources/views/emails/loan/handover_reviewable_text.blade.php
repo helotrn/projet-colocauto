@@ -15,5 +15,5 @@ du {{ $loan->loanable->name }}
 "
 @endif
 
-Voir l'emprunt [{{ url('/loans/'. $loan->id) }}]
+Voir l'emprunt [{{ env('FRONTEND_URL') . '/loans/'. $loan->id }}]
 @endsection

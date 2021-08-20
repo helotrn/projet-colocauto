@@ -7,7 +7,7 @@ Votre réservation d'auto commence dans 24 heures et n'a pas encore été prépa
 procéder au prépaiement avant d'aller chercher le véhicule chez votre voisin. Pour ce faire,
 rendez-vous sur la page de l'emprunt.
 
-Voir l'emprunt [{{ url('/loans/' . $loan->id) }}]
+Voir l'emprunt [{{ env('FRONTEND_URL') . '/loans/' . $loan->id }}]
 
 Merci de votre participation !
 

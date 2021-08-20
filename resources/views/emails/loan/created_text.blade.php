@@ -8,7 +8,7 @@ Bonjour {{ $owner->user->name }},
 
 {{ $loan->message_for_owner }}
 
-Voir l'emprunt [{{ url('/loans/' . $loan->id) }}]
+Voir l'emprunt [{{ env('FRONTEND_URL') . '/loans/' . $loan->id }}]
 
             - L'équipe LocoMotion
 @endsection

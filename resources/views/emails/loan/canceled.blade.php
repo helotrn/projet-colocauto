@@ -19,7 +19,7 @@
 
 <p style="text-align: center; margin-top: 32px">
     <a
-        href="{{ url('/loans/' . $loan->id) }}"
+        href="{{ env('FRONTEND_URL') . '/loans/' . $loan->id }}"
         style="
             display: inline-block;
             background-color: #246aea;
