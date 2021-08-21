@@ -33,7 +33,7 @@ COPY ./docker-entrypoint.sh .
 
 CMD bash -c "./docker-entrypoint.sh && \
              composer install && \
-             php artisan migrate && \
+             php artisan migrate --force && \
              php artisan queue:work & \
              php artisan serve --host=0.0.0.0"
 
@@ -43,6 +43,6 @@ COPY . .
 RUN composer install
 
 CMD bash -c "./docker-entrypoint.sh && \
-             php artisan migrate && \
+             php artisan migrate --force && \
              php artisan queue:work & \
              php artisan serve --host=0.0.0.0"
