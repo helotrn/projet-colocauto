@@ -1,14 +1,11 @@
 <tr style="height: 263.27px">
-    <td class='background'>
-        <style>
-            .background {
-                background-position: bottom center;
-                background-repeat: no-repeat;
-                background-color: #1e4847;
-                height: 500px;
-                background-image: url("{{ env('BACKEND_URL_FROM_BROWSER') . '/mail-footer-bg.png' }}");
-            }
-        </style>
+    <td style="
+        background-position: bottom center;
+        background-repeat: no-repeat;
+        background-color: #1e4847;
+        height: 500px;
+        background-image: url('{{ env('BACKEND_URL_FROM_BROWSER') . '/mail-footer-bg.png' }}');    
+    ">
         <p style="
                 position: relative;
                 top: -80px;
