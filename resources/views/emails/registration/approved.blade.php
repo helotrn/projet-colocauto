@@ -96,7 +96,9 @@
 >
     LocoMotion est un projet porté par les citoyen-ne-s, avec le soutien de
     Solon! Voyez qui sont vos voisin-e-s et comment vous impliquer dans le
-    projet via «&nbsp;<a href="{{ env('FRONTEND_URL') . '/community' }}" target="_blank"
+    projet via «&nbsp;<a
+        href="{{ env('FRONTEND_URL') . '/community' }}"
+        target="_blank"
         >Mon voisinage</a
     >&nbsp;».
 </p>
