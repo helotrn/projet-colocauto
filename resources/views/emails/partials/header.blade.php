@@ -2,7 +2,7 @@
     <td align="center" style="height: 60px">
         <div style="text-align: center">
             <img
-                src="data:image/png;base64,<?php echo base64_encode(file_get_contents('./public/mail-header-logo.png')) ?>"
+                src="{{ env('BACKEND_URL_FROM_BROWSER') . '/mail-header-logo.png' }}"
                 alt="LocoMotion"
                 style="width: 125px; height: 17px"
             />
