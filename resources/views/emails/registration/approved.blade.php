@@ -57,7 +57,7 @@
 >
     Vous pouvez dès maintenant emprunter les vélos et remorques à vélo. Pour
     emprunter une auto, vous devez compléter votre «&nbsp;<a
-        href="{{ url('/profile/borrower') }}"
+        href="{{ env('FRONTEND_URL') . '/profile/borrower' }}"
         target="_blank"
         >Mon dossier de conduite</a
     >&nbsp;».
@@ -75,13 +75,13 @@
 >
     Pour partager votre véhicule personnel avec vos voisin-e-s (auto,
     vélo-cargo, vélo électrique...), ajoutez-le à votre profil dans «&nbsp;<a
-        href="{{ url('/profile/loanables') }}"
+        href="{{ env('FRONTEND_URL') . '/profile/loanables' }}"
         target="_blank"
         >Mes véhicules</a
     >&nbsp;». Bien sûr, vous avez toujours la main pour décider ou non de prêter
     votre véhicule lorsque vous recevez une demande. Assurances, compensation, …
     Toutes les réponses sont dans la
-    <a href="{{ url('/faq') }}" target="_blank">FAQ</a>!
+    <a href="{{ env('FRONTEND_URL') . '/faq' }}" target="_blank">FAQ</a>!
 </p>
 
 <p
@@ -96,7 +96,7 @@
 >
     LocoMotion est un projet porté par les citoyen-ne-s, avec le soutien de
     Solon! Voyez qui sont vos voisin-e-s et comment vous impliquer dans le
-    projet via «&nbsp;<a href="{{ url('/community') }}" target="_blank"
+    projet via «&nbsp;<a href="{{ env('FRONTEND_URL') . '/community' }}" target="_blank"
         >Mon voisinage</a
     >&nbsp;».
 </p>

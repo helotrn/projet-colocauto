@@ -10,5 +10,5 @@ dans les communautés suivantes :
 
 Le profil peut maintenant être validé.
 
-Voir le profil [{{ url('/admin/users/' . $user->id) }}#borrower]
+Voir le profil [{{ env('FRONTEND_URL') . '/admin/users/' . $user->id) }}#borrower]
 @endsection

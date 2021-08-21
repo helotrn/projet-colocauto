@@ -16,7 +16,7 @@ véhicule sur son emprunt de votre {{ $loan->loanable->name }} qui commençait
 Un membre de l'équipe LocoMotion a été notifié et sera appelé à arbitrer la résolution du
 problème.
 
-Voir l'emprunt [{{ url('/loans/' . $loan->id) }}]
+Voir l'emprunt [{{ env('FRONTEND_URL') . '/loans/' . $loan->id }}]
 
         - L'équipe LocoMotion
 @endsection

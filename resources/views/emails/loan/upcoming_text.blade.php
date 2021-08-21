@@ -9,7 +9,7 @@ Votre réservation commence dans 3 heures, veuillez prendre connaisance de la ma
 à suivre si ce n'est pas déjà fait.
 
 Si vous ne prevoyez pas utiliser le véhicule vous pouvez annuler la réservation
-ici [{{ url('/loans/' . $loan->id) }}].
+ici [{{ env('FRONTEND_URL') . '/loans/' . $loan->id }}].
 
 Merci de votre participation!
 

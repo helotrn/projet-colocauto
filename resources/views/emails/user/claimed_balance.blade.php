@@ -15,7 +15,7 @@
 
 <p style="text-align: center; margin: 32px auto 0 auto">
     <a
-        href="{{ url('/admin/users/' . $user->id) }}"
+        href="{{ env('FRONTEND_URL') . '/admin/users/' . $user->id }}"
         style="
             display: inline-block;
             background-color: #246aea;

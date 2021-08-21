@@ -15,7 +15,7 @@
 
 <p style="text-align: center; margin: 32px auto 0 auto">
     <a
-        href="{{ url('/admin/communities/' . $community->id) }}#members"
+        href="{{ env('FRONTEND_URL') . '/admin/communities/' . $community->id }}#members"
         style="
             display: inline-block;
             background-color: #246aea;

@@ -7,7 +7,7 @@ Bonjour {{ $receiver->name }},
 véhicule sur l'emprunt de votre {{ $loan->loanable->name }} qui commençait
 à {{ $loan->departure_at }}.
 
-Voir l'emprunt [{{ url('/loans/' . $loan->id) }}]
+Voir l'emprunt [{{ env('FRONTEND_URL') . '/loans/' . $loan->id }}]
 
         - L'équipe LocoMotion
 @endsection
