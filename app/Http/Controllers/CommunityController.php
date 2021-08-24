@@ -48,10 +48,10 @@ class CommunityController extends RestController
                     $items,
                     $this->model
                 );
-                $base = app()
-                    ->make("url")
-                    ->to("/");
-                return response($base . $filename, 201);
+                return response(
+                    env("BACKEND_URL_FROM_BROWSER") . $filename,
+                    201
+                );
             default:
                 return $this->respondWithCollection($request, $items, $total);
         }
@@ -177,10 +177,10 @@ class CommunityController extends RestController
         switch ($request->headers->get("accept")) {
             case "text/csv":
                 $filename = $this->respondWithCsv($request, $items, new User());
-                $base = app()
-                    ->make("url")
-                    ->to("/");
-                return response($base . $filename, 201);
+                return response(
+                    env("BACKEND_URL_FROM_BROWSER") . $filename,
+                    201
+                );
             default:
                 return $this->respondWithCollection($request, $items, $total);
         }
