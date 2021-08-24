@@ -30,7 +30,7 @@ class NokeService
 
         $this->token = Cache::get("noke:token");
 
-        if (!$this->token) {
+        if (!$this->token && app()->environment() === "production") {
             $this->resetToken();
         }
     }
