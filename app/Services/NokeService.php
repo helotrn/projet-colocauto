@@ -3,9 +3,10 @@
 namespace App\Services;
 
 use App\Models\User;
+use ErrorException;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Cache;
-use Log;
+use Illuminate\Support\Facades\Log;
 
 class NokeService
 {
@@ -48,7 +49,7 @@ class NokeService
         Log::channel("noke")->info("Request to $url for group $groupName");
 
         if (app()->environment() !== "production") {
-            return;
+            throw new ErrorException('You can only do that in production');
         }
 
         $this->client->post($url, [
@@ -151,7 +152,7 @@ class NokeService
         Log::channel("noke")->info("Request to $url for user ID $user->id");
 
         if (app()->environment() !== "production") {
-            return;
+            throw new ErrorException('You can only do that in production');
         }
 
         $response = $this->client->post($url, [
@@ -268,7 +269,7 @@ class NokeService
             $this->users = json_decode($users);
         } else {
             if (app()->environment() !== "production") {
-                return; // TODO mock
+                throw new ErrorException('You can only do that in production');
             }
 
             $url = "{$this->baseUrl}/user/get/list/";
@@ -320,7 +321,7 @@ class NokeService
         Log::channel("noke")->info("Request to $url");
 
         if (app()->environment() !== "production") {
-            return;
+            throw new ErrorException('You can only do that in production');
         }
 
         $response = $this->client->post($url, [
@@ -340,7 +341,7 @@ class NokeService
         Log::channel("noke")->info("Request to $url");
 
         if (app()->environment() !== "production") {
-            return;
+            throw new ErrorException('You can only do that in production');
         }
 
         $response = $this->client->post($url, [
@@ -357,7 +358,7 @@ class NokeService
     private function resetToken()
     {
         if (app()->environment() !== "production") {
-            return; // TODO mock
+            throw new ErrorException('You can only do that in production');
         }
 
         $url = "{$this->baseUrl}/company/web/login/";
