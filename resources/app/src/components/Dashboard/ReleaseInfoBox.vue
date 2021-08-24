@@ -15,45 +15,30 @@
         </div>
 
         <li>
-          Version du 2 août 2021
+          Version du 23 août 2021
           <ul>
-            <li>Utilisateurs</li>
-            <ul>
-              <li>Ajout d'un icone sur l'onglet de l'application</li>
-              <li>
-                Retirer le bloc "réserver un véhicule" de la page d'accueil quand on est en attente
-                d'approbation
-              </li>
-              <li>Nouveau message d'information pour les emprunts</li>
-              <li>Modification de la mise en page de tous les courriels</li>
-              <li>On peut maintenant changer l'image de preuve d'adresse</li>
-              <li>
-                Au rechargement d'une page, il n'y a plus de redirection automatique vers la page de
-                connexion
-              </li>
-              <li>Nouveau look du menu de profil</li>
-              <li>
-                Dans la barre de navigation, la photo de profil de l'utilisateur ou ses initiales
-                sont affichées
-              </li>
-            </ul>
-            <li>Administrateurs</li>
-            <ul>
-              <li>
-                Dans les listes, pour les véhicules, les anciens boutons "supprimer" indiquent
-                maintenant "archiver"
-              </li>
-              <li>Les liens de la section emprunts de l'administration fonctionnent</li>
-              <li>On peut chercher des membres avec seulement une partie de l'adresse courriel</li>
-              <li>
-                Dans les filtres, il est maintenant possible de cliquer n'importe où dans l'écran
-                pour sortir du filtre
-              </li>
-              <li>
-                Le filtre de date sur une période d'un mois affiche maintenant tous les emprunts du
-                mois
-              </li>
-            </ul>
+            <li>
+              Mise en place d'une nouvelle architecture qui nous permettra de déployer plus
+              rapidement nos changements
+            </li>
+            <li>Le texte des 7 voisinages a été mis à jour</li>
+            <li>Correction de sécurité pour effacer toutes les données après une déconnexion</li>
+            <li>
+              Les dossiers de conduite et les rapports de sinistres sont maintenant accessibles par
+              l'utilisateur
+            </li>
+            <li>Corrections orthographiques multiples</li>
+            <li>On peut maintenant annuler une réservation depuis le tableau de bord</li>
+            <li>On ne peut plus réserver un véhicule avant d'être approuvé</li>
+            <li>On peut maintenant modifier une image de preuve d'adresse</li>
+            <li>
+              Clarification de l'affichage des mouvements de fonds sur le compte utilisateur dans la
+              liste des factures
+            </li>
+            <li>
+              Supression du champ "contrat d'assurance" dans la section "emprunter un véhicule" et
+              dans l'inscription
+            </li>
           </ul>
         </li>
       </ul>
