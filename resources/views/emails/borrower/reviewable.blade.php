@@ -41,7 +41,7 @@
 </p>
 <p style="text-align: center; margin-bottom: 0">
     <a
-        href="{{ env('FRONTEND_URL') . '/admin/users/' . $user->id) }}#borrower"
+        href="{{ env('FRONTEND_URL') . '/admin/users/' . $user->id }}#borrower"
         style="
             display: inline-block;
             background-color: #246aea;
