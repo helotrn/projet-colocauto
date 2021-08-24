@@ -30,10 +30,10 @@ class InvoiceController extends RestController
                     $items,
                     $this->model
                 );
-                $base = app()
-                    ->make("url")
-                    ->to("/");
-                return response($base . $filename, 201);
+                return response(
+                    env("BACKEND_URL_FROM_BROWSER") . $filename,
+                    201
+                );
             default:
                 return $this->respondWithCollection($request, $items, $total);
         }

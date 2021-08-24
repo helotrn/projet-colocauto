@@ -49,7 +49,7 @@ class NokeService
         Log::channel("noke")->info("Request to $url for group $groupName");
 
         if (app()->environment() !== "production") {
-            throw new ErrorException('You can only do that in production');
+            throw new ErrorException("You can only do that in production");
         }
 
         $this->client->post($url, [
@@ -152,7 +152,7 @@ class NokeService
         Log::channel("noke")->info("Request to $url for user ID $user->id");
 
         if (app()->environment() !== "production") {
-            throw new ErrorException('You can only do that in production');
+            throw new ErrorException("You can only do that in production");
         }
 
         $response = $this->client->post($url, [
@@ -269,7 +269,7 @@ class NokeService
             $this->users = json_decode($users);
         } else {
             if (app()->environment() !== "production") {
-                throw new ErrorException('You can only do that in production');
+                throw new ErrorException("You can only do that in production");
             }
 
             $url = "{$this->baseUrl}/user/get/list/";
@@ -321,7 +321,7 @@ class NokeService
         Log::channel("noke")->info("Request to $url");
 
         if (app()->environment() !== "production") {
-            throw new ErrorException('You can only do that in production');
+            throw new ErrorException("You can only do that in production");
         }
 
         $response = $this->client->post($url, [
@@ -341,7 +341,7 @@ class NokeService
         Log::channel("noke")->info("Request to $url");
 
         if (app()->environment() !== "production") {
-            throw new ErrorException('You can only do that in production');
+            throw new ErrorException("You can only do that in production");
         }
 
         $response = $this->client->post($url, [
@@ -358,7 +358,7 @@ class NokeService
     private function resetToken()
     {
         if (app()->environment() !== "production") {
-            throw new ErrorException('You can only do that in production');
+            throw new ErrorException("You can only do that in production");
         }
 
         $url = "{$this->baseUrl}/company/web/login/";
