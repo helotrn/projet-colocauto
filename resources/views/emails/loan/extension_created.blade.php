@@ -1,11 +1,19 @@
 @extends('emails.layouts.main') @section('content')
-<p style="font-weight: 390; font-size: 17px; line-height: 24px; color: #343a40">
+<p style="
+    text-align: center;
+    font-weight: 390;
+    font-size: 17px;
+    line-height: 24px;
+    color: #343a40;
+    margin-bottom: 32px;
+    "
+>
     Bonjour {{ $owner->user->name }},
 </p>
 
 <p
     style="
-        text-align: justify;
+        text-align: center;
         font-weight: 390;
         font-size: 17px;
         line-height: 24px;
@@ -20,7 +28,7 @@
 @if (!!$extension->comments_on_extension)
 <p
     style="
-        text-align: justify;
+        text-align: center;
         margin-top: 0;
         font-weight: 390;
         font-size: 17px;
@@ -28,11 +36,11 @@
         color: #343a40;
     "
 >
-    Message:
+    Commentaires:
 </p>
 <p
     style="
-        text-align: justify;
+        text-align: center;
         margin-top: 0;
         font-weight: 390;
         font-size: 17px;

@@ -1,12 +1,13 @@
 @extends('emails.layouts.main') @section('content')
 <p
     style="
-        text-align: justify;
+        text-align: center;
         margin-top: 0;
         font-weight: 390;
         font-size: 17px;
         line-height: 24px;
         color: #343a40;
+        margin-bottom: 32px;
     "
 >
     Bonjour,
@@ -14,7 +15,7 @@
 
 <p
     style="
-        text-align: justify;
+        text-align: center;
         margin-top: 0;
         font-weight: 390;
         font-size: 17px;
@@ -27,7 +28,7 @@
 
 <p
     style="
-        text-align: justify;
+        text-align: center;
         margin-top: 0;
         font-weight: 390;
         font-size: 17px;
@@ -44,7 +45,7 @@
     style="
         background: #f9ca51;
         padding: 16px;
-        text-align: justify;
+        text-align: center;
         font-weight: 390;
         font-size: 17px;
         line-height: 24px;
@@ -56,31 +57,5 @@
     Pro. Vous pouvez aussi simplement «&nbsp;inscrire mot de passe oublié&nbsp;»
     lors de votre première connexion à Noke Pro depuis votre téléphone
     intelligent.
-</p>
-
-<p
-    style="
-        text-align: justify;
-        margin-top: 0;
-        font-weight: 390;
-        font-size: 17px;
-        line-height: 24px;
-        color: #343a40;
-    "
->
-    À bientôt,
-</p>
-
-<p
-    style="
-        text-align: justify;
-        margin-top: 0;
-        font-weight: 390;
-        font-size: 17px;
-        line-height: 24px;
-        color: #343a40;
-    "
->
-    L'équipe LocoMotion
 </p>
 @endsection

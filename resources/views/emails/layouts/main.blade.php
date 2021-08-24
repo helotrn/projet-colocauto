@@ -32,6 +32,23 @@
                             "
                         >
                             <tr>
+                                <td>
+                                    <h1
+                                        style="
+                                            text-align: center;
+                                            font-weight: 420;
+                                            margin: 0;
+                                            padding: 44px 32px 16px 32px;
+                                            font-size: 32px;
+                                            line-height: 40px;
+                                            color: #343a40;
+                                        "
+                                    >
+                                        {{ $title }}
+                                    </h1>
+                                </td>
+                            </tr>
+                            <tr>
                                 <td>@yield('content')</td>
                             </tr>
                         </table>
