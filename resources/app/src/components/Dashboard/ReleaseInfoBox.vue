@@ -17,16 +17,28 @@
         <li>
           Version du 23 août 2021
           <ul>
-              <li>Mise en place d'une nouvelle architecture qui nous permettra de déployer plus rapidement nos changements</li>
-              <li>Le texte des 7 voisinages a été mis à jour</li>
-              <li>Correction de sécurité pour effacer toutes les données après une déconnexion</li>
-              <li>Les dossiers de conduite et les rapports de sinistres sont maintenant accessibles par l'utilisateur</li>
-              <li>Corrections orthographiques multiples</li>
-              <li>On peut maintenant annuler une réservation depuis le tableau de bord</li>
-              <li>On ne peut plus réserver un véhicule avant d'être approuvé</li>
-              <li>On peut maintenant modifier une image de preuve d'adresse</li>
-              <li>Clarification de l'affichage des mouvements de fonds sur le compte utilisateur dans la liste des factures</li>
-              <li>Supression du champ "contrat d'assurance" dans la section "emprunter un véhicule" et dans l'inscription</li>
+            <li>
+              Mise en place d'une nouvelle architecture qui nous permettra de déployer plus
+              rapidement nos changements
+            </li>
+            <li>Le texte des 7 voisinages a été mis à jour</li>
+            <li>Correction de sécurité pour effacer toutes les données après une déconnexion</li>
+            <li>
+              Les dossiers de conduite et les rapports de sinistres sont maintenant accessibles par
+              l'utilisateur
+            </li>
+            <li>Corrections orthographiques multiples</li>
+            <li>On peut maintenant annuler une réservation depuis le tableau de bord</li>
+            <li>On ne peut plus réserver un véhicule avant d'être approuvé</li>
+            <li>On peut maintenant modifier une image de preuve d'adresse</li>
+            <li>
+              Clarification de l'affichage des mouvements de fonds sur le compte utilisateur dans la
+              liste des factures
+            </li>
+            <li>
+              Supression du champ "contrat d'assurance" dans la section "emprunter un véhicule" et
+              dans l'inscription
+            </li>
           </ul>
         </li>
       </ul>
