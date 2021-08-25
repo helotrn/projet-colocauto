@@ -2,12 +2,13 @@
 
 <p
     style="
-        text-align: justify;
+        text-align: center;
         margin-top: 0;
         font-weight: 390;
         font-size: 17px;
         line-height: 24px;
         color: #343a40;
+        margin-bottom: 32px;
     "
 >
     Un-e nouveau-lle membre, {{ $user->name }}, a complété son profil
@@ -17,7 +18,7 @@
     @foreach ($communities as $community)
     <li
         style="
-            text-align: justify;
+            text-align: left;
             font-weight: 390;
             font-size: 17px;
             line-height: 24px;
@@ -30,11 +31,12 @@
 </ul>
 <p
     style="
-        text-align: justify;
+        text-align: center;
         font-weight: 390;
         font-size: 17px;
         line-height: 24px;
         color: #343a40;
+        margin: 32px auto;
     "
 >
     Le profil peut maintenant être validé.

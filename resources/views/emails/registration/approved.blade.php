@@ -1,12 +1,13 @@
 @extends('emails.layouts.main') @section('content')
 <p
     style="
-        text-align: justify;
+        text-align: center;
         margin-top: 0;
         font-weight: 390;
         font-size: 17px;
         line-height: 24px;
         color: #343a40;
+        margin-bottom: 32px;
     "
 >
     Ça y est! Vous pouvez maintenant commencer à prêter ou emprunter des
@@ -15,7 +16,7 @@
 
 <p
     style="
-        text-align: justify;
+        text-align: center;
         margin-top: 0;
         font-weight: 390;
         font-size: 17px;
@@ -47,7 +48,7 @@
 
 <p
     style="
-        text-align: justify;
+        text-align: center;
         margin-top: 0;
         font-weight: 390;
         font-size: 17px;
@@ -65,7 +66,7 @@
 
 <p
     style="
-        text-align: justify;
+        text-align: center;
         margin-top: 0;
         font-weight: 390;
         font-size: 17px;
@@ -86,7 +87,7 @@
 
 <p
     style="
-        text-align: justify;
+        text-align: center;
         margin-top: 0;
         font-weight: 390;
         font-size: 17px;
@@ -105,7 +106,7 @@
 
 <p
     style="
-        text-align: justify;
+        text-align: center;
         margin-top: 0;
         font-weight: 390;
         font-size: 17px;
@@ -117,29 +118,4 @@
     plaisir de vous répondre.
 </p>
 
-<p
-    style="
-        text-align: justify;
-        margin-top: 0;
-        font-weight: 390;
-        font-size: 17px;
-        line-height: 24px;
-        color: #343a40;
-    "
->
-    À bientôt,
-</p>
-
-<p
-    style="
-        text-align: justify;
-        margin-top: 0;
-        font-weight: 390;
-        font-size: 17px;
-        line-height: 24px;
-        color: #343a40;
-    "
->
-    L'équipe LocoMotion
-</p>
 @endsection

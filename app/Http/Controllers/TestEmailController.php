@@ -401,7 +401,7 @@ class TestEmailController extends Controller
     {
         $testData = $this->getCommonLoanTestData();
 
-        $testData["target"] = $testData["owner_user"];
+        $testData["target"] = $testData["owner"];
         $testData["incident"] = factory(Incident::class)->make();
 
         return $testData;
