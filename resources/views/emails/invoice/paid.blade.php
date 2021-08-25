@@ -25,7 +25,7 @@
         color: #343a40;
     "
 >
-    {!! $text !!}
+    {{ $text }}
 </p>
 
 <table style="width: 100%">
@@ -152,6 +152,7 @@
                                     font-size: 17px;
                                     line-height: 24px;
                                     color: #343a40;
+                                    max-width: 200px;
                                 "
                             >
                                 {{ $item['label'] }}

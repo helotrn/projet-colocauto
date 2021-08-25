@@ -118,29 +118,4 @@
     plaisir de vous répondre.
 </p>
 
-<p
-    style="
-        text-align: center;
-        margin-top: 0;
-        font-weight: 390;
-        font-size: 17px;
-        line-height: 24px;
-        color: #343a40;
-    "
->
-    À bientôt,
-</p>
-
-<p
-    style="
-        text-align: center;
-        margin-top: 0;
-        font-weight: 390;
-        font-size: 17px;
-        line-height: 24px;
-        color: #343a40;
-    "
->
-    L'équipe LocoMotion
-</p>
 @endsection
