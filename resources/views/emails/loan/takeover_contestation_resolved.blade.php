@@ -7,7 +7,7 @@
         font-size: 17px;
         line-height: 24px;
         color: #343a40;
-        margin-bottom: 32px
+        margin-bottom: 32px;
     "
 >
     Bonjour {{ $receiver->name }},

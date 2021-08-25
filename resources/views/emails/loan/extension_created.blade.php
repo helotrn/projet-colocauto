@@ -1,11 +1,12 @@
 @extends('emails.layouts.main') @section('content')
-<p style="
-    text-align: center;
-    font-weight: 390;
-    font-size: 17px;
-    line-height: 24px;
-    color: #343a40;
-    margin-bottom: 32px;
+<p
+    style="
+        text-align: center;
+        font-weight: 390;
+        font-size: 17px;
+        line-height: 24px;
+        color: #343a40;
+        margin-bottom: 32px;
     "
 >
     Bonjour {{ $owner->user->name }},
