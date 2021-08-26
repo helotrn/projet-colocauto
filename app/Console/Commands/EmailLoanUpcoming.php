@@ -7,6 +7,7 @@ use App\Models\Loan;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Mail;
+use Log;
 
 class EmailLoanUpcoming extends Command
 {
@@ -19,11 +20,7 @@ class EmailLoanUpcoming extends Command
 
     public function handle()
     {
-        if ($this->option("pretend")) {
-            $this->pretend = true;
-        }
-
-        $this->info(
+        Log::info(
             "Fetching loans in three hours created " .
                 "at least three hours before now..."
         );
@@ -35,7 +32,7 @@ class EmailLoanUpcoming extends Command
         foreach ($loans as $loan) {
             $user = $loan->borrower->user;
             if (!$this->pretend) {
-                $this->info("Sending email to $user->email");
+                Log::info("Sending email to $user->email");
 
                 Mail::to(
                     $user->email,
@@ -45,7 +42,7 @@ class EmailLoanUpcoming extends Command
                 if ($loan->owner) {
                     $ownerUser = $loan->owner->user;
 
-                    $this->info("Sending email to $ownerUser->email");
+                    Log::info("Sending email to $ownerUser->email");
 
                     Mail::to(
                         $ownerUser->email,
@@ -59,13 +56,13 @@ class EmailLoanUpcoming extends Command
 
                 $loan->save();
             } else {
-                $this->info(
+                Log::info(
                     "Would have sent an email to {$user->email} for loan {$loan->id}"
                 );
 
                 if ($loan->owner) {
                     $ownerUser = $loan->owner->user;
-                    $this->info(
+                    Log::info(
                         "Would have sent an email to {$ownerUser->email} " .
                             "for loan {$loan->id}"
                     );
@@ -73,7 +70,7 @@ class EmailLoanUpcoming extends Command
             }
         }
 
-        $this->info("Done.");
+        Log::info("Done.");
     }
 
     public static function getQuery($queryParams)
