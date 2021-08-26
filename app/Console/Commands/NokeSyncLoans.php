@@ -36,10 +36,6 @@ class NokeSyncLoans extends Command
 
     public function handle()
     {
-        // if ($this->option("pretend")) {
-        //     $this->pretend = true;
-        // }
-
         Log::info("Fetching locks...");
         $this->getLocks();
 
