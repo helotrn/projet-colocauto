@@ -6,6 +6,7 @@ use App\Models\Padlock;
 use App\Services\NokeService;
 use Illuminate\Console\Command;
 use GuzzleHttp\Client;
+use Log;
 
 class NokeSyncLocks extends Command
 {
@@ -31,25 +32,25 @@ class NokeSyncLocks extends Command
 
     public function handle()
     {
-        if ($this->option("pretend")) {
-            $this->pretend = true;
-        }
+        // if ($this->option("pretend")) {
+        //     $this->pretend = true;
+        // }
 
-        $this->info("Fetching locks...");
+        Log::info("Fetching locks...");
         $this->locks = $this->service->fetchLocks(true);
-        $this->info("Found " . count($this->locks) . " locks.");
+        Log::info("Found " . count($this->locks) . " locks.");
 
-        $this->info("Synchronizing local locks...");
+        Log::info("Synchronizing local locks...");
         $this->syncLocks();
 
-        $this->info("Fetching groups...");
+        Log::info("Fetching groups...");
         $this->getGroups();
-        $this->info("Found " . count($this->groups) . " groups.");
+        Log::info("Found " . count($this->groups) . " groups.");
 
-        $this->info("Creating remote groups...");
+        Log::info("Creating remote groups...");
         $this->createGroups();
 
-        $this->info("Done.");
+        Log::info("Done.");
     }
 
     private function getGroups()
@@ -68,11 +69,11 @@ class NokeSyncLocks extends Command
             $lock = Padlock::whereExternalId($nokeLock->id)->first();
             if (!$lock) {
                 $lock = new Padlock();
-                $this->warn(
+                Log::info(
                     "Creating lock $nokeLock->name ({$lock->id} / {$nokeLock->id})."
                 );
             } else {
-                $this->warn(
+                Log::info(
                     "Updating lock $nokeLock->name ({$lock->id} / {$nokeLock->id})."
                 );
             }
@@ -91,14 +92,14 @@ class NokeSyncLocks extends Command
             }
         }
 
-        $this->info("Removing defunct locks...");
+        Log::info("Removing defunct locks...");
         $removedLocks = Padlock::whereNotIn("id", $lockIds)->get();
         if ($removedLocks->count() === 0) {
-            $this->warn("No lock to remove.");
+            Log::info("No lock to remove.");
         }
 
         foreach ($removedLocks as $lock) {
-            $this->warn(
+            Log::info(
                 "Removing lock $nokeLock->name ({$lock->id} / {$nokeLock->id})."
             );
 
@@ -118,7 +119,7 @@ class NokeSyncLocks extends Command
             $groupName = "API {$lock->mac_address}";
 
             if (!isset($this->groupsIndex[$groupName])) {
-                $this->warn("Creating group {$groupName}.");
+                Log::info("Creating group {$groupName}.");
 
                 if ($this->pretend) {
                     continue;

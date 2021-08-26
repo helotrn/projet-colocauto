@@ -7,6 +7,7 @@ use App\Models\Loan;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Mail;
+use Log;
 
 class EmailLoanPrePaymentMissing extends Command
 {
@@ -19,11 +20,7 @@ class EmailLoanPrePaymentMissing extends Command
 
     public function handle()
     {
-        if ($this->option("pretend")) {
-            $this->pretend = true;
-        }
-
-        $this->info(
+        Log::info(
             "Fetching loans in 24 hours created " .
                 "at least three hours before now..."
         );
@@ -35,7 +32,7 @@ class EmailLoanPrePaymentMissing extends Command
         foreach ($loans as $loan) {
             $user = $loan->borrower->user;
             if (!$this->pretend) {
-                $this->info("Sending email to $user->email");
+                Log::info("Sending email to $user->email");
 
                 Mail::to(
                     $user->email,
@@ -48,13 +45,13 @@ class EmailLoanPrePaymentMissing extends Command
 
                 $loan->save();
             } else {
-                $this->info(
+                Log::info(
                     "Would have sent an email to {$user->email} for loan {$loan->id}"
                 );
             }
         }
 
-        $this->info("Done.");
+        Log::info("Done.");
     }
 
     public static function getQuery($queryParams)

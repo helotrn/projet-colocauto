@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Services\NokeService;
 use Illuminate\Console\Command;
 use GuzzleHttp\Client;
+use Log;
 
 class NokeSyncUsers extends Command
 {
@@ -26,17 +27,13 @@ class NokeSyncUsers extends Command
 
     public function handle()
     {
-        if ($this->option("pretend")) {
-            $this->pretend = true;
-        }
-
-        $this->info("Fetching users...");
+        Log::info("Fetching users...");
         $this->getUsers(true);
 
-        $this->info("Creating remote users...");
+        Log::info("Creating remote users...");
         $this->createUsers();
 
-        $this->info("Done.");
+        Log::info("Done.");
     }
 
     private function getUsers()
@@ -65,7 +62,7 @@ class NokeSyncUsers extends Command
 
         foreach ($users as $user) {
             if (!isset($this->usersIndex[$user->email])) {
-                $this->warn("Creating user {$user->email}.");
+                Log::info("Creating user {$user->email}.");
 
                 if ($this->pretend) {
                     continue;
