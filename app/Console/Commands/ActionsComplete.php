@@ -25,9 +25,7 @@ class ActionsComplete extends Command
 
     public function handle()
     {
-        Log::channel("actions")->info(
-            "Starting actions autocompletion command..."
-        );
+        Log::info("Starting actions autocompletion command...");
 
         // Intentions have to be confirmed by owner
         // Pre-payments have to be made by borrower
@@ -55,7 +53,7 @@ class ActionsComplete extends Command
             try {
                 switch ($action->type) {
                     case "handover":
-                        Log::channel("actions")->info(
+                        Log::info(
                             "Autocompleting $action->type on loan ID $loan->id..."
                         );
 
@@ -78,12 +76,12 @@ class ActionsComplete extends Command
                             $action->id
                         );
 
-                        Log::channel("actions")->info(
+                        Log::info(
                             "Autocompleted $action->type on loan ID $loan->id."
                         );
                         break;
                     case "takeover":
-                        Log::channel("actions")->info(
+                        Log::info(
                             "Autocompleting $action->type on loan ID $loan->id..."
                         );
 
@@ -102,12 +100,12 @@ class ActionsComplete extends Command
                             $action->id
                         );
 
-                        Log::channel("actions")->info(
+                        Log::info(
                             "Autocompleted $action->type on loan ID $loan->id."
                         );
                         break;
                     case "extension":
-                        Log::channel("actions")->info(
+                        Log::info(
                             "Autocompleting $action->type on loan ID $loan->id..."
                         );
 
@@ -127,7 +125,7 @@ class ActionsComplete extends Command
                             $action->id
                         );
 
-                        Log::channel("actions")->info(
+                        Log::info(
                             "Autocompleted $action->type on loan ID $loan->id."
                         );
                         break;
@@ -138,7 +136,7 @@ class ActionsComplete extends Command
                             floatval($loan->borrower->user->balance) >=
                             $totalActualCost
                         ) {
-                            Log::channel("actions")->info(
+                            Log::info(
                                 "Autocompleting $action->type on loan ID $loan->id..."
                             );
 
@@ -159,11 +157,11 @@ class ActionsComplete extends Command
                                 $action->id
                             );
 
-                            Log::channel("actions")->info(
+                            Log::info(
                                 "Autocompleted $action->type on loan ID $loan->id."
                             );
                         } else {
-                            Log::channel("actions")->warning(
+                            Log::warning(
                                 "Not autocompleting $action->type on loan ID $loan->id " .
                                     "because the user balance is less than the total actual cost " .
                                     "({$loan->borrower->user->balance} < $totalActualCost)..."
@@ -174,15 +172,13 @@ class ActionsComplete extends Command
                         break;
                 }
             } catch (\Exception $e) {
-                Log::channel("actions")->error(
+                Log::error(
                     "Fatal error trying to autocomplete " .
                         "action ID $action->id: {$e->getMessage()}."
                 );
             }
         }
 
-        Log::channel("actions")->info(
-            "Completed actions autocompletion command."
-        );
+        Log::info("Completed actions autocompletion command.");
     }
 }
