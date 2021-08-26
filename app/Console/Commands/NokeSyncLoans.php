@@ -36,26 +36,26 @@ class NokeSyncLoans extends Command
 
     public function handle()
     {
-        if ($this->option("pretend")) {
-            $this->pretend = true;
-        }
+        // if ($this->option("pretend")) {
+        //     $this->pretend = true;
+        // }
 
-        $this->info("Fetching locks...");
+        Log::info("Fetching locks...");
         $this->getLocks();
 
-        $this->info("Fetching users...");
+        Log::info("Fetching users...");
         $this->getUsers();
 
-        $this->info("Fetching groups...");
+        Log::info("Fetching groups...");
         $this->getGroups();
 
-        $this->info("Building locks users...");
+        Log::info("Building locks users...");
         $this->buildLocksUsers();
 
-        $this->info("Updating locks users...");
+        Log::info("Updating locks users...");
         $this->updateLocksUsers();
 
-        $this->info("Done.");
+        Log::info("Done.");
     }
 
     protected function getLocks($force = false)
@@ -161,7 +161,7 @@ class NokeSyncLoans extends Command
                 if (isset($this->usersIndex[$email])) {
                     $data->userIds[] = $this->usersIndex[$email]->id;
                 } else {
-                    $this->error("User not found: $email!");
+                    Log::error("User not found: $email!");
                 }
             }
 
@@ -184,7 +184,7 @@ class NokeSyncLoans extends Command
                 continue;
             }
 
-            $this->warn("Updating group {$groupName} users.");
+            Log::info("Updating group {$groupName} users.");
             $userIds = join(",", $data->userIds);
             Log::channel("noke")->info("Updating $groupName with $userIds");
 
