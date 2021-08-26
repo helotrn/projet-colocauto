@@ -27,10 +27,6 @@ class NokeSyncUsers extends Command
 
     public function handle()
     {
-        // if ($this->option("pretend")) {
-        //     $this->pretend = true;
-        // }
-
         Log::info("Fetching users...");
         $this->getUsers(true);
 
