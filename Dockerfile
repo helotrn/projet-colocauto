@@ -26,7 +26,7 @@ RUN apt-get update \
 
 RUN update-alternatives --set php /usr/bin/php7.3
 
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer --version=1.10.20
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer --version=2.1.6
 
 ENV COMPOSER_MEMORY_LIMIT=-1
 COPY ./docker-entrypoint.sh .
