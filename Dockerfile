@@ -30,6 +30,7 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 
 ENV COMPOSER_MEMORY_LIMIT=-1
 COPY ./docker-entrypoint.sh .
+COPY ./php.ini /etc/php/7.3/cli/php.ini
 
 CMD bash -c "./docker-entrypoint.sh && \
              composer install && \
