@@ -247,9 +247,6 @@ export default {
         loanable_id: this.item.loanable.id,
       });
     },
-    loading() {
-      return this.$store.state.loans.loading;
-    },
   },
   watch: {
     async loanParams(newValue, oldValue) {
