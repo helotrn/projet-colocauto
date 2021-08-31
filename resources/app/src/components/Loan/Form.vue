@@ -180,7 +180,11 @@
                 <b-button disabled type="submit" v-if="!item.loanable.available">
                   Indisponible
                 </b-button>
-                <b-button type="submit" :disabled="priceUpdating" v-else-if="isOwnedLoanable">
+                <b-button
+                  type="submit"
+                  :disabled="$store.state.loans.loading"
+                  v-else-if="isOwnedLoanable"
+                >
                   Faire la demande d'emprunt
                 </b-button>
                 <b-button type="submit" v-else>Réserver</b-button>
