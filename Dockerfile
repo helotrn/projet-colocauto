@@ -33,18 +33,12 @@ ENV COMPOSER_MEMORY_LIMIT=-1
 COPY ./docker-entrypoint.sh .
 COPY ./php.ini /etc/php/7.3/cli/php.ini
 
-CMD bash -c "./docker-entrypoint.sh && \
-             composer install && \
-             php artisan migrate --force && \
-             php artisan queue:work & \
-             php artisan serve --host=0.0.0.0"
+CMD bash -c "composer install && \
+             ./docker-entrypoint.sh "
 
 ###################
 FROM dev as prod
 COPY . .
 RUN composer install
 
-CMD bash -c "./docker-entrypoint.sh && \
-             php artisan migrate --force && \
-             php artisan queue:work & \
-             php artisan serve --host=0.0.0.0"
+CMD bash -c "./docker-entrypoint.sh"
