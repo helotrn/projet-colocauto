@@ -219,6 +219,10 @@ SQL;
 
     public function getCenterGoogleAttribute()
     {
+        if (!$this->center) {
+            return null;
+        }
+
         return [
             "lat" => $this->center[0],
             "lng" => $this->center[1],
