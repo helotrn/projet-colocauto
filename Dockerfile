@@ -21,7 +21,8 @@ RUN apt-get update \
    php7.3-pgsql \
    php7.3-mbstring \
    php7.3-dom \
-   php7.3-curl
+   php7.3-curl \
+   php7.3-xdebug
 
 
 RUN update-alternatives --set php /usr/bin/php7.3
