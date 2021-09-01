@@ -32,7 +32,7 @@ test:prettier:
   stage: test
   script:
     - curl -sL https://deb.nodesource.com/setup_10.x | bash
-    - apt-get install nodejs -yqq
+    - apt-get install nodejs npm -yqq
     - npm install --global prettier @prettier/plugin-php
     - npx prettier . --list-different
 
