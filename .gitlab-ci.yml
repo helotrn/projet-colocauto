@@ -28,7 +28,7 @@ cache:
     - resources/app/node_modules/
     - vendor/
 
-test:yarn_lint:
+test:prettier:
   stage: test
   script:
     - curl -sL https://deb.nodesource.com/setup_10.x | bash
@@ -49,10 +49,3 @@ test:phpunit:
     - php artisan passport:install --env testing
     - export XDEBUG_MODE="coverage"
     - vendor/bin/phpunit --coverage-text --colors=never
-
-test:phpcs:
-  stage: test
-  script:
-    - docker-php-ext-install gd zip
-    - php composer.phar install
-    - vendor/bin/phpcs app/
