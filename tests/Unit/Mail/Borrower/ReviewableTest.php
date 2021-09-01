@@ -15,17 +15,17 @@ class ReviewableTest extends TestCase
 
         $mail = new Reviewable($user, null);
 
-        $mail_content = preg_replace("/\s+/", "", $mail->render());
+        $mail_content = preg_replace("/\s+/", " ", $mail->render());
 
         // Search for user name.
         $this->assertStringContainsString(
-            "Un&bull;enouveau&bull;llemembre,TestName,acomplétésonprofild'emprunteur" .
-                "danslescommunautéssuivantes&nbsp;:",
+            "Un-e nouveau-lle membre, Test Name, a complété son profil d'emprunteur dans " .
+                "les communautés suivantes&nbsp;:",
             $mail_content
         );
 
         // Search for empty list.
-        $this->assertStringContainsString("<ul></ul>", $mail_content);
+        $this->assertStringContainsString("<ul> </ul>", $mail_content);
     }
 
     public function testEmailContentWithOneCommunity()
@@ -38,17 +38,20 @@ class ReviewableTest extends TestCase
 
         $mail = new Reviewable($user, $community);
 
-        $mail_content = preg_replace("/\s+/", "", $mail->render());
+        $mail_content = preg_replace("/\s+/", " ", $mail->render());
 
         // Search for community name in title.
         $this->assertStringContainsString(
-            "Profild&#039;emprunteurcomplétédansCommunityName",
+            "Profil d&#039;emprunteur complété dans Community Name",
             $mail_content
         );
 
+        $style =
+            'style=" text-align: left; font-weight: 390; ' .
+            'font-size: 17px; line-height: 24px; color: #343a40; "';
         // Search for list.
         $this->assertStringContainsString(
-            "<ul><li>CommunityName</li></ul>",
+            "<ul> <li $style > Community Name </li> </ul>",
             $mail_content
         );
     }
@@ -64,17 +67,20 @@ class ReviewableTest extends TestCase
 
         $mail = new Reviewable($user, $communities);
 
-        $mail_content = preg_replace("/\s+/", "", $mail->render());
+        $mail_content = preg_replace("/\s+/", " ", $mail->render());
 
         // Search for community name in title.
         $this->assertStringContainsString(
-            "Profild&#039;emprunteurcomplétédans2communautés",
+            "Profil d&#039;emprunteur complété dans 2 communautés",
             $mail_content
         );
 
+        $style =
+            'style=" text-align: left; font-weight: 390; ' .
+            'font-size: 17px; line-height: 24px; color: #343a40; "';
         // Search for list.
         $this->assertStringContainsString(
-            "<ul><li>FirstCommunity</li><li>SecondCommunity</li></ul>",
+            "<ul> <li $style > First Community </li> <li $style > Second Community </li> </ul>",
             $mail_content
         );
     }
