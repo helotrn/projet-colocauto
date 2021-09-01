@@ -12,23 +12,24 @@ class Authenticate extends ParentAuthenticate
 {
     protected function authenticate($request, array $guards)
     {
-        $user = Cache::remember($request->headers->get('authorization'), 600, function() use ($request, $guards) {
-            parent::authenticate($request, $guards);
-            return $request->user();
-        });
-        $request->setUserResolver(function() use ($user) {
+        $user = Cache::remember(
+            $request->headers->get("authorization"),
+            600,
+            function () use ($request, $guards) {
+                parent::authenticate($request, $guards);
+                return $request->user();
+            }
+        );
+        $request->setUserResolver(function () use ($user) {
             return $user;
         });
         Auth::setUser($user);
     }
 
-
     protected function redirectTo($request)
     {
         if (!$request->expectsJson()) {
-            return route("login");  
+            return route("login");
         }
     }
-
-
 }

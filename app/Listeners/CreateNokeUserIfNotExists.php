@@ -18,7 +18,7 @@ class CreateNokeUserIfNotExists
         }
 
         if ($event instanceof RegistrationApprovedEvent) {
-            if (app()->environment() === "production") {            
+            if (app()->environment() === "production") {
                 $event->user->getNokeUser();
             }
         }
