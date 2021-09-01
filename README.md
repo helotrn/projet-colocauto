@@ -17,7 +17,7 @@ Consultez le fichier [CONTRIBUTE.md](CONTRIBUTE.md)
 -   Postgresql 10
     -   postgis
     -   unaccent
--   composer, yarn
+-   composer, npm
 -   Redis
 
 ## Configuration
@@ -38,11 +38,13 @@ postgres=# CREATE DATABASE locomotion OWNER locomotion;
 CREATE DATABASE
 postgres=# \q
 locomotion@localhost $ psql locomotion
-postgres=# CREATE EXTENSION postgis;
+locomotion=# CREATE EXTENSION postgis;
 CREATE EXTENSION
-postgres=# CREATE EXTENSION unaccent;
+locomotion=# CREATE EXTENSION unaccent;
 CREATE EXTENSION
-postgres=# \q
+locomotion=# CREATE EXTENSION citext;
+CREATE EXTENSION
+locomotion=# \q
 ```
 
 ## Installation
@@ -53,11 +55,12 @@ postgres=# \q
 -   `php artisan passport:install` et copier les valeurs d'ID et de secret du client par mot de
     passe aux clés `PASSWORD_CLIENT_*` correspondantes du fichier `.env`
 -   `php artisan migrate` (une fois et à chaque fois que le schéma change)
+-   `npm install` dans `resources/app`
 
 ## Développement
 
 -   `php artisan serve`
--   `yarn serve` dans `resources/app`
+-   `npm run serve` dans `resources/app`
 
 ## Tests
 
@@ -65,12 +68,12 @@ Créez la base de données de test en suivant les mêmes instructions que la sec
 avec le nom `locomotion_test` .
 
 Migrez la base de données de test comme la base de donnée
-de développement : `php artisan migration --env testing` .
+de développement : `php artisan migrate --seed --env testing` .
 
 Ajustez les noms d'hôtes des bases de données, en particulier `postgres` et `redis` .
 
 -   `./vendor/bin/phpunit`
--   `yarn lint` dans `resources/app`
+-   `npx prettier . --list-different`
 
 ## Déploiement
 
@@ -82,13 +85,15 @@ contenir qu'une seule ligne commençant par `VUE_APP_RELEASE`.
 
 ## Utilisation de prettier
 
-Nous utilisons prettier pour le formattage du code. Vous devez l'installer sur vos machine.
+Nous utilisons prettier pour le formattage du code. Vous devez l'installer sur vos machines.
 
-Installer prettier et prettier-php
+Pour installer prettier et prettier-php:
 
 ```
-sudo npm install --global prettier @prettier/plugin-php
+npm install --global prettier @prettier/plugin-php
 ```
+
+Pour exécuter prettier et corriger les problèmes automatiquement, faire la commande à la racine:
 
 ```
 npx prettier --write .
