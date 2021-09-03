@@ -1,4 +1,4 @@
-FROM webdevops/php-apache:7.4 as dev
+FROM webdevops/php-nginx:7.4 as dev
 WORKDIR /app
 
 ENV WEB_DOCUMENT_ROOT /app/public
