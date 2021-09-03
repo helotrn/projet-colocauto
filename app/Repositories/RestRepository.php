@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -1190,19 +1191,14 @@ class RestRepository
                         $timestampMatches
                     )
                 ) {
+                    $start = Carbon::parse(
+                        $intervalMatches["start"]
+                    )->setTimezone(config("app.timezone"));
                     // Match found, then add constraint.
                     if ($aggregate) {
-                        $query = $query->having(
-                            $scopedParam,
-                            ">=",
-                            $intervalMatches["start"]
-                        );
+                        $query = $query->having($scopedParam, ">=", $start);
                     } else {
-                        $query = $query->where(
-                            $scopedParam,
-                            ">=",
-                            $intervalMatches["start"]
-                        );
+                        $query = $query->where($scopedParam, ">=", $start);
                     }
                 } else {
                     throw new \Exception("Malformed timestamp.");
@@ -1218,19 +1214,14 @@ class RestRepository
                         $timestampMatches
                     )
                 ) {
+                    $end = Carbon::parse($intervalMatches["end"])->setTimezone(
+                        config("app.timezone")
+                    );
                     // Match found, then add constraint.
                     if ($aggregate) {
-                        $query = $query->having(
-                            $scopedParam,
-                            "<",
-                            $intervalMatches["end"]
-                        );
+                        $query = $query->having($scopedParam, "<", $end);
                     } else {
-                        $query = $query->where(
-                            $scopedParam,
-                            "<",
-                            $intervalMatches["end"]
-                        );
+                        $query = $query->where($scopedParam, "<", $end);
                     }
                 } else {
                     throw new \Exception("Malformed timestamp.");

@@ -2,6 +2,7 @@ vendor
 node_modules
 bootstrap/cache
 storage
+public/app
 *_text.blade.php
 resources/app/dist
 composer.lock

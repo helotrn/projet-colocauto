@@ -28,8 +28,8 @@ class RestRepositoryTest extends TestCase
 
         $this->assertQuerySql(
             'select * from "base_models"' .
-                ' where "date" >= \'2021-06-01T14:00:00Z\'' .
-                ' and "date" < \'2021-07-01T08:00:00Z\'',
+                ' where "date" >= \'2021-06-01 10:00:00\'' .
+                ' and "date" < \'2021-07-01 04:00:00\'',
             $query
         );
 
@@ -44,7 +44,7 @@ class RestRepositoryTest extends TestCase
         );
 
         $this->assertQuerySql(
-            'select * from "base_models" where "date" >= \'2021-06-01T14:00:00Z\'',
+            'select * from "base_models" where "date" >= \'2021-06-01 10:00:00\'',
             $query
         );
 
@@ -59,7 +59,7 @@ class RestRepositoryTest extends TestCase
         );
 
         $this->assertQuerySql(
-            'select * from "base_models" where "date" >= \'2021-06-01T14:00:00Z\'',
+            'select * from "base_models" where "date" >= \'2021-06-01 10:00:00\'',
             $query
         );
 
@@ -74,7 +74,7 @@ class RestRepositoryTest extends TestCase
         );
 
         $this->assertQuerySql(
-            'select * from "base_models" where "date" < \'2021-07-01T08:00:00Z\'',
+            'select * from "base_models" where "date" < \'2021-07-01 04:00:00\'',
             $query
         );
 
@@ -102,8 +102,8 @@ class RestRepositoryTest extends TestCase
 
         $this->assertQuerySql(
             'select * from "base_models"' .
-                ' having "date" >= \'2021-06-01T14:00:00Z\'' .
-                ' and "date" < \'2021-07-01T08:00:00Z\'',
+                ' having "date" >= \'2021-06-01 10:00:00\'' .
+                ' and "date" < \'2021-07-01 04:00:00\'',
             $query
         );
     }
