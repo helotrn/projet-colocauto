@@ -1,7 +1,6 @@
 #!/bin/sh
-ln -s -f $OAUTH_PRIVATE_PATH /app/storage/oauth-private.key
-ln -s -f $OAUTH_PUBLIC_PATH /app/storage/oauth-public.key
+cp -f $OAUTH_PRIVATE_PATH /app/storage/oauth-private.key
+cp -f $OAUTH_PUBLIC_PATH /app/storage/oauth-public.key
 
-composer install
 php artisan migrate --force
 php artisan queue:work & 
