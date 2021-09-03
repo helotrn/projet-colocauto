@@ -9,5 +9,5 @@ COPY ./docker-entrypoint.sh /entrypoint.d/
 FROM dev as prod
 COPY . .
 RUN composer install
-RUN chmod a+rw /app/storage 
-RUN chmod a+rw /var/log 
+RUN chmod -R a+rw /app/storage 
+RUN chmod -R a+rw /var/log 
