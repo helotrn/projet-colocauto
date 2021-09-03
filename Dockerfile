@@ -9,3 +9,4 @@ COPY ./docker-entrypoint.sh /entrypoint.d/
 FROM dev as prod
 COPY . .
 RUN composer install
+RUN chown -R application.application . 
