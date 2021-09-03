@@ -10,3 +10,5 @@ FROM dev as prod
 COPY . .
 RUN composer install
 RUN chown -R application.application . 
+RUN chown -R application.application /var/log 
+RUN chown -R application.application /var/lib/nginx 
