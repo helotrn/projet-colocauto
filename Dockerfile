@@ -10,5 +10,5 @@ FROM dev as prod
 COPY . .
 RUN composer install
 RUN chmod -R a+rw /app/storage 
-RUN chmod -R a+rw /var/log 
+RUN chmod -R a+rwx /var/log 
 RUN chmod -R a+rw /var/lib/nginx/logs
