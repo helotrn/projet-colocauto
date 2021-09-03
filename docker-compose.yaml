@@ -14,8 +14,12 @@ services:
             - 8000:80
         secrets:
             - source: oauth-private
+              uid: '1000'
+              mode: '1777'
               target: /app/storage/oauth-private
             - source: oauth-public
+              uid: '1000'
+              mode: '1777'
               target: /app/storage/oauth-public
         environment:
             LOG_CHANNEL: stderr
