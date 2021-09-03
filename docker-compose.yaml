@@ -8,7 +8,6 @@ services:
             - postgres
         volumes:
             - .:/app
-            - .env.docker:/app/.env
             - ./docker-dev-entrypoint.sh:/entrypoint.d/docker-dev-entrypoint.sh
         ports:
             - 8000:80
@@ -36,8 +35,8 @@ services:
             DB_PASSWORD: locomotion
             ENABLE_TEST_ROUTES: "true"
             MAIL_DRIVER: log
-            PASSWORD_CLIENT_ID: pTrmRvquBD6mXlep
-            PASSWORD_CLIENT_SECRET: 1hu8xmgtXI8O6HRH4zIbRt92X6rSLCgY6NtTNyxN
+            PASSWORD_CLIENT_ID: 7CmTbdyr4gI1tk0r
+            PASSWORD_CLIENT_SECRET: bR44Zmg5ERuyEHq0Paw02GEPIqRHYYmtrUqlTxVY
             FILESYSTEM_DRIVER: s3
             S3_DRIVER: minio
             S3_KEY: locomotion

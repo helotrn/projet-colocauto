@@ -131,13 +131,13 @@ class Image extends BaseModel
                         $width =
                             isset($dimensions[0])
                                 ? $dimensions[0]
-                                : null ?:
-                            null;
+                                : (null ?:
+                            null);
                         $height =
                             isset($dimensions[1])
                                 ? $dimensions[1]
-                                : null ?:
-                            null;
+                                : (null ?:
+                            null);
 
                         $canvas->resize($width, $height, function (
                             $constraint
@@ -148,13 +148,13 @@ class Image extends BaseModel
                         $width =
                             isset($dimensions[0])
                                 ? $dimensions[0]
-                                : null ?:
-                            null;
+                                : (null ?:
+                            null);
                         $height =
                             isset($dimensions[1])
                                 ? $dimensions[1]
-                                : null ?:
-                            null;
+                                : (null ?:
+                            null);
 
                         $x = $model->imageable->crop_x;
                         $y = $model->imageable->crop_y;
