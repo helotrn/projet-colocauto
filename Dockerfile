@@ -9,6 +9,5 @@ COPY ./docker-entrypoint.sh /entrypoint.d/
 FROM dev as prod
 COPY . .
 RUN composer install
-RUN chown -R application.application . 
-RUN chown -R application.application /var/log 
-RUN chown -R application.application /var/lib/nginx 
+RUN chmod a+rw /app/storage 
+RUN chmod a+rw /var/log 
