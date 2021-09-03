@@ -16,11 +16,11 @@ services:
             - source: oauth-private
               uid: '1000'
               mode: '1777'
-              target: /app/storage/oauth-private
+              target: /var/secret/oauth-private
             - source: oauth-public
               uid: '1000'
               mode: '1777'
-              target: /app/storage/oauth-public
+              target: /var/secret/oauth-public
         environment:
             LOG_CHANNEL: stderr
             APP_ENV: local
@@ -51,8 +51,8 @@ services:
             REDIS_HOST: redis
             REDIS_PORT: 6379
             REDIS_PASSWORD: null
-            OAUTH_PRIVATE_PATH: /app/storage/oauth-private
-            OAUTH_PUBLIC_PATH: /app/storage/oauth-public
+            OAUTH_PRIVATE_PATH: /var/secret/oauth-private
+            OAUTH_PUBLIC_PATH: /var/secret/oauth-public
             QUEUE_CONNECTION: redis
     vue:
         depends_on:
