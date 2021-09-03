@@ -10,7 +10,7 @@ services:
             - .:/app
             - .env.docker:/app/.env
         ports:
-            - 8000:8000
+            - 8000:80
         secrets:
             - source: oauth-private
               target: /app/storage/oauth-private
@@ -61,7 +61,7 @@ services:
             - 8080:80
         environment:
             VUE_APP_BACKEND_URL: http://localhost:8000
-            BACKEND_URL: http://php:8000
+            BACKEND_URL: http://php:80
             VUE_APP_FRONTEND_URL: localhost:8080
             PORT: 80
     postgres:
