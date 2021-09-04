@@ -1,17 +1,17 @@
-<tr style="height: 263.27px">
+<tr style="height: 325px">
     <td
         style="
-        background-position: bottom center;
-        background-repeat: no-repeat;
-        background-color: #1e4847;
-        height: 500px;
-        background-image: url('{{ env('BACKEND_URL_FROM_BROWSER') }}/mail-footer-bg.png');    
-    "
+            background-position: bottom center;
+            background-repeat: no-repeat;
+            background-color: #1e4847;
+            height: 263.27px;
+            background-image: url('{{ env('BACKEND_URL_FROM_BROWSER') }}/mail-footer-bg.png');    
+        "
+        align="top"
     >
         <p
             style="
                 position: relative;
-                top: -80px;
                 margin: 0;
                 color: white;
                 font-weight: bold;
@@ -25,7 +25,6 @@
         <p
             style="
                 position: relative;
-                top: -80px;
                 margin: 0;
                 color: white;
                 font-weight: 390;

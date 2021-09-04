@@ -1,16 +1,17 @@
 @extends('emails.layouts.main') @section('content')
 <p
     style="
-        text-align: justify;
+        text-align: center;
         margin-top: 0;
         font-weight: 390;
         font-size: 17px;
         line-height: 24px;
         color: #343a40;
+        margin-bottom: 32px;
     "
 >
     Un-e nouveau-lle membre, {{ $user->name }}, a complété son inscription dans
-    {{ $community->name }} et peut être validé.e.
+    {{ $community->name }} et peut être validé-e.
 </p>
 
 <p style="text-align: center; margin: 32px auto 0 auto">

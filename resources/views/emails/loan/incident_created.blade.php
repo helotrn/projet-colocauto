@@ -1,12 +1,13 @@
 @extends('emails.layouts.main') @section('content')
 <p
     style="
-        text-align: justify;
+        text-align: center;
         margin-top: 0;
         font-weight: 390;
         font-size: 17px;
         line-height: 24px;
         color: #343a40;
+        margin-bottom: 32px;
     "
 >
     Bonjour {{ $owner->user->name }},
@@ -14,12 +15,13 @@
 
 <p
     style="
-        text-align: justify;
+        text-align: center;
         margin-top: 0;
         font-weight: 390;
         font-size: 17px;
         line-height: 24px;
         color: #343a40;
+        margin-bottom: 32px;
     "
 >
     {{ $borrower->user->name }} a rapporté un incident lors de son emprunt de
@@ -30,7 +32,7 @@
 @if (!!$incident->comments_on_incident)
 <p
     style="
-        text-align: justify;
+        text-align: center;
         margin-top: 0;
         font-weight: 390;
         font-size: 17px;
@@ -42,7 +44,7 @@
 </p>
 <p
     style="
-        text-align: justify;
+        text-align: center;
         margin-top: 0;
         font-weight: 390;
         font-size: 17px;

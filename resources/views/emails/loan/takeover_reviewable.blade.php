@@ -1,12 +1,13 @@
 @extends('emails.layouts.main') @section('content')
 <p
     style="
-        text-align: justify;
+        text-align: center;
         margin-top: 0;
         font-weight: 390;
         font-size: 17px;
         line-height: 24px;
         color: #343a40;
+        margin-bottom: 32px;
     "
 >
     {{ $caller->name }} a contesté les données de la prise de possession sur son
@@ -18,7 +19,7 @@
 @if (!!$takeover->comments_on_contestation)
 <p
     style="
-        text-align: justify;
+        text-align: center;
         margin-top: 0;
         font-weight: 390;
         font-size: 17px;
@@ -30,7 +31,7 @@
 </p>
 <p
     style="
-        text-align: justify;
+        text-align: center;
         margin-top: 0;
         font-weight: 390;
         font-size: 17px;
@@ -44,7 +45,7 @@
 
 <p style="text-align: center; margin: 32px auto 0 auto">
     <a
-        href="{{ env('FRONTEND_URL') . /loans/'. $loan->id }}"
+        href="{{ env('FRONTEND_URL') . '/loans/'. $loan->id }}"
         style="
             display: inline-block;
             background-color: #246aea;

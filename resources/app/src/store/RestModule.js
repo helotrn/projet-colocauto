@@ -20,6 +20,7 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
       lastLoadedAt: null,
       lastPage: 1,
       loaded: false,
+      loading: false,
       search: [],
       searchAjax: null,
       lastAjax: null,
@@ -85,6 +86,9 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
       },
       loaded(state, loaded) {
         state.loaded = loaded;
+      },
+      loading(state, loading) {
+        state.loading = loading;
       },
       // SETTER : Deep merges the partial in the item
       mergeItem(state, partial) {
@@ -170,6 +174,7 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
       },
       async create({ commit, dispatch, state }, { data, params }) {
         commit("loaded", false);
+        commit("loading", true);
 
         try {
           const ajax = Vue.axios.post(`/${state.slug}`, data, {
@@ -184,7 +189,6 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
 
           commit("item", item);
           commit("initialItem", item);
-
           commit("ajax", null);
 
           await dispatch("retrieve", state.params);
@@ -196,6 +200,8 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
 
           throw e;
         }
+
+        commit("loading", false);
       },
       async options({ state, commit }) {
         if (state.form === null || state.filters === null || state.empty === null) {

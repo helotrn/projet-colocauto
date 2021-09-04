@@ -1,7 +1,7 @@
 @extends('emails.layouts.main') @section('content')
 <p
     style="
-        text-align: justify;
+        text-align: center;
         margin-top: 0;
         font-weight: 390;
         font-size: 17px;

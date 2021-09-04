@@ -2,12 +2,13 @@
 
 <p
     style="
-        text-align: justify;
+        text-align: center;
         margin: 0;
         font-weight: 390;
         font-size: 17px;
         line-height: 24px;
         color: #343a40;
+        margin-bottom: 32px;
     "
 >
     Bonjour {{ $user->name }},
@@ -15,7 +16,7 @@
 
 <p
     style="
-        text-align: justify;
+        text-align: center;
         margin: 0;
         padding-bottom: 32px;
         font-weight: 390;
@@ -24,7 +25,7 @@
         color: #343a40;
     "
 >
-    {!! $text !!}
+    {{ $text }}
 </p>
 
 <table style="width: 100%">
@@ -151,6 +152,7 @@
                                     font-size: 17px;
                                     line-height: 24px;
                                     color: #343a40;
+                                    max-width: 200px;
                                 "
                             >
                                 {{ $item['label'] }}
