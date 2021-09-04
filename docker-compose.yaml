@@ -50,6 +50,7 @@ services:
             REDIS_HOST: redis
             REDIS_PORT: 6379
             REDIS_PASSWORD: null
+            CACHE_DRIVER: redis
             OAUTH_PRIVATE_PATH: /var/secret/oauth-private
             OAUTH_PUBLIC_PATH: /var/secret/oauth-public
             QUEUE_CONNECTION: redis
