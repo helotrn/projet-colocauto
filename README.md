@@ -19,6 +19,7 @@ Consultez le fichier [CONTRIBUTE.md](CONTRIBUTE.md)
 -   `docker-compose up --build`
 
 ## Initialisation de la base de données
+
 Une fois que l'application est démarrée, dans un autre terminal, faire
 
 -   `docker-compose exec php php artisan migrate --seed`
@@ -38,16 +39,18 @@ Ajustez les noms d'hôtes des bases de données, en particulier `postgres` et `r
 
 ## Déploiement
 
-Pour déployer, il faut simplement avoir le tag correspondant à 
-l'environnement qui pointe vers le commit à déloyer. 
+Pour déployer, il faut simplement avoir le tag correspondant à
+l'environnement qui pointe vers le commit à déloyer.
 
 Les tags suivants sont disponibles:
-* production
-* staging
+
+-   production
+-   staging
 
 Voici les étapes à suivre sur gitlab dans le section [tags](https://gitlab.com/solon-collectif/locomotion.app/-/tags):
-* effacer le tag que vous voulez déployer.
-* Créer un nouveau tag avec le même nom et l'associer à la branche que vous voulez déployer. 
+
+-   effacer le tag que vous voulez déployer.
+-   Créer un nouveau tag avec le même nom et l'associer à la branche que vous voulez déployer.
 
 ## Utilisation de prettier
 
