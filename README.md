@@ -38,7 +38,7 @@ Ajustez les noms d'hôtes des bases de données, en particulier `postgres` et `r
 
 ## Déploiement
 
-Pour déployer, il faut simplement avec le tag correspondant à 
+Pour déployer, il faut simplement avoir le tag correspondant à 
 l'environnement qui pointe vers le commit à déloyer. 
 
 Les tags suivants sont disponibles:
