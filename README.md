@@ -1,7 +1,6 @@
 # LocoMotion
 
 Application et API de LocoMotion
-Ce document est encore incomplet et en cours de rédaction par l'équipe LocoMotion !
 
 [![pipeline status](https://gitlab.com/Solon-collectif/locomotion.app/badges/master/pipeline.svg)](https://gitlab.com/Solon-collectif/locomotion.app/-/commits/master)
 [![coverage report](https://gitlab.com/Solon-collectif/locomotion.app/badges/master/coverage.svg)](https://gitlab.com/Solon-collectif/locomotion.app/-/commits/master)
@@ -12,55 +11,17 @@ Consultez le fichier [CONTRIBUTE.md](CONTRIBUTE.md)
 
 ## Prérequis
 
--   PHP 7.3
--   Node 10
--   Postgresql 10
-    -   postgis
-    -   unaccent
--   composer, npm
--   Redis
+-   docker 20
+-   docker-compose 3.6
 
-## Configuration
+## Démarrage
 
-Créez l'utilisateur :
+-   `docker-compose up --build`
 
-```
-locomotion@localhost $ createuser --interactive --pwprompt
-```
+## Initialisation de la base de données
+Une fois que l'application est démarrée, dans un autre terminal, faire
 
-Utilisez par exemple `locomotion:locomotion` , les valeurs par défaut sont dans `.env.example` .
-
-Créez la base de données :
-
-```
-locomotion@localhost $ psql
-postgres=# CREATE DATABASE locomotion OWNER locomotion;
-CREATE DATABASE
-postgres=# \q
-locomotion@localhost $ psql locomotion
-locomotion=# CREATE EXTENSION postgis;
-CREATE EXTENSION
-locomotion=# CREATE EXTENSION unaccent;
-CREATE EXTENSION
-locomotion=# CREATE EXTENSION citext;
-CREATE EXTENSION
-locomotion=# \q
-```
-
-## Installation
-
--   `composer install`
--   `php artisan key:generate`
--   `php artisan migrate --seed`
--   `php artisan passport:install` et copier les valeurs d'ID et de secret du client par mot de
-    passe aux clés `PASSWORD_CLIENT_*` correspondantes du fichier `.env`
--   `php artisan migrate` (une fois et à chaque fois que le schéma change)
--   `npm install` dans `resources/app`
-
-## Développement
-
--   `php artisan serve`
--   `npm run serve` dans `resources/app`
+-   `docker-compose exec php php artisan migrate --seed`
 
 ## Tests
 
@@ -77,11 +38,16 @@ Ajustez les noms d'hôtes des bases de données, en particulier `postgres` et `r
 
 ## Déploiement
 
-Si l'interface publique a été mise à jour, il peut être pertinent d'augmenter le numéro de version
-dans `resources/app/.release` et de créer une version sur Gitlab. Le fichier `.release` ne doit
-contenir qu'une seule ligne commençant par `VUE_APP_RELEASE`.
+Pour déployer, il faut simplement avec le tag correspondant à 
+l'environnement qui pointe vers le commit à déloyer. 
 
--   `vendor/bin/dep deployer {staging,production}`
+Les tags suivants sont disponibles:
+* production
+* staging
+
+Voici les étapes à suivre sur gitlab dans le section [tags](https://gitlab.com/solon-collectif/locomotion.app/-/tags):
+* effacer le tage que vous voulez déployer.
+* Créer un nouveau tag avec le même nom et l'associer à la branche que vous voulez déployer. 
 
 ## Utilisation de prettier
 
