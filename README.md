@@ -46,7 +46,7 @@ Les tags suivants sont disponibles:
 * staging
 
 Voici les étapes à suivre sur gitlab dans le section [tags](https://gitlab.com/solon-collectif/locomotion.app/-/tags):
-* effacer le tage que vous voulez déployer.
+* effacer le tag que vous voulez déployer.
 * Créer un nouveau tag avec le même nom et l'associer à la branche que vous voulez déployer. 
 
 ## Utilisation de prettier
