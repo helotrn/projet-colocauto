@@ -59,7 +59,7 @@ Nous utilisons prettier pour le formattage du code. Vous devez l'installer sur v
 Pour installer prettier et prettier-php:
 
 ```
-npm install --global prettier @prettier/plugin-php
+sudo npm install --global prettier @prettier/plugin-php
 ```
 
 Pour exécuter prettier et corriger les problèmes automatiquement, faire la commande à la racine:
