@@ -9,7 +9,7 @@ class UsersTableSeeder extends Seeder
     public function run()
     {
         $molotov = [
-            "password" => "molotov",
+            "password" => "locomotion",
             "date_of_birth" => "2009-01-01",
             "address" => "2065 rue Parthenais",
             "postal_code" => "H2K 3T1",
@@ -27,22 +27,22 @@ class UsersTableSeeder extends Seeder
         ];
 
         $users = [
-            "soutien@molotov.ca" => array_merge(
+            "soutien@locomotion.app" => array_merge(
                 [
                     "id" => 1,
                     "role" => "admin",
-                    "name" => "Molotov Communications",
+                    "name" => "Soutien Locomotion",
                 ],
                 $molotov
             ),
-            "emile@molotov.ca" => array_merge($molotov, [
+            "emile@locomotion.app" => array_merge($molotov, [
                 "id" => 2,
                 "name" => "Émile",
                 "last_name" => "Plourde-Lavoie",
                 "description" => "Salut tout le monde :)",
                 "submitted_at" => new \DateTime(),
             ]),
-            "ariane@molotov.ca" => array_merge($molotov, [
+            "ariane@locomotion.app" => array_merge($molotov, [
                 "id" => 3,
                 "name" => "Ariane",
                 "last_name" => "Mercier",
@@ -66,15 +66,15 @@ class UsersTableSeeder extends Seeder
 
         // Community memberships
         $memberships = [
-            "soutien@molotov.ca" => [],
-            "emile@molotov.ca" => [
+            "soutien@locomotion.app" => [],
+            "emile@locomotion.app" => [
                 // 1: Bellechasse
                 1 => [
                     "role" => "admin",
                     "approved_at" => new \DateTime(),
                 ],
             ],
-            "ariane@molotov.ca" => [
+            "ariane@locomotion.app" => [
                 // 1: Bellechasse
                 1 => [
                     "approved_at" => new \DateTime(),
