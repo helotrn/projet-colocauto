@@ -7,18 +7,14 @@ services:
         depends_on:
             - postgres
         volumes:
-            - .:/app
-            - ./docker-dev-entrypoint.sh:/entrypoint.d/docker-dev-entrypoint.sh
+            - .:/var/www/html
+            - ./php.ini:/usr/local/etc/php/php.ini
         ports:
             - 8000:80
         secrets:
             - source: oauth-private
-              uid: '1000'
-              mode: '1777'
               target: /var/secret/oauth-private
             - source: oauth-public
-              uid: '1000'
-              mode: '1777'
               target: /var/secret/oauth-public
         environment:
             LOG_CHANNEL: stderr
