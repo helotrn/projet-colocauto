@@ -7,18 +7,14 @@ services:
         depends_on:
             - postgres
         volumes:
-            - .:/app
-            - ./docker-dev-entrypoint.sh:/entrypoint.d/docker-dev-entrypoint.sh
+            - .:/var/www/html
+            - ./php.ini:/usr/local/etc/php/php.ini
         ports:
             - 8000:80
         secrets:
             - source: oauth-private
-              uid: "1000"
-              mode: "1777"
               target: /var/secret/oauth-private
             - source: oauth-public
-              uid: "1000"
-              mode: "1777"
               target: /var/secret/oauth-public
         environment:
             LOG_CHANNEL: stderr
@@ -54,6 +50,8 @@ services:
             OAUTH_PRIVATE_PATH: /var/secret/oauth-private
             OAUTH_PUBLIC_PATH: /var/secret/oauth-public
             QUEUE_CONNECTION: redis
+            STRIPE_KEY: pk_test_4lBQS366h37TcBC9IAvCaDEL00K5H3B8LH
+            STRIPE_SECRET: sk_test_9wI77kB8C1XR5EqkJTMdNEac00SomF64a1
     vue:
         depends_on:
             - php
@@ -65,6 +63,7 @@ services:
         ports:
             - 8080:80
         environment:
+            VUE_APP_STRIPE_KEY: pk_test_4lBQS366h37TcBC9IAvCaDEL00K5H3B8LH
             VUE_APP_BACKEND_URL: http://localhost:8000
             BACKEND_URL: http://php:80
             VUE_APP_FRONTEND_URL: localhost:8080
