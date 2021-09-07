@@ -24,6 +24,18 @@ Une fois que l'application est démarrée, dans un autre terminal, faire
 
 -   `docker-compose exec php php artisan migrate --seed`
 
+### Se connecter à l'application
+
+Les comptes suivant ont été créé:
+
+* soutien@locomotion.app (admin)
+* emile@locomotion.app
+* ariane@locomotion.app
+* proprietairevoiture@locomotion.app
+* emprunteurvoiture@locomotion.app
+
+Le mot de passe pour chacun des comptes est **locomotion**
+
 ## Tests
 
 Créez la base de données de test en suivant les mêmes instructions que la section Configuration
