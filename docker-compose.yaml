@@ -31,8 +31,8 @@ services:
             DB_PASSWORD: locomotion
             ENABLE_TEST_ROUTES: "true"
             MAIL_DRIVER: log
-            PASSWORD_CLIENT_ID: 7CmTbdyr4gI1tk0r
-            PASSWORD_CLIENT_SECRET: bR44Zmg5ERuyEHq0Paw02GEPIqRHYYmtrUqlTxVY
+            PASSWORD_CLIENT_ID: BCZZHm4YsI14Rum2
+            PASSWORD_CLIENT_SECRET: uK6RMfHwnnSsFcia641MtbaSaopbRzhwqXs1GIjJ
             FILESYSTEM_DRIVER: s3
             S3_DRIVER: minio
             S3_KEY: locomotion
