@@ -50,6 +50,8 @@ services:
             OAUTH_PRIVATE_PATH: /var/secret/oauth-private
             OAUTH_PUBLIC_PATH: /var/secret/oauth-public
             QUEUE_CONNECTION: redis
+            STRIPE_KEY: pk_test_4lBQS366h37TcBC9IAvCaDEL00K5H3B8LH
+            STRIPE_SECRET: sk_test_9wI77kB8C1XR5EqkJTMdNEac00SomF64a1
     vue:
         depends_on:
             - php
@@ -61,6 +63,7 @@ services:
         ports:
             - 8080:80
         environment:
+            VUE_APP_STRIPE_KEY: pk_test_4lBQS366h37TcBC9IAvCaDEL00K5H3B8LH
             VUE_APP_BACKEND_URL: http://localhost:8000
             BACKEND_URL: http://php:80
             VUE_APP_FRONTEND_URL: localhost:8080
