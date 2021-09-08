@@ -28,11 +28,11 @@ Une fois que l'application est démarrée, dans un autre terminal, faire
 
 Les comptes suivant ont été créé:
 
-* soutien@locomotion.app (admin)
-* emile@locomotion.app
-* ariane@locomotion.app
-* proprietairevoiture@locomotion.app
-* emprunteurvoiture@locomotion.app
+-   soutien@locomotion.app (admin)
+-   emile@locomotion.app
+-   ariane@locomotion.app
+-   proprietairevoiture@locomotion.app
+-   emprunteurvoiture@locomotion.app
 
 Le mot de passe pour chacun des comptes est **locomotion**
 
