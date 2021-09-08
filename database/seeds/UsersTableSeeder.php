@@ -57,7 +57,7 @@ class UsersTableSeeder extends Seeder
             ]),
             "emprunteurvoiture@locomotion.app" => array_merge($solon, [
                 "id" => 5,
-                "name" => "Propriétaire",
+                "name" => "Emprunteur",
                 "last_name" => "Voiture",
                 "description" => "Emprunteur de voiture prudent.",
                 "date_of_birth" => "1990-05-11",
