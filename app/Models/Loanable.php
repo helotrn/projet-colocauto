@@ -349,8 +349,7 @@ class Loanable extends BaseModel
                 $this->owner->user->getAccessibleCommunityIds()->toArray()
             )
         );
-        $community = Community::where("id", $communityId)->first();
-        return $community;
+        return Community::where("id", $communityId)->first();
     }
 
     public function getEventsAttribute()
