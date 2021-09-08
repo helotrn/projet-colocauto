@@ -340,12 +340,17 @@ class Loanable extends BaseModel
             }
         }
 
-        // 3. The community of the loable owner that is common with the user
+        // 3. The community of the loanable owner that is common with the user
         // It is assumed that there is one, otherwise the user wouldn't
         // have access to that loanable at this point
-        return $this->owner->user->communities
-            ->whereIn("id", $user->getAccessibleCommunityIds()->toArray())
-            ->first();
+        $communityId = current(
+            array_intersect(
+                $user->getAccessibleCommunityIds()->toArray(),
+                $this->owner->user->getAccessibleCommunityIds()->toArray()
+            )
+        );
+        $community = Community::where("id", $communityId)->first();
+        return $community;
     }
 
     public function getEventsAttribute()
