@@ -14,11 +14,7 @@
     <b-row>
       <b-col class="admin__selection">
         <b-button-group variant="info">
-          <b-dropdown
-            left
-            :disabled="selected.length === 0"
-            text="Actions groupées"
-          >
+          <b-dropdown left :disabled="selected.length === 0" text="Actions groupées">
             <b-dropdown-item @click="sendPasswordResetEmail">
               Courriel de réinit. de mot de passe
             </b-dropdown-item>
@@ -91,18 +87,18 @@
           </template>
           <template v-slot:cell(actions)="row">
             <div class="user-actions">
-              <admin-list-actions
-                :columns="['edit', 'delete']"
-                :row="row"
-                :slug="slug"
-              />
+              <admin-list-actions :columns="['edit', 'delete']" :row="row" :slug="slug" />
               <b-button
+                :id="'mandate-' + row.item.id"
                 size="sm"
                 variant="warning"
                 v-on:click="mandate(row.item.id)"
               >
-                {{ $t("mandater") | capitalize }}
+                {{ $t("mandate") | capitalize }}
               </b-button>
+              <b-tooltip :target="'mandate-' + row.item.id" triggers="hover">
+                Cliquez ici pour vous connecter à la place de l'utilisateur
+              </b-tooltip>
             </div>
           </template>
         </b-table>
@@ -126,11 +122,7 @@
       </b-col>
 
       <b-col md="6">
-        <admin-pagination
-          :params="contextParams"
-          :total="total"
-          @change="setParam"
-        />
+        <admin-pagination :params="contextParams" :total="total" @change="setParam" />
       </b-col>
     </b-row>
   </b-container>
@@ -165,7 +157,7 @@ export default {
   },
   methods: {
     async mandate(mandatedUserId) {
-      this.$store.dispatch("account/mandate", { mandatedUserId })
+      this.$store.dispatch("account/mandate", { mandatedUserId });
     },
     displayMailStatus(data) {
       const { report } = data;

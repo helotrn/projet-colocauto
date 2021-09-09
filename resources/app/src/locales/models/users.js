@@ -40,5 +40,6 @@ export default {
     },
     model_name: "membre | membres",
     payment_methods: paymentMethods.fr,
+    mandate: "mandater",
   },
 };

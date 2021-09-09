@@ -218,18 +218,19 @@ class AuthController extends RestController
     }
 
     /*
-    * If the current user is an admin, we create an
-    * access token for the provided user. The frontend
-    * will use it to mandate the admin to act on behalf
-    * of the user.
-    */
-    public function mandate(Request $request, $userId){
-        if(!$this->user->first()->isAdmin()){
-            return new Response('you are not authorized', 403);
+     * If the current user is an admin, we create an
+     * access token for the provided user. The frontend
+     * will use it to mandate the admin to act on behalf
+     * of the user.
+     */
+    public function mandate(Request $request, $userId)
+    {
+        if (!$this->user->first()->isAdmin()) {
+            return new Response("you are not authorized", 403);
         }
 
         $user = User::find($userId);
-        $token = $user->createToken('mandate token')->accessToken;
+        $token = $user->createToken("mandate token")->accessToken;
         return $token;
     }
 
