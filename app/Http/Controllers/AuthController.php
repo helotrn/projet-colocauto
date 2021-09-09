@@ -225,7 +225,7 @@ class AuthController extends RestController
      */
     public function mandate(Request $request, $userId)
     {
-        if (!$this->user->first()->isAdmin()) {
+        if (!$request->user()->isAdmin()) {
             return new Response("you are not authorized", 403);
         }
 
