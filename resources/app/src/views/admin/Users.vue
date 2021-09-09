@@ -14,7 +14,11 @@
     <b-row>
       <b-col class="admin__selection">
         <b-button-group variant="info">
-          <b-dropdown left :disabled="selected.length === 0" text="Actions groupées">
+          <b-dropdown
+            left
+            :disabled="selected.length === 0"
+            text="Actions groupées"
+          >
             <b-dropdown-item @click="sendPasswordResetEmail">
               Courriel de réinit. de mot de passe
             </b-dropdown-item>
@@ -86,7 +90,20 @@
             </span>
           </template>
           <template v-slot:cell(actions)="row">
-            <admin-list-actions :columns="['edit', 'delete']" :row="row" :slug="slug" />
+            <div class="user-actions">
+              <admin-list-actions
+                :columns="['edit', 'delete']"
+                :row="row"
+                :slug="slug"
+              />
+              <b-button
+                size="sm"
+                variant="warning"
+                v-on:click="mandate(row.item.id)"
+              >
+                {{ $t("mandater") | capitalize }}
+              </b-button>
+            </div>
           </template>
         </b-table>
       </b-col>
@@ -109,7 +126,11 @@
       </b-col>
 
       <b-col md="6">
-        <admin-pagination :params="contextParams" :total="total" @change="setParam" />
+        <admin-pagination
+          :params="contextParams"
+          :total="total"
+          @change="setParam"
+        />
       </b-col>
     </b-row>
   </b-container>
@@ -143,6 +164,9 @@ export default {
     };
   },
   methods: {
+    async mandate(mandatedUserId) {
+      this.$store.dispatch("account/mandate", { mandatedUserId })
+    },
     displayMailStatus(data) {
       const { report } = data;
 
@@ -213,4 +237,11 @@ export default {
 };
 </script>
 
-<style lang="scss"></style>
+<style lang="scss">
+.user-actions {
+  display: flex;
+}
+.btn {
+  margin: 0 10px;
+}
+</style>

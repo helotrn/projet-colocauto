@@ -12,12 +12,14 @@ use App\Http\Requests\User\UpdateRequest as UserUpdateRequest;
 use App\Models\User;
 use App\Services\GoogleAccountService;
 use Illuminate\Contracts\Auth\Factory as Auth;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
 use Laravel\Passport\TokenRepository;
 use Laravel\Socialite\Facades\Socialite;
 use Molotov\Traits\RespondsWithErrors;
+use Log;
 
 class AuthController extends RestController
 {
@@ -213,6 +215,22 @@ class AuthController extends RestController
         return $response == Password::PASSWORD_RESET
             ? $this->sendResetResponse($request, $response)
             : $this->sendResetFailedResponse($request, $response);
+    }
+
+    /*
+    * If the current user is an admin, we create an
+    * access token for the provided user. The frontend
+    * will use it to mandate the admin to act on behalf
+    * of the user.
+    */
+    public function mandate(Request $request, $userId){
+        if(!$this->user->first()->isAdmin()){
+            return new Response('you are not authorized', 403);
+        }
+
+        $user = User::find($userId);
+        $token = $user->createToken('mandate token')->accessToken;
+        return $token;
     }
 
     protected function sendResetLinkResponse($response)
