@@ -47,8 +47,10 @@ CMD bash -c "composer install && \
 
 ###################
 FROM dev as prod
+
 COPY . /var/www/html/
 RUN composer install
+RUN chown -R www-data.www-data /var/www/html/
 
 CMD bash -c "ln -s -f $OAUTH_PRIVATE_PATH '/var/www/html/storage/oauth-private.key' && \
              ln -s -f $OAUTH_PUBLIC_PATH '/var/www/html/storage/oauth-public.key' && \
