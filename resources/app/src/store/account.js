@@ -85,7 +85,7 @@ export default {
       // If we reload right now we are redirected to the login page
       setTimeout(() => {
         location.reload();
-      }, 50);
+      }, 500);
     },
   },
 };
