@@ -97,7 +97,7 @@
                 <i class="bi bi-person-badge"></i>
               </b-button>
               <b-tooltip :target="'mandate-' + row.item.id" triggers="hover">
-                Cliquez ici pour vous connecter à la place de l'utilisateur
+                {{ $t("mandate_tool_tip") }}
               </b-tooltip>
             </div>
           </template>
