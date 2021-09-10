@@ -86,7 +86,20 @@
             </span>
           </template>
           <template v-slot:cell(actions)="row">
-            <admin-list-actions :columns="['edit', 'delete']" :row="row" :slug="slug" />
+            <div class="user-actions">
+              <admin-list-actions :columns="['edit', 'delete']" :row="row" :slug="slug" />
+              <b-button
+                :id="'mandate-' + row.item.id"
+                size="sm"
+                variant="warning"
+                v-on:click="mandate(row.item.id)"
+              >
+                <i class="bi bi-person-badge"></i>
+              </b-button>
+              <b-tooltip :target="'mandate-' + row.item.id" triggers="hover">
+                {{ $t("mandate_tool_tip") }}
+              </b-tooltip>
+            </div>
           </template>
         </b-table>
       </b-col>
@@ -143,6 +156,9 @@ export default {
     };
   },
   methods: {
+    async mandate(mandatedUserId) {
+      this.$store.dispatch("account/mandate", { mandatedUserId });
+    },
     displayMailStatus(data) {
       const { report } = data;
 
@@ -213,4 +229,11 @@ export default {
 };
 </script>
 
-<style lang="scss"></style>
+<style lang="scss">
+.user-actions {
+  display: flex;
+}
+.btn {
+  margin: 0 10px;
+}
+</style>

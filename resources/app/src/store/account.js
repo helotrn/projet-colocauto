@@ -77,5 +77,15 @@ export default {
         throw e;
       }
     },
+    async mandate({}, { mandatedUserId }) {
+      const response = await Vue.axios(`/auth/password/mandate/${mandatedUserId}`);
+      location.href = location.href.match(/http?.:\/\/.*?\//)[0];
+      localStorage.setItem("locomotion", JSON.stringify({ token: response.data }));
+
+      // If we reload right now we are redirected to the login page
+      setTimeout(() => {
+        location.reload();
+      }, 50);
+    },
   },
 };

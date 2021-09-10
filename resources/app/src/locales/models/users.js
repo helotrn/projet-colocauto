@@ -40,5 +40,6 @@ export default {
     },
     model_name: "membre | membres",
     payment_methods: paymentMethods.fr,
+    mandate_tool_tip: "Cliquez ici pour vous connecter à la place de l'utilisateur",
   },
 };

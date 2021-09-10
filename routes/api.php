@@ -12,6 +12,10 @@ Route::prefix("v1")->group(function () {
     Route::post("auth/register", "AuthController@register");
     Route::post("auth/password/request", "AuthController@passwordRequest");
     Route::post("auth/password/reset", "AuthController@passwordReset");
+    Route::get(
+        "auth/password/mandate/{userId}",
+        "AuthController@mandate"
+    )->middleware("auth:api");
 
     Route::middleware(["auth:api", "transaction"])->group(function () {
         Route::prefix("auth")->group(function () {
