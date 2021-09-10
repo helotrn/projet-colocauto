@@ -17,6 +17,7 @@ use Eluceo\iCal\Property\Event\RecurrenceRule;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use MStaack\LaravelPostgis\Eloquent\PostgisTrait;
+use Log;
 
 class Loanable extends BaseModel
 {
@@ -322,31 +323,17 @@ class Loanable extends BaseModel
 
     public function getCommunityForLoanBy(User $user): ?Community
     {
-        // The reference community for a loan is...
-        // 1. The community of the loanable, if the user is an approved member as well
-        if ($this->community) {
-            if ($user->approvedCommunities->find($this->community->id)) {
-                return $this->community;
-            }
-
-            // 2. A children community that the user is a member of as well
-            // It is assumed that there is only one since children communities are exclusive area
-            if (
-                $community = $this->community->children
-                    ->whereIn("id", $user->approvedCommunities->pluck("id"))
-                    ->first()
-            ) {
-                return $community;
-            }
+        $userComunities = $user->getAccessibleCommunityIds()->toArray();
+        if($this->owner){
+            $loanableCommunities = $this->owner->user->getAccessibleCommunityIds()->toArray();
+        }else {
+            $loanableCommunities = [$this->community->id, $this->community->parent_id];
         }
 
-        // 3. The community of the loanable owner that is common with the user
-        // It is assumed that there is one, otherwise the user wouldn't
-        // have access to that loanable at this point
         $communityId = current(
             array_intersect(
-                $user->getAccessibleCommunityIds()->toArray(),
-                $this->owner->user->getAccessibleCommunityIds()->toArray()
+                $userComunities,
+                $loanableCommunities
             )
         );
         return Community::where("id", $communityId)->first();
