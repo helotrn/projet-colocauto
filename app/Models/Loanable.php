@@ -324,17 +324,19 @@ class Loanable extends BaseModel
     public function getCommunityForLoanBy(User $user): ?Community
     {
         $userComunities = $user->getAccessibleCommunityIds()->toArray();
-        if($this->owner){
-            $loanableCommunities = $this->owner->user->getAccessibleCommunityIds()->toArray();
-        }else {
-            $loanableCommunities = [$this->community->id, $this->community->parent_id];
+        if ($this->owner) {
+            $loanableCommunities = $this->owner->user
+                ->getAccessibleCommunityIds()
+                ->toArray();
+        } else {
+            $loanableCommunities = [
+                $this->community->id,
+                $this->community->parent_id,
+            ];
         }
 
         $communityId = current(
-            array_intersect(
-                $userComunities,
-                $loanableCommunities
-            )
+            array_intersect($userComunities, $loanableCommunities)
         );
         return Community::where("id", $communityId)->first();
     }

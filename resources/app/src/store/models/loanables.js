@@ -128,12 +128,16 @@ export default new RestModule(
         commit("ajax", null);
       } catch (e) {
         commit("ajax", null);
-        commit("addNotification", {
-          content: JSON.stringify(e),
-          title: `Erreur de test pour ${state.slug}`,
-          variant: "danger",
-          type: "ajax",
-        }, {root: true});
+        commit(
+          "addNotification",
+          {
+            content: JSON.stringify(e),
+            title: `Erreur de test pour ${state.slug}`,
+            variant: "danger",
+            type: "ajax",
+          },
+          { root: true }
+        );
         const { request, response } = e;
         commit("error", { request, response });
 
