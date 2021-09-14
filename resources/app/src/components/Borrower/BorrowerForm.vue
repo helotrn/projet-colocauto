@@ -136,7 +136,6 @@ export default {
     return {
       gaaUrl:
         "https://mondossier.gaa.qc.ca/fr/DemandeWeb/DemandeReleve/",
-      otherIntent: true,
       saaqUrl:
         "https://services.saaq.gouv.qc.ca/FonctionsWeb/EtatDossierConduite.Web/",
     };

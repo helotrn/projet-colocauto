@@ -129,6 +129,11 @@ export default {
       required: true,
     },
   },
+  data() {
+    return {
+      otherIntent: true,
+    };
+  },
   computed: {
     ...buildComputed("register.intent", ["borrower", "carBorrowerIntent", "ownerIntent"]),
   },
