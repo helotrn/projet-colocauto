@@ -63,7 +63,9 @@
                   </a>
                 </li>
                 <li>
-                  <a :href="gaaUrl" target="_blank"> Pour commander votre rapport de sinistre GAA </a>
+                  <a :href="gaaUrl" target="_blank">
+                    Pour commander votre rapport de sinistre GAA
+                  </a>
                 </li>
               </ul>
             </div>
@@ -134,10 +136,8 @@ export default {
   },
   data() {
     return {
-      gaaUrl:
-        "https://mondossier.gaa.qc.ca/fr/DemandeWeb/DemandeReleve/",
-      saaqUrl:
-        "https://services.saaq.gouv.qc.ca/FonctionsWeb/EtatDossierConduite.Web/",
+      gaaUrl: "https://mondossier.gaa.qc.ca/fr/DemandeWeb/DemandeReleve/",
+      saaqUrl: "https://services.saaq.gouv.qc.ca/FonctionsWeb/EtatDossierConduite.Web/",
     };
   },
   i18n: {
