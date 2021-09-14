@@ -46,7 +46,7 @@ class NokeService
         }
 
         $url = "{$this->baseUrl}/group/create/";
-        Log::channel("noke")->info("Request to $url for group $groupName");
+        Log::info("Request to $url for group $groupName");
 
         if (app()->environment() !== "production") {
             throw new ErrorException("You can only do that in production");
@@ -101,7 +101,7 @@ class NokeService
         $user = $this->usersIndex[$email];
 
         $url = "{$this->baseUrl}/user/profile/";
-        Log::channel("noke")->info("Request to $url for user ID $user->id");
+        Log::info("Request to $url for user ID $user->id");
 
         $response = $this->client->post($url, [
             "json" => [
@@ -149,7 +149,7 @@ class NokeService
         ];
 
         $url = "{$this->baseUrl}/user/create/";
-        Log::channel("noke")->info("Request to $url for user ID $user->id");
+        Log::info("Request to $url for user ID $user->id");
 
         if (app()->environment() !== "production") {
             throw new ErrorException("You can only do that in production");
@@ -192,7 +192,7 @@ class NokeService
                 $page += 1;
 
                 $url = "{$this->baseUrl}/group/get/all/";
-                Log::channel("noke")->info("Request to $url with page $page");
+                Log::info("Request to $url with page $page");
 
                 $groupsResponse = $this->client->post($url, [
                     "json" => [
@@ -233,7 +233,7 @@ class NokeService
         }
 
         $url = "{$this->baseUrl}/lock/get/list/";
-        Log::channel("noke")->info("Request to $url");
+        Log::info("Request to $url");
 
         $locksResponse = $this->client->post($url, [
             "json" => [
@@ -273,7 +273,7 @@ class NokeService
             }
 
             $url = "{$this->baseUrl}/user/get/list/";
-            Log::channel("noke")->info("Request to $url");
+            Log::info("Request to $url");
 
             $usersResponse = $this->client->post($url, [
                 "headers" => [
@@ -298,7 +298,7 @@ class NokeService
     public function getGroupProfile($id)
     {
         $url = "{$this->baseUrl}/group/profile/";
-        Log::channel("noke")->info("Request to $url");
+        Log::info("Request to $url");
 
         $response = $this->client->post($url, [
             "json" => [
@@ -318,7 +318,7 @@ class NokeService
     public function updateGroup($data)
     {
         $url = "{$this->baseUrl}/group/edit/";
-        Log::channel("noke")->info("Request to $url");
+        Log::info("Request to $url");
 
         if (app()->environment() !== "production") {
             throw new ErrorException("You can only do that in production");
@@ -338,7 +338,7 @@ class NokeService
     public function updateUser($data)
     {
         $url = "{$this->baseUrl}/user/edit/";
-        Log::channel("noke")->info("Request to $url");
+        Log::info("Request to $url");
 
         if (app()->environment() !== "production") {
             throw new ErrorException("You can only do that in production");
@@ -362,7 +362,7 @@ class NokeService
         }
 
         $url = "{$this->baseUrl}/company/web/login/";
-        Log::channel("noke")->info("Request to $url");
+        Log::info("Request to $url");
 
         $loginResponse = $this->client->post($url, [
             "json" => [

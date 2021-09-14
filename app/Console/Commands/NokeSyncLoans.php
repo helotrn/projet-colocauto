@@ -168,9 +168,7 @@ class NokeSyncLoans extends Command
             $currentUserIds = array_map(function ($u) {
                 return $u->id;
             }, $group->users);
-            Log::channel("noke")->info(
-                "Group $groupName has " . join(",", $currentUserIds)
-            );
+            Log::info("Group $groupName has " . join(",", $currentUserIds));
 
             $data->userIds = array_values(array_unique($data->userIds));
             if (
@@ -182,7 +180,7 @@ class NokeSyncLoans extends Command
 
             Log::info("Updating group {$groupName} users.");
             $userIds = join(",", $data->userIds);
-            Log::channel("noke")->info("Updating $groupName with $userIds");
+            Log::info("Updating $groupName with $userIds");
 
             if ($this->pretend) {
                 continue;
