@@ -37,6 +37,10 @@ COPY ./php.ini /usr/local/etc/php/php.ini
 # installing composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
+# xdebug
+RUN pecl install xdebug \
+    && docker-php-ext-enable xdebug
+
 CMD bash -c "composer install && \
              ln -s -f $OAUTH_PRIVATE_PATH '/var/www/html/storage/oauth-private.key' && \
              ln -s -f $OAUTH_PUBLIC_PATH '/var/www/html/storage/oauth-public.key' && \
