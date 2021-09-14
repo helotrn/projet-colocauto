@@ -27,9 +27,7 @@ abstract class BaseMailable extends Mailable
             $message->sent_at = date("Y-m-d H:i:s");
         });
 
-        Log::channel("mail")->info(
-            "OK Sending $mailableClass to {$emailAddresses}"
-        );
+        Log::info("OK Sending $mailableClass to {$emailAddresses}");
 
         parent::send($mailer);
     }
