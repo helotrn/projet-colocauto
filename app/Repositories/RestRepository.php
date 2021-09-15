@@ -150,7 +150,11 @@ class RestRepository
         }
 
         try {
-            $items = $query->cursor();
+            if (empty($query->getEagerLoads())) {
+                $items = $query->cursor();
+            } else {
+                $items = $query->get();
+            }
         } catch (RelationNotFoundException $e) {
             throw new ValidationException([
                 "includes" => "relationship does not exist",
