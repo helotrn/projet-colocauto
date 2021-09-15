@@ -7,8 +7,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Padlock extends BaseModel
 {
-    use SoftDeletes;
-
     public static $rules = [
         "external_id" => "required",
         "mac_address" => "required",
