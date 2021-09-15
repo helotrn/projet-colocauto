@@ -146,57 +146,6 @@ class PadlockTest extends TestCase
             ->assertJsonStructure(static::$getPadlocksResponseStructure);
     }
 
-    public function testFilterPadlocksByDeletedAt()
-    {
-        // Lower bound only
-        $data = [
-            "page" => 1,
-            "per_page" => 10,
-            "fields" => "id,name,last_name,full_name,email",
-            "deleted_at" => "2020-11-10T01:23:45Z@",
-        ];
-        $response = $this->json("GET", "/api/v1/padlocks/", $data);
-        $response
-            ->assertStatus(200)
-            ->assertJsonStructure(static::$getPadlocksResponseStructure);
-
-        // Lower and upper bounds
-        $data = [
-            "page" => 1,
-            "per_page" => 10,
-            "fields" => "id,name,last_name,full_name,email",
-            "deleted_at" => "2020-11-10T01:23:45Z@2020-11-12T01:23:45Z",
-        ];
-        $response = $this->json("GET", "/api/v1/padlocks/", $data);
-        $response
-            ->assertStatus(200)
-            ->assertJsonStructure(static::$getPadlocksResponseStructure);
-
-        // Upper bound only
-        $data = [
-            "page" => 1,
-            "per_page" => 10,
-            "fields" => "id,name,last_name,full_name,email",
-            "deleted_at" => "@2020-11-12T01:23:45Z",
-        ];
-        $response = $this->json("GET", "/api/v1/padlocks/", $data);
-        $response
-            ->assertStatus(200)
-            ->assertJsonStructure(static::$getPadlocksResponseStructure);
-
-        // Degenerate case when bounds are removed
-        $data = [
-            "page" => 1,
-            "per_page" => 10,
-            "fields" => "id,name,last_name,full_name,email",
-            "deleted_at" => "@",
-        ];
-        $response = $this->json("GET", "/api/v1/padlocks/", $data);
-        $response
-            ->assertStatus(200)
-            ->assertJsonStructure(static::$getPadlocksResponseStructure);
-    }
-
     public function testSearchPadlocks()
     {
         // Test searching for a padlock that does not exist.
