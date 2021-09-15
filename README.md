@@ -20,12 +20,8 @@ Consultez le fichier [CONTRIBUTE.md](CONTRIBUTE.md)
 
 ## Initialisation de la base de données et de MinIO
 
-Une fois que l'application est démarrée:
-
-1. Se connecter à [MinIO](http://localhost:9000)
-2. Créer un Bucket avec le nom "locomotion", tel quel
-
-Puis, dans un autre terminal, faire:
+Une fois que l'application est démarrée,
+dans un autre terminal, faire:
 
 -   `docker-compose exec php php artisan migrate --seed`
 
