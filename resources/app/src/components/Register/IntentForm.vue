@@ -31,19 +31,6 @@
           <borrower-form v-if="borrower" :borrower="borrower" :loading="loading" hide-buttons />
 
           <div class="register-intent-form__form__car_borrower_intent__text">
-            <p>Vous ne les avez pas sous la main ? Pas de soucis.</p>
-
-            <ul>
-              <li>
-                <a :href="saaqUrl" target="_blank">
-                  Pour commander votre dossier de conduite SAAQ
-                </a>
-              </li>
-              <li>
-                <a :href="gaaUrl" target="_blank"> Pour commander votre rapport de sinistre GAA </a>
-              </li>
-            </ul>
-
             <p>
               Certains de ces documents doivent être commandés. Commandez-les dès maintenant. Vous
               pourrez compléter votre dossier de conduite plus tard, via "Mon profil".
@@ -144,11 +131,7 @@ export default {
   },
   data() {
     return {
-      gaaUrl:
-        "https://gaa.qc.ca/fr/fichier-central-des-sinistres-automobiles/votre-dossier-de-sinistres/",
       otherIntent: true,
-      saaqUrl:
-        "https://saaq.gouv.qc.ca/services-en-ligne/citoyens/demander-copie-dossier-conduite/",
     };
   },
   computed: {
