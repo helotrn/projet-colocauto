@@ -11,10 +11,10 @@ export default {
       user: Object.keys(users.fr.fields).reduce((acc, f) => {
         acc[f] = `${users.fr.fields[f]} (Emprunteur)`;
         return acc;
-      }, {})
+      }, {}),
     },
     placeholders: {
-      drivers_license_number: "ex.: L1234-456789-09"
-    }
-  }
+      drivers_license_number: "ex.: L1234-456789-09",
+    },
+  },
 };
