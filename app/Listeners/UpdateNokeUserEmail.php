@@ -13,7 +13,7 @@ class UpdateNokeUserEmail
 
     public function handle(UserEmailUpdated $event)
     {
-        if (app()->environment() !== "production") {
+        if (!in_array(app()->environment(), ["production", "testing"])) {
             return;
         }
 
