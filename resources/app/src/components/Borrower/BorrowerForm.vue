@@ -51,6 +51,27 @@
           </b-col>
         </b-row>
 
+        <b-row>
+          <b-col>
+            <div>
+              <p>Vous ne les avez pas sous la main ? Pas de soucis.</p>
+
+              <ul>
+                <li>
+                  <a :href="saaqUrl" target="_blank">
+                    Pour commander votre dossier de conduite SAAQ
+                  </a>
+                </li>
+                <li>
+                  <a :href="gaaUrl" target="_blank">
+                    Pour commander votre rapport de sinistre GAA
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </b-col>
+        </b-row>
+
         <div class="form__buttons" v-if="!hideButtons">
           <b-button-group v-if="showReset">
             <b-button variant="success" type="submit" :disabled="!changed">
@@ -112,6 +133,12 @@ export default {
       required: false,
       default: false,
     },
+  },
+  data() {
+    return {
+      gaaUrl: "https://mondossier.gaa.qc.ca/fr/DemandeWeb/DemandeReleve/",
+      saaqUrl: "https://services.saaq.gouv.qc.ca/FonctionsWeb/EtatDossierConduite.Web/",
+    };
   },
   i18n: {
     messages: {

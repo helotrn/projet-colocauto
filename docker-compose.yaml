@@ -79,6 +79,7 @@ services:
             POSTGRES_DB: locomotion
             POSTGRES_PASSWORD: locomotion
             POSTGRES_USER: locomotion
+        command: ["postgres", "-c", "log_statement=all"]
     minio:
         image: minio/minio
         ports:
