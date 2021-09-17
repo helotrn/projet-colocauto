@@ -26,8 +26,8 @@ class AuthTest extends TestCase
         $this->createTestUser();
 
         $data = [
-            "email" => "emile@molotov.ca",
-            "password" => "molotov",
+            "email" => "emile@locomotion.app",
+            "password" => "locomotion",
         ];
         $response = $this->json("POST", "/api/v1/auth/login", $data);
 
@@ -124,8 +124,8 @@ class AuthTest extends TestCase
     private function createTestUser()
     {
         $user = new User();
-        $user->email = "emile@molotov.ca";
-        $user->password = Hash::make("molotov");
+        $user->email = "emile@locomotion.app";
+        $user->password = Hash::make("locomotion");
         $user->save();
 
         return $user;
