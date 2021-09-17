@@ -4,4 +4,4 @@ export DB_DATABASE=locomotion_test
 
 php artisan migrate 
 
-./vendor/bin/phpunit 
+./vendor/bin/phpunit "$@"
