@@ -12,12 +12,11 @@
 
           <div class="layout-footer__text">
               <p class="introduction">
-              <strong>LocoMotion</strong> est un projet de mobilité urbaine communautaire par <a href="https://solon-collectif.org">Solon</a>. <br>
+              <strong>LocoMotion</strong> est un projet citoyen accompagné par <a href="https://solon-collectif.org">Solon</a>. <br>
               </p>
 
-
             <p>
-              N'hésitez pas à contribuer avec vos suggestions <a :href="googleFormUrl" target="_blank">ici</a>.
+              Ce site web s'améliore en continu. Merci de nous <a :href="googleFormUrl" target="_blank">envoyer vos idées et suggestions</a>.
             </p>
 
             <p class="cgu small">Organisme à but non lucratif basé à Montréal - <a href="/conditions" title="Conditions d'utilisation - LocoMotion">Conditions d'utilisation</a></p>
