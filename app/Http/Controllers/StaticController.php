@@ -83,8 +83,9 @@ class StaticController extends Controller
         } catch (FileNotFoundException $e) {
             return null;
         }
-        $manager = new ImageManager(["driver" => "imagick"]);
-        return (new Response($file, 200))->header("Content-Type", "file-jpeg");
+        preg_match('/.*\.(.*)/', $path, $out);
+        $mimeType = str_ends_with($path, 'pdf')? 'application/pdf': 'image/'.$out[1];
+        return (new Response($file, 200))->header("Content-Type", $mimeType);
     }
 
     public function app()
