@@ -40,6 +40,8 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # xdebug
 RUN pecl install xdebug \
     && docker-php-ext-enable xdebug
+RUN echo "xdebug.start_with_request = yes" >> /usr/local/etc/php/php.ini
+RUN echo "xdebug.mode = debug" >> /usr/local/etc/php/php.ini
 
 CMD bash -c "composer install && \
              ln -s -f $OAUTH_PRIVATE_PATH '/var/www/html/storage/oauth-private.key' && \
@@ -53,6 +55,11 @@ CMD bash -c "composer install && \
 FROM dev as prod
 
 COPY . /var/www/html/
+
+# We put it back to remove xdebug that is launched on the dev layer
+COPY ./php.ini /usr/local/etc/php/php.ini
+
+
 RUN composer install
 RUN chown -R www-data.www-data /var/www/html/
 
