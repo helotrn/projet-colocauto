@@ -45,7 +45,7 @@ Le mot de passe pour chacun des comptes est **locomotion**
 
 Faire la commande
 ```
-./phpunit
+docker-compose exec php bash ./phpunit
 ```
 
 ## Déploiement
