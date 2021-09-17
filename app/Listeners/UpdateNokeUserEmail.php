@@ -13,6 +13,10 @@ class UpdateNokeUserEmail
 
     public function handle(UserEmailUpdated $event)
     {
+        if (app()->environment() !== "production") {
+            return;
+        }
+
         $nokeUser = Noke::findUserByEmail($event->previousEmail, true);
 
         if ($nokeUser) {
