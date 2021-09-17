@@ -14,7 +14,24 @@
     <div class="form__section">
       <h2>Changer mon courriel</h2>
 
-      <user-email-form ref="emailForm" :user="item" :loading="loading" @updated="resetEmailForm" />
+      <user-email-form
+        ref="emailForm"
+        :user="item"
+        :loading="loading"
+        @updated="resetEmailFormAndShowModal"
+      />
+
+      <b-modal
+        size="md"
+        header-bg-variant="success"
+        title-class="font-weight-bold"
+        ok-only
+        no-close-on-backdrop
+        :title="$t('views.profile.account.password_change_modal.title')"
+        id="password-change-modal"
+      >
+        <div v-html="$t('views.profile.account.password_change_modal.content')" />
+      </b-modal>
     </div>
 
     <div class="form__section">
@@ -56,8 +73,9 @@ export default {
     },
   },
   methods: {
-    resetEmailForm() {
+    resetEmailFormAndShowModal() {
       this.$refs.emailForm.reset();
+      this.$bvModal.show("password-change-modal");
     },
     resetPasswordForm() {
       this.$refs.passwordForm.reset();
