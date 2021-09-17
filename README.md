@@ -43,16 +43,10 @@ Le mot de passe pour chacun des comptes est **locomotion**
 
 ## Tests
 
-Créez la base de données de test en suivant les mêmes instructions que la section Configuration
-avec le nom `locomotion_test` .
-
-Migrez la base de données de test comme la base de donnée
-de développement : `php artisan migrate --seed --env testing` .
-
-Ajustez les noms d'hôtes des bases de données, en particulier `postgres` et `redis` .
-
--   `./vendor/bin/phpunit`
--   `npx prettier . --list-different`
+Faire la commande
+```
+./phpunit
+```
 
 ## Déploiement
 
