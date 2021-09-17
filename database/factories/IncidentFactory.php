@@ -17,6 +17,6 @@ $factory->define(Incident::class, function (Faker $faker) {
             "accident",
             "small_incident",
         ]),
-        'comments_on_incident' => $faker->sentence,
+        "comments_on_incident" => $faker->sentence,
     ];
 });
