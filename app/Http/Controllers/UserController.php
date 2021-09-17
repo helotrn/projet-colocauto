@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Events\AddedToUserBalanceEvent;
 use App\Events\ClaimedUserBalanceEvent;
 use App\Events\RegistrationSubmittedEvent;
-use App\Events\UserEmailUpdated;
 use App\Exports\UsersExport;
 use App\Http\Requests\AdminRequest;
 use App\Http\Requests\Auth\LoginRequest;
@@ -147,10 +146,6 @@ class UserController extends RestController
         $previousEmail = $item->email;
 
         $user = $this->repo->update($request, $id, $request->only("email"));
-
-        event(
-            new UserEmailUpdated($user, $previousEmail, $request->get("email"))
-        );
 
         return $this->respondWithItem($request, $user);
     }
