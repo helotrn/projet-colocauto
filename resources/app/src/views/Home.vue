@@ -284,9 +284,6 @@ export default {
       return true;
     },
   },
-  watch: {
-
-  },
   updated() {
     if (this.isLoggedIn && !this.isGlobalAdmin && !this.hasCompletedRegistration) {
       this.$router.push("register");
