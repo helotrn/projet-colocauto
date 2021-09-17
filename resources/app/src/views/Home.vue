@@ -284,8 +284,11 @@ export default {
       return true;
     },
   },
-  mounted() {
-    if (!this.isGlobalAdmin && !this.hasCompletedRegistration) {
+  watch: {
+
+  },
+  updated() {
+    if (this.isLoggedIn && !this.isGlobalAdmin && !this.hasCompletedRegistration) {
       this.$router.push("register");
     }
   },
