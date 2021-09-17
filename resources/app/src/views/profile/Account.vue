@@ -27,6 +27,8 @@
         title-class="font-weight-bold"
         ok-only
         no-close-on-backdrop
+        no-close-on-esc
+        hide-header-close
         :title="$t('views.profile.account.password_change_modal.title')"
         id="password-change-modal"
       >
