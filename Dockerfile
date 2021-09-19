@@ -32,7 +32,7 @@ RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf
 RUN a2enmod rewrite headers
 
 # putting our own php.ini
-COPY ./php.ini /usr/local/etc/php/php.ini
+COPY ./php.ini ${PHP_INI_DIR}/conf.d/php.ini
 
 # installing composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
@@ -40,8 +40,8 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # xdebug
 RUN pecl install xdebug \
     && docker-php-ext-enable xdebug
-RUN echo "xdebug.start_with_request = yes" >> /usr/local/etc/php/php.ini
-RUN echo "xdebug.mode = debug" >> /usr/local/etc/php/php.ini
+RUN echo "xdebug.start_with_request = yes" >> ${PHP_INI_DIR}/conf.d/php.ini
+RUN echo "xdebug.mode = debug" >> ${PHP_INI_DIR}/conf.d/php.ini
 
 CMD bash -c "composer install && \
              ln -s -f $OAUTH_PRIVATE_PATH '/var/www/html/storage/oauth-private.key' && \
@@ -57,7 +57,7 @@ FROM dev as prod
 COPY . /var/www/html/
 
 # We put it back to remove xdebug that is launched on the dev layer
-COPY ./php.ini /usr/local/etc/php/php.ini
+COPY ./php.ini ${PHP_INI_DIR}/conf.d/php.ini
 
 
 RUN composer install
