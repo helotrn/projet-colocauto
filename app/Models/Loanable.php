@@ -27,6 +27,8 @@ class Loanable extends BaseModel
 
     public static $transformer = LoanableTransformer::class;
 
+    protected $appends = ['community_ids'];
+
     public static $filterTypes = [
         "id" => "number",
         "name" => "text",
@@ -159,6 +161,21 @@ class Loanable extends BaseModel
                 $model->save();
             });
         });
+    }
+
+    public function getCommunityIdsAttribute()
+    {
+        if ($this->owner) {
+            $loanableCommunities = $this->owner->user
+                ->getAccessibleCommunityIds()
+                ->toArray();
+        } else {
+            $loanableCommunities = [
+                $this->community['id'],
+                $this->community['parent'],
+            ];
+        }
+        return array_filter($loanableCommunities);
     }
 
     public static function getColumnsDefinition()
@@ -368,7 +385,7 @@ class Loanable extends BaseModel
                         "start" => $startDate->format("Y-m-d"),
                         "end" => $endDate->format("Y-m-d"),
                         "period" =>
-                            $startDate->format("H:i") .
+                        $startDate->format("H:i") .
                             "-" .
                             $endDate->format("H:i"),
                     ]
@@ -376,7 +393,7 @@ class Loanable extends BaseModel
                         "start" => $startDate->format("Y-m-d H:i"),
                         "end" => $endDate->format("Y-m-d H:i"),
                         "period" =>
-                            $startDate->format("H:i") .
+                        $startDate->format("H:i") .
                             "-" .
                             $endDate->format("H:i"),
                     ];
