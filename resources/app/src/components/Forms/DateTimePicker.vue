@@ -10,7 +10,7 @@
     </b-col>
 
     <b-col col lg="12">
-      <time-selector 
+      <time-selector
         :disabled="disabled"
         :minute-interval="15"
         :exclude-past-time="true"
@@ -23,7 +23,7 @@
 
 <script>
 import FormsDatePicker from "@/components/Forms/DatePicker.vue";
-import TimeSelector from '@/components/Forms/TimeSelector.vue';
+import TimeSelector from "@/components/Forms/TimeSelector.vue";
 
 export default {
   name: "FormsDateTimePicker",
@@ -54,7 +54,7 @@ export default {
   },
   components: {
     FormsDatePicker,
-    TimeSelector
+    TimeSelector,
   },
   computed: {
     dateValue() {

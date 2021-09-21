@@ -50,10 +50,7 @@ export default class TimeSelector extends Vue {
     type: Object,
     default: () => ({ h: [], m: [], s: [] }),
     validator: (value: any) => {
-      const allArrays =
-        Array.isArray(value.h) &&
-        Array.isArray(value.h) &&
-        Array.isArray(value.s);
+      const allArrays = Array.isArray(value.h) && Array.isArray(value.h) && Array.isArray(value.s);
 
       if (!allArrays) {
         return false;
@@ -79,11 +76,9 @@ export default class TimeSelector extends Vue {
   get allTimeSlotsInTypicalDay() {
     const millisecondsInInterval = this.minuteInterval * 60 * 1000;
 
-    return new Array(MILLISECONDS_IN_A_DAY / millisecondsInInterval)
-      .fill(null)
-      .map((v, idx) => {
-        return dayjs(idx * millisecondsInInterval).utc();
-      });
+    return new Array(MILLISECONDS_IN_A_DAY / millisecondsInInterval).fill(null).map((v, idx) => {
+      return dayjs(idx * millisecondsInInterval).utc();
+    });
   }
 
   get timeslots(): Option[] {
@@ -91,9 +86,7 @@ export default class TimeSelector extends Vue {
       .map((timeOfDay) => {
         const dayOfValue = dayjs(this.value);
 
-        return dayOfValue
-          .set("hour", timeOfDay.hour())
-          .set("minute", timeOfDay.minute());
+        return dayOfValue.set("hour", timeOfDay.hour()).set("minute", timeOfDay.minute());
       })
       .map((timeOfDayAtValue) => {
         return {
