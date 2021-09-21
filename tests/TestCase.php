@@ -44,15 +44,18 @@ abstract class TestCase extends BaseTestCase
 
         $this->actAs($this->user);
 
+        $clientId = env("PASSWORD_CLIENT_ID");
+        $clientSecret = env("PASSWORD_CLIENT_SECRET");
+
         \DB::statement(
             <<<SQL
 INSERT INTO oauth_clients
 (id, name, secret, redirect, personal_access_client, password_client, revoked,
     created_at, updated_at)
 VALUES (
-    'pTrmRvquBD6mXlep',
+    '$clientId',
     'LocoMotion Password Grant Client',
-    '1hu8xmgtXI8O6HRH4zIbRt92X6rSLCgY6NtTNyxN',
+    '$clientSecret',
     'http://localhost',
     false,
     true,

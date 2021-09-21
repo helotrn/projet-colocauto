@@ -20,12 +20,8 @@ Consultez le fichier [CONTRIBUTE.md](CONTRIBUTE.md)
 
 ## Initialisation de la base de données et de MinIO
 
-Une fois que l'application est démarrée:
-
-1. Se connecter à [MinIO](http://localhost:9000)
-2. Créer un Bucket avec le nom "locomotion", tel quel
-
-Puis, dans un autre terminal, faire:
+Une fois que l'application est démarrée,
+dans un autre terminal, faire:
 
 -   `docker-compose exec php php artisan migrate --seed`
 
@@ -43,16 +39,11 @@ Le mot de passe pour chacun des comptes est **locomotion**
 
 ## Tests
 
-Créez la base de données de test en suivant les mêmes instructions que la section Configuration
-avec le nom `locomotion_test` .
+Faire la commande
 
-Migrez la base de données de test comme la base de donnée
-de développement : `php artisan migrate --seed --env testing` .
-
-Ajustez les noms d'hôtes des bases de données, en particulier `postgres` et `redis` .
-
--   `./vendor/bin/phpunit`
--   `npx prettier . --list-different`
+```
+docker-compose exec php bash ./phpunit
+```
 
 ## Déploiement
 

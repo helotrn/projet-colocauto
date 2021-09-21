@@ -1,7 +1,7 @@
 <template>
   <footer class="layout-footer">
     <b-container fluid>
-      <b-row>
+      <b-row class="justify-content-md-center">
         <b-col class="text-center">
           <div class="layout-footer__logo">
             <a href="https://solon-collectif.org" target="_blank">
@@ -10,24 +10,22 @@
           </div>
 
           <div class="layout-footer__text">
-            <p>
-              LocoMotion est un projet citoyen accompagné par Solon.<br />
-
-              <strong>locomotion.app</strong> est un
-              <a href="https://www.gnu.org/philosophy/free-sw.fr.html" target="_blank"
-                >logiciel libre</a
-              >. Vous pourrez bientôt
-              <a href="https://gitlab.com/Solon-collectif/locomotion.app" target="_blank"
-                >contribuer</a
-              >!<br />
-
-              Version BETA &mdash; On expérimente ensemble sur locomotion.app.
-              <a :href="googleFormUrl" target="_blank">
-                Donnez-nous votre avis ou signalez un bug!
-              </a>
+            <p class="introduction">
+              <strong>LocoMotion</strong> est un projet citoyen accompagné par
+              <a href="https://solon-collectif.org">Solon</a>. <br />
             </p>
 
-            <p><a href="/conditions">Conditions d'utilisation</a></p>
+            <p>
+              Ce site web s'améliore en continu. Merci de nous
+              <a :href="googleFormUrl" target="_blank">envoyer vos idées et suggestions</a>.
+            </p>
+
+            <p class="cgu small">
+              Organisme à but non lucratif basé à Montréal -
+              <a href="/conditions" title="Conditions d'utilisation - LocoMotion"
+                >Conditions d'utilisation</a
+              >
+            </p>
           </div>
         </b-col>
       </b-row>
@@ -69,6 +67,12 @@ export default {
     line-height: 18px;
 
     color: $white;
+
+    .introduction {
+      a {
+        text-decoration: none;
+      }
+    }
 
     a {
       color: $white;
