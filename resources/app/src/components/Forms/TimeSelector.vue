@@ -57,9 +57,9 @@ export default class TimeSelector extends Vue {
       }
 
       if (
-        !value.h.every((item) => typeof item === "number") ||
-        !value.m.every((item) => typeof item === "number") ||
-        !value.s.every((item) => typeof item === "number")
+        !value.h.every((item: any) => typeof item === "number") ||
+        !value.m.every((item: any) => typeof item === "number") ||
+        !value.s.every((item: any) => typeof item === "number")
       ) {
         return false;
       }
@@ -133,7 +133,7 @@ export default class TimeSelector extends Vue {
     });
   }
 
-  selected: Date;
+  selected!: Date;
 
   @Watch("timeslots")
   onOptionsChanged() {
