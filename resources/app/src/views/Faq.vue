@@ -4,6 +4,30 @@
 
     <b-row tag="section" class="page__section">
       <b-col>
+        <b-row style="background-color: white; padding: 20px" class="text-center">
+          <b-col class="text-center"
+            >Vous trouverez réponses à la majorité des questions les plus populaires ci-dessous.
+            <br /><br />
+
+            Si vous ne trouvez pas la réponse à vos questions ou souhaitez faire des suggestions,
+            rendez-vous sur
+            <a
+              href="https://docs.google.com/forms/d/e/1FAIpQLSd-O_aK6WycUjD2Vd3Xsle_UwV61P84-3kFZGzWAzeASg2bHA/viewform"
+              target="_blank"
+              >notre formulaire de suggestions</a
+            >. <br /><br />
+            <small
+              >Pour tout autre besoin, nous sommes joignables via
+              <strong>info@locomotion.app</strong> ou au <strong>(438) 476-3343</strong> pour les
+              urgences cadenas uniquement.</small
+            >
+          </b-col>
+        </b-row>
+      </b-col>
+    </b-row>
+
+    <b-row tag="section" class="page__section">
+      <b-col>
         <b-row>
           <b-col lg="6" class="page__section__content" v-for="s in 11" :key="`section-${s}`">
             <h2 v-html="$t('faq.sections.' + (s - 1) + '.title')" />

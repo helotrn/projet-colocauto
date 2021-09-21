@@ -65,7 +65,7 @@
           <span class="nav-link__icon">
             <svg-help />
           </span>
-          <span class="nav-link__text">FAQ</span>
+          <span class="nav-link__text">Contact / FAQ</span>
         </b-nav-item>
 
         <b-nav-item @click="logout" class="d-block d-lg-none">

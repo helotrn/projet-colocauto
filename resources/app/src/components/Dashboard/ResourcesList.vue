@@ -60,24 +60,10 @@
       <li class="dashboard-resources-list__item">
         <router-link to="/faq" class="dashboard-resources-list__item-title">
           <img class="dashboard-resources-list__item-title-icon" src="/icons/faq.png" />
-          <span class="dashboard-resources-list__item-title-text"> Foire aux questions (FAQ) </span>
+          <span class="dashboard-resources-list__item-title-text"> FAQ / Contact</span>
         </router-link>
       </li>
     </ul>
-
-    <div class="dashboard-resources-list__footer">
-      <span>Numéro d'aide</span>
-      <span>(pour cadenas uniquement)</span>
-      <span>
-        <a href="tel:+14384763343">
-          <strong>(438) 476-3343</strong>
-        </a>
-      </span>
-      <br />
-      <span class="dashboard-resources-list__mailto text-center">
-        <a href="mailto:info@locomotion.app">Écrivez-nous!</a>
-      </span>
-    </div>
   </div>
 </template>
 

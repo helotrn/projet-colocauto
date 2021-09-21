@@ -3,7 +3,6 @@
     <b-container fluid>
       <b-row class="justify-content-md-center">
         <b-col class="text-center">
-          
           <div class="layout-footer__logo">
             <a href="https://solon-collectif.org" target="_blank">
               <img src="/partners/logo-solon.png" />
@@ -11,15 +10,23 @@
           </div>
 
           <div class="layout-footer__text">
-              <p class="introduction">
-              <strong>LocoMotion</strong> est un projet citoyen accompagné par <a href="https://solon-collectif.org">Solon</a>. <br>
-              </p>
-
-            <p>
-              Ce site web s'améliore en continu. Merci de nous <a :href="googleFormUrl" target="_blank">envoyer vos idées et suggestions</a>.
+            <p class="introduction">
+              <strong>LocoMotion</strong> est un projet citoyen accompagné par
+              <a href="https://solon-collectif.org">Solon</a>. <br />
             </p>
 
-            <p class="cgu small">Organisme à but non lucratif basé à Montréal - <a href="/conditions" title="Conditions d'utilisation - LocoMotion">Conditions d'utilisation</a></p>
+            <p>
+              Ce site web s'améliore en continu. Merci de nous
+              <a :href="googleFormUrl" target="_blank">envoyer vos idées et suggestions</a>.
+            </p>
+
+            <p class="cgu small">
+              Organisme à but non lucratif basé à Montréal -
+              <a href="/conditions" title="Conditions d'utilisation - LocoMotion"
+                >Conditions d'utilisation</a
+              >
+              - <a href="/faq" title="Nous contacter">Nous contacter</a>
+            </p>
           </div>
         </b-col>
       </b-row>
@@ -64,7 +71,7 @@ export default {
 
     .introduction {
       a {
-        text-decoration:none;
+        text-decoration: none;
       }
     }
 
