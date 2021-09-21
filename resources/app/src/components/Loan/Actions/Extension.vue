@@ -99,13 +99,24 @@
                 </b-row>
 
                 <div class="loan-actions-extension__buttons text-center">
-                  <b-button size="sm" type="submit" variant="success" class="mr-3">
+                  <b-button size="sm" type="submit" variant="success" class="mr-3" :disabled="!extensionValid">
                     Créer
                   </b-button>
 
                   <b-button size="sm" variant="outline-warning" @click="abortAction">
                     Annuler
                   </b-button>
+                </div>
+
+                <div v-if="!extensionValid" class="loan-actions__alert">
+                  <b-alert variant="danger" show>
+                    <p>
+                      La nouvelle date de retour n'est pas valide. La durée minimale d'un retard doit être d'au moins 10 minutes. 
+                    </p>
+                    <p class="loan-extension__bold">
+                      Date de retour initiale: {{ initialReturnDate | date }} à {{ initialReturnDate | time }}
+                    </p>
+                  </b-alert>
                 </div>
               </b-form>
             </validation-observer>
@@ -194,8 +205,22 @@ export default {
         );
       },
     },
+    initialReturnDate() {
+      return this.$dayjs(this.item.departure_at)
+      .add(this.item.actual_duration_in_minutes, "minute")
+      .format("YYYY-MM-DD HH:mm:ss");
+    },
+    extensionValid() {
+      return (this.action.new_duration > this.item.actual_duration_in_minutes) ? true : false;
+    },
   },
 };
 </script>
 
-<style lang="scss"></style>
+<style lang="scss">
+.loan-extension {
+  &__bold {
+    font-weight: 600;
+  }
+}
+</style>
