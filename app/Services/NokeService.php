@@ -48,46 +48,46 @@ class NokeService
         $url = "{$this->baseUrl}/group/create/";
         Log::info("Request to $url for group $groupName");
 
-        if (app()->environment() !== "production") {
-            throw new ErrorException("You can only do that in production");
-        }
+        if (app()->environment() === "production") {
 
-        $this->client->post($url, [
-            "json" => [
-                "name" => $groupName,
-                "groupType" => "online",
-                "lockIds" => [intval($lockExternalId)],
-                "userIds" => [intval(config("services.noke.api_user_id"))],
-                "schedule" => [
-                    [
-                        "startDate" => "2020-05-01T00:00:00-04:00",
-                        "endDate" => "2030-05-01T23:59:59-04:00",
-                        "expiration" => "2030-05-01T23:59:59-04:00",
-                        "repeatType" => "none",
-                        "dayOfWeek" => "",
-                        "name" => strval(time()),
+
+            $this->client->post($url, [
+                "json" => [
+                    "name" => $groupName,
+                    "groupType" => "online",
+                    "lockIds" => [intval($lockExternalId)],
+                    "userIds" => [intval(config("services.noke.api_user_id"))],
+                    "schedule" => [
+                        [
+                            "startDate" => "2020-05-01T00:00:00-04:00",
+                            "endDate" => "2030-05-01T23:59:59-04:00",
+                            "expiration" => "2030-05-01T23:59:59-04:00",
+                            "repeatType" => "none",
+                            "dayOfWeek" => "",
+                            "name" => strval(time()),
+                        ],
                     ],
                 ],
-            ],
-            "headers" => [
-                "Accept" => "application/json",
-                "Authorization" => "Bearer $this->token",
-            ],
-        ]);
+                "headers" => [
+                    "Accept" => "application/json",
+                    "Authorization" => "Bearer $this->token",
+                ],
+            ]);
 
-        $result = json_decode($response->getBody());
+            $result = json_decode($response->getBody());
 
-        if (isset($result->result) && $result->result === "failure") {
-            return null;
+            if (isset($result->result) && $result->result === "failure") {
+                return null;
+            }
+
+            $newGroup = $result->data;
+            $this->groupsIndex[$groupName] = $newGroup;
+            array_push($this->groups, $newGroup);
+
+            Cache::set("noke:groups", json_encode($this->groups), 14400);
+
+            return $newGroup;
         }
-
-        $newGroup = $result->data;
-        $this->groupsIndex[$groupName] = $newGroup;
-        array_push($this->groups, $newGroup);
-
-        Cache::set("noke:groups", json_encode($this->groups), 14400);
-
-        return $newGroup;
     }
 
     public function findUserByEmail($email, $force = false)
@@ -151,31 +151,30 @@ class NokeService
         $url = "{$this->baseUrl}/user/create/";
         Log::info("Request to $url for user ID $user->id");
 
-        if (app()->environment() !== "production") {
-            throw new ErrorException("You can only do that in production");
+        if (app()->environment() == "production") {
+
+            $response = $this->client->post($url, [
+                "json" => $data,
+                "headers" => [
+                    "Accept" => "application/json",
+                    "Authorization" => "Bearer $this->token",
+                ],
+            ]);
+
+            $result = json_decode($response->getBody());
+
+            if (isset($result->result) && $result->result === "failure") {
+                return null;
+            }
+
+            $newUser = $result->data;
+            $this->usersIndex[$user->email] = $newUser;
+            array_push($this->users, $newUser);
+
+            Cache::set("noke:users", json_encode($this->users), 14400);
+
+            return $newUser;
         }
-
-        $response = $this->client->post($url, [
-            "json" => $data,
-            "headers" => [
-                "Accept" => "application/json",
-                "Authorization" => "Bearer $this->token",
-            ],
-        ]);
-
-        $result = json_decode($response->getBody());
-
-        if (isset($result->result) && $result->result === "failure") {
-            return null;
-        }
-
-        $newUser = $result->data;
-        $this->usersIndex[$user->email] = $newUser;
-        array_push($this->users, $newUser);
-
-        Cache::set("noke:users", json_encode($this->users), 14400);
-
-        return $newUser;
     }
 
     public function fetchGroups($force = false)
@@ -268,24 +267,23 @@ class NokeService
         if ($users = Cache::get("noke:users")) {
             $this->users = json_decode($users);
         } else {
-            if (app()->environment() !== "production") {
-                throw new ErrorException("You can only do that in production");
+            if (app()->environment() === "production") {
+
+                $url = "{$this->baseUrl}/user/get/list/";
+                Log::info("Request to $url");
+
+                $usersResponse = $this->client->post($url, [
+                    "headers" => [
+                        "Accept" => "application/json",
+                        "Authorization" => "Bearer $this->token",
+                    ],
+                ]);
+                $usersResults = json_decode($usersResponse->getBody());
+
+                $this->users = $usersResults->data;
+
+                Cache::set("noke:users", json_encode($this->users), 14400);
             }
-
-            $url = "{$this->baseUrl}/user/get/list/";
-            Log::info("Request to $url");
-
-            $usersResponse = $this->client->post($url, [
-                "headers" => [
-                    "Accept" => "application/json",
-                    "Authorization" => "Bearer $this->token",
-                ],
-            ]);
-            $usersResults = json_decode($usersResponse->getBody());
-
-            $this->users = $usersResults->data;
-
-            Cache::set("noke:users", json_encode($this->users), 14400);
         }
 
         foreach ($this->users as $user) {
@@ -320,19 +318,18 @@ class NokeService
         $url = "{$this->baseUrl}/group/edit/";
         Log::info("Request to $url");
 
-        if (app()->environment() !== "production") {
-            throw new ErrorException("You can only do that in production");
+        if (app()->environment() === "production") {
+
+            $response = $this->client->post($url, [
+                "json" => $data,
+                "headers" => [
+                    "Accept" => "application/json",
+                    "Authorization" => "Bearer $this->token",
+                ],
+            ]);
+
+            return json_decode($response->getBody());
         }
-
-        $response = $this->client->post($url, [
-            "json" => $data,
-            "headers" => [
-                "Accept" => "application/json",
-                "Authorization" => "Bearer $this->token",
-            ],
-        ]);
-
-        return json_decode($response->getBody());
     }
 
     public function updateUser($data)
@@ -340,45 +337,43 @@ class NokeService
         $url = "{$this->baseUrl}/user/edit/";
         Log::info("Request to $url");
 
-        if (app()->environment() !== "production") {
-            throw new ErrorException("You can only do that in production");
+        if (app()->environment() === "production") {
+
+            $response = $this->client->post($url, [
+                "json" => $data,
+                "headers" => [
+                    "Accept" => "application/json",
+                    "Authorization" => "Bearer $this->token",
+                ],
+            ]);
+
+            return json_decode($response->getBody());
         }
-
-        $response = $this->client->post($url, [
-            "json" => $data,
-            "headers" => [
-                "Accept" => "application/json",
-                "Authorization" => "Bearer $this->token",
-            ],
-        ]);
-
-        return json_decode($response->getBody());
     }
 
     private function resetToken()
     {
-        if (app()->environment() !== "production") {
-            throw new ErrorException("You can only do that in production");
+        if (app()->environment() == "production") {
+
+            $url = "{$this->baseUrl}/company/web/login/";
+            Log::info("Request to $url");
+
+            $loginResponse = $this->client->post($url, [
+                "json" => [
+                    "username" => config("services.noke.username"),
+                    "password" => config("services.noke.password"),
+                ],
+            ]);
+
+            $loginResult = json_decode($loginResponse->getBody());
+
+            if ($loginResult->result === "failure") {
+                throw new \Exception("login error");
+            }
+
+            $this->token = $loginResult->token;
+
+            Cache::set("noke:token", $this->token, 3600);
         }
-
-        $url = "{$this->baseUrl}/company/web/login/";
-        Log::info("Request to $url");
-
-        $loginResponse = $this->client->post($url, [
-            "json" => [
-                "username" => config("services.noke.username"),
-                "password" => config("services.noke.password"),
-            ],
-        ]);
-
-        $loginResult = json_decode($loginResponse->getBody());
-
-        if ($loginResult->result === "failure") {
-            throw new \Exception("login error");
-        }
-
-        $this->token = $loginResult->token;
-
-        Cache::set("noke:token", $this->token, 3600);
     }
 }
