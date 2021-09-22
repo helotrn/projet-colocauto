@@ -223,11 +223,19 @@ export default {
       return this?.$store?.state?.user?.avatar?.url;
     },
     userInitials() {
-      // eslint-disable-next-line
-      return `${this.$store.state?.user?.name?.slice(
-        0,
-        1
-      )}${this.$store.state?.user?.last_name?.slice(0, 1)}`;
+      const { user } = this.$store.state;
+
+      if (!user) {
+        return "";
+      }
+
+      if (typeof user.name === "string" && user.name.length > 0) {
+        return `${user.name[0]}${user?.last_name.slice(0, 1)}`.toUpperCase();
+      } else if (typeof user.email === "string" && user.email.length > 0) {
+        return user?.email[0].toUpperCase();
+      }
+
+      return "";
     },
   },
 };
