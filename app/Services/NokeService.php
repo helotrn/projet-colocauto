@@ -49,8 +49,6 @@ class NokeService
         Log::info("Request to $url for group $groupName");
 
         if (app()->environment() === "production") {
-
-
             $this->client->post($url, [
                 "json" => [
                     "name" => $groupName,
@@ -152,7 +150,6 @@ class NokeService
         Log::info("Request to $url for user ID $user->id");
 
         if (app()->environment() == "production") {
-
             $response = $this->client->post($url, [
                 "json" => $data,
                 "headers" => [
@@ -268,7 +265,6 @@ class NokeService
             $this->users = json_decode($users);
         } else {
             if (app()->environment() === "production") {
-
                 $url = "{$this->baseUrl}/user/get/list/";
                 Log::info("Request to $url");
 
@@ -319,7 +315,6 @@ class NokeService
         Log::info("Request to $url");
 
         if (app()->environment() === "production") {
-
             $response = $this->client->post($url, [
                 "json" => $data,
                 "headers" => [
@@ -338,7 +333,6 @@ class NokeService
         Log::info("Request to $url");
 
         if (app()->environment() === "production") {
-
             $response = $this->client->post($url, [
                 "json" => $data,
                 "headers" => [
@@ -354,7 +348,6 @@ class NokeService
     private function resetToken()
     {
         if (app()->environment() == "production") {
-
             $url = "{$this->baseUrl}/company/web/login/";
             Log::info("Request to $url");
 
