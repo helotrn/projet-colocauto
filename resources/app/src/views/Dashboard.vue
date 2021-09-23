@@ -5,7 +5,7 @@
         <b-col class="page__content" xl="9" lg="8" md="7">
           <h1>{{ $t("welcome_text", { name: user.name }) }}</h1>
 
-           <section class="page__section">
+          <section class="page__section">
             <release-info-box />
           </section>
 

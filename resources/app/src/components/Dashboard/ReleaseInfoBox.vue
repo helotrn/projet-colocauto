@@ -1,5 +1,5 @@
 <template>
-  <div class="dashboard-release-info-box"  v-if="userInAhuntsic">
+  <div class="dashboard-release-info-box" v-if="userInAhuntsic">
     <b-alert variant="success" show class="dashboard-release-info-box_changeset">
       <p>Nouveautés</p>
       <ul>
@@ -29,7 +29,7 @@ export default {
     */
     userInAhuntsic() {
       const ahuntsicCommunityNames = ["Ahuntsic", "Fleury-Est", "Fleury-Ouest", "Youville"];
-  
+
       // uc: User's community.
       // ac: Ahuntsic's community.
       for (let uc = 0, uclen = this?.user?.communities?.length; uc < uclen; uc += 1) {
