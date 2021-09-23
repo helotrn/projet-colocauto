@@ -68,7 +68,8 @@
                 </b-col>
                 <b-col md="12">
                   <p class="text-center mb-5">
-                    Partagez votre auto avec vos <span class="no-break">voisin-e-s</span>
+                    Partagez votre auto avec vos
+                    <span class="no-break">voisin-e-s</span>
                   </p>
                 </b-col>
               </b-row>
@@ -119,10 +120,13 @@
                 }}</span>
                 et
                 <span class="no-break">{{
-                  $tc("neighborhood", neighborhoodsCount, { count: neighborhoodsCount })
+                  $tc("neighborhood", neighborhoodsCount, {
+                    count: neighborhoodsCount,
+                  })
                 }}</span
                 >, soit plus de
-                <span class="no-break">{{ stats.users }} participant•e•s</span> partageant
+                <span class="no-break">{{ stats.users }} participant•e•s</span>
+                partageant
                 <span class="no-break">{{ stats.loanables }}</span> véhicules expérimentent cette
                 solution collective.
               </p>
@@ -193,10 +197,11 @@ import Lend from "@/assets/svg/home-lend.svg";
 import Tridem from "@/assets/svg/home-tridem.svg";
 import WaveDesktop from "@/assets/svg/home-wave-desktop.svg";
 import Wave from "@/assets/svg/home-wave.svg";
+import UserMixin from "@/mixins/UserMixin";
 
 export default {
   name: "Home",
-  mixins: [DataRouteGuards],
+  mixins: [DataRouteGuards, UserMixin],
   components: {
     DashboardCovidSection,
     MainFaq,
@@ -278,6 +283,11 @@ export default {
 
       return true;
     },
+  },
+  updated() {
+    if (this.isLoggedIn && !this.isGlobalAdmin && !this.hasCompletedRegistration) {
+      this.$router.push("register");
+    }
   },
 };
 </script>

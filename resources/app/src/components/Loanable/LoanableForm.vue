@@ -4,7 +4,7 @@
       <b-form
         :novalidate="true"
         class="form loanable-form__form"
-        @submit.stop.prevent="checkInvalidThenSubmit(passes, valid)"
+        @submit.stop.prevent="checkInvalidThenSubmit(passes)"
       >
         <div class="form__section">
           <b-row>
@@ -251,19 +251,15 @@ export default {
           };
       }
     },
-    checkInvalidThenSubmit(passes, isValid) {
-      passes().then(() => {
-        if (isValid) {
-          this.submit();
-        } else {
-          const invalidItems = document.getElementsByClassName("is-invalid");
-          if (invalidItems.length > 0) {
-            invalidItems[0].scrollIntoView({
-              behavior: "smooth",
-            });
-          }
-        }
-      });
+    async checkInvalidThenSubmit(passes) {
+      await passes(this.submit);
+
+      const invalidItems = document.getElementsByClassName("is-invalid");
+      if (invalidItems.length > 0) {
+        invalidItems[0].scrollIntoView({
+          behavior: "smooth",
+        });
+      }
     },
     submit(...params) {
       const ownerId = this.$store.state.user.owner.id;
