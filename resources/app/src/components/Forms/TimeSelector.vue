@@ -1,5 +1,5 @@
 <template>
-  <b-form-select :disabled="disabled" v-model="selected" :options="timeslots" />
+  <b-form-select class="time-selector" :disabled="disabled" v-model="selected" :options="timeslots" />
 </template>
 
 <script lang="ts">
@@ -159,3 +159,14 @@ export default class TimeSelector extends Vue {
   }
 }
 </script>
+
+<style lang="scss">
+@import "~/node_modules/bootstrap";
+@import "@/assets/scss/_typography.scss";
+
+.time-selector {
+  option {
+    @extend .monospace;
+  }
+}
+</style>
