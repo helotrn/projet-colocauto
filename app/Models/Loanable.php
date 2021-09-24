@@ -165,8 +165,9 @@ class Loanable extends BaseModel
 
     public function getCommunityIdsAttribute()
     {
-        if ($this->owner) {
-            $loanableCommunities = $this->owner->user
+        $owner = $this->owner()->first();
+        if ($owner) {
+            $loanableCommunities = $owner->user
                 ->getAccessibleCommunityIds()
                 ->toArray();
         } else {
