@@ -140,7 +140,15 @@ SQL
                 return $query;
             },
             "actual_duration_in_minutes" => function ($query = null) {
-                $sql = "COALESCE(extension_max_duration.max_duration, loans.duration_in_minutes)";
+                $sql = <<<SQL
+LEAST(
+    COALESCE(loan_payment.duration_according_to_payment, 1000000000000),
+    COALESCE(
+        extension_max_duration.max_duration,
+        loans.duration_in_minutes
+    )
+)
+SQL;
                 if (!$query) {
                     return $sql;
                 }
@@ -162,6 +170,23 @@ SQL
                             ,
                             "extension_max_duration",
                             "extension_max_duration.loan_id",
+                            "=",
+                            "loans.id"
+                        )
+                        ->leftJoinSub(
+                            <<<SQL
+SELECT
+    DATE_PART('day', payments.executed_at::timestamp - l.departure_at::timestamp) * 24 +
+   DATE_PART('hour', payments.executed_at::timestamp - l.departure_at::timestamp) * 60 +
+   DATE_PART('minute', payments.executed_at::timestamp - l.departure_at::timestamp) AS duration_according_to_payment,
+    payments.loan_id
+FROM payments
+INNER JOIN loans l ON l.id = payments.loan_id
+WHERE payments.status = 'completed'
+SQL
+                            ,
+                            "loan_payment",
+                            "loan_payment.loan_id",
                             "=",
                             "loans.id"
                         );
@@ -406,16 +431,32 @@ SQL
             return $this->attributes["actual_duration_in_minutes"];
         }
 
+        $durationInMinutes = $this->duration_in_minutes;
+
         $completedExtensions = $this->extensions->where("status", "completed");
         if (!$completedExtensions->isEmpty()) {
-            return $completedExtensions->reduce(function ($acc, $ext) {
+            $durationInMinutes = $completedExtensions->reduce(function (
+                $acc,
+                $ext
+            ) {
                 if ($ext->new_duration > $acc) {
                     return $ext->new_duration;
                 }
-            }, $this->duration_in_minutes);
+            },
+            $this->duration_in_minutes);
         }
 
-        return $this->duration_in_minutes;
+        if ($this->payment && $this->payment->status === "completed") {
+            return min(
+                (new Carbon($this->payment->executed_at))->diffInMinutes(
+                    new Carbon($this->departure_at)
+                ),
+                $this->payment->executed_at,
+                $durationInMinutes
+            );
+        }
+
+        return $durationInMinutes;
     }
 
     public function getCalendarDaysAttribute()

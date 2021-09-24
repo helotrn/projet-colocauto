@@ -843,10 +843,10 @@ class LoanTest extends TestCase
             "actual_duration_in_minutes" => 60,
         ]);
         $this->json("GET", "/api/v1/loans/$loan->id", [
-            'actual_duration_in_minutes' => 60,
+            "actual_duration_in_minutes" => 60,
         ]);
         $this->json("GET", "/api/v1/loans/$loan->id", [
-            'actual_duration_in_minutes' => 123,
+            "actual_duration_in_minutes" => 123,
         ])->assertStatus(404);
     }
 
@@ -871,12 +871,12 @@ class LoanTest extends TestCase
             "actual_duration_in_minutes" => 120,
         ]);
         $this->json("GET", "/api/v1/loans/$loan->id", [
-            "actual_duration_in_minutes" => '110:130',
+            "actual_duration_in_minutes" => "110:130",
         ])->assertJson([
             "actual_duration_in_minutes" => 120,
         ]);
         $this->json("GET", "/api/v1/loans/$loan->id", [
-            'actual_duration_in_minutes' => 121,
+            "actual_duration_in_minutes" => 121,
         ])->assertStatus(404);
     }
 
@@ -924,12 +924,60 @@ class LoanTest extends TestCase
             "actual_duration_in_minutes" => 360,
         ]);
         $this->json("GET", "/api/v1/loans/$loan->id", [
-            "actual_duration_in_minutes" => ':370',
+            "actual_duration_in_minutes" => ":370",
         ])->assertJson([
             "actual_duration_in_minutes" => 360,
         ]);
         $this->json("GET", "/api/v1/loans/$loan->id", [
-            'actual_duration_in_minutes' => 120,
+            "actual_duration_in_minutes" => 120,
+        ])->assertStatus(404);
+    }
+
+    // Paid case: if the loan is paid (payment step is completed),
+    // the actual_duration_in_minutes becomes the time when it was paid if its
+    // smaller than the extended or regular case, as previously tested
+    public function testLoanActualDurationInMinutesWhenPaid()
+    {
+        $loan = factory(Loan::class)
+            ->states("withAllStepsCompleted")
+            ->create([
+                "duration_in_minutes" => 60,
+            ]);
+
+        // The loan was completed earlier, so it's assumed the vehicle
+        // becomes available earlier
+        $payment = $loan->payment()->first();
+        $payment->executed_at = Carbon::now()->add(30, "minutes");
+        $payment->save();
+
+        $loan = $loan->refresh();
+
+        $loan->extensions()->save(
+            factory(Extension::class)->make([
+                "new_duration" => 120,
+                "status" => "completed",
+            ])
+        );
+
+        // In process or canceled extensions are ignored
+        $loan->extensions()->save(
+            factory(Extension::class)->make([
+                "new_duration" => 240,
+                "status" => "canceled",
+            ])
+        );
+
+        $this->assertEquals(30, $loan->actual_duration_in_minutes);
+        $this->json("GET", "/api/v1/loans/$loan->id")->assertJson([
+            "actual_duration_in_minutes" => 30,
+        ]);
+        $this->json("GET", "/api/v1/loans/$loan->id", [
+            "actual_duration_in_minutes" => "20:",
+        ])->assertJson([
+            "actual_duration_in_minutes" => 30,
+        ]);
+        $this->json("GET", "/api/v1/loans/$loan->id", [
+            "actual_duration_in_minutes" => "40:",
         ])->assertStatus(404);
     }
 }
