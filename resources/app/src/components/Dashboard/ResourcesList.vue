@@ -92,9 +92,17 @@ export default {
   },
   computed: {
     communitiesWithChatGroup() {
+      if (!this.user || !this.user.communities) {
+        return [];
+      }
+
       return this.user.communities.filter((c) => !!c.chat_group_url);
     },
     hasCommunity() {
+      if (!this.user || !this.user.communities) {
+        return false;
+      }
+
       return this.user.communities.length > 0;
     },
   },
