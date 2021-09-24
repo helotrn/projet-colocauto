@@ -140,7 +140,7 @@
           <forms-builder :definition="carForm" v-model="loanable" entity="cars">
             <template v-slot:report_template>
               <b-form-group>
-                <a :href="reportTemplateURL" download>
+                <a href="/fiche_etat_de_l_auto.pdf" download>
                   {{ $i18n.t("cars.fields.report_download") }} <b-icon icon="download" />
                 </a>
               </b-form-group>
@@ -278,9 +278,6 @@ export default {
   computed: {
     hasBoroughs() {
       return this.loanableBoroughs.length > 0;
-    },
-    reportTemplateURL() {
-      return `${location.protocol}//${process.env.VUE_APP_FRONTEND_URL}/fiche_etat_de_l_auto.pdf`;
     },
     loanableBoroughs() {
       return this.loanableCommunities.map((c) => c.parent).filter((c) => !!c);
