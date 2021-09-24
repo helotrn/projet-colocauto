@@ -80,7 +80,7 @@
             </p>
 
             <p>
-              D'autres idées pour Locomotion? Contactez-nous depuis 
+              D'autres idées pour Locomotion? Contactez-nous depuis
               <a href="/faq">cette page</a>.
             </p>
 
