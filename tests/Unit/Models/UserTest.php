@@ -89,4 +89,13 @@ class UserTest extends TestCase
         $user->email = $changedEmail;
         $user->save();
     }
+
+    public function testUserGetNokeUser()
+    {
+        $user = factory(User::class)->create();
+
+        Noke::shouldReceive("findOrCreateUser")->once();
+
+        $user->getNokeUser();
+    }
 }

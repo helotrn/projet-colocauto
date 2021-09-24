@@ -350,9 +350,7 @@ class User extends AuthenticatableBaseModel
 
     public function getNokeUser()
     {
-        $nokeService = new NokeService(new HttpClient());
-
-        return $nokeService->findOrCreateUser($this);
+        return Noke::findOrCreateUser($this);
     }
 
     public function addToBalance($amount)
