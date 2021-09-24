@@ -137,7 +137,15 @@
         <div class="form__section" v-else-if="loanable.type === 'car'">
           <h2>Détails de la voiture</h2>
 
-          <forms-builder :definition="form.car" v-model="loanable" entity="cars" />
+          <forms-builder :definition="carForm" v-model="loanable" entity="cars">
+            <template v-slot:report_template>
+              <b-form-group>
+                <a :href="reportTemplateURL" download>
+                  {{ $i18n.t("cars.fields.report_download") }} <b-icon icon="download" />
+                </a>
+              </b-form-group>
+            </template>
+          </forms-builder>
         </div>
         <div class="form__section" v-else-if="loanable.type === 'trailer'">
           <h2>Détails de la remorque</h2>
@@ -271,6 +279,9 @@ export default {
     hasBoroughs() {
       return this.loanableBoroughs.length > 0;
     },
+    reportTemplateURL() {
+      return `${location.protocol}//${process.env.VUE_APP_FRONTEND_URL}/fiche_etat_de_l_auto.pdf`;
+    },
     loanableBoroughs() {
       return this.loanableCommunities.map((c) => c.parent).filter((c) => !!c);
     },
@@ -292,6 +303,23 @@ export default {
         ...c,
         options: this.polygonOptions(c.type),
       }));
+    },
+    carForm() {
+      const carKeys = Object.keys(this.form.car);
+
+      const form = {};
+
+      // we add all the car form property and our custom report_template property at the right time, see https://262.ecma-international.org/6.0/#sec-ordinary-object-internal-methods-and-internal-slots-ownpropertykeys
+      for (let i = 0; i < carKeys.length; i++) {
+        const key = carKeys[i];
+        form[key] = this.form.car[key];
+
+        if (key === "report") {
+          form["report_template"] = {};
+        }
+      }
+
+      return form;
     },
     typeOptions() {
       return [
