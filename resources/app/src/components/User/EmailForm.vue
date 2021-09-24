@@ -124,6 +124,7 @@ export default {
       this.currentPassword = "";
       this.newEmail = "";
       this.newEmailRepeat = "";
+      this.$refs.observer.reset();
     },
   },
 };
