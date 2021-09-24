@@ -133,7 +133,7 @@ export default class TimeSelector extends Vue {
     });
   }
 
-  selected!: Date;
+  selected: Date | null = null;
 
   @Watch("timeslots")
   onOptionsChanged() {
