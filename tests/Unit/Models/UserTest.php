@@ -90,12 +90,12 @@ class UserTest extends TestCase
         $user->save();
     }
 
-	public function testUserGetNokeUser()
-	{
+    public function testUserGetNokeUser()
+    {
         $user = factory(User::class)->create();
 
         Noke::shouldReceive("findOrCreateUser")->once();
 
-		$user->getNokeUser();
-	}
+        $user->getNokeUser();
+    }
 }
