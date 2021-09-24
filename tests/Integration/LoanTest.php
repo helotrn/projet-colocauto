@@ -5,9 +5,11 @@ namespace Tests\Integration;
 use App\Models\Bike;
 use App\Models\Borrower;
 use App\Models\Community;
+use App\Models\Extension;
 use App\Models\Loan;
 use App\Models\Owner;
 use App\Models\User;
+use Carbon\Carbon;
 use Tests\TestCase;
 
 class LoanTest extends TestCase
@@ -825,5 +827,87 @@ class LoanTest extends TestCase
         $data = json_decode($response->getContent());
 
         $this->assertEquals(3, count($data->actions));
+    }
+
+    // Basic case: the actual_duration_in_minutes of a loan is its intended duration
+    public function testLoanActualDurationInMinutes()
+    {
+        $loan = factory(Loan::class)
+            ->states("withAllStepsCompleted")
+            ->create([
+                "duration_in_minutes" => 60,
+            ]);
+
+        $this->assertEquals(60, $loan->actual_duration_in_minutes);
+        $this->json("GET", "/api/v1/loans/$loan->id")->assertJson([
+            "actual_duration_in_minutes" => 60,
+        ]);
+    }
+
+    // Extended case: the actual_duration_in_minutes is its largest extension duration
+    public function testLoanActualDurationInMinutesWithExtension()
+    {
+        $loan = factory(Loan::class)
+            ->states("withAllStepsCompleted")
+            ->create([
+                "duration_in_minutes" => 60,
+            ]);
+
+        $loan->extensions()->save(
+            factory(Extension::class)->make([
+                "new_duration" => 120,
+                "status" => "completed",
+            ])
+        );
+
+        $this->assertEquals(120, $loan->actual_duration_in_minutes);
+        $this->json("GET", "/api/v1/loans/$loan->id")->assertJson([
+            "actual_duration_in_minutes" => 120,
+        ]);
+    }
+
+    // Extended case with multiple extensions:
+    // same as before, but only the largest completed (approved) extension is considered
+    public function testLoanActualDurationInMinutesWithMultipleExtensions()
+    {
+        $loan = factory(Loan::class)
+            ->states("withAllStepsCompleted")
+            ->create([
+                "duration_in_minutes" => 60,
+            ]);
+
+        // Only completed extensions are considered
+        $loan->extensions()->save(
+            factory(Extension::class)->make([
+                "new_duration" => 120,
+                "status" => "completed",
+            ])
+        );
+
+        $loan->extensions()->save(
+            factory(Extension::class)->make([
+                "new_duration" => 360,
+                "status" => "completed",
+            ])
+        );
+
+        // In process or canceled extensions are ignored
+        $loan->extensions()->save(
+            factory(Extension::class)->make([
+                "new_duration" => 240,
+                "status" => "in_process",
+            ])
+        );
+        $loan->extensions()->save(
+            factory(Extension::class)->make([
+                "new_duration" => 480,
+                "status" => "canceled",
+            ])
+        );
+
+        $this->assertEquals(360, $loan->actual_duration_in_minutes);
+        $this->json("GET", "/api/v1/loans/$loan->id")->assertJson([
+            "actual_duration_in_minutes" => 360,
+        ]);
     }
 }
