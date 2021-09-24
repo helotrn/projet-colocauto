@@ -3,6 +3,7 @@
 namespace Tests\Unit\Models;
 
 use App\Models\User;
+use Noke;
 use Tests\TestCase;
 
 class UserTest extends TestCase
@@ -57,5 +58,35 @@ class UserTest extends TestCase
         );
         $user->removeFromBalance(1.01);
         $this->assertEquals(0, 1); // Raised above
+    }
+
+    public function testUpdateUserEmailFromModelDirectly()
+    {
+        $user = factory(User::class)->create([
+            "email" => "original@user.email",
+        ]);
+
+        $originalEmail = $user->email;
+        $changedEmail = "changed@email.com";
+
+        Noke::shouldReceive("findUserByEmail")
+            ->withArgs(function ($a, $b) use ($originalEmail) {
+                return $a === $originalEmail && $b === true;
+            })
+            ->andReturns(
+                (object) [
+                    "username" => $originalEmail,
+                ]
+            )
+            ->once();
+
+        Noke::shouldReceive("updateUser")
+            ->withArgs(function ($arg) use ($changedEmail) {
+                return $arg->username === $changedEmail;
+            })
+            ->once();
+
+        $user->email = $changedEmail;
+        $user->save();
     }
 }

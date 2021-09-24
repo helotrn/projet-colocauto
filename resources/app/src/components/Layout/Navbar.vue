@@ -1,6 +1,6 @@
 <template>
   <b-navbar class="layout-navbar" toggleable="lg" variant="transparent" type="light">
-    <b-collapse id="nav-collapse" class="layout-navbar__collapse" is-nav>
+    <b-collapse class="layout-navbar__collapse" is-nav>
       <b-navbar-nav class="mr-auto">
         <b-navbar-brand :to="isLoggedIn ? '/app' : '/'">
           <img src="/logo.svg" alt="Locomotion Beta" />

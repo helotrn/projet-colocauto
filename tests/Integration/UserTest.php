@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\Community;
 use Tests\TestCase;
 use Illuminate\Support\Str;
+use Noke;
 
 class UserTest extends TestCase
 {
@@ -464,5 +465,71 @@ class UserTest extends TestCase
                     static::$getCommunityResponseStructure
                 )
             );
+    }
+
+    public function testUsersUpdateEmailEndpointUpdatesNokeEmail()
+    {
+        $originalEmail = "test@gmail.com";
+        $user = factory(User::class)->create([
+            "email" => $originalEmail,
+        ]);
+
+        $newEmail = "different@hotmail.com";
+
+        Noke::shouldReceive("findUserByEmail")
+            ->withArgs(function ($a, $b) use ($originalEmail) {
+                return $a === $originalEmail && $b === true;
+            })
+            ->andReturns(
+                (object) [
+                    "username" => $originalEmail,
+                ]
+            )
+            ->once();
+
+        Noke::shouldReceive("updateUser")
+            ->withArgs(function ($arg) use ($newEmail) {
+                return $arg->username === $newEmail;
+            })
+            ->once();
+
+        $this->json("POST", "/api/v1/users/$user->id/email", [
+            "email" => $newEmail,
+        ])->assertStatus(200);
+    }
+
+    public function testUsersUpdateEndpointUpdatesNokeEmail()
+    {
+        $originalEmail = "test@gmail.com";
+        $user = factory(User::class)->create([
+            "email" => $originalEmail,
+        ]);
+
+        $newEmail = "different@hotmail.com";
+
+        Noke::shouldReceive("findUserByEmail")
+            ->withArgs(function ($a, $b) use ($originalEmail) {
+                return $a === $originalEmail && $b === true;
+            })
+            ->andReturns(
+                (object) [
+                    "username" => $originalEmail,
+                ]
+            )
+            ->once();
+
+        Noke::shouldReceive("updateUser")
+            ->withArgs(function ($arg) use ($newEmail) {
+                return $arg->username === $newEmail;
+            })
+            ->once();
+
+        $this->json(
+            "PUT",
+            "/api/v1/users/$user->id",
+            array_merge($user->toArray(), [
+                "email" => $newEmail,
+            ])
+        )->assertStatus(200);
     }
 }

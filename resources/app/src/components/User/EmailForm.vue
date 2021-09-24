@@ -100,13 +100,6 @@ export default {
           userId,
         });
 
-        this.$store.commit("addNotification", {
-          content: "Vous pouvez maintenant vous connecter avec votre nouveau courriel.",
-          title: "Courriel mis à jour",
-          variant: "success",
-          type: "email",
-        });
-
         this.$emit("updated");
       } catch (e) {
         if (e.request) {
@@ -131,6 +124,7 @@ export default {
       this.currentPassword = "";
       this.newEmail = "";
       this.newEmailRepeat = "";
+      this.$refs.observer.reset();
     },
   },
 };
