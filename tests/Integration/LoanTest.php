@@ -830,7 +830,7 @@ class LoanTest extends TestCase
     }
 
     // Basic case: the actual_duration_in_minutes of a loan is its intended duration
-    public function testLoanActualDurationInMinutes()
+    public function testLoanActualDurationInMinutesBase()
     {
         $loan = factory(Loan::class)
             ->states("withAllStepsCompleted")
@@ -842,6 +842,12 @@ class LoanTest extends TestCase
         $this->json("GET", "/api/v1/loans/$loan->id")->assertJson([
             "actual_duration_in_minutes" => 60,
         ]);
+        $this->json("GET", "/api/v1/loans/$loan->id", [
+            'actual_duration_in_minutes' => 60,
+        ]);
+        $this->json("GET", "/api/v1/loans/$loan->id", [
+            'actual_duration_in_minutes' => 123,
+        ])->assertStatus(404);
     }
 
     // Extended case: the actual_duration_in_minutes is its largest extension duration
@@ -864,6 +870,14 @@ class LoanTest extends TestCase
         $this->json("GET", "/api/v1/loans/$loan->id")->assertJson([
             "actual_duration_in_minutes" => 120,
         ]);
+        $this->json("GET", "/api/v1/loans/$loan->id", [
+            "actual_duration_in_minutes" => '110:130',
+        ])->assertJson([
+            "actual_duration_in_minutes" => 120,
+        ]);
+        $this->json("GET", "/api/v1/loans/$loan->id", [
+            'actual_duration_in_minutes' => 121,
+        ])->assertStatus(404);
     }
 
     // Extended case with multiple extensions:
@@ -909,5 +923,13 @@ class LoanTest extends TestCase
         $this->json("GET", "/api/v1/loans/$loan->id")->assertJson([
             "actual_duration_in_minutes" => 360,
         ]);
+        $this->json("GET", "/api/v1/loans/$loan->id", [
+            "actual_duration_in_minutes" => ':370',
+        ])->assertJson([
+            "actual_duration_in_minutes" => 360,
+        ]);
+        $this->json("GET", "/api/v1/loans/$loan->id", [
+            'actual_duration_in_minutes' => 120,
+        ])->assertStatus(404);
     }
 }

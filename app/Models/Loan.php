@@ -36,6 +36,7 @@ class Loan extends BaseModel
     public static $transformer = LoanTransformer::class;
 
     public static $filterTypes = [
+        "actual_duration_in_minutes" => "number",
         "departure_at" => "date",
         "calendar_days" => "number",
         "loanable.type" => ["car", "bike", "trailer"],
@@ -139,17 +140,16 @@ SQL
                 return $query;
             },
             "actual_duration_in_minutes" => function ($query = null) {
+                $sql = "COALESCE(extension_max_duration.max_duration, loans.duration_in_minutes)";
                 if (!$query) {
-                    return "extension_max_duration.max_duration";
+                    return $sql;
                 }
 
                 if (
                     false === strpos($query->toSql(), "extension_max_duration")
                 ) {
                     $query
-                        ->selectRaw(
-                            "extension_max_duration.max_duration as actual_duration_in_minutes"
-                        )
+                        ->selectRaw("$sql AS actual_duration_in_minutes")
                         ->leftJoinSub(
                             <<<SQL
 SELECT
