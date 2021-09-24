@@ -1,8 +1,7 @@
 export default {
   fr: {
     descriptions: {
-      report:
-        `Téléchargez et remplissez la fiche puis gardez-en une copie imprimée dans le carnet de bord et une copie virtuelle ici.
+      report: `Téléchargez et remplissez la fiche puis gardez-en une copie imprimée dans le carnet de bord et une copie virtuelle ici.
         Lorsque vous partagerez votre auto, vous pourrez vous appuyer sur cette fiche dans vos discussions. Gardez-la bien à jour !`,
     },
     engines: {
