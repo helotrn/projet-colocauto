@@ -195,7 +195,7 @@ export default {
   },
   computed: {
     discoverCommunityTitle() {
-      if (this.user.communities[0].type === "borough") {
+      if (this.user && this.user.communities && this.user.communities[0].type === "borough") {
         return "Découvrez votre quartier";
       }
 

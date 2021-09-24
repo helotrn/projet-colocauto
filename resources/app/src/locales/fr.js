@@ -1,4 +1,5 @@
 import AdminFilters from "@/locales/components/Admin/Filters";
+import AccountProfile from "@/locales/views/Profile/Account";
 import bikes from "@/locales/models/bikes";
 import borrowers from "@/locales/models/borrowers";
 import cars from "@/locales/models/cars";
@@ -21,6 +22,11 @@ export default {
   components: {
     admin: {
       filters: AdminFilters.fr,
+    },
+  },
+  views: {
+    profile: {
+      account: AccountProfile.fr,
     },
   },
   faq: faq.fr,

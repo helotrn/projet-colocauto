@@ -112,6 +112,7 @@ export default {
       this.currentPassword = "";
       this.newPassword = "";
       this.newPasswordRepeat = "";
+      this.$refs.observer.reset();
     },
   },
   watch: {

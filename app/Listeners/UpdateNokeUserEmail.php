@@ -3,29 +3,25 @@
 namespace App\Listeners;
 
 use App\Events\UserEmailUpdated;
-use App\Services\NokeService;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
+use Noke;
 
 class UpdateNokeUserEmail
 {
     private $service;
 
-    public function __construct(NokeService $service)
-    {
-        $this->service = $service;
-    }
-
     public function handle(UserEmailUpdated $event)
     {
-        $nokeUser = $this->service->findUserByEmail(
-            $event->previousEmail,
-            true
-        );
+        if (!in_array(app()->environment(), ["production", "testing"])) {
+            return;
+        }
+
+        $nokeUser = Noke::findUserByEmail($event->previousEmail, true);
 
         if ($nokeUser) {
             $nokeUser->username = $event->newEmail;
-            $response = $this->service->updateUser($nokeUser);
+            Noke::updateUser($nokeUser);
         }
     }
 }
