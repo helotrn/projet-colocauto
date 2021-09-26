@@ -6,7 +6,8 @@ RUN apt-get update && apt-get install -y \
     imagemagick \
     libmagickwand-dev \
     libzip-dev \
-    git
+    git \
+    npm
 
 # installing php extensions
 RUN docker-php-ext-install \
@@ -36,6 +37,9 @@ COPY ./php.ini ${PHP_INI_DIR}/conf.d/php.ini
 
 # installing composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
+# prettier
+RUN npm install --global prettier @prettier/plugin-php
 
 # xdebug
 RUN pecl install xdebug \
