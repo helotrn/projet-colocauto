@@ -1,6 +1,6 @@
 <template>
   <b-navbar class="layout-navbar" toggleable="lg" variant="transparent" type="light">
-    <b-collapse id="nav-collapse" class="layout-navbar__collapse" is-nav>
+    <b-collapse class="layout-navbar__collapse" is-nav>
       <b-navbar-nav class="mr-auto">
         <b-navbar-brand :to="isLoggedIn ? '/app' : '/'">
           <img src="/logo.svg" alt="Locomotion Beta" />
@@ -223,11 +223,19 @@ export default {
       return this?.$store?.state?.user?.avatar?.url;
     },
     userInitials() {
-      // eslint-disable-next-line
-      return `${this.$store.state?.user?.name?.slice(
-        0,
-        1
-      )}${this.$store.state?.user?.last_name?.slice(0, 1)}`;
+      const { user } = this.$store.state;
+
+      if (!user) {
+        return "";
+      }
+
+      if (typeof user.name === "string" && user.name.length > 0) {
+        return `${user.name[0]}${user?.last_name.slice(0, 1)}`.toUpperCase();
+      } else if (typeof user.email === "string" && user.email.length > 0) {
+        return user?.email[0].toUpperCase();
+      }
+
+      return "";
     },
   },
 };

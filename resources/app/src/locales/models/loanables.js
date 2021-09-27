@@ -75,8 +75,7 @@ export default {
       instructions:
         "ex.: SVP ne pas fumer dans mon auto. Aussi, j'apprécierai que le siège de " +
         "bébé soit replacé, s'il y a lieu.  Merci beaucoup!",
-      location_description:
-        "ex.: Généralement dans la ruelle, textez-moi plus plus de " + "précision",
+      location_description: "ex.: Généralement dans la ruelle, textez-moi pour plus de précisions.",
       name: "ex.: la LocoMobile bleue",
     },
     sizes: {

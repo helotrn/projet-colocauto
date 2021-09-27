@@ -99,13 +99,32 @@
                 </b-row>
 
                 <div class="loan-actions-extension__buttons text-center">
-                  <b-button size="sm" type="submit" variant="success" class="mr-3">
+                  <b-button
+                    size="sm"
+                    type="submit"
+                    variant="success"
+                    class="mr-3"
+                    :disabled="!extensionValid"
+                  >
                     Créer
                   </b-button>
 
                   <b-button size="sm" variant="outline-warning" @click="abortAction">
                     Annuler
                   </b-button>
+                </div>
+
+                <div v-if="!extensionValid" class="loan-actions__alert">
+                  <b-alert variant="danger" show>
+                    <p>
+                      La nouvelle date de retour n'est pas valide. La durée minimale d'un retard
+                      doit être d'au moins 10 minutes.
+                    </p>
+                    <p class="loan-extension__bold">
+                      Date de retour initiale: {{ initialReturnDate | date }} à
+                      {{ initialReturnDate | time }}
+                    </p>
+                  </b-alert>
                 </div>
               </b-form>
             </validation-observer>
@@ -178,6 +197,22 @@ export default {
     FormsValidatedInput,
     LoanNextDate,
   },
+  mounted: function () {
+    // to avoid an illegal value for new_duration, we need to verify if the return time is before the time right now.
+    // if this is the case, we set the extension time to right now and add 10 minutes
+    // if not, we set the extension time to the original return time and add 10 minutes
+
+    const min10 = this.$dayjs().add(10, "minute");
+    const returnTime = this.$dayjs(this.item.departure_at).add(this.action.new_duration, "minute");
+
+    if (returnTime < min10 && !this.action.id) {
+      this.action.new_duration = Math.floor(
+        (this.$dayjs().unix() - this.$dayjs(this.item.departure_at).unix() + 60 * 10) / 60
+      );
+    } else if (!this.action.id) {
+      this.action.new_duration += 10;
+    }
+  },
   computed: {
     disabledDates,
     disabledTimes,
@@ -194,8 +229,22 @@ export default {
         );
       },
     },
+    initialReturnDate() {
+      return this.$dayjs(this.item.departure_at)
+        .add(this.item.actual_duration_in_minutes, "minute")
+        .format("YYYY-MM-DD HH:mm:ss");
+    },
+    extensionValid() {
+      return this.action.new_duration > this.item.actual_duration_in_minutes ? true : false;
+    },
   },
 };
 </script>
 
-<style lang="scss"></style>
+<style lang="scss">
+.loan-extension {
+  &__bold {
+    font-weight: 600;
+  }
+}
+</style>
