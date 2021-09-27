@@ -84,8 +84,6 @@ class ActionController extends RestController
                 return $this->handoverController->retrieve($request, $id);
             case "extension":
                 return $this->extensionController->retrieve($request, $id);
-            case "intention":
-                return $this->intentionController->retrieve($request, $id);
             case "incident":
                 return $this->incidentController->retrieve($request, $id);
             default:
