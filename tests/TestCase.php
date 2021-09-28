@@ -8,6 +8,7 @@ use Faker\Factory;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 use Laravel\Passport\Passport;
+use Noke;
 
 abstract class TestCase extends BaseTestCase
 {
@@ -39,8 +40,10 @@ abstract class TestCase extends BaseTestCase
 
         $this->faker = Factory::create();
 
-        $this->user = factory(User::class)->create();
-        $this->user->role = "admin";
+        $this->user = factory(User::class)->make([
+            "role" => "admin",
+        ]);
+        $this->user->save();
 
         $this->actAs($this->user);
 

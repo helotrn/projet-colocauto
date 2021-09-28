@@ -1,9 +1,8 @@
 export default {
   fr: {
     descriptions: {
-      report:
-        "Faites part à votre voisinage de l'état de votre auto. Lorsque vous la partagerez, " +
-        "vous pourrez vous appuyer sur ce document dans vos discussions. Gardez-le bien à jour!",
+      report: `Téléchargez et remplissez la fiche puis gardez-en une copie imprimée dans le carnet de bord et une copie virtuelle ici.
+        Lorsque vous partagerez votre auto, vous pourrez vous appuyer sur cette fiche dans vos discussions. Gardez-la bien à jour !`,
     },
     engines: {
       fuel: "essence",
@@ -23,6 +22,7 @@ export default {
       plate_number: "numéro de plaque",
       pricing_category: "catégorie",
       report: "fiche - état de l'auto",
+      report_download: "télécharger le gabarit de la fiche",
       transmission_mode: "transmission",
       year_of_circulation: "année de mise en circulation",
     },

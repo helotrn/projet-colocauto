@@ -2,16 +2,17 @@
 
 namespace App\Models;
 
+use App\Events\UserEmailUpdated;
 use App\Mail\PasswordRequest;
-use App\Services\NokeService;
 use App\Transformers\UserTransformer;
 use Auth;
 use GuzzleHttp\Client as HttpClient;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
-use Mail;
 use Laravel\Passport\HasApiTokens;
+use Mail;
+use Noke;
 
 class User extends AuthenticatableBaseModel
 {
@@ -78,6 +79,18 @@ class User extends AuthenticatableBaseModel
     }
 
     public static $transformer = UserTransformer::class;
+
+    public static function booted()
+    {
+        self::updated(function ($model) {
+            if ($model->wasChanged("email")) {
+                $previousEmail = $model->getOriginal("email");
+                event(
+                    new UserEmailUpdated($model, $previousEmail, $model->email)
+                );
+            }
+        });
+    }
 
     public static function getColumnsDefinition()
     {
@@ -337,9 +350,7 @@ class User extends AuthenticatableBaseModel
 
     public function getNokeUser()
     {
-        $nokeService = new NokeService(new HttpClient());
-
-        return $nokeService->findOrCreateUser($this);
+        return Noke::findOrCreateUser($this);
     }
 
     public function addToBalance($amount)
