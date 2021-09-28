@@ -950,7 +950,7 @@ class LoanTest extends TestCase
         $payment->executed_at = Carbon::now()->add(30, "minutes");
         $payment->save();
 
-        $loan = $loan->refresh();
+        $loan = $loan->fresh();
 
         $loan->extensions()->save(
             factory(Extension::class)->make([
@@ -975,6 +975,53 @@ class LoanTest extends TestCase
             "actual_duration_in_minutes" => "20:",
         ])->assertJson([
             "actual_duration_in_minutes" => 30,
+        ]);
+        $this->json("GET", "/api/v1/loans/$loan->id", [
+            "actual_duration_in_minutes" => "40:",
+        ])->assertStatus(404);
+    }
+
+    // Paid in the past case: if the loan is paid in the past, the actual
+    // duration in minutes would be zero
+    public function testLoanActualDurationInMinutesWhenPaidInThePast()
+    {
+        $loan = factory(Loan::class)
+            ->states("withAllStepsCompleted")
+            ->create([
+                "duration_in_minutes" => 60,
+            ]);
+
+        // The loan was completed earlier, so it's assumed the vehicle
+        // becomes available earlier
+        $payment = $loan->payment()->first();
+        $payment->executed_at = Carbon::now()->sub(300, "minutes");
+        $payment->save();
+
+        $loan->extensions()->save(
+            factory(Extension::class)->make([
+                "new_duration" => 120,
+                "status" => "completed",
+            ])
+        );
+
+        // In process or canceled extensions are ignored
+        $loan->extensions()->save(
+            factory(Extension::class)->make([
+                "new_duration" => 240,
+                "status" => "canceled",
+            ])
+        );
+
+        $loan = $loan->fresh();
+
+        $this->assertEquals(0, $loan->actual_duration_in_minutes);
+        $this->json("GET", "/api/v1/loans/$loan->id")->assertJson([
+            "actual_duration_in_minutes" => 0,
+        ]);
+        $this->json("GET", "/api/v1/loans/$loan->id", [
+            "actual_duration_in_minutes" => "0",
+        ])->assertJson([
+            "actual_duration_in_minutes" => 0,
         ]);
         $this->json("GET", "/api/v1/loans/$loan->id", [
             "actual_duration_in_minutes" => "40:",

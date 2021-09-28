@@ -141,12 +141,15 @@ SQL
             },
             "actual_duration_in_minutes" => function ($query = null) {
                 $sql = <<<SQL
-LEAST(
-    COALESCE(loan_payment.duration_according_to_payment, 1000000000000),
-    COALESCE(
-        extension_max_duration.max_duration,
-        loans.duration_in_minutes
-    )
+GREATEST(
+	0,
+	LEAST(
+		COALESCE(loan_payment.duration_according_to_payment, 1000000000000),
+		COALESCE(
+			extension_max_duration.max_duration,
+			loans.duration_in_minutes
+		)
+	)
 )
 SQL;
                 if (!$query) {
@@ -447,11 +450,14 @@ SQL
         }
 
         if ($this->payment && $this->payment->status === "completed") {
+            if ((new Carbon($this->payment->executed_at))->isPast()) {
+                return 0;
+            }
+
             return min(
                 (new Carbon($this->payment->executed_at))->diffInMinutes(
                     new Carbon($this->departure_at)
                 ),
-                $this->payment->executed_at,
                 $durationInMinutes
             );
         }
