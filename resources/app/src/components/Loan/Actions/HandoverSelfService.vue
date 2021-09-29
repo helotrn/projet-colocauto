@@ -80,8 +80,8 @@
             </p>
 
             <p>
-              D'autres idées pour Locomotion? Contactez-nous depuis
-              <a href="/faq">cette page</a>.
+              D'autres idées pour Locomotion? Contactez-nous depuis la
+              <a href="/faq">page de contact</a>.
             </p>
 
             <p class="text-center"><strong>Merci et à très bientôt !</strong></p>

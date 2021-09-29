@@ -5,22 +5,26 @@
     <b-row tag="section" class="page__section">
       <b-col>
         <b-row style="background-color: white; padding: 20px" class="text-center">
-          <b-col class="text-center"
-            >Vous trouverez réponses à la majorité des questions les plus populaires ci-dessous.
-            <br /><br />
+          <b-col class="text-center">
+            <p>
+              Vous trouverez réponses à la majorité des questions les plus populaires ci-dessous.
+            </p>
 
-            Si vous ne trouvez pas la réponse à vos questions ou souhaitez faire des suggestions,
-            rendez-vous sur
-            <a
-              href="https://docs.google.com/forms/d/e/1FAIpQLSd-O_aK6WycUjD2Vd3Xsle_UwV61P84-3kFZGzWAzeASg2bHA/viewform"
-              target="_blank"
-              >notre formulaire de suggestions</a
-            >. <br /><br />
-            <small
-              >Pour tout autre besoin, nous sommes joignables via
+            <p>
+              Si vous ne trouvez pas la réponse à vos questions ou souhaitez faire des suggestions,
+              rendez-vous sur
+              <a
+                href="https://docs.google.com/forms/d/e/1FAIpQLSd-O_aK6WycUjD2Vd3Xsle_UwV61P84-3kFZGzWAzeASg2bHA/viewform"
+                target="_blank"
+                >notre formulaire de suggestions</a
+              >.
+            </p>
+
+            <p>
+              Pour tout autre besoin, nous sommes joignables via
               <strong>info@locomotion.app</strong> ou au <strong>(438) 476-3343</strong> pour les
-              urgences cadenas uniquement.</small
-            >
+              urgences cadenas uniquement.
+            </p>
           </b-col>
         </b-row>
       </b-col>
