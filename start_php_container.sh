@@ -5,6 +5,7 @@ ln -s -f $OAUTH_PRIVATE_PATH '/var/www/html/storage/oauth-private.key' && \
 ln -s -f $OAUTH_PUBLIC_PATH '/var/www/html/storage/oauth-public.key' && \
 
 # migrate need the cache but the cache table need to exist first 
+# so using the array cache for the migration
 export CACHE_DRIVER_OLD=$CACHE_DRIVER && \
 export CACHE_DRIVER=array && \
 php artisan migrate --force && \
