@@ -42,9 +42,6 @@ services:
             GOOGLE_CLIENT_ID: 406326292737-7hbogvat3i32ungfngc8f0qn56cudbqr.apps.googleusercontent.com #dev id
             GOOGLE_CLIENT_SECRET: 3M4rv8_3L6iL7AcCcuN6nJsa # dev secret
             GOOGLE_REDIRECT: http://localhost:8000/auth/callback
-            REDIS_HOST: redis
-            REDIS_PORT: 6379
-            REDIS_PASSWORD: null
             CACHE_DRIVER: database
             OAUTH_PRIVATE_PATH: /var/secret/oauth-private
             OAUTH_PUBLIC_PATH: /var/secret/oauth-public
