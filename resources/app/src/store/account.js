@@ -27,15 +27,18 @@ export default {
       commit("loaded", false);
 
       try {
-        const {data} = await Vue.axios.put("/auth/user/balance", {
-          amount,
-          payment_method_id: paymentMethodId,
-          transaction_id: state.transactionId,
-        }, {cancelToken});
+        const { data } = await Vue.axios.put(
+          "/auth/user/balance",
+          {
+            amount,
+            payment_method_id: paymentMethodId,
+            transaction_id: state.transactionId,
+          },
+          { cancelToken }
+        );
 
         commit("data", data);
         commit("loaded", true);
-
       } catch (e) {
         commit("error", e.response.data);
 
@@ -47,10 +50,10 @@ export default {
       const { CancelToken } = Vue.axios;
       const cancelToken = CancelToken.source();
 
-      commit()
+      commit();
       try {
         commit("cancelToken", cancelToken);
-        const {data} = await Vue.axios.put("/auth/user/claim", null, {cancelToken});
+        const { data } = await Vue.axios.put("/auth/user/claim", null, { cancelToken });
         commit("data", data);
 
         commit("loaded", true);

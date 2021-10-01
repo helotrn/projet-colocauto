@@ -130,7 +130,6 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
           commit("initialItem", state.item);
 
           commit("loaded", true);
-
         } catch (e) {
           const { request, response } = e;
           commit("error", { request, response });
@@ -141,19 +140,19 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
       async search({ commit, state }, { q, params }) {
         const { CancelToken } = Vue.axios;
         const cancelToken = CancelToken.source();
-  
-        try{
+
+        try {
           commit("cancelToken", cancelToken);
           const response = await Vue.axios.get(`/${state.slug}`, {
             params: {
               ...params,
               q,
-              cancelToken
+              cancelToken,
             },
           });
           commit("search", data);
           commit("cancelToken", null);
-        }catch(e){
+        } catch (e) {
           commit("cancelToken", null);
         }
       },
@@ -165,13 +164,13 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
         commit("loading", true);
         const { CancelToken } = Vue.axios;
         const cancelToken = CancelToken.source();
-  
+
         try {
           commit("cancelToken", cancelToken);
           const response = await Vue.axios.post(`/${state.slug}`, data, {
             params: {
               ...params,
-              cancelToken
+              cancelToken,
             },
           });
 
@@ -207,7 +206,7 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
       async retrieveOne({ dispatch, commit, state }, { params, id }) {
         commit("loaded", false);
         const { CancelToken } = Vue.axios;
-        const cancelToken = CancelToken.source();  
+        const cancelToken = CancelToken.source();
 
         try {
           await dispatch("options");
@@ -216,7 +215,7 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
           const response = await Vue.axios.get(`/${state.slug}/${id}`, {
             params: {
               ...params,
-              cancelToken
+              cancelToken,
             },
           });
 
@@ -238,7 +237,7 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
       async retrieve({ dispatch, state, commit }, params) {
         const { CancelToken } = Vue.axios;
         const cancelToken = CancelToken.source();
-  
+
         commit("loaded", false);
 
         try {
@@ -249,7 +248,7 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
               ...state.params,
               ...params,
             },
-            cancelToken,  
+            cancelToken,
           });
 
           commit("data", response.data);
@@ -282,7 +281,7 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
           const response = await Vue.axios.put(`/${state.slug}/${id}`, data, {
             params: {
               ...params,
-              cancelToken
+              cancelToken,
             },
           });
 
@@ -291,9 +290,9 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
 
           commit("loaded", true);
 
-        commit("cancelToken", null);
+          commit("cancelToken", null);
         } catch (e) {
-        commit("cancelToken", null);
+          commit("cancelToken", null);
 
           const { request, response } = e;
           commit("error", { request, response });
@@ -304,10 +303,10 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
       async destroy({ commit, state }, id) {
         const { CancelToken } = Vue.axios;
         const cancelToken = CancelToken.source();
-  
+
         try {
           commit("cancelToken", cancelToken);
-          const response = await Vue.axios.delete(`/${state.slug}/${id}`, {cancelToken});
+          const response = await Vue.axios.delete(`/${state.slug}/${id}`, { cancelToken });
 
           commit("deleted", response.data);
           commit("cancelToken", null);
@@ -326,7 +325,9 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
 
         try {
           commit("cancelToken", cancelToken);
-          const response = await Vue.axios.put(`/${state.slug}/${id}/restore`, null, {cancelToken});
+          const response = await Vue.axios.put(`/${state.slug}/${id}/restore`, null, {
+            cancelToken,
+          });
 
           commit("cancelToken", null);
         } catch (e) {
@@ -341,7 +342,7 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
       async export({ state, commit }, params) {
         const { CancelToken } = Vue.axios;
         const cancelToken = CancelToken.source();
-        
+
         try {
           const response = await Vue.axios.get(`/${state.slug}`, {
             params: {
@@ -351,7 +352,7 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
               page: 1,
               fields: state.exportFields.join(","),
               "!fields": state.exportNotFields.join(","),
-              cancelToken
+              cancelToken,
             },
             headers: {
               Accept: "text/csv",

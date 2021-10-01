@@ -50,7 +50,11 @@ export default new RestModule(
 
       try {
         commit("cancelToken", cancelToken);
-        const response = await Vue.axios.put(`/users/${userId}/borrower/approve`, null, cancelToken);
+        const response = await Vue.axios.put(
+          `/users/${userId}/borrower/approve`,
+          null,
+          cancelToken
+        );
 
         commit("mergeItem", { borrower: response.data });
 
@@ -70,7 +74,11 @@ export default new RestModule(
 
       try {
         commit("cancelToken", cancelToken);
-        const response = await Vue.axios.put(`/users/${userId}/communities/${communityId}`, null, cancelToken);
+        const response = await Vue.axios.put(
+          `/users/${userId}/communities/${communityId}`,
+          null,
+          cancelToken
+        );
 
         commit("mergeItem", { communities: [response.data] });
 
@@ -90,7 +98,9 @@ export default new RestModule(
 
       try {
         commit("cancelToken", cancelToken);
-        const response = await Vue.axios.put(`/users/${userId}/borrower/suspend`, null, {cancelToken});
+        const response = await Vue.axios.put(`/users/${userId}/borrower/suspend`, null, {
+          cancelToken,
+        });
 
         commit("mergeItem", { borrower: response.data });
 
@@ -107,10 +117,12 @@ export default new RestModule(
     async unsuspendBorrower({ commit }, userId) {
       const { CancelToken } = Vue.axios;
       const cancelToken = CancelToken.source();
-    
+
       try {
         commit("cancelToken", cancelToken);
-        const response = await Vue.axios.delete(`/users/${userId}/borrower/suspend`, {cancelToken});
+        const response = await Vue.axios.delete(`/users/${userId}/borrower/suspend`, {
+          cancelToken,
+        });
 
         commit("mergeItem", { borrower: response.data });
 
@@ -130,10 +142,14 @@ export default new RestModule(
 
       try {
         commit("cancelToken", cancelToken);
-        const response = await Vue.axios.post(`/users/${userId}/email`, {
-          password: currentPassword,
-          email: newEmail,
-        }, {cancelToken});
+        const response = await Vue.axios.post(
+          `/users/${userId}/email`,
+          {
+            password: currentPassword,
+            email: newEmail,
+          },
+          { cancelToken }
+        );
 
         commit("mergeItem", response.data);
 
@@ -150,13 +166,17 @@ export default new RestModule(
     async updatePassword({ commit }, { userId, currentPassword, newPassword }) {
       const { CancelToken } = Vue.axios;
       const cancelToken = CancelToken.source();
-      
+
       try {
         commit("cancelToken", cancelToken);
-        const response = await Vue.axios.post(`/users/${userId}/password`, {
-          current: currentPassword,
-          new: newPassword,
-        }, {cancelToken});
+        const response = await Vue.axios.post(
+          `/users/${userId}/password`,
+          {
+            current: currentPassword,
+            new: newPassword,
+          },
+          { cancelToken }
+        );
 
         commit("cancelToken", null);
       } catch (e) {
@@ -179,7 +199,7 @@ export default new RestModule(
           params: {
             ...params,
           },
-          cancelToken
+          cancelToken,
         });
 
         if (rootState.user.id === response.data.id) {

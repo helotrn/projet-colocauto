@@ -70,7 +70,11 @@ export default new RestModule(
 
       try {
         commit("cancelToken", cancelToken);
-        const response = await Vue.axios.put(`/loans/${action.loan_id}/actions/${action.id}/cancel`, action, {cancelToken});
+        const response = await Vue.axios.put(
+          `/loans/${action.loan_id}/actions/${action.id}/cancel`,
+          action,
+          { cancelToken }
+        );
 
         commit("cancelToken", null);
       } catch (e) {
@@ -90,7 +94,8 @@ export default new RestModule(
         commit("cancelToken", cancelToken);
         const response = await Vue.axios.put(
           `/loans/${action.loan_id}/actions/${action.id}/complete`,
-          action, {cancelToken}
+          action,
+          { cancelToken }
         );
 
         commit("cancelToken", null);
@@ -126,7 +131,9 @@ export default new RestModule(
 
       try {
         commit("cancelToken", cancelToken);
-        const response = await Vue.axios.post(`/loans/${action.loan_id}/actions`, action, {cancelToken});
+        const response = await Vue.axios.post(`/loans/${action.loan_id}/actions`, action, {
+          cancelToken,
+        });
 
         commit("cancelToken", null);
       } catch (e) {
@@ -146,9 +153,8 @@ export default new RestModule(
         commit("cancelToken", cancelToken);
         const { data } = await Vue.axios.get(`/loanables/${params.loanable_id}/test`, {
           params,
-          cancelToken
+          cancelToken,
         });
-
 
         commit("mergeItem", {
           estimated_insurance: data.insurance,

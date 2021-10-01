@@ -32,7 +32,7 @@ export default {
 
         try {
           commit("cancelToken", cancelToken);
-          const response = await Vue.axios.get("/stats", {cancelToken});
+          const response = await Vue.axios.get("/stats", { cancelToken });
 
           commit("data", response.data);
           commit("lastLoadedAt", Date.now());

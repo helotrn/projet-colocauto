@@ -21,7 +21,7 @@ export default {
 
       try {
         commit("cancelToken", cancelToken);
-        const response = await Vue.axios.post("/auth/password/request", request, {cancelToken});
+        const response = await Vue.axios.post("/auth/password/request", request, { cancelToken });
 
         commit("data", response.data);
 
@@ -39,15 +39,18 @@ export default {
       const cancelToken = CancelToken.source();
 
       try {
-        const response = await Vue.axios.post("/auth/password/reset", {
-          email,
-          password: newPassword,
-          password_confirmation: newPasswordRepeat,
-          token,
-        }, {cancelToken});
+        const response = await Vue.axios.post(
+          "/auth/password/reset",
+          {
+            email,
+            password: newPassword,
+            password_confirmation: newPasswordRepeat,
+            token,
+          },
+          { cancelToken }
+        );
 
         commit("cancelToken", cancelToken);
-
 
         commit("data", response.data);
 

@@ -338,7 +338,6 @@ export default {
           id: user.id,
         },
       });
-
     },
     async approveUser(user) {
       await this.updateUser(user, (u) => {

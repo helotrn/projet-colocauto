@@ -52,7 +52,7 @@ export default new RestModule(
             fields: "*,communities.*",
           },
         });
-        commit('users/addData', [response.data], { root: true });
+        commit("users/addData", [response.data], { root: true });
         commit("axiosCancelSource", null);
       } catch (e) {
         commit("axiosCancelSource", null);
@@ -75,7 +75,7 @@ export default new RestModule(
             per_page: 1000000,
             page: 1,
             fields: state.usersExportFields.join(","),
-            cancelToken
+            cancelToken,
           },
           headers: {
             Accept: "text/csv",
@@ -99,7 +99,9 @@ export default new RestModule(
 
       try {
         commit("cancelToken", cancelToken);
-        const response = await Vue.axios.delete(`/communities/${id}/users/${userId}`, { cancelToken });
+        const response = await Vue.axios.delete(`/communities/${id}/users/${userId}`, {
+          cancelToken,
+        });
 
         commit("cancelToken", null);
       } catch (e) {
@@ -119,7 +121,7 @@ export default new RestModule(
         const response = await Vue.axios.put(`/communities/${id}/users/${userId}`, data, {
           params: {
             fields: "*,communities.*",
-            cancelToken
+            cancelToken,
           },
         });
 
@@ -128,9 +130,8 @@ export default new RestModule(
         newUserArray[userIndex] = data;
 
         commit("users/data", {
-          newUserArray
-        })
-
+          newUserArray,
+        });
       } catch (e) {
         const { request, response } = e;
         commit("error", { request, response });
@@ -144,7 +145,9 @@ export default new RestModule(
 
       try {
         const response = await Vue.axios.put(
-          `/communities/${communityId}` + `/users/${userId}/tags/${tagId}`, null, { cancelToken }
+          `/communities/${communityId}` + `/users/${userId}/tags/${tagId}`,
+          null,
+          { cancelToken }
         );
 
         commit("cancelToken", null);
