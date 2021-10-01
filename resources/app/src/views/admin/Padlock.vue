@@ -12,18 +12,11 @@
     <b-row>
       <b-col>
         <b-form class="form" @submit.prevent="submit">
-          <forms-builder
-            :disabled="true"
-            :definition="form"
-            v-model="item"
-            entity="padlocks"
-          >
+          <forms-builder :disabled="true" :definition="form" v-model="item" entity="padlocks">
             <template v-slot:loanable_id>
               <b-form-group label="Véhicule">
                 <div class="d-flex">
-                  <b-input :disabled="true" :value="item.loanable.name">
-                    aalo
-                  </b-input>
+                  <b-input :disabled="true" :value="item.loanable.name"> aalo </b-input>
                   <b-button
                     size="sm"
                     variant="success"

@@ -47,11 +47,7 @@
           empty-text="Pas de cadenas"
         >
           <template v-slot:cell(actions)="row">
-            <admin-list-actions
-              :columns="['view']"
-              :row="row"
-              :slug="slug"
-            />
+            <admin-list-actions :columns="['view']" :row="row" :slug="slug" />
           </template>
         </b-table>
       </b-col>

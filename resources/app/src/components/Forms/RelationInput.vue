@@ -207,7 +207,10 @@ export default {
   }
 
   &.vs--disabled {
-    .vs__dropdown-toggle, .vs__search, .vs__open-indicator, .vs__clear {
+    .vs__dropdown-toggle,
+    .vs__search,
+    .vs__open-indicator,
+    .vs__clear {
       background-color: #e9ecef;
     }
   }
