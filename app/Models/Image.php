@@ -79,7 +79,7 @@ class Image extends BaseModel
 
         self::saving(function ($model) {
             // if the image was already created, we do not save it again
-            if($model->wasRecentlyCreated){
+            if ($model->wasRecentlyCreated) {
                 return;
             }
             if ($model->imageable) {
