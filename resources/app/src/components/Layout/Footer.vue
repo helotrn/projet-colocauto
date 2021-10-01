@@ -12,7 +12,7 @@
           <div class="layout-footer__text">
             <p class="introduction">
               <strong>LocoMotion</strong> est un projet citoyen accompagné par
-              <a href="https://solon-collectif.org">Solon</a>. <br />
+              <a href="https://solon-collectif.org">Solon</a>.
             </p>
 
             <p>
@@ -25,6 +25,7 @@
               <a href="/conditions" title="Conditions d'utilisation - LocoMotion"
                 >Conditions d'utilisation</a
               >
+              - <a href="/faq" title="Nous contacter">Nous contacter</a>
             </p>
           </div>
         </b-col>
