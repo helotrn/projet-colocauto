@@ -26,11 +26,7 @@
       </div>
     </div>
 
-    <div
-      class="loanable-card__estimated-fare"
-      v-if="price !== null && price !== undefined"
-      :title="pricing"
-    >
+    <div class="loanable-card__estimated-fare" v-if="price !== null && price !== undefined">
       <i> Coût estimé: {{ price | currency }} </i>
       <i v-if="insurance"> + Assurance: {{ insurance | currency }} </i>
     </div>
