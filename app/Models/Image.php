@@ -78,6 +78,10 @@ class Image extends BaseModel
         parent::boot();
 
         self::saving(function ($model) {
+            // if the image was already created, we do not save it again
+            if($model->wasRecentlyCreated){
+                return;
+            }
             if ($model->imageable) {
                 $sizes = $model->imageable::$sizes;
 
