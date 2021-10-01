@@ -253,8 +253,9 @@ export default {
     UserAddCreditBox,
   },
   computed: {
-    finalPrice() {
-      return this.item.actual_price + this.item.actual_insurance + this.action.platform_tip;
+     finalPrice() {
+      const platformTip = parseFloat(this.item.final_platform_tip || this.action.platform_tip, 10);
+      return this.item.actual_price + this.item.actual_insurance + platformTip;
     },
     hasEnoughBalance() {
       return this.user.balance >= this.finalPrice;
