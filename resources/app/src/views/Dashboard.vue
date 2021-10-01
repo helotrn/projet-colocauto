@@ -6,10 +6,6 @@
           <h1>{{ $t("welcome_text", { name: user.name }) }}</h1>
 
           <section class="page__section">
-            <loan-covid-collapsible-section />
-          </section>
-
-          <section class="page__section">
             <release-info-box />
           </section>
 
@@ -149,7 +145,7 @@
 
 <i18n>
 fr:
-  welcome_text: Bienvenue {name}!
+  welcome_text: Bienvenue {name},
   lead_text: |
     Vous y êtes presque. Il ne vous manque que quelques étapes, pour prendre la route!
 en:
@@ -163,7 +159,6 @@ import UserMixin from "@/mixins/UserMixin";
 import DashboardBalance from "@/components/Dashboard/Balance.vue";
 import DashboardLoanHistory from "@/components/Dashboard/LoanHistory.vue";
 import DashboardResourcesList from "@/components/Dashboard/ResourcesList.vue";
-import LoanCovidCollapsibleSection from "@/components/Loan/CovidCollapsibleSection.vue";
 import LoanInfoBox from "@/components/Loan/InfoBox.vue";
 import LoanableInfoBox from "@/components/Loanable/InfoBox.vue";
 import MainFaq from "@/components/Misc/MainFaq.vue";
@@ -178,7 +173,6 @@ export default {
     DashboardBalance,
     DashboardLoanHistory,
     DashboardResourcesList,
-    LoanCovidCollapsibleSection,
     LoanInfoBox,
     LoanableInfoBox,
     MainFaq,
@@ -201,7 +195,7 @@ export default {
   },
   computed: {
     discoverCommunityTitle() {
-      if (this.user.communities[0].type === "borough") {
+      if (this.user && this.user.communities && this.user.communities[0].type === "borough") {
         return "Découvrez votre quartier";
       }
 

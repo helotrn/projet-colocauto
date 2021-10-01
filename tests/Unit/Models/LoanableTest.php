@@ -11,6 +11,7 @@ use App\Models\Loanable;
 use App\Models\Owner;
 use App\Models\Trailer;
 use App\Models\User;
+use Carbon\Carbon;
 use Tests\TestCase;
 
 class LoanableTest extends TestCase
@@ -450,6 +451,56 @@ class LoanableTest extends TestCase
         $this->assertEquals(
             true,
             $bike->isAvailable("3000-10-12 11:20:00", 60)
+        );
+    }
+
+    public function testIsAvailableEarlyIfPaidBeforeDurationInMinutes()
+    {
+        $loan = factory(Loan::class)
+            ->states("withAllStepsCompleted")
+            ->create([
+                "duration_in_minutes" => 60,
+            ]);
+
+        $bike = $loan->loanable;
+
+        $this->assertEquals(
+            true,
+            $bike->isAvailable(Carbon::now()->add(61, "minutes"), 60)
+        );
+        $this->assertEquals(
+            false,
+            $bike->isAvailable(Carbon::now()->add(59, "minutes"), 60)
+        );
+        $this->assertEquals(
+            false,
+            $bike->isAvailable(Carbon::now()->add(31, "minutes"), 60)
+        );
+        $this->assertEquals(
+            false,
+            $bike->isAvailable(Carbon::now()->add(29, "minutes"), 60)
+        );
+
+        // The loan was completed earlier
+        $payment = $loan->payment()->first();
+        $payment->executed_at = Carbon::now()->add(30, "minutes");
+        $payment->save();
+
+        $this->assertEquals(
+            true,
+            $bike->isAvailable(Carbon::now()->add(61, "minutes"), 60)
+        );
+        $this->assertEquals(
+            true,
+            $bike->isAvailable(Carbon::now()->add(59, "minutes"), 60)
+        );
+        $this->assertEquals(
+            true,
+            $bike->isAvailable(Carbon::now()->add(31, "minutes"), 60)
+        );
+        $this->assertEquals(
+            false,
+            $bike->isAvailable(Carbon::now()->add(29, "minutes"), 60)
         );
     }
 }

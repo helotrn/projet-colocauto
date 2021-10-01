@@ -1,7 +1,8 @@
 <?php
 
 use App\Models\Bike;
-use Illuminate\Support\Str;
+use App\Models\Community;
+use App\Models\Owner;
 use Faker\Generator as Faker;
 
 $factory->define(Bike::class, function (Faker $faker) {
@@ -20,6 +21,20 @@ $factory->define(Bike::class, function (Faker $faker) {
         ]),
         "size" => $faker->randomElement(["big", "medium", "small", "kid"]),
         "availability_mode" => "always",
-        "owner_id" => 1,
     ];
+});
+
+$factory->afterMaking(Bike::class, function ($bike) {
+    if (!$bike->owner_id) {
+        $owner = factory(Owner::class)->create();
+        $bike->owner_id = $bike->id;
+    }
+});
+
+$factory->afterCreatingState(Bike::class, "withCommunity", function ($bike) {
+    $community = factory(Community::class)
+        ->states("withDefaultFreePricing")
+        ->create();
+    $bike->community_id = $community->id;
+    $bike->save();
 });

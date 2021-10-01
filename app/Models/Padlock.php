@@ -2,16 +2,15 @@
 
 namespace App\Models;
 
+use App\Casts\Uppercase;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Padlock extends BaseModel
 {
-    use SoftDeletes;
-
     public static $rules = [
         "external_id" => "required",
-        "mac_address" => "required",
+        "mac_address" => "required|unique:padlocks,mac_address",
         "name" => "required",
     ];
 
@@ -20,7 +19,10 @@ class Padlock extends BaseModel
         "name" => "text",
         "loanable.name" => "text",
         "loanable.id" => "number",
-        "deleted_at" => "date",
+    ];
+
+    protected $casts = [
+        "mac_address" => Uppercase::class,
     ];
 
     protected $fillable = ["external_id", "mac_address", "name"];

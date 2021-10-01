@@ -10,11 +10,10 @@
     </b-col>
 
     <b-col col lg="12">
-      <timeselector
-        :h24="true"
+      <time-selector
         :disabled="disabled"
-        :disable="disabledTimes"
-        :displayFormat="'HH[h]mm'"
+        :minute-interval="15"
+        :exclude-past-time="true"
         :value="timeValue"
         @input="emitChangeTime"
       />
@@ -23,9 +22,8 @@
 </template>
 
 <script>
-import Timeselector from "vue-timeselector";
-
 import FormsDatePicker from "@/components/Forms/DatePicker.vue";
+import TimeSelector from "@/components/Forms/TimeSelector.vue";
 
 export default {
   name: "FormsDateTimePicker",
@@ -56,7 +54,7 @@ export default {
   },
   components: {
     FormsDatePicker,
-    Timeselector,
+    TimeSelector,
   },
   computed: {
     dateValue() {

@@ -1,7 +1,7 @@
 <?php
 
 use App\Models\Community;
-use Illuminate\Support\Str;
+use App\Models\Pricing;
 use Faker\Generator as Faker;
 
 $factory->define(Community::class, function (Faker $faker) {
@@ -11,3 +11,16 @@ $factory->define(Community::class, function (Faker $faker) {
         "area" => null,
     ];
 });
+
+$factory->afterCreatingState(
+    Community::class,
+    "withDefaultFreePricing",
+    function (Community $community) {
+        $community->pricings()->save(
+            factory(Pricing::class)->make([
+                "object_type" => null,
+                "rule" => "0",
+            ])
+        );
+    }
+);

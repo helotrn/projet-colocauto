@@ -175,6 +175,7 @@ return [
         App\Providers\CustomValidationServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\MaterializedViewServiceProvider::class,
+        App\Providers\NokeServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
     ],
 
@@ -225,5 +226,7 @@ return [
         "URL" => Illuminate\Support\Facades\URL::class,
         "Validator" => Illuminate\Support\Facades\Validator::class,
         "View" => Illuminate\Support\Facades\View::class,
+
+        "Noke" => App\Facades\Noke::class,
     ],
 ];

@@ -6,7 +6,8 @@ RUN apt-get update && apt-get install -y \
     imagemagick \
     libmagickwand-dev \
     libzip-dev \
-    git
+    git \
+    npm
 
 # installing php extensions
 RUN docker-php-ext-install \
@@ -37,6 +38,9 @@ COPY ./php.ini ${PHP_INI_DIR}/conf.d/php.ini
 # installing composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
+# prettier
+RUN npm install --global prettier @prettier/plugin-php
+
 # xdebug
 RUN pecl install xdebug \
     && docker-php-ext-enable xdebug
@@ -44,11 +48,7 @@ RUN echo "xdebug.start_with_request = yes" >> ${PHP_INI_DIR}/conf.d/php.ini
 RUN echo "xdebug.mode = debug" >> ${PHP_INI_DIR}/conf.d/php.ini
 
 CMD bash -c "composer install && \
-             ln -s -f $OAUTH_PRIVATE_PATH '/var/www/html/storage/oauth-private.key' && \
-             ln -s -f $OAUTH_PUBLIC_PATH '/var/www/html/storage/oauth-public.key' && \
-             php artisan migrate --force && \
-             php artisan queue:work & \
-             apache2-foreground"
+             ./start_php_container.sh"
 
 
 ###################
@@ -63,8 +63,4 @@ COPY ./php.ini ${PHP_INI_DIR}/conf.d/php.ini
 RUN composer install
 RUN chown -R www-data.www-data /var/www/html/
 
-CMD bash -c "ln -s -f $OAUTH_PRIVATE_PATH '/var/www/html/storage/oauth-private.key' && \
-             ln -s -f $OAUTH_PUBLIC_PATH '/var/www/html/storage/oauth-public.key' && \
-             php artisan migrate --force && \
-             php artisan queue:work & \
-             apache2-foreground"
+CMD ./start_php_container.sh

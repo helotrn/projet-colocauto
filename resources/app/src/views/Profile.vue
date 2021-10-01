@@ -38,6 +38,11 @@ export default {
   },
   beforeRouteEnter: routeGuard,
   beforeRouteUpdate: routeGuard,
+  beforeRouteLeave(to, from, next) {
+    // Set the root store as not loaded to force a reload of the user
+    this.$store.commit("loaded", false);
+    next();
+  },
   computed: {
     pageTitle() {
       return this.$i18n.t(`profile.${this.$route.meta.title}`);

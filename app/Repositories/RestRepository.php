@@ -996,16 +996,22 @@ class RestRepository
         &$query,
         $aggregate = false
     ) {
-        [$start, $end] = $range;
+        [$start, $end] = array_map(function ($r) {
+            if ($r === "" || $r === null || !is_numeric($r)) {
+                return null;
+            }
 
-        if (!$start && !$end) {
+            return $r;
+        }, $range);
+
+        if ($start === null && $end === null) {
             return $query;
-        } elseif (!$start) {
+        } elseif ($start === null) {
             if ($aggregate) {
                 return $query->having($paramName, "<=", $end);
             }
             return $query->where($scopedParam, "<=", $end);
-        } elseif (!$end) {
+        } elseif ($end === null) {
             if ($aggregate) {
                 return $query->having($paramName, ">=", $start);
             }
