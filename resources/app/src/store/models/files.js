@@ -3,35 +3,30 @@ import Vue from "vue";
 export default {
   namespaced: true,
   state: {
-    ajax: false,
     errors: null,
   },
   mutations: {
-    ajax(state, ajax) {
-      state.ajax = ajax;
-    },
     errors(state, errors) {
       state.errors = errors;
     },
   },
   actions: {
     async upload({ commit }, formData) {
+      const { CancelToken } = Vue.axios;
+      const cancelToken = CancelToken.source();
       commit("errors", null);
 
       try {
-        const ajax = Vue.axios.post("/files", formData);
+        commit("cancelToken", cancelToken);
+        const response = await Vue.axios.post("/files", formData);
 
-        commit("ajax", ajax);
-
-        const { data: file } = await ajax;
-
-        commit("ajax", null);
+        commit("cancelToken", null);
 
         return file;
       } catch (e) {
         commit("errors", e.response.data);
 
-        commit("ajax", null);
+        commit("cancelToken", null);
 
         return null;
       }

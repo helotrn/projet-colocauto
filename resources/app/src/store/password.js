@@ -3,14 +3,10 @@ import Vue from "vue";
 export default {
   namespaced: true,
   state: {
-    ajax: null,
     data: {},
     error: null,
   },
   mutations: {
-    ajax(state, ajax) {
-      state.ajax = ajax;
-    },
     data(state, data) {
       state.data = data;
     },
@@ -20,18 +16,18 @@ export default {
   },
   actions: {
     async request({ commit }, request) {
+      const { CancelToken } = Vue.axios;
+      const cancelToken = CancelToken.source();
+
       try {
-        const ajax = Vue.axios.post("/auth/password/request", request);
+        commit("cancelToken", cancelToken);
+        const response = await Vue.axios.post("/auth/password/request", request, {cancelToken});
 
-        commit("ajax", ajax);
+        commit("data", response.data);
 
-        const { data } = await ajax;
-
-        commit("data", data);
-
-        commit("ajax", null);
+        commit("cancelToken", null);
       } catch (e) {
-        commit("ajax", null);
+        commit("cancelToken", null);
 
         commit("error", e.response.data);
 
@@ -39,23 +35,25 @@ export default {
       }
     },
     async reset({ commit }, { email, newPassword, newPasswordRepeat, token }) {
+      const { CancelToken } = Vue.axios;
+      const cancelToken = CancelToken.source();
+
       try {
-        const ajax = Vue.axios.post("/auth/password/reset", {
+        const response = await Vue.axios.post("/auth/password/reset", {
           email,
           password: newPassword,
           password_confirmation: newPasswordRepeat,
           token,
-        });
+        }, {cancelToken});
 
-        commit("ajax", ajax);
+        commit("cancelToken", cancelToken);
 
-        const { data } = await ajax;
 
-        commit("data", data);
+        commit("data", response.data);
 
-        commit("ajax", null);
+        commit("cancelToken", null);
       } catch (e) {
-        commit("ajax", null);
+        commit("cancelToken", null);
 
         commit("error", e.response.data);
 

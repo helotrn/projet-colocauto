@@ -3,16 +3,12 @@ import Vue from "vue";
 export default {
   namespaced: true,
   state: {
-    ajax: null,
     data: {},
     error: null,
     lastLoadedAt: null,
     loaded: false,
   },
   mutations: {
-    ajax(state, ajax) {
-      state.ajax = ajax;
-    },
     data(state, data) {
       state.data = data;
     },
@@ -28,25 +24,24 @@ export default {
   },
   actions: {
     async retrieve({ commit, state }) {
+      const { CancelToken } = Vue.axios;
+      const cancelToken = CancelToken.source();
+
       if (state.lastLoadedAt < Date.now() - 3600) {
         commit("loaded", false);
 
         try {
-          const ajax = Vue.axios.get("/stats");
+          commit("cancelToken", cancelToken);
+          const response = await Vue.axios.get("/stats", {cancelToken});
 
-          commit("ajax", ajax);
-
-          const { data } = await ajax;
-
-          commit("data", data);
+          commit("data", response.data);
           commit("lastLoadedAt", Date.now());
 
           commit("loaded", true);
 
-          commit("ajax", null);
+          commit("cancelToken", null);
         } catch (e) {
-          commit("ajax", null);
-
+          commit("cancelToken", null);
           commit("error", e.response.data);
 
           throw e;

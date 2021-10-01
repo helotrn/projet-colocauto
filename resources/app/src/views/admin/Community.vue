@@ -316,7 +316,7 @@ export default {
       },
     },
     usersLoading() {
-      return !!this.$store.state.users.ajax;
+      return !!this.$store.state.users.cancelToken;
     },
   },
   methods: {
@@ -339,9 +339,6 @@ export default {
         },
       });
 
-      this.$store.state.communities.lastAjax.then(({ data }) => {
-        this.$store.commit("users/addData", [data]);
-      });
     },
     async approveUser(user) {
       await this.updateUser(user, (u) => {
@@ -438,20 +435,6 @@ export default {
         id: this.item.id,
         data,
         userId: user.id,
-      });
-
-      this.$store.state.communities.lastAjax.then(({ data: d }) => {
-        const item = this.$store.state.users.data.find((u) => u.id === d.id);
-        const index = this.$store.state.users.data.indexOf(item);
-
-        const newData = [...this.$store.state.users.data];
-        newData.splice(index, 1, {
-          ...item,
-          ...d,
-          id: item.id,
-        });
-
-        this.$store.commit("users/data", newData);
       });
     },
   },

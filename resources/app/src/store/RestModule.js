@@ -5,7 +5,7 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
   return {
     namespaced: true,
     state: {
-      ajax: null,
+      axiosCancelSource: null,
       data: [],
       deleted: null,
       empty: null,
@@ -22,8 +22,6 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
       loaded: false,
       loading: false,
       search: [],
-      searchAjax: null,
-      lastAjax: null,
       lastSearchQuery: "",
       params: {
         page: 1,
@@ -39,16 +37,11 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
       addData(state, data) {
         state.data.push(...data);
       },
-      ajax(state, ajax) {
-        if (ajax && state.ajax && state.ajax.cancel) {
-          state.ajax.cancel(`${state.slug} canceled ${state.ajax.context}`);
+      cancelToken(state, cancelToken) {
+        if (cancelToken && state.cancelToken) {
+          state.cancelToken.cancel(`${state.slug} canceled`);
         }
-
-        if (!ajax) {
-          state.lastAjax = state.ajax;
-        }
-
-        state.ajax = ajax;
+        state.cancelToken = cancelToken;
       },
       data(state, data) {
         state.data = data;
@@ -101,9 +94,6 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
           ...partial,
         };
       },
-      searchAjax(state, searchAjax) {
-        state.searchAjax = searchAjax;
-      },
       search(state, search) {
         state.search = search;
       },
@@ -141,10 +131,7 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
 
           commit("loaded", true);
 
-          commit("ajax", null);
         } catch (e) {
-          commit("ajax", null);
-
           const { request, response } = e;
           commit("error", { request, response });
 
@@ -152,22 +139,23 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
         }
       },
       async search({ commit, state }, { q, params }) {
-        const ajax = Vue.axios.get(`/${state.slug}`, {
-          params: {
-            ...params,
-            q,
-          },
-        });
-
-        commit("searchAjax", ajax);
-
-        const {
-          data: { data },
-        } = await ajax;
-
-        commit("search", data);
-
-        commit("searchAjax", null);
+        const { CancelToken } = Vue.axios;
+        const cancelToken = CancelToken.source();
+  
+        try{
+          commit("cancelToken", cancelToken);
+          const response = await Vue.axios.get(`/${state.slug}`, {
+            params: {
+              ...params,
+              q,
+              cancelToken
+            },
+          });
+          commit("search", data);
+          commit("cancelToken", null);
+        }catch(e){
+          commit("cancelToken", null);
+        }
       },
       async createItem({ dispatch, state }, params) {
         await dispatch("create", { data: state.item, params });
@@ -175,25 +163,25 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
       async create({ commit, dispatch, state }, { data, params }) {
         commit("loaded", false);
         commit("loading", true);
-
+        const { CancelToken } = Vue.axios;
+        const cancelToken = CancelToken.source();
+  
         try {
-          const ajax = Vue.axios.post(`/${state.slug}`, data, {
+          commit("cancelToken", cancelToken);
+          const response = await Vue.axios.post(`/${state.slug}`, data, {
             params: {
               ...params,
+              cancelToken
             },
           });
 
-          commit("ajax", ajax);
+          commit("item", response.data);
+          commit("initialItem", response.data);
+          commit("cancelToken", cancelToken);
 
-          const { data: item } = await ajax;
-
-          commit("item", item);
-          commit("initialItem", item);
-          commit("ajax", null);
-
-          await dispatch("retrieve", state.params);
+          dispatch("retrieve", state.params);
         } catch (e) {
-          commit("ajax", null);
+          commit("cancelToken", cancelToken);
 
           const { request, response } = e;
           commit("error", { request, response });
@@ -218,28 +206,28 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
       },
       async retrieveOne({ dispatch, commit, state }, { params, id }) {
         commit("loaded", false);
+        const { CancelToken } = Vue.axios;
+        const cancelToken = CancelToken.source();  
 
         try {
           await dispatch("options");
 
-          const ajax = Vue.axios.get(`/${state.slug}/${id}`, {
+          commit("cancelToken", cancelToken);
+          const response = await Vue.axios.get(`/${state.slug}/${id}`, {
             params: {
               ...params,
+              cancelToken
             },
           });
 
-          commit("ajax", ajax);
-
-          const { data } = await ajax;
-
-          commit("item", data);
-          commit("initialItem", data);
+          commit("item", response.data);
+          commit("initialItem", response.data);
 
           commit("loaded", true);
 
-          commit("ajax", null);
+          commit("cancelToken", null);
         } catch (e) {
-          commit("ajax", null);
+          commit("cancelToken", null);
 
           const { request, response } = e;
           commit("error", { request, response });
@@ -248,34 +236,32 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
         }
       },
       async retrieve({ dispatch, state, commit }, params) {
+        const { CancelToken } = Vue.axios;
+        const cancelToken = CancelToken.source();
+  
         commit("loaded", false);
 
         try {
           await dispatch("options");
-
-          const ajax = Vue.axios.get(`/${state.slug}`, {
+          commit("axiosCancelSource", source);
+          const response = await Vue.axios.get(`/${state.slug}`, {
             params: {
               ...state.params,
               ...params,
             },
+            cancelToken,  
           });
 
-          commit("ajax", ajax);
-
-          const {
-            data: { data, total, last_page: lastPage },
-          } = await ajax;
-
-          commit("data", data);
-          commit("total", total);
-          commit("lastPage", lastPage);
+          commit("data", response.data);
+          commit("total", response.total);
+          commit("lastPage", response.lastPage);
           commit("lastLoadedAt", Date.now());
 
           commit("loaded", true);
 
-          commit("ajax", null);
+          commit("axiosCancelSource", null);
         } catch (e) {
-          commit("ajax", null);
+          commit("axiosCancelSource", null);
 
           const { request, response } = e;
           commit("error", { request, response });
@@ -288,26 +274,26 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
       },
       async update({ commit, state }, { id, data, params }) {
         commit("loaded", false);
+        const { CancelToken } = Vue.axios;
+        const cancelToken = CancelToken.source();
 
         try {
-          const ajax = Vue.axios.put(`/${state.slug}/${id}`, data, {
+          commit("cancelToken", cancelToken);
+          const response = await Vue.axios.put(`/${state.slug}/${id}`, data, {
             params: {
               ...params,
+              cancelToken
             },
           });
 
-          commit("ajax", ajax);
-
-          const { data: item } = await ajax;
-
-          commit("item", item);
-          commit("initialItem", item);
+          commit("item", response.data);
+          commit("initialItem", response.data);
 
           commit("loaded", true);
 
-          commit("ajax", null);
+        commit("cancelToken", null);
         } catch (e) {
-          commit("ajax", null);
+        commit("cancelToken", null);
 
           const { request, response } = e;
           commit("error", { request, response });
@@ -316,18 +302,17 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
         }
       },
       async destroy({ commit, state }, id) {
+        const { CancelToken } = Vue.axios;
+        const cancelToken = CancelToken.source();
+  
         try {
-          const ajax = Vue.axios.delete(`/${state.slug}/${id}`);
+          commit("cancelToken", cancelToken);
+          const response = await Vue.axios.delete(`/${state.slug}/${id}`, {cancelToken});
 
-          commit("ajax", ajax);
-
-          const { data: deleted } = await ajax;
-
-          commit("deleted", deleted);
-
-          commit("ajax", null);
+          commit("deleted", response.data);
+          commit("cancelToken", null);
         } catch (e) {
-          commit("ajax", null);
+          commit("cancelToken", null);
 
           const { request, response } = e;
           commit("error", { request, response });
@@ -336,16 +321,16 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
         }
       },
       async restore({ commit, state }, id) {
+        const { CancelToken } = Vue.axios;
+        const cancelToken = CancelToken.source();
+
         try {
-          const ajax = Vue.axios.put(`/${state.slug}/${id}/restore`);
+          commit("cancelToken", cancelToken);
+          const response = await Vue.axios.put(`/${state.slug}/${id}/restore`, null, {cancelToken});
 
-          commit("ajax", ajax);
-
-          await ajax;
-
-          commit("ajax", null);
+          commit("cancelToken", null);
         } catch (e) {
-          commit("ajax", null);
+          commit("cancelToken", null);
 
           const { request, response } = e;
           commit("error", { request, response });
@@ -354,8 +339,11 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
         }
       },
       async export({ state, commit }, params) {
+        const { CancelToken } = Vue.axios;
+        const cancelToken = CancelToken.source();
+        
         try {
-          const ajax = Vue.axios.get(`/${state.slug}`, {
+          const response = await Vue.axios.get(`/${state.slug}`, {
             params: {
               ...state.params,
               ...params,
@@ -363,21 +351,18 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
               page: 1,
               fields: state.exportFields.join(","),
               "!fields": state.exportNotFields.join(","),
+              cancelToken
             },
             headers: {
               Accept: "text/csv",
             },
           });
 
-          commit("ajax", ajax);
+          commit("exportUrl", response.data);
 
-          const { data: url } = await ajax;
-
-          commit("exportUrl", url);
-
-          commit("ajax", null);
+          commit("cancelToken", null);
         } catch (e) {
-          commit("ajax", null);
+          commit("cancelToken", null);
 
           const { request, response } = e;
           commit("error", { request, response });

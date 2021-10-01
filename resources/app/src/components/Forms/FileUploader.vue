@@ -93,7 +93,7 @@ export default {
       return this.$store.state.images.errors;
     },
     loading() {
-      return !!this.$store.state.images.ajax;
+      return !!this.$store.state.images.cancelToken;
     },
     validationState() {
       if (!this.required && !this.value) {

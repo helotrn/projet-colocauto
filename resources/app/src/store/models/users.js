@@ -45,18 +45,18 @@ export default new RestModule(
   },
   {
     async approveBorrower({ commit }, userId) {
+      const { CancelToken } = Vue.axios;
+      const cancelToken = CancelToken.source();
+
       try {
-        const ajax = Vue.axios.put(`/users/${userId}/borrower/approve`);
+        commit("cancelToken", cancelToken);
+        const response = await Vue.axios.put(`/users/${userId}/borrower/approve`, null, cancelToken);
 
-        commit("ajax", ajax);
+        commit("mergeItem", { borrower: response.data });
 
-        const { data } = await ajax;
-
-        commit("mergeItem", { borrower: data });
-
-        commit("ajax", null);
+        commit("cancelToken", null);
       } catch (e) {
-        commit("ajax", null);
+        commit("cancelToken", null);
 
         const { request, response } = e;
         commit("error", { request, response });
@@ -65,18 +65,18 @@ export default new RestModule(
       }
     },
     async joinCommunity({ commit }, { communityId, userId }) {
+      const { CancelToken } = Vue.axios;
+      const cancelToken = CancelToken.source();
+
       try {
-        const ajax = Vue.axios.put(`/users/${userId}/communities/${communityId}`);
+        commit("cancelToken", cancelToken);
+        const response = await Vue.axios.put(`/users/${userId}/communities/${communityId}`, null, cancelToken);
 
-        commit("ajax", ajax);
+        commit("mergeItem", { communities: [response.data] });
 
-        const { data } = await ajax;
-
-        commit("mergeItem", { communities: [data] });
-
-        commit("ajax", null);
+        commit("cancelToken", null);
       } catch (e) {
-        commit("ajax", null);
+        commit("cancelToken", null);
 
         const { request, response } = e;
         commit("error", { request, response });
@@ -85,18 +85,18 @@ export default new RestModule(
       }
     },
     async suspendBorrower({ commit }, userId) {
+      const { CancelToken } = Vue.axios;
+      const cancelToken = CancelToken.source();
+
       try {
-        const ajax = Vue.axios.put(`/users/${userId}/borrower/suspend`);
+        commit("cancelToken", cancelToken);
+        const response = await Vue.axios.put(`/users/${userId}/borrower/suspend`, null, {cancelToken});
 
-        commit("ajax", ajax);
+        commit("mergeItem", { borrower: response.data });
 
-        const { data } = await ajax;
-
-        commit("mergeItem", { borrower: data });
-
-        commit("ajax", null);
+        commit("cancelToken", null);
       } catch (e) {
-        commit("ajax", null);
+        commit("cancelToken", null);
 
         const { request, response } = e;
         commit("error", { request, response });
@@ -105,18 +105,18 @@ export default new RestModule(
       }
     },
     async unsuspendBorrower({ commit }, userId) {
+      const { CancelToken } = Vue.axios;
+      const cancelToken = CancelToken.source();
+    
       try {
-        const ajax = Vue.axios.delete(`/users/${userId}/borrower/suspend`);
+        commit("cancelToken", cancelToken);
+        const response = await Vue.axios.delete(`/users/${userId}/borrower/suspend`, {cancelToken});
 
-        commit("ajax", ajax);
+        commit("mergeItem", { borrower: response.data });
 
-        const { data } = await ajax;
-
-        commit("mergeItem", { borrower: data });
-
-        commit("ajax", null);
+        commit("cancelToken", null);
       } catch (e) {
-        commit("ajax", null);
+        commit("cancelToken", null);
 
         const { request, response } = e;
         commit("error", { request, response });
@@ -125,21 +125,21 @@ export default new RestModule(
       }
     },
     async updateEmail({ commit }, { userId, currentPassword, newEmail }) {
+      const { CancelToken } = Vue.axios;
+      const cancelToken = CancelToken.source();
+
       try {
-        const ajax = Vue.axios.post(`/users/${userId}/email`, {
+        commit("cancelToken", cancelToken);
+        const response = await Vue.axios.post(`/users/${userId}/email`, {
           password: currentPassword,
           email: newEmail,
-        });
+        }, {cancelToken});
 
-        commit("ajax", ajax);
+        commit("mergeItem", response.data);
 
-        const { data: item } = await ajax;
-
-        commit("mergeItem", item);
-
-        commit("ajax", null);
+        commit("cancelToken", null);
       } catch (e) {
-        commit("ajax", null);
+        commit("cancelToken", null);
 
         const { request, response } = e;
         commit("error", { request, response });
@@ -148,19 +148,19 @@ export default new RestModule(
       }
     },
     async updatePassword({ commit }, { userId, currentPassword, newPassword }) {
+      const { CancelToken } = Vue.axios;
+      const cancelToken = CancelToken.source();
+      
       try {
-        const ajax = Vue.axios.post(`/users/${userId}/password`, {
+        commit("cancelToken", cancelToken);
+        const response = await Vue.axios.post(`/users/${userId}/password`, {
           current: currentPassword,
           new: newPassword,
-        });
+        }, {cancelToken});
 
-        commit("ajax", ajax);
-
-        await ajax;
-
-        commit("ajax", null);
+        commit("cancelToken", null);
       } catch (e) {
-        commit("ajax", null);
+        commit("cancelToken", null);
 
         const { request, response } = e;
         commit("error", { request, response });
@@ -170,17 +170,19 @@ export default new RestModule(
     },
     async update({ commit, state, rootState }, { id, data, params }) {
       commit("loaded", false);
+      const { CancelToken } = Vue.axios;
+      const cancelToken = CancelToken.source();
+
       try {
-        const ajax = Vue.axios.put(`/${state.slug}/${id}`, data, {
+        commit("cancelToken", cancelToken);
+        const response = await Vue.axios.put(`/${state.slug}/${id}`, data, {
           params: {
             ...params,
           },
+          cancelToken
         });
 
-        commit("ajax", ajax);
-        const { data: item } = await ajax;
-
-        if (rootState.user.id === item.id) {
+        if (rootState.user.id === response.data.id) {
           commit("user", { ...item }, { root: true });
         }
         commit("item", item);
@@ -188,9 +190,9 @@ export default new RestModule(
 
         commit("loaded", true);
 
-        commit("ajax", null);
+        commit("cancelToken", null);
       } catch (e) {
-        commit("ajax", null);
+        commit("cancelToken", null);
 
         const { request, response } = e;
         commit("error", { request, response });

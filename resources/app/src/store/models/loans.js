@@ -47,16 +47,16 @@ export default new RestModule(
   },
   {
     async cancel({ commit }, loanId) {
+      const { CancelToken } = Vue.axios;
+      const cancelToken = CancelToken.source();
+
       try {
-        const ajax = Vue.axios.put(`/loans/${loanId}/cancel`);
+        commit("cancelToken", cancelToken);
+        const response = await Vue.axios.put(`/loans/${loanId}/cancel`, null, cancelToken);
 
-        commit("ajax", ajax);
-
-        await ajax;
-
-        commit("ajax", null);
+        commit("cancelToken", null);
       } catch (e) {
-        commit("ajax", null);
+        commit("cancelToken", null);
 
         const { request, response } = e;
         commit("error", { request, response });
@@ -65,16 +65,16 @@ export default new RestModule(
       }
     },
     async cancelAction({ commit }, action) {
+      const { CancelToken } = Vue.axios;
+      const cancelToken = CancelToken.source();
+
       try {
-        const ajax = Vue.axios.put(`/loans/${action.loan_id}/actions/${action.id}/cancel`, action);
+        commit("cancelToken", cancelToken);
+        const response = await Vue.axios.put(`/loans/${action.loan_id}/actions/${action.id}/cancel`, action, {cancelToken});
 
-        commit("ajax", ajax);
-
-        await ajax;
-
-        commit("ajax", null);
+        commit("cancelToken", null);
       } catch (e) {
-        commit("ajax", null);
+        commit("cancelToken", null);
 
         const { request, response } = e;
         commit("error", { request, response });
@@ -83,19 +83,19 @@ export default new RestModule(
       }
     },
     async completeAction({ commit }, action) {
+      const { CancelToken } = Vue.axios;
+      const cancelToken = CancelToken.source();
+
       try {
-        const ajax = Vue.axios.put(
+        commit("cancelToken", cancelToken);
+        const response = await Vue.axios.put(
           `/loans/${action.loan_id}/actions/${action.id}/complete`,
-          action
+          action, {cancelToken}
         );
 
-        commit("ajax", ajax);
-
-        await ajax;
-
-        commit("ajax", null);
+        commit("cancelToken", null);
       } catch (e) {
-        commit("ajax", null);
+        commit("cancelToken", null);
 
         const { request, response } = e;
         if (request) {
@@ -121,16 +121,16 @@ export default new RestModule(
       }
     },
     async createAction({ commit }, action) {
+      const { CancelToken } = Vue.axios;
+      const cancelToken = CancelToken.source();
+
       try {
-        const ajax = Vue.axios.post(`/loans/${action.loan_id}/actions`, action);
+        commit("cancelToken", cancelToken);
+        const response = await Vue.axios.post(`/loans/${action.loan_id}/actions`, action, {cancelToken});
 
-        commit("ajax", ajax);
-
-        await ajax;
-
-        commit("ajax", null);
+        commit("cancelToken", null);
       } catch (e) {
-        commit("ajax", null);
+        commit("cancelToken", null);
 
         const { request, response } = e;
         commit("error", { request, response });
@@ -140,21 +140,15 @@ export default new RestModule(
     },
     async test({ commit }, params) {
       const { CancelToken } = Vue.axios;
-      let cancel;
+      const cancelToken = CancelToken.source();
 
       try {
-        const ajax = Vue.axios.get(`/loanables/${params.loanable_id}/test`, {
+        commit("cancelToken", cancelToken);
+        const { data } = await Vue.axios.get(`/loanables/${params.loanable_id}/test`, {
           params,
-          cancelToken: new CancelToken((c) => {
-            cancel = c;
-          }),
+          cancelToken
         });
-        ajax.cancel = cancel;
-        ajax.context = "test";
 
-        commit("ajax", ajax);
-
-        const { data } = await ajax;
 
         commit("mergeItem", {
           estimated_insurance: data.insurance,
@@ -164,8 +158,9 @@ export default new RestModule(
           },
         });
 
-        commit("ajax", null);
+        commit("cancelToken", null);
       } catch (e) {
+        commit("cancelToken", null);
         if (!e.message || e.message !== "loans canceled test") {
           throw e;
         }
