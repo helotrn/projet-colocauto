@@ -120,6 +120,11 @@
           <li><code>$KM</code>, un entier représentant le kilométrage de l'emprunt;</li>
           <li><code>$MINUTES</code>, un entier représentant la durée de l'emprunt en minutes;</li>
           <li>
+            <code>$SURCOUT_ASSURANCE</code>, un booléen représentant l'application du surcoût
+            d'assurance pour les véhicules de 5 ans ou moins (toujours faux pour d'autres objets que
+            les voitures)
+          </li>
+          <li>
             <code>$OBJET</code>, une entité donnant accès à l'objet touché par la tarification (non
             accessible pour la tarification générique).
           </li>
@@ -137,6 +142,7 @@
             <li><code>hour</code></li>
             <li><code>minute</code></li>
             <li><code>day_of_year</code></li>
+            <li><code>year_eight_months_ago</code></li>
           </ul>
         </ul>
 
