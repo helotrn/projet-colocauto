@@ -171,7 +171,7 @@ export default class TimeSelector extends Vue {
 
 .time-selector {
   option {
-    @extend .monospace;
+    @extend .tabular-nums;
   }
 }
 </style>
