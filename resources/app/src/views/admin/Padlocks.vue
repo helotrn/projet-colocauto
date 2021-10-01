@@ -48,10 +48,9 @@
         >
           <template v-slot:cell(actions)="row">
             <admin-list-actions
-              :columns="['edit', 'restore']"
+              :columns="['view']"
               :row="row"
               :slug="slug"
-              @restore="restoreItemModal(row.item)"
             />
           </template>
         </b-table>

@@ -4,6 +4,7 @@
     label="text"
     :options="data"
     :placeholder="placeholder"
+    :disabled="disabled"
     @search="setQ"
     :loading="loading"
     :filterable="false"
@@ -203,6 +204,12 @@ export default {
 .forms-relation-input {
   .vs__dropdown-toggle {
     background-color: $white;
+  }
+
+  &.vs--disabled {
+    .vs__dropdown-toggle, .vs__search, .vs__open-indicator, .vs__clear {
+      background-color: #e9ecef;
+    }
   }
 }
 </style>

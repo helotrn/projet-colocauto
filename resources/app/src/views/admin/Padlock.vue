@@ -12,16 +12,29 @@
     <b-row>
       <b-col>
         <b-form class="form" @submit.prevent="submit">
-          <forms-builder :definition="form" v-model="item" entity="padlocks" />
-
-          <div class="form__buttons">
-            <b-button-group>
-              <b-button variant="success" type="submit" :disabled="!changed || loading">
-                Sauvegarder
-              </b-button>
-              <b-button type="reset" :disabled="!changed" @click="reset"> Réinitialiser </b-button>
-            </b-button-group>
-          </div>
+          <forms-builder
+            :disabled="true"
+            :definition="form"
+            v-model="item"
+            entity="padlocks"
+          >
+            <template v-slot:loanable_id>
+              <b-form-group label="Véhicule">
+                <div class="d-flex">
+                  <b-input :disabled="true" :value="item.loanable.name">
+                    aalo
+                  </b-input>
+                  <b-button
+                    size="sm"
+                    variant="success"
+                    :to="`/admin/loanables/${item.loanable.id}`"
+                  >
+                    {{ $t("afficher") | capitalize }}
+                  </b-button>
+                </div>
+              </b-form-group>
+            </template>
+          </forms-builder>
         </b-form>
       </b-col>
     </b-row>
