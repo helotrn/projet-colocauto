@@ -20,7 +20,6 @@ export default new RestModule(
       "instructions",
       "location_description",
       "position",
-      "community_ids",
       "owner.id",
       "owner.user.id",
       "owner.user.name",
