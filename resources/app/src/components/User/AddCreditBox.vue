@@ -168,7 +168,7 @@ export default {
     },
     hasPaymentMethod() {
       return this.user.payment_methods.length > 0;
-    }
+    },
   },
   methods: {
     emitCancel() {

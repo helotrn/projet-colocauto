@@ -1,6 +1,5 @@
 <template>
   <div class="profile-payment_methods" v-if="routeDataLoaded">
-
     <b-row v-if="data.length === 0">
       <p>
         Vous pouvez ajouter un mode de paiement pour accélérer l'ajout de crédits.
