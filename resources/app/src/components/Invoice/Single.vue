@@ -43,7 +43,7 @@
                 TVQ<br />
                 Total
               </b-td>
-              <b-td>
+              <b-td class="text-right tabular-nums">
                 {{ invoice.total | currency }}<br />
                 {{ invoice.total_tps | currency }}<br />
                 {{ invoice.total_tvq | currency }}<br />
@@ -71,9 +71,9 @@ export default {
   data() {
     return {
       fields: [
-        { key: "item_date", label: "Date", sortable: false },
+        { key: "item_date", label: "Date", sortable: false, class: "tabular-nums" },
         { key: "label", label: "Description", sortable: false },
-        { key: "amount", label: "Montant", sortable: false },
+        { key: "amount", label: "Montant", sortable: false, class: "text-right tabular-nums" },
       ],
     };
   },

@@ -148,7 +148,7 @@ export default {
   data() {
     return {
       table: [
-        { key: "id", label: "ID", sortable: true },
+        { key: "id", label: "ID", sortable: true, class: "text-right tabular-nums" },
         { key: "full_name", label: "Nom", sortable: true },
         { key: "email", label: "Courriel", sortable: true },
         { key: "actions", label: "Actions", tdClass: "table__cell__actions" },
