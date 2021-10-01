@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Models;
 
+use App\Models\Bike;
 use App\Models\Car;
 use App\Models\Loan;
 use App\Models\Pricing;
@@ -261,5 +262,59 @@ RULE;
                 $pricing->evaluateRule(0, 0, null, $loan)
             );
         }
+    }
+
+    public function testRuleEvaluationSurcoutAssurance()
+    {
+        $loan = new Loan();
+        $loan->duration_in_minutes = 4 * 60;
+
+        $bike = new Bike();
+        $bike->type = "bike";
+
+        $car = new Car();
+        $car->type = "car";
+
+        $pricing = new Pricing();
+
+        // Car 2015 and departure on 2021-08-31
+        $car->year_of_circulation = 2015;
+        $loan->departure_at = new \Carbon\Carbon("2021-08-31 16:00:00");
+
+        $pricing->rule = '$EMPRUNT.start.year_eight_months_ago';
+        $this->assertEquals(2020, $pricing->evaluateRule(0, 0, $car, $loan));
+
+        $pricing->rule = 'SI $SURCOUT_ASSURANCE ALORS 1';
+        $this->assertEquals(1, $pricing->evaluateRule(0, 0, $car, $loan));
+
+        // Car 2015 and departure on 2021-09-01
+        $car->year_of_circulation = 2015;
+        $loan->departure_at = new \Carbon\Carbon("2021-09-01 16:00:00");
+
+        $pricing->rule = '$EMPRUNT.start.year_eight_months_ago';
+        $this->assertEquals(2021, $pricing->evaluateRule(0, 0, $car, $loan));
+
+        $pricing->rule = 'SI $SURCOUT_ASSURANCE ALORS 1';
+        $this->assertEquals(null, $pricing->evaluateRule(0, 0, $car, $loan));
+
+        // Car 2018 and departure on 2020-03-01
+        $car->year_of_circulation = 2018;
+        $loan->departure_at = new \Carbon\Carbon("2020-03-01 16:00:00");
+
+        $pricing->rule = '$EMPRUNT.start.year_eight_months_ago';
+        $this->assertEquals(2019, $pricing->evaluateRule(0, 0, $car, $loan));
+
+        $pricing->rule = 'SI $SURCOUT_ASSURANCE ALORS 1';
+        $this->assertEquals(1, $pricing->evaluateRule(0, 0, $car, $loan));
+
+        // Car 2010 and same departure
+        $car->year_of_circulation = 2010;
+
+        $pricing->rule = 'SI $SURCOUT_ASSURANCE ALORS 1';
+        $this->assertEquals(null, $pricing->evaluateRule(0, 0, $car, $loan));
+
+        // Car 2010 and same departure
+        $pricing->rule = 'SI NON $SURCOUT_ASSURANCE ALORS 2';
+        $this->assertEquals(2, $pricing->evaluateRule(0, 0, $bike, $loan));
     }
 }
