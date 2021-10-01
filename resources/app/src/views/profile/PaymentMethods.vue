@@ -1,12 +1,5 @@
 <template>
   <div class="profile-payment_methods" v-if="routeDataLoaded">
-    <b-row>
-      <b-col class="admin__buttons">
-        <b-btn v-if="creatable" to="/profile/payment_methods/new">
-          {{ $t("ajouter un mode de paiement") | capitalize }}
-        </b-btn>
-      </b-col>
-    </b-row>
 
     <b-row v-if="data.length === 0">
       <p>
