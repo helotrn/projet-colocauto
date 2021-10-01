@@ -29,7 +29,6 @@
     <div
       class="loanable-card__estimated-fare"
       v-if="price !== null && price !== undefined"
-      v-b-tooltip.hover
       :title="pricing"
     >
       <i> Coût estimé: {{ price | currency }} </i>
@@ -38,7 +37,6 @@
     <div v-else class="loanable-card__estimated-fare">
       <i
         class="muted"
-        v-b-tooltip.hover
         title="Recherchez pour valider la disponibilité et le coût"
       >
         Coût estimé: N/A
