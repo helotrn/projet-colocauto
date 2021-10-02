@@ -25,7 +25,7 @@ export default {
 
       try {
         commit("cancelToken", cancelToken);
-        const response = await Vue.axios.post("/images", formData);
+        const response = await Vue.axios.post("/images", formData, {cancelToken});
 
         commit("cancelToken", null);
 
