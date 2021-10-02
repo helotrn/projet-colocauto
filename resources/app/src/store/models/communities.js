@@ -46,16 +46,16 @@ export default new RestModule(
       const cancelToken = CancelToken.source();
 
       try {
-        commit("axiosCancelSource", source);
+        commit("cancelToken", cancelToken);
         const response = await Vue.axios.post(`/communities/${id}/users`, data, {
           params: {
             fields: "*,communities.*",
           },
         });
         commit("users/addData", [response.data], { root: true });
-        commit("axiosCancelSource", null);
+        commit("cancelToken", null);
       } catch (e) {
-        commit("axiosCancelSource", null);
+        commit("cancelToken", null);
         const { request, response } = e;
         commit("error", { request, response });
 
