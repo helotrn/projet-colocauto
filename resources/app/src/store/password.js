@@ -13,6 +13,12 @@ export default {
     error(state, error) {
       state.error = error;
     },
+    cancelToken(state, cancelToken) {
+      if (cancelToken && state.cancelToken) {
+        state.cancelToken.cancel(`${state.slug} canceled`);
+      }
+      state.cancelToken = cancelToken;
+    },
   },
   actions: {
     async request({ commit }, request) {

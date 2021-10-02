@@ -21,6 +21,12 @@ export default {
     loaded(state, loaded) {
       state.loaded = loaded;
     },
+    cancelToken(state, cancelToken) {
+      if (cancelToken && state.cancelToken) {
+        state.cancelToken.cancel(`${state.slug} canceled`);
+      }
+      state.cancelToken = cancelToken;
+    },
   },
   actions: {
     async buyCredit({ commit, state }, { amount, paymentMethodId }) {

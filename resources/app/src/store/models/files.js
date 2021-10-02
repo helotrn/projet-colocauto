@@ -9,6 +9,12 @@ export default {
     errors(state, errors) {
       state.errors = errors;
     },
+    cancelToken(state, cancelToken) {
+      if (cancelToken && state.cancelToken) {
+        state.cancelToken.cancel(`${state.slug} canceled`);
+      }
+      state.cancelToken = cancelToken;
+    },
   },
   actions: {
     async upload({ commit }, formData) {

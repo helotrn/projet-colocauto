@@ -18,6 +18,12 @@ export default {
     tags(state, tags) {
       state.tags = tags;
     },
+    cancelToken(state, cancelToken) {
+      if (cancelToken && state.cancelToken) {
+        state.cancelToken.cancel(`${state.slug} canceled`);
+      }
+      state.cancelToken = cancelToken;
+    },
   },
   actions: {
     async load({ commit, state }) {
