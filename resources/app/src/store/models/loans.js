@@ -52,7 +52,7 @@ export default new RestModule(
 
       try {
         commit("cancelToken", cancelToken);
-        const response = await Vue.axios.put(`/loans/${loanId}/cancel`, null, cancelToken);
+        await Vue.axios.put(`/loans/${loanId}/cancel`, null, { cancelToken: cancelToken.token });
 
         commit("cancelToken", null);
       } catch (e) {
@@ -70,11 +70,9 @@ export default new RestModule(
 
       try {
         commit("cancelToken", cancelToken);
-        const response = await Vue.axios.put(
-          `/loans/${action.loan_id}/actions/${action.id}/cancel`,
-          action,
-          { cancelToken }
-        );
+        await Vue.axios.put(`/loans/${action.loan_id}/actions/${action.id}/cancel`, action, {
+          cancelToken: cancelToken.token,
+        });
 
         commit("cancelToken", null);
       } catch (e) {
@@ -92,11 +90,9 @@ export default new RestModule(
 
       try {
         commit("cancelToken", cancelToken);
-        const response = await Vue.axios.put(
-          `/loans/${action.loan_id}/actions/${action.id}/complete`,
-          action,
-          { cancelToken }
-        );
+        await Vue.axios.put(`/loans/${action.loan_id}/actions/${action.id}/complete`, action, {
+          cancelToken: cancelToken.token,
+        });
 
         commit("cancelToken", null);
       } catch (e) {
@@ -131,8 +127,8 @@ export default new RestModule(
 
       try {
         commit("cancelToken", cancelToken);
-        const response = await Vue.axios.post(`/loans/${action.loan_id}/actions`, action, {
-          cancelToken,
+        await Vue.axios.post(`/loans/${action.loan_id}/actions`, action, {
+          cancelToken: cancelToken.token,
         });
 
         commit("cancelToken", null);
@@ -153,7 +149,7 @@ export default new RestModule(
         commit("cancelToken", cancelToken);
         const { data } = await Vue.axios.get(`/loanables/${params.loanable_id}/test`, {
           params,
-          cancelToken,
+          cancelToken: cancelToken.token,
         });
 
         commit("mergeItem", {

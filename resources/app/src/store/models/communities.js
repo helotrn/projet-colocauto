@@ -51,7 +51,7 @@ export default new RestModule(
           params: {
             fields: "*,communities.*",
           },
-          cancelToken,
+          cancelToken: cancelToken.token,
         });
         commit("users/addData", [response.data], { root: true });
         commit("cancelToken", null);
@@ -69,7 +69,7 @@ export default new RestModule(
 
       try {
         commit("cancelToken", cancelToken);
-        const response = await Vue.axios.get(`/${state.slug}/${state.item.id}/users`, {
+        const { data: url } = await Vue.axios.get(`/${state.slug}/${state.item.id}/users`, {
           params: {
             ...state.params,
             ...params,
@@ -77,12 +77,12 @@ export default new RestModule(
             page: 1,
             fields: state.usersExportFields.join(","),
           },
-          cancelToken,
+          cancelToken: cancelToken.token,
           headers: {
             Accept: "text/csv",
           },
         });
-        commit("usersExportUrl", response.data);
+        commit("usersExportUrl", url);
 
         commit("cancelToken", null);
       } catch (e) {
@@ -100,8 +100,8 @@ export default new RestModule(
 
       try {
         commit("cancelToken", cancelToken);
-        const response = await Vue.axios.delete(`/communities/${id}/users/${userId}`, {
-          cancelToken,
+        await Vue.axios.delete(`/communities/${id}/users/${userId}`, {
+          cancelToken: cancelToken.token,
         });
 
         commit("cancelToken", null);
@@ -119,11 +119,11 @@ export default new RestModule(
       const cancelToken = CancelToken.source();
 
       try {
-        const response = await Vue.axios.put(`/communities/${id}/users/${userId}`, data, {
+        await Vue.axios.put(`/communities/${id}/users/${userId}`, data, {
           params: {
             fields: "*,communities.*",
           },
-          cancelToken,
+          cancelToken: cancelToken.token,
         });
 
         const userIndex = state.users.data.findIndex((u) => u.id === data.id);
@@ -145,10 +145,12 @@ export default new RestModule(
       const cancelToken = CancelToken.source();
 
       try {
-        const response = await Vue.axios.put(
+        await Vue.axios.put(
           `/communities/${communityId}` + `/users/${userId}/tags/${tagId}`,
           null,
-          { cancelToken }
+          {
+            cancelToken: cancelToken.token,
+          }
         );
 
         commit("cancelToken", null);
@@ -167,10 +169,9 @@ export default new RestModule(
 
       try {
         commit("cancelToken", cancelToken);
-        const response = await Vue.axios.delete(
-          `/communities/${communityId}` + `/users/${userId}/tags/${tagId}`,
-          { cancelToken }
-        );
+        await Vue.axios.delete(`/communities/${communityId}` + `/users/${userId}/tags/${tagId}`, {
+          cancelToken: cancelToken.token,
+        });
 
         commit("cancelToken", null);
       } catch (e) {

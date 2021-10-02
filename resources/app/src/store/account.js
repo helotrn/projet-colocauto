@@ -40,7 +40,7 @@ export default {
             payment_method_id: paymentMethodId,
             transaction_id: state.transactionId,
           },
-          { cancelToken }
+          { cancelToken: cancelToken.token }
         );
 
         commit("data", data);
@@ -59,7 +59,9 @@ export default {
       commit();
       try {
         commit("cancelToken", cancelToken);
-        const { data } = await Vue.axios.put("/auth/user/claim", null, { cancelToken });
+        const { data } = await Vue.axios.put("/auth/user/claim", null, {
+          cancelToken: cancelToken.token,
+        });
         commit("data", data);
 
         commit("loaded", true);

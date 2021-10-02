@@ -37,9 +37,11 @@ export default new RestModule(
 
       try {
         commit("cancelToken", cancelToken);
-        const response = await Vue.axios.delete(`/${state.slug}/${id}`, { cancelToken });
+        const { data: deleted } = await Vue.axios.delete(`/${state.slug}/${id}`, {
+          cancelToken: cancelToken.token,
+        });
 
-        commit("deleted", response.data);
+        commit("deleted", deleted);
 
         commit("cancelToken", null);
 
@@ -101,7 +103,7 @@ export default new RestModule(
             loanable_id: loanableId,
             community_id: communityId,
           },
-          cancelToken,
+          cancelToken: cancelToken.token,
         });
 
         const newData = state.data.map((d) => {

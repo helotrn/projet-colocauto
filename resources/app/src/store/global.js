@@ -33,9 +33,9 @@ export default {
       if (!state.loaded) {
         try {
           commit("cancelToken", cancelToken);
-          const response = await Vue.axios.get("/tags", { cancelToken });
+          const { data } = await Vue.axios.get("/tags", { cancelToken: cancelToken.token });
 
-          commit("tags", response.data);
+          commit("tags", data);
           commit("lastLoadedAt", Date.now());
 
           commit("loaded", true);
