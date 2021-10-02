@@ -237,7 +237,7 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
       async retrieve({ dispatch, state, commit }, params) {
         const { CancelToken } = Vue.axios;
         const cancelToken = CancelToken.source();
-        
+
         commit("loaded", false);
         try {
           await dispatch("options");
