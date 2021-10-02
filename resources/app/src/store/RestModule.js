@@ -5,7 +5,7 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
   return {
     namespaced: true,
     state: {
-      axiosCancelSource: null,
+      cancelToken: null,
       data: [],
       deleted: null,
       empty: null,
@@ -242,7 +242,7 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
 
         try {
           await dispatch("options");
-          commit("axiosCancelSource", source);
+          commit("cancelToken", cancelToken);
           const response = await Vue.axios.get(`/${state.slug}`, {
             params: {
               ...state.params,
@@ -258,9 +258,9 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
 
           commit("loaded", true);
 
-          commit("axiosCancelSource", null);
+          commit("cancelToken", null);
         } catch (e) {
-          commit("axiosCancelSource", null);
+          commit("cancelToken", null);
 
           const { request, response } = e;
           commit("error", { request, response });

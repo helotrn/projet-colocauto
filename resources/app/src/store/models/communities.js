@@ -51,7 +51,7 @@ export default new RestModule(
           params: {
             fields: "*,communities.*",
           },
-          cancelToken
+          cancelToken,
         });
         commit("users/addData", [response.data], { root: true });
         commit("cancelToken", null);
