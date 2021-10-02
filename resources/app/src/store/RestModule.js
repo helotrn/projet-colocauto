@@ -196,7 +196,7 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
         if (state.form === null || state.filters === null || state.empty === null) {
           const {
             data: { item: empty, filters, form },
-          } = Vue.axios.options(`/${state.slug}`);
+          } = await Vue.axios.options(`/${state.slug}`);
 
           commit("empty", empty);
           commit("filters", filters);
@@ -237,9 +237,8 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
       async retrieve({ dispatch, state, commit }, params) {
         const { CancelToken } = Vue.axios;
         const cancelToken = CancelToken.source();
-
+        
         commit("loaded", false);
-
         try {
           await dispatch("options");
           commit("cancelToken", cancelToken);
@@ -262,6 +261,7 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
 
           commit("cancelToken", null);
         } catch (e) {
+          console.log(`error while retreive ${e}`);
           commit("cancelToken", null);
 
           const { request, response } = e;
