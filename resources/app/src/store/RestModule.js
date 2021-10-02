@@ -212,15 +212,15 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
           await dispatch("options");
 
           commit("cancelToken", cancelToken);
-          const response = await Vue.axios.get(`/${state.slug}/${id}`, {
+          const { data } = await Vue.axios.get(`/${state.slug}/${id}`, {
             params: {
               ...params,
             },
             cancelToken: cancelToken.token,
           });
 
-          commit("item", response.data);
-          commit("initialItem", response.data);
+          commit("item", data);
+          commit("initialItem", data);
 
           commit("loaded", true);
 
