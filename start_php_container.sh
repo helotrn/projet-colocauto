@@ -12,7 +12,7 @@ php artisan migrate --force
 export CACHE_DRIVER=$CACHE_DRIVER_OLD 
 
 # starting the worker for the queue 
-php artisan queue:work & \
+php artisan queue:work --tries=3 & \
 
 # Finally starting apache
 apache2-foreground
