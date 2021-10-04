@@ -168,5 +168,4 @@ export default class TimeSelector extends Vue {
 <style lang="scss">
 @import "~/node_modules/bootstrap";
 @import "@/assets/scss/_typography.scss";
-
 </style>
