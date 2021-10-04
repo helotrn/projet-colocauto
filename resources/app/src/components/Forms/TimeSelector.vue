@@ -169,9 +169,4 @@ export default class TimeSelector extends Vue {
 @import "~/node_modules/bootstrap";
 @import "@/assets/scss/_typography.scss";
 
-.time-selector {
-  option {
-    @extend .tabular-nums;
-  }
-}
 </style>
