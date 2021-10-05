@@ -103,7 +103,10 @@ extend("before", {
 
     return false;
   },
-  message: "Le champ {_field_} est invalide.",
+  message: (field, args) => {
+    const parsedDate = new Date(strtotime(args[0]) * 1000);
+    return `Le champ ${field} devrait être avant le ${dayjs(parsedDate).format("DD MMMM YYYY")}.`;
+  },
 });
 extend("after", {
   validate: (v, args) => {
@@ -115,7 +118,10 @@ extend("after", {
 
     return false;
   },
-  message: "Le champ {_field_} est invalide.",
+  message: (field, args) => {
+    const parsedDate = new Date(strtotime(args[0]) * 1000);
+    return `Le champ ${field} devrait être après le ${dayjs(parsedDate).format("DD MMMM YYYY")}.`;
+  },
 });
 
 localize("fr", fr);
