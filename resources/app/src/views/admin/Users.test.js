@@ -8,7 +8,6 @@ import router from "../../router";
 import messages from "../../locales";
 import { filters } from "../../helpers";
 
-
 window.scrollTo = jest.fn();
 
 let renderResponse;
@@ -16,9 +15,9 @@ let renderResponse;
 describe("views.admin.Users", () => {
   beforeEach(() => {
     router.push("admin/users");
-    renderResponse = render(Users, { store, router }, vue => {
+    renderResponse = render(Users, { store, router }, (vue) => {
       vue.use(Vuei18n, { filters });
-      Object.keys(filters).forEach(f => vue.filter(f, filters[f]));
+      Object.keys(filters).forEach((f) => vue.filter(f, filters[f]));
       vue.use(BootstrapVue);
       vue.use(BootstrapVueIcons);
       const i18n = new Vuei18n({
@@ -29,20 +28,20 @@ describe("views.admin.Users", () => {
           fr: {
             ...messages.fr,
             ...messages.fr.users,
-            ...messages.fr.forms
-          }
-        }
+            ...messages.fr.forms,
+          },
+        },
       });
       return {
-        i18n
+        i18n,
       };
     });
   });
   describe("Given the user filter by multiple names at different intervalles", () => {
     beforeEach(() => {});
-    it("Should make calls that are matching the filter", async() => {
-        await userEvent.click(screen.getByText("Filtres"))
-        userEvent.keyboard(screen.getByLabelText("Nom complet"))
+    it("Should make calls that are matching the filter", async () => {
+      await userEvent.click(screen.getByText("Filtres"));
+      userEvent.keyboard(screen.getByLabelText("Nom complet"));
     });
   });
 });

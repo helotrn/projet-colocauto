@@ -2,11 +2,7 @@
   <div class="admin-filters">
     <b-button variant="info" v-b-modal.modal-filters>
       Filtres
-      <small
-        >({{
-          $tc("components.admin.filters.filter", appliedFilters.length)
-        }})</small
-      >
+      <small>({{ $tc("components.admin.filters.filter", appliedFilters.length) }})</small>
     </b-button>
 
     <b-modal id="modal-filters" class="admin-filters__modal" title="Filtres">
