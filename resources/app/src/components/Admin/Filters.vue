@@ -4,9 +4,7 @@
       Filtres
       <small
         >({{
-          $tc("components.admin.filters.{count} filtre appliqué", appliedFilters.length, {
-            count: appliedFilters.length,
-          })
+          $tc("components.admin.filters.filter", appliedFilters.length)
         }})</small
       >
     </b-button>
