@@ -109,6 +109,7 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
         }
       },
       setParam(state, { name, value }) {
+        console.log('setParam 333');
         Vue.set(state.params, name, value);
       },
       total(state, total) {
@@ -235,6 +236,7 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
         }
       },
       async retrieve({ dispatch, state, commit }, params) {
+        console.log('retreive');
         const { CancelToken } = Vue.axios;
         const cancelToken = CancelToken.source();
 
