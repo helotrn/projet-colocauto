@@ -19,7 +19,7 @@ describe("views.admin.Users", () => {
         full_name: "text",
         email: "text",
         deleted_at: "date",
-        "communities.name": "text"
+        "communities.name": "text",
       },
       entity: "users",
       params: {
@@ -28,13 +28,13 @@ describe("views.admin.Users", () => {
         per_page: 10,
         q: "",
         type: null,
-        full_name: ""
-      }
+        full_name: "",
+      },
     };
 
-    render(filterElement, { store, router, props }, vue => {
+    render(filterElement, { store, router, props }, (vue) => {
       vue.use(Vuei18n, { filters });
-      Object.keys(filters).forEach(f => vue.filter(f, filters[f]));
+      Object.keys(filters).forEach((f) => vue.filter(f, filters[f]));
       vue.prototype.$filters = filters;
 
       vue.use(BootstrapVue);
@@ -45,12 +45,12 @@ describe("views.admin.Users", () => {
         formatFallbackMessages: true,
         messages: {
           fr: {
-            ...messages.fr
-          }
-        }
+            ...messages.fr,
+          },
+        },
       });
       return {
-        i18n
+        i18n,
       };
     });
   });
@@ -58,7 +58,7 @@ describe("views.admin.Users", () => {
     beforeEach(() => {});
     it("Should trigger events that are matching the filter", async () => {
       userEvent.click(screen.getByText("Filtres"));
-      await new Promise(resolve => setTimeout(resolve, 0));
+      await new Promise((resolve) => setTimeout(resolve, 0));
       userEvent.type(screen.getByLabelText("Nom complet"), "ma");
       expect(filterElement.methods.setParam.mock.calls.length).toBe(2);
       expect(filterElement.methods.setParam.mock.calls[1][1]).toBe("ma");
