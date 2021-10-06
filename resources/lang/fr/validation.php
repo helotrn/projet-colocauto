@@ -147,6 +147,9 @@ return [
     "uuid" => "Le champ :attribute doit être un UUID valide",
 
     "custom" => [
+        "status" => [
+            "action_completed" => "L'action a déjà été complétée.",
+        ],
         "accept_conditions" => [
             "accepted" =>
                 'Vous devez accepter les <a href="/conditions">conditions ' .
