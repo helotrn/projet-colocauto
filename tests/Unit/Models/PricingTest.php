@@ -313,7 +313,7 @@ RULE;
         $pricing->rule = 'SI $SURCOUT_ASSURANCE ALORS 1';
         $this->assertEquals(null, $pricing->evaluateRule(0, 0, $car, $loan));
 
-        // Car 2010 and same departure
+        // Bike: not applicable
         $pricing->rule = 'SI NON $SURCOUT_ASSURANCE ALORS 2';
         $this->assertEquals(2, $pricing->evaluateRule(0, 0, $bike, $loan));
     }
