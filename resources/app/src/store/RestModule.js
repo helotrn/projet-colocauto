@@ -193,15 +193,14 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
 
           await dispatch("retrieve", state.params);
         } catch (e) {
-          commit("ajax", null);
-
           const { request, response } = e;
           commit("error", { request, response });
 
           throw e;
+        } finally {
+          commit("ajax", null);
+          commit("loading", false);
         }
-
-        commit("loading", false);
       },
       async options({ state, commit }) {
         if (state.form === null || state.filters === null || state.empty === null) {
