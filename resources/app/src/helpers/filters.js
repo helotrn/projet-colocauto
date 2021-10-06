@@ -9,13 +9,13 @@ const capitalize = (value) => {
 };
 
 const currency = (value) => {
-  const floatVal = parseFloat(value, 10);
+  const floatVal = parseFloat(value);
 
   if (Number.isNaN(floatVal)) {
     return "";
   }
 
-  return `${floatVal.toFixed(2).replace(".", ",").replace(",00", "")}$`;
+  return `${floatVal.toFixed(2).replace(".", ",")}$`;
 };
 
 const datetime = (value) => {
