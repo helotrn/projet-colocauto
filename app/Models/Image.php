@@ -194,13 +194,13 @@ class Image extends BaseModel
                 }
 
                 $targetPath = $imagePath . $ds . $name . "_" . $model->filename;
-                if(!Image::exists($targetPath)){
+                if (!Image::exists($targetPath)) {
                     Image::store($targetPath, $canvas);
                 }
             }
-            if(!Image::exists($imagePath)){
+            if (!Image::exists($imagePath)) {
                 // The image is already uploaded in the upload of ImageController
-                // I just leave that here in case of a case I do not see but it should 
+                // I just leave that here in case of a case I do not see but it should
                 // not exists
                 Image::copy($fullPath, $imagePath . $ds . $model->filename);
                 $model->path = $imagePath;
