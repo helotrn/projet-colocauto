@@ -10,8 +10,8 @@ import VueAxios from "vue-axios";
 
 window.scrollTo = jest.fn();
 jest.mock("axios");
-axios.CancelToken = {source: () => ({token: 'token'})}
-Object.keys(filters).forEach(f => Vue.filter(f, filters[f]));
+axios.CancelToken = { source: () => ({ token: "token" }) };
+Object.keys(filters).forEach((f) => Vue.filter(f, filters[f]));
 Vue.use(BootstrapVue);
 Vue.use(VueAxios, axios);
 
@@ -20,10 +20,10 @@ let mountedUsers;
 describe("views.admin.Users", () => {
   beforeEach(() => {
     router.push("/admin/users");
-    axios.get = jest.fn(async() => {
+    axios.get = jest.fn(async () => {
       // We simulate the the api calls will take 100 ms
-      await new Promise((resolve) => setTimeout(resolve, 100))
-      return {data: 'data', total: 1, lastPage: 1}
+      await new Promise((resolve) => setTimeout(resolve, 100));
+      return { data: "data", total: 1, lastPage: 1 };
     });
 
     store.replaceState({
@@ -35,7 +35,7 @@ describe("views.admin.Users", () => {
           full_name: "text",
           email: "text",
           deleted_at: "date",
-          "communities.name": "text"
+          "communities.name": "text",
         },
         params: {
           order: "name",
@@ -43,10 +43,10 @@ describe("views.admin.Users", () => {
           per_page: 10,
           q: "",
           type: null,
-          full_name: ""
+          full_name: "",
         },
-        loaded: true
-      }
+        loaded: true,
+      },
     });
 
     mountedUsers = shallowMount(Users, {
@@ -54,8 +54,8 @@ describe("views.admin.Users", () => {
       router,
       mocks: {
         $t: () => {},
-        $tc: () => {}
-      }
+        $tc: () => {},
+      },
     });
   });
 
@@ -64,12 +64,12 @@ describe("views.admin.Users", () => {
       mountedUsers.vm.setParam({ name: "full_name", value: "m" });
     });
     it("should call the correct api after the debounce", async () => {
-      await new Promise(resolve => setTimeout(resolve, 250));
+      await new Promise((resolve) => setTimeout(resolve, 250));
       expect(axios.get).toHaveBeenCalled();
       mountedUsers.vm.setParam({ name: "full_name", value: "ma" });
-      // should call the api a second time even if the previous 
+      // should call the api a second time even if the previous
       // request did not come back yet
-      await new Promise(resolve => setTimeout(resolve, 600));
+      await new Promise((resolve) => setTimeout(resolve, 600));
       expect(axios.get).toHaveBeenCalledTimes(2);
     });
   });
