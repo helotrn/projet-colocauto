@@ -6,11 +6,6 @@ use Illuminate\Support\Facades\Artisan;
 
 class PersonalAccessClient extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
     public function up()
     {
         Artisan::call("passport:client", [
@@ -19,11 +14,6 @@ class PersonalAccessClient extends Migration
         ]);
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
     public function down()
     {
     }

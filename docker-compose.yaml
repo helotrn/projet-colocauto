@@ -42,13 +42,10 @@ services:
             GOOGLE_CLIENT_ID: 406326292737-7hbogvat3i32ungfngc8f0qn56cudbqr.apps.googleusercontent.com #dev id
             GOOGLE_CLIENT_SECRET: 3M4rv8_3L6iL7AcCcuN6nJsa # dev secret
             GOOGLE_REDIRECT: http://localhost:8000/auth/callback
-            REDIS_HOST: redis
-            REDIS_PORT: 6379
-            REDIS_PASSWORD: null
-            CACHE_DRIVER: redis
+            CACHE_DRIVER: database
             OAUTH_PRIVATE_PATH: /var/secret/oauth-private
             OAUTH_PUBLIC_PATH: /var/secret/oauth-public
-            QUEUE_CONNECTION: redis
+            QUEUE_CONNECTION: database
             STRIPE_KEY: pk_test_4lBQS366h37TcBC9IAvCaDEL00K5H3B8LH
             STRIPE_SECRET: sk_test_9wI77kB8C1XR5EqkJTMdNEac00SomF64a1
     vue:
@@ -101,10 +98,6 @@ services:
             /usr/bin/mc mb myminio/locomotion;
             exit 0;
             "
-    redis:
-        image: redis
-        ports:
-            - 6379:6379
 
 volumes:
     postgres-data:

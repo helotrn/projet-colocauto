@@ -26,6 +26,10 @@ class CommunityUser extends BasePivot
         });
     }
 
+    protected $casts = [
+        "approved_at" => "datetime",
+    ];
+
     protected $fillable = [
         "approved_at",
         "community_id",

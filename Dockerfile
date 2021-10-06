@@ -48,11 +48,7 @@ RUN echo "xdebug.start_with_request = yes" >> ${PHP_INI_DIR}/conf.d/php.ini
 RUN echo "xdebug.mode = debug" >> ${PHP_INI_DIR}/conf.d/php.ini
 
 CMD bash -c "composer install && \
-             ln -s -f $OAUTH_PRIVATE_PATH '/var/www/html/storage/oauth-private.key' && \
-             ln -s -f $OAUTH_PUBLIC_PATH '/var/www/html/storage/oauth-public.key' && \
-             php artisan migrate --force && \
-             php artisan queue:work & \
-             apache2-foreground"
+             ./start_php_container.sh"
 
 
 ###################
@@ -67,8 +63,4 @@ COPY ./php.ini ${PHP_INI_DIR}/conf.d/php.ini
 RUN composer install
 RUN chown -R www-data.www-data /var/www/html/
 
-CMD bash -c "ln -s -f $OAUTH_PRIVATE_PATH '/var/www/html/storage/oauth-private.key' && \
-             ln -s -f $OAUTH_PUBLIC_PATH '/var/www/html/storage/oauth-public.key' && \
-             php artisan migrate --force && \
-             php artisan queue:work & \
-             apache2-foreground"
+CMD ./start_php_container.sh

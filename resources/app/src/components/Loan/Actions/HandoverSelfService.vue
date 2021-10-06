@@ -80,9 +80,8 @@
             </p>
 
             <p>
-              D'autres idées pour locomotion? Contactez
-              <a href="mailto:info@locomotion.app">info@locomotion.app</a>
-              ou faites-nous part de vos suggestions pour la plateforme par ici.
+              D'autres idées pour Locomotion? Contactez-nous depuis la
+              <a href="/faq">page de contact</a>.
             </p>
 
             <p class="text-center"><strong>Merci et à très bientôt !</strong></p>
