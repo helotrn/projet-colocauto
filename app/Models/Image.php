@@ -64,6 +64,11 @@ class Image extends BaseModel
         );
     }
 
+    public static function exists($file)
+    {
+        return Storage::disk(env("FILESYSTEM_DRIVER"))->exists($file);
+    }
+
     public static function copy($source, $destination)
     {
         $image = self::fetch($source);
@@ -78,10 +83,6 @@ class Image extends BaseModel
         parent::boot();
 
         self::saving(function ($model) {
-            // if the image was already created, we do not save it again
-            if ($model->wasRecentlyCreated) {
-                return;
-            }
             if ($model->imageable) {
                 $sizes = $model->imageable::$sizes;
 
@@ -193,11 +194,17 @@ class Image extends BaseModel
                 }
 
                 $targetPath = $imagePath . $ds . $name . "_" . $model->filename;
-                Image::store($targetPath, $canvas);
+                if(!Image::exists($targetPath)){
+                    Image::store($targetPath, $canvas);
+                }
             }
-
-            Image::copy($fullPath, $imagePath . $ds . $model->filename);
-            $model->path = $imagePath;
+            if(!Image::exists($imagePath)){
+                // The image is already uploaded in the upload of ImageController
+                // I just leave that here in case of a case I do not see but it should 
+                // not exists
+                Image::copy($fullPath, $imagePath . $ds . $model->filename);
+                $model->path = $imagePath;
+            }
         });
     }
 
