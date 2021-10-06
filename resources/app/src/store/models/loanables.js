@@ -1,4 +1,7 @@
 import Vue from "vue";
+
+import { extractErrors } from "@/helpers";
+
 import RestModule from "../RestModule";
 
 export default new RestModule(
@@ -124,24 +127,30 @@ export default new RestModule(
         });
 
         commit("data", newData);
-
-        commit("ajax", null);
       } catch (e) {
-        commit("ajax", null);
-        commit(
-          "addNotification",
-          {
-            content: JSON.stringify(e),
-            title: `Erreur de test pour ${state.slug}`,
-            variant: "danger",
-            type: "ajax",
-          },
-          { root: true }
-        );
         const { request, response } = e;
-        commit("error", { request, response });
+        if (request) {
+          switch (request.status) {
+            case 422:
+              commit(
+                "addNotification",
+                {
+                  content: extractErrors(response.data).join(", "),
+                  title: "Erreur de validation",
+                  variant: "danger",
+                  type: "extension",
+                },
+                { root: true }
+              );
+              return;
+            default:
+              break;
+          }
+        }
 
         throw e;
+      } finally {
+        commit("ajax", null);
       }
     },
   }
