@@ -15,8 +15,8 @@
           <forms-builder :disabled="true" :definition="form" v-model="item" entity="padlocks">
             <template v-slot:loanable_id>
               <b-form-group label="Véhicule">
-                <div class="d-flex">
-                  <b-input :disabled="true" :value="item.loanable.name"> aalo </b-input>
+                <div class="d-flex" v-if="item.loanable">
+                  <b-input :disabled="true" :value="item.loanable.name" />
                   <b-button
                     size="sm"
                     variant="success"
@@ -25,6 +25,7 @@
                     {{ $t("afficher") | capitalize }}
                   </b-button>
                 </div>
+                <b-input :disabled="true" value="" v-else />
               </b-form-group>
             </template>
           </forms-builder>
