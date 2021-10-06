@@ -90,11 +90,6 @@
                         v-if="priceUpdating"
                         class="loan-form__estimations__loading"
                       />
-                      <div v-else-if="!item.id">
-                        <i v-b-tooltip.hover :title="item.loanable.pricing">
-                          {{ item.estimated_price | currency }}
-                        </i>
-                      </div>
                       <div v-else>
                         {{ item.estimated_price | currency }}
                       </div>
@@ -108,11 +103,6 @@
                         v-if="priceUpdating"
                         class="loan-form__estimations__loading"
                       />
-                      <div v-else-if="!item.id">
-                        <i v-b-tooltip.hover :title="item.loanable.pricing">
-                          {{ item.estimated_insurance | currency }}
-                        </i>
-                      </div>
                       <div v-else>
                         {{ item.estimated_insurance | currency }}
                       </div>

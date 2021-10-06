@@ -26,21 +26,12 @@
       </div>
     </div>
 
-    <div
-      class="loanable-card__estimated-fare"
-      v-if="price !== null && price !== undefined"
-      v-b-tooltip.hover
-      :title="pricing"
-    >
+    <div class="loanable-card__estimated-fare" v-if="price !== null && price !== undefined">
       <i> Coût estimé: {{ price | currency }} </i>
       <i v-if="insurance"> + Assurance: {{ insurance | currency }} </i>
     </div>
     <div v-else class="loanable-card__estimated-fare">
-      <i
-        class="muted"
-        v-b-tooltip.hover
-        title="Recherchez pour valider la disponibilité et le coût"
-      >
+      <i class="muted" title="Recherchez pour valider la disponibilité et le coût">
         Coût estimé: N/A
       </i>
     </div>
