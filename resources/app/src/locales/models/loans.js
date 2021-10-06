@@ -21,6 +21,7 @@ export default {
     },
     fields: {
       id: "ID",
+      actual_duration_in_minutes: "durée (minutes)",
       borrower_id: "emprunteur",
       borrower: borrowers.fr.fields,
       calendar_days: "jours calendaires",

@@ -78,8 +78,8 @@
             <p>{{ item.borrower.user.name }} doit ajouter des crédits à son compte.</p>
           </div>
         </div>
-        <div v-else>
-          <!-- Action is completed -->
+        <div v-else-if="action.status === 'in_process'">
+          <!-- Action is in process -->
           <div v-if="userRoles.includes('borrower')">
             <p>Il y a assez de crédits à votre compte pour couvrir cette course.</p>
             <p>Visitez votre profil pour ajouter des crédits à votre compte.</p>
@@ -88,6 +88,14 @@
             <p>Il y a assez de crédits au compte de l'emprunteur-se pour couvrir cette course.</p>
             <p>Visitez votre profil pour ajouter des crédits à votre compte.</p>
           </div>
+        </div>
+        <div v-else-if="action.status === 'canceled'">
+          <!-- Action is cancled -->
+          <p>Cette étape a été annulée.</p>
+        </div>
+        <div v-else>
+          <!-- Action is completed -->
+          <p>Cette étape est complétée.</p>
         </div>
       </b-collapse>
     </b-card-body>
