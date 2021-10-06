@@ -170,14 +170,10 @@
                 <b-button disabled type="submit" v-if="!item.loanable.available">
                   Indisponible
                 </b-button>
-                <b-button
-                  type="submit"
-                  :disabled="$store.state.loans.loading"
-                  v-else-if="isOwnedLoanable"
-                >
+                <b-button type="submit" :disabled="loading" v-else-if="isOwnedLoanable">
                   Faire la demande d'emprunt
                 </b-button>
-                <b-button type="submit" v-else>Réserver</b-button>
+                <b-button type="submit" :disabled="loading" v-else>Réserver</b-button>
               </b-col>
             </b-row>
           </b-form>
@@ -229,6 +225,9 @@ export default {
     },
   },
   computed: {
+    loading() {
+      return this.$store.state.loans.loading;
+    },
     loanParams() {
       return JSON.stringify({
         departure_at: this.item.departure_at,
