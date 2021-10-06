@@ -153,7 +153,13 @@
           </div>
 
           <div class="loan-actions-incident__buttons text-center" v-if="user.role === 'admin'">
-            <b-button size="sm" variant="success" class="mr-3" @click="completeAction">
+            <b-button
+              size="sm"
+              variant="success"
+              class="mr-3"
+              :disabled="actionLoading"
+              @click="completeAction"
+            >
               Résoudre
             </b-button>
           </div>

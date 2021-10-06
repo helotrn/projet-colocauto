@@ -159,11 +159,24 @@
           </div>
 
           <div class="loan-actions-extension__buttons text-center">
-            <b-button size="sm" variant="success" class="mr-3" @click="completeAction">
+            <b-button
+              size="sm"
+              variant="success"
+              class="mr-3"
+              :disabled="actionLoading"
+              @click="completeAction"
+            >
               Accepter
             </b-button>
 
-            <b-button size="sm" variant="outline-danger" @click="cancelAction"> Refuser </b-button>
+            <b-button
+              size="sm"
+              variant="outline-danger"
+              :disabled="actionLoading"
+              @click="cancelAction"
+            >
+              Refuser
+            </b-button>
           </div>
 
           <div class="loan-actions__alert">

@@ -53,11 +53,22 @@
               <p>Ou compléter cette étape sans plus attendre.</p>
 
               <div class="text-center">
-                <b-button size="sm" variant="success" class="mr-3" @click="completeAction">
+                <b-button
+                  size="sm"
+                  variant="success"
+                  class="mr-3"
+                  :disabled="actionLoading"
+                  @click="completeAction"
+                >
                   Compléter
                 </b-button>
 
-                <b-button size="sm" variant="outline-danger" @click="cancelAction">
+                <b-button
+                  size="sm"
+                  variant="outline-danger"
+                  :disabled="actionLoading"
+                  @click="cancelAction"
+                >
                   Annuler
                 </b-button>
               </div>

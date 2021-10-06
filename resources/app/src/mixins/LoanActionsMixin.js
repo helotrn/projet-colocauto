@@ -29,6 +29,11 @@ export default {
       required: true,
     },
   },
+  data() {
+    return {
+      actionLoading: false,
+    };
+  },
   computed: {
     borrower() {
       return this.item.borrower;
@@ -154,11 +159,21 @@ export default {
       }
     },
     async completeAction() {
-      await this.$store.dispatch("loans/completeAction", this.action);
+      this.actionLoading = true;
+      try {
+        await this.$store.dispatch("loans/completeAction", this.action);
+      } finally {
+        this.actionLoading = false;
+      }
       this.$emit("completed");
     },
     async cancelAction() {
-      await this.$store.dispatch("loans/cancelAction", this.action);
+      this.actionLoading = true;
+      try {
+        await this.$store.dispatch("loans/cancelAction", this.action);
+      } finally {
+        this.actionLoading = false;
+      }
       this.$emit("canceled");
     },
   },

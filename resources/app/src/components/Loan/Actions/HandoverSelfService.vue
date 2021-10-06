@@ -185,7 +185,7 @@
                     size="sm"
                     variant="success"
                     class="mr-3"
-                    :disabled="!hasEnoughBalance"
+                    :disabled="!hasEnoughBalance || actionLoading"
                     @click="completeAction"
                   >
                     Mon emprunt est terminé!
