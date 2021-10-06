@@ -188,5 +188,6 @@ return [
         "time" => "heure",
         "available" => "disponible",
         "size" => "taille",
+        "platform_tip" => "contribution volontaire",
     ],
 ];
