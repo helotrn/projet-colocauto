@@ -27,7 +27,7 @@ class Loanable extends BaseModel
 
     public static $transformer = LoanableTransformer::class;
 
-    protected $appends = ['community_ids'];
+    protected $appends = ["community_ids"];
 
     public static $filterTypes = [
         "id" => "number",
@@ -167,14 +167,24 @@ class Loanable extends BaseModel
     {
         $owner = $this->owner()->first();
         if ($owner) {
-            $loanableCommunities = $owner->user
-                ->getAccessibleCommunityIds()
-                ->toArray();
+            if ($this->share_with_parent_communities) {
+                $loanableCommunities = $owner->user
+                    ->getAccessibleCommunityIds()
+                    ->toArray();
+            } else {
+                $loanableCommunities = array_map(function ($c) {
+                    return $c["id"];
+                }, $owner->user->communities->toArray());
+            }
         } else {
-            $loanableCommunities = [
-                $this->community['id'],
-                $this->community['parent'],
-            ];
+            if ($this->share_with_parent_communities) {
+                $loanableCommunities = [
+                    $this->community["id"],
+                    $this->community["parent"]['id'],
+                ];
+            } else {
+                $loanableCommunities = [$this->community["id"]];
+            }
         }
         return array_filter($loanableCommunities);
     }
@@ -386,7 +396,7 @@ class Loanable extends BaseModel
                         "start" => $startDate->format("Y-m-d"),
                         "end" => $endDate->format("Y-m-d"),
                         "period" =>
-                        $startDate->format("H:i") .
+                            $startDate->format("H:i") .
                             "-" .
                             $endDate->format("H:i"),
                     ]
@@ -394,7 +404,7 @@ class Loanable extends BaseModel
                         "start" => $startDate->format("Y-m-d H:i"),
                         "end" => $endDate->format("Y-m-d H:i"),
                         "period" =>
-                        $startDate->format("H:i") .
+                            $startDate->format("H:i") .
                             "-" .
                             $endDate->format("H:i"),
                     ];
