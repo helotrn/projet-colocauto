@@ -28,6 +28,7 @@
           id="payment_method_id"
           name="payment_method_id"
           :options="paymentMethods"
+          v-if="hasPaymentMethod"
           v-model="paymentMethodId"
         >
           <template v-slot:first>
@@ -36,12 +37,9 @@
             </b-form-select-option>
           </template>
         </b-form-select>
-
-        <p>
-          <router-link to="/profile/payment_methods/new">
-            + Ajouter un mode de paiement
-          </router-link>
-        </p>
+        <b-btn v-else to="/profile/payment_methods/new">
+          {{ $t("ajouter un mode de paiement") | capitalize }}
+        </b-btn>
       </b-col>
 
       <b-col class="user-add-credit-box__explanations">
@@ -167,6 +165,9 @@ export default {
           selected,
         };
       });
+    },
+    hasPaymentMethod() {
+      return this.user.payment_methods.length > 0;
     },
   },
   methods: {

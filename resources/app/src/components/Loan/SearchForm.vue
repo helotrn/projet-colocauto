@@ -77,7 +77,14 @@
           />
 
           <div class="form__buttons">
-            <b-button size="sm" type="submit" variant="primary" class="mr-2 mb-2">
+            <b-button
+              size="sm"
+              type="submit"
+              variant="primary"
+              class="mr-2 mb-2"
+              :disabled="loading || invalid"
+            >
+              <b-spinner small v-if="loading" />
               Rechercher
             </b-button>
 
@@ -115,6 +122,11 @@ export default {
       required: false,
       default: false,
     },
+    loading: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
     loanableTypes: {
       type: Array,
       required: false,
@@ -136,6 +148,9 @@ export default {
     },
   },
   computed: {
+    invalid() {
+      return this.item.duration_in_minutes < 15;
+    },
     loanableTypesExceptCar() {
       return this.loanableTypes.filter((t) => t.value !== "car");
     },

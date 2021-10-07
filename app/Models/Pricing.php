@@ -27,6 +27,12 @@ class Pricing extends BaseModel
         $line = str_replace('$MINUTES', "minutes", $line);
         $line = str_replace('$OBJET', "loanable", $line);
         $line = str_replace('$EMPRUNT', "loan", $line);
+        $line = str_replace(
+            '$SURCOUT_ASSURANCE',
+            "(loanable.type == 'car' " .
+                "and (loan.start.year_eight_months_ago - loanable.year_of_circulation) <= 5)",
+            $line
+        );
 
         $line = str_replace(" NON ", " !", $line);
         $line = str_replace(" OU ", " or ", $line);
@@ -135,6 +141,7 @@ class Pricing extends BaseModel
             "hour" => $date->hour,
             "minute" => $date->minute,
             "day_of_year" => $date->dayOfYear,
+            "year_eight_months_ago" => $date->copy()->sub(8, "months")->year,
         ];
     }
 

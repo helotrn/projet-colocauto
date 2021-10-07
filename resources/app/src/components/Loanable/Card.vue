@@ -26,21 +26,12 @@
       </div>
     </div>
 
-    <div
-      class="loanable-card__estimated-fare"
-      v-if="price !== null && price !== undefined"
-      v-b-tooltip.hover
-      :title="pricing"
-    >
+    <div class="loanable-card__estimated-fare" v-if="price !== null && price !== undefined">
       <i> Coût estimé: {{ price | currency }} </i>
       <i v-if="insurance"> + Assurance: {{ insurance | currency }} </i>
     </div>
     <div v-else class="loanable-card__estimated-fare">
-      <i
-        class="muted"
-        v-b-tooltip.hover
-        title="Recherchez pour valider la disponibilité et le coût"
-      >
+      <i class="muted" title="Recherchez pour valider la disponibilité et le coût">
         Coût estimé: N/A
       </i>
     </div>
@@ -49,6 +40,10 @@
       <b-button variant="outline-primary" v-if="available" @click="$emit('select')">
         Demande d'emprunt
       </b-button>
+      <b-button v-else-if="loading" variant="outline-warning" disabled>
+        <b-spinner small v-if="loading" />
+        Valider la disponibilité
+      </b-button>
       <b-button
         v-else-if="!tested"
         variant="outline-warning"
@@ -56,7 +51,10 @@
         :title="
           `Cliquez pour valider la disponibilité avec les paramètres ` + `d'emprunt sélectionnés`
         "
-        @click.stop.prevent="$emit('test')"
+        @click.stop.prevent="
+          loading = true;
+          $emit('test');
+        "
       >
         Valider la disponibilité
       </b-button>
@@ -141,6 +139,11 @@ export default {
       required: true,
     },
   },
+  data() {
+    return {
+      loading: false,
+    };
+  },
   computed: {
     isElectric() {
       switch (this.type) {
@@ -169,6 +172,11 @@ export default {
       return {
         backgroundImage: `url('${this.image.sizes.thumbnail}')`,
       };
+    },
+  },
+  watch: {
+    available() {
+      this.loading = false;
     },
   },
 };

@@ -12,7 +12,7 @@
     <b-row>
       <b-col>
         <validation-observer ref="observer" v-slot="{ passes }">
-          <b-form class="form" @submit.prevent="passes(submit)">
+          <b-form class="form" @submit.prevent="checkInvalidThenSubmit(passes)">
             <div class="form__section">
               <h2>Informations générales</h2>
 
@@ -143,7 +143,12 @@
               >
                 <template v-slot:cell(actions)="row">
                   <div class="text-right">
-                    <b-button variant="success" size="sm" @click="viewUserInCommunity(row.item)">
+                    <b-button
+                      v-if="!row.item._new"
+                      size="sm"
+                      variant="success"
+                      @click="viewUserInCommunity(row.item)"
+                    >
                       {{ $t("afficher") | capitalize }} dans la communauté
                     </b-button>
                   </div>
@@ -529,7 +534,10 @@ export default {
   },
   methods: {
     addCommunity(community) {
-      this.item.communities.push(community);
+      this.item.communities.push({
+        ...community,
+        _new: true,
+      });
     },
     addCommunityTag(community, tag) {
       if (tag) {
@@ -541,6 +549,16 @@ export default {
     },
     async approveBorrower(user) {
       await this.$store.dispatch(`${this.slug}/approveBorrower`, user.id);
+    },
+    async checkInvalidThenSubmit(passes) {
+      await passes(this.submit);
+
+      const invalidItems = document.getElementsByClassName("is-invalid");
+      if (invalidItems.length > 0) {
+        invalidItems[0].scrollIntoView({
+          behavior: "smooth",
+        });
+      }
     },
     communityRowSelected(rows) {
       this.communitiesSelected = rows;

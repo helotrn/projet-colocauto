@@ -10,7 +10,12 @@ class TestRequest extends BaseRequest
 {
     public function authorize()
     {
-        if (($user = $this->user()) && $user->borrower) {
+        $user = $this->user();
+        if ($user && $user->borrower) {
+            return true;
+        }
+
+        if ($user && $user->isAdmin()) {
             return true;
         }
 
@@ -21,7 +26,7 @@ class TestRequest extends BaseRequest
     {
         $rules = [
             "departure_at" => ["date", "required"],
-            "duration_in_minutes" => ["integer", "required", "min:1"],
+            "duration_in_minutes" => ["integer", "required", "min:15"],
             "estimated_distance" => ["integer", "required", "min:0"],
             "loanable_id" => ["integer", "required"],
             "community_id" => ["integer", "filled"],

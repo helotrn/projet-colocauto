@@ -47,12 +47,7 @@
           empty-text="Pas de cadenas"
         >
           <template v-slot:cell(actions)="row">
-            <admin-list-actions
-              :columns="['edit', 'restore']"
-              :row="row"
-              :slug="slug"
-              @restore="restoreItemModal(row.item)"
-            />
+            <admin-list-actions :columns="['view']" :row="row" :slug="slug" />
           </template>
         </b-table>
       </b-col>
