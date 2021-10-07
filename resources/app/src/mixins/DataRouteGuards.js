@@ -94,7 +94,6 @@ export default {
 
           return required;
         }, false);
-        console.log("collectionRequired", collectionRequired);
         return acc && !collectionRequired;
       }, true);
     },
