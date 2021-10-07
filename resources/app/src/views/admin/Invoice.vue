@@ -140,7 +140,7 @@
                     TVQ<br />
                     Total
                   </b-td>
-                  <b-td>
+                  <b-td class="text-right tabular-nums">
                     {{ itemTotal | currency }}<br />
                     {{ itemTotalTps | currency }}<br />
                     {{ itemTotalTvq | currency }}<br />
@@ -219,9 +219,9 @@ export default {
   data() {
     return {
       fields: [
-        { key: "item_date", label: "Date", sortable: false },
+        { key: "item_date", label: "Date", sortable: false, tdClass: "tabular-nums" },
         { key: "label", label: "Description", sortable: false },
-        { key: "amount", label: "Montant", sortable: false },
+        { key: "amount", label: "Montant", sortable: false, tdClass: "text-right tabular-nums" },
         { key: "actions", label: "Actions", tdClass: "table__cell__actions" },
       ],
       newBillItem: null,
