@@ -149,6 +149,7 @@ return [
     "custom" => [
         "status" => [
             "action_completed" => "L'action a déjà été complétée.",
+        ],
         "duration_in_minutes" => [
             "min" =>
                 "La durée de l'emprunt doit être supérieure ou égale à 15 minutes.",
