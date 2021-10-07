@@ -102,8 +102,8 @@ export default {
   data() {
     return {
       table: [
-        { key: "id", label: "ID", sortable: true },
-        { key: "departure_at", label: "Départ", sortable: true },
+        { key: "id", label: "ID", sortable: true, class: "text-right tabular-nums" },
+        { key: "departure_at", label: "Départ", sortable: true, class: "tabular-nums" },
         { key: "borrower.user.full_name", label: "Emprunteur", sortable: true },
         { key: "loanable.owner.user.full_name", label: "Propriétaire", sortable: true },
         { key: "community.name", label: "Communauté", sortable: true },

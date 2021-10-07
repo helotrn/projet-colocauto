@@ -23,7 +23,7 @@ class Loan extends BaseModel
 
     public static $rules = [
         "departure_at" => ["required"],
-        "duration_in_minutes" => ["integer", "required"],
+        "duration_in_minutes" => ["integer", "required", "min:15"],
         "estimated_distance" => ["integer", "required"],
         "estimated_insurance" => ["numeric", "required"],
         "estimated_price" => ["numeric", "required"],
@@ -445,6 +445,7 @@ SQL
                 if ($ext->new_duration > $acc) {
                     return $ext->new_duration;
                 }
+                return $acc;
             },
             $this->duration_in_minutes);
         }

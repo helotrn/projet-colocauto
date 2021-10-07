@@ -1,5 +1,5 @@
 <template>
-  <b-container fluid v-if="item && routeDataLoaded">
+  <b-container fluid v-if="item">
     <b-row>
       <b-col>
         <h1 v-if="item.name">{{ item.name }}</h1>

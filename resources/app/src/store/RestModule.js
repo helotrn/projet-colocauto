@@ -178,19 +178,19 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
 
           commit("item", item);
           commit("initialItem", item);
-          commit("cancelToken", cancelToken);
+          commit("cancelToken", null);
 
           dispatch("retrieve", state.params);
         } catch (e) {
-          commit("cancelToken", cancelToken);
-
+          commit("cancelToken", null);
           const { request, response } = e;
           commit("error", { request, response });
 
           throw e;
+        } finally {
+          commit("ajax", null);
+          commit("loading", false);
         }
-
-        commit("loading", false);
       },
       async options({ state, commit }) {
         if (state.form === null || state.filters === null || state.empty === null) {

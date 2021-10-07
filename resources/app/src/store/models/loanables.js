@@ -1,4 +1,7 @@
 import Vue from "vue";
+
+import { extractErrors } from "@/helpers";
+
 import RestModule from "../RestModule";
 
 export default new RestModule(
@@ -134,9 +137,28 @@ export default new RestModule(
           { root: true }
         );
         const { request, response } = e;
-        commit("error", { request, response });
+        if (request) {
+          switch (request.status) {
+            case 422:
+              commit(
+                "addNotification",
+                {
+                  content: extractErrors(response.data).join(", "),
+                  title: "Erreur de validation",
+                  variant: "danger",
+                  type: "extension",
+                },
+                { root: true }
+              );
+              return;
+            default:
+              break;
+          }
+        }
 
         throw e;
+      } finally {
+        commit("ajax", null);
       }
     },
   }

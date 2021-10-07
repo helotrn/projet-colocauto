@@ -57,13 +57,13 @@ export default {
           key: "total",
           label: "Total",
           sortable: true,
-          tdClass: "text-right",
+          tdClass: "text-right tabular-nums",
         },
         {
           key: "total_with_taxes",
           label: "Total avec taxes",
           sortable: true,
-          tdClass: "text-right",
+          tdClass: "text-right tabular-nums",
         },
       ],
     };

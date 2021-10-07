@@ -47,12 +47,7 @@
           empty-text="Pas de cadenas"
         >
           <template v-slot:cell(actions)="row">
-            <admin-list-actions
-              :columns="['edit', 'restore']"
-              :row="row"
-              :slug="slug"
-              @restore="restoreItemModal(row.item)"
-            />
+            <admin-list-actions :columns="['view']" :row="row" :slug="slug" />
           </template>
         </b-table>
       </b-col>
@@ -101,9 +96,9 @@ export default {
   data() {
     return {
       table: [
-        { key: "external_id", label: "ID", sortable: true },
+        { key: "external_id", label: "ID", sortable: true, class: "text-right tabular-nums" },
         { key: "name", label: "Nom", sortable: true },
-        { key: "mac_address", label: "Adresse MAC", sortable: true },
+        { key: "mac_address", label: "Adresse MAC", sortable: true, class: "tabular-nums" },
         { key: "loanable.name", label: "Objet", sortable: true },
         { key: "actions", label: "Actions", tdClass: "table__cell__actions" },
       ],
