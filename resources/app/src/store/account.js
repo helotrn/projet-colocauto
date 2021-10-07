@@ -27,9 +27,12 @@ export default {
   },
   actions: {
     async buyCredit({ commit, state }, { amount, paymentMethodId }) {
+      const { CancelToken } = Vue.axios;
+      const cancelToken = CancelToken.source();
       commit("loaded", false);
 
       try {
+        commit("cancelToken", cancelToken);
         const { data } = await Vue.axios.put(
           "/auth/user/balance",
           {
@@ -42,7 +45,9 @@ export default {
 
         commit("data", data);
         commit("loaded", true);
+        commit("cancelToken", null);
       } catch (e) {
+        commit("cancelToken", null);
         commit("error", e.response.data);
 
         throw e;
