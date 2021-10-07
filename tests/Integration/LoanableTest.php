@@ -276,4 +276,117 @@ class LoanableTest extends TestCase
             "id" => $nextNextLoanId,
         ]);
     }
+
+    public function testLoanableTestEndpointValidation()
+    {
+        $community = factory(Community::class)
+            ->states("withDefaultFreePricing")
+            ->create();
+        $this->user->communities()->sync([
+            $community->id => [
+                "approved_at" => Carbon::now(),
+            ],
+        ]);
+        $loanable = factory(Bike::class)->create([
+            "community_id" => $community->id,
+        ]);
+
+        $this->setTestLocale();
+
+        // Complete valid request
+        $response = $this->json(
+            "GET",
+            "/api/v1/loanables/{$loanable->id}/test",
+            [
+                "departure_at" => Carbon::now()->format("Y-m-d H:i:s"),
+                "duration_in_minutes" => 20,
+                "estimated_distance" => 0,
+                "loanable_id" => $loanable->id,
+                "community_id" => $community->id,
+            ]
+        )->assertStatus(200);
+
+        // Departure missing
+        $response = $this->json(
+            "GET",
+            "/api/v1/loanables/{$loanable->id}/test",
+            [
+                "duration_in_minutes" => 20,
+                "estimated_distance" => 0,
+                "loanable_id" => $loanable->id,
+                "community_id" => $community->id,
+            ]
+        )
+            ->assertStatus(422)
+            ->assertJson([
+                "errors" => [
+                    "departure_at" => ["validation.required"],
+                ],
+            ]);
+
+        // Community missing: OK
+        $response = $this->json(
+            "GET",
+            "/api/v1/loanables/{$loanable->id}/test",
+            [
+                "departure_at" => Carbon::now()->format("Y-m-d H:i:s"),
+                "duration_in_minutes" => 20,
+                "estimated_distance" => 0,
+                "loanable_id" => $loanable->id,
+            ]
+        )->assertStatus(200);
+
+        // Loanable missing
+        $response = $this->json(
+            "GET",
+            "/api/v1/loanables/{$loanable->id}/test",
+            [
+                "departure_at" => Carbon::now()->format("Y-m-d H:i:s"),
+                "duration_in_minutes" => 20,
+                "estimated_distance" => 0,
+            ]
+        )
+            ->assertStatus(422)
+            ->assertJson([
+                "errors" => [
+                    "loanable_id" => ["validation.required"],
+                ],
+            ]);
+
+        // Duration 0
+        $response = $this->json(
+            "GET",
+            "/api/v1/loanables/{$loanable->id}/test",
+            [
+                "departure_at" => Carbon::now()->format("Y-m-d H:i:s"),
+                "duration_in_minutes" => 0,
+                "estimated_distance" => 0,
+                "loanable_id" => $loanable->id,
+            ]
+        )
+            ->assertStatus(422)
+            ->assertJson([
+                "errors" => [
+                    "duration_in_minutes" => ["validation.min.numeric"],
+                ],
+            ]);
+
+        // Estimated distance negative
+        $response = $this->json(
+            "GET",
+            "/api/v1/loanables/{$loanable->id}/test",
+            [
+                "departure_at" => Carbon::now()->format("Y-m-d H:i:s"),
+                "duration_in_minutes" => 0,
+                "estimated_distance" => -1,
+                "loanable_id" => $loanable->id,
+            ]
+        )
+            ->assertStatus(422)
+            ->assertJson([
+                "errors" => [
+                    "estimated_distance" => ["validation.min.numeric"],
+                ],
+            ]);
+    }
 }

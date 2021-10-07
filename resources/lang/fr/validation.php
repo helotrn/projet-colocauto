@@ -147,6 +147,10 @@ return [
     "uuid" => "Le champ :attribute doit être un UUID valide",
 
     "custom" => [
+        "duration_in_minutes" => [
+            "min" =>
+                "La durée de l'emprunt doit être supérieure ou égale à 15 minutes.",
+        ],
         "accept_conditions" => [
             "accepted" =>
                 'Vous devez accepter les <a href="/conditions">conditions ' .
