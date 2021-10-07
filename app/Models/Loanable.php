@@ -180,7 +180,7 @@ class Loanable extends BaseModel
             if ($this->share_with_parent_communities) {
                 $loanableCommunities = [
                     $this->community["id"],
-                    $this->community["parent"]['id'],
+                    $this->community["parent"]["id"],
                 ];
             } else {
                 $loanableCommunities = [$this->community["id"]];
