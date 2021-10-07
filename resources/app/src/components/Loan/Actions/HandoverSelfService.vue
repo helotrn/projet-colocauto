@@ -236,7 +236,7 @@ export default {
   name: "LoanActionsHandoverSelfService",
   mixins: [LoanActionsMixin],
   mounted() {
-    const platformTip = parseFloat(this.item.final_platform_tip || this.item.platform_tip, 10);
+    const platformTip = parseFloat(this.item.final_platform_tip || this.item.platform_tip);
     this.action.platform_tip = Number.isNaN(platformTip) ? 0 : platformTip;
 
     if (!this.item.actual_price) {
@@ -254,7 +254,7 @@ export default {
   },
   computed: {
     finalPrice() {
-      const platformTip = parseFloat(this.item.final_platform_tip || this.action.platform_tip, 10);
+      const platformTip = parseFloat(this.item.final_platform_tip || this.action.platform_tip);
       return this.item.actual_price + this.item.actual_insurance + platformTip;
     },
     hasEnoughBalance() {
@@ -268,7 +268,7 @@ export default {
         strParts.push(`Assurance: ${currency(this.item.actual_insurance || 0)}`); // eslint-disable-line no-irregular-whitespace
       }
 
-      const platformTip = parseFloat(this.item.final_platform_tip || this.action.platform_tip, 10);
+      const platformTip = parseFloat(this.item.final_platform_tip || this.action.platform_tip);
       if (platformTip > 0) {
         strParts.push(`Contribution: ${currency(platformTip)}`); // eslint-disable-line no-irregular-whitespace
       }
