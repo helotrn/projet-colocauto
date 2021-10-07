@@ -88,6 +88,12 @@ class HandoverController extends RestController
         $item = $this->repo->find($authRequest, $actionId);
         $loan = $this->loanRepo->find($authRequest, $loanId);
 
+        if ($item->status === "completed") {
+            return $this->respondWithErrors([
+                "status" => __("validation.custom.status.action_completed"),
+            ]);
+        }
+
         $wasContested = $item->status === "canceled";
 
         $item->fill($request->all());

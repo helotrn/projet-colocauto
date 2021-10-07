@@ -89,6 +89,12 @@ class PaymentController extends RestController
         $payment = $this->repo->find($authRequest, $actionId);
         $loan = $this->loanRepo->find($authRequest, $loanId);
 
+        if ($payment->status === "completed") {
+            return $this->respondWithErrors([
+                "status" => _("validation.custom.status.action_completed"),
+            ]);
+        }
+
         // Prepare variables
         $price = $loan->actual_price;
         $insurance = $loan->actual_insurance;

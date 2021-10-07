@@ -36,6 +36,7 @@ class Loan extends BaseModel
     public static $transformer = LoanTransformer::class;
 
     public static $filterTypes = [
+        "id" => "number",
         "actual_duration_in_minutes" => "number",
         "departure_at" => "date",
         "calendar_days" => "number",

@@ -66,6 +66,16 @@ class HandoverTest extends ActionTestCase
         $handover = $loan->handover;
 
         $this->assertNotNull($handover);
+
+        $response = $this->json(
+            "PUT",
+            "/api/v1/loans/$loan->id/actions/$handover->id/complete",
+            [
+                "type" => "handover",
+                "mileage_end" => 0,
+            ]
+        );
+        $response->assertStatus(422);
     }
 
     public function testCancelHandovers()

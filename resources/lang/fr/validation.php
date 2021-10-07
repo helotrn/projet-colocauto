@@ -147,6 +147,9 @@ return [
     "uuid" => "Le champ :attribute doit être un UUID valide",
 
     "custom" => [
+        "status" => [
+            "action_completed" => "L'action a déjà été complétée.",
+        ],
         "duration_in_minutes" => [
             "min" =>
                 "La durée de l'emprunt doit être supérieure ou égale à 15 minutes.",
@@ -189,5 +192,6 @@ return [
         "time" => "heure",
         "available" => "disponible",
         "size" => "taille",
+        "platform_tip" => "contribution volontaire",
     ],
 ];

@@ -358,6 +358,7 @@
                 size="sm"
                 variant="success"
                 class="mr-3"
+                :disabled="actionLoading"
                 @click="completeAction"
               >
                 C'est fait!
@@ -405,7 +406,12 @@
 
             <b-row class="loan-actions-handover__buttons text-center">
               <b-col>
-                <b-button size="sm" variant="outline-danger" @click="cancelAction">
+                <b-button
+                  size="sm"
+                  variant="outline-danger"
+                  :disabled="actionLoading"
+                  @click="cancelAction"
+                >
                   Contester
                 </b-button>
               </b-col>

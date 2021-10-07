@@ -18,6 +18,7 @@ abstract class ActionTestCase extends TestCase
     {
         $community = factory(Community::class)->create();
         $pricing = factory(Pricing::class)->create([
+            "rule" => "0",
             "community_id" => $community->id,
             "object_type" => "App\Models\Car",
         ]);
@@ -78,6 +79,21 @@ abstract class ActionTestCase extends TestCase
             [
                 "type" => "takeover",
                 "mileage_beginning" => 0,
+            ]
+        );
+        $response->assertStatus(200);
+
+        if ($upTo === "handover") {
+            return $loan->fresh();
+        }
+
+        $handover = $loan->handover;
+        $response = $this->json(
+            "PUT",
+            "/api/v1/loans/$loan->id/actions/$handover->id/complete",
+            [
+                "type" => "handover",
+                "mileage_end" => 10,
             ]
         );
         $response->assertStatus(200);

@@ -109,7 +109,12 @@
             v-if="!action.executed_at"
           >
             <b-col>
-              <b-button @click="completeAction" size="sm" variant="success">
+              <b-button
+                @click="completeAction"
+                :disabled="actionLoading"
+                size="sm"
+                variant="success"
+              >
                 J'ai bien lu ces infos!
               </b-button>
             </b-col>

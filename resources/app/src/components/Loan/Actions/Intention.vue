@@ -94,11 +94,22 @@
 
           <div v-if="userRoles.includes('owner')">
             <div class="loan-actions-intention__buttons text-center">
-              <b-button size="sm" variant="success" class="mr-3" @click="completeAction">
+              <b-button
+                size="sm"
+                variant="success"
+                class="mr-3"
+                :disabled="actionLoading"
+                @click="completeAction"
+              >
                 Accepter
               </b-button>
 
-              <b-button size="sm" variant="outline-danger" @click="cancelAction">
+              <b-button
+                size="sm"
+                variant="outline-danger"
+                :disabled="actionLoading"
+                @click="cancelAction"
+              >
                 Refuser
               </b-button>
             </div>

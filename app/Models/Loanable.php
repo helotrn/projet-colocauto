@@ -217,7 +217,7 @@ class Loanable extends BaseModel
         "position" => PointCast::class,
     ];
 
-    protected $with = ["image"];
+    protected $with = [];
 
     public $computed = [
         "car_insurer",

@@ -289,6 +289,7 @@
                 size="sm"
                 variant="success"
                 class="mr-3"
+                :disabled="actionLoading"
                 @click="completeAction"
               >
                 C'est fait!
