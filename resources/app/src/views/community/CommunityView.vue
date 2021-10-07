@@ -22,6 +22,7 @@
                 :selected-loanable-types="selectedLoanableTypes"
                 @selectLoanableTypes="selectLoanableTypes"
                 @selectLoanable="selectLoanable"
+                :loading="searching"
                 :loanable-types="loanableTypes"
                 :form="loanForm"
                 :can-loan-car="canLoanCar"
@@ -93,6 +94,7 @@ export default {
     return {
       lastLoanMerged: false,
       reloading: false,
+      searching: false,
     };
   },
   beforeRouteEnter(to, from, next) {
@@ -211,9 +213,14 @@ export default {
       });
     },
     async testLoanables() {
-      await this.$store.dispatch(`${this.slug}/testAll`, {
-        loan: this.loan,
-      });
+      this.searching = true;
+      try {
+        await this.$store.dispatch(`${this.slug}/testAll`, {
+          loan: this.loan,
+        });
+      } finally {
+        this.searching = false;
+      }
       this.searched = true;
     },
   },

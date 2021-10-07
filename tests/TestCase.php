@@ -96,4 +96,10 @@ SQL
     {
         Passport::actingAs($user);
     }
+
+    protected function setTestLocale($locale = "test")
+    {
+        \App::setLocale("test");
+        \App::setFallbackLocale("test");
+    }
 }
