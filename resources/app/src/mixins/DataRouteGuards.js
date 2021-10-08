@@ -45,6 +45,12 @@ export default {
     }
   },
   computed: {
+    /*
+     * In case of an 'options' call, it justs
+     * checks for a "form" attribute in the state.
+     *
+     * ex1: for users options: state.users.form has to exists
+     */
     routeDataLoaded() {
       // According to Molotov, this is a particular case and it was not kept in
       // later versions of DataRouteGuards.
@@ -60,44 +66,19 @@ export default {
 
       const {
         $store: { state },
-        $route,
         $route: {
           meta: { data },
         },
       } = this;
 
       return Object.keys(data).reduce((acc, collection) => {
-        // Each element of a collection is an action or options.
         const actions = Object.keys(data[collection]);
 
         if (actions.indexOf("options") !== -1) {
           return acc && !!state[collection].form;
         }
 
-        // For all actions regarding a collection (one expected, but who knows...):
-        // - if no conditional action, then data must be loaded;
-        // - if conditional action and condition evaluates to true, then data
-        //   must be loaded;
-        // - if conditional action and condition evaluates to false, then no
-        //   data must be loaded;
-        const collectionRequired = actions.reduce((required, action) => {
-          const routeParams = data[collection][action];
-
-          if (
-            !routeParams.conditional ||
-            routeParams.conditional({
-              route: $route,
-            })
-          ) {
-            // Collection is required.
-            return required || true;
-          }
-
-          return required;
-        }, false);
-
-        // state[collection].loaded is set in src/store/RestModule.js
-        return acc && (!collectionRequired || !!state[collection].loaded);
+        return acc;
       }, true);
     },
   },

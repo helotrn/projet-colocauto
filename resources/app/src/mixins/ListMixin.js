@@ -47,7 +47,7 @@ export default {
       return this.context.loaded;
     },
     loading() {
-      return !!this.context.ajax;
+      return !!this.context.cancelToken;
     },
     params() {
       return {

@@ -3,16 +3,12 @@ import Vue from "vue";
 export default {
   namespaced: true,
   state: {
-    ajax: null,
     data: null,
     error: null,
     loaded: false,
     transactionId: 1,
   },
   mutations: {
-    ajax(state, ajax) {
-      state.ajax = ajax;
-    },
     data(state, data) {
       state.data = data;
     },
@@ -25,30 +21,33 @@ export default {
     loaded(state, loaded) {
       state.loaded = loaded;
     },
+    cancelToken(state, cancelToken) {
+      state.cancelToken = cancelToken;
+    },
   },
   actions: {
     async buyCredit({ commit, state }, { amount, paymentMethodId }) {
+      const { CancelToken } = Vue.axios;
+      const cancelToken = CancelToken.source();
       commit("loaded", false);
 
       try {
-        const ajax = Vue.axios.put("/auth/user/balance", {
-          amount,
-          payment_method_id: paymentMethodId,
-          transaction_id: state.transactionId,
-        });
-
-        commit("ajax", ajax);
-
-        const { data } = await ajax;
+        commit("cancelToken", cancelToken);
+        const { data } = await Vue.axios.put(
+          "/auth/user/balance",
+          {
+            amount,
+            payment_method_id: paymentMethodId,
+            transaction_id: state.transactionId,
+          },
+          { cancelToken: cancelToken.token }
+        );
 
         commit("data", data);
-
         commit("loaded", true);
-
-        commit("ajax", null);
+        commit("cancelToken", null);
       } catch (e) {
-        commit("ajax", null);
-
+        commit("cancelToken", null);
         commit("error", e.response.data);
 
         throw e;
@@ -56,21 +55,21 @@ export default {
     },
     async claimCredit({ commit }) {
       commit("loaded", false);
+      const { CancelToken } = Vue.axios;
+      const cancelToken = CancelToken.source();
 
+      commit();
       try {
-        const ajax = Vue.axios.put("/auth/user/claim");
-
-        commit("ajax", ajax);
-
-        const { data } = await ajax;
-
+        commit("cancelToken", cancelToken);
+        const { data } = await Vue.axios.put("/auth/user/claim", null, {
+          cancelToken: cancelToken.token,
+        });
         commit("data", data);
 
         commit("loaded", true);
-
-        commit("ajax", null);
+        commit("cancelToken", null);
       } catch (e) {
-        commit("ajax", null);
+        commit("cancelToken", null);
 
         commit("error", e.response.data);
 

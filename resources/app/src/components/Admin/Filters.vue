@@ -1,14 +1,8 @@
 <template>
   <div class="admin-filters">
-    <b-button variant="info" v-b-modal.modal-filters>
+    <b-button variant="info" v-b-modal.modal-filters data-testid="filters-button">
       Filtres
-      <small
-        >({{
-          $tc("components.admin.filters.{count} filtre appliqué", appliedFilters.length, {
-            count: appliedFilters.length,
-          })
-        }})</small
-      >
+      <small>({{ $tc("components.admin.filters.filter", appliedFilters.length) }})</small>
     </b-button>
 
     <b-modal id="modal-filters" class="admin-filters__modal" title="Filtres">
