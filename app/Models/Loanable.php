@@ -27,6 +27,8 @@ class Loanable extends BaseModel
 
     public static $transformer = LoanableTransformer::class;
 
+    protected $appends = ["community_ids"];
+
     public static $filterTypes = [
         "id" => "number",
         "name" => "text",
@@ -159,6 +161,33 @@ class Loanable extends BaseModel
                 $model->save();
             });
         });
+    }
+
+    public function getCommunityIdsAttribute()
+    {
+        $owner = $this->owner()->first();
+        $loanableCommunities = [];
+        if ($owner) {
+            if ($this->share_with_parent_communities) {
+                $loanableCommunities = $owner->user
+                    ->getAccessibleCommunityIds()
+                    ->toArray();
+            } else {
+                $loanableCommunities = array_map(function ($c) {
+                    return $c["id"];
+                }, $owner->user->communities->toArray());
+            }
+        } elseif ($this->community) {
+            if ($this->share_with_parent_communities) {
+                $loanableCommunities = [
+                    $this->community["id"],
+                    $this->community["parent"]["id"],
+                ];
+            } else {
+                $loanableCommunities = [$this->community["id"]];
+            }
+        }
+        return array_filter($loanableCommunities);
     }
 
     public static function getColumnsDefinition()
