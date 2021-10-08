@@ -74,7 +74,7 @@ export default {
           return acc && !!state[collection].form;
         }
 
-        return acc
+        return acc;
       }, true);
     },
   },
