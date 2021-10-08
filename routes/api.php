@@ -183,5 +183,10 @@ Route::prefix("v1")->group(function () {
         "SchedulerController@emailPrePayement"
     )->where("appKey", ".*");
 
+    Route::get(
+        "/mail/subscribe/{email}",
+        "MailController@subscribe"
+    );//->middleware(["auth:api"]);
+
     Route::get("/{any?}", "StaticController@notFound")->where("any", ".*");
 });

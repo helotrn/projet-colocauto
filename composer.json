@@ -25,6 +25,7 @@
         "laravel/helpers": "^1.1",
         "laravel/passport": "^9.0",
         "laravel/socialite": "^4.3",
+        "mailchimp/marketing": "^3.0",
         "molotovcoop/laravel-api-molotov": "dev-master",
         "mstaack/laravel-postgis": "^5",
         "predis/predis": "^1.1",
