@@ -52,10 +52,14 @@ export default {
      * ex1: for users options: state.users.form has to exists
      */
     routeDataLoaded() {
+      // According to Molotov, this is a particular case and it was not kept in
+      // later versions of DataRouteGuards.
       if (this.reloading) {
         return true;
       }
 
+      // meta.data specifies what data should be loaded for a given route. No
+      // meta.data: noting to load, hence considered implicitely loaded.
       if (!this.$route.meta || !this.$route.meta.data) {
         return true;
       }
