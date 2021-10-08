@@ -114,7 +114,7 @@ export default new RestModule(
         throw e;
       }
     },
-    async updateUser({ commit, state }, { id, userId, data }) {
+    async updateUser({ commit, rootState }, { id, userId, data }) {
       const { CancelToken } = Vue.axios;
       const cancelToken = CancelToken.source();
 
@@ -128,13 +128,12 @@ export default new RestModule(
         });
         commit("cancelToken", null);
 
-        const userIndex = state.users.data.findIndex((u) => u.id === data.id);
-        const newUserArray = [...state.users.data];
+        const userIndex = rootState.users.data.findIndex((u) => u.id === data.id);
+        const newUserArray = [...rootState.users.data];
         newUserArray[userIndex] = data;
 
-        commit("users/data", {
-          newUserArray,
-        });
+        console.log(newUserArray);
+        commit("users/data", newUserArray, { root: true });
       } catch (e) {
         commit("cancelToken", null);
         const { request, response } = e;

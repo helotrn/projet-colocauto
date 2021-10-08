@@ -393,6 +393,7 @@ export default {
 
         const community = data.communities.find((c) => c.id === this.item.id);
         community.role = role;
+        data.role = role; // the data was misplaced so we leave it also here
 
         return data;
       });
@@ -405,6 +406,7 @@ export default {
 
         const community = data.communities.find((c) => c.id === this.item.id);
         community.suspended_at = new Date();
+        data.suspended_at = community.suspended_at; // the data was misplaced so we leave it also here
 
         return data;
       });
@@ -417,6 +419,7 @@ export default {
 
         const community = data.communities.find((c) => c.id === this.item.id);
         community.suspended_at = null;
+        data.suspended_at = null; // the data was misplaced so we leave it also here
 
         return data;
       });
