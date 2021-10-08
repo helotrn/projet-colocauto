@@ -1,0 +1,15 @@
+* 752 Le véhicule redevient disponible quand l'emprunt est clos
+* 457 Les courriels automatisés sont envoyés correctement
+* 619 On Voit toutes les communautés d'une auto dans l'export
+* 766 Les contacts et la FAQ ont été fusionnés
+* 770 Les pages de communautés sont maintenant rapides
+* 774 Dans l'admin, on ne peux plus faire de changement sur les cadenas
+* 660 Il n'y a plus de bouton pour ajouter une seconde carte
+* 777 Dans une demande d'emprunt, le coût estimé et l'assurance sont maintenant correctes
+* 764 Le calcul du surcoût d'assurance pour véhicule de 5 ans et moins a été corrigé
+* 785 Les réservations doivent maintenant être de 10 minutes ou plus
+* 775 Suppression du texte erroné "Il manque de crédits"
+* 710 On empêche la création de paiements multiples
+* 652 Les liens vers les documents d'assurance ont été corrigés
+* 750 Les images ne deviendront plus vertes toutes seules. Il faut terminer de nettoyer les images existantes
+* 771 Les filtres sont maintenant toujours appliqués correctement
