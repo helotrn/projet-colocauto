@@ -40,7 +40,7 @@ export default {
       },
     },
     loading() {
-      return !!this.context.ajax;
+      return !!this.context.cancelToken;
     },
     params() {
       return this.$route.meta.params;

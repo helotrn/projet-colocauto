@@ -316,7 +316,7 @@ export default {
       },
     },
     usersLoading() {
-      return !!this.$store.state.users.ajax;
+      return !!this.$store.state.users.cancelToken;
     },
   },
   methods: {
@@ -337,10 +337,6 @@ export default {
         data: {
           id: user.id,
         },
-      });
-
-      this.$store.state.communities.lastAjax.then(({ data }) => {
-        this.$store.commit("users/addData", [data]);
       });
     },
     async approveUser(user) {
@@ -397,6 +393,7 @@ export default {
 
         const community = data.communities.find((c) => c.id === this.item.id);
         community.role = role;
+        data.role = role; // the data was misplaced so we leave it also here
 
         return data;
       });
@@ -409,6 +406,7 @@ export default {
 
         const community = data.communities.find((c) => c.id === this.item.id);
         community.suspended_at = new Date();
+        data.suspended_at = community.suspended_at; // the data was misplaced so we leave it also here
 
         return data;
       });
@@ -421,6 +419,7 @@ export default {
 
         const community = data.communities.find((c) => c.id === this.item.id);
         community.suspended_at = null;
+        data.suspended_at = null; // the data was misplaced so we leave it also here
 
         return data;
       });
@@ -438,20 +437,6 @@ export default {
         id: this.item.id,
         data,
         userId: user.id,
-      });
-
-      this.$store.state.communities.lastAjax.then(({ data: d }) => {
-        const item = this.$store.state.users.data.find((u) => u.id === d.id);
-        const index = this.$store.state.users.data.indexOf(item);
-
-        const newData = [...this.$store.state.users.data];
-        newData.splice(index, 1, {
-          ...item,
-          ...d,
-          id: item.id,
-        });
-
-        this.$store.commit("users/data", newData);
       });
     },
   },

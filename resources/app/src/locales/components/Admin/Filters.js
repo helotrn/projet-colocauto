@@ -1,7 +1,8 @@
 export default {
   fr: {
-    "{count} filtre appliqué":
-      "aucun filtre appliqué | 1 filtre appliqué | {count} filtres appliqués",
+    filter: "aucun filtre appliqué | 1 filtre appliqué | {n} filtres appliqués",
   },
-  en: {},
+  en: {
+    filter: "No filter | 1 filter | {n} filters",
+  },
 };

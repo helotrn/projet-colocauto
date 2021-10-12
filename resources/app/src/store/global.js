@@ -9,9 +9,6 @@ export default {
     tags: [],
   },
   mutations: {
-    ajax(state, ajax) {
-      state.ajax = ajax;
-    },
     lastLoadedAt(state, lastLoadedAt) {
       state.lastLoadedAt = lastLoadedAt;
     },
@@ -21,26 +18,28 @@ export default {
     tags(state, tags) {
       state.tags = tags;
     },
+    cancelToken(state, cancelToken) {
+      state.cancelToken = cancelToken;
+    },
   },
   actions: {
     async load({ commit, state }) {
+      const { CancelToken } = Vue.axios;
+      const cancelToken = CancelToken.source();
+
       if (!state.loaded) {
         try {
-          const ajax = Vue.axios.get("/tags");
+          commit("cancelToken", cancelToken);
+          const { data } = await Vue.axios.get("/tags", { cancelToken: cancelToken.token });
 
-          commit("ajax", ajax);
-
-          const {
-            data: { data: tags },
-          } = await ajax;
-
-          commit("tags", tags);
+          commit("tags", data);
           commit("lastLoadedAt", Date.now());
 
           commit("loaded", true);
 
-          commit("ajax", null);
+          commit("cancelToken", null);
         } catch (e) {
+          commit("cancelToken", null);
           throw e;
         }
       }

@@ -23,6 +23,7 @@ export default new RestModule(
       "instructions",
       "location_description",
       "position",
+      "community_ids",
       "owner.id",
       "owner.user.id",
       "owner.user.name",
@@ -35,20 +36,22 @@ export default new RestModule(
   },
   {
     async disable({ commit, dispatch, state }, id) {
+      const { CancelToken } = Vue.axios;
+      const cancelToken = CancelToken.source();
+
       try {
-        const ajax = Vue.axios.delete(`/${state.slug}/${id}`);
-
-        commit("ajax", ajax);
-
-        const { data: deleted } = await ajax;
+        commit("cancelToken", cancelToken);
+        const { data: deleted } = await Vue.axios.delete(`/${state.slug}/${id}`, {
+          cancelToken: cancelToken.token,
+        });
 
         commit("deleted", deleted);
 
-        commit("ajax", null);
+        commit("cancelToken", null);
 
         await dispatch("loadUser", null, { root: true });
       } catch (e) {
-        commit("ajax", null);
+        commit("cancelToken", null);
 
         const { request, response } = e;
         commit("error", { request, response });
@@ -70,7 +73,7 @@ export default new RestModule(
     },
     async testAll({ commit, state }, { loan, communityId }) {
       try {
-        const ajax = Promise.all([
+        const responses = await Promise.all([
           ...state.data.map((d) =>
             Vue.axios.get(`/${state.slug}/${d.id}/test`, {
               params: { ...loan, loanable_id: d.id, community_id: communityId },
@@ -78,22 +81,14 @@ export default new RestModule(
           ),
         ]);
 
-        commit("ajax", ajax);
-
-        const data = await ajax;
-
         const newData = state.data.map((d, index) => ({
           ...d,
-          ...data[index].data,
+          ...responses[index].data,
           tested: true,
         }));
 
         commit("data", newData);
-
-        commit("ajax", null);
       } catch (e) {
-        commit("ajax", null);
-
         const { request, response } = e;
         commit("error", { request, response });
 
@@ -101,24 +96,25 @@ export default new RestModule(
       }
     },
     async testOne({ commit, state }, { communityId, loan, loanableId }) {
+      const { CancelToken } = Vue.axios;
+      const cancelToken = CancelToken.source();
+
       try {
-        const ajax = Vue.axios.get(`/${state.slug}/${loanableId}/test`, {
+        commit("cancelToken", cancelToken);
+        const response = await Vue.axios.get(`/${state.slug}/${loanableId}/test`, {
           params: {
             ...loan,
             loanable_id: loanableId,
             community_id: communityId,
           },
+          cancelToken: cancelToken.token,
         });
-
-        commit("ajax", ajax);
-
-        const { data } = await ajax;
 
         const newData = state.data.map((d) => {
           if (d.id === loanableId) {
             return {
               ...d,
-              ...data,
+              ...response.data,
               tested: true,
             };
           }
@@ -127,7 +123,20 @@ export default new RestModule(
         });
 
         commit("data", newData);
+
+        commit("cancelToken", null);
       } catch (e) {
+        commit("cancelToken", null);
+        commit(
+          "addNotification",
+          {
+            content: JSON.stringify(e),
+            title: `Erreur de test pour ${state.slug}`,
+            variant: "danger",
+            type: "ajax",
+          },
+          { root: true }
+        );
         const { request, response } = e;
         if (request) {
           switch (request.status) {
