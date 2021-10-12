@@ -16,11 +16,22 @@ $factory->afterCreatingState(
     Community::class,
     "withDefaultFreePricing",
     function (Community $community) {
-        $community->pricings()->save(
-            factory(Pricing::class)->make([
-                "object_type" => null,
-                "rule" => "0",
-            ])
-        );
+        factory(Pricing::class)->make([
+            "object_type" => null,
+            "rule" => "0",
+            "community_id" => $community->id,
+        ]);
+    }
+);
+
+$factory->afterCreatingState(
+    Community::class,
+    "withDefault10DollarsPricing",
+    function (Community $community) {
+        factory(Pricing::class)->create([
+            "object_type" => null,
+            "rule" => "[10, 0]",
+            "community_id" => $community->id,
+        ]);
     }
 );
