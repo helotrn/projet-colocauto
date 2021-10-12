@@ -49,3 +49,10 @@ test:phpunit:
     - php artisan passport:install --env testing
     - export XDEBUG_MODE="coverage"
     - vendor/bin/phpunit --coverage-text --colors=never
+
+test:jest:
+  image: node:12
+  stage: test
+  script:
+    - npm install
+    - npm run test
