@@ -178,7 +178,10 @@ class Loanable extends BaseModel
                 }, $owner->user->communities->toArray());
             }
         } elseif ($this->community) {
-            if ($this->share_with_parent_communities && $this->community["parent"]) {
+            if (
+                $this->share_with_parent_communities &&
+                $this->community["parent"]
+            ) {
                 $loanableCommunities = [
                     $this->community["id"],
                     $this->community["parent"]["id"],
