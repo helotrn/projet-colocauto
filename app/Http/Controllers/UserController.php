@@ -23,6 +23,7 @@ use App\Models\User;
 use App\Repositories\CommunityRepository;
 use App\Repositories\InvoiceRepository;
 use App\Repositories\UserRepository;
+use GuzzleHttp\Exception\ClientException;
 use Cache;
 use Excel;
 use Mail;
@@ -88,6 +89,64 @@ class UserController extends RestController
     {
         try {
             $item = parent::validateAndUpdate($request, $id);
+            $userInfo = $request->json()->all();
+
+            # Settign up mailchimp marketing
+            $desNouvellesDeSolonId = "0e5ad9b3b1--";
+
+            $mailchimp = new \MailchimpMarketing\ApiClient();
+
+            $mailchimp->setConfig([
+                "apiKey" => env("MAILCHIMP_KEY"),
+                "server" => env("MAILCHIMP_SERVER_PREFIX"),
+            ]);
+
+            try {
+                if ($userInfo["opt_in_newsletter"] && env("MAILCHIMP_KEY")) {
+                    $mailchimpUser = [
+                        "email_address" => $userInfo["email"],
+                        "status" => "subscribed",
+                        "merge_fields" => [
+                            "FNAME" => $userInfo["name"],
+                            "LNAME" => $userInfo["last_name"],
+                            "CODEPOSTAL" => $userInfo["postal_code"],
+                            "MMERGE6" => $userInfo["phone"],
+                            "ADDRESS" => $userInfo["address"],
+                        ],
+                    ];
+
+                    $searchResponse = $mailchimp->searchMembers->search(
+                        $userInfo["email"]
+                    );
+                    if ($searchResponse->exact_matches->total_items == 0) {
+                        # The user in not in the list. We add him
+                        $mailchimp->lists->addListMember(
+                            $desNouvellesDeSolonId,
+                            $mailchimpUser
+                        );
+                    } else {
+                        # The user is in the list, we update its info
+                        $mailchimp->lists->setListMember(
+                            $desNouvellesDeSolonId,
+                            $searchResponse->exact_matches->members[0]->id,
+                            $mailchimpUser
+                        );
+                    }
+                } else {
+                    // We are not opt_in_newsletter so we'll see if we need to unsubscibe
+                    $searchResponse = $mailchimp->searchMembers->search(
+                        $userInfo["email"]
+                    );
+                    if ($searchResponse->exact_matches->total_items > 0) {
+                        $mailchimp->lists->deleteListMember(
+                            $desNouvellesDeSolonId,
+                            $searchResponse->exact_matches->members[0]->id
+                        );
+                    }
+                }
+            } catch (ClientException $e) {
+                Log::error($e);
+            }
         } catch (ValidationException $e) {
             return $this->respondWithErrors($e->errors(), $e->getMessage());
         } catch (ModelNotFoundException $e) {
