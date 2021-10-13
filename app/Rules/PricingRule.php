@@ -9,6 +9,9 @@ class PricingRule implements Rule
 {
     protected $message;
 
+    /*
+      This validates the pricing rule through evaluation using arbitrary data.
+    */
     public function passes($attribute, $value)
     {
         $lines = explode("\n", $value);
@@ -21,6 +24,7 @@ class PricingRule implements Rule
                     "loanable" => (object) [
                         "pricing_category" => "large",
                         "year_of_circulation" => 1999,
+                        "type" => "car",
                     ],
                     "loan" => (object) [
                         "days" => 1,
