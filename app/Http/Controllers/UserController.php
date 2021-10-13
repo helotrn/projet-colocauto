@@ -92,7 +92,7 @@ class UserController extends RestController
             $userInfo = $request->json()->all();
 
             # Settign up mailchimp marketing
-            $desNouvellesDeSolonId = "0e5ad9b3b1--";
+            $desNouvellesDeSolonId = env("MAILCHIMP_LIST_ID");
 
             $mailchimp = new \MailchimpMarketing\ApiClient();
 
