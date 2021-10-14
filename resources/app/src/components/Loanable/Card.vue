@@ -172,11 +172,6 @@ export default {
       };
     },
   },
-  watch: {
-    available(val) {
-      this.loading = false;
-    },
-  },
 };
 </script>
 
