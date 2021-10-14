@@ -140,7 +140,7 @@ export default {
     },
   },
   computed: {
-    loading () {
+    loading() {
       return this.$store.state.loans.cancelToken;
     },
     isElectric() {
