@@ -85,7 +85,7 @@
           <template v-slot:button-content>
             <b-badge pill variant="locomotion" class="layout-navbar__dropdown__icon">
               <b-img v-if="avatarUrl" :src="avatarUrl" rounded="circle" />
-              <span v-if="!avatarUrl" class="initials">
+              <span v-if="!avatarUrl" class="layout-navbar__dropdown__initials">
                 {{ userInitials }}
               </span>
             </b-badge>
@@ -242,21 +242,19 @@ export default {
 </script>
 
 <style lang="scss">
-.initials {
-  position: relative;
-  font-size: 18px;
-  left: -0.5px;
-  top: 11px;
-}
+.layout-navbar {
+  &__dropdown {
+    &__initials {
+      position: relative;
+      font-size: 18px;
+      left: -0.5px;
+      top: 11px;
+    }
 
-span.badge {
-  padding: 0;
-}
-
-.layout-navbar__dropdown {
-  img {
-    width: $line-height-base + (2 * $nav-link-padding-y);
-    height: $line-height-base + (2 * $nav-link-padding-y);
+    img {
+      width: $line-height-base + (2 * $nav-link-padding-y);
+      height: $line-height-base + (2 * $nav-link-padding-y);
+    }
   }
 }
 </style>
