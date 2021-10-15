@@ -164,7 +164,6 @@
 import { gmapApi } from "vue2-google-maps";
 
 import BoroughDifferenceModal from "@/components/Misc/BoroughDifferenceModal.vue";
-import MailchimpNewsletter from "@/components/Misc/MailchimpNewsletter.vue";
 
 import Authenticated from "@/mixins/Authenticated";
 import DataRouteGuards from "@/mixins/DataRouteGuards";
@@ -184,7 +183,6 @@ export default {
   },
   components: {
     BoroughDifferenceModal,
-    MailchimpNewsletter,
   },
   data() {
     return {
