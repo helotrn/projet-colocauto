@@ -550,7 +550,7 @@ SQL
         }
 
         if ($this->canceled_at) {
-            return true;
+            return 'canceled';
         }
 
         if ($action = $this->actions->last()) {
