@@ -124,6 +124,13 @@ class UserController extends RestController
                             $desNouvellesDeSolonId,
                             $mailchimpUser
                         );
+                    } else {
+                        # The user is in the list, we update its info
+                        $mailchimp->lists->setListMember(
+                            $desNouvellesDeSolonId,
+                            $searchResponse->exact_matches->members[0]->id,
+                            $mailchimpUser
+                        );
                     }
                 }
             } catch (ClientException $e) {
@@ -483,7 +490,7 @@ class UserController extends RestController
                 "currency" => "cad",
                 "customer" => $user->getStripeCustomer()->id,
                 "description" =>
-                    "Ajout au compte LocoMotion: " .
+                "Ajout au compte LocoMotion: " .
                     "{$amount}$ + {$fee}$ (frais)",
             ]);
         } catch (\Exception $e) {
@@ -506,7 +513,7 @@ class UserController extends RestController
 
             $invoice->billItems()->create([
                 "label" =>
-                    "Ajout au compte LocoMotion: " .
+                "Ajout au compte LocoMotion: " .
                     "{$amount}$ + {$fee}$ (frais)",
                 "amount" => $amountWithFee,
                 "item_date" => date("Y-m-d"),
