@@ -131,6 +131,9 @@ class ActionsCompleteTest extends TestCase
         $twoDaysAgo = Carbon::now()
             ->sub(48, "hours")
             ->sub(10, "seconds");
+        $twoDaysFromNow = Carbon::now()
+            ->add(48, "hours")
+            ->add(10, "seconds");
 
         Carbon::setTestNow($twoDaysAgo);
 
@@ -150,6 +153,18 @@ class ActionsCompleteTest extends TestCase
                 "borrower_id" => $user->borrower->id,
                 "community_id" => $car->community_id,
                 "departure_at" => Carbon::now()->sub(48, "hours"),
+                "duration_in_minutes" => 60,
+                "loanable_id" => $car->id,
+                "platform_tip" => 0,
+            ]);
+
+        $intentionLoanInFuture = factory(Loan::class)
+            ->states("withCompletedIntention", "withInProcessTakeover")
+            ->create([
+                "borrower_id" => $user->borrower->id,
+                "community_id" => $car->community_id,
+                "departure_at" => Carbon::now()->add(48, "hours"),
+                "duration_in_minutes" => 60,
                 "loanable_id" => $car->id,
                 "platform_tip" => 0,
             ]);
@@ -157,11 +172,25 @@ class ActionsCompleteTest extends TestCase
         // Validate initial state
         Carbon::setTestNow();
         $this->assertEquals("in_process", $intentionLoan->loanStatus);
+        $this->assertEquals("in_process", $intentionLoanInFuture->loanStatus);
 
         // Run the command
         app(ActionsCompleteCommand::class)->handle();
         $intentionLoan = $intentionLoan->fresh();
+        $intentionLoanInFuture = $intentionLoanInFuture->fresh();
 
+        // This one ended in the past
         $this->assertEquals("canceled", $intentionLoan->loanStatus);
+
+        // This one is not yet ended, so it's not canceled yet
+        $this->assertEquals("in_process", $intentionLoanInFuture->loanStatus);
+
+        // Run the command again in the future
+        Carbon::setTestNow($twoDaysFromNow);
+        app(ActionsCompleteCommand::class)->handle();
+        $intentionLoanInFuture = $intentionLoanInFuture->fresh();
+
+        // This one is canceled now
+        $this->assertEquals("canceled", $intentionLoanInFuture->loanStatus);
     }
 }

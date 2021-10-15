@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Http\Controllers\ActionController;
 use App\Http\Requests\Action\ActionRequest;
 use App\Models\Action;
+use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Log;
 
@@ -59,19 +60,24 @@ class ActionsComplete extends Command
             try {
                 switch ($action->type) {
                     case "takeover":
-                        Log::info(
-                            "Autocancelling loan ID $loan->id because "
-                                . "$action->type has not been completed..."
-                        );
+                        if ($loan->departure_at &&
+                            Carbon::parse($loan->departure_at)
+                                ->add($loan->actual_duration_in_minutes, 'minutes')
+                                ->isPast()) {
+                            Log::info(
+                                "Autocancelling loan ID $loan->id because "
+                                    . "$action->type has not been completed..."
+                            );
 
-                        $loan->update([
-                            'canceled_at' => new \DateTime(),
-                        ]);
+                            $loan->update([
+                                'canceled_at' => new \DateTime(),
+                            ]);
 
-                        Log::info(
-                            "Canceled loan ID $loan->id because "
-                                . "$action->type has never been completed."
-                        );
+                            Log::info(
+                                "Canceled loan ID $loan->id because "
+                                    . "$action->type has never been completed."
+                            );
+                        }
                         break;
                     case "handover":
                         Log::info(
