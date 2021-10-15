@@ -60,22 +60,27 @@ class ActionsComplete extends Command
             try {
                 switch ($action->type) {
                     case "takeover":
-                        if ($loan->departure_at &&
+                        if (
+                            $loan->departure_at &&
                             Carbon::parse($loan->departure_at)
-                                ->add($loan->actual_duration_in_minutes, 'minutes')
-                                ->isPast()) {
+                                ->add(
+                                    $loan->actual_duration_in_minutes,
+                                    "minutes"
+                                )
+                                ->isPast()
+                        ) {
                             Log::info(
-                                "Autocancelling loan ID $loan->id because "
-                                    . "$action->type has not been completed..."
+                                "Autocancelling loan ID $loan->id because " .
+                                    "$action->type has not been completed..."
                             );
 
                             $loan->update([
-                                'canceled_at' => new \DateTime(),
+                                "canceled_at" => new \DateTime(),
                             ]);
 
                             Log::info(
-                                "Canceled loan ID $loan->id because "
-                                    . "$action->type has never been completed."
+                                "Canceled loan ID $loan->id because " .
+                                    "$action->type has never been completed."
                             );
                         }
                         break;
