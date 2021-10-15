@@ -53,7 +53,7 @@
               Validez dès maintenant les informations sur ce trajet&nbsp;: le kilomètrage, la
               facture d'essence&hellip;
             </p>
-            <p>
+            <p v-else>
               Validez dès maintenant les informations sur ce trajet.
             </p>
             <p>

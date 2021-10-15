@@ -229,7 +229,7 @@
 
               <b-row
                 class="loan-actions-handover__buttons text-center"
-                v-if="(!action.executed_at && !loanIsCanceled && !item.contested_at) || userIsAdmin"
+                v-if="(!action.executed_at && !loanIsCanceled && !item.contested_at)"
               >
                 <b-col>
                   <b-button type="submit" size="sm" variant="success" class="mr-3">
@@ -436,6 +436,19 @@
           <p>
             Un membre de l'équipe LocoMotion contactera les participant-e-s et ajustera les données.
           </p>
+
+          <div v-if="userIsAdmin" class="text-center">
+            <b-button
+              type="submit"
+              size="sm"
+              variant="success"
+              class="mr-3"
+              :disabled="actionLoading"
+              @click="completeAction"
+            >
+              Résoudre la contestation
+            </b-button>
+          </div>
         </div>
       </b-collapse>
     </b-card-body>
