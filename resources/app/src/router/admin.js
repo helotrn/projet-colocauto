@@ -134,7 +134,8 @@ export default {
         data: {
           users: {
             retrieve: {
-              fields: "id,name,last_name,full_name,email",
+              fields: "id,name,last_name,full_name,email,is_deactivated",
+              is_deactivated: 0,
             },
           },
         },

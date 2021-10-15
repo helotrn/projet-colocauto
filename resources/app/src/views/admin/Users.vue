@@ -43,7 +43,7 @@
           entity="users"
           :filters="filters"
           :params="contextParams"
-          @change="setParam"
+          @change="customSetParam"
         />
       </b-col>
     </b-row>
@@ -87,7 +87,25 @@
           </template>
           <template v-slot:cell(actions)="row">
             <div class="user-actions">
-              <admin-list-actions :columns="['edit', 'delete']" :row="row" :slug="slug" />
+              <admin-list-actions :columns="['edit']" :row="row" :slug="slug" />
+              <b-button
+                v-if="!row.item.is_deactivated"
+                size="sm"
+                class="mr-1"
+                variant="danger"
+                @click="destroyItemModal(row.item, () => deactivateUser(row.item.id))"
+              >
+                {{ $t("archiver") | capitalize }}
+              </b-button>
+              <b-button
+                v-else
+                size="sm"
+                class="mr-1"
+                variant="warning"
+                @click="restoreItemModal(row.item, () => activateUser(row.item.id))"
+              >
+                {{ $t("restaurer") | capitalize }}
+              </b-button>
               <b-button
                 :id="'mandate-' + row.item.id"
                 size="sm"
@@ -156,6 +174,14 @@ export default {
     };
   },
   methods: {
+    //we use a setParam wrapper to make sure the default params always exclude deactivated users
+    customSetParam(param) {
+      if (param.name === "is_deactivated" && typeof param.value === "undefined") {
+        this.setParam({ ...param, value: 0 });
+      } else {
+        this.setParam(param);
+      }
+    },
     async mandate(mandatedUserId) {
       this.$store.dispatch("account/mandate", { mandatedUserId });
     },
@@ -205,6 +231,22 @@ export default {
         `/users/send/registration_rejected?id=${this.selected.map((s) => s.id).join(",")}`
       );
       this.displayMailStatus(data);
+    },
+    activateUser(id) {
+      return this.$store.dispatch(`${this.slug}/update`, {
+        id: id,
+        data: {
+          is_deactivated: 0,
+        },
+      });
+    },
+    deactivateUser(id) {
+      return this.$store.dispatch(`${this.slug}/update`, {
+        id: id,
+        data: {
+          is_deactivated: 1,
+        },
+      });
     },
     toggleSelection(val) {
       if (val === true) {

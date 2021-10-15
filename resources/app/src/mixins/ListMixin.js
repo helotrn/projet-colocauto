@@ -114,7 +114,7 @@ export default {
     };
   },
   methods: {
-    destroyItemModal(item) {
+    destroyItemModal(item, destroyAction) {
       const itemLabel = typeof this.itemLabel === "function" ? this.itemLabel(item) : "cet item";
       this.$bvModal
         .msgBoxConfirm(`Êtes-vous sûr de vouloir retirer ${itemLabel}?`, {
@@ -129,8 +129,13 @@ export default {
         })
         .then(async (value) => {
           if (value) {
-            await this.$store.dispatch(`${this.slug}/destroy`, item.id);
-            await this.$store.dispatch(`${this.slug}/load`);
+            if (typeof destroyAction === "function") {
+              await destroyAction();
+            } else {
+              await this.$store.dispatch(`${this.slug}/destroy`, item.id);
+            }
+
+            await this.reloadDataRoutesData();
           }
         })
         .catch((e) => {
@@ -190,7 +195,7 @@ export default {
     resetExportUrl() {
       this.$store.commit(`${this.slug}/exportUrl`, null);
     },
-    restoreItemModal(item) {
+    restoreItemModal(item, restoreAction) {
       const itemLabel = typeof this.itemLabel === "function" ? this.itemLabel(item) : "cet item";
       this.$bvModal
         .msgBoxConfirm(`Êtes-vous sûr de vouloir restaurer ${itemLabel}?`, {
@@ -205,8 +210,14 @@ export default {
         })
         .then(async (value) => {
           if (value) {
-            await this.$store.dispatch(`${this.slug}/restore`, item.id);
-            await this.$store.dispatch(`${this.slug}/load`);
+            if (typeof restoreAction === "function") {
+              await restoreAction();
+            } else {
+              await this.$store.dispatch(`${this.slug}/restore`, item.id);
+              await this.$store.dispatch(`${this.slug}/load`);
+            }
+
+            await this.reloadDataRoutesData();
           }
         });
     },

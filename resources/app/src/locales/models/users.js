@@ -33,6 +33,7 @@ export default {
       other_phone: "autre numéro de téléphone",
       phone: "téléphone",
       postal_code: "code postal",
+      is_deactivated: "afficher les membres désactivés",
     },
     list: {
       create: "ajouter un membre",
