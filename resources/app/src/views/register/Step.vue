@@ -34,7 +34,6 @@
       >
         <hr />
 
-
         <b-row>
           <b-col>
             <forms-validated-input
