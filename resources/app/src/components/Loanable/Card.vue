@@ -139,12 +139,10 @@ export default {
       required: true,
     },
   },
-  data() {
-    return {
-      loading: false,
-    };
-  },
   computed: {
+    loading() {
+      return this.$store.state.loans.cancelToken;
+    },
     isElectric() {
       switch (this.type) {
         case "bike":
@@ -172,11 +170,6 @@ export default {
       return {
         backgroundImage: `url('${this.image.sizes.thumbnail}')`,
       };
-    },
-  },
-  watch: {
-    available() {
-      this.loading = false;
     },
   },
 };

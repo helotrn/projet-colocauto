@@ -188,7 +188,7 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
 
           throw e;
         } finally {
-          commit("ajax", null);
+          commit("cancelToken", null);
           commit("loading", false);
         }
       },

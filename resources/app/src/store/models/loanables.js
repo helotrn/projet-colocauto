@@ -159,7 +159,7 @@ export default new RestModule(
 
         throw e;
       } finally {
-        commit("ajax", null);
+        commit("cancelToken", null);
       }
     },
   }
