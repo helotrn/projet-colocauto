@@ -550,7 +550,7 @@ SQL
         }
 
         if ($this->canceled_at) {
-            return 'canceled';
+            return "canceled";
         }
 
         if ($action = $this->actions->last()) {
@@ -562,9 +562,10 @@ SQL
 
     public function getTotalActualCostAttribute()
     {
-        return $this->actual_price +
-            $this->actual_insurance +
-            $this->platform_tip;
+        return round(
+            $this->actual_price + $this->actual_insurance + $this->platform_tip,
+            2
+        );
     }
 
     public function getTotalFinalCostAttribute()
