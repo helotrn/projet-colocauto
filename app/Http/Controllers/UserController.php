@@ -103,7 +103,10 @@ class UserController extends RestController
             ]);
 
             try {
-                if (env("MAILCHIMP_KEY", null) && $userInfo["email"]) {
+                if (
+                    env("MAILCHIMP_KEY", null) &&
+                    array_key_exists("email", $userInfo)
+                ) {
                     $mailchimpUser = [
                         "email_address" => $userInfo["email"],
                         "status" => "subscribed",
