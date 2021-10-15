@@ -99,8 +99,11 @@
     >
       <svg-danger
         v-if="
-          hasCanceledStep('payment') || hasActiveIncidents
-          || hasActiveExtensions || loanIsContested || loanIsCanceled
+          hasCanceledStep('payment') ||
+          hasActiveIncidents ||
+          hasActiveExtensions ||
+          loanIsContested ||
+          loanIsCanceled
         "
       />
       <svg-check v-else-if="hasReachedStep('payment')" />

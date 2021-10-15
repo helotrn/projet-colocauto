@@ -2,13 +2,9 @@
   <b-card no-body class="loan-form loan-actions loan-actions-payment">
     <b-card-header header-tag="header" role="tab" class="loan-actions__header">
       <h2 v-b-toggle.loan-actions-payment>
-        <svg-waiting
-          v-if="action.status === 'in_process' && !loanIsCanceled && !loanIsContested"
-        />
+        <svg-waiting v-if="action.status === 'in_process' && !loanIsCanceled && !loanIsContested" />
         <svg-check v-else-if="action.status === 'completed'" />
-        <svg-danger
-          v-else-if="action.status === 'canceled' || loanIsCanceled || loanIsContested"
-        />
+        <svg-danger v-else-if="action.status === 'canceled' || loanIsCanceled || loanIsContested" />
 
         Conclusion
       </h2>
@@ -53,23 +49,12 @@
               Validez dès maintenant les informations sur ce trajet&nbsp;: le kilomètrage, la
               facture d'essence&hellip;
             </p>
-            <p v-else>
-              Validez dès maintenant les informations sur ce trajet.
-            </p>
+            <p v-else>Validez dès maintenant les informations sur ce trajet.</p>
             <p>
-              <b-button
-                size="sm"
-                variant="primary"
-                class="mr-3"
-                v-b-toggle.loan-actions-takeover
-              >
+              <b-button size="sm" variant="primary" class="mr-3" v-b-toggle.loan-actions-takeover>
                 Informations au début
               </b-button>
-              <b-button
-                size="sm"
-                variant="primary"
-                v-b-toggle.loan-actions-handover
-              >
+              <b-button size="sm" variant="primary" v-b-toggle.loan-actions-handover>
                 Informations à la fin
               </b-button>
             </p>
@@ -77,8 +62,8 @@
 
           <div class="loan-actions-payment__warning" v-if="loanIsContested">
             <p>
-              L'emprunt est en processus de révision.
-              Il faut compléter ce processus avant de poursuivre.
+              L'emprunt est en processus de révision. Il faut compléter ce processus avant de
+              poursuivre.
             </p>
           </div>
 
@@ -113,7 +98,8 @@
             <div v-if="userRoles.includes('owner') && finalOwnerPart > 0">
               <hr />
               <p>
-                À titre de propriétaire, vous recevrez {{ finalOwnerPart | currency }} pour l'emprunt.
+                À titre de propriétaire, vous recevrez {{ finalOwnerPart | currency }} pour
+                l'emprunt.
               </p>
             </div>
 

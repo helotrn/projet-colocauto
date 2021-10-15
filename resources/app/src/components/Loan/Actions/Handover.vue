@@ -56,8 +56,8 @@
         </div>
         <div v-else-if="hasActiveExtensions">
           <p>
-            Une demande d'extension est en cours. Elle doit être complétée
-            (acceptée ou refusée) avant de poursuivre.
+            Une demande d'extension est en cours. Elle doit être complétée (acceptée ou refusée)
+            avant de poursuivre.
           </p>
         </div>
         <div v-else-if="item.loanable.type === 'car'">
@@ -229,7 +229,7 @@
 
               <b-row
                 class="loan-actions-handover__buttons text-center"
-                v-if="(!action.executed_at && !loanIsCanceled && !item.contested_at)"
+                v-if="!action.executed_at && !loanIsCanceled && !item.contested_at"
               >
                 <b-col>
                   <b-button type="submit" size="sm" variant="success" class="mr-3">
