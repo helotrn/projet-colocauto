@@ -8,7 +8,6 @@ use App\Transformers\UserTransformer;
 use Auth;
 use GuzzleHttp\Client as HttpClient;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
 use Mail;
@@ -16,7 +15,7 @@ use Noke;
 
 class User extends AuthenticatableBaseModel
 {
-    use HasApiTokens, Notifiable, SoftDeletes;
+    use HasApiTokens, Notifiable;
 
     public static $rules = [
         "accept_conditions" => ["accepted"],
@@ -43,6 +42,7 @@ class User extends AuthenticatableBaseModel
         "email" => "text",
         "deleted_at" => "date",
         "communities.name" => "text",
+        "is_deactivated" => "boolean",
     ];
 
     public static function getRules($action = "", $auth = null)
@@ -121,6 +121,7 @@ class User extends AuthenticatableBaseModel
     public static $sizesByField = [];
 
     protected $fillable = [
+        "is_deactivated",
         "accept_conditions",
         "name",
         "last_name",
