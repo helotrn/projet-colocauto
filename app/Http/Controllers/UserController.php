@@ -26,6 +26,7 @@ use App\Repositories\UserRepository;
 use GuzzleHttp\Exception\ClientException;
 use Cache;
 use Excel;
+use Log;
 use Mail;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Validation\ValidationException;
