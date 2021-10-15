@@ -14,14 +14,6 @@ stages:
   - test
 
 before_script:
-  - apt-get update -yqq
-  - apt-get install curl git wget unzip libpq-dev libjpeg-dev libpng-dev libxpm-dev libzip-dev postgresql-client -yqq
-  - wget https://composer.github.io/installer.sig -O - -q | tr -d '\n' > installer.sig
-  - php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
-  - php -r "if (hash_file('SHA384', 'composer-setup.php') === file_get_contents('installer.sig')) { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
-  - php composer-setup.php
-  - php -r "unlink('composer-setup.php'); unlink('installer.sig');"
-  - cp .env.testing .env
 
 cache:
   paths:
@@ -29,16 +21,23 @@ cache:
     - vendor/
 
 test:prettier:
+  image: node:15
   stage: test
   script:
-    - curl -sL https://deb.nodesource.com/setup_10.x | bash
-    - apt-get install nodejs npm -yqq
     - npm install --global prettier @prettier/plugin-php
     - npx prettier . --list-different
 
 test:phpunit:
   stage: test
   script:
+    - apt-get update -yqq
+    - apt-get install curl git wget unzip libpq-dev libjpeg-dev libpng-dev libxpm-dev libzip-dev postgresql-client -yqq
+    - wget https://composer.github.io/installer.sig -O - -q | tr -d '\n' > installer.sig
+    - php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+    - php -r "if (hash_file('SHA384', 'composer-setup.php') === file_get_contents('installer.sig')) { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
+    - php composer-setup.php
+    - php -r "unlink('composer-setup.php'); unlink('installer.sig');"
+    - cp .env.testing .env
     - pecl install xdebug
     - docker-php-ext-install pdo_pgsql pgsql gd zip
     - php composer.phar install
@@ -51,8 +50,9 @@ test:phpunit:
     - vendor/bin/phpunit --coverage-text --colors=never
 
 test:jest:
-  image: node:12
+  image: node:15
   stage: test
   script:
+    - cd resources/app
     - npm install
     - npm run test
