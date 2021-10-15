@@ -54,6 +54,12 @@
         >
           <p>L'emprunt a été annulé. Cette étape ne peut pas être complétée.</p>
         </div>
+        <div v-else-if="hasActiveExtensions">
+          <p>
+            Une demande d'extension est en cours. Elle doit être complétée
+            (acceptée ou refusée) avant de poursuivre.
+          </p>
+        </div>
         <div v-else-if="item.loanable.type === 'car'">
           <validation-observer ref="observer" v-slot="{ passes }">
             <b-form
@@ -346,8 +352,8 @@
           </b-row>
           <b-row v-else>
             <b-col>
-              <p v-if="action.status !== 'canceled'">Le retour du véhicule a été effectuée.</p>
-              <p v-else>Le retour du véhicule a été annulée.</p>
+              <p v-if="action.status !== 'canceled'">Le retour du véhicule a été effectué.</p>
+              <p v-else>Le retour du véhicule a été annulé.</p>
             </b-col>
           </b-row>
 
@@ -441,10 +447,11 @@ import FormsImageUploader from "@/components/Forms/ImageUploader.vue";
 import FormsValidatedInput from "@/components/Forms/ValidatedInput.vue";
 
 import LoanActionsMixin from "@/mixins/LoanActionsMixin";
+import LoanStepsSequence from "@/mixins/LoanStepsSequence";
 
 export default {
   name: "LoanActionsHandover",
-  mixins: [LoanActionsMixin],
+  mixins: [LoanActionsMixin, LoanStepsSequence],
   mounted() {
     if (!this.action.mileage_end) {
       this.action.mileage_end =
