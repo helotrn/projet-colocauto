@@ -45,13 +45,33 @@
           <!-- Action is not completed -->
           <!-- Whether userRoles includes 'borrower' or 'owner' -->
           <div v-if="['borrower', 'owner'].some((role) => userRoles.includes(role))">
-            <p>
+            <p v-if="item.loanable.type === 'car'">
               Validez dès maintenant les informations sur ce trajet&nbsp;: le kilomètrage, la
               facture d'essence&hellip;
             </p>
+            <p>
+              Validez dès maintenant les informations sur ce trajet.
+            </p>
+            <p>
+              <b-button
+                size="sm"
+                variant="primary"
+                class="mr-3"
+                v-b-toggle.loan-actions-takeover
+              >
+                Informations au début
+              </b-button>
+              <b-button
+                size="sm"
+                variant="primary"
+                v-b-toggle.loan-actions-handover
+              >
+                Informations à la fin
+              </b-button>
+            </p>
           </div>
 
-          <div v-if="userRoles.includes('owner')">
+          <div v-if="userRoles.includes('owner') && finalOwnerPart > 0">
             <hr />
             <p>
               À titre de propriétaire, vous recevrez {{ finalOwnerPart | currency }} pour l'emprunt.
