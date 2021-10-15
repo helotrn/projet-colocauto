@@ -17,6 +17,7 @@
         :value="pricing.rule"
         rows="6"
         @input="emitChange('rule', $event)"
+        class="monospace"
       />
     </b-form-group>
   </b-card>
