@@ -64,10 +64,6 @@
             value=""
           />
         </div>
-
-        <div>
-          <b-button name="subscribe" type="submit">Je m'inscris!</b-button>
-        </div>
       </div>
     </form>
   </b-alert>
