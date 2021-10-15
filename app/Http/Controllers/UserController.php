@@ -102,7 +102,7 @@ class UserController extends RestController
             ]);
 
             try {
-                if (env("MAILCHIMP_KEY", null)) {
+                if (env("MAILCHIMP_KEY", null) && $userInfo["email"]) {
                     $mailchimpUser = [
                         "email_address" => $userInfo["email"],
                         "status" => "subscribed",
@@ -133,7 +133,7 @@ class UserController extends RestController
                         );
                     }
                 }
-            } catch (ClientException $e) {
+            } catch (\Throwable $e) {
                 Log::error($e);
             }
         } catch (ValidationException $e) {
