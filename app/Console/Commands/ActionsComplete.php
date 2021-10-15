@@ -27,11 +27,16 @@ class ActionsComplete extends Command
     {
         Log::info("Starting actions autocompletion command...");
 
-        // Intentions have to be confirmed by owner
-        // Pre-payments have to be made by borrower
-        // Incidents have to be managed by an admin
+        // The following action cannot be completed...
+        // Intentions: have to be confirmed by owner
+        // Pre-payments: have to be made by borrower
+        // Incidents: have to be managed by an admin
+
         $finishableActions = Action::whereIn("type", [
-            /*'takeover', 'handover', 'extension',*/ "payment",
+            /*'extension',*/
+            /*'handover',*/
+            "payment",
+            "takeover",
         ])
             ->where("status", "in_process")
             ->where(
@@ -53,6 +58,21 @@ class ActionsComplete extends Command
 
             try {
                 switch ($action->type) {
+                    case "takeover":
+                        Log::info(
+                            "Autocancelling loan ID $loan->id because "
+                                . "$action->type has not been completed..."
+                        );
+
+                        $loan->update([
+                            'canceled_at' => new \DateTime(),
+                        ]);
+
+                        Log::info(
+                            "Canceled loan ID $loan->id because "
+                                . "$action->type has never been completed."
+                        );
+                        break;
                     case "handover":
                         Log::info(
                             "Autocompleting $action->type on loan ID $loan->id..."
@@ -70,55 +90,6 @@ class ActionsComplete extends Command
                             "mileage_end" =>
                                 $takeover->mileage_beginning +
                                 $loan->estimated_distance,
-                        ]);
-                        $this->controller->complete(
-                            $request,
-                            $loan->id,
-                            $action->id
-                        );
-
-                        Log::info(
-                            "Autocompleted $action->type on loan ID $loan->id."
-                        );
-                        break;
-                    case "takeover":
-                        Log::info(
-                            "Autocompleting $action->type on loan ID $loan->id..."
-                        );
-
-                        $request = new ActionRequest();
-                        $request->setUserResolver(function () use ($loan) {
-                            return $loan->borrower->user;
-                        });
-                        $request->merge([
-                            "type" => $action->type,
-                            "loan_id" => $loan->id,
-                            "mileage_beginning" => 0,
-                        ]);
-                        $this->controller->complete(
-                            $request,
-                            $loan->id,
-                            $action->id
-                        );
-
-                        Log::info(
-                            "Autocompleted $action->type on loan ID $loan->id."
-                        );
-                        break;
-                    case "extension":
-                        Log::info(
-                            "Autocompleting $action->type on loan ID $loan->id..."
-                        );
-
-                        $request = new ActionRequest();
-                        $request->setUserResolver(function () use ($loan) {
-                            // FIXME is this right? shouldn't it be the owner?
-                            return $loan->borrower->user;
-                        });
-                        $request->merge([
-                            "type" => $action->type,
-                            "loan_id" => $loan->id,
-                            "new_duration" => $action->new_duration,
                         ]);
                         $this->controller->complete(
                             $request,
@@ -168,6 +139,31 @@ class ActionsComplete extends Command
                                     "({$loan->borrower->user->balance} < $totalActualCost)..."
                             );
                         }
+                        break;
+                    case "extension":
+                        Log::info(
+                            "Autocompleting $action->type on loan ID $loan->id..."
+                        );
+
+                        $request = new ActionRequest();
+                        $request->setUserResolver(function () use ($loan) {
+                            // FIXME is this right? shouldn't it be the owner?
+                            return $loan->borrower->user;
+                        });
+                        $request->merge([
+                            "type" => $action->type,
+                            "loan_id" => $loan->id,
+                            "new_duration" => $action->new_duration,
+                        ]);
+                        $this->controller->complete(
+                            $request,
+                            $loan->id,
+                            $action->id
+                        );
+
+                        Log::info(
+                            "Autocompleted $action->type on loan ID $loan->id."
+                        );
                         break;
                     default:
                         break;

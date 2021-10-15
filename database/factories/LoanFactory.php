@@ -67,6 +67,17 @@ $factory->afterCreatingState(Loan::class, "withInProcessIntention", function (
     );
 });
 
+$factory->afterCreatingState(Loan::class, "withInProcessTakeover", function (
+    $loan,
+    $faker
+) {
+    $loan->takeover()->save(
+        factory(Takeover::class)->make([
+            "status" => "in_process",
+        ])
+    );
+});
+
 $factory->afterCreatingState(Loan::class, "withCompletedPrePayment", function (
     $loan,
     $faker
