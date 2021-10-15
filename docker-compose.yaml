@@ -48,9 +48,9 @@ services:
             QUEUE_CONNECTION: database
             STRIPE_KEY: pk_test_4lBQS366h37TcBC9IAvCaDEL00K5H3B8LH
             STRIPE_SECRET: sk_test_9wI77kB8C1XR5EqkJTMdNEac00SomF64a1
-            MAILCHIMP_SERVER_PREFIX: 
-            MAILCHIMP_KEY: 
-            MAILCHIMP_LIST_ID: 
+            MAILCHIMP_SERVER_PREFIX:
+            MAILCHIMP_KEY:
+            MAILCHIMP_LIST_ID:
     vue:
         depends_on:
             - php

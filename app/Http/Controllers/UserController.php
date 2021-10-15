@@ -132,7 +132,7 @@ class UserController extends RestController
                             $mailchimpUser
                         );
                     }
-                } elseif (env("MAILCHIMP_KEY")){
+                } elseif (env("MAILCHIMP_KEY")) {
                     // We are not opt_in_newsletter so we'll see if we need to unsubscibe
                     $searchResponse = $mailchimp->searchMembers->search(
                         $userInfo["email"]
