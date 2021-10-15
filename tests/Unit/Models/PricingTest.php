@@ -264,6 +264,23 @@ RULE;
         }
     }
 
+    public function testRuleEvaluationSkipsComments()
+    {
+        $pricing = new Pricing();
+
+        $pricing->rule = <<<RULE
+# This is a comment
+12345
+RULE;
+        $this->assertEquals(12345, $pricing->evaluateRule(0, 0));
+
+        $pricing->rule = <<<RULE
+  # Some whitespace may preced comment.
+12345
+RULE;
+        $this->assertEquals(12345, $pricing->evaluateRule(0, 0));
+    }
+
     public function testRuleEvaluationSurcoutAssurance()
     {
         $loan = new Loan();

@@ -13,9 +13,20 @@ class Pricing extends BaseModel
 {
     public static $language;
 
+    /**
+     * @return
+     *     If null, then will skip evaluating this line.
+     */
     public static function evaluateRuleLine($line, $data)
     {
         $language = static::getExpressionLanguage();
+
+        // Skip:
+        // - comments (lines starting with # preceded by any whitespace).
+        // - empty lines or containing whitespace only
+        if (preg_match("/^\s*#/", $line) || preg_match('/^\s*$/', $line)) {
+            return null;
+        }
 
         if (preg_match('/^SI\s+.+?\s+ALORS\s+.+$/', $line)) {
             $line = str_replace("SI", "", $line);

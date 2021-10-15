@@ -152,6 +152,10 @@
           d'une voiture ou <code>OBJET.size</code> pour la taille d'un vélo.
         </p>
 
+        <h4>Commentaires</h4>
+
+        <p>On peut ajouter des commentaires en les faisant commencer par <code>#</code>.</p>
+
         <p>
           Se référer à <a :href="unitTestUrl" target="_blank">ce fichier</a> pour des exemple
           d'utilisation.
