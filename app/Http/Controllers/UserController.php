@@ -102,7 +102,10 @@ class UserController extends RestController
             ]);
 
             try {
-                if ($userInfo["opt_in_newsletter"] && env("MAILCHIMP_KEY")) {
+                if (
+                    $userInfo["opt_in_newsletter"] &&
+                    env("MAILCHIMP_KEY", null)
+                ) {
                     $mailchimpUser = [
                         "email_address" => $userInfo["email"],
                         "status" => "subscribed",
@@ -132,7 +135,7 @@ class UserController extends RestController
                             $mailchimpUser
                         );
                     }
-                } elseif (env("MAILCHIMP_KEY")) {
+                } elseif (env("MAILCHIMP_KEY", null)) {
                     // We are not opt_in_newsletter so we'll see if we need to unsubscibe
                     $searchResponse = $mailchimp->searchMembers->search(
                         $userInfo["email"]
