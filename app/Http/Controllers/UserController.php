@@ -102,10 +102,7 @@ class UserController extends RestController
             ]);
 
             try {
-                if (
-                    $userInfo["opt_in_newsletter"] &&
-                    env("MAILCHIMP_KEY", null)
-                ) {
+                if (env("MAILCHIMP_KEY", null)) {
                     $mailchimpUser = [
                         "email_address" => $userInfo["email"],
                         "status" => "subscribed",
@@ -126,24 +123,6 @@ class UserController extends RestController
                         $mailchimp->lists->addListMember(
                             $desNouvellesDeSolonId,
                             $mailchimpUser
-                        );
-                    } else {
-                        # The user is in the list, we update its info
-                        $mailchimp->lists->setListMember(
-                            $desNouvellesDeSolonId,
-                            $searchResponse->exact_matches->members[0]->id,
-                            $mailchimpUser
-                        );
-                    }
-                } elseif (env("MAILCHIMP_KEY", null)) {
-                    // We are not opt_in_newsletter so we'll see if we need to unsubscibe
-                    $searchResponse = $mailchimp->searchMembers->search(
-                        $userInfo["email"]
-                    );
-                    if ($searchResponse->exact_matches->total_items > 0) {
-                        $mailchimp->lists->deleteListMember(
-                            $desNouvellesDeSolonId,
-                            $searchResponse->exact_matches->members[0]->id
                         );
                     }
                 }
