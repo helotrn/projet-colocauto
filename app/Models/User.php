@@ -317,10 +317,9 @@ class User extends AuthenticatableBaseModel
         if (!$customer) {
             $customer = \Stripe\Customer::create([
                 "description" =>
-                    "{$this->name} {$this->last_name} " .
-                    "<{$this->email}> ({$this->id})",
+                    "{$this->full_name} " . "<{$this->email}> ({$this->id})",
                 "email" => $this->email,
-                "name" => "{$this->name} {$this->last_name}",
+                "name" => "{$this->full_name}",
                 "address" => [
                     "line1" => $this->address,
                     "country" => "CA",
@@ -425,8 +424,13 @@ class User extends AuthenticatableBaseModel
 
     public function sendPasswordResetNotification($token)
     {
-        Mail::to($this->email, $this->name . " " . $this->last_name)->queue(
+        Mail::to($this->email, $this->full_name)->queue(
             new PasswordRequest($this, $token)
         );
+    }
+
+    public function getFullNameAttribute()
+    {
+        return trim($this->name . " " . $this->last_name);
     }
 }

@@ -160,12 +160,6 @@ class TestEmailController extends Controller
                 $viewData = $this->getPasswordRequestTestData();
                 break;
 
-            // Registration
-            case "registration.approved":
-            case "registration.approved_text":
-                $viewData = $this->getCommonTestData();
-                break;
-
             case "registration.rejected":
             case "registration.rejected_text":
                 $viewData = $this->getRegistrationRejectedTestData();
