@@ -62,8 +62,8 @@
 
           <div class="loan-actions-payment__warning" v-if="loanIsContested">
             <p>
-              L'emprunt est en processus de révision. Il faut compléter ce processus avant de
-              poursuivre.
+              Vous ne pouvez pas clôturer cette réservation car elle a été contestée, notre équipe
+              va vous contacter.
             </p>
           </div>
 
