@@ -7,6 +7,9 @@ abstract class MandrillMailable extends BaseMailable
     public $template = "base";
     public $trackable = false;
     public $templateVars = [];
+    public $subject;
+    public $body = "";
+    public $text = "";
 
     public $raw = false;
 
@@ -14,10 +17,18 @@ abstract class MandrillMailable extends BaseMailable
     {
         $this->withSwiftMessage(function ($message) {
             $message->template = $this->template;
-            $mesage->trackable = $this->trackable;
+            $message->trackable = $this->trackable;
             $message->templateVars = $this->templateVars;
         });
 
         parent::send($mailer);
+    }
+
+    public function build()
+    {
+        return $this->subject($this->subject)
+            ->view("emails.mandrill")
+            ->text("emails.mandrill_text")
+            ->with($this->templateVars);
     }
 }

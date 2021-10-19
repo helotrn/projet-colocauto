@@ -98,34 +98,49 @@ class MandrillTransport extends Transport
         ];
 
         foreach ($message->templateVars as $name => $content) {
-            $templateContent[$name] = (string) $content;
+            $templateContent[] = [
+                "name" => $name,
+                "content" => (string) $content,
+            ];
+        }
+
+        $messageConfig = [
+            "subject" => $message->getSubject(),
+            "from_email" => array_keys($message->getFrom())[0],
+            "from_name" => array_values($message->getFrom())[0],
+            "to" => array_map(
+                function ($name, $email) {
+                    return [
+                        "email" => $email,
+                        "name" => $name,
+                        "type" => "to",
+                    ];
+                },
+                $this->getTo($message),
+                array_keys($this->getTo($message))
+            ),
+            "tags" => [
+                "locomotion",
+                "locomotion_template",
+                "locomotion_template_$message->template",
+            ],
+        ];
+
+        $messageChildren = $message->getChildren();
+        $textContent = isset($messageChildren[0])
+            ? trim($messageChildren[0]->getBody())
+            : null;
+        if ($textContent) {
+            $messageConfig["text"] = $textContent;
+        } else {
+            $messageConfig["auto_text"] = true;
         }
 
         $params = [
             "key" => $this->key,
             "template_name" => $message->template,
             "template_content" => $templateContent,
-            "message" => [
-                "subject" => $message->getSubject(),
-                "from_email" => array_keys($message->getFrom())[0],
-                "from_name" => array_values($message->getFrom())[0],
-                "to" => array_map(
-                    function ($name, $email) {
-                        return [
-                            "email" => $email,
-                            "name" => $name,
-                            "type" => "to",
-                        ];
-                    },
-                    $this->getTo($message),
-                    array_keys($this->getTo($message))
-                ),
-                "tags" => [
-                    "locomotion",
-                    "locomotion_template",
-                    "locomotion_template_$message->template",
-                ],
-            ],
+            "message" => $messageConfig,
         ];
 
         return $this->client->request(
