@@ -175,6 +175,7 @@ return [
         App\Providers\CustomValidationServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\MaterializedViewServiceProvider::class,
+        App\Providers\MandrillServiceProvider::class,
         App\Providers\NokeServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
     ],
