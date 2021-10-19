@@ -1,17 +1,11 @@
 <?php
 
 return [
-    /*
-    |--------------------------------------------------------------------------
-    | Third Party Services
-    |--------------------------------------------------------------------------
-    |
-    | This file is for storing the credentials for third party services such
-    | as Mailgun, SparkPost and others. This file provides a sane default
-    | location for this type of information, allowing packages to have
-    | a conventional file to locate the various service credentials.
-    |
-    */
+    "google" => [
+        "client_id" => env("GOOGLE_CLIENT_ID"),
+        "client_secret" => env("GOOGLE_CLIENT_SECRET"),
+        "redirect" => env("GOOGLE_REDIRECT"),
+    ],
 
     "mailgun" => [
         "domain" => env("MAILGUN_DOMAIN"),
@@ -19,8 +13,14 @@ return [
         "endpoint" => env("MAILGUN_ENDPOINT", "api.mailgun.net"),
     ],
 
-    'mandrill' => [
-        'secret' => env('MANDRILL_KEY'),
+    "mandrill" => [
+        "secret" => env("MANDRILL_KEY"),
+    ],
+
+    "noke" => [
+        "api_user_id" => env("NOKE_API_USER_ID"),
+        "username" => env("NOKE_USERNAME"),
+        "password" => env("NOKE_PASSWORD"),
     ],
 
     "postmark" => [
@@ -40,17 +40,5 @@ return [
     "stripe" => [
         "key" => env("STRIPE_KEY"),
         "secret" => env("STRIPE_SECRET"),
-    ],
-
-    "noke" => [
-        "api_user_id" => env("NOKE_API_USER_ID"),
-        "username" => env("NOKE_USERNAME"),
-        "password" => env("NOKE_PASSWORD"),
-    ],
-
-    "google" => [
-        "client_id" => env("GOOGLE_CLIENT_ID"),
-        "client_secret" => env("GOOGLE_CLIENT_SECRET"),
-        "redirect" => env("GOOGLE_REDIRECT"),
     ],
 ];
