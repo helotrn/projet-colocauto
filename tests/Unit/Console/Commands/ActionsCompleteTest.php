@@ -13,7 +13,7 @@ use Tests\TestCase;
 
 class ActionsCompleteTest extends TestCase
 {
-    public function testActionsCompletedIfPayment()
+    public function testPaymentActionsCompleted()
     {
         $twoDaysAgo = Carbon::now()
             ->sub(48, "hours")
@@ -124,5 +124,73 @@ class ActionsCompleteTest extends TestCase
             $unpaidCompletedLoan48HoursAgoNotEnoughFunds->loanStatus
         );
         $this->assertEquals("in_process", $loanOtherUser->loanStatus);
+    }
+
+    public function testTakeoverActionsCanceled()
+    {
+        $twoDaysAgo = Carbon::now()
+            ->sub(48, "hours")
+            ->sub(10, "seconds");
+        $twoDaysFromNow = Carbon::now()
+            ->add(48, "hours")
+            ->add(10, "seconds");
+
+        Carbon::setTestNow($twoDaysAgo);
+
+        $user = factory(User::class)
+            ->states("withBorrower", "withCommunity")
+            ->create([
+                "balance" => 15,
+            ]);
+
+        $car = factory(Car::class)->create([
+            "community_id" => $user->communities[0]->id,
+        ]);
+
+        $intentionLoan = factory(Loan::class)
+            ->states("withCompletedIntention", "withInProcessTakeover")
+            ->create([
+                "borrower_id" => $user->borrower->id,
+                "community_id" => $car->community_id,
+                "departure_at" => Carbon::now()->sub(48, "hours"),
+                "duration_in_minutes" => 60,
+                "loanable_id" => $car->id,
+                "platform_tip" => 0,
+            ]);
+
+        $intentionLoanInFuture = factory(Loan::class)
+            ->states("withCompletedIntention", "withInProcessTakeover")
+            ->create([
+                "borrower_id" => $user->borrower->id,
+                "community_id" => $car->community_id,
+                "departure_at" => Carbon::now()->add(48, "hours"),
+                "duration_in_minutes" => 60,
+                "loanable_id" => $car->id,
+                "platform_tip" => 0,
+            ]);
+
+        // Validate initial state
+        Carbon::setTestNow();
+        $this->assertEquals("in_process", $intentionLoan->loanStatus);
+        $this->assertEquals("in_process", $intentionLoanInFuture->loanStatus);
+
+        // Run the command
+        app(ActionsCompleteCommand::class)->handle();
+        $intentionLoan = $intentionLoan->fresh();
+        $intentionLoanInFuture = $intentionLoanInFuture->fresh();
+
+        // This one ended in the past
+        $this->assertEquals("canceled", $intentionLoan->loanStatus);
+
+        // This one is not yet ended, so it's not canceled yet
+        $this->assertEquals("in_process", $intentionLoanInFuture->loanStatus);
+
+        // Run the command again in the future
+        Carbon::setTestNow($twoDaysFromNow);
+        app(ActionsCompleteCommand::class)->handle();
+        $intentionLoanInFuture = $intentionLoanInFuture->fresh();
+
+        // This one is canceled now
+        $this->assertEquals("canceled", $intentionLoanInFuture->loanStatus);
     }
 }
