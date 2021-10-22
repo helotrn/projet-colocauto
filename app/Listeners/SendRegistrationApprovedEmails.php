@@ -14,10 +14,9 @@ class SendRegistrationApprovedEmails
         $user = $event->user;
 
         if (!isset($user->meta["sent_registration_approved_email"])) {
-            Mail::mailer('mandrill')
-                ->to($user->email, $user->name . " " . $user->last_name)->queue(
-                    new RegistrationApproved($user)
-                );
+            Mail::mailer("mandrill")
+                ->to($user->email, $user->name . " " . $user->last_name)
+                ->queue(new RegistrationApproved($user));
 
             $meta = $user->meta;
             $meta["sent_registration_approved_email"] = true;

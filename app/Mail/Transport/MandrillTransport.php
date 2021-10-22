@@ -25,17 +25,19 @@ class MandrillTransport extends Transport
     ) {
         $this->beforeSendPerformed($message);
 
-        if (property_exists($message, "template") && !!$message->template) {
-            $response = $this->sendTemplate($message);
-        } elseif (property_exists($message, "raw") && !!$message->raw) {
-            $response = $this->sendRaw($message);
-        } else {
-            $response = $this->sendJson($message);
-        }
+        if (app()->environment() !== "testing") {
+            if (property_exists($message, "template") && !!$message->template) {
+                $response = $this->sendTemplate($message);
+            } elseif (property_exists($message, "raw") && !!$message->raw) {
+                $response = $this->sendRaw($message);
+            } else {
+                $response = $this->sendJson($message);
+            }
 
-        $message
-            ->getHeaders()
-            ->addTextHeader("X-Message-ID", $this->getMessageId($response));
+            $message
+                ->getHeaders()
+                ->addTextHeader("X-Message-ID", $this->getMessageId($response));
+        }
 
         $this->sendPerformed($message);
 
