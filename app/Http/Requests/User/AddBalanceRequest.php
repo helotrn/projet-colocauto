@@ -26,14 +26,11 @@ class AddBalanceRequest extends BaseRequest
     public function rules()
     {
         $user = $this->user();
+        $transactionId = $user->transaction_id ?: 0;
 
         $rules = [
             "amount" => ["numeric", "required"],
-            "transaction_id" => [
-                "required",
-                "integer",
-                "gt:{$user->transaction_id}",
-            ],
+            "transaction_id" => ["required", "integer", "gt:$transactionId"],
         ];
 
         return $rules;
