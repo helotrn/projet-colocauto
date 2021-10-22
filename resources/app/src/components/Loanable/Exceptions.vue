@@ -22,6 +22,7 @@
             Certains jours de la semaine
           </option>
           <option value="dates">Certaines dates en particulier</option>
+          <option value="periodRange">Sélectionner une période</option>
         </b-select>
 
         <div v-if="exception.type === 'weekdays'">
@@ -50,10 +51,19 @@
             @input="selectDate($event, exception)"
           />
         </div>
+        <div v-if="exception.type === 'periodRange'" class="exceptions__row__type__calendar">
+          <forms-date-picker
+            inline
+            class="mt-3"
+            :disabled-dates="selectedDates(exception.scope)"
+            :open-date="firstSelectedDate(selectedDates(exception.scope))"
+            @input="selectPeriodDate($event, exception)"
+          />
+        </div>
       </b-col>
 
       <b-col class="exceptions__row__period">
-        <div v-if="exception.type" class="mb-3">
+        <div v-if="exception.type && exception.type !== 'periodRange'" class="mb-3">
           <b-form-input
             type="text"
             :value="exception.period"
@@ -82,6 +92,29 @@
             </a>
           </div>
         </div>
+        <div v-if="exception.type === 'periodRange'" class="exceptions__row__dates">
+          <p>
+            <strong>Date de début</strong>
+          </p>
+          <div :key="exception.scope[0]" class="exceptions__row__dates__date">
+            {{ exception.scope[0] }}
+            <a href="#" v-if="exception.scope.length === 1">
+              <small @click.prevent="removeDate(exception.scope[0], exception)">Retirer</small>
+            </a>
+          </div>
+        </div>
+
+        <div v-if="exception.type === 'periodRange' && exception.scope.length > 1" class="exceptions__row__dates">
+          <p>
+            <strong>Date de fin</strong>
+          </p>
+          <div :key="exception.scope[0]" class="exceptions__row__dates__date">
+            {{ exception.scope[exception.scope.length - 1] }}
+            <a href="#" v-if="exception.scope.length > 0">
+              <small @click.prevent="removePeriodDate(exception.scope[exception.scope.length - 1], exception)">Retirer</small>
+            </a>
+          </div>
+        </div>
       </b-col>
     </b-row>
   </div>
@@ -89,6 +122,10 @@
 
 <script>
 import FormsDatePicker from "@/components/Forms/DatePicker.vue";
+import dayjs from "dayjs";
+import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
+
+dayjs.extend(isSameOrBefore);
 
 export default {
   name: "LoanableExceptions",
@@ -120,6 +157,10 @@ export default {
             newTarget.period = "00:00-00:00";
             newTarget.scope = [];
             break;
+          case "periodRange":
+            newTarget.period = "00:00-23:59";
+            newTarget.scope = [];
+            break;
           default:
             // noop
             break;
@@ -145,6 +186,13 @@ export default {
 
       this.emitChange(exception, "scope", dates);
     },
+    removePeriodDate(date, exception) {
+      const dates = [...exception.scope];
+      const datesRemoved = [];
+      datesRemoved.push(dates[0]);
+
+      this.emitChange(exception, "scope", datesRemoved);
+    },
     removeException(exception) {
       const newExceptions = [...this.exceptions];
       const index = newExceptions.indexOf(exception);
@@ -167,6 +215,33 @@ export default {
       }
 
       this.emitChange(exception, "scope", dates);
+    },
+    selectPeriodDate(dateToAdd, exception) {
+      const oldDates = [...exception.scope];
+      const newDates = [];
+
+      if(oldDates.length === 0) {
+        newDates.push(dateToAdd);
+        newDates.sort();
+
+        this.emitChange(exception, "scope", newDates);
+        return;
+      } 
+
+      let date = oldDates[0];
+
+      while(dayjs(date).isSameOrBefore(dayjs(dateToAdd), "day")) {
+        const index = newDates.indexOf(date);
+        
+        if(index === -1) {
+          newDates.push(date);
+          newDates.sort();
+        }
+        
+        date = dayjs(date).add(1, "day").format("YYYY-MM-DD");
+      }
+      
+      this.emitChange(exception, "scope", newDates);
     },
     togglePeriod(exception) {
       if (exception.period === "00:00-23:59" || exception.period === "00:00-24:00") {
