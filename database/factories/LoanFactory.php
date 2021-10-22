@@ -50,6 +50,7 @@ $factory->afterCreatingState(Loan::class, "withCompletedIntention", function (
 ) {
     $loan->intention()->save(
         factory(Intention::class)->make([
+            "executed_at" => Carbon::now(),
             "status" => "completed",
         ])
     );
@@ -62,6 +63,18 @@ $factory->afterCreatingState(Loan::class, "withInProcessIntention", function (
     $loan->intention()->save(
         factory(Intention::class)->make([
             "status" => "in_process",
+        ])
+    );
+});
+
+$factory->afterCreatingState(Loan::class, "withCompletedPrePayment", function (
+    $loan,
+    $faker
+) {
+    $loan->prePayment()->save(
+        factory(PrePayment::class)->make([
+            "executed_at" => Carbon::now(),
+            "status" => "completed",
         ])
     );
 });
@@ -96,6 +109,19 @@ $factory->afterCreatingState(Loan::class, "withCompletedExtension", function (
         factory(Extension::class)->make([
             "new_duration" => 120,
             "status" => "completed",
+            "executed_at" => Carbon::now(),
+        ])
+    );
+});
+
+$factory->afterCreatingState(Loan::class, "withCanceledHandover", function (
+    Loan $loan,
+    Faker $faker
+) {
+    $loan->handover()->save(
+        factory(Handover::class)->make([
+            "status" => "canceled",
+            "executed_at" => Carbon::now(),
         ])
     );
 });
@@ -107,24 +133,28 @@ $factory->afterCreatingState(Loan::class, "withAllStepsCompleted", function (
         $loan->intention()->save(
             factory(Intention::class)->make([
                 "status" => "completed",
+                "executed_at" => Carbon::now(),
             ])
         );
 
         $loan->prePayment()->save(
             factory(PrePayment::class)->make([
                 "status" => "completed",
+                "executed_at" => Carbon::now(),
             ])
         );
 
         $loan->takeover()->save(
             factory(Takeover::class)->make([
                 "status" => "completed",
+                "executed_at" => Carbon::now(),
             ])
         );
 
         $loan->handover()->save(
             factory(Handover::class)->make([
                 "status" => "completed",
+                "executed_at" => Carbon::now(),
             ])
         );
 
@@ -135,4 +165,25 @@ $factory->afterCreatingState(Loan::class, "withAllStepsCompleted", function (
             ])
         );
     });
+});
+
+$factory->afterCreatingState(Loan::class, "butPaymentInProcess", function (
+    Loan $loan,
+    Faker $faker
+) {
+    if (!$loan->payment) {
+        $loan->payment()->save(
+            factory(Payment::class)->make([
+                "executed_at" => Carbon::now()->add(100, "years"),
+                "status" => "completed",
+            ])
+        );
+    }
+
+    $payment = $loan->payment()->first();
+
+    $payment->status = "in_process";
+    $payment->executed_at = null;
+
+    $payment->save();
 });

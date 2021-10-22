@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Borrower;
+use App\Models\Community;
 use App\Models\User;
 use Carbon\Carbon;
 use Faker\Generator as Faker;
@@ -31,4 +32,22 @@ $factory->afterCreatingState(User::class, "withBorrower", function (
     $faker
 ) {
     $user->borrower()->save(factory(Borrower::class)->make());
+});
+
+$factory->afterCreatingState(User::class, "withCommunity", function (
+    User $user,
+    Faker $faker
+) {
+    $user->communities()->save(factory(Community::class)->make());
+});
+
+$factory->afterCreatingState(User::class, "withPaidCommunity", function (
+    User $user,
+    Faker $faker
+) {
+    $user->communities()->save(
+        factory(Community::class)
+            ->states("withDefault10DollarsPricing")
+            ->create()
+    );
 });

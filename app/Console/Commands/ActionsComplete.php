@@ -39,6 +39,7 @@ class ActionsComplete extends Command
                 "<=",
                 (new \DateTime("-48hours"))->format("Y-m-d H:i:s")
             )
+            ->whereHas("loan")
             ->with(
                 "loan",
                 "loan.loanable",
