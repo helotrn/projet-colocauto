@@ -104,14 +104,22 @@
           </div>
         </div>
 
-        <div v-if="exception.type === 'periodRange' && exception.scope.length > 1" class="exceptions__row__dates">
+        <div
+          v-if="exception.type === 'periodRange' && exception.scope.length > 1"
+          class="exceptions__row__dates"
+        >
           <p class="exceptions__endTitle">
             <strong>Date de fin</strong>
           </p>
           <div :key="exception.scope[0]" class="exceptions__row__dates__date">
             {{ exception.scope[exception.scope.length - 1] }}
             <a href="#" v-if="exception.scope.length > 0">
-              <small @click.prevent="removePeriodDate(exception.scope[exception.scope.length - 1], exception)">Retirer</small>
+              <small
+                @click.prevent="
+                  removePeriodDate(exception.scope[exception.scope.length - 1], exception)
+                "
+                >Retirer</small
+              >
             </a>
           </div>
         </div>
@@ -220,27 +228,27 @@ export default {
       const oldDates = [...exception.scope];
       const newDates = [];
 
-      if(oldDates.length === 0) {
+      if (oldDates.length === 0) {
         newDates.push(dateToAdd);
         newDates.sort();
 
         this.emitChange(exception, "scope", newDates);
         return;
-      } 
+      }
 
       let date = oldDates[0];
 
-      while(dayjs(date).isSameOrBefore(dayjs(dateToAdd), "day")) {
+      while (dayjs(date).isSameOrBefore(dayjs(dateToAdd), "day")) {
         const index = newDates.indexOf(date);
-        
-        if(index === -1) {
+
+        if (index === -1) {
           newDates.push(date);
           newDates.sort();
         }
-        
+
         date = dayjs(date).add(1, "day").format("YYYY-MM-DD");
       }
-      
+
       this.emitChange(exception, "scope", newDates);
     },
     togglePeriod(exception) {
