@@ -10,7 +10,7 @@ use App\Http\Requests\AdminRequest;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\BaseRequest as Request;
 use App\Http\Requests\User\BorrowerStatusRequest;
-use App\Http\Requests\User\AddBalanceRequest;
+use App\Http\Requests\User\AddToBalanceRequest;
 use App\Http\Requests\User\CreateRequest;
 use App\Http\Requests\User\DestroyRequest;
 use App\Http\Requests\User\UpdateRequest;
@@ -398,7 +398,7 @@ class UserController extends RestController
         return $user->balance;
     }
 
-    public function addToBalance(AddBalanceRequest $request, $userId)
+    public function addToBalance(AddToBalanceRequest $request, $userId)
     {
         $findRequest = $request->redirectAuth(Request::class);
         $user = $this->repo->find($findRequest, $userId);
