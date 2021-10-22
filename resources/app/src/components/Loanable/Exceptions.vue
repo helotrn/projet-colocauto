@@ -105,7 +105,7 @@
         </div>
 
         <div v-if="exception.type === 'periodRange' && exception.scope.length > 1" class="exceptions__row__dates">
-          <p>
+          <p class="exceptions__endTitle">
             <strong>Date de fin</strong>
           </p>
           <div :key="exception.scope[0]" class="exceptions__row__dates__date">
@@ -281,6 +281,10 @@ export default {
       justify-content: space-between;
       line-height: 20px;
     }
+  }
+
+  &__endTitle {
+    margin-top: 16px;
   }
 }
 </style>
