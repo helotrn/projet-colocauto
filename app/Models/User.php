@@ -13,6 +13,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
 use Mail;
 use Noke;
+use Stripe;
 
 class User extends AuthenticatableBaseModel
 {
@@ -302,34 +303,7 @@ class User extends AuthenticatableBaseModel
 
     public function getStripeCustomer()
     {
-        if (app()->environment() === "testing") {
-            return; // TODO mock
-        }
-
-        \Stripe\Stripe::setApiKey(config("services.stripe.secret"));
-        $customers = \Stripe\Customer::all([
-            "email" => $this->email,
-            "limit" => 1,
-        ]);
-
-        $customer = array_pop($customers->data);
-
-        if (!$customer) {
-            $customer = \Stripe\Customer::create([
-                "description" =>
-                    "{$this->name} {$this->last_name} " .
-                    "<{$this->email}> ({$this->id})",
-                "email" => $this->email,
-                "name" => "{$this->name} {$this->last_name}",
-                "address" => [
-                    "line1" => $this->address,
-                    "country" => "CA",
-                    "postal_code" => $this->postal_code,
-                ],
-            ]);
-        }
-
-        return $customer;
+        return Stripe::getUserCustomer($this);
     }
 
     public function getAccessibleCommunityIds()

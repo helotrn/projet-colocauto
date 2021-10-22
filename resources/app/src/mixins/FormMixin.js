@@ -179,7 +179,7 @@ export default {
           variant = "warning";
           break;
         case 500:
-          content = "Une erreur sytème s'est produite.";
+          content = "Une erreur système s'est produite.";
           title = "Erreur fatale";
           variant = "danger";
           break;

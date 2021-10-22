@@ -4,6 +4,7 @@ namespace Tests\Unit\Models;
 
 use App\Models\User;
 use Noke;
+use Stripe;
 use Tests\TestCase;
 
 class UserTest extends TestCase
@@ -97,5 +98,16 @@ class UserTest extends TestCase
         Noke::shouldReceive("findOrCreateUser")->once();
 
         $user->getNokeUser();
+    }
+
+    public function testUserStripeCustomerMethod()
+    {
+        $user = factory(User::class)->create();
+
+        Stripe::shouldReceive("getUserCustomer")
+            ->once()
+            ->with($user);
+
+        $user->getStripeCustomer();
     }
 }

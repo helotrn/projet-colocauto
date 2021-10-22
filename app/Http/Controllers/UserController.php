@@ -10,7 +10,7 @@ use App\Http\Requests\AdminRequest;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\BaseRequest as Request;
 use App\Http\Requests\User\BorrowerStatusRequest;
-use App\Http\Requests\User\AddBalanceRequest;
+use App\Http\Requests\User\AddToBalanceRequest;
 use App\Http\Requests\User\CreateRequest;
 use App\Http\Requests\User\DestroyRequest;
 use App\Http\Requests\User\UpdateRequest;
@@ -28,6 +28,7 @@ use Excel;
 use Mail;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Validation\ValidationException;
+use Stripe;
 
 class UserController extends RestController
 {
@@ -397,7 +398,7 @@ class UserController extends RestController
         return $user->balance;
     }
 
-    public function addToBalance(AddBalanceRequest $request, $userId)
+    public function addToBalance(AddToBalanceRequest $request, $userId)
     {
         $findRequest = $request->redirectAuth(Request::class);
         $user = $this->repo->find($findRequest, $userId);
@@ -418,8 +419,6 @@ class UserController extends RestController
             return $this->respondWithMessage("no_payment_method", 400);
         }
 
-        \Stripe\Stripe::setApiKey(config("services.stripe.secret"));
-
         // Passing fees on to customer:
         // https://support.stripe.com/questions/passing-the-stripe-fee-on-to-customers
         $feeRatio = 0.022;
@@ -437,14 +436,12 @@ class UserController extends RestController
         $date = date("Y-m-d");
         $charge = null;
         try {
-            $charge = \Stripe\Charge::create([
-                "amount" => $amountWithFeeInCents,
-                "currency" => "cad",
-                "customer" => $user->getStripeCustomer()->id,
-                "description" =>
-                    "Ajout au compte LocoMotion: " .
-                    "{$amount}$ + {$fee}$ (frais)",
-            ]);
+            $customerId = $user->getStripeCustomer()->id;
+            $charge = Stripe::createCharge(
+                $amountWithFeeInCents,
+                $customerId,
+                "Ajout au compte LocoMotion: {$amount}$ + {$fee}$ (frais)"
+            );
         } catch (\Exception $e) {
             $message = $e->getMessage();
             return $this->respondWithMessage("Stripe: {$message}", 500);

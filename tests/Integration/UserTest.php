@@ -2,11 +2,13 @@
 
 namespace Tests\Integration;
 
-use App\Models\User;
 use App\Models\Community;
-use Tests\TestCase;
+use App\Models\PaymentMethod;
+use App\Models\User;
 use Illuminate\Support\Str;
 use Noke;
+use Stripe;
+use Tests\TestCase;
 
 class UserTest extends TestCase
 {
@@ -531,5 +533,35 @@ class UserTest extends TestCase
                 "email" => $newEmail,
             ])
         )->assertStatus(200);
+    }
+
+    public function testAddToBalanceEndpoint()
+    {
+        $paymentMethod = factory(PaymentMethod::class)->create([
+            "user_id" => $this->user->id,
+            "type" => "credit_card",
+        ]);
+
+        Stripe::shouldReceive("getUserCustomer")
+            ->once()
+            ->withArgs(function ($arg) {
+                return $arg->id === $this->user->id;
+            })
+            ->andReturn((object) ["id" => "cus_test"]);
+
+        Stripe::shouldReceive("createCharge")
+            ->once()
+            ->with(
+                1065,
+                "cus_test",
+                "Ajout au compte LocoMotion: 10.12$ + 0.53$ (frais)"
+            );
+
+        $response = $this->json("PUT", "/api/v1/auth/user/balance", [
+            "transaction_id" => 1,
+            "amount" => 10.12,
+            "payment_method_id" => $paymentMethod->id,
+        ]);
+        $response->assertStatus(200)->assertSee("10.12");
     }
 }
