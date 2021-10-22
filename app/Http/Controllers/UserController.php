@@ -28,6 +28,7 @@ use Excel;
 use Mail;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Validation\ValidationException;
+use Stripe;
 
 class UserController extends RestController
 {
@@ -418,8 +419,6 @@ class UserController extends RestController
             return $this->respondWithMessage("no_payment_method", 400);
         }
 
-        \Stripe\Stripe::setApiKey(config("services.stripe.secret"));
-
         // Passing fees on to customer:
         // https://support.stripe.com/questions/passing-the-stripe-fee-on-to-customers
         $feeRatio = 0.022;
@@ -437,14 +436,12 @@ class UserController extends RestController
         $date = date("Y-m-d");
         $charge = null;
         try {
-            $charge = \Stripe\Charge::create([
-                "amount" => $amountWithFeeInCents,
-                "currency" => "cad",
-                "customer" => $user->getStripeCustomer()->id,
-                "description" =>
-                    "Ajout au compte LocoMotion: " .
-                    "{$amount}$ + {$fee}$ (frais)",
-            ]);
+            $customerId = $user->getStripeCustomer()->id;
+            $charge = Stripe::createCharge(
+                $amountWithFeeInCents,
+                $customerId,
+                "Ajout au compte LocoMotion: {$amount}$ + {$fee}$ (frais)"
+            );
         } catch (\Exception $e) {
             $message = $e->getMessage();
             return $this->respondWithMessage("Stripe: {$message}", 500);
