@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\Community;
 use Tests\TestCase;
 use Illuminate\Support\Str;
+use Illuminate\Testing\Assert;
 use Noke;
 
 class UserTest extends TestCase
@@ -157,55 +158,69 @@ class UserTest extends TestCase
             ->assertJsonStructure(TestCase::$collectionResponseStructure);
     }
 
-    public function testFilterUsersByDeletedAt()
+    public function testFilterUsersByIsDeactivated()
     {
-        // Lower bound only
+        // Zero integer
         $data = [
             "page" => 1,
             "per_page" => 10,
             "fields" => "id,name,last_name,full_name,email",
-            "deleted_at" => "2020-11-10T01:23:45Z@",
+            "is_deactivated" => 0,
         ];
         $response = $this->json("GET", "/api/v1/users/", $data);
         $response
             ->assertStatus(200)
             ->assertJsonStructure(TestCase::$collectionResponseStructure);
 
-        // Lower and upper bounds
+        $notDeactivatedResponseContent = $response->baseResponse->getContent();
+
+        // Positive integer
         $data = [
             "page" => 1,
             "per_page" => 10,
             "fields" => "id,name,last_name,full_name,email",
-            "deleted_at" => "2020-11-10T01:23:45Z@2020-11-12T01:23:45Z",
+            "is_deactivated" => 1,
         ];
         $response = $this->json("GET", "/api/v1/users/", $data);
         $response
             ->assertStatus(200)
             ->assertJsonStructure(TestCase::$collectionResponseStructure);
 
-        // Upper bound only
+        $deactivatedResponseContent = $response->baseResponse->getContent();
+
+        // Boolean false
         $data = [
             "page" => 1,
             "per_page" => 10,
             "fields" => "id,name,last_name,full_name,email",
-            "deleted_at" => "@2020-11-12T01:23:45Z",
+            "is_deactivated" => false,
         ];
         $response = $this->json("GET", "/api/v1/users/", $data);
         $response
             ->assertStatus(200)
             ->assertJsonStructure(TestCase::$collectionResponseStructure);
 
-        // Degenerate case when bounds are removed
+        Assert::assertJsonStringEqualsJsonString(
+            $notDeactivatedResponseContent,
+            $response->baseResponse->getContent()
+        );
+
+        // Boolean true
         $data = [
             "page" => 1,
             "per_page" => 10,
             "fields" => "id,name,last_name,full_name,email",
-            "deleted_at" => "@",
+            "is_deactivated" => true,
         ];
         $response = $this->json("GET", "/api/v1/users/", $data);
         $response
             ->assertStatus(200)
             ->assertJsonStructure(TestCase::$collectionResponseStructure);
+
+        Assert::assertJsonStringEqualsJsonString(
+            $deactivatedResponseContent,
+            $response->baseResponse->getContent()
+        );
     }
 
     public function testFilterUsersByCommunityId()
