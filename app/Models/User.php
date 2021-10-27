@@ -40,7 +40,6 @@ class User extends AuthenticatableBaseModel
         "created_at" => "date",
         "full_name" => "text",
         "email" => "text",
-        "deleted_at" => "date",
         "communities.name" => "text",
         "is_deactivated" => "boolean",
     ];
