@@ -115,18 +115,18 @@
 
           <div id="page__section__text--2">
             <p>Soyez protégé-e avec <strong>une assurance complète</strong>, pas compliquée.</p>
-            <b-button
+            <!-- <b-button
               size="lg"
               variant="outline-info"
               to="/conditions-utilisation-desjardins-assurances.html"
             >
               Voir l'assurance
-            </b-button>
+            </b-button> -->
           </div>
 
           <div id="page__section__text--3">
             <p><strong>Économisez</strong> grâce à ce projet citoyen à but non-lucratif</p>
-            <b-button size="lg" variant="outline-info"> Voir les prix </b-button>
+            <!-- <b-button size="lg" variant="outline-info"> Voir les prix </b-button> -->
           </div>
 
           <div id="page__section__text--4">
