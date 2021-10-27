@@ -115,7 +115,11 @@
 
           <div id="page__section__text--2">
             <p>Soyez protégé-e avec <strong>une assurance complète</strong>, pas compliquée.</p>
-            <b-button size="lg" variant="outline-info" to="/conditions-utilisation-desjardins-assurances.html">
+            <b-button
+              size="lg"
+              variant="outline-info"
+              to="/conditions-utilisation-desjardins-assurances.html"
+            >
               Voir l'assurance
             </b-button>
           </div>
