@@ -90,6 +90,51 @@
       </b-container>
     </section>
 
+    <section class="page__section page__section--why-locomotion">
+      <b-container>
+        <h2 class="page__section__title mb-4">Quatres raison de choisir<br />LocoMotion</h2>
+
+        <div class="page__section__content">
+          <div class="page__section__illustration page__section__illustration--1">
+            <svg-waving />
+          </div>
+          <div class="page__section__illustration page__section__illustration--2">
+            <svg-driving />
+          </div>
+          <div class="page__section__illustration page__section__illustration--3">
+            <svg-biking />
+          </div>
+          <div class="page__section__illustration page__section__illustration--4">
+            <svg-smiling-heart />
+          </div>
+          <div id="page__section__text--1">
+            <p>
+              C’est un projet <strong>par et pour votre voisinage</strong>, qui évolue avec vous
+            </p>
+          </div>
+
+          <div id="page__section__text--2">
+            <p>Soyez protégé-e avec <strong>une assurance complète</strong>, pas compliquée.</p>
+            <b-button size="lg" variant="outline-info" to="/communities">
+              Voir l'assurance
+            </b-button>
+          </div>
+
+          <div id="page__section__text--3">
+            <p><strong>Économisez</strong> grâce à ce projet citoyen à but non-lucratif</p>
+            <b-button size="lg" variant="outline-info" to="/communities"> Voir les prix </b-button>
+          </div>
+
+          <div id="page__section__text--4">
+            <p>
+              Optez pour
+              <strong>la seule solution locale</strong> d’autopartage entre voisin-e-s
+            </p>
+          </div>
+        </div>
+      </b-container>
+    </section>
+
     <section class="page__section page__section--participants">
       <b-container fluid>
         <b-row>
@@ -199,6 +244,11 @@ import WaveDesktop from "@/assets/svg/home-wave-desktop.svg";
 import Wave from "@/assets/svg/home-wave.svg";
 import UserMixin from "@/mixins/UserMixin";
 
+import SmilingHeart from "@/assets/svg/smiling-heart.svg";
+import Driving from "@/assets/svg/driving.svg";
+import Biking from "@/assets/svg/biking.svg";
+import Waving from "@/assets/svg/waving.svg";
+
 export default {
   name: "Home",
   mixins: [DataRouteGuards, UserMixin],
@@ -206,6 +256,7 @@ export default {
     DashboardCovidSection,
     MainFaq,
     PartnersSection,
+    "svg-biking": Biking,
     "svg-borrow": Borrow,
     "svg-city-desktop": CityDesktop,
     "svg-city": City,
@@ -215,10 +266,14 @@ export default {
     "svg-community": Community,
     "svg-dot-desktop": DotDesktop,
     "svg-dot": Dot,
+    "svg-driving": Driving,
     "svg-lend": Lend,
+    "svg-smiling-heart": SmilingHeart,
+
     "svg-tridem": Tridem,
     "svg-wave-desktop": WaveDesktop,
     "svg-wave": Wave,
+    "svg-waving": Waving,
   },
   computed: {
     communitiesCount() {
