@@ -199,6 +199,7 @@ class PaymentController extends RestController
         } else {
             $borrowerUser->removeFromBalance($debitAmount);
             if ($loan->loanable->owner) {
+                $ownerUser->refresh();
                 $ownerUser->addToBalance($creditAmount);
             }
         }
