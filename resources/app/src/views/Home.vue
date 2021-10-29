@@ -47,45 +47,32 @@
         <h2 class="page__section__title mb-4">C’est quoi<br />LocoMotion?</h2>
 
         <div class="page__section__content">
-          <b-row align-v="end">
-            <b-col md="4">
-              <b-row align-v="center">
-                <b-col md="12">
-                  <svg-borrow class="svg-borrow" />
-                </b-col>
-                <b-col md="12">
-                  <p class="text-center mb-5">
-                    Empruntez une auto, un vélo, une remorque&mldr; à 5 minutes à pied!
-                  </p>
-                </b-col>
-              </b-row>
-            </b-col>
+          <div class="page__section__illustration page__section__illustration--1">
+            <svg-borrow />
+          </div>
 
-            <b-col md="4">
-              <b-row align-v="center">
-                <b-col md="12">
-                  <svg-lend class="svg-lend" />
-                </b-col>
-                <b-col md="12">
-                  <p class="text-center mb-5">
-                    Partagez votre auto avec vos
-                    <span class="no-break">voisin-e-s</span>
-                  </p>
-                </b-col>
-              </b-row>
-            </b-col>
+          <div class="page__section__illustration page__section__illustration--2">
+            <svg-lend />
+          </div>
 
-            <b-col md="4">
-              <b-row align-v="center">
-                <b-col md="12">
-                  <svg-tridem class="svg-tridem" />
-                </b-col>
-                <b-col md="12">
-                  <p class="text-center mb-5">Faites partie d’un projet collectif ambitieux</p>
-                </b-col>
-              </b-row>
-            </b-col>
-          </b-row>
+          <div class="page__section__illustration page__section__illustration--3">
+            <svg-tridem />
+          </div>
+
+          <div class="page__section__text page__section__text--1">
+            <p>Empruntez une auto, un vélo, une remorque&mldr; à 5 minutes à pied!</p>
+          </div>
+
+          <div class="page__section__text page__section__text--2">
+            <p>
+              Partagez votre auto avec vos
+              <span class="no-break">voisin-e-s</span>
+            </p>
+          </div>
+
+          <div class="page__section__text page__section__text--3">
+            <p>Faites partie d’un projet collectif ambitieux</p>
+          </div>
         </div>
       </b-container>
     </section>
