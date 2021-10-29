@@ -168,7 +168,13 @@
             grid-template-rows: 50% fit-content(50%);
 
             .page__section__illustration svg {
-                height: 100%;
+                width: 100%;
+                height: auto;
+
+                @include media-breakpoint-only(md) {
+                    width: auto;
+                    height: 100%;
+                }
             }
 
             p {
