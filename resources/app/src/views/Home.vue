@@ -107,13 +107,13 @@
           <div class="page__section__illustration page__section__illustration--4">
             <svg-smiling-heart />
           </div>
-          <div id="page__section__text--1">
+          <div class="page__section__text page__section__text--1">
             <p>
               C’est un projet <strong>par et pour votre voisinage</strong>, qui évolue avec vous
             </p>
           </div>
 
-          <div id="page__section__text--2">
+          <div class="page__section__text page__section__text--2">
             <p>Soyez protégé-e avec <strong>une assurance complète</strong>, pas compliquée.</p>
             <!-- <b-button
               size="lg"
@@ -124,12 +124,12 @@
             </b-button> -->
           </div>
 
-          <div id="page__section__text--3">
+          <div class="page__section__text page__section__text--3">
             <p><strong>Économisez</strong> grâce à ce projet citoyen à but non-lucratif</p>
             <!-- <b-button size="lg" variant="outline-info"> Voir les prix </b-button> -->
           </div>
 
-          <div id="page__section__text--4">
+          <div class="page__section__text page__section__text--4">
             <p>
               Optez pour
               <strong>la seule solution locale</strong> d’autopartage entre voisin-e-s
