@@ -681,14 +681,34 @@ class Loanable extends BaseModel
         return $date->modify("next $strDay");
     }
 
-    protected static function getPeriodLimits($baseDate, $startTime, $endTime)
-    {
-        return [
-            $baseDate->copy()->setTime(0, 0, 0),
-            $baseDate->copy()->setTime($startTime[0], $startTime[1], 0),
-            $baseDate->copy()->setTime($endTime[0], $endTime[1], 0),
-            $baseDate->copy()->setTime(23, 59, 59),
-        ];
+    /**
+     * @return
+     *     Complement of the given interval on a given date.
+     */
+    protected static function getPeriodIntervals(
+        $baseDate,
+        $startTime,
+        $endTime
+    ) {
+        $intervals = [];
+
+        // If startTime is not the start of the day, then add preceding interval.
+        if ($startTime[0] != 0 || $startTime[1] != 0) {
+            $intervals[] = [
+                $baseDate->copy()->setTime(0, 0, 0),
+                $baseDate->copy()->setTime($startTime[0], $startTime[1], 0),
+            ];
+        }
+
+        // If endTime is not the end of the day, then add succeeding interval.
+        if ($endTime[0] != 23 || $endTime[1] != 59) {
+            $intervals[] = [
+                $baseDate->copy()->setTime($endTime[0], $endTime[1], 0),
+                $baseDate->copy()->setTime(23, 59, 59),
+            ];
+        }
+
+        return $intervals;
     }
 
     protected static function addDatesException(
@@ -713,9 +733,6 @@ class Loanable extends BaseModel
                             $calendar->addComponent($event);
                             break;
                         default:
-                            $startDayEvent = new Event();
-                            $endDayEvent = new Event();
-
                             [$startTime, $endTime] = explode(
                                 "-",
                                 $exception->period
@@ -723,28 +740,19 @@ class Loanable extends BaseModel
                             $startTime = explode(":", $startTime);
                             $endTime = explode(":", $endTime);
 
-                            [
-                                $startOfDay,
-                                $startOfPeriod,
-                                $endOfPeriod,
-                                $endOfDay,
-                            ] = static::getPeriodLimits(
+                            $periodIntervals = static::getPeriodIntervals(
                                 $baseDate,
                                 $startTime,
                                 $endTime
                             );
 
-                            $startDayEvent
-                                ->setUseTimezone(true)
-                                ->setDtStart($startOfDay)
-                                ->setDtEnd($startOfPeriod);
-                            $endDayEvent
-                                ->setUseTimezone(true)
-                                ->setDtStart($endOfPeriod)
-                                ->setDtEnd($endOfDay);
-
-                            $calendar->addComponent($startDayEvent);
-                            $calendar->addComponent($endDayEvent);
+                            foreach ($periodIntervals as $interval) {
+                                $event = (new Event())
+                                    ->setUseTimezone(true)
+                                    ->setDtStart($interval[0])
+                                    ->setDtEnd($interval[1]);
+                                $calendar->addComponent($event);
+                            }
                             break;
                     }
                     break;
@@ -753,9 +761,6 @@ class Loanable extends BaseModel
                     $baseEvent->addExDate(new Carbon($date));
 
                     if ($exception->period !== "00:00-23:59") {
-                        $startDayEvent = new Event();
-                        $endDayEvent = new Event();
-
                         [$startTime, $endTime] = explode(
                             "-",
                             $exception->period
@@ -763,26 +768,19 @@ class Loanable extends BaseModel
                         $startTime = explode(":", $startTime);
                         $endTime = explode(":", $endTime);
 
-                        [
-                            $startOfDay,
-                            $startOfPeriod,
-                            $endOfPeriod,
-                            $endOfDay,
-                        ] = static::getPeriodLimits(
+                        $periodIntervals = static::getPeriodIntervals(
                             new Carbon($date),
                             $startTime,
                             $endTime
                         );
 
-                        $startDayEvent
-                            ->setDtStart($startOfDay)
-                            ->setDtEnd($startOfPeriod);
-                        $endDayEvent
-                            ->setDtStart($endOfPeriod)
-                            ->setDtEnd($endOfDay);
-
-                        $calendar->addComponent($startDayEvent);
-                        $calendar->addComponent($endDayEvent);
+                        foreach ($periodIntervals as $interval) {
+                            $event = (new Event())
+                                ->setUseTimezone(true)
+                                ->setDtStart($interval[0])
+                                ->setDtEnd($interval[1]);
+                            $calendar->addComponent($event);
+                        }
                     }
                     break;
             }
@@ -795,39 +793,30 @@ class Loanable extends BaseModel
         &$calendar
     ) {
         foreach ($exception->scope as $day) {
-            $startDayEvent = new Event();
-            $endDayEvent = new Event();
-
             [$startTime, $endTime] = explode("-", $exception->period);
             $startTime = explode(":", $startTime);
             $endTime = explode(":", $endTime);
 
             $baseDate = $model::getFirstDateOnA($day, $model);
-            [
-                $startOfDay,
-                $startOfPeriod,
-                $endOfPeriod,
-                $endOfDay,
-            ] = $model::getPeriodLimits($baseDate, $startTime, $endTime);
 
-            $recurrence = new RecurrenceRule();
-            $recurrence
+            $periodIntervals = static::getPeriodIntervals(
+                $baseDate,
+                $startTime,
+                $endTime
+            );
+
+            $recurrence = (new RecurrenceRule())
                 ->setFreq(RecurrenceRule::FREQ_MONTHLY)
                 ->setByDay(join(",", $exception->scope));
 
-            $startDayEvent
-                ->setUseTimezone(true)
-                ->setDtStart($startOfDay)
-                ->setDtEnd($startOfPeriod)
-                ->setRecurrenceRule($recurrence);
-            $endDayEvent
-                ->setUseTimezone(true)
-                ->setDtStart($endOfPeriod)
-                ->setDtEnd($endOfDay)
-                ->setRecurrenceRule($recurrence);
-
-            $calendar->addComponent($startDayEvent);
-            $calendar->addComponent($endDayEvent);
+            foreach ($periodIntervals as $interval) {
+                $event = (new Event())
+                    ->setUseTimezone(true)
+                    ->setDtStart($interval[0])
+                    ->setDtEnd($interval[1])
+                    ->setRecurrenceRule($recurrence);
+                $calendar->addComponent($event);
+            }
         }
     }
 
@@ -840,31 +829,23 @@ class Loanable extends BaseModel
             );
 
             if ($exception->period !== "00:00-23:59") {
-                $startDayEvent = new Event();
-                $endDayEvent = new Event();
-
                 [$startTime, $endTime] = explode("-", $exception->period);
                 $startTime = explode(":", $startTime);
                 $endTime = explode(":", $endTime);
 
-                [
-                    $startOfDay,
-                    $startOfPeriod,
-                    $endOfPeriod,
-                    $endOfDay,
-                ] = $model::getPeriodLimits($baseDate, $startTime, $endTime);
+                $periodIntervals = static::getPeriodIntervals(
+                    $baseDate,
+                    $startTime,
+                    $endTime
+                );
 
-                $startDayEvent
-                    ->setUseTimezone(true)
-                    ->setDtStart($startOfDay)
-                    ->setDtEnd($startOfPeriod);
-                $endDayEvent
-                    ->setUseTimezone(true)
-                    ->setDtStart($endOfPeriod)
-                    ->setDtEnd($endOfDay);
-
-                $calendar->addComponent($startDayEvent);
-                $calendar->addComponent($endDayEvent);
+                foreach ($periodIntervals as $interval) {
+                    $event = (new Event())
+                        ->setUseTimezone(true)
+                        ->setDtStart($interval[0])
+                        ->setDtEnd($interval[1]);
+                    $calendar->addComponent($event);
+                }
             } else {
                 $event = (new Event())
                     ->setDtStart($baseDate)

@@ -97,6 +97,107 @@ class LoanableTest extends TestCase
         }
     }
 
+    public function testGetPeriodIntervals()
+    {
+        // Make getPeriodIntervals accessible
+        $class = new \ReflectionClass("App\Models\Loanable");
+        $getPeriodIntervals = $class->getMethod("getPeriodIntervals");
+        $getPeriodIntervals->setAccessible(true);
+
+        $baseDate = new Carbon(
+            "2021-11-01",
+            new \DateTimeZone("America/Toronto")
+        );
+
+        // Basic case.
+        $startTime = ["01", "00"];
+        $endTime = ["23", "00"];
+
+        $intervals = $getPeriodIntervals->invokeArgs(new Loanable(), [
+            $baseDate,
+            $startTime,
+            $endTime,
+        ]);
+
+        // Expect two intervals.
+        $this->assertEquals(2, count($intervals));
+
+        $this->assertEquals(
+            "2021-11-01T04:00:00.000000Z",
+            $intervals[0][0]->toIsoString()
+        );
+        $this->assertEquals(
+            "2021-11-01T05:00:00.000000Z",
+            $intervals[0][1]->toIsoString()
+        );
+
+        $this->assertEquals(
+            "2021-11-02T03:00:00.000000Z",
+            $intervals[1][0]->toIsoString()
+        );
+        $this->assertEquals(
+            "2021-11-02T03:59:59.000000Z",
+            $intervals[1][1]->toIsoString()
+        );
+
+        // Start of day
+        $startTime = ["00", "00"];
+        $endTime = ["23", "00"];
+
+        $intervals = $getPeriodIntervals->invokeArgs(new Loanable(), [
+            $baseDate,
+            $startTime,
+            $endTime,
+        ]);
+
+        // Expect one interval.
+        $this->assertEquals(1, count($intervals));
+
+        $this->assertEquals(
+            "2021-11-02T03:00:00.000000Z",
+            $intervals[0][0]->toIsoString()
+        );
+        $this->assertEquals(
+            "2021-11-02T03:59:59.000000Z",
+            $intervals[0][1]->toIsoString()
+        );
+
+        // End of day
+        $startTime = ["01", "00"];
+        $endTime = ["23", "59"];
+
+        $intervals = $getPeriodIntervals->invokeArgs(new Loanable(), [
+            $baseDate,
+            $startTime,
+            $endTime,
+        ]);
+
+        // Expect one interval.
+        $this->assertEquals(1, count($intervals));
+
+        $this->assertEquals(
+            "2021-11-01T04:00:00.000000Z",
+            $intervals[0][0]->toIsoString()
+        );
+        $this->assertEquals(
+            "2021-11-01T05:00:00.000000Z",
+            $intervals[0][1]->toIsoString()
+        );
+
+        // Whole day
+        $startTime = ["00", "00"];
+        $endTime = ["23", "59"];
+
+        $intervals = $getPeriodIntervals->invokeArgs(new Loanable(), [
+            $baseDate,
+            $startTime,
+            $endTime,
+        ]);
+
+        // Expect no interval
+        $this->assertEquals(0, count($intervals));
+    }
+
     public function testLoanableNotAccessibleAccrossCommunitiesByDefault()
     {
         foreach (
