@@ -163,8 +163,8 @@
 
         .page__section__content {
             display: grid;
-            column-gap: 10px;
-            grid-template-columns: 25% 25% 25% 25%;
+            column-gap: 25px;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
             grid-template-rows: 50% fit-content(50%);
 
             .page__section__illustration svg {
