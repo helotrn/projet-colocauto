@@ -166,7 +166,7 @@ export default {
             newTarget.scope = [];
             break;
           case "periodRange":
-            newTarget.period = "00:00-23:59";
+            newTarget.period = "00:00-00:00";
             newTarget.scope = [];
             break;
           default:
