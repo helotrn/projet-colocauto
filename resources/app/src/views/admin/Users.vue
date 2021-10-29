@@ -174,7 +174,7 @@ export default {
     };
   },
   methods: {
-    //we use a setParam wrapper to make sure the default params always exclude deactivated users
+    // We use a setParam wrapper to make sure the default params always exclude deactivated users
     customSetParam(param) {
       if (param.name === "is_deactivated" && typeof param.value === "undefined") {
         this.setParam({ ...param, value: 0 });
