@@ -83,6 +83,9 @@ export default {
     },
   },
   methods: {
+    reloadDataRoutesData() {
+      return this.loadDataRoutesData(this, this.$route);
+    },
     loadDataRoutesData(vm, to) {
       return Promise.all(
         Object.keys(to.meta.data).reduce((acc, collection) => {
