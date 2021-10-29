@@ -7,7 +7,7 @@ use App\Http\Requests\Auth\ResetPasswordRequest;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\Auth\RegisterRequest;
 use App\Http\Requests\BaseRequest as Request;
-use App\Http\Requests\User\AddBalanceRequest as UserAddBalanceRequest;
+use App\Http\Requests\User\AddToBalanceRequest as UserAddToBalanceRequest;
 use App\Http\Requests\User\UpdateRequest as UserUpdateRequest;
 use App\Models\User;
 use App\Services\GoogleAccountService;
@@ -137,7 +137,7 @@ class AuthController extends RestController
     public function addToUserBalance(Request $request)
     {
         $request->merge(["user_id" => $this->auth->user()->id]);
-        $addBalanceRequest = $request->redirect(UserAddBalanceRequest::class);
+        $addBalanceRequest = $request->redirect(UserAddToBalanceRequest::class);
         return $this->userController->addToBalance(
             $addBalanceRequest,
             $this->auth->user()->id

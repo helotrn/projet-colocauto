@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Car;
+use App\Models\Owner;
 use Illuminate\Support\Str;
 use Faker\Generator as Faker;
 
@@ -22,7 +23,6 @@ $factory->define(Car::class, function (Faker $faker) {
         "location_description" => $faker->sentence,
         "model" => $faker->sentence,
         "name" => $faker->name,
-        "owner_id" => 1,
         "papers_location" => $faker->randomElement([
             "in_the_car",
             "to_request_with_car",
@@ -33,4 +33,14 @@ $factory->define(Car::class, function (Faker $faker) {
         "transmission_mode" => $faker->randomElement(["automatic", "manual"]),
         "year_of_circulation" => $faker->year($max = "now"),
     ];
+});
+
+$factory->afterMaking(Car::class, function (Car $car) {
+    if (!$car->owner_id) {
+        if ($owner = Owner::find(1)) {
+            $car->owner_id = $owner;
+        }
+
+        $car->owner_id = factory(Owner::class)->create()->id;
+    }
 });

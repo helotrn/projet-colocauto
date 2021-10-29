@@ -34,8 +34,8 @@ return [
     ],
 
     "stripe" => [
-        "key" => env("STRIPE_KEY"),
-        "secret" => env("STRIPE_SECRET"),
+        "key" => env("STRIPE_KEY", "sk_test"),
+        "secret" => env("STRIPE_SECRET", "pk_test"),
     ],
 
     "noke" => [

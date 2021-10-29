@@ -97,7 +97,15 @@
       }"
       v-if="displayStep('payment')"
     >
-      <svg-danger v-if="hasCanceledStep('payment') || hasActiveIncidents || hasActiveExtensions" />
+      <svg-danger
+        v-if="
+          hasCanceledStep('payment') ||
+          hasActiveIncidents ||
+          hasActiveExtensions ||
+          loanIsContested ||
+          loanIsCanceled
+        "
+      />
       <svg-check v-else-if="hasReachedStep('payment')" />
       <svg-waiting v-else />
 

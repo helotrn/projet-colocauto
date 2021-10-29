@@ -177,6 +177,7 @@ return [
         App\Providers\MaterializedViewServiceProvider::class,
         App\Providers\NokeServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+        App\Providers\StripeServiceProvider::class,
     ],
 
     /*
@@ -228,5 +229,6 @@ return [
         "View" => Illuminate\Support\Facades\View::class,
 
         "Noke" => App\Facades\Noke::class,
+        "Stripe" => App\Facades\Stripe::class,
     ],
 ];

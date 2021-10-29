@@ -3,6 +3,7 @@
 use App\Models\Bike;
 use App\Models\Community;
 use App\Models\Owner;
+use App\Models\Padlock;
 use Faker\Generator as Faker;
 
 $factory->define(Bike::class, function (Faker $faker) {
@@ -37,4 +38,10 @@ $factory->afterCreatingState(Bike::class, "withCommunity", function ($bike) {
         ->create();
     $bike->community_id = $community->id;
     $bike->save();
+});
+
+$factory->afterCreatingState(Bike::class, "withPadlock", function ($bike) {
+    factory(Padlock::class)->create([
+        "loanable_id" => $bike->id,
+    ]);
 });

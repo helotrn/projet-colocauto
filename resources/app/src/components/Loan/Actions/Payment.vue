@@ -2,9 +2,9 @@
   <b-card no-body class="loan-form loan-actions loan-actions-payment">
     <b-card-header header-tag="header" role="tab" class="loan-actions__header">
       <h2 v-b-toggle.loan-actions-payment>
-        <svg-waiting v-if="action.status === 'in_process' && !loanIsCanceled" />
+        <svg-waiting v-if="action.status === 'in_process' && !loanIsCanceled && !loanIsContested" />
         <svg-check v-else-if="action.status === 'completed'" />
-        <svg-danger v-else-if="action.status === 'canceled' || loanIsCanceled" />
+        <svg-danger v-else-if="action.status === 'canceled' || loanIsCanceled || loanIsContested" />
 
         Conclusion
       </h2>
@@ -45,103 +45,26 @@
           <!-- Action is not completed -->
           <!-- Whether userRoles includes 'borrower' or 'owner' -->
           <div v-if="['borrower', 'owner'].some((role) => userRoles.includes(role))">
-            <p>
+            <p v-if="item.loanable.type === 'car'">
               Validez dès maintenant les informations sur ce trajet&nbsp;: le kilomètrage, la
               facture d'essence&hellip;
             </p>
-          </div>
-
-          <div v-if="userRoles.includes('owner')">
-            <hr />
+            <p v-else>Validez dès maintenant les informations sur ce trajet.</p>
             <p>
-              À titre de propriétaire, vous recevrez {{ finalOwnerPart | currency }} pour l'emprunt.
-            </p>
-          </div>
-
-          <div v-if="userRoles.includes('borrower')">
-            <hr />
-            <p>
-              À titre d'emprunteur ce trajet vous coûtera&nbsp;:
-              <span v-b-popover.hover="priceTooltip">{{ finalPrice | currency }}</span
-              >.
-            </p>
-
-            <b-row>
-              <b-col lg="3" />
-
-              <b-col lg="6">
-                <div role="group" class="form-group">
-                  <label for="platform_tip" class="d-block" id="__BVID__151__BV_label_">
-                    {{ $t("fields.platform_tip") | capitalize }}
-                    <b-badge
-                      pill
-                      variant="light"
-                      v-b-popover.hover="$t('descriptions.platform_tip')"
-                    >
-                      ?
-                    </b-badge>
-                  </label>
-
-                  <div class="bv-no-focus-ring text-center">
-                    <b-form-input
-                      id="platform_tip"
-                      name="platform_tip"
-                      type="number"
-                      :min="0"
-                      :step="0.01"
-                      v-model="platformTip"
-                    />
-                  </div>
-                </div>
-              </b-col>
-
-              <b-col lg="3" />
-            </b-row>
-
-            <b-row v-if="!hasEnoughBalance">
-              <b-col>
-                <p>
-                  Il manque de crédits à votre compte pour payer cet emprunt.<br />
-                  <a href="#" v-b-modal.add-credit-modal>Ajoutez des crédits</a>
-                </p>
-
-                <b-modal
-                  id="add-credit-modal"
-                  title="Approvisionner mon compte"
-                  size="lg"
-                  footer-class="d-none"
-                >
-                  <user-add-credit-box
-                    :user="user"
-                    :minimum-required="finalPrice - user.balance"
-                    @bought="reloadUserAndCloseModal"
-                    @cancel="closeModal"
-                  />
-                </b-modal>
-              </b-col>
-            </b-row>
-
-            <div class="loan-actions-payment__buttons text-center">
-              <b-button
-                size="sm"
-                variant="success"
-                class="mr-3"
-                :disabled="!hasEnoughBalance || actionLoading"
-                @click="completeAction"
-              >
-                Accepter
+              <b-button size="sm" variant="primary" class="mr-3" v-b-toggle.loan-actions-takeover>
+                Informations au début
               </b-button>
-            </div>
+              <b-button size="sm" variant="primary" v-b-toggle.loan-actions-handover>
+                Informations à la fin
+              </b-button>
+            </p>
+          </div>
 
-            <b-row class="loan-actions__alert">
-              <b-col>
-                <b-alert variant="warning" show>
-                  Les informations de l'emprunt peuvent être modifiées jusqu'à 48h après sa
-                  conclusion. À partir de ce moment, le coût de l'emprunt sera validé avec les
-                  détails ci-dessus.
-                </b-alert>
-              </b-col>
-            </b-row>
+          <div class="loan-actions-payment__warning" v-if="loanIsContested">
+            <p>
+              Vous ne pouvez pas clôturer cette réservation car elle a été contestée, notre équipe
+              va vous contacter.
+            </p>
           </div>
 
           <div v-else-if="userIsAdmin" class="text-center">
@@ -158,6 +81,112 @@
               {{ item.borrower.user.full_name }}
               paiera {{ finalPrice | currency }} pour l'emprunt.
             </p>
+
+            <div class="loan-actions-payment__buttons text-center">
+              <b-button
+                size="sm"
+                variant="success"
+                :disabled="actionLoading"
+                @click="completeAction"
+              >
+                Accepter
+              </b-button>
+            </div>
+          </div>
+
+          <div v-else>
+            <div v-if="userRoles.includes('owner') && finalOwnerPart > 0">
+              <hr />
+              <p>
+                À titre de propriétaire, vous recevrez {{ finalOwnerPart | currency }} pour
+                l'emprunt.
+              </p>
+            </div>
+
+            <div v-if="userRoles.includes('borrower')">
+              <hr />
+              <p>
+                À titre d'emprunteur ce trajet vous coûtera&nbsp;:
+                <span v-b-popover.hover="priceTooltip">{{ finalPrice | currency }}</span
+                >.
+              </p>
+
+              <b-row>
+                <b-col lg="3" />
+
+                <b-col lg="6">
+                  <div role="group" class="form-group">
+                    <label for="platform_tip" class="d-block" id="__BVID__151__BV_label_">
+                      {{ $t("fields.platform_tip") | capitalize }}
+                      <b-badge
+                        pill
+                        variant="light"
+                        v-b-popover.hover="$t('descriptions.platform_tip')"
+                      >
+                        ?
+                      </b-badge>
+                    </label>
+
+                    <div class="bv-no-focus-ring text-center">
+                      <b-form-input
+                        id="platform_tip"
+                        name="platform_tip"
+                        type="number"
+                        :min="0"
+                        :step="0.01"
+                        v-model="platformTip"
+                      />
+                    </div>
+                  </div>
+                </b-col>
+
+                <b-col lg="3" />
+              </b-row>
+
+              <b-row v-if="!hasEnoughBalance">
+                <b-col>
+                  <p>
+                    Il manque de crédits à votre compte pour payer cet emprunt.<br />
+                    <a href="#" v-b-modal.add-credit-modal>Ajoutez des crédits</a>
+                  </p>
+
+                  <b-modal
+                    id="add-credit-modal"
+                    title="Approvisionner mon compte"
+                    size="lg"
+                    footer-class="d-none"
+                  >
+                    <user-add-credit-box
+                      :user="user"
+                      :minimum-required="finalPrice - user.balance"
+                      @bought="reloadUserAndCloseModal"
+                      @cancel="closeModal"
+                    />
+                  </b-modal>
+                </b-col>
+              </b-row>
+
+              <div class="loan-actions-payment__buttons text-center">
+                <b-button
+                  size="sm"
+                  variant="success"
+                  :disabled="!hasEnoughBalance || actionLoading"
+                  @click="completeAction"
+                >
+                  Accepter
+                </b-button>
+              </div>
+
+              <b-row class="loan-actions__alert">
+                <b-col>
+                  <b-alert variant="warning" show>
+                    Les informations de l'emprunt peuvent être modifiées jusqu'à 48h après sa
+                    conclusion. À partir de ce moment, le coût de l'emprunt sera validé avec les
+                    détails ci-dessus.
+                  </b-alert>
+                </b-col>
+              </b-row>
+            </div>
           </div>
         </div>
       </b-collapse>
@@ -169,6 +198,7 @@
 import UserAddCreditBox from "@/components/User/AddCreditBox.vue";
 
 import LoanActionsMixin from "@/mixins/LoanActionsMixin";
+import LoanStepsSequence from "@/mixins/LoanStepsSequence";
 
 import { filters } from "@/helpers";
 import locales from "@/locales";
@@ -177,7 +207,7 @@ const { currency } = filters;
 
 export default {
   name: "LoanActionsPayment",
-  mixins: [LoanActionsMixin],
+  mixins: [LoanActionsMixin, LoanStepsSequence],
   mounted() {
     this.action.platform_tip = parseFloat(this.platformTip, 10);
   },

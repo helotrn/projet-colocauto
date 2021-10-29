@@ -8,15 +8,15 @@ use App\Transformers\UserTransformer;
 use Auth;
 use GuzzleHttp\Client as HttpClient;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
 use Mail;
 use Noke;
+use Stripe;
 
 class User extends AuthenticatableBaseModel
 {
-    use HasApiTokens, Notifiable, SoftDeletes;
+    use HasApiTokens, Notifiable;
 
     public static $rules = [
         "accept_conditions" => ["accepted"],
@@ -41,8 +41,8 @@ class User extends AuthenticatableBaseModel
         "created_at" => "date",
         "full_name" => "text",
         "email" => "text",
-        "deleted_at" => "date",
         "communities.name" => "text",
+        "is_deactivated" => "boolean",
     ];
 
     public static function getRules($action = "", $auth = null)
@@ -121,6 +121,7 @@ class User extends AuthenticatableBaseModel
     public static $sizesByField = [];
 
     protected $fillable = [
+        "is_deactivated",
         "accept_conditions",
         "name",
         "last_name",
@@ -302,34 +303,7 @@ class User extends AuthenticatableBaseModel
 
     public function getStripeCustomer()
     {
-        if (app()->environment() === "testing") {
-            return; // TODO mock
-        }
-
-        \Stripe\Stripe::setApiKey(config("services.stripe.secret"));
-        $customers = \Stripe\Customer::all([
-            "email" => $this->email,
-            "limit" => 1,
-        ]);
-
-        $customer = array_pop($customers->data);
-
-        if (!$customer) {
-            $customer = \Stripe\Customer::create([
-                "description" =>
-                    "{$this->name} {$this->last_name} " .
-                    "<{$this->email}> ({$this->id})",
-                "email" => $this->email,
-                "name" => "{$this->name} {$this->last_name}",
-                "address" => [
-                    "line1" => $this->address,
-                    "country" => "CA",
-                    "postal_code" => $this->postal_code,
-                ],
-            ]);
-        }
-
-        return $customer;
+        return Stripe::getUserCustomer($this);
     }
 
     public function getAccessibleCommunityIds()

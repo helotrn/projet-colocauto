@@ -83,6 +83,9 @@ export default {
     },
   },
   methods: {
+    reloadDataRoutesData() {
+      return this.loadDataRoutesData(this, this.$route);
+    },
     loadDataRoutesData(vm, to) {
       return Promise.all(
         Object.keys(to.meta.data).reduce((acc, collection) => {
@@ -169,6 +172,14 @@ export default {
                   type: "route_data",
                 });
                 vm.$router.push("/app");
+                break;
+              case 500:
+                vm.$store.commit("addNotification", {
+                  content: "Une erreur système s'est produite.",
+                  title: "Erreur fatale",
+                  variant: "danger",
+                  type: "route_data",
+                });
                 break;
               case 401:
               default:

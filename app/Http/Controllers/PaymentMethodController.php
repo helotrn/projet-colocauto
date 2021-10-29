@@ -7,7 +7,7 @@ use App\Http\Requests\PaymentMethod\CreateRequest;
 use App\Models\PaymentMethod;
 use App\Repositories\PaymentMethodRepository;
 use Auth;
-use Stripe\Exception\CardException;
+use Stripe;
 
 class PaymentMethodController extends RestController
 {
@@ -37,13 +37,12 @@ class PaymentMethodController extends RestController
         if ($request->get("type") === "credit_card") {
             $customer = $user->getStripeCustomer();
             try {
-                $card = \Stripe\Customer::createSource($customer->id, [
-                    "source" => $request->get("external_id"),
-                ]);
-            } catch (CardException $e) {
-                return $this->respondWithErrors([
-                    "id" => [$e->getMessage()],
-                ]);
+                $card = Stripe::createCardBySourceId(
+                    $customer->id,
+                    $request->get("external_id")
+                );
+            } catch (ValidationException $e) {
+                return $this->respondWithErrors($e->errors(), $e->getMessage());
             }
 
             $request->merge(["external_id" => $card->id]);
@@ -93,7 +92,7 @@ class PaymentMethodController extends RestController
         if ($item->type === "credit_card") {
             $user = $request->user();
             $customer = $user->getStripeCustomer();
-            \Stripe\Customer::deleteSource($customer->id, $item->external_id);
+            Stripe::deleteSource($customer->id, $item->external_id);
         }
 
         try {

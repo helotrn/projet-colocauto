@@ -54,6 +54,12 @@
         >
           <p>L'emprunt a été annulé. Cette étape ne peut pas être complétée.</p>
         </div>
+        <div v-else-if="hasActiveExtensions">
+          <p>
+            Une demande d'extension est en cours. Elle doit être complétée (acceptée ou refusée)
+            avant de poursuivre.
+          </p>
+        </div>
         <div v-else-if="item.loanable.type === 'car'">
           <validation-observer ref="observer" v-slot="{ passes }">
             <b-form
@@ -223,7 +229,7 @@
 
               <b-row
                 class="loan-actions-handover__buttons text-center"
-                v-if="(!action.executed_at && !loanIsCanceled && !item.contested_at) || userIsAdmin"
+                v-if="!action.executed_at && !loanIsCanceled && !item.contested_at"
               >
                 <b-col>
                   <b-button type="submit" size="sm" variant="success" class="mr-3">
@@ -346,8 +352,8 @@
           </b-row>
           <b-row v-else>
             <b-col>
-              <p v-if="action.status !== 'canceled'">Le retour du véhicule a été effectuée.</p>
-              <p v-else>Le retour du véhicule a été annulée.</p>
+              <p v-if="action.status !== 'canceled'">Le retour du véhicule a été effectué.</p>
+              <p v-else>Le retour du véhicule a été annulé.</p>
             </b-col>
           </b-row>
 
@@ -430,6 +436,19 @@
           <p>
             Un membre de l'équipe LocoMotion contactera les participant-e-s et ajustera les données.
           </p>
+
+          <div v-if="userIsAdmin" class="text-center">
+            <b-button
+              type="submit"
+              size="sm"
+              variant="success"
+              class="mr-3"
+              :disabled="actionLoading"
+              @click="completeAction"
+            >
+              Résoudre la contestation
+            </b-button>
+          </div>
         </div>
       </b-collapse>
     </b-card-body>
@@ -441,10 +460,11 @@ import FormsImageUploader from "@/components/Forms/ImageUploader.vue";
 import FormsValidatedInput from "@/components/Forms/ValidatedInput.vue";
 
 import LoanActionsMixin from "@/mixins/LoanActionsMixin";
+import LoanStepsSequence from "@/mixins/LoanStepsSequence";
 
 export default {
   name: "LoanActionsHandover",
-  mixins: [LoanActionsMixin],
+  mixins: [LoanActionsMixin, LoanStepsSequence],
   mounted() {
     if (!this.action.mileage_end) {
       this.action.mileage_end =

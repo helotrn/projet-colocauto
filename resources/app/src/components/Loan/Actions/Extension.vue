@@ -138,6 +138,16 @@
               disponible.
             </p>
             <p v-if="item.loanable.owner">{{ item.loanable.owner.user.phone | phone }}</p>
+
+            <blockquote v-if="action.message_for_borrower">
+              {{ action.message_for_borrower }}
+              <div class="user-avatar" :style="{ backgroundImage: ownerAvatar }" />
+            </blockquote>
+
+            <blockquote v-if="action.comments_on_extension">
+              {{ action.comments_on_extension }}
+              <div class="user-avatar" :style="{ backgroundImage: borrowerAvatar }" />
+            </blockquote>
           </div>
         </div>
 

@@ -23,6 +23,11 @@ class PaymentRequest extends BaseRequest
         }
 
         $loan = Loan::find($this->get("loan_id"));
+
+        if (!$loan || $loan->loan_status === "canceled") {
+            return false;
+        }
+
         if ($user->borrower && $user->borrower->id === $loan->borrower->id) {
             return true;
         }

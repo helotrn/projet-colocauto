@@ -17,6 +17,12 @@ export default {
 
       return this.item.incidents.reduce((acc, i) => acc || i.status !== "completed", false);
     },
+    loanIsContested() {
+      const { handover, takeover } = this.item;
+      return (
+        (handover && handover.status === "canceled") || (takeover && takeover.status === "canceled")
+      );
+    },
     isOwnedLoanable() {
       return !!this.item.loanable.owner;
     },

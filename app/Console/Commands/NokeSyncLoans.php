@@ -110,6 +110,8 @@ class NokeSyncLoans extends Command
         $query = $columnDefinitions["loan_status"]($query);
         $query = $columnDefinitions["*"]($query);
 
+        $query->where($columnDefinitions["loan_status"](), "!=", "canceled");
+
         $query->with("borrower", "borrower.user");
 
         return $query;

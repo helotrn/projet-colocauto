@@ -2,11 +2,14 @@
 
 namespace Tests\Integration;
 
-use App\Models\User;
 use App\Models\Community;
-use Tests\TestCase;
+use App\Models\PaymentMethod;
+use App\Models\User;
 use Illuminate\Support\Str;
+use Illuminate\Testing\Assert;
 use Noke;
+use Stripe;
+use Tests\TestCase;
 
 class UserTest extends TestCase
 {
@@ -157,55 +160,69 @@ class UserTest extends TestCase
             ->assertJsonStructure(TestCase::$collectionResponseStructure);
     }
 
-    public function testFilterUsersByDeletedAt()
+    public function testFilterUsersByIsDeactivated()
     {
-        // Lower bound only
+        // Zero integer
         $data = [
             "page" => 1,
             "per_page" => 10,
             "fields" => "id,name,last_name,full_name,email",
-            "deleted_at" => "2020-11-10T01:23:45Z@",
+            "is_deactivated" => 0,
         ];
         $response = $this->json("GET", "/api/v1/users/", $data);
         $response
             ->assertStatus(200)
             ->assertJsonStructure(TestCase::$collectionResponseStructure);
 
-        // Lower and upper bounds
+        $notDeactivatedResponseContent = $response->baseResponse->getContent();
+
+        // Positive integer
         $data = [
             "page" => 1,
             "per_page" => 10,
             "fields" => "id,name,last_name,full_name,email",
-            "deleted_at" => "2020-11-10T01:23:45Z@2020-11-12T01:23:45Z",
+            "is_deactivated" => 1,
         ];
         $response = $this->json("GET", "/api/v1/users/", $data);
         $response
             ->assertStatus(200)
             ->assertJsonStructure(TestCase::$collectionResponseStructure);
 
-        // Upper bound only
+        $deactivatedResponseContent = $response->baseResponse->getContent();
+
+        // Boolean false
         $data = [
             "page" => 1,
             "per_page" => 10,
             "fields" => "id,name,last_name,full_name,email",
-            "deleted_at" => "@2020-11-12T01:23:45Z",
+            "is_deactivated" => false,
         ];
         $response = $this->json("GET", "/api/v1/users/", $data);
         $response
             ->assertStatus(200)
             ->assertJsonStructure(TestCase::$collectionResponseStructure);
 
-        // Degenerate case when bounds are removed
+        Assert::assertJsonStringEqualsJsonString(
+            $notDeactivatedResponseContent,
+            $response->baseResponse->getContent()
+        );
+
+        // Boolean true
         $data = [
             "page" => 1,
             "per_page" => 10,
             "fields" => "id,name,last_name,full_name,email",
-            "deleted_at" => "@",
+            "is_deactivated" => true,
         ];
         $response = $this->json("GET", "/api/v1/users/", $data);
         $response
             ->assertStatus(200)
             ->assertJsonStructure(TestCase::$collectionResponseStructure);
+
+        Assert::assertJsonStringEqualsJsonString(
+            $deactivatedResponseContent,
+            $response->baseResponse->getContent()
+        );
     }
 
     public function testFilterUsersByCommunityId()
@@ -531,5 +548,35 @@ class UserTest extends TestCase
                 "email" => $newEmail,
             ])
         )->assertStatus(200);
+    }
+
+    public function testAddToBalanceEndpoint()
+    {
+        $paymentMethod = factory(PaymentMethod::class)->create([
+            "user_id" => $this->user->id,
+            "type" => "credit_card",
+        ]);
+
+        Stripe::shouldReceive("getUserCustomer")
+            ->once()
+            ->withArgs(function ($arg) {
+                return $arg->id === $this->user->id;
+            })
+            ->andReturn((object) ["id" => "cus_test"]);
+
+        Stripe::shouldReceive("createCharge")
+            ->once()
+            ->with(
+                1065,
+                "cus_test",
+                "Ajout au compte LocoMotion: 10.12$ + 0.53$ (frais)"
+            );
+
+        $response = $this->json("PUT", "/api/v1/auth/user/balance", [
+            "transaction_id" => 1,
+            "amount" => 10.12,
+            "payment_method_id" => $paymentMethod->id,
+        ]);
+        $response->assertStatus(200)->assertSee("10.12");
     }
 }
