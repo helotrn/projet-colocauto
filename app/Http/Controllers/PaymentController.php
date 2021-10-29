@@ -183,12 +183,24 @@ class PaymentController extends RestController
             $ownerInvoice->pay();
         }
 
+        $debitAmount = $price + $insurance + $platformTip - $expenses;
+        $creditAmount = $price - $expenses;
+
         // Update balances
-        $borrowerUser->removeFromBalance(
-            $price + $insurance + $platformTip - $expenses
-        );
-        if ($loan->loanable->owner) {
-            $ownerUser->addToBalance($price - $expenses);
+        if ($borrowerUser->is($ownerUser)) {
+            //if the borrower is the owner we do a single atomic addToBalance or removeFromBalance instead of both calls so we can allow temporarily going below a balance of zero if the final balance is above zero (e.g initial balance is 0.5 => debit 1 => balance is -0.5 => credit 1 ==> final balance is 0.5)
+            $movement = $creditAmount - $debitAmount;
+
+            if ($movement >= 0) {
+                $ownerUser->addToBalance($movement);
+            } else {
+                $ownerUser->removeFromBalance($movement * -1);
+            }
+        } else {
+            $borrowerUser->removeFromBalance($debitAmount);
+            if ($loan->loanable->owner) {
+                $ownerUser->addToBalance($creditAmount);
+            }
         }
 
         // Save payment
