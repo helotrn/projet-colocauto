@@ -47,45 +47,81 @@
         <h2 class="page__section__title mb-4">C’est quoi<br />LocoMotion?</h2>
 
         <div class="page__section__content">
-          <b-row align-v="end">
-            <b-col md="4">
-              <b-row align-v="center">
-                <b-col md="12">
-                  <svg-borrow class="svg-borrow" />
-                </b-col>
-                <b-col md="12">
-                  <p class="text-center mb-5">
-                    Empruntez une auto, un vélo, une remorque&mldr; à 5 minutes à pied!
-                  </p>
-                </b-col>
-              </b-row>
-            </b-col>
+          <div class="page__section__illustration page__section__illustration--1">
+            <svg-borrow />
+          </div>
 
-            <b-col md="4">
-              <b-row align-v="center">
-                <b-col md="12">
-                  <svg-lend class="svg-lend" />
-                </b-col>
-                <b-col md="12">
-                  <p class="text-center mb-5">
-                    Partagez votre auto avec vos
-                    <span class="no-break">voisin-e-s</span>
-                  </p>
-                </b-col>
-              </b-row>
-            </b-col>
+          <div class="page__section__illustration page__section__illustration--2">
+            <svg-lend />
+          </div>
 
-            <b-col md="4">
-              <b-row align-v="center">
-                <b-col md="12">
-                  <svg-tridem class="svg-tridem" />
-                </b-col>
-                <b-col md="12">
-                  <p class="text-center mb-5">Faites partie d’un projet collectif ambitieux</p>
-                </b-col>
-              </b-row>
-            </b-col>
-          </b-row>
+          <div class="page__section__illustration page__section__illustration--3">
+            <svg-tridem />
+          </div>
+
+          <div class="page__section__text page__section__text--1">
+            <p>Empruntez une auto, un vélo, une remorque&mldr; à 5 minutes à pied!</p>
+          </div>
+
+          <div class="page__section__text page__section__text--2">
+            <p>
+              Partagez votre auto avec vos
+              <span class="no-break">voisin-e-s</span>
+            </p>
+          </div>
+
+          <div class="page__section__text page__section__text--3">
+            <p>Faites partie d’un projet collectif ambitieux</p>
+          </div>
+        </div>
+      </b-container>
+    </section>
+
+    <section class="page__section page__section--why-locomotion">
+      <b-container>
+        <h2 class="page__section__title mb-4">Quatres raison de choisir<br />LocoMotion</h2>
+
+        <div class="page__section__content">
+          <div class="page__section__illustration page__section__illustration--1">
+            <svg-waving />
+          </div>
+          <div class="page__section__illustration page__section__illustration--2">
+            <svg-driving />
+          </div>
+          <div class="page__section__illustration page__section__illustration--3">
+            <svg-biking />
+          </div>
+          <div class="page__section__illustration page__section__illustration--4">
+            <svg-smiling-heart />
+          </div>
+          <div class="page__section__text page__section__text--1">
+            <p>
+              C’est un projet <strong>par et pour votre voisinage</strong>, qui évolue avec vous
+            </p>
+          </div>
+
+          <div class="page__section__text page__section__text--2">
+            <p>Soyez protégé-e avec <strong>une assurance complète</strong>, pas compliquée.</p>
+            <!-- <b-button
+              size="lg"
+              variant="outline-info"
+              to="/conditions-utilisation-desjardins-assurances.html"
+            >
+              Voir l'assurance
+            </b-button> -->
+          </div>
+
+          <div class="page__section__text page__section__text--3">
+            <p><strong>Économisez</strong> grâce à ce projet citoyen à but non-lucratif</p>
+            <!-- <b-button size="lg" variant="outline-info"> Voir les prix </b-button> -->
+          </div>
+
+          <div class="page__section__text page__section__text--4">
+            <p>
+              Optez pour
+              <strong>la seule solution locale</strong> d’autopartage entre voisin-e-s
+            </p>
+          </div>
         </div>
       </b-container>
     </section>
@@ -199,6 +235,11 @@ import WaveDesktop from "@/assets/svg/home-wave-desktop.svg";
 import Wave from "@/assets/svg/home-wave.svg";
 import UserMixin from "@/mixins/UserMixin";
 
+import SmilingHeart from "@/assets/svg/smiling-heart.svg";
+import Driving from "@/assets/svg/driving.svg";
+import Biking from "@/assets/svg/biking.svg";
+import Waving from "@/assets/svg/waving.svg";
+
 export default {
   name: "Home",
   mixins: [DataRouteGuards, UserMixin],
@@ -206,6 +247,7 @@ export default {
     DashboardCovidSection,
     MainFaq,
     PartnersSection,
+    "svg-biking": Biking,
     "svg-borrow": Borrow,
     "svg-city-desktop": CityDesktop,
     "svg-city": City,
@@ -215,10 +257,14 @@ export default {
     "svg-community": Community,
     "svg-dot-desktop": DotDesktop,
     "svg-dot": Dot,
+    "svg-driving": Driving,
     "svg-lend": Lend,
+    "svg-smiling-heart": SmilingHeart,
+
     "svg-tridem": Tridem,
     "svg-wave-desktop": WaveDesktop,
     "svg-wave": Wave,
+    "svg-waving": Waving,
   },
   computed: {
     communitiesCount() {
