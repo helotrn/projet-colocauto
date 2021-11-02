@@ -299,11 +299,12 @@ class Loanable extends BaseModel
         return $this->hasMany(Loan::class);
     }
 
-    public function isAvailable(
-        $departureAt,
-        $durationInMinutes,
-        $ignoreLoanIds = []
-    ) {
+    /**
+     * This method checks whether the loanable is available based on the
+     * availability schedule.
+     */
+    public function isScheduleAvailable(Carbon $departureAt, $durationInMinutes)
+    {
         $ical = new \ICal\ICal(
             [0 => [$this->availability_ics]],
             [
@@ -325,6 +326,24 @@ class Loanable extends BaseModel
         if (!empty($events)) {
             return false;
         }
+
+        return true;
+    }
+
+    public function isAvailable(
+        $departureAt,
+        $durationInMinutes,
+        $ignoreLoanIds = []
+    ) {
+        if (!is_a(\Carbon\Carbon::class, $departureAt)) {
+            $departureAt = new \Carbon\Carbon($departureAt);
+        }
+
+        if (!$this->isScheduleAvailable($departureAt, $durationInMinutes)) {
+            return false;
+        }
+
+        $returnAt = $departureAt->copy()->add($durationInMinutes, "minutes");
 
         $query = Loan::where("loanable_id", $this->id);
 
