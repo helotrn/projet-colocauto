@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Calendar\DateIntervalHelper;
 use App\Models\Community;
 use App\Models\Loan;
 use App\Models\Owner;
@@ -690,25 +691,31 @@ class Loanable extends BaseModel
         $startTime,
         $endTime
     ) {
-        $intervals = [];
+        $dayInterval = [
+            $baseDate->copy()->setTime(0, 0, 0),
+            $baseDate->copy()->setTime(23, 59, 59),
+        ];
 
-        // If startTime is not the start of the day, then add preceding interval.
-        if ($startTime[0] != 0 || $startTime[1] != 0) {
-            $intervals[] = [
-                $baseDate->copy()->setTime(0, 0, 0),
-                $baseDate->copy()->setTime($startTime[0], $startTime[1], 0),
-            ];
+        // Complete startTime seconds
+        $startTime[2] = 0;
+
+        // Complete endTime seconds
+        // If endTime == 23:59, then complete seconds with 59 too.
+        if ($endTime[0] == 23 && $endTime[1] == 59) {
+            $endTime[2] = 59;
+        } else {
+            $endTime[2] = 0;
         }
 
-        // If endTime is not the end of the day, then add succeeding interval.
-        if ($endTime[0] != 23 || $endTime[1] != 59) {
-            $intervals[] = [
-                $baseDate->copy()->setTime($endTime[0], $endTime[1], 0),
-                $baseDate->copy()->setTime(23, 59, 59),
-            ];
-        }
+        $period = [
+            $baseDate
+                ->copy()
+                ->setTime($startTime[0], $startTime[1], $startTime[2]),
+            $baseDate->copy()->setTime($endTime[0], $endTime[1], $endTime[2]),
+        ];
 
-        return $intervals;
+        // removeInterval requires first argument to be an array of intervals.
+        return DateIntervalHelper::removeInterval([$dayInterval], $period);
     }
 
     protected static function addDatesException(
