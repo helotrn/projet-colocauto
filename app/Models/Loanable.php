@@ -305,6 +305,8 @@ class Loanable extends BaseModel
      */
     public function isScheduleAvailable(Carbon $departureAt, $durationInMinutes)
     {
+        // This is the availability calendar. The availability_mode field is
+        // accounted for when saving.
         $ical = new \ICal\ICal(
             [0 => [$this->availability_ics]],
             [
@@ -315,15 +317,52 @@ class Loanable extends BaseModel
             ]
         );
 
+        // If availability_mode is undefined, then available by default.
+        $availability_mode = $this->availability_mode
+            ? $this->availability_mode
+            : "always";
+
+        // If availability_ics contains no event at all, then one of two things:
+        // - if availability_mode is never, then the loanable is never available;
+        // - if availability_mode is never, then the loanable is always available.
+        if (0 == count($ical->events())) {
+            return "always" == $availability_mode;
+        }
+
         if (!is_a(\Carbon\Carbon::class, $departureAt)) {
             $departureAt = new \Carbon\Carbon($departureAt);
         }
 
         $returnAt = $departureAt->copy()->add($durationInMinutes, "minutes");
 
+        // From the documentation of johngrogg/ics-parser:
+        //   - Returns a sorted array of the events in a given range,
+        //     or an empty array if no events exist in the range.
+        //   - Events will be returned if the start or end date is contained
+        //     within the range (inclusive), or if the event starts before and
+        //     end after the range.
         $events = $ical->eventsFromRange($departureAt, $returnAt);
 
-        if (!empty($events)) {
+        // removeInterval acts on a array of intervals and biting a chunk may
+        // result in the creation of two disjoint intervals hence an array here.
+        $reservationIntervals = [[$departureAt, $returnAt]];
+
+        foreach ($events as $availabilityEvent) {
+            // *_array[2] is UNIX timestamp.
+            // No need to set timezone. This is accounted for.
+            $eventInterval = [
+                new Carbon($availabilityEvent->dtstart_array[2]),
+                new Carbon($availabilityEvent->dtend_array[2]),
+            ];
+
+            $reservationIntervals = DateIntervalHelper::removeInterval(
+                $reservationIntervals,
+                $eventInterval
+            );
+        }
+
+        // If any chunk of reservation is left, then the loanable is not available.
+        if (!empty($reservationIntervals)) {
             return false;
         }
 
