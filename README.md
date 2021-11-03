@@ -7,7 +7,7 @@ Application et API de LocoMotion
 
 ## Contribuer
 
-Consultez le fichier [CONTRIBUTE.md](CONTRIBUTE.md)
+Consultez le fichier [CONTRIBUTING.md](CONTRIBUTING.md)
 
 ## Prérequis
 
