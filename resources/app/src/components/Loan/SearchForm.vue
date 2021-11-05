@@ -34,6 +34,10 @@
             />
           </div>
 
+          <div v-if="invalid" class="warning-message">
+            La durée de l'emprunt doit être supérieure ou égale à 15 minutes.
+          </div>
+
           <b-form-group :label="$t('fields.loanable_type') | capitalize" label-for="loanable_type">
             <b-form-checkbox-group
               stacked
@@ -183,6 +187,11 @@ export default {
   .form__buttons {
     display: flex;
     justify-content: space-between;
+  }
+
+  .warning-message {
+    color: $danger;
+    margin-bottom: 20px;
   }
 }
 </style>
