@@ -574,18 +574,15 @@ class Loanable extends BaseModel
             $loanDateRange[1] = $loanInterval[1]->copy()->setTime(24, 0, 0);
         }
 
-
         // Ensure an exception is thrown if JSON is not properly decoded.
-        $availabilityRules =
-            $this->availability_json
-            ?  json_decode(
+        $availabilityRules = $this->availability_json
+            ? json_decode(
                 $this->availability_json,
                 true,
                 512,
                 JSON_THROW_ON_ERROR
             )
             : [];
-
 
         // Get availability or unavailability intervals.
         foreach ($availabilityRules as $rule) {
