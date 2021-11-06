@@ -13,9 +13,12 @@ use App\Models\Trailer;
 use App\Models\User;
 use Carbon\Carbon;
 use Tests\TestCase;
+use Tests\Unit\Calendar\AssertsIntervals;
 
 class LoanableTest extends TestCase
 {
+    use AssertsIntervals;
+
     public $borough;
     public $community;
     public $otherCommunity;
@@ -95,6 +98,556 @@ class LoanableTest extends TestCase
                 "owner_id" => $member->owner->id,
             ]);
         }
+    }
+
+    public function testAvailabilityParsePeriodStr()
+    {
+        // Without seconds
+        $period = Loanable::availabilityParsePeriodStr("00:00-00:00");
+        $expected = [[0, 0, 0], [0, 0, 0]];
+        $this->assertEquals($expected, $period);
+
+        $period = Loanable::availabilityParsePeriodStr("12:34-23:45");
+        $expected = [[12, 34, 0], [23, 45, 0]];
+        $this->assertEquals($expected, $period);
+
+        // Last minute exception
+        $period = Loanable::availabilityParsePeriodStr("23:59-23:59");
+        $expected = [[23, 59, 0], [24, 0, 0]];
+        $this->assertEquals($expected, $period);
+
+        $period = Loanable::availabilityParsePeriodStr("23:59-24:00");
+        $expected = [[23, 59, 0], [24, 0, 0]];
+        $this->assertEquals($expected, $period);
+
+        // With seconds
+        $period = Loanable::availabilityParsePeriodStr("00:00:00-00:00:00");
+        $expected = [[0, 0, 0], [0, 0, 0]];
+        $this->assertEquals($expected, $period);
+
+        $period = Loanable::availabilityParsePeriodStr("12:34:56-23:45:01");
+        $expected = [[12, 34, 56], [23, 45, 1]];
+        $this->assertEquals($expected, $period);
+
+        // Last minute exception
+        $period = Loanable::availabilityParsePeriodStr("23:59:00-23:59:00");
+        $expected = [[23, 59, 0], [24, 0, 0]];
+        $this->assertEquals($expected, $period);
+
+        $period = Loanable::availabilityParsePeriodStr("23:59:05-23:59:05");
+        $expected = [[23, 59, 5], [24, 0, 0]];
+        $this->assertEquals($expected, $period);
+
+        $period = Loanable::availabilityParsePeriodStr("23:59:59-23:59:59");
+        $expected = [[23, 59, 59], [24, 0, 0]];
+        $this->assertEquals($expected, $period);
+
+        $period = Loanable::availabilityParsePeriodStr("23:59:59-24:00:00");
+        $expected = [[23, 59, 59], [24, 0, 0]];
+        $this->assertEquals($expected, $period);
+    }
+
+    public function testAvailabilityGetDatesIntervals()
+    {
+        $rule = [
+            "type" => "dateRange",
+            "scope" => ["2021-11-07", "2021-11-09", "2021-11-12", "2021-11-13"],
+            "period" => "00:00-24:00",
+        ];
+        $dateRange = [new Carbon("2021-11-07"), new Carbon("2021-11-14")];
+
+        $intervals = Loanable::availabilityGetDatesIntervals($rule, $dateRange);
+        $expected = [
+            [
+                new Carbon("2021-11-07 00:00:00"),
+                new Carbon("2021-11-08 00:00:00"),
+            ],
+            [
+                new Carbon("2021-11-09 00:00:00"),
+                new Carbon("2021-11-10 00:00:00"),
+            ],
+            [
+                new Carbon("2021-11-12 00:00:00"),
+                new Carbon("2021-11-13 00:00:00"),
+            ],
+            [
+                new Carbon("2021-11-13 00:00:00"),
+                new Carbon("2021-11-14 00:00:00"),
+            ],
+        ];
+        $this->assertSameIntervals($expected, $intervals);
+
+        // Test partial intersection
+        $rule = [
+            "type" => "dateRange",
+            "scope" => ["2021-11-07", "2021-11-09", "2021-11-12", "2021-11-13"],
+            "period" => "00:00-24:00",
+        ];
+        $dateRange = [new Carbon("2021-11-09"), new Carbon("2021-11-13")];
+
+        $intervals = Loanable::availabilityGetDatesIntervals($rule, $dateRange);
+        $expected = [
+            [
+                new Carbon("2021-11-09 00:00:00"),
+                new Carbon("2021-11-10 00:00:00"),
+            ],
+            [
+                new Carbon("2021-11-12 00:00:00"),
+                new Carbon("2021-11-13 00:00:00"),
+            ],
+        ];
+        $this->assertSameIntervals($expected, $intervals);
+
+        // Test intersection with last day
+        $rule = [
+            "type" => "dateRange",
+            "scope" => ["2021-11-07", "2021-11-09", "2021-11-12", "2021-11-13"],
+            "period" => "00:00-24:00",
+        ];
+        $dateRange = [new Carbon("2021-11-13"), new Carbon("2021-11-14")];
+
+        $intervals = Loanable::availabilityGetDatesIntervals($rule, $dateRange);
+        $expected = [
+            [
+                new Carbon("2021-11-13 00:00:00"),
+                new Carbon("2021-11-14 00:00:00"),
+            ],
+        ];
+        $this->assertSameIntervals($expected, $intervals);
+
+        // Test no intersection
+        $rule = [
+            "type" => "dateRange",
+            "scope" => ["2021-11-07", "2021-11-09", "2021-11-12", "2021-11-13"],
+            "period" => "00:00-24:00",
+        ];
+        $dateRange = [new Carbon("2021-11-14"), new Carbon("2021-11-18")];
+
+        $intervals = Loanable::availabilityGetDatesIntervals($rule, $dateRange);
+        $expected = [];
+        $this->assertSameIntervals($expected, $intervals);
+
+        // Test without period.
+        $rule = [
+            "type" => "dateRange",
+            "scope" => ["2021-11-07", "2021-11-09", "2021-11-12", "2021-11-13"],
+        ];
+        $dateRange = [new Carbon("2021-11-07"), new Carbon("2021-11-14")];
+
+        $intervals = Loanable::availabilityGetDatesIntervals($rule, $dateRange);
+        $expected = [
+            [
+                new Carbon("2021-11-07 00:00:00"),
+                new Carbon("2021-11-08 00:00:00"),
+            ],
+            [
+                new Carbon("2021-11-09 00:00:00"),
+                new Carbon("2021-11-10 00:00:00"),
+            ],
+            [
+                new Carbon("2021-11-12 00:00:00"),
+                new Carbon("2021-11-13 00:00:00"),
+            ],
+            [
+                new Carbon("2021-11-13 00:00:00"),
+                new Carbon("2021-11-14 00:00:00"),
+            ],
+        ];
+        $this->assertSameIntervals($expected, $intervals);
+
+        // Set period
+        $rule = [
+            "type" => "dateRange",
+            "scope" => ["2021-11-07", "2021-11-09", "2021-11-12", "2021-11-13"],
+            "period" => "10:30-18:45",
+        ];
+        $dateRange = [new Carbon("2021-11-07"), new Carbon("2021-11-14")];
+
+        $intervals = Loanable::availabilityGetDatesIntervals($rule, $dateRange);
+        $expected = [
+            [
+                new Carbon("2021-11-07 10:30:00"),
+                new Carbon("2021-11-07 18:45:00"),
+            ],
+            [
+                new Carbon("2021-11-09 10:30:00"),
+                new Carbon("2021-11-09 18:45:00"),
+            ],
+            [
+                new Carbon("2021-11-12 10:30:00"),
+                new Carbon("2021-11-12 18:45:00"),
+            ],
+            [
+                new Carbon("2021-11-13 10:30:00"),
+                new Carbon("2021-11-13 18:45:00"),
+            ],
+        ];
+        $this->assertSameIntervals($expected, $intervals);
+
+        // Undefined date range
+        $rule = [
+            "type" => "dateRange",
+            "scope" => ["2021-11-07", "2021-11-09", "2021-11-12", "2021-11-13"],
+            "period" => "00:00-24:00",
+        ];
+
+        $intervals = Loanable::availabilityGetDatesIntervals($rule);
+        $expected = [
+            [
+                new Carbon("2021-11-07 00:00:00"),
+                new Carbon("2021-11-08 00:00:00"),
+            ],
+            [
+                new Carbon("2021-11-09 00:00:00"),
+                new Carbon("2021-11-10 00:00:00"),
+            ],
+            [
+                new Carbon("2021-11-12 00:00:00"),
+                new Carbon("2021-11-13 00:00:00"),
+            ],
+            [
+                new Carbon("2021-11-13 00:00:00"),
+                new Carbon("2021-11-14 00:00:00"),
+            ],
+        ];
+        $this->assertSameIntervals($expected, $intervals);
+    }
+
+    public function testAvailabilityGetDateRangeIntervals()
+    {
+        $rule = [
+            "type" => "dateRange",
+            "scope" => ["2021-11-07", "2021-11-08", "2021-11-09"],
+            "period" => "00:00-24:00",
+        ];
+        $dateRange = [new Carbon("2021-11-07"), new Carbon("2021-11-14")];
+
+        $intervals = Loanable::availabilityGetDateRangeIntervals(
+            $rule,
+            $dateRange
+        );
+        $expected = [
+            [
+                new Carbon("2021-11-07 00:00:00"),
+                new Carbon("2021-11-08 00:00:00"),
+            ],
+            [
+                new Carbon("2021-11-08 00:00:00"),
+                new Carbon("2021-11-09 00:00:00"),
+            ],
+            [
+                new Carbon("2021-11-09 00:00:00"),
+                new Carbon("2021-11-10 00:00:00"),
+            ],
+        ];
+        $this->assertSameIntervals($expected, $intervals);
+
+        // test same day, repeated.
+        $rule = [
+            "type" => "dateRange",
+            "scope" => ["2021-11-07", "2021-11-07"],
+            "period" => "00:00-24:00",
+        ];
+        $dateRange = [new Carbon("2021-11-07"), new Carbon("2021-11-14")];
+
+        $intervals = Loanable::availabilityGetDateRangeIntervals(
+            $rule,
+            $dateRange
+        );
+        $expected = [
+            [
+                new Carbon("2021-11-07 00:00:00"),
+                new Carbon("2021-11-08 00:00:00"),
+            ],
+        ];
+        $this->assertSameIntervals($expected, $intervals);
+
+        // Test same day, one date in scope.
+        $rule = [
+            "type" => "dateRange",
+            "scope" => ["2021-11-07"],
+            "period" => "00:00-24:00",
+        ];
+        $dateRange = [new Carbon("2021-11-07"), new Carbon("2021-11-14")];
+
+        $intervals = Loanable::availabilityGetDateRangeIntervals(
+            $rule,
+            $dateRange
+        );
+        $expected = [
+            [
+                new Carbon("2021-11-07 00:00:00"),
+                new Carbon("2021-11-08 00:00:00"),
+            ],
+        ];
+        $this->assertSameIntervals($expected, $intervals);
+
+        // Test partial intersection
+        $rule = [
+            "type" => "dateRange",
+            "scope" => ["2021-11-07", "2021-11-14"],
+            "period" => "00:00-24:00",
+        ];
+        $dateRange = [new Carbon("2021-11-04"), new Carbon("2021-11-09")];
+
+        $intervals = Loanable::availabilityGetDateRangeIntervals(
+            $rule,
+            $dateRange
+        );
+        $expected = [
+            [
+                new Carbon("2021-11-07 00:00:00"),
+                new Carbon("2021-11-08 00:00:00"),
+            ],
+            [
+                new Carbon("2021-11-08 00:00:00"),
+                new Carbon("2021-11-09 00:00:00"),
+            ],
+        ];
+        $this->assertSameIntervals($expected, $intervals);
+
+        // Test no intersection
+        $rule = [
+            "type" => "dateRange",
+            "scope" => ["2021-11-07", "2021-11-14"],
+            "period" => "00:00-24:00",
+        ];
+        $dateRange = [new Carbon("2021-11-02"), new Carbon("2021-11-07")];
+
+        $intervals = Loanable::availabilityGetDateRangeIntervals(
+            $rule,
+            $dateRange
+        );
+        $expected = [];
+        $this->assertSameIntervals($expected, $intervals);
+
+        // Test without period.
+        $rule = [
+            "type" => "dateRange",
+            "scope" => ["2021-11-07", "2021-11-08", "2021-11-09"],
+        ];
+        $dateRange = [new Carbon("2021-11-07"), new Carbon("2021-11-14")];
+
+        $intervals = Loanable::availabilityGetDateRangeIntervals(
+            $rule,
+            $dateRange
+        );
+        $expected = [
+            [
+                new Carbon("2021-11-07 00:00:00"),
+                new Carbon("2021-11-08 00:00:00"),
+            ],
+            [
+                new Carbon("2021-11-08 00:00:00"),
+                new Carbon("2021-11-09 00:00:00"),
+            ],
+            [
+                new Carbon("2021-11-09 00:00:00"),
+                new Carbon("2021-11-10 00:00:00"),
+            ],
+        ];
+        $this->assertSameIntervals($expected, $intervals);
+
+        // Set period
+        $rule = [
+            "type" => "dateRange",
+            "scope" => ["2021-11-07", "2021-11-08", "2021-11-09"],
+            "period" => "10:30-18:45",
+        ];
+        $dateRange = [new Carbon("2021-11-07"), new Carbon("2021-11-14")];
+
+        $intervals = Loanable::availabilityGetDateRangeIntervals(
+            $rule,
+            $dateRange
+        );
+        $expected = [
+            [
+                new Carbon("2021-11-07 10:30:00"),
+                new Carbon("2021-11-07 18:45:00"),
+            ],
+            [
+                new Carbon("2021-11-08 10:30:00"),
+                new Carbon("2021-11-08 18:45:00"),
+            ],
+            [
+                new Carbon("2021-11-09 10:30:00"),
+                new Carbon("2021-11-09 18:45:00"),
+            ],
+        ];
+        $this->assertSameIntervals($expected, $intervals);
+
+        // Undefined date range
+        $rule = [
+            "type" => "dateRange",
+            "scope" => ["2021-11-07", "2021-11-08", "2021-11-09"],
+            "period" => "00:00-24:00",
+        ];
+
+        $intervals = Loanable::availabilityGetDateRangeIntervals($rule);
+        $expected = [
+            [
+                new Carbon("2021-11-07 00:00:00"),
+                new Carbon("2021-11-08 00:00:00"),
+            ],
+            [
+                new Carbon("2021-11-08 00:00:00"),
+                new Carbon("2021-11-09 00:00:00"),
+            ],
+            [
+                new Carbon("2021-11-09 00:00:00"),
+                new Carbon("2021-11-10 00:00:00"),
+            ],
+        ];
+        $this->assertSameIntervals($expected, $intervals);
+    }
+
+    public function testAvailabilityGetWeekdaysIntervals()
+    {
+        $rule = [
+            "type" => "weekdays",
+            "scope" => ["SU", "WE", "SA"],
+            "period" => "00:00-24:00",
+        ];
+        $dateRange = [new Carbon("2021-11-07"), new Carbon("2021-11-14")];
+
+        $intervals = Loanable::availabilityGetWeekdaysIntervals(
+            $rule,
+            $dateRange
+        );
+        $expected = [
+            [
+                new Carbon("2021-11-07 00:00:00"),
+                new Carbon("2021-11-08 00:00:00"),
+            ],
+            [
+                new Carbon("2021-11-10 00:00:00"),
+                new Carbon("2021-11-11 00:00:00"),
+            ],
+            [
+                new Carbon("2021-11-13 00:00:00"),
+                new Carbon("2021-11-14 00:00:00"),
+            ],
+        ];
+        $this->assertSameIntervals($expected, $intervals);
+
+        // Other weekdays, unordered
+        $rule = [
+            "type" => "weekdays",
+            "scope" => ["FR", "TH", "MO", "TU"],
+            "period" => "00:00-24:00",
+        ];
+        $dateRange = [new Carbon("2021-11-07"), new Carbon("2021-11-14")];
+
+        $intervals = Loanable::availabilityGetWeekdaysIntervals(
+            $rule,
+            $dateRange
+        );
+        $expected = [
+            [
+                new Carbon("2021-11-08 00:00:00"),
+                new Carbon("2021-11-09 00:00:00"),
+            ],
+            [
+                new Carbon("2021-11-09 00:00:00"),
+                new Carbon("2021-11-10 00:00:00"),
+            ],
+            [
+                new Carbon("2021-11-11 00:00:00"),
+                new Carbon("2021-11-12 00:00:00"),
+            ],
+            [
+                new Carbon("2021-11-12 00:00:00"),
+                new Carbon("2021-11-13 00:00:00"),
+            ],
+        ];
+        $this->assertSameIntervals($expected, $intervals);
+
+        // Test without period.
+        $rule = [
+            "type" => "weekdays",
+            "scope" => ["MO", "TU"],
+        ];
+        $dateRange = [new Carbon("2021-11-07"), new Carbon("2021-11-14")];
+
+        $intervals = Loanable::availabilityGetWeekdaysIntervals(
+            $rule,
+            $dateRange
+        );
+        $expected = [
+            [
+                new Carbon("2021-11-08 00:00:00"),
+                new Carbon("2021-11-09 00:00:00"),
+            ],
+            [
+                new Carbon("2021-11-09 00:00:00"),
+                new Carbon("2021-11-10 00:00:00"),
+            ],
+        ];
+        $this->assertSameIntervals($expected, $intervals);
+
+        // Set period
+        $rule = [
+            "type" => "weekdays",
+            "scope" => ["SU", "WE", "SA"],
+            "period" => "10:30-18:45",
+        ];
+        $dateRange = [new Carbon("2021-11-07"), new Carbon("2021-11-14")];
+
+        $intervals = Loanable::availabilityGetWeekdaysIntervals(
+            $rule,
+            $dateRange
+        );
+        $expected = [
+            [
+                new Carbon("2021-11-07 10:30:00"),
+                new Carbon("2021-11-07 18:45:00"),
+            ],
+            [
+                new Carbon("2021-11-10 10:30:00"),
+                new Carbon("2021-11-10 18:45:00"),
+            ],
+            [
+                new Carbon("2021-11-13 10:30:00"),
+                new Carbon("2021-11-13 18:45:00"),
+            ],
+        ];
+        $this->assertSameIntervals($expected, $intervals);
+
+        // Longer date range
+        $rule = [
+            "type" => "weekdays",
+            "scope" => ["MO", "TH"],
+            "period" => "10:30-18:45",
+        ];
+        $dateRange = [new Carbon("2021-11-08"), new Carbon("2021-11-23")];
+
+        $intervals = Loanable::availabilityGetWeekdaysIntervals(
+            $rule,
+            $dateRange
+        );
+        $expected = [
+            [
+                new Carbon("2021-11-08 10:30:00"),
+                new Carbon("2021-11-08 18:45:00"),
+            ],
+            [
+                new Carbon("2021-11-11 10:30:00"),
+                new Carbon("2021-11-11 18:45:00"),
+            ],
+            [
+                new Carbon("2021-11-15 10:30:00"),
+                new Carbon("2021-11-15 18:45:00"),
+            ],
+            [
+                new Carbon("2021-11-18 10:30:00"),
+                new Carbon("2021-11-18 18:45:00"),
+            ],
+            [
+                new Carbon("2021-11-22 10:30:00"),
+                new Carbon("2021-11-22 18:45:00"),
+            ],
+        ];
+        $this->assertSameIntervals($expected, $intervals);
     }
 
     public function testGetPeriodIntervals()
@@ -471,6 +1024,198 @@ class LoanableTest extends TestCase
             $this->otherMemberOfCommunity
         );
         $this->assertEquals($this->community->id, $community->id);
+    }
+
+    public function testIsScheduleAvailable()
+    {
+        $bike = factory(Bike::class)->create([
+            "availability_mode" => "never",
+            "availability_json" => <<<JSON
+[   {   "available":true,
+        "type":"dates",
+        "scope":["2021-12-07","2021-12-09"],
+        "period":"11:00-13:00"},
+    {   "available":true,
+        "type":"dateRange",
+        "scope":["2021-12-14","2021-12-16"],
+        "period":"17:00-21:00"},
+    {   "available":false,
+        "type":"dateRange",
+        "scope":["2021-12-22","2021-12-24"]},
+    {   "available":true,
+        "type":"weekdays",
+        "scope":["SA"],
+        "period":"12:00-13:00"},
+    {   "available":true,
+        "type":"weekdays",
+        "scope":["MO","SU"],
+        "period":"00:00-23:59"}
+]
+JSON
+        ,
+        ]);
+
+        // "dates"
+        $this->assertTrue(
+            $bike->isScheduleAvailable(new Carbon("2021-12-09 11:00:00"), 60)
+        );
+        $this->assertFalse(
+            $bike->isScheduleAvailable(new Carbon("2021-12-09 10:59:00"), 2)
+        );
+        $this->assertFalse(
+            $bike->isScheduleAvailable(new Carbon("2021-12-09 12:59:00"), 2)
+        );
+
+        // "dateRange"
+        $this->assertTrue(
+            $bike->isScheduleAvailable(new Carbon("2021-12-14 18:00:00"), 180)
+        );
+        $this->assertFalse(
+            $bike->isScheduleAvailable(new Carbon("2021-12-14 16:59:00"), 2)
+        );
+        $this->assertFalse(
+            $bike->isScheduleAvailable(new Carbon("2021-12-14 20:59:00"), 2)
+        );
+
+        // Multi-day "dateRange"
+        $this->assertTrue(
+            $bike->isScheduleAvailable(
+                new Carbon("2021-12-22 00:00:00"),
+                72 * 60
+            )
+        );
+        $this->assertFalse(
+            $bike->isScheduleAvailable(new Carbon("2021-12-21 23:59:00"), 2)
+        );
+        $this->assertFalse(
+            $bike->isScheduleAvailable(new Carbon("2021-12-24 23:59:00"), 2)
+        );
+
+        // "weekdays"
+        $this->assertTrue(
+            $bike->isScheduleAvailable(new Carbon("2021-12-18 12:00:00"), 60)
+        );
+        $this->assertFalse(
+            $bike->isScheduleAvailable(new Carbon("2021-12-18 11:59:00"), 2)
+        );
+        $this->assertFalse(
+            $bike->isScheduleAvailable(new Carbon("2021-12-18 12:59:00"), 2)
+        );
+
+        // Multi-day "weekdays"
+        $this->assertTrue(
+            $bike->isScheduleAvailable(
+                new Carbon("2021-12-19 00:00:00"),
+                48 * 60
+            )
+        );
+        $this->assertFalse(
+            $bike->isScheduleAvailable(new Carbon("2021-12-18 23:59:00"), 2)
+        );
+        $this->assertFalse(
+            $bike->isScheduleAvailable(new Carbon("2021-12-20 23:59:00"), 2)
+        );
+
+        // Match no rule.
+        $this->assertFalse(
+            $bike->isScheduleAvailable(new Carbon("2021-12-07 13:00:00"), 15)
+        );
+
+        $bike = factory(Bike::class)->create([
+            "availability_mode" => "always",
+            "availability_json" => <<<JSON
+[   {   "available":false,
+        "type":"dates",
+        "scope":["2021-12-07","2021-12-09"],
+        "period":"11:00-13:00"},
+    {   "available":false,
+        "type":"dateRange",
+        "scope":["2021-12-14","2021-12-16"],
+        "period":"17:00-21:00"},
+    {   "available":false,
+        "type":"dateRange",
+        "scope":["2021-12-22","2021-12-24"]},
+    {   "available":false,
+        "type":"weekdays",
+        "scope":["SA"],
+        "period":"12:00-13:00"},
+    {   "available":false,
+        "type":"weekdays",
+        "scope":["MO","SU"],
+        "period":"00:00-23:59"}
+]
+JSON
+        ,
+        ]);
+
+        // "dates"
+        $this->assertFalse(
+            $bike->isScheduleAvailable(new Carbon("2021-12-09 11:00:00"), 120)
+        );
+        $this->assertTrue(
+            $bike->isScheduleAvailable(new Carbon("2021-12-09 10:30:00"), 30)
+        );
+        $this->assertTrue(
+            $bike->isScheduleAvailable(new Carbon("2021-12-09 13:00:00"), 30)
+        );
+
+        // "dateRange"
+        $this->assertFalse(
+            $bike->isScheduleAvailable(new Carbon("2021-12-14 17:00:00"), 240)
+        );
+        $this->assertTrue(
+            $bike->isScheduleAvailable(new Carbon("2021-12-14 16:30:00"), 30)
+        );
+        $this->assertTrue(
+            $bike->isScheduleAvailable(new Carbon("2021-12-14 21:00:00"), 30)
+        );
+
+        // Multi-day "dateRange"
+        $this->assertFalse(
+            $bike->isScheduleAvailable(
+                new Carbon("2021-12-22 00:00:00"),
+                72 * 60
+            )
+        );
+        $this->assertTrue(
+            $bike->isScheduleAvailable(new Carbon("2021-12-21 23:30:00"), 30)
+        );
+        $this->assertTrue(
+            $bike->isScheduleAvailable(new Carbon("2021-12-25 00:00:00"), 30)
+        );
+
+        // "weekdays"
+        $this->assertFalse(
+            $bike->isScheduleAvailable(new Carbon("2021-12-18 12:00:00"), 60)
+        );
+        $this->assertTrue(
+            $bike->isScheduleAvailable(new Carbon("2021-12-18 11:30:00"), 30)
+        );
+        $this->assertTrue(
+            $bike->isScheduleAvailable(new Carbon("2021-12-18 13:00:00"), 30)
+        );
+
+        // Multi-day "weekdays"
+        $this->assertFalse(
+            $bike->isScheduleAvailable(
+                new Carbon("2021-12-19 00:00:00"),
+                48 * 60
+            )
+        );
+        $this->assertTrue(
+            $bike->isScheduleAvailable(new Carbon("2021-12-18 23:30:00"), 30)
+        );
+        $this->assertTrue(
+            $bike->isScheduleAvailable(new Carbon("2021-12-21 00:00:00"), 30)
+        );
+
+        // No rule.
+        $this->assertTrue(
+            $bike->isScheduleAvailable(new Carbon("2021-12-07 13:00:00"), 15)
+        );
+
+        // Always, never, default.
+        // Json null (not even a string)
     }
 
     public function testIsAvailableEventIfLoanExistsWithIntentionInProcessOrCanceled()

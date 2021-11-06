@@ -299,74 +299,339 @@ class Loanable extends BaseModel
         return $this->hasMany(Loan::class);
     }
 
+    /*
+     * Parse period string of the form 12:34-23:45 to arrays of integers
+     * representing time. Accounts for expressions with or without seconds.
+     * Will define them if not.
+     * Will correct 23:59 end time to 24:00 to comply with the [ , ) interval
+     * convention.
+     */
+    public static function availabilityParsePeriodStr($periodStr)
+    {
+        [$startTime, $endTime] = explode("-", $periodStr);
+
+        // Explode and convert to integers.
+        $startTime = array_map(function ($s) {
+            return intval($s);
+        }, explode(":", $startTime));
+        $endTime = array_map(function ($s) {
+            return intval($s);
+        }, explode(":", $endTime));
+
+        // Set seconds if not set.
+        $startTime[2] = isset($startTime[2]) ? $startTime[2] : 0;
+
+        // Set seconds if not set.
+        $endTime[2] = isset($endTime[2]) ? $endTime[2] : 0;
+
+        // Enforce [, ) interval convention for the end of the day.
+        if (23 == $endTime[0] && 59 == $endTime[1]) {
+            $endTime = [24, 0, 0];
+        }
+
+        return [$startTime, $endTime];
+    }
+
+    /*
+     * @param rule
+     *   Array containing:
+     *     - type: "dates"
+     *     - scope:
+     *           An array of individual unordered dates.
+     *     - [period]:
+     *           Optional string defining availability or unavailability times.
+     *
+     * @param dateRange
+     *   Date interval following the [, ) interval convention.
+     */
+    public static function availabilityGetDatesIntervals(
+        $rule,
+        $dateRange = null
+    ) {
+        if (isset($rule["period"])) {
+            $periodInterval = self::availabilityParsePeriodStr($rule["period"]);
+        } else {
+            $periodInterval = [[0, 0, 0], [24, 0, 0]];
+        }
+
+        // Set time to 0 to ensure consistency with the fact that we expect dates.
+        if ($dateRange) {
+            $dateRange[0] = $dateRange[0]->copy()->setTime(0, 0, 0);
+            $dateRange[1] = $dateRange[1]->copy()->setTime(0, 0, 0);
+        }
+
+        $intervals = [];
+        foreach ($rule["scope"] as $dateStr) {
+            $currentDate = new Carbon($dateStr);
+
+            $interval = [
+                $currentDate->copy()->setTime(0, 0, 0),
+                $currentDate->copy()->setTime(24, 0, 0),
+            ];
+
+            if (
+                !$dateRange ||
+                DateIntervalHelper::hasIntersection([$interval], $dateRange)
+            ) {
+                // setTime gracefully accounts for time = 24:00:00
+                // and will set to 00:00:00 on the next day :)
+                $intervals[] = [
+                    $currentDate
+                        ->copy()
+                        ->setTime(
+                            $periodInterval[0][0],
+                            $periodInterval[0][1],
+                            $periodInterval[0][2]
+                        ),
+                    $currentDate
+                        ->copy()
+                        ->setTime(
+                            $periodInterval[1][0],
+                            $periodInterval[1][1],
+                            $periodInterval[1][2]
+                        ),
+                ];
+            }
+        }
+
+        return $intervals;
+    }
+
+    /*
+     * @param rule
+     *   Array containing:
+     *     - type: "dateRange"
+     *     - scope:
+     *           An array of dates from which the first and the last represent the endpoints of the range.
+     *           This is a [, ] interval
+     *     - [period]:
+     *           Optional string defining availability or unavailability times.
+     *
+     * @param dateRange
+     *   Date interval following the [, ) interval convention.
+     */
+    public static function availabilityGetDateRangeIntervals(
+        $rule,
+        $dateRange = null
+    ) {
+        if (isset($rule["period"])) {
+            $periodInterval = self::availabilityParsePeriodStr($rule["period"]);
+        } else {
+            $periodInterval = [[0, 0, 0], [24, 0, 0]];
+        }
+
+        // Get first and last days of interval no matter the
+        // format of scope (list of all dates or start and end date).
+        // Assume they are in order.
+        $ruleRange = [null, null];
+        foreach ($rule["scope"] as $dateStr) {
+            if (!$ruleRange[0]) {
+                $ruleRange[0] = $dateStr;
+            }
+            $ruleRange[1] = $dateStr;
+        }
+
+        $ruleRange[0] = (new \Carbon\Carbon($ruleRange[0]))->setTime(0, 0, 0);
+        $ruleRange[1] = (new \Carbon\Carbon($ruleRange[1]))->setTime(24, 0, 0);
+
+        // Prepare range.
+        if ($dateRange) {
+            // Set time to 0 to ensure consistency with the fact that we expect dates.
+            $dateRange[0] = $dateRange[0]->copy()->setTime(0, 0, 0);
+            $dateRange[1] = $dateRange[1]->copy()->setTime(0, 0, 0);
+
+            // Intersection of the two ranges so as to have the least number of days to check.
+            $dateRange = DateIntervalHelper::intersection(
+                [$dateRange],
+                $ruleRange
+            );
+
+            // If no intersection, then no interval.
+            if (empty($dateRange)) {
+                return [];
+            }
+
+            // Expect an array of one interval.
+            $dateRange = $dateRange[0];
+        } else {
+            $dateRange = $ruleRange;
+        }
+
+        $currentDate = $dateRange[0];
+        $intervals = [];
+        while ($currentDate->lessThan($dateRange[1])) {
+            $intervals[] = [
+                $currentDate
+                    ->copy()
+                    ->setTime(
+                        $periodInterval[0][0],
+                        $periodInterval[0][1],
+                        $periodInterval[0][2]
+                    ),
+                $currentDate
+                    ->copy()
+                    ->setTime(
+                        $periodInterval[1][0],
+                        $periodInterval[1][1],
+                        $periodInterval[1][2]
+                    ),
+            ];
+
+            $currentDate->addDay();
+        }
+
+        return $intervals;
+    }
+
+    /*
+     * @param rule
+     *   Array containing:
+     *     - type: "weekdays"
+     *     - scope:
+     *           Weekdays on which the rule applies.
+     *     - [period]:
+     *           Optional string defining availability or unavailability times.
+     *
+     * @param dateRange
+     *   Date interval following the [, ) interval convention.
+     */
+    public static function availabilityGetWeekdaysIntervals($rule, $dateRange)
+    {
+        static $isoWeekdays = [
+            1 => "MO",
+            2 => "TU",
+            3 => "WE",
+            4 => "TH",
+            5 => "FR",
+            6 => "SA",
+            7 => "SU",
+        ];
+
+        if (isset($rule["period"])) {
+            $periodInterval = self::availabilityParsePeriodStr($rule["period"]);
+        } else {
+            $periodInterval = [[0, 0, 0], [24, 0, 0]];
+        }
+
+        // Set time to 0 to ensure consistency with the fact that we expect dates.
+        $dateRange[0] = $dateRange[0]->copy()->setTime(0, 0, 0);
+        $dateRange[1] = $dateRange[1]->copy()->setTime(0, 0, 0);
+
+        $currentDate = $dateRange[0];
+        $intervals = [];
+        while ($currentDate->lessThan($dateRange[1])) {
+            if (
+                in_array(
+                    $isoWeekdays[$currentDate->isoWeekday()],
+                    $rule["scope"]
+                )
+            ) {
+                $intervals[] = [
+                    $currentDate
+                        ->copy()
+                        ->setTime(
+                            $periodInterval[0][0],
+                            $periodInterval[0][1],
+                            $periodInterval[0][2]
+                        ),
+                    $currentDate
+                        ->copy()
+                        ->setTime(
+                            $periodInterval[1][0],
+                            $periodInterval[1][1],
+                            $periodInterval[1][2]
+                        ),
+                ];
+            }
+
+            $currentDate->addDay();
+        }
+
+        return $intervals;
+    }
+
     /**
      * This method checks whether the loanable is available based on the
      * availability schedule.
      */
     public function isScheduleAvailable(Carbon $departureAt, $durationInMinutes)
     {
-        // This is the availability calendar. The availability_mode field is
-        // accounted for when saving.
-        $ical = new \ICal\ICal(
-            [0 => [$this->availability_ics]],
-            [
-                "defaultTimeZone" => "America/Toronto",
-                "defaultWeekStart" => "SU",
-                "filterDaysBefore" => 1,
-                "filterDaysAfter" => 365,
-            ]
-        );
+        $loanInterval = [
+            $departureAt,
+            $departureAt->copy()->add($durationInMinutes, "minutes"),
+        ];
 
-        // If availability_mode is undefined, then available by default.
-        $availability_mode = $this->availability_mode
-            ? $this->availability_mode
-            : "always";
+        $loanDateRange[0] = $loanInterval[0]->copy()->setTime(0, 0, 0);
 
-        // If availability_ics contains no event at all, then one of two things:
-        // - if availability_mode is never, then the loanable is never available;
-        // - if availability_mode is never, then the loanable is always available.
-        if (0 == count($ical->events())) {
-            return "always" == $availability_mode;
+        // If loan ends at 00:00:00, then don't go to the next day.
+        if (
+            $loanInterval[1]->hour == 0 &&
+            $loanInterval[1]->minute == 0 &&
+            $loanInterval[1]->second == 0
+        ) {
+            $loanDateRange[1] = $loanInterval[1]->copy()->setTime(0, 0, 0);
+        } else {
+            $loanDateRange[1] = $loanInterval[1]->copy()->setTime(24, 0, 0);
         }
 
-        if (!is_a(\Carbon\Carbon::class, $departureAt)) {
-            $departureAt = new \Carbon\Carbon($departureAt);
+
+        // Ensure an exception is thrown if JSON is not properly decoded.
+        $availabilityRules =
+            $this->availability_json
+            ?  json_decode(
+                $this->availability_json,
+                true,
+                512,
+                JSON_THROW_ON_ERROR
+            )
+            : [];
+
+
+        // Get availability or unavailability intervals.
+        foreach ($availabilityRules as $rule) {
+            switch ($rule["type"]) {
+                case "dates":
+                    $ruleIntervals = $this->availabilityGetDatesIntervals(
+                        $rule,
+                        $loanDateRange
+                    );
+                    break;
+
+                case "dateRange":
+                    $ruleIntervals = $this->availabilityGetDateRangeIntervals(
+                        $rule,
+                        $loanDateRange
+                    );
+                    break;
+
+                case "weekdays":
+                    $ruleIntervals = $this->availabilityGetWeekdaysIntervals(
+                        $rule,
+                        $loanDateRange
+                    );
+                    break;
+            }
+
+            if ("always" == $this->availability_mode) {
+                // If intervals intersect with loanInterval, then loanable is unavailable
+                if (
+                    DateIntervalHelper::hasIntersection(
+                        $ruleIntervals,
+                        $loanInterval
+                    )
+                ) {
+                    return false;
+                }
+            } else {
+                // If intervals cover loanInterval, then loanable is available
+                if (DateIntervalHelper::cover($ruleIntervals, $loanInterval)) {
+                    return true;
+                }
+            }
         }
 
-        $returnAt = $departureAt->copy()->add($durationInMinutes, "minutes");
-
-        // From the documentation of johngrogg/ics-parser:
-        //   - Returns a sorted array of the events in a given range,
-        //     or an empty array if no events exist in the range.
-        //   - Events will be returned if the start or end date is contained
-        //     within the range (inclusive), or if the event starts before and
-        //     end after the range.
-        $events = $ical->eventsFromRange($departureAt, $returnAt);
-
-        // removeInterval acts on a array of intervals and biting a chunk may
-        // result in the creation of two disjoint intervals hence an array here.
-        $reservationIntervals = [[$departureAt, $returnAt]];
-
-        foreach ($events as $availabilityEvent) {
-            // *_array[2] is UNIX timestamp.
-            // No need to set timezone. This is accounted for.
-            $eventInterval = [
-                new Carbon($availabilityEvent->dtstart_array[2]),
-                new Carbon($availabilityEvent->dtend_array[2]),
-            ];
-
-            $reservationIntervals = DateIntervalHelper::removeInterval(
-                $reservationIntervals,
-                $eventInterval
-            );
-        }
-
-        // If any chunk of reservation is left, then the loanable is not available.
-        if (!empty($reservationIntervals)) {
-            return false;
-        }
-
-        return true;
+        // If no rule applied, then return default availability.
+        return "always" == $this->availability_mode;
     }
 
     public function isAvailable(
