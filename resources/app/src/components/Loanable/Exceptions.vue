@@ -22,7 +22,7 @@
             Certains jours de la semaine
           </option>
           <option value="dates">Certaines dates en particulier</option>
-          <option value="periodRange">Sélectionner une période</option>
+          <option value="dateRange">Sélectionner une période</option>
         </b-select>
 
         <div v-if="exception.type === 'weekdays'">
@@ -51,7 +51,7 @@
             @input="selectDate($event, exception)"
           />
         </div>
-        <div v-if="exception.type === 'periodRange'" class="exceptions__row__type__calendar">
+        <div v-if="exception.type === 'dateRange'" class="exceptions__row__type__calendar">
           <forms-date-picker
             inline
             class="mt-3"
@@ -63,7 +63,7 @@
       </b-col>
 
       <b-col class="exceptions__row__period">
-        <div v-if="exception.type && exception.type !== 'periodRange'" class="mb-3">
+        <div v-if="exception.type && exception.type !== 'dateRange'" class="mb-3">
           <b-form-input
             type="text"
             :value="exception.period"
@@ -92,7 +92,7 @@
             </a>
           </div>
         </div>
-        <div v-if="exception.type === 'periodRange'" class="exceptions__row__dates">
+        <div v-if="exception.type === 'dateRange'" class="exceptions__row__dates">
           <p>
             <strong>Date de début</strong>
           </p>
@@ -105,7 +105,7 @@
         </div>
 
         <div
-          v-if="exception.type === 'periodRange' && exception.scope.length > 1"
+          v-if="exception.type === 'dateRange' && exception.scope.length > 1"
           class="exceptions__row__dates"
         >
           <p class="exceptions__endTitle">
@@ -165,7 +165,7 @@ export default {
             newTarget.period = "00:00-00:00";
             newTarget.scope = [];
             break;
-          case "periodRange":
+          case "dateRange":
             newTarget.period = "00:00-00:00";
             newTarget.scope = [];
             break;
