@@ -457,7 +457,7 @@ class Loanable extends BaseModel
             $dateRange = $ruleRange;
         }
 
-        $currentDate = $dateRange[0];
+        $currentDate = $dateRange[0]->copy();
         $intervals = [];
         while ($currentDate->lessThan($dateRange[1])) {
             $intervals[] = [
@@ -517,7 +517,7 @@ class Loanable extends BaseModel
         $dateRange[0] = $dateRange[0]->copy()->setTime(0, 0, 0);
         $dateRange[1] = $dateRange[1]->copy()->setTime(0, 0, 0);
 
-        $currentDate = $dateRange[0];
+        $currentDate = $dateRange[0]->copy();
         $intervals = [];
         while ($currentDate->lessThan($dateRange[1])) {
             if (
