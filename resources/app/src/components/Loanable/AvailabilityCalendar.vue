@@ -33,7 +33,13 @@
           :disable-views="['years', 'year', 'week', 'day']"
         >
           <template v-slot:cell-content="{ cell, view, events }">
-            <span :class="`vuecal__cell-date ${availabilityClass(events, cell)}`">
+            <span
+              :class="`vuecal__cell-date ${availabilityClass(
+                loanable.availability_mode,
+                events,
+                cell
+              )}`"
+            >
               {{ cell.content }}
             </span>
           </template>
@@ -53,7 +59,13 @@
           :disable-views="['years', 'year', 'week', 'day']"
         >
           <template v-slot:cell-content="{ cell, view, events }">
-            <span :class="`vuecal__cell-date ${availabilityClass(events, cell)}`">
+            <span
+              :class="`vuecal__cell-date ${availabilityClass(
+                loanable.availability_mode,
+                events,
+                cell
+              )}`"
+            >
               {{ cell.content }}
             </span>
           </template>
@@ -174,26 +186,73 @@ export default {
         },
       ];
     },
-    availabilityClass(events, cell) {
-      const now = this.$dayjs().format("YYYY-MM-DD");
-      const inAYear = this.$dayjs().add(365, "day").format("YYYY-MM-DD");
-      if (cell.startDate.format("YYYY-MM-DD") < now) {
+    availabilityClass(availabilityMode, events, cell) {
+      const now = this.$dayjs();
+      const inAYear = this.$dayjs().add(365, "day");
+
+      const cellStartTime = this.$dayjs(cell.startDate)
+        .set("hour", 0)
+        .set("minute", 0)
+        .set("second", 0);
+      const cellEndTime = this.$dayjs(cell.endDate)
+        .add(1, "day")
+        .set("hour", 0)
+        .set("minute", 0)
+        .set("second", 0);
+
+      // All what's in the past is unavailable.
+      if (cellStartTime.isSameOrBefore(now)) {
         return "unavailable";
       }
 
-      if (cell.startDate.format("YYYY-MM-DD") >= inAYear) {
+      // All what's in in more than a year is unknown.
+      if (cellStartTime.isSameOrAfter(inAYear)) {
         return "unknown";
       }
 
-      if (events.length === 0) {
-        return "available";
+      let eventStartTime, eventEndTime;
+      if (availabilityMode == "always") {
+        let nEvents = events.length;
+
+        for (let e = 0; e < nEvents; e++) {
+          eventStartTime = this.$dayjs(events[e].start);
+          eventEndTime = this.$dayjs(events[e].end);
+
+          // If event spans the whole day, then unavailable.
+          if (
+            0 == eventStartTime.diff(cellStartTime, "seconds") &&
+            0 == eventEndTime.diff(cellEndTime, "seconds")
+          ) {
+            return "unavailable";
+          }
+        }
+
+        // If an event was found, that does not span the whole day, then
+        // limited availability.
+        if (nEvents > 0) return "limited";
+      } else {
+        let nEvents = events.length;
+
+        for (let e = 0; e < nEvents; e++) {
+          eventStartTime = this.$dayjs(events[e].start);
+          eventEndTime = this.$dayjs(events[e].end);
+
+          // If event spans the whole day, then available.
+          if (
+            0 == eventStartTime.diff(cellStartTime, "seconds") &&
+            0 == eventEndTime.diff(cellEndTime, "seconds")
+          ) {
+            return "available";
+          }
+        }
+
+        // If an event was found, that does not span the whole day, then
+        // limited availability.
+        if (nEvents > 0) return "limited";
       }
 
-      if (events.find((e) => e.period === "00:00-00:00")) {
-        return "unavailable";
-      }
-
-      return "limited";
+      // No event found, then default availability applies.
+      return availabilityMode == "always" ? "available" : "unavailable";
     },
     nextMonth() {
       this.selectedDate = this.$dayjs(this.selectedDate).add(1, "month").format("YYYY-MM-DD");

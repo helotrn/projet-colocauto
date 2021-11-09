@@ -778,48 +778,21 @@ class Loanable extends BaseModel
 
     public function getEventsAttribute()
     {
-        try {
-            $ical = new \ICal\ICal(
-                [0 => [$this->availability_ics]],
-                [
-                    "defaultTimeZone" => "America/Toronto",
-                    "defaultWeekStart" => "SU",
-                    "filterDaysBefore" => 1,
-                    "filterDaysAfter" => 365,
-                ]
-            );
+        // Generate events for the next year.
+        $dateRange = [new Carbon(), (new Carbon())->addYear()];
 
-            $events = [];
-            foreach ($ical->events() as $event) {
-                $startDate = new Carbon($event->dtstart);
-                $endDate = new Carbon($event->dtend);
-                $period =
-                    $startDate->format("H:i") . "-" . $endDate->format("H:i");
+        $dailyIntervals = $this->availabilityGetScheduleDailyIntervals($dateRange);
 
-                $fullDay = $period === "00:00-00:00";
-
-                $events[] = $fullDay
-                    ? [
-                        "start" => $startDate->format("Y-m-d"),
-                        "end" => $endDate->format("Y-m-d"),
-                        "period" =>
-                            $startDate->format("H:i") .
-                            "-" .
-                            $endDate->format("H:i"),
-                    ]
-                    : [
-                        "start" => $startDate->format("Y-m-d H:i"),
-                        "end" => $endDate->format("Y-m-d H:i"),
-                        "period" =>
-                            $startDate->format("H:i") .
-                            "-" .
-                            $endDate->format("H:i"),
-                    ];
-            }
-            return $events;
-        } catch (\Exception $e) {
-            return [];
+        // Create events from intervals.
+        $events = [];
+        foreach ($dailyIntervals as $interval) {
+            $events[] = [
+                "start" => $interval[0]->format("Y-m-d H:i:s"),
+                "end" => $interval[1]->format("Y-m-d H:i:s"),
+            ];
         }
+
+        return $events;
     }
 
     public function getHasPadlockAttribute()
