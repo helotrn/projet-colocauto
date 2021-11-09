@@ -1039,7 +1039,7 @@ class LoanableTest extends TestCase
         "type":"dateRange",
         "scope":["2021-12-14","2021-12-16"],
         "period":"17:00-21:00"},
-    {   "available":false,
+    {   "available":true,
         "type":"dateRange",
         "scope":["2021-12-22","2021-12-24"]},
     {   "available":true,
