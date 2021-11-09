@@ -7,7 +7,6 @@ use Faker\Generator as Faker;
 
 $factory->define(Car::class, function (Faker $faker) {
     return [
-        "availability_ics" => $faker->sentence,
         "brand" => $faker->word,
         "comments" => $faker->paragraph,
         "engine" => $faker->randomElement([
