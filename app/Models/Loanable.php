@@ -550,6 +550,88 @@ class Loanable extends BaseModel
         return $intervals;
     }
 
+    /*
+     * For all availability rules, will generate daily intervals over a period
+     * given by dateRange.
+     * Daily means that any interval such as those returned by date ranges will
+     * be split into individual days.
+     */
+    public function availabilityGetScheduleDailyIntervals($dateRange)
+    {
+        // Set time to 0 to ensure consistency with the fact that we expect dates.
+        $dateRange[0] = $dateRange[0]->copy()->setTime(0, 0, 0);
+        $dateRange[1] = $dateRange[1]->copy()->setTime(0, 0, 0);
+
+        // Ensure an exception is thrown if JSON is not properly decoded.
+        $availabilityRules = $this->availability_json
+            ? json_decode(
+                $this->availability_json,
+                true,
+                512,
+                JSON_THROW_ON_ERROR
+            )
+            : [];
+
+        $dailyIntervals = [];
+
+        // Get availability or unavailability intervals.
+        foreach ($availabilityRules as $rule) {
+            switch ($rule["type"]) {
+                case "dates":
+                    $ruleIntervals = $this->availabilityGetDatesIntervals(
+                        $rule,
+                        $dateRange
+                    );
+                    break;
+
+                case "dateRange":
+                    $ruleIntervals = $this->availabilityGetDateRangeIntervals(
+                        $rule,
+                        $dateRange
+                    );
+
+                    // Split date ranges into individual days.
+                    $currentDate = $dateRange[0]->copy();
+                    $intervals = [];
+                    while ($currentDate->lessThan($dateRange[1])) {
+                        $dateInterval = [
+                            $currentDate->copy()->setTime(0, 0, 0),
+                            $currentDate->copy()->setTime(24, 0, 0),
+                        ];
+
+                        // There should be only one interval per day.
+                        $interval = DateIntervalHelper::Intersection(
+                            $ruleIntervals,
+                            $dateInterval
+                        );
+                        if (count($interval) > 1) {
+                            throw new \Exception("Only one interval expected.");
+                        }
+
+                        if ($interval) {
+                            $intervals[] = $interval[0];
+                        }
+
+                        $currentDate->addDay();
+                    }
+
+                    $ruleIntervals = $intervals;
+                    break;
+
+                case "weekdays":
+                    $ruleIntervals = $this->availabilityGetWeekdaysIntervals(
+                        $rule,
+                        $dateRange
+                    );
+                    break;
+            }
+
+            $dailyIntervals = array_merge($dailyIntervals, $ruleIntervals);
+        }
+
+        return $dailyIntervals;
+    }
+
     /**
      * This method checks whether the loanable is available based on the
      * availability schedule.

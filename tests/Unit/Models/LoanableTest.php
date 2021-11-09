@@ -1026,6 +1026,129 @@ class LoanableTest extends TestCase
         $this->assertEquals($this->community->id, $community->id);
     }
 
+    public function testAvailabilityGetScheduleDailyIntervals()
+    {
+        $bike = factory(Bike::class)->create([
+            "availability_mode" => "never",
+            "availability_json" => <<<JSON
+[   {   "available":true,
+        "type":"dates",
+        "scope":["2021-12-07","2021-12-09"],
+        "period":"11:00-13:00"},
+    {   "available":true,
+        "type":"dateRange",
+        "scope":["2021-12-14","2021-12-16"],
+        "period":"17:00-21:00"},
+    {   "available":true,
+        "type":"dateRange",
+        "scope":["2021-12-22","2021-12-24"]},
+    {   "available":true,
+        "type":"weekdays",
+        "scope":["SA"],
+        "period":"12:00-13:00"},
+    {   "available":true,
+        "type":"weekdays",
+        "scope":["MO","SU"],
+        "period":"00:00-23:59"}
+]
+JSON
+        ,
+        ]);
+
+        $dateRange = [new Carbon("2021-12-01"), new Carbon("2022-01-01")];
+        $intervals = $bike->availabilityGetScheduleDailyIntervals($dateRange);
+
+        $expected = [
+            // Dates
+            [
+                new Carbon("2021-12-07 11:00:00"),
+                new Carbon("2021-12-07 13:00:00"),
+            ],
+            [
+                new Carbon("2021-12-09 11:00:00"),
+                new Carbon("2021-12-09 13:00:00"),
+            ],
+            // Date range, 17:00-21:00
+            [
+                new Carbon("2021-12-14 17:00:00"),
+                new Carbon("2021-12-14 21:00:00"),
+            ],
+            [
+                new Carbon("2021-12-15 17:00:00"),
+                new Carbon("2021-12-15 21:00:00"),
+            ],
+            [
+                new Carbon("2021-12-16 17:00:00"),
+                new Carbon("2021-12-16 21:00:00"),
+            ],
+            // Date range, all day
+            [
+                new Carbon("2021-12-22 00:00:00"),
+                new Carbon("2021-12-23 00:00:00"),
+            ],
+            [
+                new Carbon("2021-12-23 00:00:00"),
+                new Carbon("2021-12-24 00:00:00"),
+            ],
+            [
+                new Carbon("2021-12-24 00:00:00"),
+                new Carbon("2021-12-25 00:00:00"),
+            ],
+            // Saturdays, 12:00-13:00
+            [
+                new Carbon("2021-12-04 12:00:00"),
+                new Carbon("2021-12-04 13:00:00"),
+            ],
+            [
+                new Carbon("2021-12-11 12:00:00"),
+                new Carbon("2021-12-11 13:00:00"),
+            ],
+            [
+                new Carbon("2021-12-18 12:00:00"),
+                new Carbon("2021-12-18 13:00:00"),
+            ],
+            [
+                new Carbon("2021-12-25 12:00:00"),
+                new Carbon("2021-12-25 13:00:00"),
+            ],
+            // Sundays and Mondays, all day
+            [
+                new Carbon("2021-12-05 00:00:00"),
+                new Carbon("2021-12-06 00:00:00"),
+            ],
+            [
+                new Carbon("2021-12-06 00:00:00"),
+                new Carbon("2021-12-07 00:00:00"),
+            ],
+            [
+                new Carbon("2021-12-12 00:00:00"),
+                new Carbon("2021-12-13 00:00:00"),
+            ],
+            [
+                new Carbon("2021-12-13 00:00:00"),
+                new Carbon("2021-12-14 00:00:00"),
+            ],
+            [
+                new Carbon("2021-12-19 00:00:00"),
+                new Carbon("2021-12-20 00:00:00"),
+            ],
+            [
+                new Carbon("2021-12-20 00:00:00"),
+                new Carbon("2021-12-21 00:00:00"),
+            ],
+            [
+                new Carbon("2021-12-26 00:00:00"),
+                new Carbon("2021-12-27 00:00:00"),
+            ],
+            [
+                new Carbon("2021-12-27 00:00:00"),
+                new Carbon("2021-12-28 00:00:00"),
+            ],
+        ];
+
+        $this->assertSameIntervals($expected, $intervals);
+    }
+
     public function testIsScheduleAvailable()
     {
         $bike = factory(Bike::class)->create([
