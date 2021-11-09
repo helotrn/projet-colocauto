@@ -182,7 +182,7 @@ export default {
           available: this.loanable.availability_mode === "never",
           type: null,
           scope: [],
-          period: "00:00-23:59",
+          period: "00:00-24:00",
         },
       ];
     },

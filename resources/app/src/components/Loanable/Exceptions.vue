@@ -60,11 +60,11 @@
             class="mb-3"
             @blur="emitPeriodChange(exception, $event)"
             v-mask="'##:##-##:##'"
-            :disabled="exception.period === '00:00-23:59'"
+            :disabled="exception.period === '00:00-23:59' || exception.period === '00:00-24:00'"
           />
 
           <b-form-checkbox
-            :checked="exception.period === '00:00-23:59'"
+            :checked="exception.period === '00:00-23:59' || exception.period === '00:00-24:00'"
             @change="togglePeriod(exception)"
           >
             Toute la journée
@@ -169,10 +169,10 @@ export default {
       this.emitChange(exception, "scope", dates);
     },
     togglePeriod(exception) {
-      if (exception.period === "00:00-23:59") {
+      if (exception.period === "00:00-23:59" || exception.period === "00:00-24:00") {
         this.emitChange(exception, "period", "00:00-00:00");
       } else {
-        this.emitChange(exception, "period", "00:00-23:59");
+        this.emitChange(exception, "period", "00:00-24:00");
       }
     },
   },
