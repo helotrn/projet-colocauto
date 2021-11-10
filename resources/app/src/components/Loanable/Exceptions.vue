@@ -18,9 +18,7 @@
           <option :value="null" disabled>
             Type {{ exception.available ? "de disponibilité" : "d'indisponibilité" }}
           </option>
-          <option value="weekdays" v-if="!!exception.available">
-            Certains jours de la semaine
-          </option>
+          <option value="weekdays">Certains jours de la semaine</option>
           <option value="dates">Certaines dates en particulier</option>
           <option value="dateRange">Sélectionner une période</option>
         </b-select>
