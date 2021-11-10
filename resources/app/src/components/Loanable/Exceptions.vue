@@ -63,7 +63,7 @@
       </b-col>
 
       <b-col class="exceptions__row__period">
-        <div v-if="exception.type && exception.type !== 'dateRange'" class="mb-3">
+        <div v-if="exception.type" class="mb-3">
           <b-form-input
             type="text"
             :value="exception.period"
