@@ -13,12 +13,13 @@ class MandrillServiceProvider extends ServiceProvider
     {
         $this->app->resolving(MailManager::class, function (
             MailManager $manager
-        ) {
+        ) { 
+            // data_get($config, "secret") ?: "na" was on line 22 before for obscur reasons
             $manager->extend("mandrill", function () {
-                $config = $this->app["config"]->get("services.mandrill", []);
+                $config = $this->app["config"]->get("services.mandrill", []);                
                 return new MandrillTransport(
                     new Client($config),
-                    data_get($config, "secret") ?: "na"
+                    $config['secret']
                 );
             });
         });
