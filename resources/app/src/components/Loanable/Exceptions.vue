@@ -130,10 +130,6 @@
 
 <script>
 import FormsDatePicker from "@/components/Forms/DatePicker.vue";
-import dayjs from "dayjs";
-import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
-
-dayjs.extend(isSameOrBefore);
 
 export default {
   name: "LoanableExceptions",
@@ -238,7 +234,7 @@ export default {
 
       let date = oldDates[0];
 
-      while (dayjs(date).isSameOrBefore(dayjs(dateToAdd), "day")) {
+      while (this.$dayjs(date).isSameOrBefore(this.$dayjs(dateToAdd), "day")) {
         const index = newDates.indexOf(date);
 
         if (index === -1) {
@@ -246,7 +242,7 @@ export default {
           newDates.sort();
         }
 
-        date = dayjs(date).add(1, "day").format("YYYY-MM-DD");
+        date = this.$dayjs(date).add(1, "day").format("YYYY-MM-DD");
       }
 
       this.emitChange(exception, "scope", newDates);
