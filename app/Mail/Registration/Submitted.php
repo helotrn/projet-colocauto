@@ -2,30 +2,27 @@
 
 namespace App\Mail\Registration;
 
-use App\Mail\BaseMailable;
+use App\Mail\MandrillMailable;
 use App\Models\User;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\SerializesModels;
 
-class Submitted extends BaseMailable
+class Submitted extends MandrillMailable
 {
     use Queueable, SerializesModels;
 
     public $user;
+    public $template = "confirmation-d-inscription-sp-13-au-27-oct";
 
     public function __construct(User $user)
     {
         $this->user = $user;
-    }
-
-    public function build()
-    {
-        return $this->view("emails.registration.submitted")
-            ->subject("Bienvenue dans LocoMotion! Ça y est presque!")
-            ->text("emails.registration.submitted_text")
-            ->with([
-                "title" => "Bienvenue dans LocoMotion! Ça y est presque!",
-            ]);
+        $this->subject = "Bienvenue dans LocoMotion, vous y êtes presque!";
+        $this->templateVars = [
+            "name" => $user->name,
+            "full_name" => $user->full_name,
+            "last_name" => $user->last_name,
+            "title" => "Bienvenue dans LocoMotion, vous y êtes presque!",
+        ];
     }
 }
