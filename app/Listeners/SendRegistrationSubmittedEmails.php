@@ -14,15 +14,19 @@ class SendRegistrationSubmittedEmails
 {
     public function handle(RegistrationSubmittedEvent $event)
     {
+        
+        // Send a welcome email to the user
         Mail::to(
             $event->user->email,
             $event->user->name . " " . $event->user->last_name
         )->queue(new RegistrationSubmitted($event->user));
-
+        
         $admins = User::whereRole("admin")
             ->select("name", "last_name", "email")
             ->get()
             ->toArray();
+
+        // Retrieve the admins for each community 
         foreach ($event->user->communities as $community) {
             $communityAdmins = $community
                 ->users()
@@ -30,7 +34,8 @@ class SendRegistrationSubmittedEmails
                 ->where("community_user.role", "admin")
                 ->get()
                 ->toArray();
-
+            
+                // Send an email notification to each admin 
             foreach (array_merge($admins, $communityAdmins) as $admin) {
                 Mail::to(
                     $admin["email"],
