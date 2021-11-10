@@ -12,6 +12,5 @@ $factory->define(Trailer::class, function (Faker $faker) {
         "comments" => $faker->paragraph,
         "instructions" => $faker->paragraph,
         "maximum_charge" => $faker->numberBetween($min = 1000, $max = 9000),
-        "availability_ics" => $faker->sentence,
     ];
 });
