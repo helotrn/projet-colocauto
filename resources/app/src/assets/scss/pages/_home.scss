@@ -125,6 +125,7 @@
         background: #f5f8fb;
         margin-bottom: 0;
         padding-bottom: 0;
+        text-align: center;
 
         .page__section__title {
             @include space("margin-bottom", 15px, "", "", 30px);
