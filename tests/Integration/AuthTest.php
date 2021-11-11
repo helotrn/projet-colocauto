@@ -113,7 +113,6 @@ class AuthTest extends TestCase
 
         $data = [
             "last_name" => "ceci est un test",
-            "opt_in_newsletter" => false,
         ];
         $response = $this->json("PUT", "/api/v1/auth/user", $data);
         $response->assertStatus(200)->assertJson($data);

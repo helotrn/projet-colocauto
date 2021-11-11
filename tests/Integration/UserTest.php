@@ -331,7 +331,6 @@ class UserTest extends TestCase
         $user = factory(User::class)->create();
         $data = [
             "name" => $this->faker->name,
-            "opt_in_newsletter" => false,
         ];
 
         $response = $this->json("PUT", "/api/v1/users/$user->id", $data);
@@ -405,7 +404,6 @@ class UserTest extends TestCase
 
         $data = [
             "communities" => [["id" => $community->id]],
-            "opt_in_newsletter" => false,
         ];
 
         $response = $this->json("PUT", "/api/v1/users/$user->id", $data);
@@ -422,7 +420,6 @@ class UserTest extends TestCase
 
         $data = [
             "communities" => [["id" => $community->id]],
-            "opt_in_newsletter" => false,
         ];
         $response = $this->json("PUT", "/api/v1/users/$user->id", $data);
         $response->assertStatus(200);
