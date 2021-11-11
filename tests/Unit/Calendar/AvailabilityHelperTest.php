@@ -13,10 +13,6 @@ class AvailabilityHelperTest extends TestCase
     public function testRuleParsePeriodStr()
     {
         // Without seconds
-        $period = AvailabilityHelper::ruleParsePeriodStr("00:00-00:00");
-        $expected = [[0, 0, 0], [0, 0, 0]];
-        $this->assertEquals($expected, $period);
-
         $period = AvailabilityHelper::ruleParsePeriodStr("12:34-23:45");
         $expected = [[12, 34, 0], [23, 45, 0]];
         $this->assertEquals($expected, $period);
@@ -30,11 +26,12 @@ class AvailabilityHelperTest extends TestCase
         $expected = [[23, 59, 0], [24, 0, 0]];
         $this->assertEquals($expected, $period);
 
-        // With seconds
-        $period = AvailabilityHelper::ruleParsePeriodStr("00:00:00-00:00:00");
-        $expected = [[0, 0, 0], [0, 0, 0]];
+        // 00:00-00:00 exception
+        $period = AvailabilityHelper::ruleParsePeriodStr("00:00-00:00");
+        $expected = [[0, 0, 0], [24, 0, 0]];
         $this->assertEquals($expected, $period);
 
+        // With seconds
         $period = AvailabilityHelper::ruleParsePeriodStr("12:34:56-23:45:01");
         $expected = [[12, 34, 56], [23, 45, 1]];
         $this->assertEquals($expected, $period);
@@ -54,6 +51,11 @@ class AvailabilityHelperTest extends TestCase
 
         $period = AvailabilityHelper::ruleParsePeriodStr("23:59:59-24:00:00");
         $expected = [[23, 59, 59], [24, 0, 0]];
+        $this->assertEquals($expected, $period);
+
+        // 00:00:00-00:00:00 exception
+        $period = AvailabilityHelper::ruleParsePeriodStr("00:00:00-00:00:00");
+        $expected = [[0, 0, 0], [24, 0, 0]];
         $this->assertEquals($expected, $period);
     }
 
