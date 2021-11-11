@@ -23,7 +23,6 @@ use App\Models\User;
 use App\Repositories\CommunityRepository;
 use App\Repositories\InvoiceRepository;
 use App\Repositories\UserRepository;
-use GuzzleHttp\Exception\ClientException;
 use Cache;
 use Excel;
 use Log;
