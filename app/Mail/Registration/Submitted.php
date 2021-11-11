@@ -12,7 +12,7 @@ class Submitted extends MandrillMailable
     use Queueable, SerializesModels;
 
     public $user;
-    public $template = "confirmation-d-inscription-sp-13-au-27-oct";
+    public $template = "soumission-d-inscription-sp-13-au-27-oct";
 
     public function __construct(User $user)
     {

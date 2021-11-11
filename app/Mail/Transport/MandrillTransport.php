@@ -99,8 +99,10 @@ class MandrillTransport extends Transport
             ],
         ];
 
+        // Formating $globalMergeVars;
+        $globalMergeVars = [];
         foreach ($message->templateVars as $name => $content) {
-            $templateContent[] = [
+            $globalMergeVars[] = [
                 "name" => $name,
                 "content" => (string) $content,
             ];
@@ -121,6 +123,7 @@ class MandrillTransport extends Transport
                 $this->getTo($message),
                 array_keys($this->getTo($message))
             ),
+            "global_merge_vars" => $globalMergeVars,
             "tags" => [
                 "locomotion",
                 "locomotion_template",
