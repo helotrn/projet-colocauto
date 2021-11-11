@@ -36,6 +36,19 @@ class AvailabilityHelper
             $endTime = [24, 0, 0];
         }
 
+        // Account for the exception 00:00:00-00:00:00 to be interpreted as
+        // full day.
+        if (
+            0 == $startTime[0] &&
+            0 == $startTime[1] &&
+            0 == $startTime[2] &&
+            0 == $endTime[0] &&
+            0 == $endTime[1] &&
+            0 == $endTime[2]
+        ) {
+            $endTime = [24, 0, 0];
+        }
+
         return [$startTime, $endTime];
     }
 
