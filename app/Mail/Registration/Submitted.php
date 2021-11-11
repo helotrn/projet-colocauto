@@ -19,7 +19,7 @@ class Submitted extends MandrillMailable
         $this->user = $user;
         $this->subject = "Bienvenue dans LocoMotion, vous y êtes presque!";
         $this->templateVars = [
-            "name" => $user->name,
+            "FNAME" => $user->name,
             "full_name" => $user->full_name,
             "last_name" => $user->last_name,
             "title" => "Bienvenue dans LocoMotion, vous y êtes presque!",
