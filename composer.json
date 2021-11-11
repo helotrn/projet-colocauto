@@ -20,7 +20,6 @@
         "eluceo/ical": "^0.16.0",
         "fideloper/proxy": "^4.0",
         "intervention/image": "^2.5",
-        "johngrogg/ics-parser": "^2.1",
         "laravel/framework": "^7.0",
         "laravel/helpers": "^1.1",
         "laravel/passport": "^9.0",
