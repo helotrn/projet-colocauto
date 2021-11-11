@@ -3,31 +3,18 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use App\Mail\Registration\Submitted as RegistrationSubmitted;
+// use App\Mail\Registration\Submitted as RegistrationEmail;
+use App\Mail\Registration\Approved as RegistrationEmail;
 use App\Models\User;
 use Mail;
 
 class TestRegistrationEmails extends Command
 {
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
+    // Default settings for artisan commands
+    // php artisan email:registration:test 
+    //
     protected $signature = 'email:registration:test';
-
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
     protected $description = 'Test registration emails locally';
-
-    /**
-     * Create a new command instance.
-     *
-     * @return void
-     */
     public function __construct()
     {
         parent::__construct();
@@ -41,10 +28,9 @@ class TestRegistrationEmails extends Command
     public function handle()
     {
         $user = User::whereEmail('alexandre.toulemonde+loco1@gmail.com')->first();
-        // php artisan email:registration:test 
         Mail::mailer("mandrill")
             ->to($user->email, $user->name . " " . $user->last_name)
-            ->queue(new RegistrationSubmitted($user));
+            ->queue(new RegistrationEmail($user));
 
         $meta = $user->meta;
         $meta["sent_registration_submitted_email"] = true;
