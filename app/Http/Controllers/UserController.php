@@ -122,13 +122,13 @@ class UserController extends RestController
                         $userInfo["email"]
                     );
                     if ($searchResponse->exact_matches->total_items == 0) {
-                        # The user in not in the list. We add him
+                        // The user is not in the list. We add him
                         $mailchimp->lists->addListMember(
                             $desNouvellesDeSolonId,
                             $mailchimpUser
                         );
                     } else {
-                        # The user is in the list, we update its info
+                        // The user is in the list, we update it's info
                         $mailchimp->lists->setListMember(
                             $desNouvellesDeSolonId,
                             $searchResponse->exact_matches->members[0]->id,
