@@ -7,4 +7,5 @@ Steps for the team member making the request on behalf of the customer:
 Steps for the tech team:
 - [ ] Execute the artisan command DeleteUser (to be created)
 - [ ] Remove from Mailchimp 
+- [ ] Remove from Noke 
 - ...
