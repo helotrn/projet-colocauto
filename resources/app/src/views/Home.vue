@@ -60,7 +60,7 @@
           </div>
 
           <div class="page__section__text page__section__text--1">
-            <p>Empruntez une auto, un vélo, une remorque&mldr; à 5 minutes à pied!</p>
+            <p>Empruntez une auto, un vélo, une remorque&mldr; à 5 minutes à pied</p>
           </div>
 
           <div class="page__section__text page__section__text--2">
@@ -79,7 +79,7 @@
 
     <section class="page__section page__section--why-locomotion">
       <b-container>
-        <h2 class="page__section__title mb-4">Quatres raison de choisir<br />LocoMotion</h2>
+        <h2 class="page__section__title mb-4">4 raisons de choisir<br />LocoMotion</h2>
 
         <div class="page__section__content">
           <div class="page__section__illustration page__section__illustration--1">
@@ -101,7 +101,7 @@
           </div>
 
           <div class="page__section__text page__section__text--2">
-            <p>Soyez protégé-e avec <strong>une assurance complète</strong>, pas compliquée.</p>
+            <p>Soyez protégé-e avec <strong>une assurance complète</strong>, pas compliquée</p>
             <!-- <b-button
               size="lg"
               variant="outline-info"

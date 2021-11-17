@@ -153,6 +153,10 @@
             grid-column: 3 / 4;
         }
 
+        .page__section__text {
+            margin-top: 1rem;
+        }
+
         .page__section__text--1 {
             grid-row: 2 / 3;
             grid-column: 1 / 2;
@@ -236,11 +240,6 @@
     }
 
     .page__section--why-locomotion {
-        & > .container {
-            padding-left: 45px;
-            padding-right: 45px;
-        }
-
         background: #f5f8fb;
         margin-bottom: 0;
         text-align: center;
@@ -267,7 +266,6 @@
             }
 
             .page__section__text {
-                text-align: left;
                 margin-top: 1rem;
             }
 
