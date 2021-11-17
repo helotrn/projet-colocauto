@@ -63,7 +63,7 @@
 <i18n>
 fr:
   'register': Inscription
-  'google': Inscription Google
+  'google': Inscription via Google
   'or': OU
   'email': Courriel
   'password': Mot de passe
