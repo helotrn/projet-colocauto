@@ -8,8 +8,8 @@
       </b-col>
       <b-col class="exceptions__row__available">
         <b-select :value="exception.available" @change="emitChange(exception, 'available', $event)">
-          <option :value="true" v-if="mode !== 'always'">Rendre disponible</option>
-          <option :value="false">Rendre indisponible</option>
+          <option :value="true" v-if="mode === 'never'">Rendre disponible</option>
+          <option :value="false" v-if="mode === 'always'">Rendre indisponible</option>
         </b-select>
       </b-col>
 
