@@ -15,6 +15,7 @@ use App\Repositories\LoanRepository;
 use Carbon\Carbon;
 use Excel;
 use Illuminate\Validation\ValidationException;
+use Log;
 
 class LoanController extends RestController
 {
@@ -244,4 +245,30 @@ class LoanController extends RestController
 
         return $template;
     }
+
+    // function to test if a loanable is available for the requested loan
+    public function isAvailable(Request $request, $loanId)
+    {
+        $loan = $this->repo->find($request, $loanId);
+        
+        $loanable = Loanable::accessibleBy($request->user())->find(
+            $loan->loanable_id
+        );
+        
+        $startLoan = new Carbon($loan->departure_at);
+        $durationInMinutes = $loan->duration_in_minutes;
+        
+        $loanableAvailability = $loanable->isAvailable(
+            $startLoan,
+            $durationInMinutes,
+            [$loanId]
+        );
+        
+        return response(
+            [
+                "isAvailable" => $loanableAvailability,
+            ], 
+            200
+        );
+    } 
 }

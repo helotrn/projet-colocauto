@@ -134,6 +134,10 @@ Route::prefix("v1")->group(function () {
             "/loans/{loan_id}/actions/{action_id}/cancel",
             "ActionController@cancel"
         );
+        Route::get(
+            "/loans/{loan_id}/isavailable",
+            "LoanController@isAvailable"
+        );
 
         Route::put(
             "/pricings/{id}/evaluate",
