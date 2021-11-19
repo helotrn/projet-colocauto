@@ -371,6 +371,8 @@ class AvailabilityHelper
 
         // Get availability or unavailability intervals.
         foreach ($availabilityParams["rules"] as $rule) {
+            $ruleIntervals = [];
+
             switch ($rule["type"]) {
                 case "dates":
                     $ruleIntervals = AvailabilityHelper::ruleGetDatesIntervals(
