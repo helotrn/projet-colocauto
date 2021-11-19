@@ -180,15 +180,12 @@ export default new RestModule(
           cancelToken: cancelToken.token,
         });
 
-        console.log(data.isAvailable);
-
         commit("patchItem", {
           isAvailable: data.isAvailable,
         });
 
         commit("cancelToken", null);
-      }
-      catch(e) {
+      } catch (e) {
         commit("cancelToken", null);
         throw e;
       }
