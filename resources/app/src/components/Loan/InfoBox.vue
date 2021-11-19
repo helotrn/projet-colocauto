@@ -145,6 +145,9 @@ export default {
     LoanMenu,
   },
   computed: {
+    isAvailable() {
+      return this.$store.state.loans.item.isAvailable;
+    },
     loanPersonImage() {
       if (!this.otherUser) {
         return "";
@@ -212,9 +215,7 @@ export default {
       try {
         await this.$store.dispatch("loans/isAvailable", this.loan.id);
 
-        const isAvailable = this.$store.state.loans.item.isAvailable;
-
-        if (!isAvailable) throw "unavailable";
+        if (!this.isAvailable) throw "unavailable";
         else {
           await this.$store.dispatch("loans/completeAction", intention);
           await this.$store.dispatch("loadUser");
