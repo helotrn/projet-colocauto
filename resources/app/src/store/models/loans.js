@@ -168,5 +168,30 @@ export default new RestModule(
         }
       }
     },
+    async isAvailable({ commit }, loanId) {
+      const { CancelToken } = Vue.axios;
+      const cancelToken = CancelToken.source();
+
+      try {
+        commit("cancelToken", cancelToken);
+
+        const { data } = await Vue.axios.get(`/loans/${loanId}/isavailable`, {
+          loanId,
+          cancelToken: cancelToken.token,
+        });
+
+        console.log(data.isAvailable);
+
+        commit("patchItem", {
+          isAvailable: data.isAvailable,
+        });
+
+        commit("cancelToken", null);
+      }
+      catch(e) {
+        commit("cancelToken", null);
+        throw e;
+      }
+    },
   }
 );

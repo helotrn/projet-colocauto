@@ -210,10 +210,28 @@ export default {
     async acceptLoan() {
       const intention = this.loan.actions.find((a) => a.type === "intention");
       try {
-        await this.$store.dispatch("loans/completeAction", intention);
-        await this.$store.dispatch("loadUser");
+        await this.$store.dispatch("loans/isAvailable", this.loan.id);
+
+        const isAvailable = this.$store.state.loans.item.isAvailable;
+        
+        if(!isAvailable) throw "unavailable";
+        else {
+          await this.$store.dispatch("loans/completeAction", intention);
+          await this.$store.dispatch("loadUser");
+        }
       } catch (e) {
-        throw e;
+        if(e === 'unavailable') {
+          this.$store.commit(
+            "addNotification",
+            {
+              content: "Ce véhicule est déjà réservé à cette date.",
+              title: "Emprunt non valide",
+              variant: "danger",
+              type: "loans",
+            }
+          );
+        }
+        else throw e;
       }
     },
     async cancelLoan() {
