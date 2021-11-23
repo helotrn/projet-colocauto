@@ -267,11 +267,11 @@ class LoanController extends RestController
             return $this->respondWithMessage("Not found", 404);
         }
 
-        $startLoan = new Carbon($loan->departure_at);
+        $loanStart = new Carbon($loan->departure_at);
         $durationInMinutes = $loan->duration_in_minutes;
 
         $loanableAvailability = $loanable->isAvailable(
-            $startLoan,
+            $loanStart,
             $durationInMinutes,
             [$loanId]
         );
