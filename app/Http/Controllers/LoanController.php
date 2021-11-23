@@ -15,6 +15,7 @@ use App\Repositories\LoanRepository;
 use Carbon\Carbon;
 use Excel;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class LoanController extends RestController
 {
@@ -249,11 +250,22 @@ class LoanController extends RestController
     // verifies if there is no loan at the same time of the current loan to accept
     public function isAvailable(Request $request, $loanId)
     {
-        $loan = $this->repo->find($request, $loanId);
+        try {
+            // verify if the loan or the loanable exists, if not then it throws a ModelNotFoundException  
+            $loanable = NULL;
+            $loan = $this->repo->find($request, $loanId);
 
-        $loanable = Loanable::accessibleBy($request->user())->find(
-            $loan->loanable_id
-        );
+            if($loan) {
+                $loanable = Loanable::accessibleBy($request->user())->find(
+                    $loan->loanable_id
+                );
+            }
+            if(!$loanable)
+                throw new ModelNotFoundException();
+        }
+        catch(ModelNotFoundException $e) {
+            return $this->respondWithMessage("Not found", 404);
+        }
 
         $startLoan = new Carbon($loan->departure_at);
         $durationInMinutes = $loan->duration_in_minutes;
