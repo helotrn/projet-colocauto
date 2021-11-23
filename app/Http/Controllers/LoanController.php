@@ -251,19 +251,19 @@ class LoanController extends RestController
     public function isAvailable(Request $request, $loanId)
     {
         try {
-            // verify if the loan or the loanable exists, if not then it throws a ModelNotFoundException  
-            $loanable = NULL;
+            // verify if the loan or the loanable exists, if not then it throws a ModelNotFoundException
+            $loanable = null;
             $loan = $this->repo->find($request, $loanId);
 
-            if($loan) {
+            if ($loan) {
                 $loanable = Loanable::accessibleBy($request->user())->find(
                     $loan->loanable_id
                 );
             }
-            if(!$loanable)
+            if (!$loanable) {
                 throw new ModelNotFoundException();
-        }
-        catch(ModelNotFoundException $e) {
+            }
+        } catch (ModelNotFoundException $e) {
             return $this->respondWithMessage("Not found", 404);
         }
 
