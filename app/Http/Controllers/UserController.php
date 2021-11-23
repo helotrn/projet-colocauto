@@ -89,56 +89,6 @@ class UserController extends RestController
     {
         try {
             $item = parent::validateAndUpdate($request, $id);
-            $userInfo = $request->json()->all();
-
-            # Settign up mailchimp marketing
-            $desNouvellesDeSolonId = env("MAILCHIMP_LIST_ID");
-
-            $mailchimp = new \MailchimpMarketing\ApiClient();
-
-            $mailchimp->setConfig([
-                "apiKey" => env("MAILCHIMP_KEY"),
-                "server" => env("MAILCHIMP_SERVER_PREFIX"),
-            ]);
-
-            try {
-                if (
-                    env("MAILCHIMP_KEY", null) &&
-                    array_key_exists("email", $userInfo)
-                ) {
-                    $mailchimpUser = [
-                        "email_address" => $userInfo["email"],
-                        "status" => "subscribed",
-                        "merge_fields" => [
-                            "FNAME" => $userInfo["name"],
-                            "LNAME" => $userInfo["last_name"],
-                            "CODEPOSTAL" => $userInfo["postal_code"],
-                            "MMERGE6" => $userInfo["phone"],
-                            "ADDRESS" => $userInfo["address"],
-                        ],
-                    ];
-
-                    $searchResponse = $mailchimp->searchMembers->search(
-                        $userInfo["email"]
-                    );
-                    if ($searchResponse->exact_matches->total_items == 0) {
-                        // The user is not in the list. We add him
-                        $mailchimp->lists->addListMember(
-                            $desNouvellesDeSolonId,
-                            $mailchimpUser
-                        );
-                    } else {
-                        // The user is in the list, we update it's info
-                        $mailchimp->lists->setListMember(
-                            $desNouvellesDeSolonId,
-                            $searchResponse->exact_matches->members[0]->id,
-                            $mailchimpUser
-                        );
-                    }
-                }
-            } catch (\Throwable $e) {
-                Log::error($e);
-            }
         } catch (ValidationException $e) {
             return $this->respondWithErrors($e->errors(), $e->getMessage());
         } catch (ModelNotFoundException $e) {

@@ -175,6 +175,7 @@ return [
         App\Providers\CustomValidationServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\MaterializedViewServiceProvider::class,
+        App\Providers\MailchimpServiceProvider::class,
         App\Providers\NokeServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
     ],
@@ -227,6 +228,7 @@ return [
         "Validator" => Illuminate\Support\Facades\Validator::class,
         "View" => Illuminate\Support\Facades\View::class,
 
+        "Mailchimp" => App\Facades\Mailchimp::class,
         "Noke" => App\Facades\Noke::class,
     ],
 ];

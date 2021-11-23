@@ -13,6 +13,12 @@ return [
     |
     */
 
+    "mailchimp" => [
+        "server_prefix" => env("MAILCHIMP_SERVER_PREFIX"),
+        "key" => env("MAILCHIMP_KEY"),
+        "newsletter_list_id" => env("MAILCHIMP_LIST_ID"),
+    ],
+
     "mailgun" => [
         "domain" => env("MAILGUN_DOMAIN"),
         "secret" => env("MAILGUN_SECRET"),
