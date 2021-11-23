@@ -223,8 +223,8 @@ export default {
       } catch (e) {
         if (e === "unavailable") {
           this.$store.commit("addNotification", {
-            content: "Ce véhicule est déjà réservé à cette date.",
-            title: "Emprunt non valide",
+            content: "Ce véhicule n'est pas disponible pour cette réservation.",
+            title: "Véhicule non disponible",
             variant: "danger",
             type: "loans",
           });
