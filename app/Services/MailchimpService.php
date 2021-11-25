@@ -34,6 +34,10 @@ class MailchimpService
         $mailchimpUser = [
             "email_address" => $appUser->email,
             "status" => "subscribed",
+            // At the moment, tags work for subscription of new members, but
+            // not for updates. We have a script that can add tags retroactively
+            // if necessary so we are covered.
+            "tags" => ["LocoMotion"],
             "merge_fields" => [
                 "FNAME" => $appUser->name,
                 "LNAME" => $appUser->last_name,
