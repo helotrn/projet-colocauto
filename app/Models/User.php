@@ -130,7 +130,6 @@ class User extends AuthenticatableBaseModel
         "postal_code",
         "phone",
         "is_smart_phone",
-        "opt_in_newsletter",
         "other_phone",
     ];
 
@@ -141,7 +140,6 @@ class User extends AuthenticatableBaseModel
         "balance" => "decimal:2",
         "email_verified_at" => "datetime",
         "meta" => "array",
-        "opt_in_newsletter" => "boolean",
     ];
 
     protected $with = [];
