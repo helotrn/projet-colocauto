@@ -25,7 +25,6 @@ use App\Repositories\InvoiceRepository;
 use App\Repositories\UserRepository;
 use Cache;
 use Excel;
-use Log;
 use Mail;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Validation\ValidationException;
