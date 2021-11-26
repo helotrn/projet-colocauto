@@ -23,7 +23,6 @@ $factory->define(User::class, function (Faker $faker) {
         "is_smart_phone" => false,
         "other_phone" => "",
         "remember_token" => Str::random(10),
-        "opt_in_newsletter" => false,
     ];
 });
 
