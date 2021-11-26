@@ -60,6 +60,7 @@ class EventServiceProvider extends ServiceProvider
         "App\Events\LoanPaidEvent" => ["App\Listeners\SendInvoiceEmail"],
         "App\Events\RegistrationSubmittedEvent" => [
             "App\Listeners\SendRegistrationSubmittedEmails",
+            "App\Listeners\AddUserToNewsletterIfNotRegistered",
         ],
         "App\Events\RegistrationApprovedEvent" => [
             "App\Listeners\SendRegistrationApprovedEmails",

@@ -72,10 +72,9 @@
         <p class="text-center">Locomotion n’est pas encore accessible dans votre quartier.</p>
 
         <p class="text-center">
-          Souhaitez-vous être informé-e du développement du projet dans votre quartier?
+          Si vous le souhaitez, vous pouvez rester informé-e du développement du projet en vous
+          inscrivant à <a href="http://eepurl.com/dzpW3n" target="_blank">l'infolettre Solon</a>
         </p>
-
-        <mailchimp-newsletter :item="user" @optin="updateOptInNewsletter" />
 
         <div class="text-center">
           <b-button @click.prevent="resetView" variant="warning">Retour</b-button>
@@ -164,7 +163,6 @@
 import { gmapApi } from "vue2-google-maps";
 
 import BoroughDifferenceModal from "@/components/Misc/BoroughDifferenceModal.vue";
-import MailchimpNewsletter from "@/components/Misc/MailchimpNewsletter.vue";
 
 import Authenticated from "@/mixins/Authenticated";
 import DataRouteGuards from "@/mixins/DataRouteGuards";
@@ -184,7 +182,6 @@ export default {
   },
   components: {
     BoroughDifferenceModal,
-    MailchimpNewsletter,
   },
   data() {
     return {
@@ -455,17 +452,6 @@ export default {
       });
 
       return true;
-    },
-    async updateOptInNewsletter(value) {
-      await this.$store.dispatch("users/update", {
-        id: this.user.id,
-        data: {
-          opt_in_newsletter: value,
-        },
-        params: {
-          fields: "id,name,opt_in_newsletter",
-        },
-      });
     },
   },
   watch: {

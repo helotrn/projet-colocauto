@@ -12,9 +12,8 @@ export default {
         "Ça aide à se faire confiance et à mieux profiter des avantages du partage.",
     },
     fields: {
-      accept_conditions:
-        'j\'accepte les <a href="/conditions" target="_blank">conditions ' +
-        "générales d'utilisation</a>",
+      accept_conditions: `j'accepte les <a href="/conditions" target="_blank">conditions
+        générales d'utilisation</a> incluant des communications par courriel`,
       address: "adresse",
       avatar: "image de profil",
       communities: prefixFields(communities.fr.fields, "(Communauté)"),
@@ -28,8 +27,6 @@ export default {
       is_smart_phone: "téléphone intelligent?",
       last_name: "nom",
       name: "prénom",
-      opt_in_newsletter:
-        "j'accepte de recevoir les communications de LocoMotion (Solon) par courriel",
       other_phone: "autre numéro de téléphone",
       phone: "téléphone",
       postal_code: "code postal",

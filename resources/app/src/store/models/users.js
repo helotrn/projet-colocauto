@@ -26,7 +26,6 @@ export default new RestModule(
       "password",
       "phone",
       "postal_code",
-      "opt_in_newsletter",
       "borrower.drivers_licence_number",
       "borrower.approved_at",
       "communities.id",

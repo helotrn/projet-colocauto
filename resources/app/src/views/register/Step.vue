@@ -36,12 +36,6 @@
 
         <b-row>
           <b-col>
-            <mailchimp-newsletter :item="user" @optin="item.opt_in_newsletter = $event" />
-          </b-col>
-        </b-row>
-
-        <b-row>
-          <b-col>
             <forms-validated-input
               name="accept_conditions"
               :label="$t('users.fields.accept_conditions') | capitalize"
@@ -116,7 +110,6 @@ import Notification from "@/mixins/Notification";
 import UserMixin from "@/mixins/UserMixin";
 
 import CommunityProofForm from "@/components/Community/ProofForm.vue";
-import MailchimpNewsletter from "@/components/Misc/MailchimpNewsletter.vue";
 import ProfileForm from "@/components/Profile/ProfileForm.vue";
 import RegisterIntentForm from "@/components/Register/IntentForm.vue";
 
@@ -132,7 +125,6 @@ export default {
   components: {
     CommunityProofForm,
     FormsValidatedInput,
-    MailchimpNewsletter,
     ProfileForm,
     RegisterIntentForm,
   },
