@@ -46,6 +46,9 @@ export default {
 
       return `url('${avatar.sizes.thumbnail}')`;
     },
+    isAvailable() {
+      return this.$store.state.loans.item.isAvailable;
+    },
     isContestable() {
       return !!this.action.executed_at && this.action.status !== "canceled" && !!this.owner;
     },
@@ -161,7 +164,22 @@ export default {
     async completeAction() {
       this.actionLoading = true;
       try {
+        if (this.action.type === "intention") {
+          await this.$store.dispatch("loans/isAvailable", this.action.loan_id);
+          if (!this.isAvailable) throw "unavailable";
+        }
+
         await this.$store.dispatch("loans/completeAction", this.action);
+      } catch (e) {
+        if (e === "unavailable") {
+          this.$store.commit("addNotification", {
+            content: "Ce véhicule n'est pas disponible pour cette réservation.",
+            title: "Véhicule non disponible",
+            variant: "danger",
+            type: "loans",
+          });
+          return;
+        } else throw e;
       } finally {
         this.actionLoading = false;
       }

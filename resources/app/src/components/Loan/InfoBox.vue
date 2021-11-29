@@ -145,6 +145,9 @@ export default {
     LoanMenu,
   },
   computed: {
+    isAvailable() {
+      return this.$store.state.loans.item.isAvailable;
+    },
     loanPersonImage() {
       if (!this.otherUser) {
         return "";
@@ -210,10 +213,22 @@ export default {
     async acceptLoan() {
       const intention = this.loan.actions.find((a) => a.type === "intention");
       try {
-        await this.$store.dispatch("loans/completeAction", intention);
-        await this.$store.dispatch("loadUser");
+        await this.$store.dispatch("loans/isAvailable", this.loan.id);
+
+        if (!this.isAvailable) throw "unavailable";
+        else {
+          await this.$store.dispatch("loans/completeAction", intention);
+          await this.$store.dispatch("loadUser");
+        }
       } catch (e) {
-        throw e;
+        if (e === "unavailable") {
+          this.$store.commit("addNotification", {
+            content: "Ce véhicule n'est pas disponible pour cette réservation.",
+            title: "Véhicule non disponible",
+            variant: "danger",
+            type: "loans",
+          });
+        } else throw e;
       }
     },
     async cancelLoan() {
