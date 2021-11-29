@@ -73,7 +73,7 @@
 
         <p class="text-center">
           Si vous le souhaitez, vous pouvez rester informé-e du développement du projet en vous
-          inscrivant à <a href="http://eepurl.com/dzpW3n" target="_blank">l'infolettre Solon</a>
+          inscrivant à <a href="http://eepurl.com/dzpW3n" target="_blank">l'infolettre Solon</a>.
         </p>
 
         <div class="text-center">
