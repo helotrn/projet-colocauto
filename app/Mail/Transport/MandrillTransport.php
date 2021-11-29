@@ -46,9 +46,8 @@ class MandrillTransport extends Transport
 
     protected function getMessageId(ResponseInterface $response)
     {
-      
         try {
-            $response = json_decode((string) $response->getBody(), true);                
+            $response = json_decode((string) $response->getBody(), true);
         } catch (Exception $e) {
             throw new \Exception($e->getMessage());
         }

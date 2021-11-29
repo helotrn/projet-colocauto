@@ -11,10 +11,10 @@ use Mail;
 class TestRegistrationEmails extends Command
 {
     // Default settings for artisan commands
-    // php artisan email:registration:test 
+    // php artisan email:registration:test
     //
-    protected $signature = 'email:registration:test';
-    protected $description = 'Test registration emails locally';
+    protected $signature = "email:registration:test";
+    protected $description = "Test registration emails locally";
     public function __construct()
     {
         parent::__construct();
@@ -27,7 +27,9 @@ class TestRegistrationEmails extends Command
      */
     public function handle()
     {
-        $user = User::whereEmail('alexandre.toulemonde+loco1@gmail.com')->first();
+        $user = User::whereEmail(
+            "alexandre.toulemonde+loco1@gmail.com"
+        )->first();
         Mail::mailer("mandrill")
             ->to($user->email, $user->name . " " . $user->last_name)
             ->queue(new RegistrationEmail($user));
