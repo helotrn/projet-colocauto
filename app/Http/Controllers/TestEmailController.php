@@ -175,11 +175,6 @@ class TestEmailController extends Controller
                 $viewData = $this->getCommonTestData();
                 break;
 
-            case "registration.submitted":
-            case "registration.submitted_text":
-                $viewData = $this->getCommonTestData();
-                break;
-
             // User
             case "user.claimed_balance":
             case "user.claimed_balance_text":
