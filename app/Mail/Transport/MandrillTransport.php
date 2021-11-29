@@ -46,18 +46,12 @@ class MandrillTransport extends Transport
 
     protected function getMessageId(ResponseInterface $response)
     {
-        $response = json_decode((string) $response->getBody(), true);
-
-        if (
-            !in_array(Arr::get($response, "0.status"), [
-                "sent",
-                "rejected",
-                "queued",
-            ])
-        ) {
-            throw new \Exception("Failed sending message"); // FIXME better error handling
+      
+        try {
+            $response = json_decode((string) $response->getBody(), true);                
+        } catch (Exception $e) {
+            throw new \Exception($e->getMessage());
         }
-
         return Arr::get($response, "0._id");
     }
 
