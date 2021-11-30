@@ -193,7 +193,6 @@ export default {
       const cellStartTime = this.$dayjs(cell.startDate).startOfDay();
       const cellEndTime = cellStartTime.add(1, "day");
 
-
       // All what's in the past is unavailable.
       if (cellStartTime.isBefore(today)) {
         return "unavailable";
