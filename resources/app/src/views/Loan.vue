@@ -18,6 +18,23 @@
             @incident="addIncident('accident')"
           />
 
+          <b-alert
+            show
+            variant="warning"
+            v-if="
+              !!item.id &&
+              item.loan_status === 'in_process' &&
+              !loanIsCanceled &&
+              !hasReachedStep('takeover') &&
+              !hasReachedStep('handover') &&
+              !hasReachedStep('payment')
+            "
+          >
+            <h4>Modification de la réservation</h4>
+            <strong>Pour modifier</strong> cette demande de réservation, merci de l'annuler et d'en
+            créer une nouvelle.
+          </b-alert>
+
           <loan-actions
             :item="item"
             @load="loadItemAndUser"
