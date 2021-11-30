@@ -14,15 +14,26 @@ class SendRegistrationSubmittedEmails
 {
     public function handle(RegistrationSubmittedEvent $event)
     {
-        Mail::to(
-            $event->user->email,
-            $event->user->name . " " . $event->user->last_name
-        )->queue(new RegistrationSubmitted($event->user));
+        if (!isset($event->user->meta["sent_registration_submitted_email"])) {
+            // Send an email to the user
+            Mail::mailer("mandrill")
+                ->to($event->user->email, $event->user->full_name)
+                ->queue(new RegistrationSubmitted($event->user));
 
+            // Save Meta
+            $meta = $event->user->meta;
+            $meta["sent_registration_submitted_email"] = true;
+            $event->user->meta = $meta;
+            $event->user->save();
+        }
+
+        // Retrieve all super admins
         $admins = User::whereRole("admin")
             ->select("name", "last_name", "email")
             ->get()
             ->toArray();
+
+        // Retrieve the admins for each community
         foreach ($event->user->communities as $community) {
             $communityAdmins = $community
                 ->users()
@@ -31,6 +42,7 @@ class SendRegistrationSubmittedEmails
                 ->get()
                 ->toArray();
 
+            // Send an email notification to all admins
             foreach (array_merge($admins, $communityAdmins) as $admin) {
                 Mail::to(
                     $admin["email"],
