@@ -5,4 +5,5 @@ storage
 public/app
 *_text.blade.php
 resources/app/dist
+resources/app/public/*.html
 composer.lock
