@@ -187,21 +187,15 @@ export default {
       ];
     },
     availabilityClass(availabilityMode, events, cell) {
-      const now = this.$dayjs();
+      const today = this.$dayjs().startOfDay();
       const inAYear = this.$dayjs().add(365, "day");
 
-      const cellStartTime = this.$dayjs(cell.startDate)
-        .set("hour", 0)
-        .set("minute", 0)
-        .set("second", 0);
-      const cellEndTime = this.$dayjs(cell.endDate)
-        .add(1, "day")
-        .set("hour", 0)
-        .set("minute", 0)
-        .set("second", 0);
+      const cellStartTime = this.$dayjs(cell.startDate).startOfDay();
+      const cellEndTime = cellStartTime.add(1, "day");
+
 
       // All what's in the past is unavailable.
-      if (cellStartTime.isSameOrBefore(now)) {
+      if (cellStartTime.isBefore(today)) {
         return "unavailable";
       }
 

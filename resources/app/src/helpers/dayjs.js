@@ -52,4 +52,8 @@ dayjs.extend(isSameOrBefore);
 dayjs.extend(relativeTime);
 dayjs.extend(timeZone);
 
+dayjs.prototype.startOfDay = function (that, units) {
+  return this.hour(0).minute(0).second(0).millisecond(0);
+};
+
 export default dayjs;
