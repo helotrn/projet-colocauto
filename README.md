@@ -66,7 +66,7 @@ Nous utilisons [prettier](https://prettier.io/) et [prettier-php](https://github
 
 Pour VM Code, vous devez installer **prettier-php** en local et vérifier que package.json contienne [le plugin](https://stackoverflow.com/a/63228491).
 
-Vous pouvez l'installer sur vos machines et l'exécuter onSave ou utiliser la commande suivante avant de publier vos commits. 
+Vous pouvez l'installer sur vos machines et l'exécuter onSave ou utiliser la commande suivante avant de publier vos commits.
 
 ```
 docker-compose exec php npx prettier --write .
