@@ -62,11 +62,11 @@ Voici les étapes à suivre sur gitlab dans le section [tags](https://gitlab.com
 
 ## Utilisation de prettier
 
-Nous utilisons prettier pour le formattage du code. Vous devez l'installer sur vos machines.
+Nous utilisons [prettier](https://prettier.io/) et [prettier-php](https://github.com/prettier/plugin-php) pour le formattage du code.
 
-Pour installer prettier et prettier-php:
+Pour VM Code, vous devez installer **prettier-php** en local et vérifier que package.json contienne [le plugin](https://stackoverflow.com/a/63228491).
 
-Pour exécuter prettier et corriger les problèmes automatiquement, faire la commande à la racine:
+Vous pouvez l'installer sur vos machines et l'exécuter onSave ou utiliser la commande suivante avant de publier vos commits. 
 
 ```
 docker-compose exec php npx prettier --write .
