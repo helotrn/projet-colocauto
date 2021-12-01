@@ -32,11 +32,25 @@
         <div v-if="!!action.executed_at">
           <p>L'emprunt s'est conclu avec succès!</p>
 
-          <p>
-            Coût final du trajet&nbsp;:
-            <span v-b-popover.hover="priceTooltip">{{ item.total_final_cost | currency }}</span
-            >.
-          </p>
+          <div v-if="userIsAdmin">
+            <p>
+              {{ item.borrower.user.full_name }}
+              a payé {{ item.total_final_cost | currency }} pour l'emprunt.
+            </p>
+            <p>
+              {{ item.loanable.owner.user.full_name }}
+              a reçu {{ finalOwnerPart | currency }} pour l'emprunt.
+            </p>
+          </div>
+          <div v-else>
+            <p v-if="userRoles.includes('borrower')">
+              Vous avez payé {{ item.total_final_cost | currency }} pour cet emprunt.
+            </p>
+            <p v-if="userRoles.includes('owner')">
+              {{ item.borrower.user.full_name }}
+              vous a remis {{ finalOwnerPart | currency }} pour l'emprunt.
+            </p>
+          </div>
         </div>
         <div v-else-if="action.status === 'in_process' && loanIsCanceled">
           <p>L'emprunt a été annulé. Cette étape ne peut pas être complétée.</p>
@@ -222,6 +236,9 @@ export default {
   computed: {
     actualOwnerPart() {
       return this.item.actual_price - this.item.handover.purchases_amount;
+    },
+    finalOwnerPart() {
+      return this.item.final_price - this.item.handover.purchases_amount;
     },
     actualPrice() {
       return (
