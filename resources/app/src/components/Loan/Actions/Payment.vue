@@ -74,12 +74,12 @@
 
             <p v-if="item.loanable.owner">
               {{ item.loanable.owner.user.full_name }}
-              recevra {{ finalOwnerPart | currency }} pour l'emprunt.
+              recevra {{ actualOwnerPart | currency }} pour l'emprunt.
             </p>
 
             <p>
               {{ item.borrower.user.full_name }}
-              paiera {{ finalPrice | currency }} pour l'emprunt.
+              paiera {{ actualPrice | currency }} pour l'emprunt.
             </p>
 
             <div class="loan-actions-payment__buttons text-center">
@@ -95,10 +95,10 @@
           </div>
 
           <div v-else>
-            <div v-if="userRoles.includes('owner') && finalOwnerPart > 0">
+            <div v-if="userRoles.includes('owner') && actualOwnerPart > 0">
               <hr />
               <p>
-                À titre de propriétaire, vous recevrez {{ finalOwnerPart | currency }} pour
+                À titre de propriétaire, vous recevrez {{ actualOwnerPart | currency }} pour
                 l'emprunt.
               </p>
             </div>
@@ -107,7 +107,7 @@
               <hr />
               <p>
                 À titre d'emprunteur ce trajet vous coûtera&nbsp;:
-                <span v-b-popover.hover="priceTooltip">{{ finalPrice | currency }}</span
+                <span v-b-popover.hover="priceTooltip">{{ actualPrice | currency }}</span
                 >.
               </p>
 
@@ -158,7 +158,7 @@
                   >
                     <user-add-credit-box
                       :user="user"
-                      :minimum-required="finalPrice - user.balance"
+                      :minimum-required="actualPrice - user.balance"
                       @bought="reloadUserAndCloseModal"
                       @cancel="closeModal"
                     />
@@ -220,10 +220,10 @@ export default {
     };
   },
   computed: {
-    finalOwnerPart() {
+    actualOwnerPart() {
       return this.item.actual_price - this.item.handover.purchases_amount;
     },
-    finalPrice() {
+    actualPrice() {
       return (
         this.item.actual_price +
         this.item.actual_insurance +
@@ -232,7 +232,7 @@ export default {
       );
     },
     hasEnoughBalance() {
-      return this.user.balance >= this.finalPrice;
+      return this.user.balance >= this.actualPrice;
     },
     priceTooltip() {
       const strParts = [];
