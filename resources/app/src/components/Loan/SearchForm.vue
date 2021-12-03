@@ -59,7 +59,7 @@
                     tabindex="0"
                     v-b-tooltip.hover
                     :title="
-                      'Pour réserver une auto, remplissez le dossier de conduite ' +
+                      'Pour emprunter une auto, remplissez le dossier de conduite ' +
                       'de votre profil.'
                     "
                   >
