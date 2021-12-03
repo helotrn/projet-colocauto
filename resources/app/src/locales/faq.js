@@ -67,7 +67,7 @@ export default {
         ],
       },
       {
-        title: "Réserver&nbsp;: auto, vélo, remorque à vélo",
+        title: "Emprunter &nbsp;: auto, vélo, remorque à vélo",
         count: "1",
         questions: [
           {

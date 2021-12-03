@@ -87,7 +87,7 @@
           class="register-intent-form__form__other_intent"
         >
           <div class="register-intent-form__form__other_intent__text">
-            <p>Excellent! Rendez-vous sur la carte pour réserver un véhicule.</p>
+            <p>Excellent! Rendez-vous sur la carte pour emprunter un véhicule.</p>
           </div>
         </b-collapse>
       </div>
