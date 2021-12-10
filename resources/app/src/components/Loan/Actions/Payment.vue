@@ -32,24 +32,70 @@
         <div v-if="!!action.executed_at">
           <p>L'emprunt s'est conclu avec succès!</p>
 
-          <div v-if="userIsAdmin">
-            <p>
-              {{ item.borrower.user.full_name }}
-              a payé {{ item.total_final_cost | currency }} pour l'emprunt.
-            </p>
-            <p>
-              {{ item.loanable.owner.user.full_name }}
-              a reçu {{ finalOwnerPart | currency }} pour l'emprunt.
-            </p>
+          <div v-if="userIsAdmin || userRoles.includes('borrower')">
+            <h3>Coût du trajet</h3>
+            <table class="trip-details">
+              <tr>
+                <th>Temps et distance&nbsp;:</th>
+                <td class="text-right tabular-nums">{{ item.final_price | currency }}</td>
+              </tr>
+              <tr>
+                <th>Dépenses déduites&nbsp;:</th>
+                <td class="text-right tabular-nums">
+                  {{ -item.final_purchases_amount | currency }}
+                </td>
+              </tr>
+
+              <tr>
+                <th v-if="userIsAdmin">
+                  Montant remis à {{ item.loanable.owner.user.full_name }} par
+                  {{ item.borrower.user.full_name }}&nbsp;:
+                </th>
+                <th v-else>Montant remis à {{ item.loanable.owner.user.full_name }}&nbsp;:</th>
+                <td class="trip-details__total text-right tabular-nums">
+                  {{ finalOwnerPart | currency }}
+                </td>
+              </tr>
+
+              <tr>
+                <th>Assurances&nbsp;:</th>
+                <td class="text-right tabular-nums">{{ item.final_insurance | currency }}</td>
+              </tr>
+              <tr>
+                <th>Contribution volontaire&nbsp;:</th>
+                <td class="text-right tabular-nums">
+                  {{ item.final_platform_tip | currency }}
+                </td>
+              </tr>
+              <tr>
+                <th>Total&nbsp;:</th>
+                <td class="trip-details__total text-right tabular-nums">
+                  {{ item.total_final_cost | currency }}
+                </td>
+              </tr>
+            </table>
           </div>
-          <div v-else>
-            <p v-if="userRoles.includes('borrower')">
-              Vous avez payé {{ item.total_final_cost | currency }} pour cet emprunt.
-            </p>
-            <p v-if="userRoles.includes('owner')">
-              {{ item.borrower.user.full_name }}
-              vous a remis {{ finalOwnerPart | currency }} pour l'emprunt.
-            </p>
+
+          <div v-if="userRoles.includes('owner')">
+            <h3>Compensation du trajet</h3>
+            <table class="trip-details">
+              <tr>
+                <th>Temps et distance&nbsp;:</th>
+                <td class="text-right tabular-nums">{{ item.final_price | currency }}</td>
+              </tr>
+              <tr>
+                <th>Dépenses déduites&nbsp;:</th>
+                <td class="text-right tabular-nums">
+                  {{ -item.final_purchases_amount | currency }}
+                </td>
+              </tr>
+              <tr>
+                <th>Total remis par {{ item.borrower.user.full_name }}&nbsp;:</th>
+                <td class="trip-details__total text-right tabular-nums">
+                  {{ finalOwnerPart | currency }}
+                </td>
+              </tr>
+            </table>
           </div>
         </div>
         <div v-else-if="action.status === 'in_process' && loanIsCanceled">
@@ -81,84 +127,120 @@
             </p>
           </div>
 
-          <div v-else-if="userIsAdmin" class="text-center">
-            <p>L'emprunt est en phase de validation par les participant-e-s.</p>
-
-            <hr />
-
-            <p v-if="item.loanable.owner">
-              {{ item.loanable.owner.user.full_name }}
-              recevra {{ actualOwnerPart | currency }} pour l'emprunt.
-            </p>
-
-            <p>
-              {{ item.borrower.user.full_name }}
-              paiera {{ actualPrice | currency }} pour l'emprunt.
-            </p>
-
-            <div class="loan-actions-payment__buttons text-center">
-              <b-button
-                size="sm"
-                variant="success"
-                :disabled="actionLoading"
-                @click="completeAction"
-              >
-                Accepter
-              </b-button>
-            </div>
-          </div>
-
           <div v-else>
-            <div v-if="userRoles.includes('owner') && actualOwnerPart > 0">
+            <div v-if="userRoles.includes('owner')">
               <hr />
-              <p>
-                À titre de propriétaire, vous recevrez {{ actualOwnerPart | currency }} pour
-                l'emprunt.
-              </p>
+
+              <h3>Compensation du trajet</h3>
+              <table class="trip-details">
+                <tr>
+                  <th>Temps et distance&nbsp;:</th>
+                  <td class="text-right tabular-nums">{{ item.actual_price | currency }}</td>
+                </tr>
+                <tr>
+                  <th>Dépenses déduites&nbsp;:</th>
+                  <td class="text-right tabular-nums">
+                    {{ -this.item.handover.purchases_amount | currency }}
+                  </td>
+                </tr>
+                <tr>
+                  <th>Total remis par {{ item.borrower.user.full_name }}&nbsp;:</th>
+                  <td class="trip-details__total text-right tabular-nums">
+                    {{ actualOwnerPart | currency }}
+                  </td>
+                </tr>
+              </table>
             </div>
 
-            <div v-if="userRoles.includes('borrower')">
+            <div v-if="userIsAdmin || userRoles.includes('borrower')">
+              <div v-if="userIsAdmin">
+                <p>L'emprunt est en phase de validation par les participant-e-s.</p>
+              </div>
+
               <hr />
-              <p>
-                À titre d'emprunteur ce trajet vous coûtera&nbsp;:
-                <span v-b-popover.hover="priceTooltip">{{ actualPrice | currency }}</span
-                >.
-              </p>
 
-              <b-row>
-                <b-col lg="3" />
+              <div v-if="!userIsAdmin">
+                <b-row>
+                  <b-col lg="3" />
 
-                <b-col lg="6">
-                  <div role="group" class="form-group">
-                    <label for="platform_tip" class="d-block" id="__BVID__151__BV_label_">
-                      {{ $t("fields.platform_tip") | capitalize }}
-                      <b-badge
-                        pill
-                        variant="light"
-                        v-b-popover.hover="$t('descriptions.platform_tip')"
-                      >
-                        ?
-                      </b-badge>
-                    </label>
+                  <b-col lg="6">
+                    <div role="group" class="form-group">
+                      <label for="platform_tip" class="d-block" id="__BVID__151__BV_label_">
+                        {{ $t("fields.platform_tip") | capitalize }}
+                        <b-badge
+                          pill
+                          variant="light"
+                          v-b-popover.hover="$t('descriptions.platform_tip')"
+                        >
+                          ?
+                        </b-badge>
+                      </label>
 
-                    <div class="bv-no-focus-ring text-center">
-                      <b-form-input
-                        id="platform_tip"
-                        name="platform_tip"
-                        type="number"
-                        :min="0"
-                        :step="0.01"
-                        v-model="platformTip"
-                      />
+                      <div class="bv-no-focus-ring text-center">
+                        <b-form-input
+                          id="platform_tip"
+                          name="platform_tip"
+                          type="number"
+                          :min="0"
+                          :step="0.01"
+                          v-model="platformTip"
+                        />
+                      </div>
                     </div>
-                  </div>
-                </b-col>
+                  </b-col>
 
-                <b-col lg="3" />
-              </b-row>
+                  <b-col lg="3" />
+                </b-row>
+              </div>
 
-              <b-row v-if="!hasEnoughBalance">
+              <h3>Coût du trajet</h3>
+              <table class="trip-details">
+                <tr>
+                  <th>Temps et distance&nbsp;:</th>
+                  <td class="text-right tabular-nums">{{ item.actual_price | currency }}</td>
+                </tr>
+
+                <tr>
+                  <th>Dépenses déduites&nbsp;:</th>
+                  <td class="text-right tabular-nums">
+                    {{ -this.item.handover.purchases_amount | currency }}
+                  </td>
+                </tr>
+
+                <tr>
+                  <th v-if="userIsAdmin">
+                    Montant remis à {{ item.loanable.owner.user.full_name }} par
+                    {{ item.borrower.user.full_name }}&nbsp;:
+                  </th>
+                  <th v-else>Montant remis à {{ item.loanable.owner.user.full_name }}&nbsp;:</th>
+                  <td class="trip-details__total text-right tabular-nums">
+                    {{ actualOwnerPart | currency }}
+                  </td>
+                </tr>
+
+                <tr>
+                  <th>Assurances&nbsp;:</th>
+                  <td class="text-right tabular-nums">
+                    {{ item.actual_insurance | currency }}
+                  </td>
+                </tr>
+                <tr>
+                  <th>Contribution volontaire&nbsp;:</th>
+                  <td class="text-right tabular-nums">
+                    {{ parseFloat(this.platformTip, 10) | currency }}
+                  </td>
+                </tr>
+                <tr>
+                  <th>Total&nbsp;:</th>
+                  <td class="trip-details__total text-right tabular-nums">
+                    {{ actualPrice | currency }}
+                  </td>
+                </tr>
+              </table>
+
+              <b-row v-if="!userIsAdmin && !hasEnoughBalance">
                 <b-col>
+                  <br />
                   <p>
                     Il manque de crédits à votre compte pour payer cet emprunt.<br />
                     <a href="#" v-b-modal.add-credit-modal>Ajoutez des crédits</a>
@@ -180,15 +262,30 @@
                 </b-col>
               </b-row>
 
-              <div class="loan-actions-payment__buttons text-center">
-                <b-button
-                  size="sm"
-                  variant="success"
-                  :disabled="!hasEnoughBalance || actionLoading"
-                  @click="completeAction"
-                >
-                  Accepter
-                </b-button>
+              <div v-if="userIsAdmin">
+                <div class="loan-actions-payment__buttons text-center">
+                  <b-button
+                    size="sm"
+                    variant="success"
+                    :disabled="actionLoading"
+                    @click="completeAction"
+                  >
+                    Accepter
+                  </b-button>
+                </div>
+              </div>
+
+              <div v-else class="text-center">
+                <div class="loan-actions-payment__buttons text-center">
+                  <b-button
+                    size="sm"
+                    variant="success"
+                    :disabled="!hasEnoughBalance || actionLoading"
+                    @click="completeAction"
+                  >
+                    Accepter
+                  </b-button>
+                </div>
               </div>
 
               <b-row class="loan-actions__alert">
@@ -300,4 +397,19 @@ export default {
 };
 </script>
 
-<style lang="scss"></style>
+<style lang="scss">
+.loan-actions-payment {
+  .trip-details {
+    margin: 0 auto;
+
+    th,
+    td {
+      padding: 0 0.75rem;
+    }
+  }
+
+  .trip-details__total {
+    border-top: 1px solid black;
+  }
+}
+</style>
