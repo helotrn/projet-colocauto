@@ -54,10 +54,5 @@ export default {
 </script>
 
 <style lang="scss">
-.partners-section {
-  &__top,
-  &__bottom {
-    overflow: hidden;
-  }
-}
+// This component's style can be found in assets/scss/components/_partners-section.scss
 </style>

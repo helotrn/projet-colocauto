@@ -18,6 +18,10 @@
             }
         }
 
+        &__bottom {
+            overflow: hidden;
+        }
+
         h2 {
             color: $locomotion-light-green;
             font-size: 28px;
