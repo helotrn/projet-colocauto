@@ -176,6 +176,7 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\MaterializedViewServiceProvider::class,
         App\Providers\MailchimpServiceProvider::class,
+        App\Providers\MattermostServiceProvider::class,
         App\Providers\MandrillServiceProvider::class,
         App\Providers\NokeServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
