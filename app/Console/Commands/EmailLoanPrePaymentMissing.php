@@ -58,9 +58,6 @@ class EmailLoanPrePaymentMissing extends Command
     {
         $query = Loan::departureInLessThan(24, "hours")
             ->where("loans.created_at", "<", $queryParams["created_at"])
-            ->whereHas("loanable", function ($q) {
-                return $q->whereHas("owner");
-            })
             ->whereHas("prePayment", function ($q) {
                 return $q->where("pre_payments.status", "=", "in_process");
             })
