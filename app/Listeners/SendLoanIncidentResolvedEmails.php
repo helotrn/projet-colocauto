@@ -6,8 +6,6 @@ use App\Models\User;
 use App\Events\LoanIncidentResolvedEvent;
 use App\Mail\LoanIncidentResolved;
 use App\Mail\LoanIncidentReviewable;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
 use Mail;
 
 class SendLoanIncidentResolvedEmails
