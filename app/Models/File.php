@@ -7,6 +7,7 @@ use Auth;
 use Illuminate\Database\Eloquent\Builder;
 use Laravel\Passport\Token;
 use Storage;
+use Log;
 
 class File extends BaseModel
 {
@@ -87,6 +88,16 @@ class File extends BaseModel
             File::copy($fullPath, $filePath . $ds . $model->filename);
 
             $model->path = $filePath;
+
+            // Notify the admins of a newly uploaded document
+            if ($model->borrower()) {
+                // if (
+                //     $borrower->getIsCompleteAttribute() &&
+                //     ($model->field == "saaq" || $model->field == "gaa")
+                // ) {
+                //     // Send a notification
+                // }
+            }
         });
     }
 
