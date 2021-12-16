@@ -176,7 +176,6 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\MaterializedViewServiceProvider::class,
         App\Providers\MailchimpServiceProvider::class,
-        App\Providers\MattermostServiceProvider::class,
         App\Providers\MandrillServiceProvider::class,
         App\Providers\NokeServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
@@ -230,7 +229,6 @@ return [
         "URL" => Illuminate\Support\Facades\URL::class,
         "Validator" => Illuminate\Support\Facades\Validator::class,
         "View" => Illuminate\Support\Facades\View::class,
-
         "Mailchimp" => App\Facades\Mailchimp::class,
         "Noke" => App\Facades\Noke::class,
         "Stripe" => App\Facades\Stripe::class,
