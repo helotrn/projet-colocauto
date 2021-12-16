@@ -8,7 +8,7 @@ use ThibaudDauce\Mattermost\Message;
 use ThibaudDauce\Mattermost\Attachment;
 use Log;
 
-class MattermostService
+class NotificationsService
 {
     private $config = [];
     public function __construct($config)
