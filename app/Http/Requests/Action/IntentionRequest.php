@@ -8,6 +8,11 @@ use App\Repositories\LoanRepository;
 
 class IntentionRequest extends BaseRequest
 {
+    /*
+       Request is authorized for
+         - admins
+         - owner of the loanable
+    */
     public function authorize()
     {
         $loanRepository = new LoanRepository(new Loan());

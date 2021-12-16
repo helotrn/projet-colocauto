@@ -37,6 +37,12 @@ class HandoverRequest extends BaseRequest
         return [];
     }
 
+    /*
+       Request is authorized for
+         - admins
+         - borrower involved in the loan
+         - owner of the loanable
+    */
     public function authorize()
     {
         $user = $this->user();
