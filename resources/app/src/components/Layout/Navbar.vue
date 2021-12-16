@@ -13,6 +13,7 @@
       </b-navbar-nav>
     </b-collapse>
 
+    <img src="/logo.svg" alt="Locomotion Beta" class="logo d-lg-none"/>
     <b-navbar-toggle target="nav-collapse" />
 
     <b-collapse id="nav-collapse" class="layout-navbar__collapse" is-nav>
