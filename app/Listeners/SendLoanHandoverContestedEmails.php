@@ -7,8 +7,6 @@ use App\Mail\Loan\HandoverReviewable as LoanHandoverReviewable;
 use App\Models\Handover;
 use App\Models\User;
 use App\Events\LoanHandoverContestedEvent;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
 use Mail;
 
 class SendLoanHandoverContestedEmails
