@@ -12,6 +12,12 @@ use Mail;
 
 class SendLoanIncidentResolvedEmails
 {
+    /*
+       Send incident-resolved notification to owner and borrower.
+       Only send one copy if owner is borrower.
+
+       These rules apply for on-demand as well as self-service vehicles.
+    */
     public function handle(LoanIncidentResolvedEvent $event)
     {
         $loan = $event->incident->loan;
@@ -19,13 +25,15 @@ class SendLoanIncidentResolvedEmails
         $owner = $loan->loanable->owner;
 
         Mail::to(
-            $owner->user->email,
-            $owner->user->name . " " . $owner->user->last_name
-        )->queue(new LoanIncidentResolved($event->incident, $loan, $owner));
-
-        Mail::to(
             $borrower->user->email,
             $borrower->user->name . " " . $borrower->user->last_name
         )->queue(new LoanIncidentResolved($event->incident, $loan, $borrower));
+
+        if ($owner && $owner->user->id !== $borrower->user->id) {
+            Mail::to(
+                $owner->user->email,
+                $owner->user->name . " " . $owner->user->last_name
+            )->queue(new LoanIncidentResolved($event->incident, $loan, $owner));
+        }
     }
 }
