@@ -36,15 +36,6 @@
                   variant="dark"
                 />
               </div>
-
-              <div v-if="hasTutorial('find-vehicle')">
-                <tutorial-block
-                  title="Réservez un véhicule"
-                  to="/community/list"
-                  bg-image="/img-vehicules.png"
-                  variant="light"
-                />
-              </div>
             </div>
           </section>
 
@@ -204,7 +195,6 @@ export default {
     hasTutorials() {
       return (
         this.hasTutorial("add-vehicle") ||
-        this.hasTutorial("find-vehicle") ||
         this.hasTutorial("discover-community")
       );
     },
@@ -214,8 +204,6 @@ export default {
       switch (name) {
         case "add-vehicle":
           return this.user.owner && this.user.loanables && this.user.loanables.length === 0;
-        case "find-vehicle":
-          return this.canLoanVehicle;
         case "discover-community":
           return (
             this.hasCommunity &&
