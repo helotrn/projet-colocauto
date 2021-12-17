@@ -7,16 +7,18 @@ use ThibaudDauce\Mattermost\Mattermost;
 use ThibaudDauce\Mattermost\Message;
 use ThibaudDauce\Mattermost\Attachment;
 
-/** MATTERMOST NOTIFICATION
+/** MATTERMOST NOTIFICATIONS
+ * This service has been created on top of thibaud-dauce/mattermost-php
+ * for the sake of simplifying the use of Mattermost notification inside the app
+ *
  * Documentation: https://github.com/ThibaudDauce/mattermost-php
  */
 
 class MattermostNotificationsService
 {
-    private $config = [];
-    public function __construct($config)
+    public function __construct()
     {
-        $this->config = $config;
+        // Nothing yet
     }
     /**
      * $message can be a string or a Message object (see documentation)
