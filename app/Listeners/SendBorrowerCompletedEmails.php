@@ -46,10 +46,7 @@ class SendBorrowerCompletedEmails
             MattermostNotifications::send(
                 $user->full_name .
                     " a complété son dossier de conduite " .
-                    env("FRONTEND_URL") .
-                    "/admin/users/" .
-                    $user->id .
-                    "#borrower"
+                    $user->admin_link
             );
 
             // Send a notification to all admins.

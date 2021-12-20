@@ -45,6 +45,8 @@ class User extends AuthenticatableBaseModel
         "is_deactivated" => "boolean",
     ];
 
+    public $computed = ["admin_link"];
+
     public static function getRules($action = "", $auth = null)
     {
         switch ($action) {
@@ -405,5 +407,10 @@ class User extends AuthenticatableBaseModel
     public function getFullNameAttribute()
     {
         return trim($this->name . " " . $this->last_name);
+    }
+
+    public function getAdminLinkAttribute()
+    {
+        return env("FRONTEND_URL") . "/admin/users/" . $this->id;
     }
 }
