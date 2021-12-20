@@ -32,11 +32,71 @@
         <div v-if="!!action.executed_at">
           <p>L'emprunt s'est conclu avec succès!</p>
 
-          <p>
-            Coût final du trajet&nbsp;:
-            <span v-b-popover.hover="priceTooltip">{{ item.total_final_cost | currency }}</span
-            >.
-          </p>
+          <div v-if="userIsAdmin || userRoles.includes('borrower')">
+            <h3>Coût du trajet</h3>
+            <table class="trip-details">
+              <tr>
+                <th>Temps et distance&nbsp;:</th>
+                <td class="text-right tabular-nums">{{ item.final_price | currency }}</td>
+              </tr>
+              <tr>
+                <th>Dépenses déduites&nbsp;:</th>
+                <td class="text-right tabular-nums">
+                  {{ -item.final_purchases_amount | currency }}
+                </td>
+              </tr>
+
+              <tr>
+                <th v-if="userIsAdmin">
+                  Montant remis à {{ item.loanable.owner.user.full_name }} par
+                  {{ item.borrower.user.full_name }}&nbsp;:
+                </th>
+                <th v-else>Montant remis à {{ item.loanable.owner.user.full_name }}&nbsp;:</th>
+                <td class="trip-details__total text-right tabular-nums">
+                  {{ finalOwnerPart | currency }}
+                </td>
+              </tr>
+
+              <tr>
+                <th>Assurances&nbsp;:</th>
+                <td class="text-right tabular-nums">{{ item.final_insurance | currency }}</td>
+              </tr>
+              <tr>
+                <th>Contribution volontaire&nbsp;:</th>
+                <td class="text-right tabular-nums">
+                  {{ item.final_platform_tip | currency }}
+                </td>
+              </tr>
+              <tr>
+                <th>Total&nbsp;:</th>
+                <td class="trip-details__total text-right tabular-nums">
+                  {{ item.total_final_cost | currency }}
+                </td>
+              </tr>
+            </table>
+          </div>
+
+          <div v-if="userRoles.includes('owner')">
+            <h3>Compensation du trajet</h3>
+            <table class="trip-details">
+              <tr>
+                <th>Temps et distance&nbsp;:</th>
+                <td class="text-right tabular-nums">{{ item.final_price | currency }}</td>
+              </tr>
+              <tr>
+                <th>Dépenses déduites&nbsp;:</th>
+                <td class="text-right tabular-nums">
+                  {{ -item.final_purchases_amount | currency }}
+                </td>
+              </tr>
+              <tr>
+                <th>Total remis par {{ item.borrower.user.full_name }}&nbsp;:</th>
+                <td class="trip-details__total text-right tabular-nums">
+                  {{ finalOwnerPart | currency }}
+                </td>
+              </tr>
+            </table>
+          </div>
         </div>
         <div v-else-if="action.status === 'in_process' && loanIsCanceled">
           <p>L'emprunt a été annulé. Cette étape ne peut pas être complétée.</p>
@@ -67,84 +127,120 @@
             </p>
           </div>
 
-          <div v-else-if="userIsAdmin" class="text-center">
-            <p>L'emprunt est en phase de validation par les participant-e-s.</p>
-
-            <hr />
-
-            <p v-if="item.loanable.owner">
-              {{ item.loanable.owner.user.full_name }}
-              recevra {{ finalOwnerPart | currency }} pour l'emprunt.
-            </p>
-
-            <p>
-              {{ item.borrower.user.full_name }}
-              paiera {{ finalPrice | currency }} pour l'emprunt.
-            </p>
-
-            <div class="loan-actions-payment__buttons text-center">
-              <b-button
-                size="sm"
-                variant="success"
-                :disabled="actionLoading"
-                @click="completeAction"
-              >
-                Accepter
-              </b-button>
-            </div>
-          </div>
-
           <div v-else>
-            <div v-if="userRoles.includes('owner') && finalOwnerPart > 0">
+            <div v-if="userRoles.includes('owner')">
               <hr />
-              <p>
-                À titre de propriétaire, vous recevrez {{ finalOwnerPart | currency }} pour
-                l'emprunt.
-              </p>
+
+              <h3>Compensation du trajet</h3>
+              <table class="trip-details">
+                <tr>
+                  <th>Temps et distance&nbsp;:</th>
+                  <td class="text-right tabular-nums">{{ item.actual_price | currency }}</td>
+                </tr>
+                <tr>
+                  <th>Dépenses déduites&nbsp;:</th>
+                  <td class="text-right tabular-nums">
+                    {{ -this.item.handover.purchases_amount | currency }}
+                  </td>
+                </tr>
+                <tr>
+                  <th>Total remis par {{ item.borrower.user.full_name }}&nbsp;:</th>
+                  <td class="trip-details__total text-right tabular-nums">
+                    {{ actualOwnerPart | currency }}
+                  </td>
+                </tr>
+              </table>
             </div>
 
-            <div v-if="userRoles.includes('borrower')">
+            <div v-if="userIsAdmin || userRoles.includes('borrower')">
+              <div v-if="userIsAdmin">
+                <p>L'emprunt est en phase de validation par les participant-e-s.</p>
+              </div>
+
               <hr />
-              <p>
-                À titre d'emprunteur ce trajet vous coûtera&nbsp;:
-                <span v-b-popover.hover="priceTooltip">{{ finalPrice | currency }}</span
-                >.
-              </p>
 
-              <b-row>
-                <b-col lg="3" />
+              <div v-if="!userIsAdmin">
+                <b-row>
+                  <b-col lg="3" />
 
-                <b-col lg="6">
-                  <div role="group" class="form-group">
-                    <label for="platform_tip" class="d-block" id="__BVID__151__BV_label_">
-                      {{ $t("fields.platform_tip") | capitalize }}
-                      <b-badge
-                        pill
-                        variant="light"
-                        v-b-popover.hover="$t('descriptions.platform_tip')"
-                      >
-                        ?
-                      </b-badge>
-                    </label>
+                  <b-col lg="6">
+                    <div role="group" class="form-group">
+                      <label for="platform_tip" class="d-block" id="__BVID__151__BV_label_">
+                        {{ $t("fields.platform_tip") | capitalize }}
+                        <b-badge
+                          pill
+                          variant="light"
+                          v-b-popover.hover="$t('descriptions.platform_tip')"
+                        >
+                          ?
+                        </b-badge>
+                      </label>
 
-                    <div class="bv-no-focus-ring text-center">
-                      <b-form-input
-                        id="platform_tip"
-                        name="platform_tip"
-                        type="number"
-                        :min="0"
-                        :step="0.01"
-                        v-model="platformTip"
-                      />
+                      <div class="bv-no-focus-ring text-center">
+                        <b-form-input
+                          id="platform_tip"
+                          name="platform_tip"
+                          type="number"
+                          :min="0"
+                          :step="0.01"
+                          v-model="platformTip"
+                        />
+                      </div>
                     </div>
-                  </div>
-                </b-col>
+                  </b-col>
 
-                <b-col lg="3" />
-              </b-row>
+                  <b-col lg="3" />
+                </b-row>
+              </div>
 
-              <b-row v-if="!hasEnoughBalance">
+              <h3>Coût du trajet</h3>
+              <table class="trip-details">
+                <tr>
+                  <th>Temps et distance&nbsp;:</th>
+                  <td class="text-right tabular-nums">{{ item.actual_price | currency }}</td>
+                </tr>
+
+                <tr>
+                  <th>Dépenses déduites&nbsp;:</th>
+                  <td class="text-right tabular-nums">
+                    {{ -this.item.handover.purchases_amount | currency }}
+                  </td>
+                </tr>
+
+                <tr>
+                  <th v-if="userIsAdmin">
+                    Montant remis à {{ item.loanable.owner.user.full_name }} par
+                    {{ item.borrower.user.full_name }}&nbsp;:
+                  </th>
+                  <th v-else>Montant remis à {{ item.loanable.owner.user.full_name }}&nbsp;:</th>
+                  <td class="trip-details__total text-right tabular-nums">
+                    {{ actualOwnerPart | currency }}
+                  </td>
+                </tr>
+
+                <tr>
+                  <th>Assurances&nbsp;:</th>
+                  <td class="text-right tabular-nums">
+                    {{ item.actual_insurance | currency }}
+                  </td>
+                </tr>
+                <tr>
+                  <th>Contribution volontaire&nbsp;:</th>
+                  <td class="text-right tabular-nums">
+                    {{ parseFloat(this.platformTip, 10) | currency }}
+                  </td>
+                </tr>
+                <tr>
+                  <th>Total&nbsp;:</th>
+                  <td class="trip-details__total text-right tabular-nums">
+                    {{ actualPrice | currency }}
+                  </td>
+                </tr>
+              </table>
+
+              <b-row v-if="!userIsAdmin && !hasEnoughBalance">
                 <b-col>
+                  <br />
                   <p>
                     Il manque de crédits à votre compte pour payer cet emprunt.<br />
                     <a href="#" v-b-modal.add-credit-modal>Ajoutez des crédits</a>
@@ -158,7 +254,7 @@
                   >
                     <user-add-credit-box
                       :user="user"
-                      :minimum-required="finalPrice - user.balance"
+                      :minimum-required="actualPrice - user.balance"
                       @bought="reloadUserAndCloseModal"
                       @cancel="closeModal"
                     />
@@ -166,15 +262,30 @@
                 </b-col>
               </b-row>
 
-              <div class="loan-actions-payment__buttons text-center">
-                <b-button
-                  size="sm"
-                  variant="success"
-                  :disabled="!hasEnoughBalance || actionLoading"
-                  @click="completeAction"
-                >
-                  Accepter
-                </b-button>
+              <div v-if="userIsAdmin">
+                <div class="loan-actions-payment__buttons text-center">
+                  <b-button
+                    size="sm"
+                    variant="success"
+                    :disabled="actionLoading"
+                    @click="completeAction"
+                  >
+                    Accepter
+                  </b-button>
+                </div>
+              </div>
+
+              <div v-else class="text-center">
+                <div class="loan-actions-payment__buttons text-center">
+                  <b-button
+                    size="sm"
+                    variant="success"
+                    :disabled="!hasEnoughBalance || actionLoading"
+                    @click="completeAction"
+                  >
+                    Accepter
+                  </b-button>
+                </div>
               </div>
 
               <b-row class="loan-actions__alert">
@@ -220,10 +331,13 @@ export default {
     };
   },
   computed: {
-    finalOwnerPart() {
+    actualOwnerPart() {
       return this.item.actual_price - this.item.handover.purchases_amount;
     },
-    finalPrice() {
+    finalOwnerPart() {
+      return this.item.final_price - this.item.handover.purchases_amount;
+    },
+    actualPrice() {
       return (
         this.item.actual_price +
         this.item.actual_insurance +
@@ -232,7 +346,7 @@ export default {
       );
     },
     hasEnoughBalance() {
-      return this.user.balance >= this.finalPrice;
+      return this.user.balance >= this.actualPrice;
     },
     priceTooltip() {
       const strParts = [];
@@ -283,4 +397,19 @@ export default {
 };
 </script>
 
-<style lang="scss"></style>
+<style lang="scss">
+.loan-actions-payment {
+  .trip-details {
+    margin: 0 auto;
+
+    th,
+    td {
+      padding: 0 0.75rem;
+    }
+  }
+
+  .trip-details__total {
+    border-top: 1px solid black;
+  }
+}
+</style>
