@@ -8,8 +8,10 @@ use ThibaudDauce\Mattermost\Message;
 use ThibaudDauce\Mattermost\Attachment;
 
 /** MATTERMOST NOTIFICATIONS
+ * *
  * This service has been created on top of thibaud-dauce/mattermost-php
- * for the sake of simplifying the use of Mattermost notification inside the app
+ * for the sake of simplifying the use of Mattermost notification inside the app.
+ * It relies on Mattermost Webhook and isn't using their API directly.
  *
  * Documentation: https://github.com/ThibaudDauce/mattermost-php
  */
@@ -21,7 +23,15 @@ class MattermostNotificationsService
         // Nothing yet
     }
     /**
+     * CREATE A NOTIFICATION ON MATTERMOST
      * $message can be a string or a Message object (see documentation)
+     *
+     * Examples:
+     *
+     * MattermostNotifications::send("A new notification has been created on the default channel");
+     * OR
+     * MattermostNotifications::send((new Message())->text("New notification")->channel("test"));
+     *
      */
     public static function send($message)
     {
