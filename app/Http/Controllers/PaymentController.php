@@ -160,7 +160,9 @@ class PaymentController extends RestController
         }
         $borrowerInvoice->pay();
 
-        if ($loan->loanable->owner) {
+        // For the moment we assume that self-service loanables are free.
+        // We may want to relax this constraint later.
+        if (!$loan->loanable->is_self_service && $loan->loanable->owner) {
             $ownerUser = $loan->loanable->owner->user;
             $ownerInvoice = $ownerUser->createInvoice();
 
@@ -206,7 +208,7 @@ class PaymentController extends RestController
 
         // Save payment
         $payment->borrower_invoice_id = $borrowerInvoice->id;
-        if ($loan->loanable->owner) {
+        if (!$loan->loanable->is_self_service && $loan->loanable->owner) {
             $payment->owner_invoice_id = $ownerInvoice->id;
         }
         $payment->status = "completed";
@@ -214,7 +216,11 @@ class PaymentController extends RestController
 
         // Send emails after an automated or manual action
         $invoiceTransformer = new Invoice::$transformer();
-        if ($loan->total_final_cost > 0) {
+        if (
+            !$loan->loanable->is_self_service &&
+            $loan->loanable->owner &&
+            $loan->total_final_cost > 0
+        ) {
             if ($request->get("automated")) {
                 event(
                     new LoanPaidEvent(
