@@ -226,7 +226,9 @@ class PaymentController extends RestController
                         "<p>Votre emprunt est terminé depuis 48h. Il est désormais clôturé!</p>"
                     )
                 );
-                if ($loan->loanable->owner) {
+
+                // Trigger event for owner if exists and is not also the borrower.
+                if ($loan->loanable->owner && !$borrowerUser->is($ownerUser)) {
                     event(
                         new LoanPaidEvent(
                             $ownerUser,
@@ -247,7 +249,9 @@ class PaymentController extends RestController
                         ])
                     )
                 );
-                if ($loan->loanable->owner) {
+
+                // Trigger event for owner if exists and is not also the borrower.
+                if ($loan->loanable->owner && !$borrowerUser->is($ownerUser)) {
                     event(
                         new LoanPaidEvent(
                             $ownerUser,
