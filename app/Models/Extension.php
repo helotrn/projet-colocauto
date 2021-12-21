@@ -33,8 +33,6 @@ class Extension extends Action
                         }
                         break;
                     case "completed":
-                        $loanId = $model->loan->id;
-
                         $model->executed_at = Carbon::now();
                         $model->save();
                         break;
