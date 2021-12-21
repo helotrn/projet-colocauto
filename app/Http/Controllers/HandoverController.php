@@ -112,7 +112,10 @@ class HandoverController extends RestController
             );
         }
 
-        if (!$loan->loanable->owner) {
+        // For the moment we assume that self-service loanables are free.
+        // We may want to relax this constraint later.
+        // Auto-complete payment if loanable has no owner or if is self service.
+        if (!$loan->loanable->owner || $loan->loanable->is_self_service) {
             $payment = $loan->payment()->first();
             $paymentController = app(PaymentController::class);
             $paymentController->complete(
