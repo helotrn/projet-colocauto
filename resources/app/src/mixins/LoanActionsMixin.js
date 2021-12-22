@@ -49,11 +49,17 @@ export default {
     isAvailable() {
       return this.$store.state.loans.item.isAvailable;
     },
+    /*
+       Conditions on loan actions so they are contestable:
+         - the loanable must not be self service;
+         - action is either handover or takeover;
+         - action must be executed and not canceled.
+     */
     isContestable() {
-      return !!this.action.executed_at && this.action.status !== "canceled" && !!this.owner;
+      return !this.isSelfService && !!this.action.executed_at && this.action.status !== "canceled";
     },
     isContested() {
-      return !!this.action.executed_at && this.action.status === "canceled" && !!this.owner;
+      return !this.isSelfService && !!this.action.executed_at && this.action.status === "canceled";
     },
     owner() {
       return this.item.loanable.owner;
