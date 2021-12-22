@@ -60,7 +60,7 @@
               <b-button
                 size="sm"
                 variant="success"
-                v-if="hasButton('accept') && userRole === 'owner'"
+                v-if="hasButton('accept') && userRoles.includes('owner')"
                 @click.prevent="acceptLoan"
               >
                 Accepter
@@ -78,7 +78,7 @@
               <b-button
                 size="sm"
                 variant="outline-danger"
-                v-if="hasButton('deny') && userRole === 'owner'"
+                v-if="hasButton('deny') && userRoles.includes('owner')"
                 @click.prevent="denyLoan"
               >
                 Refuser
@@ -103,10 +103,10 @@
       </router-link>
     </b-card>
     <div v-if="hasButton('accept')">
-      <p class="loan-info-box__instructions muted" v-if="userRole === 'owner'">
+      <p class="loan-info-box__instructions muted" v-if="userRoles.includes('owner')">
         Cette personne devrait entrer en contact avec vous sous peu.
       </p>
-      <p class="loan-info-box__instructions muted" v-else>
+      <p class="loan-info-box__instructions muted" v-else-if="userRoles.includes('borrower')">
         La demande est envoyée! Maintenant contactez la personne propriétaire pour valider votre
         demande.
       </p>
@@ -190,16 +190,26 @@ export default {
         .add(this.loan.duration_in_minutes, "minute")
         .format("YYYY-MM-DD HH:mm:ss");
     },
-    userRole() {
+    /*
+      Returns an array containing all user roles in the current loan.
+    */
+    userRoles() {
+      const roles = [];
+
+      // User is global admin
+      if (this?.user?.role === "admin") {
+        roles.push("admin");
+      }
+
       if (this.loan.loanable.owner && this.user.id === this.loan.loanable.owner.user.id) {
-        return "owner";
+        roles.push("owner");
       }
 
       if (this.user.id === this.loan.borrower.user.id) {
-        return "borrower";
+        roles.push("borrower");
       }
 
-      return "other";
+      return roles;
     },
   },
   methods: {
