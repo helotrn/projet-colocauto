@@ -78,12 +78,18 @@
       <loanable-details-box :loanable="loan.loanable" />
     </b-modal>
 
-    <b-modal size="md" title="Coordonnées du propriétaire" id="owner-modal" footer-class="d-none">
-      <p v-if="loan.loanable.owner">
+    <b-modal
+      v-if="loan.loanable.owner"
+      size="md"
+      title="Coordonnées du propriétaire"
+      id="owner-modal"
+      footer-class="d-none"
+    >
+      <p>
         <strong>{{ loan.loanable.owner.user.full_name }}</strong>
       </p>
 
-      <dl v-if="loan.loanable.owner">
+      <dl>
         <dt>Téléphone</dt>
         <dd>{{ loan.loanable.owner.user.phone }}</dd>
       </dl>
