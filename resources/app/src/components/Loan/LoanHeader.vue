@@ -4,7 +4,8 @@
       <b-col>
         <h1>
           Emprunt {{ loanablePrettyName }}
-          <small v-if="userRole === 'other'">(#{{ loan.id }})</small>
+          <!-- Show loan id for admins -->
+          <small v-if="userRoles.includes('admin')">(#{{ loan.id }})</small>
         </h1>
       </b-col>
     </b-row>
@@ -12,7 +13,8 @@
     <b-row>
       <b-col class="loan-header__description">
         <p class="loan-header__description__people">
-          <span v-if="userRole !== 'borrower'">
+          <!-- Display borrower's name for owner or admins -->
+          <span v-if="!userRoles.includes('borrower')">
             Emprunteur-se&nbsp;:
             <a v-if="borrowerUrl" :href="borrowerUrl">
               {{ loan.borrower.user.full_name }}
@@ -23,9 +25,11 @@
             <span class="badge badge-light badge-pill" v-b-modal="'borrower-modal'"> ? </span>
           </span>
 
-          <br v-if="userRole === 'other'" />
+          <!-- Skip line if borrower's and owner's names are to be displayed (for admins). -->
+          <br v-if="userRoles.includes('admin')" />
 
-          <span v-if="loan.loanable.owner && userRole !== 'owner'">
+          <!-- Display owner's name for borrower or admins -->
+          <span v-if="loan.loanable.owner && !userRoles.includes('owner')">
             Propriétaire&nbsp;:
             <a v-if="ownerUrl" :href="ownerUrl">
               {{ loan.loanable.owner.user.full_name }}
@@ -35,6 +39,7 @@
             </span>
             <span class="badge badge-light badge-pill" v-b-modal="'owner-modal'"> ? </span>
           </span>
+          <!-- Display community's name if present -->
           <span v-else-if="loan.loanable.community">
             Communauté&nbsp;:
             {{ loan.loanable.community.name }}
@@ -137,7 +142,7 @@ export default {
       }
     },
     loanableOwnerText() {
-      if (this.userRole === "owner") {
+      if (this.userRoles.includes("owner")) {
         return "";
       }
 
@@ -206,16 +211,26 @@ export default {
         this.$dayjs(this.returnAt).format("YYYY-MM-DD")
       );
     },
-    userRole() {
+    /*
+      Returns an array containing all user roles in the current loan.
+    */
+    userRoles() {
+      const roles = [];
+
+      // User is global admin
+      if (this?.user?.role === "admin") {
+        roles.push("admin");
+      }
+
       if (this.loan.loanable.owner && this.user.id === this.loan.loanable.owner.user.id) {
-        return "owner";
+        roles.push("owner");
       }
 
       if (this.user.id === this.loan.borrower.user.id) {
-        return "borrower";
+        roles.push("borrower");
       }
 
-      return "other";
+      return roles;
     },
     userIsAdmin() {
       // User is global admin
