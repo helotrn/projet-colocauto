@@ -71,7 +71,7 @@ export default {
       return `url('${avatar.sizes.thumbnail}')`;
     },
     /*
-      Returns an array containing all roles.
+      Returns an array containing all user roles in the current loan.
     */
     userRoles() {
       const roles = [];
