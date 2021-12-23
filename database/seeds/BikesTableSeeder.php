@@ -7,7 +7,7 @@ class BikesTableSeeder extends Seeder
 {
     public function run()
     {
-        // Start cars at 1
+        // Start bikes at 1
         $bikes = [
             [
                 "id" => 1,
@@ -25,7 +25,7 @@ class BikesTableSeeder extends Seeder
     "available":true,
     "type":"weekdays",
     "scope":["MO","TU","TH","WE","FR"],
-    "period":"00:00-23:59"
+    "period":"00:00-24:00"
   }
 ]
 JSON
