@@ -10,7 +10,7 @@
       </b-row>
 
       <b-row v-if="data.length === 0">
-        <b-col> Pas de véhicule. </b-col>
+        <b-col>Pas de véhicule.</b-col>
       </b-row>
       <b-row
         v-else
