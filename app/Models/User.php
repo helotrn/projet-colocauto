@@ -195,6 +195,14 @@ class User extends AuthenticatableBaseModel
         return $this->hasOne(Borrower::class);
     }
 
+    public function getCommunityAttribute()
+    {
+        return $this->communities->first();
+    }
+
+    /**  communities() should be deprecated at some point as 99% of users have only one community
+     *  use $this->community instead
+     */
     public function communities()
     {
         return $this->belongsToMany(Community::class)
