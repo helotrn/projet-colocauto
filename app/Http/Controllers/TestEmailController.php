@@ -233,7 +233,6 @@ class TestEmailController extends Controller
 
         $loan = factory(Loan::class)->make();
         $loan->id = (int) $faker->numberBetween(1, 1234);
-        $loan->owner = $owner;
         $loan->borrower = $borrower;
         $loan->loanable = $loanable;
 
