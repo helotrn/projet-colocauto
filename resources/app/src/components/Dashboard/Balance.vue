@@ -97,9 +97,9 @@ export default {
   h3 {
     .badge {
       cursor: pointer;
-      position:relative;
-      top:-2px;
-      margin-left:6px;
+      position: relative;
+      top: -2px;
+      margin-left: 6px;
       .badge-pill {
         padding-left: 0.4em;
         padding-right: 0.4em;

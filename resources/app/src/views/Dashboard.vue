@@ -234,7 +234,6 @@ export default {
 
 <style lang="scss">
 .dashboard {
-
   h3 {
     text-transform: uppercase;
     font-weight: 600;

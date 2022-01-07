@@ -20,7 +20,7 @@
           <span class="dashboard-resources-list__item-title-text"> Guide de départ </span>
         </a>
       </li>
-  
+
       <li class="dashboard-resources-list__item" v-if="communitiesWithChatGroup.length > 0">
         <div class="dashboard-resources-list__item-title">
           <img class="dashboard-resources-list__item-title-icon" src="/icons/messenger.png" />
@@ -28,7 +28,7 @@
             Discuter avec mon quartier
           </span>
         </div>
-        
+
         <div class="dashboard-resources-list__item-content">
           <ul v-if="communitiesWithChatGroup.length > 0">
             <li v-for="c in communitiesWithChatGroup" :key="c.id">
@@ -78,7 +78,7 @@ export default {
 
 <style lang="scss">
 .dashboard-resources-list {
-    a {
+  a {
     &,
     &:hover,
     &:active,

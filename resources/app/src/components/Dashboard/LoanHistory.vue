@@ -113,7 +113,6 @@ export default {
 <style lang="scss">
 .dashboard-loan-history {
   h3 {
-
     display: flex;
 
     li {
