@@ -12,17 +12,6 @@
 
       <li class="dashboard-resources-list__item" v-if="hasCommunity">
         <a
-          href="https://bit.ly/voisinage-LocoMotion"
-          target="_blank"
-          class="dashboard-resources-list__item-title"
-        >
-          <img class="dashboard-resources-list__item-title-icon" src="/icons/allo.png" />
-          <span class="dashboard-resources-list__item-title-text"> Motiver son quartier </span>
-        </a>
-      </li>
-
-      <li class="dashboard-resources-list__item" v-if="hasCommunity">
-        <a
           href="https://bit.ly/locomotion-bienvenue"
           target="_blank"
           class="dashboard-resources-list__item-title"
@@ -31,27 +20,19 @@
           <span class="dashboard-resources-list__item-title-text"> Guide de départ </span>
         </a>
       </li>
-    </ul>
-
-    <h3>Des questions?</h3>
-
-    <ul class="dashboard-resources-list__list">
-      <li class="dashboard-resources-list__item">
+  
+      <li class="dashboard-resources-list__item" v-if="communitiesWithChatGroup.length > 0">
         <div class="dashboard-resources-list__item-title">
           <img class="dashboard-resources-list__item-title-icon" src="/icons/messenger.png" />
           <span class="dashboard-resources-list__item-title-text">
-            Discuter avec mon voisinage
+            Discuter avec mon quartier
           </span>
         </div>
+        
         <div class="dashboard-resources-list__item-content">
           <ul v-if="communitiesWithChatGroup.length > 0">
             <li v-for="c in communitiesWithChatGroup" :key="c.id">
               <a :href="c.chat_group_url" target="_blank">{{ c.name }}</a>
-            </li>
-          </ul>
-          <ul v-else>
-            <li>
-              <a href="https://bit.ly/voisinage-LocoMotion" target="_blank"> LocoMotion </a>
             </li>
           </ul>
         </div>
@@ -97,12 +78,7 @@ export default {
 
 <style lang="scss">
 .dashboard-resources-list {
-  h3 {
-    font-size: 20px;
-    font-weight: 600;
-  }
-
-  a {
+    a {
     &,
     &:hover,
     &:active,

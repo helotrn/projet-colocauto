@@ -45,10 +45,6 @@
     <div v-else class="dashboard-loan-history__loans">
       <p class="muted">Aucun trajet.</p>
     </div>
-
-    <p class="dashboard-loan-history__link">
-      <router-link to="/profile/loans">Voir tous les trajets</router-link>
-    </p>
   </div>
 </template>
 
@@ -117,15 +113,13 @@ export default {
 <style lang="scss">
 .dashboard-loan-history {
   h3 {
-    font-size: 20px;
-    font-weight: normal;
-    font-weight: 600;
 
     display: flex;
 
     li {
       style-type: none;
       display: inline;
+      margin-left: 2px;
       flex: 0 1 25px;
 
       > a.nav-link {
