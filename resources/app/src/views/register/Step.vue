@@ -109,29 +109,9 @@
         icon="arrow-right-circle-fill"
       ></b-icon>
 
-      <b-btn v-else variant="primary" href="/app">
+      <b-btn v-else variant="primary" to="/app">
         J'embarque!
       </b-btn>
-    </div>
-
-    <div v-if="currentPage == 5" class="register-step__completed">
-      <h2>Inscription complétée!</h2>
-
-      <layout-loading v-if="!item || loading" />
-      <div class="register-step__completed__text" v-else>
-        <p>
-          Votre inscription sera validée par un membre de l'équipe et vous aurez alors accès à
-          toutes les fonctionnalités de LocoMotion.
-        </p>
-
-        <p v-if="!!item.owner">
-          En attendant, vous pouvez commencer à entrer les informations sur vos véhicules.
-        </p>
-
-        <div class="register-step__completed__button">
-          <b-button variant="primary" to="/app">Aller au tableau de bord</b-button>
-        </div>
-      </div>
     </div>
   </div>
 </template>

@@ -43,13 +43,6 @@
           </span>
         </b-nav-item>
 
-        <b-nav-item to="/register" v-if="!isGlobalAdmin && !hasCompletedRegistration">
-          <span class="nav-link__icon d-lg-none">
-            <svg-hand />
-          </span>
-          <span class="nav-link__text">Inscription</span>
-        </b-nav-item>
-
         <b-nav-item
           to="/profile/locomotion"
           class="d-block d-lg-none"
