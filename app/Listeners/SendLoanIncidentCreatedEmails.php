@@ -12,13 +12,21 @@ use Mail;
 
 class SendLoanIncidentCreatedEmails
 {
+    /*
+       Send loan-incident-created notification to owner if not also the
+       borrower.
+
+       Also notify admins because they are the only ones who can resolve incidents.
+
+       These rules apply for on-demand as well as self-service vehicles.
+    */
     public function handle(LoanIncidentCreatedEvent $event)
     {
         $loan = $event->incident->loan;
         $borrower = $loan->borrower;
         $owner = $loan->loanable->owner;
 
-        if ($owner) {
+        if ($owner && $owner->user->id !== $borrower->user->id) {
             Mail::to(
                 $owner->user->email,
                 $owner->user->name . " " . $owner->user->last_name

@@ -149,7 +149,8 @@
                 />
               </b-col>
 
-              <b-col xl="6" v-if="item.loanable.owner">
+              <!-- No message for owner if the loanable is self service. -->
+              <b-col xl="6" v-if="!loanableIsSelfService">
                 <forms-validated-input
                   name="message_for_owner"
                   :disabled="!!item.id"

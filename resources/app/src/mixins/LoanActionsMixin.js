@@ -49,11 +49,17 @@ export default {
     isAvailable() {
       return this.$store.state.loans.item.isAvailable;
     },
+    /*
+       Conditions on loan actions so they are contestable:
+         - the loanable must not be self service;
+         - action is either handover or takeover;
+         - action must be executed and not canceled.
+     */
     isContestable() {
-      return !!this.action.executed_at && this.action.status !== "canceled" && !!this.owner;
+      return !this.isSelfService && !!this.action.executed_at && this.action.status !== "canceled";
     },
     isContested() {
-      return !!this.action.executed_at && this.action.status === "canceled" && !!this.owner;
+      return !this.isSelfService && !!this.action.executed_at && this.action.status === "canceled";
     },
     owner() {
       return this.item.loanable.owner;
@@ -71,7 +77,7 @@ export default {
       return `url('${avatar.sizes.thumbnail}')`;
     },
     /*
-      Returns an array containing all roles.
+      Returns an array containing all user roles in the current loan.
     */
     userRoles() {
       const roles = [];
@@ -120,10 +126,16 @@ export default {
       return this.item.borrower.user.id === this.item.loanable.owner.user.id;
     },
     /*
-      For the time being, a loanable is self-service if it has no owner.
-      This definition is likely to change.
+      Use the loanable.is_self_service attribute if true.
+
+      Otherwise keep the old definition of a loanable without owner is self
+      service until all tests are done with the new definition.
     */
     loanableIsSelfService() {
+      if (this.item.loanable.is_self_service) {
+        return true;
+      }
+
       // If the loanable has no owner (Considered as belonging to
       // the community, hence self-service)
       return !this.item.loanable.owner;

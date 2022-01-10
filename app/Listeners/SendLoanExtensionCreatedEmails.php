@@ -10,26 +10,33 @@ use Mail;
 
 class SendLoanExtensionCreatedEmails
 {
+    /*
+       Send loan-extension-created notification to borrower if loanable is
+       not self service and borrower is not also the owner.
+    */
     public function handle(LoanExtensionCreatedEvent $event)
     {
         $loan = $event->extension->loan;
+        $loanable = $loan->loanable;
         $borrower = $loan->borrower;
-        $owner = $loan->loanable->owner;
+        $owner = $loanable->owner;
 
-        if (!$owner || !$owner->user) {
-            return;
+        if (
+            !$loanable->is_self_service &&
+            $owner &&
+            $owner->user->id !== $borrower->user->id
+        ) {
+            Mail::to(
+                $owner->user->email,
+                $owner->user->name . " " . $owner->user->last_name
+            )->queue(
+                new LoanExtensionCreated(
+                    $event->extension,
+                    $loan,
+                    $borrower,
+                    $owner
+                )
+            );
         }
-
-        Mail::to(
-            $owner->user->email,
-            $owner->user->name . " " . $owner->user->last_name
-        )->queue(
-            new LoanExtensionCreated(
-                $event->extension,
-                $loan,
-                $borrower,
-                $owner
-            )
-        );
     }
 }

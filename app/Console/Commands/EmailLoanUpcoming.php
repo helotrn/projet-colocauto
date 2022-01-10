@@ -16,33 +16,39 @@ class EmailLoanUpcoming extends Command
 
     protected $description = "Send loan upcoming emails (in three hours)";
 
-    private $pretend = false;
-
     public function handle()
     {
-        Log::info(
-            "Fetching loans in three hours created " .
-                "at least three hours before now..."
-        );
-        $threeHoursAgo = (new Carbon())->subtract(3, "hours");
+        $pretend = $this->option("pretend");
 
-        $query = $this->getQuery(["created_at" => $threeHoursAgo]);
+        Log::info(
+            "Fetching loans starting in three hours or less created at least three hours before now..."
+        );
+
+        $query = $this->getQuery();
 
         $loans = $query->cursor();
         foreach ($loans as $loan) {
             $user = $loan->borrower->user;
-            if (!$this->pretend) {
-                Log::info("Sending email to $user->email");
+            if (!$pretend) {
+                Log::info(
+                    "Sending LoanUpcoming email to borrower at: $user->email"
+                );
 
                 Mail::to(
                     $user->email,
                     $user->name . " " . $user->last_name
                 )->send(new LoanUpcoming($user, $loan));
 
-                if ($loan->owner) {
-                    $ownerUser = $loan->owner->user;
+                // Loanable has an owner and is not self service.
+                if (
+                    $loan->loanable->owner &&
+                    !$loan->loanable->is_self_service
+                ) {
+                    $ownerUser = $loan->loanable->owner->user;
 
-                    Log::info("Sending email to $ownerUser->email");
+                    Log::info(
+                        "Sending LoanUpcoming email to owner at: $ownerUser->email"
+                    );
 
                     Mail::to(
                         $ownerUser->email,
@@ -57,14 +63,19 @@ class EmailLoanUpcoming extends Command
                 $loan->save();
             } else {
                 Log::info(
-                    "Would have sent an email to {$user->email} for loan {$loan->id}"
+                    "Would have sent LoanUpcoming email to borrower at: {$user->email}" .
+                        " for loan with id: {$loan->id}"
                 );
 
-                if ($loan->owner) {
-                    $ownerUser = $loan->owner->user;
+                // Loanable has an owner and is not self service.
+                if (
+                    $loan->loanable->owner &&
+                    !$loan->loanable->is_self_service
+                ) {
+                    $ownerUser = $loan->loanable->owner->user;
                     Log::info(
-                        "Would have sent an email to {$ownerUser->email} " .
-                            "for loan {$loan->id}"
+                        "Would have sent LoanUpcoming email to owner at: {$ownerUser->email} " .
+                            "for loan with id: {$loan->id}"
                     );
                 }
             }
@@ -73,10 +84,15 @@ class EmailLoanUpcoming extends Command
         Log::info("Done.");
     }
 
-    public static function getQuery($queryParams)
+    public static function getQuery()
     {
-        $query = Loan::departureInLessThan(3, "hours")
-            ->where("loans.created_at", "<", $queryParams["created_at"])
+        $now = Carbon::now();
+        $threeHoursAgo = $now->copy()->subtract(3, "hours");
+        $inThreeHours = $now->copy()->add(3, "hours");
+
+        $query = Loan::where("departure_at", "<=", $inThreeHours)
+            ->where("departure_at", ">", $now)
+            ->where("loans.created_at", "<=", $threeHoursAgo)
             ->where("meta->sent_loan_upcoming_email", null);
 
         $columnDefinitions = Loan::getColumnsDefinition();

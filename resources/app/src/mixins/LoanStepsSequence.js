@@ -27,10 +27,16 @@ export default {
       return !!this.item.loanable.owner;
     },
     /*
-      For the time being, a loanable is self-service if it has no owner.
-      This definition is likely to change.
+      Use the loanable.is_self_service attribute if true.
+
+      Otherwise keep the old definition of a loanable without owner is self
+      service until all tests are done with the new definition.
     */
     loanableIsSelfService() {
+      if (this.item.loanable.is_self_service) {
+        return true;
+      }
+
       // If the loanable has no owner (Considered as belonging to
       // the community, hence self-service)
       return !this.item.loanable.owner;

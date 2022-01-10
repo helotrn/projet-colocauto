@@ -10,6 +10,12 @@ use Mail;
 
 class SendLoanTakeoverContestationResolvedEmails
 {
+    /*
+       Send contestation-resolved notification to owner and borrower.
+       Only send one copy if owner is borrower.
+
+       These rules apply for on-demand as well as self-service vehicles.
+    */
     public function handle(LoanTakeoverContestationResolvedEvent $event)
     {
         $loan = $event->takeover->loan;
@@ -29,7 +35,7 @@ class SendLoanTakeoverContestationResolvedEmails
             )
         );
 
-        if ($owner) {
+        if ($owner && $owner->user->id !== $borrower->user->id) {
             Mail::to(
                 $owner->user->email,
                 $owner->user->name . " " . $owner->user->last_name

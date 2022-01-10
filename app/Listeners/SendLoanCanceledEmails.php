@@ -10,14 +10,27 @@ use Mail;
 
 class SendLoanCanceledEmails
 {
+    /*
+       For on-demand vehicles:
+         Whoever cancels the loan, then the counterpart should be notified.
+
+       For self-service vehicles
+         If the loan is cancelled by the owner, then the borrower should be notified.
+         If the loan is cancelled by the borrower, it is not necessary to notify the owner.
+    */
     public function handle(CanceledEvent $event)
     {
         $sender = $event->user;
         $loan = $event->loan;
-        $owner = $loan->loanable->owner;
+        $loanable = $loan->loanable;
+        $owner = $loanable->owner;
         $borrower = $loan->borrower;
 
-        if ($owner && $owner->user->id !== $sender->id) {
+        if (
+            !$loanable->is_self_service &&
+            $owner &&
+            $owner->user->id !== $sender->id
+        ) {
             Mail::to(
                 $owner->user->email,
                 $owner->user->name . " " . $owner->user->last_name

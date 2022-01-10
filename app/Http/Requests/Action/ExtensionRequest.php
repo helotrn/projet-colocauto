@@ -10,6 +10,12 @@ class ExtensionRequest extends BaseRequest
 {
     private $loanMemo;
 
+    /*
+       Request is authorized for
+         - admins
+         - owner of the loanable
+         - borrower involved in the current loan
+    */
     public function authorize()
     {
         $loan = $this->fetchLoan();
