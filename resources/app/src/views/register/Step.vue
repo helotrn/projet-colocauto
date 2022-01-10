@@ -1,6 +1,5 @@
 <template>
   <div class="register-step">
-    
     <b-pagination-nav
       v-bind:value="currentPage"
       :number-of-pages="3"
@@ -12,15 +11,12 @@
       v-show="currrentPage < 4"
     >
       <template v-slot:page="{ page, active }">
-        
         <span v-if="page < currentPage" class="checked">
           <b-icon icon="check" font-scale="2" />
         </span>
         <span v-else>{{ page }}</span>
-
       </template>
     </b-pagination-nav>
-
 
     <div v-if="item && currentPage == 2">
       <h2>Profil de membre</h2>
@@ -76,31 +72,46 @@
     </div>
 
     <div v-if="currentPage == 4" class="register-step__reasons-why">
-     
       <h2>Vous avez fait le bon choix</h2>
 
       <div class="swiping-card" v-show="currentSlide == 1">
-        <svg-driving class="img"/>
-        <div class="text">Soyez protégé-e avec <strong>une assurance complète</strong>, pas compliquée.</div>
+        <svg-driving class="img" />
+        <div class="text">
+          Soyez protégé-e avec <strong>une assurance complète</strong>, pas compliquée.
+        </div>
       </div>
 
-      <div class="swiping-card"  v-show="currentSlide == 2">
-        <svg-lend class="img"/>
-        <div class="text">C’est un projet <strong>par et pour votre voisinage</strong>, qui évolue avec vous.</div>
+      <div class="swiping-card" v-show="currentSlide == 2">
+        <svg-lend class="img" />
+        <div class="text">
+          C’est un projet <strong>par et pour votre voisinage</strong>, qui évolue avec vous.
+        </div>
       </div>
 
-       <div class="swiping-card"  v-show="currentSlide == 3">
-        <svg-smiling-heart class="img"/>
-        <div class="text">Optez pour <strong>la seule solution locale</strong> d’autopartage entre voisin-e-s.</div>
+      <div class="swiping-card" v-show="currentSlide == 3">
+        <svg-smiling-heart class="img" />
+        <div class="text">
+          Optez pour <strong>la seule solution locale</strong> d’autopartage entre voisin-e-s.
+        </div>
       </div>
 
-       <div class="swiping-card"  v-show="currentSlide == 4">
-        <svg-bike class="img"/>
-        <div class="text"><strong>Économisez</strong> grâce à ce projet citoyen à but non-lucratif.</div>
+      <div class="swiping-card" v-show="currentSlide == 4">
+        <svg-biking class="img" />
+        <div class="text">
+          <strong>Économisez</strong> grâce à ce projet citoyen à but non-lucratif.
+        </div>
       </div>
 
-      <div v-on:click="currentSlide += 1" class="nextSlide-btn">Arrow</div>
-      
+      <b-icon
+        class="nextSlide-btn"
+        v-on:click="nextSlide()"
+        v-if="currentSlide < 4"
+        icon="arrow-right-circle-fill"
+      ></b-icon>
+
+      <b-btn v-else variant="primary" href="/app">
+        J'embarque!
+      </b-btn>
     </div>
 
     <div v-if="currentPage == 5" class="register-step__completed">
@@ -143,8 +154,7 @@ import { extractErrors } from "@/helpers";
 import SmilingHeart from "@/assets/svg/smiling-heart.svg";
 import Driving from "@/assets/svg/driving.svg";
 import Lend from "@/assets/svg/home-lend.svg";
-import Bike from "@/assets/svg/bike.svg";
-
+import Biking from "@/assets/svg/biking.svg";
 
 export default {
   name: "RegisterStep",
@@ -157,9 +167,11 @@ export default {
     "svg-driving": Driving,
     "svg-lend": Lend,
     "svg-smiling-heart": SmilingHeart,
-    "svg-bike": Bike,
+    "svg-biking": Biking,
   },
-  data() {return {currentSlide: 1}},
+  data() {
+    return { currentSlide: 1 };
+  },
   beforeRouteEnter(to, from, next) {
     next((vm) => {
       if (vm.isLoggedIn) {
@@ -208,9 +220,10 @@ export default {
     },
   },
   methods: {
+    nextSlide() {
+      this.currentSlide += 1;
+    },
     async submitAndReload() {
-
-      
       try {
         await this.submit();
 
@@ -218,7 +231,7 @@ export default {
 
         if (!this.item.communities || this.item.communities.length === 0) {
           this.$store.commit("addNotification", {
-            content: "Il est temps de choisir un premier voisinage!",
+            content: "Il est temps de rejoindre un quartier!",
             title: "Profil mis à jour",
             variant: "success",
             type: "register",
@@ -320,23 +333,25 @@ export default {
   }
 
   &__reasons-why {
+    text-align: center;
     h2 {
-      margin-bottom:30px;
+      margin-bottom: 30px;
     }
     .swiping-card {
       margin: 20px 0;
-      text-align:center;
+      text-align: center;
       .img {
         width: 330px;
       }
       .text {
-      font-size: 22px;
-      margin: 30px 20px 0 20px;
-      text-align: center;
+        font-size: 22px;
+        margin: 30px 20px 0 20px;
+        text-align: center;
       }
     }
     .nextSlide-btn {
-      margin: 0 auto;
+      cursor: pointer;
+      font-size: 30px;
     }
   }
 }
