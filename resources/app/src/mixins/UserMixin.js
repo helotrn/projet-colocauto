@@ -16,8 +16,15 @@ export default {
     hasCommunity() {
       return this.isLoggedIn && this.user.communities && this.user.communities.length > 0;
     },
+    hasProfileApproved() {
+      return (
+        this.isLoggedIn &&
+        this.user.communities &&
+        this.user.communities.reduce((acc, c) => acc || (!!c.approved_at && !c.suspended_at), false)
+      );
+    },
     hasCompletedRegistration() {
-      return this.isLoggedIn && (!!this.user.submitted_at || this.canLoanVehicle);
+      return this.isLoggedIn && this.isRegistered;
     },
     isGlobalAdmin() {
       return this.isLoggedIn && this.user.role === "admin";

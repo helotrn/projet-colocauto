@@ -9,9 +9,12 @@
             <release-info-box />
           </section>
 
-          <section class="page__section" v-if="!hasCompletedRegistration">
-            <b-jumbotron bg-variant="light" header="Inscription" :lead="$t('lead_text')">
-              <b-button to="/register">Compléter l'inscription</b-button>
+          <section class="page__section" v-if="!hasProfileApproved">
+            <b-jumbotron
+              bg-variant="light"
+              header="En attente de validation"
+              :lead="$t('lead_text')"
+            >
             </b-jumbotron>
           </section>
 
@@ -19,15 +22,6 @@
             <h2>Pour commencer</h2>
 
             <div class="page__section__tutorials">
-              <div v-if="hasTutorial('discover-community')">
-                <tutorial-block
-                  :title="discoverCommunityTitle"
-                  to="/community"
-                  bg-image="/img-tetes.png"
-                  variant="dark"
-                />
-              </div>
-
               <div v-if="hasTutorial('add-vehicle')">
                 <tutorial-block
                   title="Inscrivez un véhicule"
@@ -147,7 +141,7 @@
 fr:
   welcome_text: Bienvenue {name},
   lead_text: |
-    Vous y êtes presque. Il ne vous manque que quelques étapes, pour prendre la route!
+     Votre inscription est en cours de validation par un membre de l'équipe et vous aurez alors accès à toutes les fonctionnalités de LocoMotion.
 en:
   welcome_text: Welcome {name}!
 </i18n>
@@ -202,11 +196,7 @@ export default {
       return "Découvrez votre voisinage";
     },
     hasTutorials() {
-      return (
-        this.hasTutorial("add-vehicle") ||
-        this.hasTutorial("find-vehicle") ||
-        this.hasTutorial("discover-community")
-      );
+      return this.hasTutorial("add-vehicle") || this.hasTutorial("find-vehicle");
     },
   },
   methods: {
@@ -219,7 +209,10 @@ export default {
         case "discover-community":
           return (
             this.hasCommunity &&
-            this.user.created_at >= this.$dayjs().subtract(2, "week").format("YYYY-MM-DD HH:mm:ss")
+            this.user.created_at >=
+              this.$dayjs()
+                .subtract(2, "week")
+                .format("YYYY-MM-DD HH:mm:ss")
           );
         default:
           return false;
