@@ -21,8 +21,6 @@
                 <img src="/partners/DefiVillIntel_fr_rgb.png" />
               </div>
 
-              <div class="partners-section__partners__line-break" />
-
               <div class="partners-section__partners__partner">
                 <img src="/partners/Montreal_nb.png" />
               </div>

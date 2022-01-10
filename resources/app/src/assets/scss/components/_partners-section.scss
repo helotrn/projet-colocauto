@@ -3,6 +3,12 @@
     .partners-section {
         background-color: $white;
 
+        // Override bootstrap max-width for container so logos may take the
+        // whole page width.
+        .container {
+            max-width: 100%;
+        }
+
         &__top {
             background-color: $white;
             height: 136px;
