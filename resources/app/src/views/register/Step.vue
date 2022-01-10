@@ -143,7 +143,6 @@ import UserMixin from "@/mixins/UserMixin";
 
 import CommunityProofForm from "@/components/Community/ProofForm.vue";
 import ProfileForm from "@/components/Profile/ProfileForm.vue";
-import RegisterIntentForm from "@/components/Register/IntentForm.vue";
 
 import FormsValidatedInput from "@/components/Forms/ValidatedInput.vue";
 import FormLabelsMixin from "@/mixins/FormLabelsMixin";
@@ -163,7 +162,6 @@ export default {
     CommunityProofForm,
     FormsValidatedInput,
     ProfileForm,
-    RegisterIntentForm,
     "svg-driving": Driving,
     "svg-lend": Lend,
     "svg-smiling-heart": SmilingHeart,
