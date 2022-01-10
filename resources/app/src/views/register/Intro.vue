@@ -36,23 +36,22 @@ export default {
   beforeRouteEnter(to, from, next) {
     next((vm) => {
       if (vm.isLoggedIn) {
+        // Not register, go to "complete your profile"
         if (!vm.isRegistered) {
           if (vm.$route.path !== "/register/2") {
             return vm.$router.replace("/register/2");
           }
-
           return null;
         }
-
+        // Not community associated to profile, go to "map"
         if (vm.user.communities.length === 0) {
           if (vm.$route.path !== "/register/map") {
             return vm.$router.replace("/register/map");
           }
-
           return null;
         }
-
-        return vm.$router.replace("/register/4");
+        // Otherwise, go to "Submit your proof of residence"
+        return vm.$router.replace("/register/3");
       }
 
       if (vm.$route.path !== "/register/1") {
