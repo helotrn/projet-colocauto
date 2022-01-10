@@ -2,7 +2,7 @@
   <div class="register-intro">
     <b-pagination-nav
       v-bind:value="currentPage"
-      :number-of-pages="4"
+      :number-of-pages="3"
       pills
       align="center"
       use-router
@@ -52,7 +52,7 @@ export default {
           return null;
         }
 
-        return vm.$router.replace("/register/3");
+        return vm.$router.replace("/register/4");
       }
 
       if (vm.$route.path !== "/register/1") {
