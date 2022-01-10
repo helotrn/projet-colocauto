@@ -222,7 +222,6 @@ export default {
       return age;
     },
     dateOfBirthRules() {
-      console.log(this.form.general);
       return {
         ...this.form.general.date_of_birth.rules,
         required: true,
