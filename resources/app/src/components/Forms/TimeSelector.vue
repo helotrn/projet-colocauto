@@ -78,21 +78,8 @@ export default class TimeSelector extends Vue {
     s: Array<number>;
   };
 
-  get allTimeSlotsInTypicalDay() {
-    const millisecondsInInterval = this.minuteInterval * 60 * 1000;
-
-    return new Array(MILLISECONDS_IN_A_DAY / millisecondsInInterval).fill(null).map((v, idx) => {
-      return dayjs(idx * millisecondsInInterval).utc();
-    });
-  }
-
   get timeslots(): Option[] {
-    return this.allTimeSlotsInTypicalDay
-      .map((timeOfDay) => {
-        const dayOfValue = dayjs(this.value);
-
-        return dayOfValue.set("hour", timeOfDay.hour()).set("minute", timeOfDay.minute());
-      })
+    return this.allDayTimeSlots(dayjs(this.value))
       .map((timeOfDayAtValue) => {
         return {
           value: timeOfDayAtValue.toDate(),
@@ -119,6 +106,24 @@ export default class TimeSelector extends Vue {
 
         return option;
       });
+  }
+
+  allDayTimeSlots(date: Date) {
+    const millisecondsInInterval = this.minuteInterval * 60 * 1000;
+
+    // Ensure date is at the start of the day
+    date = date.startOfDay();
+
+    // Fill a new array with the correct number...
+    const allTimeSlots = new Array(MILLISECONDS_IN_A_DAY / millisecondsInInterval)
+      // ... of empty time slots...
+      .fill(null)
+      // ... then set them to the current date and appropriate time.
+      .map((v, idx) => {
+        return date.add(idx * millisecondsInInterval, "millisecond");
+      });
+
+    return allTimeSlots;
   }
 
   closest(needle: Date) {
