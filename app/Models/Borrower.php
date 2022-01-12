@@ -17,7 +17,9 @@ class Borrower extends BaseModel
     {
         parent::boot();
 
+        // For every save
         self::saved(function ($model) {
+            // Stop all logic if the borrower is suspended
             if (!!$model->suspended_at) {
                 return;
             }
@@ -73,6 +75,7 @@ class Borrower extends BaseModel
         return $this->hasMany(Loan::class);
     }
 
+    // Has the borrower a completed profile?
     public function getIsCompleteAttribute()
     {
         return !!$this->drivers_license_number &&

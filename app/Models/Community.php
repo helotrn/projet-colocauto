@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Validation\Rule;
 use Molotov\Traits\TreeScopes;
 use MStaack\LaravelPostgis\Eloquent\PostgisTrait;
+use Log;
 
 class Community extends BaseModel
 {
@@ -161,6 +162,17 @@ SQL;
     public function children()
     {
         return $this->hasMany(Community::class, "parent_id");
+    }
+
+    public function admins()
+    {
+        $allAdmins = [];
+        $globalAdmins = User::whereRole("admin")->get();
+        $localAdmins = $this->users()
+            ->where("community_user.role", "admin")
+            ->get();
+        $allAdmins = $globalAdmins->merge($localAdmins);
+        return $allAdmins;
     }
 
     public function loanables()
