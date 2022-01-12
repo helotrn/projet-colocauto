@@ -86,15 +86,8 @@ export default {
     };
   },
   computed: {
-    averageCommunitiesCenter() {
-      const center = this.communitiesWithArea.reduce(
-        (acc, c) => [(acc[0] + c.center[0]) / 2, (acc[1] + c.center[1]) / 2],
-        this.communities[0].center
-      );
-      return {
-        lat: center[0],
-        lng: center[1],
-      };
+    defaultCenter() {
+      return { lat: 45.53748, lng: -73.60145 };
     },
     center: {
       get() {
@@ -102,7 +95,7 @@ export default {
           return this.$store.state["community.view"].center;
         }
 
-        return this.averageCommunitiesCenter;
+        return this.defaultCenter;
       },
       set(center) {
         this.$store.commit("community.view/center", center);

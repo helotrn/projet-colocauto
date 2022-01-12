@@ -22,10 +22,6 @@
         >
           <b-button type="submit" variant="primary" class="mr-3 mb-3">Rejoindre</b-button>
           <b-button type="reset" variant="warning" class="mb-3">Retour</b-button>
-          <br />
-          <b-button variant="outline-light" v-b-modal="'borough-difference-modal'">
-            Voisinage, quartier: quelle différence?
-          </b-button>
         </b-form>
       </b-card-text>
     </b-card>
@@ -55,10 +51,6 @@
         >
           <b-button type="submit" variant="primary" class="mr-3 mb-3">Rejoindre</b-button>
           <b-button type="reset" variant="warning" class="mb-3">Retour</b-button>
-          <br />
-          <b-button variant="outline-light" v-b-modal="'register-map-modal'">
-            Voisinage, quartier: quelle différence?
-          </b-button>
         </b-form>
       </b-card-text>
     </b-card>
@@ -216,15 +208,8 @@ export default {
     };
   },
   computed: {
-    averageCommunitiesCenter() {
-      const center = this.communities.reduce(
-        (acc, c) => [(acc[0] + c.center[0]) / 2, (acc[1] + c.center[1]) / 2],
-        this.communities[0].center
-      );
-      return {
-        lat: center[0],
-        lng: center[1],
-      };
+    defaultCenter() {
+      return { lat: 45.53748, lng: -73.60145 };
     },
     borough: {
       get() {
@@ -258,8 +243,8 @@ export default {
         }
 
         return {
-          ...this.averageCommunitiesCenter,
-          lng: this.averageCommunitiesCenter.lng - 0.007,
+          ...this.defaultCenter,
+          lng: this.defaultCenter.lng - 0.007,
         };
       },
       set(center) {
