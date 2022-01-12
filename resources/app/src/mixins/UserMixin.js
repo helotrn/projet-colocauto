@@ -16,6 +16,9 @@ export default {
     hasCommunity() {
       return this.isLoggedIn && this.user.communities && this.user.communities.length > 0;
     },
+    hasNotSubmittedProofOfResidency() {
+      return !this.user.communities.reduce((acc, c) => acc && !!c.proof, true);
+    },
     hasProfileApproved() {
       return (
         this.isLoggedIn &&
@@ -39,15 +42,9 @@ export default {
     isLoggedIn() {
       return !!this.user;
     },
+    // Has finalized his account creation
     isRegistered() {
-      const requiredFields = [
-        "name",
-        "last_name",
-        "date_of_birth",
-        "address",
-        "postal_code",
-        "phone",
-      ];
+      const requiredFields = ["name", "date_of_birth", "address", "postal_code", "phone"];
 
       for (let i = 0, len = requiredFields.length; i < len; i += 1) {
         if (!this.user[requiredFields[i]]) {

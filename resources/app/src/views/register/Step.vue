@@ -148,27 +148,28 @@ export default {
     "svg-biking": Biking,
   },
   data() {
-    return { currentSlide: 1 };
+    return { currentSlide: 1, currrentPage: 2 };
   },
   beforeRouteEnter(to, from, next) {
     next((vm) => {
       if (vm.isLoggedIn) {
+        // Has not finalized his account creation
         if (!vm.isRegistered) {
           if (vm.$route.path !== "/register/2") {
             vm.$router.replace("/register/2");
           }
-        } else if (vm.user.communities.length === 0) {
+        }
+        // Doesn't have a community yet (to deprecate when we better handle out-of-borough users)
+        else if (!vm.hasCommunity) {
           if (vm.$route.path !== "/register/map") {
             vm.$router.replace("/register/map");
           }
-        } else if (!vm.user.communities.reduce((acc, c) => acc && !!c.proof, true)) {
+        }
+        // Doesn't have the proof of residency submitted (to deprecate when we allow to submit the proof later in the process)
+        else if (vm.hasNotSubmittedProofOfResidency) {
           if (vm.$route.path !== "/register/3") {
             vm.$router.replace("/register/3");
           }
-        } else if (!vm.hasCompletedRegistration) {
-          vm.$router.replace("/register/4");
-        } else if (vm.$route.path !== "/register/5") {
-          vm.$router.replace("/register/5");
         }
       }
     });
@@ -312,6 +313,8 @@ export default {
 
   &__reasons-why {
     text-align: center;
+    height: 460px;
+    margin-top: 40px;
     h2 {
       margin-bottom: 30px;
     }
@@ -319,7 +322,7 @@ export default {
       margin: 20px 0;
       text-align: center;
       .img {
-        width: 330px;
+        max-height: 280px;
       }
       .text {
         font-size: 22px;
