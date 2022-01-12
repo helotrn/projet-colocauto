@@ -195,7 +195,15 @@ class User extends AuthenticatableBaseModel
         return $this->hasOne(Borrower::class);
     }
 
-    public function getCommunityAttribute()
+    // main_community
+    //
+    // In 99% of the cases, a user is (or should be) associated
+    // with a single geographical community we call main_community.
+    //
+    // Exceptionnaly, other scenarios may involve non-geographical communities such as Eco-Village, Schools, etc.
+    // But the app won't react well to these exceptions because of the assumption below.
+    //
+    public function getMainCommunityAttribute()
     {
         return $this->communities->first();
     }

@@ -31,7 +31,7 @@ class SendBorrowerCompletedEmails
 
             // Send a notification on Mattermost
             MattermostNotifications::send(
-                $user->community->name .
+                $user->main_community->name .
                     " - " .
                     $user->full_name .
                     " a complété son dossier de conduite " .
@@ -39,9 +39,9 @@ class SendBorrowerCompletedEmails
             );
 
             // Send an email notification to all admins.
-            foreach ($user->community->admins() as $admin) {
+            foreach ($user->main_community->admins() as $admin) {
                 Mail::to($admin->email, $admin->full_name)->queue(
-                    new BorrowerReviewable($user, $user->community)
+                    new BorrowerReviewable($user, $user->main_community)
                 );
             }
 
