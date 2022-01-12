@@ -13,10 +13,6 @@ return [
         "newsletter_list_id" => env("MAILCHIMP_LIST_ID"),
     ],
 
-    "mattermost" => [
-        "main_hook_url" => env("MATTERMOST_MAIN_HOOK_URL"),
-    ],
-
     "mailgun" => [
         "domain" => env("MAILGUN_DOMAIN"),
         "secret" => env("MAILGUN_SECRET"),
