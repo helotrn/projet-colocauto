@@ -158,12 +158,12 @@ export default {
     margin-bottom: 20px;
   }
 
-  .btn-primary{
-    margin-left:0;
-   
-   &.btn-register {
-    margin-top:40px;
-  }
+  .btn-primary {
+    margin-left: 0;
+
+    &.btn-register {
+      margin-top: 40px;
+    }
   }
 
   &__google {
