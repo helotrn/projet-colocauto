@@ -12,8 +12,8 @@
           <section class="page__section" v-if="!hasProfileApproved">
             <b-jumbotron
               bg-variant="light"
-              header="En attente de validation"
-              :lead="$t('lead_text')"
+              header="Votre profil est en attente de validation."
+              lead="LocoMotion s'assure que vos voisins soient bien... vos voisins! C'est pourquoi un membre de notre équipe va vérifier votre preuve de résidence et valider votre compte. Vous recevrez un courriel de confirmation et aurez alors accès à toutes les fonctionnalités de LocoMotion! "
             >
             </b-jumbotron>
           </section>
@@ -140,8 +140,6 @@
 <i18n>
 fr:
   welcome_text: Bienvenue {name},
-  lead_text: |
-     Votre inscription est en cours de validation par un membre de l'équipe et vous aurez alors accès à toutes les fonctionnalités de LocoMotion.
 en:
   welcome_text: Welcome {name}!
 </i18n>
