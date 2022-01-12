@@ -5,7 +5,10 @@
     </div>
 
     <b-container>
-      <b-row class="community__description page__section" v-if="community.long_description">
+      <b-row
+        class="community__description page__section"
+        v-if="community.long_description"
+      >
         <b-col>
           <b-alert variant="info" show>
             <div v-html="community.long_description" />
@@ -13,7 +16,10 @@
         </b-col>
       </b-row>
 
-      <b-row class="page__section text-center" v-if="community.type === 'neighborhood'">
+      <b-row
+        class="page__section text-center"
+        v-if="community.type === 'neighborhood'"
+      >
         <b-col>
           <h2>Mon voisinage</h2>
         </b-col>
@@ -71,7 +77,10 @@
     </b-container>
 
     <b-container>
-      <b-row class="community__organize page__section" v-if="community.chat_group_url">
+      <b-row
+        class="community__organize page__section"
+        v-if="community.chat_group_url"
+      >
         <b-col>
           <h2>Un espace pour s'organiser</h2>
         </b-col>
@@ -80,9 +89,10 @@
       <b-row class="page__section text-center" v-if="community.chat_group_url">
         <b-col>
           <p>
-            La prochaine fête de voisinage c’est quand? Besoin d’aide? Où proposer mon idée pour
-            améliorer la vie de quartier? Quand on ne se voit pas en personne, les réponses à ces
-            questions se trouvent sur notre groupe Facebook!
+            La prochaine fête de voisinage c’est quand? Besoin d’aide? Où
+            proposer mon idée pour améliorer la vie de quartier? Quand on ne se
+            voit pas en personne, les réponses à ces questions se trouvent sur
+            notre groupe Facebook!
           </p>
 
           <p>
@@ -102,7 +112,10 @@
 
         <b-row v-if="borough && neighborhoods" class="page__section">
           <b-col class="community__map">
-            <schematized-community-map :borough="borough" :neighborhoods="neighborhoods" />
+            <schematized-community-map
+              :borough="borough"
+              :neighborhoods="neighborhoods"
+            />
 
             <div class="community__map__total">
               {{ totalUsersCount }}<br />
@@ -137,7 +150,9 @@ export default {
   },
   computed: {
     borough() {
-      return this.community.type === "borough" ? this.community : this.community.parent;
+      return this.community.type === "borough"
+        ? this.community
+        : this.community.parent;
     },
     community() {
       return this.$store.state.communities.item || {};
@@ -149,7 +164,8 @@ export default {
     },
     totalUsersCount() {
       return (
-        this.borough.users_count + this.neighborhoods.reduce((acc, c) => acc + c.users_count, 0)
+        this.borough.users_count +
+        this.neighborhoods.reduce((acc, c) => acc + c.users_count, 0)
       );
     },
   },

@@ -45,7 +45,11 @@
           <section class="page__section" v-if="hasWaitingLoans">
             <h2>Nouvelles demandes d'emprunt</h2>
 
-            <div class="dashboard__waiting-loans" v-for="loan in waitingLoans" :key="loan.id">
+            <div
+              class="dashboard__waiting-loans"
+              v-for="loan in waitingLoans"
+              :key="loan.id"
+            >
               <loan-info-box
                 v-if="isBorrower(loan)"
                 :loan="loan"
@@ -59,7 +63,11 @@
           <section class="page__section" v-if="hasOngoingLoans">
             <h2>Emprunts en cours</h2>
 
-            <div class="dashboard__ongoing-loans" v-for="loan in ongoingLoans" :key="loan.id">
+            <div
+              class="dashboard__ongoing-loans"
+              v-for="loan in ongoingLoans"
+              :key="loan.id"
+            >
               <loan-info-box :loan="loan" :user="user" :buttons="['view']" />
             </div>
           </section>
@@ -67,7 +75,11 @@
           <section class="page__section" v-if="hasUpcomingLoans">
             <h2>Emprunts à venir</h2>
 
-            <div class="dashboard__upcoming-loans" v-for="loan in upcomingLoans" :key="loan.id">
+            <div
+              class="dashboard__upcoming-loans"
+              v-for="loan in upcomingLoans"
+              :key="loan.id"
+            >
               <loan-info-box
                 mode="upcoming"
                 :loan="loan"
@@ -99,7 +111,8 @@
               </div>
               <div v-else>
                 Aucun véhicule.<br />
-                Ajoutez-en un <router-link to="/profile/loanables/new">ici</router-link>.
+                Ajoutez-en un
+                <router-link to="/profile/loanables/new">ici</router-link>.
               </div>
             </div>
           </section>
@@ -187,30 +200,38 @@ export default {
   },
   computed: {
     discoverCommunityTitle() {
-      if (this.user && this.user.communities && this.user.communities[0].type === "borough") {
+      if (
+        this.user &&
+        this.user.communities &&
+        this.user.communities[0].type === "borough"
+      ) {
         return "Découvrez votre quartier";
       }
 
       return "Découvrez votre voisinage";
     },
     hasTutorials() {
-      return this.hasTutorial("add-vehicle") || this.hasTutorial("find-vehicle");
+      return (
+        this.hasTutorial("add-vehicle") || this.hasTutorial("find-vehicle")
+      );
     },
   },
   methods: {
     hasTutorial(name) {
       switch (name) {
         case "add-vehicle":
-          return this.user.owner && this.user.loanables && this.user.loanables.length === 0;
+          return (
+            this.user.owner &&
+            this.user.loanables &&
+            this.user.loanables.length === 0
+          );
         case "find-vehicle":
           return this.canLoanVehicle;
         case "discover-community":
           return (
             this.hasCommunity &&
             this.user.created_at >=
-              this.$dayjs()
-                .subtract(2, "week")
-                .format("YYYY-MM-DD HH:mm:ss")
+              this.$dayjs().subtract(2, "week").format("YYYY-MM-DD HH:mm:ss")
           );
         default:
           return false;

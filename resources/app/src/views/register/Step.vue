@@ -22,8 +22,8 @@
       <h2>Profil de membre</h2>
 
       <p class="register-step__profile__text">
-        Pour faire connaissance, dites à vos voisines et vos voisins qui vous êtes en remplissant
-        les champs suivants.
+        Pour faire connaissance, dites à vos voisines et vos voisins qui vous
+        êtes en remplissant les champs suivants.
       </p>
 
       <profile-form
@@ -42,7 +42,9 @@
               :label="$t('users.fields.accept_conditions') | capitalize"
               :rules="form.general.accept_conditions.rules"
               type="checkbox"
-              :placeholder="placeholderOrLabel('accept_conditions', 'users') | capitalize"
+              :placeholder="
+                placeholderOrLabel('accept_conditions', 'users') | capitalize
+              "
               v-model="item.accept_conditions"
             />
           </b-col>
@@ -55,8 +57,8 @@
       <h2>Preuve de résidence</h2>
 
       <p class="register-step__community__text">
-        Pour rejoindre un quartier ou un voisinage LocoMotion, il faut&hellip; habiter dedans! :-)
-        Merci de nous fournir une preuve de résidence.
+        Pour rejoindre un quartier ou un voisinage LocoMotion, il faut&hellip;
+        habiter dedans! :-) Merci de nous fournir une preuve de résidence.
       </p>
 
       <div v-if="item && item.communities">
@@ -77,28 +79,32 @@
       <div class="swiping-card" v-show="currentSlide == 1">
         <svg-driving class="img" />
         <div class="text">
-          Soyez protégé-e avec <strong>une assurance complète</strong>, pas compliquée.
+          Soyez protégé-e avec <strong>une assurance complète</strong>, pas
+          compliquée.
         </div>
       </div>
 
       <div class="swiping-card" v-show="currentSlide == 2">
         <svg-lend class="img" />
         <div class="text">
-          C’est un projet <strong>par et pour votre voisinage</strong>, qui évolue avec vous.
+          C’est un projet <strong>par et pour votre voisinage</strong>, qui
+          évolue avec vous.
         </div>
       </div>
 
       <div class="swiping-card" v-show="currentSlide == 3">
         <svg-smiling-heart class="img" />
         <div class="text">
-          Optez pour <strong>la seule solution locale</strong> d’autopartage entre voisin-e-s.
+          Optez pour <strong>la seule solution locale</strong> d’autopartage
+          entre voisin-e-s.
         </div>
       </div>
 
       <div class="swiping-card" v-show="currentSlide == 4">
         <svg-biking class="img" />
         <div class="text">
-          <strong>Économisez</strong> grâce à ce projet citoyen à but non-lucratif.
+          <strong>Économisez</strong> grâce à ce projet citoyen à but
+          non-lucratif.
         </div>
       </div>
 
@@ -109,9 +115,7 @@
         icon="arrow-right-circle-fill"
       ></b-icon>
 
-      <b-btn v-else variant="primary" to="/app">
-        J'embarque!
-      </b-btn>
+      <b-btn v-else variant="primary" to="/app"> J'embarque!</b-btn>
     </div>
   </div>
 </template>
