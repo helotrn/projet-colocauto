@@ -155,11 +155,7 @@ export default class TimeSelector extends Vue {
   }
 
   closestOption(needle: Date) {
-    const haystack = this.timeslots
-      // Filter disabled options out.
-      .filter((option) => option.disabled !== true);
-
-    return haystack.reduce((closest, current) => {
+    return this.timeslots.reduce((closest, current) => {
       // Set closest to current item on first iteration.
       if (!closest) {
         return current;
