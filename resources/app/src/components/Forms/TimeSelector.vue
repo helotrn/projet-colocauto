@@ -82,35 +82,40 @@ export default class TimeSelector extends Vue {
     // Compute "now" once so it won't change along the way.
     const now = dayjs();
 
-    return this.allDayTimeSlots(dayjs(this.value))
-      .map((timeOfDayAtValue) => {
-        return {
-          // Carry time along options so as to perform computations on source objects.
-          time: timeOfDayAtValue,
-          value: timeOfDayAtValue.toDate(),
-          text: timeOfDayAtValue.format("HH:mm"),
-          disabled: false,
-        };
-      })
-      .map((option) => {
-        if (this.excludePastTime && option.time.isSameOrBefore(now)) {
-          option.disabled = true;
-        }
+    return (
+      this.allDayTimeSlots(dayjs(this.value))
+        // Augment with option properties.
+        .map((timeOfDayAtValue) => {
+          return {
+            // Carry time along options so as to perform computations on source objects.
+            time: timeOfDayAtValue,
+            value: timeOfDayAtValue.toDate(),
+            text: timeOfDayAtValue.format("HH:mm"),
+            disabled: false,
+          };
+        })
+        // Disable past times.
+        .map((option) => {
+          if (this.excludePastTime && option.time.isSameOrBefore(now)) {
+            option.disabled = true;
+          }
 
-        return option;
-      })
-      .map((option) => {
-        const dValue = dayjs(option.value);
+          return option;
+        })
+        // Disable disabledTimes.
+        .map((option) => {
+          const dValue = dayjs(option.value);
 
-        if (
-          this.disabledTimes.h.includes(dValue.hour()) ||
-          this.disabledTimes.m.includes(dValue.minute())
-        ) {
-          option.disabled = true;
-        }
+          if (
+            this.disabledTimes.h.includes(dValue.hour()) ||
+            this.disabledTimes.m.includes(dValue.minute())
+          ) {
+            option.disabled = true;
+          }
 
-        return option;
-      });
+          return option;
+        })
+    );
   }
 
   allDayTimeSlots(date: Date) {
