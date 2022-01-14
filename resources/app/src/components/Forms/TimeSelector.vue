@@ -131,10 +131,10 @@ export default class TimeSelector extends Vue {
     return allTimeSlots;
   }
 
-  closest(needle: Date) {
+  closestOption(needle: Date) {
     const haystack = this.timeslots
-      .filter((option) => option.disabled !== true)
-      .map(({ value }) => value);
+      // Filter disabled options out.
+      .filter((option) => option.disabled !== true);
 
     return haystack.reduce((closest, current) => {
       // Set closest to current item on first iteration.
@@ -142,11 +142,11 @@ export default class TimeSelector extends Vue {
         return current;
       }
 
-      let diffClosest = Math.abs(closest.getTime() - needle.getTime());
-      let diffCurrent = Math.abs(current.getTime() - needle.getTime());
+      let diffClosest = Math.abs(closest.value.getTime() - needle.getTime());
+      let diffCurrent = Math.abs(current.value.getTime() - needle.getTime());
 
       if (diffClosest == diffCurrent) {
-        return closest > current ? closest : current;
+        return closest.value > current.value ? closest : current;
       } else {
         return diffCurrent < diffClosest ? current : closest;
       }
@@ -164,11 +164,13 @@ export default class TimeSelector extends Vue {
       .set("month", dayOfValue.month())
       .set("date", dayOfValue.date());
 
-    this.selected = this.closest(selectedOnValueDate.toDate());
+    const { value } = this.closestOption(selectedOnValueDate.toDate());
+    this.selected = value;
   }
 
   created() {
-    this.selected = this.closest(this.value);
+    const { value } = this.closestOption(this.value);
+    this.selected = value;
 
     this.onSelection();
   }
