@@ -131,16 +131,21 @@ export default class TimeSelector extends Vue {
       .filter((option) => option.disabled !== true)
       .map(({ value }) => value);
 
-    return haystack.reduce((a, b) => {
-      let aDiff = Math.abs(a.getTime() - needle.getTime());
-      let bDiff = Math.abs(b.getTime() - needle.getTime());
-
-      if (aDiff == bDiff) {
-        return a > b ? a : b;
-      } else {
-        return bDiff < aDiff ? b : a;
+    return haystack.reduce((closest, current) => {
+      // Set closest to current item on first iteration.
+      if (!closest) {
+        return current;
       }
-    });
+
+      let diffClosest = Math.abs(closest.getTime() - needle.getTime());
+      let diffCurrent = Math.abs(current.getTime() - needle.getTime());
+
+      if (diffClosest == diffCurrent) {
+        return closest > current ? closest : current;
+      } else {
+        return diffCurrent < diffClosest ? current : closest;
+      }
+    }, undefined);
   }
 
   selected: Date | null = null;
