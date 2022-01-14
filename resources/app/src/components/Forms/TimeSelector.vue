@@ -82,6 +82,8 @@ export default class TimeSelector extends Vue {
     return this.allDayTimeSlots(dayjs(this.value))
       .map((timeOfDayAtValue) => {
         return {
+          // Carry time along options so as to perform computations on source objects.
+          time: timeOfDayAtValue,
           value: timeOfDayAtValue.toDate(),
           text: timeOfDayAtValue.format("HH:mm"),
           disabled: false,
