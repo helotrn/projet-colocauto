@@ -79,6 +79,9 @@ export default class TimeSelector extends Vue {
   };
 
   get timeslots(): Option[] {
+    // Compute "now" once so it won't change along the way.
+    const now = dayjs();
+
     return this.allDayTimeSlots(dayjs(this.value))
       .map((timeOfDayAtValue) => {
         return {
@@ -90,7 +93,7 @@ export default class TimeSelector extends Vue {
         };
       })
       .map((option) => {
-        if (this.excludePastTime && option.value < dayjs().toDate()) {
+        if (this.excludePastTime && option.time.isSameOrBefore(now)) {
           option.disabled = true;
         }
 
