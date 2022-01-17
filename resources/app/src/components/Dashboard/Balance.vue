@@ -22,12 +22,6 @@
       </b-button>
     </div>
 
-    <p class="dashboard-balance__payment-methods">
-      <router-link to="/profile/payment_methods">
-        {{ $t("modify_payment_method") }}
-      </router-link>
-    </p>
-
     <b-modal
       id="add-credit-modal"
       title="Approvisionner mon compte"
@@ -55,7 +49,6 @@
 <i18n>
 fr:
   approvisionner: Approvisionner
-  modify_payment_method: Modifier les modes de paiement
   reclamer: Réclamer
   reclamer_tooltip: Un minimum de 10$ est requis pour réclamer son solde.
   approvisionner_popover: |
@@ -102,13 +95,21 @@ export default {
 <style lang="scss">
 .dashboard-balance {
   h3 {
-    font-size: 20px;
-    font-weight: normal;
-    font-weight: 600;
-
     .badge {
       cursor: pointer;
+      position: relative;
+      top: -2px;
+      margin-left: 6px;
+      .badge-pill {
+        padding-left: 0.4em;
+        padding-right: 0.4em;
+      }
     }
+  }
+
+  .btn {
+    margin-left: 0;
+    margin-bottom: 10px;
   }
 
   &__balance {
@@ -119,10 +120,6 @@ export default {
 
   &__buttons {
     margin-bottom: 10px;
-  }
-
-  &__payment-methods {
-    font-size: 13px;
   }
 }
 </style>

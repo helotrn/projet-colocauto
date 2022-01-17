@@ -234,6 +234,12 @@ export default {
 
 <style lang="scss">
 .dashboard {
+  h3 {
+    text-transform: uppercase;
+    font-weight: 600;
+    font-size: 16px;
+  }
+
   .page__section {
     &__main {
       padding-top: 45px;
