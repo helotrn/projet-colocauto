@@ -2,6 +2,7 @@
   <b-form-select
     class="time-selector"
     :disabled="disabled"
+    :disabled-times-fct="disabledTimesFct"
     v-model="selected"
     :options="timeslots"
   />
@@ -75,6 +76,12 @@ export default class TimeSelector extends Vue {
     s: Array<number>;
   };
 
+  /*
+     disabledTimesFct(time) { return true|false; };
+  */
+  @Prop({ type: Function, default: () => false })
+  disabledTimesFct;
+
   get timeslots(): Option[] {
     // Compute "now" once so it won't change along the way.
     const now = dayjs();
@@ -91,6 +98,15 @@ export default class TimeSelector extends Vue {
             disabled: false,
           };
         })
+
+        // Disable options from calling disabledTimesFct.
+        .map((option) => {
+          if (this.disabledTimesFct && this.disabledTimesFct(option.time)) {
+            option.disabled = true;
+          }
+          return option;
+        })
+
         // Disable past times.
         .map((option) => {
           if (this.excludePastTime && option.time.isSameOrBefore(now)) {
