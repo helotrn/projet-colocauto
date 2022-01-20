@@ -86,6 +86,7 @@
         v-else-if="type === 'datetime'"
         :disabled-dates="disabledDates"
         :disabled-times="disabledTimes"
+        :disabled-times-fct="disabledTimesFct"
         :disabled="disabled"
         :value="value"
         @input="emitInput"
@@ -238,6 +239,11 @@ export default {
       default() {
         return {};
       },
+    },
+    disabledTimesFct: {
+      type: Function,
+      required: false,
+      default: () => false,
     },
     disabledTooltip: {
       type: String,

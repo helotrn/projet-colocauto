@@ -12,6 +12,7 @@
     <b-col col lg="12">
       <time-selector
         :disabled="disabled"
+        :disabled-times-fct="disabledTimesFct"
         :minute-interval="15"
         :exclude-past-time="true"
         :value="timeValue"
@@ -46,6 +47,11 @@ export default {
       default() {
         return {};
       },
+    },
+    disabledTimesFct: {
+      type: Function,
+      required: false,
+      default: () => false,
     },
     value: {
       type: String,
