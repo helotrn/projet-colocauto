@@ -10,14 +10,11 @@
 <script lang="ts">
 import Vue from "vue";
 import Component from "vue-class-component";
-import dayjs from "dayjs";
-import utc from "dayjs/plugin/utc";
+import dayjs from "../../helpers/dayjs";
 import { Prop, Watch } from "vue-property-decorator";
 
 const MILLISECONDS_IN_A_DAY = 24 * 60 * 60 * 1000;
 const MILLISECONDS_IN_A_MINUTE = 60 * 1000;
-
-dayjs.extend(utc);
 
 interface Option {
   value: Date;
