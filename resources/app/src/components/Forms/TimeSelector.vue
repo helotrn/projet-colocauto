@@ -53,6 +53,11 @@ export default class TimeSelector extends Vue {
     type: Object,
     default: () => ({ h: [], m: [], s: [] }),
     validator: (value: any) => {
+      // Accept undefined or empty.
+      if (!value || Object.keys(value).length == 0) {
+        return true;
+      }
+
       const allArrays = Array.isArray(value.h) && Array.isArray(value.h) && Array.isArray(value.s);
 
       if (!allArrays) {
@@ -120,8 +125,8 @@ export default class TimeSelector extends Vue {
           const dValue = dayjs(option.value);
 
           if (
-            this.disabledTimes.h.includes(dValue.hour()) ||
-            this.disabledTimes.m.includes(dValue.minute())
+            (this.disabledTimes.h && this.disabledTimes.h.includes(dValue.hour())) ||
+            (this.disabledTimes.m && this.disabledTimes.m.includes(dValue.minute()))
           ) {
             option.disabled = true;
           }
