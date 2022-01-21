@@ -14,7 +14,7 @@
         :disabled="disabled"
         :disabled-times-fct="disabledTimesFct"
         :minute-interval="15"
-        :exclude-past-time="true"
+        :exclude-past-time="excludePastTime"
         :value="timeValue"
         @input="emitChangeTime"
       />
@@ -52,6 +52,11 @@ export default {
       type: Function,
       required: false,
       default: () => false,
+    },
+    excludePastTime: {
+      type: Boolean,
+      required: false,
+      default: true,
     },
     value: {
       type: String,
