@@ -1,3 +1,5 @@
+import dayjs from "@/helpers/dayjs";
+
 export default {
   props: {
     form: {
@@ -10,6 +12,24 @@ export default {
     item: {
       type: Object,
       required: true,
+    },
+  },
+  methods: {
+    /*
+       This is generic and may be made available outside of loans.
+       It expects a dayjs or Date object.
+    */
+    dateIsInThePast: (date) => {
+      // Return whether the start of next day is in the past, meaning that the
+      // whole day is in the past.
+      return dayjs(date).startOfDay().add(1, "day").isSameOrBefore(dayjs());
+    },
+    /*
+       This is generic and may be made available outside of loans.
+       It expects a dayjs or Date object.
+    */
+    timeIsInThePast: (time) => {
+      return dayjs(time).isSameOrBefore(dayjs());
     },
   },
   computed: {
