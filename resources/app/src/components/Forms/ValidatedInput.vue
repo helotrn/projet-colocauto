@@ -87,7 +87,6 @@
         v-else-if="type === 'datetime'"
         :disabled-dates="disabledDates"
         :disabled-dates-fct="disabledDatesFct"
-        :disabled-times="disabledTimes"
         :disabled-times-fct="disabledTimesFct"
         :exclude-past-time="excludePastTime"
         :disabled="disabled"
@@ -240,13 +239,6 @@ export default {
       type: Function,
       required: false,
       default: () => false,
-    },
-    disabledTimes: {
-      type: Object,
-      required: false,
-      default() {
-        return {};
-      },
     },
     disabledTimesFct: {
       type: Function,

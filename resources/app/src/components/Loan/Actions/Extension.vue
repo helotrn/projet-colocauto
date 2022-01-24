@@ -212,10 +212,6 @@ import LoanNextDate from "@/components/Loan/NextDate.vue";
 import LoanFormMixin from "@/mixins/LoanFormMixin";
 import LoanActionsMixin from "@/mixins/LoanActionsMixin";
 
-const {
-  computed: { disabledDates, disabledTimes },
-} = LoanFormMixin;
-
 export default {
   name: "LoanActionsExtension",
   mixins: [LoanActionsMixin],
@@ -240,8 +236,6 @@ export default {
     }
   },
   computed: {
-    disabledDates,
-    disabledTimes,
     returnAt: {
       get() {
         return this.$dayjs(this.item.departure_at)

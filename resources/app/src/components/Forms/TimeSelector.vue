@@ -49,38 +49,6 @@ export default class TimeSelector extends Vue {
   @Prop({ type: Boolean, default: false })
   excludePastTime!: boolean;
 
-  @Prop({
-    type: Object,
-    default: () => ({ h: [], m: [], s: [] }),
-    validator: (value: any) => {
-      // Accept undefined or empty.
-      if (!value || Object.keys(value).length == 0) {
-        return true;
-      }
-
-      const allArrays = Array.isArray(value.h) && Array.isArray(value.h) && Array.isArray(value.s);
-
-      if (!allArrays) {
-        return false;
-      }
-
-      if (
-        !value.h.every((item: any) => typeof item === "number") ||
-        !value.m.every((item: any) => typeof item === "number") ||
-        !value.s.every((item: any) => typeof item === "number")
-      ) {
-        return false;
-      }
-
-      return true;
-    },
-  })
-  disabledTimes!: {
-    h: Array<number>;
-    m: Array<number>;
-    s: Array<number>;
-  };
-
   /*
      disabledTimesFct(time) { return true|false; };
   */
@@ -115,19 +83,6 @@ export default class TimeSelector extends Vue {
         // Disable past times.
         .map((option) => {
           if (this.excludePastTime && option.time.isSameOrBefore(now)) {
-            option.disabled = true;
-          }
-
-          return option;
-        })
-        // Disable disabledTimes.
-        .map((option) => {
-          const dValue = dayjs(option.value);
-
-          if (
-            (this.disabledTimes.h && this.disabledTimes.h.includes(dValue.hour())) ||
-            (this.disabledTimes.m && this.disabledTimes.m.includes(dValue.minute()))
-          ) {
             option.disabled = true;
           }
 

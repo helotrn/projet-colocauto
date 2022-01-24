@@ -47,13 +47,6 @@ export default {
       required: false,
       default: () => false,
     },
-    disabledTimes: {
-      type: Object,
-      required: false,
-      default() {
-        return {};
-      },
-    },
     disabledTimesFct: {
       type: Function,
       required: false,
