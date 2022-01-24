@@ -208,7 +208,6 @@ import dayjs from "@/helpers/dayjs";
 
 import LoanNextDate from "@/components/Loan/NextDate.vue";
 
-import LoanFormMixin from "@/mixins/LoanFormMixin";
 import LoanActionsMixin from "@/mixins/LoanActionsMixin";
 
 export default {
