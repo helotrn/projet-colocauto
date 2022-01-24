@@ -75,6 +75,7 @@
       <forms-date-picker
         v-else-if="type === 'date'"
         :disabled-dates="disabledDates"
+        :disabled-dates-fct="disabledDatesFct"
         :disabled="disabled"
         :initial-view="initialView"
         :state="getValidationState(validationContext)"
@@ -85,6 +86,7 @@
       <forms-date-time-picker
         v-else-if="type === 'datetime'"
         :disabled-dates="disabledDates"
+        :disabled-dates-fct="disabledDatesFct"
         :disabled-times="disabledTimes"
         :disabled-times-fct="disabledTimesFct"
         :exclude-past-time="excludePastTime"
@@ -233,6 +235,11 @@ export default {
       default() {
         return {};
       },
+    },
+    disabledDatesFct: {
+      type: Function,
+      required: false,
+      default: () => false,
     },
     disabledTimes: {
       type: Object,

@@ -12,7 +12,8 @@
     :initial-view="initialView"
     :open-date="openDate"
     :language="language"
-    :disabled-dates="disabledDates"
+    :disabled-dates="disabledDatesCombined"
+    :disabled-dates-fct="disabledDatesFct"
     :disabled="disabled"
     :value="dateValue"
     @selected="emitInput($event)"
@@ -43,6 +44,11 @@ export default {
       default() {
         return {};
       },
+    },
+    disabledDatesFct: {
+      type: Function,
+      required: false,
+      default: () => false,
     },
     format: {
       type: [String, Function],
@@ -92,6 +98,14 @@ export default {
     },
   },
   computed: {
+    // Combine disabledDates and disabledDatesFct into the proper format for
+    // vuejs-datepicker
+    disabledDatesCombined() {
+      return {
+        ...this.disabledDates,
+        customPredictor: this.disabledDatesFct,
+      };
+    },
     dateValue() {
       if (!this.value || this.value === "null") {
         return null;

@@ -4,6 +4,7 @@
       <forms-date-picker
         :disabled="disabled"
         :disabled-dates="disabledDates"
+        :disabled-dates-fct="disabledDatesFct"
         :value="dateValue"
         @input="emitChangeDate"
       />
@@ -40,6 +41,11 @@ export default {
       default() {
         return {};
       },
+    },
+    disabledDatesFct: {
+      type: Function,
+      required: false,
+      default: () => false,
     },
     disabledTimes: {
       type: Object,
