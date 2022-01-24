@@ -46,9 +46,6 @@ export default class TimeSelector extends Vue {
   @Prop({ type: Boolean, default: false })
   disabled!: boolean;
 
-  @Prop({ type: Boolean, default: false })
-  excludePastTime!: boolean;
-
   /*
      disabledTimesFct(time) { return true|false; };
   */
@@ -77,15 +74,6 @@ export default class TimeSelector extends Vue {
           if (this.disabledTimesFct && this.disabledTimesFct(option.time)) {
             option.disabled = true;
           }
-          return option;
-        })
-
-        // Disable past times.
-        .map((option) => {
-          if (this.excludePastTime && option.time.isSameOrBefore(now)) {
-            option.disabled = true;
-          }
-
           return option;
         })
     );

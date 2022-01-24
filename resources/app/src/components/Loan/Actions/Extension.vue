@@ -81,7 +81,6 @@
                       :rules="{ required: true }"
                       label="Nouvelle date de retour"
                       type="datetime"
-                      :exclude-past-time="false"
                       :disabled-dates-fct="dateIsNotAfterScheduledReturn"
                       :disabled-times-fct="timeIsNotAfterScheduledReturn"
                       v-model="returnAt"

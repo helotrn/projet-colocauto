@@ -88,7 +88,6 @@
         :disabled-dates="disabledDates"
         :disabled-dates-fct="disabledDatesFct"
         :disabled-times-fct="disabledTimesFct"
-        :exclude-past-time="excludePastTime"
         :disabled="disabled"
         :value="value"
         @input="emitInput"
@@ -249,11 +248,6 @@ export default {
       type: String,
       required: false,
       default: "",
-    },
-    excludePastTime: {
-      type: Boolean,
-      required: false,
-      default: true,
     },
     extraParams: {
       type: Object,
