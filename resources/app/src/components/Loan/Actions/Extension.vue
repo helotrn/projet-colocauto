@@ -81,8 +81,9 @@
                       :rules="{ required: true }"
                       label="Nouvelle date de retour"
                       type="datetime"
-                      :disabled-dates="disabledDates"
-                      :disabled-times="disabledTimes"
+                      :exclude-past-time="false"
+                      :disabled-dates-fct="dateIsNotAfterScheduledReturn"
+                      :disabled-times-fct="timeIsNotAfterScheduledReturn"
                       v-model="returnAt"
                     />
                   </b-col>
@@ -204,6 +205,8 @@
 <script>
 import FormsValidatedInput from "@/components/Forms/ValidatedInput.vue";
 
+import dayjs from "@/helpers/dayjs";
+
 import LoanNextDate from "@/components/Loan/NextDate.vue";
 
 import LoanFormMixin from "@/mixins/LoanFormMixin";
@@ -256,6 +259,18 @@ export default {
       return this.$dayjs(this.item.departure_at)
         .add(this.item.actual_duration_in_minutes, "minute")
         .format("YYYY-MM-DD HH:mm:ss");
+    },
+    // Dates and times are disabled accounting for the scheduled return time,
+    // which also accounts for previously accepted extensions.
+    dateIsNotAfterScheduledReturn() {
+      return (date) => {
+        return dayjs(date).startOfDay().add(1, "day").isSameOrBefore(dayjs(this.initialReturnDate));
+      };
+    },
+    timeIsNotAfterScheduledReturn() {
+      return (time) => {
+        return dayjs(time).isSameOrBefore(dayjs(this.initialReturnDate));
+      };
     },
     extensionValid() {
       return this.action.new_duration > this.item.actual_duration_in_minutes ? true : false;
