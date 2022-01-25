@@ -54,11 +54,9 @@
               <a id="borrower" />
               <h2>Profil d'emprunteur</h2>
 
-              <p>  <strong>Statut:</strong>
-                {{ borrowerStatus }}</p>
+              <p><strong>Statut:</strong> {{ borrowerStatus }}</p>
 
               <p v-if="item.borrower">
-
                 <b-button
                   v-if="!item.borrower.approved_at"
                   size="sm"
