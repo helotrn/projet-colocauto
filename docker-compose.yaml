@@ -52,7 +52,7 @@ services:
             MAILCHIMP_SERVER_PREFIX:
             MAILCHIMP_KEY:
             MAILCHIMP_LIST_ID:
-            MATTERMOST_MAIN_HOOK_URL: 
+            MATTERMOST_MAIN_HOOK_URL:
             MATTERMOST_DEFAULT_CHANNEL: test
     vue:
         depends_on:
