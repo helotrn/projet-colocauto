@@ -12,12 +12,18 @@
         {{ $t("approvisionner") }}
       </b-button>
 
-      <span v-if="user.balance < 10" tabindex="0" v-b-tooltip.hover :title="$t('reclamer_tooltip')">
+      <span
+        v-if="user.balance > 0 && user.balance < 10"
+        tabindex="0"
+        v-b-tooltip.hover
+        :title="$t('reclamer_tooltip')"
+      >
         <b-button size="sm" variant="outline-primary" disabled>
           {{ $t("reclamer") }}
         </b-button>
       </span>
-      <b-button v-else size="sm" variant="outline-primary" v-b-modal.claim-modal>
+
+      <b-button v-if="user.balance >= 10" size="sm" variant="outline-primary" v-b-modal.claim-modal>
         {{ $t("reclamer") }}
       </b-button>
     </div>
@@ -33,7 +39,7 @@
 
     <b-modal
       id="claim-modal"
-      title="Réclamer l'argent au compte LocoMotion"
+      title="Demande de transfert vers votre compte bancaire"
       size="md"
       footer-class="d-none"
     >
