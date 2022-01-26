@@ -19,31 +19,30 @@
             <h2>Pour commencer</h2>
 
             <div v-if="hasTutorial('fill-your-driving-profile')">
-                 <tutorial-block
-                 title="Remplissez votre dossier de conduite"
-                 to="/profile/borrower"
-                 bg-image="/img-voiture.png"
-                 variant="dark"
-               />
-             </div>
+              <tutorial-block
+                title="Remplissez votre dossier de conduite"
+                to="/profile/borrower"
+                bg-image="/img-voiture.png"
+                variant="dark"
+              />
+            </div>
 
-              <div v-if="hasTutorial('add-vehicle')">
-                <tutorial-block
-                  title="Inscrivez un véhicule"
-                  to="/profile/loanables/new"
-                  bg-image="/img-voiture.png"
-                  variant="dark"
-                />
-              </div>
+            <div v-if="hasTutorial('add-vehicle')">
+              <tutorial-block
+                title="Inscrivez un véhicule"
+                to="/profile/loanables/new"
+                bg-image="/img-voiture.png"
+                variant="dark"
+              />
+            </div>
 
-              <div v-if="hasTutorial('find-vehicle')">
-                <tutorial-block
-                  title="Empruntez un véhicule"
-                  to="/community/list"
-                  bg-image="/img-vehicules.png"
-                  variant="light"
-                />
-              </div>
+            <div v-if="hasTutorial('find-vehicle')">
+              <tutorial-block
+                title="Empruntez un véhicule"
+                to="/community/list"
+                bg-image="/img-vehicules.png"
+                variant="light"
+              />
             </div>
           </section>
 
@@ -218,7 +217,7 @@ export default {
         case "fill-your-driving-profile":
           return !this.user.borrower || !this.user.borrower.is_complete;
         default:
-          return false; 
+          return false;
       }
     },
     isBorrower(loan) {
