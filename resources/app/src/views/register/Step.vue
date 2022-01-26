@@ -52,12 +52,10 @@
     </div>
 
     <div v-if="currentPage == 3" class="register-step__community">
-      <h2>Preuve de résidence</h2>
-
-      <p class="register-step__community__text">
-        Pour rejoindre un quartier ou un voisinage LocoMotion, il faut&hellip; habiter dedans! :-)
-        Merci de nous fournir une preuve de résidence.
-      </p>
+      <div class="headers text-center">
+        <h4>Afin que LocoMotion reste un service entre voisin.e.s sécuritaire.</h4>
+        <h2>Veuillez téléverser une preuve de résidence</h2>
+      </div>
 
       <div v-if="item && item.communities">
         <community-proof-form
@@ -331,6 +329,16 @@ export default {
     .nextSlide-btn {
       cursor: pointer;
       font-size: 30px;
+    }
+  }
+
+  &__community {
+    .headers {
+      margin: 20px 0;
+      h4 {
+        color: grey;
+        font-size: 16px;
+      }
     }
   }
 }

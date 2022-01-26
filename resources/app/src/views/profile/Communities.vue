@@ -6,7 +6,11 @@
         v-for="community in item.communities"
         :key="community.id"
       >
-        <b-card-header header-tag="h3">{{ community.name }}</b-card-header>
+        <div class="profile-communities__headers">
+          <h4>Afin que LocoMotion reste un service entre voisin.e.s sécuritaire,</h4>
+          <h2>Veuillez téléverser une preuve de résidence pour {{ community.name }}</h2>
+        </div>
+
         <b-card-body>
           <community-proof-form :community="community" @submit="submit" />
         </b-card-body>
@@ -45,6 +49,13 @@ export default {
 
 <style lang="scss">
 .profile-communities {
+  &__headers {
+    padding-left: 15px;
+    h4 {
+      color: grey;
+      font-size: 16px;
+    }
+  }
   &__communities__community {
     margin-bottom: 20px;
   }

@@ -67,6 +67,7 @@ export default {
       account: "Mon compte",
       borrower: "Mon dossier de conduite",
       communities: "Mes voisinages",
+      residency_proof: "Ma preuve de résidence",
       invoice: "Ma facture",
       invoices: "Mes factures",
       loans: "Historique d'emprunts",
