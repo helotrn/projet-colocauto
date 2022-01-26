@@ -14,6 +14,10 @@
 
             <div class="partners-section__partners">
               <div class="partners-section__partners__partner">
+                <img src="/partners/MTL_en_commun.png" />
+              </div>
+
+              <div class="partners-section__partners__partner">
                 <img src="/partners/DefiVillIntel_fr_rgb.png" />
               </div>
 
@@ -21,14 +25,8 @@
                 <img src="/partners/Montreal_nb.png" />
               </div>
 
-              <div class="partners-section__partners__line-break" />
-
               <div class="partners-section__partners__partner">
-                <img src="/partners/f20-logo-n1-desjardins-v.svg" />
-              </div>
-
-              <div class="partners-section__partners__partner">
-                <img src="/partners/FCM-logo-2018-col_fr.png" />
+                <img src="/partners/Quebec-Logo-1.png" />
               </div>
 
               <div class="partners-section__partners__partner">
@@ -54,10 +52,5 @@ export default {
 </script>
 
 <style lang="scss">
-.partners-section {
-  &__top,
-  &__bottom {
-    overflow: hidden;
-  }
-}
+// This component's style can be found in assets/scss/components/_partners-section.scss
 </style>
