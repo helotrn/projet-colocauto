@@ -28,28 +28,34 @@
           >
             <b-row>
               <b-col lg="6">
+                <!--
+                  Disable past times only if loan is editable.
+                -->
                 <forms-validated-input
                   name="departure_at"
                   :disabled="!!item.id"
                   :label="$t('fields.departure_at') | capitalize"
                   :rules="form.departure_at.rules"
                   type="datetime"
-                  :disabled-dates="disabledDatesInThePast"
-                  :disabled-times="disabledTimesInThePast"
+                  :disabled-dates-fct="!item.id ? dateIsInThePast : null"
+                  :disabled-times-fct="!item.id ? timeIsInThePast : null"
                   :placeholder="placeholderOrLabel('departure_at') | capitalize"
                   v-model="item.departure_at"
                 />
               </b-col>
 
               <b-col lg="6">
+                <!--
+                  Disable past times only if loan is editable.
+                -->
                 <forms-validated-input
                   name="return_at"
                   :disabled="!!item.id"
                   :label="$t('fields.return_at') | capitalize"
                   :rules="form.departure_at.rules"
                   type="datetime"
-                  :disabled-dates="disabledDates"
-                  :disabled-times="disabledTimes"
+                  :disabled-dates-fct="!item.id ? dateIsInThePast : null"
+                  :disabled-times-fct="!item.id ? timeIsInThePast : null"
                   :placeholder="placeholderOrLabel('return_at') | capitalize"
                   v-model="returnAt"
                 />

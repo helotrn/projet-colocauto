@@ -4,6 +4,7 @@
       <forms-date-picker
         :disabled="disabled"
         :disabled-dates="disabledDates"
+        :disabled-dates-fct="disabledDatesFct"
         :value="dateValue"
         @input="emitChangeDate"
       />
@@ -12,8 +13,8 @@
     <b-col col lg="12">
       <time-selector
         :disabled="disabled"
+        :disabled-times-fct="disabledTimesFct"
         :minute-interval="15"
-        :exclude-past-time="true"
         :value="timeValue"
         @input="emitChangeTime"
       />
@@ -40,12 +41,15 @@ export default {
         return {};
       },
     },
-    disabledTimes: {
-      type: Object,
+    disabledDatesFct: {
+      type: Function,
       required: false,
-      default() {
-        return {};
-      },
+      default: () => false,
+    },
+    disabledTimesFct: {
+      type: Function,
+      required: false,
+      default: () => false,
     },
     value: {
       type: String,

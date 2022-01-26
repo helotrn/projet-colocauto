@@ -14,8 +14,8 @@
               :label="$t('fields.departure_at') | capitalize"
               :rules="form.departure_at.rules"
               type="datetime"
-              :disabled-dates="disabledDatesInThePast"
-              :disabled-times="disabledTimesInThePast"
+              :disabled-dates-fct="dateIsInThePast"
+              :disabled-times-fct="timeIsInThePast"
               :placeholder="placeholderOrLabel('departure_at') | capitalize"
               v-model="item.departure_at"
             />
@@ -27,8 +27,8 @@
               :label="$t('fields.return_at') | capitalize"
               :rules="form.departure_at.rules"
               type="datetime"
-              :disabled-dates="disabledDates"
-              :disabled-times="disabledTimes"
+              :disabled-dates-fct="dateIsInThePast"
+              :disabled-times-fct="timeIsInThePast"
               :placeholder="placeholderOrLabel('return_at') | capitalize"
               v-model="returnAt"
             />
