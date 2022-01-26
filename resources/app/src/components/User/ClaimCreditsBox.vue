@@ -71,14 +71,14 @@ export default {
   name: "UserClaimCreditsBox",
   data() {
     return {
-      loading: false
+      loading: false,
     };
   },
   props: {
     user: {
       type: Object,
-      required: true
-    }
+      required: true,
+    },
   },
   methods: {
     emitCancel() {
@@ -96,7 +96,7 @@ export default {
           content: "Votre demande a bien été envoyée. Vous recevrez une réponse sous peu.",
           title: "Demande envoyée",
           variant: "success",
-          type: "balance_claim"
+          type: "balance_claim",
         });
       } catch (e) {
         switch (e.request.status) {
@@ -105,7 +105,7 @@ export default {
               content: "Votre demande a déjà été envoyée. Vous recevrez une réponse sous peu.",
               title: "Demande déjà envoyée",
               variant: "warning",
-              type: "balance_claim"
+              type: "balance_claim",
             });
 
             this.$emit("cancel");
@@ -117,8 +117,8 @@ export default {
       }
 
       this.loading = false;
-    }
-  }
+    },
+  },
 };
 </script>
 
