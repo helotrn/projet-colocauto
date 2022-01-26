@@ -4,7 +4,7 @@
       <b-col>
         <p>Les transferts sont gérés par l’équipe comptabilité de LocoMotion.</p>
         <p>
-          Veuillez nous envoyer <strong>vos coordonnéees bancaires</strong> ou
+          Veuillez nous envoyer <strong>vos coordonnées bancaires</strong> ou
           <strong>un spécimen chèque</strong>
           par courriel en cliquant sur le bouton ci-dessous ou à
           <a
@@ -58,8 +58,8 @@ Cordialement, %0D%0A
     <b-row>
       <b-col>
         <small class="subtext"
-          >Le boutton ci-dessus nécessite que vous ayez votre logiciel de courriel de configuré sur
-          votre appareil. Veuillez nous écrire directement si le boutton ne fonctionne pas.</small
+          >Le bouton ci-dessus nécessite que vous ayez votre logiciel de courriel de configuré sur
+          votre appareil. Veuillez nous écrire directement si le bouton ne fonctionne pas.</small
         >
       </b-col>
     </b-row>
