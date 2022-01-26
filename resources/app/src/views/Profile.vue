@@ -1,9 +1,5 @@
 <template>
   <layout-page name="profile">
-    <h1 class="page__title">
-      {{ pageTitle | capitalize }}
-    </h1>
-
     <b-row>
       <b-col md="4" lg="3">
         <profile-sidebar />

@@ -8,7 +8,7 @@
         {{ $t("profile.titles.account") }}
       </b-nav-item>
       <b-nav-item to="/profile/communities">
-        {{ $t("profile.titles.communities") }}
+        {{ $t("profile.titles.residency_proof") }}
       </b-nav-item>
       <b-nav-item to="/profile/borrower">
         {{ $t("profile.titles.borrower") }}
