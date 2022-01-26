@@ -55,6 +55,14 @@ Cordialement, %0D%0A
         <b-button variant="outline-warning" @click="emitCancel">Annuler</b-button>
       </b-col>
     </b-row>
+    <b-row>
+      <b-col>
+        <small class="subtext"
+          >Le boutton ci-dessus nécessite que vous ayez votre logiciel de courriel de configuré sur
+          votre appareil. Veuillez nous écrire directement si le boutton ne fonctionne pas.</small
+        >
+      </b-col>
+    </b-row>
   </div>
 </template>
 
@@ -63,14 +71,14 @@ export default {
   name: "UserClaimCreditsBox",
   data() {
     return {
-      loading: false,
+      loading: false
     };
   },
   props: {
     user: {
       type: Object,
-      required: true,
-    },
+      required: true
+    }
   },
   methods: {
     emitCancel() {
@@ -88,7 +96,7 @@ export default {
           content: "Votre demande a bien été envoyée. Vous recevrez une réponse sous peu.",
           title: "Demande envoyée",
           variant: "success",
-          type: "balance_claim",
+          type: "balance_claim"
         });
       } catch (e) {
         switch (e.request.status) {
@@ -97,7 +105,7 @@ export default {
               content: "Votre demande a déjà été envoyée. Vous recevrez une réponse sous peu.",
               title: "Demande déjà envoyée",
               variant: "warning",
-              type: "balance_claim",
+              type: "balance_claim"
             });
 
             this.$emit("cancel");
@@ -109,8 +117,8 @@ export default {
       }
 
       this.loading = false;
-    },
-  },
+    }
+  }
 };
 </script>
 
@@ -123,6 +131,9 @@ export default {
     .btn-primary {
       margin-left: 0;
     }
+  }
+  .subtext {
+    color: grey;
   }
 }
 </style>
