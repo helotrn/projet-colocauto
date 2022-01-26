@@ -2,12 +2,13 @@
   <div class="register-step">
     <b-pagination-nav
       v-bind:value="currentPage"
-      :number-of-pages="4"
+      :number-of-pages="3"
       pills
       align="center"
       use-router
       :hide-goto-end-buttons="true"
       disabled
+      v-show="currrentPage < 4"
     >
       <template v-slot:page="{ page, active }">
         <span v-if="page < currentPage" class="checked">
@@ -17,7 +18,7 @@
       </template>
     </b-pagination-nav>
 
-    <div v-if="item && currentPage == 2" class="register-step__profile">
+    <div v-if="item && currentPage == 2">
       <h2>Profil de membre</h2>
 
       <p class="register-step__profile__text">
@@ -70,36 +71,45 @@
       <layout-loading v-else />
     </div>
 
-    <div v-if="currentPage == 4" class="register-step__intents">
-      <h2>Que voulez-vous faire?</h2>
+    <div v-if="currentPage == 4" class="register-step__reasons-why">
+      <h2>Vous avez fait le bon choix</h2>
 
-      <register-intent-form
-        :user="item"
-        v-if="item"
-        :loading="loading"
-        @submit="submitOwnerDocumentsAndTags"
-      />
-      <layout-loading v-else />
-    </div>
-
-    <div v-if="currentPage == 5" class="register-step__completed">
-      <h2>Inscription complétée!</h2>
-
-      <layout-loading v-if="!item || loading" />
-      <div class="register-step__completed__text" v-else>
-        <p>
-          Votre inscription sera validée par un membre de l'équipe et vous aurez alors accès à
-          toutes les fonctionnalités de LocoMotion.
-        </p>
-
-        <p v-if="!!item.owner">
-          En attendant, vous pouvez commencer à entrer les informations sur vos véhicules.
-        </p>
-
-        <div class="register-step__completed__button">
-          <b-button variant="primary" to="/app">Aller au tableau de bord</b-button>
+      <div class="swiping-card" v-show="currentSlide == 1">
+        <svg-driving class="img" />
+        <div class="text">
+          Soyez protégé-e avec <strong>une assurance complète</strong>, pas compliquée.
         </div>
       </div>
+
+      <div class="swiping-card" v-show="currentSlide == 2">
+        <svg-lend class="img" />
+        <div class="text">
+          C’est un projet <strong>par et pour votre voisinage</strong>, qui évolue avec vous.
+        </div>
+      </div>
+
+      <div class="swiping-card" v-show="currentSlide == 3">
+        <svg-smiling-heart class="img" />
+        <div class="text">
+          Optez pour <strong>la seule solution locale</strong> d’autopartage entre voisin-e-s.
+        </div>
+      </div>
+
+      <div class="swiping-card" v-show="currentSlide == 4">
+        <svg-biking class="img" />
+        <div class="text">
+          <strong>Économisez</strong> grâce à ce projet citoyen à but non-lucratif.
+        </div>
+      </div>
+
+      <b-icon
+        class="nextSlide-btn"
+        v-on:click="nextSlide()"
+        v-if="currentSlide < 4"
+        icon="arrow-right-circle-fill"
+      ></b-icon>
+
+      <b-btn v-else variant="primary" to="/app"> J'embarque!</b-btn>
     </div>
   </div>
 </template>
@@ -111,13 +121,17 @@ import UserMixin from "@/mixins/UserMixin";
 
 import CommunityProofForm from "@/components/Community/ProofForm.vue";
 import ProfileForm from "@/components/Profile/ProfileForm.vue";
-import RegisterIntentForm from "@/components/Register/IntentForm.vue";
 
 import FormsValidatedInput from "@/components/Forms/ValidatedInput.vue";
 import FormLabelsMixin from "@/mixins/FormLabelsMixin";
 import FormMixin from "@/mixins/FormMixin";
 
 import { extractErrors } from "@/helpers";
+
+import SmilingHeart from "@/assets/svg/smiling-heart.svg";
+import Driving from "@/assets/svg/driving.svg";
+import Lend from "@/assets/svg/home-lend.svg";
+import Biking from "@/assets/svg/biking.svg";
 
 export default {
   name: "RegisterStep",
@@ -126,27 +140,34 @@ export default {
     CommunityProofForm,
     FormsValidatedInput,
     ProfileForm,
-    RegisterIntentForm,
+    "svg-driving": Driving,
+    "svg-lend": Lend,
+    "svg-smiling-heart": SmilingHeart,
+    "svg-biking": Biking,
+  },
+  data() {
+    return { currentSlide: 1, currrentPage: 2 };
   },
   beforeRouteEnter(to, from, next) {
     next((vm) => {
       if (vm.isLoggedIn) {
+        // Has not finalized his account creation
         if (!vm.isRegistered) {
           if (vm.$route.path !== "/register/2") {
             vm.$router.replace("/register/2");
           }
-        } else if (vm.user.communities.length === 0) {
+        }
+        // Doesn't have a community yet (to deprecate when we better handle out-of-borough users)
+        else if (!vm.hasCommunity) {
           if (vm.$route.path !== "/register/map") {
             vm.$router.replace("/register/map");
           }
-        } else if (!vm.user.communities.reduce((acc, c) => acc && !!c.proof, true)) {
+        }
+        // Doesn't have the proof of residency submitted (to deprecate when we allow to submit the proof later in the process)
+        else if (vm.hasNotSubmittedProofOfResidency) {
           if (vm.$route.path !== "/register/3") {
             vm.$router.replace("/register/3");
           }
-        } else if (!vm.hasCompletedRegistration) {
-          vm.$router.replace("/register/4");
-        } else if (vm.$route.path !== "/register/5") {
-          vm.$router.replace("/register/5");
         }
       }
     });
@@ -176,6 +197,9 @@ export default {
     },
   },
   methods: {
+    nextSlide() {
+      this.currentSlide += 1;
+    },
     async submitAndReload() {
       try {
         await this.submit();
@@ -184,7 +208,7 @@ export default {
 
         if (!this.item.communities || this.item.communities.length === 0) {
           this.$store.commit("addNotification", {
-            content: "Il est temps de choisir un premier voisinage!",
+            content: "Il est temps de rejoindre un quartier!",
             title: "Profil mis à jour",
             variant: "success",
             type: "register",
@@ -283,6 +307,31 @@ export default {
 
   &__completed__button {
     text-align: center;
+  }
+
+  &__reasons-why {
+    text-align: center;
+    height: 460px;
+    margin-top: 40px;
+    h2 {
+      margin-bottom: 30px;
+    }
+    .swiping-card {
+      margin: 20px 0;
+      text-align: center;
+      .img {
+        max-height: 280px;
+      }
+      .text {
+        font-size: 22px;
+        margin: 30px 20px 0 20px;
+        text-align: center;
+      }
+    }
+    .nextSlide-btn {
+      cursor: pointer;
+      font-size: 30px;
+    }
   }
 }
 </style>

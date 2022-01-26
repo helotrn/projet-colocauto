@@ -31,7 +31,7 @@
                 <forms-validated-input
                   name="last_name"
                   :label="$t('fields.last_name') | capitalize"
-                  :rules="form.general.last_name.rules"
+                  :rules="{ required: true }"
                   type="text"
                   :placeholder="placeholderOrLabel('last_name') | capitalize"
                   v-model="user.last_name"
@@ -44,7 +44,8 @@
                 <forms-validated-input
                   name="description"
                   :description="$t('descriptions.description')"
-                  label="Pour briser la glace"
+                  :rules="{ required: true }"
+                  label="On brise la glace?"
                   type="textarea"
                   :placeholder="placeholderOrLabel('description') | capitalize"
                   v-model="user.description"

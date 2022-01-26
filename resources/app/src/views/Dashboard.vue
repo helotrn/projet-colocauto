@@ -9,9 +9,12 @@
             <release-info-box />
           </section>
 
-          <section class="page__section" v-if="!hasCompletedRegistration">
-            <b-jumbotron bg-variant="light" header="Inscription" :lead="$t('lead_text')">
-              <b-button to="/register">Compléter l'inscription</b-button>
+          <section class="page__section" v-if="!hasProfileApproved">
+            <b-jumbotron
+              bg-variant="light"
+              header="Votre profil est en attente de validation."
+              lead="LocoMotion s'assure que vos voisins soient bien... vos voisins! C'est pourquoi un membre de notre équipe va vérifier votre preuve de résidence et valider votre compte. Vous recevrez un courriel de confirmation et aurez alors accès à toutes les fonctionnalités de LocoMotion! "
+            >
             </b-jumbotron>
           </section>
 
@@ -105,7 +108,8 @@
               </div>
               <div v-else>
                 Aucun véhicule.<br />
-                Ajoutez-en un <router-link to="/profile/loanables/new">ici</router-link>.
+                Ajoutez-en un
+                <router-link to="/profile/loanables/new">ici</router-link>.
               </div>
             </div>
           </section>
@@ -146,8 +150,6 @@
 <i18n>
 fr:
   welcome_text: Bienvenue {name},
-  lead_text: |
-    Vous y êtes presque. Il ne vous manque que quelques étapes, pour prendre la route!
 en:
   welcome_text: Welcome {name}!
 </i18n>
