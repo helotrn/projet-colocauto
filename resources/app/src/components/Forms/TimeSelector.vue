@@ -20,6 +20,12 @@ const MILLISECONDS_IN_A_MINUTE = 60 * 1000;
 export default {
   name: "TimeSelector",
 
+  data() {
+    return {
+      selected: null,
+    };
+  },
+
   props: {
     value: {
       type: Date,
@@ -120,10 +126,8 @@ export default {
         }
       }, undefined);
     },
-  },
 
-  watch: {
-    timeslots: function () {
+    onOptionsChanged() {
       const dayOfValue = dayjs(this.value);
 
       const selectedOnValueDate = dayjs(this.selected)
@@ -134,15 +138,26 @@ export default {
       const { value } = this.closestOption(selectedOnValueDate.toDate());
       this.selected = value;
     },
-
-    selected: function () {
+    onSelection() {
+      console.log("onSelection");
       this.$emit("input", this.selected);
+    },
+  },
+
+  watch: {
+    timeslots: function () {
+      this.onOptionsChanged();
+    },
+    selected: function () {
+      this.onSelection();
     },
   },
 
   created() {
     const { value } = this.closestOption(this.value);
     this.selected = value;
+
+    this.onSelection();
   },
 };
 </script>
