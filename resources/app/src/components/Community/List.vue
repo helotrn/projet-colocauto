@@ -1,8 +1,8 @@
 <template>
   <div class="community-list">
     <div v-if="data.length > 0">
-      <b-row>
-        <b-col v-for="loanable in data" :key="loanable.id" lg="4" md="6">
+      <b-row no-gutters>
+        <b-col v-for="loanable in data" class="test" :key="loanable.id" lg="3" md="6">
           <loanable-card
             v-bind="loanable"
             @test="emitTest(loanable)"
@@ -11,7 +11,7 @@
           />
         </b-col>
       </b-row>
-      <b-row>
+      <b-row no-gutters>
         <b-col>
           <b-pagination
             align="right"
@@ -74,8 +74,16 @@ export default {
 @import "~bootstrap/scss/mixins/breakpoints";
 
 .community-list {
+  @include media-breakpoint-up(lg) {
+    padding-left: 30px;
+  }
+
   @include media-breakpoint-down(md) {
     margin-top: 45px;
+  }
+
+  .test {
+    margin: 15px 30px;
   }
 }
 </style>
