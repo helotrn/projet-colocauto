@@ -7,6 +7,10 @@
         @submit.stop.prevent="passes(submit)"
         @reset.stop.prevent="$emit('reset')"
       >
+        <div>
+          <h3>Qu'aimeriez-vous emprunter</h3>
+          <h3>à vos voisin-e-s?</h3>
+        </div>
         <div v-if="form">
           <div v-if="item.departure_at">
             <forms-validated-input
@@ -38,38 +42,6 @@
             La durée de l'emprunt doit être supérieure ou égale à 15 minutes.
           </div>
 
-          <b-form-group :label="$t('fields.loanable_type') | capitalize" label-for="loanable_type">
-            <b-form-checkbox-group
-              stacked
-              switches
-              id="loanable_type"
-              name="loanable_type"
-              :options="loanableTypesExceptCar"
-              :checked="selectedLoanableTypes"
-              @change="emitLoanableTypes"
-            >
-              <template v-slot:first>
-                <b-checkbox value="car" :disabled="!canLoanCar">
-                  Auto
-
-                  <b-badge
-                    pill
-                    variant="light"
-                    v-if="!canLoanCar"
-                    tabindex="0"
-                    v-b-tooltip.hover
-                    :title="
-                      'Pour réserver une auto, remplissez le dossier de conduite ' +
-                      'de votre profil.'
-                    "
-                  >
-                    ?
-                  </b-badge>
-                </b-checkbox>
-              </template>
-            </b-form-checkbox-group>
-          </b-form-group>
-
           <forms-validated-input
             name="estimated_distance"
             :label="$t('fields.estimated_distance') | capitalize"
@@ -82,7 +54,6 @@
 
           <div class="form__buttons">
             <b-button
-              size="sm"
               type="submit"
               variant="primary"
               class="mr-2 mb-2"
@@ -93,7 +64,6 @@
             </b-button>
 
             <b-button
-              size="sm"
               variant="info"
               class="ml-2 mb-2 d-block d-lg-none"
               @click="$emit('hide')"
