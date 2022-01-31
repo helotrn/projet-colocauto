@@ -154,7 +154,7 @@ export default {
   computed: {
     invalid() {
       // Invalid if the duration is not greater than 0 minute.
-      return !this.item.duration_in_minutes > 0;
+      return !(this.item.duration_in_minutes > 0);
     },
     loanableTypesExceptCar() {
       return this.loanableTypes.filter((t) => t.value !== "car");
