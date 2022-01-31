@@ -54,21 +54,13 @@
 
           <div class="form__buttons">
             <b-button
-              type="submit"
+              @click="$emit('hide')"
               variant="primary"
               class="mr-2 mb-2"
               :disabled="loading || invalid"
             >
               <b-spinner small v-if="loading" />
               Rechercher
-            </b-button>
-
-            <b-button
-              variant="info"
-              class="ml-2 mb-2 d-block d-lg-none"
-              @click="$emit('hide')"
-            >
-              Fermer
             </b-button>
           </div>
         </div>
