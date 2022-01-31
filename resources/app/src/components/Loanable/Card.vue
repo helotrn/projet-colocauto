@@ -8,7 +8,7 @@
       </div>
     </div>
 
-    <h2 class="loanable-card__title">{{ name }}</h2>
+    <h2 class="loanable-card__title">{{ vehiculeName }}</h2>
 
     <div class="loanable-card__tags">
       <div v-if="type === 'car'">
@@ -174,6 +174,9 @@ export default {
       return {
         backgroundImage: `url('${this.image.sizes.thumbnail}')`,
       };
+    },
+    vehiculeName() {
+      return (this.name.length > 23) ? this.name.substr(0, 20) + "..." : this.name;
     },
   },
 };
