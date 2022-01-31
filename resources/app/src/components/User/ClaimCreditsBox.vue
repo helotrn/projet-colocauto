@@ -1,31 +1,68 @@
 <template>
   <div class="user-claim-credits-box">
-    <b-row>
+    <b-row class="user-claim-credits-box__text">
       <b-col>
+        <p>Les transferts sont gérés par l’équipe comptabilité de LocoMotion.</p>
         <p>
-          Par cette action, un courriel sera envoyé à l'équipe LocoMotion pour qu'elle vous envoie
-          le solde de votre compte.
+          Envoyez-nous <strong>vos coordonnées bancaires</strong> ou
+          <strong>un spécimen chèque</strong>, en cliquant sur le bouton ci-dessous ou en écrivant
+          un courriel à
+          <a
+            href="mailto:info@locomotion.app?subject=Demande de transfert du solde du compte LocoMotion vers un compte bancaire&body=Veuillez joindre un spécimen chèque à ce courriel si besoin. %0D%0A
+---- %0D%0A
+Bonjour,%0D%0A%0D%0A
+
+Je souhaite transférer la totalité de mon solde LocoMotion vers mon compte bancaire. %0D%0A%0D%0A
+
+Voici les coordonnées de mon compte: %0D%0A%0D%0A
+
+Numéro de compte:%0D%0A
+Numéro de transit: %0D%0A
+Code banque: %0D%0A
+%0D%0A
+OU %0D%0A  %0D%0A 
+Voici un spécimen chèque en pièce jointe. %0D%0A %0D%0A
+Cordialement, %0D%0A"
+            >info@locomotion.app</a
+          >.
         </p>
-        <p>
-          Assurez-vous d'avoir configuré un autre mode de paiement qu'une carte de crédit ou
-          communiquez avec l'équipe pour déterminer le mode de transfert.
-        </p>
+        <p>Un membre de l’équipe vous répondra sous peu.</p>
       </b-col>
     </b-row>
 
     <b-row class="user-claim-credits-box__buttons" tag="p">
-      <b-col class="text-center">
+      <b-col>
         <b-button
           class="mr-3"
-          type="submit"
+          href="mailto:info@locomotion.app?subject=Demande de transfert du solde du compte LocoMotion vers un compte bancaire&body=Veuillez joindre un spécimen chèque à ce courriel si besoin. %0D%0A
+---- %0D%0A
+Bonjour,%0D%0A%0D%0A
+
+Je souhaite transférer la totalité de mon solde LocoMotion vers mon compte bancaire. %0D%0A%0D%0A
+
+Voici les coordonnées de mon compte: %0D%0A%0D%0A
+
+Numéro de compte:%0D%0A
+Numéro de transit: %0D%0A
+Code banque: %0D%0A
+%0D%0A
+OU %0D%0A  %0D%0A 
+Voici un spécimen chèque en pièce jointe. %0D%0A %0D%0A
+Cordialement, %0D%0A"
           variant="primary"
-          @click="claimCredit"
           :disabled="loading"
         >
-          Confirmer
+          Faire une demande de transfert
         </b-button>
-
         <b-button variant="outline-warning" @click="emitCancel">Annuler</b-button>
+      </b-col>
+    </b-row>
+    <b-row>
+      <b-col>
+        <small class="subtext"
+          >Pour que le bouton fonctionne, il faut que le logiciel de courriel de votre appareil soit
+          configuré. Veuillez nous écrire directement si le bouton ne fonctionne pas.</small
+        >
       </b-col>
     </b-row>
   </div>
@@ -87,4 +124,18 @@ export default {
 };
 </script>
 
-<style lang="scss"></style>
+<style lang="scss">
+.user-claim-credits-box {
+  &__text {
+    margin: 15px 0;
+  }
+  &__buttons {
+    .btn-primary {
+      margin-left: 0;
+    }
+  }
+  .subtext {
+    color: grey;
+  }
+}
+</style>
