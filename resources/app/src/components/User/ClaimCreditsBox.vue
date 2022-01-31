@@ -4,28 +4,29 @@
       <b-col>
         <p>Les transferts sont gérés par l’équipe comptabilité de LocoMotion.</p>
         <p>
-          Veuillez nous envoyer <strong>vos coordonnées bancaires</strong> ou
-          <strong>un spécimen chèque</strong>
-          par courriel en cliquant sur le bouton ci-dessous ou à
+          Envoyez-nous <strong>vos coordonnées bancaires</strong> ou
+          <strong>un spécimen chèque</strong>, en cliquant sur le bouton ci-dessous ou en écrivant
+          un courriel à
           <a
-            href="mailto:info@locomotion.app?subject=Demande de transfert vers votre compte bancaire&body=Veuillez joindre un spécimen chèque à ce courriel si besoin. 
-%0D%0A——%0D%0A
-Bonjour, %0D%0A%0D%0A
+            href="mailto:info@locomotion.app?subject=Demande de transfert du solde du compte LocoMotion vers un compte bancaire&body=Veuillez joindre un spécimen chèque à ce courriel si besoin. %0D%0A
+---- %0D%0A
+Bonjour,%0D%0A%0D%0A
 
-Pourriez-vous transférer la totalité de mon solde LocoMotion vers mon compte en banque? %0D%0A%0D%0A
+Je souhaite transférer la totalité de mon solde LocoMotion vers mon compte bancaire. %0D%0A%0D%0A
 
-Vous trouverez les coordonnées de mon compte ou un spécimen chèque en pièce jointe.  %0D%0A%0D%0A
+Voici les coordonnées de mon compte: %0D%0A%0D%0A
 
 Numéro de compte:%0D%0A
 Numéro de transit: %0D%0A
 Code banque: %0D%0A
 %0D%0A
-Cordialement, %0D%0A
-"
+OU %0D%0A  %0D%0A 
+Voici un spécimen chèque en pièce jointe. %0D%0A %0D%0A
+Cordialement, %0D%0A"
             >info@locomotion.app</a
           >.
         </p>
-        <p>Un membre de l’équipe fera un suivi avec vous.</p>
+        <p>Un membre de l’équipe vous répondra sous peu.</p>
       </b-col>
     </b-row>
 
@@ -33,20 +34,21 @@ Cordialement, %0D%0A
       <b-col>
         <b-button
           class="mr-3"
-          href="mailto:info@locomotion.app?subject=Demande de transfert vers votre compte bancaire&body=Veuillez joindre un spécimen chèque à ce courriel si besoin. 
-%0D%0A——%0D%0A
-Bonjour, %0D%0A%0D%0A
+          href="mailto:info@locomotion.app?subject=Demande de transfert du solde du compte LocoMotion vers un compte bancaire&body=Veuillez joindre un spécimen chèque à ce courriel si besoin. %0D%0A
+---- %0D%0A
+Bonjour,%0D%0A%0D%0A
 
-Pourriez-vous transférer la totalité de mon solde LocoMotion vers mon compte en banque? %0D%0A%0D%0A
+Je souhaite transférer la totalité de mon solde LocoMotion vers mon compte bancaire. %0D%0A%0D%0A
 
-Vous trouverez les coordonnées de mon compte ou un spécimen chèque en pièce jointe.  %0D%0A%0D%0A
+Voici les coordonnées de mon compte: %0D%0A%0D%0A
 
 Numéro de compte:%0D%0A
 Numéro de transit: %0D%0A
 Code banque: %0D%0A
 %0D%0A
-Cordialement, %0D%0A
-"
+OU %0D%0A  %0D%0A 
+Voici un spécimen chèque en pièce jointe. %0D%0A %0D%0A
+Cordialement, %0D%0A"
           variant="primary"
           :disabled="loading"
         >
@@ -58,8 +60,8 @@ Cordialement, %0D%0A
     <b-row>
       <b-col>
         <small class="subtext"
-          >Le bouton ci-dessus nécessite que vous ayez votre logiciel de courriel de configuré sur
-          votre appareil. Veuillez nous écrire directement si le bouton ne fonctionne pas.</small
+          >Pour que le bouton fonctionne, il faut que le logiciel de courriel de votre appareil soit
+          configuré. Veuillez nous écrire directement si le bouton ne fonctionne pas.</small
         >
       </b-col>
     </b-row>

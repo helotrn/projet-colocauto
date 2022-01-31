@@ -39,7 +39,7 @@
 
     <b-modal
       id="claim-modal"
-      title="Demande de transfert vers votre compte bancaire"
+      title="Demande de transfert du solde du compte LocoMotion vers un compte bancaire"
       size="md"
       footer-class="d-none"
     >
