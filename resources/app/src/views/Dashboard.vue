@@ -3,11 +3,8 @@
     <b-container>
       <b-row class="page__section page__section__main">
         <b-col class="page__content" xl="9" lg="8" md="7">
-          <h1>{{ $t("welcome_text", { name: user.name }) }}</h1>
-
-          <section class="page__section">
-            <release-info-box />
-          </section>
+          <p class="title title__main">{{ $t("welcome_text", { name: user.name }) }}</p>
+          <p class="subtitle">{{ $t("welcome_description", {userCount: totalUsers, community: communityName}) }}</p>
 
           <section class="page__section" v-if="!hasCompletedRegistration">
             <b-jumbotron bg-variant="light" header="Inscription" :lead="$t('lead_text')">
@@ -15,8 +12,17 @@
             </b-jumbotron>
           </section>
 
+          <section class="page__section" v-else>
+            <b-button pill to="/search/loanables" class="btn-search-vehicule">
+              <div class="btn-search-vehicule__text">
+                <svg-magnifying-glass />
+                Rechercher un véhicule
+              </div>
+            </b-button>
+          </section>
+
           <section class="page__section" v-if="hasTutorials">
-            <h2>Pour commencer</h2>
+            <p class="title">Pour commencer</p>
 
             <div class="page__section__tutorials">
               <div v-if="hasTutorial('discover-community')">
@@ -40,7 +46,7 @@
           </section>
 
           <section class="page__section" v-if="hasWaitingLoans">
-            <h2>Nouvelles demandes d'emprunt</h2>
+            <p class="title">Nouvelles demandes d'emprunt</p>
 
             <div class="dashboard__waiting-loans" v-for="loan in waitingLoans" :key="loan.id">
               <loan-info-box
@@ -54,7 +60,7 @@
           </section>
 
           <section class="page__section" v-if="hasOngoingLoans">
-            <h2>Emprunts en cours</h2>
+            <p class="title">Emprunts en cours</p>
 
             <div class="dashboard__ongoing-loans" v-for="loan in ongoingLoans" :key="loan.id">
               <loan-info-box :loan="loan" :user="user" :buttons="['view']" />
@@ -62,7 +68,7 @@
           </section>
 
           <section class="page__section" v-if="hasUpcomingLoans">
-            <h2>Emprunts à venir</h2>
+            <p class="title">Emprunts à venir</p>
 
             <div class="dashboard__upcoming-loans" v-for="loan in upcomingLoans" :key="loan.id">
               <loan-info-box
@@ -77,7 +83,7 @@
           <section class="page__section" v-if="user.owner">
             <b-row>
               <b-col>
-                <h2>Mes véhicules</h2>
+                <p class="title">Mes véhicules</p>
               </b-col>
               <b-col class="text-right">
                 <b-button variant="outline-primary" to="/profile/loanables">
@@ -137,6 +143,7 @@
 <i18n>
 fr:
   welcome_text: Bienvenue {name},
+  welcome_description: Vous êtes {userCount} voisin-e-s à {community}.
   lead_text: |
     Vous y êtes presque. Il ne vous manque que quelques étapes, pour prendre la route!
 en:
@@ -157,6 +164,8 @@ import ReleaseInfoBox from "@/components/Dashboard/ReleaseInfoBox.vue";
 import TutorialBlock from "@/components/Dashboard/TutorialBlock.vue";
 import PartnersSection from "@/components/Misc/PartnersSection.vue";
 
+import MagnifyingGlass from "@/assets/svg/magnifying-glass.svg";
+
 export default {
   name: "Dashboard",
   mixins: [Authenticated, UserMixin],
@@ -170,6 +179,7 @@ export default {
     PartnersSection,
     ReleaseInfoBox,
     TutorialBlock,
+    "svg-magnifying-glass": MagnifyingGlass,
   },
   beforeMount() {
     if (!this.isLoggedIn) {
@@ -185,6 +195,12 @@ export default {
     }
   },
   computed: {
+    communityName() {
+      return this.user.communities[0].name;
+    },
+    totalUsers() {
+      return this.$store.state.stats.data.users;
+    },
     discoverCommunityTitle() {
       if (this.user && this.user.communities && this.user.communities[0].type === "borough") {
         return "Découvrez votre quartier";
@@ -219,41 +235,3 @@ export default {
   },
 };
 </script>
-
-<style lang="scss">
-.dashboard {
-  .page__section {
-    &__main {
-      padding-top: 45px;
-      padding-bottom: 45px;
-    }
-
-    h2 {
-      margin-bottom: 25px;
-    }
-  }
-
-  .page__content {
-    > h1 {
-      margin-bottom: 60px;
-    }
-
-    .main-faq {
-      padding-top: 65px;
-      padding-bottom: 65px;
-      margin-bottom: 0;
-    }
-
-    .partners-section {
-      margin-top: 0;
-      margin-bottom: 80px;
-    }
-  }
-
-  &__vehicles {
-    .loanable-info-box {
-      margin-bottom: 20px;
-    }
-  }
-}
-</style>

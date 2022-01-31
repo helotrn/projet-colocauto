@@ -28,3 +28,27 @@
         @extend .shadow-none;
     }
 }
+
+.btn-search-vehicule {
+    width: 300px;
+    margin: 0;
+    border: 1px solid #E5E5E5;
+    background: #FFFFFF;
+    padding: 16px, 16px, 16px, 45px;
+    color: #7A7A7A;
+
+    &__text {
+        text-align: justify;
+    }
+}
+.btn-search-vehicule:hover {
+    background: #FFFFFF;
+    padding: 16px, 16px, 16px, 45px;
+    color: #7A7A7A;
+}
+
+.btn-search-vehicule:after {
+    background: #FFFFFF;
+    padding: 16px, 16px, 16px, 45px;
+    color: #7A7A7A;
+}
