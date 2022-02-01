@@ -4,18 +4,6 @@
       <b-row no-gutters>
         <b-col lg="3">
           <b-card :class="`community-view-${view}__form__sections`">
-<!-- toggle view (list or map)--> 
-            <div :class="`community-view-${view}__form__sections__view mb-3`">
-              <b-form-group label="Vue" label-for="view">
-                <b-form-select :value="view" @change="gotoView" name="view" id="view">
-                  <b-form-select-option value="list">Liste</b-form-select-option>
-                  <b-form-select-option value="map">Carte</b-form-select-option>
-                </b-form-select>
-              </b-form-group>
-            </div>
-
-            <hr />
-<!---->
 <!-- loan search form -->
             <div :class="`community-view-${view}__form__sections__search`">
               <loan-search-form
@@ -36,6 +24,18 @@
             </div>
 <!---->
           </b-card>
+<!--results title mobile view -->
+          <b-card v-if="searched" :class="`community-view-${view}__form__toggler`">
+            <h4>Résultats de votre recherche</h4>
+            <p>Prochaine étape: vérifier la disponibilité!</p>
+            <div class="button-display">
+              <a @click="searched=false">Modifier la recherche</a>
+              <b-button @click="view === 'map' ? gotoView('list') : gotoView('map')">
+                Afficher la {{ view === "map" ? `carte` : `liste`}}
+              </b-button>
+            </div>
+          </b-card>
+<!---->
         </b-col>
 <!-- results for list view -->
         <b-col v-if="view === 'list' && searched" lg="9">
@@ -321,7 +321,7 @@ export default {
       }
 
       &__toggler {
-          display: inline-block;
+        display: inline-block;
       }
 
       &__sections {
