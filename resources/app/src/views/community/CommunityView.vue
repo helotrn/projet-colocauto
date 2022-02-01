@@ -1,9 +1,10 @@
 <template>
-  <layout-page :name="`community-view-${view}`" :loading="!routeDataLoaded" :wide="view === 'map'">
+  <layout-page :name="`community-view-${view}`" :loading="!routeDataLoaded" wide>
     <div :class="mainDivClasses">
-      <b-row>
+      <b-row no-gutters>
         <b-col lg="3">
           <b-card :class="`community-view-${view}__form__sections`">
+<!-- toggle view (list or map)--> 
             <div :class="`community-view-${view}__form__sections__view mb-3`">
               <b-form-group label="Vue" label-for="view">
                 <b-form-select :value="view" @change="gotoView" name="view" id="view">
@@ -14,7 +15,8 @@
             </div>
 
             <hr />
-
+<!---->
+<!-- loan search form -->
             <div :class="`community-view-${view}__form__sections__search`">
               <loan-search-form
                 v-if="loan"
@@ -32,28 +34,29 @@
                 @submit="testLoanables"
               />
             </div>
-          </b-card>
-          <b-card :class="`community-view-${view}__form__toggler`">
-            <b-button @click="searched = false">Modifier la recherche</b-button>
+<!---->
           </b-card>
         </b-col>
-
-        <b-col v-if="view === 'list'" lg="9">
-          <community-list
-            v-if="!loading"
-            :data="data"
-            :page="params.page"
-            :per-page="params.per_page"
-            :total="total"
-            @page="setParam({ name: 'page', value: $event })"
-            @select="selectLoanable"
-            @test="testLoanable"
-          />
-          <layout-loading class="col-lg-9" v-else />
+<!-- results for list view -->
+        <b-col v-if="view === 'list' && searched" lg="9">
+          <b-row no-gutters>
+            <community-list
+              v-if="!loading"
+              :data="data"
+              :page="params.page"
+              :per-page="params.per_page"
+              :total="total"
+              @page="setParam({ name: 'page', value: $event })"
+              @select="selectLoanable"
+              @test="testLoanable"
+            />
+            <layout-loading class="col-lg-9" v-else />
+          </b-row>
         </b-col>
+<!---->
       </b-row>
     </div>
-
+<!-- map display -->
     <community-map
       v-if="view === 'map'"
       :data="data"
@@ -61,6 +64,7 @@
       @test="testLoanable"
       @select="selectLoanable"
     />
+<!---->
   </layout-page>
 </template>
 
@@ -124,8 +128,7 @@ export default {
       const base = `community-view-${this.view}__form`;
       return (
         base +
-        (this.searched ? ` ${base}--searched` : "") +
-        (this.view === "map" ? " container" : "")
+        (this.searched ? ` ${base}--searched` : "")
       );
     },
     loan() {
@@ -283,8 +286,27 @@ export default {
           overflow: hidden;
 
           + .card {
-            max-height: 100px;
+            max-height: 500px;
+            background: $main-bg;
+            border-radius: 0;
           }
+        }
+      }
+
+      .card {
+        pointer-events: all;
+
+        &-body {
+          padding: 0;
+          margin: 1.25rem;
+        }
+        @include media-breakpoint-down(sm) {
+          max-height: calc(100vh - #{$layout-navbar-height});
+        }
+
+        @include media-breakpoint-up(md) {
+          margin: 20px;
+          max-height: 84vh;
         }
       }
 
@@ -298,8 +320,33 @@ export default {
         overflow: hidden;
       }
 
-      &__toggler.card {
-        display: inline-block;
+      &__toggler {
+          display: inline-block;
+      }
+
+      &__sections {
+        &__view {
+          height: 34px;
+
+          .form-group {
+            display: flex;
+          }
+
+          .form-group label {
+            line-height: 34px;
+          }
+        }
+
+        hr {
+          height: 1px;
+        }
+
+        &__search {
+          max-height: calc(100vh - #{$layout-navbar-height} - 30px);
+          height: 100vh;
+          overflow: auto;
+          overflow-x: hidden;
+        }
       }
 
       &__sections__view {
@@ -344,63 +391,19 @@ export default {
     }
 
     &__form {
-      max-height: calc(100vh - #{$layout-navbar-height} - 1px);
-
-      padding-top: 15px;
-      padding-bottom: 15px;
-
-      @include media-breakpoint-up(lg) {
-        padding-top: 45px;
-        padding-bottom: 45px;
-      }
       pointer-events: none;
-
-      &__sections.card {
-        min-width: 382px;
-      }
-
-      .card {
-        min-width: 382px;
-
-        pointer-events: all;
-
-        &-body {
-          padding: 0;
-          margin: 1.25rem;
-        }
-
-        max-height: calc(100vh - #{$layout-navbar-height} - 30px);
-      }
-
-      &__sections {
-        &__view {
-          height: 34px;
-
-          .form-group {
-            display: flex;
-          }
-
-          .form-group label {
-            line-height: 34px;
-          }
-        }
-
-        hr {
-          height: 1px;
-        }
-
-        &__search {
-          max-height: calc(100vh - #{$layout-navbar-height} - 154px);
-          overflow: auto;
-          overflow-x: hidden;
-        }
-      }
     }
   }
 
   &-list .page__content {
-    padding-top: 45px;
-    padding-bottom: 45px;
+    padding: 0;
   }
+}
+
+.button-display {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
 }
 </style>
