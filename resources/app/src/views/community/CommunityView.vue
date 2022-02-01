@@ -46,7 +46,7 @@
           </b-card>
         </b-col>
         <!---->
-        <b-col v-if="view === 'list' && searched" lg="9">
+        <b-col v-if="view === 'list'" lg="9">
           <!-- results header for list view (large screens) -->
           <b-row no-gutters>
             <b-container :class="`community-view-${view}__form__toggler d-none d-lg-block`">
@@ -304,7 +304,7 @@ export default {
       z-index: 20;
       position: relative;
 
-      @include media-breakpoint-down(lg) {
+      @include media-breakpoint-down(md) {
         &--searched &__sections.card {
           max-height: 0;
           overflow: hidden;

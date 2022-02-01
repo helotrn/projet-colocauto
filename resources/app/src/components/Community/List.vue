@@ -2,7 +2,7 @@
   <div class="community-list">
     <div v-if="data.length > 0">
       <b-row no-gutters>
-        <b-col v-for="loanable in data" class="test" :key="loanable.id" lg="3" md="6">
+        <b-col v-for="loanable in data" class="spacing" :key="loanable.id" lg="3" md="4">
           <loanable-card
             v-bind="loanable"
             @test="emitTest(loanable)"
@@ -25,7 +25,7 @@
     </div>
 
     <b-row v-else>
-      <b-col>Aucun véhicule ne correspond à ces critères</b-col>
+      <b-col class="spacing-no-loanable">Aucun véhicule ne correspond à ces critères</b-col>
     </b-row>
   </div>
 </template>
@@ -73,15 +73,15 @@ export default {
 <style lang="scss">
 @import "~bootstrap/scss/mixins/breakpoints";
 
-.community-list {
-  @include media-breakpoint-down(md) {
-    margin-top: 45px;
+.spacing {
+  @include media-breakpoint-down(sm) {
+    margin: 0 15px;
   }
+}
 
-  .test {
-    @include media-breakpoint-down(md) {
-      margin: 15px 30px;
-    }
+.spacing-no-loanable {
+  @include media-breakpoint-down(md) {
+    margin: 0 15px;
   }
 }
 </style>
