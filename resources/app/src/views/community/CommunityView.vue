@@ -3,8 +3,8 @@
     <div :class="mainDivClasses">
       <b-row no-gutters>
         <b-col lg="3">
+          <!-- loan search form -->
           <b-card :class="`community-view-${view}__form__sections`">
-<!-- loan search form -->
             <div :class="`community-view-${view}__form__sections__search`">
               <loan-search-form
                 v-if="loan"
@@ -22,23 +22,47 @@
                 @submit="testLoanables"
               />
             </div>
-<!---->
           </b-card>
-<!--results title mobile view -->
+          <!---->
+          <!--results header for mobile view -->
           <b-card v-if="searched" :class="`community-view-${view}__form__toggler`">
             <h4>Résultats de votre recherche</h4>
             <p>Prochaine étape: vérifier la disponibilité!</p>
             <div class="button-display">
               <a @click="searched=false">Modifier la recherche</a>
               <b-button @click="view === 'map' ? gotoView('list') : gotoView('map')">
-                Afficher la {{ view === "map" ? `carte` : `liste`}}
+                Afficher la {{ view === "map" ? `liste` : `carte`}}
               </b-button>
             </div>
           </b-card>
-<!---->
+          <!---->
         </b-col>
-<!-- results for list view -->
+        <!-- button to switch to list view -->
+        <b-col v-if="view==='map'" lg="9">
+          <b-card class="button-container">
+            <b-button @click="gotoView('list')">
+              Afficher la liste
+            </b-button>
+          </b-card>
+        </b-col>
+        <!---->
         <b-col v-if="view === 'list' && searched" lg="9">
+          <!-- results header for list view (large screens) -->
+          <b-row no-gutters>
+            <b-container :class="`community-view-${view}__form__toggler d-lg-block`">
+              <div class="button-display">
+                <div>
+                  <h4>Résultats de votre recherche</h4>
+                  <p>Prochaine étape: vérifier la disponibilité!</p>
+                </div>
+                <b-button @click="gotoView('map')">
+                  Afficher la carte
+                </b-button>
+              </div>
+            </b-container>
+          </b-row>
+          <!---->
+          <!-- results for list view -->
           <b-row no-gutters>
             <community-list
               v-if="!loading"
@@ -52,11 +76,11 @@
             />
             <layout-loading class="col-lg-9" v-else />
           </b-row>
+          <!---->
         </b-col>
-<!---->
       </b-row>
     </div>
-<!-- map display -->
+    <!-- map display -->
     <community-map
       v-if="view === 'map'"
       :data="data"
@@ -64,7 +88,7 @@
       @test="testLoanable"
       @select="selectLoanable"
     />
-<!---->
+    <!---->
   </layout-page>
 </template>
 
@@ -321,7 +345,8 @@ export default {
       }
 
       &__toggler {
-        display: inline-block;
+        margin: 0;
+        max-width: 100% !important;
       }
 
       &__sections {
@@ -405,5 +430,12 @@ export default {
   justify-content: space-between;
   align-items: center;
   margin-top: 20px;
+}
+
+.card.button-container {
+  position: absolute;
+  margin: 15px 0;
+  right: 0;
+  background: none;
 }
 </style>
