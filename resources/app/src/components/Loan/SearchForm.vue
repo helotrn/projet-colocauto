@@ -8,10 +8,10 @@
         @reset.stop.prevent="$emit('reset')"
       >
         <div>
-          <h3>Qu'aimeriez-vous emprunter</h3>
-          <h3>à vos voisin-e-s?</h3>
+          <p class="title">Qu'aimeriez-vous emprunter</p>
+          <p class="subtitle">à vos voisin-e-s?</p>
         </div>
-        <div v-if="form">
+        <div v-if="form" class="label">
           <div v-if="item.departure_at">
             <forms-validated-input
               name="departure_at"
@@ -25,7 +25,7 @@
             />
           </div>
 
-          <div v-if="item.departure_at">
+          <div v-if="item.departure_at" class="label">
             <forms-validated-input
               name="return_at"
               :label="$t('fields.return_at') | capitalize"
@@ -41,28 +41,27 @@
           <div v-if="invalid" class="warning-message">
             La durée de l'emprunt doit être supérieure ou égale à 15 minutes.
           </div>
-
-          <forms-validated-input
-            name="estimated_distance"
-            :label="$t('fields.estimated_distance') | capitalize"
-            type="number"
-            :min="10"
-            :max="1000"
-            :placeholder="placeholderOrLabel('estimated_distance') | capitalize"
-            v-model="item.estimated_distance"
-          />
-
-          <div class="form__buttons">
-            <b-button
-              @click="$emit('hide')"
-              variant="primary"
-              class="mr-2 mb-2"
-              :disabled="loading || invalid"
-            >
-              <b-spinner small v-if="loading" />
-              Rechercher
-            </b-button>
+          <div class="label">
+            <forms-validated-input
+              name="estimated_distance"
+              :label="$t('fields.estimated_distance') | capitalize"
+              type="number"
+              :min="10"
+              :max="1000"
+              :placeholder="placeholderOrLabel('estimated_distance') | capitalize"
+              v-model="item.estimated_distance"
+            />
           </div>
+          <b-button
+            pill
+            @click="$emit('hide')"
+            variant="primary"
+            class="mr-2 mb-2"
+            :disabled="loading || invalid"
+          >
+            <b-spinner small v-if="loading" />
+            Rechercher
+          </b-button>
         </div>
         <layout-loading v-else />
       </b-form>
@@ -145,15 +144,31 @@ export default {
 </script>
 
 <style lang="scss">
+@import "~bootstrap/scss/mixins/breakpoints";
+
 .loan-search-form {
-  .form__buttons {
-    display: flex;
-    justify-content: space-between;
-  }
 
   .warning-message {
     color: $danger;
     margin-bottom: 20px;
   }
+}
+
+.title {
+  line-height: $h4-line-height !important;
+  font-size: $h4-font-size !important;
+  font-weight: 700;
+  margin: 0;
+}
+
+.subtitle {
+  line-height: $h4-line-height;
+  font-size: $h4-font-size;
+  font-weight: 700;
+  color: #00B1AA;
+}
+
+.label {
+  font-weight: 700;
 }
 </style>

@@ -26,12 +26,15 @@
           <!---->
           <!--results header for mobile view -->
           <b-card v-if="searched" :class="`community-view-${view}__form__toggler`">
-            <h4>Résultats de votre recherche</h4>
-            <p>Prochaine étape: vérifier la disponibilité!</p>
+            <p class="title">Résultats de votre recherche</p>
+            <p class="description">Prochaine étape: vérifier la disponibilité!</p>
             <div class="button-display">
-              <a @click="searched=false">Modifier la recherche</a>
-              <b-button @click="view === 'map' ? gotoView('list') : gotoView('map')">
-                Afficher la {{ view === "map" ? `liste` : `carte`}}
+              <a class="btn-modify-search" @click="searched=false">Modifier votre recherche</a>
+              <b-button v-if="view==='map'"pill class="btn-toggle" @click="gotoView('list')">
+                Afficher la liste <svg-list />
+              </b-button>
+              <b-button v-else pill class="btn-toggle" @click="gotoView('map')">
+                Afficher la carte <svg-map />
               </b-button>
             </div>
           </b-card>
@@ -40,23 +43,23 @@
         <!-- button to switch to list view -->
         <b-col v-if="view==='map'" lg="9">
           <b-card class="button-container d-none d-lg-block">
-            <b-button @click="gotoView('list')">
-              Afficher la liste
+            <b-button pill class="btn-toggle" @click="gotoView('list')">
+              Afficher la liste <svg-list />
             </b-button>
           </b-card>
         </b-col>
         <!---->
-        <b-col v-if="view === 'list'" lg="9">
+        <b-col v-if="view === 'list' && searched" lg="9">
           <!-- results header for list view (large screens) -->
           <b-row no-gutters>
             <b-container :class="`community-view-${view}__form__toggler d-none d-lg-block`">
               <div class="button-display">
                 <div>
-                  <h4>Résultats de votre recherche</h4>
-                  <p>Prochaine étape: vérifier la disponibilité!</p>
+                  <p class="title">Résultats de votre recherche</p>
+                  <p class="description">Prochaine étape: vérifier la disponibilité!</p>
                 </div>
-                <b-button @click="gotoView('map')">
-                  Afficher la carte
+                <b-button pill class="btn-toggle" @click="gotoView('map')">
+                  Afficher la carte <svg-map />
                 </b-button>
               </div>
             </b-container>
@@ -102,6 +105,9 @@ import CommunityList from "@/components/Community/List.vue";
 import CommunityMap from "@/components/Community/Map.vue";
 import LoanSearchForm from "@/components/Loan/SearchForm.vue";
 
+import ListIcon from "@/assets/svg/list.svg";
+import MapIcon from "@/assets/svg/map.svg";
+
 import { buildComputed } from "@/helpers";
 
 export default {
@@ -111,6 +117,8 @@ export default {
     CommunityList,
     CommunityMap,
     LoanSearchForm,
+    "svg-list": ListIcon,
+    "svg-map": MapIcon,
   },
   props: {
     view: {
@@ -328,7 +336,7 @@ export default {
           max-height: calc(100vh - #{$layout-navbar-height});
         }
 
-        @include media-breakpoint-up(md) {
+        @include media-breakpoint-up(lg) {
           margin: 20px;
           max-height: 84vh;
         }
@@ -437,5 +445,23 @@ export default {
   margin: 15px 0;
   right: 0;
   background: none;
+}
+
+svg {
+  margin-left: 5px;
+}
+
+.title {
+  line-height: $h4-line-height;
+  font-size: $h4-font-size;
+  font-weight: 700;
+  // margin-bottom: 25px;
+}
+
+@include media-breakpoint-up(lg) {
+  .title {
+    line-height: $h3-line-height;
+    font-size: $h3-font-size;
+  }
 }
 </style>
