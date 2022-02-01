@@ -39,7 +39,7 @@
         </b-col>
         <!-- button to switch to list view -->
         <b-col v-if="view==='map'" lg="9">
-          <b-card class="button-container">
+          <b-card class="button-container d-none d-lg-block">
             <b-button @click="gotoView('list')">
               Afficher la liste
             </b-button>
@@ -49,7 +49,7 @@
         <b-col v-if="view === 'list' && searched" lg="9">
           <!-- results header for list view (large screens) -->
           <b-row no-gutters>
-            <b-container :class="`community-view-${view}__form__toggler d-lg-block`">
+            <b-container :class="`community-view-${view}__form__toggler d-none d-lg-block`">
               <div class="button-display">
                 <div>
                   <h4>Résultats de votre recherche</h4>
