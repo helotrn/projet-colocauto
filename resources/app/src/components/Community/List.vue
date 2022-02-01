@@ -74,16 +74,14 @@ export default {
 @import "~bootstrap/scss/mixins/breakpoints";
 
 .community-list {
-  @include media-breakpoint-up(lg) {
-    padding-left: 30px;
-  }
-
   @include media-breakpoint-down(md) {
     margin-top: 45px;
   }
 
   .test {
-    margin: 15px 30px;
+    @include media-breakpoint-down(md) {
+      margin: 15px 30px;
+    }
   }
 }
 </style>
