@@ -19,13 +19,11 @@
     </b-pagination-nav>
 
     <div v-if="item && currentPage == 2">
-      <h2>Profil de membre</h2>
+      <h2>Ravi de vous rencontrer</h2>
 
-      <p class="register-step__profile__text">
-        Pour faire connaissance, dites à vos voisines et vos voisins qui vous êtes en remplissant
-        les champs suivants.
-      </p>
-
+      <h3>
+        Remplissez votre profil de membre pour faciliter la rencontre avec vos voisin-e-s.
+      </h3>
       <profile-form
         v-if="item"
         :form="form"
@@ -147,7 +145,7 @@ export default {
     return { currentSlide: 1, currrentPage: 2 };
   },
   beforeRouteEnter(to, from, next) {
-    next((vm) => {
+    next(vm => {
       if (vm.isLoggedIn) {
         // Has not finalized his account creation
         if (!vm.isRegistered) {
@@ -291,12 +289,26 @@ export default {
     margin-bottom: 50px;
   }
 
-  .register-step__title {
+  &__title {
+    text-align: center;
+  }
+
+  h2,
+  h3 {
     text-align: center;
   }
 
   h2 {
-    text-align: center;
+    margin-top: 30px;
+    font-size: 26px;
+    font-weight: 600;
+  }
+
+  h3 {
+    color: grey;
+    font-size: 20px;
+    margin: 20px 0;
+    font-weight: 400;
   }
 
   .community-proof-form {
