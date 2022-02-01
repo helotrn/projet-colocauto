@@ -332,6 +332,9 @@ class LoanableController extends RestController
                     "share_with_parent_communities" => [
                         "type" => "checkbox",
                     ],
+                    "is_self_service" => [
+                        "type" => "checkbox",
+                    ],
                     "padlock_id" => [
                         "type" => "relation",
                         "query" => [
