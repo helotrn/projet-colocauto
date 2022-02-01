@@ -196,13 +196,6 @@ export default {
     }
   },
   computed: {
-    discoverCommunityTitle() {
-      if (this.user && this.user.communities && this.user.communities[0].type === "borough") {
-        return "Découvrez votre quartier";
-      }
-
-      return "Découvrez votre voisinage";
-    },
     hasTutorials() {
       return (
         this.hasTutorial("add-vehicle") ||
