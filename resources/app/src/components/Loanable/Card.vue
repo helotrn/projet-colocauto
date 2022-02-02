@@ -176,7 +176,7 @@ export default {
       };
     },
     vehiculeName() {
-      return (this.name.length > 23) ? this.name.substr(0, 20) + "..." : this.name;
+      return (this.name.length > 10) ? this.name.substr(0, 7) + "..." : this.name;
     },
   },
 };
