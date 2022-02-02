@@ -32,38 +32,38 @@
 .btn-search-vehicule {
     width: 300px;
     margin: 0;
-    border: 1px solid #E5E5E5;
-    background: #FFFFFF;
+    border: 1px solid #e5e5e5;
+    background: #fff;
     padding: 16px, 16px, 16px, 45px;
-    color: #7A7A7A;
+    color: #7a7a7a;
 
     &__text {
         text-align: justify;
     }
 }
 .btn-search-vehicule:hover {
-    background: #FFFFFF;
+    background: #fff;
     padding: 16px, 16px, 16px, 45px;
-    color: #7A7A7A;
+    color: #7a7a7a;
 }
 
 .btn-toggle {
     display: flex;
     align-items: center;
     justify-content: end;
-    color:#7A7A7A;
-    background: #FFFFFF;
-    border: 1px solid #E5E5E5;
+    color:#7a7a7a;
+    background: #fff;
+    border: 1px solid #e5e5e5;
     box-sizing: border-box;
     margin: 0;
 }
 
 .btn-toggle:hover {
-    color:#7A7A7A;
-    background: #FFFFFF;
-    border: 1px solid #E5E5E5;
+    color:#7a7a7a;
+    background: #fff;
+    border: 1px solid #e5e5e5;
 }
 
 .btn-modify-search {
-    color: #4440FF;
+    color: #4440ff;
 }
