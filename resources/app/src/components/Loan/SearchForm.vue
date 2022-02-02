@@ -8,10 +8,43 @@
         @reset.stop.prevent="$emit('reset')"
       >
         <div>
-          <p class="title">Qu'aimeriez-vous emprunter</p>
-          <p class="subtitle">à vos voisin-e-s?</p>
+          <p class="loan-search-form__title">Qu'aimeriez-vous emprunter</p>
+          <p class="loan-search-form__subtitle">à vos voisin-e-s?</p>
         </div>
-        <div v-if="form" class="label">
+        <!-- auto, velo, remorque buttons -->
+        <b-form-group label-for="loanable_type">
+          <b-form-checkbox-group
+            buttons
+            class="form__group"
+            id="loanable_type"
+            name="loanable_type"
+            :options="loanableTypesExceptCar"
+            :checked="selectedLoanableTypes"
+            @change="emitLoanableTypes"
+          >
+            <template v-slot:first>
+              <b-checkbox value="car" :disabled="!canLoanCar">
+                Auto
+
+                <b-badge
+                  pill
+                  variant="light"
+                  v-if="!canLoanCar"
+                  tabindex="0"
+                  v-b-tooltip.hover
+                  :title="
+                    'Pour réserver une auto, remplissez le dossier de conduite ' +
+                    'de votre profil.'
+                  "
+                >
+                  ?
+                </b-badge>
+              </b-checkbox>
+            </template>
+          </b-form-checkbox-group>
+        </b-form-group>
+        <!---->
+        <div v-if="form">
           <div v-if="item.departure_at">
             <forms-validated-input
               name="departure_at"
@@ -25,7 +58,7 @@
             />
           </div>
 
-          <div v-if="item.departure_at" class="label">
+          <div v-if="item.departure_at">
             <forms-validated-input
               name="return_at"
               :label="$t('fields.return_at') | capitalize"
@@ -41,7 +74,7 @@
           <div v-if="invalid" class="warning-message">
             La durée de l'emprunt doit être supérieure ou égale à 15 minutes.
           </div>
-          <div class="label">
+          <div>
             <forms-validated-input
               name="estimated_distance"
               :label="$t('fields.estimated_distance') | capitalize"
@@ -152,23 +185,20 @@ export default {
     color: $danger;
     margin-bottom: 20px;
   }
-}
 
-.title {
+  &__title {
   line-height: $h4-line-height !important;
   font-size: $h4-font-size !important;
   font-weight: 700;
   margin: 0;
+  }
+
+  &__subtitle {
+    line-height: $h4-line-height;
+    font-size: $h4-font-size;
+    font-weight: 700;
+    color: #00B1AA;
+  }
 }
 
-.subtitle {
-  line-height: $h4-line-height;
-  font-size: $h4-font-size;
-  font-weight: 700;
-  color: #00B1AA;
-}
-
-.label {
-  font-weight: 700;
-}
 </style>
