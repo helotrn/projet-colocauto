@@ -26,9 +26,9 @@
           <!---->
           <!--results header for mobile view -->
           <b-card v-if="searched" :class="`community-view-${view}__form__toggler`">
-            <p class="title">Résultats de votre recherche</p>
-            <p class="description">Prochaine étape: vérifier la disponibilité!</p>
-            <div class="button-display">
+            <p :class="`community-view-${view}__title`">Résultats de votre recherche</p>
+            <p :class="`community-view-${view}__description`">Prochaine étape: vérifier la disponibilité!</p>
+            <div :class="`community-view-${view}__button-display`">
               <a class="btn-modify-search" @click="searched=false">Modifier votre recherche</a>
               <b-button v-if="view==='map'"pill class="btn-toggle" @click="gotoView('list')">
                 Afficher la liste <svg-list />
@@ -42,7 +42,7 @@
         </b-col>
         <!-- button to switch to list view -->
         <b-col v-if="view==='map'" lg="9">
-          <b-card class="button-container d-none d-lg-block">
+          <b-card :class="`community-view-${view}__button-container d-none d-lg-block`">
             <b-button pill class="btn-toggle" @click="gotoView('list')">
               Afficher la liste <svg-list />
             </b-button>
@@ -53,10 +53,10 @@
           <!-- results header for list view (large screens) -->
           <b-row no-gutters>
             <b-container :class="`community-view-${view}__form__toggler d-none d-lg-block`">
-              <div class="button-display">
+              <div :class="`community-view-${view}__button-display`">
                 <div>
-                  <p class="title">Résultats de votre recherche</p>
-                  <p class="description">Prochaine étape: vérifier la disponibilité!</p>
+                  <p :class="`community-view-${view}__title`">Résultats de votre recherche</p>
+                  <p :class="`community-view-${view}__description`">Prochaine étape: vérifier la disponibilité!</p>
                 </div>
                 <b-button pill class="btn-toggle" @click="gotoView('map')">
                   Afficher la carte <svg-map />
@@ -407,6 +407,33 @@ export default {
         }
       }
     }
+
+    &__title {
+      line-height: $h4-line-height;
+      font-size: $h4-font-size;
+      font-weight: 700;
+    }
+
+    @include media-breakpoint-up(lg) {
+      &__title {
+        line-height: $h3-line-height;
+        font-size: $h3-font-size;
+      }
+    }
+
+    &__button-display {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 20px;
+    }
+
+    &__button-container {
+      position: absolute !important;
+      background: none !important;
+      margin: 20px 0;
+      right: 0;
+    }
   }
 
   &-map {
@@ -433,35 +460,8 @@ export default {
   }
 }
 
-.button-display {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 20px;
-}
-
-.card.button-container {
-  position: absolute;
-  margin: 15px 0;
-  right: 0;
-  background: none;
-}
-
 svg {
   margin-left: 5px;
 }
 
-.title {
-  line-height: $h4-line-height;
-  font-size: $h4-font-size;
-  font-weight: 700;
-  // margin-bottom: 25px;
-}
-
-@include media-breakpoint-up(lg) {
-  .title {
-    line-height: $h3-line-height;
-    font-size: $h3-font-size;
-  }
-}
 </style>
