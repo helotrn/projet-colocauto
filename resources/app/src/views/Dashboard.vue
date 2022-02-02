@@ -3,8 +3,8 @@
     <b-container>
       <b-row class="page__section page__section__main">
         <b-col class="page__content" xl="9" lg="8" md="7">
-          <p class="title title__main">{{ $t("welcome_text", { name: user.name }) }}</p>
-          <p class="subtitle">{{ $t("welcome_description", {userCount: totalUsers, community: communityName}) }}</p>
+          <p class="dashboard__title dashboard__title__main">{{ $t("welcome_text", { name: user.name }) }}</p>
+          <p class="dashboard__subtitle">{{ $t("welcome_description", {userCount: totalUsers, community: communityName}) }}</p>
 
           <section class="page__section" v-if="!hasCompletedRegistration">
             <b-jumbotron bg-variant="light" header="Inscription" :lead="$t('lead_text')">
@@ -13,7 +13,7 @@
           </section>
 
           <section class="page__section" v-else>
-            <b-button pill to="/search/loanables" class="btn-search-vehicule">
+            <b-button pill to="/community/map" class="btn-search-vehicule">
               <div class="btn-search-vehicule__text">
                 <svg-magnifying-glass />
                 Rechercher un véhicule
@@ -22,7 +22,7 @@
           </section>
 
           <section class="page__section" v-if="hasTutorials">
-            <p class="title">Pour commencer</p>
+            <p class="dashboard__title">Pour commencer</p>
 
             <div class="page__section__tutorials">
               <div v-if="hasTutorial('discover-community')">
@@ -46,7 +46,7 @@
           </section>
 
           <section class="page__section" v-if="hasWaitingLoans">
-            <p class="title">Nouvelles demandes d'emprunt</p>
+            <p class="dashboard__title">Nouvelles demandes d'emprunt</p>
 
             <div class="dashboard__waiting-loans" v-for="loan in waitingLoans" :key="loan.id">
               <loan-info-box
@@ -60,7 +60,7 @@
           </section>
 
           <section class="page__section" v-if="hasOngoingLoans">
-            <p class="title">Emprunts en cours</p>
+            <p class="dashboard__title">Emprunts en cours</p>
 
             <div class="dashboard__ongoing-loans" v-for="loan in ongoingLoans" :key="loan.id">
               <loan-info-box :loan="loan" :user="user" :buttons="['view']" />
@@ -68,7 +68,7 @@
           </section>
 
           <section class="page__section" v-if="hasUpcomingLoans">
-            <p class="title">Emprunts à venir</p>
+            <p class="dashboard__title">Emprunts à venir</p>
 
             <div class="dashboard__upcoming-loans" v-for="loan in upcomingLoans" :key="loan.id">
               <loan-info-box
@@ -83,7 +83,7 @@
           <section class="page__section" v-if="user.owner">
             <b-row>
               <b-col>
-                <p class="title">Mes véhicules</p>
+                <p class="dashboard__title">Mes véhicules</p>
               </b-col>
               <b-col class="text-right">
                 <b-button variant="outline-primary" to="/profile/loanables">
@@ -235,3 +235,63 @@ export default {
   },
 };
 </script>
+
+<style lang="scss">
+@import "~bootstrap/scss/mixins/breakpoints";
+
+.dashboard {
+  .page__section {
+    &__main {
+      padding-top: 45px;
+      padding-bottom: 45px;
+    }
+  }
+
+  .page__content {
+    .main-faq {
+      padding-top: 65px;
+      padding-bottom: 65px;
+      margin-bottom: 0;
+    }
+
+    .partners-section {
+      margin-top: 0;
+      margin-bottom: 80px;
+    }
+  }
+
+  &__vehicles {
+    .loanable-info-box {
+      margin-bottom: 20px;
+    }
+  }
+
+  &__title {
+    line-height: $h3-line-height;
+    font-size: $h3-font-size;
+    font-weight: 700;
+    margin-bottom: 25px;
+
+    &__main {
+      margin-bottom: 5px;
+    }
+  }
+
+  &__subtitle {
+    line-height: $h4-line-height;
+    font-size: $h4-font-size;
+  }
+
+  @include media-breakpoint-up(lg) {
+    &__title {
+      line-height: $h2-line-height;
+      font-size: $h2-font-size;
+    }
+
+    &__subtitle {
+      line-height: $h3-line-height;
+      font-size: $h3-font-size;
+    }
+  }
+}
+</style>
