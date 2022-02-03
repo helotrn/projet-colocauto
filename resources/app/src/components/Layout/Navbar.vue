@@ -3,7 +3,7 @@
     <b-collapse class="layout-navbar__collapse" is-nav>
       <b-navbar-nav class="mr-auto">
         <b-navbar-brand :to="isLoggedIn ? '/app' : '/'">
-          <img src="/logo.svg" alt="Locomotion Beta" />
+          <img src="/logo.svg" alt="Locomotion" />
         </b-navbar-brand>
 
         <b-navbar-brand class="layout-navbar__separator d-none d-sm-block" v-if="title" />
@@ -13,7 +13,7 @@
       </b-navbar-nav>
     </b-collapse>
 
-    <img src="/logo.svg" alt="Locomotion Beta" class="logo d-lg-none"/>
+    <img src="/logo.svg" alt="Locomotion" class="logo d-lg-none"/>
     <b-navbar-toggle target="nav-collapse" />
 
     <b-collapse id="nav-collapse" class="layout-navbar__collapse" is-nav>
