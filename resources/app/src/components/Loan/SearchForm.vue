@@ -14,7 +14,8 @@
         <!-- auto, velo, remorque buttons -->
         <b-form-group label-for="loanable_type">
           <b-form-checkbox-group
-            buttons
+            switches
+            stacked
             class="form__group"
             id="loanable_type"
             name="loanable_type"
