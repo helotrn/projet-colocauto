@@ -17,8 +17,9 @@ class SendLoanExtensionAcceptedEmails
     public function handle(LoanExtensionAcceptedEvent $event)
     {
         $loan = $event->extension->loan;
+        $loanable = $loan->loanable;
         $borrower = $loan->borrower;
-        $owner = $loan->loanable->owner;
+        $owner = $loanable->owner;
 
         if (
             !$loanable->is_self_service &&
