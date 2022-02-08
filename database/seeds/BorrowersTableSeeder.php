@@ -9,16 +9,16 @@ class BorrowersTableSeeder extends Seeder
     {
         $borrowers = [
             [
-                // ariane@molotov.ca
-                "id" => 1,
-                "user_id" => 3,
+                // solon@locomotion.app
+                "id" => 2,
+                "user_id" => 2,
                 "submitted_at" => new DateTime(),
                 "approved_at" => new DateTime(),
             ],
             [
-                // emile@molotov.ca
-                "id" => 2,
-                "user_id" => 2,
+                // emprunteur@locomotion.app
+                "id" => 3,
+                "user_id" => 3,
                 "submitted_at" => new DateTime(),
                 "approved_at" => new DateTime(),
             ],

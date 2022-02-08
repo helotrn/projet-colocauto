@@ -9,7 +9,8 @@ class OwnersTableSeeder extends Seeder
     {
         $owners = [
             [
-                "id" => 1,
+                // solon@locomotion.app
+                "id" => 2,
                 "user_id" => 2,
                 "submitted_at" => new DateTime(),
             ],

@@ -8,15 +8,6 @@ class UsersTableSeeder extends Seeder
 {
     public function run()
     {
-        $molotov = [
-            "password" => "locomotion",
-            "date_of_birth" => "2009-01-01",
-            "address" => "2065 rue Parthenais",
-            "postal_code" => "H2K 3T1",
-            "phone" => "514-908-9744",
-            "description" => "Communications alternatives",
-        ];
-
         $solon = [
             "password" => "locomotion",
             "date_of_birth" => "2018-06-04",
@@ -27,25 +18,21 @@ class UsersTableSeeder extends Seeder
         ];
 
         $users = [
-            "soutien@locomotion.app" => array_merge(
-                [
+            "soutien@locomotion.app" => array_merge($solon, [
                     "id" => 1,
                     "role" => "admin",
                     "name" => "Soutien Locomotion",
-                ],
-                $molotov
-            ),
-            "emile@locomotion.app" => array_merge($molotov, [
-                "id" => 2,
-                "name" => "Émile",
-                "last_name" => "Plourde-Lavoie",
-                "description" => "Salut tout le monde :)",
-                "submitted_at" => new \DateTime(),
             ]),
-            "ariane@locomotion.app" => array_merge($molotov, [
+            "solon@locomotion.app" => array_merge($solon, [
+                "id" => 2,
+                "role" => "admin",
+                "name" => "Solon",
+                "last_name" => "Collectif",
+            ]),
+            "emprunteur@locomotion.app" => array_merge($solon, [
                 "id" => 3,
-                "name" => "Ariane",
-                "last_name" => "Mercier",
+                "name" => "Emprunteur",
+                "last_name" => "",
                 "submitted_at" => new \DateTime(),
             ]),
             "proprietairevoiture@locomotion.app" => array_merge($solon, [
@@ -67,14 +54,14 @@ class UsersTableSeeder extends Seeder
         // Community memberships
         $memberships = [
             "soutien@locomotion.app" => [],
-            "emile@locomotion.app" => [
+            "solon@locomotion.app" => [
                 // 1: Bellechasse
                 1 => [
                     "role" => "admin",
                     "approved_at" => new \DateTime(),
                 ],
             ],
-            "ariane@locomotion.app" => [
+            "emprunteur@locomotion.app" => [
                 // 1: Bellechasse
                 1 => [
                     "approved_at" => new \DateTime(),

@@ -30,7 +30,7 @@ class BikesTableSeeder extends Seeder
 ]
 JSON
                 ,
-                "owner_id" => 1,
+                "owner_id" => 2,
                 "created_at" => "2020-05-01 13:57:14",
             ],
         ];
