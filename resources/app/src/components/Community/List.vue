@@ -2,7 +2,12 @@
   <div class="community-list">
     <div v-if="data.length > 0">
       <b-row no-gutters>
-        <b-col v-for="loanable in data" class="community-list__spacing-md" :key="loanable.id" lg="3">
+        <b-col
+          v-for="loanable in data"
+          class="community-list__spacing-md"
+          :key="loanable.id"
+          lg="3"
+        >
           <loanable-card
             v-bind="loanable"
             @test="emitTest(loanable)"
@@ -25,7 +30,16 @@
     </div>
 
     <b-row v-else>
-      <b-col class="community-list__spacing-md">Aucun véhicule ne correspond à ces critères</b-col>
+      <b-col class="community-list__spacing-md no-results"
+        ><b-card
+          ><b-card-body>
+            <h3>Désolé, aucun véhicule ne correspond à ces critères.</h3>
+            <p class="subtext">
+              Essayez d’autres critères ou invitez vos voisins à rejoindre LocoMotion ;)
+            </p></b-card-body
+          ></b-card
+        ></b-col
+      >
     </b-row>
   </div>
 </template>
@@ -87,6 +101,15 @@ export default {
   &__spacing-md {
     @include media-breakpoint-down(md) {
       margin: 0 15px;
+    }
+  }
+
+  .no-results {
+    h3 {
+      font-weight: 700;
+    }
+    .subtext {
+      color: $dark;
     }
   }
 }
