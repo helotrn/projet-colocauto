@@ -50,18 +50,13 @@
               />
             </div>
 
-            <div class="form__section" v-if="item.borrower">
+            <div class="form__section">
               <a id="borrower" />
               <h2>Profil d'emprunteur</h2>
 
-              <p>
-                <em>Un profil d'emprunteur valide est requis pour emprunter une voiture.</em>
-              </p>
+              <p><strong>Statut:</strong> {{ borrowerStatus }}</p>
 
-              <p>
-                <strong>Statut:</strong>
-                {{ borrowerStatus }}
-
+              <p v-if="item.borrower">
                 <b-button
                   v-if="!item.borrower.approved_at"
                   size="sm"
@@ -511,10 +506,11 @@ export default {
       ];
     },
     borrowerStatus() {
-      if (!this.item.borrower.approved) {
+      if (!this.item.borrower) {
+        return "L'utilisateur n'a pas encore commencé à remplir son dossier de conduite";
+      } else if (!this.item.borrower.approved) {
         return "Non approuvé";
       }
-
       return this.item.borrower.suspended ? "Suspendu" : "Approuvé";
     },
     loggedInUserIsAdmin() {

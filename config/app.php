@@ -229,7 +229,6 @@ return [
         "URL" => Illuminate\Support\Facades\URL::class,
         "Validator" => Illuminate\Support\Facades\Validator::class,
         "View" => Illuminate\Support\Facades\View::class,
-
         "Mailchimp" => App\Facades\Mailchimp::class,
         "Noke" => App\Facades\Noke::class,
         "Stripe" => App\Facades\Stripe::class,

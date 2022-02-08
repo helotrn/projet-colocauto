@@ -33,7 +33,11 @@ class Intention extends Action
                     $model->save();
                     break;
                 default:
-                    if (!$loan->loanable->owner) {
+                    // Auto complete intention if loanable is self service.
+                    if (
+                        $loan->loanable->is_self_service ||
+                        !$loan->loanable->owner
+                    ) {
                         $model->status = "completed";
                         $model->save();
                     } elseif (

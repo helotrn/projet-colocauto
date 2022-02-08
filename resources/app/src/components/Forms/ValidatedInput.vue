@@ -75,6 +75,7 @@
       <forms-date-picker
         v-else-if="type === 'date'"
         :disabled-dates="disabledDates"
+        :disabled-dates-fct="disabledDatesFct"
         :disabled="disabled"
         :initial-view="initialView"
         :state="getValidationState(validationContext)"
@@ -85,7 +86,8 @@
       <forms-date-time-picker
         v-else-if="type === 'datetime'"
         :disabled-dates="disabledDates"
-        :disabled-times="disabledTimes"
+        :disabled-dates-fct="disabledDatesFct"
+        :disabled-times-fct="disabledTimesFct"
         :disabled="disabled"
         :value="value"
         @input="emitInput"
@@ -232,12 +234,15 @@ export default {
         return {};
       },
     },
-    disabledTimes: {
-      type: Object,
+    disabledDatesFct: {
+      type: Function,
       required: false,
-      default() {
-        return {};
-      },
+      default: () => false,
+    },
+    disabledTimesFct: {
+      type: Function,
+      required: false,
+      default: () => false,
     },
     disabledTooltip: {
       type: String,

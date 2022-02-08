@@ -16,8 +16,18 @@ export default {
     hasCommunity() {
       return this.isLoggedIn && this.user.communities && this.user.communities.length > 0;
     },
+    hasNotSubmittedProofOfResidency() {
+      return !this.user.communities.reduce((acc, c) => acc && !!c.proof, true);
+    },
+    hasProfileApproved() {
+      return (
+        this.isLoggedIn &&
+        this.user.communities &&
+        this.user.communities.reduce((acc, c) => acc || (!!c.approved_at && !c.suspended_at), false)
+      );
+    },
     hasCompletedRegistration() {
-      return this.isLoggedIn && (!!this.user.submitted_at || this.canLoanVehicle);
+      return this.isLoggedIn && this.isRegistered;
     },
     isGlobalAdmin() {
       return this.isLoggedIn && this.user.role === "admin";
@@ -32,15 +42,9 @@ export default {
     isLoggedIn() {
       return !!this.user;
     },
+    // Has finalized his account creation
     isRegistered() {
-      const requiredFields = [
-        "name",
-        "last_name",
-        "date_of_birth",
-        "address",
-        "postal_code",
-        "phone",
-      ];
+      const requiredFields = ["name", "date_of_birth", "address", "postal_code", "phone"];
 
       for (let i = 0, len = requiredFields.length; i < len; i += 1) {
         if (!this.user[requiredFields[i]]) {

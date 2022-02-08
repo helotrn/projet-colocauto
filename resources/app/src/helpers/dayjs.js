@@ -4,6 +4,7 @@ import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
 import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
 import relativeTime from "dayjs/plugin/relativeTime";
 import timeZone from "dayjs-ext/plugin/timeZone-2012-2022";
+import utc from "dayjs/plugin/utc";
 
 const locale = {
   name: "fr",
@@ -51,6 +52,7 @@ dayjs.extend(isSameOrAfter);
 dayjs.extend(isSameOrBefore);
 dayjs.extend(relativeTime);
 dayjs.extend(timeZone);
+dayjs.extend(utc);
 
 dayjs.prototype.startOfDay = function (that, units) {
   return this.hour(0).minute(0).second(0).millisecond(0);

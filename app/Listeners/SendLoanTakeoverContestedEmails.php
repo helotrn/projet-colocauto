@@ -11,6 +11,15 @@ use Mail;
 
 class SendLoanTakeoverContestedEmails
 {
+    /*
+       Send loan-takeover-contested notification to:
+         - owner if the borrower has contested
+         - borrower if the owner has contested
+
+       Also notify admins because they are the only ones who can resolve contestations.
+
+       These rules apply for on-demand as well as self-service vehicles.
+    */
     public function handle(LoanTakeoverContestedEvent $event)
     {
         $loan = $event->takeover->loan;

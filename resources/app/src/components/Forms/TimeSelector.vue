@@ -2,167 +2,164 @@
   <b-form-select
     class="time-selector"
     :disabled="disabled"
+    :disabled-times-fct="disabledTimesFct"
     v-model="selected"
     :options="timeslots"
   />
 </template>
 
-<script lang="ts">
+<script>
 import Vue from "vue";
 import Component from "vue-class-component";
-import dayjs from "dayjs";
-import utc from "dayjs/plugin/utc";
+import dayjs from "../../helpers/dayjs";
 import { Prop, Watch } from "vue-property-decorator";
 
 const MILLISECONDS_IN_A_DAY = 24 * 60 * 60 * 1000;
 const MILLISECONDS_IN_A_MINUTE = 60 * 1000;
 
-dayjs.extend(utc);
+export default {
+  name: "TimeSelector",
 
-interface Option {
-  value: Date;
-  text: string;
-  disabled?: boolean;
-}
+  data() {
+    return {
+      selected: null,
+    };
+  },
 
-@Component
-export default class TimeSelector extends Vue {
-  @Prop({ type: Date, default: () => new Date() })
-  value!: Date;
-
-  @Prop({
-    type: Number,
-    default: () => 15,
-    validator: (value: number) => {
-      if (MILLISECONDS_IN_A_DAY % (value * MILLISECONDS_IN_A_MINUTE) !== 0) {
-        console.error(
-          `Invalid prop in \`minuteInterval\` in TimeSelector: 24 hours should be divisible by this number of minutes`
-        );
-      }
-
-      return true;
+  props: {
+    value: {
+      type: Date,
+      required: false,
+      default: () => new Date(),
     },
-  })
-  minuteInterval!: number;
 
-  @Prop({ type: Boolean, default: false })
-  disabled!: boolean;
-
-  @Prop({ type: Boolean, default: false })
-  excludePastTime!: boolean;
-
-  @Prop({
-    type: Object,
-    default: () => ({ h: [], m: [], s: [] }),
-    validator: (value: any) => {
-      const allArrays = Array.isArray(value.h) && Array.isArray(value.h) && Array.isArray(value.s);
-
-      if (!allArrays) {
-        return false;
-      }
-
-      if (
-        !value.h.every((item: any) => typeof item === "number") ||
-        !value.m.every((item: any) => typeof item === "number") ||
-        !value.s.every((item: any) => typeof item === "number")
-      ) {
-        return false;
-      }
-
-      return true;
+    minuteInterval: {
+      type: Number,
+      required: false,
+      default: () => 15,
+      validator: (value) => {
+        if (MILLISECONDS_IN_A_DAY % (value * MILLISECONDS_IN_A_MINUTE) !== 0) {
+          console.error(
+            `Invalid prop in \`minuteInterval\` in TimeSelector: 24 hours should be divisible by this number of minutes`
+          );
+        }
+        return true;
+      },
     },
-  })
-  disabledTimes!: {
-    h: Array<number>;
-    m: Array<number>;
-    s: Array<number>;
-  };
 
-  get allTimeSlotsInTypicalDay() {
-    const millisecondsInInterval = this.minuteInterval * 60 * 1000;
+    disabled: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
 
-    return new Array(MILLISECONDS_IN_A_DAY / millisecondsInInterval).fill(null).map((v, idx) => {
-      return dayjs(idx * millisecondsInInterval).utc();
-    });
-  }
+    // disabledTimesFct(time) { return true|false; };
+    disabledTimesFct: {
+      type: Function,
+      required: false,
+      default: () => false,
+    },
+  },
 
-  get timeslots(): Option[] {
-    return this.allTimeSlotsInTypicalDay
-      .map((timeOfDay) => {
-        const dayOfValue = dayjs(this.value);
+  computed: {
+    timeslots() {
+      // Compute "now" once so it won't change along the way.
+      const now = dayjs();
 
-        return dayOfValue.set("hour", timeOfDay.hour()).set("minute", timeOfDay.minute());
-      })
-      .map((timeOfDayAtValue) => {
-        return {
-          value: timeOfDayAtValue.toDate(),
-          text: timeOfDayAtValue.format("HH:mm"),
-          disabled: false,
-        };
-      })
-      .map((option) => {
-        if (this.excludePastTime && option.value < dayjs().toDate()) {
-          option.disabled = true;
+      return (
+        this.allDayTimeSlots(dayjs(this.value))
+          // Augment with option properties.
+          .map((timeOfDayAtValue) => {
+            return {
+              // Carry time along options so as to perform computations on source objects.
+              time: timeOfDayAtValue,
+              value: timeOfDayAtValue.toDate(),
+              text: timeOfDayAtValue.format("HH:mm"),
+              disabled: false,
+            };
+          })
+
+          // Disable options from calling disabledTimesFct.
+          .map((option) => {
+            if (this.disabledTimesFct && this.disabledTimesFct(option.time)) {
+              option.disabled = true;
+            }
+            return option;
+          })
+      );
+    },
+  },
+
+  methods: {
+    allDayTimeSlots(date) {
+      const millisecondsInInterval = this.minuteInterval * 60 * 1000;
+
+      // Ensure date is at the start of the day
+      date = date.startOfDay();
+
+      // Fill a new array with the correct number...
+      const allTimeSlots = new Array(MILLISECONDS_IN_A_DAY / millisecondsInInterval)
+        // ... of empty time slots...
+        .fill(null)
+        // ... then set them to the current date and appropriate time.
+        .map((v, idx) => {
+          return date.add(idx * millisecondsInInterval, "millisecond");
+        });
+
+      return allTimeSlots;
+    },
+
+    closestOption(needle) {
+      return this.timeslots.reduce((closest, current) => {
+        // Set closest to current item on first iteration.
+        if (!closest) {
+          return current;
         }
 
-        return option;
-      })
-      .map((option) => {
-        const dValue = dayjs(option.value);
+        let diffClosest = Math.abs(closest.value.getTime() - needle.getTime());
+        let diffCurrent = Math.abs(current.value.getTime() - needle.getTime());
 
-        if (
-          this.disabledTimes.h.includes(dValue.hour()) ||
-          this.disabledTimes.m.includes(dValue.minute())
-        ) {
-          option.disabled = true;
+        if (diffClosest == diffCurrent) {
+          return closest.value > current.value ? closest : current;
+        } else {
+          return diffCurrent < diffClosest ? current : closest;
         }
+      }, undefined);
+    },
 
-        return option;
-      });
-  }
+    onOptionsChanged() {
+      const dayOfValue = dayjs(this.value);
 
-  closest(needle: Date) {
-    const haystack = this.timeslots
-      .filter((option) => option.disabled !== true)
-      .map(({ value }) => value);
+      const selectedOnValueDate = dayjs(this.selected)
+        .set("year", dayOfValue.year())
+        .set("month", dayOfValue.month())
+        .set("date", dayOfValue.date());
 
-    return haystack.reduce((a, b) => {
-      let aDiff = Math.abs(a.getTime() - needle.getTime());
-      let bDiff = Math.abs(b.getTime() - needle.getTime());
+      const { value } = this.closestOption(selectedOnValueDate.toDate());
+      this.selected = value;
+    },
+    onSelection() {
+      console.log("onSelection");
+      this.$emit("input", this.selected);
+    },
+  },
 
-      if (aDiff == bDiff) {
-        return a > b ? a : b;
-      } else {
-        return bDiff < aDiff ? b : a;
-      }
-    });
-  }
-
-  selected: Date | null = null;
-
-  @Watch("timeslots")
-  onOptionsChanged() {
-    const dayOfValue = dayjs(this.value);
-
-    const selectedOnValueDate = dayjs(this.selected)
-      .set("year", dayOfValue.year())
-      .set("month", dayOfValue.month())
-      .set("date", dayOfValue.date());
-
-    this.selected = this.closest(selectedOnValueDate.toDate());
-  }
+  watch: {
+    timeslots: function () {
+      this.onOptionsChanged();
+    },
+    selected: function () {
+      this.onSelection();
+    },
+  },
 
   created() {
-    this.selected = this.closest(this.value);
+    const { value } = this.closestOption(this.value);
+    this.selected = value;
 
     this.onSelection();
-  }
-
-  @Watch("selected")
-  onSelection() {
-    this.$emit("input", this.selected);
-  }
-}
+  },
+};
 </script>
 
 <style lang="scss">

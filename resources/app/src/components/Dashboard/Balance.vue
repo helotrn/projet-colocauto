@@ -12,21 +12,21 @@
         {{ $t("approvisionner") }}
       </b-button>
 
-      <span v-if="user.balance < 10" tabindex="0" v-b-tooltip.hover :title="$t('reclamer_tooltip')">
+      <span
+        v-if="user.balance > 0 && user.balance < 10"
+        tabindex="0"
+        v-b-tooltip.hover
+        :title="$t('reclamer_tooltip')"
+      >
         <b-button size="sm" variant="outline-primary" disabled>
           {{ $t("reclamer") }}
         </b-button>
       </span>
-      <b-button v-else size="sm" variant="outline-primary" v-b-modal.claim-modal>
+
+      <b-button v-if="user.balance >= 10" size="sm" variant="outline-primary" v-b-modal.claim-modal>
         {{ $t("reclamer") }}
       </b-button>
     </div>
-
-    <p class="dashboard-balance__payment-methods">
-      <router-link to="/profile/payment_methods">
-        {{ $t("modify_payment_method") }}
-      </router-link>
-    </p>
 
     <b-modal
       id="add-credit-modal"
@@ -39,7 +39,7 @@
 
     <b-modal
       id="claim-modal"
-      title="Réclamer l'argent au compte LocoMotion"
+      title="Demande de transfert du solde du compte LocoMotion vers un compte bancaire"
       size="md"
       footer-class="d-none"
     >
@@ -55,7 +55,6 @@
 <i18n>
 fr:
   approvisionner: Approvisionner
-  modify_payment_method: Modifier les modes de paiement
   reclamer: Réclamer
   reclamer_tooltip: Un minimum de 10$ est requis pour réclamer son solde.
   approvisionner_popover: |
@@ -102,13 +101,21 @@ export default {
 <style lang="scss">
 .dashboard-balance {
   h3 {
-    font-size: 20px;
-    font-weight: normal;
-    font-weight: 600;
-
     .badge {
       cursor: pointer;
+      position: relative;
+      top: -2px;
+      margin-left: 6px;
+      .badge-pill {
+        padding-left: 0.4em;
+        padding-right: 0.4em;
+      }
     }
+  }
+
+  .btn {
+    margin-left: 0;
+    margin-bottom: 10px;
   }
 
   &__balance {
@@ -119,10 +126,6 @@ export default {
 
   &__buttons {
     margin-bottom: 10px;
-  }
-
-  &__payment-methods {
-    font-size: 13px;
   }
 }
 </style>

@@ -31,24 +31,7 @@
           <span class="nav-link__icon d-lg-none">
             <svg-location />
           </span>
-          <span class="nav-link__text">Réserver un véhicule</span>
-        </b-nav-item>
-
-        <b-nav-item to="/community" v-if="!isGlobalAdmin && hasCommunity">
-          <span class="nav-link__icon d-lg-none">
-            <svg-hand />
-          </span>
-          <span class="nav-link__text">
-            <span v-if="user.communities[0].type === 'borough'">Quartier</span>
-            <span v-else>Voisinage</span>
-          </span>
-        </b-nav-item>
-
-        <b-nav-item to="/register" v-if="!isGlobalAdmin && !hasCompletedRegistration">
-          <span class="nav-link__icon d-lg-none">
-            <svg-hand />
-          </span>
-          <span class="nav-link__text">Inscription</span>
+          <span class="nav-link__text">Emprunter un véhicule</span>
         </b-nav-item>
 
         <b-nav-item

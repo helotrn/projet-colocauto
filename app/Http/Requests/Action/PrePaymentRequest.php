@@ -7,6 +7,11 @@ use App\Models\Loan;
 
 class PrePaymentRequest extends BaseRequest
 {
+    /*
+       Request is authorized for
+         - admins
+         - borrower involved in the loan
+    */
     public function authorize()
     {
         $user = $this->user();
@@ -15,10 +20,8 @@ class PrePaymentRequest extends BaseRequest
             return true;
         }
 
-        if (
-            $user->borrower->id ===
-            Loan::find($this->get("loan_id"))->borrower->id
-        ) {
+        $loan = Loan::find($this->get("loan_id"));
+        if ($user->borrower && $user->borrower->id === $loan->borrower->id) {
             return true;
         }
 

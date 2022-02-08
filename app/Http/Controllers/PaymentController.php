@@ -160,6 +160,10 @@ class PaymentController extends RestController
         }
         $borrowerInvoice->pay();
 
+        $ownerUser = null;
+        $ownerInvoice = null;
+        // Create the owner invoice as soon as an owner exists.
+        // This check could be removed when we can garantee that every loanable has an owner.
         if ($loan->loanable->owner) {
             $ownerUser = $loan->loanable->owner->user;
             $ownerInvoice = $ownerUser->createInvoice();
@@ -187,8 +191,12 @@ class PaymentController extends RestController
         $creditAmount = $price - $expenses;
 
         // Update balances
-        if ($borrowerUser->is($ownerUser)) {
-            //if the borrower is the owner we do a single atomic addToBalance or removeFromBalance instead of both calls so we can allow temporarily going below a balance of zero if the final balance is above zero (e.g initial balance is 0.5 => debit 1 => balance is -0.5 => credit 1 ==> final balance is 0.5)
+        if ($ownerUser && $borrowerUser->is($ownerUser)) {
+            // If the borrower is the owner we do a single atomic addToBalance
+            // or removeFromBalance instead of both calls so we can allow
+            // temporarily going below a balance of zero if the final balance
+            // is above zero (e.g initial balance is 0.5 => debit 1 => balance
+            // is -0.5 => credit 1 ==> final balance is 0.5)
             $movement = $creditAmount - $debitAmount;
 
             if ($movement >= 0) {
@@ -198,15 +206,17 @@ class PaymentController extends RestController
             }
         } else {
             $borrowerUser->removeFromBalance($debitAmount);
-            if ($loan->loanable->owner) {
+            if ($ownerUser) {
                 $ownerUser->refresh();
                 $ownerUser->addToBalance($creditAmount);
             }
         }
 
         // Save payment
+        // Borrower invoice is always created.
         $payment->borrower_invoice_id = $borrowerInvoice->id;
-        if ($loan->loanable->owner) {
+        // If owner invoice exists, then add it to payment.
+        if ($ownerInvoice) {
             $payment->owner_invoice_id = $ownerInvoice->id;
         }
         $payment->status = "completed";
@@ -214,7 +224,11 @@ class PaymentController extends RestController
 
         // Send emails after an automated or manual action
         $invoiceTransformer = new Invoice::$transformer();
-        if ($loan->total_final_cost > 0) {
+        if (
+            !$loan->loanable->is_self_service &&
+            $loan->loanable->owner &&
+            $loan->total_final_cost > 0
+        ) {
             if ($request->get("automated")) {
                 event(
                     new LoanPaidEvent(
@@ -226,7 +240,9 @@ class PaymentController extends RestController
                         "<p>Votre emprunt est terminé depuis 48h. Il est désormais clôturé!</p>"
                     )
                 );
-                if ($loan->loanable->owner) {
+
+                // Trigger event for owner if exists and is not also the borrower.
+                if ($loan->loanable->owner && !$borrowerUser->is($ownerUser)) {
                     event(
                         new LoanPaidEvent(
                             $ownerUser,
@@ -247,7 +263,9 @@ class PaymentController extends RestController
                         ])
                     )
                 );
-                if ($loan->loanable->owner) {
+
+                // Trigger event for owner if exists and is not also the borrower.
+                if ($loan->loanable->owner && !$borrowerUser->is($ownerUser)) {
                     event(
                         new LoanPaidEvent(
                             $ownerUser,

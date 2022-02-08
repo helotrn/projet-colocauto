@@ -13,7 +13,6 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use MStaack\LaravelPostgis\Eloquent\PostgisTrait;
-use Log;
 
 class Loanable extends BaseModel
 {

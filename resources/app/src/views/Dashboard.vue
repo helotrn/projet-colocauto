@@ -6,9 +6,12 @@
           <p class="dashboard__title dashboard__title__main">{{ $t("welcome_text", { name: user.name }) }}</p>
           <p class="dashboard__subtitle">{{ $t("welcome_description", {userCount: totalUsers, community: communityName}) }}</p>
 
-          <section class="page__section" v-if="!hasCompletedRegistration">
-            <b-jumbotron bg-variant="light" header="Inscription" :lead="$t('lead_text')">
-              <b-button to="/register">Compléter l'inscription</b-button>
+          <section class="page__section" v-if="!hasProfileApproved">
+            <b-jumbotron
+              bg-variant="light"
+              header="Votre profil est en attente de validation."
+              lead="LocoMotion s'assure que vos voisins soient bien... vos voisins! C'est pourquoi un membre de notre équipe va vérifier votre preuve de résidence et valider votre compte. Vous recevrez un courriel de confirmation et aurez alors accès à toutes les fonctionnalités de LocoMotion! "
+            >
             </b-jumbotron>
           </section>
 
@@ -25,11 +28,11 @@
             <p class="dashboard__title">Pour commencer</p>
 
             <div class="page__section__tutorials">
-              <div v-if="hasTutorial('discover-community')">
+              <div v-if="hasTutorial('fill-your-driving-profile')">
                 <tutorial-block
-                  :title="discoverCommunityTitle"
-                  to="/community"
-                  bg-image="/img-tetes.png"
+                  title="Remplissez votre dossier de conduite"
+                  to="/profile/borrower"
+                  bg-image="/img-voiture.png"
                   variant="dark"
                 />
               </div>
@@ -40,6 +43,15 @@
                   to="/profile/loanables/new"
                   bg-image="/img-voiture.png"
                   variant="dark"
+                />
+              </div>
+
+              <div v-if="hasTutorial('find-vehicle')">
+                <tutorial-block
+                  title="Empruntez un véhicule"
+                  to="/community/list"
+                  bg-image="/img-vehicules.png"
+                  variant="light"
                 />
               </div>
             </div>
@@ -102,7 +114,8 @@
               </div>
               <div v-else>
                 Aucun véhicule.<br />
-                Ajoutez-en un <router-link to="/profile/loanables/new">ici</router-link>.
+                Ajoutez-en un
+                <router-link to="/profile/loanables/new">ici</router-link>.
               </div>
             </div>
           </section>
@@ -212,6 +225,11 @@ export default {
       return (
         this.hasTutorial("add-vehicle") ||
         this.hasTutorial("discover-community")
+    hasTutorials() {
+      return (
+        this.hasTutorial("add-vehicle") ||
+        this.hasTutorial("find-vehicle") ||
+        this.hasTutorial("fill-your-driving-profile")
       );
     },
   },
@@ -220,11 +238,10 @@ export default {
       switch (name) {
         case "add-vehicle":
           return this.user.owner && this.user.loanables && this.user.loanables.length === 0;
-        case "discover-community":
-          return (
-            this.hasCommunity &&
-            this.user.created_at >= this.$dayjs().subtract(2, "week").format("YYYY-MM-DD HH:mm:ss")
-          );
+        case "find-vehicle":
+          return this.canLoanVehicle;
+        case "fill-your-driving-profile":
+          return !this.user.borrower || !this.user.borrower.is_complete;
         default:
           return false;
       }

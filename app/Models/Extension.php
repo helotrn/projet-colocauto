@@ -20,16 +20,19 @@ class Extension extends Action
         self::saved(function ($model) {
             if (!$model->executed_at) {
                 switch ($model->status) {
+                    // Complete (meaning to accept) extension if loanable is self-service.
                     case "in_process":
-                        if ($model->loan && !$model->loan->loanable->owner) {
+                        if (
+                            $model->loan &&
+                            (!$model->loan->loanable->owner ||
+                                $model->loan->loanable->is_self_service)
+                        ) {
                             $model->status = "completed";
                             $model->executed_at = Carbon::now();
                             $model->save();
                         }
                         break;
                     case "completed":
-                        $loanId = $model->loan->id;
-
                         $model->executed_at = Carbon::now();
                         $model->save();
                         break;

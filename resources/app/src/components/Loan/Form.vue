@@ -28,31 +28,45 @@
           >
             <b-row>
               <b-col lg="6">
+                <!--
+                  Disable past times only if loan is editable.
+                -->
                 <forms-validated-input
                   name="departure_at"
                   :disabled="!!item.id"
                   :label="$t('fields.departure_at') | capitalize"
                   :rules="form.departure_at.rules"
                   type="datetime"
-                  :disabled-dates="disabledDatesInThePast"
-                  :disabled-times="disabledTimesInThePast"
+                  :disabled-dates-fct="!item.id ? dateIsInThePast : null"
+                  :disabled-times-fct="!item.id ? timeIsInThePast : null"
                   :placeholder="placeholderOrLabel('departure_at') | capitalize"
                   v-model="item.departure_at"
                 />
               </b-col>
 
               <b-col lg="6">
+                <!--
+                  Disable past times only if loan is editable.
+                -->
                 <forms-validated-input
                   name="return_at"
                   :disabled="!!item.id"
                   :label="$t('fields.return_at') | capitalize"
                   :rules="form.departure_at.rules"
                   type="datetime"
-                  :disabled-dates="disabledDates"
-                  :disabled-times="disabledTimes"
+                  :disabled-dates-fct="!item.id ? dateIsInThePast : null"
+                  :disabled-times-fct="!item.id ? timeIsInThePast : null"
                   :placeholder="placeholderOrLabel('return_at') | capitalize"
                   v-model="returnAt"
                 />
+              </b-col>
+            </b-row>
+
+            <b-row v-if="invalid">
+              <b-col>
+                <div class="warning-message">
+                  La durée de l'emprunt doit être supérieure ou égale à 15 minutes.
+                </div>
               </b-col>
             </b-row>
 
@@ -62,7 +76,7 @@
                   <b-col cols="6">
                     <div class="form-group">
                       <label>{{ $t("fields.duration_in_minutes") | capitalize }}</label>
-                      <div>{{ item.duration_in_minutes }} minutes</div>
+                      <div v-if="!invalid">{{ item.duration_in_minutes }} minutes</div>
                     </div>
                   </b-col>
 
@@ -90,7 +104,7 @@
                         v-if="priceUpdating"
                         class="loan-form__estimations__loading"
                       />
-                      <div v-else>
+                      <div v-else-if="!invalid">
                         {{ item.estimated_price | currency }}
                       </div>
                     </div>
@@ -103,7 +117,7 @@
                         v-if="priceUpdating"
                         class="loan-form__estimations__loading"
                       />
-                      <div v-else>
+                      <div v-else-if="!invalid">
                         {{ item.estimated_insurance | currency }}
                       </div>
                     </div>
@@ -149,7 +163,8 @@
                 />
               </b-col>
 
-              <b-col xl="6" v-if="item.loanable.owner">
+              <!-- No message for owner if the loanable is self service. -->
+              <b-col xl="6" v-if="!loanableIsSelfService">
                 <forms-validated-input
                   name="message_for_owner"
                   :disabled="!!item.id"
@@ -170,7 +185,7 @@
                 <b-button disabled type="submit" v-if="!item.loanable.available">
                   Indisponible
                 </b-button>
-                <b-button type="submit" :disabled="loading" v-else-if="isOwnedLoanable">
+                <b-button type="submit" :disabled="loading || invalid" v-else-if="isOwnedLoanable">
                   Faire la demande d'emprunt
                 </b-button>
                 <b-button type="submit" :disabled="loading" v-else>Réserver</b-button>
@@ -225,6 +240,10 @@ export default {
     },
   },
   computed: {
+    invalid() {
+      // Invalid if the duration is not greater than 0 minute.
+      return !(this.item.duration_in_minutes > 0);
+    },
     loading() {
       return this.$store.state.loans.loading;
     },
@@ -265,5 +284,11 @@ export default {
 .loan-form__estimations__loading {
   max-width: 100px;
   max-height: 30px;
+}
+.loan-form {
+  .warning-message {
+    color: $danger;
+    margin-bottom: 20px;
+  }
 }
 </style>

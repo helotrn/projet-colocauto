@@ -45,6 +45,8 @@ class User extends AuthenticatableBaseModel
         "is_deactivated" => "boolean",
     ];
 
+    public $computed = ["admin_link"];
+
     public static function getRules($action = "", $auth = null)
     {
         switch ($action) {
@@ -193,6 +195,22 @@ class User extends AuthenticatableBaseModel
         return $this->hasOne(Borrower::class);
     }
 
+    // main_community
+    //
+    // In 99% of the cases, a user is (or should be) associated
+    // with a single geographical community we call main_community.
+    //
+    // Exceptionnaly, other scenarios may involve non-geographical communities such as Eco-Village, Schools, etc.
+    // But the app won't react well to these exceptions because of the assumption below.
+    //
+    public function getMainCommunityAttribute()
+    {
+        return $this->communities->first();
+    }
+
+    /**  communities() should be deprecated at some point as 99% of users have only one community
+     *  use $this->community instead
+     */
     public function communities()
     {
         return $this->belongsToMany(Community::class)
@@ -405,5 +423,10 @@ class User extends AuthenticatableBaseModel
     public function getFullNameAttribute()
     {
         return trim($this->name . " " . $this->last_name);
+    }
+
+    public function getAdminLinkAttribute()
+    {
+        return env("FRONTEND_URL") . "/admin/users/" . $this->id;
     }
 }
