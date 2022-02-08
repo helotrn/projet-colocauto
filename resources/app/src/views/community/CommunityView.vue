@@ -27,10 +27,12 @@
           <!--results header for mobile view -->
           <b-card v-if="searched" :class="`community-view-${view}__form__toggler`">
             <p :class="`community-view-${view}__title`">Résultats de votre recherche</p>
-            <p :class="`community-view-${view}__description`">Prochaine étape: vérifier la disponibilité!</p>
+            <p :class="`community-view-${view}__description`">
+              Prochaine étape: vérifier la disponibilité!
+            </p>
             <div :class="`community-view-${view}__button-display`">
-              <a class="btn-modify-search" @click="searched=false">Modifier votre recherche</a>
-              <b-button v-if="view==='map'"pill class="btn-toggle" @click="gotoView('list')">
+              <a class="btn-modify-search" @click="searched = false">Modifier votre recherche</a>
+              <b-button v-if="view === 'map'" pill class="btn-toggle" @click="gotoView('list')">
                 Afficher la liste <svg-list />
               </b-button>
               <b-button v-else pill class="btn-toggle" @click="gotoView('map')">
@@ -41,7 +43,7 @@
           <!---->
         </b-col>
         <!-- button to switch to list view -->
-        <b-col v-if="view==='map'" lg="9">
+        <b-col v-if="view === 'map'" lg="9">
           <b-card :class="`community-view-${view}__button-container d-none d-lg-block`">
             <b-button pill class="btn-toggle" @click="gotoView('list')">
               Afficher la liste <svg-list />
@@ -56,7 +58,9 @@
               <div :class="`community-view-${view}__button-display`">
                 <div>
                   <p :class="`community-view-${view}__title`">Résultats de votre recherche</p>
-                  <p :class="`community-view-${view}__description`">Prochaine étape: vérifier la disponibilité!</p>
+                  <p :class="`community-view-${view}__description`">
+                    Prochaine étape: vérifier la disponibilité!
+                  </p>
                 </div>
                 <b-button pill class="btn-toggle" @click="gotoView('map')">
                   Afficher la carte <svg-map />
@@ -137,8 +141,9 @@ export default {
     next((vm) => {
       if (vm.user.communities.filter((c) => !!c.approved_at && !c.suspended_at).length === 0) {
         vm.$store.commit("addNotification", {
-          content: "Vous n'avez accès à aucun voisinage ou quartier.",
-          title: "Accès refusé",
+          content:
+            "Il faut avoir été accepté dans un quartier pour faire une recherche de véhicule",
+          title: "En attente de validation",
           variant: "warning",
           type: "loan",
         });
@@ -158,10 +163,7 @@ export default {
     ...buildComputed("community.view", ["center", "lastLoan", "searched", "selectedLoanableTypes"]),
     mainDivClasses() {
       const base = `community-view-${this.view}__form`;
-      return (
-        base +
-        (this.searched ? ` ${base}--searched` : "")
-      );
+      return base + (this.searched ? ` ${base}--searched` : "");
     },
     loan() {
       return this.$store.state.loans.item;
@@ -426,6 +428,13 @@ export default {
       justify-content: space-between;
       align-items: center;
       margin-top: 20px;
+      .btn-modify-search {
+        color: $primary;
+        cursor: pointer;
+        &:hover {
+          color: $primary;
+        }
+      }
     }
 
     &__button-container {
@@ -463,5 +472,4 @@ export default {
 svg {
   margin-left: 5px;
 }
-
 </style>

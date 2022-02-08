@@ -35,7 +35,7 @@
                   v-b-tooltip.hover
                   :title="
                     'Pour réserver une auto, remplissez le dossier de conduite ' +
-                    'de votre profil.'
+                      'de votre profil.'
                   "
                 >
                   ?
@@ -181,25 +181,23 @@ export default {
 @import "~bootstrap/scss/mixins/breakpoints";
 
 .loan-search-form {
-
   .warning-message {
     color: $danger;
     margin-bottom: 20px;
   }
 
   &__title {
-  line-height: $h4-line-height !important;
-  font-size: $h4-font-size !important;
-  font-weight: 700;
-  margin: 0;
+    line-height: $h3-line-height !important;
+    font-size: $h3-font-size !important;
+    font-weight: 700;
+    margin: 0;
   }
 
   &__subtitle {
-    line-height: $h4-line-height;
-    font-size: $h4-font-size;
+    line-height: $h3-line-height;
+    font-size: $h3-font-size;
     font-weight: 700;
-    color: #00B1AA;
+    color: #00b1aa;
   }
 }
-
 </style>
