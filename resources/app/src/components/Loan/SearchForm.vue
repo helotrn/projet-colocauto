@@ -3,13 +3,13 @@
     <validation-observer ref="observer" v-slot="{ passes }">
       <b-form
         :novalidate="true"
-        class="form loan-search-form__form"
+        class="form loan-search-form"
         @submit.stop.prevent="passes(submit)"
         @reset.stop.prevent="$emit('reset')"
       >
         <div>
-          <p class="loan-search-form__title">Qu'aimeriez-vous emprunter</p>
-          <p class="loan-search-form__subtitle">à vos voisin-e-s?</p>
+          <p class="loan-search-form--title loan-search-form--no-margin">Qu'aimeriez-vous emprunter</p>
+          <p class="loan-search-form--title loan-search-form--green">à vos voisin-e-s?</p>
         </div>
         <!-- auto, velo, remorque buttons -->
         <b-form-group label-for="loanable_type">
@@ -72,7 +72,7 @@
             />
           </div>
 
-          <div v-if="invalid" class="warning-message">
+          <div v-if="invalid" class="loan-search-form--warning loan-search-form--margin-bottom">
             La durée de l'emprunt doit être supérieure ou égale à 15 minutes.
           </div>
           <div>
@@ -181,26 +181,25 @@ export default {
 <style lang="scss">
 @import "~bootstrap/scss/mixins/breakpoints";
 
-.loan-search-form {
-
-  .warning-message {
-    color: $danger;
-    margin-bottom: 20px;
-  }
-
-  &__title {
-  line-height: $h4-line-height !important;
-  font-size: $h4-font-size !important;
+.loan-search-form--title {
+  line-height: $h4-line-height;
+  font-size: $h4-font-size;
   font-weight: 700;
-  margin: 0;
-  }
-
-  &__subtitle {
-    line-height: $h4-line-height;
-    font-size: $h4-font-size;
-    font-weight: 700;
-    color: #00B1AA;
-  }
 }
 
+.loan-search-form--green {
+  color: #00B1AA;
+}
+
+.loan-search-form--no-margin {
+  margin: 0;
+}
+
+.loan-search-form--margin-bottom {
+  margin-bottom: 15px;
+}
+
+.loan-search-form--warning {
+  color: $danger;
+}
 </style>
