@@ -224,10 +224,6 @@ export default {
     hasTutorials() {
       return (
         this.hasTutorial("add-vehicle") ||
-        this.hasTutorial("discover-community")
-    hasTutorials() {
-      return (
-        this.hasTutorial("add-vehicle") ||
         this.hasTutorial("find-vehicle") ||
         this.hasTutorial("fill-your-driving-profile")
       );
