@@ -15,9 +15,15 @@ class OwnersTableSeeder extends Seeder
                 "submitted_at" => new DateTime(),
             ],
             [
-                // proprietairevoiture@locomotion.app
-                "id" => 4,
-                "user_id" => 4,
+                // proprietaireahuntsic@locomotion.app
+                "id" => 3,
+                "user_id" => 3,
+                "submitted_at" => new DateTime(),
+            ],
+            [
+                // proprietairepetitepatrie@locomotion.app
+                "id" => 5,
+                "user_id" => 5,
                 "submitted_at" => new DateTime(),
             ],
         ];

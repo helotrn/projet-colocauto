@@ -10,7 +10,7 @@ class UsersTableSeeder extends Seeder
     {
         $solon = [
             "password" => "locomotion",
-            "date_of_birth" => "2018-06-04",
+            "date_of_birth" => "1965-06-04",
             "address" => "6450 Christophe-Colomb, Montréal",
             "postal_code" => "H2S 2G7",
             "phone" => "555 555-5555",
@@ -29,62 +29,59 @@ class UsersTableSeeder extends Seeder
                 "name" => "Solon",
                 "last_name" => "Collectif",
             ]),
-            "emprunteur@locomotion.app" => array_merge($solon, [
+            "proprietaireahuntsic@locomotion.app" => array_merge($solon, [
                 "id" => 3,
-                "name" => "Emprunteur",
-                "last_name" => "",
+                "name" => "Propriétaire",
+                "last_name" => "Ahuntsic",
+                "description" => "Salut tout le monde :)",
                 "submitted_at" => new \DateTime(),
             ]),
-            "proprietairevoiture@locomotion.app" => array_merge($solon, [
+            "emprunteurahuntsic@locomotion.app" => array_merge($solon, [
                 "id" => 4,
-                "name" => "Propriétaire",
-                "last_name" => "Voiture",
-                "description" => "Sympatique propriétaire de voiture.",
-                "date_of_birth" => "1984-08-21",
-            ]),
-            "emprunteurvoiture@locomotion.app" => array_merge($solon, [
-                "id" => 5,
                 "name" => "Emprunteur",
-                "last_name" => "Voiture",
-                "description" => "Emprunteur de voiture prudent.",
-                "date_of_birth" => "1990-05-11",
+                "last_name" => "Ahuntsic",
+                "submitted_at" => new \DateTime(),
+            ]),
+            "proprietairepetitepatrie@locomotion.app" => array_merge($solon, [
+                "id" => 5,
+                "name" => "Propriétaire",
+                "last_name" => "Petite-Patrie",
+                "description" => "Salut tout le monde :)",
+                "submitted_at" => new \DateTime(),
+            ]),
+            "emprunteurpetitepatrie@locomotion.app" => array_merge($solon, [
+                "id" => 6,
+                "name" => "Emprunteur",
+                "last_name" => "Petite-Patrie",
+                "description" => "Salut tout le monde :)",
+                "submitted_at" => new \DateTime(),
             ]),
         ];
 
         // Community memberships
         $memberships = [
             "soutien@locomotion.app" => [],
-            "solon@locomotion.app" => [
-                // 1: Bellechasse
-                1 => [
-                    "role" => "admin",
-                    "approved_at" => new \DateTime(),
-                ],
+
+            "proprietaireahuntsic@locomotion.app" => [
+                // 8: Ahuntsic
+                8 => ["approved_at" => new \DateTime()],
             ],
-            "emprunteur@locomotion.app" => [
-                // 1: Bellechasse
-                1 => [
-                    "approved_at" => new \DateTime(),
-                ],
+            "emprunteurahuntsic@locomotion.app" => [
+                // 8: Ahuntsic
+                8 => ["approved_at" => new \DateTime()],
             ],
-            "proprietairevoiture@locomotion.app" => [
+            "proprietairepetitepatrie@locomotion.app" => [
                 // 9: Petite-Patrie
-                9 => [
-                    "approved_at" => new \DateTime(),
-                ],
+                9 => ["approved_at" => new \DateTime()],
             ],
-            "emprunteurvoiture@locomotion.app" => [
+            "emprunteurpetitepatrie@locomotion.app" => [
                 // 9: Petite-Patrie
-                9 => [
-                    "approved_at" => new \DateTime(),
-                ],
+                9 => ["approved_at" => new \DateTime()],
             ],
         ];
 
-        $id = 1;
         foreach ($users as $email => $data) {
             $data = array_merge($data, [
-                "id" => $id,
                 "email" => $email,
                 "password" => Hash::make(
                     array_get($data, "password", "password")
@@ -96,8 +93,6 @@ class UsersTableSeeder extends Seeder
             } else {
                 User::where("email", $email)->update($data);
             }
-
-            $id += 1;
         }
 
         foreach ($memberships as $email => $communities) {

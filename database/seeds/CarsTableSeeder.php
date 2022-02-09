@@ -11,15 +11,15 @@ class CarsTableSeeder extends Seeder
         $cars = [
             [
                 "id" => 1001,
-                "name" => "La voiture de la propriétaire",
-                "position" => "45.537562, -73.601487",
+                "name" => "Auto de Propriétaire Petite-Patrie sur demande",
+                "position" => "45.540, -73.590",
                 "location_description" => "Stationnée devant la maison.",
-                "comments" => 'J\'ai échappé la clé dans le caniveau.',
-                "instructions" => 'Récupérer les clés à l\'aide d\'un aimant.',
-                "owner_id" => 4,
+                "comments" => "",
+                "instructions" => "",
+                "owner_id" => 5,
                 "brand" => "Toyota",
                 "model" => "Matrix",
-                "year_of_circulation" => "2005",
+                "year_of_circulation" => "2015",
                 "transmission_mode" => "automatic",
                 "engine" => "fuel",
                 "plate_number" => "F123456",
@@ -28,6 +28,7 @@ class CarsTableSeeder extends Seeder
                 "insurer" => "Assurancetourix",
                 "has_informed_insurer" => true,
                 "created_at" => new \DateTime(),
+                "availability_mode" => "never",
                 "availability_json" => <<<JSON
 [
   {

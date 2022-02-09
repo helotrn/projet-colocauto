@@ -9,13 +9,6 @@ class BorrowersTableSeeder extends Seeder
     {
         $borrowers = [
             [
-                // solon@locomotion.app
-                "id" => 2,
-                "user_id" => 2,
-                "submitted_at" => new DateTime(),
-                "approved_at" => new DateTime(),
-            ],
-            [
                 // emprunteur@locomotion.app
                 "id" => 3,
                 "user_id" => 3,
@@ -23,7 +16,7 @@ class BorrowersTableSeeder extends Seeder
                 "approved_at" => new DateTime(),
             ],
             [
-                // proprietairevoiture@locomotion.app
+                // emprunteurahuntsic@locomotion.app
                 "id" => 4,
                 "user_id" => 4,
                 "drivers_license_number" => "L1234-456789-01",
@@ -33,9 +26,9 @@ class BorrowersTableSeeder extends Seeder
                 "approved_at" => new DateTime(),
             ],
             [
-                // emprunteurvoiture@locomotion.app
-                "id" => 5,
-                "user_id" => 5,
+                // emprunteurpetitepatrie@locomotion.app
+                "id" => 6,
+                "user_id" => 6,
                 "drivers_license_number" => "L1234-456789-01",
                 "has_been_sued_last_ten_years" => false,
                 "noke_id" => null,
