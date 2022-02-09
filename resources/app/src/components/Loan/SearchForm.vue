@@ -35,7 +35,7 @@
                   v-b-tooltip.hover
                   :title="
                     'Pour réserver une auto, remplissez le dossier de conduite ' +
-                    'de votre profil.'
+                      'de votre profil.'
                   "
                 >
                   ?

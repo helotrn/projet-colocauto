@@ -25,7 +25,16 @@
     </div>
 
     <b-row v-else>
-      <b-col class="community-list--margin-left">Aucun véhicule ne correspond à ces critères</b-col>
+      <b-col class="no-results">
+        <b-card>
+          <b-card-body>
+            <h3>Désolé, aucun véhicule ne correspond à ces critères.</h3>
+            <p class="subtext">
+              Essayez d’autres critères ou invitez vos voisins à rejoindre LocoMotion ;)
+            </p>
+          </b-card-body>
+        </b-card>
+      </b-col>
     </b-row>
   </div>
 </template>
@@ -73,6 +82,17 @@ export default {
 <style lang="scss">
 @import "~bootstrap/scss/mixins/breakpoints";
 
+.community-list {
+  .no-results {
+    h3 {
+      font-weight: 700;
+    }
+    .subtext {
+      color: $dark;
+    }
+  }
+}
+
 .community-list--mobile {
   @include media-breakpoint-down(md) {
     margin: 0 15px;
@@ -81,9 +101,5 @@ export default {
 
 .community-list--margin {
   margin: 15px;
-}
-
-.community-list--margin-left {
-  margin-left: 15px;
 }
 </style>
