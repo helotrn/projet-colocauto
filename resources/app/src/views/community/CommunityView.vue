@@ -27,11 +27,11 @@
           <!-- results header (on mobile view) -->
           <b-card v-if="searched" :class="`community-view__results-container d-lg-none`">
             <h3>Résultats de votre recherche</h3>
-            <p>
-              Prochaine étape: vérifier la disponibilité!
-            </p>
+            <p>Prochaine étape: vérifier la disponibilité!</p>
             <div :class="`community-view--flex`">
-              <a class="community-view__button-modify-search" @click="searched = false">Modifier votre recherche</a>
+              <a class="community-view__button-modify-search" @click="searched = false"
+                >Modifier votre recherche</a
+              >
               <b-button v-if="view === 'map'" pill @click="gotoView('list')">
                 Afficher la liste <svg-list />
               </b-button>
@@ -45,9 +45,7 @@
         <b-col v-if="view === 'map'" lg="9">
           <!-- button to view list (on large screens) -->
           <b-card :class="`community-view__list-button-container d-none d-lg-block`">
-            <b-button pill @click="gotoView('list')">
-              Afficher la liste <svg-list />
-            </b-button>
+            <b-button pill @click="gotoView('list')"> Afficher la liste <svg-list /> </b-button>
           </b-card>
           <!---->
         </b-col>
@@ -58,13 +56,9 @@
               <div :class="`community-view--flex`">
                 <div>
                   <h3>Résultats de votre recherche</h3>
-                  <p>
-                    Prochaine étape: vérifier la disponibilité!
-                  </p>
+                  <p>Prochaine étape: vérifier la disponibilité!</p>
                 </div>
-                <b-button pill @click="gotoView('map')">
-                  Afficher la carte <svg-map />
-                </b-button>
+                <b-button pill @click="gotoView('map')"> Afficher la carte <svg-map /> </b-button>
               </div>
             </b-container>
             <!---->
@@ -161,7 +155,7 @@ export default {
   computed: {
     ...buildComputed("community.view", ["center", "lastLoan", "searched", "selectedLoanableTypes"]),
     isSearched() {
-      return (this.searched ? "community-view--searched" : "");
+      return this.searched ? "community-view--searched" : "";
     },
     loan() {
       return this.$store.state.loans.item;
@@ -317,7 +311,7 @@ export default {
     overflow: auto;
     overflow-x: hidden;
   }
-  
+
   &__results-container {
     margin: 0;
     max-width: 100%;
@@ -326,7 +320,7 @@ export default {
   &__button-modify-search {
     color: $primary !important;
     cursor: pointer;
-    
+
     &:hover {
       color: $primary;
     }
@@ -339,7 +333,7 @@ export default {
   }
 
   .btn-secondary {
-    color:#7a7a7a;
+    color: #7a7a7a;
     background: #fff;
     border: 1px solid #e5e5e5;
     display: flex;
@@ -349,7 +343,7 @@ export default {
     margin: 0;
 
     &:hover {
-      color:#7a7a7a;
+      color: #7a7a7a;
       background: #fff;
       border: 1px solid #e5e5e5;
     }

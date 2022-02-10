@@ -5,7 +5,9 @@
         <b-col class="page__content" xl="9" lg="8" md="7">
           <!-- main header -->
           <h1>{{ $t("welcome_text", { name: user.name }) }}</h1>
-          <h3>{{ $t("welcome_description", {userCount: totalUsers, community: communityName}) }}</h3>
+          <h3>
+            {{ $t("welcome_description", { userCount: totalUsers, community: communityName }) }}
+          </h3>
           <!---->
           <!-- profile pending container -->
           <section class="page__section" v-if="!hasProfileApproved">

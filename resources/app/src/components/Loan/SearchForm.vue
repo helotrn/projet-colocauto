@@ -37,7 +37,7 @@
                   v-b-tooltip.hover
                   :title="
                     'Pour réserver une auto, remplissez le dossier de conduite ' +
-                      'de votre profil.'
+                    'de votre profil.'
                   "
                 >
                   ?
@@ -49,7 +49,7 @@
         <!---->
         <div v-if="form">
           <div v-if="item.departure_at">
-          <!-- field start time -->
+            <!-- field start time -->
             <forms-validated-input
               name="departure_at"
               :label="$t('fields.departure_at') | capitalize"
@@ -192,14 +192,13 @@ export default {
 @import "~bootstrap/scss/mixins/breakpoints";
 
 .loan-search-form {
-
   h3 {
     font-weight: 700;
   }
 }
 
 .loan-search-form--green {
-  color: #00B1AA;
+  color: #00b1aa;
 }
 
 .loan-search-form--no-margin {

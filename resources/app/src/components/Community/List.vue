@@ -1,6 +1,6 @@
 <template>
   <div class="community-list">
-  <!-- loanable cards -->
+    <!-- loanable cards -->
     <div v-if="data.length > 0">
       <b-row no-gutters>
         <b-col v-for="loanable in data" class="community-list--mobile" :key="loanable.id" lg="3">
