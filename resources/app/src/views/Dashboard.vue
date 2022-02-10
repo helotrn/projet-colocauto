@@ -9,9 +9,12 @@
             <release-info-box />
           </section>
 
-          <section class="page__section" v-if="!hasCompletedRegistration">
-            <b-jumbotron bg-variant="light" header="Inscription" :lead="$t('lead_text')">
-              <b-button to="/register">Compléter l'inscription</b-button>
+          <section class="page__section" v-if="!hasProfileApproved">
+            <b-jumbotron
+              bg-variant="light"
+              header="Votre profil est en attente de validation."
+              lead="LocoMotion s'assure que vos voisins soient bien... vos voisins! C'est pourquoi un membre de notre équipe va vérifier votre preuve de résidence et valider votre compte. Vous recevrez un courriel de confirmation et aurez alors accès à toutes les fonctionnalités de LocoMotion! "
+            >
             </b-jumbotron>
           </section>
 
@@ -19,11 +22,11 @@
             <h2>Pour commencer</h2>
 
             <div class="page__section__tutorials">
-              <div v-if="hasTutorial('discover-community')">
+              <div v-if="hasTutorial('fill-your-driving-profile')">
                 <tutorial-block
-                  :title="discoverCommunityTitle"
-                  to="/community"
-                  bg-image="/img-tetes.png"
+                  title="Remplissez votre dossier de conduite"
+                  to="/profile/borrower"
+                  bg-image="/img-voiture.png"
                   variant="dark"
                 />
               </div>
@@ -105,7 +108,8 @@
               </div>
               <div v-else>
                 Aucun véhicule.<br />
-                Ajoutez-en un <router-link to="/profile/loanables/new">ici</router-link>.
+                Ajoutez-en un
+                <router-link to="/profile/loanables/new">ici</router-link>.
               </div>
             </div>
           </section>
@@ -146,8 +150,6 @@
 <i18n>
 fr:
   welcome_text: Bienvenue {name},
-  lead_text: |
-    Vous y êtes presque. Il ne vous manque que quelques étapes, pour prendre la route!
 en:
   welcome_text: Welcome {name}!
 </i18n>
@@ -194,18 +196,11 @@ export default {
     }
   },
   computed: {
-    discoverCommunityTitle() {
-      if (this.user && this.user.communities && this.user.communities[0].type === "borough") {
-        return "Découvrez votre quartier";
-      }
-
-      return "Découvrez votre voisinage";
-    },
     hasTutorials() {
       return (
         this.hasTutorial("add-vehicle") ||
         this.hasTutorial("find-vehicle") ||
-        this.hasTutorial("discover-community")
+        this.hasTutorial("fill-your-driving-profile")
       );
     },
   },
@@ -216,11 +211,8 @@ export default {
           return this.user.owner && this.user.loanables && this.user.loanables.length === 0;
         case "find-vehicle":
           return this.canLoanVehicle;
-        case "discover-community":
-          return (
-            this.hasCommunity &&
-            this.user.created_at >= this.$dayjs().subtract(2, "week").format("YYYY-MM-DD HH:mm:ss")
-          );
+        case "fill-your-driving-profile":
+          return !this.user.borrower || !this.user.borrower.is_complete;
         default:
           return false;
       }
@@ -234,12 +226,6 @@ export default {
 
 <style lang="scss">
 .dashboard {
-  h3 {
-    text-transform: uppercase;
-    font-weight: 600;
-    font-size: 16px;
-  }
-
   .page__section {
     &__main {
       padding-top: 45px;

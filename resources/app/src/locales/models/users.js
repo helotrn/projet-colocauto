@@ -6,7 +6,8 @@ import paymentMethods from "./paymentMethods";
 export default {
   fr: {
     descriptions: {
-      description: "Décrivez-vous en quelques mots. Ce sera affiché sur votre profil LocoMotion.",
+      description:
+        "Partagez ce qu’il vous plait! Vos passions, le nom de vos enfants, votre film préféré ou vos plus grandes folies!",
       avatar:
         "Ajoutez une photo de profil. On vous encourage à vous montrer la binette! " +
         "Ça aide à se faire confiance et à mieux profiter des avantages du partage.",

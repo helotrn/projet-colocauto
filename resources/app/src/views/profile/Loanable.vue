@@ -56,7 +56,7 @@ export default {
       return this.item.community.center;
     },
     center() {
-      return this.communityCenter || this.averageCommunitiesCenter;
+      return this.communityCenter || this.defaultCenter;
     },
     fullTitle() {
       const parts = [
@@ -71,22 +71,8 @@ export default {
 
       return parts.reverse().join(" | ");
     },
-    averageCommunitiesCenter() {
-      const { communities } = this.user;
-
-      if (communities.length === 0) {
-        return null;
-      }
-
-      const center = communities.reduce(
-        (acc, c) => [(acc[0] + c.center[0]) / 2, (acc[1] + c.center[1]) / 2],
-        communities[0].center
-      );
-
-      return {
-        lat: center[0],
-        lng: center[1],
-      };
+    defaultCenter() {
+      return { lat: 45.53748, lng: -73.60145 };
     },
     pageTitle() {
       return this.item.name || capitalize(this.$i18n.tc("véhicule", 1));

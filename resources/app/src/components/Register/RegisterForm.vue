@@ -52,7 +52,7 @@
           v-model="passwordRepeat"
         />
 
-        <b-button type="submit" :disabled="loading" variant="primary" block>
+        <b-button type="submit" :disabled="loading" variant="primary" block class="btn-register">
           {{ $t("register-submit") }}
         </b-button>
       </b-form>
@@ -62,12 +62,12 @@
 
 <i18n>
 fr:
-  'register': Inscription
+  'register': Bienvenue sur LocoMotion
   'google': Inscription via Google
-  'or': OU
-  'email': Courriel
-  'password': Mot de passe
-  'password-repeat': Mot de passe (confirmation)
+  'or': OU VIA COURRIEL
+  'email': Courriel*
+  'password': Mot de passe*
+  'password-repeat': Mot de passe* (confirmation)
   'register-submit': S'inscrire
 en:
   'register': Register
@@ -156,6 +156,14 @@ export default {
 .register-form {
   h2 {
     margin-bottom: 20px;
+  }
+
+  .btn-primary {
+    margin-left: 0;
+
+    &.btn-register {
+      margin-top: 40px;
+    }
   }
 
   &__google {

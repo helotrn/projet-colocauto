@@ -2,7 +2,7 @@
   <div class="register-intro">
     <b-pagination-nav
       v-bind:value="currentPage"
-      :number-of-pages="4"
+      :number-of-pages="3"
       pills
       align="center"
       use-router
@@ -36,23 +36,27 @@ export default {
   beforeRouteEnter(to, from, next) {
     next((vm) => {
       if (vm.isLoggedIn) {
+        // Not register, go to "complete your profile"
         if (!vm.isRegistered) {
           if (vm.$route.path !== "/register/2") {
             return vm.$router.replace("/register/2");
           }
-
           return null;
         }
-
-        if (vm.user.communities.length === 0) {
+        // Not community associated to profile, go to "map"
+        if (!vm.hasCommunity) {
           if (vm.$route.path !== "/register/map") {
             return vm.$router.replace("/register/map");
           }
-
           return null;
         }
-
-        return vm.$router.replace("/register/3");
+        // Doesn't have the proof of residency submitted (to deprecate when we allow to submit the proof later in the process)
+        else if (vm.hasNotSubmittedProofOfResidency) {
+          if (vm.$route.path !== "/register/3") {
+            vm.$router.replace("/register/3");
+          }
+          return null;
+        }
       }
 
       if (vm.$route.path !== "/register/1") {
