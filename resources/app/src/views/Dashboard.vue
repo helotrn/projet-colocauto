@@ -3,9 +3,11 @@
     <b-container>
       <b-row class="page__section page__section__main">
         <b-col class="page__content" xl="9" lg="8" md="7">
-          <h2>{{ $t("welcome_text", { name: user.name }) }}</h2>
-          <h4>{{ $t("welcome_description", {userCount: totalUsers, community: communityName}) }}</h4>
-
+          <!-- main header -->
+          <h1>{{ $t("welcome_text", { name: user.name }) }}</h1>
+          <h3>{{ $t("welcome_description", {userCount: totalUsers, community: communityName}) }}</h3>
+          <!---->
+          <!-- profile pending container -->
           <section class="page__section" v-if="!hasProfileApproved">
             <b-jumbotron
               bg-variant="light"
@@ -14,7 +16,8 @@
             >
             </b-jumbotron>
           </section>
-
+          <!---->
+          <!-- button to search for vehicles -->
           <section class="page__section" v-else>
             <b-button pill to="/community/map">
               <div class="dashboard--justify-text">
@@ -23,7 +26,8 @@
               </div>
             </b-button>
           </section>
-
+          <!---->
+          <!-- tutorial blocks -->
           <section class="page__section" v-if="hasTutorials">
             <h2 class="dashboard--margin-bottom">Pour commencer</h2>
 
@@ -56,7 +60,8 @@
               </div>
             </div>
           </section>
-
+          <!---->
+          <!-- awaiting loans container -->
           <section class="page__section" v-if="hasWaitingLoans">
             <h2 class="dashboard--margin-bottom">Nouvelles demandes d'emprunt</h2>
 
@@ -70,7 +75,8 @@
               <loan-info-box v-else :loan="loan" :user="user" />
             </div>
           </section>
-
+          <!---->
+          <!-- ongoing loans container -->
           <section class="page__section" v-if="hasOngoingLoans">
             <h2 class="dashboard--margin-bottom">Emprunts en cours</h2>
 
@@ -78,7 +84,8 @@
               <loan-info-box :loan="loan" :user="user" :buttons="['view']" />
             </div>
           </section>
-
+          <!---->
+          <!-- upcoming loans container -->
           <section class="page__section" v-if="hasUpcomingLoans">
             <h2 class="dashboard--margin-bottom">Emprunts à venir</h2>
 
@@ -91,7 +98,8 @@
               />
             </div>
           </section>
-
+          <!---->
+          <!-- loanables container -->
           <section class="page__section" v-if="user.owner">
             <b-row>
               <b-col>
@@ -119,9 +127,11 @@
               </div>
             </div>
           </section>
+          <!---->
         </b-col>
 
         <b-col tag="aside" class="page__sidebar" xl="3" lg="4" md="5">
+          <!-- sidebar -->
           <b-card>
             <div v-if="hasCompletedRegistration">
               <dashboard-balance :user="user" />
@@ -143,6 +153,7 @@
 
             <dashboard-resources-list :user="user" />
           </b-card>
+          <!---->
         </b-col>
       </b-row>
     </b-container>
@@ -279,6 +290,15 @@ export default {
     }
   }
 
+  h1 {
+    font-weight: 700;
+
+    @include media-breakpoint-down(md) {
+      line-height: $h2-line-height;
+      font-size: $h2-font-size;
+    }
+  }
+
   h2 {
     font-weight: 700;
 
@@ -288,8 +308,13 @@ export default {
     }
   }
 
-  h4 {
+  h3 {
     margin-bottom: 25px;
+
+    @include media-breakpoint-down(md) {
+      line-height: $h4-line-height;
+      font-size: $h4-font-size;
+    }
   }
 
   .btn-secondary {

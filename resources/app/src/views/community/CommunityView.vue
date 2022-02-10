@@ -3,7 +3,7 @@
     <div :class="`community-view__overlay`">
       <b-row no-gutters>
         <b-col lg="3">
-          
+          <!-- loan search form container -->
           <b-card :class="isSearched">
             <div :class="`community-view__search-menu`">
               <loan-search-form
@@ -23,8 +23,10 @@
               />
             </div>
           </b-card>
+          <!---->
+          <!-- results header (on mobile view) -->
           <b-card v-if="searched" :class="`community-view__results-container d-lg-none`">
-            <p :class="`community-view__title`">Résultats de votre recherche</p>
+            <h3>Résultats de votre recherche</h3>
             <p>
               Prochaine étape: vérifier la disponibilité!
             </p>
@@ -38,20 +40,24 @@
               </b-button>
             </div>
           </b-card>
+          <!---->
         </b-col>
         <b-col v-if="view === 'map'" lg="9">
+          <!-- button to view list (on large screens) -->
           <b-card :class="`community-view__list-button-container d-none d-lg-block`">
             <b-button pill @click="gotoView('list')">
               Afficher la liste <svg-list />
             </b-button>
           </b-card>
+          <!---->
         </b-col>
         <b-col v-if="view === 'list' && searched" lg="9">
           <b-row no-gutters>
+            <!-- results header (on large screens) -->
             <b-container :class="`community-view__results-container d-none d-lg-block`">
               <div :class="`community-view--flex`">
                 <div>
-                  <p :class="`community-view__title`">Résultats de votre recherche</p>
+                  <h3>Résultats de votre recherche</h3>
                   <p>
                     Prochaine étape: vérifier la disponibilité!
                   </p>
@@ -61,8 +67,10 @@
                 </b-button>
               </div>
             </b-container>
+            <!---->
           </b-row>
           <b-row no-gutters>
+            <!-- results display (loanable cards) -->
             <community-list
               v-if="!loading"
               :data="data"
@@ -73,11 +81,13 @@
               @select="selectLoanable"
               @test="testLoanable"
             />
+            <!---->
             <layout-loading class="col-lg-9" v-else />
           </b-row>
         </b-col>
       </b-row>
     </div>
+    <!-- map display -->
     <community-map
       v-if="view === 'map'"
       :data="data"
@@ -85,6 +95,7 @@
       @test="testLoanable"
       @select="selectLoanable"
     />
+    <!---->
   </layout-page>
 </template>
 <script>
@@ -312,17 +323,6 @@ export default {
     max-width: 100%;
   }
 
-  &__title {
-    font-weight: 700;
-    line-height: $h4-line-height;
-    font-size: $h4-font-size;
-
-    @include media-breakpoint-up(lg) {
-      line-height: $h3-line-height;
-      font-size: $h3-font-size;
-    }
-  }
-
   &__button-modify-search {
     color: $primary !important;
     cursor: pointer;
@@ -369,6 +369,15 @@ export default {
     @include media-breakpoint-up(lg) {
       margin: 20px;
       max-height: 84vh;
+    }
+  }
+
+  h3 {
+    font-weight: 700;
+
+    @include media-breakpoint-down(md) {
+      line-height: $h4-line-height;
+      font-size: $h4-font-size;
     }
   }
 

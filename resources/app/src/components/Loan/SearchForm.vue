@@ -7,11 +7,13 @@
         @submit.stop.prevent="passes(submit)"
         @reset.stop.prevent="$emit('reset')"
       >
+        <!-- title -->
         <div>
-          <p class="loan-search-form--title loan-search-form--no-margin">Qu'aimeriez-vous emprunter</p>
-          <p class="loan-search-form--title loan-search-form--green">à vos voisin-e-s?</p>
+          <h3 class="loan-search-form--no-margin">Qu'aimeriez-vous emprunter</h3>
+          <h3 class="loan-search-form--green">à vos voisin-e-s?</h3>
         </div>
-        <!-- auto, velo, remorque buttons -->
+        <!---->
+        <!-- buttons to select types of vehicles -->
         <b-form-group label-for="loanable_type">
           <b-form-checkbox-group
             switches
@@ -47,6 +49,7 @@
         <!---->
         <div v-if="form">
           <div v-if="item.departure_at">
+          <!-- field start time -->
             <forms-validated-input
               name="departure_at"
               :label="$t('fields.departure_at') | capitalize"
@@ -58,7 +61,8 @@
               v-model="item.departure_at"
             />
           </div>
-
+          <!---->
+          <!-- field end time -->
           <div v-if="item.departure_at">
             <forms-validated-input
               name="return_at"
@@ -71,10 +75,13 @@
               v-model="returnAt"
             />
           </div>
-
+          <!---->
+          <!-- loan invalid text -->
           <div v-if="invalid" class="loan-search-form--warning loan-search-form--margin-bottom">
             La durée de l'emprunt doit être supérieure ou égale à 15 minutes.
           </div>
+          <!---->
+          <!-- field estimated distance -->
           <div>
             <forms-validated-input
               name="estimated_distance"
@@ -86,6 +93,8 @@
               v-model="item.estimated_distance"
             />
           </div>
+          <!---->
+          <!-- search button -->
           <b-button
             pill
             @click="$emit('hide')"
@@ -96,6 +105,7 @@
             <b-spinner small v-if="loading" />
             Rechercher
           </b-button>
+          <!---->
         </div>
         <layout-loading v-else />
       </b-form>
@@ -181,10 +191,11 @@ export default {
 <style lang="scss">
 @import "~bootstrap/scss/mixins/breakpoints";
 
-.loan-search-form--title {
-  line-height: $h3-line-height;
-  font-size: $h3-font-size;
-  font-weight: 700;
+.loan-search-form {
+
+  h3 {
+    font-weight: 700;
+  }
 }
 
 .loan-search-form--green {
