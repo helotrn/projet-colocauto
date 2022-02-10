@@ -25,12 +25,12 @@
     </div>
 
     <b-row v-else>
-      <b-col class="no-results">
+      <b-col class="community-list__no-results">
         <b-card>
           <b-card-body>
             <h3>Désolé, aucun véhicule ne correspond à ces critères.</h3>
-            <p class="subtext">
-              Essayez d’autres critères ou invitez vos voisins à rejoindre LocoMotion ;)
+            <p class="community-list--dark">
+              Essayez d'autres critères ou invitez vos voisins à rejoindre LocoMotion ;)
             </p>
           </b-card-body>
         </b-card>
@@ -83,13 +83,8 @@ export default {
 @import "~bootstrap/scss/mixins/breakpoints";
 
 .community-list {
-  .no-results {
-    h3 {
-      font-weight: 700;
-    }
-    .subtext {
-      color: $dark;
-    }
+  &__no-results h3 {
+    font-weight: 700;
   }
 }
 
@@ -101,5 +96,9 @@ export default {
 
 .community-list--margin {
   margin: 15px;
+}
+
+.community-list--dark {
+  color: $dark;
 }
 </style>

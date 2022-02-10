@@ -3,8 +3,8 @@
     <b-container>
       <b-row class="page__section page__section__main">
         <b-col class="page__content" xl="9" lg="8" md="7">
-          <p class="dashboard__title dashboard__title__main">{{ $t("welcome_text", { name: user.name }) }}</p>
-          <p class="dashboard__subtitle">{{ $t("welcome_description", {userCount: totalUsers, community: communityName}) }}</p>
+          <h2>{{ $t("welcome_text", { name: user.name }) }}</h2>
+          <h4>{{ $t("welcome_description", {userCount: totalUsers, community: communityName}) }}</h4>
 
           <section class="page__section" v-if="!hasProfileApproved">
             <b-jumbotron
@@ -16,8 +16,8 @@
           </section>
 
           <section class="page__section" v-else>
-            <b-button pill to="/community/map" class="btn-search-vehicule">
-              <div class="btn-search-vehicule__text">
+            <b-button pill to="/community/map">
+              <div class="dashboard--justify-text">
                 <svg-magnifying-glass />
                 Rechercher un véhicule
               </div>
@@ -25,7 +25,7 @@
           </section>
 
           <section class="page__section" v-if="hasTutorials">
-            <p class="dashboard__title">Pour commencer</p>
+            <h2 class="dashboard--margin-bottom">Pour commencer</h2>
 
             <div class="page__section__tutorials">
               <div v-if="hasTutorial('fill-your-driving-profile')">
@@ -58,7 +58,7 @@
           </section>
 
           <section class="page__section" v-if="hasWaitingLoans">
-            <p class="dashboard__title">Nouvelles demandes d'emprunt</p>
+            <h2 class="dashboard--margin-bottom">Nouvelles demandes d'emprunt</h2>
 
             <div class="dashboard__waiting-loans" v-for="loan in waitingLoans" :key="loan.id">
               <loan-info-box
@@ -72,7 +72,7 @@
           </section>
 
           <section class="page__section" v-if="hasOngoingLoans">
-            <p class="dashboard__title">Emprunts en cours</p>
+            <h2 class="dashboard--margin-bottom">Emprunts en cours</h2>
 
             <div class="dashboard__ongoing-loans" v-for="loan in ongoingLoans" :key="loan.id">
               <loan-info-box :loan="loan" :user="user" :buttons="['view']" />
@@ -80,7 +80,7 @@
           </section>
 
           <section class="page__section" v-if="hasUpcomingLoans">
-            <p class="dashboard__title">Emprunts à venir</p>
+            <h2 class="dashboard--margin-bottom">Emprunts à venir</h2>
 
             <div class="dashboard__upcoming-loans" v-for="loan in upcomingLoans" :key="loan.id">
               <loan-info-box
@@ -95,7 +95,7 @@
           <section class="page__section" v-if="user.owner">
             <b-row>
               <b-col>
-                <p class="dashboard__title">Mes véhicules</p>
+                <h2 class="dashboard--margin-bottom">Mes véhicules</h2>
               </b-col>
               <b-col class="text-right">
                 <b-button variant="outline-primary" to="/profile/loanables">
@@ -279,32 +279,43 @@ export default {
     }
   }
 
-  &__title {
-    line-height: $h3-line-height;
-    font-size: $h3-font-size;
+  h2 {
     font-weight: 700;
-    margin-bottom: 25px;
 
-    &__main {
-      margin-bottom: 5px;
-    }
-  }
-
-  &__subtitle {
-    line-height: $h4-line-height;
-    font-size: $h4-font-size;
-  }
-
-  @include media-breakpoint-up(lg) {
-    &__title {
-      line-height: $h2-line-height;
-      font-size: $h2-font-size;
-    }
-
-    &__subtitle {
+    @include media-breakpoint-down(md) {
       line-height: $h3-line-height;
       font-size: $h3-font-size;
     }
   }
+
+  h4 {
+    margin-bottom: 25px;
+  }
+
+  .btn-secondary {
+    background: #fff;
+    color: #7a7a7a;
+    border: 1px solid #e5e5e5;
+    padding: 16px, 16px, 16px, 45px;
+    margin: 0;
+    width: 300px;
+
+    &:hover {
+      background: #fff;
+      color: #7a7a7a;
+    }
+  }
+}
+
+.dashboard--margin-top {
+  margin-top: 25px;
+}
+
+.dashboard--margin-bottom {
+  margin-bottom: 25px;
+}
+
+.dashboard--justify-text {
+  text-align: justify;
 }
 </style>

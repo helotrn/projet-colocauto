@@ -182,8 +182,8 @@ export default {
 @import "~bootstrap/scss/mixins/breakpoints";
 
 .loan-search-form--title {
-  line-height: $h4-line-height;
-  font-size: $h4-font-size;
+  line-height: $h3-line-height;
+  font-size: $h3-font-size;
   font-weight: 700;
 }
 
