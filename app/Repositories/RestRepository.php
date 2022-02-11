@@ -211,6 +211,59 @@ class RestRepository
         return $query->findOrFail($id);
     }
 
+/*
+  This method is used to get items to be restored as it returns items that were
+  soft-deleted.
+
+  It's a copy of find(), but using the withTrashed() method.
+*/
+    public function findWithTrashed($request, $id)
+    {
+        if (!intval($id)) {
+            return abort(422, "Numeric ids.");
+        }
+
+        $query = $this->model->withTrashed();
+
+        if (method_exists($this->model, "scopeAccessibleBy")) {
+            $query = $query->accessibleBy($request->user());
+        }
+
+        if (method_exists($this->model, "scopeFor")) {
+            $query = $query->for($request->get("for"), $request->user());
+        }
+
+        $params = $request->all();
+        foreach ($params as $param => $value) {
+            if (in_array($param, $this->reserved)) {
+                continue;
+            }
+
+            $query = $this->applyFilter(
+                $this->model,
+                $param,
+                $value,
+                $query,
+                $request
+            );
+        }
+
+        if ($fields = $request->getFields()) {
+            $this->applyWithFromQuery($fields, $query);
+        }
+
+        $columns = $this->columnsDefinition;
+        foreach ($columns as $paramName => $column) {
+            [$query, $_] = $this->addColumnDefinition(
+                $query,
+                $columns,
+                $paramName
+            );
+        }
+
+        return $query->findOrFail($id);
+    }
+
     public function create($data)
     {
         $this->model->fill($data);

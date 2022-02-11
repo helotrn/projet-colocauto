@@ -167,7 +167,7 @@ class LoanableController extends RestController
 
     public function restore(RestoreRequest $request, $id)
     {
-        $item = $this->repo->find($request, $id);
+        $item = $this->repo->findWithTrashed($request, $id);
 
         switch ($item->type) {
             case "bike":
