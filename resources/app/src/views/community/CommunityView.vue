@@ -1,6 +1,6 @@
 <template>
   <layout-page :name="`community-view community-view--${view}`" :loading="!routeDataLoaded" wide>
-    <div :class="`community-view__overlay`">
+    <div :class="`community-view__overlay ${isMap}`">
       <b-row no-gutters>
         <b-col lg="3">
           <!-- loan search form container -->
@@ -154,6 +154,9 @@ export default {
   },
   computed: {
     ...buildComputed("community.view", ["center", "lastLoan", "searched", "selectedLoanableTypes"]),
+    isMap() {
+      return this.view === "map" ? "community-list--no-pointer-events" : "";
+    },
     isSearched() {
       return this.searched ? "community-view--searched" : "";
     },
@@ -393,6 +396,10 @@ export default {
   .page__content {
     position: relative;
   }
+}
+
+.community-list--no-pointer-events {
+  pointer-events: none;
 }
 
 .community-view--list {

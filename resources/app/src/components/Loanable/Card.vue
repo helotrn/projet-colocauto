@@ -8,7 +8,7 @@
       </div>
     </div>
 
-    <h2 class="loanable-card__title">{{ vehiculeName }}</h2>
+    <h2 class="loanable-card__title">{{ name }}</h2>
 
     <div class="loanable-card__tags">
       <div v-if="type === 'car'">
@@ -175,19 +175,28 @@ export default {
         backgroundImage: `url('${this.image.sizes.thumbnail}')`,
       };
     },
-    vehiculeName() {
-      return this.name.length > 10 ? this.name.substr(0, 7) + "..." : this.name;
-    },
   },
 };
 </script>
 
 <style lang="scss">
+@import "~bootstrap/scss/mixins/breakpoints";
+
 .loanable-card {
   padding: 20px;
 
   &__title {
     font-size: 20px;
+
+    @include media-breakpoint-up(lg) {
+      max-height: 40px;
+      overflow: hidden;
+
+      &:hover {
+        max-height: 100%;
+        overflow: visible;
+      }
+    } 
   }
 
   &__tags {
