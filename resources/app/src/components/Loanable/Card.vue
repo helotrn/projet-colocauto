@@ -196,7 +196,7 @@ export default {
         max-height: 100%;
         overflow: visible;
       }
-    } 
+    }
   }
 
   &__tags {
