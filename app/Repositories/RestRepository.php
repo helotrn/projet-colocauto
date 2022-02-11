@@ -211,12 +211,12 @@ class RestRepository
         return $query->findOrFail($id);
     }
 
-/*
-  This method is used to get items to be restored as it returns items that were
-  soft-deleted.
+    /*
+      This method is used to get items to be restored as it returns items that were
+      soft-deleted.
 
-  It's a copy of find(), but using the withTrashed() method.
-*/
+      It's a copy of find(), but using the withTrashed() method.
+    */
     public function findWithTrashed($request, $id)
     {
         if (!intval($id)) {
