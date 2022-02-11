@@ -214,7 +214,6 @@ export default {
               await restoreAction();
             } else {
               await this.$store.dispatch(`${this.slug}/restore`, item.id);
-              await this.$store.dispatch(`${this.slug}/load`);
             }
 
             await this.reloadDataRoutesData();
