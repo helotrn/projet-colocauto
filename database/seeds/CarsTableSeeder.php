@@ -16,7 +16,8 @@ class CarsTableSeeder extends Seeder
                 "location_description" => "Stationnée devant la maison.",
                 "comments" => "",
                 "instructions" => "",
-                "owner_id" => 5,
+                // proprietairepetitepatrie@locomotion.app
+                "owner_id" => 6,
                 "brand" => "Toyota",
                 "model" => "Matrix",
                 "year_of_circulation" => "2015",

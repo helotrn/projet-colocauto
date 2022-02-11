@@ -18,8 +18,8 @@ class TrailersTableSeeder extends Seeder
                 "instructions" => "",
                 "maximum_charge" => "5",
                 "availability_mode" => "always",
-                // solon@locomotion.app
-                "owner_id" => 2,
+                // solonpetitepatrie@locomotion.app
+                "owner_id" => 3,
                 "created_at" => "2020-05-01 13:57:14",
                 "is_self_service" => true,
             ],
@@ -32,7 +32,7 @@ class TrailersTableSeeder extends Seeder
                 "instructions" => "",
                 "maximum_charge" => "5",
                 "availability_mode" => "always",
-                // solon@locomotion.app
+                // solonahuntsic@locomotion.app
                 "owner_id" => 2,
                 "community_id" => 8, // 8: Ahuntsic
                 "created_at" => "2020-05-01 13:57:14",
@@ -47,8 +47,8 @@ class TrailersTableSeeder extends Seeder
                 "instructions" => "",
                 "maximum_charge" => "5",
                 "availability_mode" => "always",
-                // solon@locomotion.app
-                "owner_id" => 2,
+                // solonpetitepatrie@locomotion.app
+                "owner_id" => 3,
                 "community_id" => 9, // 9: Petite-Patrie
                 "created_at" => "2020-05-01 13:57:14",
                 "is_self_service" => true,
@@ -74,7 +74,7 @@ class TrailersTableSeeder extends Seeder
 JSON
                 ,
                 // proprietairepetitepatrie@locomotion.app
-                "owner_id" => 5,
+                "owner_id" => 6,
                 "created_at" => "2020-05-01 13:57:14",
                 "is_self_service" => false,
             ],
@@ -99,7 +99,7 @@ JSON
 JSON
                 ,
                 // proprietairepetitepatrie@locomotion.app
-                "owner_id" => 5,
+                "owner_id" => 6,
                 "created_at" => "2020-05-01 13:57:14",
                 "is_self_service" => true,
             ],

@@ -23,34 +23,42 @@ class UsersTableSeeder extends Seeder
                     "role" => "admin",
                     "name" => "Soutien Locomotion",
             ]),
-            "solon@locomotion.app" => array_merge($solon, [
+           "solonahuntsic@locomotion.app" => array_merge($solon, [
                 "id" => 2,
                 "role" => "admin",
                 "name" => "Solon",
-                "last_name" => "Collectif",
+                "last_name" => "Ahuntsic",
+                "description" => "Propriétaire de la flotte dans Ahuntsic.",
             ]),
-            "proprietaireahuntsic@locomotion.app" => array_merge($solon, [
+            "solonpetitepatrie@locomotion.app" => array_merge($solon, [
                 "id" => 3,
+                "role" => "admin",
+                "name" => "Solon",
+                "last_name" => "Petite-Patrie",
+                "description" => "Propriétaire de la flotte dans La Petite-Patrie.",
+            ]),
+             "proprietaireahuntsic@locomotion.app" => array_merge($solon, [
+                "id" => 4,
                 "name" => "Propriétaire",
                 "last_name" => "Ahuntsic",
                 "description" => "Salut tout le monde :)",
                 "submitted_at" => new \DateTime(),
             ]),
             "emprunteurahuntsic@locomotion.app" => array_merge($solon, [
-                "id" => 4,
+                "id" => 5,
                 "name" => "Emprunteur",
                 "last_name" => "Ahuntsic",
                 "submitted_at" => new \DateTime(),
             ]),
             "proprietairepetitepatrie@locomotion.app" => array_merge($solon, [
-                "id" => 5,
+                "id" => 6,
                 "name" => "Propriétaire",
                 "last_name" => "Petite-Patrie",
                 "description" => "Salut tout le monde :)",
                 "submitted_at" => new \DateTime(),
             ]),
             "emprunteurpetitepatrie@locomotion.app" => array_merge($solon, [
-                "id" => 6,
+                "id" => 7,
                 "name" => "Emprunteur",
                 "last_name" => "Petite-Patrie",
                 "description" => "Salut tout le monde :)",
@@ -61,7 +69,14 @@ class UsersTableSeeder extends Seeder
         // Community memberships
         $memberships = [
             "soutien@locomotion.app" => [],
-
+            "solonahuntsic@locomotion.app" => [
+                // 8: Ahuntsic
+                8 => ["approved_at" => new \DateTime()],
+            ],
+            "solonpetitepatrie@locomotion.app" => [
+                // 9: Petite-Patrie
+                9 => ["approved_at" => new \DateTime()],
+            ],
             "proprietaireahuntsic@locomotion.app" => [
                 // 8: Ahuntsic
                 8 => ["approved_at" => new \DateTime()],
