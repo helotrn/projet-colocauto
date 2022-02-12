@@ -4,6 +4,7 @@ namespace App\Services;
 
 use Geocoder\Query\GeocodeQuery;
 use Geocoder\Query\ReverseQuery;
+use DB;
 
 /** LocoMotion Geocoder
  *
@@ -41,5 +42,19 @@ class LocoMotionGeocoderService
         );
         var_dump($result);
         return $result;
+    }
+
+    public static function findCommunityFromCoordinates(
+        float $latitude,
+        float $longitude
+    ) {
+        $rawQuery =
+            "select * from(SELECT public.ST_Contains(area::geometry,ST_SetSRID('POINT(" .
+            $longitude .
+            " " .
+            $latitude .
+            ")'::geometry,4326)) in_area, name from communities) table_results where in_area is TRUE LIMIT 1";
+
+        return $results = DB::select(DB::raw($rawQuery));
     }
 }

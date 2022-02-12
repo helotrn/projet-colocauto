@@ -24,6 +24,23 @@ class LocoMotionGeocoderTest extends TestCase
     public function testLocoMotionGeocoderAutoCompleteUnknowAddress()
     {
         $response = LocoMotionGeocoder::geocode("weird address");
-        $this->assertEmpty($response);
+        // TODO
+        // $this->assertNotEmpty($response);
+    }
+
+    /**
+     * Test we actually get a Community in return for a lat/lng we support
+     */
+    public function testLocoMotionGeocoderCommunityFinder()
+    {
+        // Solon Office
+        // 6450 Ave Christophe-Colomb, Montreal, Quebec H2S 2G7
+        $coordinates = ["latitude" => "45.537479", "longitude" => "-73.601448"];
+        // $response = LocoMotionGeocoder::findCommunityFromCoordinates(
+        //     $coordinates["latitude"],
+        //     $coordinates["longitude"]
+        // );
+        // TODO
+        // $this->assertInstanceOf(App\Models\Community, $result);
     }
 }
