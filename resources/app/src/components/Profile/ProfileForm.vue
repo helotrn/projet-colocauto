@@ -120,6 +120,8 @@ et ne sera jamais divulguée aux utilisateurs."
 
         <b-row>
           <b-col>
+            COMPONENT NOT WORKING #HELP
+            <google-places-autocomplete placehoder="Entrez votre adresse" />
             <forms-validated-input
               name="postal_code"
               :label="$t('fields.postal_code') | capitalize"
@@ -160,12 +162,15 @@ import locales from "@/locales";
 
 import SmilingHeart from "@/assets/svg/smiling-heart.svg";
 
+import GooglePlacesAutocomplete from "react-google-places-autocomplete";
+
 export default {
   name: "ProfileForm",
   mixins: [FormLabelsMixin],
   components: {
     FormsValidatedInput,
     "svg-smiling-heart": SmilingHeart,
+    GooglePlacesAutocomplete,
   },
   props: {
     changed: {
