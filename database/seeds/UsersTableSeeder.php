@@ -19,11 +19,11 @@ class UsersTableSeeder extends Seeder
 
         $users = [
             "soutien@locomotion.app" => array_merge($solon, [
-                    "id" => 1,
-                    "role" => "admin",
-                    "name" => "Soutien Locomotion",
+                "id" => 1,
+                "role" => "admin",
+                "name" => "Soutien Locomotion",
             ]),
-           "solonahuntsic@locomotion.app" => array_merge($solon, [
+            "solonahuntsic@locomotion.app" => array_merge($solon, [
                 "id" => 2,
                 "role" => "admin",
                 "name" => "Solon",
@@ -35,9 +35,10 @@ class UsersTableSeeder extends Seeder
                 "role" => "admin",
                 "name" => "Solon",
                 "last_name" => "Petite-Patrie",
-                "description" => "Propriétaire de la flotte dans La Petite-Patrie.",
+                "description" =>
+                    "Propriétaire de la flotte dans La Petite-Patrie.",
             ]),
-             "proprietaireahuntsic@locomotion.app" => array_merge($solon, [
+            "proprietaireahuntsic@locomotion.app" => array_merge($solon, [
                 "id" => 4,
                 "name" => "Propriétaire",
                 "last_name" => "Ahuntsic",

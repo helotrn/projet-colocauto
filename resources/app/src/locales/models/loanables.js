@@ -34,7 +34,7 @@ export default {
         "partager davantage!",
       is_self_service:
         "Mon véhicule sera accessible en mode libre service, c'est-à-dire que" +
-        " les demandes d'emprint seront automatiquement acceptées."
+        " les demandes d'emprint seront automatiquement acceptées.",
     },
     engines: cars.fr.engines,
     fields: {
@@ -64,8 +64,7 @@ export default {
         trailer: "remorque",
       },
       is_deleted: "afficher les véhicules archivés",
-      is_self_service:
-        "Véhicule en libre service",
+      is_self_service: "Véhicule en libre service",
     },
     model: {
       singular: "véhicule",

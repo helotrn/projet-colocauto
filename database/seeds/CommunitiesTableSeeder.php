@@ -166,7 +166,8 @@ class CommunitiesTableSeeder extends Seeder
                 "created_at" => "2021-12-17 18:42:03",
                 "updated_at" => "2021-12-17 18:42:46",
                 "type" => "private",
-                "long_description" => "<p>Merci aux participants motivés à explorer avec nous le vélo-partage d'hiver!</p>"
+                "long_description" =>
+                    "<p>Merci aux participants motivés à explorer avec nous le vélo-partage d'hiver!</p>",
             ],
             [
                 "id" => 15,
