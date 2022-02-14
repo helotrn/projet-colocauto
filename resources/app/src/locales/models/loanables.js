@@ -34,7 +34,7 @@ export default {
         "partager davantage!",
       is_self_service:
         "Mon véhicule sera accessible en mode libre service, c'est-à-dire que" +
-        " les demandes d'emprint seront automatiquement acceptées.",
+        " les demandes d'emprunts seront automatiquement acceptées.",
     },
     engines: cars.fr.engines,
     fields: {
