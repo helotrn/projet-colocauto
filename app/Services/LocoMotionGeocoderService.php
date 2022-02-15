@@ -4,6 +4,8 @@ namespace App\Services;
 
 use Geocoder\Query\GeocodeQuery;
 use Geocoder\Query\ReverseQuery;
+use Geocoder\Model\Address;
+use App\Models\Community;
 use DB;
 
 /** LocoMotion Geocoder
@@ -13,7 +15,7 @@ use DB;
  * Useful documentation:
  * - https://geocoder-php.org/docs/
  * - https://github.com/geocoder-php/Geocoder/blob/master/src/Common/Model/AddressCollection.php
- * - https://github.com/geocoder-php/Geocoder/blob/master/src/Common/Model/Address.php
+ * - https://github.com/geocoder-php/Geocoder/blob/master/src/Common/Model/Address.php (Address)
  */
 
 class LocoMotionGeocoderService
@@ -24,8 +26,9 @@ class LocoMotionGeocoderService
     }
 
     /**
-     * RETURN A FULL ADDRESS OBJECT FROM GOOGLE
-     * input @text
+     * RETURN A GEOCODER-PHP ADDRESS OBJECT FROM A TEXTUAL ADDRESS
+     * input @string
+     * return @Address
      */
     public static function geocode(string $full_text_address)
     {
@@ -40,10 +43,37 @@ class LocoMotionGeocoderService
         $result = $geocoder->geocodeQuery(
             GeocodeQuery::create($full_text_address)
         );
-        var_dump($result);
-        return $result;
+        return $result->first();
     }
 
+    /**
+     * Convert address object to a full textual address
+     * *
+     * @input Address
+     * @return String
+     * Ex: '9155 Rue St-Hubert, Montréal, H2M 1Y8, Canada'
+     */
+    public static function formatAddressToText(Address $address)
+    {
+        $full_address =
+            $address->getStreetNumber() .
+            " " .
+            $address->getStreetName() .
+            ", " .
+            $address->getLocality() .
+            "," .
+            $address->getPostalCode() .
+            "," .
+            $address->getCountry();
+        return $full_address;
+    }
+
+    /**
+     * Find Community From Coordinates
+     * *
+     * @input (float:latitude, float:longitude)
+     * @return Community
+     */
     public static function findCommunityFromCoordinates(
         float $latitude,
         float $longitude
@@ -53,8 +83,13 @@ class LocoMotionGeocoderService
             $longitude .
             " " .
             $latitude .
-            ")'::geometry,4326)) in_area, name from communities) table_results where in_area is TRUE LIMIT 1";
+            ")'::geometry,4326)) in_area, communities.id, communities.name from communities WHERE communities.type = 'borough') table_results where in_area is TRUE LIMIT 1";
 
-        return $results = DB::select(DB::raw($rawQuery));
+        $results = DB::select(DB::raw($rawQuery));
+        if (count($results) > 0) {
+            return Community::find($results[0]->id);
+        } else {
+            return null;
+        }
     }
 }

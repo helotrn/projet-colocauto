@@ -1,9 +1,10 @@
 <?php
 
-namespace Tests\Unit;
+namespace Tests\Unit\Services;
 
 use PHPUnit\Framework\TestCase;
 use App\Services\LocoMotionGeocoderService as LocoMotionGeocoder;
+use Geocoder\Model\Address;
 
 class LocoMotionGeocoderTest extends TestCase
 {
@@ -13,9 +14,10 @@ class LocoMotionGeocoderTest extends TestCase
     public function testLocoMotionGeocoderAutoCompleteIdentifiableAddress()
     {
         $response = LocoMotionGeocoder::geocode(
-            "962 Avenue Laurier Est, Montreal"
+            "6450, Ave Christophe-Colomb, Montréal, QC, H2S 2G7"
         );
         $this->assertNotEmpty($response);
+        $this->assertInstanceOf(Address::class, $response);
     }
 
     /**
@@ -24,12 +26,14 @@ class LocoMotionGeocoderTest extends TestCase
     public function testLocoMotionGeocoderAutoCompleteUnknowAddress()
     {
         $response = LocoMotionGeocoder::geocode("weird address");
-        // TODO
-        // $this->assertNotEmpty($response);
+        $this->assertNotEmpty($response);
+        $this->assertInstanceOf(Address::class, $response);
     }
 
     /**
-     * Test we actually get a Community in return for a lat/lng we support
+     * Test we actually get a Community::class in return for a lat/lng we support
+     * *
+     * TODO: Since it interacts with the DB, we can't run it in a unit testing
      */
     public function testLocoMotionGeocoderCommunityFinder()
     {
@@ -40,7 +44,6 @@ class LocoMotionGeocoderTest extends TestCase
         //     $coordinates["latitude"],
         //     $coordinates["longitude"]
         // );
-        // TODO
-        // $this->assertInstanceOf(App\Models\Community, $result);
+        // $this->assertInstanceOf(App\Models\Community::class, $result);
     }
 }
