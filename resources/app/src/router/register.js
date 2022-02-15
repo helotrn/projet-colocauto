@@ -1,7 +1,6 @@
 import Register from "../views/Register.vue";
 import RegisterIntro from "../views/register/Intro.vue";
 import RegisterStep from "../views/register/Step.vue";
-import RegisterMap from "../views/register/Map.vue";
 
 export default {
   path: "/register",
@@ -17,27 +16,6 @@ export default {
       component: RegisterIntro,
       meta: {
         title: "titles.register",
-      },
-    },
-    {
-      path: "map",
-      name: "register-map",
-      component: RegisterMap,
-      meta: {
-        auth: true,
-        slug: "users",
-        skipCleanup: true,
-        data: {
-          communities: {
-            retrieve: {
-              fields:
-                "id,name,type,description,center,area_google,center_google," +
-                "parent.id,parent.name,parent.center_google",
-              type: "neighborhood,borough",
-            },
-          },
-        },
-        title: "titles.register-map",
       },
     },
     {
