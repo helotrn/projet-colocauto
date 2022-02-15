@@ -167,8 +167,7 @@ class LoanableController extends RestController
 
     public function restore(RestoreRequest $request, $id)
     {
-        $request->merge(["deleted_at" => "0001-01-01"]);
-        $item = $this->repo->find($request, $id);
+        $item = $this->repo->findWithTrashed($request, $id);
 
         switch ($item->type) {
             case "bike":
