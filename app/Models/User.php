@@ -4,15 +4,18 @@ namespace App\Models;
 
 use App\Events\UserEmailUpdated;
 use App\Mail\PasswordRequest;
+use App\Models\Community;
 use App\Transformers\UserTransformer;
 use Auth;
 use GuzzleHttp\Client as HttpClient;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
+use App\Services\LocoMotionGeocoderService as LocoMotionGeocoder;
 use Mail;
 use Noke;
 use Stripe;
+use Log;
 
 class User extends AuthenticatableBaseModel
 {
@@ -30,10 +33,7 @@ class User extends AuthenticatableBaseModel
         "other_phone" => ["nullable"],
         "password" => ["min:8"],
         "phone" => ["nullable"],
-        "postal_code" => [
-            "nullable",
-            'regex:/^$|^[a-zA-Z][0-9][a-zA-Z]\s*[0-9][a-zA-Z][0-9]$/',
-        ],
+        "postal_code" => ["nullable"],
     ];
 
     public static $filterTypes = [
@@ -56,7 +56,6 @@ class User extends AuthenticatableBaseModel
                     "date_of_birth" => "required",
                     "first_name" => "required",
                     "last_name" => "required",
-                    "postal_code" => "required",
                     "telephone" => "required",
                 ]);
                 break;
@@ -65,7 +64,6 @@ class User extends AuthenticatableBaseModel
                 $rules["name"][] = "required";
                 $rules["phone"][] = "required";
                 $rules["address"][] = "required";
-                $rules["postal_code"][] = "required";
                 break;
             default:
                 $rules = parent::getRules($action, $auth);
@@ -84,7 +82,15 @@ class User extends AuthenticatableBaseModel
 
     public static function booted()
     {
+        self::saved(function ($model) {
+            // Address Update
+            if ($model->wasChanged("address")) {
+                $model->updateAddressAndRelocateCommunity($model->address);
+            }
+        });
+
         self::updated(function ($model) {
+            // Detect email change
             if ($model->wasChanged("email")) {
                 $previousEmail = $model->getOriginal("email");
                 event(
@@ -208,6 +214,97 @@ class User extends AuthenticatableBaseModel
         return $this->communities->first();
     }
 
+    /**
+     * Update User Address And Relocate Community
+     *
+     * @param  String $full_text_address
+     * @return void
+     *
+     * SCENARIOS COVERED:
+     *  1) Moved within the same community
+     *  2) Moved from covered to non-covered
+     *  3) Moved from non-covered to non-covered
+     *  4) Moved from covered to covered
+     *  5) Moved from non-covered to covered
+     *
+     */
+    public function updateAddressAndRelocateCommunity(string $full_text_address)
+    {
+        // Geocode the text address into an Address object
+        $address = LocoMotionGeocoder::geocode($full_text_address);
+        $model = $this;
+
+        // If the address has been located by the geocoder
+        if ($address) {
+            // Re-save newly formatted postal_code and address
+            //
+            // For the sake of keeping the data integrity of postal_code but technically we don't need it anymore
+            // Save Quietly in order to prevent an infinite loop within this self:saved and $this->save();
+            $localUser = User::withoutEvents(function () use (
+                $address,
+                $model
+            ) {
+                $localUser = User::find($model->id);
+                $localUser->postal_code = $address->getPostalCode();
+                $localUser->address = LocoMotionGeocoder::formatAddressToText(
+                    $address
+                );
+                $localUser->save();
+            });
+
+            $coordinates = $address->getCoordinates();
+
+            // Find if the new address is within a community
+            $community = LocoMotionGeocoder::findCommunityFromCoordinates(
+                $coordinates->getLatitude(),
+                $coordinates->getLongitude()
+            );
+
+            // If so, attach or switch community
+            if ($community) {
+                $this->AttachMainCommunity($community);
+            } elseif ($this->main_community) {
+                // User has moved from covered to a non-covered area
+                $this->DetachMainCommunity($this->main_community);
+            }
+        }
+    }
+
+    /**
+     * Attach a main community to the user
+     *
+     * @param  Community $community
+     * @return void
+     *
+     * Two safety guards are in place:
+     * 1) Since it's technically possible a use is attache twice to a community, we detach first.
+     * 2) We don't switch community if the user is already in it
+     */
+    public function AttachMainCommunity(Community $community)
+    {
+        if ($this->main_community) {
+            if ($this->main_community->id !== $community->id) {
+                $this->communities()->detach($this->communities);
+                $this->communities()->detach($community);
+                $this->communities()->attach($community);
+            }
+        } else {
+            $this->communities()->detach($community);
+            $this->communities()->attach($community);
+        }
+    }
+
+    /**
+     * Detach a main community from the user
+     *
+     * @param  Community $community
+     * @return void
+     */
+    public function DetachMainCommunity(Community $community)
+    {
+        $this->communities()->detach($community);
+    }
+
     /**  communities() should be deprecated at some point as 99% of users have only one community
      *  use $this->community instead
      */
@@ -223,7 +320,8 @@ class User extends AuthenticatableBaseModel
                 "role",
                 "suspended_at",
                 "updated_at",
-            ]);
+            ])
+            ->distinct();
     }
 
     public function approvedCommunities()
