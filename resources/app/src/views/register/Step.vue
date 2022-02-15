@@ -52,15 +52,13 @@
     <div v-if="currentPage == 3" class="register-step__community">
       <div class="headers text-center">
         <h4>Afin que LocoMotion reste un service entre voisin.e.s sécuritaire.</h4>
-        <h2>Veuillez téléverser une preuve de résidence</h2>
+        <h2>Veuillez téléverser une preuve de résidence pour {{ mainCommunity.name }}</h2>
       </div>
-
       <div v-if="item && item.communities">
         <community-proof-form
           v-for="community in item.communities"
           :key="community.id"
           :community="community"
-          :loading="!hasAllProofs"
           @submit="submitCommunityProof"
         />
       </div>
@@ -145,24 +143,12 @@ export default {
     return { currentSlide: 1, currrentPage: 2 };
   },
   beforeRouteEnter(to, from, next) {
-    next(vm => {
+    next((vm) => {
       if (vm.isLoggedIn) {
         // Has not finalized his account creation
         if (!vm.isRegistered) {
           if (vm.$route.path !== "/register/2") {
             vm.$router.replace("/register/2");
-          }
-        }
-        // Doesn't have a community yet (to deprecate when we better handle out-of-borough users)
-        else if (!vm.hasCommunity) {
-          if (vm.$route.path !== "/register/map") {
-            vm.$router.replace("/register/map");
-          }
-        }
-        // Doesn't have the proof of residency submitted (to deprecate when we allow to submit the proof later in the process)
-        else if (vm.hasNotSubmittedProofOfResidency) {
-          if (vm.$route.path !== "/register/3") {
-            vm.$router.replace("/register/3");
           }
         }
       }
@@ -188,9 +174,6 @@ export default {
 
       return stepIndex;
     },
-    hasAllProofs() {
-      return this.item.communities.reduce((acc, c) => acc && !!c.proof, true);
-    },
   },
   methods: {
     nextSlide() {
@@ -199,21 +182,11 @@ export default {
     async submitAndReload() {
       try {
         await this.submit();
-
         this.$store.commit("user", this.item);
-
-        if (!this.item.communities || this.item.communities.length === 0) {
-          this.$store.commit("addNotification", {
-            content: "Il est temps de rejoindre un quartier!",
-            title: "Profil mis à jour",
-            variant: "success",
-            type: "register",
-          });
-
-          this.$router.push("/register/map");
-        } else {
-          this.$router.push("/register/3");
-        }
+        console.log(this.item);
+        // Go to proof of residency
+        // TODO if (community found) else "Quartier non-ouvert"
+        this.$router.push("/register/3");
       } catch (e) {
         if (e.request) {
           switch (e.request.status) {
@@ -230,30 +203,24 @@ export default {
       }
     },
     async submitCommunityProof() {
-      if (!this.hasAllProofs) {
-        this.$store.commit("addNotification", {
-          content: "Fournissez toutes les preuves requises.",
-          title: "Données incomplètes",
-          variant: "warning",
-          type: "register",
-        });
-      } else {
-        try {
+      try {
+        // File attached
+        console.log(this);
+        if (false) {
           await this.submit();
-
-          this.$router.push("/register/4");
-        } catch (e) {
-          if (e.request) {
-            switch (e.request.status) {
-              case 422:
-              default:
-                this.$store.commit("addNotification", {
-                  content: extractErrors(e.response.data).join(", "),
-                  title: "Erreur d'inscription",
-                  variant: "danger",
-                  type: "register",
-                });
-            }
+        }
+        this.$router.push("/register/4");
+      } catch (e) {
+        if (e.request) {
+          switch (e.request.status) {
+            case 422:
+            default:
+              this.$store.commit("addNotification", {
+                content: extractErrors(e.response.data).join(", "),
+                title: "Erreur d'inscription",
+                variant: "danger",
+                type: "register",
+              });
           }
         }
       }

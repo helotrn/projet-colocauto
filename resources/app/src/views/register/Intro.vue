@@ -43,20 +43,6 @@ export default {
           }
           return null;
         }
-        // Not community associated to profile, go to "map"
-        if (!vm.hasCommunity) {
-          if (vm.$route.path !== "/register/map") {
-            return vm.$router.replace("/register/map");
-          }
-          return null;
-        }
-        // Doesn't have the proof of residency submitted (to deprecate when we allow to submit the proof later in the process)
-        else if (vm.hasNotSubmittedProofOfResidency) {
-          if (vm.$route.path !== "/register/3") {
-            vm.$router.replace("/register/3");
-          }
-          return null;
-        }
       }
 
       if (vm.$route.path !== "/register/1") {
