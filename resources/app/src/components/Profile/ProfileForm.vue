@@ -6,7 +6,7 @@
           <b-col>
             <forms-validated-input
               name="name"
-              label="Quel est votre prénom?*"
+              :label="$t('fields.name') | capitalize"
               :rules="form.general.name.rules"
               type="text"
               @keypress.native="onlyChars"
@@ -19,7 +19,7 @@
           <b-col>
             <forms-validated-input
               name="last_name"
-              label="Nom de famille*"
+              :label="$t('fields.last_name') | capitalize"
               :rules="{ required: true }"
               type="text"
               v-model="user.last_name"
@@ -34,22 +34,25 @@
               Allo {{ user.name }}<span v-if="user.name">,</span>
             </h2>
 
+            <label>On brise la glace? Parlez-nous de vous.*</label>
             <forms-validated-input
               name="description"
               description="Vos passions, votre film préféré ou vos plus grandes folies! Ce texte permet à vos voisins de vous découvrir sous un autre angle."
               :rules="{ required: true }"
-              label="On brise la glace? Parlez-nous de vous.*"
+              label="Brise glace"
               type="textarea"
               v-model="user.description"
+              class="hide-label"
             />
           </b-col>
         </b-row>
 
         <b-row>
           <b-col class="profile-picture-uploader">
-            <h2>Une petite photo de profil?*</h2>
+            <h2>Une photo de profil?*</h2>
             <div class="circle">
               <forms-validated-input
+                label="Photo de profil"
                 type="image"
                 name="avatar"
                 :rules="{ required: true }"
@@ -61,7 +64,7 @@
 
         <b-row class="safety-questions">
           <b-col>
-            <h2>Encore quelques questions pour votre sécurité.</h2>
+            <h2>Quelques questions pour votre sécurité.</h2>
             <h3>
               LocoMotion et son partenaire d’assurance Desjardins ont besoin de ces informations.
             </h3>
@@ -108,7 +111,7 @@ uniquement dans le cadre d’une réservation."
           <b-col>
             <forms-validated-input
               name="address"
-              :label="$t('fields.address') | capitalize"
+              label="Adresse complète"
               :rules="form.general.address.rules"
               description="Elle nous permet de vous affecter au bon quartier
 et ne sera jamais divulguée aux utilisateurs."
@@ -118,20 +121,16 @@ et ne sera jamais divulguée aux utilisateurs."
           </b-col>
         </b-row>
 
-        <b-row>
-          <b-col>
-            COMPONENT NOT WORKING #HELP
-            <google-places-autocomplete placehoder="Entrez votre adresse" />
-            <forms-validated-input
-              name="postal_code"
-              :label="$t('fields.postal_code') | capitalize"
-              :rules="form.general.postal_code.rules"
-              type="text"
-              mask="A#A #A#"
-              v-model="user.postal_code"
-            />
+        <!-- TODO 
+        <b-row v-if="mainCommunity">
+          <b-col
+            ><div class="md-3">
+              Vous êtes actuellement inscrit au sein du quartier
+              <strong>{{ mainCommunity.name }}</strong
+              >.</br></br>
+            </div>
           </b-col>
-        </b-row>
+        </b-row> -->
 
         <slot />
 
@@ -140,7 +139,12 @@ et ne sera jamais divulguée aux utilisateurs."
             <b-button variant="primary" type="submit" :disabled="!changed || loading">
               {{ $t("enregistrer") | capitalize }}
             </b-button>
-            <b-button type="reset" :disabled="!changed || loading" @click="$emit('reset')">
+            <b-button
+              type="reset"
+              variant="light"
+              :disabled="!changed || loading"
+              @click="$emit('reset')"
+            >
               {{ $t("réinitialiser") | capitalize }}
             </b-button>
           </b-button-group>
@@ -162,15 +166,12 @@ import locales from "@/locales";
 
 import SmilingHeart from "@/assets/svg/smiling-heart.svg";
 
-import GooglePlacesAutocomplete from "react-google-places-autocomplete";
-
 export default {
   name: "ProfileForm",
   mixins: [FormLabelsMixin],
   components: {
     FormsValidatedInput,
     "svg-smiling-heart": SmilingHeart,
-    GooglePlacesAutocomplete,
   },
   props: {
     changed: {
@@ -267,6 +268,12 @@ export default {
     color: #1a1a1a;
     font-weight: 400;
     font-size: 14px;
+  }
+
+  .hide-label {
+    label {
+      display: none !important;
+    }
   }
 
   h2.allo-title {
