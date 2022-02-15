@@ -4,12 +4,14 @@
       <b-row class="page__section page__section__main">
         <b-col class="page__content" xl="9" lg="8" md="7">
           <h1>{{ $t("welcome_text", { name: user.name }) }}</h1>
-
           <section class="page__section">
             <release-info-box />
           </section>
 
-          <section class="page__section" v-if="!hasProfileApproved">
+          <section
+            class="page__section"
+            v-if="hasCommunity && !hasProfileApproved && !hasNotSubmittedProofOfResidency"
+          >
             <b-jumbotron
               bg-variant="light"
               header="Votre profil est en attente de validation."
@@ -22,6 +24,15 @@
             <h2>Pour commencer</h2>
 
             <div class="page__section__tutorials">
+              <div v-if="hasTutorial('upload-proof-of-residency')">
+                <tutorial-block
+                  title="Veuillez fournir une preuve de résidence"
+                  to="/profile/communities"
+                  bg-image="/img-tetes.png"
+                  variant="light"
+                />
+              </div>
+
               <div v-if="hasTutorial('fill-your-driving-profile')">
                 <tutorial-block
                   title="Remplissez votre dossier de conduite"
@@ -200,7 +211,8 @@ export default {
       return (
         this.hasTutorial("add-vehicle") ||
         this.hasTutorial("find-vehicle") ||
-        this.hasTutorial("fill-your-driving-profile")
+        this.hasTutorial("fill-your-driving-profile") ||
+        this.hasTutorial("upload-proof-of-residency")
       );
     },
   },
@@ -213,6 +225,8 @@ export default {
           return this.canLoanVehicle;
         case "fill-your-driving-profile":
           return !this.user.borrower || !this.user.borrower.is_complete;
+        case "upload-proof-of-residency":
+          return this.hasNotSubmittedProofOfResidency;
         default:
           return false;
       }

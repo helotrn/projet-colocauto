@@ -57,6 +57,9 @@
 
             <div class="community-proof-form__buttons">
               <b-button variant="primary" type="submit" :disabled="loading"> Soumettre </b-button>
+              <b-button variant="outline-primary" type="submit" to="/register/4" class="later-btn">
+                Plus tard</b-button
+              >
             </div>
           </b-col>
         </b-row>
