@@ -86,6 +86,8 @@ export default {
 @import "~bootstrap/scss/mixins/breakpoints";
 
 .community-list {
+  width: 100%;
+
   &__no-results h3 {
     font-weight: 700;
   }

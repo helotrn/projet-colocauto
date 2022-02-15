@@ -44,23 +44,23 @@
         </b-col>
         <b-col v-if="view === 'map'" lg="9">
           <!-- button to view list (on large screens) -->
-          <b-card :class="`community-view__list-button-container d-none d-lg-block`">
+          <div class="community-view__button-container d-none d-lg-block">
             <b-button pill @click="gotoView('list')"> Afficher la liste <svg-list /> </b-button>
-          </b-card>
+          </div>
           <!---->
         </b-col>
         <b-col v-if="view === 'list' && searched" lg="9">
           <b-row no-gutters>
             <!-- results header (on large screens) -->
-            <b-container :class="`community-view__results-container d-none d-lg-block`">
-              <div :class="`community-view--flex`">
-                <div>
-                  <h3>Résultats de votre recherche</h3>
-                  <p>Prochaine étape: vérifier la disponibilité!</p>
-                </div>
-                <b-button pill @click="gotoView('map')"> Afficher la carte <svg-map /> </b-button>
-              </div>
-            </b-container>
+            <div :class="`community-view__results-container d-none d-lg-block`">
+              <h3>Résultats de votre recherche</h3>
+              <p>Prochaine étape: vérifier la disponibilité!</p>
+            </div>
+            <!---->
+            <!-- button to view list (on large screens) -->
+            <div class="community-view__button-container d-none d-lg-block">
+              <b-button pill @click="gotoView('map')"> Afficher la carte <svg-map /> </b-button>
+            </div>
             <!---->
           </b-row>
           <b-row no-gutters>
@@ -316,8 +316,8 @@ export default {
   }
 
   &__results-container {
-    margin: 0;
-    max-width: 100%;
+    margin-top: 20px;
+    width: 100%;
   }
 
   &__button-modify-search {
@@ -329,10 +329,11 @@ export default {
     }
   }
 
-  &__list-button-container {
-    position: absolute !important;
-    background: none !important;
+  &__button-container {
+    pointer-events: all;
+    position: absolute;
     right: 0;
+    margin: 40px 20px;
   }
 
   .btn-secondary {
