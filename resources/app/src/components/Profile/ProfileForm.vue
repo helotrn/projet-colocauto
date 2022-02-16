@@ -109,15 +109,26 @@ uniquement dans le cadre d’une réservation."
 
         <b-row>
           <b-col>
-            <forms-validated-input
-              name="address"
-              label="Adresse complète"
-              :rules="form.general.address.rules"
-              description="Elle nous permet de vous affecter au bon quartier
+            <label>Adresse complète</label>
+            <gmap-autocomplete class="form-control">
+              <template>
+                <forms-validated-input
+                  name="address"
+                  label="Adresse complète"
+                  placeholder="Adresse"
+                  :rules="form.general.address.rules"
+                  description="Elle nous permet de vous affecter au bon quartier
 et ne sera jamais divulguée aux utilisateurs."
-              type="text"
-              v-model="user.address"
-            />
+                  type="text"
+                  v-model="user.address"
+                  @place_changed="setLocation"
+                />
+              </template>
+            </gmap-autocomplete>
+            <small class="text-muted"
+              >Elle nous permet de vous affecter au bon quartier et ne sera jamais divulguée aux
+              utilisateurs.</small
+            >
           </b-col>
         </b-row>
 
@@ -243,6 +254,10 @@ export default {
     },
   },
   methods: {
+    setLocation(value) {
+      this.user.address = value;
+      this.changed = true;
+    },
     onlyChars(event) {
       if (!this.isPerson) {
         return true;

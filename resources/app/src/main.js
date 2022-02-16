@@ -49,7 +49,8 @@ Vue.use(BootstrapVueIcons);
 Vue.use(VueGoogleMaps, {
   load: {
     key: process.env.VUE_APP_GOOGLE_MAPS_API_KEY,
-    libraries: "drawing",
+    libraries: "drawing,places",
+    installComponents: true,
   },
 });
 
