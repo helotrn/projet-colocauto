@@ -5,7 +5,7 @@
         <b-col lg="3">
           <!-- loan search form container -->
           <b-card :class="isSearched">
-            <div class="community-view__search-menu">
+            <div class="community-view__search-menu community-view--mobile-height">
               <loan-search-form
                 v-if="loan"
                 :item="loan"
@@ -57,7 +57,7 @@
               <p>Prochaine étape: vérifier la disponibilité!</p>
             </div>
             <!---->
-            <!-- button to view list (on large screens) -->
+            <!-- button to view map (on large screens) -->
             <div class="community-view__button-container d-none d-lg-block">
               <b-button pill @click="gotoView('map')"> Afficher la carte <svg-map /> </b-button>
             </div>
@@ -310,7 +310,6 @@ export default {
 
   &__search-menu {
     max-height: calc(100vh - #{$layout-navbar-height} - 30px);
-    height: 100vh;
     overflow: auto;
     overflow-x: hidden;
   }
@@ -430,5 +429,11 @@ export default {
 
 .community-view--margin-top {
   margin-top: 20px;
+}
+
+.community-view--mobile-height {
+  @include media-breakpoint-down(md) {
+    height: 100vh;
+  }
 }
 </style>
