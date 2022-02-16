@@ -41,8 +41,7 @@
         "vuejs-datepicker": "^1.6.2",
         "vuex": "^3.1.2",
         "vuex-persist": "^2.2.0",
-        "yaml-loader": "^0.5.0",
-        "react-google-places-autocomplete": "^3.3.2"
+        "yaml-loader": "^0.5.0"
     },
     "devDependencies": {
         "@babel/plugin-proposal-class-properties": "^7.14.5",
