@@ -5,7 +5,7 @@
         <b-col lg="3">
           <!-- loan search form container -->
           <b-card :class="isSearched">
-            <div :class="`community-view__search-menu`">
+            <div class="community-view__search-menu">
               <loan-search-form
                 v-if="loan"
                 :item="loan"
@@ -25,10 +25,10 @@
           </b-card>
           <!---->
           <!-- results header (on mobile view) -->
-          <b-card v-if="searched" :class="`community-view__results-container d-lg-none`">
+          <b-card v-if="searched" class="community-view__results-container d-lg-none">
             <h3>Résultats de votre recherche</h3>
             <p>Prochaine étape: vérifier la disponibilité!</p>
-            <div :class="`community-view--flex`">
+            <div class="community-view--flex">
               <a class="community-view__button-modify-search" @click="searched = false"
                 >Modifier votre recherche</a
               >
@@ -52,7 +52,7 @@
         <b-col v-if="view === 'list' && searched" lg="9">
           <b-row no-gutters>
             <!-- results header (on large screens) -->
-            <div :class="`community-view__results-container d-none d-lg-block`">
+            <div class="community-view__results-container community-view--margin-top d-none d-lg-block">
               <h3>Résultats de votre recherche</h3>
               <p>Prochaine étape: vérifier la disponibilité!</p>
             </div>
@@ -316,7 +316,6 @@ export default {
   }
 
   &__results-container {
-    margin-top: 20px;
     width: 100%;
   }
 
@@ -426,6 +425,10 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-top: 20px;
+}
+
+.community-view--margin-top {
   margin-top: 20px;
 }
 </style>
