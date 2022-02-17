@@ -110,21 +110,25 @@ uniquement dans le cadre d’une réservation."
         <b-row>
           <b-col>
             <label>Adresse complète</label>
-            <gmap-autocomplete class="form-control">
+            <gmap-autocomplete
+              class="form-control"
+              @place_changed="setLocation"
+              :value="user.address"
+              placeholder=""
+            >
               <template>
                 <forms-validated-input
                   name="address"
                   label="Adresse complète"
                   placeholder="Adresse"
                   :rules="form.general.address.rules"
-                  description="Elle nous permet de vous affecter au bon quartier
-et ne sera jamais divulguée aux utilisateurs."
+                  description="Elle nous permet de vous affecter au bon quartier et ne sera jamais divulguée aux
+              utilisateurs"
                   type="text"
-                  v-model="user.address"
-                  @place_changed="setLocation"
                 />
               </template>
             </gmap-autocomplete>
+
             <small class="text-muted"
               >Elle nous permet de vous affecter au bon quartier et ne sera jamais divulguée aux
               utilisateurs.</small
@@ -255,8 +259,7 @@ export default {
   },
   methods: {
     setLocation(value) {
-      this.user.address = value;
-      this.changed = true;
+      this.user.address = value.formatted_address;
     },
     onlyChars(event) {
       if (!this.isPerson) {
@@ -339,6 +342,13 @@ export default {
     button {
       display: block;
       margin: 20px auto;
+    }
+  }
+
+  .form__buttons {
+    margin-top: 20px;
+    .btn-primary {
+      margin-left: 0;
     }
   }
 
