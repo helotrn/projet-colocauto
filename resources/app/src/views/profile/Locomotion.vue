@@ -13,7 +13,7 @@
       <template>
         <b-row v-if="hasAddressChanged">
           <b-col>
-            <b-alert variant="danger" show>
+            <b-alert variant="danger" show class="address-change-warning">
               Si votre changement d'adresse entraine un changement de quartier, vous devrez
               soumettre une nouvelle preuve de résidence.
             </b-alert>
@@ -52,5 +52,8 @@ export default {
 <style lang="scss">
 .profile-locomotion {
   margin-bottom: 3em;
+  .address-change-warning {
+    margin-top: 20px;
+  }
 }
 </style>
