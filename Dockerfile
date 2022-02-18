@@ -61,6 +61,6 @@ COPY ./php.ini ${PHP_INI_DIR}/conf.d/php.ini
 
 
 RUN composer install
-RUN chown -R www-data.www-data /var/www/html/
+RUN chown -R www-data:www-data /var/www/html/
 
 CMD ./start_php_container.sh
