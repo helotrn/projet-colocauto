@@ -52,7 +52,6 @@
             <h2>Une photo de profil?*</h2>
             <div class="circle">
               <forms-validated-input
-                label="Photo de profil"
                 type="image"
                 name="avatar"
                 :rules="{ required: true }"
@@ -112,6 +111,7 @@ uniquement dans le cadre d’une réservation."
             <label>Adresse complète</label>
             <gmap-autocomplete
               class="form-control"
+              v-bind:class="{ 'is-invalid': !user.address && submitted == true }"
               @place_changed="setLocation"
               :value="user.address"
               placeholder=""
@@ -121,7 +121,6 @@ uniquement dans le cadre d’une réservation."
                   name="address"
                   label="Adresse complète"
                   placeholder="Adresse"
-                  :rules="form.general.address.rules"
                   description="Elle nous permet de vous affecter au bon quartier et ne sera jamais divulguée aux
               utilisateurs"
                   type="text"
@@ -150,22 +149,15 @@ uniquement dans le cadre d’une réservation."
         <slot />
 
         <div class="form__buttons" v-if="!hideButtons">
-          <b-button-group v-if="showReset">
-            <b-button variant="primary" type="submit" :disabled="!changed || loading">
-              {{ $t("enregistrer") | capitalize }}
-            </b-button>
-            <b-button
-              type="reset"
-              variant="light"
-              :disabled="!changed || loading"
-              @click="$emit('reset')"
-            >
-              {{ $t("réinitialiser") | capitalize }}
-            </b-button>
-          </b-button-group>
-          <b-button variant="primary" type="submit" :disabled="loading" v-else>
+          <b-button
+            variant="primary"
+            type="submit"
+            :disabled="loading"
+            v-on:click="submitted = true"
+          >
             {{ $t("enregistrer") | capitalize }}
           </b-button>
+          <layout-loading class="inline-with-buttons" v-if="loading" />
         </div>
       </b-form>
     </validation-observer>
@@ -198,6 +190,11 @@ export default {
       type: Object,
       required: true,
     },
+    submitted: {
+      type: Boolean,
+      required: true,
+      default: false,
+    },
     hideButtons: {
       type: Boolean,
       required: false,
@@ -205,11 +202,6 @@ export default {
     loading: {
       type: Boolean,
       required: true,
-    },
-    showReset: {
-      type: Boolean,
-      required: false,
-      default: false,
     },
     user: {
       type: Object,
@@ -275,6 +267,8 @@ export default {
     },
     submit(...params) {
       this.$emit("submit", ...params);
+      this.submitted = true;
+      this.loading = true;
     },
   },
 };
