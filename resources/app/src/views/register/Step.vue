@@ -21,9 +21,7 @@
     <div v-if="item && currentPage == 2">
       <h2>Ravi de vous rencontrer</h2>
 
-      <h3>
-        Remplissez votre profil de membre pour faciliter la rencontre avec vos voisin-e-s.
-      </h3>
+      <h3>Remplissez votre profil de membre pour faciliter la rencontre avec vos voisin-e-s.</h3>
       <profile-form
         v-if="item"
         :form="form"
@@ -48,6 +46,8 @@
       </profile-form>
       <layout-loading v-else />
     </div>
+
+    <layout-loading v-if="!item && currentPage == 2" />
 
     <div v-if="currentPage == 3" class="register-step__community">
       <div class="headers text-center">
@@ -183,10 +183,14 @@ export default {
       try {
         await this.submit();
         this.$store.commit("user", this.item);
-        console.log(this.item);
-        // Go to proof of residency
-        // TODO if (community found) else "Quartier non-ouvert"
-        this.$router.push("/register/3");
+        // We found a community for his/her address
+        if (this.item.communities.length > 0) {
+          // Go to "Submit proof of residency"
+          this.$router.push("/register/3");
+        } else {
+          // LocoMotion doesn't covered their area => Go to onboarding
+          this.$router.push("/register/4");
+        }
       } catch (e) {
         if (e.request) {
           switch (e.request.status) {
@@ -205,10 +209,10 @@ export default {
     async submitCommunityProof() {
       try {
         // File attached
-        console.log(this);
-        if (false) {
+        if (this.hasAllProofs) {
           await this.submit();
         }
+        // Go to the on-boarding slides
         this.$router.push("/register/4");
       } catch (e) {
         if (e.request) {
@@ -223,21 +227,6 @@ export default {
               });
           }
         }
-      }
-    },
-    async submitOwnerDocumentsAndTags() {
-      try {
-        await this.submit();
-        await this.$store.dispatch("submitUser");
-
-        this.$router.push("/register/5");
-      } catch (e) {
-        this.$store.commit("addNotification", {
-          content: "Erreur fatale",
-          title: "Erreur d'inscription",
-          variant: "danger",
-          type: "register",
-        });
       }
     },
   },

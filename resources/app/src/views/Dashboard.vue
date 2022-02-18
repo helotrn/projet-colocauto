@@ -23,11 +23,12 @@
           <section class="page__section" v-if="!hasCommunity">
             <b-jumbotron
               bg-variant="light"
+              class="no-communities-jumbotron"
               header="LocoMotion n'est pas encore ouvert dans votre quartier."
-              lead="LocoMotion travaille fort pour être disponible dans de nouveaux quartiers. Nous aimerions en savoir plus sur ce qui vous serait le plus utile. Écrivez-nous vos besoins!"
+              lead="LocoMotion travaille fort pour être disponible dans de nouveaux quartiers. Nous aimerions en savoir plus sur ce qui vous serait le plus utile. Écrivez-nous"
             >
               <b-button variant="primary" href="mailto:info@locomotion.app"
-                >Écrire à info@locomotion.app</b-button
+                >Écrire à LocoMotion</b-button
               >
             </b-jumbotron>
           </section>
@@ -260,6 +261,11 @@ export default {
 
     h2 {
       margin-bottom: 25px;
+    }
+    .no-communities-jumbotron {
+      .btn {
+        margin-left: 0;
+      }
     }
   }
 
