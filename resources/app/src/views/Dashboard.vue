@@ -5,12 +5,15 @@
         <b-col class="page__content" xl="9" lg="8" md="7">
           <!-- main header -->
           <h1>{{ $t("welcome_text", { name: user.name }) }}</h1>
-          <h3>
+          <h3 v-if="hasCommunity">
             {{ $t("welcome_description", { userCount: totalUsers, community: communityName }) }}
+          </h3>
+          <h3 v-else>
+            Vous n'êtes dans aucune communauté.
           </h3>
           <!---->
           <!-- profile pending container -->
-          <section class="page__section" v-if="!hasProfileApproved">
+          <section class="page__section" v-if="!hasProfileApproved && hasCommunity">
             <b-jumbotron
               bg-variant="light"
               header="Votre profil est en attente de validation."
@@ -20,7 +23,7 @@
           </section>
           <!---->
           <!-- button to search for vehicles -->
-          <section class="page__section" v-else>
+          <section class="page__section" v-if="canLoanVehicle">
             <b-button pill to="/community/map">
               <div class="dashboard--justify-text">
                 <svg-magnifying-glass />
@@ -225,7 +228,7 @@ export default {
       return this.user.communities[0].name;
     },
     totalUsers() {
-      return this.$store.state.stats.data.users;
+      return this.user.communities[0].users_count;
     },
     discoverCommunityTitle() {
       if (this.user && this.user.communities && this.user.communities[0].type === "borough") {
