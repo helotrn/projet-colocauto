@@ -2,12 +2,11 @@
 
 Bienvenue sur le guide de contribution de locomotion.app.
 
-Avant de soumettre une contribution, assurez-vous d'avoir discuté au préalable
-des changements que vous souhaitez proposer avec les propriétaires (nous) de ce dépôt
-de code. Assurez-vous également d'avoir lu ce guide.
+Tout d'abord, merci de considérer contribuer à Locomotion.app. Nous essayons d'incarner une plateforme "coop", plus local, axée vers la transition socio-écologique et donc avec une gouvernance la plus ouverte et démocratique possible. 
 
-Nous avons instauré un code de conduite qu'il importe à tou-te-s de respecter
-dans le but de créer un espace sécuritaire pour tout le monde.
+Contribuer à Locomotion, c'est renforcer ces principes. Merci pour cela. 
+
+Avant de soumettre une contribution, assurez-vous d'avoir lu ce guide.
 
 Nous sommes ouverts à une variété de contributions :
 
@@ -23,6 +22,8 @@ Nous sommes ouverts à une variété de contributions :
 
 Si vous débutez, nous maintenons une liste d'incidents à l'intention des
 néophytes : ~18698008.
+
+Si vous vous sentez prêt pour l'aventure, nous vous invitons à contribuer aux prochains [sprints](https://gitlab.com/solon-collectif/locomotion.app/-/milestones). 
 
 ## Code de conduite
 
