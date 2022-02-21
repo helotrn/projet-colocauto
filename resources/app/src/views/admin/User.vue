@@ -16,6 +16,10 @@
             <div class="form__section">
               <h2>Informations générales</h2>
 
+              <label>Membre depuis le</label>
+              {{ item.created_at | date }}
+              <hr />
+
               <forms-builder :definition="form.general" v-model="item" entity="users" />
             </div>
 
