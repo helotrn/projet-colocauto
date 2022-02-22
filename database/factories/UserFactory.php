@@ -12,7 +12,7 @@ $factory->define(User::class, function (Faker $faker) {
     return [
         "accept_conditions" => true,
         "name" => $faker->firstName,
-        "last_name" => "",
+        "last_name" => $faker->lastName,
         "email" => $faker->unique()->safeEmail,
         "email_verified_at" => Carbon::now(),
         "password" =>

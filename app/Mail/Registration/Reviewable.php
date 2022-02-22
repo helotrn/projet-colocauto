@@ -1,5 +1,13 @@
 <?php
 
+/**
+ * App\Mail\Registration\Reviewable
+ *
+ * Event triggered when the user has completed its registration.
+ * Send a notification to the community administrators so they can approve the registration.
+ *
+ */
+
 namespace App\Mail\Registration;
 
 use App\Mail\BaseMailable;
@@ -24,12 +32,15 @@ class Reviewable extends BaseMailable
 
     public function build()
     {
+        $subject =
+            $this->user->full_name .
+            " s'est inscrit dans " .
+            $this->community->name;
         return $this->view("emails.registration.reviewable")
-            ->subject("Nouveau membre inscrit dans " . $this->community->name)
+            ->subject($subject)
             ->text("emails.registration.reviewable_text")
             ->with([
-                "title" =>
-                    "Nouveau membre inscrit dans " . $this->community->name,
+                "title" => $subject,
             ]);
     }
 }
