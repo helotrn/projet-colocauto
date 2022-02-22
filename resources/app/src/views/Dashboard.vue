@@ -25,10 +25,13 @@
               bg-variant="light"
               class="no-communities-jumbotron"
               header="LocoMotion n'est pas encore ouvert dans votre quartier."
-              lead="LocoMotion travaille fort pour être disponible dans de nouveaux quartiers. Nous aimerions en savoir plus sur ce qui vous serait le plus utile. Écrivez-nous"
+              lead="Mais on y travaille! En attendant, devenez acteur de votre quartier et aider LocoMotion à améliorer votre mobilité et celle de vos voisin-e-s."
             >
-              <b-button variant="primary" href="mailto:info@locomotion.app"
-                >Écrire à LocoMotion</b-button
+              <b-button
+                variant="primary"
+                href="https://docs.google.com/forms/d/1A9p72_t7BohN04_yQaFswP78-X-TOBGPe7zaDKQc0qY/edit"
+                target="_blank"
+                >Je donne mon avis</b-button
               >
             </b-jumbotron>
           </section>
