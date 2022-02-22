@@ -37,7 +37,7 @@
             <label>On brise la glace? Parlez-nous de vous.*</label>
             <forms-validated-input
               name="description"
-              description="Vos passions, votre film préféré ou vos plus grandes folies! Ce texte permet à vos voisins de vous découvrir sous un autre angle."
+              description="Vos passions, votre film préféré ou vos plus grandes folies! Ce texte permet à vos voisin-e-s de vous découvrir sous un autre angle."
               :rules="{ required: true }"
               label="Brise glace"
               type="textarea"
@@ -86,6 +86,11 @@
           </b-col>
         </b-row>
 
+        <b-alert :variant="age < 18 ? 'danger' : 'warning'" :show="age < 21">
+          L'âge minimal pour utiliser LocoMotion est de 18 ans pour les vélos et les remorques; 21
+          ans pour les autos.
+        </b-alert>
+
         <b-row>
           <b-col>
             <forms-validated-input
@@ -100,11 +105,6 @@ uniquement dans le cadre d’une réservation."
             />
           </b-col>
         </b-row>
-
-        <b-alert :variant="age < 18 ? 'danger' : 'warning'" :show="age < 21">
-          L'âge minimal pour utiliser LocoMotion est de 18 ans pour les vélos et les remorques; 21
-          ans pour les autos.
-        </b-alert>
 
         <b-row>
           <b-col>
