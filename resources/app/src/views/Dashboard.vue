@@ -25,7 +25,7 @@
               bg-variant="light"
               class="no-communities-jumbotron"
               header="LocoMotion n'est pas encore ouvert dans votre quartier."
-              lead="Mais on y travaille! En attendant, devenez acteur de votre quartier et aider LocoMotion à améliorer votre mobilité et celle de vos voisin-e-s."
+              lead="Mais on y travaille! En attendant, devenez acteur de votre quartier et aidez LocoMotion à améliorer votre mobilité et celle de vos voisin-e-s."
             >
               <b-button
                 variant="primary"
