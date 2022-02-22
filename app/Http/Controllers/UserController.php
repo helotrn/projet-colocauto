@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Events\AddedToUserBalanceEvent;
 use App\Events\ClaimedUserBalanceEvent;
 use App\Events\RegistrationSubmittedEvent;
-use App\Exports\UsersExport;
 use App\Http\Requests\AdminRequest;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\BaseRequest as Request;
@@ -24,7 +23,6 @@ use App\Repositories\CommunityRepository;
 use App\Repositories\InvoiceRepository;
 use App\Repositories\UserRepository;
 use Cache;
-use Excel;
 use Mail;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Validation\ValidationException;
@@ -424,6 +422,7 @@ class UserController extends RestController
         $feeRatio = 0.022;
         $feeConstant = 0.3;
 
+        $amountForDisplay = Invoice::formatAmountForDisplay($amount);
         $amountWithFee = ($amount + $feeConstant) / (1 - $feeRatio);
         $amountWithFeeInCents = intval($amountWithFee * 100);
 
@@ -440,7 +439,7 @@ class UserController extends RestController
             $charge = Stripe::createCharge(
                 $amountWithFeeInCents,
                 $customerId,
-                "Ajout au compte LocoMotion: {$amount}$ + {$fee}$ (frais)"
+                "Ajout au compte LocoMotion: {$amountForDisplay}$ + {$fee}$ (frais)"
             );
         } catch (\Exception $e) {
             $message = $e->getMessage();
@@ -463,7 +462,7 @@ class UserController extends RestController
             $invoice->billItems()->create([
                 "label" =>
                     "Ajout au compte LocoMotion: " .
-                    "{$amount}$ + {$fee}$ (frais)",
+                    "{$amountForDisplay}$ + {$fee}$ (frais)",
                 "amount" => $amountWithFee,
                 "item_date" => date("Y-m-d"),
                 "taxes_tps" => 0,
