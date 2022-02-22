@@ -8,23 +8,30 @@
       >
         <div class="profile-communities__headers">
           <h4>Afin que LocoMotion reste un service entre voisin.e.s sécuritaire,</h4>
-          <h2>Veuillez téléverser une preuve de résidence pour {{ community.name }}</h2>
+          <h3>Veuillez téléverser une preuve de résidence pour {{ community.name }}</h3>
         </div>
 
-        <b-card-body>
+        <b-card-body class="profile-communities__community_proof">
           <community-proof-form :community="community" @submit="submit" />
         </b-card-body>
       </b-card>
     </div>
-    <div v-else>
-      <p>
-        Vous n'êtes membre d'aucun voisinage?
-        <router-link to="/register/map">Cliquez ici</router-link> pour rejoindre un premier
-        voisinage!
-      </p>
-    </div>
+
+    <b-card class="profile-communities__nocommunities" v-else>
+      <div>
+        <h3>Vous n'êtes pas encore inscrit au sein d'un quartier soutenu par LocoMotion.</h3>
+      </div>
+      <b-card-body>
+        <p>
+          Il se peut que LocoMotion ne soit pas encore ouvert dans votre quartier ou que votre
+          adresse n'est pas à jour.
+        </p>
+        <b-button variant="primary" to="/profile/locomotion">
+          Modifier mon adresse
+        </b-button>
+      </b-card-body>
+    </b-card>
   </div>
-  <layout-loading v-else />
 </template>
 
 <script>
@@ -58,6 +65,16 @@ export default {
   }
   &__communities__community {
     margin-bottom: 20px;
+  }
+  &__community_proof {
+    .later-btn {
+      display: none;
+    }
+  }
+  &__nocommunities {
+    .btn {
+      margin-left: 0;
+    }
   }
 }
 </style>

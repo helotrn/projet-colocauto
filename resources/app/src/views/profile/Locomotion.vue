@@ -13,10 +13,9 @@
       <template>
         <b-row v-if="hasAddressChanged">
           <b-col>
-            <b-alert variant="warning" show>
-              Si vous avez changé d'adresse et souhaitez rejoindre une nouvelle communauté, merci de
-              prendre contact avec un administrateur à l'adresse
-              <a href="mailto:info@locomotion.app">info@locomotion.app</a> .
+            <b-alert variant="danger" show class="address-change-warning">
+              Si votre changement d'adresse entraine un changement de quartier, vous devrez
+              soumettre une nouvelle preuve de résidence.
             </b-alert>
           </b-col>
         </b-row>
@@ -44,10 +43,7 @@ export default {
   },
   computed: {
     hasAddressChanged() {
-      return (
-        this.item.address !== this.parsedInitialItem.address ||
-        this.item.postal_code !== this.parsedInitialItem.postal_code
-      );
+      return this.item.address !== this.parsedInitialItem.address;
     },
   },
 };
@@ -56,5 +52,8 @@ export default {
 <style lang="scss">
 .profile-locomotion {
   margin-bottom: 3em;
+  .address-change-warning {
+    margin-top: 20px;
+  }
 }
 </style>

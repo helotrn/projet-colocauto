@@ -30,7 +30,6 @@ import CommunityView from "./pages/community/view";
 import Login from "./pages/login";
 import Register from "./pages/register";
 import RegisterIntent from "./pages/register/intent";
-import RegisterMap from "./pages/register/map";
 
 const vuexPersist = new VuexPersist({
   key: "locomotion",
@@ -256,7 +255,6 @@ export default new Vuex.Store({
     paymentMethods,
     register: Register,
     "register.intent": RegisterIntent,
-    "register.map": RegisterMap,
     stats,
     tags,
     trailers,

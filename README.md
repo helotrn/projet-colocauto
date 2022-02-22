@@ -41,11 +41,21 @@ Le mot de passe pour chacun des comptes est **locomotion**
 
 ## Tests
 
-Faire la commande
+Faire la commande, vous pouvez exécuter le script bash: 
 
-```
-docker-compose exec php bash ./phpunit
-```
+```docker-compose exec php bash ./phpunit```
+
+Ou lancer la console via Docker puis: 
+
+```php artisan test```
+
+Pour tester un seul test:
+
+```php artisan test --filter LocoMotionGeocoderTest```
+
+Les variables de l'environnement de test se trouvent dans: `.env.testing` ou `phpunit.xml`, assurez-vous d'éxécuter `php artisan config:clear` après chaque modification.
+
+Documentation: https://mattstauffer.com/blog/environment-specific-variables-in-laravels-testing-environment/ 
 
 ## Déploiement
 

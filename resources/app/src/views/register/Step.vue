@@ -19,13 +19,9 @@
     </b-pagination-nav>
 
     <div v-if="item && currentPage == 2">
-      <h2>Profil de membre</h2>
+      <h2>Ravi de vous rencontrer</h2>
 
-      <p class="register-step__profile__text">
-        Pour faire connaissance, dites à vos voisines et vos voisins qui vous êtes en remplissant
-        les champs suivants.
-      </p>
-
+      <h3>Remplissez votre profil de membre pour faciliter la rencontre avec vos voisin-e-s.</h3>
       <profile-form
         v-if="item"
         :form="form"
@@ -51,18 +47,18 @@
       <layout-loading v-else />
     </div>
 
+    <layout-loading v-if="!item && currentPage == 2" />
+
     <div v-if="currentPage == 3" class="register-step__community">
       <div class="headers text-center">
         <h4>Afin que LocoMotion reste un service entre voisin.e.s sécuritaire.</h4>
-        <h2>Veuillez téléverser une preuve de résidence</h2>
+        <h2>Veuillez téléverser une preuve de résidence pour {{ mainCommunity.name }}</h2>
       </div>
-
       <div v-if="item && item.communities">
         <community-proof-form
           v-for="community in item.communities"
           :key="community.id"
           :community="community"
-          :loading="!hasAllProofs"
           @submit="submitCommunityProof"
         />
       </div>
@@ -155,18 +151,6 @@ export default {
             vm.$router.replace("/register/2");
           }
         }
-        // Doesn't have a community yet (to deprecate when we better handle out-of-borough users)
-        else if (!vm.hasCommunity) {
-          if (vm.$route.path !== "/register/map") {
-            vm.$router.replace("/register/map");
-          }
-        }
-        // Doesn't have the proof of residency submitted (to deprecate when we allow to submit the proof later in the process)
-        else if (vm.hasNotSubmittedProofOfResidency) {
-          if (vm.$route.path !== "/register/3") {
-            vm.$router.replace("/register/3");
-          }
-        }
       }
     });
   },
@@ -190,9 +174,6 @@ export default {
 
       return stepIndex;
     },
-    hasAllProofs() {
-      return this.item.communities.reduce((acc, c) => acc && !!c.proof, true);
-    },
   },
   methods: {
     nextSlide() {
@@ -201,20 +182,14 @@ export default {
     async submitAndReload() {
       try {
         await this.submit();
-
         this.$store.commit("user", this.item);
-
-        if (!this.item.communities || this.item.communities.length === 0) {
-          this.$store.commit("addNotification", {
-            content: "Il est temps de rejoindre un quartier!",
-            title: "Profil mis à jour",
-            variant: "success",
-            type: "register",
-          });
-
-          this.$router.push("/register/map");
-        } else {
+        // We found a community for his/her address
+        if (this.item.communities.length > 0) {
+          // Go to "Submit proof of residency"
           this.$router.push("/register/3");
+        } else {
+          // LocoMotion doesn't covered their area => Go to onboarding
+          this.$router.push("/register/4");
         }
       } catch (e) {
         if (e.request) {
@@ -232,47 +207,26 @@ export default {
       }
     },
     async submitCommunityProof() {
-      if (!this.hasAllProofs) {
-        this.$store.commit("addNotification", {
-          content: "Fournissez toutes les preuves requises.",
-          title: "Données incomplètes",
-          variant: "warning",
-          type: "register",
-        });
-      } else {
-        try {
+      try {
+        // File attached
+        if (this.hasAllProofs) {
           await this.submit();
-
-          this.$router.push("/register/4");
-        } catch (e) {
-          if (e.request) {
-            switch (e.request.status) {
-              case 422:
-              default:
-                this.$store.commit("addNotification", {
-                  content: extractErrors(e.response.data).join(", "),
-                  title: "Erreur d'inscription",
-                  variant: "danger",
-                  type: "register",
-                });
-            }
+        }
+        // Go to the on-boarding slides
+        this.$router.push("/register/4");
+      } catch (e) {
+        if (e.request) {
+          switch (e.request.status) {
+            case 422:
+            default:
+              this.$store.commit("addNotification", {
+                content: extractErrors(e.response.data).join(", "),
+                title: "Erreur d'inscription",
+                variant: "danger",
+                type: "register",
+              });
           }
         }
-      }
-    },
-    async submitOwnerDocumentsAndTags() {
-      try {
-        await this.submit();
-        await this.$store.dispatch("submitUser");
-
-        this.$router.push("/register/5");
-      } catch (e) {
-        this.$store.commit("addNotification", {
-          content: "Erreur fatale",
-          title: "Erreur d'inscription",
-          variant: "danger",
-          type: "register",
-        });
       }
     },
   },
@@ -291,12 +245,26 @@ export default {
     margin-bottom: 50px;
   }
 
-  .register-step__title {
+  &__title {
+    text-align: center;
+  }
+
+  h2,
+  h3 {
     text-align: center;
   }
 
   h2 {
-    text-align: center;
+    margin-top: 30px;
+    font-size: 26px;
+    font-weight: 600;
+  }
+
+  h3 {
+    color: grey;
+    font-size: 20px;
+    margin: 20px 0;
+    font-weight: 400;
   }
 
   .community-proof-form {

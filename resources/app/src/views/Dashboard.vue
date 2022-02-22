@@ -21,22 +21,36 @@
             >
             </b-jumbotron>
           </section>
-          <!---->
-          <!-- button to search for vehicles -->
-          <section class="page__section" v-if="canLoanVehicle">
-            <b-button pill to="/community/map">
-              <div class="dashboard--justify-text">
-                <svg-magnifying-glass />
-                Rechercher un véhicule
-              </div>
-            </b-button>
+
+          <section class="page__section" v-if="!hasCommunity">
+            <b-jumbotron
+              bg-variant="light"
+              class="no-communities-jumbotron"
+              header="LocoMotion n'est pas encore ouvert dans votre quartier."
+              lead="Mais on y travaille! En attendant, devenez acteur de votre quartier et aidez LocoMotion à améliorer votre mobilité et celle de vos voisin-e-s."
+            >
+              <b-button
+                variant="primary"
+                href="https://docs.google.com/forms/d/1A9p72_t7BohN04_yQaFswP78-X-TOBGPe7zaDKQc0qY/edit"
+                target="_blank"
+                >Je donne mon avis</b-button
+              >
+            </b-jumbotron>
           </section>
-          <!---->
-          <!-- tutorial blocks -->
+
           <section class="page__section" v-if="hasTutorials">
             <h2 class="dashboard--margin-bottom">Pour commencer</h2>
 
             <div class="page__section__tutorials">
+              <div v-if="hasTutorial('upload-proof-of-residency')">
+                <tutorial-block
+                  title="Veuillez fournir une preuve de résidence"
+                  to="/profile/communities"
+                  bg-image="/img-tetes.png"
+                  variant="light"
+                />
+              </div>
+
               <div v-if="hasTutorial('fill-your-driving-profile')">
                 <tutorial-block
                   title="Remplissez votre dossier de conduite"
@@ -241,7 +255,8 @@ export default {
       return (
         this.hasTutorial("add-vehicle") ||
         this.hasTutorial("find-vehicle") ||
-        this.hasTutorial("fill-your-driving-profile")
+        this.hasTutorial("fill-your-driving-profile") ||
+        this.hasTutorial("upload-proof-of-residency")
       );
     },
   },
@@ -254,6 +269,8 @@ export default {
           return this.canLoanVehicle;
         case "fill-your-driving-profile":
           return !this.user.borrower || !this.user.borrower.is_complete;
+        case "upload-proof-of-residency":
+          return this.hasNotSubmittedProofOfResidency;
         default:
           return false;
       }
@@ -273,6 +290,15 @@ export default {
     &__main {
       padding-top: 45px;
       padding-bottom: 45px;
+    }
+
+    h2 {
+      margin-bottom: 25px;
+    }
+    .no-communities-jumbotron {
+      .btn {
+        margin-left: 0;
+      }
     }
   }
 

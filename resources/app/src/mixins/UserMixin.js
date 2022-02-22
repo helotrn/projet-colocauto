@@ -16,8 +16,17 @@ export default {
     hasCommunity() {
       return this.isLoggedIn && this.user.communities && this.user.communities.length > 0;
     },
+    mainCommunity() {
+      if (this.user.communities && this.user.communities.length > 0) {
+        return this.user.communities[0];
+      } else {
+        return false;
+      }
+    },
     hasNotSubmittedProofOfResidency() {
-      return !this.user.communities.reduce((acc, c) => acc && !!c.proof, true);
+      return (
+        this.user.communities && !this.user.communities.reduce((acc, c) => acc && !!c.proof, true)
+      );
     },
     hasProfileApproved() {
       return (
@@ -44,7 +53,7 @@ export default {
     },
     // Has finalized his account creation
     isRegistered() {
-      const requiredFields = ["name", "date_of_birth", "address", "postal_code", "phone"];
+      const requiredFields = ["name", "date_of_birth", "address", "phone"];
 
       for (let i = 0, len = requiredFields.length; i < len; i += 1) {
         if (!this.user[requiredFields[i]]) {

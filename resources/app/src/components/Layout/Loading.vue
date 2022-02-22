@@ -15,5 +15,12 @@ export default {
   display: flex;
   justify-content: center;
   text-align: center;
+  &.inline-with-buttons {
+    display: inline-block;
+    img {
+      height: 30px;
+      width: 30px;
+    }
+  }
 }
 </style>
