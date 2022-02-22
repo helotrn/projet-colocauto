@@ -33,7 +33,7 @@ export default {
       current_step: "étape en cours",
       departure_at: "départ",
       duration_in_minutes: "durée (minutes)",
-      estimated_distance: "kilométrage à parcourir",
+      estimated_distance: "distance prévue (km)",
       estimated_insurance: "coût estimé de l'assurance",
       estimated_price: "coût estimé",
       incidents: {

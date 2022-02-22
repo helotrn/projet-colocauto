@@ -1,21 +1,11 @@
 <template>
-  <layout-page :name="`community-view-${view}`" :loading="!routeDataLoaded" :wide="view === 'map'">
-    <div :class="mainDivClasses">
-      <b-row>
+  <layout-page :name="`community-view community-view--${view}`" :loading="!routeDataLoaded" wide>
+    <div :class="`community-view__overlay ${isMap}`">
+      <b-row no-gutters>
         <b-col lg="3">
-          <b-card :class="`community-view-${view}__form__sections`">
-            <div :class="`community-view-${view}__form__sections__view mb-3`">
-              <b-form-group label="Vue" label-for="view">
-                <b-form-select :value="view" @change="gotoView" name="view" id="view">
-                  <b-form-select-option value="list">Liste</b-form-select-option>
-                  <b-form-select-option value="map">Carte</b-form-select-option>
-                </b-form-select>
-              </b-form-group>
-            </div>
-
-            <hr />
-
-            <div :class="`community-view-${view}__form__sections__search`">
+          <!-- loan search form container -->
+          <b-card :class="isSearched">
+            <div class="community-view__search-menu community-view--mobile-height">
               <loan-search-form
                 v-if="loan"
                 :item="loan"
@@ -33,27 +23,65 @@
               />
             </div>
           </b-card>
-          <b-card :class="`community-view-${view}__form__toggler`">
-            <b-button @click="searched = false">Modifier la recherche</b-button>
+          <!---->
+          <!-- results header (on mobile view) -->
+          <b-card v-if="searched" class="community-view__results-container d-lg-none">
+            <h3>Résultats de votre recherche</h3>
+            <p>Prochaine étape: vérifier la disponibilité!</p>
+            <div class="community-view--flex">
+              <a class="community-view__button-modify-search" @click="searched = false"
+                >Modifier votre recherche</a
+              >
+              <b-button v-if="view === 'map'" pill @click="gotoView('list')">
+                Afficher la liste <svg-list />
+              </b-button>
+              <b-button v-else pill @click="gotoView('map')">
+                Afficher la carte <svg-map />
+              </b-button>
+            </div>
           </b-card>
+          <!---->
         </b-col>
-
-        <b-col v-if="view === 'list'" lg="9">
-          <community-list
-            v-if="!loading"
-            :data="data"
-            :page="params.page"
-            :per-page="params.per_page"
-            :total="total"
-            @page="setParam({ name: 'page', value: $event })"
-            @select="selectLoanable"
-            @test="testLoanable"
-          />
-          <layout-loading class="col-lg-9" v-else />
+        <b-col v-if="view === 'map'" lg="9">
+          <!-- button to view list (on large screens) -->
+          <div class="community-view__button-container d-none d-lg-block">
+            <b-button pill @click="gotoView('list')"> Afficher la liste <svg-list /> </b-button>
+          </div>
+          <!---->
+        </b-col>
+        <b-col v-if="view === 'list' && searched" lg="9">
+          <b-row no-gutters>
+            <!-- results header (on large screens) -->
+            <div class="community-view__results-container community-view--margin-top d-none d-lg-block">
+              <h3>Résultats de votre recherche</h3>
+              <p>Prochaine étape: vérifier la disponibilité!</p>
+            </div>
+            <!---->
+            <!-- button to view map (on large screens) -->
+            <div class="community-view__button-container d-none d-lg-block">
+              <b-button pill @click="gotoView('map')"> Afficher la carte <svg-map /> </b-button>
+            </div>
+            <!---->
+          </b-row>
+          <b-row no-gutters>
+            <!-- results display (loanable cards) -->
+            <community-list
+              v-if="!loading"
+              :data="data"
+              :page="params.page"
+              :per-page="params.per_page"
+              :total="total"
+              @page="setParam({ name: 'page', value: $event })"
+              @select="selectLoanable"
+              @test="testLoanable"
+            />
+            <!---->
+            <layout-loading class="col-lg-9" v-else />
+          </b-row>
         </b-col>
       </b-row>
     </div>
-
+    <!-- map display -->
     <community-map
       v-if="view === 'map'"
       :data="data"
@@ -61,9 +89,9 @@
       @test="testLoanable"
       @select="selectLoanable"
     />
+    <!---->
   </layout-page>
 </template>
-
 <script>
 import Authenticated from "@/mixins/Authenticated";
 import DataRouteGuards from "@/mixins/DataRouteGuards";
@@ -74,6 +102,9 @@ import CommunityList from "@/components/Community/List.vue";
 import CommunityMap from "@/components/Community/Map.vue";
 import LoanSearchForm from "@/components/Loan/SearchForm.vue";
 
+import ListIcon from "@/assets/svg/list.svg";
+import MapIcon from "@/assets/svg/map.svg";
+
 import { buildComputed } from "@/helpers";
 
 export default {
@@ -83,6 +114,8 @@ export default {
     CommunityList,
     CommunityMap,
     LoanSearchForm,
+    "svg-list": ListIcon,
+    "svg-map": MapIcon,
   },
   props: {
     view: {
@@ -101,8 +134,9 @@ export default {
     next((vm) => {
       if (vm.user.communities.filter((c) => !!c.approved_at && !c.suspended_at).length === 0) {
         vm.$store.commit("addNotification", {
-          content: "Vous n'avez accès à aucun voisinage ou quartier.",
-          title: "Accès refusé",
+          content:
+            "Il faut avoir été accepté dans un quartier pour faire une recherche de véhicule",
+          title: "En attente de validation",
           variant: "warning",
           type: "loan",
         });
@@ -120,13 +154,11 @@ export default {
   },
   computed: {
     ...buildComputed("community.view", ["center", "lastLoan", "searched", "selectedLoanableTypes"]),
-    mainDivClasses() {
-      const base = `community-view-${this.view}__form`;
-      return (
-        base +
-        (this.searched ? ` ${base}--searched` : "") +
-        (this.view === "map" ? " container" : "")
-      );
+    isMap() {
+      return this.view === "map" ? "community-list--no-pointer-events" : "";
+    },
+    isSearched() {
+      return this.searched ? "community-view--searched" : "";
     },
     loan() {
       return this.$store.state.loans.item;
@@ -271,136 +303,137 @@ export default {
 @import "~bootstrap/scss/mixins/breakpoints";
 
 .community-view {
-  &-list,
-  &-map {
-    &__form {
-      z-index: 20;
-      position: relative;
+  &__overlay {
+    z-index: 20;
+    position: relative;
+  }
 
-      @include media-breakpoint-down(lg) {
-        &--searched &__sections.card {
-          max-height: 0;
-          overflow: hidden;
+  &__search-menu {
+    max-height: calc(100vh - #{$layout-navbar-height} - 30px);
+    overflow: auto;
+    overflow-x: hidden;
+  }
 
-          + .card {
-            max-height: 100px;
-          }
-        }
-      }
+  &__results-container {
+    width: 100%;
+  }
 
-      &__sections.card,
-      &__sections.card + .card {
-        transition: max-height $one-tick ease-in-out;
-      }
+  &__button-modify-search {
+    color: $primary !important;
+    cursor: pointer;
 
-      &__sections.card + .card {
-        max-height: 0;
-        overflow: hidden;
-      }
-
-      &__toggler.card {
-        display: inline-block;
-      }
-
-      &__sections__view {
-        .card-body {
-          width: 100%;
-          display: flex;
-          flex-direction: column;
-        }
-
-        .form-group {
-          margin-bottom: 0;
-        }
-
-        .form-group label {
-          margin-right: 1em;
-          display: inline-block;
-        }
-
-        .form-group > div {
-          flex-grow: 1;
-        }
-
-        .form-group .custom-select {
-          width: 100%;
-        }
-      }
+    &:hover {
+      color: $primary;
     }
   }
 
-  &-map {
-    .page__content {
-      position: relative;
-    }
+  &__button-container {
+    pointer-events: all;
+    position: absolute;
+    right: 0;
+    margin: 40px 20px;
+  }
 
-    .community-map {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: calc(100vh - #{$layout-navbar-height});
-      z-index: 10;
-    }
+  .btn-secondary {
+    color: #7a7a7a;
+    background: #fff;
+    border: 1px solid #e5e5e5;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    box-sizing: border-box;
+    margin: 0;
 
-    &__form {
-      max-height: calc(100vh - #{$layout-navbar-height} - 1px);
-
-      padding-top: 15px;
-      padding-bottom: 15px;
-
-      @include media-breakpoint-up(lg) {
-        padding-top: 45px;
-        padding-bottom: 45px;
-      }
-      pointer-events: none;
-
-      &__sections.card {
-        min-width: 382px;
-      }
-
-      .card {
-        min-width: 382px;
-
-        pointer-events: all;
-
-        &-body {
-          padding: 0;
-          margin: 1.25rem;
-        }
-
-        max-height: calc(100vh - #{$layout-navbar-height} - 30px);
-      }
-
-      &__sections {
-        &__view {
-          height: 34px;
-
-          .form-group {
-            display: flex;
-          }
-
-          .form-group label {
-            line-height: 34px;
-          }
-        }
-
-        hr {
-          height: 1px;
-        }
-
-        &__search {
-          max-height: calc(100vh - #{$layout-navbar-height} - 154px);
-          overflow: auto;
-          overflow-x: hidden;
-        }
-      }
+    &:hover {
+      color: #7a7a7a;
+      background: #fff;
+      border: 1px solid #e5e5e5;
     }
   }
 
-  &-list .page__content {
-    padding-top: 45px;
-    padding-bottom: 45px;
+  .card {
+    pointer-events: all;
+
+    &-body {
+      padding: 0;
+      margin: 1.25rem;
+    }
+    @include media-breakpoint-down(md) {
+      border-radius: 0;
+    }
+
+    @include media-breakpoint-up(lg) {
+      margin: 20px;
+      max-height: 84vh;
+    }
+  }
+
+  h3 {
+    font-weight: 700;
+
+    @include media-breakpoint-down(md) {
+      line-height: $h4-line-height;
+      font-size: $h4-font-size;
+    }
+  }
+
+  svg {
+    margin-left: 5px;
+  }
+
+  .community-map {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: calc(100vh - #{$layout-navbar-height});
+    z-index: 10;
+  }
+}
+
+.community-view--map {
+  .page__content {
+    position: relative;
+  }
+}
+
+.community-list--no-pointer-events {
+  pointer-events: none;
+}
+
+.community-view--list {
+  .page__content {
+    padding: 0;
+  }
+}
+
+.community-view--searched {
+  @include media-breakpoint-down(md) {
+    max-height: 0;
+    overflow: hidden;
+
+    + .card {
+      max-height: 500px;
+      background: $main-bg;
+      border-radius: 0;
+    }
+  }
+}
+
+.community-view--flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.community-view--margin-top {
+  margin-top: 20px;
+}
+
+.community-view--mobile-height {
+  @include media-breakpoint-down(md) {
+    height: 100vh;
   }
 }
 </style>

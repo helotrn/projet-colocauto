@@ -3,13 +3,17 @@
     <b-container>
       <b-row class="page__section page__section__main">
         <b-col class="page__content" xl="9" lg="8" md="7">
+          <!-- main header -->
           <h1>{{ $t("welcome_text", { name: user.name }) }}</h1>
-
-          <section class="page__section">
-            <release-info-box />
-          </section>
-
-          <section class="page__section" v-if="!hasProfileApproved">
+          <h3 v-if="hasCommunity">
+            {{ $t("welcome_description", { userCount: totalUsers, community: communityName }) }}
+          </h3>
+          <h3 v-else>
+            Vous n'êtes dans aucune communauté.
+          </h3>
+          <!---->
+          <!-- profile pending container -->
+          <section class="page__section" v-if="!hasProfileApproved && hasCommunity">
             <b-jumbotron
               bg-variant="light"
               header="Votre profil est en attente de validation."
@@ -17,9 +21,20 @@
             >
             </b-jumbotron>
           </section>
-
+          <!---->
+          <!-- button to search for vehicles -->
+          <section class="page__section" v-if="canLoanVehicle">
+            <b-button pill to="/community/map">
+              <div class="dashboard--justify-text">
+                <svg-magnifying-glass />
+                Rechercher un véhicule
+              </div>
+            </b-button>
+          </section>
+          <!---->
+          <!-- tutorial blocks -->
           <section class="page__section" v-if="hasTutorials">
-            <h2>Pour commencer</h2>
+            <h2 class="dashboard--margin-bottom">Pour commencer</h2>
 
             <div class="page__section__tutorials">
               <div v-if="hasTutorial('fill-your-driving-profile')">
@@ -50,9 +65,10 @@
               </div>
             </div>
           </section>
-
+          <!---->
+          <!-- awaiting loans container -->
           <section class="page__section" v-if="hasWaitingLoans">
-            <h2>Nouvelles demandes d'emprunt</h2>
+            <h2 class="dashboard--margin-bottom">Nouvelles demandes d'emprunt</h2>
 
             <div class="dashboard__waiting-loans" v-for="loan in waitingLoans" :key="loan.id">
               <loan-info-box
@@ -64,17 +80,19 @@
               <loan-info-box v-else :loan="loan" :user="user" />
             </div>
           </section>
-
+          <!---->
+          <!-- ongoing loans container -->
           <section class="page__section" v-if="hasOngoingLoans">
-            <h2>Emprunts en cours</h2>
+            <h2 class="dashboard--margin-bottom">Emprunts en cours</h2>
 
             <div class="dashboard__ongoing-loans" v-for="loan in ongoingLoans" :key="loan.id">
               <loan-info-box :loan="loan" :user="user" :buttons="['view']" />
             </div>
           </section>
-
+          <!---->
+          <!-- upcoming loans container -->
           <section class="page__section" v-if="hasUpcomingLoans">
-            <h2>Emprunts à venir</h2>
+            <h2 class="dashboard--margin-bottom">Emprunts à venir</h2>
 
             <div class="dashboard__upcoming-loans" v-for="loan in upcomingLoans" :key="loan.id">
               <loan-info-box
@@ -85,11 +103,12 @@
               />
             </div>
           </section>
-
+          <!---->
+          <!-- loanables container -->
           <section class="page__section" v-if="user.owner">
             <b-row>
               <b-col>
-                <h2>Mes véhicules</h2>
+                <h2 class="dashboard--margin-bottom">Mes véhicules</h2>
               </b-col>
               <b-col class="text-right">
                 <b-button variant="outline-primary" to="/profile/loanables">
@@ -113,9 +132,11 @@
               </div>
             </div>
           </section>
+          <!---->
         </b-col>
 
         <b-col tag="aside" class="page__sidebar" xl="3" lg="4" md="5">
+          <!-- sidebar -->
           <b-card>
             <div v-if="hasCompletedRegistration">
               <dashboard-balance :user="user" />
@@ -137,6 +158,7 @@
 
             <dashboard-resources-list :user="user" />
           </b-card>
+          <!---->
         </b-col>
       </b-row>
     </b-container>
@@ -150,6 +172,9 @@
 <i18n>
 fr:
   welcome_text: Bienvenue {name},
+  welcome_description: Vous êtes {userCount} voisin-e-s à {community}.
+  lead_text: |
+    Vous y êtes presque. Il ne vous manque que quelques étapes, pour prendre la route!
 en:
   welcome_text: Welcome {name}!
 </i18n>
@@ -168,6 +193,8 @@ import ReleaseInfoBox from "@/components/Dashboard/ReleaseInfoBox.vue";
 import TutorialBlock from "@/components/Dashboard/TutorialBlock.vue";
 import PartnersSection from "@/components/Misc/PartnersSection.vue";
 
+import MagnifyingGlass from "@/assets/svg/magnifying-glass.svg";
+
 export default {
   name: "Dashboard",
   mixins: [Authenticated, UserMixin],
@@ -181,6 +208,7 @@ export default {
     PartnersSection,
     ReleaseInfoBox,
     TutorialBlock,
+    "svg-magnifying-glass": MagnifyingGlass,
   },
   beforeMount() {
     if (!this.isLoggedIn) {
@@ -196,6 +224,19 @@ export default {
     }
   },
   computed: {
+    communityName() {
+      return this.user.communities[0].name;
+    },
+    totalUsers() {
+      return this.user.communities[0].users_count;
+    },
+    discoverCommunityTitle() {
+      if (this.user && this.user.communities && this.user.communities[0].type === "borough") {
+        return "Découvrez votre quartier";
+      }
+
+      return "Découvrez votre voisinage";
+    },
     hasTutorials() {
       return (
         this.hasTutorial("add-vehicle") ||
@@ -225,23 +266,17 @@ export default {
 </script>
 
 <style lang="scss">
+@import "~bootstrap/scss/mixins/breakpoints";
+
 .dashboard {
   .page__section {
     &__main {
       padding-top: 45px;
       padding-bottom: 45px;
     }
-
-    h2 {
-      margin-bottom: 25px;
-    }
   }
 
   .page__content {
-    > h1 {
-      margin-bottom: 60px;
-    }
-
     .main-faq {
       padding-top: 65px;
       padding-bottom: 65px;
@@ -259,5 +294,58 @@ export default {
       margin-bottom: 20px;
     }
   }
+
+  h1 {
+    font-weight: 700;
+
+    @include media-breakpoint-down(md) {
+      line-height: $h2-line-height;
+      font-size: $h2-font-size;
+    }
+  }
+
+  h2 {
+    font-weight: 700;
+
+    @include media-breakpoint-down(md) {
+      line-height: $h3-line-height;
+      font-size: $h3-font-size;
+    }
+  }
+
+  h3 {
+    margin-bottom: 25px;
+
+    @include media-breakpoint-down(md) {
+      line-height: $h4-line-height;
+      font-size: $h4-font-size;
+    }
+  }
+
+  .btn-secondary {
+    background: #fff;
+    color: #7a7a7a;
+    border: 1px solid #e5e5e5;
+    padding: 16px, 16px, 16px, 45px;
+    margin: 0;
+    width: 300px;
+
+    &:hover {
+      background: #fff;
+      color: #7a7a7a;
+    }
+  }
+}
+
+.dashboard--margin-top {
+  margin-top: 25px;
+}
+
+.dashboard--margin-bottom {
+  margin-bottom: 25px;
+}
+
+.dashboard--justify-text {
+  text-align: justify;
 }
 </style>

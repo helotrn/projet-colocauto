@@ -3,12 +3,53 @@
     <validation-observer ref="observer" v-slot="{ passes }">
       <b-form
         :novalidate="true"
-        class="form loan-search-form__form"
+        class="form loan-search-form"
         @submit.stop.prevent="passes(submit)"
         @reset.stop.prevent="$emit('reset')"
       >
+        <!-- title -->
+        <div>
+          <h3 class="loan-search-form--no-margin">Qu'aimeriez-vous emprunter</h3>
+          <h3 class="loan-search-form--green">à vos voisin-e-s?</h3>
+        </div>
+        <!---->
+        <!-- buttons to select types of vehicles -->
+        <b-form-group label-for="loanable_type">
+          <b-form-checkbox-group
+            switches
+            stacked
+            class="form__group"
+            id="loanable_type"
+            name="loanable_type"
+            :options="loanableTypesExceptCar"
+            :checked="selectedLoanableTypes"
+            @change="emitLoanableTypes"
+          >
+            <template v-slot:first>
+              <b-checkbox value="car" :disabled="!canLoanCar">
+                Auto
+
+                <b-badge
+                  pill
+                  variant="light"
+                  v-if="!canLoanCar"
+                  tabindex="0"
+                  v-b-tooltip.hover
+                  :title="
+                    'Pour réserver une auto, remplissez le dossier de conduite ' +
+                    'de votre profil.'
+                  "
+                >
+                  ?
+                </b-badge>
+              </b-checkbox>
+            </template>
+          </b-form-checkbox-group>
+        </b-form-group>
+        <!---->
         <div v-if="form">
           <div v-if="item.departure_at">
+            <!-- field start time -->
             <forms-validated-input
               name="departure_at"
               :label="$t('fields.departure_at') | capitalize"
@@ -20,7 +61,8 @@
               v-model="item.departure_at"
             />
           </div>
-
+          <!---->
+          <!-- field end time -->
           <div v-if="item.departure_at">
             <forms-validated-input
               name="return_at"
@@ -33,74 +75,37 @@
               v-model="returnAt"
             />
           </div>
-
-          <div v-if="invalid" class="warning-message">
+          <!---->
+          <!-- loan invalid text -->
+          <div v-if="invalid" class="loan-search-form--warning loan-search-form--margin-bottom">
             La durée de l'emprunt doit être supérieure ou égale à 15 minutes.
           </div>
-
-          <b-form-group :label="$t('fields.loanable_type') | capitalize" label-for="loanable_type">
-            <b-form-checkbox-group
-              stacked
-              switches
-              id="loanable_type"
-              name="loanable_type"
-              :options="loanableTypesExceptCar"
-              :checked="selectedLoanableTypes"
-              @change="emitLoanableTypes"
-            >
-              <template v-slot:first>
-                <b-checkbox value="car" :disabled="!canLoanCar">
-                  Auto
-
-                  <b-badge
-                    pill
-                    variant="light"
-                    v-if="!canLoanCar"
-                    tabindex="0"
-                    v-b-tooltip.hover
-                    :title="
-                      'Pour emprunter une auto, remplissez le dossier de conduite ' +
-                      'de votre profil.'
-                    "
-                  >
-                    ?
-                  </b-badge>
-                </b-checkbox>
-              </template>
-            </b-form-checkbox-group>
-          </b-form-group>
-
-          <forms-validated-input
-            name="estimated_distance"
-            :label="$t('fields.estimated_distance') | capitalize"
-            type="number"
-            :min="10"
-            :max="1000"
-            :placeholder="placeholderOrLabel('estimated_distance') | capitalize"
-            v-model="item.estimated_distance"
-          />
-
-          <div class="form__buttons">
-            <b-button
-              size="sm"
-              type="submit"
-              variant="primary"
-              class="mr-2 mb-2"
-              :disabled="loading || invalid"
-            >
-              <b-spinner small v-if="loading" />
-              Rechercher
-            </b-button>
-
-            <b-button
-              size="sm"
-              variant="info"
-              class="ml-2 mb-2 d-block d-lg-none"
-              @click="$emit('hide')"
-            >
-              Fermer
-            </b-button>
+          <!---->
+          <!-- field estimated distance -->
+          <div>
+            <forms-validated-input
+              name="estimated_distance"
+              :label="$t('fields.estimated_distance') | capitalize"
+              type="number"
+              :min="10"
+              :max="1000"
+              :placeholder="placeholderOrLabel('estimated_distance') | capitalize"
+              v-model="item.estimated_distance"
+            />
           </div>
+          <!---->
+          <!-- search button -->
+          <b-button
+            pill
+            @click="$emit('hide')"
+            variant="primary"
+            class="mr-2 mb-2"
+            :disabled="loading || invalid"
+          >
+            <b-spinner small v-if="loading" />
+            Rechercher
+          </b-button>
+          <!---->
         </div>
         <layout-loading v-else />
       </b-form>
@@ -184,15 +189,27 @@ export default {
 </script>
 
 <style lang="scss">
-.loan-search-form {
-  .form__buttons {
-    display: flex;
-    justify-content: space-between;
-  }
+@import "~bootstrap/scss/mixins/breakpoints";
 
-  .warning-message {
-    color: $danger;
-    margin-bottom: 20px;
+.loan-search-form {
+  h3 {
+    font-weight: 700;
   }
+}
+
+.loan-search-form--green {
+  color: #00b1aa;
+}
+
+.loan-search-form--no-margin {
+  margin: 0;
+}
+
+.loan-search-form--margin-bottom {
+  margin-bottom: 15px;
+}
+
+.loan-search-form--warning {
+  color: $danger;
 }
 </style>

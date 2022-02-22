@@ -180,11 +180,23 @@ export default {
 </script>
 
 <style lang="scss">
+@import "~bootstrap/scss/mixins/breakpoints";
+
 .loanable-card {
   padding: 20px;
 
   &__title {
     font-size: 20px;
+
+    @include media-breakpoint-up(lg) {
+      max-height: 40px;
+      overflow: hidden;
+
+      &:hover {
+        max-height: 100%;
+        overflow: visible;
+      }
+    }
   }
 
   &__tags {

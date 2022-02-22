@@ -126,9 +126,19 @@ export default {
 </script>
 
 <style lang="scss">
+@import "~bootstrap/scss/mixins/breakpoints";
+
 .forms-datepicker {
   input.form-control[readonly]:not([disabled]) {
     background-color: $white;
+  }
+
+  .vdp-datepicker__calendar {
+    width: 100%;
+
+    @include media-breakpoint-down(sm) {
+      min-width: 300px;
+    }
   }
 
   .vdp-datepicker__clear-button {
