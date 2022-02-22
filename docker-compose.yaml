@@ -6,7 +6,6 @@ services:
             target: dev
         depends_on:
             - postgres
-        user: "${UID}:${GID}"
         volumes:
             - .:/var/www/html
         ports:

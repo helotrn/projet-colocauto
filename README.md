@@ -50,7 +50,7 @@ docker-compose exec php bash ./phpunit
 ## Déploiement
 
 Pour déployer, il faut simplement avoir le tag correspondant à
-l'environnement qui pointe vers le commit à déloyer.
+l'environnement qui pointe vers le commit à déployer.
 
 Les tags suivants sont disponibles:
 
