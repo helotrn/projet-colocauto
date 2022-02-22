@@ -1,24 +1,22 @@
 <?php
 
-use App\Models\Bike;
+use App\Models\Trailer;
 use Illuminate\Database\Seeder;
 
-class BikesTableSeeder extends Seeder
+class TrailersTableSeeder extends Seeder
 {
     public function run()
     {
-        // Start bikes at 1
-        $bikes = [
+        // Start trailers at 2001
+        $trailers = [
             [
-                "id" => 1,
-                "name" => "Vélo Solon sans communauté",
-                "position" => "45.54371 -73.627796",
+                "id" => 2001,
+                "name" => "Remorque Solon sans communauté",
+                "position" => "45.54471 -73.628796",
                 "location_description" => "",
                 "comments" => "",
                 "instructions" => "",
-                "model" => "Vélo",
-                "bike_type" => "regular",
-                "size" => "big",
+                "maximum_charge" => "5",
                 "availability_mode" => "always",
                 // solonpetitepatrie@locomotion.app
                 "owner_id" => 3,
@@ -26,15 +24,13 @@ class BikesTableSeeder extends Seeder
                 "is_self_service" => true,
             ],
             [
-                "id" => 2,
-                "name" => "Vélo Solon Ahuntsic",
-                "position" => "45.562652 -73.653695",
+                "id" => 2002,
+                "name" => "Remorque Solon Ahuntsic",
+                "position" => "45.563652 -73.654695",
                 "location_description" => "",
                 "comments" => "",
                 "instructions" => "",
-                "model" => "Vélo",
-                "bike_type" => "regular",
-                "size" => "big",
+                "maximum_charge" => "5",
                 "availability_mode" => "always",
                 // solonahuntsic@locomotion.app
                 "owner_id" => 2,
@@ -43,15 +39,13 @@ class BikesTableSeeder extends Seeder
                 "is_self_service" => true,
             ],
             [
-                "id" => 3,
-                "name" => "Vélo Solon Petite-Patrie",
-                "position" => "45.540 -73.600",
+                "id" => 2003,
+                "name" => "Remorque Solon Petite-Patrie",
+                "position" => "45.540 -73.610",
                 "location_description" => "",
                 "comments" => "",
                 "instructions" => "",
-                "model" => "Vélo",
-                "bike_type" => "regular",
-                "size" => "big",
+                "maximum_charge" => "5",
                 "availability_mode" => "always",
                 // solonpetitepatrie@locomotion.app
                 "owner_id" => 3,
@@ -60,15 +54,13 @@ class BikesTableSeeder extends Seeder
                 "is_self_service" => true,
             ],
             [
-                "id" => 101,
-                "name" => "Vélo de Propriétaire Petite-Patrie sur demande",
-                "position" => "45.535 -73.595",
+                "id" => 2101,
+                "name" => "Remorque privée sur demande",
+                "position" => "45.535 -73.605",
                 "location_description" => "",
                 "comments" => "",
                 "instructions" => "",
-                "model" => "Vélo",
-                "bike_type" => "regular",
-                "size" => "big",
+                "maximum_charge" => "5",
                 "availability_mode" => "never",
                 "availability_json" => <<<JSON
 [
@@ -87,15 +79,13 @@ JSON
                 "is_self_service" => false,
             ],
             [
-                "id" => 102,
-                "name" => "Vélo de Propriétaire Petite-Patrie en libre service",
-                "position" => "45.540 -73.595",
+                "id" => 2102,
+                "name" => "Remorque privée en libre service",
+                "position" => "45.540 -73.605",
                 "location_description" => "",
                 "comments" => "",
                 "instructions" => "",
-                "model" => "Vélo",
-                "bike_type" => "regular",
-                "size" => "big",
+                "maximum_charge" => "5",
                 "availability_mode" => "never",
                 "availability_json" => <<<JSON
 [
@@ -115,13 +105,13 @@ JSON
             ],
         ];
 
-        foreach ($bikes as $bike) {
-            if (!Bike::where("id", $bike["id"])->exists()) {
-                Bike::create($bike);
+        foreach ($trailers as $trailer) {
+            if (!Trailer::where("id", $trailer["id"])->exists()) {
+                Trailer::create($trailer);
             } else {
-                Bike::where("id", $bike["id"])
+                Trailer::where("id", $trailer["id"])
                     ->first()
-                    ->update($bike);
+                    ->update($trailer);
             }
         }
 

@@ -58,6 +58,7 @@ class Car extends Loanable
     public $readOnly = false;
 
     protected $fillable = [
+        "is_self_service",
         "availability_json",
         "availability_mode",
         "brand",

@@ -1,8 +1,9 @@
 <template>
   <div class="community-list">
+    <!-- loanable cards -->
     <div v-if="data.length > 0">
-      <b-row>
-        <b-col v-for="loanable in data" :key="loanable.id" lg="4" md="6">
+      <b-row no-gutters>
+        <b-col v-for="loanable in data" class="community-list--mobile" :key="loanable.id" lg="3">
           <loanable-card
             v-bind="loanable"
             @test="emitTest(loanable)"
@@ -11,8 +12,8 @@
           />
         </b-col>
       </b-row>
-      <b-row>
-        <b-col>
+      <b-row no-gutters>
+        <b-col class="community-list--margin">
           <b-pagination
             align="right"
             :value="page"
@@ -23,10 +24,21 @@
         </b-col>
       </b-row>
     </div>
-
+    <!---->
+    <!-- container if no loanables -->
     <b-row v-else>
-      <b-col>Aucun véhicule ne correspond à ces critères</b-col>
+      <b-col class="community-list__no-results">
+        <b-card>
+          <b-card-body>
+            <h3>Désolé, aucun véhicule ne correspond à ces critères.</h3>
+            <p class="community-list--dark">
+              Essayez d'autres critères ou invitez vos voisins à rejoindre LocoMotion ;)
+            </p>
+          </b-card-body>
+        </b-card>
+      </b-col>
     </b-row>
+    <!---->
   </div>
 </template>
 
@@ -74,8 +86,24 @@ export default {
 @import "~bootstrap/scss/mixins/breakpoints";
 
 .community-list {
-  @include media-breakpoint-down(md) {
-    margin-top: 45px;
+  width: 100%;
+
+  &__no-results h3 {
+    font-weight: 700;
   }
+}
+
+.community-list--mobile {
+  @include media-breakpoint-down(md) {
+    margin: 0 15px;
+  }
+}
+
+.community-list--margin {
+  margin: 15px;
+}
+
+.community-list--dark {
+  color: $dark;
 }
 </style>

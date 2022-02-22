@@ -30,10 +30,12 @@ dans un autre terminal, faire:
 Les comptes suivants auront été créés:
 
 -   soutien@locomotion.app (admin)
--   emile@locomotion.app
--   ariane@locomotion.app
--   proprietairevoiture@locomotion.app
--   emprunteurvoiture@locomotion.app
+-   solonahuntsic@locomotion.app
+-   solonpetitepatrie@locomotion.app
+-   emprunteurahuntsic@locomotion.app
+-   proprietaireahuntsic@locomotion.app
+-   emprunteurpetitepatrie@locomotion.app
+-   proprietairepetitepatrie@locomotion.app
 
 Le mot de passe pour chacun des comptes est **locomotion**
 
@@ -58,7 +60,7 @@ Documentation: https://mattstauffer.com/blog/environment-specific-variables-in-l
 ## Déploiement
 
 Pour déployer, il faut simplement avoir le tag correspondant à
-l'environnement qui pointe vers le commit à déloyer.
+l'environnement qui pointe vers le commit à déployer.
 
 Les tags suivants sont disponibles:
 

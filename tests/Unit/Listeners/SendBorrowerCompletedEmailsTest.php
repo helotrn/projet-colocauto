@@ -22,6 +22,10 @@ class SendBorrowerCompletedEmailsTest extends TestCase
         Mail::fake();
 
         $user = factory(User::class)->create();
+        $community = factory(Community::class)->create();
+        $user
+            ->communities()
+            ->attach($community->id, ["approved_at" => new \DateTime()]);
 
         $event = new BorrowerCompletedEvent($user);
 
@@ -37,36 +41,6 @@ class SendBorrowerCompletedEmailsTest extends TestCase
         });
     }
 
-    /*
-  Even though this might indicate a bug somewhere else in the app, we test for
-  the case of a borrower that is not a member of any community.
-*/
-    public function testSendsEmailToGlobalAdminsZeroCommunity()
-    {
-        Mail::fake();
-
-        $user = factory(User::class)->create();
-
-        $global_admin = factory(User::class)->create(["role" => "admin"]);
-
-        $event = new BorrowerCompletedEvent($user);
-
-        // Don't trigger event. Only test listener.
-        $listener = app()->make(SendBorrowerCompletedEmails::class);
-        $listener->handle($event);
-
-        // Mail to global admin
-        Mail::assertQueued(BorrowerReviewable::class, function ($mail) use (
-            $global_admin
-        ) {
-            return $mail->hasTo($global_admin->email);
-        });
-    }
-
-    /*
-  Tests that the email is sent to admins when they are registered at the same
-  level as the user.
-*/
     public function testSendsEmailToAdminsOfSameLevel()
     {
         Mail::fake();

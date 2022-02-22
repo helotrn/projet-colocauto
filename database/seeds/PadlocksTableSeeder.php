@@ -9,6 +9,34 @@ class PadlocksTableSeeder extends Seeder
     {
         $nUnaffectedPadlocks = 100;
 
+        // Bikes
+        factory(Padlock::class)->create([
+            "loanable_id" => 1,
+        ]);
+        factory(Padlock::class)->create([
+            "loanable_id" => 2,
+        ]);
+        factory(Padlock::class)->create([
+            "loanable_id" => 3,
+        ]);
+        factory(Padlock::class)->create([
+            "loanable_id" => 102,
+        ]);
+
+        // Trailers
+        factory(Padlock::class)->create([
+            "loanable_id" => 2001,
+        ]);
+        factory(Padlock::class)->create([
+            "loanable_id" => 2002,
+        ]);
+        factory(Padlock::class)->create([
+            "loanable_id" => 2003,
+        ]);
+        factory(Padlock::class)->create([
+            "loanable_id" => 2102,
+        ]);
+
         for ($p = 0; $p < $nUnaffectedPadlocks; ++$p) {
             factory(Padlock::class)->create();
         }
