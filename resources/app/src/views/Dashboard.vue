@@ -11,9 +11,7 @@
               $t("welcome_description", { userCount: totalUsers, community: mainCommunity.name })
             }}
           </h3>
-          <h3 v-else>
-            Vous n'êtes dans aucune communauté.
-          </h3>
+          <h3 v-else>Vous n'êtes dans aucune communauté.</h3>
           <!---->
           <!-- profile pending container -->
           <section class="page__section" v-if="hasCommunity && !hasProfileApproved">

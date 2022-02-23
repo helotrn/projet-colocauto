@@ -13,7 +13,10 @@
       </b-navbar-nav>
     </b-collapse>
 
-    <img src="/logo.svg" alt="Locomotion" class="logo d-lg-none" />
+    <b-navbar-brand :to="isLoggedIn ? '/app' : '/'">
+      <img src="/logo.svg" alt="Locomotion" class="logo d-lg-none" />
+    </b-navbar-brand>
+
     <b-navbar-toggle target="nav-collapse" />
 
     <b-collapse id="nav-collapse" class="layout-navbar__collapse" is-nav>

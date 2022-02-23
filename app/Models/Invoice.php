@@ -154,7 +154,8 @@ class Invoice extends BaseModel
         ];
     }
 
-    public static function formatAmountForDisplay($amount) {
+    public static function formatAmountForDisplay($amount)
+    {
         return number_format($amount, 2, ",", " ");
     }
 

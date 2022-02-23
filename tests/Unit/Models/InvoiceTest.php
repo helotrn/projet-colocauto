@@ -11,6 +11,9 @@ class InvoiceTest extends TestCase
     {
         $this->assertEquals(Invoice::formatAmountForDisplay(10.124), "10,12");
         $this->assertEquals(Invoice::formatAmountForDisplay(10.125), "10,13");
-        $this->assertEquals(Invoice::formatAmountForDisplay(10000.126), "10 000,13");
+        $this->assertEquals(
+            Invoice::formatAmountForDisplay(10000.126),
+            "10 000,13"
+        );
     }
 }
