@@ -2,9 +2,9 @@
 
 Bienvenue sur le guide de contribution de locomotion.app.
 
-Tout d'abord, merci de considérer contribuer à Locomotion.app. Nous essayons d'incarner une plateforme "coop", plus local, axée vers la transition socio-écologique et donc avec une gouvernance la plus ouverte et démocratique possible. 
+Tout d'abord, merci de considérer contribuer à Locomotion.app. Nous essayons d'incarner une plateforme "coop", plus local, axée vers la transition socio-écologique et donc avec une gouvernance la plus ouverte et démocratique possible.
 
-Contribuer à Locomotion, c'est renforcer ces principes. Merci pour cela. 
+Contribuer à Locomotion, c'est renforcer ces principes. Merci pour cela.
 
 Avant de soumettre une contribution, assurez-vous d'avoir lu ce guide.
 
@@ -23,11 +23,11 @@ Nous sommes ouverts à une variété de contributions :
 Si vous débutez, nous maintenons une liste d'incidents à l'intention des
 nouveaux contributeurs : ~18698008.
 
-Si vous vous sentez prêt pour l'aventure, nous vous invitons à contribuer aux prochains [sprints](https://gitlab.com/solon-collectif/locomotion.app/-/milestones). 
+Si vous vous sentez prêt pour l'aventure, nous vous invitons à contribuer aux prochains [sprints](https://gitlab.com/solon-collectif/locomotion.app/-/milestones).
 
 ## Code de conduite
 
-Nous souhaitons promouvoir un espace sécuritaire pour tou-te-s. 
+Nous souhaitons promouvoir un espace sécuritaire pour tou-te-s.
 Merci de respecter certaines règles de bonnes conduites :
 
 -   Adopter un ton poli et respectueux des opinions différentes;
@@ -62,6 +62,7 @@ d'abord être documentés dans un rapport d'incident. Voir "Rapporter un bug".
 Si vous souhaitez corriger des anomalies, il vous faudra certains droits supplémentaires. Faites signe pour que l'on vous accorde les permissions nécessaires.
 
 Bonnes pratiques de correction d'un bug :
+
 -   créer un test unitaire qui met le bug en évidence;
 -   corriger le bug;
 -   valider la correction du bug avec le test.
@@ -79,7 +80,6 @@ fonctionnalité dans un rapport d'incident.
 Si cette fonctionnalité s'inscrit dans l'esprit de locomotion.app, nous pourrons la mettre en oeuvre et il nous fera plaisir d'accepter votre merge request.
 
 Dans tous les cas, n'hésitez pas à nous solliciter !
-
 
 ## Sécurité
 

@@ -26,9 +26,7 @@
           Il se peut que LocoMotion ne soit pas encore ouvert dans votre quartier ou que votre
           adresse n'est pas à jour.
         </p>
-        <b-button variant="primary" to="/profile/locomotion">
-          Modifier mon adresse
-        </b-button>
+        <b-button variant="primary" to="/profile/locomotion"> Modifier mon adresse </b-button>
       </b-card-body>
     </b-card>
   </div>
