@@ -11,10 +11,21 @@
               $t("welcome_description", { userCount: totalUsers, community: mainCommunity.name })
             }}
           </h3>
+
           <h3 v-else>
             Vous n'êtes dans aucune communauté.
           </h3>
-          <!---->
+
+          <!-- button to search for vehicule -->
+          <section class="page__section" v-if="canLoanVehicle">
+            <b-button pill to="/community/map">
+              <div class="dashboard--justify-text">
+                <svg-magnifying-glass />
+                Rechercher un véhicule
+              </div>
+            </b-button>
+          </section>
+
           <!-- profile pending container -->
           <section class="page__section" v-if="hasCommunity && !hasProfileApproved">
             <b-jumbotron
