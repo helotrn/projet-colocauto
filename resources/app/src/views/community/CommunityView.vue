@@ -52,7 +52,9 @@
         <b-col v-if="view === 'list' && searched" lg="9">
           <b-row no-gutters>
             <!-- results header (on large screens) -->
-            <div class="community-view__results-container community-view--margin-top d-none d-lg-block">
+            <div
+              class="community-view__results-container community-view--margin-top d-none d-lg-block"
+            >
               <h3>Résultats de votre recherche</h3>
               <p>Prochaine étape: vérifier la disponibilité!</p>
             </div>
