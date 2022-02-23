@@ -49,12 +49,11 @@
 
         <b-row>
           <b-col class="profile-picture-uploader">
-            <h2>Une photo de profil?*</h2>
             <div class="circle">
               <forms-validated-input
                 type="image"
+                label="Une photo de profil?*"
                 name="avatar"
-                :rules="{ required: true }"
                 v-model="user.avatar"
               />
             </div>
@@ -192,7 +191,6 @@ export default {
     },
     submitted: {
       type: Boolean,
-      required: true,
       default: false,
     },
     hideButtons: {
@@ -300,8 +298,10 @@ export default {
 
   .profile-picture-uploader {
     text-align: center;
-    h2 {
+    label {
       margin: 20px 0;
+      font-size: $h3-font-size;
+      line-height: $h3-line-height;
     }
     figure {
       height: 200px;
