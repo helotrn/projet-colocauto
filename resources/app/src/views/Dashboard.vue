@@ -5,19 +5,22 @@
         <b-col class="page__content" xl="9" lg="8" md="7">
           <!-- main header -->
           <h1>{{ $t("welcome_text", { name: user.name }) }}</h1>
+
           <h3 v-if="hasCommunity">
-            {{ $t("welcome_description", { userCount: totalUsers, community: communityName }) }}
+            {{
+              $t("welcome_description", { userCount: totalUsers, community: mainCommunity.name })
+            }}
           </h3>
           <h3 v-else>
             Vous n'êtes dans aucune communauté.
           </h3>
           <!---->
           <!-- profile pending container -->
-          <section class="page__section" v-if="!hasProfileApproved && hasCommunity">
+          <section class="page__section" v-if="hasCommunity && !hasProfileApproved">
             <b-jumbotron
               bg-variant="light"
               header="Votre profil est en attente de validation."
-              lead="LocoMotion s'assure que vos voisins soient bien... vos voisins! C'est pourquoi un membre de notre équipe va vérifier votre preuve de résidence et valider votre compte. Vous recevrez un courriel de confirmation et aurez alors accès à toutes les fonctionnalités de LocoMotion! "
+              lead="LocoMotion s'assure que vos voisin-e-s soient bien... vos voisin-e-s! C'est pourquoi un membre de notre équipe va vérifier votre preuve de résidence et valider votre compte. Vous recevrez un courriel de confirmation et aurez alors accès à toutes les fonctionnalités de LocoMotion! "
             >
             </b-jumbotron>
           </section>
@@ -238,11 +241,12 @@ export default {
     }
   },
   computed: {
-    communityName() {
-      return this.user.communities[0].name;
-    },
     totalUsers() {
-      return this.user.communities[0].users_count;
+      if (this.hasCommunity) {
+        return this.user.communities[0].users_count;
+      } else {
+        return 0;
+      }
     },
     discoverCommunityTitle() {
       if (this.user && this.user.communities && this.user.communities[0].type === "borough") {
@@ -268,7 +272,7 @@ export default {
         case "find-vehicle":
           return this.canLoanVehicle;
         case "fill-your-driving-profile":
-          return !this.user.borrower || !this.user.borrower.is_complete;
+          return this.hasCommunity && (!this.user.borrower || !this.user.borrower.is_complete);
         case "upload-proof-of-residency":
           return this.hasNotSubmittedProofOfResidency;
         default:
