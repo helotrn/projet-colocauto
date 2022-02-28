@@ -569,7 +569,7 @@ class UserTest extends TestCase
             ->with(
                 1065,
                 "cus_test",
-                "Ajout au compte LocoMotion: 10.12$ + 0.53$ (frais)"
+                "Ajout au compte LocoMotion: 10,12$ + 0,53$ (frais)"
             );
 
         $response = $this->json("PUT", "/api/v1/auth/user/balance", [

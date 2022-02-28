@@ -431,6 +431,7 @@ class UserController extends RestController
         }
 
         $fee = round($amountWithFee - $amount, 2);
+        $feeForDisplay = Invoice::formatAmountForDisplay($fee);
 
         $date = date("Y-m-d");
         $charge = null;
@@ -439,7 +440,7 @@ class UserController extends RestController
             $charge = Stripe::createCharge(
                 $amountWithFeeInCents,
                 $customerId,
-                "Ajout au compte LocoMotion: {$amountForDisplay}$ + {$fee}$ (frais)"
+                "Ajout au compte LocoMotion: {$amountForDisplay}$ + {$feeForDisplay}$ (frais)"
             );
         } catch (\Exception $e) {
             $message = $e->getMessage();
