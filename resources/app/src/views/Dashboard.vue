@@ -12,9 +12,7 @@
             }}
           </h3>
 
-          <h3 v-else>
-            Vous n'êtes dans aucune communauté.
-          </h3>
+          <h3 v-else>Vous n'êtes dans aucune communauté.</h3>
 
           <!-- button to search for vehicule -->
           <section class="page__section" v-if="canLoanVehicle">
