@@ -28,7 +28,7 @@ services:
             DB_DATABASE: locomotion
             DB_USERNAME: locomotion
             DB_PASSWORD: locomotion
-            MANDRILL_KEY: yourapikey
+            MANDRILL_KEY:
             ENABLE_TEST_ROUTES: "true"
             MAIL_DRIVER: log
             PASSWORD_CLIENT_ID: BCZZHm4YsI14Rum2
