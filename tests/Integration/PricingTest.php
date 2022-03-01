@@ -12,6 +12,12 @@ class PricingTest extends TestCase
 {
     public function testEvaluatePricing()
     {
+        // Linking users and communities would trigger RegistrationApprovedEvent
+        // which would then send email using an external service.
+        // withoutEvents() makes the test robust to a non-existent or
+        // incorrectly-configured email service.
+        $this->withoutEvents();
+
         $community = factory(Community::class)->create();
 
         $syncCommunities = [];
@@ -57,6 +63,12 @@ class PricingTest extends TestCase
 
     public function testEvaluatePricingThatReturnsTwoValues()
     {
+        // Linking users and communities would trigger RegistrationApprovedEvent
+        // which would then send email using an external service.
+        // withoutEvents() makes the test robust to a non-existent or
+        // incorrectly-configured email service.
+        $this->withoutEvents();
+
         $community = factory(Community::class)->create();
 
         $syncCommunities = [];
