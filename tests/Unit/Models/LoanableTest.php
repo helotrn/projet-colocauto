@@ -32,6 +32,12 @@ class LoanableTest extends TestCase
     {
         parent::setUp();
 
+        // Linking users and communities would trigger RegistrationApprovedEvent
+        // which would then send email using an external service.
+        // withoutEvents() makes the test robust to a non-existent or
+        // incorrectly-configured email service.
+        $this->withoutEvents();
+
         $this->borough = factory(Community::class)->create([
             "type" => "borough",
         ]);

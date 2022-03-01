@@ -183,6 +183,12 @@ class LoanableTest extends TestCase
 
     public function testRetrieveNextLoan()
     {
+        // Linking users and communities would trigger RegistrationApprovedEvent
+        // which would then send email using an external service.
+        // withoutEvents() makes the test robust to a non-existent or
+        // incorrectly-configured email service.
+        $this->withoutEvents();
+
         $borrower = factory(Borrower::class)->create([
             "user_id" => $this->user->id,
         ]);
@@ -279,6 +285,12 @@ class LoanableTest extends TestCase
 
     public function testLoanableTestEndpointValidation()
     {
+        // Linking users and communities would trigger RegistrationApprovedEvent
+        // which would then send email using an external service.
+        // withoutEvents() makes the test robust to a non-existent or
+        // incorrectly-configured email service.
+        $this->withoutEvents();
+
         $community = factory(Community::class)
             ->states("withDefaultFreePricing")
             ->create();
