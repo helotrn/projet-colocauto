@@ -77,7 +77,10 @@
           </div>
           <!---->
           <!-- text for loan invalid duration -->
-          <div v-if="invalidDuration" class="loan-search-form--warning loan-search-form--margin-bottom">
+          <div
+            v-if="invalidDuration"
+            class="loan-search-form--warning loan-search-form--margin-bottom"
+          >
             La durée de l'emprunt doit être supérieure ou égale à 15 minutes.
           </div>
           <!---->
@@ -93,7 +96,10 @@
               v-model="item.estimated_distance"
             />
             <!-- text for invalid input for estimated distance -->
-            <div v-if="invalidDistance" class="loan-search-form--warning loan-search-form--margin-bottom">
+            <div
+              v-if="invalidDistance"
+              class="loan-search-form--warning loan-search-form--margin-bottom"
+            >
               La distance prévue doit être un entier.
             </div>
             <!---->
