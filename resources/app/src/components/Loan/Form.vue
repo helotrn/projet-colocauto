@@ -84,13 +84,16 @@
                     <forms-validated-input
                       name="estimated_distance"
                       :label="$t('fields.estimated_distance') | capitalize"
-                      type="number"
+                      type="text"
                       :min="10"
                       :max="1000"
                       :disabled="!!item.id"
                       :placeholder="placeholderOrLabel('estimated_distance') | capitalize"
                       v-model="item.estimated_distance"
                     />
+                    <div class="warning-message" v-if="invalidDistance">
+                      La distance prévue doit être un entier.
+                    </div>
                   </b-col>
                 </b-row>
               </b-col>
@@ -185,7 +188,7 @@
                 <b-button disabled type="submit" v-if="!item.loanable.available">
                   Indisponible
                 </b-button>
-                <b-button type="submit" :disabled="loading || invalid" v-else-if="isOwnedLoanable">
+                <b-button type="submit" :disabled="loading || isDisabled" v-else-if="isOwnedLoanable">
                   Faire la demande d'emprunt
                 </b-button>
                 <b-button type="submit" :disabled="loading" v-else>Réserver</b-button>
@@ -240,9 +243,18 @@ export default {
     },
   },
   computed: {
-    invalid() {
+    invalidDuration() {
       // Invalid if the duration is not greater than 0 minute.
       return !(this.item.duration_in_minutes > 0);
+    },
+    invalidDistance() {
+      // Invalid if the estimated_distance value is not an int.
+      let input = this.item.estimated_distance;
+      return input.includes(".") || input.includes(",");
+    },
+    isDisabled() {
+      // Search button is disabled if there is an invalid input.
+      return this.invalidDuration || this.invalidDistance;
     },
     loading() {
       return this.$store.state.loans.loading;
