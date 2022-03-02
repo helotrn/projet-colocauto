@@ -139,7 +139,6 @@ export default {
       this.selected = value;
     },
     onSelection() {
-      console.log("onSelection");
       this.$emit("input", this.selected);
     },
   },
