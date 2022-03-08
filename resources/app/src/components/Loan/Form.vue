@@ -62,7 +62,7 @@
               </b-col>
             </b-row>
 
-            <b-row v-if="invalid">
+            <b-row v-if="invalidDuration">
               <b-col>
                 <div class="warning-message">
                   La durée de l'emprunt doit être supérieure ou égale à 15 minutes.
@@ -76,7 +76,7 @@
                   <b-col cols="6">
                     <div class="form-group">
                       <label>{{ $t("fields.duration_in_minutes") | capitalize }}</label>
-                      <div v-if="!invalid">{{ item.duration_in_minutes }} minutes</div>
+                      <div v-if="!invalidDuration">{{ item.duration_in_minutes }} minutes</div>
                     </div>
                   </b-col>
 
@@ -89,7 +89,7 @@
                       :max="1000"
                       :disabled="!!item.id"
                       :placeholder="placeholderOrLabel('estimated_distance') | capitalize"
-                      v-model="item.estimated_distance"
+                      v-model="formattedEstimatedDistance"
                     />
                     <div class="warning-message" v-if="invalidDistance">
                       La distance prévue doit être un entier.
@@ -107,7 +107,7 @@
                         v-if="priceUpdating"
                         class="loan-form__estimations__loading"
                       />
-                      <div v-else-if="!invalid">
+                      <div v-else-if="!invalidDuration">
                         {{ item.estimated_price | currency }}
                       </div>
                     </div>
@@ -120,7 +120,7 @@
                         v-if="priceUpdating"
                         class="loan-form__estimations__loading"
                       />
-                      <div v-else-if="!invalid">
+                      <div v-else-if="!invalidDuration">
                         {{ item.estimated_insurance | currency }}
                       </div>
                     </div>

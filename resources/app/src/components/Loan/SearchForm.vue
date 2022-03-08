@@ -93,7 +93,7 @@
               :min="10"
               :max="1000"
               :placeholder="placeholderOrLabel('estimated_distance') | capitalize"
-              v-model="item.estimated_distance"
+              v-model="formattedEstimatedDistance"
             />
             <!-- text for invalid input for estimated distance -->
             <div
