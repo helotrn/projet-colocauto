@@ -54,12 +54,10 @@ export default {
     formattedEstimatedDistance: {
       get() {
         // if the estimated distance is 0, there will be nothing displayed
-        if(this.item.estimated_distance === 0)
-          return "";
+        if (this.item.estimated_distance === 0) return "";
 
         // if no input has been provided yet, the initial value of estimated distance will be displayed
-        if(!this.estimatedDistanceStr)
-          return this.item.estimated_distance;
+        if (!this.estimatedDistanceStr) return this.item.estimated_distance;
 
         // display the input value as a string
         return this.estimatedDistanceStr;
@@ -67,21 +65,18 @@ export default {
       set(val) {
         // set the estimated distance to be displayed to the input value.
         this.estimatedDistanceStr = val;
-        
+
         // if the input is a number, set the estimated distance to the value unchanged.
-        if(typeof(val) === "number")
-          this.item.estimated_distance = val;
+        if (typeof val === "number") this.item.estimated_distance = val;
         
         // if the input is empty, set the estimated distance to 0.
-        else if(val === "") {
-          this.item.estimated_distance = 0;
-        }
-        
+        else if (val === "") this.item.estimated_distance = 0;
+
         // if the input is not a number, parse it into a float and round it to an int.
         else {
           const valueFloat = parseFloat(val.replace(",", "."));
           const roundedValue = Math.round(valueFloat);
-          
+
           // set the estimated distance to the rounded value.
           this.item.estimated_distance = roundedValue;
         }
