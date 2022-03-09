@@ -91,9 +91,6 @@
                       :placeholder="placeholderOrLabel('estimated_distance') | capitalize"
                       v-model="formattedEstimatedDistance"
                     />
-                    <div class="warning-message" v-if="invalidDistance">
-                      La distance prévue doit être un entier.
-                    </div>
                   </b-col>
                 </b-row>
               </b-col>
@@ -190,7 +187,7 @@
                 </b-button>
                 <b-button
                   type="submit"
-                  :disabled="loading || isDisabled"
+                  :disabled="loading || invalidDuration"
                   v-else-if="isOwnedLoanable"
                 >
                   Faire la demande d'emprunt
@@ -250,15 +247,6 @@ export default {
     invalidDuration() {
       // Invalid if the duration is not greater than 0 minute.
       return !(this.item.duration_in_minutes > 0);
-    },
-    invalidDistance() {
-      // Invalid if the estimated_distance value is not an int.
-      let input = this.item.estimated_distance;
-      return input.includes(".") || input.includes(",");
-    },
-    isDisabled() {
-      // Search button is disabled if there is an invalid input.
-      return this.invalidDuration || this.invalidDistance;
     },
     loading() {
       return this.$store.state.loans.loading;

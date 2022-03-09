@@ -95,14 +95,6 @@
               :placeholder="placeholderOrLabel('estimated_distance') | capitalize"
               v-model="formattedEstimatedDistance"
             />
-            <!-- text for invalid input for estimated distance -->
-            <div
-              v-if="invalidDistance"
-              class="loan-search-form--warning loan-search-form--margin-bottom"
-            >
-              La distance prévue doit être un entier.
-            </div>
-            <!---->
           </div>
           <!---->
           <!-- search button -->
@@ -111,7 +103,7 @@
             @click="$emit('hide')"
             variant="primary"
             class="mr-2 mb-2"
-            :disabled="loading || isDisabled"
+            :disabled="loading || invalidDuration"
           >
             <b-spinner small v-if="loading" />
             Rechercher
@@ -171,15 +163,6 @@ export default {
     invalidDuration() {
       // Invalid if the duration of a loan is not greater than 0 minute.
       return !(this.item.duration_in_minutes > 0);
-    },
-    invalidDistance() {
-      // Invalid if the estimated_distance value is not an int.
-      let input = this.item.estimated_distance;
-      return input.includes(".") || input.includes(",");
-    },
-    isDisabled() {
-      // Search button is disabled if there is an invalid input.
-      return this.invalidDuration || this.invalidDistance;
     },
     loanableTypesExceptCar() {
       return this.loanableTypes.filter((t) => t.value !== "car");

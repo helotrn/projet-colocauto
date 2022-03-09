@@ -51,7 +51,7 @@
         :title="
           `Cliquez pour valider la disponibilité avec les paramètres ` + `d'emprunt sélectionnés`
         "
-        :disabled="isDisabled"
+        :disabled="invalidDuration"
         @click.stop.prevent="
           loading = true;
           $emit('test');
@@ -147,15 +147,6 @@ export default {
     invalidDuration() {
       // Invalid if the duration of a loan is less than 15 minutes.
       return this.$store.state.loans.item.duration_in_minutes < 15;
-    },
-    invalidDistance() {
-      // Invalid if the estimated_distance value is not an int.
-      let input = this.$store.state.loans.item.estimated_distance;
-      return input.includes(".") || input.includes(",");
-    },
-    isDisabled() {
-      // Search button is disabled if there is an invalid input.
-      return this.invalidDuration || this.invalidDistance;
     },
     isElectric() {
       switch (this.type) {
