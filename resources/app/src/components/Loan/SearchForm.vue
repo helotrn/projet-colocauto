@@ -16,9 +16,8 @@
         <!-- buttons to select types of vehicles -->
         <b-form-group label-for="loanable_type">
           <b-form-checkbox-group
-            switches
-            stacked
-            class="form__group"
+            buttons
+            class="loanable-buttons"
             id="loanable_type"
             name="loanable_type"
             :options="loanableTypesExceptCar"
@@ -28,24 +27,17 @@
             <template v-slot:first>
               <b-checkbox value="car" :disabled="!canLoanCar">
                 Auto
-
-                <b-badge
-                  pill
-                  variant="light"
-                  v-if="!canLoanCar"
-                  tabindex="0"
-                  v-b-tooltip.hover
-                  :title="
-                    'Pour réserver une auto, remplissez le dossier de conduite ' +
-                    'de votre profil.'
-                  "
-                >
-                  ?
-                </b-badge>
               </b-checkbox>
             </template>
           </b-form-checkbox-group>
         </b-form-group>
+        <b-alert
+          show
+          variant="danger"
+          v-if="!canLoanCar"
+        >
+          <strong>Oops! Pour emprunter l'auto de vos voisin-e-s</strong> vous devez remplir votre profil de conduite.
+        </b-alert>
         <!---->
         <div v-if="form">
           <div v-if="item.departure_at">
@@ -194,6 +186,49 @@ export default {
 .loan-search-form {
   h3 {
     font-weight: 700;
+  }
+
+  .loanable-buttons label {
+    border: 2px solid $locomotion-light-green;
+    border-radius: 10px;
+    display: table;
+    height: 85px;
+    width: 85px;
+    font-size: 14px;
+    line-height: 24px;
+  }
+
+  .loanable-buttons label:hover {
+    background-color: #fff; 
+    border: 2px solid $locomotion-light-green;
+  }
+
+  .loanable-buttons > .btn:not(:last-child):not(.dropdown-toggle), .btn-group > .btn-group:not(:last-child) > .btn {
+    border-radius: 10px;
+    margin-right: 5px;
+  }
+
+  .loanable-buttons > .btn:not(:first-child), .btn-group > .btn-group:not(:first-child) > .btn {
+    border-radius: 10px;
+    margin-left: 5px;
+  }
+
+  .loanable-buttons .btn:not(:disabled):not(.disabled):active, 
+  .loanable-buttons .btn-secondary:not(:disabled):not(.disabled).active, .show > .loanable-buttons .btn-secondary.dropdown-toggle {
+    background-color: $locomotion-light-green; 
+    border: 2px solid $locomotion-light-green;
+    color: #fff;
+  }
+
+  .loanable-buttons .btn:focus, .btn.focus {
+    background-color: #fff;
+    color: #7a7a7a;
+  }
+
+  .loanable-buttons .btn:disabled, .btn.disabled {
+    background-color: #fff;
+    border-color: #a9afb5 !important;
+    color: #7a7a7a;
   }
 }
 
