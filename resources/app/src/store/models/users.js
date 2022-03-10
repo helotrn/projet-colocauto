@@ -197,6 +197,9 @@ export default new RestModule(
           cancelToken: cancelToken.token,
         });
 
+        // If the user currently being updated is the logged-in user
+        // (rootState.user), then update it's state as well.
+        // Only diff with the update method in RestModule.
         if (rootState.user.id === item.id) {
           commit("user", { ...item }, { root: true });
         }
