@@ -23,7 +23,7 @@
             <b-form-group
               :description="
                 `Zone géographique sous la forme d'une liste de tuples ` +
-                '(latitude, longitude), un par ligne.'
+                  '(latitude, longitude), un par ligne.'
               "
               label-for="area"
             >
@@ -390,10 +390,9 @@ export default {
         const data = {
           ...u,
         };
-
+        // Only update the community_user.role
         const community = data.communities.find((c) => c.id === this.item.id);
         community.role = role;
-        data.role = role; // the data was misplaced so we leave it also here
 
         return data;
       });
