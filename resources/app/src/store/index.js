@@ -57,35 +57,47 @@ const vuexPersist = new VuexPersist({
 
 Vue.use(Vuex);
 
+/*
+  Store is divided into modules:
+    https://vuex.vuejs.org/guide/modules.html
+
+  Root state is described in initialState below.
+*/
 const modules = {
   account,
-  "admin.community": AdminCommunity,
+  global,
+  password: passwordModule,
+  stats,
+
+  // RestModules containing data for each entity.
   bikes,
   borrowers,
   cars,
   communities,
-  "community.map": CommunityMap,
-  "community.view": CommunityView,
   files,
-  global,
   images,
   invoices,
   loans,
   loanables,
-  login: Login,
   owners,
   padlocks,
-  password: passwordModule,
   paymentMethods,
-  register: Register,
-  "register.intent": RegisterIntent,
-  stats,
   tags,
   trailers,
   users,
+
+  // Page state.
+  "community.map": CommunityMap,
+  "community.view": CommunityView,
+  login: Login,
+  register: Register,
+  "register.intent": RegisterIntent,
+  "admin.community": AdminCommunity,
 };
 
 const initialState = {
+  // Initial root state.
+  // Initial state of modules is set in each module individually.
   loaded: false,
   loading: false,
   notifications: [],
