@@ -31,30 +31,6 @@ import Login from "./pages/login";
 import Register from "./pages/register";
 import RegisterIntent from "./pages/register/intent";
 
-const vuexPersist = new VuexPersist({
-  key: "locomotion",
-  storage: window.localStorage,
-  reducer: (state) => ({
-    token: state.token,
-    refreshToken: state.refreshToken,
-    user: state.user,
-    loans: {
-      item: state.loans.item,
-    },
-    login: {
-      email: state.login.email,
-      rememberMe: state.login.rememberMe,
-    },
-    seenVersions: state.seenVersions,
-    stats: state.stats,
-    "community.view": {
-      ...state["community.view"],
-      center: null,
-    },
-    "register.intent": state["register.intent"],
-  }),
-});
-
 Vue.use(Vuex);
 
 /*
@@ -64,12 +40,13 @@ Vue.use(Vuex);
   Root state is described in initialState below.
 */
 const modules = {
+  // General modules
   account,
   global,
   password: passwordModule,
   stats,
 
-  // RestModules containing data for each entity.
+  // Rest modules: containing data for each entity.
   bikes,
   borrowers,
   cars,
@@ -86,7 +63,7 @@ const modules = {
   trailers,
   users,
 
-  // Page state.
+  // Page modules
   "community.map": CommunityMap,
   "community.view": CommunityView,
   login: Login,
@@ -268,6 +245,42 @@ const mutations = {
     Object.assign(state, initialState);
   },
 };
+
+const vuexPersist = new VuexPersist({
+  key: "locomotion",
+  storage: window.localStorage,
+  /*
+     State reducer. Reduces state to only those values you want to save.
+     By default, saves entire state.
+     https://github.com/championswimmer/vuex-persist#constructor-parameters--
+   */
+  reducer: (state) => ({
+    // Root state
+    user: state.user,
+    token: state.token,
+    refreshToken: state.refreshToken,
+    seenVersions: state.seenVersions,
+
+    // General modules
+    stats: state.stats,
+
+    // Rest modules
+    loans: {
+      item: state.loans.item,
+    },
+
+    // Page modules
+    "community.view": {
+      ...state["community.view"],
+      center: null,
+    },
+    login: {
+      email: state.login.email,
+      rememberMe: state.login.rememberMe,
+    },
+    "register.intent": state["register.intent"],
+  }),
+});
 
 export default new Vuex.Store({
   modules,
