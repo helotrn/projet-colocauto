@@ -57,6 +57,34 @@ const vuexPersist = new VuexPersist({
 
 Vue.use(Vuex);
 
+const modules = {
+  account,
+  "admin.community": AdminCommunity,
+  bikes,
+  borrowers,
+  cars,
+  communities,
+  "community.map": CommunityMap,
+  "community.view": CommunityView,
+  files,
+  global,
+  images,
+  invoices,
+  loans,
+  loanables,
+  login: Login,
+  owners,
+  padlocks,
+  password: passwordModule,
+  paymentMethods,
+  register: Register,
+  "register.intent": RegisterIntent,
+  stats,
+  tags,
+  trailers,
+  users,
+};
+
 const initialState = {
   loaded: false,
   loading: false,
@@ -230,35 +258,9 @@ const mutations = {
 };
 
 export default new Vuex.Store({
+  modules,
   state: initialState,
   mutations,
   actions,
-  modules: {
-    account,
-    "admin.community": AdminCommunity,
-    bikes,
-    borrowers,
-    cars,
-    communities,
-    "community.map": CommunityMap,
-    "community.view": CommunityView,
-    files,
-    global,
-    images,
-    invoices,
-    loans,
-    loanables,
-    login: Login,
-    owners,
-    padlocks,
-    password: passwordModule,
-    paymentMethods,
-    register: Register,
-    "register.intent": RegisterIntent,
-    stats,
-    tags,
-    trailers,
-    users,
-  },
   plugins: [vuexPersist.plugin],
 });
