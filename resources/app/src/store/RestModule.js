@@ -15,7 +15,7 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
       exportUrl: null,
       filters: {},
       form: null,
-      initialItem: "",
+      initialItemJson: "",
       item: null,
       lastLoadedAt: null,
       lastPage: 1,
@@ -35,7 +35,7 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
     },
     getters: {
       initialItem(state) {
-        return state.initialItem;
+        return state.initialItemJson;
       },
     },
     mutations: {
@@ -74,7 +74,7 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
         state.item = item;
       },
       initialItem(state, item) {
-        state.initialItem = JSON.stringify(item);
+        state.initialItemJson = JSON.stringify(item);
       },
       lastLoadedAt(state, lastLoadedAt) {
         state.lastLoadedAt = lastLoadedAt;
