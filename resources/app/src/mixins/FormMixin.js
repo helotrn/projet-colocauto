@@ -17,7 +17,7 @@ export default {
   },
   computed: {
     changed() {
-      return this.initialItem !== JSON.stringify(this.item);
+      return this.initialItemJson !== JSON.stringify(this.item);
     },
     context() {
       return this.$store.state[this.slug];
@@ -29,6 +29,9 @@ export default {
       return this.context.form || this.$route.meta.form;
     },
     initialItem() {
+      return this.context.initialItem;
+    },
+    initialItemJson() {
       return this.context.initialItem;
     },
     item: {
