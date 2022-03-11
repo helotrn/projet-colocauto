@@ -29,10 +29,10 @@ export default {
       return this.context.form || this.$route.meta.form;
     },
     initialItem() {
-      return this.context.initialItem;
+      return this.$store.getters[`${this.slug}/initialItem`];
     },
     initialItemJson() {
-      return this.context.initialItem;
+      return this.$store.getters[`${this.slug}/initialItem`];
     },
     item: {
       get() {

@@ -33,6 +33,11 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
       total: undefined,
       ...initialState,
     },
+    getters: {
+      initialItem(state) {
+        return state.initialItem;
+      },
+    },
     mutations: {
       addData(state, data) {
         state.data.push(...data);
