@@ -15,6 +15,7 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
       exportUrl: null,
       filters: {},
       form: null,
+      // Used in forms to determine whether a field has changed or to reset it's content.
       initialItemJson: "",
       item: null,
       lastLoadedAt: null,
