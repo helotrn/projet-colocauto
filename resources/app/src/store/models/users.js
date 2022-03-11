@@ -201,7 +201,7 @@ export default new RestModule(
         // (rootState.user), then update it's state as well.
         // Only diff with the update method in RestModule.
         if (rootState.user.id === item.id) {
-          commit("user", { ...item }, { root: true });
+          commit("mergeUser", { ...item }, { root: true });
         }
         commit("item", item);
         commit("initialItem", item);
