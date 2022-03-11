@@ -35,6 +35,9 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
     },
     getters: {
       initialItem(state) {
+        return JSON.parse(state.initialItemJson);
+      },
+      initialItemJson(state) {
         return state.initialItemJson;
       },
     },

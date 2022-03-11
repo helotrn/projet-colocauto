@@ -5,7 +5,7 @@ export default {
     const guard = from.meta.skipCleanup;
     if (!((typeof guard === "function" && guard(to, from)) || !!guard)) {
       this.$store.commit(`${this.slug}/item`, null);
-      this.$store.commit(`${this.slug}/initialItem`, "");
+      this.$store.commit(`${this.slug}/initialItem`, null);
     }
 
     next();
@@ -32,7 +32,7 @@ export default {
       return this.$store.getters[`${this.slug}/initialItem`];
     },
     initialItemJson() {
-      return this.$store.getters[`${this.slug}/initialItem`];
+      return this.$store.getters[`${this.slug}/initialItemJson`];
     },
     item: {
       get() {
@@ -52,9 +52,6 @@ export default {
       const parentPathParts = this.$route.path.split("/").filter((p) => !!p);
       parentPathParts.pop();
       return `/${parentPathParts.join("/")}`;
-    },
-    parsedInitialItem() {
-      return JSON.parse(this.initialItem);
     },
     slug() {
       return this.$route.meta.slug;
@@ -115,7 +112,7 @@ export default {
       }
     },
     reset() {
-      this.$store.commit(`${this.slug}/item`, JSON.parse(this.initialItem));
+      this.$store.commit(`${this.slug}/item`, this.initialItem);
     },
     async submit() {
       try {

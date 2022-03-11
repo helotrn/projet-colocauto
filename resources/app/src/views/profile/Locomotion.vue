@@ -43,7 +43,7 @@ export default {
   },
   computed: {
     hasAddressChanged() {
-      return this.item.address !== this.parsedInitialItem.address;
+      return this.item.address !== this.initialItem.address;
     },
   },
 };
