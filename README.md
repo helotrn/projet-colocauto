@@ -86,10 +86,10 @@ docker-compose exec php npx prettier --write .
 
 ## Envoi des courriels
 
-Nous avons deux manières d'envoyer des courriels: 
+Nous avons deux manières d'envoyer des courriels:
 
-1) Via [Mailgun](https://www.mailgun.com/) quand les templates sont hébergés dans ce repertoire.
+1. Via [Mailgun](https://www.mailgun.com/) quand les templates sont hébergés dans ce repertoire.
 
-2) Via [Mandrill](https://mandrillapp.com/) quand les templates sont créés sur [Mailchimp](https://us18.admin.mailchimp.com/templates/) puis envoyer à Mandrill. 
+2. Via [Mandrill](https://mandrillapp.com/) quand les templates sont créés sur [Mailchimp](https://us18.admin.mailchimp.com/templates/) puis envoyer à Mandrill.
 
-    - Lorsqu'un template est modifié sur Mailchimp, il doit être envoyé à Mandrill via le [bouton](https://us18.admin.mailchimp.com/templates/) "Send to Mandrill" puis publier via le bouton "[Publish](https://mandrillapp.com/templates/code?id=confirmation-d-inscription-sp-13-au-27-oct)" sur Mandrill. 
+    - Lorsqu'un template est modifié sur Mailchimp, il doit être envoyé à Mandrill via le [bouton](https://us18.admin.mailchimp.com/templates/) "Send to Mandrill" puis publier via le bouton "[Publish](https://mandrillapp.com/templates/code?id=confirmation-d-inscription-sp-13-au-27-oct)" sur Mandrill.
