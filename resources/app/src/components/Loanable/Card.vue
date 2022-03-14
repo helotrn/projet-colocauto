@@ -145,8 +145,8 @@ export default {
       return this.$store.state.loans.cancelToken;
     },
     invalidDuration() {
-      // Invalid if the duration of a loan is less than 15 minutes.
-      return this.$store.state.loans.item.duration_in_minutes < 15;
+      // Invalid if the duration of a loan is not greater than 0 minute.
+      return !(this.$store.state.loans.item.duration_in_minutes > 0);
     },
     isElectric() {
       switch (this.type) {
