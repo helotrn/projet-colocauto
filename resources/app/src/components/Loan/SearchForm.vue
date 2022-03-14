@@ -76,8 +76,11 @@
             />
           </div>
           <!---->
-          <!-- loan invalid text -->
-          <div v-if="invalid" class="loan-search-form--warning loan-search-form--margin-bottom">
+          <!-- text for loan invalid duration -->
+          <div
+            v-if="invalidDuration"
+            class="loan-search-form--warning loan-search-form--margin-bottom"
+          >
             La durée de l'emprunt doit être supérieure ou égale à 15 minutes.
           </div>
           <!---->
@@ -86,11 +89,11 @@
             <forms-validated-input
               name="estimated_distance"
               :label="$t('fields.estimated_distance') | capitalize"
-              type="number"
+              type="text"
               :min="10"
               :max="1000"
               :placeholder="placeholderOrLabel('estimated_distance') | capitalize"
-              v-model="item.estimated_distance"
+              v-model="formattedEstimatedDistance"
             />
           </div>
           <!---->
@@ -100,7 +103,7 @@
             @click="$emit('hide')"
             variant="primary"
             class="mr-2 mb-2"
-            :disabled="loading || invalid"
+            :disabled="loading || invalidDuration"
           >
             <b-spinner small v-if="loading" />
             Rechercher
@@ -157,8 +160,8 @@ export default {
     },
   },
   computed: {
-    invalid() {
-      // Invalid if the duration is not greater than 0 minute.
+    invalidDuration() {
+      // Invalid if the duration of a loan is not greater than 0 minute.
       return !(this.item.duration_in_minutes > 0);
     },
     loanableTypesExceptCar() {
