@@ -28,6 +28,7 @@ class Trailer extends Loanable
     }
 
     protected $fillable = [
+        "is_self_service",
         "availability_json",
         "availability_mode",
         "comments",
