@@ -36,6 +36,10 @@ Merci de respecter certaines règles de bonnes conduites :
 
 Merci de votre collaboration !
 
+## License de contribution
+
+Pour plus d'informations concernant le contrat de license qui se rapporte à notre projet, rendez vous sur notre [contribution license agreement](https://gitlab.com/solon-collectif/locomotion.app/-/blob/master/Contribution%20Licence%20Agreement).
+
 ## Rapporter un bug
 
 Pour rapporter un bug, rendez vous sur notre [gestionnaire d'incidents](https://gitlab.com/Solon-collectif/locomotion.app/-/issues).
@@ -84,5 +88,5 @@ Dans tous les cas, n'hésitez pas à nous solliciter !
 ## Sécurité
 
 Merci de votre vigilance !
-Contactez-nous par courriel pour tout sujet relqtif à la securtié des données et de la plateforme à
+Contactez-nous **par courriel** pour tout sujet relatif à la securité des données et de la plateforme à
 [dev+securite@solon-collectif.org](mailto:dev+securite@solon-collectif.org).
