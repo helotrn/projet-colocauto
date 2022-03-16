@@ -578,8 +578,11 @@ SQL
 
     public function getContestedAtAttribute()
     {
+        // An action of type extension is not a contestation
+        $relatedActions = $this->actions->where("type", "!=", "extension");
+
         // The canceled status on an action indicates it was contested
-        $canceledAction = $this->actions->where("status", "canceled")->first();
+        $canceledAction = $relatedActions->where("status", "canceled")->first();
 
         if ($canceledAction) {
             return $canceledAction->executed_at;
