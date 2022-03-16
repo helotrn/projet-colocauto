@@ -6,7 +6,7 @@ export default {
       }
 
       return this.item.extensions.reduce(
-        (acc, i) => acc || !i.id || i.status !== "completed",
+        (acc, i) => acc || !i.id || (i.status !== "completed" && i.status !=="canceled"),
         false
       );
     },
