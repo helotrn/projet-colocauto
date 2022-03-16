@@ -356,9 +356,9 @@
         <div v-else-if="!loanIsCanceled">
           <hr />
 
-          <p>Les données ont été contestées:</p>
+          <p>Les données ont été contestées {{ action.comments_on_contestation ? `:` : `` }}</p>
 
-          <b-alert variant="warning" show>
+          <b-alert variant="warning" v-if="action.comments_on_contestation" show>
             {{ action.comments_on_contestation }}
           </b-alert>
 
