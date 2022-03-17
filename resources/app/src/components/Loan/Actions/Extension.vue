@@ -26,10 +26,10 @@
           </span>
           <span v-else-if="(action.status == 'in_process') & !loanIsCanceled"> En attente </span>
           <span v-else-if="action.status === 'completed'">
-            Validé &bull; {{ action.executed_at | datetime }}
+            Accepté &bull; {{ action.executed_at | datetime }}
           </span>
           <span v-else-if="action.status === 'canceled'">
-            Contesté &bull; {{ action.executed_at | datetime }}
+            Refusé &bull; {{ action.executed_at | datetime }}
           </span>
         </b-col>
 
