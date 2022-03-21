@@ -57,6 +57,11 @@ class ActionsComplete extends Command
         foreach ($finishableActions as $action) {
             $loan = $action->loan;
 
+            // Nothing to complete for canceled loans.
+            if ($loan->canceled_at) {
+                continue;
+            }
+
             try {
                 switch ($action->type) {
                     case "takeover":
