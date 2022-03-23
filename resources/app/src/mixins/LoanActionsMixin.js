@@ -206,5 +206,14 @@ export default {
       }
       this.$emit("canceled");
     },
+    async rejectAction() {
+      this.actionLoading = true;
+      try {
+        await this.$store.dispatch("loans/rejectAction", this.action);
+      } finally {
+        this.actionLoading = false;
+      }
+      this.$emit("rejected");
+    },
   },
 };

@@ -19,7 +19,7 @@
         Retour
       </h2>
 
-      <span v-if="item.contested_at && action.status === 'in_process' && !loanIsCanceled">
+      <span v-if="hasActiveExtensions || (item.contested_at && action.status === 'in_process' && !loanIsCanceled)">
         Bloqué
       </span>
       <span v-else>

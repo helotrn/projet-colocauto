@@ -95,6 +95,7 @@
         @created="emitLoad"
         @completed="emitLoad"
         @canceled="emitLoad"
+        @rejected="emitLoad"
       />
 
       <loan-actions-incident

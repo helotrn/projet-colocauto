@@ -15,7 +15,7 @@
           <h2>
             <svg-waiting v-if="action.status === 'in_process' && !loanIsCanceled" />
             <svg-check v-else-if="action.status === 'completed'" />
-            <svg-danger v-else-if="action.status === 'canceled' || loanIsCanceled" />
+            <svg-danger v-else-if="action.status === 'canceled' || action.status === 'rejected' || loanIsCanceled" />
 
             Retard
           </h2>
@@ -28,8 +28,11 @@
           <span v-else-if="action.status === 'completed'">
             Validé &bull; {{ action.executed_at | datetime }}
           </span>
-          <span v-else-if="action.status === 'canceled'">
+          <span v-else-if="action.status === 'rejected'">
             Contesté &bull; {{ action.executed_at | datetime }}
+          </span>
+          <span v-else-if="action.status === 'canceled'">
+            Annulé &bull; {{ action.executed_at | datetime }}
           </span>
         </b-col>
 
@@ -183,7 +186,7 @@
               size="sm"
               variant="outline-danger"
               :disabled="actionLoading"
-              @click="cancelAction"
+              @click="rejectAction"
             >
               Refuser
             </b-button>
