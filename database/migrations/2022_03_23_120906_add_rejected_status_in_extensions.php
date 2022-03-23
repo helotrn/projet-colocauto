@@ -13,14 +13,21 @@ class AddRejectedStatusInExtensions extends Migration
      */
     public function up()
     {
-        DB::statement("ALTER TABLE extensions DROP CONSTRAINT extensions_status_check");
+        DB::statement(
+            "ALTER TABLE extensions DROP CONSTRAINT extensions_status_check"
+        );
 
-        $types = ['in_process', 'canceled', 'completed', 'rejected'];
-        $result = join( ', ', array_map(function ($value){
-            return sprintf("'%s'::character varying", $value);
-        }, $types));
+        $types = ["in_process", "canceled", "completed", "rejected"];
+        $result = join(
+            ", ",
+            array_map(function ($value) {
+                return sprintf("'%s'::character varying", $value);
+            }, $types)
+        );
 
-        DB::statement("ALTER TABLE extensions ADD CONSTRAINT extensions_status_check CHECK (status::text = ANY (ARRAY[$result]::text[]))");
+        DB::statement(
+            "ALTER TABLE extensions ADD CONSTRAINT extensions_status_check CHECK (status::text = ANY (ARRAY[$result]::text[]))"
+        );
     }
 
     /**
@@ -30,13 +37,20 @@ class AddRejectedStatusInExtensions extends Migration
      */
     public function down()
     {
-        DB::statement("ALTER TABLE extensions DROP CONSTRAINT extensions_status_check");
+        DB::statement(
+            "ALTER TABLE extensions DROP CONSTRAINT extensions_status_check"
+        );
 
-        $types = ['in_process', 'canceled', 'completed'];
-        $result = join( ', ', array_map(function ($value){
-            return sprintf("'%s'::character varying", $value);
-        }, $types));
+        $types = ["in_process", "canceled", "completed"];
+        $result = join(
+            ", ",
+            array_map(function ($value) {
+                return sprintf("'%s'::character varying", $value);
+            }, $types)
+        );
 
-        DB::statement("ALTER TABLE extensions ADD CONSTRAINT extensions_status_check CHECK (status::text = ANY (ARRAY[$result]::text[]))");
+        DB::statement(
+            "ALTER TABLE extensions ADD CONSTRAINT extensions_status_check CHECK (status::text = ANY (ARRAY[$result]::text[]))"
+        );
     }
 }
