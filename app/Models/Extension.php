@@ -40,6 +40,10 @@ class Extension extends Action
                         $model->executed_at = Carbon::now();
                         $model->save();
                         break;
+                    case "rejected":
+                        $model->executed_at = Carbon::now();
+                        $model->save();
+                        break;
                 }
             }
         });
