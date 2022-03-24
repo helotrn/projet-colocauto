@@ -43,9 +43,9 @@
             >
               <b-button
                 variant="primary"
-                href="https://docs.google.com/forms/d/1A9p72_t7BohN04_yQaFswP78-X-TOBGPe7zaDKQc0qY/edit"
+                href="https://bit.ly/locoquartier"
                 target="_blank"
-                >Je donne mon avis</b-button
+                >En savoir plus</b-button
               >
             </b-jumbotron>
           </section>
