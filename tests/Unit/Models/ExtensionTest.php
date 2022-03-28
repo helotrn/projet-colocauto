@@ -64,4 +64,64 @@ class ExtensionTest extends TestCase
         $this->assertFalse($this->loanable->isAvailable($anHourLater, 10));
         $this->assertTrue($this->loanable->isAvailable($threeHoursLater, 10));
     }
+
+    public function testCancelExtension()
+    {
+        // create a fake extension
+        $extension = factory(Extension::class)->create([
+            "loan_id" => $this->loan->id,
+            "executed_at" => null,
+            "status" => "in_process",
+        ]);
+
+        // verify if the change of status is successful
+        $response = $this->json(
+            "PUT",
+            "/api/v1/loans/{$this->loan->id}/actions/{$extension->id}/cancel",
+            [
+                "type" => $extension->type,
+            ]
+        );
+        $response->assertStatus(200);
+
+        // verify if the values are correct
+        $response = $this->json(
+            "GET",
+            "/api/v1/loans/{$this->loan->id}/actions/{$extension->id}"
+        );
+        $json = $response->json();
+
+        $this->assertEquals($extension->id, array_get($json, "id"));
+        $this->assertEquals("canceled", array_get($json, "status"));
+    }
+
+    public function testRejectExtension()
+    {
+        // create a fake extension
+        $extension = factory(Extension::class)->create([
+            "loan_id" => $this->loan->id,
+            "executed_at" => null,
+            "status" => "in_process",
+        ]);
+
+        // verify if the change of status is successful
+        $response = $this->json(
+            "PUT",
+            "/api/v1/loans/{$this->loan->id}/actions/{$extension->id}/reject",
+            [
+                "type" => $extension->type,
+            ]
+        );
+        $response->assertStatus(200);
+
+        // verify if the values are correct
+        $response = $this->json(
+            "GET",
+            "/api/v1/loans/{$this->loan->id}/actions/{$extension->id}"
+        );
+        $json = $response->json();
+
+        $this->assertEquals($extension->id, array_get($json, "id"));
+        $this->assertEquals("rejected", array_get($json, "status"));
+    }
 }
