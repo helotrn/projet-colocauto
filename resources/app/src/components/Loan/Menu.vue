@@ -84,7 +84,7 @@
       }"
       v-if="displayStep('handover')"
     >
-      <svg-danger v-if="hasCanceledStep('handover')" />
+      <svg-danger v-if="hasCanceledStep('handover') || hasActiveExtensions" />
       <svg-check v-else-if="hasReachedStep('handover')" />
       <svg-waiting v-else />
 

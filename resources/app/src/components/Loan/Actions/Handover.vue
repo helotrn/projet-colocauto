@@ -10,7 +10,8 @@
         <svg-danger
           v-if="
             (action.status === 'in_process' && loanIsCanceled) ||
-            (action.status === 'canceled' && item.contested_at)
+            (action.status === 'canceled' && item.contested_at) ||
+            hasActiveExtensions
           "
         />
         <svg-waiting v-else-if="action.status === 'in_process'" />
