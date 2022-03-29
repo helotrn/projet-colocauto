@@ -41,11 +41,8 @@
               header="LocoMotion n'est pas encore ouvert dans votre quartier."
               lead="Mais on y travaille! En attendant, devenez acteur de votre quartier et aidez LocoMotion à améliorer votre mobilité et celle de vos voisin-e-s."
             >
-              <b-button
-                variant="primary"
-                href="https://docs.google.com/forms/d/1A9p72_t7BohN04_yQaFswP78-X-TOBGPe7zaDKQc0qY/edit"
-                target="_blank"
-                >Je donne mon avis</b-button
+              <b-button variant="primary" href="https://bit.ly/locoquartier" target="_blank"
+                >En savoir plus</b-button
               >
             </b-jumbotron>
           </section>

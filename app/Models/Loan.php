@@ -140,6 +140,7 @@ SQL
 
                 return $query;
             },
+            // See comments in getActualDurationInMinutesAttribute
             "actual_duration_in_minutes" => function ($query = null) {
                 $sql = <<<SQL
 GREATEST(
@@ -435,8 +436,10 @@ SQL
             return $this->attributes["actual_duration_in_minutes"];
         }
 
+        // Initial duration
         $durationInMinutes = $this->duration_in_minutes;
 
+        // Account for the longest approved duration
         $completedExtensions = $this->extensions->where("status", "completed");
         if (!$completedExtensions->isEmpty()) {
             $durationInMinutes = $completedExtensions->reduce(function (
@@ -451,15 +454,23 @@ SQL
             $this->duration_in_minutes);
         }
 
+        // If payment is completed, then account for early termination
         if ($this->payment && $this->payment->status === "completed") {
-            if ((new Carbon($this->payment->executed_at))->isPast()) {
-                return 0;
-            }
+            // diffInMinutes:
+            //   - All values are truncated and not rounded
+            //   - Takes, as 2nd argument, an absolute boolean option (true by
+            //     default) that make the method return an absolute value no
+            //     matter which date is greater than the other.
+            // Notice the order of instances: A->diff(B) means B - A.
+            // From: https://carbon.nesbot.com/docs/
+            $diffPaymentAndDeparture = (new Carbon(
+                $this->departure_at
+            ))->diffInMinutes(new Carbon($this->payment->executed_at), false);
 
             return min(
-                (new Carbon($this->payment->executed_at))->diffInMinutes(
-                    new Carbon($this->departure_at)
-                ),
+                // If payment was executed before departure, diffPaymentAndDeparture < 0, then set duration = 0.
+                // Otherwise, account for early return (payment).
+                max($diffPaymentAndDeparture, 0),
                 $durationInMinutes
             );
         }

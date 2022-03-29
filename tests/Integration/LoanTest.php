@@ -1029,13 +1029,14 @@ class LoanTest extends TestCase
         ])->assertStatus(404);
     }
 
-    // Paid in the past case: if the loan is paid in the past, the actual
-    // duration in minutes would be zero
+    // If the loan was paid before it's departure time, then the actual duration is expected to be 0.
     public function testLoanActualDurationInMinutesWhenPaidInThePast()
     {
+        // Loan starts 270 minutes ago and was paid 30 minutes before it started.
         $loan = factory(Loan::class)
             ->states("withAllStepsCompleted")
             ->create([
+                "departure_at" => Carbon::now()->sub(270, "minutes"),
                 "duration_in_minutes" => 60,
             ]);
 

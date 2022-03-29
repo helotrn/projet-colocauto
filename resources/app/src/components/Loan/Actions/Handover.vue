@@ -19,7 +19,12 @@
         Retour
       </h2>
 
-      <span v-if="item.contested_at && action.status === 'in_process' && !loanIsCanceled">
+      <span
+        v-if="
+          hasActiveExtensions ||
+          (item.contested_at && action.status === 'in_process' && !loanIsCanceled)
+        "
+      >
         Bloqué
       </span>
       <span v-else>
@@ -56,8 +61,8 @@
         </div>
         <div v-else-if="hasActiveExtensions">
           <p>
-            Une demande d'extension est en cours. Elle doit être complétée (acceptée ou refusée)
-            avant de poursuivre.
+            Une demande d'extension est en cours. Elle doit être complétée (acceptée, refusée ou
+            annulée) avant de poursuivre.
           </p>
         </div>
         <div v-else-if="item.loanable.type === 'car'">

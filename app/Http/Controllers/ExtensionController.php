@@ -106,4 +106,19 @@ class ExtensionController extends RestController
 
         return $item;
     }
+
+    // function to reject the extension requested
+    public function reject(Request $request, $actionId, $loanId)
+    {
+        $authRequest = $request->redirectAuth(Request::class);
+        $item = $this->repo->find($authRequest, $actionId);
+
+        $item->message_for_borrower = $request->get("message_for_borrower");
+        $item->status = "rejected";
+        $item->save();
+
+        event(new LoanExtensionRejectedEvent($item));
+
+        return $item;
+    }
 }

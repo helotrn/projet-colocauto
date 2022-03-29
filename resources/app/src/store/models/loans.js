@@ -190,5 +190,24 @@ export default new RestModule(
         throw e;
       }
     },
+    async rejectAction({ commit }, action) {
+      const { CancelToken } = Vue.axios;
+      const cancelToken = CancelToken.source();
+
+      try {
+        commit("cancelToken", cancelToken);
+        await Vue.axios.put(`/loans/${action.loan_id}/actions/${action.id}/reject`, action, {
+          cancelToken: cancelToken.token,
+        });
+        commit("cancelToken", null);
+      } catch (e) {
+        commit("cancelToken", null);
+
+        const { request, response } = e;
+        commit("error", { request, response });
+
+        throw e;
+      }
+    },
   }
 );
