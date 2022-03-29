@@ -32,7 +32,7 @@
           <span v-else-if="action.status === 'completed'">
             Accepté &bull; {{ action.executed_at | datetime }}
           </span>
-          <span v-else-if="action.status === 'canceled'">
+          <span v-else-if="action.status === 'rejected'">
             Refusé &bull; {{ action.executed_at | datetime }}
           </span>
           <span v-else-if="action.status === 'canceled'">
