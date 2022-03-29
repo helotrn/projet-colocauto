@@ -156,9 +156,7 @@
               <div class="user-avatar" :style="{ backgroundImage: borrowerAvatar }" />
             </blockquote>
 
-            <b-button size="sm" variant="outline-danger" @click="cancelAction">
-              Annuler
-            </b-button>
+            <b-button size="sm" variant="outline-danger" @click="cancelAction"> Annuler </b-button>
           </div>
         </div>
 
