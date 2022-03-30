@@ -53,6 +53,7 @@
               <forms-validated-input
                 type="image"
                 label="Une photo de profil?*"
+                :rules="{ required: true }"
                 name="avatar"
                 v-model="user.avatar"
               />

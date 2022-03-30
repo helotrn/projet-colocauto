@@ -15,7 +15,8 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
       exportUrl: null,
       filters: {},
       form: null,
-      initialItem: "",
+      // Used in forms to determine whether a field has changed or to reset it's content.
+      initialItemJson: "",
       item: null,
       lastLoadedAt: null,
       lastPage: 1,
@@ -32,6 +33,14 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
       slug,
       total: undefined,
       ...initialState,
+    },
+    getters: {
+      initialItem(state) {
+        return JSON.parse(state.initialItemJson);
+      },
+      initialItemJson(state) {
+        return state.initialItemJson;
+      },
     },
     mutations: {
       addData(state, data) {
@@ -69,7 +78,7 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
         state.item = item;
       },
       initialItem(state, item) {
-        state.initialItem = JSON.stringify(item);
+        state.initialItemJson = JSON.stringify(item);
       },
       lastLoadedAt(state, lastLoadedAt) {
         state.lastLoadedAt = lastLoadedAt;

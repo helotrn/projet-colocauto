@@ -33,10 +33,8 @@ class Extension extends Action
                         }
                         break;
                     case "completed":
-                        $model->executed_at = Carbon::now();
-                        $model->save();
-                        break;
                     case "canceled":
+                    case "rejected":
                         $model->executed_at = Carbon::now();
                         $model->save();
                         break;

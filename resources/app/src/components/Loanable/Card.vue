@@ -51,7 +51,7 @@
         :title="
           `Cliquez pour valider la disponibilité avec les paramètres ` + `d'emprunt sélectionnés`
         "
-        :disabled="invalid"
+        :disabled="invalidDuration"
         @click.stop.prevent="
           loading = true;
           $emit('test');
@@ -144,8 +144,9 @@ export default {
     loading() {
       return this.$store.state.loans.cancelToken;
     },
-    invalid() {
-      return this.$store.state.loans.item.duration_in_minutes < 15;
+    invalidDuration() {
+      // Invalid if the duration of a loan is not greater than 0 minute.
+      return !(this.$store.state.loans.item.duration_in_minutes > 0);
     },
     isElectric() {
       switch (this.type) {

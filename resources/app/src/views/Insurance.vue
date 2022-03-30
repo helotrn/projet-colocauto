@@ -8,8 +8,13 @@
           </p>
           <ol>
             <li>
+              <a href="https://mailchi.mp/solon-collectif/loco-assurances" target="_blank">
+                L'assurance LocoMotion en résumé
+              </a>
+            </li>
+            <li>
               <a href="/conditions-utilisation-desjardins-assurances.html">
-                Conditions d'utilisation l'assurance LocoMotion (version simplifiée)
+                Conditions d'utilisation l'assurance LocoMotion
               </a>
             </li>
             <li>

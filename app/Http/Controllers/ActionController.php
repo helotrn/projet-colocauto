@@ -244,6 +244,21 @@ class ActionController extends RestController
         }
     }
 
+    // function to reject an extension
+    public function reject(ActionRequest $request, $loanId, $actionId)
+    {
+        switch ($request->get("type")) {
+            case "extension":
+                return $this->extensionController->reject(
+                    $request,
+                    $actionId,
+                    $loanId
+                );
+            default:
+                throw new \Exception("invalid action type");
+        }
+    }
+
     public function template(Request $request)
     {
         return [

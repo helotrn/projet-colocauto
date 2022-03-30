@@ -31,33 +31,50 @@ import Login from "./pages/login";
 import Register from "./pages/register";
 import RegisterIntent from "./pages/register/intent";
 
-const vuexPersist = new VuexPersist({
-  key: "locomotion",
-  storage: window.localStorage,
-  reducer: (state) => ({
-    token: state.token,
-    refreshToken: state.refreshToken,
-    user: state.user,
-    loans: {
-      item: state.loans.item,
-    },
-    login: {
-      email: state.login.email,
-      rememberMe: state.login.rememberMe,
-    },
-    seenVersions: state.seenVersions,
-    stats: state.stats,
-    "community.view": {
-      ...state["community.view"],
-      center: null,
-    },
-    "register.intent": state["register.intent"],
-  }),
-});
-
 Vue.use(Vuex);
 
+/*
+  Store is divided into modules:
+    https://vuex.vuejs.org/guide/modules.html
+
+  Root state is described in initialState below.
+*/
+const modules = {
+  // General modules
+  account,
+  global,
+  password: passwordModule,
+  stats,
+
+  // Rest modules: containing data for each entity.
+  bikes,
+  borrowers,
+  cars,
+  communities,
+  files,
+  images,
+  invoices,
+  loans,
+  loanables,
+  owners,
+  padlocks,
+  paymentMethods,
+  tags,
+  trailers,
+  users,
+
+  // Page modules
+  "community.map": CommunityMap,
+  "community.view": CommunityView,
+  login: Login,
+  register: Register,
+  "register.intent": RegisterIntent,
+  "admin.community": AdminCommunity,
+};
+
 const initialState = {
+  // Initial root state.
+  // Initial state of modules is set in each module individually.
   loaded: false,
   loading: false,
   notifications: [],
@@ -229,36 +246,46 @@ const mutations = {
   },
 };
 
+const vuexPersist = new VuexPersist({
+  key: "locomotion",
+  storage: window.localStorage,
+  /*
+     State reducer. Reduces state to only those values you want to save.
+     By default, saves entire state.
+     https://github.com/championswimmer/vuex-persist#constructor-parameters--
+   */
+  reducer: (state) => ({
+    // Root state
+    user: state.user,
+    token: state.token,
+    refreshToken: state.refreshToken,
+    seenVersions: state.seenVersions,
+
+    // General modules
+    stats: state.stats,
+
+    // Rest modules
+    loans: {
+      item: state.loans.item,
+    },
+
+    // Page modules
+    "community.view": {
+      ...state["community.view"],
+      center: null,
+    },
+    login: {
+      email: state.login.email,
+      rememberMe: state.login.rememberMe,
+    },
+    "register.intent": state["register.intent"],
+  }),
+});
+
 export default new Vuex.Store({
+  modules,
   state: initialState,
   mutations,
   actions,
-  modules: {
-    account,
-    "admin.community": AdminCommunity,
-    bikes,
-    borrowers,
-    cars,
-    communities,
-    "community.map": CommunityMap,
-    "community.view": CommunityView,
-    files,
-    global,
-    images,
-    invoices,
-    loans,
-    loanables,
-    login: Login,
-    owners,
-    padlocks,
-    password: passwordModule,
-    paymentMethods,
-    register: Register,
-    "register.intent": RegisterIntent,
-    stats,
-    tags,
-    trailers,
-    users,
-  },
   plugins: [vuexPersist.plugin],
 });
