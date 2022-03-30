@@ -330,6 +330,11 @@ export default {
     max-height: calc(100vh - #{$layout-navbar-height} - 30px);
     overflow: auto;
     overflow-x: hidden;
+
+    @include media-breakpoint-up(lg) {
+      max-height: calc(100vh - #{$layout-navbar-height} - 70px);
+      padding: 20px;
+    }
   }
 
   &__results-container {
@@ -386,7 +391,10 @@ export default {
 
     &-body {
       padding: 0;
-      margin: 1.25rem;
+
+      @include media-breakpoint-down(md) {
+        margin: 1.25rem;
+      }
     }
     @include media-breakpoint-down(md) {
       border-radius: 0;
