@@ -9,34 +9,44 @@
       >
         <!-- title -->
         <div>
-          <h3 class="loan-search-form--no-margin">Qu'aimeriez-vous emprunter</h3>
-          <h3 class="loan-search-form--green">à vos voisin-e-s?</h3>
+          <h4 class="loan-search-form--no-margin">Qu'aimeriez-vous emprunter</h4>
+          <h4 class="loan-search-form--green">à vos voisin-e-s?</h4>
         </div>
         <!---->
         <!-- buttons to select types of vehicles -->
-        <b-form-group label-for="loanable_type">
+        <b-form-group>
           <b-form-checkbox-group
             buttons
             class="loanable-buttons"
             id="loanable_type"
-            name="loanable_type"
-            :options="loanableTypesExceptCar"
             :checked="selectedLoanableTypes"
             @change="emitLoanableTypes"
           >
-            <template v-slot:first>
-              <b-checkbox value="car" :disabled="!canLoanCar">
-                Auto
-              </b-checkbox>
-            </template>
+            <b-checkbox value="car" :disabled="!canLoanCar">
+              <svg-car />
+              Auto
+            </b-checkbox>
+            <b-checkbox value="bike">
+              <svg-bike />
+              Vélo
+            </b-checkbox>
+            <b-checkbox value="trailer">
+              <svg-trailer />
+              Remorque
+            </b-checkbox>
           </b-form-checkbox-group>
         </b-form-group>
-        <b-alert
-          show
-          variant="danger"
-          v-if="!canLoanCar"
-        >
-          <strong>Oops! Pour emprunter l'auto de vos voisin-e-s</strong> vous devez remplir votre profil de conduite.
+        <b-alert show variant="danger" v-if="!canLoanCar">
+          <strong>Oops! Pour emprunter l'auto de vos voisin-e-s</strong> vous devez remplir votre
+          profil de conduite.
+          <b-button
+            to="/profile/borrower"
+            pill
+            class="loan-search-form__button-borrower"
+            variant="danger"
+          >
+            Remplissez votre profil
+          </b-button>
         </b-alert>
         <!---->
         <div v-if="form">
@@ -113,9 +123,18 @@ import LoanFormMixin from "@/mixins/LoanFormMixin";
 
 import locales from "@/locales";
 
+import Bike from "@/assets/svg/bike.svg";
+import Car from "@/assets/svg/car.svg";
+import Trailer from "@/assets/svg/trailer.svg";
+
 export default {
   name: "Form",
-  components: { FormsValidatedInput },
+  components: {
+    FormsValidatedInput,
+    "svg-bike": Bike,
+    "svg-car": Car,
+    "svg-trailer": Trailer,
+  },
   mixins: [FormLabelsMixin, LoanFormMixin],
   props: {
     canLoanCar: {
@@ -184,48 +203,63 @@ export default {
 @import "~bootstrap/scss/mixins/breakpoints";
 
 .loan-search-form {
-  h3 {
+  h4 {
+    font-size: 22px;
     font-weight: 700;
+  }
+
+  svg path {
+    fill: currentColor;
+    height: 50px;
+    width: 50px;
+  }
+
+  &__button-borrower {
+    margin: 15px 0 0 0;
   }
 
   .loanable-buttons label {
     border: 2px solid $locomotion-light-green;
     border-radius: 10px;
     display: table;
-    height: 85px;
     width: 85px;
-    font-size: 14px;
+    font-size: 13px;
     line-height: 24px;
   }
 
   .loanable-buttons label:hover {
-    background-color: #fff; 
+    background-color: #fff;
     border: 2px solid $locomotion-light-green;
   }
 
-  .loanable-buttons > .btn:not(:last-child):not(.dropdown-toggle), .btn-group > .btn-group:not(:last-child) > .btn {
+  .loanable-buttons > .btn:not(:last-child):not(.dropdown-toggle),
+  .btn-group > .btn-group:not(:last-child) > .btn {
     border-radius: 10px;
     margin-right: 5px;
   }
 
-  .loanable-buttons > .btn:not(:first-child), .btn-group > .btn-group:not(:first-child) > .btn {
+  .loanable-buttons > .btn:not(:first-child),
+  .btn-group > .btn-group:not(:first-child) > .btn {
     border-radius: 10px;
     margin-left: 5px;
   }
 
-  .loanable-buttons .btn:not(:disabled):not(.disabled):active, 
-  .loanable-buttons .btn-secondary:not(:disabled):not(.disabled).active, .show > .loanable-buttons .btn-secondary.dropdown-toggle {
-    background-color: $locomotion-light-green; 
+  .loanable-buttons .btn:not(:disabled):not(.disabled):active,
+  .loanable-buttons .btn-secondary:not(:disabled):not(.disabled).active,
+  .show > .loanable-buttons .btn-secondary.dropdown-toggle {
+    background-color: $locomotion-light-green;
     border: 2px solid $locomotion-light-green;
     color: #fff;
   }
 
-  .loanable-buttons .btn:focus, .btn.focus {
+  .loanable-buttons .btn:focus,
+  .btn.focus {
     background-color: #fff;
     color: #7a7a7a;
   }
 
-  .loanable-buttons .btn:disabled, .btn.disabled {
+  .loanable-buttons .btn:disabled,
+  .btn.disabled {
     background-color: #fff;
     border-color: #a9afb5 !important;
     color: #7a7a7a;
