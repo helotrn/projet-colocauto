@@ -10,7 +10,8 @@
         <svg-danger
           v-if="
             (action.status === 'in_process' && loanIsCanceled) ||
-            (action.status === 'canceled' && item.contested_at)
+            (action.status === 'canceled' && item.contested_at) ||
+            hasActiveExtensions
           "
         />
         <svg-waiting v-else-if="action.status === 'in_process'" />
@@ -432,9 +433,9 @@
         <div v-else-if="!loanIsCanceled">
           <hr />
 
-          <p>Les données ont été contestées:</p>
+          <p>Les données ont été contestées {{ action.comments_on_contestation ? `:` : `` }}</p>
 
-          <b-alert variant="warning" show>
+          <b-alert variant="warning" v-if="action.comments_on_contestation" show>
             {{ action.comments_on_contestation }}
           </b-alert>
 

@@ -72,7 +72,9 @@
         'reached-step': extension.status === 'completed',
       }"
     >
-      <svg-danger v-if="extension.status === 'canceled' || loanIsCanceled" />
+      <svg-danger
+        v-if="extension.status === 'canceled' || extension.status === 'rejected' || loanIsCanceled"
+      />
       <svg-check v-else-if="extension.status === 'completed'" />
       <svg-waiting v-else />
       <span>Retard</span>
@@ -84,7 +86,7 @@
       }"
       v-if="displayStep('handover')"
     >
-      <svg-danger v-if="hasCanceledStep('handover')" />
+      <svg-danger v-if="hasCanceledStep('handover') || hasActiveExtensions" />
       <svg-check v-else-if="hasReachedStep('handover')" />
       <svg-waiting v-else />
 

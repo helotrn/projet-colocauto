@@ -102,8 +102,6 @@ class ExtensionController extends RestController
         $item->status = "canceled";
         $item->save();
 
-        event(new LoanExtensionRejectedEvent($item));
-
         return $item;
     }
 

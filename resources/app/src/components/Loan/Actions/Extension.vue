@@ -30,10 +30,10 @@
           </span>
           <span v-else-if="(action.status == 'in_process') & !loanIsCanceled"> En attente </span>
           <span v-else-if="action.status === 'completed'">
-            Validé &bull; {{ action.executed_at | datetime }}
+            Accepté &bull; {{ action.executed_at | datetime }}
           </span>
           <span v-else-if="action.status === 'rejected'">
-            Contesté &bull; {{ action.executed_at | datetime }}
+            Refusé &bull; {{ action.executed_at | datetime }}
           </span>
           <span v-else-if="action.status === 'canceled'">
             Annulé &bull; {{ action.executed_at | datetime }}
@@ -155,6 +155,8 @@
               {{ action.comments_on_extension }}
               <div class="user-avatar" :style="{ backgroundImage: borrowerAvatar }" />
             </blockquote>
+
+            <b-button size="sm" variant="outline-danger" @click="cancelAction"> Annuler </b-button>
           </div>
         </div>
 

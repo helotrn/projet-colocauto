@@ -5,8 +5,9 @@ export default {
         return false;
       }
 
+      // an active extension has the status "in_process"
       return this.item.extensions.reduce(
-        (acc, i) => acc || !i.id || i.status !== "completed",
+        (acc, i) => acc || !i.id || i.status === "in_process",
         false
       );
     },
