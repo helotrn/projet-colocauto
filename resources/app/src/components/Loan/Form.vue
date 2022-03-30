@@ -64,9 +64,9 @@
 
             <b-row v-if="invalidDuration">
               <b-col>
-                <div class="warning-message">
+                <b-alert show variant="danger">
                   La durée de l'emprunt doit être supérieure ou égale à 15 minutes.
-                </div>
+                </b-alert>
               </b-col>
             </b-row>
 
@@ -288,11 +288,5 @@ export default {
 .loan-form__estimations__loading {
   max-width: 100px;
   max-height: 30px;
-}
-.loan-form {
-  .warning-message {
-    color: $danger;
-    margin-bottom: 20px;
-  }
 }
 </style>

@@ -79,12 +79,9 @@
           </div>
           <!---->
           <!-- text for loan invalid duration -->
-          <div
-            v-if="invalidDuration"
-            class="loan-search-form--warning loan-search-form--margin-bottom"
-          >
+          <b-alert show variant="danger" v-if="invalidDuration">
             La durée de l'emprunt doit être supérieure ou égale à 15 minutes.
-          </div>
+          </b-alert>
           <!---->
           <!-- field estimated distance -->
           <div>
@@ -213,8 +210,6 @@ export default {
 
   svg path {
     fill: currentColor;
-    height: 50px;
-    width: 50px;
   }
 
   &__button-borrower {
@@ -279,9 +274,5 @@ export default {
 
 .loan-search-form--margin-bottom {
   margin-bottom: 15px;
-}
-
-.loan-search-form--warning {
-  color: $danger;
 }
 </style>
