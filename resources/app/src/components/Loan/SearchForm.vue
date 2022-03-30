@@ -203,6 +203,10 @@ export default {
 @import "~bootstrap/scss/mixins/breakpoints";
 
 .loan-search-form {
+  &__button-borrower {
+    margin: 15px 0 0 0;
+  }
+
   h4 {
     font-size: 22px;
     font-weight: 700;
@@ -212,17 +216,13 @@ export default {
     fill: currentColor;
   }
 
-  &__button-borrower {
-    margin: 15px 0 0 0;
-  }
-
   .loanable-buttons label {
     border: 2px solid $locomotion-light-green;
     border-radius: 10px;
     display: table;
-    width: 85px;
     font-size: 13px;
     line-height: 24px;
+    width: 85px;
   }
 
   .loanable-buttons label:hover {
