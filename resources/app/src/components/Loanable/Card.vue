@@ -8,7 +8,7 @@
       </div>
     </div>
 
-    <h2 class="loanable-card__title">{{ name }}</h2>
+    <h4 class="loanable-card__title">{{ name }}</h4>
 
     <div class="loanable-card__tags">
       <div v-if="type === 'car'">
@@ -184,20 +184,6 @@ export default {
 
 .loanable-card {
   padding: 20px;
-
-  &__title {
-    font-size: 20px;
-
-    @include media-breakpoint-up(lg) {
-      max-height: 40px;
-      overflow: hidden;
-
-      &:hover {
-        max-height: 100%;
-        overflow: visible;
-      }
-    }
-  }
 
   &__tags {
     margin-bottom: 10px;
