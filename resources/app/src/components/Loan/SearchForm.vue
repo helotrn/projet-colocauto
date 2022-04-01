@@ -38,14 +38,14 @@
         </b-form-group>
         <b-alert show variant="danger" v-if="!canLoanCar">
           <strong>Oops! Pour emprunter l'auto de vos voisin-e-s</strong> vous devez remplir votre
-          profil de conduite.
+          dossier de conduite.
           <b-button
             to="/profile/borrower"
             pill
             class="loan-search-form__button-borrower"
             variant="danger"
           >
-            Remplissez votre profil
+            Remplissez votre dossier
           </b-button>
         </b-alert>
         <!---->
