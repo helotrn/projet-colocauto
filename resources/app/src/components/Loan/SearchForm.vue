@@ -9,43 +9,45 @@
       >
         <!-- title -->
         <div>
-          <h3 class="loan-search-form--no-margin">Qu'aimeriez-vous emprunter</h3>
-          <h3 class="loan-search-form--green">à vos voisin-e-s?</h3>
+          <h4 class="loan-search-form--no-margin">Qu'aimeriez-vous emprunter</h4>
+          <h4 class="loan-search-form--green">à vos voisin-e-s?</h4>
         </div>
         <!---->
         <!-- buttons to select types of vehicles -->
-        <b-form-group label-for="loanable_type">
+        <b-form-group>
           <b-form-checkbox-group
-            switches
-            stacked
-            class="form__group"
+            buttons
+            class="loanable-buttons"
             id="loanable_type"
-            name="loanable_type"
-            :options="loanableTypesExceptCar"
             :checked="selectedLoanableTypes"
             @change="emitLoanableTypes"
           >
-            <template v-slot:first>
-              <b-checkbox value="car" :disabled="!canLoanCar">
-                Auto
-
-                <b-badge
-                  pill
-                  variant="light"
-                  v-if="!canLoanCar"
-                  tabindex="0"
-                  v-b-tooltip.hover
-                  :title="
-                    'Pour réserver une auto, remplissez le dossier de conduite ' +
-                    'de votre profil.'
-                  "
-                >
-                  ?
-                </b-badge>
-              </b-checkbox>
-            </template>
+            <b-checkbox value="car" :disabled="!canLoanCar">
+              <svg-car />
+              Auto
+            </b-checkbox>
+            <b-checkbox value="bike">
+              <svg-bike />
+              Vélo
+            </b-checkbox>
+            <b-checkbox value="trailer">
+              <svg-trailer />
+              Remorque
+            </b-checkbox>
           </b-form-checkbox-group>
         </b-form-group>
+        <b-alert show variant="danger" v-if="!canLoanCar">
+          <strong>Oops! Pour emprunter l'auto de vos voisin-e-s</strong> vous devez remplir votre
+          dossier de conduite.
+          <b-button
+            to="/profile/borrower"
+            pill
+            class="loan-search-form__button-borrower"
+            variant="danger"
+          >
+            Remplissez votre dossier
+          </b-button>
+        </b-alert>
         <!---->
         <div v-if="form">
           <div v-if="item.departure_at">
@@ -77,12 +79,9 @@
           </div>
           <!---->
           <!-- text for loan invalid duration -->
-          <div
-            v-if="invalidDuration"
-            class="loan-search-form--warning loan-search-form--margin-bottom"
-          >
+          <b-alert show variant="danger" v-if="invalidDuration">
             La durée de l'emprunt doit être supérieure ou égale à 15 minutes.
-          </div>
+          </b-alert>
           <!---->
           <!-- field estimated distance -->
           <div>
@@ -124,9 +123,18 @@ import LoanFormMixin from "@/mixins/LoanFormMixin";
 
 import locales from "@/locales";
 
+import Bike from "@/assets/svg/bike.svg";
+import Car from "@/assets/svg/car.svg";
+import Trailer from "@/assets/svg/trailer.svg";
+
 export default {
   name: "Form",
-  components: { FormsValidatedInput },
+  components: {
+    FormsValidatedInput,
+    "svg-bike": Bike,
+    "svg-car": Car,
+    "svg-trailer": Trailer,
+  },
   mixins: [FormLabelsMixin, LoanFormMixin],
   props: {
     canLoanCar: {
@@ -195,8 +203,64 @@ export default {
 @import "~bootstrap/scss/mixins/breakpoints";
 
 .loan-search-form {
-  h3 {
+  &__button-borrower {
+    margin: 15px 0 0 0;
+  }
+
+  h4 {
+    font-size: 22px;
     font-weight: 700;
+  }
+
+  svg path {
+    fill: currentColor;
+  }
+
+  .loanable-buttons label {
+    border: 2px solid $locomotion-light-green;
+    border-radius: 10px;
+    display: table;
+    font-size: 13px;
+    line-height: 24px;
+    width: 85px;
+  }
+
+  .loanable-buttons label:hover {
+    background-color: #fff;
+    border: 2px solid $locomotion-light-green;
+  }
+
+  .loanable-buttons > .btn:not(:last-child):not(.dropdown-toggle),
+  .btn-group > .btn-group:not(:last-child) > .btn {
+    border-radius: 10px;
+    margin-right: 5px;
+  }
+
+  .loanable-buttons > .btn:not(:first-child),
+  .btn-group > .btn-group:not(:first-child) > .btn {
+    border-radius: 10px;
+    margin-left: 5px;
+  }
+
+  .loanable-buttons .btn:not(:disabled):not(.disabled):active,
+  .loanable-buttons .btn-secondary:not(:disabled):not(.disabled).active,
+  .show > .loanable-buttons .btn-secondary.dropdown-toggle {
+    background-color: $locomotion-light-green;
+    border: 2px solid $locomotion-light-green;
+    color: #fff;
+  }
+
+  .loanable-buttons .btn:focus,
+  .btn.focus {
+    background-color: #fff;
+    color: #7a7a7a;
+  }
+
+  .loanable-buttons .btn:disabled,
+  .btn.disabled {
+    background-color: #fff;
+    border-color: #a9afb5 !important;
+    color: #7a7a7a;
   }
 }
 
@@ -210,9 +274,5 @@ export default {
 
 .loan-search-form--margin-bottom {
   margin-bottom: 15px;
-}
-
-.loan-search-form--warning {
-  color: $danger;
 }
 </style>

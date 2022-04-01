@@ -33,10 +33,16 @@
                 >Modifier votre recherche</a
               >
               <b-button v-if="view === 'map'" pill @click="gotoView('list')">
-                Afficher la liste <svg-list />
+                <div class="community-view__button-spacing">
+                  <div>Afficher la liste</div>
+                  <div><svg-list /></div>
+                </div>
               </b-button>
               <b-button v-else pill @click="gotoView('map')">
-                Afficher la carte <svg-map />
+                <div class="community-view__button-spacing">
+                  <div>Afficher la carte</div>
+                  <div><svg-map /></div>
+                </div>
               </b-button>
             </div>
           </b-card>
@@ -45,7 +51,12 @@
         <b-col v-if="view === 'map'" lg="9">
           <!-- button to view list (on large screens) -->
           <div class="community-view__button-container d-none d-lg-block">
-            <b-button pill @click="gotoView('list')"> Afficher la liste <svg-list /> </b-button>
+            <b-button pill @click="gotoView('list')">
+              <div class="community-view__button-spacing">
+                <div>Afficher la liste</div>
+                <div><svg-list /></div>
+              </div>
+            </b-button>
           </div>
           <!---->
         </b-col>
@@ -61,7 +72,12 @@
             <!---->
             <!-- button to view map (on large screens) -->
             <div class="community-view__button-container d-none d-lg-block">
-              <b-button pill @click="gotoView('map')"> Afficher la carte <svg-map /> </b-button>
+              <b-button pill @click="gotoView('map')">
+                <div class="community-view__button-spacing">
+                  <div>Afficher la carte</div>
+                  <div><svg-map /></div>
+                </div>
+              </b-button>
             </div>
             <!---->
           </b-row>
@@ -314,6 +330,11 @@ export default {
     max-height: calc(100vh - #{$layout-navbar-height} - 30px);
     overflow: auto;
     overflow-x: hidden;
+
+    @include media-breakpoint-up(lg) {
+      max-height: calc(100vh - #{$layout-navbar-height} - 70px);
+      padding: 20px;
+    }
   }
 
   &__results-container {
@@ -336,6 +357,17 @@ export default {
     margin: 40px 20px;
   }
 
+  &__button-spacing {
+    display: flex;
+    flex-direction: row;
+  }
+
+  &__button-spacing > div {
+    display: flex;
+    align-items: center;
+    margin: 0 5px;
+  }
+
   .btn-secondary {
     color: #7a7a7a;
     background: #fff;
@@ -355,10 +387,14 @@ export default {
 
   .card {
     pointer-events: all;
+    min-width: fit-content;
 
     &-body {
       padding: 0;
-      margin: 1.25rem;
+
+      @include media-breakpoint-down(md) {
+        margin: 1.25rem;
+      }
     }
     @include media-breakpoint-down(md) {
       border-radius: 0;
@@ -377,10 +413,6 @@ export default {
       line-height: $h4-line-height;
       font-size: $h4-font-size;
     }
-  }
-
-  svg {
-    margin-left: 5px;
   }
 
   .community-map {
