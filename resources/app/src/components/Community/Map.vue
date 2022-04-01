@@ -78,7 +78,7 @@ export default {
       },
       polygonOptions: {
         fillColor: "#16a59e",
-        fillOpacity: 0.5,
+        fillOpacity: 0.25,
         strokeOpacity: 0,
         zIndex: 2,
       },

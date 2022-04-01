@@ -99,14 +99,14 @@ export default {
       },
       neighborhoodPolygonOptions: {
         fillColor: "#16a59e",
-        fillOpacity: 0.3,
+        fillOpacity: 0.25,
         strokeColor: "#16a59e",
         strokeOpacity: 0.7,
         zIndex: 1,
       },
       boroughPolygonOptions: {
         fillColor: "#16a59e",
-        fillOpacity: 0.5,
+        fillOpacity: 0.35,
         strokeOpacity: 0,
         zIndex: 2,
       },
