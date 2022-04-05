@@ -135,7 +135,7 @@ class ActionsCompleteTest extends TestCase
             ->add(48, "hours")
             ->add(10, "seconds");
 
-        Carbon::setTestNow($twoDaysAgo);
+        Carbon::setTestNow();
 
         $user = factory(User::class)
             ->states("withBorrower", "withCommunity")
@@ -152,7 +152,8 @@ class ActionsCompleteTest extends TestCase
             ->create([
                 "borrower_id" => $user->borrower->id,
                 "community_id" => $car->community_id,
-                "departure_at" => Carbon::now()->sub(48, "hours"),
+                // Return scheduled 1 hour ago, then cancelled in 48 hours.
+                "departure_at" => Carbon::now()->sub(2, "hours"),
                 "duration_in_minutes" => 60,
                 "loanable_id" => $car->id,
                 "platform_tip" => 0,
@@ -163,34 +164,29 @@ class ActionsCompleteTest extends TestCase
             ->create([
                 "borrower_id" => $user->borrower->id,
                 "community_id" => $car->community_id,
-                "departure_at" => Carbon::now()->add(48, "hours"),
+                // Return scheduled in 1 hour, then don't cancel
+                "departure_at" => Carbon::now(),
                 "duration_in_minutes" => 60,
                 "loanable_id" => $car->id,
                 "platform_tip" => 0,
             ]);
 
         // Validate initial state
-        Carbon::setTestNow();
         $this->assertEquals("in_process", $intentionLoan->loanStatus);
         $this->assertEquals("in_process", $intentionLoanInFuture->loanStatus);
+
+        // Run the test as if we were two days later.
+        Carbon::setTestNow($twoDaysFromNow);
 
         // Run the command
         app(ActionsCompleteCommand::class)->handle();
         $intentionLoan = $intentionLoan->fresh();
         $intentionLoanInFuture = $intentionLoanInFuture->fresh();
 
-        // This one ended in the past
+        // This one ended more than 48 hours ago.
         $this->assertEquals("canceled", $intentionLoan->loanStatus);
 
-        // This one is not yet ended, so it's not canceled yet
+        // This one ended less than 48 hours ago, and is not to be canceled.
         $this->assertEquals("in_process", $intentionLoanInFuture->loanStatus);
-
-        // Run the command again in the future
-        Carbon::setTestNow($twoDaysFromNow);
-        app(ActionsCompleteCommand::class)->handle();
-        $intentionLoanInFuture = $intentionLoanInFuture->fresh();
-
-        // This one is canceled now
-        $this->assertEquals("canceled", $intentionLoanInFuture->loanStatus);
     }
 }
