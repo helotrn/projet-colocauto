@@ -43,7 +43,9 @@ class ActionsComplete extends Command
             ->where(
                 "created_at",
                 "<=",
-                (new \DateTime("-48hours"))->format("Y-m-d H:i:s")
+                Carbon::now()
+                    ->subHours(48)
+                    ->format("Y-m-d H:i:s")
             )
             ->whereHas("loan")
             ->with(
@@ -81,7 +83,7 @@ class ActionsComplete extends Command
                             );
 
                             $loan->update([
-                                "canceled_at" => new \DateTime(),
+                                "canceled_at" => Carbon::now(),
                             ]);
 
                             Log::info(
