@@ -72,6 +72,7 @@ class ActionsComplete extends Command
                                     $loan->actual_duration_in_minutes,
                                     "minutes"
                                 )
+                                ->addHours(48)
                                 ->isPast()
                         ) {
                             Log::info(
