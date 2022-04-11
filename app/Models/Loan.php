@@ -755,4 +755,72 @@ SQL
                 return $this->loanable;
         }
     }
+
+    /*
+      This function is used to compute the loan_status attribute and should be
+      the single source of truth.
+
+      Possible states:
+        - in_process
+        - canceled
+        - completed
+
+      Only accounts for actions, not any fields from the loan itself.
+      Loan.canceled_at has precedence over this status.
+
+      Refer to database/migrations/2022_04_12_144045_set_loan_status.php
+      to see how older cases were accounted for.
+    */
+    public function getStatusFromActions()
+    {
+        // Loan is canceled if pre-payment is canceled.
+        foreach ($this->actions as $action) {
+            if ("pre_payment" == $action->type) {
+                switch ($action->status) {
+                    case "canceled":
+                        return "canceled";
+                        break;
+                }
+            }
+        }
+
+        // Payment
+        foreach ($this->actions as $action) {
+            if ("payment" == $action->type) {
+                switch ($action->status) {
+                    case "in_process":
+                    case "completed":
+                        return $action->status;
+                        break;
+                    default:
+                        throw new \Exception(
+                            "Unexpected status for loan action: payment."
+                        );
+                        break;
+                }
+            }
+        }
+
+        // Intention
+        foreach ($this->actions as $action) {
+            if ("intention" == $action->type) {
+                switch ($action->status) {
+                    case "canceled":
+                        return "canceled";
+                        break;
+                    case "in_process":
+                    case "completed":
+                        return "in_process";
+                        break;
+                    default:
+                        throw new \Exception(
+                            "Unexpected status for loan action: takeover."
+                        );
+                        break;
+                }
+            }
+        }
+
+        return "in_process";
+    }
 }
