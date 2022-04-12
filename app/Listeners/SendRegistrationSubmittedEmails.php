@@ -14,8 +14,8 @@ class SendRegistrationSubmittedEmails
 {
     public function handle(RegistrationSubmittedEvent $event)
     {
+        // Send the email to the user if that's the first time he registers
         if (!isset($event->user->meta["sent_registration_submitted_email"])) {
-            // Send an email to the user
             Mail::mailer("mandrill")
                 ->to($event->user->email, $event->user->full_name)
                 ->queue(new RegistrationSubmitted($event->user));
@@ -27,28 +27,11 @@ class SendRegistrationSubmittedEmails
             $event->user->save();
         }
 
-        // Retrieve all super admins
-        $admins = User::whereRole("admin")
-            ->select("name", "last_name", "email")
-            ->get()
-            ->toArray();
-
-        // Retrieve the admins for each community
-        foreach ($event->user->communities as $community) {
-            $communityAdmins = $community
-                ->users()
-                ->select("name", "last_name", "email")
-                ->where("community_user.role", "admin")
-                ->get()
-                ->toArray();
-
-            // Send an email notification to all admins
-            foreach (array_merge($admins, $communityAdmins) as $admin) {
-                Mail::to(
-                    $admin["email"],
-                    $admin["name"] . " " . $admin["last_name"]
-                )->queue(new RegistrationReviewable($event->user, $community));
-            }
+        // Notify the admins.
+        foreach ($event->$user->main_community->admins() as $admin) {
+            Mail::to($admin->email, $admin->full_name)->queue(
+                new RegistrationReviewable($event->user, $user->main_community)
+            );
         }
     }
 }
