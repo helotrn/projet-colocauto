@@ -75,6 +75,47 @@ class Loan extends BaseModel
                 $intention->save();
             }
         });
+
+        // Update loan.status whenever an action is changed.
+        foreach (
+            [
+                \App\Models\Extension::class,
+                \App\Models\Handover::class,
+                \App\Models\Incident::class,
+                \App\Models\Intention::class,
+                \App\Models\Payment::class,
+                \App\Models\PrePayment::class,
+                \App\Models\Takeover::class,
+            ]
+            as $class
+        ) {
+            $class::saved(function ($model) {
+                $loan = $model->loan;
+                $loan->status = $loan->getStatusFromActions();
+                $loan->save();
+            });
+
+            $class::deleted(function ($model) {
+                $loan = $model->loan;
+                $loan->status = $loan->getStatusFromActions();
+                $loan->save();
+            });
+        }
+
+        // Update loan.status if loan.canceled_at has changed.
+        self::saved(function ($loan) {
+            $initialStatus = $loan->status;
+
+            if ($loan->canceled_at && "canceled" != $loan->status) {
+                $loan->status = "canceled";
+            } elseif (!$loan->canceled_at) {
+                $loan->status = $loan->getStatusFromActions();
+            }
+
+            if ($loan->status != $initialStatus) {
+                $loan->save();
+            }
+        });
     }
 
     public static function getColumnsDefinition()
