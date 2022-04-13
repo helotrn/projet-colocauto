@@ -145,6 +145,8 @@ SQL;
 
                 return $query->selectRaw("$calendarDaysSql AS calendar_days");
             },
+
+            // This attribute is deprecated. Refer to loans.status instead.
             "loan_status" => function ($query = null) {
                 $sql = \DB::raw(
                     <<<SQL
@@ -595,6 +597,9 @@ SQL
         return max(0, is_array($values) ? $values[1] : $values);
     }
 
+    /*
+      Deprecated. Use loans.status.
+    */
     public function getLoanStatusAttribute()
     {
         if (isset($this->attributes["loan_status"])) {
