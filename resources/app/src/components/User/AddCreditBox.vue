@@ -59,7 +59,7 @@
           Valider
         </b-button>
 
-        <b-button variant="outline-warning" @click="emitCancel">Annuler</b-button>
+        <b-button v-if="!noCancel" variant="outline-warning" @click="emitCancel">Annuler</b-button>
       </b-col>
     </b-row>
   </div>
@@ -93,6 +93,12 @@ export default {
     user: {
       type: Object,
       required: true,
+    },
+    // This prop is a patch to remove cancel button from the pre-payment step.
+    noCancel: {
+      type: Boolean,
+      required: false,
+      default: false,
     },
   },
   computed: {
