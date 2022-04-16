@@ -47,7 +47,7 @@ Tests au complet, exécuter:
 
 :warning: à exécuter avant de soumettre votre MR.
 
-Pour tester une fraction des tests localement, 
+Pour tester une fraction des tests localement,
 
 `docker-compose exec php bash ./phpunit --filter ReviewableTest`
 
