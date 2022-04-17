@@ -12,7 +12,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Validation\Rule;
 use Molotov\Traits\TreeScopes;
 use MStaack\LaravelPostgis\Eloquent\PostgisTrait;
-use Log;
 
 class Community extends BaseModel
 {
