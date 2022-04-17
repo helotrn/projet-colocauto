@@ -30,7 +30,10 @@ class SendRegistrationSubmittedEmails
         // Notify the admins.
         foreach ($event->user->main_community->admins() as $admin) {
             Mail::to($admin->email, $admin->full_name)->queue(
-                new RegistrationReviewable($event->user, $user->main_community)
+                new RegistrationReviewable(
+                    $event->user,
+                    $event->user->main_community
+                )
             );
         }
     }

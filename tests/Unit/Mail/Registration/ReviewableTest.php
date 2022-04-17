@@ -38,33 +38,47 @@ class RegistrationReviewableTest extends TestCase
         $this->assertStringContainsString("John Doe", $mail_content);
     }
 
-    public function testRegistrationAdminEmailDelivery()
+    public function testRegistrationAdminsEmailDelivery()
     {
+        Mail::fake();
+
         // Prevent the event to send customer's email since this test is admin-only.
         $meta = [];
         $meta["sent_registration_submitted_email"] = true;
+
+        // Fake User
         $user = factory(User::class)->create([
             "name" => "John",
             "last_name" => "Doe",
             "meta" => $meta,
         ]);
-
         $community = factory(Community::class)->create([
             "name" => "Community_Name",
         ]);
+        $community->users()->attach($user);
 
-        // Don't trigger event. Only test listener.
+        // Fake global and local admins
+        $global_admin = factory(User::class)->create(["role" => "admin"]);
+        $community_admin = factory(User::class)->create();
+        $community->users()->attach($community_admin, ["role" => "admin"]);
+
+        // This doesn't trigger Event but only the Listener.
         $event = new RegistrationSubmittedEvent($user);
-        // $mail = new RegistrationReviewable($user, $community);
-        // $listener = app()->make(SendRegistrationSubmittedEmails::class);
-        // $listener->handle($event);
+        $listener = app()->make(SendRegistrationSubmittedEmails::class);
+        $listener->handle($event);
 
-        // // Mail to borrower.
-        // Find inspiration from testSendsEmailToAdminsOfSameLevel for what's next
-        // Mail::assertQueued(RegistrationReviewable::class, function ($mail) use (
-        //     $user
-        // ) {
-        //     return $mail->hasTo($user->email);
-        // });
+        // Check mail delivery for global admin
+        Mail::assertQueued(RegistrationReviewable::class, function ($mail) use (
+            $global_admin
+        ) {
+            return $mail->hasTo($global_admin->email);
+        });
+
+        // Check mail delivery for local admin
+        Mail::assertQueued(RegistrationReviewable::class, function ($mail) use (
+            $community_admin
+        ) {
+            return $mail->hasTo($community_admin->email);
+        });
     }
 }
