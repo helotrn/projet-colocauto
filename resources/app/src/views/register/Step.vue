@@ -103,7 +103,7 @@
         icon="arrow-right-circle-fill"
       ></b-icon>
 
-      <b-btn v-else variant="primary" to="/app"> J'embarque!</b-btn>
+      <b-btn v-else variant="primary" to="/app" v-on:click="forcePageRefresh()"> J'embarque!</b-btn>
     </div>
   </div>
 </template>
@@ -179,6 +179,10 @@ export default {
     nextSlide() {
       this.currentSlide += 1;
     },
+    forcePageRefresh() {
+      // Hack to get the dashboard to refresh with the latest UserMixin
+      window.location.reload();
+    },
     async submitAndReload() {
       try {
         await this.submit();
@@ -209,9 +213,7 @@ export default {
     async submitCommunityProof() {
       try {
         // File attached
-        if (this.hasAllProofs) {
-          await this.submit();
-        }
+        await this.submit();
         // Go to the on-boarding slides
         this.$router.push("/register/4");
       } catch (e) {
