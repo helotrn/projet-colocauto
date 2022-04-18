@@ -15,7 +15,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Mail;
 use Tests\TestCase;
 
-class RegistrationReviewableTest extends TestCase
+class ReviewableTest extends TestCase
 {
     public function testRegistrationAdminEmailContentIntegrity()
     {
