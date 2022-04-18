@@ -242,6 +242,8 @@ class UserController extends RestController
         return ["report" => $report];
     }
 
+    // Doesn't seem to be either used or triggered.
+    // TODO To delete?
     public function submit(Request $request, $id)
     {
         $user = $this->repo->find($request, $id);
