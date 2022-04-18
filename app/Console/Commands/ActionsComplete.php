@@ -60,7 +60,7 @@ class ActionsComplete extends Command
             $loan = $action->loan;
 
             // Nothing to complete for canceled loans.
-            if ($loan->canceled_at) {
+            if ($loan->isCanceled()) {
                 continue;
             }
 

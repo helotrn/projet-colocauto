@@ -606,7 +606,7 @@ SQL
             return $this->attributes["loan_status"];
         }
 
-        if ($this->canceled_at) {
+        if ($this->isCanceled()) {
             return "canceled";
         }
 

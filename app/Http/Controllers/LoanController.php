@@ -118,7 +118,7 @@ class LoanController extends RestController
     {
         $item = $this->repo->find($request, $id);
 
-        $item->canceled_at = now();
+        $item->cancel();
         $item->save();
 
         try {
