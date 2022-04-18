@@ -28,6 +28,14 @@ export default {
         this.user.communities && !this.user.communities.reduce((acc, c) => acc && !!c.proof, true)
       );
     },
+    waitingForProfileApproval() {
+      return (
+        this.isLoggedIn &&
+        this.hasCompletedRegistration &&
+        !this.hasNotSubmittedProofOfResidency &&
+        !this.hasProfileApproved
+      );
+    },
     hasProfileApproved() {
       return (
         this.isLoggedIn &&
