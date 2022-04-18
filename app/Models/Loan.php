@@ -788,6 +788,30 @@ SQL
             ->whereRaw("departure_at > now()");
     }
 
+    /*
+       This method checks whether this loan is in a state in which it can be
+       canceled.
+    */
+    public function isCancelable($at = null)
+    {
+        if ($this->isCanceled()) {
+            return false;
+        }
+
+        // Check if takeover is completed or if payment exists.
+        foreach ($this->actions as $action) {
+            if (
+                ("takeover" == $action->type &&
+                    "completed" == $action->status) ||
+                "payment" == $action->type
+            ) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     public function cancel($at = null)
     {
         $this->canceled_at = new Carbon($at);

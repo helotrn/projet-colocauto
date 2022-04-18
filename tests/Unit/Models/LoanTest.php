@@ -8,6 +8,56 @@ use Carbon\Carbon;
 
 class LoanTest extends TestCase
 {
+    public function testIsCancelable_Canceled()
+    {
+        $loan = factory(Loan::class)
+            ->states("withCompletedPrePayment")
+            ->create();
+
+        // Must refresh materialized views before asking for loan->actions.
+        \DB::statement("REFRESH MATERIALIZED VIEW actions");
+
+        // Refresh loan from database
+        $loan = $loan->fresh();
+
+        $this->assertTrue($loan->isCancelable());
+
+        $loan->cancel();
+
+        $this->assertTrue($loan->isCanceled());
+        $this->assertFalse($loan->isCancelable());
+    }
+
+    public function testIsCancelable_TakeoverInProcess()
+    {
+        $loan = factory(Loan::class)
+            ->states("withInProcessTakeover")
+            ->create();
+
+        // Must refresh materialized views before asking for loan->actions.
+        \DB::statement("REFRESH MATERIALIZED VIEW actions");
+
+        // Refresh loan from database
+        $loan = $loan->fresh();
+
+        $this->assertTrue($loan->isCancelable());
+    }
+
+    public function testIsCancelable_TakeoverCompleted()
+    {
+        $loan = factory(Loan::class)
+            ->states("withCompletedTakeover")
+            ->create();
+
+        // Must refresh materialized views before asking for loan->actions.
+        \DB::statement("REFRESH MATERIALIZED VIEW actions");
+
+        // Refresh loan from database
+        $loan = $loan->fresh();
+
+        $this->assertFalse($loan->isCancelable());
+    }
+
     public function testCancel_Now()
     {
         $loan = factory(Loan::class)
