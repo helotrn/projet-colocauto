@@ -4,9 +4,69 @@ namespace Tests\Unit\Models;
 
 use App\Models\Loan;
 use Tests\TestCase;
+use Carbon\Carbon;
 
 class LoanTest extends TestCase
 {
+    public function testCancel_Now()
+    {
+        $loan = factory(Loan::class)
+            ->states("withCompletedPrePayment")
+            ->create();
+
+        $this->assertFalse($loan->isCanceled());
+
+        $loan->cancel();
+
+        $this->assertTrue($loan->isCanceled());
+
+        $this->assertNotNull($loan->canceled_at);
+        $this->assertEquals("canceled", $loan->status);
+    }
+
+    public function testCancel_At()
+    {
+        $loan = factory(Loan::class)
+            ->states("withCompletedPrePayment")
+            ->create();
+
+        $this->assertFalse($loan->isCanceled());
+
+        $loan->cancel(new Carbon("2022-04-16 12:34:56"));
+
+        $this->assertTrue($loan->isCanceled());
+
+        $this->assertNotNull($loan->canceled_at);
+        $this->assertEquals("canceled", $loan->status);
+        $this->assertEquals("2022-04-16 12:34:56", $loan->canceled_at);
+    }
+
+    public function testIsCanceled_Status()
+    {
+        $loan = factory(Loan::class)
+            ->states("withCompletedPrePayment")
+            ->create();
+
+        $this->assertFalse($loan->isCanceled());
+
+        $loan->status = "canceled";
+
+        $this->assertTrue($loan->isCanceled());
+    }
+
+    public function testIsCanceled_CanceledAt()
+    {
+        $loan = factory(Loan::class)
+            ->states("withCompletedPrePayment")
+            ->create();
+
+        $this->assertFalse($loan->isCanceled());
+
+        $loan->canceled_at = new Carbon();
+
+        $this->assertTrue($loan->isCanceled());
+    }
+
     public function testGetStatusFromActions_IntentionInProcess()
     {
         $loan = factory(Loan::class)

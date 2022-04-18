@@ -788,6 +788,19 @@ SQL
             ->whereRaw("departure_at > now()");
     }
 
+    public function cancel($at = null)
+    {
+        $this->canceled_at = new Carbon($at);
+        $this->status = "canceled";
+
+        return $this;
+    }
+
+    public function isCanceled()
+    {
+        return $this->canceled_at || $this->status == "canceled";
+    }
+
     public function getFullLoanable()
     {
         switch ($this->loanable->type) {
