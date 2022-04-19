@@ -75,6 +75,47 @@ class Loan extends BaseModel
                 $intention->save();
             }
         });
+
+        // Update loan.status whenever an action is changed.
+        foreach (
+            [
+                \App\Models\Extension::class,
+                \App\Models\Handover::class,
+                \App\Models\Incident::class,
+                \App\Models\Intention::class,
+                \App\Models\Payment::class,
+                \App\Models\PrePayment::class,
+                \App\Models\Takeover::class,
+            ]
+            as $class
+        ) {
+            $class::saved(function ($model) {
+                $loan = $model->loan;
+                $loan->status = $loan->getStatusFromActions();
+                $loan->save();
+            });
+
+            $class::deleted(function ($model) {
+                $loan = $model->loan;
+                $loan->status = $loan->getStatusFromActions();
+                $loan->save();
+            });
+        }
+
+        // Update loan.status if loan.canceled_at has changed.
+        self::saved(function ($loan) {
+            $initialStatus = $loan->status;
+
+            if ($loan->canceled_at && "canceled" != $loan->status) {
+                $loan->status = "canceled";
+            } elseif (!$loan->canceled_at) {
+                $loan->status = $loan->getStatusFromActions();
+            }
+
+            if ($loan->status != $initialStatus) {
+                $loan->save();
+            }
+        });
     }
 
     public static function getColumnsDefinition()
@@ -104,6 +145,8 @@ SQL;
 
                 return $query->selectRaw("$calendarDaysSql AS calendar_days");
             },
+
+            // This attribute is deprecated. Refer to loans.status instead.
             "loan_status" => function ($query = null) {
                 $sql = \DB::raw(
                     <<<SQL
@@ -554,6 +597,9 @@ SQL
         return max(0, is_array($values) ? $values[1] : $values);
     }
 
+    /*
+      Deprecated. Use loans.status.
+    */
     public function getLoanStatusAttribute()
     {
         if (isset($this->attributes["loan_status"])) {
@@ -754,5 +800,73 @@ SQL
             default:
                 return $this->loanable;
         }
+    }
+
+    /*
+      This function is used to compute the loan_status attribute and should be
+      the single source of truth.
+
+      Possible states:
+        - in_process
+        - canceled
+        - completed
+
+      Only accounts for actions, not any fields from the loan itself.
+      Loan.canceled_at has precedence over this status.
+
+      Refer to database/migrations/2022_04_12_144045_set_loan_status.php
+      to see how older cases were accounted for.
+    */
+    public function getStatusFromActions()
+    {
+        // Loan is canceled if pre-payment is canceled.
+        foreach ($this->actions as $action) {
+            if ("pre_payment" == $action->type) {
+                switch ($action->status) {
+                    case "canceled":
+                        return "canceled";
+                        break;
+                }
+            }
+        }
+
+        // Payment
+        foreach ($this->actions as $action) {
+            if ("payment" == $action->type) {
+                switch ($action->status) {
+                    case "in_process":
+                    case "completed":
+                        return $action->status;
+                        break;
+                    default:
+                        throw new \Exception(
+                            "Unexpected status for loan action: payment."
+                        );
+                        break;
+                }
+            }
+        }
+
+        // Intention
+        foreach ($this->actions as $action) {
+            if ("intention" == $action->type) {
+                switch ($action->status) {
+                    case "canceled":
+                        return "canceled";
+                        break;
+                    case "in_process":
+                    case "completed":
+                        return "in_process";
+                        break;
+                    default:
+                        throw new \Exception(
+                            "Unexpected status for loan action: takeover."
+                        );
+                        break;
+                }
+            }
+        }
+
+        return "in_process";
     }
 }
