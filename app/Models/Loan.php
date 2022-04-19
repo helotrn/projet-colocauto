@@ -606,7 +606,7 @@ SQL
             return $this->attributes["loan_status"];
         }
 
-        if ($this->canceled_at) {
+        if ($this->isCanceled()) {
             return "canceled";
         }
 
@@ -786,6 +786,19 @@ SQL
                 Carbon::now(),
             ])
             ->whereRaw("departure_at > now()");
+    }
+
+    public function cancel($at = null)
+    {
+        $this->canceled_at = new Carbon($at);
+        $this->status = "canceled";
+
+        return $this;
+    }
+
+    public function isCanceled()
+    {
+        return $this->canceled_at || $this->status == "canceled";
     }
 
     public function getFullLoanable()
