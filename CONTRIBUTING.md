@@ -2,7 +2,7 @@
 
 Bienvenue sur le guide de contribution de locomotion.app.
 
-Tout d'abord, merci de considérer contribuer à Locomotion.app. Nous essayons d'incarner une plateforme "coop", plus local, axée vers la transition socio-écologique et donc avec une gouvernance la plus ouverte et démocratique possible.
+Tout d'abord, merci de considérer contribuer à Locomotion.app. Nous essayons d'incarner une plateforme "coop", plus locale, axée vers la transition socio-écologique et donc avec une gouvernance la plus ouverte et démocratique possible.
 
 Contribuer à Locomotion, c'est renforcer ces principes. Merci pour cela.
 
@@ -17,7 +17,7 @@ Nous sommes ouverts à une variété de contributions :
 -   proposition d'améliorations à la simplicité et la clarté du code;
 -   proposition de bonnes pratiques et standards à adopter;
 -   amélioration de la documentation
--   amélioration de l'accessibilité universelle et élaboration de bonne pratiques;
+-   amélioration de l'accessibilité universelle et élaboration de bonnes pratiques;
 -   etc.
 
 Si vous débutez, nous maintenons une liste d'incidents à l'intention des
