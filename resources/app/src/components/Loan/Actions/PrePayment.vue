@@ -45,8 +45,8 @@
             <user-add-credit-box
               :minimumRequired="minimumRequired"
               :user="user"
+              :noCancel="true"
               @bought="completeAction"
-              @cancel="cancelAction"
             />
 
             <div class="loan-actions-intention__buttons" v-if="canComplete">
@@ -61,15 +61,6 @@
                   @click="completeAction"
                 >
                   Compléter
-                </b-button>
-
-                <b-button
-                  size="sm"
-                  variant="outline-danger"
-                  :disabled="actionLoading"
-                  @click="cancelAction"
-                >
-                  Annuler
                 </b-button>
               </div>
             </div>
