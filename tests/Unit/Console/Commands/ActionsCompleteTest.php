@@ -8,6 +8,7 @@ use App\Models\Car;
 use App\Models\Loan;
 use App\Models\User;
 use Carbon\Carbon;
+use Carbon\CarbonImmutable;
 
 use Tests\TestCase;
 
@@ -188,5 +189,95 @@ class ActionsCompleteTest extends TestCase
 
         // This one ended less than 48 hours ago, and is not to be canceled.
         $this->assertEquals("in_process", $intentionLoanInFuture->loanStatus);
+    }
+
+    public function testGetActiveLoansScheduledToReturnBefore()
+    {
+        $expectedLoanIds = [];
+
+        $twoDaysAgo = CarbonImmutable::now()->sub(48, "hours");
+
+        $ownerUser = factory(User::class)
+           ->states("withOwner", "withPaidCommunity")
+            ->create();
+
+        $borrowerUser = factory(User::class)
+            ->states("withBorrower", "withPaidCommunity")
+            ->create();
+
+        $loanable = factory(Car::class)->create([
+            "owner_id" => $ownerUser->owner_id,
+            "community_id" => $ownerUser->communities[0]->id,
+        ]);
+
+        $unpaidCompletedLoanEndingMoreThan48HoursAgo = factory(Loan::class)
+            ->states("withAllStepsCompleted", "butPaymentInProcess")
+            ->create([
+                "borrower_id" => $borrowerUser->borrower->id,
+                "community_id" => $loanable->community_id,
+                "departure_at" => $twoDaysAgo->subMinutes(60),
+                "duration_in_minutes" => 50,
+                "loanable_id" => $loanable->id,
+                "platform_tip" => 0,
+            ]);
+        $expectedLoanIds[] = $unpaidCompletedLoanEndingMoreThan48HoursAgo->id;
+
+        $unpaidCompletedLoanEndingLessThan48HoursAgo = factory(Loan::class)
+            ->states("withAllStepsCompleted", "butPaymentInProcess")
+            ->create([
+                "borrower_id" => $borrowerUser->borrower->id,
+                "community_id" => $loanable->community_id,
+                "departure_at" => $twoDaysAgo->subMinutes(60),
+                "duration_in_minutes" => 70,
+                "loanable_id" => $loanable->id,
+                "platform_tip" => 0,
+            ])
+            ->fresh();
+
+        $unpaidCompletedLoanEndingLessThan48HoursAgoCanceled = factory(
+            Loan::class
+        )
+            ->states("withAllStepsCompleted", "butPaymentInProcess")
+            ->create([
+                "borrower_id" => $borrowerUser->borrower->id,
+                "community_id" => $loanable->community_id,
+                "departure_at" => $twoDaysAgo->subMinutes(60),
+                "duration_in_minutes" => 70,
+                "loanable_id" => $loanable->id,
+                "platform_tip" => 0,
+                "canceled_at" => $twoDaysAgo->subMinutes(30),
+            ]);
+
+        $unpaidCompletedLoanEndingMoreThan48HoursAgoExtended = factory(
+            Loan::class
+        )
+            ->states(
+                "withAllStepsCompleted",
+                "butPaymentInProcess",
+                // Extension: new duration = 120 minutes.
+                "withCompletedExtension"
+            )
+            ->create([
+                "borrower_id" => $borrowerUser->borrower->id,
+                "community_id" => $loanable->community_id,
+                "departure_at" => $twoDaysAgo->subMinutes(60),
+                "duration_in_minutes" => 50,
+                "loanable_id" => $loanable->id,
+                "platform_tip" => 0,
+            ]);
+        $expectedLoanIds[] =
+            $unpaidCompletedLoanEndingMoreThan48HoursAgoExtended->id;
+
+        $scheduledLoans = ActionsCompleteCommand::getActiveLoansScheduledToReturnBefore(
+            $twoDaysAgo
+        );
+
+        $scheduledLoanIds = [];
+        foreach ($scheduledLoans as $loan) {
+            $scheduledLoanIds[] = $loan->id;
+        }
+
+        // Assert equals, order not important.
+        $this->assertEqualsCanonicalizing($expectedLoanIds, $scheduledLoanIds);
     }
 }

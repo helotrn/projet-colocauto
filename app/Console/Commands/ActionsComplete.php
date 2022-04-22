@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Http\Controllers\ActionController;
 use App\Http\Requests\Action\ActionRequest;
 use App\Models\Action;
+use App\Models\Loan;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Log;
@@ -196,5 +197,29 @@ class ActionsComplete extends Command
         }
 
         Log::info("Completed actions autocompletion command.");
+    }
+
+    /*
+       This function quickly fetches a supreset of the candidate loans to be
+       completed or canceled. They will then be checked individually.
+
+       The key word here is "superset".
+    */
+    public static function getActiveLoansScheduledToReturnBefore($datetime)
+    {
+        $loans = Loan::whereRaw("status = 'in_process'")
+
+            // Duration, not accounting for extensions. It is not expected that
+            // there will be many extensions and we can afford to load them and
+            // check them individually.
+            ->whereRaw(
+                "departure_at + duration_in_minutes * interval '1 minute' <= ?",
+                [$datetime]
+            )
+            // Load along with all actions. They'll be needed.
+            ->with("actions")
+            ->get();
+
+        return $loans;
     }
 }
