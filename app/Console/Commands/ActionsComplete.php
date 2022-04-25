@@ -7,6 +7,7 @@ use App\Http\Requests\Action\ActionRequest;
 use App\Models\Action;
 use App\Models\Loan;
 use Carbon\Carbon;
+use Carbon\CarbonImmutable;
 use Illuminate\Console\Command;
 use Log;
 
@@ -29,152 +30,177 @@ class ActionsComplete extends Command
     {
         Log::info("Starting actions autocompletion command...");
 
-        // The following action cannot be completed...
-        // Intentions: have to be confirmed by owner
-        // Pre-payments: have to be made by borrower
-        // Incidents: have to be managed by an admin
+        /*
+           Strategy:
 
-        $finishableActions = Action::whereIn("type", [
-            /*'extension',*/
-            /*'handover',*/
-            "payment",
-            "takeover",
-        ])
-            ->where("status", "in_process")
-            ->where(
-                "created_at",
-                "<=",
-                Carbon::now()
-                    ->subHours(48)
-                    ->format("Y-m-d H:i:s")
-            )
-            ->whereHas("loan")
-            ->with(
-                "loan",
-                "loan.loanable",
-                "loan.borrower",
-                "loan.borrower.user"
-            )
-            ->get();
+           1. Quickly find loans (getActiveLoansScheduledToReturnBefore):
+               - that are active;
+               - that were registered to be finished by 48 hours ago
+                 (departure_at + duration_in_minutes) in table "loans".
 
-        foreach ($finishableActions as $action) {
-            $loan = $action->loan;
+           2. Then refine calculation of the real return_at time accounting for
+              extensions.
 
-            // Nothing to complete for canceled loans.
-            if ($loan->isCanceled()) {
+           3. Decide whether to cancel, complete or leave the loan intact.
+
+           NOTE: Early payments are not expected as it would indicate that the
+           loan is already completed.
+
+           This implementation creates requests and uses the HTTP Controller
+           because it contains some of the business logic that must be
+           applied and some events that should be triggered.
+           See PaymentController::complete for example.
+        */
+
+        $loanExpirationTime = CarbonImmutable::now()->subHours(48);
+
+        $loans = self::getActiveLoansScheduledToReturnBefore(
+            $loanExpirationTime
+        );
+
+        foreach ($loans as $loan) {
+            $intentionEnd = (new Carbon($loan->departure_at))->addMinutes(
+                $loan->duration_in_minutes
+            );
+            $actualEnd = (new Carbon($loan->departure_at))->addMinutes(
+                $loan->actual_duration_in_minutes
+            );
+
+            if ($actualEnd->greaterThanOrEqualTo($loanExpirationTime)) {
+                Log::info(
+                    "Not autocompleting loan ID $loan->id because of an accepted extension."
+                );
                 continue;
             }
 
-            try {
-                switch ($action->type) {
-                    case "takeover":
-                        if (
-                            $loan->departure_at &&
-                            Carbon::parse($loan->departure_at)
-                                ->add(
-                                    $loan->actual_duration_in_minutes,
-                                    "minutes"
-                                )
-                                ->addHours(48)
-                                ->isPast()
-                        ) {
-                            Log::info(
-                                "Autocancelling loan ID $loan->id because " .
-                                    "$action->type has not been completed..."
-                            );
+            // We could also check loan actions individually and issue better log messages.
+            if ($loan->isCancelable()) {
+                Log::info("Autocancelling loan ID $loan->id.");
 
-                            $loan->update([
-                                "canceled_at" => Carbon::now(),
-                            ]);
+                $loan->cancel()->save();
 
-                            Log::info(
-                                "Canceled loan ID $loan->id because " .
-                                    "$action->type has never been completed."
-                            );
-                        }
-                        break;
-                    case "handover":
+                Log::info("Canceled loan ID $loan->id.");
+
+                break;
+            }
+
+            /*
+              Extensions:
+
+              Cancel extensions if they were not accepted before the previously accepted
+              loan duration (this means accounting for extensions accepted earlier).
+            */
+            foreach ($loan->actions as $action) {
+                if (
+                    "extension" == $action->type &&
+                    "in_process" == $action->status
+                ) {
+                    $actualReturnAt = Carbon::parse(
+                        $loan->departure_at
+                    )->addMinutes($loan->actual_duration_in_minutes);
+
+                    if (
+                        $actualReturnAt->lessThanOrEqualTo($loanExpirationTime)
+                    ) {
                         Log::info(
-                            "Autocompleting $action->type on loan ID $loan->id..."
-                        );
-
-                        $takeover = $loan->takeover()->first();
-
-                        $request = new ActionRequest();
-                        $request->setUserResolver(function () use ($loan) {
-                            return $loan->borrower->user;
-                        });
-                        $request->merge([
-                            "type" => $action->type,
-                            "loan_id" => $loan->id,
-                            "mileage_end" =>
-                                $takeover->mileage_beginning +
-                                $loan->estimated_distance,
-                        ]);
-                        $this->controller->complete(
-                            $request,
-                            $loan->id,
-                            $action->id
-                        );
-
-                        Log::info(
-                            "Autocompleted $action->type on loan ID $loan->id."
-                        );
-                        break;
-                    case "payment":
-                        $totalActualCost = $loan->total_actual_cost;
-
-                        if (
-                            floatval($loan->borrower->user->balance) >=
-                            $totalActualCost
-                        ) {
-                            Log::info(
-                                "Autocompleting $action->type on loan ID $loan->id..."
-                            );
-
-                            $request = new ActionRequest();
-                            $request->setUserResolver(function () use ($loan) {
-                                return $loan->borrower->user;
-                            });
-                            $request->merge([
-                                "type" => $action->type,
-                                "loan_id" => $loan->id,
-                                "platform_tip" => $loan->platform_tip,
-                                "automated" => true,
-                            ]);
-
-                            $this->controller->complete(
-                                $request,
-                                $loan->id,
-                                $action->id
-                            );
-
-                            Log::info(
-                                "Autocompleted $action->type on loan ID $loan->id."
-                            );
-                        } else {
-                            Log::warning(
-                                "Not autocompleting $action->type on loan ID $loan->id " .
-                                    "because the user balance is less than the total actual cost " .
-                                    "({$loan->borrower->user->balance} < $totalActualCost)..."
-                            );
-                        }
-                        break;
-                    case "extension":
-                        Log::info(
-                            "Autocompleting $action->type on loan ID $loan->id..."
+                            "Canceling $action->type on loan ID $loan->id..."
                         );
 
                         $request = new ActionRequest();
-                        $request->setUserResolver(function () use ($loan) {
-                            // FIXME is this right? shouldn't it be the owner?
-                            return $loan->borrower->user;
-                        });
                         $request->merge([
                             "type" => $action->type,
                             "loan_id" => $loan->id,
                             "new_duration" => $action->new_duration,
                         ]);
+
+                        $this->controller->cancel(
+                            $request,
+                            $loan->id,
+                            $action->id
+                        );
+
+                        Log::info(
+                            "Canceled $action->type on loan ID $loan->id."
+                        );
+                    }
+                }
+            }
+
+            // Canceled extensions will not change loan status. Not necessary to refresh loan.
+
+            // Cancelable pre-payments and takeovers were already canceled earlier.
+
+            /*
+              Handovers:
+            */
+            foreach ($loan->actions as $action) {
+                if (
+                    "handover" == $action->type &&
+                    "in_process" == $action->status
+                ) {
+                    Log::info(
+                        "Autocompleting $action->type on loan ID $loan->id..."
+                    );
+
+                    $takeover = $loan->takeover()->first();
+
+                    $request = new ActionRequest();
+                    $request->setUserResolver(function () use ($loan) {
+                        return $loan->borrower->user;
+                    });
+                    $request->merge([
+                        "type" => $action->type,
+                        "loan_id" => $loan->id,
+                        "mileage_end" =>
+                            $takeover->mileage_beginning +
+                            $loan->estimated_distance,
+                    ]);
+                    Log::debug("CALL HANDOVER COMPLETE");
+                    $this->controller->complete(
+                        $request,
+                        $loan->id,
+                        $action->id
+                    );
+
+                    Log::info(
+                        "Autocompleted $action->type on loan ID $loan->id."
+                    );
+                }
+            }
+
+            // Completed handovers will not change loan status. Not necessary to refresh loan.
+
+            /*
+              Payments:
+
+              Complete if balance is sufficient.
+            */
+            foreach ($loan->actions as $action) {
+                if (
+                    "payment" == $action->type &&
+                    "in_process" == $action->status
+                ) {
+                    $totalActualCost = $loan->total_actual_cost;
+
+                    if (
+                        floatval($loan->borrower->user->balance) >=
+                        $totalActualCost
+                    ) {
+                        Log::info(
+                            "Autocompleting $action->type on loan ID $loan->id..."
+                        );
+
+                        $request = new ActionRequest();
+                        $request->setUserResolver(function () use ($loan) {
+                            return $loan->borrower->user;
+                        });
+                        $request->merge([
+                            "type" => $action->type,
+                            "loan_id" => $loan->id,
+                            "platform_tip" => $loan->platform_tip,
+                            "automated" => true,
+                        ]);
+
                         $this->controller->complete(
                             $request,
                             $loan->id,
@@ -184,15 +210,14 @@ class ActionsComplete extends Command
                         Log::info(
                             "Autocompleted $action->type on loan ID $loan->id."
                         );
-                        break;
-                    default:
-                        break;
+                    } else {
+                        Log::info(
+                            "Not autocompleting $action->type on loan ID $loan->id " .
+                                "because the user balance is less than the total actual cost " .
+                                "({$loan->borrower->user->balance} < $totalActualCost)..."
+                        );
+                    }
                 }
-            } catch (\Exception $e) {
-                Log::error(
-                    "Fatal error trying to autocomplete " .
-                        "action ID $action->id: {$e->getMessage()}."
-                );
             }
         }
 
