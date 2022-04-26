@@ -25,7 +25,7 @@
           </section>
 
           <!-- profile pending container -->
-          <section class="page__section" v-if="hasCommunity && !hasProfileApproved">
+          <section class="page__section" v-if="waitingForProfileApproval">
             <b-jumbotron
               bg-variant="light"
               header="Votre profil est en attente de validation."

@@ -36,7 +36,7 @@
           </a>
         </figcaption>
       </figure>
-      <b-button variant="warning" @click="removeImage">
+      <b-button variant="outline-info" @click="removeImage">
         <small>{{ removeImageText }}</small>
       </b-button>
     </div>

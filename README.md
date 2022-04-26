@@ -25,6 +25,16 @@ dans un autre terminal, faire:
 
 -   `docker-compose exec php php artisan migrate --seed`
 
+## Variables pour un bon fonctionnement en local
+
+Demandez à un admin les variables confidentielles. Elles sont dans `docker-compose.yaml`.
+
+Voici quelques-unes dont vous aurez particulièrement besoin:
+
+-   GOOGLE_API_KEY
+-   VUE_APP_GOOGLE_MAPS_API_KEY
+-   MANDRILL_KEY
+
 ### Se connecter à l'application
 
 Les comptes suivants auront été créés:

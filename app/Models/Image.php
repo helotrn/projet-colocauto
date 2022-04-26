@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Pivots\CommunityUser;
 use App\Models\User;
+use App\Events\RegistrationSubmittedEvent;
 use Auth;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Database\Eloquent\Builder;
@@ -204,6 +205,26 @@ class Image extends BaseModel
                 // not exists
                 Image::copy($fullPath, $imagePath . $ds . $model->filename);
                 $model->path = $imagePath;
+            }
+        });
+
+        self::saved(function ($model) {
+            // A new proof of residency is matched to a user through CommunityUser
+            // Act as the ultimate trigger to know that a registration is complete
+            // and should be submitted through RegistrationSubmittedEvent
+            if (
+                $model->field == "proof" &&
+                $model->wasChanged("imageable_id") &&
+                $model->communityUser()
+            ) {
+                $communityUser = CommunityUser::where(
+                    "id",
+                    $model->imageable_id
+                )->first();
+                // Trigger the registration submission
+                if ($communityUser && $communityUser->user) {
+                    event(new RegistrationSubmittedEvent($communityUser->user));
+                }
             }
         });
     }
