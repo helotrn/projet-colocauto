@@ -5,7 +5,7 @@
       <b-badge pill variant="light" v-b-popover.hover="$t('approvisionner_popover')"> ? </b-badge>
     </h3>
 
-    <div class="dashboard-balance__balance">{{ roundedBalance }}&nbsp;$</div>
+    <div class="dashboard-balance__balance">{{ user.balance | currency }}</div>
 
     <div class="dashboard-balance__buttons">
       <b-button class="mr-3" size="sm" variant="primary" v-b-modal.add-credit-modal>
@@ -75,11 +75,6 @@ export default {
     user: {
       type: Object,
       required: true,
-    },
-  },
-  computed: {
-    roundedBalance() {
-      return Math.floor(this.user.balance);
     },
   },
   methods: {
