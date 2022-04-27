@@ -155,7 +155,6 @@ class ActionsComplete extends Command
                             $takeover->mileage_beginning +
                             $loan->estimated_distance,
                     ]);
-                    Log::debug("CALL HANDOVER COMPLETE");
                     $this->controller->complete(
                         $request,
                         $loan->id,
