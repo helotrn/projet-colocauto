@@ -169,18 +169,10 @@ class PaymentController extends RestController
             $ownerInvoice = $ownerUser->createInvoice();
 
             if ($items["price"]) {
-                $items["price"]["amount"] = -$items["price"]["amount"];
                 $ownerInvoice->billItems()->create($items["price"]);
             }
 
             if ($items["expenses"]) {
-                $items["expenses"]["amount"] = -$items["expenses"]["amount"];
-                $items["expenses"]["taxes_tvq"] = -$items["expenses"][
-                    "taxes_tvq"
-                ];
-                $items["expenses"]["taxes_tps"] = -$items["expenses"][
-                    "taxes_tps"
-                ];
                 $ownerInvoice->billItems()->create($items["expenses"]);
             }
 
