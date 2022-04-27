@@ -249,8 +249,8 @@ export default {
   computed: {
     amountTypes() {
       return [
-        { value: "debit", text: "Paiement" },
-        { value: "credit", text: "Ajout au compte" },
+        { value: "debit", text: "Débit" },
+        { value: "credit", text: "Crédit" },
       ];
     },
     fullTitle() {
@@ -297,20 +297,9 @@ export default {
       if (this.newBillItem.amount > 0 && this.newBillItem.amount_type === "debit")
         this.newBillItem.amount *= -1;
 
-      // if the amount type is determined (debit or credit), add the type to the bill item label
-      this.newBillItem.label = this.addDescriptionType(this.newBillItem);
-
       this.item.bill_items.push(this.newBillItem);
 
       this.newBillItem = null;
-    },
-    // add the amount type to the description if available to specify
-    // if the current amount will be added or substracted from the user's balance
-    addDescriptionType(currentBillItem) {
-      if (!currentBillItem.amount_type) return currentBillItem.label;
-
-      let type = currentBillItem.amount_type === "debit" ? "paiement" : "ajout au compte";
-      return `${currentBillItem.label} (${type})`;
     },
     createNewBillItem() {
       this.newBillItem = { ...this.newBillItemTemplate };
