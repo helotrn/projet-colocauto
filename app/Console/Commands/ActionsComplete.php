@@ -80,8 +80,7 @@ class ActionsComplete extends Command
                 $loan->cancel()->save();
 
                 Log::info("Canceled loan ID $loan->id.");
-
-                break;
+                continue;
             }
 
             /*
