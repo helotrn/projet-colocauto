@@ -291,12 +291,27 @@ export default {
   },
   methods: {
     addBillItemAndReset() {
+      // adjust the amount according to the type (only negate the amount if the type is a debit,
+      // since it has to be substracted from the user balance). No need to update the amount if it
+      // is already negative.
+      if(this.newBillItem.amount > 0 && this.newBillItem.amount_type === "debit")
+        this.newBillItem.amount *= -1;
+
       // if the amount type is determined (debit or credit), add the type to the bill item label
       this.newBillItem.label = this.addDescriptionType(this.newBillItem);
 
       this.item.bill_items.push(this.newBillItem);
 
       this.newBillItem = null;
+    },
+    // add the amount type to the description if available to specify
+    // if the current amount will be added or substracted from the user's balance
+    addDescriptionType(currentBillItem) {
+      if(!currentBillItem.amount_type)
+        return currentBillItem.label;
+
+      let type = (currentBillItem.amount_type === "debit") ? "paiement" : "ajout au compte";
+      return `${currentBillItem.label} (${type})`; 
     },
     createNewBillItem() {
       this.newBillItem = { ...this.newBillItemTemplate };
@@ -310,15 +325,6 @@ export default {
 
       this.item.bill_items.splice(index, 1);
     },
-    // add the amount type to the description if available to specify
-    // if the current amount will be added or substracted from the user's balance
-    addDescriptionType(currentBillItem) {
-      if(!currentBillItem.amount_type)
-        return currentBillItem.label;
-
-      let type = (currentBillItem.amount_type == "debit") ? "paiement" : "ajout au compte";
-      return `${currentBillItem.label} (${type})`; 
-    }
   },
   i18n: {
     messages: {
