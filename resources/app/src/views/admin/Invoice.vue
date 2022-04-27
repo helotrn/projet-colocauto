@@ -102,6 +102,17 @@
                             v-model="newBillItem.amount"
                             :rules="{ required: true }"
                           />
+                          <!-- determine the type of the amount, which can be :
+                              - debit: a payment that will be deducted from the user balance
+                              - credit: add funds to the user balance
+                          -->
+                          <forms-validated-input
+                            label="Type du montant"
+                            type="select"
+                            :options="amountTypes"
+                            :rules="{ required: true }"
+                            v-model="newBillItem.amount_type"
+                          />
                           <forms-validated-input
                             label="TPS"
                             type="number"
@@ -134,7 +145,7 @@
                 </b-tr>
 
                 <b-tr class="invoice-view__footer-row">
-                  <b-td colspan="2">
+                  <b-td colspan="3">
                     Sous-total<br />
                     TPS<br />
                     TVQ<br />
@@ -229,12 +240,19 @@ export default {
         item_date: this.$dayjs().format("YYYY-MM-DD"),
         label: "",
         amount: 0,
+        amount_type: null,
         taxes_tps: 0,
         taxes_tvq: 0,
       },
     };
   },
   computed: {
+    amountTypes() {
+      return [
+        { value: "debit", text: "Paiement" },
+        { value: "credit", text: "Ajout au compte" },
+      ];
+    },
     fullTitle() {
       const parts = [
         "LocoMotion",
@@ -273,6 +291,9 @@ export default {
   },
   methods: {
     addBillItemAndReset() {
+      // if the amount type is determined (debit or credit), add the type to the bill item label
+      this.newBillItem.label = this.addDescriptionType(this.newBillItem);
+
       this.item.bill_items.push(this.newBillItem);
 
       this.newBillItem = null;
@@ -289,6 +310,15 @@ export default {
 
       this.item.bill_items.splice(index, 1);
     },
+    // add the amount type to the description if available to specify
+    // if the current amount will be added or substracted from the user's balance
+    addDescriptionType(currentBillItem) {
+      if(!currentBillItem.amount_type)
+        return currentBillItem.label;
+
+      let type = (currentBillItem.amount_type == "debit") ? "paiement" : "ajout au compte";
+      return `${currentBillItem.label} (${type})`; 
+    }
   },
   i18n: {
     messages: {
