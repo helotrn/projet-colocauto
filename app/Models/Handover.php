@@ -102,4 +102,9 @@ class Handover extends Action
             },
         ];
     }
+
+    public function isContested()
+    {
+        return $this->status == "canceled";
+    }
 }

@@ -83,4 +83,9 @@ class Takeover extends Action
     {
         return $this->belongsTo(Loan::class);
     }
+
+    public function isContested()
+    {
+        return $this->status == "canceled";
+    }
 }
