@@ -297,8 +297,10 @@ export default {
       if (this.newBillItem.amount > 0 && this.newBillItem.amount_type === "debit")
         this.newBillItem.amount *= -1;
 
+      // add the bill item to invoice
       this.item.bill_items.push(this.newBillItem);
 
+      // reset the bill item
       this.newBillItem = null;
     },
     createNewBillItem() {
