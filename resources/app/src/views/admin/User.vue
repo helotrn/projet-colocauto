@@ -573,11 +573,10 @@ export default {
       this.$router.push(`/admin/communities/${community.id}#members`);
     },
     findInvoiceType(type, total) {
-      if(type === "debit")
-        return -total;
+      if (type === "debit") return -total;
 
       return total;
-    }
+    },
   },
   i18n: {
     messages: {

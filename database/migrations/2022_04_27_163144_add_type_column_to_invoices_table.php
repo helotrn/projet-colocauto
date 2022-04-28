@@ -16,7 +16,7 @@ class AddTypeColumnToInvoicesTable extends Migration
         // the type will determine whether the invoice is a debit or a credit :
         // - debit: cost to be paid by the user
         // - credit: gains to be added in the user's balance
-        Schema::table('invoices', function (Blueprint $table) {
+        Schema::table("invoices", function (Blueprint $table) {
             $table
                 ->enum("type", ["debit", "credit"])
                 ->nullable()
@@ -31,7 +31,7 @@ class AddTypeColumnToInvoicesTable extends Migration
      */
     public function down()
     {
-        Schema::table('invoices', function (Blueprint $table) {
+        Schema::table("invoices", function (Blueprint $table) {
             $table->dropColumn("type");
         });
     }

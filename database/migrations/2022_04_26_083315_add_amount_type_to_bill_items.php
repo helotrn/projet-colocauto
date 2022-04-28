@@ -13,7 +13,10 @@ class AddAmountTypeToBillItems extends Migration
      */
     public function up()
     {
-        Schema::table('bill_items', function (Blueprint $table) {
+        // the type will determine whether the bill item is a debit or a credit :
+        // - debit: amount is paid by the user
+        // - credit: amount is added to the user balance
+        Schema::table("bill_items", function (Blueprint $table) {
             $table
                 ->enum("amount_type", ["debit", "credit"])
                 ->nullable()
@@ -28,7 +31,7 @@ class AddAmountTypeToBillItems extends Migration
      */
     public function down()
     {
-        Schema::table('bill_items', function (Blueprint $table) {
+        Schema::table("bill_items", function (Blueprint $table) {
             $table->dropColumn("amount_type");
         });
     }

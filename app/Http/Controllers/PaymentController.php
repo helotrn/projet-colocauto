@@ -162,11 +162,12 @@ class PaymentController extends RestController
         foreach ($items as $key => $item) {
             if ($item) {
                 // Determine whether the item is a debit or credit
-                if($key != "expenses")
+                if ($key != "expenses") {
                     $item["amount_type"] = "debit";
-                else
+                } else {
                     $item["amount_type"] = "credit";
-                
+                }
+
                 // Create a bill item in the invoice
                 $borrowerInvoice->billItems()->create($item);
             }
@@ -187,12 +188,12 @@ class PaymentController extends RestController
             if ($items["price"]) {
                 // Cost of the loan will be received by the owner
                 $items["price"]["amount_type"] = "credit";
-                
+
                 $ownerInvoice->billItems()->create($items["price"]);
             }
 
             if ($items["expenses"]) {
-                // Expenses are deduced from the amount received by the owner
+                // Expenses are deducted from the amount received by the owner
                 $items["expenses"]["amount_type"] = "debit";
 
                 $ownerInvoice->billItems()->create($items["expenses"]);

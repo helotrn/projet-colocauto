@@ -312,10 +312,8 @@ export default {
       // Set the type of the invoice:
       // - negative amount: debit
       // - positive amount: credit
-      if(this.itemTotalWithTaxes >= 0)
-        this.item.type = "credit";
-      else
-        this.item.type = "debit";
+      if (this.itemTotalWithTaxes >= 0) this.item.type = "credit";
+      else this.item.type = "debit";
 
       await this.submit();
     },

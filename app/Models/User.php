@@ -412,7 +412,7 @@ class User extends AuthenticatableBaseModel
             ->format("m/Y");
 
         // Set the type of the invoice
-        if($invoiceType) {
+        if ($invoiceType) {
             $invoice->type = $invoiceType;
         }
 
