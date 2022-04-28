@@ -457,6 +457,8 @@ class UserController extends RestController
             $invoice->period = \Carbon\Carbon::now()
                 ->locale("fr_FR")
                 ->isoFormat("LLLL");
+            // Set invoice type to credit, since we're adding to the balance
+            $invoice->type = "credit";
             $invoice->user()->associate($user);
             $invoice->save();
 

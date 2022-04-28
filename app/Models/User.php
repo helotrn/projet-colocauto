@@ -403,13 +403,19 @@ class User extends AuthenticatableBaseModel
             ->exists();
     }
 
-    public function createInvoice()
+    public function createInvoice($invoiceType)
     {
         $invoice = new Invoice();
         $invoice->user_id = $this->id;
         $invoice->period = \Carbon\Carbon::now()
             ->locale("fr_FR")
             ->format("m/Y");
+
+        // Set the type of the invoice
+        if($invoiceType) {
+            $invoice->type = $invoiceType;
+        }
+
         $invoice->save();
 
         return $invoice;

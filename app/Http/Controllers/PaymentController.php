@@ -152,8 +152,10 @@ class PaymentController extends RestController
 
         // Update invoices
         $borrowerUser = $loan->borrower->user;
-        $borrowerInvoice = $borrowerUser->createInvoice();
-        foreach ($items as $item) {
+
+        // Create an invoice as a debit, since it is a payment
+        $borrowerInvoice = $borrowerUser->createInvoice("debit");
+        foreach ($items as $key => $item) {
             if ($item) {
                 $borrowerInvoice->billItems()->create($item);
             }
@@ -166,7 +168,10 @@ class PaymentController extends RestController
         // This check could be removed when we can garantee that every loanable has an owner.
         if ($loan->loanable->owner) {
             $ownerUser = $loan->loanable->owner->user;
-            $ownerInvoice = $ownerUser->createInvoice();
+
+            // Create an invoice as a credit, since the owner will
+            // receive this amount from the loan
+            $ownerInvoice = $ownerUser->createInvoice("credit");
 
             if ($items["price"]) {
                 $ownerInvoice->billItems()->create($items["price"]);

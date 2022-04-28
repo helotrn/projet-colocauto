@@ -308,6 +308,15 @@ export default {
     },
     async mergeUserAndSubmit() {
       this.item.user_id = this.user.id;
+
+      // Set the type of the invoice:
+      // - negative amount: debit
+      // - positive amount: credit
+      if(this.itemTotalWithTaxes >= 0)
+        this.item.type = "credit";
+      else
+        this.item.type = "debit";
+
       await this.submit();
     },
     removeBillItem(item) {

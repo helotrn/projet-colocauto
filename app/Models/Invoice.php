@@ -159,7 +159,10 @@ class Invoice extends BaseModel
         return number_format($amount, 2, ",", " ");
     }
 
-    protected $fillable = ["period"];
+    protected $fillable = [
+        "period",
+        "type",
+    ];
 
     public $items = ["payment_method", "user"];
 
