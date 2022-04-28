@@ -249,20 +249,20 @@ export default {
       return parts.reverse().join(" | ");
     },
     itemTotal() {
-      return this.item.bill_items.reduce((acc, i) => parseFloat(i.amount, 10) + acc, 0);
+      return this.item.bill_items.reduce((acc, i) => parseFloat(i.amount) + acc, 0);
     },
     itemTotalTps() {
-      return this.item.bill_items.reduce((acc, i) => parseFloat(i.taxes_tps, 10) + acc, 0);
+      return this.item.bill_items.reduce((acc, i) => parseFloat(i.taxes_tps) + acc, 0);
     },
     itemTotalTvq() {
-      return this.item.bill_items.reduce((acc, i) => parseFloat(i.taxes_tvq, 10) + acc, 0);
+      return this.item.bill_items.reduce((acc, i) => parseFloat(i.taxes_tvq) + acc, 0);
     },
     itemTotalWithTaxes() {
       return this.itemTotal + this.itemTotalTps + this.itemTotalTvq;
     },
     newBillItemTotal() {
       const { amount, tps, tvq } = this.newBillItem;
-      return parseFloat(amount, 10) + parseFloat(tps, 10) + parseFloat(tvq, 10);
+      return parseFloat(amount) + parseFloat(tps) + parseFloat(tvq);
     },
     pageTitle() {
       return this.item.name || capitalize(this.$i18n.tc("facture", 1));
