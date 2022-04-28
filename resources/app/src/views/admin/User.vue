@@ -289,30 +289,6 @@
 
               <p><strong>Balance:</strong> {{ item.balance | currency }}</p>
 
-              <p v-if="false"><strong>Transactions</strong></p>
-
-              <b-table
-                v-if="false"
-                striped
-                hover
-                :items="item.transactions"
-                selectable
-                select-mode="multi"
-                @row-selected="transactionRowSelected"
-                :fields="transactionsTable"
-                no-sort-reset
-                :show-empty="true"
-                empty-text="Pas de transaction"
-              >
-                <template v-slot:cell(actions)="row">
-                  <div class="text-right">
-                    <b-button variant="success" size="sm" :to="`/admin/invoices/${row.item.id}`">
-                      {{ $t("afficher") | capitalize }}
-                    </b-button>
-                  </div>
-                </template>
-              </b-table>
-
               <p><strong>Factures</strong></p>
 
               <b-table
@@ -482,10 +458,6 @@ export default {
         },
         { key: "actions", label: "Actions", tdClass: "table__cell__actions" },
       ],
-      transactionsTable: [
-        { key: "id", label: "ID", sortable: true },
-        { key: "actions", label: "Actions", tdClass: "table__cell__actions" },
-      ],
     };
   },
   computed: {
@@ -592,9 +564,6 @@ export default {
     },
     tagRowSelected(rows) {
       this.tagsSelected = rows;
-    },
-    transactionRowSelected(rows) {
-      this.transactionsSelected = rows;
     },
     async unsuspendBorrower(user) {
       await this.$store.dispatch(`${this.slug}/unsuspendBorrower`, user.id);
