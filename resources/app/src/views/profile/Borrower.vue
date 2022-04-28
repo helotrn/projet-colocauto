@@ -14,10 +14,13 @@
     </div>
 
     <b-alert variant="info" show>
-      Les informations ci-contre ne sont requises que si vous désirez emprunter des voitures.<br />
-      Celles-ci ne seront accessibles que par l'équipe de LocoMotion ou les représentants des
-      assurances Desjardins.<br />
-      Consultez notre <a href="/privacy" target="_blank">politique de confidentialité</a>.
+      <p>Notez que vous devez avoir 21 ans ou plus pour pouvoir emprunter une auto.</p>
+      <p>
+        Les informations ci-contre ne sont requises que si vous désirez emprunter des voitures.
+        Celles-ci ne seront accessibles que par l'équipe de LocoMotion ou les représentants des
+        assurances Desjardins. Consultez notre
+        <a href="/privacy" target="_blank">politique de confidentialité</a>.
+      </p>
     </b-alert>
 
     <borrower-form
