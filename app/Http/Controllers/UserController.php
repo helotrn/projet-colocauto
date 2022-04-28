@@ -470,6 +470,7 @@ class UserController extends RestController
                 "item_date" => date("Y-m-d"),
                 "taxes_tps" => 0,
                 "taxes_tvq" => 0,
+                "amount_type" => "credit",
             ]);
 
             $invoice->payWith($paymentMethod);
