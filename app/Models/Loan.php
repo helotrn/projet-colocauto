@@ -798,11 +798,13 @@ SQL
             return false;
         }
 
-        // Check if takeover is completed or if payment exists.
         foreach ($this->actions as $action) {
             if (
+                // If takeover exists, then it must be in process.
                 ("takeover" == $action->type &&
-                    "completed" == $action->status) ||
+                    "in_process" != $action->status) ||
+                // If handover or payment exist, then loan can't be canceled.
+                "handover" == $action->type ||
                 "payment" == $action->type
             ) {
                 return false;
