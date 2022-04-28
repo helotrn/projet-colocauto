@@ -721,6 +721,79 @@ class ActionsCompleteTest extends TestCase
         // $this->assertEquals("completed", $loan->status);
     }
 
+    public function testHandoverInProcess_TakeoverContested_LoanExpired()
+    {
+        $loanableIsSelfService = false;
+        $loanCost = 0;
+
+        $twoDaysAgo = CarbonImmutable::now()->sub(48, "hours");
+        $moreThanTwoDaysAgo = CarbonImmutable::now()->sub(54, "hours");
+
+        $ownerUser = factory(User::class)
+            ->states("withOwner", "withPaidCommunity")
+            ->create();
+
+        $borrowerUser = factory(User::class)
+            ->states("withBorrower")
+            ->create([
+                "balance" => 15,
+            ]);
+
+        $loanable = factory(Car::class)->create([
+            "owner_id" => $ownerUser->owner_id,
+            "community_id" => $ownerUser->communities[0]->id,
+            "is_self_service" => $loanableIsSelfService,
+        ]);
+
+        CarbonImmutable::setTestNow($moreThanTwoDaysAgo);
+
+        $loan = factory(Loan::class)
+            ->states(
+                "withCompletedIntention",
+                "withContestedTakeover",
+                "withInProcessHandover"
+            )
+            ->create([
+                "loanable_id" => $loanable->id,
+                "community_id" => $ownerUser->communities[0]->id,
+                "borrower_id" => $borrowerUser->borrower->id,
+                "departure_at" => $twoDaysAgo->subMinutes(60),
+                "duration_in_minutes" => 50,
+                "platform_tip" => $loanCost,
+            ]);
+
+        // Setup is finished, set back test time to now.
+        CarbonImmutable::setTestNow();
+
+        // Validate preconditions
+        $this->assertEquals(
+            "canceled",
+            $loan->takeover ? $loan->takeover->status : ""
+        );
+        $this->assertEquals(
+            "in_process",
+            $loan->handover ? $loan->handover->status : ""
+        );
+        $this->assertEquals("in_process", $loan->status);
+
+        // Run the command
+        app(ActionsCompleteCommand::class)->handle();
+
+        // Ensure we fetch loan back from the database
+        $loan = $loan->fresh();
+
+        // Takeover remains canceled. Handover and loan remain in process.
+        $this->assertEquals(
+            "canceled",
+            $loan->takeover ? $loan->takeover->status : ""
+        );
+        $this->assertEquals(
+            "in_process",
+            $loan->handover ? $loan->handover->status : ""
+        );
+        $this->assertEquals("in_process", $loan->status);
+    }
+
     public function testPaymentInProcess_LoanNotExpired_BalanceSufficient()
     {
         $loanableIsSelfService = false;
@@ -980,6 +1053,170 @@ class ActionsCompleteTest extends TestCase
             $this->assertEquals("canceled", $extension->status);
         }
 
+        $this->assertEquals("in_process", $loan->status);
+    }
+
+    public function testPaymentInProcess_TakeoverContested_LoanExpired()
+    {
+        $loanableIsSelfService = false;
+        $loanCost = 0;
+
+        $twoDaysAgo = CarbonImmutable::now()->sub(48, "hours");
+        $moreThanTwoDaysAgo = CarbonImmutable::now()->sub(54, "hours");
+
+        $ownerUser = factory(User::class)
+            ->states("withOwner", "withPaidCommunity")
+            ->create();
+
+        $borrowerUser = factory(User::class)
+            ->states("withBorrower")
+            ->create([
+                "balance" => 15,
+            ]);
+
+        $loanable = factory(Car::class)->create([
+            "owner_id" => $ownerUser->owner_id,
+            "community_id" => $ownerUser->communities[0]->id,
+            "is_self_service" => $loanableIsSelfService,
+        ]);
+
+        CarbonImmutable::setTestNow($moreThanTwoDaysAgo);
+
+        $loan = factory(Loan::class)
+            ->states(
+                "withCompletedIntention",
+                "withContestedTakeover",
+                "withCompletedHandover",
+                "withInProcessPayment"
+            )
+            ->create([
+                "loanable_id" => $loanable->id,
+                "community_id" => $ownerUser->communities[0]->id,
+                "borrower_id" => $borrowerUser->borrower->id,
+                "departure_at" => $twoDaysAgo->subMinutes(60),
+                "duration_in_minutes" => 50,
+                "platform_tip" => $loanCost,
+            ]);
+
+        // Setup is finished, set back test time to now.
+        CarbonImmutable::setTestNow();
+
+        // Validate preconditions
+        $this->assertEquals(
+            "canceled",
+            $loan->takeover ? $loan->takeover->status : ""
+        );
+        $this->assertEquals(
+            "completed",
+            $loan->handover ? $loan->handover->status : ""
+        );
+        $this->assertEquals(
+            "in_process",
+            $loan->payment ? $loan->payment->status : ""
+        );
+        $this->assertEquals("in_process", $loan->status);
+
+        // Run the command
+        app(ActionsCompleteCommand::class)->handle();
+
+        // Ensure we fetch loan back from the database
+        $loan = $loan->fresh();
+
+        // Things remain intact.
+        $this->assertEquals(
+            "canceled",
+            $loan->takeover ? $loan->takeover->status : ""
+        );
+        $this->assertEquals(
+            "completed",
+            $loan->handover ? $loan->handover->status : ""
+        );
+        $this->assertEquals(
+            "in_process",
+            $loan->payment ? $loan->payment->status : ""
+        );
+        $this->assertEquals("in_process", $loan->status);
+    }
+
+    public function testPaymentInProcess_HandoverContested_LoanExpired()
+    {
+        $loanableIsSelfService = false;
+        $loanCost = 0;
+
+        $twoDaysAgo = CarbonImmutable::now()->sub(48, "hours");
+        $moreThanTwoDaysAgo = CarbonImmutable::now()->sub(54, "hours");
+
+        $ownerUser = factory(User::class)
+            ->states("withOwner", "withPaidCommunity")
+            ->create();
+
+        $borrowerUser = factory(User::class)
+            ->states("withBorrower")
+            ->create([
+                "balance" => 15,
+            ]);
+
+        $loanable = factory(Car::class)->create([
+            "owner_id" => $ownerUser->owner_id,
+            "community_id" => $ownerUser->communities[0]->id,
+            "is_self_service" => $loanableIsSelfService,
+        ]);
+
+        CarbonImmutable::setTestNow($moreThanTwoDaysAgo);
+
+        $loan = factory(Loan::class)
+            ->states(
+                "withCompletedIntention",
+                "withCompletedTakeover",
+                "withContestedHandover",
+                "withInProcessPayment"
+            )
+            ->create([
+                "loanable_id" => $loanable->id,
+                "community_id" => $ownerUser->communities[0]->id,
+                "borrower_id" => $borrowerUser->borrower->id,
+                "departure_at" => $twoDaysAgo->subMinutes(60),
+                "duration_in_minutes" => 50,
+                "platform_tip" => $loanCost,
+            ]);
+
+        // Setup is finished, set back test time to now.
+        CarbonImmutable::setTestNow();
+
+        // Validate preconditions
+        $this->assertEquals(
+            "completed",
+            $loan->takeover ? $loan->takeover->status : ""
+        );
+        $this->assertEquals(
+            "canceled",
+            $loan->handover ? $loan->handover->status : ""
+        );
+        $this->assertEquals(
+            "in_process",
+            $loan->payment ? $loan->payment->status : ""
+        );
+        $this->assertEquals("in_process", $loan->status);
+
+        // Run the command
+        app(ActionsCompleteCommand::class)->handle();
+
+        // Ensure we fetch loan back from the database
+        $loan = $loan->fresh();
+
+        // Things remain intact.
+        $this->assertEquals(
+            "completed",
+            $loan->takeover ? $loan->takeover->status : ""
+        );
+        $this->assertEquals(
+            "canceled",
+            $loan->handover ? $loan->handover->status : ""
+        );
+        $this->assertEquals(
+            "in_process",
+            $loan->payment ? $loan->payment->status : ""
+        );
         $this->assertEquals("in_process", $loan->status);
     }
 }

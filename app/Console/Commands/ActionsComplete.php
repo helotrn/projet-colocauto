@@ -143,6 +143,11 @@ class ActionsComplete extends Command
 
                     $takeover = $loan->takeover()->first();
 
+                    // Don't complete handover if takeover is contested
+                    if ($takeover->isContested()) {
+                        continue;
+                    }
+
                     $request = new ActionRequest();
                     $request->setUserResolver(function () use ($loan) {
                         return $loan->borrower->user;
@@ -178,6 +183,14 @@ class ActionsComplete extends Command
                     "payment" == $action->type &&
                     "in_process" == $action->status
                 ) {
+                    $takeover = $loan->takeover()->first();
+                    $handover = $loan->handover()->first();
+
+                    // Don't complete payment if takeover or handover is contested
+                    if ($takeover->isContested() || $handover->isContested()) {
+                        continue;
+                    }
+
                     $totalActualCost = $loan->total_actual_cost;
 
                     if (
