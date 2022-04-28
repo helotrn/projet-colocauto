@@ -86,8 +86,8 @@
 </template>
 
 <script>
-import Check from "@/assets/icons/check.svg";
-import X from "@/assets/icons/x.svg";
+import IconsCheck from "@/assets/icons/check.svg";
+import IconsX from "@/assets/icons/x.svg";
 
 import FormsImageUploader from "@/components/Forms/ImageUploader.vue";
 
@@ -96,8 +96,8 @@ import locales from "@/locales";
 export default {
   name: "CommunityProofForm",
   components: {
-    "icons-check": Check,
-    "icons-x": X,
+    "icons-check": IconsCheck,
+    "icons-x": IconsX,
     FormsImageUploader,
   },
   props: {
