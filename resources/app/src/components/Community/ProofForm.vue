@@ -43,22 +43,22 @@
 
               <ul>
                 <li>
-                  <icons-check class="accepted" /> Permis de conduire valide (recto et verso si
+                  <icons-check class="accepted" /> permis de conduire valide (recto et verso si
                   nouvelle adresse au verso);
                 </li>
                 <li>
                   <icons-check class="accepted" />
-                  Facture récente d'une institution reconnue (électricité, gaz, télécommunications);
+                  facture récente d'une institution reconnue (électricité, gaz, télécommunications);
                 </li>
                 <li>
-                  <icons-check class="accepted" /> Document émis par un gouvernement fédéral,
+                  <icons-check class="accepted" /> document émis par un gouvernement fédéral,
                   provincial ou municipal;
                 </li>
                 <li>
-                  <icons-check class="accepted" /> Document officiel d’une institution bancaire ou
+                  <icons-check class="accepted" /> document officiel d’une institution bancaire ou
                   de crédit;
                 </li>
-                <li><icons-check class="accepted" /> Bulletin scolaire ou relevé de notes.</li>
+                <li><icons-check class="accepted" /> bulletin scolaire ou relevé de notes.</li>
               </ul>
 
               <p><strong>Pièces non acceptées :</strong></p>
