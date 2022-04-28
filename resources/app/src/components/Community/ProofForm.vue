@@ -42,24 +42,36 @@
               <p><strong>Exemples de documents acceptés :</strong></p>
 
               <ul>
-                <li>✅ Permis de conduire valide (recto et verso si nouvelle adresse au verso);</li>
                 <li>
-                  ✅ Facture récente d'une institution reconnue (électricité, gaz,
-                  télécommunications);
+                  <icons-check class="accepted" /> Permis de conduire valide (recto et verso si
+                  nouvelle adresse au verso);
                 </li>
-                <li>✅ Document émis par un gouvernement fédéral, provincial ou municipal;</li>
-                <li>✅ Document officiel d’une institution bancaire ou de crédit;</li>
-                <li>✅ Bulletin scolaire ou relevé de notes.</li>
+                <li>
+                  <icons-check class="accepted" />
+                  Facture récente d'une institution reconnue (électricité, gaz, télécommunications);
+                </li>
+                <li>
+                  <icons-check class="accepted" /> Document émis par un gouvernement fédéral,
+                  provincial ou municipal;
+                </li>
+                <li>
+                  <icons-check class="accepted" /> Document officiel d’une institution bancaire ou
+                  de crédit;
+                </li>
+                <li><icons-check class="accepted" /> Bulletin scolaire ou relevé de notes.</li>
               </ul>
 
               <p><strong>Pièces non acceptées :</strong></p>
 
               <ul>
-                <li>❌ bail;</li>
-                <li>❌ facture d'un service professionnel (avocat, notaire, etc.);</li>
-                <li>❌ carte professionnelle;</li>
-                <li>❌ carte d'autobus sans photo;</li>
-                <li>❌ carte de crédit.</li>
+                <li><icons-x class="rejected" /> bail;</li>
+                <li>
+                  <icons-x class="rejected" /> facture d'un service professionnel (avocat, notaire,
+                  etc.);
+                </li>
+                <li><icons-x class="rejected" /> carte professionnelle;</li>
+                <li><icons-x class="rejected" /> carte d'autobus sans photo;</li>
+                <li><icons-x class="rejected" /> carte de crédit.</li>
               </ul>
             </div>
 
@@ -74,6 +86,9 @@
 </template>
 
 <script>
+import Check from "@/assets/icons/check.svg";
+import X from "@/assets/icons/x.svg";
+
 import FormsImageUploader from "@/components/Forms/ImageUploader.vue";
 
 import locales from "@/locales";
@@ -81,6 +96,8 @@ import locales from "@/locales";
 export default {
   name: "CommunityProofForm",
   components: {
+    "icons-check": Check,
+    "icons-x": X,
     FormsImageUploader,
   },
   props: {
@@ -131,6 +148,12 @@ export default {
     button {
       margin-left: 0;
     }
+  }
+  .accepted {
+    stroke: $success;
+  }
+  .rejected {
+    stroke: $danger;
   }
 }
 </style>
