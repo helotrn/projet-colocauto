@@ -240,7 +240,7 @@ export default {
         item_date: this.$dayjs().format("YYYY-MM-DD"),
         label: "",
         amount: 0,
-        amount_type: null,
+        amount_type: "credit",
         taxes_tps: 0,
         taxes_tvq: 0,
       },
