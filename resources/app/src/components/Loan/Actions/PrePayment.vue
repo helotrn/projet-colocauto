@@ -107,9 +107,9 @@ export default {
   computed: {
     minimumRequired() {
       return (
-        parseFloat(this.item.estimated_price, 10) +
-        parseFloat(this.item.estimated_insurance, 10) +
-        parseFloat(this.item.platform_tip, 10)
+        parseFloat(this.item.estimated_price) +
+        parseFloat(this.item.estimated_insurance) +
+        parseFloat(this.item.platform_tip)
       );
     },
     /*

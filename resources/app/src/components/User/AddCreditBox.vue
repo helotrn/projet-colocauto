@@ -104,10 +104,10 @@ export default {
   computed: {
     amount() {
       if (this.selectedAmount === "other") {
-        return parseFloat(this.customAmount, 10);
+        return parseFloat(this.customAmount);
       }
 
-      return parseFloat(this.selectedAmount, 10);
+      return parseFloat(this.selectedAmount);
     },
     amountWithFee() {
       // Passing fees on to customer:
@@ -144,10 +144,7 @@ export default {
       ];
 
       for (let i = 0, len = standardOptions.length; i < len; i += 1) {
-        if (
-          !this.minimumRequired ||
-          standardOptions[i].value > parseFloat(this.minimumRequired, 10)
-        ) {
+        if (!this.minimumRequired || standardOptions[i].value > parseFloat(this.minimumRequired)) {
           options.push(standardOptions[i]);
         }
       }

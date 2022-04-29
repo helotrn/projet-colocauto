@@ -387,7 +387,7 @@ export default {
   },
   computed: {
     floatValue() {
-      return parseFloat(this.value, 10);
+      return parseFloat(this.value);
     },
     rulesOrNothing() {
       if (!this.rules) {

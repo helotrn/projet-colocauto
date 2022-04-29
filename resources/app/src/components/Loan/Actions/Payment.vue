@@ -227,7 +227,7 @@
                 <tr>
                   <th>Contribution volontaire&nbsp;:</th>
                   <td class="text-right tabular-nums">
-                    {{ parseFloat(this.platformTip, 10) | currency }}
+                    {{ parseFloat(this.platformTip) | currency }}
                   </td>
                 </tr>
                 <tr>
@@ -320,7 +320,7 @@ export default {
   name: "LoanActionsPayment",
   mixins: [LoanActionsMixin, LoanStepsSequence],
   mounted() {
-    this.action.platform_tip = parseFloat(this.platformTip, 10);
+    this.action.platform_tip = parseFloat(this.platformTip);
   },
   components: {
     UserAddCreditBox,
@@ -341,7 +341,7 @@ export default {
       return (
         this.item.actual_price +
         this.item.actual_insurance +
-        parseFloat(this.platformTip, 10) -
+        parseFloat(this.platformTip) -
         this.item.handover.purchases_amount
       );
     },
@@ -356,8 +356,8 @@ export default {
         strParts.push(`Assurance: ${currency(this.item.actual_insurance)}`); // eslint-disable-line no-irregular-whitespace
       }
 
-      if (parseFloat(this.platformTip, 10) > 0) {
-        strParts.push(`Contribution: ${currency(parseFloat(this.platformTip, 10))}`); // eslint-disable-line no-irregular-whitespace
+      if (parseFloat(this.platformTip) > 0) {
+        strParts.push(`Contribution: ${currency(parseFloat(this.platformTip))}`); // eslint-disable-line no-irregular-whitespace
       }
 
       const purchasesAmount = parseFloat(this.item.handover.purchases_amount);
@@ -379,7 +379,7 @@ export default {
   },
   watch: {
     platformTip(val) {
-      this.action.platform_tip = parseFloat(val, 10);
+      this.action.platform_tip = parseFloat(val);
     },
   },
   i18n: {
