@@ -17,6 +17,7 @@ class Padlock extends BaseModel
     public static $filterTypes = [
         "external_id" => "text",
         "name" => "text",
+        "mac_address" => "text",
         "loanable.name" => "text",
         "loanable.id" => "number",
     ];
