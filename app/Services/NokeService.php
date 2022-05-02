@@ -49,7 +49,7 @@ class NokeService
         Log::info("Request to $url for group $groupName");
 
         if (app()->environment() === "production") {
-            $this->client->post($url, [
+            $response = $this->client->post($url, [
                 "json" => [
                     "name" => $groupName,
                     "groupType" => "online",
