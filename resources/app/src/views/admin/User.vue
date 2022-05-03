@@ -307,10 +307,10 @@
                   {{ row.item.created_at | date }}
                 </template>
                 <template v-slot:cell(total)="row">
-                  {{ findInvoiceType(row.item.type, row.item.total) | currency }}
+                  {{ getSignedAmount(row.item.type, row.item.total) | currency }}
                 </template>
                 <template v-slot:cell(total_with_taxes)="row">
-                  {{ findInvoiceType(row.item.type, row.item.total_with_taxes) | currency }}
+                  {{ getSignedAmount(row.item.type, row.item.total_with_taxes) | currency }}
                 </template>
                 <template v-slot:cell(actions)="row">
                   <div class="text-right">
@@ -572,10 +572,10 @@ export default {
       this.$store.commit("admin.community/usersFilter", this.item.full_name);
       this.$router.push(`/admin/communities/${community.id}#members`);
     },
-    findInvoiceType(type, total) {
-      if (type === "debit") return -total;
+    getSignedAmount(type, amount) {
+      if (type === "debit") return -amount;
 
-      return total;
+      return amount;
     },
   },
   i18n: {
