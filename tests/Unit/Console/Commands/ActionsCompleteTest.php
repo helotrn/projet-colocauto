@@ -1042,18 +1042,24 @@ class ActionsCompleteTest extends TestCase
         // Ensure we fetch loan back from the database
         $loan = $loan->fresh();
 
-        // Loan and handover must remain in process
-        $this->assertEquals(
-            "completed",
-            $loan->handover ? $loan->handover->status : ""
-        );
-
+        // Extension was not accepted before initial loan expiration and thus
+        // must be canceled.
         $this->assertCount(1, $loan->extensions);
         foreach ($loan->extensions as $extension) {
             $this->assertEquals("canceled", $extension->status);
         }
 
-        $this->assertEquals("in_process", $loan->status);
+        // Loan, handover and payment must be completed
+        $this->assertEquals(
+            "completed",
+            $loan->handover ? $loan->handover->status : ""
+        );
+        // Complete this test after #950
+        // $this->assertEquals(
+        //     "completed",
+        //     $loan->payment ? $loan->payment->status : ""
+        // );
+        // $this->assertEquals("completed", $loan->status);
     }
 
     public function testPaymentInProcess_TakeoverContested_LoanExpired()
