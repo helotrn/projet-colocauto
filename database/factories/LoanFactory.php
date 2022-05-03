@@ -78,6 +78,63 @@ $factory->afterCreatingState(Loan::class, "withInProcessTakeover", function (
     );
 });
 
+$factory->afterCreatingState(Loan::class, "withCompletedTakeover", function (
+    $loan,
+    $faker
+) {
+    $loan->takeover()->save(
+        factory(Takeover::class)->make([
+            "status" => "completed",
+        ])
+    );
+});
+
+$factory->afterCreatingState(Loan::class, "withContestedTakeover", function (
+    $loan,
+    $faker
+) {
+    $loan->takeover()->save(
+        factory(Takeover::class)->make([
+            "status" => "canceled",
+            "executed_at" => Carbon::now(),
+        ])
+    );
+});
+
+$factory->afterCreatingState(Loan::class, "withInProcessHandover", function (
+    $loan,
+    $faker
+) {
+    $loan->handover()->save(
+        factory(Handover::class)->make([
+            "status" => "in_process",
+        ])
+    );
+});
+$factory->afterCreatingState(Loan::class, "withCompletedHandover", function (
+    $loan,
+    $faker
+) {
+    $loan->handover()->save(
+        factory(Handover::class)->make([
+            "status" => "completed",
+            "executed_at" => Carbon::now(),
+        ])
+    );
+});
+
+$factory->afterCreatingState(Loan::class, "withContestedHandover", function (
+    $loan,
+    $faker
+) {
+    $loan->handover()->save(
+        factory(Handover::class)->make([
+            "status" => "canceled",
+            "executed_at" => Carbon::now(),
+        ])
+    );
+});
+
 $factory->afterCreatingState(Loan::class, "withCompletedPrePayment", function (
     $loan,
     $faker
@@ -121,6 +178,17 @@ $factory->afterCreatingState(Loan::class, "withCompletedExtension", function (
             "new_duration" => 120,
             "status" => "completed",
             "executed_at" => Carbon::now(),
+        ])
+    );
+});
+
+$factory->afterCreatingState(Loan::class, "withInProcessPayment", function (
+    $loan,
+    $faker
+) {
+    $loan->payment()->save(
+        factory(Payment::class)->make([
+            "status" => "in_process",
         ])
     );
 });
