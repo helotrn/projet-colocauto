@@ -150,10 +150,10 @@ export default {
     }
   }
   .accepted {
-    stroke: $success;
+    fill: $success;
   }
   .rejected {
-    stroke: $danger;
+    fill: $danger;
   }
 }
 </style>
