@@ -25,6 +25,7 @@ class BillItem extends BaseModel
         "item_date",
         "taxes_tps",
         "taxes_tvq",
+        "amount_type",
     ];
 
     public $items = ["invoice", "payment"];

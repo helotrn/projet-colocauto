@@ -102,6 +102,17 @@
                             v-model="newBillItem.amount"
                             :rules="{ required: true }"
                           />
+                          <!-- determine the type of the amount, which can be :
+                              - debit: a payment that will be deducted from the user balance
+                              - credit: add funds to the user balance
+                          -->
+                          <forms-validated-input
+                            label="Type du montant"
+                            type="select"
+                            :options="amountTypes"
+                            :rules="{ required: true }"
+                            v-model="newBillItem.amount_type"
+                          />
                           <forms-validated-input
                             label="TPS"
                             type="number"
@@ -134,7 +145,7 @@
                 </b-tr>
 
                 <b-tr class="invoice-view__footer-row">
-                  <b-td colspan="2">
+                  <b-td colspan="3">
                     Sous-total<br />
                     TPS<br />
                     TVQ<br />
@@ -229,12 +240,19 @@ export default {
         item_date: this.$dayjs().format("YYYY-MM-DD"),
         label: "",
         amount: 0,
+        amount_type: "credit",
         taxes_tps: 0,
         taxes_tvq: 0,
       },
     };
   },
   computed: {
+    amountTypes() {
+      return [
+        { value: "debit", text: "Débit" },
+        { value: "credit", text: "Crédit" },
+      ];
+    },
     fullTitle() {
       const parts = [
         "LocoMotion",
@@ -273,8 +291,16 @@ export default {
   },
   methods: {
     addBillItemAndReset() {
+      // adjust the amount according to the type (only negate the amount if the type is a debit,
+      // since it has to be substracted from the user balance). No need to update the amount if it
+      // is already negative.
+      if (this.newBillItem.amount > 0 && this.newBillItem.amount_type === "debit")
+        this.newBillItem.amount *= -1;
+
+      // add the bill item to invoice
       this.item.bill_items.push(this.newBillItem);
 
+      // reset the bill item
       this.newBillItem = null;
     },
     createNewBillItem() {
@@ -282,6 +308,13 @@ export default {
     },
     async mergeUserAndSubmit() {
       this.item.user_id = this.user.id;
+
+      // Set the type of the invoice:
+      // - negative amount: debit
+      // - positive amount: credit
+      if (this.itemTotalWithTaxes >= 0) this.item.type = "credit";
+      else this.item.type = "debit";
+
       await this.submit();
     },
     removeBillItem(item) {

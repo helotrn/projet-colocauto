@@ -99,6 +99,7 @@ class InvoiceController extends RestController
                 "apply_to_balance" => true,
                 "bill_items" => [],
                 "period" => "",
+                "type" => "",
             ],
             "rules" => [],
             "filters" => $this->model::$filterTypes,

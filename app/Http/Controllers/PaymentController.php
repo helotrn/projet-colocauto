@@ -120,6 +120,7 @@ class PaymentController extends RestController
                 "item_date" => date("Y-m-d"),
                 "taxes_tps" => 0,
                 "taxes_tvq" => 0,
+                "amount_type" => null,
             ],
             "insurance" => $insurance
                 ? [
@@ -128,6 +129,7 @@ class PaymentController extends RestController
                     "item_date" => date("Y-m-d"),
                     "taxes_tps" => 0,
                     "taxes_tvq" => 0,
+                    "amount_type" => null,
                 ]
                 : null,
             "expenses" => $expenses
@@ -137,6 +139,7 @@ class PaymentController extends RestController
                     "item_date" => date("Y-m-d"),
                     "taxes_tps" => 0,
                     "taxes_tvq" => 0,
+                    "amount_type" => null,
                 ]
                 : null,
             "platform_tip" => $platformTip
@@ -146,15 +149,26 @@ class PaymentController extends RestController
                     "item_date" => date("Y-m-d"),
                     "taxes_tps" => round(($platformTip / 1.14975) * 0.05, 2),
                     "taxes_tvq" => round(($platformTip / 1.14975) * 0.09975, 2),
+                    "amount_type" => null,
                 ]
                 : null,
         ];
 
         // Update invoices
         $borrowerUser = $loan->borrower->user;
-        $borrowerInvoice = $borrowerUser->createInvoice();
-        foreach ($items as $item) {
+
+        // Create an invoice as a debit, since it is a payment
+        $borrowerInvoice = $borrowerUser->createInvoice("debit");
+        foreach ($items as $key => $item) {
             if ($item) {
+                // Determine whether the item is a debit or credit
+                if ($key != "expenses") {
+                    $item["amount_type"] = "debit";
+                } else {
+                    $item["amount_type"] = "credit";
+                }
+
+                // Create a bill item in the invoice
                 $borrowerInvoice->billItems()->create($item);
             }
         }
@@ -166,21 +180,22 @@ class PaymentController extends RestController
         // This check could be removed when we can garantee that every loanable has an owner.
         if ($loan->loanable->owner) {
             $ownerUser = $loan->loanable->owner->user;
-            $ownerInvoice = $ownerUser->createInvoice();
+
+            // Create an invoice as a credit, since the owner will
+            // receive this amount from the loan
+            $ownerInvoice = $ownerUser->createInvoice("credit");
 
             if ($items["price"]) {
-                $items["price"]["amount"] = -$items["price"]["amount"];
+                // Cost of the loan will be received by the owner
+                $items["price"]["amount_type"] = "credit";
+
                 $ownerInvoice->billItems()->create($items["price"]);
             }
 
             if ($items["expenses"]) {
-                $items["expenses"]["amount"] = -$items["expenses"]["amount"];
-                $items["expenses"]["taxes_tvq"] = -$items["expenses"][
-                    "taxes_tvq"
-                ];
-                $items["expenses"]["taxes_tps"] = -$items["expenses"][
-                    "taxes_tps"
-                ];
+                // Expenses are deducted from the amount received by the owner
+                $items["expenses"]["amount_type"] = "debit";
+
                 $ownerInvoice->billItems()->create($items["expenses"]);
             }
 
