@@ -12,15 +12,12 @@ use Illuminate\Queue\SerializesModels;
 class LoanPaidEvent extends SendInvoiceEmailEvent
 {
     public static $defaultText = <<<HTML
-<p>
 Cela signifie que vous ne pouvez plus modifier les informations du trajet (km départ,
 km retour, achat carburant). Si vous vous rendez compte d’une erreur, dites-le à la personne
 qui vous a prêté son auto ou vélo et contactez info@locomotion.app, on vous aidera à
 ajuster vos factures.
-</p>
-<p>
+
 Merci d'avoir utilisé LocoMotion!
-</p>
 HTML;
     public function __construct(
         User $user,
