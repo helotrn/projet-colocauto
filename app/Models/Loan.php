@@ -792,7 +792,7 @@ SQL
        This method checks whether this loan is in a state in which it can be
        canceled.
     */
-    public function isCancelable($at = null)
+    public function isCancelable()
     {
         if ($this->isCanceled()) {
             return false;
