@@ -94,8 +94,6 @@ class HandoverController extends RestController
             ]);
         }
 
-        $wasContested = $item->status === "canceled";
-
         $item->fill($request->all());
         $item->status = "completed";
         $item->comments_on_contestation = "";
@@ -103,7 +101,7 @@ class HandoverController extends RestController
 
         $this->repo->update($request, $actionId, $request->all());
 
-        if ($wasContested) {
+        if ($item->isContested()) {
             event(
                 new LoanHandoverContestationResolvedEvent(
                     $item,
@@ -135,10 +133,11 @@ class HandoverController extends RestController
         $item = $this->repo->find($authRequest, $actionId);
         $loan = $this->loanRepo->find($authRequest, $loanId);
 
-        $item->status = "canceled";
         $item->comments_on_contestation = $request->get(
             "comments_on_contestation"
         );
+        $item->contest();
+
         $item->save();
 
         event(new LoanHandoverContestedEvent($item, $request->user()));

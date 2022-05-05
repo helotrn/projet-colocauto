@@ -73,10 +73,6 @@ class Handover extends Action
                     $model->executed_at = Carbon::now();
                     $model->save();
                     break;
-                case "canceled":
-                    $model->executed_at = Carbon::now();
-                    $model->save();
-                    break;
                 default:
                     break;
             }
