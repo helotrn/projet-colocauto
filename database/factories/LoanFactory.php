@@ -251,12 +251,7 @@ $factory->afterCreatingState(Loan::class, "butPaymentInProcess", function (
     Faker $faker
 ) {
     if (!$loan->payment) {
-        $loan->payment()->save(
-            factory(Payment::class)->make([
-                "executed_at" => Carbon::now()->add(100, "years"),
-                "status" => "completed",
-            ])
-        );
+        $loan->payment()->save(factory(Payment::class)->make());
     }
 
     $payment = $loan->payment()->first();
