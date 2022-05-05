@@ -498,7 +498,7 @@ SQL
         }
 
         // If payment is completed, then account for early termination
-        if ($this->payment && $this->payment->status === "completed") {
+        if ($this->payment && $this->payment->isCompleted()) {
             // diffInMinutes:
             //   - All values are truncated and not rounded
             //   - Takes, as 2nd argument, an absolute boolean option (true by

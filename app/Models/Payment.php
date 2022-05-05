@@ -6,28 +6,6 @@ use Carbon\Carbon;
 
 class Payment extends Action
 {
-    public static function boot()
-    {
-        parent::boot();
-
-        self::saved(function ($model) {
-            if ($model->executed_at) {
-                return;
-            }
-
-            switch ($model->status) {
-                case "completed":
-                    $model->executed_at = Carbon::now();
-                    $model->save();
-                    break;
-                case "canceled":
-                    $model->executed_at = Carbon::now();
-                    $model->save();
-                    break;
-            }
-        });
-    }
-
     public static function getColumnsDefinition()
     {
         return [
