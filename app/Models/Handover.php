@@ -103,8 +103,31 @@ class Handover extends Action
         ];
     }
 
+    public function complete($at = null)
+    {
+        $this->executed_at = new Carbon($at);
+        $this->status = "completed";
+
+        return $this;
+    }
+
+    public function isCompleted()
+    {
+        return $this->status == "completed";
+    }
+
+    public function contest($at = null)
+    {
+        // Status = canceled means contested.
+        $this->executed_at = new Carbon($at);
+        $this->status = "canceled";
+
+        return $this;
+    }
+
     public function isContested()
     {
+        // Status = canceled means contested.
         return $this->status == "canceled";
     }
 }
