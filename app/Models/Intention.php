@@ -90,4 +90,30 @@ class Intention extends Action
     {
         return $this->belongsTo(Loan::class);
     }
+
+    public function complete($at = null)
+    {
+        $this->executed_at = new Carbon($at);
+        $this->status = "completed";
+
+        return $this;
+    }
+
+    public function isCompleted()
+    {
+        return $this->status == "completed";
+    }
+
+    public function cancel($at = null)
+    {
+        $this->executed_at = new Carbon($at);
+        $this->status = "canceled";
+
+        return $this;
+    }
+
+    public function isCanceled()
+    {
+        return $this->status == "canceled";
+    }
 }
