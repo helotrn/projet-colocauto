@@ -100,7 +100,8 @@ class IntentionController extends RestController
         $item = $this->repo->find($authRequest, $actionId);
 
         $item->message_for_borrower = $request->get("message_for_borrower");
-        $item->status = "canceled";
+
+        $item->cancel();
         $item->save();
 
         event(new LoanIntentionRejectedEvent($item));

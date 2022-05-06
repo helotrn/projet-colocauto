@@ -29,8 +29,6 @@ class Intention extends Action
                     $model->save();
                     break;
                 case "canceled":
-                    $model->executed_at = Carbon::now();
-                    $model->save();
                     break;
                 default:
                     // Auto complete intention if loanable is self service.
