@@ -97,7 +97,7 @@ class PrePaymentController extends RestController
         $item = $this->repo->find($authRequest, $actionId);
         $loan = $this->loanRepo->find($authRequest, $loanId);
 
-        $item->status = "canceled";
+        $item->cancel();
         $item->save();
 
         return $item;
