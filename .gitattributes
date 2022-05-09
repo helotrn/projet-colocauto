@@ -1,5 +1,11 @@
+# Set default behavior to automatically normalize line endings
 * text=auto
+
 *.css linguist-vendored
 *.scss linguist-vendored
 *.js linguist-vendored
+
+# Bash scripts will always use LF line endings
+*.sh text eol=lf
+
 CHANGELOG.md export-ignore
