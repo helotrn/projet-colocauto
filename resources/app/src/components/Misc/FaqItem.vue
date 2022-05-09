@@ -33,6 +33,11 @@ export default {
 
 <style lang="scss">
 .faq-item {
+  .btn {
+    margin-left: 0;
+    margin-right: 0;
+  }
+
   dd {
     margin-left: 40px;
   }
