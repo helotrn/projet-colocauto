@@ -66,15 +66,15 @@ class NokeSyncLocks extends Command
     {
         $lockIds = [];
         foreach ($this->locks as $nokeLock) {
-            $lock = Padlock::whereExternalId($nokeLock->id)->first();
+            $lock = Padlock::whereMacAddress($nokeLock->macAddress)->first();
             if (!$lock) {
                 $lock = new Padlock();
                 Log::info(
-                    "Creating lock $nokeLock->name ({$lock->id} / {$nokeLock->id})."
+                    "Creating lock $nokeLock->name ({$lock->id} / {$nokeLock->id} / {$nokeLock->macAddress})."
                 );
             } else {
                 Log::info(
-                    "Updating lock $nokeLock->name ({$lock->id} / {$nokeLock->id})."
+                    "Updating lock $lock->name -> $nokeLock->name ({$lock->id} / {$lock->external_id} -> {$nokeLock->id} / {$lock->mac_address})."
                 );
             }
 
@@ -100,7 +100,7 @@ class NokeSyncLocks extends Command
 
         foreach ($removedLocks as $lock) {
             Log::info(
-                "Removing lock $nokeLock->name ({$lock->id} / {$nokeLock->id})."
+                "Removing lock $lock->name ({$lock->id} / {$lock->external_id} / {$lock->mac_address})."
             );
 
             if ($this->pretend) {
