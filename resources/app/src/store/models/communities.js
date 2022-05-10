@@ -131,7 +131,6 @@ export default new RestModule(
         const newUserArray = [...rootState.users.data];
         newUserArray[userIndex] = data;
 
-        console.log(newUserArray);
         commit("users/data", newUserArray, { root: true });
       } catch (e) {
         commit("cancelToken", null);
