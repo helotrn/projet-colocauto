@@ -208,42 +208,42 @@ $factory->afterCreatingState(Loan::class, "withCanceledHandover", function (
 $factory->afterCreatingState(Loan::class, "withAllStepsCompleted", function (
     $loan
 ) {
-    return $loan::withoutEvents(function () use ($loan) {
-        $loan->intention()->save(
-            factory(Intention::class)->make([
-                "status" => "completed",
-                "executed_at" => Carbon::now(),
-            ])
-        );
+    $loan->intention()->save(
+        factory(Intention::class)->make([
+            "status" => "completed",
+            "executed_at" => Carbon::now(),
+        ])
+    );
 
-        $loan->prePayment()->save(
-            factory(PrePayment::class)->make([
-                "status" => "completed",
-                "executed_at" => Carbon::now(),
-            ])
-        );
+    $loan->prePayment()->save(
+        factory(PrePayment::class)->make([
+            "status" => "completed",
+            "executed_at" => Carbon::now(),
+        ])
+    );
 
-        $loan->takeover()->save(
-            factory(Takeover::class)->make([
-                "status" => "completed",
-                "executed_at" => Carbon::now(),
-            ])
-        );
+    $loan->takeover()->save(
+        factory(Takeover::class)->make([
+            "status" => "completed",
+            "executed_at" => Carbon::now(),
+        ])
+    );
 
-        $loan->handover()->save(
-            factory(Handover::class)->make([
-                "status" => "completed",
-                "executed_at" => Carbon::now(),
-            ])
-        );
+    $loan->handover()->save(
+        factory(Handover::class)->make([
+            "status" => "completed",
+            "executed_at" => Carbon::now(),
+        ])
+    );
 
-        $loan->payment()->save(
-            factory(Payment::class)->make([
-                "executed_at" => Carbon::now()->add(100, "years"),
-                "status" => "completed",
-            ])
-        );
-    });
+    $loan->payment()->save(
+        factory(Payment::class)->make([
+            "executed_at" => Carbon::now()->add(100, "years"),
+            "status" => "completed",
+        ])
+    );
+
+    return $loan;
 });
 
 $factory->afterCreatingState(Loan::class, "butPaymentInProcess", function (
