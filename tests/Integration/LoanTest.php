@@ -707,7 +707,7 @@ class LoanTest extends TestCase
         $this->assertEquals($refActionStatuses, $testActionStatuses);
     }
 
-    public function testCreateWithCollectiveLoanableIsAutomaticallyAccepted()
+    public function testCreateWithSelfServiceLoanableIsAutomaticallyAccepted()
     {
         $borrower = factory(Borrower::class)->create([
             "user_id" => $this->user->id,
@@ -720,7 +720,11 @@ class LoanTest extends TestCase
             ->communities()
             ->attach($community->id, ["approved_at" => new \DateTime()]);
 
-        $loanable = factory(Bike::class)->create(["owner_id" => null]);
+        $owner = factory(Owner::class)->create(["user_id" => $user->id]);
+        $loanable = factory(Bike::class)->create([
+            "owner_id" => $owner->id,
+            "is_self_service" => true,
+        ]);
 
         $data = [
             "departure_at" => now()->toDateTimeString(),
@@ -837,7 +841,7 @@ class LoanTest extends TestCase
         $this->assertEquals($refActionStatuses, $testActionStatuses);
     }
 
-    public function testCreateWithCollectiveLoanableAndEnoughBalanceAutomaticallyPrePaid()
+    public function testCreateWithSelfServiceLoanableAndEnoughBalanceAutomaticallyPrePaid()
     {
         $borrower = factory(Borrower::class)->create([
             "user_id" => $this->user->id,
@@ -850,7 +854,11 @@ class LoanTest extends TestCase
             ->communities()
             ->attach($community->id, ["approved_at" => new \DateTime()]);
 
-        $loanable = factory(Bike::class)->create(["owner_id" => null]);
+        $owner = factory(Owner::class)->create(["user_id" => $user->id]);
+        $loanable = factory(Bike::class)->create([
+            "owner_id" => $owner->id,
+            "is_self_service" => true,
+        ]);
 
         $data = [
             "departure_at" => now()->toDateTimeString(),
