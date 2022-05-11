@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Events\LoanHandoverContestationResolvedEvent;
 use App\Events\LoanHandoverContestedEvent;
+use App\Http\Controllers\LoanController;
 use App\Http\Requests\Action\HandoverRequest;
 use App\Http\Requests\Action\PaymentRequest;
 use App\Http\Requests\BaseRequest as Request;
@@ -88,16 +89,20 @@ class HandoverController extends RestController
         $item = $this->repo->find($authRequest, $actionId);
         $loan = $this->loanRepo->find($authRequest, $loanId);
 
-        if ($item->status === "completed") {
+        if ($item->isCompleted()) {
             return $this->respondWithErrors([
                 "status" => __("validation.custom.status.action_completed"),
             ]);
         }
 
         $item->fill($request->all());
-        $item->status = "completed";
         $item->comments_on_contestation = "";
+
+        $item->complete();
         $item->save();
+
+        // Move forward if possible.
+        LoanController::loanActionsForward($loan);
 
         $this->repo->update($request, $actionId, $request->all());
 

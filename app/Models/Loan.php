@@ -63,19 +63,6 @@ class Loan extends BaseModel
     {
         parent::boot();
 
-        self::saved(function ($model) {
-            if (
-                $model->loanable &&
-                // Check existence on database because the model is
-                // not updated automatically in the request lifecycle
-                !$model->intention()->first()
-            ) {
-                $intention = new Intention();
-                $intention->loan()->associate($model);
-                $intention->save();
-            }
-        });
-
         // Update loan.status whenever an action is changed.
         foreach (
             [

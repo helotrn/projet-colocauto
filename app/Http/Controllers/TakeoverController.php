@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Events\LoanTakeoverContestationResolvedEvent;
 use App\Events\LoanTakeoverContestedEvent;
+use App\Http\Controllers\LoanController;
 use App\Http\Requests\Action\TakeoverRequest;
 use App\Http\Requests\BaseRequest as Request;
 use App\Models\Takeover;
@@ -90,7 +91,12 @@ class TakeoverController extends RestController
         $item->fill($request->all());
         $item->status = "completed";
         $item->comments_on_contestation = "";
+
+        $item->complete();
         $item->save();
+
+        // Move forward if possible.
+        LoanController::loanActionsForward($loan);
 
         $this->repo->update($request, $actionId, $request->all());
 

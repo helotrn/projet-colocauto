@@ -16,32 +16,6 @@ class Takeover extends Action
         "thumbnail" => "256x@fit",
     ];
 
-    public static function boot()
-    {
-        parent::boot();
-
-        self::saved(function ($model) {
-            if ($model->executed_at) {
-                return;
-            }
-
-            switch ($model->status) {
-                case "completed":
-                    if (!$model->loan->handover) {
-                        $handover = new Handover();
-                        $handover->loan()->associate($model->loan);
-                        $handover->save();
-                    }
-
-                    $model->executed_at = Carbon::now();
-                    $model->save();
-                    break;
-                default:
-                    break;
-            }
-        });
-    }
-
     public static function getColumnsDefinition()
     {
         return [

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Events\LoanIntentionAcceptedEvent;
 use App\Events\LoanIntentionRejectedEvent;
+use App\Http\Controllers\LoanController;
 use App\Http\Requests\BaseRequest as Request;
 use App\Http\Requests\Action\IntentionRequest;
 use App\Models\Intention;
@@ -83,11 +84,17 @@ class IntentionController extends RestController
     public function complete(IntentionRequest $request, $actionId, $loanId)
     {
         $authRequest = $request->redirectAuth(Request::class);
+
         $item = $this->repo->find($authRequest, $actionId);
+        $loan = $this->loanRepo->find($authRequest, $loanId);
 
         $item->message_for_borrower = $request->get("message_for_borrower");
-        $item->status = "completed";
+
+        $item->complete();
         $item->save();
+
+        // Move forward if possible.
+        LoanController::loanActionsForward($loan);
 
         event(new LoanIntentionAcceptedEvent($item));
 

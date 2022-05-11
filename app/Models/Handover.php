@@ -53,32 +53,6 @@ class Handover extends Action
         return $this->belongsTo(Loan::class);
     }
 
-    public static function boot()
-    {
-        parent::boot();
-
-        self::saved(function ($model) {
-            if ($model->executed_at) {
-                return;
-            }
-
-            switch ($model->status) {
-                case "completed":
-                    if (!$model->loan->payment) {
-                        $payment = new Payment();
-                        $payment->loan()->associate($model->loan);
-                        $payment->save();
-                    }
-
-                    $model->executed_at = Carbon::now();
-                    $model->save();
-                    break;
-                default:
-                    break;
-            }
-        });
-    }
-
     public static function getColumnsDefinition()
     {
         return [
