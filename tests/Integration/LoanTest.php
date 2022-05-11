@@ -693,7 +693,18 @@ class LoanTest extends TestCase
         $response->assertStatus(201);
         $responseData = json_decode($response->getContent());
 
+        // Validate loan actions
         $this->assertEquals(1, count($responseData->actions));
+
+        $refActionStatuses = [
+            "intention" => "in_process",
+        ];
+        $testActionStatuses = [];
+        foreach ($responseData->actions as $action) {
+            $testActionStatuses[$action->type] = $action->status;
+        }
+
+        $this->assertEquals($refActionStatuses, $testActionStatuses);
     }
 
     public function testCreateWithCollectiveLoanableIsAutomaticallyAccepted()
@@ -731,7 +742,19 @@ class LoanTest extends TestCase
         $response->assertStatus(201);
         $responseData = json_decode($response->getContent());
 
+        // Validate loan actions
         $this->assertEquals(2, count($responseData->actions));
+
+        $refActionStatuses = [
+            "intention" => "completed",
+            "pre_payment" => "in_process",
+        ];
+        $testActionStatuses = [];
+        foreach ($responseData->actions as $action) {
+            $testActionStatuses[$action->type] = $action->status;
+        }
+
+        $this->assertEquals($refActionStatuses, $testActionStatuses);
     }
 
     public function testCreateWithLoanableOnPrivateCommunityIsAutomaticallyAccepted()
@@ -776,7 +799,18 @@ class LoanTest extends TestCase
         $response->assertStatus(201);
         $responseData = json_decode($response->getContent());
 
+        // Validate loan actions
         $this->assertEquals(1, count($responseData->actions));
+
+        $refActionStatuses = [
+            "intention" => "in_process",
+        ];
+        $testActionStatuses = [];
+        foreach ($responseData->actions as $action) {
+            $testActionStatuses[$action->type] = $action->status;
+        }
+
+        $this->assertEquals($refActionStatuses, $testActionStatuses);
 
         // Community is private: intentions are automatically accepted
         $community->type = "private";
@@ -788,7 +822,19 @@ class LoanTest extends TestCase
         $response->assertStatus(201);
         $responseData = json_decode($response->getContent());
 
+        // Validate loan actions
         $this->assertEquals(2, count($responseData->actions));
+
+        $refActionStatuses = [
+            "intention" => "completed",
+            "pre_payment" => "in_process",
+        ];
+        $testActionStatuses = [];
+        foreach ($responseData->actions as $action) {
+            $testActionStatuses[$action->type] = $action->status;
+        }
+
+        $this->assertEquals($refActionStatuses, $testActionStatuses);
     }
 
     public function testCreateWithCollectiveLoanableAndEnoughBalanceAutomaticallyPrePaid()
@@ -826,7 +872,20 @@ class LoanTest extends TestCase
         $response->assertStatus(201);
         $responseData = json_decode($response->getContent());
 
+        // Validate loan actions
         $this->assertEquals(3, count($responseData->actions));
+
+        $refActionStatuses = [
+            "intention" => "completed",
+            "pre_payment" => "completed",
+            "takeover" => "in_process",
+        ];
+        $testActionStatuses = [];
+        foreach ($responseData->actions as $action) {
+            $testActionStatuses[$action->type] = $action->status;
+        }
+
+        $this->assertEquals($refActionStatuses, $testActionStatuses);
     }
 
     // Basic case: the actual_duration_in_minutes of a loan is its intended duration
