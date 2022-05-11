@@ -318,12 +318,6 @@ class LoanTest extends TestCase
 
     public function testCreateLoans()
     {
-        // Linking users and communities would trigger RegistrationApprovedEvent
-        // which would then send email using an external service.
-        // withoutEvents() makes the test robust to a non-existent or
-        // incorrectly-configured email service.
-        $this->withoutEvents();
-
         $borrower = factory(Borrower::class)->create([
             "user_id" => $this->user->id,
         ]);
@@ -361,12 +355,6 @@ class LoanTest extends TestCase
 
     public function testCreateLoanOnApprovedCommunityOnly()
     {
-        // Linking users and communities would trigger RegistrationApprovedEvent
-        // which would then send email using an external service.
-        // withoutEvents() makes the test robust to a non-existent or
-        // incorrectly-configured email service.
-        $this->withoutEvents();
-
         $approvedCommunity = factory(Community::class)->create();
         $suspendedCommunity = factory(Community::class)->create();
         $justRegisteredCommunity = factory(Community::class)->create();
@@ -462,12 +450,6 @@ class LoanTest extends TestCase
 
     public function testUpdateLoans()
     {
-        // Linking users and communities would trigger RegistrationApprovedEvent
-        // which would then send email using an external service.
-        // withoutEvents() makes the test robust to a non-existent or
-        // incorrectly-configured email service.
-        $this->withoutEvents();
-
         $borrower = factory(Borrower::class)->create([
             "user_id" => $this->user->id,
         ]);
@@ -544,12 +526,6 @@ class LoanTest extends TestCase
 
     public function testCannotCreateConcurrentLoans()
     {
-        // Linking users and communities would trigger RegistrationApprovedEvent
-        // which would then send email using an external service.
-        // withoutEvents() makes the test robust to a non-existent or
-        // incorrectly-configured email service.
-        $this->withoutEvents();
-
         $borrower = factory(Borrower::class)->create([
             "user_id" => $this->user->id,
         ]);
@@ -683,12 +659,6 @@ class LoanTest extends TestCase
 
     public function testCreateLoansOnlyBuildsOneIntention()
     {
-        // Linking users and communities would trigger RegistrationApprovedEvent
-        // which would then send email using an external service.
-        // withoutEvents() makes the test robust to a non-existent or
-        // incorrectly-configured email service.
-        $this->withoutEvents();
-
         $borrower = factory(Borrower::class)->create([
             "user_id" => $this->user->id,
         ]);
@@ -728,12 +698,6 @@ class LoanTest extends TestCase
 
     public function testCreateWithCollectiveLoanableIsAutomaticallyAccepted()
     {
-        // Linking users and communities would trigger RegistrationApprovedEvent
-        // which would then send email using an external service.
-        // withoutEvents() makes the test robust to a non-existent or
-        // incorrectly-configured email service.
-        $this->withoutEvents();
-
         $borrower = factory(Borrower::class)->create([
             "user_id" => $this->user->id,
         ]);
@@ -772,12 +736,6 @@ class LoanTest extends TestCase
 
     public function testCreateWithLoanableOnPrivateCommunityIsAutomaticallyAccepted()
     {
-        // Linking users and communities would trigger RegistrationApprovedEvent
-        // which would then send email using an external service.
-        // withoutEvents() makes the test robust to a non-existent or
-        // incorrectly-configured email service.
-        $this->withoutEvents();
-
         $borrower = factory(Borrower::class)->create([
             "user_id" => $this->user->id,
         ]);
@@ -835,12 +793,6 @@ class LoanTest extends TestCase
 
     public function testCreateWithCollectiveLoanableAndEnoughBalanceAutomaticallyPrePaid()
     {
-        // Linking users and communities would trigger RegistrationApprovedEvent
-        // which would then send email using an external service.
-        // withoutEvents() makes the test robust to a non-existent or
-        // incorrectly-configured email service.
-        $this->withoutEvents();
-
         $borrower = factory(Borrower::class)->create([
             "user_id" => $this->user->id,
         ]);
