@@ -378,6 +378,7 @@ class ActionsCompleteTest extends TestCase
         $loan = factory(Loan::class)
             ->states(
                 "withCompletedIntention",
+                "withCompletedPrePayment",
                 "withCompletedTakeover",
                 "withInProcessHandover"
             )
@@ -443,6 +444,7 @@ class ActionsCompleteTest extends TestCase
         $loan = factory(Loan::class)
             ->states(
                 "withCompletedIntention",
+                "withCompletedPrePayment",
                 "withCompletedTakeover",
                 "withInProcessHandover"
             )
@@ -468,6 +470,9 @@ class ActionsCompleteTest extends TestCase
         $loan->handover->executed_at = null;
 
         // Run the command
+        // At the moment, the command only completes one step at a time. Call
+        // it twice so as to complete handover and payment.
+        app(ActionsCompleteCommand::class)->handle();
         app(ActionsCompleteCommand::class)->handle();
 
         // Ensure we fetch loan back from the database
@@ -478,12 +483,11 @@ class ActionsCompleteTest extends TestCase
             "completed",
             $loan->handover ? $loan->handover->status : ""
         );
-        // Complete this test after #950
-        // $this->assertEquals(
-        //     "completed",
-        //     $loan->payment ? $loan->payment->status : ""
-        // );
-        // $this->assertEquals("completed", $loan->status);
+        $this->assertEquals(
+            "completed",
+            $loan->payment ? $loan->payment->status : ""
+        );
+        $this->assertEquals("completed", $loan->status);
     }
 
     public function testHandoverInProcess_LoanExpired_BalanceNotSufficient()
@@ -515,6 +519,7 @@ class ActionsCompleteTest extends TestCase
         $loan = factory(Loan::class)
             ->states(
                 "withCompletedIntention",
+                "withCompletedPrePayment",
                 "withCompletedTakeover",
                 "withInProcessHandover"
             )
@@ -549,11 +554,10 @@ class ActionsCompleteTest extends TestCase
             "completed",
             $loan->handover ? $loan->handover->status : ""
         );
-        // Complete this test after #950
-        // $this->assertEquals(
-        //     "in_process",
-        //     $loan->payment ? $loan->payment->status : ""
-        // );
+        $this->assertEquals(
+            "in_process",
+            $loan->payment ? $loan->payment->status : ""
+        );
         $this->assertEquals("in_process", $loan->status);
     }
 
@@ -586,6 +590,7 @@ class ActionsCompleteTest extends TestCase
         $loan = factory(Loan::class)
             ->states(
                 "withCompletedIntention",
+                "withCompletedPrePayment",
                 "withCompletedTakeover",
                 "withInProcessHandover"
             )
@@ -666,6 +671,7 @@ class ActionsCompleteTest extends TestCase
         $loan = factory(Loan::class)
             ->states(
                 "withCompletedIntention",
+                "withCompletedPrePayment",
                 "withCompletedTakeover",
                 "withInProcessHandover"
             )
@@ -703,6 +709,9 @@ class ActionsCompleteTest extends TestCase
         }
 
         // Run the command
+        // At the moment, the command only completes one step at a time. Call
+        // it twice so as to complete handover and payment.
+        app(ActionsCompleteCommand::class)->handle();
         app(ActionsCompleteCommand::class)->handle();
 
         // Ensure we fetch loan back from the database
@@ -713,12 +722,11 @@ class ActionsCompleteTest extends TestCase
             "completed",
             $loan->handover ? $loan->handover->status : ""
         );
-        // Complete this test after #950
-        // $this->assertEquals(
-        //     "completed",
-        //     $loan->payment ? $loan->payment->status : ""
-        // );
-        // $this->assertEquals("completed", $loan->status);
+        $this->assertEquals(
+            "completed",
+            $loan->payment ? $loan->payment->status : ""
+        );
+        $this->assertEquals("completed", $loan->status);
     }
 
     public function testHandoverInProcess_TakeoverContested_LoanExpired()
@@ -831,12 +839,17 @@ class ActionsCompleteTest extends TestCase
                 "platform_tip" => $loanCost,
             ]);
 
+        // I don't know why loan must be refreshed here, but id does.
+        $loan = $loan->fresh();
+
         // Setup is finished, set back test time to now.
         CarbonImmutable::setTestNow();
 
         // Validate preconditions
-        // Complete this test after #950
-        // $this->assertEquals("in_process", $loan->payment ? $loan->payment->status : "");
+        $this->assertEquals(
+            "in_process",
+            $loan->payment ? $loan->payment->status : ""
+        );
         $this->assertEquals("in_process", $loan->status);
 
         // Run the command
@@ -890,12 +903,17 @@ class ActionsCompleteTest extends TestCase
                 "platform_tip" => $loanCost,
             ]);
 
+        // I don't know why loan must be refreshed here, but id does.
+        $loan = $loan->fresh();
+
         // Setup is finished, set back test time to now.
         CarbonImmutable::setTestNow();
 
         // Validate preconditions
-        // Complete this test after #950
-        // $this->assertEquals("in_process", $loan->payment ? $loan->payment->status : "");
+        $this->assertEquals(
+            "in_process",
+            $loan->payment ? $loan->payment->status : ""
+        );
         $this->assertEquals("in_process", $loan->status);
 
         // Run the command
@@ -949,12 +967,17 @@ class ActionsCompleteTest extends TestCase
                 "platform_tip" => $loanCost,
             ]);
 
+        // I don't know why loan must be refreshed here, but id does.
+        $loan = $loan->fresh();
+
         // Setup is finished, set back test time to now.
         CarbonImmutable::setTestNow();
 
         // Validate preconditions
-        // Complete this test after #950
-        // $this->assertEquals("in_process", $loan->payment ? $loan->payment->status : "");
+        $this->assertEquals(
+            "in_process",
+            $loan->payment ? $loan->payment->status : ""
+        );
         $this->assertEquals("in_process", $loan->status);
 
         // Run the command
@@ -1000,6 +1023,7 @@ class ActionsCompleteTest extends TestCase
         $loan = factory(Loan::class)
             ->states(
                 "withCompletedIntention",
+                "withCompletedPrePayment",
                 "withCompletedTakeover",
                 "withInProcessHandover"
             )
@@ -1037,6 +1061,9 @@ class ActionsCompleteTest extends TestCase
         }
 
         // Run the command
+        // At the moment, the command only completes one step at a time. Call
+        // it twice so as to complete handover and payment.
+        app(ActionsCompleteCommand::class)->handle();
         app(ActionsCompleteCommand::class)->handle();
 
         // Ensure we fetch loan back from the database
@@ -1054,12 +1081,11 @@ class ActionsCompleteTest extends TestCase
             "completed",
             $loan->handover ? $loan->handover->status : ""
         );
-        // Complete this test after #950
-        // $this->assertEquals(
-        //     "completed",
-        //     $loan->payment ? $loan->payment->status : ""
-        // );
-        // $this->assertEquals("completed", $loan->status);
+        $this->assertEquals(
+            "completed",
+            $loan->payment ? $loan->payment->status : ""
+        );
+        $this->assertEquals("completed", $loan->status);
     }
 
     public function testPaymentInProcess_TakeoverContested_LoanExpired()
@@ -1173,6 +1199,7 @@ class ActionsCompleteTest extends TestCase
         $loan = factory(Loan::class)
             ->states(
                 "withCompletedIntention",
+                "withCompletedPrePayment",
                 "withCompletedTakeover",
                 "withContestedHandover",
                 "withInProcessPayment"
