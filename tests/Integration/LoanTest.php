@@ -721,9 +721,9 @@ class LoanTest extends TestCase
         $response = $this->json("POST", "/api/v1/loans", $data);
 
         $response->assertStatus(201);
-        $data = json_decode($response->getContent());
+        $responseData = json_decode($response->getContent());
 
-        $this->assertEquals(1, count($data->actions));
+        $this->assertEquals(1, count($responseData->actions));
     }
 
     public function testCreateWithCollectiveLoanableIsAutomaticallyAccepted()
@@ -765,9 +765,9 @@ class LoanTest extends TestCase
         $response = $this->json("POST", "/api/v1/loans", $data);
 
         $response->assertStatus(201);
-        $data = json_decode($response->getContent());
+        $responseData = json_decode($response->getContent());
 
-        $this->assertEquals(2, count($data->actions));
+        $this->assertEquals(2, count($responseData->actions));
     }
 
     public function testCreateWithLoanableOnPrivateCommunityIsAutomaticallyAccepted()
@@ -872,9 +872,9 @@ class LoanTest extends TestCase
         $response = $this->json("POST", "/api/v1/loans", $data);
 
         $response->assertStatus(201);
-        $data = json_decode($response->getContent());
+        $responseData = json_decode($response->getContent());
 
-        $this->assertEquals(3, count($data->actions));
+        $this->assertEquals(3, count($responseData->actions));
     }
 
     // Basic case: the actual_duration_in_minutes of a loan is its intended duration
