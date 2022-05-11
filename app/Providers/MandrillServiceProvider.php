@@ -19,7 +19,7 @@ class MandrillServiceProvider extends ServiceProvider
                 $config = $this->app["config"]->get("services.mandrill", []);
                 return new MandrillTransport(
                     new Client($config),
-                    $config["secret"]
+                    isset($config["secret"]) ? $config["secret"] : ""
                 );
             });
         });
