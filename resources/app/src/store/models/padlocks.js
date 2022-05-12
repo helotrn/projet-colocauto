@@ -9,5 +9,5 @@ export default new RestModule("padlocks", {
     type: null,
     deleted_at: null,
   },
-  exportFields: ["id", "external_id", "name", "mac_addresss", "loanable.id", "loanable.name"],
+  exportFields: ["id", "external_id", "name", "mac_address", "loanable.id", "loanable.name"],
 });
