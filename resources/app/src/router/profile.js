@@ -125,7 +125,7 @@ export default {
         params: {
           fields:
             "*,events,type,community.id,community.center,owner.id,owner.user.id," +
-            "owner.user.communities.center,image.*",
+            "owner.user.communities.center,image.*,report.*",
         },
         title: "titles.loanable",
         data: {
