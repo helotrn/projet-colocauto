@@ -93,32 +93,15 @@ export default {
         user: { id: userId },
       } = this;
 
-      try {
-        await this.$store.dispatch("users/updateEmail", {
-          currentPassword,
-          newEmail,
-          userId,
-        });
+      const data = await this.$store.dispatch("users/updateEmail", {
+        currentPassword,
+        newEmail,
+        userId,
+      });
 
+      // if data is received, the email has been succesfully updated, and we show the success message.
+      if(data)
         this.$emit("updated");
-      } catch (e) {
-        if (e.request) {
-          switch (e.request.status) {
-            case 422:
-              this.$store.commit("addNotification", {
-                content: extractErrors(e.response.data).join(", "),
-                title: "Erreur de validation",
-                variant: "danger",
-                type: "email",
-              });
-              break;
-            default:
-              throw e;
-          }
-        } else {
-          throw e;
-        }
-      }
     },
     reset() {
       this.currentPassword = "";

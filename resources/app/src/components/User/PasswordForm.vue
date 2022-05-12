@@ -93,20 +93,15 @@ export default {
         user: { id: userId },
       } = this;
 
-      await this.$store.dispatch("users/updatePassword", {
+      const response = await this.$store.dispatch("users/updatePassword", {
         currentPassword,
         newPassword,
         userId,
       });
 
-      this.$store.commit("addNotification", {
-        content: "Vous pouvez maintenant vous connecter avec votre nouveau mot de passe.",
-        title: "Mot de passe mis à jour",
-        variant: "success",
-        type: "password",
-      });
-
-      this.$emit("updated");
+      // if response is received, the password has been succesfully updated, and we show the success message.
+      if(response)
+        this.$emit("updated");
     },
     reset() {
       this.currentPassword = "";

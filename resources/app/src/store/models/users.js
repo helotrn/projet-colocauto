@@ -137,6 +137,8 @@ export default new RestModule(
 
       try {
         commit("cancelToken", cancelToken);
+
+        // request to update email
         const { data } = await Vue.axios.post(
           `/users/${userId}/email`,
           {
@@ -147,14 +149,32 @@ export default new RestModule(
         );
 
         commit("mergeItem", data);
-
         commit("cancelToken", null);
+        
+        return data;
       } catch (e) {
         commit("cancelToken", null);
+        const { request } = e;
 
-        const { request, response } = e;
-        commit("error", { request, response });
-
+        if (request) {
+          switch (request.status) {
+            // notify user that current password is invalid
+            case 401:
+              commit(
+                "addNotification",
+                {
+                  content: "Le mot de passe actuel est invalide.",
+                  title: "Erreur d'authentification",
+                  variant: "danger",
+                  type: "password",
+                },
+                { root: true }
+              );
+              return;
+            default:
+              break;
+          }
+        }
         throw e;
       }
     },
@@ -164,7 +184,9 @@ export default new RestModule(
 
       try {
         commit("cancelToken", cancelToken);
-        await Vue.axios.post(
+
+        // request to update password
+        const response = await Vue.axios.post(
           `/users/${userId}/password`,
           {
             current: currentPassword,
@@ -174,11 +196,32 @@ export default new RestModule(
         );
 
         commit("cancelToken", null);
+
+        return response;
       } catch (e) {
         commit("cancelToken", null);
 
-        const { request, response } = e;
-        commit("error", { request, response });
+        const { request } = e;
+
+        if (request) {
+          switch (request.status) {
+            // notify user that current password is invalid
+            case 401:
+              commit(
+                "addNotification",
+                {
+                  content: "Le mot de passe actuel est invalide.",
+                  title: "Erreur d'authentification",
+                  variant: "danger",
+                  type: "password",
+                },
+                { root: true }
+              );
+              return;
+            default:
+              break;
+          }
+        }
 
         throw e;
       }
