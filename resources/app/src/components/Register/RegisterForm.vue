@@ -22,7 +22,7 @@
         @submit.stop.prevent="passes(register)"
       >
         <forms-validated-input
-          mode="passive"
+          mode="eager"
           name="email"
           :label="$t('email')"
           :rules="{ required: true, email: true }"
@@ -32,7 +32,7 @@
         />
 
         <forms-validated-input
-          mode="passive"
+          mode="eager"
           name="password"
           :label="$t('password')"
           :rules="{ required: true, min: 8 }"
@@ -43,7 +43,7 @@
         />
 
         <forms-validated-input
-          mode="passive"
+          mode="eager"
           name="password_repeat"
           :label="$t('password-repeat')"
           :rules="{ required: true, is: password }"
@@ -65,9 +65,9 @@ fr:
   'register': Bienvenue sur LocoMotion
   'google': Inscription via Google
   'or': OU VIA COURRIEL
-  'email': Courriel*
-  'password': Mot de passe*
-  'password-repeat': Mot de passe* (confirmation)
+  'email': Courriel
+  'password': Mot de passe
+  'password-repeat': Mot de passe (confirmation)
   'register-submit': S'inscrire
 en:
   'register': Register
