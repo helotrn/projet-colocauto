@@ -1,6 +1,6 @@
 export default {
   fr: {
-    password_change_modal: {
+    email_change_modal: {
       title: "Courriel mis à jour",
       content: `
       <p>Vous pouvez maintenant vous connecter avec votre nouveau courriel.</p>
@@ -10,6 +10,10 @@ export default {
         sur votre téléphone intelligent, vous devez vous reconnecter avec ce courriel.
       </p>
       `,
+    },
+    password_change_modal: {
+      title: "Mot de passe mis à jour",
+      content: `<p>Vous pouvez maintenant vous connecter avec votre nouveau mot de passe.</p>`,
     },
   },
 };
