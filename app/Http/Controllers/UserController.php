@@ -25,6 +25,7 @@ use App\Repositories\UserRepository;
 use Cache;
 use Mail;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 use Stripe;
 
@@ -122,53 +123,52 @@ class UserController extends RestController
     }
 
     public function updateEmail(UpdateEmailRequest $request, $id)
-    {
-        $item = $this->repo->find($request->redirectAuth(Request::class), $id);
-
+    {        
+        // verify if the user is not an admin. if so, we need to check for its current password.
         if (!$request->user()->isAdmin()) {
             $currentPassword = $request->get("password");
 
-            $loginRequest = new LoginRequest();
-            $loginRequest->setMethod("POST");
-            $loginRequest->request->add([
-                "email" => $item->email,
-                "password" => $currentPassword,
-            ]);
-
-            $authController = app("App\Http\Controllers\AuthController");
-            $response = $authController->login($loginRequest);
-            if ($response->getStatusCode() !== 200) {
-                return $response;
+            // if the current password entered is invalid, return bad response
+            if(!Hash::check($currentPassword, $request->user()->password)) {
+                return response()->json(
+                    [
+                        "message" => "Invalid password.",
+                        "error" => "invalid_password",
+                        "error_description" =>
+                            "The password provided is invalid.",
+                    ],
+                    401
+                );
             }
         }
 
-        $previousEmail = $item->email;
-
+        // change the email
         $user = $this->repo->update($request, $id, $request->only("email"));
-
         return $this->respondWithItem($request, $user);
     }
 
     public function updatePassword(UpdatePasswordRequest $request, $id)
     {
-        $item = $this->repo->find($request->redirectAuth(Request::class), $id);
-
-        if (!$request->user()->isAdmin()) {
+        // verify if the user is not an admin. if so, we need to check for its current password.
+        if(!$request->user()->isAdmin()) {
             $currentPassword = $request->get("current");
 
-            $loginRequest = new LoginRequest();
-            $loginRequest->setMethod("POST");
-            $loginRequest->request->add([
-                "email" => $item->email,
-                "password" => $currentPassword,
-            ]);
-
-            $authController = app("App\Http\Controllers\AuthController");
-            $authController->login($loginRequest);
+            // if the current password entered is invalid, return bad response
+            if(!Hash::check($currentPassword, $request->user()->password)) {
+                return response()->json(
+                    [
+                        "message" => "Invalid password.",
+                        "error" => "invalid_password",
+                        "error_description" =>
+                            "The password provided is invalid.",
+                    ],
+                    401
+                );
+            }
         }
-
+        
+        // change the password
         $this->repo->updatePassword($request, $id, $request->get("new"));
-
         return response("", 204);
     }
 
