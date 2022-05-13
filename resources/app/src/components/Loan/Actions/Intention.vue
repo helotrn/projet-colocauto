@@ -37,7 +37,7 @@
           v-if="action.status !== 'in_process' || !loanIsCanceled"
           class="loan-actions-intention__image mb-3 text-center"
         >
-          <user-avatar :user="borrower.user" :size=85 />
+          <user-avatar :user="borrower.user" :size="85" />
         </div>
 
         <div
@@ -59,7 +59,7 @@
 
           <blockquote v-if="item.message_for_owner">
             {{ item.message_for_owner }}
-            <user-avatar :user="borrower.user" :size=85 />
+            <user-avatar :user="borrower.user" :size="85" />
           </blockquote>
 
           <blockquote
@@ -69,7 +69,7 @@
             "
           >
             {{ action.message_for_borrower }}
-            <div class="user-avatar" :style="{ backgroundImage: ownerAvatar }" />
+            <user-avatar :user="borrower.user" :size="85" />
           </blockquote>
         </div>
 
@@ -216,12 +216,6 @@ export default {
   &__image {
     > div {
       margin: 0 auto;
-      height: 85px;
-      width: 85px;
-      background-size: cover;
-      background-repeat: no-repeat;
-      background-position: center center;
-      border-radius: 100%;
     }
   }
 }

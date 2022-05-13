@@ -6,7 +6,7 @@
           <b-col lg="6">
             <b-row>
               <b-col class="loan-info-box__image" v-if="otherUser">
-                <user-avatar :user="otherUser" class="loan-info-box__image__user" :size=85 />
+                <user-avatar :user="otherUser" class="loan-info-box__image__user" :size="85" />
 
                 <div class="loan-info-box__image__loanable">
                   <div :style="{ backgroundImage: loanableImage }" />

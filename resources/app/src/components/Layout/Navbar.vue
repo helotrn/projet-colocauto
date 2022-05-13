@@ -70,10 +70,10 @@
 
         <b-nav-item-dropdown class="layout-navbar__dropdown d-none d-lg-block" text="" right>
           <template v-slot:button-content>
-            <user-avatar :user="user" class="layout-navbar__dropdown__icon"/>
+            <user-avatar :user="user" class="layout-navbar__dropdown__icon" />
           </template>
           <b-dropdown-item v-if="!isGlobalAdmin && hasCompletedRegistration">
-            <user-avatar :user="user" class="layout-navbar__dropdown__icon"/>
+            <user-avatar :user="user" class="layout-navbar__dropdown__icon" />
             <span class="dropdown-container">
               <span class="username"> {{ user.name }}</span>
               <span class="username-title"></span>

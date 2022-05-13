@@ -1,6 +1,6 @@
 <template>
-  <div :style="style" class="user-avatar" >
-    <span class="initials-wrapper" v-if="userAvatarImage==null">
+  <div :style="style" class="user-avatar">
+    <span class="initials-wrapper" v-if="userAvatarImage == null">
       {{ userInitials }}
     </span>
   </div>
@@ -26,16 +26,17 @@ export default {
           "background-image": `url('${this.user.avatar.sizes.thumbnail}')`,
           "background-color": null,
           "background-size": "cover",
+          "background-position": "top",
         };
       } else {
-        return null
+        return null;
       }
     },
     userInitials() {
       if (typeof this.user.name === "string" && this.user.name.length > 0) {
         return `${this.user.name[0] + this.user.last_name[0]}`.toUpperCase();
       } else {
-        return null
+        return null;
       }
     },
     style() {
@@ -43,8 +44,8 @@ export default {
         width: this.size + "px",
         height: this.size + "px",
         "font-size": this.size / 2 + "px",
-      }
-      return Object.assign(styles, this.userAvatarImage)
+      };
+      return Object.assign(styles, this.userAvatarImage);
     },
   },
 };
@@ -66,5 +67,4 @@ export default {
     justify-content: center;
   }
 }
-
 </style>
