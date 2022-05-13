@@ -37,7 +37,7 @@
           v-if="action.status !== 'in_process' || !loanIsCanceled"
           class="loan-actions-intention__image mb-3 text-center"
         >
-          <div :style="{ backgroundImage: borrowerAvatar }" />
+          <user-avatar :user="borrower.user" :size=85 />
         </div>
 
         <div
@@ -59,7 +59,7 @@
 
           <blockquote v-if="item.message_for_owner">
             {{ item.message_for_owner }}
-            <div class="user-avatar" :style="{ backgroundImage: borrowerAvatar }" />
+            <user-avatar :user="borrower.user" :size=85 />
           </blockquote>
 
           <blockquote
@@ -149,6 +149,7 @@
 
 <script>
 import FormsValidatedInput from "@/components/Forms/ValidatedInput.vue";
+import UserAvatar from "@/components/User/UserAvatar.vue";
 
 import LoanActionsMixin from "@/mixins/LoanActionsMixin";
 
@@ -157,6 +158,7 @@ export default {
   mixins: [LoanActionsMixin],
   components: {
     FormsValidatedInput,
+    UserAvatar,
   },
   computed: {
     loanablePrettyNameBorrower() {

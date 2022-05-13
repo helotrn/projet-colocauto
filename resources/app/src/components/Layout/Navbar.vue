@@ -70,18 +70,10 @@
 
         <b-nav-item-dropdown class="layout-navbar__dropdown d-none d-lg-block" text="" right>
           <template v-slot:button-content>
-            <b-badge pill variant="locomotion" class="layout-navbar__dropdown__icon">
-              <b-img v-if="avatarUrl" :src="avatarUrl" rounded="circle" />
-              <span v-if="!avatarUrl" class="layout-navbar__dropdown__initials">
-                {{ userInitials }}
-              </span>
-            </b-badge>
+            <user-avatar :user="user" class="layout-navbar__dropdown__icon"/>
           </template>
           <b-dropdown-item v-if="!isGlobalAdmin && hasCompletedRegistration">
-            <b-badge pill variant="locomotion" class="layout-navbar__dropdown__icon">
-              <b-img v-if="avatarUrl" v-bind:src="avatarUrl" rounded="circle" />
-              <svg-profile v-if="!avatarUrl" />
-            </b-badge>
+            <user-avatar :user="user" class="layout-navbar__dropdown__icon"/>
             <span class="dropdown-container">
               <span class="username"> {{ user.name }}</span>
               <span class="username-title"></span>
@@ -164,6 +156,7 @@ import Vector from "@/assets/svg/vector.svg";
 
 import AdminSidebar from "@/components/Admin/Sidebar.vue";
 import LocaleSwitcher from "@/components/LocaleSwitcher.vue";
+import UserAvatar from "@/components/User/UserAvatar.vue";
 
 import UserMixin from "@/mixins/UserMixin";
 
@@ -173,6 +166,7 @@ export default {
   components: {
     AdminSidebar,
     LocaleSwitcher,
+    UserAvatar,
     "svg-category": Category,
     "svg-dashboard": Dashboard,
     "svg-hand": Hand,
