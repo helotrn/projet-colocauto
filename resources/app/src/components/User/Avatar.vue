@@ -26,10 +26,10 @@ export default {
   },
   computed: {
     userInitials() {
-      if (typeof this.user.name === "string" && this.user.name.length > 0) {
-        return `${this.user.name[0] + this.user.last_name[0]}`.toUpperCase();
-      } else {
-        return null;
+      if (typeof user.name === "string" && user.name.length > 0) {
+        return `${user.name[0]}${user?.last_name.slice(0, 1)}`.toUpperCase();
+      } else if (typeof user.email === "string" && user.email.length > 0) {
+        return user?.email[0].toUpperCase();
       }
     },
   },
@@ -43,6 +43,9 @@ export default {
   // Default size.
   width: 3rem;
   height: 3rem;
+
+  font-weight: 700;
+  color: $white;
 
   &__image,
   &__initials,
@@ -69,21 +72,5 @@ export default {
     object-position: top;
   }
 
-  &__initials {
-    font-weight: 700;
-    color: #f1f1f1;
-  }
-
-  &--thumbnail {
-    width: 45px;
-    height: 45px;
-    font-size: 20px;
-  }
-
-  &--profile {
-    width: 85px;
-    height: 85px;
-    font-size: 40px;
-  }
 }
 </style>

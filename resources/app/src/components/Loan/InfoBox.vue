@@ -147,18 +147,6 @@ export default {
     isAvailable() {
       return this.$store.state.loans.item.isAvailable;
     },
-    loanPersonImage() {
-      if (!this.otherUser) {
-        return "";
-      }
-
-      const { avatar } = this.otherUser;
-      if (!avatar) {
-        return "";
-      }
-
-      return `url('${avatar.sizes.thumbnail}')`;
-    },
     loanableImage() {
       const { image } = this.loan.loanable;
       if (!image) {
