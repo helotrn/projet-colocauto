@@ -27,13 +27,12 @@ dans un autre terminal, faire:
 
 ## Variables pour un bon fonctionnement en local
 
-Demandez à un admin les variables confidentielles. Elles sont dans `docker-compose.yaml`.
+Les variables confidentielles sont dans `docker-compose.yaml`.
 
-Voici quelques-unes dont vous aurez particulièrement besoin:
+Vous aurez peut-être besoin de demander à un admin pour utiliser celles-ci:
 
 -   GOOGLE_API_KEY
 -   VUE_APP_GOOGLE_MAPS_API_KEY
--   MANDRILL_KEY
 
 ### Se connecter à l'application
 
@@ -48,6 +47,8 @@ Les comptes suivants auront été créés:
 -   proprietairepetitepatrie@locomotion.app
 
 Le mot de passe pour chacun des comptes est **locomotion**
+
+Il est possible depuis le compte admin de se connecter comme n'importe quel autre membre.
 
 ## Tests
 
@@ -67,26 +68,11 @@ Les variables dans l'environnement de test se trouvent dans: `.env.testing` ou `
 
 Pour en savoir plus, [voici un article utile](https://mattstauffer.com/blog/environment-specific-variables-in-laravels-testing-environment).
 
-## Déploiement
-
-Pour déployer, il faut simplement avoir le tag correspondant à
-l'environnement qui pointe vers le commit à déployer.
-
-Les tags suivants sont disponibles:
-
--   production
--   staging
-
-Voici les étapes à suivre sur gitlab dans le section [tags](https://gitlab.com/solon-collectif/locomotion.app/-/tags):
-
--   effacer le tag que vous voulez déployer.
--   Créer un nouveau tag avec le même nom et l'associer à la branche que vous voulez déployer.
-
 ## Utilisation de prettier
 
 Nous utilisons [prettier](https://prettier.io/) et [prettier-php](https://github.com/prettier/plugin-php) pour le formattage du code.
 
-Pour VM Code, vous devez installer **prettier-php** en local et vérifier que package.json contienne [le plugin](https://stackoverflow.com/a/63228491).
+Pour VS Code, vous devez installer **prettier-php** en local et vérifier que package.json contienne [le plugin](https://stackoverflow.com/a/63228491).
 
 Vous pouvez l'installer sur vos machines et l'exécuter onSave ou utiliser la commande suivante avant de publier vos commits.
 
