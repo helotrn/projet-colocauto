@@ -71,6 +71,5 @@ export default {
     object-fit: cover;
     object-position: top;
   }
-
 }
 </style>
