@@ -37,7 +37,7 @@
           v-if="action.status !== 'in_process' || !loanIsCanceled"
           class="loan-actions-intention__image mb-3 text-center"
         >
-          <user-avatar :user="borrower.user" :size="85" />
+          <user-avatar :user="borrower.user" />
         </div>
 
         <div
@@ -59,7 +59,7 @@
 
           <blockquote v-if="item.message_for_owner">
             {{ item.message_for_owner }}
-            <user-avatar :user="borrower.user" :size="85" />
+            <user-avatar :user="borrower.user" />
           </blockquote>
 
           <blockquote
@@ -69,7 +69,7 @@
             "
           >
             {{ action.message_for_borrower }}
-            <user-avatar :user="borrower.user" :size="85" />
+            <user-avatar :user="borrower.user" />
           </blockquote>
         </div>
 
@@ -149,7 +149,7 @@
 
 <script>
 import FormsValidatedInput from "@/components/Forms/ValidatedInput.vue";
-import UserAvatar from "@/components/User/UserAvatar.vue";
+import UserAvatar from "@/components/User/Avatar.vue";
 
 import LoanActionsMixin from "@/mixins/LoanActionsMixin";
 

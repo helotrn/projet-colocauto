@@ -156,7 +156,7 @@ import Vector from "@/assets/svg/vector.svg";
 
 import AdminSidebar from "@/components/Admin/Sidebar.vue";
 import LocaleSwitcher from "@/components/LocaleSwitcher.vue";
-import UserAvatar from "@/components/User/UserAvatar.vue";
+import UserAvatar from "@/components/User/Avatar.vue";
 
 import UserMixin from "@/mixins/UserMixin";
 
@@ -199,43 +199,7 @@ export default {
       this.$router.push("/");
     },
   },
-  computed: {
-    avatarUrl() {
-      return this?.$store?.state?.user?.avatar?.url;
-    },
-    userInitials() {
-      const { user } = this.$store.state;
-
-      if (!user) {
-        return "";
-      }
-
-      if (typeof user.name === "string" && user.name.length > 0) {
-        return `${user.name[0]}${user?.last_name.slice(0, 1)}`.toUpperCase();
-      } else if (typeof user.email === "string" && user.email.length > 0) {
-        return user?.email[0].toUpperCase();
-      }
-
-      return "";
-    },
-  },
 };
 </script>
 
-<style lang="scss">
-.layout-navbar {
-  &__dropdown {
-    &__initials {
-      position: relative;
-      font-size: 18px;
-      left: -0.5px;
-      top: 11px;
-    }
-
-    img {
-      width: $line-height-base + (2 * $nav-link-padding-y);
-      height: $line-height-base + (2 * $nav-link-padding-y);
-    }
-  }
-}
-</style>
+<style lang="scss"></style>
