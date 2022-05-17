@@ -1,0 +1,31 @@
+/*
+  SVG icons should have a viewBox, but no inline width or height.
+*/
+.icon {
+    display: block;
+    vertical-align: middle;
+
+    // Icons are the same size as text by default. That makes them easier to
+    // integrate inline.
+
+    height: 1em;
+    width: 1em;
+
+    overflow: hidden;
+}
+// Stroke or fill using current text color.
+.icon--fill {
+    fill: currentColor;
+}
+.icon--stroke {
+    stroke: currentColor;
+}
+.icon--as-text {
+    display: inline;
+
+    // Offset will differ from font family to font family. Adjust manually.
+    position: relative;
+    top: -0.075em;
+
+    stroke-width: 0.255rem;
+}
