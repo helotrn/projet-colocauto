@@ -308,23 +308,26 @@ class LoanController extends RestController
             $loan->intention()->save($intention);
         }
 
-        if ($loan->loanable->is_self_service) {
-            // Autocomplete intention if loanable is self service.
-            $intention->complete()->save();
-        } elseif (
-            // Autocomplete intention in private communities.
-            $loan->loanable->owner->user->approvedCommunities
-                ->where("type", "private")
-                ->pluck("id")
-                ->intersect(
-                    $loan->borrower->user->approvedCommunities
-                        ->where("type", "private")
-                        ->pluck("id")
-                )
-                ->intersect([$loan->community_id])
-                ->isNotEmpty()
-        ) {
-            $intention->complete()->save();
+        // Ensure intention is still in process to not complete the action every time we call this function.
+        if ($intention->status == "in_process") {
+            if ($loan->loanable->is_self_service) {
+                // Autocomplete intention if loanable is self service.
+                $intention->complete()->save();
+            } elseif (
+                // Autocomplete intention in private communities.
+                $loan->loanable->owner->user->approvedCommunities
+                    ->where("type", "private")
+                    ->pluck("id")
+                    ->intersect(
+                        $loan->borrower->user->approvedCommunities
+                            ->where("type", "private")
+                            ->pluck("id")
+                    )
+                    ->intersect([$loan->community_id])
+                    ->isNotEmpty()
+            ) {
+                $intention->complete()->save();
+            }
         }
 
         // Ensure pre-payment exists if intention is completed.
