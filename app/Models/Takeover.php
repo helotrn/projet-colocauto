@@ -16,36 +16,6 @@ class Takeover extends Action
         "thumbnail" => "256x@fit",
     ];
 
-    public static function boot()
-    {
-        parent::boot();
-
-        self::saved(function ($model) {
-            if ($model->executed_at) {
-                return;
-            }
-
-            switch ($model->status) {
-                case "completed":
-                    if (!$model->loan->handover) {
-                        $handover = new Handover();
-                        $handover->loan()->associate($model->loan);
-                        $handover->save();
-                    }
-
-                    $model->executed_at = Carbon::now();
-                    $model->save();
-                    break;
-                case "canceled":
-                    $model->executed_at = Carbon::now();
-                    $model->save();
-                    break;
-                default:
-                    break;
-            }
-        });
-    }
-
     public static function getColumnsDefinition()
     {
         return [
@@ -82,6 +52,28 @@ class Takeover extends Action
     public function loan()
     {
         return $this->belongsTo(Loan::class);
+    }
+
+    public function complete($at = null)
+    {
+        $this->executed_at = new Carbon($at);
+        $this->status = "completed";
+
+        return $this;
+    }
+
+    public function isCompleted()
+    {
+        return $this->status == "completed";
+    }
+
+    public function contest($at = null)
+    {
+        // Status = canceled means contested.
+        $this->executed_at = new Carbon($at);
+        $this->status = "canceled";
+
+        return $this;
     }
 
     public function isContested()

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\LoanController;
 use App\Http\Requests\BaseRequest as Request;
 use App\Models\PrePayment;
 use App\Repositories\LoanRepository;
@@ -84,8 +85,11 @@ class PrePaymentController extends RestController
         $item = $this->repo->find($authRequest, $actionId);
         $loan = $this->loanRepo->find($authRequest, $loanId);
 
-        $item->status = "completed";
+        $item->complete();
         $item->save();
+
+        // Move forward if possible.
+        LoanController::loanActionsForward($loan);
 
         return $item;
     }
@@ -97,7 +101,7 @@ class PrePaymentController extends RestController
         $item = $this->repo->find($authRequest, $actionId);
         $loan = $this->loanRepo->find($authRequest, $loanId);
 
-        $item->status = "canceled";
+        $item->cancel();
         $item->save();
 
         return $item;

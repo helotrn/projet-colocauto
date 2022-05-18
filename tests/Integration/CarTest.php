@@ -11,6 +11,7 @@ use App\Models\Payment;
 use App\Models\PrePayment;
 use App\Models\Pricing;
 use App\Models\User;
+use Carbon\Carbon;
 use MStaack\LaravelPostgis\Geometries\Point;
 use Tests\TestCase;
 
@@ -194,6 +195,7 @@ class CarTest extends TestCase
         $loanable = factory(Car::class)->create([
             "owner_id" => $owner,
             "community_id" => $community->id,
+            "availability_mode" => "always",
         ]);
 
         $loan = factory(Loan::class)->create([
@@ -201,6 +203,29 @@ class CarTest extends TestCase
             "loanable_id" => $loanable->id,
             "community_id" => $community->id,
         ]);
+
+        $loanData = [
+            "departure_at" => Carbon::now()->toDateTimeString(),
+            "duration_in_minutes" => $this->faker->randomNumber(4),
+            "estimated_distance" => $this->faker->randomNumber(4),
+            "estimated_insurance" => $this->faker->randomNumber(4),
+            "borrower_id" => $borrower->id,
+            "loanable_id" => $loanable->id,
+            "estimated_price" => 1,
+            "estimated_insurance" => 1,
+            "platform_tip" => 1,
+            "message_for_owner" => "",
+            "reason" => "Test",
+            "community_id" => $community->id,
+        ];
+
+        $response = $this->json("POST", "/api/v1/loans", $loanData);
+
+        $response->assertStatus(201);
+
+        // Load newly created loan.
+        $loanId = $response->json()["id"];
+        $loan = Loan::find($loanId);
 
         if ($upTo === "intention") {
             return $loan->fresh();

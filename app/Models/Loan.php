@@ -63,19 +63,6 @@ class Loan extends BaseModel
     {
         parent::boot();
 
-        self::saved(function ($model) {
-            if (
-                $model->loanable &&
-                // Check existence on database because the model is
-                // not updated automatically in the request lifecycle
-                !$model->intention()->first()
-            ) {
-                $intention = new Intention();
-                $intention->loan()->associate($model);
-                $intention->save();
-            }
-        });
-
         // Update loan.status whenever an action is changed.
         foreach (
             [
@@ -498,7 +485,7 @@ SQL
         }
 
         // If payment is completed, then account for early termination
-        if ($this->payment && $this->payment->status === "completed") {
+        if ($this->payment && $this->payment->isCompleted()) {
             // diffInMinutes:
             //   - All values are truncated and not rounded
             //   - Takes, as 2nd argument, an absolute boolean option (true by
@@ -792,7 +779,7 @@ SQL
        This method checks whether this loan is in a state in which it can be
        canceled.
     */
-    public function isCancelable($at = null)
+    public function isCancelable()
     {
         if ($this->isCanceled()) {
             return false;

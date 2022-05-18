@@ -318,12 +318,6 @@ class LoanTest extends TestCase
 
     public function testCreateLoans()
     {
-        // Linking users and communities would trigger RegistrationApprovedEvent
-        // which would then send email using an external service.
-        // withoutEvents() makes the test robust to a non-existent or
-        // incorrectly-configured email service.
-        $this->withoutEvents();
-
         $borrower = factory(Borrower::class)->create([
             "user_id" => $this->user->id,
         ]);
@@ -361,12 +355,6 @@ class LoanTest extends TestCase
 
     public function testCreateLoanOnApprovedCommunityOnly()
     {
-        // Linking users and communities would trigger RegistrationApprovedEvent
-        // which would then send email using an external service.
-        // withoutEvents() makes the test robust to a non-existent or
-        // incorrectly-configured email service.
-        $this->withoutEvents();
-
         $approvedCommunity = factory(Community::class)->create();
         $suspendedCommunity = factory(Community::class)->create();
         $justRegisteredCommunity = factory(Community::class)->create();
@@ -462,12 +450,6 @@ class LoanTest extends TestCase
 
     public function testUpdateLoans()
     {
-        // Linking users and communities would trigger RegistrationApprovedEvent
-        // which would then send email using an external service.
-        // withoutEvents() makes the test robust to a non-existent or
-        // incorrectly-configured email service.
-        $this->withoutEvents();
-
         $borrower = factory(Borrower::class)->create([
             "user_id" => $this->user->id,
         ]);
@@ -544,12 +526,6 @@ class LoanTest extends TestCase
 
     public function testCannotCreateConcurrentLoans()
     {
-        // Linking users and communities would trigger RegistrationApprovedEvent
-        // which would then send email using an external service.
-        // withoutEvents() makes the test robust to a non-existent or
-        // incorrectly-configured email service.
-        $this->withoutEvents();
-
         $borrower = factory(Borrower::class)->create([
             "user_id" => $this->user->id,
         ]);
@@ -683,12 +659,6 @@ class LoanTest extends TestCase
 
     public function testCreateLoansOnlyBuildsOneIntention()
     {
-        // Linking users and communities would trigger RegistrationApprovedEvent
-        // which would then send email using an external service.
-        // withoutEvents() makes the test robust to a non-existent or
-        // incorrectly-configured email service.
-        $this->withoutEvents();
-
         $borrower = factory(Borrower::class)->create([
             "user_id" => $this->user->id,
         ]);
@@ -721,19 +691,24 @@ class LoanTest extends TestCase
         $response = $this->json("POST", "/api/v1/loans", $data);
 
         $response->assertStatus(201);
-        $data = json_decode($response->getContent());
+        $responseData = json_decode($response->getContent());
 
-        $this->assertEquals(1, count($data->actions));
+        // Validate loan actions
+        $this->assertEquals(1, count($responseData->actions));
+
+        $refActionStatuses = [
+            "intention" => "in_process",
+        ];
+        $testActionStatuses = [];
+        foreach ($responseData->actions as $action) {
+            $testActionStatuses[$action->type] = $action->status;
+        }
+
+        $this->assertEquals($refActionStatuses, $testActionStatuses);
     }
 
-    public function testCreateWithCollectiveLoanableIsAutomaticallyAccepted()
+    public function testCreateWithSelfServiceLoanableIsAutomaticallyAccepted()
     {
-        // Linking users and communities would trigger RegistrationApprovedEvent
-        // which would then send email using an external service.
-        // withoutEvents() makes the test robust to a non-existent or
-        // incorrectly-configured email service.
-        $this->withoutEvents();
-
         $borrower = factory(Borrower::class)->create([
             "user_id" => $this->user->id,
         ]);
@@ -745,7 +720,11 @@ class LoanTest extends TestCase
             ->communities()
             ->attach($community->id, ["approved_at" => new \DateTime()]);
 
-        $loanable = factory(Bike::class)->create(["owner_id" => null]);
+        $owner = factory(Owner::class)->create(["user_id" => $user->id]);
+        $loanable = factory(Bike::class)->create([
+            "owner_id" => $owner->id,
+            "is_self_service" => true,
+        ]);
 
         $data = [
             "departure_at" => now()->toDateTimeString(),
@@ -765,19 +744,25 @@ class LoanTest extends TestCase
         $response = $this->json("POST", "/api/v1/loans", $data);
 
         $response->assertStatus(201);
-        $data = json_decode($response->getContent());
+        $responseData = json_decode($response->getContent());
 
-        $this->assertEquals(2, count($data->actions));
+        // Validate loan actions
+        $this->assertEquals(2, count($responseData->actions));
+
+        $refActionStatuses = [
+            "intention" => "completed",
+            "pre_payment" => "in_process",
+        ];
+        $testActionStatuses = [];
+        foreach ($responseData->actions as $action) {
+            $testActionStatuses[$action->type] = $action->status;
+        }
+
+        $this->assertEquals($refActionStatuses, $testActionStatuses);
     }
 
     public function testCreateWithLoanableOnPrivateCommunityIsAutomaticallyAccepted()
     {
-        // Linking users and communities would trigger RegistrationApprovedEvent
-        // which would then send email using an external service.
-        // withoutEvents() makes the test robust to a non-existent or
-        // incorrectly-configured email service.
-        $this->withoutEvents();
-
         $borrower = factory(Borrower::class)->create([
             "user_id" => $this->user->id,
         ]);
@@ -818,7 +803,18 @@ class LoanTest extends TestCase
         $response->assertStatus(201);
         $responseData = json_decode($response->getContent());
 
+        // Validate loan actions
         $this->assertEquals(1, count($responseData->actions));
+
+        $refActionStatuses = [
+            "intention" => "in_process",
+        ];
+        $testActionStatuses = [];
+        foreach ($responseData->actions as $action) {
+            $testActionStatuses[$action->type] = $action->status;
+        }
+
+        $this->assertEquals($refActionStatuses, $testActionStatuses);
 
         // Community is private: intentions are automatically accepted
         $community->type = "private";
@@ -830,17 +826,23 @@ class LoanTest extends TestCase
         $response->assertStatus(201);
         $responseData = json_decode($response->getContent());
 
+        // Validate loan actions
         $this->assertEquals(2, count($responseData->actions));
+
+        $refActionStatuses = [
+            "intention" => "completed",
+            "pre_payment" => "in_process",
+        ];
+        $testActionStatuses = [];
+        foreach ($responseData->actions as $action) {
+            $testActionStatuses[$action->type] = $action->status;
+        }
+
+        $this->assertEquals($refActionStatuses, $testActionStatuses);
     }
 
-    public function testCreateWithCollectiveLoanableAndEnoughBalanceAutomaticallyPrePaid()
+    public function testCreateWithSelfServiceLoanableAndEnoughBalanceAutomaticallyPrePaid()
     {
-        // Linking users and communities would trigger RegistrationApprovedEvent
-        // which would then send email using an external service.
-        // withoutEvents() makes the test robust to a non-existent or
-        // incorrectly-configured email service.
-        $this->withoutEvents();
-
         $borrower = factory(Borrower::class)->create([
             "user_id" => $this->user->id,
         ]);
@@ -852,7 +854,11 @@ class LoanTest extends TestCase
             ->communities()
             ->attach($community->id, ["approved_at" => new \DateTime()]);
 
-        $loanable = factory(Bike::class)->create(["owner_id" => null]);
+        $owner = factory(Owner::class)->create(["user_id" => $user->id]);
+        $loanable = factory(Bike::class)->create([
+            "owner_id" => $owner->id,
+            "is_self_service" => true,
+        ]);
 
         $data = [
             "departure_at" => now()->toDateTimeString(),
@@ -872,9 +878,22 @@ class LoanTest extends TestCase
         $response = $this->json("POST", "/api/v1/loans", $data);
 
         $response->assertStatus(201);
-        $data = json_decode($response->getContent());
+        $responseData = json_decode($response->getContent());
 
-        $this->assertEquals(3, count($data->actions));
+        // Validate loan actions
+        $this->assertEquals(3, count($responseData->actions));
+
+        $refActionStatuses = [
+            "intention" => "completed",
+            "pre_payment" => "completed",
+            "takeover" => "in_process",
+        ];
+        $testActionStatuses = [];
+        foreach ($responseData->actions as $action) {
+            $testActionStatuses[$action->type] = $action->status;
+        }
+
+        $this->assertEquals($refActionStatuses, $testActionStatuses);
     }
 
     // Basic case: the actual_duration_in_minutes of a loan is its intended duration

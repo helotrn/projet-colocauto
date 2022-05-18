@@ -89,7 +89,7 @@ class PaymentController extends RestController
         $payment = $this->repo->find($authRequest, $actionId);
         $loan = $this->loanRepo->find($authRequest, $loanId);
 
-        if ($payment->status === "completed") {
+        if ($payment->isCompleted()) {
             return $this->respondWithErrors([
                 "status" => _("validation.custom.status.action_completed"),
             ]);
@@ -234,7 +234,7 @@ class PaymentController extends RestController
         if ($ownerInvoice) {
             $payment->owner_invoice_id = $ownerInvoice->id;
         }
-        $payment->status = "completed";
+        $payment->complete();
         $payment->save();
 
         // Send emails after an automated or manual action

@@ -6,44 +6,6 @@ use Carbon\Carbon;
 
 class PrePayment extends Action
 {
-    public static function boot()
-    {
-        parent::boot();
-
-        self::saved(function ($model) {
-            if ($model->executed_at) {
-                return;
-            }
-
-            $loan = $model->loan;
-            if ($loan->borrower) {
-                $borrowerUser = $loan->borrower->user;
-                if ($borrowerUser->balance >= $loan->total_estimated_cost) {
-                    $model->status = "completed";
-                }
-            }
-
-            switch ($model->status) {
-                case "completed":
-                    if (!$model->loan->takeover) {
-                        $takeover = new Takeover();
-                        $takeover->loan()->associate($model->loan);
-                        $takeover->save();
-                    }
-
-                    $model->executed_at = Carbon::now();
-                    $model->save();
-                    break;
-                case "canceled":
-                    $model->executed_at = Carbon::now();
-                    $model->save();
-                    break;
-                default:
-                    break;
-            }
-        });
-    }
-
     public static function getColumnsDefinition()
     {
         return [
@@ -73,5 +35,31 @@ class PrePayment extends Action
     public function loan()
     {
         return $this->belongsTo(Loan::class);
+    }
+
+    public function complete($at = null)
+    {
+        $this->executed_at = new Carbon($at);
+        $this->status = "completed";
+
+        return $this;
+    }
+
+    public function isCompleted()
+    {
+        return $this->status == "completed";
+    }
+
+    public function cancel($at = null)
+    {
+        $this->executed_at = new Carbon($at);
+        $this->status = "canceled";
+
+        return $this;
+    }
+
+    public function isCanceled()
+    {
+        return $this->status == "canceled";
     }
 }

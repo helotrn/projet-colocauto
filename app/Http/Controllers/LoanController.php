@@ -9,8 +9,13 @@ use App\Http\Requests\Action\ActionRequest;
 use App\Http\Requests\Action\CreateRequest as ActionCreateRequest;
 use App\Http\Requests\Loan\CreateRequest;
 use App\Http\Requests\BaseRequest as Request;
+use App\Models\Handover;
+use App\Models\Intention;
 use App\Models\Loan;
 use App\Models\Loanable;
+use App\Models\Payment;
+use App\Models\PrePayment;
+use App\Models\Takeover;
 use App\Repositories\LoanRepository;
 use Carbon\Carbon;
 use Excel;
@@ -70,6 +75,9 @@ class LoanController extends RestController
 
         try {
             $item = parent::validateAndCreate($request);
+
+            // Move loan forward if possible.
+            self::loanActionsForward($item);
         } catch (ValidationException $e) {
             return $this->respondWithErrors($e->errors(), $e->getMessage());
         }
@@ -282,5 +290,117 @@ class LoanController extends RestController
             ],
             200
         );
+    }
+
+    /*
+       This method creates next loan action upon completion of an action.
+       It also checks if any action may be autocompleted.
+     */
+    public static function loanActionsForward($loan)
+    {
+        $intention = $loan->intention;
+
+        // Ensure intention exists.
+        if (!$intention) {
+            $intention = new Intention();
+
+            // https://laravel.com/docs/9.x/eloquent-relationships#the-save-method
+            $loan->intention()->save($intention);
+        }
+
+        // Ensure intention is still in process to not complete the action every time we call this function.
+        if ($intention->status == "in_process") {
+            if ($loan->loanable->is_self_service) {
+                // Autocomplete intention if loanable is self service.
+                $intention->complete()->save();
+            } elseif (
+                // Autocomplete intention in private communities.
+                $loan->loanable->owner->user->approvedCommunities
+                    ->where("type", "private")
+                    ->pluck("id")
+                    ->intersect(
+                        $loan->borrower->user->approvedCommunities
+                            ->where("type", "private")
+                            ->pluck("id")
+                    )
+                    ->intersect([$loan->community_id])
+                    ->isNotEmpty()
+            ) {
+                $intention->complete()->save();
+            }
+        }
+
+        // Ensure pre-payment exists if intention is completed.
+        $prePayment = null;
+        if ($intention && $intention->isCompleted()) {
+            $prePayment = $loan->prePayment;
+
+            if (!$prePayment) {
+                $prePayment = new PrePayment();
+                $loan->prePayment()->save($prePayment);
+            }
+        }
+
+        if (!$prePayment) {
+            return $loan;
+        }
+
+        // Autocomplete pre-payment if balance is sufficient.
+        if ("in_process" == $prePayment->status) {
+            if ($loan->borrower) {
+                $borrowerUser = $loan->borrower->user;
+
+                if ($borrowerUser->balance >= $loan->total_estimated_cost) {
+                    $prePayment->complete()->save();
+                }
+            }
+        }
+
+        // Ensure takeover exists if pre-payment is completed.
+        $takeover = null;
+        if ($prePayment && $prePayment->isCompleted()) {
+            $takeover = $loan->takeover;
+
+            if (!$takeover) {
+                $takeover = new Takeover();
+                $loan->takeover()->save($takeover);
+            }
+        }
+
+        if (!$takeover) {
+            return $loan;
+        }
+
+        // Ensure handover exists if takeover is completed.
+        $handover = null;
+        if ($takeover && $takeover->isCompleted()) {
+            $handover = $loan->handover;
+
+            if (!$handover) {
+                $handover = new Handover();
+                $loan->handover()->save($handover);
+            }
+        }
+
+        if (!$handover) {
+            return $loan;
+        }
+
+        // Ensure payment exists if handover is completed.
+        $payment = null;
+        if ($handover->isCompleted()) {
+            $payment = $loan->payment;
+
+            if (!$payment) {
+                $payment = new Payment();
+                $loan->payment()->save($payment);
+            }
+        }
+
+        // We don't complete payment here (yet?) because we would have to
+        // generate the invoice which is done in PaymentController for the
+        // moment.
+
+        return $loan;
     }
 }

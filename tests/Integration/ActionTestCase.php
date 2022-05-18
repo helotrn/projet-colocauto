@@ -10,6 +10,7 @@ use App\Models\Owner;
 use App\Models\Pricing;
 use App\Models\Takeover;
 use App\Models\User;
+use Carbon\Carbon;
 use Tests\TestCase;
 
 abstract class ActionTestCase extends TestCase
@@ -27,18 +28,40 @@ abstract class ActionTestCase extends TestCase
             "user_id" => $this->user->id,
         ]);
         $user = factory(User::class)->create();
-        $owner = factory(Owner::class)->create(["user_id" => $user]);
+        $user
+            ->communities()
+            ->attach($community->id, ["approved_at" => Carbon::now()]);
+
+        $owner = factory(Owner::class)->create(["user_id" => $user->id]);
 
         $loanable = factory(Car::class)->create([
             "owner_id" => $owner,
             "community_id" => $community->id,
+            "availability_mode" => "always",
         ]);
 
-        $loan = factory(Loan::class)->create([
+        $loanData = [
+            "departure_at" => Carbon::now()->toDateTimeString(),
+            "duration_in_minutes" => $this->faker->randomNumber(4),
+            "estimated_distance" => $this->faker->randomNumber(4),
+            "estimated_insurance" => $this->faker->randomNumber(4),
             "borrower_id" => $borrower->id,
             "loanable_id" => $loanable->id,
+            "estimated_price" => 1,
+            "estimated_insurance" => 1,
+            "platform_tip" => 1,
+            "message_for_owner" => "",
+            "reason" => "Test",
             "community_id" => $community->id,
-        ]);
+        ];
+
+        $response = $this->json("POST", "/api/v1/loans", $loanData);
+
+        $response->assertStatus(201);
+
+        // Load newly created loan.
+        $loanId = $response->json()["id"];
+        $loan = Loan::find($loanId);
 
         if ($upTo === "intention") {
             return $loan->fresh();
