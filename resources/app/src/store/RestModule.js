@@ -270,7 +270,6 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
 
           commit("cancelToken", null);
         } catch (e) {
-          console.log(`error while retreive ${e}`);
           commit("cancelToken", null);
 
           const { request, response } = e;

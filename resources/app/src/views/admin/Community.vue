@@ -347,6 +347,7 @@ export default {
 
         const community = data.communities.find((c) => c.id === this.item.id);
         community.approved_at = new Date();
+        data.approved_at = community.approved_at; // the data was misplaced so we leave it also here
 
         return data;
       });
@@ -393,6 +394,7 @@ export default {
         // Only update the community_user.role
         const community = data.communities.find((c) => c.id === this.item.id);
         community.role = role;
+        data.role = community.role; // the data was misplaced so we leave it also here
 
         return data;
       });
