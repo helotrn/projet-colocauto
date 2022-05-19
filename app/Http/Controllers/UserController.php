@@ -124,52 +124,42 @@ class UserController extends RestController
 
     public function updateEmail(UpdateEmailRequest $request, $id)
     {        
-        // verify if the user is not an admin. if so, we need to check for its current password.
+        //retrieve user to update
+        $user = User::find($id);
+
+        // verify if the user who sent the request is not an admin. if so, we need to check for its current password.
         if (!$request->user()->isAdmin()) {
             $currentPassword = $request->get("password");
 
             // if the current password entered is invalid, return bad response
-            if(!Hash::check($currentPassword, $request->user()->password)) {
-                return response()->json(
-                    [
-                        "message" => "Invalid password.",
-                        "error" => "invalid_password",
-                        "error_description" =>
-                            "The password provided is invalid.",
-                    ],
-                    401
-                );
+            if(!Hash::check($currentPassword, $user->password)) {
+                return $this->respondWithItem($request, $user, 401);
             }
         }
 
         // change the email
-        $user = $this->repo->update($request, $id, $request->only("email"));
-        return $this->respondWithItem($request, $user);
+        $updatedUser = $this->repo->update($request, $id, $request->only("email"));
+        return $this->respondWithItem($request, $updatedUser);
     }
 
     public function updatePassword(UpdatePasswordRequest $request, $id)
     {
-        // verify if the user is not an admin. if so, we need to check for its current password.
+        // retrieve user
+        $user = User::find($id);
+
+        // verify if the user who sent the request is not an admin. if so, we need to check for its current password.
         if(!$request->user()->isAdmin()) {
             $currentPassword = $request->get("current");
 
             // if the current password entered is invalid, return bad response
-            if(!Hash::check($currentPassword, $request->user()->password)) {
-                return response()->json(
-                    [
-                        "message" => "Invalid password.",
-                        "error" => "invalid_password",
-                        "error_description" =>
-                            "The password provided is invalid.",
-                    ],
-                    401
-                );
+            if(!Hash::check($currentPassword, $user->password)) {
+                return $this->respondWithItem($request, $user, 401);
             }
         }
         
         // change the password
-        $this->repo->updatePassword($request, $id, $request->get("new"));
-        return response("", 204);
+        $updatedUser = $this->repo->updatePassword($request, $id, $request->get("new"));
+        return $this->respondWithItem($request, $updatedUser);
     }
 
     public function sendEmail(AdminRequest $request, $type)
