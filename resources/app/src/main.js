@@ -128,8 +128,8 @@ extend("after", {
 extend("is", {
   message: (field) => {
     return `${field} n'est pas identique`;
-  }
-})
+  },
+});
 
 localize("fr", fr);
 

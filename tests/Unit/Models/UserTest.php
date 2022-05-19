@@ -112,7 +112,8 @@ class UserTest extends TestCase
         $user->getStripeCustomer();
     }
 
-    public function testUpdateEmailSuccess() {
+    public function testUpdateEmailSuccess()
+    {
         $newUser = $this->createTestUser();
         $this->actingAs($newUser);
 
@@ -123,14 +124,22 @@ class UserTest extends TestCase
             "password" => "locomotion",
         ];
 
-        $response = $this->json("POST", "/api/v1/users/$newUser->id/email", $data);
+        $response = $this->json(
+            "POST",
+            "/api/v1/users/$newUser->id/email",
+            $data
+        );
         $json = $response->json();
 
         $response->assertStatus(200);
-        $this->assertEquals("test_changed@locomotion.app", array_get($json, "email"));
+        $this->assertEquals(
+            "test_changed@locomotion.app",
+            array_get($json, "email")
+        );
     }
 
-    public function testUpdateEmailError() {
+    public function testUpdateEmailError()
+    {
         $newUser = $this->createTestUser();
         $this->actingAs($newUser);
 
@@ -141,14 +150,19 @@ class UserTest extends TestCase
             "password" => "wrongpassword",
         ];
 
-        $response = $this->json("POST", "/api/v1/users/$newUser->id/email", $data);
+        $response = $this->json(
+            "POST",
+            "/api/v1/users/$newUser->id/email",
+            $data
+        );
         $json = $response->json();
 
         $response->assertStatus(401);
         $this->assertEquals("test@locomotion.app", array_get($json, "email"));
     }
 
-    public function testUpdatePasswordSuccess() {
+    public function testUpdatePasswordSuccess()
+    {
         $newUser = $this->createTestUser();
         $this->actingAs($newUser);
 
@@ -159,7 +173,11 @@ class UserTest extends TestCase
             "new" => "newpassword",
         ];
 
-        $response = $this->json("POST", "/api/v1/users/$newUser->id/password", $data);
+        $response = $this->json(
+            "POST",
+            "/api/v1/users/$newUser->id/password",
+            $data
+        );
         $password = User::find($newUser->id)->password;
 
         $response->assertStatus(200);
@@ -168,7 +186,8 @@ class UserTest extends TestCase
         $this->assertFalse(Hash::check("locomotion", $password));
     }
 
-    public function testUpdatePasswordError() {
+    public function testUpdatePasswordError()
+    {
         $newUser = $this->createTestUser();
         $this->actingAs($newUser);
 
@@ -179,11 +198,15 @@ class UserTest extends TestCase
             "new" => "newpassword",
         ];
 
-        $response = $this->json("POST", "/api/v1/users/$newUser->id/password", $data);
+        $response = $this->json(
+            "POST",
+            "/api/v1/users/$newUser->id/password",
+            $data
+        );
         $password = User::find($newUser->id)->password;
 
         $response->assertStatus(401);
-        $this->assertTrue(Hash::check("locomotion", $password));      
+        $this->assertTrue(Hash::check("locomotion", $password));
         $this->assertFalse(Hash::check("newpassword", $password));
     }
 

@@ -150,7 +150,7 @@ export default new RestModule(
 
         commit("mergeItem", data);
         commit("cancelToken", null);
-        
+
         return data;
       } catch (e) {
         commit("cancelToken", null);

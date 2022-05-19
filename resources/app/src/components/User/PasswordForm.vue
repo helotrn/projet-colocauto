@@ -100,8 +100,7 @@ export default {
       });
 
       // if response is received, the password has been succesfully updated, and we show the success message.
-      if(response)
-        this.$emit("updated");
+      if (response) this.$emit("updated");
     },
     reset() {
       this.currentPassword = "";

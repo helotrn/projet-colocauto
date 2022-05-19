@@ -100,8 +100,7 @@ export default {
       });
 
       // if data is received, the email has been succesfully updated, and we show the success message.
-      if(data)
-        this.$emit("updated");
+      if (data) this.$emit("updated");
     },
     reset() {
       this.currentPassword = "";
