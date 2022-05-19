@@ -26,10 +26,10 @@ export default {
   },
   computed: {
     userInitials() {
-      if (typeof user.name === "string" && user.name.length > 0) {
-        return `${user.name[0]}${user?.last_name.slice(0, 1)}`.toUpperCase();
-      } else if (typeof user.email === "string" && user.email.length > 0) {
-        return user?.email[0].toUpperCase();
+      if (typeof this.user.name === "string" && this.user.name.length > 0) {
+        return `${this.user.name[0]}${this.user?.last_name.slice(0, 1)}`.toUpperCase();
+      } else if (typeof this.user.email === "string" && this.user.email.length > 0) {
+        return this.user?.email[0].toUpperCase();
       }
     },
   },
