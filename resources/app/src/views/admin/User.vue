@@ -51,7 +51,22 @@
                 :is-admin="loggedInUserIsAdmin"
                 :user="item"
                 ref="passwordForm"
+                @updated="resetPasswordFormAndShowModal"
               />
+
+              <b-modal
+                size="md"
+                header-bg-variant="success"
+                title-class="font-weight-bold"
+                ok-only
+                no-close-on-backdrop
+                no-close-on-esc
+                hide-header-close
+                :title="$t('password_change.title')"
+                id="password-change-modal"
+              >
+                <div v-html="$t('password_change.content')" />
+              </b-modal>
             </div>
 
             <div class="form__section">
@@ -586,6 +601,10 @@ export default {
     removeCommunityTag(community, tag) {
       const index = community.tags.indexOf(tag);
       community.tags.splice(index, 1);
+    },
+    resetPasswordFormAndShowModal() {
+      this.$refs.passwordForm.reset();
+      this.$bvModal.show("password-change-modal");
     },
     async suspendBorrower(user) {
       await this.$store.dispatch(`${this.slug}/suspendBorrower`, user.id);
