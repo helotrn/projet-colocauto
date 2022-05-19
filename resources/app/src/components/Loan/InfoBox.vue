@@ -6,10 +6,7 @@
           <b-col lg="6">
             <b-row>
               <b-col class="loan-info-box__image" v-if="otherUser">
-                <div
-                  class="loan-info-box__image__user"
-                  :style="{ backgroundImage: loanPersonImage }"
-                />
+                <user-avatar :user="otherUser" class="loan-info-box__image__user" />
 
                 <div class="loan-info-box__image__loanable">
                   <div :style="{ backgroundImage: loanableImage }" />
@@ -116,6 +113,7 @@
 
 <script>
 import LoanMenu from "@/components/Loan/Menu.vue";
+import UserAvatar from "@/components/User/Avatar.vue";
 
 export default {
   name: "LoanInfoBox",
@@ -143,22 +141,11 @@ export default {
   },
   components: {
     LoanMenu,
+    UserAvatar,
   },
   computed: {
     isAvailable() {
       return this.$store.state.loans.item.isAvailable;
-    },
-    loanPersonImage() {
-      if (!this.otherUser) {
-        return "";
-      }
-
-      const { avatar } = this.otherUser;
-      if (!avatar) {
-        return "";
-      }
-
-      return `url('${avatar.sizes.thumbnail}')`;
     },
     loanableImage() {
       const { image } = this.loan.loanable;

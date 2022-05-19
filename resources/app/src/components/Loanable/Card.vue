@@ -4,7 +4,7 @@
       <div class="loanable-card__image__loanable" :style="loanableImageStyle" />
 
       <div class="loanable-card__image__user" v-if="owner">
-        <div :style="userAvatarStyle" />
+        <user-avatar :user="owner.user" />
       </div>
     </div>
 
@@ -69,9 +69,12 @@ import Bike from "@/assets/svg/bike.svg";
 import Car from "@/assets/svg/car.svg";
 import Trailer from "@/assets/svg/trailer.svg";
 
+import UserAvatar from "@/components/User/Avatar.vue";
+
 export default {
   name: "LoanableCard",
   components: {
+    UserAvatar,
     "svg-bike": Bike,
     "svg-car": Car,
     "svg-trailer": Trailer,
@@ -157,15 +160,6 @@ export default {
         default:
           return false;
       }
-    },
-    userAvatarStyle() {
-      if (!this.owner || !this.owner.user || !this.owner.user.avatar) {
-        return {};
-      }
-
-      return {
-        backgroundImage: `url('${this.owner.user.avatar.sizes.thumbnail}')`,
-      };
     },
     loanableImageStyle() {
       if (!this.image) {

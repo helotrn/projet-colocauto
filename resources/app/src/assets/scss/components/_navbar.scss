@@ -131,17 +131,6 @@
             padding-right: 0;
             padding-left: 0;
         }
-
-        img {
-            width: 40px;
-            height: 40px;
-        }
-
-        &__icon {
-            width: $line-height-base + (2 * $nav-link-padding-y);
-            height: $line-height-base + (2 * $nav-link-padding-y);
-            padding: 9px;
-        }
     }
 
     .navbar-toggle-wrapper {
