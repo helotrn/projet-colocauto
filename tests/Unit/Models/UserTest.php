@@ -181,7 +181,6 @@ class UserTest extends TestCase
         $password = User::find($newUser->id)->password;
 
         $response->assertStatus(200);
-
         $this->assertTrue(Hash::check("newpassword", $password));
         $this->assertFalse(Hash::check("locomotion", $password));
     }
