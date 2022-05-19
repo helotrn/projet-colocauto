@@ -84,7 +84,7 @@
                   :disabled="loading"
                   @click="approveBorrower(item)"
                 >
-                  {{ $t("approuver") | capitalize }}
+                  {{ $t("approve") | capitalize }}
                 </b-button>
                 <b-button
                   v-else-if="!item.borrower.suspended_at"
@@ -94,7 +94,7 @@
                   :disabled="loading"
                   @click="suspendBorrower(item)"
                 >
-                  {{ $t("suspendre") | capitalize }}
+                  {{ $t("suspend") | capitalize }}
                 </b-button>
                 <b-button
                   v-else

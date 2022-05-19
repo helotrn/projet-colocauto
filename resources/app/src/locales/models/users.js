@@ -41,8 +41,12 @@ export default {
       title: "Mot de passe mis à jour",
       content: `<p>Le mot de passe de l'utilisateur a été mis à jour.</p>`,
     },
+    archive: "Archiver",
+    approve: "Approuver",
     mandate_tool_tip: "Cliquez ici pour vous connecter à la place de l'utilisateur",
     model_name: "membre | membres",
     payment_methods: paymentMethods.fr,
+    restore: "Restaurer",
+    suspend: "Suspendre",
   },
 };

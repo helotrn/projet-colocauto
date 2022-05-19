@@ -95,7 +95,7 @@
                 variant="danger"
                 @click="destroyItemModal(row.item, () => deactivateUser(row.item.id))"
               >
-                {{ $t("archiver") | capitalize }}
+                {{ $t("archive") | capitalize }}
               </b-button>
               <b-button
                 v-else
@@ -104,7 +104,7 @@
                 variant="warning"
                 @click="restoreItemModal(row.item, () => activateUser(row.item.id))"
               >
-                {{ $t("restaurer") | capitalize }}
+                {{ $t("restore") | capitalize }}
               </b-button>
               <b-button
                 :id="'mandate-' + row.item.id"
