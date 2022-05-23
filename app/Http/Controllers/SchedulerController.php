@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Artisan;
 
 class SchedulerController extends Controller
 {
-    public static function nokeLocks($appKey)
+    public static function nokeSyncLocks($appKey)
     {
         if ($appKey != env("APP_KEY")) {
             return new Response("Wrong app key", 403);
@@ -16,7 +16,7 @@ class SchedulerController extends Controller
         Artisan::call("noke:sync:locks");
     }
 
-    public static function nokeUsers($appKey)
+    public static function nokeSyncUsers($appKey)
     {
         if ($appKey != env("APP_KEY")) {
             return new Response("Wrong app key", 403);
@@ -25,7 +25,7 @@ class SchedulerController extends Controller
         Artisan::call("noke:sync:users");
     }
 
-    public static function nokeLoans($appKey)
+    public static function nokeSyncLoans($appKey)
     {
         if ($appKey != env("APP_KEY")) {
             return new Response("Wrong app key", 403);
