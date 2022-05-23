@@ -16,9 +16,13 @@ class EmailLoanUpcoming extends Command
 
     protected $description = "Send loan upcoming emails (in three hours)";
 
+    private $pretend = false;
+
     public function handle()
     {
-        $pretend = $this->option("pretend");
+        if ($this->option("pretend")) {
+            $this->pretend = true;
+        }
 
         Log::info(
             "Fetching loans starting in three hours or less created at least three hours before now..."
@@ -29,7 +33,7 @@ class EmailLoanUpcoming extends Command
         $loans = $query->cursor();
         foreach ($loans as $loan) {
             $user = $loan->borrower->user;
-            if (!$pretend) {
+            if (!$this->pretend) {
                 Log::info(
                     "Sending LoanUpcoming email to borrower at: $user->email"
                 );
