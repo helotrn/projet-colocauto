@@ -22,6 +22,7 @@ class PricingRule implements Rule
                     "km" => 1,
                     "minutes" => 1,
                     "loanable" => (object) [
+                        "engine" => "hybrid",
                         "pricing_category" => "large",
                         "year_of_circulation" => 1999,
                         "type" => "car",
