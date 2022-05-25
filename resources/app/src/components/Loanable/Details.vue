@@ -18,9 +18,17 @@
           <b-badge> <svg-trailer /> Remorque </b-badge>
         </div>
       </div>
-      <div class="loanable-card__estimated-fare">
-        <i title="Recherchez pour valider la disponibilité et le coût" class="muted"
-          >Coût estimé: N/A
+
+      <div
+        class="loanable-details__estimated-fare"
+        v-if="loanable.price !== null && loanable.price !== undefined"
+      >
+        <i> Coût estimé: {{ loanable.price | currency }} </i>
+        <i v-if="loanable.insurance"> + Assurance: {{ loanable.insurance | currency }} </i>
+      </div>
+      <div v-else class="loanable-details__estimated-fare">
+        <i class="muted" title="Recherchez pour valider la disponibilité et le coût">
+          Coût estimé: N/A
         </i>
       </div>
     </main>
@@ -142,6 +150,11 @@ export default {
   }
   &__tags {
     text-align: center;
+    margin-bottom: 0.5rem;
+  }
+  &__estimated-fare {
+    text-align: center;
+    font-size: 0.8rem;
     margin-bottom: 0.5rem;
   }
 }
