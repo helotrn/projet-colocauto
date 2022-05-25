@@ -125,7 +125,7 @@ class UserController extends RestController
     public function updateEmail(UpdateEmailRequest $request, $id)
     {
         //retrieve user to update
-        $user = User::find($id);
+        $user = $this->repo->find($request->redirectAuth(Request::class), $id);
 
         // verify if the user who sent the request is not an admin. if so, we need to check for its current password.
         if (!$request->user()->isAdmin()) {
@@ -149,7 +149,7 @@ class UserController extends RestController
     public function updatePassword(UpdatePasswordRequest $request, $id)
     {
         // retrieve user
-        $user = User::find($id);
+        $user = $this->repo->find($request->redirectAuth(Request::class), $id);
 
         // verify if the user who sent the request is not an admin. if so, we need to check for its current password.
         if (!$request->user()->isAdmin()) {
