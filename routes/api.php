@@ -168,15 +168,15 @@ Route::prefix("v1")->group(function () {
 
     Route::get(
         "/scheduler/noke/sync/locks/{appKey?}",
-        "SchedulerController@nokeLocks"
+        "SchedulerController@nokeSyncLocks"
     )->where("appKey", ".*");
     Route::get(
         "/scheduler/noke/sync/users/{appKey?}",
-        "SchedulerController@nokeUsers"
+        "SchedulerController@nokeSyncUsers"
     )->where("appKey", ".*");
     Route::get(
         "/scheduler/noke/sync/loans/{appKey?}",
-        "SchedulerController@nokeLoans"
+        "SchedulerController@nokeSyncLoans"
     )->where("appKey", ".*");
     Route::get(
         "/scheduler/actions/complete/{appKey?}",
