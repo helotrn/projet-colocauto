@@ -489,6 +489,7 @@ class UserTest extends TestCase
         $originalEmail = "test@gmail.com";
         $user = factory(User::class)->create([
             "email" => $originalEmail,
+            "role" => "admin",
         ]);
 
         $newEmail = "different@hotmail.com";

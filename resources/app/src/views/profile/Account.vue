@@ -7,8 +7,22 @@
         ref="passwordForm"
         :user="item"
         :loading="loading"
-        @updated="resetPasswordForm"
+        @updated="resetPasswordFormAndShowModal"
       />
+
+      <b-modal
+        size="md"
+        header-bg-variant="success"
+        title-class="font-weight-bold"
+        ok-only
+        no-close-on-backdrop
+        no-close-on-esc
+        hide-header-close
+        :title="$t('views.profile.account.password_change_modal.title')"
+        id="password-change-modal"
+      >
+        <div v-html="$t('views.profile.account.password_change_modal.content')" />
+      </b-modal>
     </div>
 
     <div class="form__section">
@@ -29,10 +43,10 @@
         no-close-on-backdrop
         no-close-on-esc
         hide-header-close
-        :title="$t('views.profile.account.password_change_modal.title')"
-        id="password-change-modal"
+        :title="$t('views.profile.account.email_change_modal.title')"
+        id="email-change-modal"
       >
-        <div v-html="$t('views.profile.account.password_change_modal.content')" />
+        <div v-html="$t('views.profile.account.email_change_modal.content')" />
       </b-modal>
     </div>
 
@@ -77,10 +91,11 @@ export default {
   methods: {
     resetEmailFormAndShowModal() {
       this.$refs.emailForm.reset();
-      this.$bvModal.show("password-change-modal");
+      this.$bvModal.show("email-change-modal");
     },
-    resetPasswordForm() {
+    resetPasswordFormAndShowModal() {
       this.$refs.passwordForm.reset();
+      this.$bvModal.show("password-change-modal");
     },
     async updateAcceptConditions(value) {
       await this.$store.dispatch("users/update", {

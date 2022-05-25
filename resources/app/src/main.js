@@ -125,6 +125,11 @@ extend("after", {
     return `Le champ ${field} devrait être après le ${dayjs(parsedDate).format("DD MMMM YYYY")}.`;
   },
 });
+extend("is", {
+  message: (field) => {
+    return `${field} n'est pas identique`;
+  },
+});
 
 localize("fr", fr);
 

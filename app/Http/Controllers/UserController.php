@@ -25,6 +25,7 @@ use App\Repositories\UserRepository;
 use Cache;
 use Mail;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 use Stripe;
 
@@ -123,53 +124,50 @@ class UserController extends RestController
 
     public function updateEmail(UpdateEmailRequest $request, $id)
     {
-        $item = $this->repo->find($request->redirectAuth(Request::class), $id);
+        //retrieve user to update
+        $user = $this->repo->find($request->redirectAuth(Request::class), $id);
 
+        // verify if the user who sent the request is not an admin. if so, we need to check for its current password.
         if (!$request->user()->isAdmin()) {
             $currentPassword = $request->get("password");
 
-            $loginRequest = new LoginRequest();
-            $loginRequest->setMethod("POST");
-            $loginRequest->request->add([
-                "email" => $item->email,
-                "password" => $currentPassword,
-            ]);
-
-            $authController = app("App\Http\Controllers\AuthController");
-            $response = $authController->login($loginRequest);
-            if ($response->getStatusCode() !== 200) {
-                return $response;
+            // if the current password entered is invalid, return bad response
+            if (!Hash::check($currentPassword, $user->password)) {
+                return $this->respondWithItem($request, $user, 401);
             }
         }
 
-        $previousEmail = $item->email;
-
-        $user = $this->repo->update($request, $id, $request->only("email"));
-
-        return $this->respondWithItem($request, $user);
+        // change the email
+        $updatedUser = $this->repo->update(
+            $request,
+            $id,
+            $request->only("email")
+        );
+        return $this->respondWithItem($request, $updatedUser);
     }
 
     public function updatePassword(UpdatePasswordRequest $request, $id)
     {
-        $item = $this->repo->find($request->redirectAuth(Request::class), $id);
+        // retrieve user
+        $user = $this->repo->find($request->redirectAuth(Request::class), $id);
 
+        // verify if the user who sent the request is not an admin. if so, we need to check for its current password.
         if (!$request->user()->isAdmin()) {
             $currentPassword = $request->get("current");
 
-            $loginRequest = new LoginRequest();
-            $loginRequest->setMethod("POST");
-            $loginRequest->request->add([
-                "email" => $item->email,
-                "password" => $currentPassword,
-            ]);
-
-            $authController = app("App\Http\Controllers\AuthController");
-            $authController->login($loginRequest);
+            // if the current password entered is invalid, return bad response
+            if (!Hash::check($currentPassword, $user->password)) {
+                return $this->respondWithItem($request, $user, 401);
+            }
         }
 
-        $this->repo->updatePassword($request, $id, $request->get("new"));
-
-        return response("", 204);
+        // change the password
+        $updatedUser = $this->repo->updatePassword(
+            $request,
+            $id,
+            $request->get("new")
+        );
+        return $this->respondWithItem($request, $updatedUser);
     }
 
     public function sendEmail(AdminRequest $request, $type)

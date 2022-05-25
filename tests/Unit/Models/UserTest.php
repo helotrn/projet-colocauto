@@ -3,6 +3,7 @@
 namespace Tests\Unit\Models;
 
 use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 use Noke;
 use Stripe;
 use Tests\TestCase;
@@ -109,5 +110,113 @@ class UserTest extends TestCase
             ->with($user);
 
         $user->getStripeCustomer();
+    }
+
+    public function testUpdateEmailSuccess()
+    {
+        $newUser = $this->createTestUser();
+        $this->actingAs($newUser);
+
+        $this->assertEquals("test@locomotion.app", $newUser->email);
+
+        $data = [
+            "email" => "test_changed@locomotion.app",
+            "password" => "locomotion",
+        ];
+
+        $response = $this->json(
+            "POST",
+            "/api/v1/users/$newUser->id/email",
+            $data
+        );
+        $json = $response->json();
+
+        $response->assertStatus(200);
+        $this->assertEquals(
+            "test_changed@locomotion.app",
+            array_get($json, "email")
+        );
+    }
+
+    public function testUpdateEmailError()
+    {
+        $newUser = $this->createTestUser();
+        $this->actingAs($newUser);
+
+        $this->assertEquals("test@locomotion.app", $newUser->email);
+
+        $data = [
+            "email" => "test_changed@locomotion.app",
+            "password" => "wrongpassword",
+        ];
+
+        $response = $this->json(
+            "POST",
+            "/api/v1/users/$newUser->id/email",
+            $data
+        );
+        $json = $response->json();
+
+        $response->assertStatus(401);
+        $this->assertEquals("test@locomotion.app", array_get($json, "email"));
+    }
+
+    public function testUpdatePasswordSuccess()
+    {
+        $newUser = $this->createTestUser();
+        $this->actingAs($newUser);
+
+        $this->assertTrue(Hash::check("locomotion", $newUser->password));
+
+        $data = [
+            "current" => "locomotion",
+            "new" => "newpassword",
+        ];
+
+        $response = $this->json(
+            "POST",
+            "/api/v1/users/$newUser->id/password",
+            $data
+        );
+        $password = User::find($newUser->id)->password;
+
+        $response->assertStatus(200);
+        $this->assertTrue(Hash::check("newpassword", $password));
+        $this->assertFalse(Hash::check("locomotion", $password));
+    }
+
+    public function testUpdatePasswordError()
+    {
+        $newUser = $this->createTestUser();
+        $this->actingAs($newUser);
+
+        $this->assertTrue(Hash::check("locomotion", $newUser->password));
+
+        $data = [
+            "current" => "wrongpassword",
+            "new" => "newpassword",
+        ];
+
+        $response = $this->json(
+            "POST",
+            "/api/v1/users/$newUser->id/password",
+            $data
+        );
+        $password = User::find($newUser->id)->password;
+
+        $response->assertStatus(401);
+        $this->assertTrue(Hash::check("locomotion", $password));
+        $this->assertFalse(Hash::check("newpassword", $password));
+    }
+
+    private function createTestUser()
+    {
+        $user = factory(User::class)->create([
+            "email" => "test@locomotion.app",
+            "password" => Hash::make("locomotion"),
+            "role" => null,
+        ]);
+
+        return $user;
     }
 }
