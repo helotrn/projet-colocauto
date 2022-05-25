@@ -27,7 +27,7 @@
         v-if="selectedLoanable && selectedLoanable.id === l.id"
         @closeclick="selectedLoanable = null"
       >
-        <loanable-details :loanable="l" />
+        <loanable-details :loanable="l" @select="$emit('select', l)" @test="$emit('test', l)" />
       </gmap-info-window>
     </gmap-marker>
   </gmap-map>

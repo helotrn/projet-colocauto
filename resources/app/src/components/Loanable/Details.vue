@@ -25,7 +25,27 @@
       </div>
     </main>
     <footer class="loanable-details__footer">
-      <button type="button" class="btn btn-outline-primary">Demande d'emprunt</button>
+      <!-- Only one button will be displayed at a time. -->
+      <b-button variant="outline-primary" v-if="loanable.available" @click="$emit('select')">
+        Demande d'emprunt
+      </b-button>
+      <b-button v-else-if="loading" variant="outline-warning" disabled>
+        <b-spinner small v-if="loading" />
+        Valider la disponibilité
+      </b-button>
+      <b-button
+        v-else-if="!loanable.tested"
+        variant="outline-warning"
+        v-b-tooltip.hover
+        :title="
+          `Cliquez pour valider la disponibilité avec les paramètres ` + `d'emprunt sélectionnés`
+        "
+        :disabled="invalidDuration"
+        @click.stop.prevent="$emit('test')"
+      >
+        Valider la disponibilité
+      </b-button>
+      <b-button variant="outline-info" v-else disabled> Indisponible </b-button>
     </footer>
   </div>
 </template>
@@ -53,6 +73,13 @@ export default {
     },
   },
   computed: {
+    loading() {
+      return this.$store.state.loans.cancelToken;
+    },
+    invalidDuration() {
+      // Invalid if the duration of a loan is not greater than 0 minute.
+      return !(this.$store.state.loans.item.duration_in_minutes > 0);
+    },
     loanableTitle() {
       return this?.loanable?.name;
     },
