@@ -189,7 +189,7 @@ export default {
       max-height: none !important;
 
       // Main content of loanable details will scroll
-      overflow: hidden;
+      overflow: hidden !important;
     }
   }
 }

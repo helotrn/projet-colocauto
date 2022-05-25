@@ -111,6 +111,7 @@ export default {
     // At the moment, thumbnails are 256px x 160px -> 16rem x 10rem.
     height: 10rem;
     width: 100%;
+    overflow-y: hidden;
   }
   &__avatar {
     position: absolute;
