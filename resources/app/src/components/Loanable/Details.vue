@@ -5,7 +5,7 @@
       <user-avatar :user="ownerUser" class="loanable-details__avatar" />
     </header>
     <main class="loanable-details__content">
-      <h4>Jeep dans Petite-Patrie sur demande</h4>
+      <h4 class="loanable-details__loanable-title">{{ loanableTitle }}</h4>
       <div class="loanable-card__tags">
         <div>
           <span class="badge badge-secondary"
@@ -107,6 +107,10 @@ export default {
     height: 4rem;
     bottom: 0;
     right: 0;
+  }
+  /* Temporary element until we create sections. */
+  &__loanable-title {
+    text-align: center;
   }
 }
 </style>
