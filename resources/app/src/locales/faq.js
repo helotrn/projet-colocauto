@@ -114,7 +114,7 @@ export default {
           {
             title: "Si je n’ai pas de téléphone intelligent, qu’est-ce que je fais?",
             content:
-              "<p>Nous pourrons vous prêter une puce pour ouvrir les cadenas. En cas de bris ou de perte, elle doit nous être remboursée (30&nbsp;$). Contactez notre équipe, info@locomotion.app!</p>",
+              '<p>Contactez-nous via <a href="mailto:info@locomotion.app">info@locomotion.app</a>. Nous avons des alternatives à vous proposer !</p>',
           },
         ],
       },
@@ -172,17 +172,12 @@ export default {
       },
       {
         title: "Prêter mon auto",
-        count: "6",
+        count: "5",
         questions: [
           {
             title: "Combien je reçois lorsque je prête mon auto?",
             content:
               '<p>Consultez le document sur la <a href="http://bit.ly/locomotion-tarification" target="_blank">tarification LocoMotion</a>.</p>',
-          },
-          {
-            title: "Avant de remettre les clés, vérifier le prépaiement",
-            content:
-              "<p>Avant de remettre les clés de votre auto à votre voisin-e, vérifiez si l’emprunt est prépayé. Si ce n’est pas le cas, rappelez-le gentiment! Ça doit être un simple oubli et cette étape est nécessaire pour la suite :-)</p>",
           },
           {
             title: "Vérifier un prêt d'auto terminé (km, carburant, etc.)",
@@ -284,18 +279,12 @@ export default {
       },
       {
         title: "Les territoires LocoMotion",
-        count: "5",
+        count: "4",
         questions: [
           {
             title: "Pourquoi LocoMotion existe seulement dans certains quartiers?",
             content:
               "<p>LocoMotion n’est pas un service clé en main, c’est un projet citoyen en cours de développement. On le construit ensemble en se concentrant dans certains quartiers avant de l’adapter à d’autres réalités.</p>",
-          },
-          {
-            title: "Voisinage, quartier : quelle différence?",
-            content:
-              '<p class="text-center"><img src="/schema-quartiers.png"></p>' +
-              "<p>Le voisinage est dans le quartier, le quartier est dans l’arrondissement… &laquo;&nbsp;L’arbre est dans ses feuilles, Marilon Marilé!&nbsp;&raquo;</p><p>Être proche de ses voisin-e-s, c’est la base de LocoMotion. C’est pour cette raison qu’on privilégie la création de sous-groupes LocoMotion à l’échelle très très locale.</p><p>Un voisinage LocoMotion est créé par des gens qui habitent à 5-10 minutes à pied. Ça prend des personnes qui veulent s’impliquer dans le projet et le faire évoluer.</p><p>Comment favoriser les liens dans le voisinage? Est-ce qu’on veut ajouter à notre flotte collective un vélo électrique ou des remorques? Solon vous accompagne!</p><p>Le quartier est plus grand. Il réfère à un territoire urbain reconnu par la population et les institutions locales (par exemple, La Petite-Patrie) et peut contenir plusieurs voisinages. Participer à LocoMotion dans son quartier, c'est avoir accès à certains véhicules et c'est une porte d'entrée vers la création de son voisinage!</p><p>Les véhicules sont pour le voisinage ou le quartier? L'ensemble des participant-e-s du quartier peut profiter des véhicules collectifs (appartiennent à Solon). Les propriétaires d'un véhicule (auto, vélo-cargo ou autre) peuvent décider de le rendre disponible à leur voisinage ou au quartier au complet.</p>",
           },
           {
             title: "Est-ce que LocoMotion est disponible là où j'habite?",
