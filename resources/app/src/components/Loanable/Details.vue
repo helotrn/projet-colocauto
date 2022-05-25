@@ -1,7 +1,7 @@
 <template>
   <div class="loanable-details">
     <header class="loanable-details__header">
-      <img class="loanable-details-image" src="" alt="" />
+      <img class="loanable-details-image" :src="loanableImage" :alt="loanableTitle" />
       <user-avatar :user="ownerUser" class="loanable-details__avatar" />
     </header>
     <main class="loanable-details__content">
@@ -52,6 +52,12 @@ export default {
     },
   },
   computed: {
+    loanableTitle() {
+      return this?.loanable?.name;
+    },
+    loanableImage() {
+      return this?.loanable?.image?.sizes?.thumbnail;
+    },
     ownerUser() {
       return this?.loanable?.owner?.user;
     },
