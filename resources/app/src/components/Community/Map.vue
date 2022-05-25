@@ -27,7 +27,7 @@
         v-if="selectedLoanable && selectedLoanable.id === l.id"
         @closeclick="selectedLoanable = null"
       >
-        <loanable-details />
+        <loanable-details :loanable="l" />
       </gmap-info-window>
     </gmap-marker>
   </gmap-map>

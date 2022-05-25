@@ -2,11 +2,7 @@
   <div class="loanable-details">
     <header class="loanable-details__header">
       <img class="loanable-details-image" src="" alt="" />
-      <!-- <user-avatar class="loanable-details__avatar" /> -->
-      <div
-        class="loanable-details__avatar"
-        style="background-color: #16a59e; border-radius: 9999px"
-      ></div>
+      <user-avatar :user="ownerUser" class="loanable-details__avatar" />
     </header>
     <main class="loanable-details__content">
       <h4>Jeep dans Petite-Patrie sur demande</h4>
@@ -41,8 +37,25 @@
 </template>
 
 <script>
+import UserAvatar from "@/components/User/Avatar.vue";
+
 export default {
   name: "LoanableDetails",
+  components: {
+    UserAvatar,
+  },
+  props: {
+    loanable: {
+      type: Object,
+      required: false,
+      default: null,
+    },
+  },
+  computed: {
+    ownerUser() {
+      return this?.loanable?.owner?.user;
+    },
+  },
 };
 </script>
 
@@ -61,8 +74,6 @@ export default {
     position: absolute;
     bottom: 1rem;
     right: 1rem;
-    height: 4rem;
-    width: 4rem;
   }
   &__content {
     max-height: 12rem;
