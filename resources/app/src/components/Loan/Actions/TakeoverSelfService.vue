@@ -6,25 +6,32 @@
       class="loan-actions__header"
       v-b-toggle.loan-actions-takeover-self-service
     >
-      <h2>
-        <svg-waiting v-if="action.status === 'in_process' && !loanIsCanceled" />
-        <svg-check v-else-if="action.status === 'completed'" />
-        <svg-danger v-else-if="action.status === 'canceled' || loanIsCanceled" />
+      <b-row>
+        <b-col>
+          <h2>
+            <svg-waiting v-if="action.status === 'in_process' && !loanIsCanceled" />
+            <svg-check v-else-if="action.status === 'completed'" />
+            <svg-danger v-else-if="action.status === 'canceled' || loanIsCanceled" />
 
-        Informations avant de partir
-      </h2>
-
-      <!-- Canceled loans: current step remains in-process. -->
-      <span v-if="action.status === 'in_process' && loanIsCanceled">
-        Emprunt annulé &bull; {{ item.canceled_at | datetime }}
-      </span>
-      <span v-else-if="action.status === 'in_process' && !loanIsCanceled"> En attente </span>
-      <span v-else-if="action.status === 'completed'">
-        Complété &bull; {{ action.executed_at | datetime }}
-      </span>
-      <span v-else-if="action.status === 'canceled'">
-        Annulé &bull; {{ action.executed_at | datetime }}
-      </span>
+            Informations avant de partir
+          </h2>
+        </b-col>
+      </b-row>
+      <b-row>
+        <b-col>
+          <!-- Canceled loans: current step remains in-process. -->
+          <span v-if="action.status === 'in_process' && loanIsCanceled">
+            Emprunt annulé &bull; {{ item.canceled_at | datetime }}
+          </span>
+          <span v-else-if="action.status === 'in_process' && !loanIsCanceled"> En attente </span>
+          <span v-else-if="action.status === 'completed'">
+            Complété &bull; {{ action.executed_at | datetime }}
+          </span>
+          <span v-else-if="action.status === 'canceled'">
+            Annulé &bull; {{ action.executed_at | datetime }}
+          </span>
+        </b-col>
+      </b-row>
     </b-card-header>
 
     <b-card-body>
@@ -34,72 +41,39 @@
         accordion="loan-actions"
         :visible="open"
       >
-        <b-row v-if="action.status !== 'in_process' || !loanIsCanceled">
-          <b-col>
-            <loan-covid-collapsible-section />
-          </b-col>
-        </b-row>
-
         <div v-if="action.status === 'in_process' && loanIsCanceled">
-          <p>L'emprunt a été annulé. Cette étape ne peut pas être complétée.</p>
+          <b-row>
+            <b-col>
+              <b-alert show variant="danger">
+                <p>L'emprunt a été annulé. Cette étape ne peut pas être complétée.</p>
+              </b-alert>
+            </b-col>
+          </b-row>
         </div>
         <div v-else-if="item.loanable.has_padlock">
           <b-row>
             <b-col>
-              <b-alert show variant="danger">
+              <b-alert show variant="info">
                 <div class="alert-heading"><h4>À savoir</h4></div>
 
                 <div>
                   <p>
-                    Le cadenas du véhicule sera automatiquement associé à votre application Noke Pro
-                    pour la durée de votre réservation. Il peut y avoir un délai de quelques minutes
-                    entre la réservation et la synchronisation de vos accès aux cadenas.
+                    Assurez-vous d'aller chercher votre attache-remorque avant votre premier emprunt.
+                    <a href="https://mailchi.mp/solon-collectif/locomotion-comment-ca-marche">Voir le guide de départ</a>
                   </p>
-
-                  <p class="mb-0">Merci de le prendre en compte lors de votre réservation.</p>
+                  <p>
+                    Il faut attendre au minimum 5 minutes après avoir fait la réservation pour pouvoir débarrer le cadenas intelligent sur le véhicule!
+                  </p>
+                  <p>
+                    Pour garder l'accès au cadenas, prolongez votre emprunt avec le bouton «Signaler un retard».
+                  </p>
                 </div>
-              </b-alert>
-
-              <b-alert show variant="info">
-                <p>Vous avez un problème avec le cadenas?</p>
-                <p>
-                  Contactez-nous entre 9h et 20h au 438-476-3343<br />
-                  (cette ligne est dédiée uniquement aux problèmes liés aux cadenas)
-                </p>
               </b-alert>
             </b-col>
           </b-row>
 
           <b-row>
             <b-col>
-              <h4>Et après ?</h4>
-
-              <p>
-                Après utilisation du véhicule, merci de venir clôturer votre emprunt sur la
-                plateforme via la section suivante &laquo;&nbsp;Retour&nbsp;&raquo;.
-              </p>
-
-              <p>
-                Si vous avez du retard, utilisez le bouton &laquo;&nbsp;Signaler un
-                retard&nbsp;&raquo; sur la plateforme.
-              </p>
-
-              <p>
-                Prenez soin
-                <span v-if="item.loanable.type === 'bike'">du vélo.</span>
-                <span v-else-if="item.loanable.type === 'trailer'">de la remorque.</span>
-                <span v-else-if="item.loanable.type === 'car'">de la voiture.</span>
-                <span v-else>du véhicule.</span>
-                <br />
-                Si vous identifiez un problème, prenez une photo et/ou notez le problème, vous
-                pourrez nous en aviser à votre retour.
-              </p>
-
-              <p>
-                En cas de problème, contactez
-                <a href="mailto:info@locomotion.app">info@locomotion.app</a>
-              </p>
-
               <p class="text-center"><strong>Bonne route!</strong></p>
             </b-col>
           </b-row>
@@ -115,8 +89,9 @@
                 size="sm"
                 variant="success"
               >
-                J'ai bien lu ces infos!
+                Poursuivre l'emprunt
               </b-button>
+              <!-- démarrer l'emprunt, poursuivre l'emprunt, compléter cette étape, etc. -->
             </b-col>
           </b-row>
         </div>
@@ -132,16 +107,11 @@
 </template>
 
 <script>
-import LoanCovidCollapsibleSection from "@/components/Loan/CovidCollapsibleSection.vue";
-
 import LoanActionsMixin from "@/mixins/LoanActionsMixin";
 
 export default {
   name: "LoanActionsTakeoverSelfService",
   mixins: [LoanActionsMixin],
-  components: {
-    LoanCovidCollapsibleSection,
-  },
 };
 </script>
 

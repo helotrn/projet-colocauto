@@ -6,25 +6,32 @@
       class="loan-actions__header"
       v-b-toggle.loan-actions-handover-self-service
     >
-      <h2>
-        <svg-waiting v-if="action.status === 'in_process' && !loanIsCanceled" />
-        <svg-check v-else-if="action.status === 'completed'" />
-        <svg-danger v-else-if="action.status === 'canceled' || loanIsCanceled" />
+      <b-row>
+        <b-col>
+          <h2>
+            <svg-waiting v-if="action.status === 'in_process' && !loanIsCanceled" />
+            <svg-check v-else-if="action.status === 'completed'" />
+            <svg-danger v-else-if="action.status === 'canceled' || loanIsCanceled" />
 
-        Retour
-      </h2>
-
-      <!-- Canceled loans: current step remains in-process. -->
-      <span v-if="action.status === 'in_process' && loanIsCanceled">
-        Emprunt annulé &bull; {{ item.canceled_at | datetime }}
-      </span>
-      <span v-else-if="action.status == 'in_process' && !loanIsCanceled"> En attente </span>
-      <span v-else-if="action.status === 'completed'">
-        Complété &bull; {{ action.executed_at | datetime }}
-      </span>
-      <span v-else-if="action.status === 'canceled'">
-        Contesté &bull; {{ action.executed_at | datetime }}
-      </span>
+            Retour
+          </h2>
+        </b-col>
+      </b-row>
+      <b-row>
+        <b-col>
+          <!-- Canceled loans: current step remains in-process. -->
+          <span v-if="action.status === 'in_process' && loanIsCanceled">
+            Emprunt annulé &bull; {{ item.canceled_at | datetime }}
+          </span>
+          <span v-else-if="action.status == 'in_process' && !loanIsCanceled"> En attente </span>
+          <span v-else-if="action.status === 'completed'">
+            Complété &bull; {{ action.executed_at | datetime }}
+          </span>
+          <span v-else-if="action.status === 'canceled'">
+            Contesté &bull; {{ action.executed_at | datetime }}
+          </span>
+        </b-col>
+      </b-row>
     </b-card-header>
 
     <b-card-body>
@@ -35,56 +42,17 @@
         :visible="open"
       >
         <div v-if="action.status === 'in_process' && loanIsCanceled">
-          <p>L'emprunt a été annulé. Cette étape ne peut pas être complétée.</p>
+          <b-alert show variant="danger">
+            <p>L'emprunt a été annulé. Cette étape ne peut pas être complétée.</p>
+          </b-alert>
+        </div>
+        <div v-else-if="action.status === 'completed'">
+          <b-alert show variant="success">
+            <p>L'emprunt s'est clôturé avec succès!</p>
+          </b-alert>
         </div>
         <div v-else-if="item.loanable.has_padlock">
-          <b-alert show variant="danger">
-            <div class="alert-heading"><h4>Attention</h4></div>
-
-            <div>
-              <p class="mb-0">
-                En complétant cette étape, vous signalez que vous avez bien remis le véhicule à son
-                emplacement. Vous ne pourrez plus ouvrir le cadenas NOKE associé au véhicule.
-              </p>
-            </div>
-          </b-alert>
-
-          <b-alert show variant="info">
-            <p>Vous avez un problème avec le cadenas?</p>
-            <p>
-              Contactez-nous entre 9h et 20h au 438-476-3343<br />
-              (cette ligne est dédiée uniquement aux problèmes liés aux cadenas)
-            </p>
-          </b-alert>
-
-          <b-alert show variant="warning">
-            <div class="alert-heading"><h4>En cas de retard</h4></div>
-
-            <div>
-              <p class="mb-0">
-                Si vous avez un retard, utilisez le bouton &laquo;&nbsp;Signaler un
-                retard&nbsp;&raquo; sur la plateforme ou
-                <a @click.prevent="$emit('extension')" href="#">cliquez ici</a>.
-              </p>
-            </div>
-          </b-alert>
-
           <div class="loan-actions-handover-self-service__text">
-            <p>
-              Vous avez ramené le véhicule? Alors, il ne vous reste plus qu'à clôturer l'emprunt en
-              remplissant cette étape.
-            </p>
-
-            <p>
-              Un souci avec un véhicule? Décrivez le problème et/ou chargez la photo ci-dessous.
-            </p>
-
-            <p>
-              D'autres idées pour Locomotion? Contactez-nous depuis la
-              <a href="/faq">page de contact</a>.
-            </p>
-
-            <p class="text-center"><strong>Merci et à très bientôt !</strong></p>
 
             <validation-observer ref="observer" v-slot="{ passes }">
               <b-form
@@ -92,33 +60,7 @@
                 class="loan-actions-handover__form"
                 @submit.stop.prevent="passes(completeAction)"
               >
-                <b-row
-                  v-if="!action.executed_at && !loanIsCanceled"
-                  class="loan-actions-handover__form__image"
-                >
-                  <b-col lg="6">
-                    <forms-image-uploader
-                      label="Photo du véhicule"
-                      field="image"
-                      v-model="action.image"
-                    />
-                  </b-col>
-
-                  <b-col lg="6">
-                    <forms-validated-input
-                      v-if="userRoles.includes('borrower')"
-                      id="comments_by_borrower"
-                      name="comments_by_borrower"
-                      type="textarea"
-                      :rows="6"
-                      :disabled="!!action.commented_by_borrower_at"
-                      label="Laissez un commentaire (facultatif)"
-                      placeholder="Commentaire sur l'emprunt"
-                      v-model="action.comments_by_borrower"
-                    />
-                  </b-col>
-                </b-row>
-                <b-row v-else class="loan-actions-handover__form__image">
+                <b-row class="loan-actions-handover__form__image">
                   <b-col v-if="action.image">
                     <p>
                       <a href="#" v-b-modal="'handover-self-service-image'">
@@ -188,22 +130,9 @@
                     :disabled="!hasEnoughBalance || actionLoading"
                     @click="completeAction"
                   >
-                    Mon emprunt est terminé!
+                    Compléter l'emprunt
                   </b-button>
                 </div>
-
-                <b-row
-                  class="loan-actions__alert"
-                  v-if="!action.executed_at && !loanIsCanceled && hasEnoughBalance"
-                >
-                  <b-col>
-                    <b-alert variant="warning" show>
-                      Les informations de l'emprunt peuvent être modifiées jusqu'à 48h après sa
-                      conclusion. À partir de ce moment, le coût de l'emprunt sera validé avec les
-                      détails ci-dessus.
-                    </b-alert>
-                  </b-col>
-                </b-row>
               </b-form>
             </validation-observer>
           </div>
