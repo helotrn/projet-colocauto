@@ -36,7 +36,7 @@
             <b-jumbotron
               bg-variant="light"
               class="no-communities-jumbotron"
-              header="LocoMotion n'existe pas encore dans votre quartier."
+              header="LocoMotion n'existe pas encore dans votre quartier"
               lead="Mais on y travaille! En attendant, devenez acteur de votre quartier et aidez LocoMotion à améliorer votre mobilité et celle de vos voisin-e-s."
             >
               <b-button variant="primary" href="https://bit.ly/locoquartier" target="_blank"
