@@ -69,8 +69,8 @@
                     pouvoir débarrer le cadenas intelligent sur le véhicule!
                   </p>
                   <p>
-                    Pour garder l'accès au cadenas, prolongez votre emprunt avec le bouton «&nbsp;Signaler
-                    un retard&nbsp;».
+                    Pour garder l'accès au cadenas, prolongez votre emprunt avec le bouton
+                    «&nbsp;Signaler un retard&nbsp;».
                   </p>
                 </div>
               </b-alert>
