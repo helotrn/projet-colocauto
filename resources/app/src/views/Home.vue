@@ -38,10 +38,6 @@
       </b-col>
     </section>
 
-    <section>
-      <dashboard-covid-section />
-    </section>
-
     <section class="page__section page__section--what-is-it">
       <b-container>
         <h2 class="page__section__title mb-4">C’est quoi<br />LocoMotion?</h2>
@@ -207,7 +203,6 @@ fr:
 </i18n>
 
 <script>
-import DashboardCovidSection from "@/components/Dashboard/CovidSection.vue";
 import MainFaq from "@/components/Misc/MainFaq.vue";
 import PartnersSection from "@/components/Misc/PartnersSection.vue";
 
@@ -237,7 +232,6 @@ export default {
   name: "Home",
   mixins: [DataRouteGuards, UserMixin],
   components: {
-    DashboardCovidSection,
     MainFaq,
     PartnersSection,
     "svg-biking": Biking,

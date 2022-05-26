@@ -34,12 +34,6 @@
         accordion="loan-actions"
         :visible="open"
       >
-        <b-row v-if="action.status !== 'in_process' || !loanIsCanceled">
-          <b-col>
-            <loan-covid-collapsible-section />
-          </b-col>
-        </b-row>
-
         <div v-if="action.status === 'in_process' && loanIsCanceled">
           <p>L'emprunt a été annulé. Cette étape ne peut pas être complétée.</p>
         </div>
@@ -132,16 +126,11 @@
 </template>
 
 <script>
-import LoanCovidCollapsibleSection from "@/components/Loan/CovidCollapsibleSection.vue";
-
 import LoanActionsMixin from "@/mixins/LoanActionsMixin";
 
 export default {
   name: "LoanActionsTakeoverSelfService",
   mixins: [LoanActionsMixin],
-  components: {
-    LoanCovidCollapsibleSection,
-  },
 };
 </script>
 

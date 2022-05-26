@@ -49,39 +49,6 @@
         accordion="loan-actions"
         :visible="open"
       >
-        <b-row>
-          <b-col>
-            <b-jumbotron
-              bg-variant="warning"
-              header="COVID-19 | Informations"
-              lead="Vous êtes malade ou vous revenez de voyage? N'utilisez pas LocoMotion"
-            >
-              <dl>
-                <dt>Pour les propriétaires d'auto</dt>
-                <dd>
-                  Si vous souhaitez retirer temporairement votre auto, pensez à mettre à jour ses
-                  disponibilités.
-                </dd>
-
-                <dt>Pour tout le monde</dt>
-                <dd>
-                  Avant et après l’utilisation d’un vélo, d'une remorque ou d'une auto,
-                  <strong>lavez vos mains</strong> à l’eau courante tiède et au savon pendant au
-                  moins 20 secondes ou utilisez un désinfectant à base d’alcool.<br />
-                  Pendant un trajet à vélo, respectez les 2 mètres de distance.
-                </dd>
-
-                <dt>Gardez les véhicules propres</dt>
-                <dd>
-                  Nettoyez le volant, le guidon ou toutes autres surfaces de contact avec un linge
-                  et du désinfectant. Évitez plus que jamais de laisser tout déchet dans les autos
-                  et les remorques (mouchoir, tasse, emballage, etc…).
-                </dd>
-              </dl>
-            </b-jumbotron>
-          </b-col>
-        </b-row>
-
         <div
           v-if="(action.status === 'in_process' || action.status === 'canceled') && loanIsCanceled"
         >
