@@ -58,14 +58,19 @@
 
                 <div>
                   <p>
-                    Assurez-vous d'aller chercher votre attache-remorque avant votre premier emprunt.
-                    <a href="https://mailchi.mp/solon-collectif/locomotion-comment-ca-marche">Voir le guide de départ</a>
+                    Assurez-vous d'aller chercher votre attache-remorque avant votre premier
+                    emprunt.
+                    <a href="https://mailchi.mp/solon-collectif/locomotion-comment-ca-marche"
+                      >Voir le guide de départ</a
+                    >
                   </p>
                   <p>
-                    Il faut attendre au minimum 5 minutes après avoir fait la réservation pour pouvoir débarrer le cadenas intelligent sur le véhicule!
+                    Il faut attendre au minimum 5 minutes après avoir fait la réservation pour
+                    pouvoir débarrer le cadenas intelligent sur le véhicule!
                   </p>
                   <p>
-                    Pour garder l'accès au cadenas, prolongez votre emprunt avec le bouton «Signaler un retard».
+                    Pour garder l'accès au cadenas, prolongez votre emprunt avec le bouton «Signaler
+                    un retard».
                   </p>
                 </div>
               </b-alert>
@@ -91,7 +96,6 @@
               >
                 Poursuivre l'emprunt
               </b-button>
-              <!-- démarrer l'emprunt, poursuivre l'emprunt, compléter cette étape, etc. -->
             </b-col>
           </b-row>
         </div>

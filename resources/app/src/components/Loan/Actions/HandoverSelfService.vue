@@ -53,7 +53,6 @@
         </div>
         <div v-else-if="item.loanable.has_padlock">
           <div class="loan-actions-handover-self-service__text">
-
             <validation-observer ref="observer" v-slot="{ passes }">
               <b-form
                 :novalidate="true"
