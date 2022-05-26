@@ -4,7 +4,7 @@
     v-if="!!item.id && item.loan_status === 'in_process' && !loanIsCanceled"
   >
     <b-button
-      class="ml-3 mb-3"
+      class="mr-0 ml-3 mb-3"
       variant="danger"
       :disabled="hasReachedStep('takeover') || loanIsCanceled"
       @click="$emit('cancel')"
@@ -12,17 +12,17 @@
       Annuler la réservation
     </b-button>
     <b-button
-      class="ml-3 mb-3"
+      v-if="isAdmin || isGlobalAdmin"
+      class="mr-0 ml-3 mb-3"
       variant="danger"
       :disabled="!loanIsCanceled"
       @click="$emit('resume')"
-      v-if="isAdmin || isGlobalAdmin"
     >
       Réactiver la réservation
     </b-button>
     <b-button
       v-if="!userIsOwner"
-      class="ml-3 mb-3"
+      class="mr-0 ml-3 mb-3"
       variant="warning"
       :disabled="!hasReachedStep('takeover') || hasReachedStep('payment')"
       @click="$emit('extension')"
@@ -31,7 +31,7 @@
     </b-button>
     <b-button
       v-if="!userIsOwner"
-      class="ml-3 mb-3"
+      class="mr-0 ml-3 mb-3"
       variant="warning"
       :disabled="!hasReachedStep('takeover')"
       @click="$emit('incident')"
