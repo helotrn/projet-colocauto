@@ -45,7 +45,7 @@ class Loan extends BaseModel
         "borrower.user.full_name" => "text",
         "incidents.status" => ["in_process", "completed", "canceled"],
         "takeover.status" => ["in_process", "completed", "canceled"],
-        "loan_status" => ["in_process", "completed", "canceled"],
+        "status" => ["in_process", "completed", "canceled"],
         "current_step" => [
             "intention",
             "pre_payment",
