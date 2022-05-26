@@ -94,7 +94,7 @@
                 size="sm"
                 variant="success"
               >
-                Poursuivre l'emprunt
+                Démarrer l'emprunt
               </b-button>
             </b-col>
           </b-row>

@@ -129,7 +129,7 @@
                     :disabled="!hasEnoughBalance || actionLoading"
                     @click="completeAction"
                   >
-                    Compléter l'emprunt
+                    Terminer l'emprunt
                   </b-button>
                 </div>
               </b-form>
