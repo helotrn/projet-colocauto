@@ -27,9 +27,7 @@
         v-if="selectedLoanable && selectedLoanable.id === l.id"
         @closeclick="selectedLoanable = null"
       >
-        <div class="info-box-content" style="width: 270px">
-          <loanable-card v-bind="l" @select="$emit('select', l)" @test="$emit('test', l)" />
-        </div>
+        <loanable-details :loanable="l" @select="$emit('select', l)" @test="$emit('test', l)" />
       </gmap-info-window>
     </gmap-marker>
   </gmap-map>
@@ -38,12 +36,12 @@
 <script>
 import { gmapApi } from "vue2-google-maps";
 
-import LoanableCard from "@/components/Loanable/Card.vue";
+import LoanableDetails from "@/components/Loanable/Details.vue";
 
 export default {
   name: "CommunityMap",
   components: {
-    LoanableCard,
+    LoanableDetails,
   },
   mounted() {
     setTimeout(() => {
@@ -183,8 +181,16 @@ export default {
     overflow-x: hidden;
   }
 
-  .loanable-card.card {
-    padding: 0;
+  // Adapt Google InfoWindow to the loanable details.
+  .gm-style-iw-c {
+    padding: 0 !important;
+
+    .gm-style-iw-d {
+      max-height: none !important;
+
+      // Main content of loanable details will scroll
+      overflow: hidden !important;
+    }
   }
 }
 </style>
