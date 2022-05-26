@@ -80,9 +80,6 @@ Vue.component("layout-header", LayoutHeader);
 Vue.component("layout-loading", LayoutLoading);
 Vue.component("layout-page", LayoutPage);
 
-import LoanableDetails from "./components/Loanable/Details.vue";
-Vue.component("loanable-details", LoanableDetails);
-
 // Install VeeValidate rules and localization
 Object.keys(rules).forEach((rule) => {
   extend(rule, rules[rule]);

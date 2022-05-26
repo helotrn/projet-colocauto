@@ -36,12 +36,12 @@
 <script>
 import { gmapApi } from "vue2-google-maps";
 
-import LoanableCard from "@/components/Loanable/Card.vue";
+import LoanableDetails from "@/components/Loanable/Details.vue";
 
 export default {
   name: "CommunityMap",
   components: {
-    LoanableCard,
+    LoanableDetails,
   },
   mounted() {
     setTimeout(() => {
