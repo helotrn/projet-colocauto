@@ -1,4 +1,5 @@
 import Vue from "vue";
+import { extractErrors } from "@/helpers";
 import RestModule from "../RestModule";
 
 export default new RestModule(
@@ -167,6 +168,18 @@ export default new RestModule(
                   title: "Erreur d'authentification",
                   variant: "danger",
                   type: "password",
+                },
+                { root: true }
+              );
+              return;
+            case 422:
+              commit(
+                "addNotification",
+                {
+                  content: extractErrors(e.response.data).join(", "),
+                  title: "Erreur de changement",
+                  variant: "danger",
+                  type: "email",
                 },
                 { root: true }
               );

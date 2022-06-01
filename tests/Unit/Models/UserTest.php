@@ -161,6 +161,35 @@ class UserTest extends TestCase
         $this->assertEquals("test@locomotion.app", array_get($json, "email"));
     }
 
+    public function testUpdateEmailExistingEmail()
+    {
+        $newUser = $this->createTestUser();
+
+        $otherUser = factory(User::class)->create([
+            "email" => "used@locomotion.app",
+            "password" => Hash::make("locomotion"),
+            "role" => null,
+        ]);
+
+        $this->actingAs($newUser);
+
+        $this->assertEquals("test@locomotion.app", $newUser->email);
+        $this->assertEquals("used@locomotion.app", $otherUser->email);
+
+        $data = [
+            "email" => "used@locomotion.app",
+            "password" => "locomotion",
+        ];
+
+        $response = $this->json(
+            "POST",
+            "/api/v1/users/$newUser->id/email",
+            $data
+        );
+
+        $response->assertStatus(422);
+    }
+
     public function testUpdatePasswordSuccess()
     {
         $newUser = $this->createTestUser();

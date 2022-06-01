@@ -8,7 +8,7 @@
       >
         <forms-validated-input
           mode="lazy"
-          name="current_password"
+          name="current_password_for_email_change"
           :label="$t('current_password')"
           :rules="{ required: true }"
           type="password"

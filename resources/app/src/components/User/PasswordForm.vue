@@ -9,7 +9,7 @@
         <forms-validated-input
           v-if="!isAdmin"
           mode="lazy"
-          name="current_password"
+          name="current_password_for_password_change"
           :label="$t('current_password')"
           :rules="{ required: !isAdmin || !!newPassword }"
           type="password"
