@@ -7,6 +7,7 @@ use App\Models\Borrower;
 use App\Models\Extension;
 use App\Models\Loan;
 use App\Models\Owner;
+use Carbon\Carbon;
 use Illuminate\Support\Str;
 use Tests\TestCase;
 
@@ -30,6 +31,150 @@ class ExtensionTest extends TestCase
                 "borrower_id" => $borrower->id,
                 "duration_in_minutes" => 20,
             ]);
+    }
+
+    public function testComplete_Now()
+    {
+        $loan = factory(Loan::class)->create();
+        $extension = factory(Extension::class)->make([
+            "status" => "in_process",
+        ]);
+        $loan->extensions()->save($extension);
+
+        $this->assertFalse($extension->isCompleted());
+
+        $extension->complete();
+
+        $this->assertTrue($extension->isCompleted());
+
+        $this->assertNotNull($extension->executed_at);
+        $this->assertEquals("completed", $extension->status);
+    }
+
+    public function testComplete_At()
+    {
+        $loan = factory(Loan::class)->create();
+        $extension = factory(Extension::class)->make([
+            "status" => "in_process",
+        ]);
+        $loan->extensions()->save($extension);
+
+        $this->assertFalse($extension->isCompleted());
+
+        $extension->complete(new Carbon("2022-04-16 12:34:56"));
+
+        $this->assertTrue($extension->isCompleted());
+
+        $this->assertNotNull($extension->executed_at);
+        $this->assertEquals("completed", $extension->status);
+        $this->assertEquals("2022-04-16 12:34:56", $extension->executed_at);
+    }
+
+    public function testIsCompleted()
+    {
+        $loan = factory(Loan::class)->create();
+        $extension = factory(Extension::class)->make([
+            "status" => "completed",
+        ]);
+        $loan->extensions()->save($extension);
+
+        $this->assertTrue($extension->isCompleted());
+    }
+
+    public function testReject_Now()
+    {
+        $loan = factory(Loan::class)->create();
+        $extension = factory(Extension::class)->make([
+            "status" => "in_process",
+        ]);
+        $loan->extensions()->save($extension);
+
+        $this->assertFalse($extension->isCanceled());
+
+        $extension->reject();
+
+        $this->assertTrue($extension->isRejected());
+
+        $this->assertNotNull($extension->executed_at);
+        $this->assertEquals("rejected", $extension->status);
+    }
+
+    public function testReject_At()
+    {
+        $loan = factory(Loan::class)->create();
+        $extension = factory(Extension::class)->make([
+            "status" => "in_process",
+        ]);
+        $loan->extensions()->save($extension);
+
+        $this->assertFalse($extension->isCanceled());
+
+        $extension->reject(new Carbon("2022-04-16 12:34:56"));
+
+        $this->assertTrue($extension->isRejected());
+
+        $this->assertNotNull($extension->executed_at);
+        $this->assertEquals("rejected", $extension->status);
+        $this->assertEquals("2022-04-16 12:34:56", $extension->executed_at);
+    }
+
+    public function testIsRejected()
+    {
+        $loan = factory(Loan::class)->create();
+        $extension = factory(Extension::class)->make([
+            "status" => "rejected",
+        ]);
+        $loan->extensions()->save($extension);
+
+        $this->assertTrue($extension->isRejected());
+    }
+
+    public function testCancel_Now()
+    {
+        $loan = factory(Loan::class)->create();
+        $extension = factory(Extension::class)->make([
+            "status" => "in_process",
+        ]);
+        $loan->extensions()->save($extension);
+
+        $this->assertFalse($extension->isCanceled());
+
+        $extension->cancel();
+
+        $this->assertTrue($extension->isCanceled());
+
+        $this->assertNotNull($extension->executed_at);
+        $this->assertEquals("canceled", $extension->status);
+    }
+
+    public function testCancel_At()
+    {
+        $loan = factory(Loan::class)->create();
+        $extension = factory(Extension::class)->make([
+            "status" => "in_process",
+        ]);
+        $loan->extensions()->save($extension);
+
+        $this->assertFalse($extension->isCanceled());
+
+        $extension->cancel(new Carbon("2022-04-16 12:34:56"));
+
+        $this->assertTrue($extension->isCanceled());
+
+        $this->assertNotNull($extension->executed_at);
+        $this->assertEquals("canceled", $extension->status);
+        $this->assertEquals("2022-04-16 12:34:56", $extension->executed_at);
+    }
+
+    public function testIsCanceled()
+    {
+        $loan = factory(Loan::class)->create();
+        $extension = factory(Extension::class)->make([
+            "status" => "canceled",
+        ]);
+        $loan->extensions()->save($extension);
+
+        $this->assertTrue($extension->isCanceled());
     }
 
     public function testExtensionMakeLoanableUnavailable()
