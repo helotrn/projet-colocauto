@@ -8,7 +8,6 @@ import VueScrollTo from "vue-scrollto";
 import VueTheMask from "vue-the-mask";
 import * as Sentry from "@sentry/browser";
 import * as Integrations from "@sentry/integrations";
-import VueMatomo from "vue-matomo";
 
 import { ValidationObserver, ValidationProvider, extend, localize } from "vee-validate";
 import { strtotime } from "locutus/php/datetime";
@@ -54,26 +53,6 @@ Vue.use(VueGoogleMaps, {
     installComponents: true,
   },
 });
-
-if (process.env.VUE_APP_MATOMO_HOST && process.env.VUE_APP_MATOMO_SITEID) {
-  Vue.use(VueMatomo, {
-    host: process.env.VUE_APP_MATOMO_HOST,
-    siteId: process.env.VUE_APP_MATOMO_SITEID,
-    trackerFileName: "matomo",
-    router,
-    enableLinkTracking: true,
-    requireConsent: false,
-    trackInitialView: true,
-    disableCookies: false,
-    enableHeartBeatTimer: false,
-    heartBeatTimerInterval: 15,
-    debug: false,
-    userId: undefined,
-    cookieDomain: undefined,
-    domains: undefined,
-    preInitActions: [],
-  });
-}
 
 Vue.component("layout-footer", LayoutFooter);
 Vue.component("layout-header", LayoutHeader);

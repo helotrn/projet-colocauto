@@ -55,9 +55,3 @@ variables:
     -
         key: VUE_APP_STRIPE_KEY
         value: pk_test_4lBQS366h37TcBC9IAvCaDEL00K5H3B8LH
-    -
-        key: VUE_APP_MATOMO_HOST
-        value: ''
-    -
-        key: VUE_APP_MATOMO_SITEID
-        value: ''
