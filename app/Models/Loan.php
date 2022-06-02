@@ -14,6 +14,7 @@ use App\Models\Takeover;
 use App\Transformers\LoanTransformer;
 use App\Casts\TimestampWithTimezoneCast;
 use Carbon\Carbon;
+use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -836,5 +837,40 @@ SQL
         }
 
         return "in_process";
+    }
+
+    /*
+      This function is used to compute the loan.actual_return_at attribute and
+      should be the single source of truth.
+
+      Acounts for loan duration_in_minutes, accepted extensions and early payments.
+*/
+    public function getActualReturnAtFromActions()
+    {
+        $departureAt = CarbonImmutable::parse($this->departure_at);
+
+        $durationMinutes = $this->duration_in_minutes;
+
+        // Account for the longest accepted extension
+        foreach ($this->extensions as $extension) {
+            if ("extension" == $extension->type && $extension->isCompleted()) {
+                if ($extension->new_duration > $durationMinutes) {
+                    $durationMinutes = $extension->new_duration;
+                }
+            }
+        }
+
+        $returnAt = $departureAt->addMinutes($durationMinutes);
+
+        // Account for early payment.
+        $payment = $this->payment;
+        if ($payment && $payment->isCompleted()) {
+            $paymentTime = CarbonImmutable::parse($payment->executed_at);
+            if ($paymentTime->lessThan($returnAt)) {
+                $returnAt = $paymentTime;
+            }
+        }
+
+        return $returnAt;
     }
 }
