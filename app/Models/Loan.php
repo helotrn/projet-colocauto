@@ -90,18 +90,14 @@ class Loan extends BaseModel
             });
         }
 
-        // Update loan.status if loan.canceled_at has changed.
-        self::saved(function ($loan) {
+        // Update loan.status before saving
+        self::saving(function ($loan) {
             $initialStatus = $loan->status;
 
             if ($loan->canceled_at && "canceled" != $loan->status) {
                 $loan->status = "canceled";
             } elseif (!$loan->canceled_at) {
                 $loan->status = $loan->getStatusFromActions();
-            }
-
-            if ($loan->status != $initialStatus) {
-                $loan->save();
             }
         });
     }
