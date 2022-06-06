@@ -78,15 +78,35 @@ class Loan extends BaseModel
             as $class
         ) {
             $class::saved(function ($model) {
+                $changed = false;
+
                 $loan = $model->loan;
-                $loan->status = $loan->getStatusFromActions();
-                $loan->save();
+
+                $newStatus = $loan->getStatusFromActions();
+                if ($newStatus != $loan->status) {
+                    $loan->status = $newStatus;
+                    $changed = true;
+                }
+
+                if ($changed) {
+                    $loan->save();
+                }
             });
 
             $class::deleted(function ($model) {
+                $changed = false;
+
                 $loan = $model->loan;
-                $loan->status = $loan->getStatusFromActions();
-                $loan->save();
+
+                $newStatus = $loan->getStatusFromActions();
+                if ($newStatus != $loan->status) {
+                    $loan->status = $newStatus;
+                    $changed = true;
+                }
+
+                if ($changed) {
+                    $loan->save();
+                }
             });
         }
 
