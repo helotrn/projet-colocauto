@@ -64,7 +64,7 @@ class Loan extends BaseModel
     {
         parent::boot();
 
-        // Update loan.status whenever an action is changed.
+        // Update loan.status and loan.actual_return_at whenever an action is changed.
         foreach (
             [
                 \App\Models\Extension::class,
@@ -88,6 +88,17 @@ class Loan extends BaseModel
                     $changed = true;
                 }
 
+                // Work with Carbon objects.
+                $curReturnAt = $loan->actual_return_at
+                    ? Carbon::parse($loan->actual_return_at)
+                    : null;
+                $newReturnAt = $loan->getActualReturnAtFromActions();
+
+                if (!$curReturnAt || !$newReturnAt->equalTo($curReturnAt)) {
+                    $loan->actual_return_at = $newReturnAt;
+                    $changed = true;
+                }
+
                 if ($changed) {
                     $loan->save();
                 }
@@ -104,6 +115,17 @@ class Loan extends BaseModel
                     $changed = true;
                 }
 
+                // Work with Carbon objects.
+                $curReturnAt = $loan->actual_return_at
+                    ? Carbon::parse($loan->actual_return_at)
+                    : null;
+                $newReturnAt = $loan->getActualReturnAtFromActions();
+
+                if (!$curReturnAt || !$newReturnAt->equalTo($curReturnAt)) {
+                    $loan->actual_return_at = $newReturnAt;
+                    $changed = true;
+                }
+
                 if ($changed) {
                     $loan->save();
                 }
@@ -112,8 +134,6 @@ class Loan extends BaseModel
 
         // Update loan.status before saving
         self::saving(function ($loan) {
-            $initialStatus = $loan->status;
-
             if ($loan->canceled_at && "canceled" != $loan->status) {
                 $loan->status = "canceled";
             } elseif (!$loan->canceled_at) {
