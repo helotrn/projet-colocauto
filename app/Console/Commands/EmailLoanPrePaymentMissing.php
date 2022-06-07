@@ -64,10 +64,9 @@ class EmailLoanPrePaymentMissing extends Command
             ->where("meta->sent_loan_pre_payment_missing_email", null);
 
         $columnDefinitions = Loan::getColumnsDefinition();
-        $query = $columnDefinitions["loan_status"]($query);
         $query = $columnDefinitions["*"]($query);
 
-        $query->where($columnDefinitions["loan_status"](), "=", "in_process");
+        $query->where("status", "=", "in_process");
 
         return $query;
     }
