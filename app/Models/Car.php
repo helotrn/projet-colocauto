@@ -20,7 +20,7 @@ class Car extends Loanable
         "papers_location" => ["required", "in:in_the_car,to_request_with_car"],
         "plate_number" => ["required"],
         "position" => ["required"],
-        "pricing_category" => ["required", "in:small,large"],
+        "pricing_category" => ["required", "in:small,large,electric"],
         "transmission_mode" => ["required", "in:manual,automatic"],
         "type" => ["required", "in:car"],
         "year_of_circulation" => ["required", "digits:4", "numeric"],

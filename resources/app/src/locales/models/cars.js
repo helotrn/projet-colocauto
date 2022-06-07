@@ -20,7 +20,7 @@ export default {
       model: "modèle",
       papers_location: "emplacement des papiers",
       plate_number: "numéro de plaque",
-      pricing_category: "catégorie",
+      pricing_category: "catégorie de tarification",
       report: "fiche - état de l'auto",
       report_download: "télécharger le gabarit de la fiche",
       transmission_mode: "transmission",

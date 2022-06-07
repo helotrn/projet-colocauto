@@ -405,12 +405,18 @@ class LoanableController extends RestController
                         "type" => "select",
                         "options" => [
                             [
-                                "text" => "Petit (compacte, sous-compacte)",
+                                "text" =>
+                                    "Petite auto (compacte, sous-compacte, hybride non-branchable)",
                                 "value" => "small",
                             ],
                             [
-                                "text" => "Grand (van, VUS, pick-up)",
+                                "text" => "Grosse auto (van, VUS, pick-up)",
                                 "value" => "large",
+                            ],
+                            [
+                                "text" =>
+                                    "Auto électrique (électrique, hybride branchable)",
+                                "value" => "electric",
                             ],
                         ],
                     ],
