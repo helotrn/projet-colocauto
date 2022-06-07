@@ -132,13 +132,15 @@ class Loan extends BaseModel
             });
         }
 
-        // Update loan.status before saving
+        // Update loan.status and loan.actual_return_at before saving
         self::saving(function ($loan) {
             if ($loan->canceled_at && "canceled" != $loan->status) {
                 $loan->status = "canceled";
             } elseif (!$loan->canceled_at) {
                 $loan->status = $loan->getStatusFromActions();
             }
+
+            $loan->actual_return_at = $loan->getActualReturnAtFromActions();
         });
     }
 
