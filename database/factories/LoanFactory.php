@@ -274,6 +274,9 @@ $factory->afterCreatingState(Loan::class, "butPaymentInProcess", function (
     Loan $loan,
     Faker $faker
 ) {
+    // Refresh loan before modifying payment.
+    $loan->refresh();
+
     if (!$loan->payment) {
         $loan->payment()->save(factory(Payment::class)->make());
     }
