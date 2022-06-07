@@ -159,7 +159,7 @@ class ActionsCompleteTest extends TestCase
         $this->assertEquals("in_process", $loan->status);
 
         // Run the command
-        app(ActionsCompleteCommand::class)->handle();
+        $this->artisan("actions:complete")->assertExitCode(0);
 
         // Ensure we fetch loan back from the database
         $loan->refresh();
@@ -223,7 +223,7 @@ class ActionsCompleteTest extends TestCase
         $this->assertEquals("in_process", $loan->status);
 
         // Run the command
-        app(ActionsCompleteCommand::class)->handle();
+        $this->artisan("actions:complete")->assertExitCode(0);
 
         // Ensure we fetch loan back from the database
         $loan->refresh();
@@ -287,7 +287,7 @@ class ActionsCompleteTest extends TestCase
         $this->assertEquals("in_process", $loan->status);
 
         // Run the command
-        app(ActionsCompleteCommand::class)->handle();
+        $this->artisan("actions:complete")->assertExitCode(0);
 
         // Ensure we fetch loan back from the database
         $loan->refresh();
@@ -351,7 +351,7 @@ class ActionsCompleteTest extends TestCase
         $this->assertEquals("in_process", $loan->status);
 
         // Run the command
-        app(ActionsCompleteCommand::class)->handle();
+        $this->artisan("actions:complete")->assertExitCode(0);
 
         // Ensure we fetch loan back from the database
         $loan->refresh();
@@ -420,7 +420,7 @@ class ActionsCompleteTest extends TestCase
         $this->assertEquals("in_process", $loan->status);
 
         // Run the command
-        app(ActionsCompleteCommand::class)->handle();
+        $this->artisan("actions:complete")->assertExitCode(0);
 
         // Ensure we fetch loan back from the database
         $loan->refresh();
@@ -493,8 +493,8 @@ class ActionsCompleteTest extends TestCase
         // Run the command
         // At the moment, the command only completes one step at a time. Call
         // it twice so as to complete handover and payment.
-        app(ActionsCompleteCommand::class)->handle();
-        app(ActionsCompleteCommand::class)->handle();
+        $this->artisan("actions:complete")->assertExitCode(0);
+        $this->artisan("actions:complete")->assertExitCode(0);
 
         // Ensure we fetch loan back from the database
         $loan->refresh();
@@ -567,7 +567,7 @@ class ActionsCompleteTest extends TestCase
         $this->assertEquals("in_process", $loan->status);
 
         // Run the command
-        app(ActionsCompleteCommand::class)->handle();
+        $this->artisan("actions:complete")->assertExitCode(0);
 
         // Ensure we fetch loan back from the database
         $loan->refresh();
@@ -656,7 +656,7 @@ class ActionsCompleteTest extends TestCase
         }
 
         // Run the command
-        app(ActionsCompleteCommand::class)->handle();
+        $this->artisan("actions:complete")->assertExitCode(0);
 
         // Ensure we fetch loan back from the database
         $loan->refresh();
@@ -741,8 +741,8 @@ class ActionsCompleteTest extends TestCase
         // Run the command
         // At the moment, the command only completes one step at a time. Call
         // it twice so as to complete handover and payment.
-        app(ActionsCompleteCommand::class)->handle();
-        app(ActionsCompleteCommand::class)->handle();
+        $this->artisan("actions:complete")->assertExitCode(0);
+        $this->artisan("actions:complete")->assertExitCode(0);
 
         // Ensure we fetch loan back from the database
         $loan->refresh();
@@ -818,7 +818,7 @@ class ActionsCompleteTest extends TestCase
         $this->assertEquals("in_process", $loan->status);
 
         // Run the command
-        app(ActionsCompleteCommand::class)->handle();
+        $this->artisan("actions:complete")->assertExitCode(0);
 
         // Ensure we fetch loan back from the database
         $loan->refresh();
@@ -886,7 +886,7 @@ class ActionsCompleteTest extends TestCase
         $this->assertEquals("in_process", $loan->status);
 
         // Run the command
-        app(ActionsCompleteCommand::class)->handle();
+        $this->artisan("actions:complete")->assertExitCode(0);
 
         // Ensure we fetch loan back from the database
         $loan->refresh();
@@ -950,7 +950,7 @@ class ActionsCompleteTest extends TestCase
         $this->assertEquals("in_process", $loan->status);
 
         // Run the command
-        app(ActionsCompleteCommand::class)->handle();
+        $this->artisan("actions:complete")->assertExitCode(0);
 
         // Ensure we fetch loan back from the database
         $loan->refresh();
@@ -1014,7 +1014,7 @@ class ActionsCompleteTest extends TestCase
         $this->assertEquals("in_process", $loan->status);
 
         // Run the command
-        app(ActionsCompleteCommand::class)->handle();
+        $this->artisan("actions:complete")->assertExitCode(0);
 
         // Ensure we fetch loan back from the database
         $loan->refresh();
@@ -1099,8 +1099,8 @@ class ActionsCompleteTest extends TestCase
         // Run the command
         // At the moment, the command only completes one step at a time. Call
         // it twice so as to complete handover and payment.
-        app(ActionsCompleteCommand::class)->handle();
-        app(ActionsCompleteCommand::class)->handle();
+        $this->artisan("actions:complete")->assertExitCode(0);
+        $this->artisan("actions:complete")->assertExitCode(0);
 
         // Ensure we fetch loan back from the database
         $loan->refresh();
@@ -1188,7 +1188,7 @@ class ActionsCompleteTest extends TestCase
         $this->assertEquals("in_process", $loan->status);
 
         // Run the command
-        app(ActionsCompleteCommand::class)->handle();
+        $this->artisan("actions:complete")->assertExitCode(0);
 
         // Ensure we fetch loan back from the database
         $loan->refresh();
@@ -1274,7 +1274,7 @@ class ActionsCompleteTest extends TestCase
         $this->assertEquals("in_process", $loan->status);
 
         // Run the command
-        app(ActionsCompleteCommand::class)->handle();
+        $this->artisan("actions:complete")->assertExitCode(0);
 
         // Ensure we fetch loan back from the database
         $loan->refresh();
