@@ -828,50 +828,47 @@ SQL
     public function getStatusFromActions()
     {
         // Loan is canceled if pre-payment is canceled.
-        foreach ($this->actions as $action) {
-            if ("pre_payment" == $action->type) {
-                switch ($action->status) {
-                    case "canceled":
-                        return "canceled";
-                        break;
-                }
+        $action = $this->prePayment;
+        if ($action) {
+            switch ($action->status) {
+                case "canceled":
+                    return "canceled";
+                    break;
             }
         }
 
         // Payment
-        foreach ($this->actions as $action) {
-            if ("payment" == $action->type) {
-                switch ($action->status) {
-                    case "in_process":
-                    case "completed":
-                        return $action->status;
-                        break;
-                    default:
-                        throw new \Exception(
-                            "Unexpected status for loan action: payment."
-                        );
-                        break;
-                }
+        $action = $this->payment;
+        if ($action) {
+            switch ($action->status) {
+                case "in_process":
+                case "completed":
+                    return $action->status;
+                    break;
+                default:
+                    throw new \Exception(
+                        "Unexpected status for loan action: payment."
+                    );
+                    break;
             }
         }
 
         // Intention
-        foreach ($this->actions as $action) {
-            if ("intention" == $action->type) {
-                switch ($action->status) {
-                    case "canceled":
-                        return "canceled";
-                        break;
-                    case "in_process":
-                    case "completed":
-                        return "in_process";
-                        break;
-                    default:
-                        throw new \Exception(
-                            "Unexpected status for loan action: takeover."
-                        );
-                        break;
-                }
+        $action = $this->intention;
+        if ($action) {
+            switch ($action->status) {
+                case "canceled":
+                    return "canceled";
+                    break;
+                case "in_process":
+                case "completed":
+                    return "in_process";
+                    break;
+                default:
+                    throw new \Exception(
+                        "Unexpected status for loan action: takeover."
+                    );
+                    break;
             }
         }
 
