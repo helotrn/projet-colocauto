@@ -91,7 +91,13 @@ class Community extends BaseModel
 
             "users_count" => function ($query = null) {
                 $usersCountSql = <<<SQL
-(SELECT count(id) FROM community_user WHERE community_user.community_id = communities.id)
+  (
+    SELECT count(id)
+    FROM community_user
+    WHERE community_user.community_id = communities.id
+    AND community_user.approved_at IS NOT NULL
+    AND community_user.suspended_at IS NULL
+  )
 SQL;
 
                 if (!$query) {
