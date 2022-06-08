@@ -116,13 +116,13 @@ class CommunityTest extends TestCase
 
         $user1
             ->communities()
-            ->attach($community2, ["approved_at" =>  new \DateTime()]);
+            ->attach($community2, ["approved_at" => new \DateTime()]);
         $user2
             ->communities()
-            ->attach($community2, ["approved_at" =>  new \DateTime()]);
+            ->attach($community2, ["approved_at" => new \DateTime()]);
         $user3
             ->communities()
-            ->attach($community1, ["approved_at" =>  new \DateTime()]);
+            ->attach($community1, ["approved_at" => new \DateTime()]);
 
         $data = [
             "order" => "users_count",
