@@ -14,18 +14,39 @@
         </div>
       </div>
 
-      <div
-        class="loanable-details__estimated-fare"
-        v-if="loanable.price !== null && loanable.price !== undefined"
-      >
-        <i> Coût estimé: {{ loanable.price | currency }} </i>
-        <i v-if="loanable.insurance"> + Assurance: {{ loanable.insurance | currency }} </i>
+      <div>
+        <b-tabs content-class="mt-3">
+          <b-tab title="i">
+            <dl>
+              <dt>Nom du véhicule</dt>
+              <dd>{{ loanable.name }}</dd>
+
+              <dt>Propriétaire</dt>
+              <dd>{{ loanable.owner.user.full_name }}</dd>
+
+              <div v-if="loanable.comments">
+                <dt>Commentaires</dt>
+                <dd>&laquo; {{ loanable.comments }} &raquo;</dd>
+              </div>
+            </dl>
+          </b-tab>
+          <b-tab title="e">
+            <div
+              class="loanable-details__estimated-fare"
+              v-if="loanable.price !== null && loanable.price !== undefined"
+            >
+              <i> Coût estimé: {{ loanable.price | currency }} </i>
+              <i v-if="loanable.insurance"> + Assurance: {{ loanable.insurance | currency }} </i>
+            </div>
+            <div v-else class="loanable-details__estimated-fare">
+              <i class="muted" title="Recherchez pour valider la disponibilité et le coût">
+                Coût estimé: N/A
+              </i>
+            </div>
+          </b-tab>
+        </b-tabs>
       </div>
-      <div v-else class="loanable-details__estimated-fare">
-        <i class="muted" title="Recherchez pour valider la disponibilité et le coût">
-          Coût estimé: N/A
-        </i>
-      </div>
+
     </main>
     <footer class="loanable-details__footer">
       <!-- Only one button will be displayed at a time. -->
