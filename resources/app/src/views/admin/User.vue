@@ -21,7 +21,7 @@
                 {{ item.borrower.approved_at | date }}
               </div>
               <div v-else>
-                <label>Membre en attente d'approbation, créé le</label>
+                <label>Membre en attente d'approbation depuis le</label>
                 {{ item.created_at | date }}
               </div>
               <hr />
