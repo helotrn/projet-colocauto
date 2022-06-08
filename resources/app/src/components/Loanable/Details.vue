@@ -5,17 +5,12 @@
       <user-avatar :user="ownerUser" class="loanable-details__avatar" />
     </header>
     <main class="loanable-details__content">
-      <h4 class="loanable-details__loanable-title">{{ loanableTitle }}</h4>
-
       <div class="loanable-details__tags">
-        <div v-if="loanable.type === 'car'">
-          <b-badge> <svg-car /> Auto </b-badge>
+        <div v-if="loanable.is_self_service">
+          <b-badge> Libre-service </b-badge>
         </div>
-        <div v-else-if="loanable.type === 'bike'">
-          <b-badge> <svg-bike /> Vélo </b-badge>
-        </div>
-        <div v-else-if="loanable.type === 'trailer'">
-          <b-badge> <svg-trailer /> Remorque </b-badge>
+        <div v-else>
+          <b-badge> Sur demande </b-badge>
         </div>
       </div>
 
@@ -105,6 +100,10 @@ export default {
 .loanable-details {
   // Fixed width for the moment. We'll deal with resizing later.
   width: 16rem;
+
+  .badge {
+    padding: 0.5rem;
+  }
 
   &__header {
     position: relative;
