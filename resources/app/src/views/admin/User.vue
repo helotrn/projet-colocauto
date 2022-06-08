@@ -16,8 +16,14 @@
             <div class="form__section">
               <h2>Informations générales</h2>
 
-              <label>Membre depuis le</label>
-              {{ item.created_at | date }}
+              <div v-if="item.borrower.approved">
+                <label>Membre depuis le</label>
+                {{ item.borrower.approved_at | date }}
+              </div>
+              <div v-else>
+                <label>Membre en attente d'approbation, créé le</label>
+                {{ item.created_at | date }}
+              </div>
               <hr />
 
               <forms-builder :definition="form.general" v-model="item" entity="users" />
