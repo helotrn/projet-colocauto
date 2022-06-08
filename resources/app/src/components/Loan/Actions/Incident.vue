@@ -131,7 +131,7 @@
 
               <blockquote v-if="action.comments_on_incident">
                 {{ action.comments_on_incident }}
-                <div class="user-avatar" :style="{ backgroundImage: borrowerAvatar }" />
+                <user-avatar :user="borrower.user" />
               </blockquote>
             </div>
           </div>
@@ -148,7 +148,7 @@
 
             <blockquote v-if="action.comments_on_incident">
               {{ action.comments_on_incident }}
-              <div class="user-avatar" :style="{ backgroundImage: borrowerAvatar }" />
+              <user-avatar :user="borrower.user" />
             </blockquote>
           </div>
 
@@ -171,7 +171,7 @@
           <!-- Action has an id, hence not new, and it is completed. -->
           <blockquote v-if="action.comments_on_incident">
             {{ action.comments_on_incident }}
-            <div class="user-avatar" :style="{ backgroundImage: borrowerAvatar }" />
+            <user-avatar :user="borrower.user" />
           </blockquote>
 
           <p v-if="userRoles.includes('borrower')">
@@ -188,6 +188,7 @@
 
 <script>
 import FormsValidatedInput from "@/components/Forms/ValidatedInput.vue";
+import UserAvatar from "@/components/User/Avatar.vue";
 
 import LoanActionsMixin from "@/mixins/LoanActionsMixin";
 
@@ -196,6 +197,7 @@ export default {
   mixins: [LoanActionsMixin],
   components: {
     FormsValidatedInput,
+    UserAvatar,
   },
   mounted() {
     if (this.item.loanable.type !== "car") {
