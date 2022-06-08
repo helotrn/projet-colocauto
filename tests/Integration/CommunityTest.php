@@ -114,8 +114,15 @@ class CommunityTest extends TestCase
         $user2 = factory(User::class)->create();
         $user3 = factory(User::class)->create();
 
-        $community1->users()->sync([$user3->id]);
-        $community2->users()->sync([$user1->id, $user2->id]);
+        $user1
+            ->communities()
+            ->attach($community2, ["approved_at" =>  new \DateTime()]);
+        $user2
+            ->communities()
+            ->attach($community2, ["approved_at" =>  new \DateTime()]);
+        $user3
+            ->communities()
+            ->attach($community1, ["approved_at" =>  new \DateTime()]);
 
         $data = [
             "order" => "users_count",
