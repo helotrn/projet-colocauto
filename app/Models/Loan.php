@@ -880,7 +880,10 @@ SQL
       should be the single source of truth.
 
       Acounts for loan duration_in_minutes, accepted extensions and early payments.
-*/
+
+      Refer to database/migrations/2022_06_08_093323_set_actual_return_at.php
+      to see how older cases were accounted for.
+    */
     public function getActualReturnAtFromActions()
     {
         $departureAt = CarbonImmutable::parse($this->departure_at);
