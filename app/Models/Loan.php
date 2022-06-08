@@ -310,6 +310,7 @@ SQL
     protected $casts = [
         "departure_at" => TimestampWithTimezoneCast::class,
         "canceled_at" => TimestampWithTimezoneCast::class,
+        "actual_return_at" => TimestampWithTimezoneCast::class,
         "meta" => "array",
     ];
 
