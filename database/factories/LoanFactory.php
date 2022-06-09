@@ -193,18 +193,6 @@ $factory->afterCreatingState(Loan::class, "withInProcessPayment", function (
     );
 });
 
-$factory->afterCreatingState(Loan::class, "withCanceledHandover", function (
-    Loan $loan,
-    Faker $faker
-) {
-    $loan->handover()->save(
-        factory(Handover::class)->make([
-            "status" => "canceled",
-            "executed_at" => Carbon::now(),
-        ])
-    );
-});
-
 $factory->afterCreatingState(Loan::class, "withAllStepsCompleted", function (
     $loan
 ) {
