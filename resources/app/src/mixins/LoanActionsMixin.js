@@ -38,14 +38,6 @@ export default {
     borrower() {
       return this.item.borrower;
     },
-    borrowerAvatar() {
-      const { avatar } = this.borrower.user;
-      if (!avatar) {
-        return "";
-      }
-
-      return `url('${avatar.sizes.thumbnail}')`;
-    },
     isAvailable() {
       return this.$store.state.loans.item.isAvailable;
     },
@@ -63,18 +55,6 @@ export default {
     },
     owner() {
       return this.item.loanable.owner;
-    },
-    ownerAvatar() {
-      if (!this.owner) {
-        return "";
-      }
-
-      const { avatar } = this.owner.user;
-      if (!avatar) {
-        return "";
-      }
-
-      return `url('${avatar.sizes.thumbnail}')`;
     },
     /*
       Returns an array containing all user roles in the current loan.

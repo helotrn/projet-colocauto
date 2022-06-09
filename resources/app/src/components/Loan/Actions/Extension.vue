@@ -59,12 +59,12 @@
 
           <blockquote v-if="action.comments_on_extension">
             {{ action.comments_on_extension }}
-            <div class="user-avatar" :style="{ backgroundImage: borrowerAvatar }" />
+            <user-avatar :user="borrower.user" />
           </blockquote>
 
           <blockquote v-if="action.message_for_borrower">
             {{ action.message_for_borrower }}
-            <div class="user-avatar" :style="{ backgroundImage: ownerAvatar }" />
+            <user-avatar :user="owner.user" />
           </blockquote>
         </div>
         <div v-else-if="action.status === 'in_process' && loanIsCanceled">
@@ -148,12 +148,12 @@
 
             <blockquote v-if="action.message_for_borrower">
               {{ action.message_for_borrower }}
-              <div class="user-avatar" :style="{ backgroundImage: ownerAvatar }" />
+              <user-avatar :user="owner.user" />
             </blockquote>
 
             <blockquote v-if="action.comments_on_extension">
               {{ action.comments_on_extension }}
-              <div class="user-avatar" :style="{ backgroundImage: borrowerAvatar }" />
+              <user-avatar :user="borrower.user" />
             </blockquote>
 
             <b-button size="sm" variant="outline-danger" @click="cancelAction"> Annuler </b-button>
@@ -165,7 +165,7 @@
 
           <blockquote v-if="action.comments_on_extension">
             {{ action.comments_on_extension }}
-            <div class="user-avatar" :style="{ backgroundImage: borrowerAvatar }" />
+            <user-avatar :user="borrower.user" />
           </blockquote>
 
           <div class="loan-actions-extension__message_for_borrower text-center mb-3">
@@ -216,6 +216,7 @@ import FormsValidatedInput from "@/components/Forms/ValidatedInput.vue";
 import dayjs from "@/helpers/dayjs";
 
 import LoanNextDate from "@/components/Loan/NextDate.vue";
+import UserAvatar from "@/components/User/Avatar.vue";
 
 import LoanActionsMixin from "@/mixins/LoanActionsMixin";
 
@@ -225,6 +226,7 @@ export default {
   components: {
     FormsValidatedInput,
     LoanNextDate,
+    UserAvatar,
   },
   mounted: function () {
     // to avoid an illegal value for new_duration, we need to verify if the return time is before the time right now.
