@@ -4,6 +4,7 @@ namespace Tests\Integration;
 
 use App\Models\Community;
 use App\Models\User;
+use Carbon\Carbon;
 use Tests\TestCase;
 
 class CommunityTest extends TestCase
@@ -116,13 +117,13 @@ class CommunityTest extends TestCase
 
         $user1
             ->communities()
-            ->attach($community2, ["approved_at" => new \DateTime()]);
+            ->attach($community2, ["approved_at" => new Carbon()]);
         $user2
             ->communities()
-            ->attach($community2, ["approved_at" => new \DateTime()]);
+            ->attach($community2, ["approved_at" => new Carbon()]);
         $user3
             ->communities()
-            ->attach($community1, ["approved_at" => new \DateTime()]);
+            ->attach($community1, ["approved_at" => new Carbon()]);
 
         $data = [
             "order" => "users_count",
