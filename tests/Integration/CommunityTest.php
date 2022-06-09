@@ -4,6 +4,7 @@ namespace Tests\Integration;
 
 use App\Models\Community;
 use App\Models\User;
+use Carbon\Carbon;
 use Tests\TestCase;
 
 class CommunityTest extends TestCase
@@ -114,8 +115,15 @@ class CommunityTest extends TestCase
         $user2 = factory(User::class)->create();
         $user3 = factory(User::class)->create();
 
-        $community1->users()->sync([$user3->id]);
-        $community2->users()->sync([$user1->id, $user2->id]);
+        $user1
+            ->communities()
+            ->attach($community2, ["approved_at" => new Carbon()]);
+        $user2
+            ->communities()
+            ->attach($community2, ["approved_at" => new Carbon()]);
+        $user3
+            ->communities()
+            ->attach($community1, ["approved_at" => new Carbon()]);
 
         $data = [
             "order" => "users_count",
