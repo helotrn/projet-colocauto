@@ -32,6 +32,7 @@ class NokeSyncLoansTest extends TestCase
         $now = Carbon::now();
         Carbon::setTestNow($now);
 
+        // Loan that should be asserted in count
         $validLoan = factory(Loan::class)
             ->states("withCompletedIntention", "withCompletedPrePayment")
             ->create([
@@ -54,17 +55,6 @@ class NokeSyncLoansTest extends TestCase
                 "loanable_id" => $bikeWithPadlock,
             ]);
 
-        $indirectlyCanceledLoan = factory(Loan::class)
-            ->states(
-                "withCompletedIntention",
-                "withCompletedPrePayment",
-                "withCanceledHandover"
-            )
-            ->create([
-                "departure_at" => $now->copy()->add(10, "minutes"),
-                "loanable_id" => $bikeWithPadlock,
-            ]);
-
         $unpaidValidLoan = factory(Loan::class)
             ->states("withAllStepsCompleted")
             ->create([
@@ -72,6 +62,7 @@ class NokeSyncLoansTest extends TestCase
                 "loanable_id" => $bikeWithPadlock,
             ]);
 
+        // Loan that should be asserted in count
         $paidValidLoan = factory(Loan::class)
             ->states("withAllStepsCompleted", "butPaymentInProcess")
             ->create([
