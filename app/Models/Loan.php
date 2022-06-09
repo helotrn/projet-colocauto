@@ -333,7 +333,6 @@ SQL
         "actual_duration_in_minutes",
         "calendar_days",
         "contested_at",
-        "loan_status",
         "total_final_cost",
         "total_estimated_cost",
     ];
@@ -545,26 +544,6 @@ SQL
         );
 
         return max(0, is_array($values) ? $values[1] : $values);
-    }
-
-    /*
-      Deprecated. Use loans.status.
-    */
-    public function getLoanStatusAttribute()
-    {
-        if (isset($this->attributes["loan_status"])) {
-            return $this->attributes["loan_status"];
-        }
-
-        if ($this->isCanceled()) {
-            return "canceled";
-        }
-
-        if ($action = $this->actions->last()) {
-            return $action->status;
-        }
-
-        return null;
     }
 
     public function getTotalActualCostAttribute()
@@ -792,8 +771,8 @@ SQL
     }
 
     /*
-      This function is used to compute the loan_status attribute and should be
-      the single source of truth.
+      This function is used to compute the status attribute of a loan and
+      should be the single source of truth.
 
       Possible states:
         - in_process
