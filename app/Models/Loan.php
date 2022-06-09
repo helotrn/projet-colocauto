@@ -133,43 +133,6 @@ SQL;
                 return $query->selectRaw("$calendarDaysSql AS calendar_days");
             },
 
-            // This attribute is deprecated. Refer to loans.status instead.
-            "loan_status" => function ($query = null) {
-                $sql = \DB::raw(
-                    <<<SQL
-CASE
-WHEN loans.canceled_at IS NOT NULL THEN 'canceled'
-ELSE loan_status_subquery.status
-END
-SQL
-                );
-
-                if (!$query) {
-                    return $sql;
-                }
-
-                if (false === strpos($query->toSql(), "loan_status_subquery")) {
-                    $query
-                        ->selectRaw(\DB::raw("$sql AS loan_status"))
-                        ->leftJoinSub(
-                            <<<SQL
-SELECT DISTINCT ON (loan_id)
-    loan_id,
-    status
-FROM actions
-WHERE actions.type NOT IN ('extension', 'incident')
-ORDER by loan_id ASC, id DESC
-SQL
-                            ,
-                            "loan_status_subquery",
-                            "loan_status_subquery.loan_id",
-                            "=",
-                            "loans.id"
-                        );
-                }
-
-                return $query;
-            },
             // See comments in getActualDurationInMinutesAttribute
             "actual_duration_in_minutes" => function ($query = null) {
                 $sql = <<<SQL
