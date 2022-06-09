@@ -107,10 +107,9 @@ class NokeSyncLoans extends Command
                     return $q->where("mac_address", $mac);
                 });
             });
-        $query = $columnDefinitions["loan_status"]($query);
         $query = $columnDefinitions["*"]($query);
 
-        $query->where($columnDefinitions["loan_status"](), "!=", "canceled");
+        $query->where("status", "!=", "canceled");
 
         $query->with("borrower", "borrower.user");
 
