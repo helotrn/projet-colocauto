@@ -49,6 +49,7 @@ export default {
   name: "ActionButtons",
   mixins: [LoanStepsSequence, UserMixin],
   props: {
+    // Item is a loan.
     item: {
       type: Object,
       required: true,
