@@ -64,7 +64,7 @@ export default {
       const now = this.$dayjs().format("YYYY-MM-DD HH:mm:ss");
 
       return this.allLoans
-        .filter((l) => l.loan_status !== "canceled")
+        .filter((l) => l.status !== "canceled")
         .filter((l) => {
           if (l.actions.length <= 1) {
             return false;
@@ -76,7 +76,7 @@ export default {
     },
     pastLoans() {
       return this.allLoans
-        .filter((l) => l.loan_status !== "canceled")
+        .filter((l) => l.status !== "canceled")
         .filter((l) => {
           if (l.actions.length <= 1) {
             return false;
@@ -94,7 +94,7 @@ export default {
       const now = this.$dayjs().format("YYYY-MM-DD HH:mm:ss");
 
       return this.allLoans
-        .filter((l) => l.loan_status === "in_process")
+        .filter((l) => l.status === "in_process")
         .filter(
           (l) =>
             l.actions.length > 1 &&
@@ -104,7 +104,7 @@ export default {
     },
     waitingLoans() {
       return this.allLoans
-        .filter((l) => l.loan_status !== "canceled")
+        .filter((l) => l.status !== "canceled")
         .filter((l) => l.actions.length === 1);
     },
   },

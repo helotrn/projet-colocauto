@@ -238,7 +238,7 @@ class LoanTest extends TestCase
             "page" => 1,
             "per_page" => 10,
             "fields" => "id,name,last_name,full_name,email",
-            "loan_status" => "completed",
+            "status" => "completed",
         ];
         $response = $this->json("GET", "/api/v1/loans/", $data);
         $response

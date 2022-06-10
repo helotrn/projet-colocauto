@@ -246,11 +246,10 @@ class Loanable extends BaseModel
 
         $cDef = Loan::getColumnsDefinition();
         $query = $cDef["*"]($query);
-        $query = $cDef["loan_status"]($query);
         $query = $cDef["actual_duration_in_minutes"]($query);
 
         $query
-            ->where(\DB::raw($cDef["loan_status"]()), "!=", "canceled")
+            ->where("status", "!=", "canceled")
             ->whereHas("intention", function ($q) {
                 return $q->where("status", "=", "completed");
             })

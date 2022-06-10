@@ -86,12 +86,12 @@ class NokeSyncLoans extends Command
     {
         $mac = $queryParams["mac_address"];
 
-        $columnDefinitions = Loan::getColumnsDefinition();
-        $query = Loan::where(
-            "departure_at",
-            "<=",
-            date("Y-m-d H:i:00", strtotime("+15 minutes"))
-        )
+        $query = Loan::where("status", "!=", "canceled")
+            ->where(
+                "departure_at",
+                "<=",
+                date("Y-m-d H:i:00", strtotime("+15 minutes"))
+            )
             ->whereHas("prePayment", function ($q) {
                 return $q->where("status", "completed");
             })
@@ -106,13 +106,8 @@ class NokeSyncLoans extends Command
                 return $q->whereHas("padlock", function ($q) use ($mac) {
                     return $q->where("mac_address", $mac);
                 });
-            });
-        $query = $columnDefinitions["loan_status"]($query);
-        $query = $columnDefinitions["*"]($query);
-
-        $query->where($columnDefinitions["loan_status"](), "!=", "canceled");
-
-        $query->with("borrower", "borrower.user");
+            })
+            ->with("borrower", "borrower.user");
 
         return $query;
     }

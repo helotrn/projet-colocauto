@@ -24,7 +24,8 @@ class PaymentRequest extends BaseRequest
 
         $loan = Loan::find($this->get("loan_id"));
 
-        if (!$loan || $loan->loan_status === "canceled") {
+        // Don't authorize payment on a canceled loan.
+        if (!$loan || $loan->isCanceled()) {
             return false;
         }
 
