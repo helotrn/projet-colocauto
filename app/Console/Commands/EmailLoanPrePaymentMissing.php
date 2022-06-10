@@ -56,17 +56,13 @@ class EmailLoanPrePaymentMissing extends Command
 
     public static function getQuery($queryParams)
     {
-        $query = Loan::departureInLessThan(24, "hours")
+        $query = Loan::where("status", "=", "in_process")
+            ->departureInLessThan(24, "hours")
             ->where("loans.created_at", "<", $queryParams["created_at"])
             ->whereHas("prePayment", function ($q) {
                 return $q->where("pre_payments.status", "=", "in_process");
             })
             ->where("meta->sent_loan_pre_payment_missing_email", null);
-
-        $columnDefinitions = Loan::getColumnsDefinition();
-        $query = $columnDefinitions["*"]($query);
-
-        $query->where("status", "=", "in_process");
 
         return $query;
     }
