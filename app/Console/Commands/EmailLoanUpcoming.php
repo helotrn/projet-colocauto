@@ -94,15 +94,11 @@ class EmailLoanUpcoming extends Command
         $threeHoursAgo = $now->copy()->subtract(3, "hours");
         $inThreeHours = $now->copy()->add(3, "hours");
 
-        $query = Loan::where("departure_at", "<=", $inThreeHours)
+        $query = Loan::where("status", "=", "in_process")
+            ->where("departure_at", "<=", $inThreeHours)
             ->where("departure_at", ">", $now)
             ->where("loans.created_at", "<=", $threeHoursAgo)
             ->where("meta->sent_loan_upcoming_email", null);
-
-        $columnDefinitions = Loan::getColumnsDefinition();
-        $query = $columnDefinitions["*"]($query);
-
-        $query->where("status", "=", "in_process");
 
         return $query;
     }
