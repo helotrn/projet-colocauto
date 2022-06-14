@@ -3,8 +3,8 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use App\Models\Community;
 use App\Models\Pivots\CommunityUser;
-use App\Models\User;
 
 class MigrationUsersToBorough extends Migration
 {
@@ -15,35 +15,44 @@ class MigrationUsersToBorough extends Migration
      */
     public function up()
     {
-        // Migrates all users from neighborhood to borough
-        $users = User::with("communities")->get();
-        foreach ($users as $user) {
-            foreach ($user->communities as $community) {
-                if ($community->type == "neighborhood" && $community->parent) {
-                    // Save Quietly in order to prevent the CommunityUser::saved event to be triggered
-                    $communityUser = CommunityUser::withoutEvents(
-                        function () use ($community, $user) {
-                            // Find the pivot line between Community and User
-                            $communityUser = CommunityUser::where(
-                                "user_id",
-                                $user->id
-                            )
-                                ->where("community_id", $community->id)
-                                ->first();
-                            if ($communityUser) {
-                                Log::info(
-                                    "Updating user " .
-                                        $user->id .
-                                        "'s neighborhood"
-                                );
-                                $communityUser->community_id =
-                                    $community->parent_id;
-                                $communityUser->save();
-                            }
-                        }
+        // Don't load users here. We'll load them from community to community to save on memory.
+        $neighborhoods = Community::where("type", "=", "neighborhood")->get();
+
+        foreach ($neighborhoods as $neighborhood) {
+            Log::info(
+                "Community: (" .
+                    $neighborhood->type .
+                    ") " .
+                    $neighborhood->name
+            );
+
+            $communityUsers = CommunityUser::where(
+                "community_id",
+                "=",
+                $neighborhood->id
+            )->get();
+
+            foreach ($communityUsers as $communityUser) {
+                CommunityUser::withoutEvents(function () use (
+                    $communityUser,
+                    $neighborhood
+                ) {
+                    Log::info(
+                        sprintf(
+                            "    Updating user with id %4d: %s (%d) -> %s (%d)",
+                            $communityUser->user_id,
+                            $neighborhood->name,
+                            $neighborhood->id,
+                            $neighborhood->parent->name,
+                            $neighborhood->parent_id
+                        )
                     );
-                }
+                    $communityUser->community_id = $neighborhood->parent_id;
+                    $communityUser->save();
+                });
             }
+
+            unset($communityUsers);
         }
     }
 
