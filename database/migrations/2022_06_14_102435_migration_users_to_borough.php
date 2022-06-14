@@ -1,26 +1,21 @@
 <?php
 
-namespace App\Console\Commands;
-
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 use App\Models\Pivots\CommunityUser;
 use App\Models\User;
-use Illuminate\Console\Command;
-use Log;
 
-class UsersMigrationNeighborhood extends Command
+class MigrationUsersToBorough extends Migration
 {
-    protected $signature = "users:migrate:neighborhood";
-    protected $description = "Migrates all users from neighborhood to borough";
-
-    private $controller;
-
-    public function __construct()
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
     {
-        parent::__construct();
-    }
-
-    public function handle()
-    {
+        // Migrates all users from neighborhood to borough
         $users = User::with("communities")->get();
         foreach ($users as $user) {
             foreach ($user->communities as $community) {
@@ -50,5 +45,15 @@ class UsersMigrationNeighborhood extends Command
                 }
             }
         }
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        // Not needed
     }
 }
