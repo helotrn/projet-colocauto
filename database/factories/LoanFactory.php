@@ -169,6 +169,18 @@ $factory->afterCreatingState(Loan::class, "withCanceledPrePayment", function (
     );
 });
 
+$factory->afterCreatingState(Loan::class, "withInProcessExtension", function (
+    $loan,
+    $faker
+) {
+    $loan->extensions()->save(
+        factory(Extension::class)->make([
+            "new_duration" => 120,
+            "status" => "in_process",
+        ])
+    );
+});
+
 $factory->afterCreatingState(Loan::class, "withCompletedExtension", function (
     $loan,
     $faker
@@ -178,6 +190,30 @@ $factory->afterCreatingState(Loan::class, "withCompletedExtension", function (
             "new_duration" => 120,
             "status" => "completed",
             "executed_at" => Carbon::now(),
+        ])
+    );
+});
+
+$factory->afterCreatingState(Loan::class, "withRejectedExtension", function (
+    $loan,
+    $faker
+) {
+    $loan->extensions()->save(
+        factory(Extension::class)->make([
+            "new_duration" => 120,
+            "status" => "rejected",
+        ])
+    );
+});
+
+$factory->afterCreatingState(Loan::class, "withCanceledExtension", function (
+    $loan,
+    $faker
+) {
+    $loan->extensions()->save(
+        factory(Extension::class)->make([
+            "new_duration" => 120,
+            "status" => "canceled",
         ])
     );
 });
@@ -238,6 +274,9 @@ $factory->afterCreatingState(Loan::class, "butPaymentInProcess", function (
     Loan $loan,
     Faker $faker
 ) {
+    // Refresh loan before modifying payment.
+    $loan->refresh();
+
     if (!$loan->payment) {
         $loan->payment()->save(factory(Payment::class)->make());
     }

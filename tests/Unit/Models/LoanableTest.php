@@ -427,10 +427,10 @@ class LoanableTest extends TestCase
                 "community_id" => $this->community->id,
                 "departure_at" => "3000-10-12 10:10:00",
                 "duration_in_minutes" => 60,
-            ]);
-        $confirmedLoan->intention->status = "completed";
-        $confirmedLoan->intention->save();
-        $confirmedLoan = $confirmedLoan->fresh();
+            ])
+            ->refresh();
+        $confirmedLoan->intention->complete()->save();
+        $confirmedLoan->refresh();
 
         $this->assertEquals(
             true,
