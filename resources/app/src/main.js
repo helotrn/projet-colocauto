@@ -56,9 +56,11 @@ Vue.use(VueGoogleMaps, {
 });
 
 // Google Analytics configuration
-Vue.use(VueGtag, {
-  config: { id: process.env.GA_MEASUREMENT_ID }
-}, router);
+if(process.env.GA_MEASUREMENT_ID) {
+  Vue.use(VueGtag, {
+    config: { id: process.env.GA_MEASUREMENT_ID }
+  }, router);
+}
 
 Vue.component("layout-footer", LayoutFooter);
 Vue.component("layout-header", LayoutHeader);
