@@ -8,6 +8,7 @@ import VueScrollTo from "vue-scrollto";
 import VueTheMask from "vue-the-mask";
 import * as Sentry from "@sentry/browser";
 import * as Integrations from "@sentry/integrations";
+import VueGtag from "vue-gtag";
 
 import { ValidationObserver, ValidationProvider, extend, localize } from "vee-validate";
 import { strtotime } from "locutus/php/datetime";
@@ -53,6 +54,11 @@ Vue.use(VueGoogleMaps, {
     installComponents: true,
   },
 });
+
+// Google Analytics configuration
+Vue.use(VueGtag, {
+  config: { id: process.env.GA_MEASUREMENT_ID }
+}, router);
 
 Vue.component("layout-footer", LayoutFooter);
 Vue.component("layout-header", LayoutHeader);
