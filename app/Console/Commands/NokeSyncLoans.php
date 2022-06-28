@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Models\Loan;
 use App\Models\Padlock;
 use App\Services\NokeService;
+use Carbon\CarbonImmutable;
 use Illuminate\Console\Command;
 use GuzzleHttp\Client;
 use Log;
@@ -82,16 +83,24 @@ class NokeSyncLoans extends Command
         }
     }
 
+    /*
+       Retrieve loans that are
+       - active (not canceled),
+       - with departure in less than 15 minutes,
+       - with completed pre-payment,
+       - without completed payment,
+       - with padlock having the given MAC address.
+     */
     public static function getLoansFromPadlockMacQuery($queryParams)
     {
         $mac = $queryParams["mac_address"];
 
+        // Add a delay so a user may open the padlock just some time before the
+        // scheduled departure time.
+        $loanStartDelay = CarbonImmutable::now()->addMinutes(15);
+
         $query = Loan::where("status", "!=", "canceled")
-            ->where(
-                "departure_at",
-                "<=",
-                date("Y-m-d H:i:00", strtotime("+15 minutes"))
-            )
+            ->where("departure_at", "<=", $loanStartDelay)
             ->whereHas("prePayment", function ($q) {
                 return $q->where("status", "completed");
             })
