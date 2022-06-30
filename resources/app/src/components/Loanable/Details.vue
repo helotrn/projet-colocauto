@@ -1,22 +1,21 @@
 <template>
   <div class="loanable-details">
     <header class="loanable-details__header">
-      <img class="loanable-details-image" :src="loanableImage" :alt="loanableTitle" />
+      <img class="loanable-details__image" :src="loanableImage" :alt="loanableTitle" />
       <user-avatar :user="ownerUser" class="loanable-details__avatar" />
-    </header>
-    <main class="loanable-details__content">
       <div class="loanable-details__tags">
         <div v-if="loanable.is_self_service">
-          <b-badge> Libre-service </b-badge>
+          <b-badge variant="warning"> Libre service </b-badge>
         </div>
-        <div v-else>
-          <b-badge> Sur demande </b-badge>
+        <div v-else-if="!loanable.is_self_service">
+          <b-badge variant="warning"> Sur demande </b-badge>
         </div>
       </div>
-
+    </header>
+    <main class="loanable-details__content">
       <div>
-        <b-tabs content-class="mt-3">
-          <b-tab title="i">
+        <b-tabs content-class="mt-3" nav-wrapper-class="sticky-top bg-white">
+          <b-tab title="Véhicule">
             <dl>
               <dt>Nom du véhicule</dt>
               <dd>{{ loanable.name }}</dd>
@@ -66,7 +65,7 @@
               </div>
             </dl>
           </b-tab>
-          <b-tab title="e">
+          <b-tab title="Estimation">
             <div
               class="loanable-details__estimated-fare"
               v-if="loanable.price !== null && loanable.price !== undefined"
@@ -82,7 +81,6 @@
           </b-tab>
         </b-tabs>
       </div>
-
     </main>
     <footer class="loanable-details__footer">
       <!-- Only one button will be displayed at a time. -->
@@ -162,6 +160,11 @@ export default {
     padding: 0.5rem;
   }
 
+  dt,
+  dd {
+    padding-left: 0.5rem;
+  }
+
   &__header {
     position: relative;
     // At the moment, thumbnails are 256px x 160px -> 16rem x 10rem.
@@ -175,9 +178,9 @@ export default {
     right: 1rem;
   }
   &__content {
-    max-height: 12rem;
+    height: 12rem;
     overflow-y: auto;
-    padding: 0.5rem;
+    padding: 0;
   }
   &__footer {
     height: 3.5rem;
@@ -189,7 +192,7 @@ export default {
     justify-content: space-around;
     align-items: center;
   }
-  &__loanable-image {
+  &__image {
     position: relative;
     height: 10rem;
     width: 100%;
@@ -206,8 +209,9 @@ export default {
     text-align: center;
   }
   &__tags {
-    text-align: center;
-    margin-bottom: 0.5rem;
+    position: absolute;
+    bottom: 1rem;
+    left: 1rem;
   }
   &__estimated-fare {
     text-align: center;
