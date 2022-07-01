@@ -44,6 +44,8 @@ Les variables d'environnement sont dans `docker-compose.yaml`.
 
 Le nom de toutes variables doit commencer par `VUE_APP_` ([doc](https://cli.vuejs.org/guide/mode-and-env.html#using-env-variables-in-client-side-code)).
 
+`env.production` et `.env.staging` sont générés dynamiquement à partir de [Google Cloud Run](https://console.cloud.google.com/run?project=locomotion-320712) dans la section 'VARIABLES & SECRETS' dans 'EDIT & DEPLOY NEW REVISION'. La personne en charge du déploiement se chargera des modifications.
+
 ## Se connecter à l'application
 
 Les comptes suivants auront été créés:
