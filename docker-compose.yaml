@@ -40,7 +40,6 @@ services:
             S3_REGION: canada
             S3_BUCKET: locomotion
             S3_URL: http://minio:9000
-            GA_MEASUREMENT_ID:
             GOOGLE_API_KEY:
             GOOGLE_CLIENT_ID: 406326292737-7hbogvat3i32ungfngc8f0qn56cudbqr.apps.googleusercontent.com #dev id
             GOOGLE_CLIENT_SECRET: 3M4rv8_3L6iL7AcCcuN6nJsa # dev secret

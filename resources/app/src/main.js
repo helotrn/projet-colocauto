@@ -56,11 +56,11 @@ Vue.use(VueGoogleMaps, {
 });
 
 // Google Analytics configuration
-if (process.env.GA_MEASUREMENT_ID) {
+if (process.env.VUE_APP_GA_MEASUREMENT_ID) {
   Vue.use(
     VueGtag,
     {
-      config: { id: process.env.GA_MEASUREMENT_ID },
+      config: { id: process.env.VUE_APP_GA_MEASUREMENT_ID },
     },
     router
   );

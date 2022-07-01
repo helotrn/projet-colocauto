@@ -25,16 +25,26 @@ dans un autre terminal, faire:
 
 -   `docker-compose exec php php artisan migrate --seed`
 
-## Variables pour un bon fonctionnement en local
+## Variables d'environnement
 
-Les variables confidentielles sont dans `docker-compose.yaml`.
+### Généralités
 
-Vous aurez peut-être besoin de demander à un admin pour utiliser celles-ci:
+1. Aucunes variables confidentielles ne doit être présent dans le code source.
 
--   GOOGLE_API_KEY
--   VUE_APP_GOOGLE_MAPS_API_KEY
+2. Lors de vos merge requests, veuillez indiquer l'ajout, la modification ou la supression d'une variable d'environment en production ou en staging. 
 
-### Se connecter à l'application
+### Back-end
+
+Les variables d'environnement sont dans `docker-compose.yaml`.
+
+### Vue.js
+
+`.env.example` Contient la liste des variables nécessaire au bon fonctionnement du front-end.
+`.env.development` contient les variables et leurs valeurs.
+
+Le nom de toutes variables doit commencer par `VUE_APP_` ([doc](https://cli.vuejs.org/guide/mode-and-env.html#using-env-variables-in-client-side-code)).
+
+## Se connecter à l'application
 
 Les comptes suivants auront été créés:
 
