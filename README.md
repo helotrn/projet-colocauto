@@ -31,7 +31,7 @@ dans un autre terminal, faire:
 
 1. Aucunes variables confidentielles ne doit être présent dans le code source.
 
-2. Lors de vos merge requests, veuillez indiquer l'ajout, la modification ou la supression d'une variable d'environment en production ou en staging. 
+2. Lors de vos merge requests, veuillez indiquer l'ajout, la modification ou la supression d'une variable d'environment en production ou en staging.
 
 ### Back-end
 
