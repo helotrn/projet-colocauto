@@ -34,13 +34,24 @@
               class="loanable-details__estimated-fare"
               v-if="loanable.price !== null && loanable.price !== undefined"
             >
-              <i> Coût estimé: {{ loanable.price | currency }} </i>
-              <i v-if="loanable.insurance"> + Assurance: {{ loanable.insurance | currency }} </i>
+              <table class="trip-details">
+                <tr>
+                  <th>Temps et distance&nbsp;:</th>
+                  <td class="text-right tabular-nums">{{ loanable.price | currency }}</td>
+                </tr>
+                <tr v-if="loanable.insurance > 0">
+                  <th>Assurances&nbsp;:</th>
+                  <td class="text-right tabular-nums">{{ loanable.insurance | currency }}</td>
+                </tr>
+                <tr>
+                  <th>Total&nbsp;:</th>
+                  <td class="trip-details__total text-right tabular-nums">
+                    {{ (loanable.price + loanable.insurance) | currency }}
+                  </td>
+                </tr>
+              </table>
             </div>
             <div v-else class="loanable-details__estimated-fare">
-              <i class="muted" title="Recherchez pour valider la disponibilité et le coût">
-                Coût estimé: N/A
-              </i>
               <p>
                 Faites &laquo;&nbsp;valider la disponibilité&nbsp;&raquo; pour obtenir l'estimation.
               </p>
@@ -184,6 +195,22 @@ export default {
     text-align: center;
     font-size: 0.8rem;
     margin-bottom: 0.5rem;
+  }
+  // This is very similar to that in components/Loan/Actions/Payment.vue
+  .trip-details {
+    margin: 0 auto;
+
+    th {
+      text-align: left;
+    }
+    th,
+    td {
+      padding: 0 0.75rem;
+    }
+  }
+
+  .trip-details__total {
+    border-top: 1px solid black;
   }
 }
 </style>
