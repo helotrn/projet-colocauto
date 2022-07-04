@@ -25,7 +25,7 @@
 
               <div v-if="loanable.comments">
                 <dt>Commentaires</dt>
-                <dd>&laquo; {{ loanable.comments }} &raquo;</dd>
+                <dd>&laquo;&nbsp;{{ loanable.comments }}&nbsp;&raquo;</dd>
               </div>
             </dl>
           </b-tab>
@@ -41,6 +41,9 @@
               <i class="muted" title="Recherchez pour valider la disponibilité et le coût">
                 Coût estimé: N/A
               </i>
+              <p>
+                Faites &laquo;&nbsp;valider la disponibilité&nbsp;&raquo; pour obtenir l'estimation.
+              </p>
             </div>
           </b-tab>
         </b-tabs>
