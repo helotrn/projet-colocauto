@@ -29,7 +29,7 @@ dans un autre terminal, faire:
 
 ### Généralités
 
-1. Aucunes variables confidentielles ne doit être présent dans le code source.
+1. Aucune variable confidentielle ne doit être présente dans le code source.
 
 2. Lors de vos merge requests, veuillez indiquer l'ajout, la modification ou la supression d'une variable d'environment en production ou en staging.
 
