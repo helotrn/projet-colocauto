@@ -1,35 +1,63 @@
 <template>
   <div class="loanable-details">
     <header class="loanable-details__header">
-      <img class="loanable-details-image" :src="loanableImage" :alt="loanableTitle" />
+      <img class="loanable-details__image" :src="loanableImage" :alt="loanableTitle" />
       <user-avatar :user="ownerUser" class="loanable-details__avatar" />
+      <div class="loanable-details__tags">
+        <div v-if="loanable.is_self_service">
+          <b-badge variant="warning"> Libre service </b-badge>
+        </div>
+        <div v-else-if="!loanable.is_self_service">
+          <b-badge variant="warning"> Sur demande </b-badge>
+        </div>
+      </div>
     </header>
     <main class="loanable-details__content">
-      <h4 class="loanable-details__loanable-title">{{ loanableTitle }}</h4>
+      <div>
+        <b-tabs content-class="mt-3" nav-wrapper-class="sticky-top bg-white">
+          <b-tab title="Véhicule">
+            <dl>
+              <dt>Nom du véhicule</dt>
+              <dd>{{ loanable.name }}</dd>
 
-      <div class="loanable-details__tags">
-        <div v-if="loanable.type === 'car'">
-          <b-badge> <svg-car /> Auto </b-badge>
-        </div>
-        <div v-else-if="loanable.type === 'bike'">
-          <b-badge> <svg-bike /> Vélo </b-badge>
-        </div>
-        <div v-else-if="loanable.type === 'trailer'">
-          <b-badge> <svg-trailer /> Remorque </b-badge>
-        </div>
-      </div>
+              <dt>Propriétaire</dt>
+              <dd>{{ loanable.owner.user.full_name }}</dd>
 
-      <div
-        class="loanable-details__estimated-fare"
-        v-if="loanable.price !== null && loanable.price !== undefined"
-      >
-        <i> Coût estimé: {{ loanable.price | currency }} </i>
-        <i v-if="loanable.insurance"> + Assurance: {{ loanable.insurance | currency }} </i>
-      </div>
-      <div v-else class="loanable-details__estimated-fare">
-        <i class="muted" title="Recherchez pour valider la disponibilité et le coût">
-          Coût estimé: N/A
-        </i>
+              <div v-if="loanable.comments">
+                <dt>Commentaires</dt>
+                <dd>&laquo;&nbsp;{{ loanable.comments }}&nbsp;&raquo;</dd>
+              </div>
+            </dl>
+          </b-tab>
+          <b-tab title="Estimation">
+            <div
+              class="loanable-details__estimated-fare"
+              v-if="loanable.price !== null && loanable.price !== undefined"
+            >
+              <table class="trip-details">
+                <tr>
+                  <th>Temps et distance&nbsp;:</th>
+                  <td class="text-right tabular-nums">{{ loanable.price | currency }}</td>
+                </tr>
+                <tr v-if="loanable.insurance > 0">
+                  <th>Assurances&nbsp;:</th>
+                  <td class="text-right tabular-nums">{{ loanable.insurance | currency }}</td>
+                </tr>
+                <tr>
+                  <th>Total&nbsp;:</th>
+                  <td class="trip-details__total text-right tabular-nums">
+                    {{ (loanable.price + loanable.insurance) | currency }}
+                  </td>
+                </tr>
+              </table>
+            </div>
+            <div v-else class="loanable-details__estimated-fare">
+              <p>
+                Faites &laquo;&nbsp;valider la disponibilité&nbsp;&raquo; pour obtenir l'estimation.
+              </p>
+            </div>
+          </b-tab>
+        </b-tabs>
       </div>
     </main>
     <footer class="loanable-details__footer">
@@ -106,6 +134,15 @@ export default {
   // Fixed width for the moment. We'll deal with resizing later.
   width: 16rem;
 
+  .badge {
+    padding: 0.5rem;
+  }
+
+  dt,
+  dd {
+    padding-left: 0.5rem;
+  }
+
   &__header {
     position: relative;
     // At the moment, thumbnails are 256px x 160px -> 16rem x 10rem.
@@ -119,9 +156,9 @@ export default {
     right: 1rem;
   }
   &__content {
-    max-height: 12rem;
+    height: 12rem;
     overflow-y: auto;
-    padding: 0.5rem;
+    padding: 0;
   }
   &__footer {
     height: 3.5rem;
@@ -133,7 +170,7 @@ export default {
     justify-content: space-around;
     align-items: center;
   }
-  &__loanable-image {
+  &__image {
     position: relative;
     height: 10rem;
     width: 100%;
@@ -150,13 +187,30 @@ export default {
     text-align: center;
   }
   &__tags {
-    text-align: center;
-    margin-bottom: 0.5rem;
+    position: absolute;
+    bottom: 1rem;
+    left: 1rem;
   }
   &__estimated-fare {
     text-align: center;
     font-size: 0.8rem;
     margin-bottom: 0.5rem;
+  }
+  // This is very similar to that in components/Loan/Actions/Payment.vue
+  .trip-details {
+    margin: 0 auto;
+
+    th {
+      text-align: left;
+    }
+    th,
+    td {
+      padding: 0 0.75rem;
+    }
+  }
+
+  .trip-details__total {
+    border-top: 1px solid black;
   }
 }
 </style>
