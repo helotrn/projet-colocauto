@@ -27,42 +27,6 @@
                 <dt>Commentaires</dt>
                 <dd>&laquo; {{ loanable.comments }} &raquo;</dd>
               </div>
-
-              <div v-if="loanable.type === 'trailer'">
-                <dt>Charge maximale</dt>
-                <dd>30kg</dd>
-              </div>
-
-              <div v-if="loanable.type === 'bike'">
-                <dt>Modèle</dt>
-                <dd>ABC-12</dd>
-
-                <dt>Taille</dt>
-                <dd>Grand</dd>
-
-                <dt>Type</dt>
-                <dd>Électrique</dd>
-              </div>
-
-              <div v-if="loanable.type === 'car'">
-                <dt>Marque</dt>
-                <dd>Tesla</dd>
-
-                <dt>Modèle</dt>
-                <dd>Model 3</dd>
-
-                <dt>Année de mise en circulation</dt>
-                <dd>2020</dd>
-
-                <dt>Transmission</dt>
-                <dd>Automatique</dd>
-
-                <dt>Moteur</dt>
-                <dd>Électrique</dd>
-
-                <dt>Type de tarification</dt>
-                <dd>30$</dd>
-              </div>
             </dl>
           </b-tab>
           <b-tab title="Estimation">
