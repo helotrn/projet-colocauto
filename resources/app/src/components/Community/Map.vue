@@ -184,6 +184,7 @@ export default {
   // Adapt Google InfoWindow to the loanable details.
   .gm-style-iw-c {
     padding: 0 !important;
+    overflow-y: auto;
 
     .gm-style-iw-d {
       max-height: none !important;
