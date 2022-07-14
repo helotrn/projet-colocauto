@@ -25,14 +25,14 @@ export default {
               params: {
                 fields:
                   "id,name,long_description,chat_group_url,type,parent.id,parent.name," +
-                  "area,area_google,center,center_google,users_count," +
+                  "area,area_google,center,center_google,approved_users_count," +
                   "parent.area,parent.center,parent.area_google,parent.center_google," +
                   "parent.children.id,parent.children.name,parent.children.area," +
                   "parent.children.center,parent.children.area_google," +
-                  "parent.children.users_count," +
-                  "parent.children.center_google,parent.users_count," +
+                  "parent.children.approved_users_count," +
+                  "parent.children.center_google,parent.approved_users_count," +
                   "children.id,children.name,children.area,children.center," +
-                  "children.area_google,children.center_google,children.users_count," +
+                  "children.area_google,children.center_google,children.approved_users_count," +
                   "users.id,users.full_name,users.avatar,users.description," +
                   "users.owner.id,users.tags.*",
               },
