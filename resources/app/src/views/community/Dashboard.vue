@@ -105,7 +105,7 @@
             <schematized-community-map :borough="borough" :neighborhoods="neighborhoods" />
 
             <div class="community__map__total">
-              {{ totalUsersCount }}<br />
+              {{ approvedUsersCount }}<br />
               voisines et voisins participent à LocoMotion dans votre quartier!
             </div>
           </b-col>
@@ -147,9 +147,10 @@ export default {
         ? this.community.children
         : this.community.parent.children;
     },
-    totalUsersCount() {
+    approvedUsersCount() {
       return (
-        this.borough.users_count + this.neighborhoods.reduce((acc, c) => acc + c.users_count, 0)
+        this.borough.approved_users_count +
+        this.neighborhoods.reduce((acc, c) => acc + c.approved_users_count, 0)
       );
     },
   },

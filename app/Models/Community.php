@@ -89,8 +89,8 @@ class Community extends BaseModel
                 );
             },
 
-            "users_count" => function ($query = null) {
-                $usersCountSql = <<<SQL
+            "approved_users_count" => function ($query = null) {
+                $approvedUsersCountSql = <<<SQL
   (
     SELECT count(id)
     FROM community_user
@@ -101,10 +101,12 @@ class Community extends BaseModel
 SQL;
 
                 if (!$query) {
-                    return $usersCountSql;
+                    return $approvedUsersCountSql;
                 }
 
-                return $query->selectRaw("$usersCountSql AS users_count");
+                return $query->selectRaw(
+                    "$approvedUsersCountSql AS approved_users_count"
+                );
             },
 
             "parent_name" => function ($query = null) {
@@ -157,7 +159,7 @@ SQL;
 
     public $collections = ["children", "users", "pricings", "loanables"];
 
-    public $computed = ["area_google", "center_google", "users_count"];
+    public $computed = ["area_google", "center_google", "approved_users_count"];
 
     public function parent()
     {
@@ -246,10 +248,10 @@ SQL;
         ];
     }
 
-    public function getUsersCountAttribute()
+    public function getApprovedUsersCountAttribute()
     {
-        if (isset($this->attributes["users_count"])) {
-            return $this->attributes["users_count"];
+        if (isset($this->attributes["approved_users_count"])) {
+            return $this->attributes["approved_users_count"];
         }
 
         return $this->users->count();

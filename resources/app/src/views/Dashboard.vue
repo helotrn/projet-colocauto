@@ -8,7 +8,10 @@
 
           <h3 v-if="hasCommunity">
             {{
-              $t("welcome_description", { userCount: totalUsers, community: mainCommunity.name })
+              $t("welcome_description", {
+                approvedUserCount: totalApprovedUsers,
+                community: mainCommunity.name,
+              })
             }}
           </h3>
 
@@ -193,7 +196,7 @@
 <i18n>
 fr:
   welcome_text: Bienvenue {name},
-  welcome_description: Vous êtes {userCount} voisin-e-s à {community}.
+  welcome_description: Vous êtes {approvedUserCount} voisin-e-s à {community}.
   lead_text: |
     Vous y êtes presque. Il ne vous manque que quelques étapes, pour prendre la route!
 en:
@@ -245,9 +248,9 @@ export default {
     }
   },
   computed: {
-    totalUsers() {
+    totalApprovedUsers() {
       if (this.hasCommunity) {
-        return this.user.communities[0].users_count;
+        return this.user.communities[0].approved_users_count;
       } else {
         return 0;
       }

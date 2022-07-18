@@ -106,7 +106,7 @@ class CommunityTest extends TestCase
             ->assertJsonStructure(static::$getCommunitiesResponseStructure);
     }
 
-    public function testOrderCommunitiesByUsersCount()
+    public function testOrderCommunitiesByApprovedUsersCount()
     {
         $community1 = factory(Community::class)->create();
         $community2 = factory(Community::class)->create();
@@ -126,10 +126,11 @@ class CommunityTest extends TestCase
             ->attach($community1, ["approved_at" => new Carbon()]);
 
         $data = [
-            "order" => "users_count",
+            "order" => "approved_users_count",
             "page" => 1,
             "per_page" => 10,
-            "fields" => "id,name,type,parent.id,parent.name,users_count",
+            "fields" =>
+                "id,name,type,parent.id,parent.name,approved_users_count",
         ];
         $response = $this->json("GET", "/api/v1/communities/", $data);
         $response
@@ -142,7 +143,7 @@ class CommunityTest extends TestCase
             ])
             ->assertJsonStructure(static::$getCommunitiesResponseStructure);
 
-        $data["order"] = "-users_count";
+        $data["order"] = "-approved_users_count";
         $response = $this->json("GET", "/api/v1/communities/", $data);
         $response->assertStatus(200)->assertJson([
             "data" => [["id" => $community2->id], ["id" => $community1->id]],
