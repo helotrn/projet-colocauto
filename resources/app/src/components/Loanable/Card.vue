@@ -1,10 +1,27 @@
 <template>
   <b-card class="loanable-card" no-body>
     <div class="loanable-card__image">
-      <div class="loanable-card__image__loanable" :style="loanableImageStyle" />
+      <div
+        v-if="loanableImage"
+        class="loanable-card__image__loanable"
+        :style="loanableImageStyle"
+      />
+
+      <svg-bike
+        v-else-if="type == 'bike'"
+        class="loanable-card__image__loanable loanable-card__image--default"
+      />
+      <svg-car
+        v-else-if="type == 'car'"
+        class="loanable-card__image__loanable loanable-card__image--default"
+      />
+      <svg-trailer
+        v-else-if="type == 'trailer'"
+        class="loanable-card__image__loanable loanable-card__image--default"
+      />
 
       <div class="loanable-card__image__user" v-if="owner">
-        <user-avatar :user="owner.user" />
+        <user-avatar :user="owner.user" variant="cut-out" />
       </div>
     </div>
 
@@ -205,15 +222,20 @@ export default {
     position: relative;
     width: 100%;
 
+    &--default {
+      fill: $locomotion-green;
+    }
+
     &__loanable,
     &__user > div {
       background-size: cover;
       background-position: center center;
       background-repeat: no-repeat;
-      border-radius: 100%;
     }
 
     &__loanable {
+      // For SVGs, which are inline elements.
+      display: block;
       height: 100%;
       width: 115px;
       margin: 0 auto;
@@ -225,11 +247,6 @@ export default {
       left: calc(50% + 30px);
       height: 50%;
       width: 115px;
-
-      > div {
-        width: calc(115px / 2);
-        height: calc(115px / 2);
-      }
     }
   }
 }
