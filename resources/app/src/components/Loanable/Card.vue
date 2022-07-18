@@ -12,13 +12,13 @@
 
     <div class="loanable-card__tags">
       <div v-if="type === 'car'">
-        <b-badge> <svg-car /> Auto </b-badge>
+        <b-badge> <svg-car class="icon icon--as-text" /> Auto </b-badge>
       </div>
       <div v-else-if="type === 'bike'">
-        <b-badge> <svg-bike /> Vélo </b-badge>
+        <b-badge> <svg-bike class="icon icon--as-text" /> Vélo </b-badge>
       </div>
       <div v-else-if="type === 'trailer'">
-        <b-badge> <svg-trailer /> Remorque </b-badge>
+        <b-badge> <svg-trailer class="icon icon--as-text" /> Remorque </b-badge>
       </div>
 
       <div v-if="isElectric">
