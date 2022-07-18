@@ -1,11 +1,7 @@
 <template>
   <b-card class="loanable-card" no-body>
     <div class="loanable-card__image">
-      <div
-        v-if="image"
-        class="loanable-card__image__loanable"
-        :style="loanableImageStyle"
-      />
+      <div v-if="image" class="loanable-card__image__loanable" :style="loanableImageStyle" />
 
       <svg-bike
         v-else-if="type == 'bike'"
