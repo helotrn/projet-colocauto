@@ -2,7 +2,7 @@
   <b-card class="loanable-card" no-body>
     <div class="loanable-card__image">
       <div
-        v-if="loanableImage"
+        v-if="image"
         class="loanable-card__image__loanable"
         :style="loanableImageStyle"
       />
