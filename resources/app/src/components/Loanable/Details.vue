@@ -1,8 +1,26 @@
 <template>
   <div class="loanable-details">
     <header class="loanable-details__header">
-      <img class="loanable-details__image" :src="loanableImage" :alt="loanableTitle" />
-      <user-avatar :user="ownerUser" class="loanable-details__avatar" />
+      <img
+        v-if="loanableImage"
+        class="loanable-details__image"
+        :src="loanableImage"
+        :alt="loanableTitle"
+      />
+      <svg-bike
+        v-else-if="loanable.type == 'bike'"
+        class="loanable-details__image loanable-details__image--default"
+      />
+      <svg-car
+        v-else-if="loanable.type == 'car'"
+        class="loanable-details__image loanable-details__image--default"
+      />
+      <svg-trailer
+        v-else-if="loanable.type == 'trailer'"
+        class="loanable-details__image loanable-details__image--default"
+      />
+
+      <user-avatar :user="ownerUser" variant="cut-out" class="loanable-details__avatar" />
       <div class="loanable-details__tags">
         <div v-if="loanable.is_self_service">
           <b-badge variant="warning"> Libre service </b-badge>
@@ -174,6 +192,12 @@ export default {
     position: relative;
     height: 10rem;
     width: 100%;
+  }
+  &__image--default {
+    fill: $locomotion-green;
+    position: relative;
+    height: 8rem;
+    top: 1rem;
   }
   &__owner-avatar {
     position: absolute;
