@@ -182,6 +182,10 @@ export default {
 
   &__tags {
     margin-bottom: 10px;
+
+    svg path {
+      fill: currentColor;
+    }
   }
 
   &__estimated-fare {
