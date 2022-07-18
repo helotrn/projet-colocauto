@@ -212,6 +212,10 @@ export default {
     font-weight: 700;
   }
 
+  svg {
+    height: 22px;
+    width: 34px;
+  }
   svg path {
     fill: currentColor;
   }
