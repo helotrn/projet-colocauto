@@ -50,7 +50,7 @@
             </b-col>
           </b-row>
         </div>
-        <div v-else-if="item.loanable.has_padlock">
+        <div>
           <b-row>
             <b-col>
               <b-alert show variant="info">
@@ -98,12 +98,6 @@
               </b-button>
             </b-col>
           </b-row>
-        </div>
-        <div v-else>
-          <p>
-            Ce véhicule est mal configuré. Contactez le
-            <a href="mailto:support@locomotion.app">support</a>.
-          </p>
         </div>
       </b-collapse>
     </b-card-body>

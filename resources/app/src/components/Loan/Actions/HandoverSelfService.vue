@@ -51,7 +51,7 @@
             <p>L'emprunt s'est clôturé avec succès!</p>
           </b-alert>
         </div>
-        <div v-else-if="item.loanable.has_padlock">
+        <div>
           <div class="loan-actions-handover-self-service__text">
             <validation-observer ref="observer" v-slot="{ passes }">
               <b-form
@@ -135,13 +135,6 @@
               </b-form>
             </validation-observer>
           </div>
-        </div>
-
-        <div v-else>
-          <p>
-            Ce véhicule est mal configuré. Contactez le
-            <a href="mailto:support@locomotion.app">support</a>.
-          </p>
         </div>
       </b-collapse>
     </b-card-body>
