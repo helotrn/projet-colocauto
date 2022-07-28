@@ -717,19 +717,11 @@ SQL
     ) {
         // Negative case
         if (filter_var($value, FILTER_VALIDATE_BOOLEAN) === $negative) {
-            return $query->where(function ($q) {
-                return $q
-                    ->whereHas("payment", function ($q) {
-                        return $q->where("status", "!=", "completed");
-                    })
-                    ->orWhereDoesntHave("payment");
-            });
+            return $query->where("status", "!=", "completed");
         }
 
         // Positive case
-        return $query->whereHas("payment", function ($q) {
-            return $q->where("status", "completed");
-        });
+        return $query->where("status", "=", "completed");
     }
 
     public function scopeCanceled(
