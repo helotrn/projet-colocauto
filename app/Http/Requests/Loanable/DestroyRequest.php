@@ -19,8 +19,10 @@ class DestroyRequest extends BaseRequest
 
     public function rules()
     {
+        // Disallow archiving loanables when prepaid loans that are not cancelled or completed.
         $prepaidLoansLoanableIds = Loan::prepaid()
             ->completed(false)
+            ->canceled(false)
             ->pluck("loanable_id")
             ->join(",");
         return [
