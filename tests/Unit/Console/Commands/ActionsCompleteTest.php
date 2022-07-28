@@ -1000,6 +1000,10 @@ class ActionsCompleteTest extends TestCase
                 "platform_tip" => $loanCost,
             ]);
 
+        // Expenses must be 0 so as to ensure a positive value for total_actual_cost.
+        $loan->handover->purchases_amount = 0;
+        $loan->handover->save();
+
         // Setup is finished, set back test time to now.
         CarbonImmutable::setTestNow();
 

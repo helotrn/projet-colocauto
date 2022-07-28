@@ -588,8 +588,15 @@ SQL
 
     public function getTotalActualCostAttribute()
     {
+        $actual_expenses = $this->handover
+            ? $this->handover->purchases_amount
+            : 0;
+
         return round(
-            $this->actual_price + $this->actual_insurance + $this->platform_tip,
+            $this->actual_price +
+                $this->actual_insurance +
+                $this->platform_tip -
+                $actual_expenses,
             2
         );
     }
