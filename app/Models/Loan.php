@@ -373,6 +373,7 @@ SQL
         "actual_duration_in_minutes",
         "calendar_days",
         "contested_at",
+        "total_actual_cost",
         "total_final_cost",
         "total_estimated_cost",
     ];

@@ -256,8 +256,8 @@ export default {
         case "payment":
           // Payment should be displayed when the loan is not inherently free.
           // As of now, this is when the loanable is not self service.
-          // Show it anytime the final price is > 0 for whatever reason.
-          return !this.loanableIsSelfService || this.item.final_price > 0;
+          // Show it anytime the total_actual_cost is > 0 for whatever reason.
+          return !this.loanableIsSelfService || this.item.total_actual_cost > 0;
 
         default:
           return false;
