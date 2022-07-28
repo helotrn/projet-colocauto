@@ -373,6 +373,7 @@ SQL
         "actual_duration_in_minutes",
         "calendar_days",
         "contested_at",
+        "total_actual_cost",
         "total_final_cost",
         "total_estimated_cost",
     ];
@@ -588,8 +589,15 @@ SQL
 
     public function getTotalActualCostAttribute()
     {
+        $actual_expenses = $this->handover
+            ? $this->handover->purchases_amount
+            : 0;
+
         return round(
-            $this->actual_price + $this->actual_insurance + $this->platform_tip,
+            $this->actual_price +
+                $this->actual_insurance +
+                $this->platform_tip -
+                $actual_expenses,
             2
         );
     }
@@ -717,19 +725,25 @@ SQL
     ) {
         // Negative case
         if (filter_var($value, FILTER_VALIDATE_BOOLEAN) === $negative) {
-            return $query->where(function ($q) {
-                return $q
-                    ->whereHas("payment", function ($q) {
-                        return $q->where("status", "!=", "completed");
-                    })
-                    ->orWhereDoesntHave("payment");
-            });
+            return $query->where("status", "!=", "completed");
         }
 
         // Positive case
-        return $query->whereHas("payment", function ($q) {
-            return $q->where("status", "completed");
-        });
+        return $query->where("status", "=", "completed");
+    }
+
+    public function scopeCanceled(
+        Builder $query,
+        $value = true,
+        $negative = false
+    ) {
+        // Negative case
+        if (filter_var($value, FILTER_VALIDATE_BOOLEAN) === $negative) {
+            return $query->where("status", "!=", "canceled");
+        }
+
+        // Positive case
+        return $query->where("status", "=", "canceled");
     }
 
     public function scopeDepartureInLessThan(
