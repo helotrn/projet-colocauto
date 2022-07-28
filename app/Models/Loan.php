@@ -732,6 +732,20 @@ SQL
         });
     }
 
+    public function scopeCanceled(
+        Builder $query,
+        $value = true,
+        $negative = false
+    ) {
+        // Negative case
+        if (filter_var($value, FILTER_VALIDATE_BOOLEAN) === $negative) {
+            return $query->where("status", "!=", "canceled");
+        }
+
+        // Positive case
+        return $query->where("status", "=", "canceled");
+    }
+
     public function scopeDepartureInLessThan(
         Builder $query,
         $amount,
