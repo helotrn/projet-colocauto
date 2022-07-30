@@ -9,7 +9,7 @@
 
     <div class="dashboard-balance__buttons">
       <b-button class="mr-3" size="sm" variant="primary" v-b-modal.add-credit-modal>
-        {{ $t("approvisionner") }}
+        {{ $t("approvisionner") | capitalize }}
       </b-button>
 
       <span
@@ -19,12 +19,12 @@
         :title="$t('reclamer_tooltip')"
       >
         <b-button size="sm" variant="outline-primary" disabled>
-          {{ $t("reclamer") }}
+          {{ $t("reclamer") | capitalize }}
         </b-button>
       </span>
 
       <b-button v-if="user.balance >= 10" size="sm" variant="outline-primary" v-b-modal.claim-modal>
-        {{ $t("reclamer") }}
+        {{ $t("reclamer") | capitalize }}
       </b-button>
     </div>
 
@@ -52,16 +52,9 @@
   </div>
 </template>
 
-<i18n>
-fr:
-  approvisionner: Approvisionner
-  reclamer: Réclamer
-  reclamer_tooltip: Un minimum de 10$ est requis pour réclamer son solde.
-  approvisionner_popover: |
-      Approvisionnez votre compte pour économiser sur les frais de transaction.
-</i18n>
-
 <script>
+import locales from "@/locales";
+
 import UserAddCreditBox from "@/components/User/AddCreditBox.vue";
 import UserClaimCreditsBox from "@/components/User/ClaimCreditsBox.vue";
 
@@ -88,6 +81,13 @@ export default {
     async reloadUserAndCloseModal() {
       this.closeModal();
       await this.reloadUser();
+    },
+  },
+  i18n: {
+    messages: {
+      fr: {
+        ...locales.fr.components.dashboard.balance,
+      },
     },
   },
 };

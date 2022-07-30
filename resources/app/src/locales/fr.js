@@ -1,4 +1,5 @@
 import AdminFilters from "@/locales/components/Admin/Filters";
+import DashboardBalance from "@/locales/components/Dashboard/Balance";
 import AccountProfile from "@/locales/views/Profile/Account";
 import bikes from "@/locales/models/bikes";
 import borrowers from "@/locales/models/borrowers";
@@ -22,6 +23,9 @@ export default {
   components: {
     admin: {
       filters: AdminFilters.fr,
+    },
+    dashboard: {
+      balance: DashboardBalance.fr,
     },
   },
   views: {
