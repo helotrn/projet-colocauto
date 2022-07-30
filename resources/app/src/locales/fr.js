@@ -1,5 +1,6 @@
 import AdminFilters from "@/locales/components/Admin/Filters";
 import DashboardBalance from "@/locales/components/Dashboard/Balance";
+import LoginBox from "@/locales/components/Login/Box";
 import AccountProfile from "@/locales/views/Profile/Account";
 import bikes from "@/locales/models/bikes";
 import borrowers from "@/locales/models/borrowers";
@@ -27,6 +28,9 @@ export default {
     dashboard: {
       balance: DashboardBalance.fr,
     },
+    login: {
+      box: LoginBox.fr,
+    }
   },
   views: {
     profile: {

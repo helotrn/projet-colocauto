@@ -26,13 +26,13 @@
 
       <b-form-group>
         <b-form-checkbox inline v-model="rememberMe">
-          {{ $t("remember-me") }}
+          {{ $t("remember_me") }}
         </b-form-checkbox>
       </b-form-group>
 
       <b-form-group class="mb-1">
         <b-button type="submit" :disabled="loading" variant="primary" block>
-          {{ $t("login-submit") }}
+          {{ $t("login_submit") }}
         </b-button>
       </b-form-group>
     </b-form>
@@ -45,27 +45,9 @@
   </div>
 </template>
 
-<i18n>
-fr:
-  'email': Courriel
-  forgot_password: J'ai oublié mon mot de passe
-  'google': Se connecter avec Google
-  'login': Connexion
-  'login-submit': Se connecter
-  'or': OU
-  'password': Mot de passe
-  'remember-me': Se souvenir de moi
-en:
-  'email': Email
-  'google': Sign in with Google
-  'login': Login
-  'login-submit': Login
-  'or': OR
-  'password': Password
-  'remember-me': Remember me
-</i18n>
-
 <script>
+import locales from "@/locales";
+
 import Google from "@/assets/svg/google.svg";
 
 export default {
@@ -143,6 +125,16 @@ export default {
       }
 
       this.$store.commit("login/loading", false);
+    },
+  },
+  i18n: {
+    messages: {
+      fr: {
+        ...locales.fr.components.login.box,
+      },
+      en: {
+        ...locales.en.components.login.box,
+      }
     },
   },
 };

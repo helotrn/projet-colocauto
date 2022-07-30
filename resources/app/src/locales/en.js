@@ -1,6 +1,7 @@
+import AdminFilters from "@/locales/components/Admin/Filters";
+import LoginBox from "@/locales/components/Login/Box";
 import communities from "@/locales/models/communities";
 import loanables from "@/locales/models/loanables";
-import AdminFilters from "./components/Admin/Filters";
 
 export default {
   communities: communities.fr,
@@ -8,6 +9,9 @@ export default {
     admin: {
       filters: AdminFilters.en,
     },
+    login: {
+      box: LoginBox.en,
+    }
   },
   forms: {
     actions: "actions",
