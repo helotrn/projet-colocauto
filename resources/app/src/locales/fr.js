@@ -30,7 +30,7 @@ export default {
     },
     login: {
       box: LoginBox.fr,
-    }
+    },
   },
   views: {
     profile: {

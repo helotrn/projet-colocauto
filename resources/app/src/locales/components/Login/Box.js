@@ -17,6 +17,6 @@ export default {
     login_submit: "Login",
     or: "OR",
     password: "Password",
-    remember_me: "Remember me"
+    remember_me: "Remember me",
   },
 };

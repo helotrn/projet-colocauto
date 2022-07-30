@@ -11,7 +11,7 @@ export default {
     },
     login: {
       box: LoginBox.en,
-    }
+    },
   },
   forms: {
     actions: "actions",

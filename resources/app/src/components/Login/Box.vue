@@ -134,7 +134,7 @@ export default {
       },
       en: {
         ...locales.en.components.login.box,
-      }
+      },
     },
   },
 };
