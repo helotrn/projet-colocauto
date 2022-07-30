@@ -20,7 +20,7 @@
         :rules="{ required: true, min: 8 }"
         type="password"
         :placeholder="$t('new_password')"
-        description="Minimum 8 caractères"
+        :description="$t('new_password_length')"
         v-model="newPassword"
       />
 
@@ -43,18 +43,9 @@
   </div>
 </template>
 
-<i18n>
-fr:
-  email: Courriel
-  instructions: Entrez un nouveau mot de passe pour le compte associé à cette adresse.
-  new_password: Nouveau mot de passe
-  new_password_repeat: Nouveau mot de passe (confirmation)
-  reset_response_error: Une erreur s'est produite. Vérifiez l'adresse utilisée et réessayez.
-  reset_password: Réinitialisation du mot de passe
-  submit: Mettre à jour
-</i18n>
-
 <script>
+import locales from "@/locales";
+
 import FormsValidatedInput from "@/components/Forms/ValidatedInput.vue";
 
 export default {
@@ -112,6 +103,13 @@ export default {
       }
 
       this.loading = false;
+    },
+  },
+  i18n: {
+    messages: {
+      fr: {
+        ...locales.fr.views.password.reset,
+      },
     },
   },
 };

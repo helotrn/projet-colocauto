@@ -4,6 +4,8 @@ import LoginBox from "@/locales/components/Login/Box";
 import RegisterForm from "@/locales/components/Register/RegisterForm";
 import UserEmailForm from "@/locales/components/User/EmailForm";
 import UserPasswordForm from "@/locales/components/User/PasswordForm";
+import PasswordRequest from "@/locales/views/Password/Request";
+import PasswordReset from "@/locales/views/Password/Reset";
 import AccountProfile from "@/locales/views/Profile/Account";
 import bikes from "@/locales/models/bikes";
 import borrowers from "@/locales/models/borrowers";
@@ -45,6 +47,10 @@ export default {
   views: {
     profile: {
       account: AccountProfile.fr,
+    },
+    password: {
+      request: PasswordRequest.fr,
+      reset: PasswordReset.fr,
     },
   },
   faq: faq.fr,
