@@ -38,48 +38,31 @@
           :rules="{ required: true, min: 8 }"
           type="password"
           :placeholder="$t('password')"
-          description="Minimum 8 caractères"
+          :description="$t('password_length')"
           v-model="password"
         />
 
         <forms-validated-input
           mode="eager"
           name="password_repeat"
-          :label="$t('password-repeat')"
+          :label="$t('password_repeat')"
           :rules="{ required: true, is: password }"
           type="password"
-          :placeholder="$t('password-repeat')"
+          :placeholder="$t('password_repeat')"
           v-model="passwordRepeat"
         />
 
         <b-button type="submit" :disabled="loading" variant="primary" block class="btn-register">
-          {{ $t("register-submit") }}
+          {{ $t("register_submit") }}
         </b-button>
       </b-form>
     </validation-observer>
   </div>
 </template>
 
-<i18n>
-fr:
-  'register': Bienvenue sur LocoMotion
-  'google': Inscription via Google
-  'or': OU VIA COURRIEL
-  'email': Courriel
-  'password': Mot de passe
-  'password-repeat': Mot de passe (confirmation)
-  'register-submit': S'inscrire
-en:
-  'register': Register
-  'google': Sign up with Google
-  'or': OR
-  'email': Email
-  'password': Password
-  'password-repeat': Password (confirmation)
-  'register-submit': Register
-</i18n>
-
 <script>
+import locales from "@/locales";
+
 import FormsValidatedInput from "@/components/Forms/ValidatedInput.vue";
 
 import { extractErrors } from "@/helpers";
@@ -138,7 +121,7 @@ export default {
             default:
               this.$store.commit("addNotification", {
                 content: extractErrors(e.response.data).join(", "),
-                title: "Erreur d'inscription",
+                title: this.$i18n.t("register_error"),
                 variant: "danger",
                 type: "register",
               });
@@ -147,6 +130,16 @@ export default {
       }
 
       this.$store.commit("register/loading", false);
+    },
+  },
+  i18n: {
+    messages: {
+      fr: {
+        ...locales.fr.components.register.registerform,
+      },
+      en: {
+        ...locales.en.components.register.registerform,
+      },
     },
   },
 };

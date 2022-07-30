@@ -1,6 +1,7 @@
 import AdminFilters from "@/locales/components/Admin/Filters";
 import DashboardBalance from "@/locales/components/Dashboard/Balance";
 import LoginBox from "@/locales/components/Login/Box";
+import RegisterForm from "@/locales/components/Register/RegisterForm";
 import AccountProfile from "@/locales/views/Profile/Account";
 import bikes from "@/locales/models/bikes";
 import borrowers from "@/locales/models/borrowers";
@@ -30,6 +31,9 @@ export default {
     },
     login: {
       box: LoginBox.fr,
+    },
+    register: {
+      registerform: RegisterForm.fr,
     },
   },
   views: {

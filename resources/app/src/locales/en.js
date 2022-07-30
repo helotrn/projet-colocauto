@@ -1,5 +1,6 @@
 import AdminFilters from "@/locales/components/Admin/Filters";
 import LoginBox from "@/locales/components/Login/Box";
+import RegisterForm from "@/locales/components/Register/RegisterForm";
 import communities from "@/locales/models/communities";
 import loanables from "@/locales/models/loanables";
 
@@ -11,6 +12,9 @@ export default {
     },
     login: {
       box: LoginBox.en,
+    },
+    register: {
+      registerform: RegisterForm.en,
     },
   },
   forms: {
