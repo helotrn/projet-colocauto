@@ -3,6 +3,7 @@ import DashboardBalance from "@/locales/components/Dashboard/Balance";
 import LoginBox from "@/locales/components/Login/Box";
 import RegisterForm from "@/locales/components/Register/RegisterForm";
 import UserEmailForm from "@/locales/components/User/EmailForm";
+import UserPasswordForm from "@/locales/components/User/PasswordForm";
 import AccountProfile from "@/locales/views/Profile/Account";
 import bikes from "@/locales/models/bikes";
 import borrowers from "@/locales/models/borrowers";
@@ -38,6 +39,7 @@ export default {
     },
     user: {
       emailform: UserEmailForm.fr,
+      passwordform: UserPasswordForm.fr,
     },
   },
   views: {
