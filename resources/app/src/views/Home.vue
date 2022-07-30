@@ -203,6 +203,8 @@ fr:
 </i18n>
 
 <script>
+import locales from "@/locales";
+
 import MainFaq from "@/components/Misc/MainFaq.vue";
 import PartnersSection from "@/components/Misc/PartnersSection.vue";
 
@@ -321,6 +323,13 @@ export default {
     if (this.isLoggedIn && !this.isGlobalAdmin && !this.hasCompletedRegistration) {
       this.$router.push("register");
     }
+  },
+  i18n: {
+    messages: {
+      fr: {
+        ...locales.fr.views.home,
+      },
+    },
   },
 };
 </script>

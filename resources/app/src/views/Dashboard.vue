@@ -193,17 +193,9 @@
   </layout-page>
 </template>
 
-<i18n>
-fr:
-  welcome_text: Bienvenue {name},
-  welcome_description: Vous êtes {approvedUserCount} voisin-e-s à {community}.
-  lead_text: |
-    Vous y êtes presque. Il ne vous manque que quelques étapes, pour prendre la route!
-en:
-  welcome_text: Welcome {name}!
-</i18n>
-
 <script>
+import locales from "@/locales";
+
 import Authenticated from "@/mixins/Authenticated";
 import UserMixin from "@/mixins/UserMixin";
 
@@ -288,6 +280,16 @@ export default {
     },
     isBorrower(loan) {
       return this.user.id === loan.borrower.user.id;
+    },
+  },
+  i18n: {
+    messages: {
+      fr: {
+        ...locales.fr.views.dashboard,
+      },
+      en: {
+        ...locales.en.views.dashboard,
+      },
     },
   },
 };
