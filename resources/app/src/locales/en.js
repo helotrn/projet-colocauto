@@ -4,7 +4,7 @@ import communities from "@/locales/models/communities";
 import loanables from "@/locales/models/loanables";
 
 export default {
-  communities: communities.fr,
+  communities: communities.en,
   components: {
     admin: {
       filters: AdminFilters.en,
