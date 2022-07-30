@@ -34,6 +34,7 @@ export default {
     actions: "actions",
     afficher: "afficher",
     approuver: "approuver",
+    archiver: "archiver",
     enregistrer: "enregistrer",
     facultatif: "facultatif",
     modifier: "modifier",

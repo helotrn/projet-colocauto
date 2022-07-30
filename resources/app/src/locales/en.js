@@ -11,6 +11,7 @@ export default {
   },
   forms: {
     actions: "actions",
+    archiver: "archive",
     modifier: "modify",
     restaurer: "restore",
     supprimer: "delete",
