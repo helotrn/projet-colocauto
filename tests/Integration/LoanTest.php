@@ -238,7 +238,7 @@ class LoanTest extends TestCase
             "page" => 1,
             "per_page" => 10,
             "fields" => "id,name,last_name,full_name,email",
-            "loan_status" => "completed",
+            "status" => "completed",
         ];
         $response = $this->json("GET", "/api/v1/loans/", $data);
         $response
@@ -933,6 +933,9 @@ class LoanTest extends TestCase
             ])
         );
 
+        // Reload loan from database before testing
+        $loan->refresh();
+
         $this->assertEquals(120, $loan->actual_duration_in_minutes);
         $this->json("GET", "/api/v1/loans/$loan->id")->assertJson([
             "actual_duration_in_minutes" => 120,
@@ -986,6 +989,9 @@ class LoanTest extends TestCase
             ])
         );
 
+        // Reload loan from database before testing
+        $loan->refresh();
+
         $this->assertEquals(360, $loan->actual_duration_in_minutes);
         $this->json("GET", "/api/v1/loans/$loan->id")->assertJson([
             "actual_duration_in_minutes" => 360,
@@ -1017,8 +1023,6 @@ class LoanTest extends TestCase
         $payment->executed_at = Carbon::now()->add(30, "minutes");
         $payment->save();
 
-        $loan = $loan->fresh();
-
         $loan->extensions()->save(
             factory(Extension::class)->make([
                 "new_duration" => 120,
@@ -1033,6 +1037,9 @@ class LoanTest extends TestCase
                 "status" => "canceled",
             ])
         );
+
+        // Reload loan from database before testing
+        $loan->refresh();
 
         $this->assertEquals(30, $loan->actual_duration_in_minutes);
         $this->json("GET", "/api/v1/loans/$loan->id")->assertJson([
@@ -1080,7 +1087,8 @@ class LoanTest extends TestCase
             ])
         );
 
-        $loan = $loan->fresh();
+        // Reload loan from database before testing
+        $loan->refresh();
 
         $this->assertEquals(0, $loan->actual_duration_in_minutes);
         $this->json("GET", "/api/v1/loans/$loan->id")->assertJson([

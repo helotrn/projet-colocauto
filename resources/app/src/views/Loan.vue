@@ -23,7 +23,7 @@
             variant="warning"
             v-if="
               !!item.id &&
-              item.loan_status === 'in_process' &&
+              item.status === 'in_process' &&
               !loanIsCanceled &&
               !hasReachedStep('takeover') &&
               !hasReachedStep('handover') &&

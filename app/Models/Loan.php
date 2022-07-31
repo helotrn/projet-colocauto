@@ -14,6 +14,7 @@ use App\Models\Takeover;
 use App\Transformers\LoanTransformer;
 use App\Casts\TimestampWithTimezoneCast;
 use Carbon\Carbon;
+use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -63,7 +64,7 @@ class Loan extends BaseModel
     {
         parent::boot();
 
-        // Update loan.status whenever an action is changed.
+        // Update loan.status and loan.actual_return_at whenever an action is changed.
         foreach (
             [
                 \App\Models\Extension::class,
@@ -77,31 +78,69 @@ class Loan extends BaseModel
             as $class
         ) {
             $class::saved(function ($model) {
+                $changed = false;
+
                 $loan = $model->loan;
-                $loan->status = $loan->getStatusFromActions();
-                $loan->save();
+
+                $newStatus = $loan->getStatusFromActions();
+                if ($newStatus != $loan->status) {
+                    $loan->status = $newStatus;
+                    $changed = true;
+                }
+
+                // Work with Carbon objects.
+                $curReturnAt = $loan->actual_return_at
+                    ? Carbon::parse($loan->actual_return_at)
+                    : null;
+                $newReturnAt = $loan->getActualReturnAtFromActions();
+
+                if (!$curReturnAt || !$newReturnAt->equalTo($curReturnAt)) {
+                    $loan->actual_return_at = $newReturnAt;
+                    $changed = true;
+                }
+
+                if ($changed) {
+                    $loan->save();
+                }
             });
 
             $class::deleted(function ($model) {
+                $changed = false;
+
                 $loan = $model->loan;
-                $loan->status = $loan->getStatusFromActions();
-                $loan->save();
+
+                $newStatus = $loan->getStatusFromActions();
+                if ($newStatus != $loan->status) {
+                    $loan->status = $newStatus;
+                    $changed = true;
+                }
+
+                // Work with Carbon objects.
+                $curReturnAt = $loan->actual_return_at
+                    ? Carbon::parse($loan->actual_return_at)
+                    : null;
+                $newReturnAt = $loan->getActualReturnAtFromActions();
+
+                if (!$curReturnAt || !$newReturnAt->equalTo($curReturnAt)) {
+                    $loan->actual_return_at = $newReturnAt;
+                    $changed = true;
+                }
+
+                if ($changed) {
+                    $loan->save();
+                }
             });
         }
 
-        // Update loan.status if loan.canceled_at has changed.
-        self::saved(function ($loan) {
-            $initialStatus = $loan->status;
-
+        // Update loan.status and loan.actual_return_at before saving
+        self::saving(function ($loan) {
             if ($loan->canceled_at && "canceled" != $loan->status) {
                 $loan->status = "canceled";
             } elseif (!$loan->canceled_at) {
                 $loan->status = $loan->getStatusFromActions();
             }
 
-            if ($loan->status != $initialStatus) {
-                $loan->save();
-            }
+            $loan->actual_return_at = $loan->getActualReturnAtFromActions();
         });
     }
 
@@ -133,43 +172,6 @@ SQL;
                 return $query->selectRaw("$calendarDaysSql AS calendar_days");
             },
 
-            // This attribute is deprecated. Refer to loans.status instead.
-            "loan_status" => function ($query = null) {
-                $sql = \DB::raw(
-                    <<<SQL
-CASE
-WHEN loans.canceled_at IS NOT NULL THEN 'canceled'
-ELSE loan_status_subquery.status
-END
-SQL
-                );
-
-                if (!$query) {
-                    return $sql;
-                }
-
-                if (false === strpos($query->toSql(), "loan_status_subquery")) {
-                    $query
-                        ->selectRaw(\DB::raw("$sql AS loan_status"))
-                        ->leftJoinSub(
-                            <<<SQL
-SELECT DISTINCT ON (loan_id)
-    loan_id,
-    status
-FROM actions
-WHERE actions.type NOT IN ('extension', 'incident')
-ORDER by loan_id ASC, id DESC
-SQL
-                            ,
-                            "loan_status_subquery",
-                            "loan_status_subquery.loan_id",
-                            "=",
-                            "loans.id"
-                        );
-                }
-
-                return $query;
-            },
             // See comments in getActualDurationInMinutesAttribute
             "actual_duration_in_minutes" => function ($query = null) {
                 $sql = <<<SQL
@@ -346,6 +348,7 @@ SQL
     protected $casts = [
         "departure_at" => TimestampWithTimezoneCast::class,
         "canceled_at" => TimestampWithTimezoneCast::class,
+        "actual_return_at" => TimestampWithTimezoneCast::class,
         "meta" => "array",
     ];
 
@@ -370,7 +373,7 @@ SQL
         "actual_duration_in_minutes",
         "calendar_days",
         "contested_at",
-        "loan_status",
+        "total_actual_cost",
         "total_final_cost",
         "total_estimated_cost",
     ];
@@ -584,30 +587,17 @@ SQL
         return max(0, is_array($values) ? $values[1] : $values);
     }
 
-    /*
-      Deprecated. Use loans.status.
-    */
-    public function getLoanStatusAttribute()
-    {
-        if (isset($this->attributes["loan_status"])) {
-            return $this->attributes["loan_status"];
-        }
-
-        if ($this->isCanceled()) {
-            return "canceled";
-        }
-
-        if ($action = $this->actions->last()) {
-            return $action->status;
-        }
-
-        return null;
-    }
-
     public function getTotalActualCostAttribute()
     {
+        $actual_expenses = $this->handover
+            ? $this->handover->purchases_amount
+            : 0;
+
         return round(
-            $this->actual_price + $this->actual_insurance + $this->platform_tip,
+            $this->actual_price +
+                $this->actual_insurance +
+                $this->platform_tip -
+                $actual_expenses,
             2
         );
     }
@@ -735,19 +725,25 @@ SQL
     ) {
         // Negative case
         if (filter_var($value, FILTER_VALIDATE_BOOLEAN) === $negative) {
-            return $query->where(function ($q) {
-                return $q
-                    ->whereHas("payment", function ($q) {
-                        return $q->where("status", "!=", "completed");
-                    })
-                    ->orWhereDoesntHave("payment");
-            });
+            return $query->where("status", "!=", "completed");
         }
 
         // Positive case
-        return $query->whereHas("payment", function ($q) {
-            return $q->where("status", "completed");
-        });
+        return $query->where("status", "=", "completed");
+    }
+
+    public function scopeCanceled(
+        Builder $query,
+        $value = true,
+        $negative = false
+    ) {
+        // Negative case
+        if (filter_var($value, FILTER_VALIDATE_BOOLEAN) === $negative) {
+            return $query->where("status", "!=", "canceled");
+        }
+
+        // Positive case
+        return $query->where("status", "=", "canceled");
     }
 
     public function scopeDepartureInLessThan(
@@ -829,8 +825,8 @@ SQL
     }
 
     /*
-      This function is used to compute the loan_status attribute and should be
-      the single source of truth.
+      This function is used to compute the status attribute of a loan and
+      should be the single source of truth.
 
       Possible states:
         - in_process
@@ -846,53 +842,88 @@ SQL
     public function getStatusFromActions()
     {
         // Loan is canceled if pre-payment is canceled.
-        foreach ($this->actions as $action) {
-            if ("pre_payment" == $action->type) {
-                switch ($action->status) {
-                    case "canceled":
-                        return "canceled";
-                        break;
-                }
+        $action = $this->prePayment;
+        if ($action) {
+            switch ($action->status) {
+                case "canceled":
+                    return "canceled";
+                    break;
             }
         }
 
         // Payment
-        foreach ($this->actions as $action) {
-            if ("payment" == $action->type) {
-                switch ($action->status) {
-                    case "in_process":
-                    case "completed":
-                        return $action->status;
-                        break;
-                    default:
-                        throw new \Exception(
-                            "Unexpected status for loan action: payment."
-                        );
-                        break;
-                }
+        $action = $this->payment;
+        if ($action) {
+            switch ($action->status) {
+                case "in_process":
+                case "completed":
+                    return $action->status;
+                    break;
+                default:
+                    throw new \Exception(
+                        "Unexpected status for loan action: payment."
+                    );
+                    break;
             }
         }
 
         // Intention
-        foreach ($this->actions as $action) {
-            if ("intention" == $action->type) {
-                switch ($action->status) {
-                    case "canceled":
-                        return "canceled";
-                        break;
-                    case "in_process":
-                    case "completed":
-                        return "in_process";
-                        break;
-                    default:
-                        throw new \Exception(
-                            "Unexpected status for loan action: takeover."
-                        );
-                        break;
-                }
+        $action = $this->intention;
+        if ($action) {
+            switch ($action->status) {
+                case "canceled":
+                    return "canceled";
+                    break;
+                case "in_process":
+                case "completed":
+                    return "in_process";
+                    break;
+                default:
+                    throw new \Exception(
+                        "Unexpected status for loan action: takeover."
+                    );
+                    break;
             }
         }
 
         return "in_process";
+    }
+
+    /*
+      This function is used to compute the loan.actual_return_at attribute and
+      should be the single source of truth.
+
+      Acounts for loan duration_in_minutes, accepted extensions and early payments.
+
+      Refer to database/migrations/2022_06_08_093323_set_actual_return_at.php
+      to see how older cases were accounted for.
+    */
+    public function getActualReturnAtFromActions()
+    {
+        $departureAt = CarbonImmutable::parse($this->departure_at);
+
+        $durationMinutes = $this->duration_in_minutes;
+
+        // Account for the longest accepted extension
+        foreach ($this->extensions as $extension) {
+            if ("extension" == $extension->type && $extension->isCompleted()) {
+                if ($extension->new_duration > $durationMinutes) {
+                    $durationMinutes = $extension->new_duration;
+                }
+            }
+        }
+
+        $returnAt = $departureAt->addMinutes($durationMinutes);
+
+        // Account for early payment.
+        $payment = $this->payment;
+        if ($payment && $payment->isCompleted()) {
+            $paymentTime = CarbonImmutable::parse($payment->executed_at);
+            if ($paymentTime->lessThan($returnAt)) {
+                $returnAt = $paymentTime;
+            }
+        }
+
+        return $returnAt;
     }
 }

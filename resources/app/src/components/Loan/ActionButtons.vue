@@ -1,7 +1,7 @@
 <template>
   <div
     class="loan__actions__buttons text-right mb-3"
-    v-if="!!item.id && item.loan_status === 'in_process' && !loanIsCanceled"
+    v-if="!!item.id && item.status === 'in_process' && !loanIsCanceled"
   >
     <b-button
       class="mr-0 ml-3 mb-3"
@@ -49,6 +49,7 @@ export default {
   name: "ActionButtons",
   mixins: [LoanStepsSequence, UserMixin],
   props: {
+    // Item is a loan.
     item: {
       type: Object,
       required: true,

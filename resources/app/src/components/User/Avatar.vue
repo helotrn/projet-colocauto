@@ -1,5 +1,6 @@
 <template>
   <div class="user-avatar">
+    <div class="user-avatar__background" v-if="variant == 'cut-out'"></div>
     <img class="user-avatar__image" v-if="user.avatar" :src="user.avatar.sizes.thumbnail" />
     <div class="user-avatar__initials" v-else-if="userInitials">
       {{ userInitials }}
@@ -21,6 +22,9 @@ export default {
   props: {
     user: {
       type: Object,
+    },
+    variant: {
+      type: String,
     },
   },
   computed: {
@@ -45,6 +49,20 @@ export default {
 
   font-weight: 700;
   color: $white;
+
+  // Background is just a bit wider than the avatar.
+  &__background {
+    position: absolute;
+    top: -0.125rem;
+    left: -0.125rem;
+
+    height: 3.25rem;
+    width: 3.25rem;
+    background-color: $white;
+
+    // That makes a rounded div no matter the size.
+    border-radius: 99999px;
+  }
 
   &__image,
   &__initials,

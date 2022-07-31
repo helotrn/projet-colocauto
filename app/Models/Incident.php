@@ -12,7 +12,7 @@ class Incident extends Action
         "incident_type" => ["required", "in:accident,small_incident,general"],
     ];
 
-    protected $fillable = ["incident_type", "comments_on_incident"];
+    protected $fillable = ["loan_id", "incident_type", "comments_on_incident"];
 
     public static function boot()
     {

@@ -51,7 +51,7 @@
             <p>L'emprunt s'est clôturé avec succès!</p>
           </b-alert>
         </div>
-        <div v-else-if="item.loanable.has_padlock">
+        <div>
           <div class="loan-actions-handover-self-service__text">
             <validation-observer ref="observer" v-slot="{ passes }">
               <b-form
@@ -80,7 +80,7 @@
                   <b-col>
                     <blockquote v-if="action.comments_by_borrower">
                       {{ action.comments_by_borrower }}
-                      <div class="user-avatar" :style="{ backgroundImage: borrowerAvatar }" />
+                      <user-avatar :user="borrower.user" />
                     </blockquote>
                   </b-col>
                 </b-row>
@@ -136,13 +136,6 @@
             </validation-observer>
           </div>
         </div>
-
-        <div v-else>
-          <p>
-            Ce véhicule est mal configuré. Contactez le
-            <a href="mailto:support@locomotion.app">support</a>.
-          </p>
-        </div>
       </b-collapse>
     </b-card-body>
   </b-card>
@@ -153,6 +146,7 @@ import FormsImageUploader from "@/components/Forms/ImageUploader.vue";
 import FormsValidatedInput from "@/components/Forms/ValidatedInput.vue";
 
 import UserAddCreditBox from "@/components/User/AddCreditBox.vue";
+import UserAvatar from "@/components/User/Avatar.vue";
 
 import LoanActionsMixin from "@/mixins/LoanActionsMixin";
 
@@ -179,6 +173,7 @@ export default {
     FormsImageUploader,
     FormsValidatedInput,
     UserAddCreditBox,
+    UserAvatar,
   },
   computed: {
     finalPrice() {

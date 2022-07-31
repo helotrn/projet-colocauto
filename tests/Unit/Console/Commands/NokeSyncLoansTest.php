@@ -32,19 +32,22 @@ class NokeSyncLoansTest extends TestCase
         $now = Carbon::now();
         Carbon::setTestNow($now);
 
+        // Loan that should be asserted in count
         $validLoan = factory(Loan::class)
             ->states("withCompletedIntention", "withCompletedPrePayment")
             ->create([
                 "departure_at" => $now->copy()->add(10, "minutes"),
                 "loanable_id" => $bikeWithPadlock,
-            ]);
+            ])
+            ->refresh();
 
         $validFutureLoan = factory(Loan::class)
             ->states("withCompletedIntention", "withCompletedPrePayment")
             ->create([
                 "departure_at" => $now->copy()->add(20, "minutes"),
                 "loanable_id" => $bikeWithPadlock,
-            ]);
+            ])
+            ->refresh();
 
         $canceledLoan = factory(Loan::class)
             ->states("withCompletedIntention", "withCompletedPrePayment")
@@ -52,32 +55,25 @@ class NokeSyncLoansTest extends TestCase
                 "canceled_at" => $now->copy()->add(10, "minutes"),
                 "departure_at" => $now->copy()->add(10, "minutes"),
                 "loanable_id" => $bikeWithPadlock,
-            ]);
-
-        $indirectlyCanceledLoan = factory(Loan::class)
-            ->states(
-                "withCompletedIntention",
-                "withCompletedPrePayment",
-                "withCanceledHandover"
-            )
-            ->create([
-                "departure_at" => $now->copy()->add(10, "minutes"),
-                "loanable_id" => $bikeWithPadlock,
-            ]);
+            ])
+            ->refresh();
 
         $unpaidValidLoan = factory(Loan::class)
             ->states("withAllStepsCompleted")
             ->create([
                 "departure_at" => $now->copy()->add(10, "minutes"),
                 "loanable_id" => $bikeWithPadlock,
-            ]);
+            ])
+            ->refresh();
 
+        // Loan that should be asserted in count
         $paidValidLoan = factory(Loan::class)
             ->states("withAllStepsCompleted", "butPaymentInProcess")
             ->create([
                 "departure_at" => $now->copy()->add(10, "minutes"),
                 "loanable_id" => $bikeWithPadlock,
-            ]);
+            ])
+            ->refresh();
 
         $query = NokeSyncLoansCommand::getLoansFromPadlockMacQuery([
             "mac_address" => $bikeWithPadlock->padlock->mac_address,

@@ -244,22 +244,20 @@ class Loanable extends BaseModel
             $query = $query->whereNotIn("loans.id", $ignoreLoanIds);
         }
 
-        $cDef = Loan::getColumnsDefinition();
-        $query = $cDef["*"]($query);
-        $query = $cDef["loan_status"]($query);
-        $query = $cDef["actual_duration_in_minutes"]($query);
-
         $query
-            ->where(\DB::raw($cDef["loan_status"]()), "!=", "canceled")
+            ->where("status", "!=", "canceled")
             ->whereHas("intention", function ($q) {
                 return $q->where("status", "=", "completed");
             })
-            ->whereRaw(
-                "(departure_at + " .
-                    "COALESCE({$cDef["actual_duration_in_minutes"]()}, duration_in_minutes) " .
-                    "* interval '1 minute') > ?",
-                [$departureAt]
-            )
+            /*
+                Intersection if: a1 > b0 and a0 < b1
+
+                    a0           a1
+                    [------------)
+                          [------------)
+                          b0           b1
+            */
+            ->where("actual_return_at", ">", $departureAt)
             ->where("departure_at", "<", $returnAt)
             ->where("loanable_id", $this->id);
 

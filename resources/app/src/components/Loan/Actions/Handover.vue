@@ -202,7 +202,7 @@
                   />
                   <blockquote v-else-if="action.comments_by_borrower">
                     {{ action.comments_by_borrower }}
-                    <div class="user-avatar" :style="{ backgroundImage: borrowerAvatar }" />
+                    <user-avatar :user="borrower.user" />
                   </blockquote>
                 </b-col>
               </b-row>
@@ -228,7 +228,7 @@
                   />
                   <blockquote v-else-if="action.comments_by_owner">
                     {{ action.comments_by_owner }}
-                    <div class="user-avatar" :style="{ backgroundImage: ownerAvatar }" />
+                    <user-avatar :user="owner.user" />
                   </blockquote>
                 </b-col>
               </b-row>
@@ -464,6 +464,7 @@
 <script>
 import FormsImageUploader from "@/components/Forms/ImageUploader.vue";
 import FormsValidatedInput from "@/components/Forms/ValidatedInput.vue";
+import UserAvatar from "@/components/User/Avatar.vue";
 
 import LoanActionsMixin from "@/mixins/LoanActionsMixin";
 import LoanStepsSequence from "@/mixins/LoanStepsSequence";
@@ -485,6 +486,7 @@ export default {
   components: {
     FormsImageUploader,
     FormsValidatedInput,
+    UserAvatar,
   },
 };
 </script>

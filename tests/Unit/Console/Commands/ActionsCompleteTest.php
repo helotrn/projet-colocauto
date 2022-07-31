@@ -43,7 +43,8 @@ class ActionsCompleteTest extends TestCase
                 "duration_in_minutes" => 50,
                 "loanable_id" => $loanable->id,
                 "platform_tip" => 0,
-            ]);
+            ])
+            ->refresh();
         $expectedLoanIds[] = $unpaidCompletedLoanEndingMoreThan48HoursAgo->id;
 
         $unpaidCompletedLoanEndingLessThan48HoursAgo = factory(Loan::class)
@@ -56,7 +57,7 @@ class ActionsCompleteTest extends TestCase
                 "loanable_id" => $loanable->id,
                 "platform_tip" => 0,
             ])
-            ->fresh();
+            ->refresh();
 
         $unpaidCompletedLoanEndingLessThan48HoursAgoCanceled = factory(
             Loan::class
@@ -70,7 +71,8 @@ class ActionsCompleteTest extends TestCase
                 "loanable_id" => $loanable->id,
                 "platform_tip" => 0,
                 "canceled_at" => $twoDaysAgo->subMinutes(30),
-            ]);
+            ])
+            ->refresh();
 
         $unpaidCompletedLoanEndingMoreThan48HoursAgoExtended = factory(
             Loan::class
@@ -88,7 +90,8 @@ class ActionsCompleteTest extends TestCase
                 "duration_in_minutes" => 50,
                 "loanable_id" => $loanable->id,
                 "platform_tip" => 0,
-            ]);
+            ])
+            ->refresh();
         $expectedLoanIds[] =
             $unpaidCompletedLoanEndingMoreThan48HoursAgoExtended->id;
 
@@ -145,6 +148,9 @@ class ActionsCompleteTest extends TestCase
         // Setup is finished, set back test time to now.
         CarbonImmutable::setTestNow();
 
+        // Ensure we fetch loan back from the database
+        $loan->refresh();
+
         // Validate preconditions
         $this->assertEquals(
             "in_process",
@@ -153,10 +159,10 @@ class ActionsCompleteTest extends TestCase
         $this->assertEquals("in_process", $loan->status);
 
         // Run the command
-        app(ActionsCompleteCommand::class)->handle();
+        $this->artisan("actions:complete")->assertExitCode(0);
 
         // Ensure we fetch loan back from the database
-        $loan = $loan->fresh();
+        $loan->refresh();
 
         // Loan and intention must remain in process
         $this->assertEquals(
@@ -206,6 +212,9 @@ class ActionsCompleteTest extends TestCase
         // Setup is finished, set back test time to now.
         CarbonImmutable::setTestNow();
 
+        // Ensure we fetch loan back from the database
+        $loan->refresh();
+
         // Validate preconditions
         $this->assertEquals(
             "in_process",
@@ -214,10 +223,10 @@ class ActionsCompleteTest extends TestCase
         $this->assertEquals("in_process", $loan->status);
 
         // Run the command
-        app(ActionsCompleteCommand::class)->handle();
+        $this->artisan("actions:complete")->assertExitCode(0);
 
         // Ensure we fetch loan back from the database
-        $loan = $loan->fresh();
+        $loan->refresh();
 
         // Intention remains in process, but loan must be canceled.
         $this->assertEquals(
@@ -267,6 +276,9 @@ class ActionsCompleteTest extends TestCase
         // Setup is finished, set back test time to now.
         CarbonImmutable::setTestNow();
 
+        // Ensure we fetch loan back from the database
+        $loan->refresh();
+
         // Validate preconditions
         $this->assertEquals(
             "in_process",
@@ -275,10 +287,10 @@ class ActionsCompleteTest extends TestCase
         $this->assertEquals("in_process", $loan->status);
 
         // Run the command
-        app(ActionsCompleteCommand::class)->handle();
+        $this->artisan("actions:complete")->assertExitCode(0);
 
         // Ensure we fetch loan back from the database
-        $loan = $loan->fresh();
+        $loan->refresh();
 
         // Loan and takeover must remain in process
         $this->assertEquals(
@@ -328,6 +340,9 @@ class ActionsCompleteTest extends TestCase
         // Setup is finished, set back test time to now.
         CarbonImmutable::setTestNow();
 
+        // Ensure we fetch loan back from the database
+        $loan->refresh();
+
         // Validate preconditions
         $this->assertEquals(
             "in_process",
@@ -336,10 +351,10 @@ class ActionsCompleteTest extends TestCase
         $this->assertEquals("in_process", $loan->status);
 
         // Run the command
-        app(ActionsCompleteCommand::class)->handle();
+        $this->artisan("actions:complete")->assertExitCode(0);
 
         // Ensure we fetch loan back from the database
-        $loan = $loan->fresh();
+        $loan->refresh();
 
         // Takeover remains in process, but loan must be canceled.
         $this->assertEquals(
@@ -394,6 +409,9 @@ class ActionsCompleteTest extends TestCase
         // Setup is finished, set back test time to now.
         CarbonImmutable::setTestNow();
 
+        // Ensure we fetch loan back from the database
+        $loan->refresh();
+
         // Validate preconditions
         $this->assertEquals(
             "in_process",
@@ -402,10 +420,10 @@ class ActionsCompleteTest extends TestCase
         $this->assertEquals("in_process", $loan->status);
 
         // Run the command
-        app(ActionsCompleteCommand::class)->handle();
+        $this->artisan("actions:complete")->assertExitCode(0);
 
         // Ensure we fetch loan back from the database
-        $loan = $loan->fresh();
+        $loan->refresh();
 
         // Loan and handover must remain in process
         $this->assertEquals(
@@ -460,6 +478,9 @@ class ActionsCompleteTest extends TestCase
         // Setup is finished, set back test time to now.
         CarbonImmutable::setTestNow();
 
+        // Ensure we fetch loan back from the database
+        $loan->refresh();
+
         // Validate preconditions
         $this->assertEquals(
             "in_process",
@@ -472,11 +493,11 @@ class ActionsCompleteTest extends TestCase
         // Run the command
         // At the moment, the command only completes one step at a time. Call
         // it twice so as to complete handover and payment.
-        app(ActionsCompleteCommand::class)->handle();
-        app(ActionsCompleteCommand::class)->handle();
+        $this->artisan("actions:complete")->assertExitCode(0);
+        $this->artisan("actions:complete")->assertExitCode(0);
 
         // Ensure we fetch loan back from the database
-        $loan = $loan->fresh();
+        $loan->refresh();
 
         // Loan, handover and payment must be completed
         $this->assertEquals(
@@ -535,6 +556,9 @@ class ActionsCompleteTest extends TestCase
         // Setup is finished, set back test time to now.
         CarbonImmutable::setTestNow();
 
+        // Ensure we fetch loan back from the database
+        $loan->refresh();
+
         // Validate preconditions
         $this->assertEquals(
             "in_process",
@@ -543,10 +567,10 @@ class ActionsCompleteTest extends TestCase
         $this->assertEquals("in_process", $loan->status);
 
         // Run the command
-        app(ActionsCompleteCommand::class)->handle();
+        $this->artisan("actions:complete")->assertExitCode(0);
 
         // Ensure we fetch loan back from the database
-        $loan = $loan->fresh();
+        $loan->refresh();
 
         // Handover must be completed
         // Loan and payment must remain in_process
@@ -616,6 +640,9 @@ class ActionsCompleteTest extends TestCase
         // Setup is finished, set back test time to now.
         CarbonImmutable::setTestNow();
 
+        // Ensure we fetch loan back from the database
+        $loan->refresh();
+
         // Validate preconditions
         $this->assertEquals(
             "in_process",
@@ -629,10 +656,10 @@ class ActionsCompleteTest extends TestCase
         }
 
         // Run the command
-        app(ActionsCompleteCommand::class)->handle();
+        $this->artisan("actions:complete")->assertExitCode(0);
 
         // Ensure we fetch loan back from the database
-        $loan = $loan->fresh();
+        $loan->refresh();
 
         // Loan and handover must remain in process
         $this->assertEquals(
@@ -696,6 +723,9 @@ class ActionsCompleteTest extends TestCase
         // Setup is finished, set back test time to now.
         CarbonImmutable::setTestNow();
 
+        // Ensure we fetch loan back from the database
+        $loan->refresh();
+
         // Validate preconditions
         $this->assertEquals(
             "in_process",
@@ -711,11 +741,11 @@ class ActionsCompleteTest extends TestCase
         // Run the command
         // At the moment, the command only completes one step at a time. Call
         // it twice so as to complete handover and payment.
-        app(ActionsCompleteCommand::class)->handle();
-        app(ActionsCompleteCommand::class)->handle();
+        $this->artisan("actions:complete")->assertExitCode(0);
+        $this->artisan("actions:complete")->assertExitCode(0);
 
         // Ensure we fetch loan back from the database
-        $loan = $loan->fresh();
+        $loan->refresh();
 
         // Loan, handover and payment must be completed
         $this->assertEquals(
@@ -773,6 +803,9 @@ class ActionsCompleteTest extends TestCase
         // Setup is finished, set back test time to now.
         CarbonImmutable::setTestNow();
 
+        // Ensure we fetch loan back from the database
+        $loan->refresh();
+
         // Validate preconditions
         $this->assertEquals(
             "canceled",
@@ -785,10 +818,10 @@ class ActionsCompleteTest extends TestCase
         $this->assertEquals("in_process", $loan->status);
 
         // Run the command
-        app(ActionsCompleteCommand::class)->handle();
+        $this->artisan("actions:complete")->assertExitCode(0);
 
         // Ensure we fetch loan back from the database
-        $loan = $loan->fresh();
+        $loan->refresh();
 
         // Takeover remains canceled. Handover and loan remain in process.
         $this->assertEquals(
@@ -839,11 +872,11 @@ class ActionsCompleteTest extends TestCase
                 "platform_tip" => $loanCost,
             ]);
 
-        // I don't know why loan must be refreshed here, but id does.
-        $loan = $loan->fresh();
-
         // Setup is finished, set back test time to now.
         CarbonImmutable::setTestNow();
+
+        // Ensure we fetch loan back from the database
+        $loan->refresh();
 
         // Validate preconditions
         $this->assertEquals(
@@ -853,10 +886,10 @@ class ActionsCompleteTest extends TestCase
         $this->assertEquals("in_process", $loan->status);
 
         // Run the command
-        app(ActionsCompleteCommand::class)->handle();
+        $this->artisan("actions:complete")->assertExitCode(0);
 
         // Ensure we fetch loan back from the database
-        $loan = $loan->fresh();
+        $loan->refresh();
 
         // Loan and payment must remain in process
         $this->assertEquals(
@@ -903,11 +936,11 @@ class ActionsCompleteTest extends TestCase
                 "platform_tip" => $loanCost,
             ]);
 
-        // I don't know why loan must be refreshed here, but id does.
-        $loan = $loan->fresh();
-
         // Setup is finished, set back test time to now.
         CarbonImmutable::setTestNow();
+
+        // Ensure we fetch loan back from the database
+        $loan->refresh();
 
         // Validate preconditions
         $this->assertEquals(
@@ -917,10 +950,10 @@ class ActionsCompleteTest extends TestCase
         $this->assertEquals("in_process", $loan->status);
 
         // Run the command
-        app(ActionsCompleteCommand::class)->handle();
+        $this->artisan("actions:complete")->assertExitCode(0);
 
         // Ensure we fetch loan back from the database
-        $loan = $loan->fresh();
+        $loan->refresh();
 
         // Loan and payment must be completed
         $this->assertEquals(
@@ -967,11 +1000,15 @@ class ActionsCompleteTest extends TestCase
                 "platform_tip" => $loanCost,
             ]);
 
-        // I don't know why loan must be refreshed here, but id does.
-        $loan = $loan->fresh();
+        // Expenses must be 0 so as to ensure a positive value for total_actual_cost.
+        $loan->handover->purchases_amount = 0;
+        $loan->handover->save();
 
         // Setup is finished, set back test time to now.
         CarbonImmutable::setTestNow();
+
+        // Ensure we fetch loan back from the database
+        $loan->refresh();
 
         // Validate preconditions
         $this->assertEquals(
@@ -981,10 +1018,10 @@ class ActionsCompleteTest extends TestCase
         $this->assertEquals("in_process", $loan->status);
 
         // Run the command
-        app(ActionsCompleteCommand::class)->handle();
+        $this->artisan("actions:complete")->assertExitCode(0);
 
         // Ensure we fetch loan back from the database
-        $loan = $loan->fresh();
+        $loan->refresh();
 
         // Loan and payment must remain in process
         $this->assertEquals(
@@ -1048,6 +1085,9 @@ class ActionsCompleteTest extends TestCase
         // Setup is finished, set back test time to now.
         CarbonImmutable::setTestNow();
 
+        // Ensure we fetch loan back from the database
+        $loan->refresh();
+
         // Validate preconditions
         $this->assertEquals(
             "in_process",
@@ -1063,11 +1103,11 @@ class ActionsCompleteTest extends TestCase
         // Run the command
         // At the moment, the command only completes one step at a time. Call
         // it twice so as to complete handover and payment.
-        app(ActionsCompleteCommand::class)->handle();
-        app(ActionsCompleteCommand::class)->handle();
+        $this->artisan("actions:complete")->assertExitCode(0);
+        $this->artisan("actions:complete")->assertExitCode(0);
 
         // Ensure we fetch loan back from the database
-        $loan = $loan->fresh();
+        $loan->refresh();
 
         // Extension was not accepted before initial loan expiration and thus
         // must be canceled.
@@ -1133,6 +1173,9 @@ class ActionsCompleteTest extends TestCase
         // Setup is finished, set back test time to now.
         CarbonImmutable::setTestNow();
 
+        // Ensure we fetch loan back from the database
+        $loan->refresh();
+
         // Validate preconditions
         $this->assertEquals(
             "canceled",
@@ -1149,10 +1192,10 @@ class ActionsCompleteTest extends TestCase
         $this->assertEquals("in_process", $loan->status);
 
         // Run the command
-        app(ActionsCompleteCommand::class)->handle();
+        $this->artisan("actions:complete")->assertExitCode(0);
 
         // Ensure we fetch loan back from the database
-        $loan = $loan->fresh();
+        $loan->refresh();
 
         // Things remain intact.
         $this->assertEquals(
@@ -1216,6 +1259,9 @@ class ActionsCompleteTest extends TestCase
         // Setup is finished, set back test time to now.
         CarbonImmutable::setTestNow();
 
+        // Ensure we fetch loan back from the database
+        $loan->refresh();
+
         // Validate preconditions
         $this->assertEquals(
             "completed",
@@ -1232,10 +1278,10 @@ class ActionsCompleteTest extends TestCase
         $this->assertEquals("in_process", $loan->status);
 
         // Run the command
-        app(ActionsCompleteCommand::class)->handle();
+        $this->artisan("actions:complete")->assertExitCode(0);
 
         // Ensure we fetch loan back from the database
-        $loan = $loan->fresh();
+        $loan->refresh();
 
         // Things remain intact.
         $this->assertEquals(
