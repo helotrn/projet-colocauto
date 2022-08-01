@@ -610,11 +610,10 @@ SQL
             $this->final_purchases_amount;
     }
 
-
     public function getIsContestedAttribute(): bool
     {
         $takeover = $this->takeover;
-        if($takeover && $takeover->isContested()){
+        if ($takeover && $takeover->isContested()) {
             return true;
         }
 

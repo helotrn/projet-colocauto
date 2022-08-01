@@ -8,10 +8,7 @@
     >
       <h2>
         <svg-danger
-          v-if="
-            (action.status === 'in_process' && loanIsCanceled) ||
-            action.status === 'canceled'
-          "
+          v-if="(action.status === 'in_process' && loanIsCanceled) || action.status === 'canceled'"
         />
         <svg-waiting v-else-if="action.status === 'in_process'" />
         <svg-check v-else-if="action.status === 'completed'" />
