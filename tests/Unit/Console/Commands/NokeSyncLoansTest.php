@@ -5,7 +5,7 @@ namespace Tests\Unit\Console\Commands;
 use App\Console\Commands\NokeSyncLoans as NokeSyncLoansCommand;
 use App\Models\Bike;
 use App\Models\Loan;
-use Carbon\Carbon;
+use Carbon\CarbonImmutable;
 
 use Tests\TestCase;
 
@@ -29,56 +29,78 @@ class NokeSyncLoansTest extends TestCase
             ->states("withCommunity", "withPadlock")
             ->create();
 
-        $now = Carbon::now();
-        Carbon::setTestNow($now);
+        $now = CarbonImmutable::now();
+        CarbonImmutable::setTestNow($now);
 
-        // Loan that should be asserted in count
-        $validLoan = factory(Loan::class)
+        // Loan starts in more than 15 minutes, should not have access.
+        $loanStartingLater = factory(Loan::class)
             ->states("withCompletedIntention", "withCompletedPrePayment")
             ->create([
-                "departure_at" => $now->copy()->add(10, "minutes"),
+                "departure_at" => $now->addMinutes(20),
+                "duration_in_minutes" => 60,
                 "loanable_id" => $bikeWithPadlock,
-            ])
-            ->refresh();
+            ]);
 
-        $validFutureLoan = factory(Loan::class)
+        // Loan starts in less than 15 minutes, should have access.
+        $loanStartingSoon = factory(Loan::class)
             ->states("withCompletedIntention", "withCompletedPrePayment")
             ->create([
-                "departure_at" => $now->copy()->add(20, "minutes"),
+                "departure_at" => $now->addMinutes(10),
+                "duration_in_minutes" => 60,
                 "loanable_id" => $bikeWithPadlock,
-            ])
-            ->refresh();
+            ]);
 
+        // Loan in process.
+        $loanInProcess = factory(Loan::class)
+            ->states("withAllStepsCompleted")
+            ->create([
+                "departure_at" => $now->subMinutes(20),
+                "duration_in_minutes" => 60,
+                "loanable_id" => $bikeWithPadlock,
+            ]);
+
+        // Loan ended less than 15 minutes ago, should have access.
+        $loanEndedRecently = factory(Loan::class)
+            ->states("withAllStepsCompleted")
+            ->create([
+                "departure_at" => $now->subMinutes(70),
+                "duration_in_minutes" => 60,
+                "loanable_id" => $bikeWithPadlock,
+            ]);
+
+        // Loan ended more than 15 minutes ago, should not have access.
+        $loanEndedEarlier = factory(Loan::class)
+            ->states("withAllStepsCompleted")
+            ->create([
+                "departure_at" => $now->subMinutes(80),
+                "duration_in_minutes" => 60,
+                "loanable_id" => $bikeWithPadlock,
+            ]);
+
+        // Cancelled loans should never grant access.
         $canceledLoan = factory(Loan::class)
             ->states("withCompletedIntention", "withCompletedPrePayment")
             ->create([
-                "canceled_at" => $now->copy()->add(10, "minutes"),
-                "departure_at" => $now->copy()->add(10, "minutes"),
+                "canceled_at" => $now->addMinutes(10),
+                "departure_at" => $now->addMinutes(10),
+                "duration_in_minutes" => 60,
                 "loanable_id" => $bikeWithPadlock,
-            ])
-            ->refresh();
-
-        $unpaidValidLoan = factory(Loan::class)
-            ->states("withAllStepsCompleted")
-            ->create([
-                "departure_at" => $now->copy()->add(10, "minutes"),
-                "loanable_id" => $bikeWithPadlock,
-            ])
-            ->refresh();
-
-        // Loan that should be asserted in count
-        $paidValidLoan = factory(Loan::class)
-            ->states("withAllStepsCompleted", "butPaymentInProcess")
-            ->create([
-                "departure_at" => $now->copy()->add(10, "minutes"),
-                "loanable_id" => $bikeWithPadlock,
-            ])
-            ->refresh();
+            ]);
 
         $query = NokeSyncLoansCommand::getLoansFromPadlockMacQuery([
             "mac_address" => $bikeWithPadlock->padlock->mac_address,
         ]);
 
-        $this->assertEquals(2, $query->count());
+        $loans = $query->get();
+
+        $testLoanIds = [];
+        foreach ($loans as $loan) {
+            $testLoanIds[] = $loan->id;
+        }
+
+        $this->assertEqualsCanonicalizing(
+            [$loanStartingSoon->id, $loanInProcess->id, $loanEndedRecently->id],
+            $testLoanIds
+        );
     }
 }
