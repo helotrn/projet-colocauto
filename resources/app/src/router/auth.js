@@ -1,7 +1,7 @@
-import Login from "../views/Login.vue";
-import Password from "../views/Password.vue";
-import PasswordRequest from "../views/password/Request.vue";
-import PasswordReset from "../views/password/Reset.vue";
+import Login from "@/views/Login.vue";
+import Password from "@/views/Password.vue";
+import PasswordRequest from "@/views/password/Request.vue";
+import PasswordReset from "@/views/password/Reset.vue";
 
 export default [
   {
