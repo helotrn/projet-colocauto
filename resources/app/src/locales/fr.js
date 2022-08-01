@@ -1,4 +1,13 @@
 import AdminFilters from "@/locales/components/Admin/Filters";
+import DashboardBalance from "@/locales/components/Dashboard/Balance";
+import LoginBox from "@/locales/components/Login/Box";
+import RegisterForm from "@/locales/components/Register/RegisterForm";
+import UserEmailForm from "@/locales/components/User/EmailForm";
+import UserPasswordForm from "@/locales/components/User/PasswordForm";
+import Dashboard from "@/locales/views/Dashboard";
+import Home from "@/locales/views/Home";
+import PasswordRequest from "@/locales/views/Password/Request";
+import PasswordReset from "@/locales/views/Password/Reset";
 import AccountProfile from "@/locales/views/Profile/Account";
 import bikes from "@/locales/models/bikes";
 import borrowers from "@/locales/models/borrowers";
@@ -23,10 +32,29 @@ export default {
     admin: {
       filters: AdminFilters.fr,
     },
+    dashboard: {
+      balance: DashboardBalance.fr,
+    },
+    login: {
+      box: LoginBox.fr,
+    },
+    register: {
+      registerform: RegisterForm.fr,
+    },
+    user: {
+      emailform: UserEmailForm.fr,
+      passwordform: UserPasswordForm.fr,
+    },
   },
   views: {
+    dashboard: Dashboard.fr,
+    home: Home.fr,
     profile: {
       account: AccountProfile.fr,
+    },
+    password: {
+      request: PasswordRequest.fr,
+      reset: PasswordReset.fr,
     },
   },
   faq: faq.fr,
@@ -34,6 +62,7 @@ export default {
     actions: "actions",
     afficher: "afficher",
     approuver: "approuver",
+    archiver: "archiver",
     enregistrer: "enregistrer",
     facultatif: "facultatif",
     modifier: "modifier",

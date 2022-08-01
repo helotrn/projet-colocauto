@@ -1,16 +1,29 @@
+import AdminFilters from "@/locales/components/Admin/Filters";
+import LoginBox from "@/locales/components/Login/Box";
+import RegisterForm from "@/locales/components/Register/RegisterForm";
+import Dashboard from "@/locales/views/Dashboard";
 import communities from "@/locales/models/communities";
 import loanables from "@/locales/models/loanables";
-import AdminFilters from "./components/Admin/Filters";
 
 export default {
-  communities: communities.fr,
+  communities: communities.en,
   components: {
     admin: {
       filters: AdminFilters.en,
     },
+    login: {
+      box: LoginBox.en,
+    },
+    register: {
+      registerform: RegisterForm.en,
+    },
+  },
+  views: {
+    dashboard: Dashboard.en,
   },
   forms: {
     actions: "actions",
+    archiver: "archive",
     modifier: "modify",
     restaurer: "restore",
     supprimer: "delete",

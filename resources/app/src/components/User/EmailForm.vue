@@ -44,15 +44,9 @@
   </div>
 </template>
 
-<i18n>
-fr:
-  current_password: Mot de passe actuel
-  new_email: Nouveau courriel
-  new_email_repeat: Nouveau courriel (confirmation)
-  submit: Mettre à jour
-</i18n>
-
 <script>
+import locales from "@/locales";
+
 import FormsValidatedInput from "@/components/Forms/ValidatedInput.vue";
 
 import { extractErrors } from "@/helpers";
@@ -107,6 +101,13 @@ export default {
       this.newEmail = "";
       this.newEmailRepeat = "";
       this.$refs.observer.reset();
+    },
+  },
+  i18n: {
+    messages: {
+      fr: {
+        ...locales.fr.components.user.emailform,
+      },
     },
   },
 };

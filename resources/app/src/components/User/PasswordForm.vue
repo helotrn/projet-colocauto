@@ -24,7 +24,7 @@
           :rules="{ required: !user.id || !isAdmin, min: 8 }"
           type="password"
           :placeholder="$t('new_password')"
-          description="Minimum 8 caractères"
+          :description="$t('new_password_length')"
           v-model="newPassword"
         />
 
@@ -46,15 +46,9 @@
   </div>
 </template>
 
-<i18n>
-fr:
-  current_password: Mot de passe actuel
-  new_password: Nouveau mot de passe
-  new_password_repeat: Nouveau mot de passe (confirmation)
-  submit: Mettre à jour
-</i18n>
-
 <script>
+import locales from "@/locales";
+
 import FormsValidatedInput from "@/components/Forms/ValidatedInput.vue";
 
 export default {
@@ -114,6 +108,13 @@ export default {
       if (!this.user.id) {
         this.user.password = val;
       }
+    },
+  },
+  i18n: {
+    messages: {
+      fr: {
+        ...locales.fr.components.user.passwordform,
+      },
     },
   },
 };
