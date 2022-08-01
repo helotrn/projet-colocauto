@@ -612,19 +612,16 @@ SQL
 
     public function getContestedAtAttribute()
     {
-        // An extension is not a contested action
-        $contestedActions = $this->actions->where("type", "!=", "extension");
-
-        // The canceled status on an action indicates it was contested
-        $canceledAction = $contestedActions
-            ->where("status", "canceled")
-            ->first();
-
-        if ($canceledAction) {
-            return $canceledAction->executed_at;
+        $takeover = $this->takeover;
+        if($takeover && $takeover->isContested()){
+            return $takeover->executed_at;
         }
 
-        return null;
+        $handover = $this->handover;
+        if($handover && $handover->isContested()){
+            return $handover->executed_at;
+        }
+        return false;
     }
 
     public function getTotalEstimatedCostAttribute()
