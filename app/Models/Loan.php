@@ -372,7 +372,7 @@ SQL
         "actual_insurance",
         "actual_duration_in_minutes",
         "calendar_days",
-        "contested_at",
+        "is_contested",
         "total_actual_cost",
         "total_final_cost",
         "total_estimated_cost",
@@ -610,18 +610,16 @@ SQL
             $this->final_purchases_amount;
     }
 
-    public function getContestedAtAttribute()
+
+    public function getIsContestedAttribute(): bool
     {
         $takeover = $this->takeover;
         if($takeover && $takeover->isContested()){
-            return $takeover->executed_at;
+            return true;
         }
 
         $handover = $this->handover;
-        if($handover && $handover->isContested()){
-            return $handover->executed_at;
-        }
-        return false;
+        return $handover && $handover->isContested();
     }
 
     public function getTotalEstimatedCostAttribute()

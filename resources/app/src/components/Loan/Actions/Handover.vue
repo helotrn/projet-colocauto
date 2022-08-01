@@ -10,7 +10,7 @@
         <svg-danger
           v-if="
             (action.status === 'in_process' && loanIsCanceled) ||
-            (action.status === 'canceled' && item.contested_at) ||
+            action.status === 'canceled' ||
             hasActiveExtensions
           "
         />
@@ -23,7 +23,7 @@
       <span
         v-if="
           hasActiveExtensions ||
-          (item.contested_at && action.status === 'in_process' && !loanIsCanceled)
+          (item.is_contested && action.status === 'in_process' && !loanIsCanceled)
         "
       >
         Bloqué
@@ -235,7 +235,7 @@
 
               <b-row
                 class="loan-actions-handover__buttons text-center"
-                v-if="!action.executed_at && !loanIsCanceled && !item.contested_at"
+                v-if="!action.executed_at && !loanIsCanceled && !item.is_contested"
               >
                 <b-col>
                   <b-button type="submit" size="sm" variant="success" class="mr-3">
@@ -321,7 +321,7 @@
 
               <b-row
                 class="loan-actions-takeover__buttons text-center"
-                v-if="(!action.executed_at && !item.contested_at) || userIsAdmin"
+                v-if="(!action.executed_at && !item.is_contested) || userIsAdmin"
               >
                 <b-col>
                   <b-button type="submit" size="sm" variant="success" class="mr-3">
