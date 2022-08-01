@@ -87,8 +87,8 @@ class NokeSyncLoans extends Command
        Retrieve loans that are
        - active (not canceled),
        - with departure in less than 15 minutes,
+       - with return 15 minutes ago or later,
        - with completed pre-payment,
-       - without completed payment,
        - with padlock having the given MAC address.
      */
     public static function getLoansFromPadlockMacQuery($queryParams)

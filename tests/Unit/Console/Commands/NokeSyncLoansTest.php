@@ -39,8 +39,7 @@ class NokeSyncLoansTest extends TestCase
                 "departure_at" => $now->addMinutes(20),
                 "duration_in_minutes" => 60,
                 "loanable_id" => $bikeWithPadlock,
-            ])
-            ->refresh();
+            ]);
 
         // Loan starts in less than 15 minutes, should have access.
         $loanStartingSoon = factory(Loan::class)
@@ -49,8 +48,7 @@ class NokeSyncLoansTest extends TestCase
                 "departure_at" => $now->addMinutes(10),
                 "duration_in_minutes" => 60,
                 "loanable_id" => $bikeWithPadlock,
-            ])
-            ->refresh();
+            ]);
 
         // Loan in process.
         $loanInProcess = factory(Loan::class)
@@ -87,8 +85,7 @@ class NokeSyncLoansTest extends TestCase
                 "departure_at" => $now->addMinutes(10),
                 "duration_in_minutes" => 60,
                 "loanable_id" => $bikeWithPadlock,
-            ])
-            ->refresh();
+            ]);
 
         $query = NokeSyncLoansCommand::getLoansFromPadlockMacQuery([
             "mac_address" => $bikeWithPadlock->padlock->mac_address,
