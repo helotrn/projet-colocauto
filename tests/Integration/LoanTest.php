@@ -559,7 +559,11 @@ class LoanTest extends TestCase
         ];
 
         // First loan
-        $response = $this->json("POST", "/api/v1/loans", $data);
+        $response = $this->json(
+            "POST",
+            "/api/v1/loans?fields=*,actions.*",
+            $data
+        );
 
         $response
             ->assertStatus(201)
@@ -688,7 +692,11 @@ class LoanTest extends TestCase
             "community_id" => $community->id,
         ];
 
-        $response = $this->json("POST", "/api/v1/loans", $data);
+        $response = $this->json(
+            "POST",
+            "/api/v1/loans?fields=*,actions.*",
+            $data
+        );
 
         $response->assertStatus(201);
         $responseData = json_decode($response->getContent());
@@ -741,7 +749,11 @@ class LoanTest extends TestCase
             "community_id" => $community->id,
         ];
 
-        $response = $this->json("POST", "/api/v1/loans", $data);
+        $response = $this->json(
+            "POST",
+            "/api/v1/loans?fields=*,actions.*",
+            $data
+        );
 
         $response->assertStatus(201);
         $responseData = json_decode($response->getContent());
@@ -798,7 +810,11 @@ class LoanTest extends TestCase
             "community_id" => $community->id,
         ];
 
-        $response = $this->json("POST", "/api/v1/loans", $data);
+        $response = $this->json(
+            "POST",
+            "/api/v1/loans?fields=*,actions.*",
+            $data
+        );
 
         $response->assertStatus(201);
         $responseData = json_decode($response->getContent());
@@ -821,7 +837,11 @@ class LoanTest extends TestCase
         $community->save();
 
         $data["departure_at"] = date("Y-m-d H:i:s", strtotime("tomorrow"));
-        $response = $this->json("POST", "/api/v1/loans", $data);
+        $response = $this->json(
+            "POST",
+            "/api/v1/loans?fields=*,actions.*",
+            $data
+        );
 
         $response->assertStatus(201);
         $responseData = json_decode($response->getContent());
@@ -875,7 +895,11 @@ class LoanTest extends TestCase
             "community_id" => $community->id,
         ];
 
-        $response = $this->json("POST", "/api/v1/loans", $data);
+        $response = $this->json(
+            "POST",
+            "/api/v1/loans?fields=*,actions.*",
+            $data
+        );
 
         $response->assertStatus(201);
         $responseData = json_decode($response->getContent());
