@@ -18,7 +18,7 @@ RUN docker-php-ext-install \
     zip
 
 # installing imagick through pecl because it is not working with docker-php-ect-install
-RUN pecl install imagick    
+RUN pecl install imagick
 RUN docker-php-ext-enable imagick
 
 # Giving a server name to stop a warning
@@ -46,6 +46,7 @@ RUN pecl install xdebug \
     && docker-php-ext-enable xdebug
 RUN echo "xdebug.start_with_request = yes" >> ${PHP_INI_DIR}/conf.d/php.ini
 RUN echo "xdebug.mode = debug" >> ${PHP_INI_DIR}/conf.d/php.ini
+RUN echo "xdebug.client_host = host.docker.internal" >> ${PHP_INI_DIR}/conf.d/php.ini
 
 CMD bash -c "composer install && \
              ./start_php_container.sh"
