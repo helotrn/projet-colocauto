@@ -12,5 +12,8 @@ npm-debug.log
 yarn-error.log
 storage
 .devcontainer
-.vscode
 psql/requests
+
+# IDE Config
+.vscode/
+.idea/
