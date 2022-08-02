@@ -196,12 +196,6 @@
   </layout-page>
 </template>
 
-<i18n>
-fr:
-  neighborhood: 'aucun voisinage | un voisinage | {count} voisinages'
-  borough: 'aucun quartier | un quartier | {count} quartiers'
-</i18n>
-
 <script>
 import locales from "@/locales";
 

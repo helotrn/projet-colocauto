@@ -6,7 +6,7 @@ export default {
     password: "Mot de passe",
     password_length: "Minimum 8 caractères",
     password_repeat: "Mot de passe (confirmation)",
-    register: "Bievenue sur LocoMotion",
+    register: "Bienvenue sur LocoMotion",
     register_error: "Erreur d'inscription",
     register_submit: "S'inscrire",
   },
