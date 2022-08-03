@@ -29,6 +29,7 @@ test:prettier:
 
 test:phpunit:
   stage: test
+  coverage: '^\s*Lines:\s*\d+.\d+\%'
   script:
     - apt-get update -yqq
     - apt-get install curl git wget unzip libpq-dev libjpeg-dev libpng-dev libxpm-dev libzip-dev postgresql-client -yqq
@@ -47,7 +48,7 @@ test:phpunit:
     - php artisan migrate --env testing
     - php artisan passport:install --env testing
     - export XDEBUG_MODE="coverage"
-    - vendor/bin/phpunit --coverage-cobertura=php-coverage.xml --colors=never
+    - vendor/bin/phpunit --coverage-cobertura=php-coverage.xml --coverage-text --colors=never
   artifacts:
     reports:
       coverage_report:
