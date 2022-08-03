@@ -47,7 +47,7 @@ test:phpunit:
     - php artisan migrate --env testing
     - php artisan passport:install --env testing
     - export XDEBUG_MODE="coverage"
-    - vendor/bin/phpunit --coverage-corbetura=php-coverage.xml --colors=never
+    - vendor/bin/phpunit --coverage-cobertura=php-coverage.xml --colors=never
   artifacts:
     reports:
       coverage_report:
