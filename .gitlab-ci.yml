@@ -29,7 +29,7 @@ test:prettier:
 
 test:phpunit:
   stage: test
-  coverage: '^\s*Lines:\s*\d+.\d+\%'
+  coverage: '/^\s*Lines:\s*\d+.\d+\%/'
   script:
     - apt-get update -yqq
     - apt-get install curl git wget unzip libpq-dev libjpeg-dev libpng-dev libxpm-dev libzip-dev postgresql-client -yqq
