@@ -16,7 +16,7 @@
             <div class="form__section">
               <h2>Informations générales</h2>
 
-              <div v-if="item.borrower.approved">
+              <div v-if="item.borrower && item.borrower.approved">
                 <label>Membre depuis le</label>
                 {{ item.borrower.approved_at | date }}
               </div>
