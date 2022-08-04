@@ -372,7 +372,7 @@ SQL
         "actual_insurance",
         "actual_duration_in_minutes",
         "calendar_days",
-        "contested_at",
+        "is_contested",
         "total_actual_cost",
         "total_final_cost",
         "total_estimated_cost",
@@ -610,21 +610,15 @@ SQL
             $this->final_purchases_amount;
     }
 
-    public function getContestedAtAttribute()
+    public function getIsContestedAttribute(): bool
     {
-        // An extension is not a contested action
-        $contestedActions = $this->actions->where("type", "!=", "extension");
-
-        // The canceled status on an action indicates it was contested
-        $canceledAction = $contestedActions
-            ->where("status", "canceled")
-            ->first();
-
-        if ($canceledAction) {
-            return $canceledAction->executed_at;
+        $takeover = $this->takeover;
+        if ($takeover && $takeover->isContested()) {
+            return true;
         }
 
-        return null;
+        $handover = $this->handover;
+        return $handover && $handover->isContested();
     }
 
     public function getTotalEstimatedCostAttribute()

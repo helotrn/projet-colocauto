@@ -121,6 +121,33 @@ class LoanTest extends TestCase
         $this->assertTrue($loan->isCanceled());
     }
 
+    public function testIsContested_TakeoverContested()
+    {
+        $loan = factory(Loan::class)
+            ->states("withContestedTakeover")
+            ->create();
+
+        $this->assertTrue($loan->is_contested);
+    }
+
+    public function testIsContested_HandoverContested()
+    {
+        $loan = factory(Loan::class)
+            ->states("withContestedHandover")
+            ->create();
+
+        $this->assertTrue($loan->is_contested);
+    }
+
+    public function testIsNotContested_OtherActionsCanceled()
+    {
+        $loan = factory(Loan::class)
+            ->states(["withCanceledPrePayment", "withCanceledExtension"])
+            ->create();
+
+        $this->assertFalse($loan->is_contested);
+    }
+
     public function testGetStatusFromActions_IntentionInProcess()
     {
         $loan = factory(Loan::class)

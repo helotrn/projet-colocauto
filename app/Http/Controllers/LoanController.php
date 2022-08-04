@@ -78,6 +78,8 @@ class LoanController extends RestController
 
             // Move loan forward if possible.
             self::loanActionsForward($item);
+            // Refresh loan to get the newly created relationships
+            $item->load("actions");
         } catch (ValidationException $e) {
             return $this->respondWithErrors($e->errors(), $e->getMessage());
         }
