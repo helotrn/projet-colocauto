@@ -22,16 +22,14 @@ class SendLoanIncidentResolvedEmails
         $borrower = $loan->borrower;
         $owner = $loan->loanable->owner;
 
-        Mail::to(
-            $borrower->user->email,
-            $borrower->user->name . " " . $borrower->user->last_name
-        )->queue(new LoanIncidentResolved($event->incident, $loan, $borrower));
+        Mail::to($borrower->user->email, $borrower->user->full_name)->queue(
+            new LoanIncidentResolved($event->incident, $loan, $borrower)
+        );
 
         if ($owner && $owner->user->id !== $borrower->user->id) {
-            Mail::to(
-                $owner->user->email,
-                $owner->user->name . " " . $owner->user->last_name
-            )->queue(new LoanIncidentResolved($event->incident, $loan, $owner));
+            Mail::to($owner->user->email, $owner->user->full_name)->queue(
+                new LoanIncidentResolved($event->incident, $loan, $owner)
+            );
         }
     }
 }

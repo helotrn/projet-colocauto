@@ -526,7 +526,7 @@ class User extends AuthenticatableBaseModel
 
     public function getFullNameAttribute()
     {
-        return trim($this->name . " " . $this->last_name);
+        return trim($this->full_name);
     }
 
     public function getAdminLinkAttribute()

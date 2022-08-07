@@ -26,10 +26,9 @@ class SendLoanCreatedEmails
             $owner &&
             $owner->user->id !== $borrower->user->id
         ) {
-            Mail::to(
-                $owner->user->email,
-                $owner->user->name . " " . $owner->user->last_name
-            )->queue(new LoanCreated($borrower, $owner, $event->loan));
+            Mail::to($owner->user->email, $owner->user->full_name)->queue(
+                new LoanCreated($borrower, $owner, $event->loan)
+            );
         }
     }
 }
