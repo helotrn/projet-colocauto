@@ -32,10 +32,9 @@ class StripeService
 
         return \Stripe\Customer::create([
             "description" =>
-                "{$user->name} {$user->last_name} " .
-                "<{$user->email}> ({$user->id})",
+                "{$user->full_name} " . "<{$user->email}> ({$user->id})",
             "email" => $user->email,
-            "name" => "{$user->name} {$user->last_name}",
+            "name" => "$user->full_name",
             "address" => [
                 "line1" => $user->address,
                 "country" => "CA",

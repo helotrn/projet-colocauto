@@ -62,7 +62,7 @@
                 "
                 align="top"
             >
-                {{ $user->name }} {{ $user->last_name }}<br />
+                {{ $user->full_name }}<br />
                 {{ $user->address }}<br />
                 {{ $user->postal_code }}
             </td>
