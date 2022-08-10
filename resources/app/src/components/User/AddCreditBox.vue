@@ -1,62 +1,70 @@
 <template>
   <div class="user-add-credit-box">
+    <b-form-group
+      label-cols="12"
+      label="Montant à approvisionner"
+      description="Approvisionnez davantage votre compte pour économiser sur les frais de transaction."
+    >
+      <b-form-radio-group
+        class="d-none d-md-block"
+        button-variant="outline-secondary"
+        v-model="selectedAmount"
+        :options="amounts"
+        buttons
+      />
+      <b-form-select class="d-md-none" v-model="selectedAmount" :options="amounts" />
+    </b-form-group>
     <b-row>
-      <b-col lg="8" class="user-add-credit-box__add">
-        <p>Ajouter&nbsp;:</p>
-
-        <p><b-form-radio-group v-model="selectedAmount" :options="amounts" buttons /></p>
-
-        <p v-if="selectedAmount === 'other'" class="user-add-credit-box__add__custom">
-          <b-form-input type="number" :min="minimumRequired" :step="0.01" v-model="customAmount" />
-        </p>
-
-        <p>Montant prélevé du mode de paiement&nbsp;: {{ amountWithFee | currency }}</p>
-
-        <p><small>Frais de transaction&nbsp;: 2,2% + 30¢</small></p>
-      </b-col>
-
-      <b-col lg="4" class="user-add-credit-box__balance">
-        <p>Solde</p>
-
-        <p class="user-add-credit-box__balance__initial">{{ user.balance | currency }}</p>
+      <b-col md="8" xl="6">
+        <b-form-group label="Montant Personnalisé" v-if="selectedAmount == 'other'">
+          <b-form-input
+            type="number"
+            :min="normalizedMinimumRequired"
+            :step="0.01"
+            v-model="customAmount"
+          />
+        </b-form-group>
       </b-col>
     </b-row>
 
-    <b-row>
-      <b-col lg="6" class="user-add-credit-box__payment-methods">
+    <hr />
+    <b-row v-if="amount > 0">
+      <b-col>
+        <strong>Montant Total Prélevé</strong>
+        <p class="total">{{ amountWithFee | currency }}</p>
+        <b-form-text
+          >Frais de transaction&nbsp;:
+          <pre>{{ this.feeRatio | percent }} + {{ this.feeConstant | currency }}</pre>
+        </b-form-text>
+      </b-col>
+      <b-col>
+        <strong>Choisir votre mode de paiement</strong>
         <b-form-select
           id="payment_method_id"
           name="payment_method_id"
-          :options="paymentMethods"
+          :options="paymentOptions"
           v-if="hasPaymentMethod"
           v-model="paymentMethodId"
         >
-          <template v-slot:first>
-            <b-form-select-option :value="null" disabled>
-              Choisir votre mode de paiement
-            </b-form-select-option>
-          </template>
         </b-form-select>
-        <b-btn v-else to="/profile/payment_methods/new">
-          {{ $t("ajouter un mode de paiement") | capitalize }}
-        </b-btn>
-      </b-col>
-
-      <b-col class="user-add-credit-box__explanations">
-        <p>Approvisionnez votre compte pour économiser sur les frais de transaction.</p>
+        <div class="mt-1">
+          <a href="/profile/payment_methods/new">
+            {{ $t("ajouter un mode de paiement") | capitalize }}
+          </a>
+        </div>
       </b-col>
     </b-row>
 
-    <b-row class="user-add-credit-box__buttons" tag="p">
+    <b-row class="mt-3">
       <b-col class="text-center">
         <b-button
           class="mr-3"
           type="submit"
           variant="primary"
           @click="buyCredit"
-          :disabled="amount < floatMinimumRequired || loading"
+          :disabled="amount <= 0 || amount < normalizedMinimumRequired || loading"
         >
-          Valider
+          Ajouter les fonds
         </b-button>
 
         <b-button v-if="!noCancel" variant="outline-warning" @click="emitCancel">Annuler</b-button>
@@ -66,33 +74,45 @@
 </template>
 
 <script>
+import { currency } from "@/helpers/filters";
+
 export default {
   name: "UserAddCreditBox",
   data() {
     return {
-      customAmount: this.minimumRequired ? parseFloat(this.minimumRequired) * 2 : 20,
+      customAmount:
+        this.minimumRequired && this.minimumRequired > 0
+          ? this.normalizeCurrency(this.minimumRequired) * 2
+          : 20,
       feeRatio: 0.022,
       feeConstant: 0.3,
       loading: false,
-      paymentMethodId: this.user.payment_methods.reduce((acc, p) => {
-        if (p.is_default) {
-          return p.id;
-        }
-
-        return acc;
-      }, null),
-      selectedAmount: this.minimumRequired ? parseFloat(this.minimumRequired) : 10,
+      paymentMethodId: this.paymentMethods
+        ? this.paymentMethods.find((p) => p.is_default)?.id
+        : null,
+      selectedAmount: this.tripCost
+        ? this.normalizeCurrency(this.tripCost)
+        : this.minimumRequired
+        ? this.normalizeCurrency(this.minimumRequired)
+        : 10,
     };
   },
   props: {
+    // Minimum that needs to be paid.
     minimumRequired: {
       type: Number,
       required: false,
       default: 0,
     },
-    user: {
-      type: Object,
-      required: true,
+    // Estimated total cost of trip, including tip.
+    tripCost: {
+      type: Number,
+      required: false,
+      default: 0,
+    },
+    paymentMethods: {
+      type: Array,
+      required: false,
     },
     // This prop is a patch to remove cancel button from the pre-payment step.
     noCancel: {
@@ -117,10 +137,17 @@ export default {
     amounts() {
       const options = [];
 
-      if (this.minimumRequired) {
+      if (this.normalizedMinimumRequired > 0) {
         options.push({
-          text: "Je paie juste pour ce trajet",
-          value: this.floatMinimumRequired,
+          text: `Minimum (${currency(this.normalizedMinimumRequired)})`,
+          value: this.normalizedMinimumRequired,
+        });
+      }
+
+      if (this.normalizedTripCost > 0) {
+        options.push({
+          text: `Ce trajet (${currency(this.normalizedTripCost)})`,
+          value: this.normalizedTripCost,
         });
       }
 
@@ -144,23 +171,32 @@ export default {
       ];
 
       for (let i = 0, len = standardOptions.length; i < len; i += 1) {
-        if (!this.minimumRequired || standardOptions[i].value > parseFloat(this.minimumRequired)) {
+        if (
+          !this.normalizedMinimumRequired ||
+          standardOptions[i].value > parseFloat(this.normalizedMinimumRequired)
+        ) {
           options.push(standardOptions[i]);
         }
       }
 
       options.push({
-        text: "J'en profite pour ajouter...",
+        text: "Montant personnalisé",
         value: "other",
       });
 
       return options;
     },
-    floatMinimumRequired() {
-      return parseFloat(this.minimumRequired);
+    normalizedMinimumRequired() {
+      return this.normalizeCurrency(this.minimumRequired);
     },
-    paymentMethods() {
-      return this.user.payment_methods.map((pm) => {
+    normalizedTripCost() {
+      return this.normalizeCurrency(this.tripCost);
+    },
+    paymentOptions() {
+      if (!this.hasPaymentMethod) {
+        return [];
+      }
+      return this.paymentMethods.map((pm) => {
         const { name: text, id: value, is_default: selected } = pm;
         return {
           text,
@@ -170,12 +206,16 @@ export default {
       });
     },
     hasPaymentMethod() {
-      return this.user.payment_methods.length > 0;
+      return this.paymentMethods && this.paymentMethods.length > 0;
     },
   },
   methods: {
     emitCancel() {
       this.$emit("cancel");
+    },
+    normalizeCurrency(currency) {
+      const amount = Math.ceil(parseFloat(currency) * 100) / 100;
+      return amount > 0 ? amount : 0;
     },
     async buyCredit() {
       this.loading = true;
@@ -210,24 +250,8 @@ export default {
 
 <style lang="scss">
 .user-add-credit-box {
-  &__add label {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-  }
-
-  &__add__custom {
-    margin-right: 70px;
-    margin-left: 70px;
-    text-align: center;
-  }
-
-  &__balance {
-    &__initial,
-    &__added {
-      font-size: 24px;
-      font-weight: bold;
-    }
+  .total {
+    font-size: 40px;
   }
 }
 </style>

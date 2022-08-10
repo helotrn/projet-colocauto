@@ -18,6 +18,16 @@ const currency = (value) => {
   return `${floatVal.toFixed(2).replace(".", ",")}$`;
 };
 
+const percent = (value) => {
+  const floatVal = parseFloat(value);
+
+  if (Number.isNaN(floatVal)) {
+    return "";
+  }
+
+  return `${(floatVal * 100).toFixed(2)}%`;
+};
+
 const datetime = (value) => {
   if (!value) {
     return "";
@@ -72,4 +82,4 @@ const titleize = (value) => {
   return parts.map(capitalize).join(" ");
 };
 
-export { capitalize, currency, date, datetime, day, phone, time, titleize };
+export { capitalize, currency, date, datetime, day, percent, phone, time, titleize };
