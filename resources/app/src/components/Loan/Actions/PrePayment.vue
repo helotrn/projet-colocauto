@@ -83,7 +83,7 @@
             <hr />
 
             <user-add-credit-box
-              :minimum-required="this.minimumCost"
+              :minimum-required="this.minimumCost - this.user.balance"
               :trip-cost="this.item.total_estimated_cost"
               :payment-methods="user.payment_methods"
               :no-cancel="true"
