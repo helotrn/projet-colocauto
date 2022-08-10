@@ -274,8 +274,8 @@ export default {
 <style lang="scss">
 .user-actions {
   display: flex;
-}
-.btn {
-  margin: 0 10px;
+  .btn {
+    margin: 0 10px;
+  }
 }
 </style>
