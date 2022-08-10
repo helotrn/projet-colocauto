@@ -232,28 +232,30 @@
                     <strong>{{ actualPrice | currency }}</strong>
                   </td>
                 </tr>
-                <tr class="header">
-                  <th>Paiement</th>
-                  <td></td>
-                </tr>
-                <tr>
-                  <th>Solde actuel</th>
-                  <td class="text-right tabular-nums">
-                    {{ user.balance | currency }}
-                  </td>
-                </tr>
-                <tr v-if="actualPrice > user.balance" class="last">
-                  <th>Solde minimum à ajouter</th>
-                  <td class="trip-details__total text-right tabular-nums">
-                    <strong>{{ (actualPrice - user.balance) | currency }}</strong>
-                  </td>
-                </tr>
-                <tr v-else class="last">
-                  <th>Solde après paiement</th>
-                  <td class="trip-details__total text-right tabular-nums">
-                    <strong>{{ (user.balance - actualPrice) | currency }}</strong>
-                  </td>
-                </tr>
+                <template v-if="!userIsAdmin">
+                  <tr class="header">
+                    <th>Paiement</th>
+                    <td></td>
+                  </tr>
+                  <tr>
+                    <th>Solde actuel</th>
+                    <td class="text-right tabular-nums">
+                      {{ user.balance | currency }}
+                    </td>
+                  </tr>
+                  <tr v-if="actualPrice > user.balance" class="last">
+                    <th>Solde minimum à ajouter</th>
+                    <td class="trip-details__total text-right tabular-nums">
+                      <strong>{{ (actualPrice - user.balance) | currency }}</strong>
+                    </td>
+                  </tr>
+                  <tr v-else class="last">
+                    <th>Solde après paiement</th>
+                    <td class="trip-details__total text-right tabular-nums">
+                      <strong>{{ (user.balance - actualPrice) | currency }}</strong>
+                    </td>
+                  </tr>
+                </template>
               </table>
 
               <b-row v-if="!userIsAdmin && !hasEnoughBalance">
