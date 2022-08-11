@@ -40,22 +40,23 @@
             <p>L'emprunt a été annulé. Cette étape ne peut pas être complétée.</p>
           </div>
           <div v-else-if="userRoles.includes('borrower')">
-            <b-alert v-if="canComplete" show variant="info">
-              <p class="font-weight-bold alert-heading">Solde suffisant</p>
-              <p>
-                Vous avez assez de fonds dans votre solde LocoMotion pour cet emprunt. Vous pouvez
-                continuer à l'étape suivante ou ajouter davantage de fonds pour le futur.
-              </p>
-              <b-button variant="success" :disabled="actionLoading" @click="completeAction">
-                Compléter
-              </b-button>
-            </b-alert>
-            <p v-else>
+            <p>
               Ajoutez des fonds a votre solde LocoMotion afin de pouvoir couvrir le coût votre
               emprunt. Ce montant correspond à un estimé. Il sera réevalué en fin d'emprunt pour
               vous donner le montant exact correspondant à vos dépenses (kilometrage réel effectué
               et durée de l'emprunt). C'est à ce moment que les fonds seront retirés de votre solde.
             </p>
+            <b-alert v-if="canComplete" show variant="success">
+              <p class="font-weight-bold alert-heading">Solde suffisant</p>
+              <p>
+                Vous avez assez de fonds dans votre solde LocoMotion pour cet emprunt. Vous pouvez
+                continuer à l'étape suivante ou ajouter davantage de fonds pour couvrir la possible
+                différence entre le coût final et votre estimation.
+              </p>
+              <b-button variant="success" :disabled="actionLoading" @click="completeAction">
+                Continuer à l'étape suivante
+              </b-button>
+            </b-alert>
             <b-row class="py-2">
               <b-col sm="8" md="6" xl="4" class="font-weight-bold"
                 >Coût estimé (trajet + assurance)</b-col
