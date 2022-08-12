@@ -75,6 +75,10 @@ export default {
     supprimer: "supprimer",
   },
   invoices: invoices.fr,
+  lists: {
+    // Generic label for list ids.
+    id: "ID",
+  },
   loans: loans.fr,
   loanables: loanables.fr,
   locales: {

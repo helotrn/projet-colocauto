@@ -10,6 +10,11 @@ const i18n = {
       "aucune communauté sélectionnée | {count} communauté sélectionnée | {count} communautés sélectionnées",
     fields: {
       chat_group_url: "URL du groupe de discussion",
+      // When community is referred to from outisde of this context.
+      community: {
+        id: "ID communauté",
+        name: "Communauté",
+      },
       description: "description",
       id: "ID",
       long_description: "texte de bienvenue / présentation",
@@ -26,6 +31,15 @@ const i18n = {
         borough: "quartier",
         private: "privée",
       },
+      user: {
+        id: "ID utilisateur-rice",
+        name: "Utilisateur-rice",
+        role: "Rôle",
+        approved_at: "Approuvé-e",
+        suspended_at: "Suspendu-e",
+        proof: "Preuve",
+        actions: "Actions",
+      },
     },
     model_name: "communauté | communautés",
   },
@@ -35,6 +49,11 @@ const i18n = {
     "{count} communauté sélectionnée":
       "no community selected | {count} community selected | {count} communities selected",
     fields: {
+      // When community is referred to from outisde of this context.
+      community: {
+        id: "Community ID",
+        _name: "Community",
+      },
       description: "description",
       id: "ID",
       name: "name",
@@ -48,6 +67,15 @@ const i18n = {
         null: "any type",
         borough: "borough",
         private: "private",
+      },
+      user: {
+        id: "User ID",
+        name: "User",
+        role: "Role",
+        approved_at: "Approved",
+        suspended_at: "Suspended",
+        proof: "Proof",
+        actions: "Actions",
       },
     },
   },

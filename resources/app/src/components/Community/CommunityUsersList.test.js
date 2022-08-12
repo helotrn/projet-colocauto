@@ -8,7 +8,12 @@ Vue.use(BootstrapVue);
 
 describe("CommunityUsersList", () => {
   it("Renders correctly by default", () => {
-    const wrapper = mount(CommunityUsersList, {});
+    const wrapper = mount(CommunityUsersList, {
+      mocks: {
+        // Mock translation
+        $t: (msg) => msg,
+      },
+    });
 
     // No items, no fields should display table with body
     expect(wrapper.find("table").exists()).toBe(true);

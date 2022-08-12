@@ -28,6 +28,10 @@ export default {
     restaurer: "restore",
     supprimer: "delete",
   },
+  lists: {
+    // Generic label for list ids.
+    id: "ID",
+  },
   loanables: loanables.en,
   locales: {
     en: "English",
