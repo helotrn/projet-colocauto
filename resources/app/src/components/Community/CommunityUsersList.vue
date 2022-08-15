@@ -1,6 +1,34 @@
 <template>
   <div>
-    <b-table striped hover :fields="fields" :items="items"> </b-table>
+    <b-table striped hover :fields="fields" :items="items">
+      <template v-slot:cell(user_full_name)="row">
+        <!-- Allow an URL-generating function in field definition -->
+        <router-link v-if="row.field.urlFct" :to="row.field.urlFct(row.item)">
+          {{ row.item.user_full_name }}
+        </router-link>
+        <template v-else>
+          {{ row.item.user_full_name }}
+        </template>
+      </template>
+
+      <template v-slot:cell(community_name)="row">
+        <!-- Allow an URL-generating function in field definition -->
+        <router-link v-if="row.field.urlFct" :to="row.field.urlFct(row.item)">
+          {{ row.item.community_name }}
+        </router-link>
+        <template v-else>
+          {{ row.item.community_name }}
+        </template>
+      </template>
+
+      <template v-slot:cell(approved_at)="row">
+        <span>{{ row.item.approved_at | date }}</span>
+      </template>
+
+      <template v-slot:cell(suspended_at)="row">
+        <span>{{ row.item.suspended_at | date }}</span>
+      </template>
+    </b-table>
     <b-pagination
       v-model="pageNum"
       :total-rows="totalItemCount"
@@ -41,9 +69,21 @@ export default {
         return [
           { key: "id", label: this.$t("lists.id") },
           { key: "user_id", label: this.$t("communities.fields.user.id") },
-          { key: "user_full_name", label: this.$t("communities.fields.user.name") },
+          {
+            key: "user_full_name",
+            label: this.$t("communities.fields.user.name"),
+            urlFct: function (item) {
+              return `/admin/users/${item.user_id}`;
+            },
+          },
           { key: "community_id", label: this.$t("communities.fields.community.id") },
-          { key: "community_name", label: this.$t("communities.fields.community.name") },
+          {
+            key: "community_name",
+            label: this.$t("communities.fields.community.name"),
+            urlFct: function (item) {
+              return `/admin/communities/${item.community_id}`;
+            },
+          },
           { key: "role", label: this.$t("communities.fields.user.role") },
           { key: "approved_at", label: this.$t("communities.fields.user.approved_at") },
           { key: "suspended_at", label: this.$t("communities.fields.user.suspended_at") },
