@@ -21,4 +21,66 @@ describe("CommunityUsersList", () => {
     // Expect pagination to be rendered.
     expect(wrapper.find(".pagination.b-pagination").exists()).toBe(true);
   });
+
+  it("Renders all fields by default", () => {
+    const wrapper = mount(CommunityUsersList, {
+      mocks: { $t: (msg) => msg },
+    });
+
+    const colHeaders = wrapper.findAll("table th");
+
+    expect(colHeaders.at(0).text()).toBe("lists.id");
+    expect(colHeaders.at(1).text()).toBe("communities.fields.user.id");
+    expect(colHeaders.at(2).text()).toBe("communities.fields.user.name");
+    expect(colHeaders.at(3).text()).toBe("communities.fields.community.id");
+    expect(colHeaders.at(4).text()).toBe("communities.fields.community.name");
+    expect(colHeaders.at(5).text()).toBe("communities.fields.user.role");
+    expect(colHeaders.at(6).text()).toBe("communities.fields.user.approved_at");
+    expect(colHeaders.at(7).text()).toBe("communities.fields.user.suspended_at");
+    expect(colHeaders.at(8).text()).toBe("communities.fields.user.proof");
+    expect(colHeaders.at(9).text()).toBe("communities.fields.user.actions");
+  });
+
+  it("Renders no field if visible fields is empty", () => {
+    const wrapper = mount(CommunityUsersList, {
+      mocks: { $t: (msg) => msg },
+      propsData: {
+        visibleFields: [],
+      },
+    });
+
+    expect(wrapper.findAll("table th").length).toBe(0);
+  });
+
+  it("Renders visible fields only", () => {
+    const wrapper = mount(CommunityUsersList, {
+      mocks: { $t: (msg) => msg },
+      propsData: {
+        visibleFields: ["proof", "role", "id"],
+      },
+    });
+
+    const colHeaders = wrapper.findAll("table th");
+
+    expect(colHeaders.at(0).text()).toBe("communities.fields.user.proof");
+    expect(colHeaders.at(1).text()).toBe("communities.fields.user.role");
+    expect(colHeaders.at(2).text()).toBe("lists.id");
+  });
+
+  it("Does not complain if a field is not defined", () => {
+    const wrapper = mount(CommunityUsersList, {
+      mocks: { $t: (msg) => msg },
+      propsData: {
+        visibleFields: ["proof", "role", "id", "undefined_field"],
+      },
+    });
+
+    const colHeaders = wrapper.findAll("table th");
+
+    expect(colHeaders.at(0).text()).toBe("communities.fields.user.proof");
+    expect(colHeaders.at(1).text()).toBe("communities.fields.user.role");
+    expect(colHeaders.at(2).text()).toBe("lists.id");
+
+    expect(wrapper.findAll("table th").length).toBe(3);
+  });
 });

@@ -15,7 +15,26 @@
 export default {
   name: "CommunityUsersList",
   props: {
-    fields: {
+    /* List of fields to display and their order. Show all by default. */
+    visibleFields: {
+      type: Array,
+      required: false,
+      default: function () {
+        return [
+          "id",
+          "user_id",
+          "user_full_name",
+          "community_id",
+          "community_name",
+          "role",
+          "approved_at",
+          "suspended_at",
+          "proof",
+          "actions",
+        ];
+      },
+    },
+    fieldDefs: {
       type: Array,
       required: false,
       default: function () {
@@ -47,6 +66,17 @@ export default {
     totalItemCount: {
       type: Number,
       required: false,
+    },
+  },
+  computed: {
+    fields() {
+      let visibleFields = [];
+      for (const fieldName of this.visibleFields) {
+        const fieldDef = this.fieldDefs.find((f) => f.key === fieldName);
+        if (fieldDef) visibleFields.push(fieldDef);
+      }
+
+      return visibleFields;
     },
   },
   data() {
