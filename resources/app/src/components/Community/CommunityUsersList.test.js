@@ -18,5 +18,7 @@ describe("CommunityUsersList", () => {
     // No items, no fields should display table with body
     expect(wrapper.find("table").exists()).toBe(true);
     expect(wrapper.find("tbody").exists()).toBe(true);
+    // Expect pagination to be rendered.
+    expect(wrapper.find(".pagination.b-pagination").exists()).toBe(true);
   });
 });

@@ -1,5 +1,14 @@
 <template>
-  <b-table striped hover :fields="fields" :items="items"> </b-table>
+  <div>
+    <b-table striped hover :fields="fields" :items="items"> </b-table>
+    <b-pagination
+      v-model="pageNum"
+      :total-rows="totalItemCount"
+      :per-page="itemsPerPage"
+      @change="$emit('changePage', $event)"
+    >
+    </b-pagination>
+  </div>
 </template>
 
 <script>
@@ -28,6 +37,22 @@ export default {
       type: [Array, Function],
       required: false,
     },
+    itemsPerPage: {
+      type: Number,
+      required: false,
+    },
+    /*
+      Total number of items in the unpaginated list.
+    */
+    totalItemCount: {
+      type: Number,
+      required: false,
+    },
+  },
+  data() {
+    return {
+      pageNum: 1,
+    };
   },
 };
 </script>
