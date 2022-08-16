@@ -35,6 +35,10 @@ const i18n = {
         id: "ID utilisateur-rice",
         name: "Utilisateur-rice",
         role: "Rôle",
+        role_labels: {
+          member: "Membre",
+          admin: "Admin",
+        },
         approved_at: "Approuvé-e",
         suspended_at: "Suspendu-e",
         proof: "Preuve",
@@ -72,6 +76,10 @@ const i18n = {
         id: "User ID",
         name: "User",
         role: "Role",
+        role_labels: {
+          member: "Member",
+          admin: "Admin",
+        },
         approved_at: "Approved",
         suspended_at: "Suspended",
         proof: "Proof",

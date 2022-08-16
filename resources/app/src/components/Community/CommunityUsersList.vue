@@ -21,6 +21,17 @@
         </template>
       </template>
 
+      <template v-slot:cell(role)="row">
+        <b-select
+          :options="[
+            { value: 'member', text: $t('communities.fields.user.role_labels.member') },
+            { value: 'admin', text: $t('communities.fields.user.role_labels.admin') },
+          ]"
+          :value="row.item.role"
+          @change="$emit('changeUserRole', row.item, $event)"
+        />
+      </template>
+
       <template v-slot:cell(approved_at)="row">
         <span>{{ row.item.approved_at | date }}</span>
       </template>
