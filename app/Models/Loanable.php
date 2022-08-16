@@ -485,6 +485,8 @@ class Loanable extends BaseModel
                 });
 
                 // ...and cars are only allowed if the borrower profile is approved
+                // This check is necessary, since the Loanable class and this method is inherited,
+                // but the 'type' field only exists in the loanable materialized view
                 switch (get_class($this)) {
                     case "App\Models\Bike":
                     case "App\Models\Trailer":
