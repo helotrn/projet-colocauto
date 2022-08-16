@@ -67,6 +67,46 @@
           </b-modal>
         </span>
       </template>
+
+      <template v-slot:cell(actions)="row">
+        <b-button
+          v-if="canDoActions.find((i) => i.id == row.item.id)['approve']"
+          size="sm"
+          class="ml-1 mb-1"
+          variant="primary"
+          @click="$emit('action', row.item, 'approve')"
+        >
+          {{ $t("communities.fields.user.action_labels.approve") | capitalize }}
+        </b-button>
+        <b-button
+          v-if="canDoActions.find((i) => i.id == row.item.id)['suspend']"
+          size="sm"
+          class="ml-1 mb-1"
+          variant="warning"
+          @click="$emit('action', row.item, 'suspend')"
+        >
+          {{ $t("communities.fields.user.action_labels.suspend") | capitalize }}
+        </b-button>
+        <b-button
+          v-if="canDoActions.find((i) => i.id == row.item.id)['unsuspend']"
+          size="sm"
+          class="ml-1 mb-1"
+          variant="success"
+          @click="$emit('action', row.item, 'unsuspend')"
+        >
+          {{ $t("communities.fields.user.action_labels.unsuspend") | capitalize }}
+        </b-button>
+
+        <b-button
+          v-if="canDoActions.find((i) => i.id == row.item.id)['remove']"
+          size="sm"
+          variant="danger"
+          class="ml-1 mb-1"
+          @click="$emit('action', row.item, 'remove')"
+        >
+          {{ $t("communities.fields.user.action_labels.remove") | capitalize }}
+        </b-button>
+      </template>
     </b-table>
     <b-pagination
       v-model="pageNum"
@@ -156,6 +196,25 @@ export default {
       }
 
       return visibleFields;
+    },
+    canDoActions() {
+      let canDoActions = [];
+
+      for (const item of this.items) {
+        canDoActions.push({
+          id: item.id,
+          // Approval is possible if not alerady approved and not suspended.
+          approve: !item.approved_at && !item.suspended_at,
+          // Suspension is possible if approved and not already suspended.
+          suspend: item.approved_at && !item.suspended_at,
+          // Restoration of approval is possible if suspended.
+          unsuspend: item.suspended_at,
+          // It is always allowed to remove a user from a community.
+          remove: true,
+        });
+      }
+
+      return canDoActions;
     },
   },
   data() {
