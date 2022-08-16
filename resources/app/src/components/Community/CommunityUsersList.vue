@@ -1,6 +1,6 @@
 <template>
   <div>
-    <b-table striped hover :fields="fields" :items="items">
+    <b-table striped hover :fields="fields" :items="items" class="community-users-list">
       <template v-slot:cell(user_full_name)="row">
         <!-- Allow an URL-generating function in field definition -->
         <router-link v-if="row.field.urlFct" :to="row.field.urlFct(row.item)">
@@ -38,6 +38,34 @@
 
       <template v-slot:cell(suspended_at)="row">
         <span>{{ row.item.suspended_at | date }}</span>
+      </template>
+
+      <template v-slot:cell(proof)="row">
+        <span v-if="row.item.proof" class="community-users-list__proof-of-residence">
+          <a href="#" v-b-modal="`community-users-list__proof-of-residence--${row.item.id}`">
+            {{ row.item.proof.original_filename }}
+          </a>
+          <b-modal
+            size="xl"
+            :id="`community-users-list__proof-of-residence--${row.item.id}`"
+            :title="
+              $t('communities.user_proof_of_residence', { user_full_name: row.item.user_full_name })
+                | capitalize
+            "
+            footer-class="d-none"
+            class="proof-of-residence-modal"
+          >
+            <img
+              class="proof-of-residence-modal__proof-image"
+              :src="row.item.proof.url"
+              :alt="
+                $t('communities.user_proof_of_residence', {
+                  user_full_name: row.item.user_full_name,
+                }) | capitalize
+              "
+            />
+          </b-modal>
+        </span>
       </template>
     </b-table>
     <b-pagination
@@ -137,3 +165,23 @@ export default {
   },
 };
 </script>
+
+<style lang="scss">
+.community-users-list {
+  &__proof-of-residence {
+    display: inline-block;
+    max-width: 100px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+/*
+  Let's consider the proof modal as an independant block.
+*/
+.proof-of-residence-modal {
+  &__proof-image {
+    max-width: 100%;
+  }
+}
+</style>

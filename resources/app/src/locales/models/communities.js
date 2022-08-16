@@ -46,6 +46,7 @@ const i18n = {
       },
     },
     model_name: "communauté | communautés",
+    user_proof_of_residence: "Preuve de résidence ({user_full_name})",
   },
   en: {
     communauté: "community | communities",
@@ -86,6 +87,7 @@ const i18n = {
         actions: "Actions",
       },
     },
+    user_proof_of_residence: "Proof of residence ({user_full_name})",
   },
 };
 
