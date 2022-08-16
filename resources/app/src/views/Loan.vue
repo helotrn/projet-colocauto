@@ -30,9 +30,8 @@
               !hasReachedStep('payment')
             "
           >
-            <h4>Modification de la réservation</h4>
-            <strong>Pour modifier</strong> cette demande de réservation, merci de l'annuler et d'en
-            créer une nouvelle.
+            <h4>{{ $t("modification_warning.title") }}</h4>
+            {{ $t("modification_warning.content") }}
           </b-alert>
 
           <b-alert
