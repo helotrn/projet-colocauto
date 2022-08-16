@@ -20,12 +20,11 @@ export default {
         "fonctionnement en donnant une contribution volontaire.",
     },
     insurance_warning: {
-      title: "Avant d'emprunter une voiture",
-      warning: "Assurez-vous d'avoir pris connaissance des {link}. {emphasis}",
-      terms: "conditions d'utilisations relatives à l'assurance",
+      title: "Avant d'emprunter une auto",
+      warning: "Lisez attentivement les {link}. {emphasis}",
+      terms: "conditions d'utilisations de l'assurance",
       terms_link: "/conditions-utilisation-desjardins-assurances.html",
-      car_stays_in_quebec:
-        "Les véhicules loués via le système de réservation doivent être utilisés au Québec seulement.",
+      car_stays_in_quebec: "Notez que l'assurance couvre seulement les trajets au Québec.",
     },
     fields: {
       id: "ID",
