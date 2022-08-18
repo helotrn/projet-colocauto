@@ -24,9 +24,8 @@ class EmailLoanPrePaymentMissing extends Command
             "Fetching loans in 24 hours created " .
                 "at least three hours before now..."
         );
-        $threeHoursAgo = (new Carbon())->subtract(3, "hours");
 
-        $query = $this->getQuery(["created_at" => $threeHoursAgo]);
+        $query = $this->getQuery();
 
         $loans = $query->cursor();
         foreach ($loans as $loan) {
@@ -56,9 +55,14 @@ class EmailLoanPrePaymentMissing extends Command
 
     public static function getQuery($queryParams)
     {
+        $now = Carbon::now();
+        $threeHoursAgo = $now->copy()->subtract(3, "hours");
+        $inTwentyFourHours = $now->copy()->add(24, "hours");
+
         $query = Loan::where("status", "=", "in_process")
-            ->departureInLessThan(24, "hours")
-            ->where("loans.created_at", "<", $queryParams["created_at"])
+            ->where("departure_at", "<=", $inTwentyFourHours)
+            ->where("departure_at", ">", $now)
+            ->where("loans.created_at", "<", $threeHoursAgo)
             ->whereHas("prePayment", function ($q) {
                 return $q->where("pre_payments.status", "=", "in_process");
             })
