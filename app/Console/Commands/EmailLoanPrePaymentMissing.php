@@ -53,7 +53,7 @@ class EmailLoanPrePaymentMissing extends Command
         Log::info("Done.");
     }
 
-    public static function getQuery($queryParams)
+    public static function getQuery()
     {
         $now = Carbon::now();
         $threeHoursAgo = $now->copy()->subtract(3, "hours");
