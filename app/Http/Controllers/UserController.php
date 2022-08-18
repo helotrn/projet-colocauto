@@ -561,7 +561,7 @@ class UserController extends RestController
                     "drivers_license_number" => [
                         "type" => "text",
                     ],
-                    "has_been_sued_last_ten_years" => [
+                    "has_not_been_sued_last_ten_years" => [
                         "type" => "checkbox",
                     ],
                     "gaa" => [

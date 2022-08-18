@@ -18,11 +18,11 @@
         <b-row>
           <b-col>
             <forms-validated-input
-              name="has_been_sued_last_ten_years"
+              name="has_not_been_sued_last_ten_years"
               type="checkbox"
               :disabled="disabled"
               label="Je confirme n'avoir reçu aucune poursuite au cours des 10 dernières années"
-              v-model="reverseHasBeenSuedLastTenYears"
+              v-model="hasNotBeenSuedLastTenYears"
             />
           </b-col>
         </b-row>
@@ -74,7 +74,11 @@
 
         <div class="form__buttons" v-if="!hideButtons">
           <b-button-group v-if="showReset">
-            <b-button variant="success" type="submit" :disabled="!changed">
+            <b-button
+              variant="success"
+              type="submit"
+              :disabled="!changed || !hasNotBeenSuedLastTenYears"
+            >
               {{ $t("enregistrer") | capitalize }}
             </b-button>
             <b-button type="reset" :disabled="!changed" @click="$emit('reset')">
@@ -158,12 +162,12 @@ export default {
     },
   },
   computed: {
-    reverseHasBeenSuedLastTenYears: {
+    hasNotBeenSuedLastTenYears: {
       get() {
-        return !this.borrower.has_been_sued_last_ten_years;
+        return this.borrower.has_not_been_sued_last_ten_years;
       },
       set(val) {
-        this.borrower.has_been_sued_last_ten_years = !val;
+        this.borrower.has_not_been_sued_last_ten_years = val;
       },
     },
   },
