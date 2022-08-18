@@ -20,6 +20,10 @@ class EmailLoanPrePaymentMissing extends Command
 
     public function handle()
     {
+        if ($this->option("pretend")) {
+            $this->pretend = true;
+        }
+
         Log::info(
             "Fetching loans in 24 hours created " .
                 "at least three hours before now..."
