@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Calendar\AvailabilityHelper;
 use App\Http\Requests\BaseRequest as Request;
 use App\Http\Requests\Loanable\DestroyRequest;
 use App\Http\Requests\Loanable\TestRequest;
@@ -10,9 +11,9 @@ use App\Http\Requests\Bike\CreateRequest as BikeCreateRequest;
 use App\Http\Requests\Bike\UpdateRequest as BikeUpdateRequest;
 use App\Http\Requests\Car\CreateRequest as CarCreateRequest;
 use App\Http\Requests\Car\UpdateRequest as CarUpdateRequest;
+use App\Http\Requests\Loanable\SearchRequest;
 use App\Http\Requests\Trailer\CreateRequest as TrailerCreateRequest;
 use App\Http\Requests\Trailer\UpdateRequest as TrailerUpdateRequest;
-use App\Exports\LoanablesExport;
 use App\Models\Community;
 use App\Models\Bike;
 use App\Models\Car;
@@ -179,6 +180,66 @@ class LoanableController extends RestController
             default:
                 throw new \Exception("invalid loanable type");
         }
+    }
+
+    public function search(SearchRequest $request)
+    {
+        $departureAt = new \Carbon\Carbon($request->get("departure_at"));
+
+        $returnAt = $departureAt
+            ->copy()
+            ->add($request->get("duration_in_minutes"), "minutes");
+
+        $loanables = Loanable::accessibleBy($request->user());
+
+        // Check no other loans intersect
+        $availableLoanables = $loanables
+            ->whereDoesntHave("loans", function ($loans) use (
+                $departureAt,
+                $returnAt
+            ) {
+                return $loans
+                    ->where("status", "!=", "canceled")
+                    ->whereHas("intention", function ($q) {
+                        return $q->where("status", "=", "completed");
+                    })
+                    /*
+                    Intersection if: a1 > b0 and a0 < b1
+
+                        a0           a1
+                        [------------)
+                            [------------)
+                            b0           b1
+                */
+                    ->where("actual_return_at", ">", $departureAt)
+                    ->where("departure_at", "<", $returnAt);
+            })
+            ->get();
+
+        $loanInterval = [$departureAt, $returnAt];
+
+        $availableLoanables = $availableLoanables->reject(function (
+            $loanable
+        ) use ($loanInterval) {
+            // Ensure an exception is thrown if JSON is not properly decoded.
+            $availabilityRules = $loanable->availability_json
+                ? json_decode(
+                    $loanable->availability_json,
+                    true,
+                    512,
+                    JSON_THROW_ON_ERROR
+                )
+                : [];
+            return !AvailabilityHelper::isScheduleAvailable(
+                [
+                    "available" => "always" == $loanable->availability_mode,
+                    "rules" => $availabilityRules,
+                ],
+                $loanInterval
+            );
+        });
+
+        return $availableLoanables;
     }
 
     public function test(TestRequest $request, $id)

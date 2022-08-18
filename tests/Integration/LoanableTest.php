@@ -4,7 +4,10 @@ namespace Tests\Integration;
 
 use App\Models\Bike;
 use App\Models\Borrower;
+use App\Models\Car;
 use App\Models\Community;
+use App\Models\Intention;
+use App\Models\Loanable;
 use App\Models\Loan;
 use App\Models\Owner;
 use App\Models\User;
@@ -27,6 +30,278 @@ class LoanableTest extends TestCase
         "to",
         "total",
     ];
+
+    public function testSearchLoanablesValidation()
+    {
+        // Linking users and communities would trigger RegistrationApprovedEvent
+        // which would then send email using an external service.
+        // withoutEvents() makes the test robust to a non-existent or
+        // incorrectly-configured email service.
+        $this->withoutEvents();
+
+        $community = factory(Community::class)
+            ->states("withDefaultFreePricing")
+            ->create();
+
+        $this->user->communities()->sync([
+            $community->id => [
+                "approved_at" => Carbon::now(),
+            ],
+        ]);
+
+        $loanable = factory(Car::class)->create([
+            "community_id" => $community->id,
+            "availability_mode" => "always",
+        ]);
+
+        $this->setTestLocale();
+
+        // Complete valid request
+        $response = $this->json("GET", "/api/v1/loanables/search", [
+            "departure_at" => Carbon::now()->format("Y-m-d H:i:s"),
+            "duration_in_minutes" => 20,
+            "estimated_distance" => 0,
+            "community_id" => $community->id,
+        ])->assertStatus(200);
+
+        // Departure missing
+        $response = $this->json("GET", "/api/v1/loanables/search", [
+            "duration_in_minutes" => 20,
+            "estimated_distance" => 0,
+            "community_id" => $community->id,
+        ])
+            ->assertStatus(422)
+            ->assertJson([
+                "errors" => [
+                    "departure_at" => ["validation.required"],
+                ],
+            ]);
+
+        // Community missing: OK
+        $response = $this->json("GET", "/api/v1/loanables/search", [
+            "departure_at" => Carbon::now()->format("Y-m-d H:i:s"),
+            "duration_in_minutes" => 20,
+            "estimated_distance" => 0,
+        ])->assertStatus(200);
+
+        // Duration 0
+        $response = $this->json("GET", "/api/v1/loanables/search", [
+            "departure_at" => Carbon::now()->format("Y-m-d H:i:s"),
+            "duration_in_minutes" => 0,
+            "estimated_distance" => 0,
+        ])
+            ->assertStatus(422)
+            ->assertJson([
+                "errors" => [
+                    "duration_in_minutes" => ["validation.min.numeric"],
+                ],
+            ]);
+    }
+
+    public function testSearchLoanables_findsLoanable()
+    {
+        // Linking users and communities would trigger RegistrationApprovedEvent
+        // which would then send email using an external service.
+        // withoutEvents() makes the test robust to a non-existent or
+        // incorrectly-configured email service.
+        $this->withoutEvents();
+        $community = factory(Community::class)
+            ->states("withDefaultFreePricing")
+            ->create();
+        $this->user->communities()->attach($community->id, [
+            "approved_at" => new \DateTime(),
+        ]);
+
+        $borrowerUser = factory(User::class)->create();
+        factory(Borrower::class)->create([
+            "user_id" => $borrowerUser->id,
+            "approved_at" => new \DateTime(),
+        ]);
+
+        $this->actAs($borrowerUser);
+        $borrowerUser->communities()->attach($community->id, [
+            "approved_at" => Carbon::now(),
+        ]);
+        $carToFind = factory(Car::class)->create([
+            "community_id" => $community->id,
+            "availability_mode" => "always",
+        ]);
+
+        // Non-overlapping loan after
+        $loanAfter = factory(Loan::class)->create([
+            "loanable_id" => $carToFind->id,
+            "departure_at" => Carbon::now()
+                ->addDay(1)
+                ->format("Y-m-d H:i:s"),
+        ]);
+        // Non-overlapping loan before
+        $loanBefore = factory(Loan::class)->create([
+            "loanable_id" => $carToFind->id,
+            "departure_at" => Carbon::now()
+                ->subDay(1)
+                ->format("Y-m-d H:i:s"),
+            "duration_in_minutes" => 20,
+        ]);
+        factory(Intention::class)->create([
+            "status" => "completed",
+            "loan_id" => $loanAfter->id,
+        ]);
+        factory(Intention::class)->create([
+            "status" => "completed",
+            "loan_id" => $loanBefore->id,
+        ]);
+
+        $response = $this->json("GET", "/api/v1/loanables/search", [
+            "departure_at" => Carbon::now()->format("Y-m-d H:i:s"),
+            "duration_in_minutes" => 20,
+            "estimated_distance" => 0,
+            "community_id" => $community->id,
+        ]);
+
+        $response->assertJson([
+            Loanable::find($carToFind->id)->jsonSerialize(),
+        ]);
+    }
+
+    public function testSearchLoanables_ignoresLoanableFromOtherCommunity()
+    {
+        // Linking users and communities would trigger RegistrationApprovedEvent
+        // which would then send email using an external service.
+        // withoutEvents() makes the test robust to a non-existent or
+        // incorrectly-configured email service.
+        $this->withoutEvents();
+        $community = factory(Community::class)
+            ->states("withDefaultFreePricing")
+            ->create();
+        $otherCommunity = factory(Community::class)
+            ->states("withDefaultFreePricing")
+            ->create();
+        $this->user->communities()->attach($community->id, [
+            "approved_at" => new \DateTime(),
+        ]);
+        $this->user->communities()->attach($otherCommunity->id, [
+            "approved_at" => new \DateTime(),
+        ]);
+
+        $borrowerUser = factory(User::class)->create();
+        factory(Borrower::class)->create([
+            "user_id" => $borrowerUser->id,
+            "approved_at" => new \DateTime(),
+        ]);
+
+        $this->actAs($borrowerUser);
+        $borrowerUser->communities()->attach($community->id, [
+            "approved_at" => Carbon::now(),
+        ]);
+        $carToIgnore = factory(Car::class)->create([
+            "community_id" => $otherCommunity->id,
+            "availability_mode" => "always",
+        ]);
+
+        $response = $this->json("GET", "/api/v1/loanables/search", [
+            "departure_at" => Carbon::now()->format("Y-m-d H:i:s"),
+            "duration_in_minutes" => 20,
+            "estimated_distance" => 0,
+            "community_id" => $community->id,
+        ]);
+
+        $response->assertJsonMissing([
+            Loanable::find($carToIgnore->id)->jsonSerialize(),
+        ]);
+    }
+
+    public function testSearchLoanables_ignoresLoanableWithOverlappingLoans()
+    {
+        // Linking users and communities would trigger RegistrationApprovedEvent
+        // which would then send email using an external service.
+        // withoutEvents() makes the test robust to a non-existent or
+        // incorrectly-configured email service.
+        $this->withoutEvents();
+        $community = factory(Community::class)
+            ->states("withDefaultFreePricing")
+            ->create();
+        $this->user->communities()->attach($community->id, [
+            "approved_at" => new \DateTime(),
+        ]);
+
+        $borrowerUser = factory(User::class)->create();
+        factory(Borrower::class)->create([
+            "user_id" => $borrowerUser->id,
+            "approved_at" => new \DateTime(),
+        ]);
+
+        $this->actAs($borrowerUser);
+        $borrowerUser->communities()->attach($community->id, [
+            "approved_at" => Carbon::now(),
+        ]);
+        $carToIgnore = factory(Car::class)->create([
+            "community_id" => $community->id,
+            "availability_mode" => "always",
+        ]);
+        $loan = factory(Loan::class)->create([
+            "loanable_id" => $carToIgnore->id,
+            "departure_at" => Carbon::now()
+                ->subMinute(5)
+                ->format("Y-m-d H:i:s"),
+            "duration_in_minutes" => 20,
+        ]);
+        factory(Intention::class)->create([
+            "status" => "completed",
+            "loan_id" => $loan->id,
+        ]);
+
+        $response = $this->json("GET", "/api/v1/loanables/search", [
+            "departure_at" => Carbon::now()->format("Y-m-d H:i:s"),
+            "duration_in_minutes" => 20,
+            "estimated_distance" => 0,
+            "community_id" => $community->id,
+        ]);
+
+        $response->assertJsonMissing([
+            Loanable::find($carToIgnore->id)->jsonSerialize(),
+        ]);
+    }
+
+    public function testSearchLoanables_ignoresLoanableWhenUnavailable()
+    {
+        // Linking users and communities would trigger RegistrationApprovedEvent
+        // which would then send email using an external service.
+        // withoutEvents() makes the test robust to a non-existent or
+        // incorrectly-configured email service.
+        $this->withoutEvents();
+        $community = factory(Community::class)
+            ->states("withDefaultFreePricing")
+            ->create();
+        $this->user->communities()->attach($community->id, [
+            "approved_at" => new \DateTime(),
+        ]);
+
+        $borrowerUser = factory(User::class)->create();
+        factory(Borrower::class)->create([
+            "user_id" => $borrowerUser->id,
+            "approved_at" => new \DateTime(),
+        ]);
+
+        $this->actAs($borrowerUser);
+        $borrowerUser->communities()->attach($community->id, [
+            "approved_at" => Carbon::now(),
+        ]);
+        $carToIgnore = factory(Car::class)->create([
+            "community_id" => $community->id,
+            "availability_mode" => "never",
+        ]);
+
+        $response = $this->json("GET", "/api/v1/loanables/search", [
+            "departure_at" => Carbon::now()->format("Y-m-d H:i:s"),
+            "duration_in_minutes" => 20,
+            "estimated_distance" => 0,
+            "community_id" => $community->id,
+        ]);
+
+        $response->assertJsonMissing([
+            Loanable::find($carToIgnore->id)->jsonSerialize(),
+        ]);
+    }
 
     public function testOrderLoanablesById()
     {
