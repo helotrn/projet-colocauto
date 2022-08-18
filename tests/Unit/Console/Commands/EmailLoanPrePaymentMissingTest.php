@@ -36,4 +36,34 @@ class EmailLoanPrePaymentMissingTest extends TestCase
             $loan->meta
         );
     }
+
+    public function testLoadPrePaymentMissingWithPretendOption()
+    {
+        $loan = factory(Loan::class)
+            ->states("withInProcessPrePayment")
+            ->create([
+                // Loan created more than 3 hours ago.
+                "created_at" => Carbon::now()->subtract(185, "minutes"),
+                // Loan starting in less than 24 hours, but later than now.
+                "departure_at" => Carbon::now()->add(240, "minutes"),
+            ]);
+
+        Log::spy();
+
+        $this->artisan("email:loan:pre_payment_missing", [
+            "--pretend" => true,
+        ])->assertExitCode(0);
+
+        Log::shouldHaveReceived("info")->times(3);
+
+        // Reload from database.
+        $loan->refresh();
+        // Check that the email is not marked as sent.
+        $this->assertTrue(
+            !array_key_exists(
+                "sent_loan_pre_payment_missing_email",
+                $loan->meta
+            ) || $loan->meta["sent_loan_pre_payment_missing_email"] == false
+        );
+    }
 }
