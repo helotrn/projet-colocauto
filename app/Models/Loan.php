@@ -740,7 +740,6 @@ SQL
         return $query->where("status", "=", "canceled");
     }
 
-
     /*
        This method checks whether this loan is in a state in which it can be
        canceled.
