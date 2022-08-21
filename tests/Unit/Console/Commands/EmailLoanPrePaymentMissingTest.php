@@ -4,7 +4,7 @@ namespace Tests\Unit\Console\Commands;
 
 use App\Console\Commands\EmailLoanPrePaymentMissing as EmailLoanPrePaymentMissingCommand;
 use App\Models\Loan;
-use Carbon\Carbon;
+use Carbon\CarbonImmutable;
 use Log;
 
 use Tests\TestCase;
@@ -17,9 +17,12 @@ class EmailLoanPrePaymentMissingTest extends TestCase
             ->states("withInProcessPrePayment")
             ->create([
                 // Loan created more than 3 hours ago.
-                "created_at" => Carbon::now()->subtract(185, "minutes"),
+                "created_at" => CarbonImmutable::now()->subtract(
+                    185,
+                    "minutes"
+                ),
                 // Loan starting in less than 24 hours, but later than now.
-                "departure_at" => Carbon::now()->add(240, "minutes"),
+                "departure_at" => CarbonImmutable::now()->add(240, "minutes"),
             ]);
 
         Log::spy();
@@ -43,9 +46,12 @@ class EmailLoanPrePaymentMissingTest extends TestCase
             ->states("withInProcessPrePayment")
             ->create([
                 // Loan created more than 3 hours ago.
-                "created_at" => Carbon::now()->subtract(185, "minutes"),
+                "created_at" => CarbonImmutable::now()->subtract(
+                    185,
+                    "minutes"
+                ),
                 // Loan starting in less than 24 hours, but later than now.
-                "departure_at" => Carbon::now()->add(240, "minutes"),
+                "departure_at" => CarbonImmutable::now()->add(240, "minutes"),
             ]);
 
         Log::spy();

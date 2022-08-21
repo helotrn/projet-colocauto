@@ -4,7 +4,7 @@ namespace App\Console\Commands;
 
 use App\Mail\Loan\PrePaymentMissing as LoanPrePaymentMissing;
 use App\Models\Loan;
-use Carbon\Carbon;
+use Carbon\CarbonImmutable;
 use Illuminate\Console\Command;
 use Mail;
 use Log;
@@ -59,7 +59,7 @@ class EmailLoanPrePaymentMissing extends Command
 
     public static function getQuery()
     {
-        $now = Carbon::now();
+        $now = CarbonImmutable::now();
         $threeHoursAgo = $now->copy()->subtract(3, "hours");
         $inTwentyFourHours = $now->copy()->add(24, "hours");
 
