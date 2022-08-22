@@ -99,7 +99,7 @@
           <!-- search button -->
           <b-button
             pill
-            @click="$emit('hide')"
+            type="submit"
             variant="primary"
             class="mr-2 mb-2"
             :disabled="loading || invalidDuration"
