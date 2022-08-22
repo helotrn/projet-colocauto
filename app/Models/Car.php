@@ -43,13 +43,6 @@ class Car extends Loanable
 
                 return $query->selectRaw("cars.*");
             },
-            "type" => function ($query = null) {
-                if (!$query) {
-                    return "'car' AS type";
-                }
-
-                return $query->selectRaw("'car' AS type");
-            },
         ];
     }
 
@@ -86,6 +79,13 @@ class Car extends Loanable
         "image" => "imageable",
         "report" => "fileable",
     ];
+
+    protected $appends = ["type"];
+
+    public function getTypeAttribute()
+    {
+        return "car";
+    }
 
     public function image()
     {

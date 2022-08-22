@@ -44,19 +44,19 @@ class Bike extends Loanable
 
                 return $query->selectRaw("bikes.*");
             },
-            "type" => function ($query = null) {
-                if (!$query) {
-                    return "'bike' AS type";
-                }
-
-                return $query->selectRaw("'bike' AS type");
-            },
         ];
     }
 
     protected $table = "bikes";
 
     public $readOnly = false;
+
+    protected $appends = ["type"];
+
+    public function getTypeAttribute()
+    {
+        return "bike";
+    }
 
     public function loans()
     {
