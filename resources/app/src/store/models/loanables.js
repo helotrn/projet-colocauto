@@ -83,7 +83,7 @@ export default new RestModule(
         });
 
         const availableLoanable = new Map(
-          Object.values(data).map((estimatedLoan) => [estimatedLoan.loanable.id, estimatedLoan])
+          Object.values(data).map((estimatedLoan) => [estimatedLoan.loanableId, estimatedLoan])
         );
 
         const newData = state.data.map((d) => {

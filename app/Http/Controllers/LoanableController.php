@@ -215,7 +215,7 @@ class LoanableController extends RestController
         ) use ($request, $estimatedDistance, $durationInMinutes, $departureAt) {
             $community = $loanable->getCommunityForLoanBy($request->user());
             return (object) [
-                "loanable" => $loanable,
+                "loanableId" => $loanable->id,
                 "estimatedCost" => self::estimateLoanCost(
                     $loanable,
                     $community,

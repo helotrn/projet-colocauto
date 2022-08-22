@@ -182,7 +182,7 @@ class LoanableTest extends TestCase
 
         $response->assertJson([
             [
-                "loanable" => Loanable::find($carToFind->id)->jsonSerialize(),
+                "loanableId" => $carToFind->id,
                 "estimatedCost" => [
                     "price" => 0,
                     "insurance" => 0,
