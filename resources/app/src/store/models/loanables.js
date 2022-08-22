@@ -71,19 +71,21 @@ export default new RestModule(
 
       commit("data", newData);
     },
-    async testAll({ commit, state }, { loan, communityId }) {
-      try {
-        const responses = await Promise.all([
-          ...state.data.map((d) =>
-            Vue.axios.get(`/${state.slug}/${d.id}/test`, {
-              params: { ...loan, loanable_id: d.id, community_id: communityId },
-            })
-          ),
-        ]);
+    async search({ commit, state }, { loan }) {
+      const { CancelToken } = Vue.axios;
+      const cancelToken = CancelToken.source();
 
-        const newData = state.data.map((d, index) => ({
+      try {
+        commit("cancelToken", cancelToken);
+        const { data } = await Vue.axios.get(`/${state.slug}/search`, {
+          params: { ...loan },
+          cancelToken: cancelToken.token,
+        });
+
+        const availableLoanableIds = new Set(Object.values(data).map((loanable) => loanable.id));
+        const newData = state.data.map((d) => ({
           ...d,
-          ...responses[index].data,
+          available: availableLoanableIds.has(d.id),
           tested: true,
         }));
 
@@ -91,71 +93,6 @@ export default new RestModule(
       } catch (e) {
         const { request, response } = e;
         commit("error", { request, response });
-
-        throw e;
-      }
-    },
-    async testOne({ commit, state }, { communityId, loan, loanableId }) {
-      const { CancelToken } = Vue.axios;
-      const cancelToken = CancelToken.source();
-
-      try {
-        commit("cancelToken", cancelToken);
-        const response = await Vue.axios.get(`/${state.slug}/${loanableId}/test`, {
-          params: {
-            ...loan,
-            loanable_id: loanableId,
-            community_id: communityId,
-          },
-          cancelToken: cancelToken.token,
-        });
-
-        const newData = state.data.map((d) => {
-          if (d.id === loanableId) {
-            return {
-              ...d,
-              ...response.data,
-              tested: true,
-            };
-          }
-
-          return d;
-        });
-
-        commit("data", newData);
-
-        commit("cancelToken", null);
-      } catch (e) {
-        commit("cancelToken", null);
-        commit(
-          "addNotification",
-          {
-            content: JSON.stringify(e),
-            title: `Erreur de test pour ${state.slug}`,
-            variant: "danger",
-            type: "ajax",
-          },
-          { root: true }
-        );
-        const { request, response } = e;
-        if (request) {
-          switch (request.status) {
-            case 422:
-              commit(
-                "addNotification",
-                {
-                  content: extractErrors(response.data).join(", "),
-                  title: "Erreur de validation",
-                  variant: "danger",
-                  type: "extension",
-                },
-                { root: true }
-              );
-              return;
-            default:
-              break;
-          }
-        }
 
         throw e;
       } finally {
