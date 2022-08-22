@@ -20,6 +20,7 @@ use App\Models\Car;
 use App\Models\Loan;
 use App\Models\Loanable;
 use App\Models\Pricing;
+use App\Models\Trailer;
 use App\Repositories\LoanRepository;
 use App\Repositories\LoanableRepository;
 use Carbon\Carbon;
@@ -185,10 +186,9 @@ class LoanableController extends RestController
     public function search(SearchRequest $request)
     {
         $departureAt = new \Carbon\Carbon($request->get("departure_at"));
+        $durationInMinutes = $request->get("duration_in_minutes");
 
-        $returnAt = $departureAt
-            ->copy()
-            ->add($request->get("duration_in_minutes"), "minutes");
+        $returnAt = $departureAt->copy()->add($durationInMinutes, "minutes");
 
         $loanables = Loanable::accessibleBy($request->user());
 
@@ -198,56 +198,98 @@ class LoanableController extends RestController
                 $departureAt,
                 $returnAt
             ) {
-                return $loans
-                    ->where("status", "!=", "canceled")
-                    ->whereHas("intention", function ($q) {
-                        return $q->where("status", "=", "completed");
-                    })
-                    /*
-                    Intersection if: a1 > b0 and a0 < b1
-
-                        a0           a1
-                        [------------)
-                            [------------)
-                            b0           b1
-                */
-                    ->where("actual_return_at", ">", $departureAt)
-                    ->where("departure_at", "<", $returnAt);
+                return $loans->intersect($departureAt, $returnAt);
             })
             ->get();
 
-        $loanInterval = [$departureAt, $returnAt];
-
         $availableLoanables = $availableLoanables->reject(function (
             $loanable
-        ) use ($loanInterval) {
-            // Ensure an exception is thrown if JSON is not properly decoded.
-            $availabilityRules = $loanable->availability_json
-                ? json_decode(
-                    $loanable->availability_json,
-                    true,
-                    512,
-                    JSON_THROW_ON_ERROR
-                )
-                : [];
-            return !AvailabilityHelper::isScheduleAvailable(
-                [
-                    "available" => "always" == $loanable->availability_mode,
-                    "rules" => $availabilityRules,
-                ],
-                $loanInterval
-            );
+        ) use ($departureAt, $returnAt) {
+            return !$loanable->isLoanableScheduleOpen($departureAt, $returnAt);
         });
 
-        return $availableLoanables;
+        $estimatedDistance = $request->get("estimated_distance");
+
+        $loanablessAndCosts = $availableLoanables->map(function (
+            Loanable $loanable
+        ) use ($request, $estimatedDistance, $durationInMinutes, $departureAt) {
+            $community = $loanable->getCommunityForLoanBy($request->user());
+            return (object) [
+                "loanable" => $loanable,
+                "estimatedCost" => self::estimateLoanCost(
+                    $loanable,
+                    $community,
+                    $estimatedDistance,
+                    $durationInMinutes,
+                    $departureAt
+                ),
+            ];
+        });
+
+        return response($loanablessAndCosts, 200);
+    }
+
+    private function estimateLoanCost(
+        Loanable $loanable,
+        Community $community,
+        $estimatedDistance,
+        $durationInMinutes,
+        $departureAt
+    ) {
+        $pricing = $community->getPricingFor($loanable);
+        if (!$pricing) {
+            return (object) [
+                "price" => 0,
+                "insurance" => 0,
+                "pricing" => "Gratuit",
+            ];
+        }
+
+        $end = $departureAt->copy()->add($durationInMinutes, "minutes");
+        $estimatedCost = $pricing->evaluateRule(
+            $estimatedDistance,
+            $durationInMinutes,
+            // This lets us access car specific fields, i.e. pricing_category
+            self::getSpecificLoanable($loanable)->toArray(),
+            (object) [
+                "days" => Loan::getCalendarDays($departureAt, $end),
+                "start" => Pricing::dateToDataObject($departureAt),
+                "end" => Pricing::dateToDataObject($end),
+            ]
+        );
+
+        if (is_array($estimatedCost)) {
+            [$price, $insurance] = $estimatedCost;
+        } else {
+            $price = $estimatedCost;
+            $insurance = 0;
+        }
+
+        return (object) [
+            "price" => $price,
+            "insurance" => $insurance,
+            "pricing" => $pricing->name,
+        ];
+    }
+
+    private function getSpecificLoanable($loanable)
+    {
+        switch ($loanable->type) {
+            case "bike":
+                return Bike::find($loanable->id);
+            case "car":
+                return Car::find($loanable->id);
+            case "trailer":
+                return Trailer::find($loanable->id);
+            default:
+                throw new \Exception("invalid loanable type");
+        }
     }
 
     public function test(TestRequest $request, $id)
     {
         $findRequest = $request->redirectAuth(Request::class);
         $item = $this->repo->find($findRequest, $id);
-
-        $objectResponse = $this->retrieve($findRequest, $id);
 
         $estimatedDistance = $request->get("estimated_distance");
         $departureAt = new Carbon($request->get("departure_at"));
@@ -261,31 +303,13 @@ class LoanableController extends RestController
         } else {
             $community = $item->getCommunityForLoanBy($request->user());
         }
-        $pricing = $community->getPricingFor($item);
-
-        $loanableData = json_decode($objectResponse->getContent());
-
-        $end = $departureAt->copy()->add($durationInMinutes, "minutes");
-
-        $response = $pricing
-            ? $pricing->evaluateRule(
-                $estimatedDistance,
-                $durationInMinutes,
-                $loanableData,
-                (object) [
-                    "days" => Loan::getCalendarDays($departureAt, $end),
-                    "start" => Pricing::dateToDataObject($departureAt),
-                    "end" => Pricing::dateToDataObject($end),
-                ]
-            )
-            : 0;
-
-        if (is_array($response)) {
-            [$price, $insurance] = $response;
-        } else {
-            $price = $response;
-            $insurance = 0;
-        }
+        $estimatedCost = self::estimateLoanCost(
+            $item,
+            $community,
+            $estimatedDistance,
+            $durationInMinutes,
+            $departureAt
+        );
 
         return response(
             [
@@ -297,9 +321,9 @@ class LoanableController extends RestController
                     $departureAt,
                     $durationInMinutes
                 ),
-                "price" => $price,
-                "insurance" => $insurance,
-                "pricing" => $pricing ? $pricing->name : "Gratuit",
+                "price" => $estimatedCost->price,
+                "insurance" => $estimatedCost->insurance,
+                "pricing" => $estimatedCost->pricing,
             ],
             200
         );

@@ -48,23 +48,26 @@
             </dl>
           </b-tab>
           <b-tab title="Estimation">
-            <div
-              class="loanable-details__estimated-fare"
-              v-if="loanable.price !== null && loanable.price !== undefined"
-            >
+            <div class="loanable-details__estimated-fare" v-if="loanable.estimatedCost">
               <table class="trip-details">
                 <tr>
                   <th>Temps et distance&nbsp;:</th>
-                  <td class="text-right tabular-nums">{{ loanable.price | currency }}</td>
+                  <td class="text-right tabular-nums">
+                    {{ loanable.estimatedCost.price | currency }}
+                  </td>
                 </tr>
-                <tr v-if="loanable.insurance > 0">
+                <tr v-if="loanable.estimatedCost.insurance > 0">
                   <th>Assurances&nbsp;:</th>
-                  <td class="text-right tabular-nums">{{ loanable.insurance | currency }}</td>
+                  <td class="text-right tabular-nums">
+                    {{ loanable.estimatedCost.insurance | currency }}
+                  </td>
                 </tr>
                 <tr>
                   <th>Total&nbsp;:</th>
                   <td class="trip-details__total text-right tabular-nums">
-                    {{ (loanable.price + loanable.insurance) | currency }}
+                    {{
+                      (loanable.estimatedCost.price + loanable.estimatedCost.insurance) | currency
+                    }}
                   </td>
                 </tr>
               </table>

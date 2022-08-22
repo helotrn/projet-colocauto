@@ -82,12 +82,19 @@ export default new RestModule(
           cancelToken: cancelToken.token,
         });
 
-        const availableLoanableIds = new Set(Object.values(data).map((loanable) => loanable.id));
-        const newData = state.data.map((d) => ({
-          ...d,
-          available: availableLoanableIds.has(d.id),
-          tested: true,
-        }));
+        const availableLoanable = new Map(
+          Object.values(data).map((estimatedLoan) => [estimatedLoan.loanable.id, estimatedLoan])
+        );
+
+        const newData = state.data.map((d) => {
+          const isAvaialble = availableLoanable.has(d.id);
+          return {
+            ...d,
+            available: isAvaialble,
+            estimatedCost: isAvaialble ? availableLoanable.get(d.id).estimatedCost : null,
+            tested: true,
+          };
+        });
 
         commit("data", newData);
       } catch (e) {

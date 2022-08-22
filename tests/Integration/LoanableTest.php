@@ -49,9 +49,20 @@ class LoanableTest extends TestCase
             ],
         ]);
 
-        $loanable = factory(Car::class)->create([
+        $ownerUser = factory(User::class)->create();
+        $ownerUser->communities()->sync([
+            $community->id => [
+                "approved_at" => Carbon::now(),
+            ],
+        ]);
+
+        $owner = factory(Owner::class)->create([
+            "user_id" => $ownerUser->id,
+        ]);
+        factory(Car::class)->create([
             "community_id" => $community->id,
             "availability_mode" => "always",
+            "owner_id" => $owner->id,
         ]);
 
         $this->setTestLocale();
@@ -111,6 +122,21 @@ class LoanableTest extends TestCase
         $this->user->communities()->attach($community->id, [
             "approved_at" => new \DateTime(),
         ]);
+        $ownerUser = factory(User::class)->create();
+        $ownerUser->communities()->sync([
+            $community->id => [
+                "approved_at" => Carbon::now(),
+            ],
+        ]);
+
+        $owner = factory(Owner::class)->create([
+            "user_id" => $ownerUser->id,
+        ]);
+        $carToFind = factory(Car::class)->create([
+            "community_id" => $community->id,
+            "availability_mode" => "always",
+            "owner_id" => $owner->id,
+        ]);
 
         $borrowerUser = factory(User::class)->create();
         factory(Borrower::class)->create([
@@ -121,10 +147,6 @@ class LoanableTest extends TestCase
         $this->actAs($borrowerUser);
         $borrowerUser->communities()->attach($community->id, [
             "approved_at" => Carbon::now(),
-        ]);
-        $carToFind = factory(Car::class)->create([
-            "community_id" => $community->id,
-            "availability_mode" => "always",
         ]);
 
         // Non-overlapping loan after
@@ -159,7 +181,14 @@ class LoanableTest extends TestCase
         ]);
 
         $response->assertJson([
-            Loanable::find($carToFind->id)->jsonSerialize(),
+            [
+                "loanable" => Loanable::find($carToFind->id)->jsonSerialize(),
+                "estimatedCost" => [
+                    "price" => 0,
+                    "insurance" => 0,
+                    "pricing" => "Gratuit",
+                ],
+            ],
         ]);
     }
 

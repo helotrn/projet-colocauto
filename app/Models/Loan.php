@@ -628,6 +628,25 @@ SQL
             $this->platform_tip;
     }
 
+    public function scopeIntersect(Builder $query, $departureAt, $returnAt)
+    {
+        $query
+            ->where("status", "!=", "canceled")
+            ->whereHas("intention", function ($q) {
+                return $q->where("status", "=", "completed");
+            })
+            /*
+                Intersection if: a1 > b0 and a0 < b1
+
+                    a0           a1
+                    [------------)
+                          [------------)
+                          b0           b1
+            */
+            ->where("actual_return_at", ">", $departureAt)
+            ->where("departure_at", "<", $returnAt);
+    }
+
     public function scopeAccessibleBy(Builder $query, $user)
     {
         if ($user->isAdmin()) {
