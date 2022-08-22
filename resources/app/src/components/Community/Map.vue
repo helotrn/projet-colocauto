@@ -130,7 +130,11 @@ export default {
       this.$refs.map.fitBounds(bounds);
     },
     iconFor(loanable) {
-      const status = loanable.available === false ? "-unavailable-" : "-";
+      const status = !loanable.tested
+        ? "-outline-"
+        : loanable.available === false
+        ? "-unavailable-"
+        : "-";
 
       let url;
       switch (loanable.type) {
