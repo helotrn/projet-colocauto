@@ -41,22 +41,25 @@
           </div>
           <div v-else-if="userRoles.includes('borrower')">
             <p>
-              Ajoutez des fonds a votre solde LocoMotion afin de pouvoir couvrir le coût votre
-              emprunt. Ce montant correspond à un estimé. Il sera réevalué en fin d'emprunt pour
-              vous donner le montant exact correspondant à vos dépenses (kilometrage réel effectué
-              et durée de l'emprunt). C'est à ce moment que les fonds seront retirés de votre solde.
+              Ajoutez de l'argent à votre solde pour payer votre emprunt. Le prépaiement se base sur
+              votre estimation. Le coût exact sera calculé à la fin du trajet.
             </p>
             <b-alert v-if="canComplete" show variant="success">
               <p class="font-weight-bold alert-heading">Solde suffisant</p>
               <p>
-                Vous avez assez de fonds dans votre solde LocoMotion pour cet emprunt. Vous pouvez
-                continuer à l'étape suivante ou ajouter davantage de fonds pour couvrir la possible
-                différence entre le coût final et votre estimation.
+                Vous avez assez d'argent pour payer cet emprunt. Ajoutez plus d'argent à votre solde
+                si vous pensez que le coût final pourrait être plus grand que votre solde actuel.
               </p>
               <b-button variant="success" :disabled="actionLoading" @click="completeAction">
-                Continuer à l'étape suivante
+                Continuer <strong>sans</strong> ajouter au solde
               </b-button>
             </b-alert>
+            <b-row class="py-2">
+              <b-col sm="8" md="6" xl="4" class="font-weight-bold">Solde actuel</b-col>
+              <b-col col md="2" class="tabular-nums text-sm-right mt-1 mt-sm-0">{{
+                user.balance | currency
+              }}</b-col>
+            </b-row>
             <b-row class="py-2">
               <b-col sm="8" md="6" xl="4" class="font-weight-bold"
                 >Coût estimé (trajet + assurance)</b-col
@@ -72,12 +75,6 @@
               >
               <b-col col md="2" class="tabular-nums text-sm-right mt-1 mt-sm-0">{{
                 this.item.platform_tip | currency
-              }}</b-col>
-            </b-row>
-            <b-row class="py-2">
-              <b-col sm="8" md="6" xl="4" class="font-weight-bold">Solde actuel</b-col>
-              <b-col col md="2" class="tabular-nums text-sm-right mt-1 mt-sm-0">{{
-                user.balance | currency
               }}</b-col>
             </b-row>
 

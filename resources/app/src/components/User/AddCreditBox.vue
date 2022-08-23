@@ -2,8 +2,8 @@
   <div class="user-add-credit-box">
     <b-form-group
       label-cols="12"
-      label="Montant à approvisionner"
-      description="Approvisionnez davantage votre compte pour économiser sur les frais de transaction."
+      label="Montant à ajouter"
+      description="* Approvisionnez davantage votre compte pour économiser sur les frais de transaction."
     >
       <b-form-radio-group
         class="d-none d-md-block"
@@ -33,7 +33,7 @@
         <strong>Montant Total Prélevé</strong>
         <p class="total">{{ amountWithFee | currency }}</p>
         <b-form-text
-          >Frais de transaction&nbsp;:
+          >Incluant les frais de transaction&nbsp;:
           <pre>{{ this.feeRatio | percent }} + {{ this.feeConstant | currency }}</pre>
         </b-form-text>
       </b-col>
@@ -180,7 +180,7 @@ export default {
       }
 
       options.push({
-        text: "Montant personnalisé",
+        text: "Autre *",
         value: "other",
       });
 
