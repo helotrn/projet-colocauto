@@ -6,7 +6,7 @@
     <b-button
       class="mr-0 ml-3 mb-3"
       variant="danger"
-      :disabled="hasReachedStep('takeover') || loanIsCanceled"
+      :disabled="(!isAdmin && hasReachedStep('takeover')) || loanIsCanceled"
       @click="$emit('cancel')"
     >
       Annuler la réservation
