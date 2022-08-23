@@ -740,31 +740,6 @@ SQL
         return $query->where("status", "=", "canceled");
     }
 
-    public function scopeDepartureInLessThan(
-        Builder $query,
-        $amount,
-        $unit = "minutes"
-    ) {
-        if (
-            !in_array($unit, [
-                "minute",
-                "minutes",
-                "hour",
-                "hours",
-                "day",
-                "days",
-            ])
-        ) {
-            throw new \Exception("invalid unit");
-        }
-
-        return $query
-            ->whereRaw("(departure_at - $amount * interval '1 $unit') < ?", [
-                Carbon::now(),
-            ])
-            ->whereRaw("departure_at > now()");
-    }
-
     /*
        This method checks whether this loan is in a state in which it can be
        canceled.
