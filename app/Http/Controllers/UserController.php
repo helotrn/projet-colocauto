@@ -212,10 +212,9 @@ class UserController extends RestController
                     );
                     $mailableName = "\\App\\Mail\\{$mailName}";
                     try {
-                        Mail::to(
-                            $item->email,
-                            $item->name . " " . $item->last_name
-                        )->send(new $mailableName($item));
+                        Mail::to($item->email, $item->full_name)->send(
+                            new $mailableName($item)
+                        );
                         $report[] = [
                             "id" => $item->id,
                             "response" => [

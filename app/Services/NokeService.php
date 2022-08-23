@@ -134,7 +134,7 @@ class NokeService
             "city" => "",
             "company" => "",
             "mobilePhone" => $user->is_smart_phone ? $user->phone : "",
-            "name" => "{$user->name} {$user->last_name}",
+            "name" => $user->full_name,
             "notifyEmail" => 1,
             "notifySMS" => $user->is_smart_phone ? 1 : 0,
             "permissions" => ["app_flag"],

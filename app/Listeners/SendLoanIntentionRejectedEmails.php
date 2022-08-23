@@ -26,10 +26,7 @@ class SendLoanIntentionRejectedEmails
             $owner &&
             $owner->user->id !== $borrower->user->id
         ) {
-            Mail::to(
-                $borrower->user->email,
-                $borrower->user->name . " " . $borrower->user->last_name
-            )->queue(
+            Mail::to($borrower->user->email, $borrower->user->full_name)->queue(
                 new LoanIntentionRejected(
                     $event->intention,
                     $loan,

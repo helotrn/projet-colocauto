@@ -31,10 +31,9 @@ class EmailRegistrationStalled extends Command
             if (!$this->pretend) {
                 $this->info("Sending email to $user->email");
 
-                Mail::to(
-                    $user->email,
-                    $user->name . " " . $user->last_name
-                )->send(new RegistrationStalled($user));
+                Mail::to($user->email, $user->full_name)->send(
+                    new RegistrationStalled($user)
+                );
 
                 $meta = $user->meta;
                 $meta["sent_stalled_email"] = true;

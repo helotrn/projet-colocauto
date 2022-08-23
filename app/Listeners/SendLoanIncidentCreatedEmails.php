@@ -27,10 +27,7 @@ class SendLoanIncidentCreatedEmails
         $owner = $loan->loanable->owner;
 
         if ($owner && $owner->user->id !== $borrower->user->id) {
-            Mail::to(
-                $owner->user->email,
-                $owner->user->name . " " . $owner->user->last_name
-            )->queue(
+            Mail::to($owner->user->email, $owner->user->full_name)->queue(
                 new LoanIncidentCreated(
                     $event->incident,
                     $loan,

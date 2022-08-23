@@ -10,8 +10,8 @@
         margin-bottom: 32px;
     "
 >
-    Un nouveau véhicule, {{ $loanable->name }}, a été ajouté par {{ $user->name
-    }} {{ $user->last_name }} dans {{ $community->name }} et peut être validé.
+    Un nouveau véhicule, {{ $loanable->name }}, a été ajouté par {{
+    $user->full_name }} dans {{ $community->name }} et peut être validé.
 </p>
 
 <p style="text-align: center; margin: 32px auto 0 auto">

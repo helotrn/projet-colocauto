@@ -12,10 +12,9 @@ class SendLoanableCreatedEmails
 {
     public function handle(LoanableCreatedEvent $event)
     {
-        Mail::to(
-            $event->user->email,
-            $event->user->name . " " . $event->user->last_name
-        )->queue(new LoanableCreated($event->user, $event->loanable));
+        Mail::to($event->user->email, $event->user->full_name)->queue(
+            new LoanableCreated($event->user, $event->loanable)
+        );
 
         $admins = User::whereRole("admin")
             ->select("name", "last_name", "email")

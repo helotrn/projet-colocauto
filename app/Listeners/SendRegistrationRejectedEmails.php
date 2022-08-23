@@ -13,7 +13,7 @@ class SendRegistrationRejectedEmails
     {
         $user = $event->user;
 
-        Mail::to($user->email, $user->name . " " . $user->last_name)->queue(
+        Mail::to($user->email, $user->full_name)->queue(
             new RegistrationRejected($user)
         );
     }

@@ -38,10 +38,9 @@ class EmailLoanUpcoming extends Command
                     "Sending LoanUpcoming email to borrower at: $user->email"
                 );
 
-                Mail::to(
-                    $user->email,
-                    $user->name . " " . $user->last_name
-                )->send(new LoanUpcoming($user, $loan));
+                Mail::to($user->email, $user->full_name)->send(
+                    new LoanUpcoming($user, $loan)
+                );
 
                 // Loanable has an owner and is not self service.
                 if (
@@ -54,10 +53,9 @@ class EmailLoanUpcoming extends Command
                         "Sending LoanUpcoming email to owner at: $ownerUser->email"
                     );
 
-                    Mail::to(
-                        $ownerUser->email,
-                        $ownerUser->name . " " . $ownerUser->last_name
-                    )->send(new LoanUpcoming($user, $loan));
+                    Mail::to($ownerUser->email, $ownerUser->full_name)->send(
+                        new LoanUpcoming($user, $loan)
+                    );
                 }
 
                 $meta = $loan->meta;

@@ -28,10 +28,7 @@ class SendLoanTakeoverContestedEmails
         $owner = $loan->loanable->owner;
 
         if ($caller->id !== $borrower->user->id) {
-            Mail::to(
-                $borrower->user->email,
-                $borrower->user->name . " " . $borrower->user->last_name
-            )->queue(
+            Mail::to($borrower->user->email, $borrower->user->full_name)->queue(
                 new LoanTakeoverContested(
                     $event->takeover,
                     $loan,
@@ -42,10 +39,7 @@ class SendLoanTakeoverContestedEmails
         }
 
         if ($owner && $caller->id !== $owner->user->id) {
-            Mail::to(
-                $owner->user->email,
-                $owner->user->name . " " . $owner->user->last_name
-            )->queue(
+            Mail::to($owner->user->email, $owner->user->full_name)->queue(
                 new LoanTakeoverContested(
                     $event->takeover,
                     $loan,

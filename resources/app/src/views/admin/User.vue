@@ -2,7 +2,7 @@
   <b-container fluid v-if="item && routeDataLoaded">
     <b-row>
       <b-col>
-        <h1 v-if="item.name || item.last_name">{{ item.name }} {{ item.last_name }}</h1>
+        <h1 v-if="item.full_name">{{ item.full_name }}</h1>
         <h1 v-else>
           <em>{{ $tc("model_name", 1) | capitalize }}</em>
         </h1>

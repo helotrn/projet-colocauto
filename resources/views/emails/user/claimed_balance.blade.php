@@ -9,8 +9,8 @@
         color: #343a40;
     "
 >
-    {{ $user->name }} {{ $user->last_name }} a demandé à ce que la balance de
-    son compte lui soit reversé.
+    {{ $user->full_name }} a demandé à ce que la balance de son compte lui soit
+    reversé.
 </p>
 
 <p style="text-align: center; margin: 32px auto 0 auto">

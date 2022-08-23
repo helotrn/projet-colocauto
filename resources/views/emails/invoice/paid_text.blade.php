@@ -11,7 +11,7 @@ Solon collectif (Celsius Mtl)
 Montréal, QC
 H2S 2L8
 
-{{ $user->name }} {{ $user->last_name }}
+{{ $user->full_name }}
 {{ $user->address }}
 {{ $user->postal_code }}
 
