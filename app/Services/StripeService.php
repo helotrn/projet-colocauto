@@ -34,7 +34,7 @@ class StripeService
             "description" =>
                 "{$user->full_name} " . "<{$user->email}> ({$user->id})",
             "email" => $user->email,
-            "name" => "$user->full_name",
+            "name" => $user->full_name,
             "address" => [
                 "line1" => $user->address,
                 "country" => "CA",
