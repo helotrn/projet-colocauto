@@ -30,9 +30,31 @@
               !hasReachedStep('payment')
             "
           >
-            <h4>Modification de la réservation</h4>
-            <strong>Pour modifier</strong> cette demande de réservation, merci de l'annuler et d'en
-            créer une nouvelle.
+            <h4>{{ $t("modification_warning.title") }}</h4>
+            {{ $t("modification_warning.content") }}
+          </b-alert>
+
+          <b-alert
+            show
+            variant="info"
+            v-if="item.loanable.type === 'car' && !loanIsCanceled && !hasReachedStep('handover')"
+          >
+            <h4 class="alert-heading">
+              {{ $t("insurance_warning.title") }}
+            </h4>
+
+            <i18n path="insurance_warning.warning" tag="p">
+              <template #link>
+                <a :href="$t('insurance_warning.terms_link')" target="_blank">{{
+                  $t("insurance_warning.terms")
+                }}</a>
+              </template>
+              <template #emphasis>
+                <strong>
+                  {{ $t("insurance_warning.car_stays_in_quebec") }}
+                </strong>
+              </template>
+            </i18n>
           </b-alert>
 
           <loan-actions
@@ -62,6 +84,8 @@ import LoanStepsSequence from "@/mixins/LoanStepsSequence";
 import UserMixin from "@/mixins/UserMixin";
 
 import { capitalize } from "@/helpers/filters";
+
+import locales from "@/locales";
 
 export default {
   name: "Loan",
@@ -142,6 +166,16 @@ export default {
     async submitLoan() {
       await this.submit();
       await this.loadItemAndUser();
+    },
+  },
+  i18n: {
+    messages: {
+      en: {
+        ...locales.en.loans,
+      },
+      fr: {
+        ...locales.fr.loans,
+      },
     },
   },
 };

@@ -19,6 +19,17 @@ export default {
         "LocoMotion est un projet citoyen et collaboratif. Participez à son" +
         "fonctionnement en donnant une contribution volontaire.",
     },
+    modification_warning: {
+      title: "Pour modifier votre réservation",
+      content: "Merci de l'annuler et de créer une nouvelle réservation.",
+    },
+    insurance_warning: {
+      title: "Avant d'emprunter une auto",
+      warning: "Lisez attentivement les {link}. {emphasis}",
+      terms: "conditions d'utilisations de l'assurance",
+      terms_link: "/conditions-utilisation-desjardins-assurances.html",
+      car_stays_in_quebec: "Notez que l'assurance couvre seulement les trajets au Québec.",
+    },
     fields: {
       id: "ID",
       actual_duration_in_minutes: "durée (minutes)",
