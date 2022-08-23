@@ -34,7 +34,11 @@
       size="lg"
       footer-class="d-none"
     >
-      <user-add-credit-box :user="user" @bought="reloadUserAndCloseModal" @cancel="closeModal" />
+      <user-add-credit-box
+        :payment-methods="user.payment_methods"
+        @bought="reloadUserAndCloseModal"
+        @cancel="closeModal"
+      />
     </b-modal>
 
     <b-modal

@@ -8,6 +8,13 @@
         }
     }
 
+    .form-group {
+        legend,
+        label:not(.btn) {
+            font-weight: bold;
+        }
+    }
+
     .card-body {
         padding: 0;
 

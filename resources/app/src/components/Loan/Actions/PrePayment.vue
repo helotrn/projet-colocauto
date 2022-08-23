@@ -34,36 +34,62 @@
         accordion="loan-actions"
         :visible="open"
       >
-        <div class="loan-actions-pre_payment__description mb-3" v-if="!action.executed_at">
+        <div class="loan-actions-pre_payment__description" v-if="!action.executed_at">
           <!-- Action is not completed -->
           <div v-if="action.status === 'in_process' && loanIsCanceled">
             <p>L'emprunt a été annulé. Cette étape ne peut pas être complétée.</p>
           </div>
           <div v-else-if="userRoles.includes('borrower')">
-            <p>Utiliser votre solde ou payer directement.</p>
+            <p>
+              Ajoutez des fonds a votre solde LocoMotion afin de pouvoir couvrir le coût votre
+              emprunt. Ce montant correspond à un estimé. Il sera réevalué en fin d'emprunt pour
+              vous donner le montant exact correspondant à vos dépenses (kilometrage réel effectué
+              et durée de l'emprunt). C'est à ce moment que les fonds seront retirés de votre solde.
+            </p>
+            <b-alert v-if="canComplete" show variant="success">
+              <p class="font-weight-bold alert-heading">Solde suffisant</p>
+              <p>
+                Vous avez assez de fonds dans votre solde LocoMotion pour cet emprunt. Vous pouvez
+                continuer à l'étape suivante ou ajouter davantage de fonds pour couvrir la possible
+                différence entre le coût final et votre estimation.
+              </p>
+              <b-button variant="success" :disabled="actionLoading" @click="completeAction">
+                Continuer à l'étape suivante
+              </b-button>
+            </b-alert>
+            <b-row class="py-2">
+              <b-col sm="8" md="6" xl="4" class="font-weight-bold"
+                >Coût estimé (trajet + assurance)</b-col
+              >
+              <b-col col md="2" class="tabular-nums text-sm-right mt-1 mt-sm-0">{{
+                this.minimumCost | currency
+              }}</b-col>
+            </b-row>
+            <b-row class="py-2">
+              <b-col sm="8" md="6" xl="4" class="font-weight-bold"
+                >Contribution volontaire
+                <b-form-text>Peut être modifiée lors du paiement final</b-form-text></b-col
+              >
+              <b-col col md="2" class="tabular-nums text-sm-right mt-1 mt-sm-0">{{
+                this.item.platform_tip | currency
+              }}</b-col>
+            </b-row>
+            <b-row class="py-2">
+              <b-col sm="8" md="6" xl="4" class="font-weight-bold">Solde actuel</b-col>
+              <b-col col md="2" class="tabular-nums text-sm-right mt-1 mt-sm-0">{{
+                user.balance | currency
+              }}</b-col>
+            </b-row>
+
+            <hr />
 
             <user-add-credit-box
-              :minimumRequired="minimumRequired"
-              :user="user"
-              :noCancel="true"
+              :minimum-required="this.minimumCost - this.user.balance"
+              :trip-cost="this.item.total_estimated_cost"
+              :payment-methods="user.payment_methods"
+              :no-cancel="true"
               @bought="completeAction"
             />
-
-            <div class="loan-actions-intention__buttons" v-if="canComplete">
-              <p>Ou compléter cette étape sans plus attendre.</p>
-
-              <div class="text-center">
-                <b-button
-                  size="sm"
-                  variant="success"
-                  class="mr-3"
-                  :disabled="actionLoading"
-                  @click="completeAction"
-                >
-                  Compléter
-                </b-button>
-              </div>
-            </div>
           </div>
           <div v-else-if="userRoles.includes('owner')">
             <p>{{ item.borrower.user.name }} doit ajouter des crédits à son compte.</p>
@@ -105,22 +131,15 @@ export default {
     UserAddCreditBox,
   },
   computed: {
-    minimumRequired() {
-      return (
-        parseFloat(this.item.estimated_price) +
-        parseFloat(this.item.estimated_insurance) +
-        parseFloat(this.item.platform_tip)
-      );
+    minimumCost() {
+      return parseFloat(this.item.estimated_price) + parseFloat(this.item.estimated_insurance);
     },
     /*
       Can complete if balance is sufficient to cover price and insurance.
       It is not necessary to cover tip as it may be changed later.
     */
     canComplete() {
-      return (
-        parseFloat(this.user.balance) >=
-        parseFloat(this.item.estimated_price) + parseFloat(this.item.estimated_insurance)
-      );
+      return parseFloat(this.user.balance) >= this.minimumCost;
     },
   },
 };

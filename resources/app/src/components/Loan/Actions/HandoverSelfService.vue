@@ -109,8 +109,9 @@
                       footer-class="d-none"
                     >
                       <user-add-credit-box
-                        :user="user"
+                        :payment-methods="user.payment_methods"
                         :minimum-required="finalPrice - user.balance"
+                        :trip-cost="finalPrice"
                         @bought="reloadUserAndCloseModal"
                         @cancel="closeModal"
                       />

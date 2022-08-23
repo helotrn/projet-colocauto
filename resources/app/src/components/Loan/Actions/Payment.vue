@@ -165,24 +165,16 @@
 
                   <b-col lg="6">
                     <div role="group" class="form-group">
-                      <label for="platform_tip" class="d-block" id="__BVID__151__BV_label_">
-                        {{ $t("fields.platform_tip") | capitalize }}
-                        <b-badge
-                          pill
-                          variant="light"
-                          v-b-popover.hover="$t('descriptions.platform_tip')"
-                        >
-                          ?
-                        </b-badge>
-                      </label>
-
                       <div class="bv-no-focus-ring text-center">
-                        <b-form-input
+                        <forms-validated-input
                           id="platform_tip"
                           name="platform_tip"
                           type="number"
+                          :label="$t('fields.platform_tip') | capitalize"
+                          :description="$t('descriptions.platform_tip')"
                           :min="0"
                           :step="0.01"
+                          :rules="{ min_value: 0 }"
                           v-model="platformTip"
                         />
                       </div>
@@ -193,15 +185,19 @@
                 </b-row>
               </div>
 
-              <h3>Coût du trajet</h3>
+              <h3>Sommaire</h3>
               <table class="trip-details">
+                <tr class="header">
+                  <th>Coût du trajet</th>
+                  <td></td>
+                </tr>
                 <tr>
-                  <th>Temps et distance&nbsp;:</th>
+                  <th>Temps et distance</th>
                   <td class="text-right tabular-nums">{{ item.actual_price | currency }}</td>
                 </tr>
 
                 <tr>
-                  <th>Dépenses déduites&nbsp;:</th>
+                  <th>Dépenses déduites</th>
                   <td class="text-right tabular-nums">
                     {{ -this.item.handover.purchases_amount | currency }}
                   </td>
@@ -210,32 +206,56 @@
                 <tr>
                   <th v-if="userIsAdmin">
                     Montant remis à {{ item.loanable.owner.user.full_name }} par
-                    {{ item.borrower.user.full_name }}&nbsp;:
+                    {{ item.borrower.user.full_name }}
                   </th>
-                  <th v-else>Montant remis à {{ item.loanable.owner.user.full_name }}&nbsp;:</th>
+                  <th v-else>Montant remis à {{ item.loanable.owner.user.full_name }}</th>
                   <td class="trip-details__total text-right tabular-nums">
                     {{ actualOwnerPart | currency }}
                   </td>
                 </tr>
 
                 <tr>
-                  <th>Assurances&nbsp;:</th>
+                  <th>Assurances</th>
                   <td class="text-right tabular-nums">
                     {{ item.actual_insurance | currency }}
                   </td>
                 </tr>
                 <tr>
-                  <th>Contribution volontaire&nbsp;:</th>
+                  <th>Contribution volontaire</th>
                   <td class="text-right tabular-nums">
-                    {{ parseFloat(this.platformTip) | currency }}
+                    {{ parseFloat(this.normalizedTip) | currency }}
                   </td>
                 </tr>
-                <tr>
-                  <th>Total&nbsp;:</th>
+                <tr class="last">
+                  <th>Total</th>
                   <td class="trip-details__total text-right tabular-nums">
-                    {{ actualPrice | currency }}
+                    <strong>{{ actualPrice | currency }}</strong>
                   </td>
                 </tr>
+                <template v-if="!userIsAdmin">
+                  <tr class="header">
+                    <th>Paiement</th>
+                    <td></td>
+                  </tr>
+                  <tr>
+                    <th>Solde actuel</th>
+                    <td class="text-right tabular-nums">
+                      {{ user.balance | currency }}
+                    </td>
+                  </tr>
+                  <tr v-if="actualPrice > user.balance" class="last">
+                    <th>Solde minimum à ajouter</th>
+                    <td class="trip-details__total text-right tabular-nums">
+                      <strong>{{ (actualPrice - user.balance) | currency }}</strong>
+                    </td>
+                  </tr>
+                  <tr v-else class="last">
+                    <th>Solde après paiement</th>
+                    <td class="trip-details__total text-right tabular-nums">
+                      <strong>{{ (user.balance - actualPrice) | currency }}</strong>
+                    </td>
+                  </tr>
+                </template>
               </table>
 
               <b-row v-if="!userIsAdmin && !hasEnoughBalance">
@@ -253,8 +273,9 @@
                     footer-class="d-none"
                   >
                     <user-add-credit-box
-                      :user="user"
+                      :payment-methods="user.payment_methods"
                       :minimum-required="actualPrice - user.balance"
+                      :trip-cost="actualPrice"
                       @bought="reloadUserAndCloseModal"
                       @cancel="closeModal"
                     />
@@ -306,31 +327,33 @@
 </template>
 
 <script>
+import FormsValidatedInput from "@/components/Forms/ValidatedInput.vue";
 import UserAddCreditBox from "@/components/User/AddCreditBox.vue";
 
 import LoanActionsMixin from "@/mixins/LoanActionsMixin";
 import LoanStepsSequence from "@/mixins/LoanStepsSequence";
 
-import { filters } from "@/helpers";
 import locales from "@/locales";
-
-const { currency } = filters;
 
 export default {
   name: "LoanActionsPayment",
   mixins: [LoanActionsMixin, LoanStepsSequence],
   mounted() {
-    this.action.platform_tip = parseFloat(this.platformTip);
+    this.action.platform_tip = this.platformTip;
   },
   components: {
+    FormsValidatedInput,
     UserAddCreditBox,
   },
   data() {
     return {
-      platformTip: this.item.platform_tip,
+      platformTip: parseFloat(this.item.platform_tip),
     };
   },
   computed: {
+    normalizedTip() {
+      return Math.max(parseFloat(this.platformTip), 0);
+    },
     actualOwnerPart() {
       return this.item.actual_price - this.item.handover.purchases_amount;
     },
@@ -341,31 +364,12 @@ export default {
       return (
         this.item.actual_price +
         this.item.actual_insurance +
-        parseFloat(this.platformTip) -
+        this.normalizedTip -
         this.item.handover.purchases_amount
       );
     },
     hasEnoughBalance() {
       return this.user.balance >= this.actualPrice;
-    },
-    priceTooltip() {
-      const strParts = [];
-
-      strParts.push(`Trajet: ${currency(this.item.actual_price)}`); // eslint-disable-line no-irregular-whitespace
-      if (this.item.actual_insurance > 0) {
-        strParts.push(`Assurance: ${currency(this.item.actual_insurance)}`); // eslint-disable-line no-irregular-whitespace
-      }
-
-      if (parseFloat(this.platformTip) > 0) {
-        strParts.push(`Contribution: ${currency(parseFloat(this.platformTip))}`); // eslint-disable-line no-irregular-whitespace
-      }
-
-      const purchasesAmount = parseFloat(this.item.handover.purchases_amount);
-      if (purchasesAmount > 0) {
-        strParts.push(`Achats: -${currency(purchasesAmount)}`); // eslint-disable-line no-irregular-whitespace
-      }
-
-      return strParts.join(" \\ ");
     },
   },
   methods: {
@@ -378,8 +382,8 @@ export default {
     },
   },
   watch: {
-    platformTip(val) {
-      this.action.platform_tip = parseFloat(val);
+    normalizedTip(val) {
+      this.action.platform_tip = val;
     },
   },
   i18n: {
@@ -401,10 +405,23 @@ export default {
 .loan-actions-payment {
   .trip-details {
     margin: 0 auto;
+    line-height: 1.5;
 
     th,
     td {
       padding: 0 0.75rem;
+      font-weight: normal;
+    }
+
+    tr:not(.header):not(.last) th,
+    tr:not(.header):not(.last) td {
+      border-bottom: 1px dotted lightgray;
+    }
+
+    .header th {
+      font-weight: bold;
+      font-size: 1.2rem;
+      padding-top: 0.5rem;
     }
   }
 
