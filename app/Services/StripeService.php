@@ -31,8 +31,7 @@ class StripeService
         }
 
         return \Stripe\Customer::create([
-            "description" =>
-                "{$user->full_name} " . "<{$user->email}> ({$user->id})",
+            "description" => "{$user->full_name} <{$user->email}> ({$user->id})",
             "email" => $user->email,
             "name" => $user->full_name,
             "address" => [
