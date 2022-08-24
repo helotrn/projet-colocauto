@@ -34,7 +34,7 @@ class Borrower extends BaseModel
 
     public static $rules = [
         "drivers_license_number" => ["nullable"],
-        "has_been_sued_last_ten_years" => ["boolean"],
+        "has_not_been_sued_last_ten_years" => ["boolean"],
         "noke_id" => ["nullable"],
         "approved_at" => ["nullable", "date"],
         "submitted_at" => ["nullable", "date"],
@@ -42,7 +42,7 @@ class Borrower extends BaseModel
 
     protected $fillable = [
         "drivers_license_number",
-        "has_been_sued_last_ten_years",
+        "has_not_been_sued_last_ten_years",
         "noke_id",
         "submitted_at",
         "user_id",
@@ -79,7 +79,7 @@ class Borrower extends BaseModel
     public function getIsCompleteAttribute()
     {
         return !!$this->drivers_license_number &&
-            !$this->has_been_sued_last_ten_years &&
+            $this->has_not_been_sued_last_ten_years &&
             !!$this->gaa()->exists() &&
             !!$this->saaq()->exists();
     }

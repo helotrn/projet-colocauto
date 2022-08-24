@@ -12,7 +12,7 @@ class BorrowerTest extends TestCase
     private static $getBorrowerResponseStructure = [
         "id",
         "drivers_license_number",
-        "has_been_sued_last_ten_years",
+        "has_not_been_sued_last_ten_years",
         "noke_id",
         "submitted_at",
         "approved_at",
@@ -25,7 +25,7 @@ class BorrowerTest extends TestCase
                 $min = 1111111111,
                 $max = 999999999
             ),
-            "has_been_sued_last_ten_years" => $this->faker->boolean,
+            "has_not_been_sued_last_ten_years" => $this->faker->boolean,
             "noke_id" => $this->faker->numberBetween(
                 $min = 000000000,
                 $max = 999999999

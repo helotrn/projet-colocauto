@@ -20,7 +20,7 @@ class BorrowerTest extends TestCase
         $borrower = factory(Borrower::class)->create([
             "user_id" => $user->id,
             "drivers_license_number" => "C1234-123456-12",
-            "has_been_sued_last_ten_years" => false,
+            "has_not_been_sued_last_ten_years" => true,
         ]);
 
         $gaa = factory(File::class)->create([
