@@ -29,7 +29,7 @@
 
     <hr />
     <b-row v-if="amount > 0">
-      <b-col>
+      <b-col sm="6">
         <strong>Montant Total Prélevé</strong>
         <p class="total">{{ amountWithFee | currency }}</p>
         <b-form-text
@@ -37,7 +37,7 @@
           <pre>{{ this.feeRatio | percent }} + {{ this.feeConstant | currency }}</pre>
         </b-form-text>
       </b-col>
-      <b-col>
+      <b-col sm="6">
         <strong>Choisir votre mode de paiement</strong>
         <b-form-select
           id="payment_method_id"
@@ -49,7 +49,7 @@
         </b-form-select>
         <div class="mt-1">
           <a href="/profile/payment_methods/new">
-            {{ $t("ajouter un mode de paiement") | capitalize }}
+            {{ "ajouter un mode de paiement" | capitalize }}
           </a>
         </div>
       </b-col>
@@ -94,7 +94,9 @@ export default {
         ? this.normalizeCurrency(this.tripCost)
         : this.minimumRequired
         ? this.normalizeCurrency(this.minimumRequired)
-        : 10,
+        : this.addStandardOptions
+        ? 10
+        : "other",
     };
   },
   props: {
@@ -120,11 +122,17 @@ export default {
       required: false,
       default: false,
     },
+    addStandardOptions: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
   },
   computed: {
     amount() {
       if (this.selectedAmount === "other") {
-        return parseFloat(this.customAmount);
+        const amount = parseFloat(this.customAmount);
+        return isNaN(amount) ? 0 : amount;
       }
 
       return parseFloat(this.selectedAmount);
@@ -151,34 +159,35 @@ export default {
         });
       }
 
-      const standardOptions = [
-        {
-          text: "10$",
-          value: 10,
-        },
-        {
-          text: "20$",
-          value: 20,
-        },
-        {
-          text: "50$",
-          value: 50,
-        },
-        {
-          text: "100$",
-          value: 100,
-        },
-      ];
+      if (this.addStandardOptions) {
+        const standardOptions = [
+          {
+            text: "10$",
+            value: 10,
+          },
+          {
+            text: "20$",
+            value: 20,
+          },
+          {
+            text: "50$",
+            value: 50,
+          },
+          {
+            text: "100$",
+            value: 100,
+          },
+        ];
 
-      for (let i = 0, len = standardOptions.length; i < len; i += 1) {
-        if (
-          !this.normalizedMinimumRequired ||
-          standardOptions[i].value > parseFloat(this.normalizedMinimumRequired)
-        ) {
-          options.push(standardOptions[i]);
+        for (let i = 0, len = standardOptions.length; i < len; i += 1) {
+          if (
+            !this.normalizedMinimumRequired ||
+            standardOptions[i].value > parseFloat(this.normalizedMinimumRequired)
+          ) {
+            options.push(standardOptions[i]);
+          }
         }
       }
-
       options.push({
         text: "Autre *",
         value: "other",
@@ -214,8 +223,9 @@ export default {
       this.$emit("cancel");
     },
     normalizeCurrency(currency) {
-      const amount = Math.ceil(parseFloat(currency) * 100) / 100;
-      return amount > 0 ? amount : 0;
+      // Rounding to get rid of floating point errors
+      const amount = Math.round(parseFloat(currency) * 100) / 100;
+      return !isNaN(amount) && amount > 0 ? amount : 0;
     },
     async buyCredit() {
       this.loading = true;
@@ -243,6 +253,18 @@ export default {
       }
 
       this.loading = false;
+    },
+  },
+  watch: {
+    minimumRequired(newValue, oldValue) {
+      if (this.selectedAmount === this.normalizeCurrency(oldValue)) {
+        this.selectedAmount = this.normalizeCurrency(newValue);
+      }
+    },
+    tripCost(newValue, oldValue) {
+      if (this.selectedAmount === this.normalizeCurrency(oldValue)) {
+        this.selectedAmount = this.normalizeCurrency(newValue);
+      }
     },
   },
 };
