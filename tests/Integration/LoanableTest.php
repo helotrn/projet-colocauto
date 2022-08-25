@@ -68,18 +68,16 @@ class LoanableTest extends TestCase
         $this->setTestLocale();
 
         // Complete valid request
-        $response = $this->json("GET", "/api/v1/loanables/search", [
+        $this->json("GET", "/api/v1/loanables/search", [
             "departure_at" => Carbon::now()->format("Y-m-d H:i:s"),
             "duration_in_minutes" => 20,
             "estimated_distance" => 0,
-            "community_id" => $community->id,
         ])->assertStatus(200);
 
         // Departure missing
-        $response = $this->json("GET", "/api/v1/loanables/search", [
+        $this->json("GET", "/api/v1/loanables/search", [
             "duration_in_minutes" => 20,
             "estimated_distance" => 0,
-            "community_id" => $community->id,
         ])
             ->assertStatus(422)
             ->assertJson([
@@ -88,15 +86,20 @@ class LoanableTest extends TestCase
                 ],
             ]);
 
-        // Community missing: OK
-        $response = $this->json("GET", "/api/v1/loanables/search", [
+        // Distance missing
+        $this->json("GET", "/api/v1/loanables/search", [
             "departure_at" => Carbon::now()->format("Y-m-d H:i:s"),
             "duration_in_minutes" => 20,
-            "estimated_distance" => 0,
-        ])->assertStatus(200);
+        ])
+            ->assertStatus(422)
+            ->assertJson([
+                "errors" => [
+                    "estimated_distance" => ["validation.required"],
+                ],
+            ]);
 
         // Duration 0
-        $response = $this->json("GET", "/api/v1/loanables/search", [
+        $this->json("GET", "/api/v1/loanables/search", [
             "departure_at" => Carbon::now()->format("Y-m-d H:i:s"),
             "duration_in_minutes" => 0,
             "estimated_distance" => 0,
@@ -177,7 +180,6 @@ class LoanableTest extends TestCase
             "departure_at" => Carbon::now()->format("Y-m-d H:i:s"),
             "duration_in_minutes" => 20,
             "estimated_distance" => 0,
-            "community_id" => $community->id,
         ]);
 
         $response->assertJson([
@@ -231,7 +233,6 @@ class LoanableTest extends TestCase
             "departure_at" => Carbon::now()->format("Y-m-d H:i:s"),
             "duration_in_minutes" => 20,
             "estimated_distance" => 0,
-            "community_id" => $community->id,
         ]);
 
         $response->assertJsonMissing([
@@ -283,7 +284,6 @@ class LoanableTest extends TestCase
             "departure_at" => Carbon::now()->format("Y-m-d H:i:s"),
             "duration_in_minutes" => 20,
             "estimated_distance" => 0,
-            "community_id" => $community->id,
         ]);
 
         $response->assertJsonMissing([
@@ -324,7 +324,6 @@ class LoanableTest extends TestCase
             "departure_at" => Carbon::now()->format("Y-m-d H:i:s"),
             "duration_in_minutes" => 20,
             "estimated_distance" => 0,
-            "community_id" => $community->id,
         ]);
 
         $response->assertJsonMissing([

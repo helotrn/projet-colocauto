@@ -21,7 +21,7 @@ class SearchRequest extends BaseRequest
         $rules = [
             "departure_at" => ["date", "required"],
             "duration_in_minutes" => ["integer", "required", "min:15"],
-            "community_id" => ["integer", "filled"],
+            "estimated_distance" => ["integer", "required"],
         ];
 
         return $rules;

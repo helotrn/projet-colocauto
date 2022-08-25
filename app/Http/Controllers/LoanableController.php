@@ -202,12 +202,14 @@ class LoanableController extends RestController
             })
             ->get();
 
+        // Check schedule is open for remaining loanables
         $availableLoanables = $availableLoanables->reject(function (
             $loanable
         ) use ($departureAt, $returnAt) {
             return !$loanable->isLoanableScheduleOpen($departureAt, $returnAt);
         });
 
+        // Estimate price for each available loanable
         $estimatedDistance = $request->get("estimated_distance");
 
         $loanablessAndCosts = $availableLoanables->map(function (
@@ -229,13 +231,18 @@ class LoanableController extends RestController
         return response($loanablessAndCosts, 200);
     }
 
+    /**
+     * Returns the estimated price a possible loan
+     *
+     * @return object with 'price', 'insurance' and 'pricing' (name of the pricing rule) fields set.
+     **/
     private function estimateLoanCost(
         Loanable $loanable,
         Community $community,
-        $estimatedDistance,
-        $durationInMinutes,
-        $departureAt
-    ) {
+        int $estimatedDistance,
+        int $durationInMinutes,
+        Carbon $departureAt
+    ): object {
         $pricing = $community->getPricingFor($loanable);
         if (!$pricing) {
             return (object) [
