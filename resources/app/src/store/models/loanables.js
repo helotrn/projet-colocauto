@@ -99,6 +99,24 @@ export default new RestModule(
         commit("data", newData);
       } catch (e) {
         const { request, response } = e;
+        if (request) {
+          switch (request.status) {
+            case 422:
+              commit(
+                "addNotification",
+                {
+                  content: extractErrors(response.data).join(", "),
+                  title: "Erreur de validation",
+                  variant: "danger",
+                  type: "extension",
+                },
+                { root: true }
+              );
+              return;
+            default:
+              break;
+          }
+        }
         commit("error", { request, response });
 
         throw e;
