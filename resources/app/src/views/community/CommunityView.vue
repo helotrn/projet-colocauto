@@ -12,7 +12,7 @@
                 :selected-loanable-types="selectedLoanableTypes"
                 @selectLoanableTypes="selectLoanableTypes"
                 @selectLoanable="selectLoanable"
-                :loading="searching"
+                :loading="searching || loading"
                 :loanable-types="loanableTypes"
                 :form="loanForm"
                 :can-loan-car="canLoanCar"
