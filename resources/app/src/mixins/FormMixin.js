@@ -86,7 +86,7 @@ export default {
         }
 
         if (this.formMixinCallback && typeof this.formMixinCallback === "function") {
-          this.formMixinCallback();
+          await this.formMixinCallback();
         }
       } catch (e) {
         if (e.request) {
