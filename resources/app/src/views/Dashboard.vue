@@ -90,73 +90,76 @@
             </div>
           </section>
           <!---->
-          <!-- awaiting loans container -->
-          <section class="page__section" v-if="hasWaitingLoans">
-            <h2 class="dashboard--margin-bottom">Nouvelles demandes d'emprunt</h2>
+          <layout-loading v-if="!allLoansLoaded" />
+          <template v-else>
+            <!-- awaiting loans container -->
+            <section class="page__section" v-if="hasWaitingLoans">
+              <h2 class="dashboard--margin-bottom">Nouvelles demandes d'emprunt</h2>
 
-            <div class="dashboard__waiting-loans" v-for="loan in waitingLoans" :key="loan.id">
-              <loan-info-box
-                v-if="isBorrower(loan)"
-                :loan="loan"
-                :user="user"
-                :buttons="['view', 'cancel']"
-              />
-              <loan-info-box v-else :loan="loan" :user="user" />
-            </div>
-          </section>
-          <!---->
-          <!-- ongoing loans container -->
-          <section class="page__section" v-if="hasOngoingLoans">
-            <h2 class="dashboard--margin-bottom">Emprunts en cours</h2>
+              <div class="dashboard__waiting-loans" v-for="loan in waitingLoans" :key="loan.id">
+                <loan-info-box
+                  v-if="isBorrower(loan)"
+                  :loan="loan"
+                  :user="user"
+                  :buttons="['view', 'cancel']"
+                />
+                <loan-info-box v-else :loan="loan" :user="user" />
+              </div>
+            </section>
+            <!---->
+            <!-- ongoing loans container -->
+            <section class="page__section" v-if="hasOngoingLoans">
+              <h2 class="dashboard--margin-bottom">Emprunts en cours</h2>
 
-            <div class="dashboard__ongoing-loans" v-for="loan in ongoingLoans" :key="loan.id">
-              <loan-info-box :loan="loan" :user="user" :buttons="['view']" />
-            </div>
-          </section>
-          <!---->
-          <!-- upcoming loans container -->
-          <section class="page__section" v-if="hasUpcomingLoans">
-            <h2 class="dashboard--margin-bottom">Emprunts à venir</h2>
+              <div class="dashboard__ongoing-loans" v-for="loan in ongoingLoans" :key="loan.id">
+                <loan-info-box :loan="loan" :user="user" :buttons="['view']" />
+              </div>
+            </section>
+            <!---->
+            <!-- upcoming loans container -->
+            <section class="page__section" v-if="hasUpcomingLoans">
+              <h2 class="dashboard--margin-bottom">Emprunts à venir</h2>
 
-            <div class="dashboard__upcoming-loans" v-for="loan in upcomingLoans" :key="loan.id">
-              <loan-info-box
-                mode="upcoming"
-                :loan="loan"
-                :user="user"
-                :buttons="['view', 'cancel']"
-              />
-            </div>
-          </section>
-          <!---->
-          <!-- loanables container -->
-          <section class="page__section" v-if="user.owner">
-            <b-row>
-              <b-col>
-                <h2 class="dashboard--margin-bottom">Mes véhicules</h2>
-              </b-col>
-              <b-col class="text-right">
-                <b-button variant="outline-primary" to="/profile/loanables">
-                  Gérer mes véhicules
-                </b-button>
-              </b-col>
-            </b-row>
-
-            <div class="dashboard__vehicles">
-              <div v-if="user.loanables.length > 0">
-                <loanable-info-box
-                  v-for="loanable in user.loanables"
-                  :key="loanable.id"
-                  v-bind="loanable"
+              <div class="dashboard__upcoming-loans" v-for="loan in upcomingLoans" :key="loan.id">
+                <loan-info-box
+                  mode="upcoming"
+                  :loan="loan"
+                  :user="user"
+                  :buttons="['view', 'cancel']"
                 />
               </div>
-              <div v-else>
-                Aucun véhicule.<br />
-                Ajoutez-en un
-                <router-link to="/profile/loanables/new">ici</router-link>.
+            </section>
+            <!---->
+            <!-- loanables container -->
+            <section class="page__section" v-if="user.owner">
+              <b-row>
+                <b-col>
+                  <h2 class="dashboard--margin-bottom">Mes véhicules</h2>
+                </b-col>
+                <b-col class="text-right">
+                  <b-button variant="outline-primary" to="/profile/loanables">
+                    Gérer mes véhicules
+                  </b-button>
+                </b-col>
+              </b-row>
+
+              <div class="dashboard__vehicles">
+                <div v-if="user.loanables.length > 0">
+                  <loanable-info-box
+                    v-for="loanable in user.loanables"
+                    :key="loanable.id"
+                    v-bind="loanable"
+                  />
+                </div>
+                <div v-else>
+                  Aucun véhicule.<br />
+                  Ajoutez-en un
+                  <router-link to="/profile/loanables/new">ici</router-link>.
+                </div>
               </div>
-            </div>
-          </section>
-          <!---->
+            </section>
+            <!---->
+          </template>
         </b-col>
 
         <b-col tag="aside" class="page__sidebar" xl="3" lg="4" md="5">
@@ -169,7 +172,9 @@
             </div>
 
             <div v-if="hasCompletedRegistration">
+              <layout-loading v-if="!allLoansLoaded"></layout-loading>
               <dashboard-loan-history
+                v-else
                 :past-loans="pastLoans.slice(0, 3)"
                 :upcoming-loans="upcomingLoans.slice(0, 3)"
                 :ongoing-loans="ongoingLoans.slice(0, 3)"

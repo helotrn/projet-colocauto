@@ -83,7 +83,7 @@ export default {
       const isNew = !this.item.id;
 
       await this.submit();
-      await this.$store.dispatch("loadUser");
+      await this.$store.dispatch("loadLoanables");
 
       if (isNew) {
         this.$store.commit("addNotification", {

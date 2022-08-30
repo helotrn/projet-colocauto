@@ -4,7 +4,7 @@ export default {
       if (vm.auth.token) {
         if (!vm.$store.state.loaded && !vm.$store.state.loading) {
           try {
-            await vm.$store.dispatch("loadUser");
+            await vm.$store.dispatch("loadUserAndLoans");
             if (to.name === "login") {
               vm.skipToApp();
             }
@@ -41,7 +41,15 @@ export default {
           );
           return acc;
         }, []),
-        ...(this.user.loans || []).filter((l) => !l.canceled_at),
+        ...(this.user.loans || [])
+          .filter((l) => !l.canceled_at)
+          .map((l) => ({
+            ...l,
+            borrower: {
+              ...this.user.borrower,
+              user: this.user,
+            },
+          })),
       ];
     },
     auth() {
@@ -59,6 +67,9 @@ export default {
     },
     hasWaitingLoans() {
       return this.waitingLoans.length > 0;
+    },
+    allLoansLoaded() {
+      return this.$store.state.loansLoaded && this.$store.state.loanablesLoaded;
     },
     ongoingLoans() {
       const now = this.$dayjs().format("YYYY-MM-DD HH:mm:ss");
