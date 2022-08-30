@@ -1,11 +1,5 @@
 const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer");
 
-const plugins = [];
-
-if (process.env.WEBPACK_ANALYZE) {
-  plugins.push(new BundleAnalyzerPlugin());
-}
-
 module.exports = {
   chainWebpack: (config) => {
     const svgRule = config.module.rule("svg");
@@ -39,8 +33,8 @@ module.exports = {
     },
   },
 
-  configureWebpack: {
-    devServer: {
+  configureWebpack: (config) => {
+    config.devServer = {
       proxy: {
         "^/api": {
           target: process.env.BACKEND_URL,
@@ -50,8 +44,31 @@ module.exports = {
       },
       public: process.env.VUE_APP_FRONTEND_URL,
       disableHostCheck: true,
-    },
-    plugins,
+    };
+
+    // from https://github.com/vuejs/vue-cli/issues/2978#issuecomment-577364101
+    if (process.env.NODE_ENV === "development") {
+      // See available sourcemaps:
+      // https://webpack.js.org/configuration/devtool/#devtool
+      config.devtool = "eval-source-map";
+      // console.log(`NOTICE: vue.config.js directive: ${config.devtool}`)
+
+      config.output.devtoolModuleFilenameTemplate = (info) => {
+        let resPath = info.resourcePath;
+        let isVue = resPath.match(/\.vue$/);
+        let isGenerated = info.allLoaders;
+
+        let generated = `webpack-generated:///${resPath}?${info.hash}`;
+        let vuesource = `vue-source:///${resPath}`;
+
+        return isVue && isGenerated ? generated : vuesource;
+      };
+
+      config.output.devtoolFallbackModuleFilenameTemplate = "webpack:///[resource-path]?[hash]";
+    }
+    if (process.env.WEBPACK_ANALYZE) {
+      config.plugins.push(new BundleAnalyzerPlugin());
+    }
   },
 
   assetsDir: "dist/",
