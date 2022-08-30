@@ -244,6 +244,11 @@ export default {
       this.$router.replace("/admin");
     }
   },
+  mounted() {
+    if (!this.allLoansLoaded && !this.$store.state.loading) {
+      this.$store.dispatch("loadAllLoans");
+    }
+  },
   computed: {
     totalApprovedUsers() {
       if (this.hasCommunity) {

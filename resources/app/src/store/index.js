@@ -127,7 +127,6 @@ const actions = {
   },
 
   async loadLoans({ commit, state }) {
-    console.log("loading loans");
     if (!state.user.borrower || !state.user.borrower.id) {
       const newUser = {
         ...state.user,
