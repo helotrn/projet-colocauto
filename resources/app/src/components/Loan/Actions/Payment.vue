@@ -261,7 +261,7 @@
               <b-row v-if="!userIsAdmin && !hasEnoughBalance">
                 <b-col>
                   <br />
-                  <p>Il manque de crédits à votre compte pour payer cet emprunt</p>
+                  <p>Il manque de crédits à votre compte pour payer cet emprunt.</p>
                   <user-add-credit-box
                     :payment-methods="user.payment_methods"
                     :minimum-required="actualPrice - user.balance"

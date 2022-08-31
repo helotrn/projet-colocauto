@@ -14,8 +14,10 @@ class Pricing extends BaseModel
     public static $language;
 
     /**
-     * @return
-     *     If null, then will skip evaluating this line.
+     * @return null|array|float
+     *     null if line is invalid
+     *     array of two floats for [trip_cost, insurance_cost]
+     *     float for trip_cost only
      */
     public static function evaluateRuleLine($line, $data)
     {

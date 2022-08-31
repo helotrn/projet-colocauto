@@ -8,15 +8,15 @@
       <b-form-radio-group
         class="d-none d-md-block"
         button-variant="outline-secondary"
-        v-model="selectedAmount"
+        v-model="selectedValue"
         :options="amounts"
         buttons
       />
-      <b-form-select class="d-md-none" v-model="selectedAmount" :options="amounts" />
+      <b-form-select class="d-md-none" v-model="selectedValue" :options="amounts" />
     </b-form-group>
     <b-row>
       <b-col md="8" xl="6">
-        <b-form-group label="Montant Personnalisé" v-if="selectedAmount == 'other'">
+        <b-form-group label="Montant Personnalisé" v-if="selectedValue == 'other'">
           <b-form-input
             type="number"
             :min="normalizedMinimumRequired"
@@ -82,7 +82,7 @@ export default {
     return {
       customAmount:
         this.minimumRequired && this.minimumRequired > 0
-          ? this.normalizeCurrency(this.minimumRequired) * 2
+          ? this.normalizeCurrency(this.minimumRequired)
           : 20,
       feeRatio: 0.022,
       feeConstant: 0.3,
@@ -90,13 +90,7 @@ export default {
       paymentMethodId: this.paymentMethods
         ? this.paymentMethods.find((p) => p.is_default)?.id
         : null,
-      selectedAmount: this.tripCost
-        ? this.normalizeCurrency(this.tripCost)
-        : this.minimumRequired
-        ? this.normalizeCurrency(this.minimumRequired)
-        : this.addStandardOptions
-        ? 10
-        : "other",
+      selectedValue: this.initialSelectedValue(),
     };
   },
   props: {
@@ -130,12 +124,12 @@ export default {
   },
   computed: {
     amount() {
-      if (this.selectedAmount === "other") {
+      if (this.selectedValue === "other") {
         const amount = parseFloat(this.customAmount);
         return isNaN(amount) ? 0 : amount;
       }
 
-      return parseFloat(this.selectedAmount);
+      return parseFloat(this.selectedValue);
     },
     amountWithFee() {
       // Passing fees on to customer:
@@ -219,6 +213,19 @@ export default {
     },
   },
   methods: {
+    initialSelectedValue() {
+      if (this.tripCost) {
+        return this.normalizeCurrency(this.tripCost);
+      }
+      if (this.minimumRequired) {
+        return this.normalizeCurrency(this.minimumRequired);
+      }
+      if (this.addStandardOptions) {
+        return 10;
+      }
+
+      return "other";
+    },
     emitCancel() {
       this.$emit("cancel");
     },
@@ -257,13 +264,13 @@ export default {
   },
   watch: {
     minimumRequired(newValue, oldValue) {
-      if (this.selectedAmount === this.normalizeCurrency(oldValue)) {
-        this.selectedAmount = this.normalizeCurrency(newValue);
+      if (this.selectedValue === this.normalizeCurrency(oldValue)) {
+        this.selectedValue = this.normalizeCurrency(newValue);
       }
     },
     tripCost(newValue, oldValue) {
-      if (this.selectedAmount === this.normalizeCurrency(oldValue)) {
-        this.selectedAmount = this.normalizeCurrency(newValue);
+      if (this.selectedValue === this.normalizeCurrency(oldValue)) {
+        this.selectedValue = this.normalizeCurrency(newValue);
       }
     },
   },

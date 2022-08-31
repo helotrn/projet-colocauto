@@ -42,7 +42,7 @@
           <div v-else-if="userRoles.includes('borrower')">
             <p>
               Ajoutez de l'argent à votre solde pour payer votre emprunt. Le prépaiement se base sur
-              votre estimation. Le coût exact sera calculé à la fin du trajet.
+              votre estimation de la distance. Le coût exact sera calculé à la fin du trajet.
             </p>
             <b-alert v-if="canComplete" show variant="success">
               <p class="font-weight-bold alert-heading">Solde suffisant</p>
