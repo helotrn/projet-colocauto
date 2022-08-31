@@ -36,6 +36,7 @@
     >
       <user-add-credit-box
         :payment-methods="user.payment_methods"
+        :add-standard-options="true"
         @bought="reloadUserAndCloseModal"
         @cancel="closeModal"
       />

@@ -244,7 +244,7 @@
                     </td>
                   </tr>
                   <tr v-if="actualPrice > user.balance" class="last">
-                    <th>Solde minimum à ajouter</th>
+                    <th>Minimum à ajouter</th>
                     <td class="trip-details__total text-right tabular-nums">
                       <strong>{{ (actualPrice - user.balance) | currency }}</strong>
                     </td>
@@ -261,25 +261,14 @@
               <b-row v-if="!userIsAdmin && !hasEnoughBalance">
                 <b-col>
                   <br />
-                  <p>
-                    Il manque de crédits à votre compte pour payer cet emprunt.<br />
-                    <a href="#" v-b-modal.add-credit-modal>Ajoutez des crédits</a>
-                  </p>
-
-                  <b-modal
-                    id="add-credit-modal"
-                    title="Approvisionner mon compte"
-                    size="lg"
-                    footer-class="d-none"
-                  >
-                    <user-add-credit-box
-                      :payment-methods="user.payment_methods"
-                      :minimum-required="actualPrice - user.balance"
-                      :trip-cost="actualPrice"
-                      @bought="reloadUserAndCloseModal"
-                      @cancel="closeModal"
-                    />
-                  </b-modal>
+                  <p>Il manque de crédits à votre compte pour payer cet emprunt.</p>
+                  <user-add-credit-box
+                    :payment-methods="user.payment_methods"
+                    :minimum-required="actualPrice - user.balance"
+                    :trip-cost="actualPrice"
+                    :no-cancel="true"
+                    @bought="completeAction"
+                  />
                 </b-col>
               </b-row>
 
@@ -295,13 +284,12 @@
                   </b-button>
                 </div>
               </div>
-
-              <div v-else class="text-center">
+              <div v-else-if="hasEnoughBalance" class="text-center">
                 <div class="loan-actions-payment__buttons text-center">
                   <b-button
                     size="sm"
                     variant="success"
-                    :disabled="!hasEnoughBalance || actionLoading"
+                    :disabled="actionLoading"
                     @click="completeAction"
                   >
                     Accepter
@@ -352,7 +340,8 @@ export default {
   },
   computed: {
     normalizedTip() {
-      return Math.max(parseFloat(this.platformTip), 0);
+      const tip = parseFloat(this.platformTip);
+      return isNaN(tip) ? 0 : Math.max(tip, 0);
     },
     actualOwnerPart() {
       return this.item.actual_price - this.item.handover.purchases_amount;
@@ -370,15 +359,6 @@ export default {
     },
     hasEnoughBalance() {
       return this.user.balance >= this.actualPrice;
-    },
-  },
-  methods: {
-    closeModal() {
-      this.$bvModal.hide("add-credit-modal");
-    },
-    async reloadUserAndCloseModal() {
-      await this.$store.dispatch("loadUser");
-      this.closeModal();
     },
   },
   watch: {

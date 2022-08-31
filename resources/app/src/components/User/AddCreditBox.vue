@@ -2,21 +2,21 @@
   <div class="user-add-credit-box">
     <b-form-group
       label-cols="12"
-      label="Montant à approvisionner"
-      description="Approvisionnez davantage votre compte pour économiser sur les frais de transaction."
+      label="Montant à ajouter"
+      description="* Approvisionnez davantage votre compte pour économiser sur les frais de transaction."
     >
       <b-form-radio-group
         class="d-none d-md-block"
         button-variant="outline-secondary"
-        v-model="selectedAmount"
+        v-model="selectedValue"
         :options="amounts"
         buttons
       />
-      <b-form-select class="d-md-none" v-model="selectedAmount" :options="amounts" />
+      <b-form-select class="d-md-none" v-model="selectedValue" :options="amounts" />
     </b-form-group>
     <b-row>
       <b-col md="8" xl="6">
-        <b-form-group label="Montant Personnalisé" v-if="selectedAmount == 'other'">
+        <b-form-group label="Montant Personnalisé" v-if="selectedValue == 'other'">
           <b-form-input
             type="number"
             :min="normalizedMinimumRequired"
@@ -29,15 +29,15 @@
 
     <hr />
     <b-row v-if="amount > 0">
-      <b-col>
+      <b-col sm="6">
         <strong>Montant Total Prélevé</strong>
         <p class="total">{{ amountWithFee | currency }}</p>
         <b-form-text
-          >Frais de transaction&nbsp;:
+          >Incluant les frais de transaction&nbsp;:
           <pre>{{ this.feeRatio | percent }} + {{ this.feeConstant | currency }}</pre>
         </b-form-text>
       </b-col>
-      <b-col>
+      <b-col sm="6">
         <strong>Choisir votre mode de paiement</strong>
         <b-form-select
           id="payment_method_id"
@@ -49,7 +49,7 @@
         </b-form-select>
         <div class="mt-1">
           <a href="/profile/payment_methods/new">
-            {{ $t("ajouter un mode de paiement") | capitalize }}
+            {{ "ajouter un mode de paiement" | capitalize }}
           </a>
         </div>
       </b-col>
@@ -82,7 +82,7 @@ export default {
     return {
       customAmount:
         this.minimumRequired && this.minimumRequired > 0
-          ? this.normalizeCurrency(this.minimumRequired) * 2
+          ? this.normalizeCurrency(this.minimumRequired)
           : 20,
       feeRatio: 0.022,
       feeConstant: 0.3,
@@ -90,11 +90,7 @@ export default {
       paymentMethodId: this.paymentMethods
         ? this.paymentMethods.find((p) => p.is_default)?.id
         : null,
-      selectedAmount: this.tripCost
-        ? this.normalizeCurrency(this.tripCost)
-        : this.minimumRequired
-        ? this.normalizeCurrency(this.minimumRequired)
-        : 10,
+      selectedValue: this.initialSelectedValue(),
     };
   },
   props: {
@@ -120,14 +116,20 @@ export default {
       required: false,
       default: false,
     },
+    addStandardOptions: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
   },
   computed: {
     amount() {
-      if (this.selectedAmount === "other") {
-        return parseFloat(this.customAmount);
+      if (this.selectedValue === "other") {
+        const amount = parseFloat(this.customAmount);
+        return isNaN(amount) ? 0 : amount;
       }
 
-      return parseFloat(this.selectedAmount);
+      return parseFloat(this.selectedValue);
     },
     amountWithFee() {
       // Passing fees on to customer:
@@ -151,36 +153,37 @@ export default {
         });
       }
 
-      const standardOptions = [
-        {
-          text: "10$",
-          value: 10,
-        },
-        {
-          text: "20$",
-          value: 20,
-        },
-        {
-          text: "50$",
-          value: 50,
-        },
-        {
-          text: "100$",
-          value: 100,
-        },
-      ];
+      if (this.addStandardOptions) {
+        const standardOptions = [
+          {
+            text: "10$",
+            value: 10,
+          },
+          {
+            text: "20$",
+            value: 20,
+          },
+          {
+            text: "50$",
+            value: 50,
+          },
+          {
+            text: "100$",
+            value: 100,
+          },
+        ];
 
-      for (let i = 0, len = standardOptions.length; i < len; i += 1) {
-        if (
-          !this.normalizedMinimumRequired ||
-          standardOptions[i].value > parseFloat(this.normalizedMinimumRequired)
-        ) {
-          options.push(standardOptions[i]);
+        for (let i = 0, len = standardOptions.length; i < len; i += 1) {
+          if (
+            !this.normalizedMinimumRequired ||
+            standardOptions[i].value > parseFloat(this.normalizedMinimumRequired)
+          ) {
+            options.push(standardOptions[i]);
+          }
         }
       }
-
       options.push({
-        text: "Montant personnalisé",
+        text: "Autre *",
         value: "other",
       });
 
@@ -210,12 +213,26 @@ export default {
     },
   },
   methods: {
+    initialSelectedValue() {
+      if (this.tripCost) {
+        return this.normalizeCurrency(this.tripCost);
+      }
+      if (this.minimumRequired) {
+        return this.normalizeCurrency(this.minimumRequired);
+      }
+      if (this.addStandardOptions) {
+        return 10;
+      }
+
+      return "other";
+    },
     emitCancel() {
       this.$emit("cancel");
     },
     normalizeCurrency(currency) {
-      const amount = Math.ceil(parseFloat(currency) * 100) / 100;
-      return amount > 0 ? amount : 0;
+      // Rounding to get rid of floating point errors
+      const amount = Math.round(parseFloat(currency) * 100) / 100;
+      return !isNaN(amount) && amount > 0 ? amount : 0;
     },
     async buyCredit() {
       this.loading = true;
@@ -243,6 +260,21 @@ export default {
       }
 
       this.loading = false;
+    },
+  },
+  watch: {
+    minimumRequired(newValue, oldValue) {
+      if (this.selectedValue === this.normalizeCurrency(oldValue)) {
+        this.selectedValue = this.normalizeCurrency(newValue);
+      }
+      if (this.customAmount <= this.normalizeCurrency(oldValue)) {
+        this.customAmount = this.normalizeCurrency(newValue);
+      }
+    },
+    tripCost(newValue, oldValue) {
+      if (this.selectedValue === this.normalizeCurrency(oldValue)) {
+        this.selectedValue = this.normalizeCurrency(newValue);
+      }
     },
   },
 };

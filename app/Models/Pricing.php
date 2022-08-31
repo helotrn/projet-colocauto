@@ -14,8 +14,10 @@ class Pricing extends BaseModel
     public static $language;
 
     /**
-     * @return
-     *     If null, then will skip evaluating this line.
+     * @return null|array|float
+     *     null if line is invalid
+     *     array of two floats for [trip_cost, insurance_cost]
+     *     float for trip_cost only
      */
     public static function evaluateRuleLine($line, $data)
     {
@@ -54,15 +56,20 @@ class Pricing extends BaseModel
 
         $response = $language->evaluate($line, $data);
 
+        $floorCost = function ($currency) {
+            return floor($currency * 100.0) / 100;
+        };
+
         if (is_array($response)) {
             if (count(array_filter($response, "is_numeric")) !== 2) {
                 return null;
             }
+            return array_map($floorCost, $response);
         } elseif (!is_numeric($response)) {
             return null;
         }
 
-        return $response;
+        return $floorCost($response);
     }
 
     public static function getExpressionLanguage()
