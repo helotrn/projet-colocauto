@@ -152,6 +152,7 @@ Route::prefix("v1")->group(function () {
             "id",
             "[0-9]+"
         );
+        Route::get("/loanables/search", "LoanableController@search");
         Route::get(
             "/loanables/{loanable_id}/loans/{loan_id}/next",
             "LoanableController@retrieveNextLoan"

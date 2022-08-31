@@ -17,13 +17,6 @@ class Trailer extends Loanable
 
                 return $query->selectRaw("trailers.*");
             },
-            "type" => function ($query = null) {
-                if (!$query) {
-                    return "'trailer' AS type";
-                }
-
-                return $query->selectRaw("'trailer' AS type");
-            },
         ];
     }
 
@@ -41,6 +34,13 @@ class Trailer extends Loanable
     ];
 
     public $readOnly = false;
+
+    protected $appends = ["type"];
+
+    public function getTypeAttribute()
+    {
+        return "trailer";
+    }
 
     public function loans()
     {

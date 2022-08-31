@@ -214,6 +214,23 @@ class Loanable extends BaseModel
 
         $returnAt = $departureAt->copy()->add($durationInMinutes, "minutes");
 
+        if (!$this->isLoanableScheduleOpen($departureAt, $returnAt)) {
+            return false;
+        }
+
+        $query = Loan::where("loanable_id", $this->id);
+
+        if ($ignoreLoanIds) {
+            $query = $query->whereNotIn("loans.id", $ignoreLoanIds);
+        }
+
+        $query->intersect($departureAt, $returnAt);
+
+        return $query->get()->count() === 0;
+    }
+
+    public function isLoanableScheduleOpen($departureAt, $returnAt)
+    {
         $loanInterval = [$departureAt, $returnAt];
 
         // Ensure an exception is thrown if JSON is not properly decoded.
@@ -226,42 +243,13 @@ class Loanable extends BaseModel
             )
             : [];
 
-        if (
-            !AvailabilityHelper::isScheduleAvailable(
-                [
-                    "available" => "always" == $this->availability_mode,
-                    "rules" => $availabilityRules,
-                ],
-                $loanInterval
-            )
-        ) {
-            return false;
-        }
-
-        $query = Loan::where("loanable_id", $this->id);
-
-        if ($ignoreLoanIds) {
-            $query = $query->whereNotIn("loans.id", $ignoreLoanIds);
-        }
-
-        $query
-            ->where("status", "!=", "canceled")
-            ->whereHas("intention", function ($q) {
-                return $q->where("status", "=", "completed");
-            })
-            /*
-                Intersection if: a1 > b0 and a0 < b1
-
-                    a0           a1
-                    [------------)
-                          [------------)
-                          b0           b1
-            */
-            ->where("actual_return_at", ">", $departureAt)
-            ->where("departure_at", "<", $returnAt)
-            ->where("loanable_id", $this->id);
-
-        return $query->get()->count() === 0;
+        return AvailabilityHelper::isScheduleAvailable(
+            [
+                "available" => "always" == $this->availability_mode,
+                "rules" => $availabilityRules,
+            ],
+            $loanInterval
+        );
     }
 
     public function getCommunityForLoanBy(User $user): ?Community
@@ -485,6 +473,8 @@ class Loanable extends BaseModel
                 });
 
                 // ...and cars are only allowed if the borrower profile is approved
+                // This check is necessary, since the Loanable class and this method is inherited,
+                // but the 'type' field only exists in the loanable materialized view
                 switch (get_class($this)) {
                     case "App\Models\Bike":
                     case "App\Models\Trailer":

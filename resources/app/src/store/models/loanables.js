@@ -71,72 +71,33 @@ export default new RestModule(
 
       commit("data", newData);
     },
-    async testAll({ commit, state }, { loan, communityId }) {
-      try {
-        const responses = await Promise.all([
-          ...state.data.map((d) =>
-            Vue.axios.get(`/${state.slug}/${d.id}/test`, {
-              params: { ...loan, loanable_id: d.id, community_id: communityId },
-            })
-          ),
-        ]);
-
-        const newData = state.data.map((d, index) => ({
-          ...d,
-          ...responses[index].data,
-          tested: true,
-        }));
-
-        commit("data", newData);
-      } catch (e) {
-        const { request, response } = e;
-        commit("error", { request, response });
-
-        throw e;
-      }
-    },
-    async testOne({ commit, state }, { communityId, loan, loanableId }) {
+    async search({ commit, state }, { loan }) {
       const { CancelToken } = Vue.axios;
       const cancelToken = CancelToken.source();
 
       try {
         commit("cancelToken", cancelToken);
-        const response = await Vue.axios.get(`/${state.slug}/${loanableId}/test`, {
-          params: {
-            ...loan,
-            loanable_id: loanableId,
-            community_id: communityId,
-          },
+        const { data } = await Vue.axios.get(`/loanables/search`, {
+          params: { ...loan },
           cancelToken: cancelToken.token,
         });
 
-        const newData = state.data.map((d) => {
-          if (d.id === loanableId) {
-            return {
-              ...d,
-              ...response.data,
-              tested: true,
-            };
-          }
+        const availableLoanable = new Map(
+          Object.values(data).map((estimatedLoan) => [estimatedLoan.loanableId, estimatedLoan])
+        );
 
-          return d;
+        const newData = state.data.map((d) => {
+          const isAvailable = availableLoanable.has(d.id);
+          return {
+            ...d,
+            available: isAvailable,
+            estimatedCost: isAvailable ? availableLoanable.get(d.id).estimatedCost : null,
+            tested: true,
+          };
         });
 
         commit("data", newData);
-
-        commit("cancelToken", null);
       } catch (e) {
-        commit("cancelToken", null);
-        commit(
-          "addNotification",
-          {
-            content: JSON.stringify(e),
-            title: `Erreur de test pour ${state.slug}`,
-            variant: "danger",
-            type: "ajax",
-          },
-          { root: true }
-        );
         const { request, response } = e;
         if (request) {
           switch (request.status) {
@@ -156,6 +117,7 @@ export default new RestModule(
               break;
           }
         }
+        commit("error", { request, response });
 
         throw e;
       } finally {

@@ -12,14 +12,14 @@
                 :selected-loanable-types="selectedLoanableTypes"
                 @selectLoanableTypes="selectLoanableTypes"
                 @selectLoanable="selectLoanable"
-                :loading="searching"
+                :loading="searching || loading"
                 :loanable-types="loanableTypes"
                 :form="loanForm"
                 :can-loan-car="canLoanCar"
                 @changed="resetLoanables"
                 @hide="searched = true"
                 @reset="reset"
-                @submit="testLoanables"
+                @submit="searchLoanables"
               />
             </div>
           </b-card>
@@ -91,7 +91,7 @@
               :total="total"
               @page="setParam({ name: 'page', value: $event })"
               @select="selectLoanable"
-              @test="testLoanable"
+              @test="searchLoanables"
             />
             <!---->
             <layout-loading class="col-lg-9" v-else />
@@ -104,7 +104,7 @@
       v-if="view === 'map'"
       :data="data"
       :communities="user.communities"
-      @test="testLoanable"
+      @test="searchLoanables"
       @select="selectLoanable"
     />
     <!---->
@@ -256,16 +256,10 @@ export default {
 
       this.$router.push("/loans/new");
     },
-    async testLoanable(loanable) {
-      await this.$store.dispatch(`${this.slug}/testOne`, {
-        loanableId: loanable.id,
-        loan: this.loan,
-      });
-    },
-    async testLoanables() {
+    async searchLoanables() {
       this.searching = true;
       try {
-        await this.$store.dispatch(`${this.slug}/testAll`, {
+        await this.$store.dispatch(`${this.slug}/search`, {
           loan: this.loan,
         });
       } finally {

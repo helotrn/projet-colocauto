@@ -2,7 +2,6 @@
   <div class="loan-search-form">
     <validation-observer ref="observer" v-slot="{ passes }">
       <b-form
-        :novalidate="true"
         class="form loan-search-form"
         @submit.stop.prevent="passes(submit)"
         @reset.stop.prevent="$emit('reset')"
@@ -88,9 +87,10 @@
             <forms-validated-input
               name="estimated_distance"
               :label="$t('fields.estimated_distance') | capitalize"
-              type="text"
+              type="number"
               :min="10"
               :max="1000"
+              :rules="{ min_value: 10, max_value: 1000 }"
               :placeholder="placeholderOrLabel('estimated_distance') | capitalize"
               v-model="formattedEstimatedDistance"
             />
@@ -99,7 +99,7 @@
           <!-- search button -->
           <b-button
             pill
-            @click="$emit('hide')"
+            type="submit"
             variant="primary"
             class="mr-2 mb-2"
             :disabled="loading || invalidDuration"
