@@ -215,7 +215,7 @@ export default {
         if (!this.isAvailable) throw "unavailable";
         else {
           await this.$store.dispatch("loans/completeAction", intention);
-          await this.$store.dispatch("loadUser");
+          await this.$store.dispatch("loadAllLoans");
         }
       } catch (e) {
         if (e === "unavailable") {
@@ -232,14 +232,14 @@ export default {
       const intention = this.loan.actions.find((a) => a.type === "intention");
       try {
         await this.$store.dispatch("loans/cancel", this.loan.id);
-        await this.$store.dispatch("loadUser");
+        await this.$store.dispatch("loadAllLoans");
       } catch (e) {
         throw e;
       }
     },
     async denyLoan() {
       await this.$store.dispatch("loans/cancel", this.loan.id);
-      await this.$store.dispatch("loadUser");
+      await this.$store.dispatch("loadAllLoans");
     },
     hasButton(name) {
       return this.buttons.indexOf(name) > -1;

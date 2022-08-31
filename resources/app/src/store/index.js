@@ -77,6 +77,8 @@ const initialState = {
   // Initial state of modules is set in each module individually.
   loaded: false,
   loading: false,
+  loansLoaded: false,
+  loanablesLoaded: false,
   notifications: [],
   user: null,
   token: null,
@@ -89,40 +91,19 @@ const loadUserFields = [
   "avatar.*",
   "borrower.*",
   "communities.*",
-  "communities.parent.*",
-  "loanables.*",
-  "!loanables.events",
-  "loanables.image.*",
-  "loanables.loans.*",
-  "loanables.loans.actions.*",
-  "loanables.loans.borrower.id",
-  "loanables.loans.borrower.user.avatar.*",
-  "loanables.loans.borrower.user.full_name",
-  "loanables.loans.borrower.user.id",
-  "loans.*",
-  "loans.total_final_cost",
-  "!loans.actual_price",
-  "!loans.actual_insurance",
-  "loans.actions.*",
-  "loans.borrower.id",
-  "loans.borrower.user.avatar",
-  "loans.borrower.user.full_name",
-  "loans.borrower.user.id",
-  "loans.loanable.id",
-  "loans.loanable.community.name",
-  "loans.loanable.image.*",
-  "loans.loanable.name",
-  "loans.loanable.owner.id",
-  "loans.loanable.owner.user.avatar.*",
-  "loans.loanable.owner.user.full_name",
-  "loans.loanable.owner.user.id",
-  "loans.loanable.type",
   "owner.*",
   "payment_methods.*",
 ].join(",");
 
 const actions = {
-  async loadUser({ commit }) {
+  async loadUserAndLoans({ dispatch }) {
+    await dispatch("loadUser");
+    dispatch("loadAllLoans");
+  },
+  async loadAllLoans({ dispatch }) {
+    dispatch("loadLoans").then(() => dispatch("loadLoanables"));
+  },
+  async loadUser({ commit, state }) {
     commit("loading", true);
 
     const { data: user } = await Vue.axios.get("/auth/user", {
@@ -131,11 +112,105 @@ const actions = {
       },
     });
 
-    commit("user", user);
+    const newUser = {
+      ...user,
+      loanables: state.user?.loanables ?? [],
+      loans: state.user?.loans ?? [],
+    };
+
+    commit("user", newUser);
 
     commit("account/transactionId", user.transaction_id + 1);
 
     commit("loaded", true);
+    commit("loading", false);
+  },
+
+  async loadLoans({ commit, state }) {
+    if (!state.user.borrower || !state.user.borrower.id) {
+      const newUser = {
+        ...state.user,
+        loans: [],
+      };
+
+      commit("user", newUser);
+      commit("loansLoaded", true);
+      return;
+    }
+    commit("loansLoaded", false);
+    commit("loading", true);
+
+    const { data: loans } = await Vue.axios.get("/loans", {
+      params: {
+        order: "-updated_at",
+        per_page: 15,
+        "borrower.id": state.user.borrower.id,
+        fields: [
+          "*",
+          "actions.*",
+          "loanable.id",
+          "loanable.community.name",
+          "loanable.image.*",
+          "loanable.name",
+          "loanable.owner.id",
+          "loanable.owner.user.avatar.*",
+          "loanable.owner.user.full_name",
+          "loanable.owner.user.id",
+          "loanable.type",
+        ].join(","),
+      },
+    });
+
+    const newUser = {
+      ...state.user,
+      loans: loans.data,
+    };
+
+    commit("user", newUser);
+    commit("loansLoaded", true);
+    commit("loading", false);
+  },
+  async loadLoanables({ commit, state }) {
+    if (!state.user.owner || !state.user.owner.id) {
+      const newUser = {
+        ...state.user,
+        loanables: [],
+      };
+
+      commit("loanablesLoaded", true);
+      commit("user", newUser);
+      return;
+    }
+
+    commit("loanablesLoaded", false);
+    commit("loading", true);
+
+    const { data: loanables } = await Vue.axios.get("/loanables", {
+      params: {
+        order: "-updated_at",
+        per_page: 15,
+        "owner.id": state.user.owner.id,
+        fields: [
+          "*",
+          "!events",
+          "image.*",
+          "loans.*",
+          "loans.actions.*",
+          "loans.borrower.id",
+          "loans.borrower.user.avatar.*",
+          "loans.borrower.user.full_name",
+          "loans.borrower.user.id",
+        ].join(","),
+      },
+    });
+
+    const newUser = {
+      ...state.user,
+      loanables: loanables.data,
+    };
+
+    commit("user", newUser);
+    commit("loanablesLoaded", true);
     commit("loading", false);
   },
   async login({ commit, dispatch, state }, { email, password }) {
@@ -154,6 +229,7 @@ const actions = {
 
     await dispatch("loadUser");
     await dispatch("global/load");
+    dispatch("loadAllLoans");
   },
   async register({ commit, dispatch, state }, { email, password }) {
     const { data } = await Vue.axios.post("/auth/register", {
@@ -216,6 +292,12 @@ const mutations = {
   },
   loaded(state, value) {
     state.loaded = value;
+  },
+  loansLoaded(state, value) {
+    state.loansLoaded = value;
+  },
+  loanablesLoaded(state, value) {
+    state.loanablesLoaded = value;
   },
   loading(state, value) {
     state.loading = value;
