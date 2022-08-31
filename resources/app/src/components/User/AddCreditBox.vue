@@ -267,6 +267,9 @@ export default {
       if (this.selectedValue === this.normalizeCurrency(oldValue)) {
         this.selectedValue = this.normalizeCurrency(newValue);
       }
+      if (this.customAmount <= this.normalizeCurrency(oldValue)) {
+        this.customAmount = this.normalizeCurrency(newValue);
+      }
     },
     tripCost(newValue, oldValue) {
       if (this.selectedValue === this.normalizeCurrency(oldValue)) {
