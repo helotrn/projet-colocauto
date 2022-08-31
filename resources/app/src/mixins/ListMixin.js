@@ -5,7 +5,7 @@ export default {
     next((vm) => {
       if (to.query) {
         Object.keys(to.query).forEach((name) =>
-          vm.setParam({
+          vm.saveParam({
             name,
             value: to.query[name],
           })
@@ -239,7 +239,9 @@ export default {
           query,
         });
       }
-
+      this.saveParam(name, value);
+    },
+    saveParam(name, value) {
       this.$store.commit(`${this.slug}/setParam`, { name, value });
     },
   },

@@ -86,9 +86,9 @@
             <community-list
               v-if="!loading"
               :data="data"
-              :page="params.page"
-              :per-page="params.per_page"
-              :total="total"
+              :page="parseInt(params.page)"
+              :per-page="parseInt(params.per_page)"
+              :total="total ? total : 0"
               @page="setParam({ name: 'page', value: $event })"
               @select="selectLoanable"
               @test="searchLoanables"
@@ -220,14 +220,14 @@ export default {
       }
     },
     resetPagination(val) {
-      this.setParam({ name: "page", value: 1 });
+      this.setParam({ name: "page", value: "1" });
       switch (val) {
         case "list":
-          this.setParam({ name: "per_page", value: 10 });
+          this.setParam({ name: "per_page", value: "10" });
           break;
         case "map":
         default:
-          this.setParam({ name: "per_page", value: 1000 });
+          this.setParam({ name: "per_page", value: "1000" });
           break;
       }
     },
