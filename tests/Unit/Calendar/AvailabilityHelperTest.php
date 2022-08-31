@@ -711,6 +711,30 @@ class AvailabilityHelperTest extends TestCase
         $this->assertSameIntervals($expected, $intervals);
     }
 
+    public function testgetScheduleDailyIntervals_ignoresInvalidTypes()
+    {
+        $rules = [
+            [
+                "available" => true,
+                "type" => null,
+                "scope" => [],
+                "period" => "0:00-24:00",
+            ],
+        ];
+
+        $dateRange = [new Carbon("2021-12-01"), new Carbon("2022-01-01")];
+
+        // This doesn't throw an exception
+        $intervals = AvailabilityHelper::getScheduleDailyIntervals(
+            ["rules" => $rules],
+            $dateRange
+        );
+
+        $expected = [];
+
+        $this->assertSameIntervals($expected, $intervals);
+    }
+
     public function testIsScheduleAvailable()
     {
         $available = false;

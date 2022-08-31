@@ -12,6 +12,7 @@ use App\Models\Owner;
 use App\Models\Trailer;
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 use Tests\TestCase;
 
 class LoanableTest extends TestCase
@@ -508,5 +509,44 @@ class LoanableTest extends TestCase
             false,
             $bike->isAvailable(Carbon::now()->add(29, "minutes"), 60)
         );
+    }
+
+    public function testLoanableAvailabilityRulesAreEmptyWhenInvalid()
+    {
+        $trailer = factory(Trailer::class)->create([
+            "availability_json" => "[{",
+        ]);
+
+        Log::shouldReceive("error")
+            ->once()
+            ->withArgs(function ($message) use ($trailer) {
+                return strpos($message, "\"[{\"") !== false &&
+                    strpos($message, (string) $trailer->id) !== false;
+            });
+
+        $rules = $trailer->getAvailabilityRules();
+
+        $this->assertEquals([], $rules);
+    }
+
+    public function testLoanableAvailabilityRules()
+    {
+        $trailer = factory(Trailer::class)->create([
+            "availability_json" =>
+                '[{"available":true,"type":"weekdays","scope":["MO","TU","WE","TH","FR"],"period":"00:00-23:59"}]',
+        ]);
+
+        $rules = $trailer->getAvailabilityRules();
+
+        $expected = [
+            [
+                "available" => true,
+                "type" => "weekdays",
+                "scope" => ["MO", "TU", "WE", "TH", "FR"],
+                "period" => "00:00-23:59",
+            ],
+        ];
+
+        $this->assertEquals($expected, $rules);
     }
 }

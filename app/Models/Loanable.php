@@ -12,6 +12,7 @@ use App\Casts\PointCast;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Log;
 use MStaack\LaravelPostgis\Eloquent\PostgisTrait;
 
 class Loanable extends BaseModel
@@ -203,6 +204,26 @@ class Loanable extends BaseModel
         return $this->hasMany(Loan::class);
     }
 
+    public function getAvailabilityRules()
+    {
+        try {
+            return $this->availability_json
+                ? json_decode(
+                    $this->availability_json,
+                    true,
+                    512,
+                    JSON_THROW_ON_ERROR
+                )
+                : [];
+        } catch (\Throwable $th) {
+            // Logging the error rather than throwing allows the rules to be modified.
+            Log::error(
+                "Could not parse availability json: \"$this->availability_json\" for loanable id: $this->id."
+            );
+            return [];
+        }
+    }
+
     public function isAvailable(
         $departureAt,
         $durationInMinutes,
@@ -233,20 +254,10 @@ class Loanable extends BaseModel
     {
         $loanInterval = [$departureAt, $returnAt];
 
-        // Ensure an exception is thrown if JSON is not properly decoded.
-        $availabilityRules = $this->availability_json
-            ? json_decode(
-                $this->availability_json,
-                true,
-                512,
-                JSON_THROW_ON_ERROR
-            )
-            : [];
-
         return AvailabilityHelper::isScheduleAvailable(
             [
                 "available" => "always" == $this->availability_mode,
-                "rules" => $availabilityRules,
+                "rules" => $this->getAvailabilityRules(),
             ],
             $loanInterval
         );
@@ -277,18 +288,8 @@ class Loanable extends BaseModel
         // Generate events for the next year.
         $dateRange = [new Carbon(), (new Carbon())->addYear()];
 
-        // Ensure an exception is thrown if JSON is not properly decoded.
-        $availabilityRules = $this->availability_json
-            ? json_decode(
-                $this->availability_json,
-                true,
-                512,
-                JSON_THROW_ON_ERROR
-            )
-            : [];
-
         $dailyIntervals = AvailabilityHelper::getScheduleDailyIntervals(
-            ["rules" => $availabilityRules],
+            ["rules" => $this->getAvailabilityRules()],
             $dateRange
         );
 
