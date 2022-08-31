@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Calendar\AvailabilityHelper;
 use App\Http\Requests\BaseRequest as Request;
 use App\Http\Requests\Loanable\DestroyRequest;
 use App\Http\Requests\Loanable\TestRequest;
@@ -212,7 +211,7 @@ class LoanableController extends RestController
         // Estimate price for each available loanable
         $estimatedDistance = $request->get("estimated_distance");
 
-        $loanablessAndCosts = $availableLoanables->map(function (
+        $loanablesAndCosts = $availableLoanables->map(function (
             Loanable $loanable
         ) use ($request, $estimatedDistance, $durationInMinutes, $departureAt) {
             $community = $loanable->getCommunityForLoanBy($request->user());
@@ -228,7 +227,7 @@ class LoanableController extends RestController
             ];
         });
 
-        return response($loanablessAndCosts, 200);
+        return response($loanablesAndCosts, 200);
     }
 
     /**

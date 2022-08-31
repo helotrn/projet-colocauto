@@ -77,7 +77,7 @@ export default new RestModule(
 
       try {
         commit("cancelToken", cancelToken);
-        const { data } = await Vue.axios.get(`/${state.slug}/search`, {
+        const { data } = await Vue.axios.get(`/loanables/search`, {
           params: { ...loan },
           cancelToken: cancelToken.token,
         });
@@ -87,11 +87,11 @@ export default new RestModule(
         );
 
         const newData = state.data.map((d) => {
-          const isAvaialble = availableLoanable.has(d.id);
+          const isAvailable = availableLoanable.has(d.id);
           return {
             ...d,
-            available: isAvaialble,
-            estimatedCost: isAvaialble ? availableLoanable.get(d.id).estimatedCost : null,
+            available: isAvailable,
+            estimatedCost: isAvailable ? availableLoanable.get(d.id).estimatedCost : null,
             tested: true,
           };
         });
