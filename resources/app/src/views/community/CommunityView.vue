@@ -1,11 +1,16 @@
 <template>
-  <layout-page :name="`community-view community-view--${view}`" :loading="!routeDataLoaded" wide>
+  <layout-page
+    :name="`community-view community-view--${view}`"
+    :class="isSearched"
+    :loading="!routeDataLoaded"
+    fluid
+  >
     <div :class="`community-view__overlay ${isMap}`">
-      <b-row no-gutters>
-        <b-col lg="3">
+      <b-row>
+        <b-col lg="4" xl="3">
           <!-- loan search form container -->
-          <b-card :class="isSearched">
-            <div class="community-view__search-menu community-view--mobile-height">
+          <b-card class="community-view__search-container">
+            <div class="community-view__search-menu">
               <loan-search-form
                 v-if="loan"
                 :item="loan"
@@ -24,89 +29,95 @@
             </div>
           </b-card>
           <!---->
-          <!-- results header (on mobile view) -->
-          <b-card v-if="searched" class="community-view__results-container d-lg-none">
-            <h3>Résultats de votre recherche</h3>
-            <p>Prochaine étape: vérifier la disponibilité!</p>
-            <div class="community-view--flex">
-              <a class="community-view__button-modify-search" @click="searched = false"
-                >Modifier votre recherche</a
-              >
-              <b-button v-if="view === 'map'" pill @click="gotoView('list')">
+        </b-col>
+
+        <!-- Results header -->
+        <b-col lg="8" xl="9">
+          <!-- Small screens -->
+          <b-card v-if="searched" class="d-lg-none my-4">
+            <h3>Résultats</h3>
+            <b-row align-v="center">
+              <b-col sm="6" class="mb-4 mb-sm-0">
+                <a class="community-view__button-modify-search" @click="searched = false"
+                  >Modifier votre recherche</a
+                >
+              </b-col>
+              <b-col sm="6">
+                <b-button v-if="view === 'map'" pill @click="gotoView('list')" class="ml-sm-auto">
+                  <div class="community-view__button-spacing">
+                    <div>Afficher la liste</div>
+                    <div><svg-list /></div>
+                  </div>
+                </b-button>
+                <b-button v-else pill @click="gotoView('map')" class="ml-sm-auto">
+                  <div class="community-view__button-spacing">
+                    <div>Afficher la carte</div>
+                    <div><svg-map /></div>
+                  </div>
+                </b-button>
+              </b-col>
+            </b-row>
+          </b-card>
+          <!---->
+
+          <!-- Large Screens -->
+          <div class="d-none d-lg-block">
+            <!-- button to view list -->
+            <div v-if="view === 'map'" class="community-view__button-container">
+              <b-button pill @click="gotoView('list')">
                 <div class="community-view__button-spacing">
                   <div>Afficher la liste</div>
                   <div><svg-list /></div>
                 </div>
               </b-button>
-              <b-button v-else pill @click="gotoView('map')">
-                <div class="community-view__button-spacing">
-                  <div>Afficher la carte</div>
-                  <div><svg-map /></div>
-                </div>
-              </b-button>
             </div>
-          </b-card>
-          <!---->
-        </b-col>
-        <b-col v-if="view === 'map'" lg="9">
-          <!-- button to view list (on large screens) -->
-          <div class="community-view__button-container d-none d-lg-block">
-            <b-button pill @click="gotoView('list')">
-              <div class="community-view__button-spacing">
-                <div>Afficher la liste</div>
-                <div><svg-list /></div>
+            <!---->
+
+            <div v-else-if="view === 'list'" class="d-none d-lg-block">
+              <div class="my-4">
+                <!-- results header -->
+                <h3>Résultats</h3>
+                <!---->
+                <!-- button to view map  -->
+                <div class="community-view__button-container">
+                  <b-button pill @click="gotoView('map')">
+                    <div class="community-view__button-spacing">
+                      <div>Afficher la carte</div>
+                      <div><svg-map /></div>
+                    </div>
+                  </b-button>
+                </div>
+                <!---->
               </div>
-            </b-button>
+            </div>
           </div>
+          <!-- -->
+
+          <!-- results display (loanable cards) -->
+          <community-list
+            v-if="view === 'list'"
+            :data="data"
+            :page="parseInt(params.page)"
+            :per-page="parseInt(params.per_page)"
+            :total="total ? total : 0"
+            :loading="searching || loading"
+            @page="setParam({ name: 'page', value: $event })"
+            @select="selectLoanable"
+            @test="searchLoanables"
+          />
           <!---->
-        </b-col>
-        <b-col v-if="view === 'list' && searched" lg="9">
-          <b-row no-gutters>
-            <!-- results header (on large screens) -->
-            <div
-              class="community-view__results-container community-view--margin-top d-none d-lg-block"
-            >
-              <h3>Résultats de votre recherche</h3>
-              <p>Prochaine étape: vérifier la disponibilité!</p>
-            </div>
-            <!---->
-            <!-- button to view map (on large screens) -->
-            <div class="community-view__button-container d-none d-lg-block">
-              <b-button pill @click="gotoView('map')">
-                <div class="community-view__button-spacing">
-                  <div>Afficher la carte</div>
-                  <div><svg-map /></div>
-                </div>
-              </b-button>
-            </div>
-            <!---->
-          </b-row>
-          <b-row no-gutters>
-            <!-- results display (loanable cards) -->
-            <community-list
-              v-if="!loading"
-              :data="data"
-              :page="parseInt(params.page)"
-              :per-page="parseInt(params.per_page)"
-              :total="total ? total : 0"
-              @page="setParam({ name: 'page', value: $event })"
-              @select="selectLoanable"
-              @test="searchLoanables"
-            />
-            <!---->
-            <layout-loading class="col-lg-9" v-else />
-          </b-row>
         </b-col>
       </b-row>
     </div>
     <!-- map display -->
-    <community-map
-      v-if="view === 'map'"
-      :data="data"
-      :communities="user.communities"
-      @test="searchLoanables"
-      @select="selectLoanable"
-    />
+    <b-row v-if="view === 'map'">
+      <community-map
+        :data="data"
+        :communities="user.communities"
+        @test="searchLoanables"
+        @select="selectLoanable"
+      />
+    </b-row>
     <!---->
   </layout-page>
 </template>
@@ -220,6 +231,7 @@ export default {
       }
     },
     resetPagination(val) {
+      this.searched = false;
       this.setParam({ name: "page", value: "1" });
       switch (val) {
         case "list":
@@ -320,21 +332,6 @@ export default {
     position: relative;
   }
 
-  &__search-menu {
-    max-height: calc(100vh - #{$layout-navbar-height} - 30px);
-    overflow: auto;
-    overflow-x: hidden;
-
-    @include media-breakpoint-up(lg) {
-      max-height: calc(100vh - #{$layout-navbar-height} - 70px);
-      padding: 20px;
-    }
-  }
-
-  &__results-container {
-    width: 100%;
-  }
-
   &__button-modify-search {
     color: $primary !important;
     cursor: pointer;
@@ -347,8 +344,8 @@ export default {
   &__button-container {
     pointer-events: all;
     position: absolute;
-    right: 0;
-    margin: 40px 20px;
+    right: 15px;
+    top: 1.5rem;
   }
 
   &__button-spacing {
@@ -362,6 +359,7 @@ export default {
     margin: 0 5px;
   }
 
+  // Go to map & list buttons
   .btn-secondary {
     color: #7a7a7a;
     background: #fff;
@@ -381,23 +379,11 @@ export default {
 
   .card {
     pointer-events: all;
-    min-width: fit-content;
+  }
 
-    &-body {
-      padding: 0;
-
-      @include media-breakpoint-down(md) {
-        margin: 1.25rem;
-      }
-    }
-    @include media-breakpoint-down(md) {
-      border-radius: 0;
-    }
-
-    @include media-breakpoint-up(lg) {
-      margin: 20px;
-      max-height: 84vh;
-    }
+  &__search-container {
+    margin: 1.5rem auto;
+    overflow: auto;
   }
 
   h3 {
@@ -410,12 +396,17 @@ export default {
   }
 
   .community-map {
-    position: absolute;
-    top: 0;
-    left: 0;
+    height: 100vh;
     width: 100%;
-    height: calc(100vh - #{$layout-navbar-height});
-    z-index: 10;
+    @include media-breakpoint-up(lg) {
+      display: block;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: calc(100vh - #{$layout-navbar-height});
+      z-index: 10;
+    }
   }
 }
 
@@ -423,45 +414,26 @@ export default {
   .page__content {
     position: relative;
   }
+  .community-view__search-container {
+    @include media-breakpoint-up(lg) {
+      max-height: calc(100vh - #{$layout-navbar-height} - 3rem);
+    }
+  }
 }
 
 .community-list--no-pointer-events {
   pointer-events: none;
 }
 
-.community-view--list {
-  .page__content {
-    padding: 0;
-  }
-}
-
-.community-view--searched {
-  @include media-breakpoint-down(md) {
-    max-height: 0;
-    overflow: hidden;
-
-    + .card {
-      max-height: 500px;
-      background: $main-bg;
-      border-radius: 0;
+@include media-breakpoint-down(md) {
+  .community-view--searched {
+    .community-view__search-container {
+      display: none;
     }
   }
 }
 
-.community-view--flex {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 20px;
-}
-
 .community-view--margin-top {
   margin-top: 20px;
-}
-
-.community-view--mobile-height {
-  @include media-breakpoint-down(md) {
-    height: 100vh;
-  }
 }
 </style>

@@ -23,15 +23,15 @@
           >
             <b-checkbox value="car" :disabled="!canLoanCar">
               <svg-car />
-              Auto
+              <div>Auto</div>
             </b-checkbox>
             <b-checkbox value="bike">
               <svg-bike />
-              Vélo
+              <div>Vélo</div>
             </b-checkbox>
             <b-checkbox value="trailer">
               <svg-trailer />
-              Remorque
+              <div>Remorque</div>
             </b-checkbox>
           </b-form-checkbox-group>
         </b-form-group>
@@ -220,30 +220,27 @@ export default {
     fill: currentColor;
   }
 
-  .loanable-buttons label {
+  .loanable-buttons {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .loanable-buttons label.btn {
     border: 2px solid $locomotion-light-green;
     border-radius: 10px;
-    display: table;
     font-size: 13px;
     line-height: 24px;
-    width: 85px;
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 calc(33.3333% - 0.666rem);
+    border-radius: 10px !important;
+    padding-left: 6px;
+    padding-right: 6px;
   }
 
   .loanable-buttons label:hover {
     background-color: #fff;
     border: 2px solid $locomotion-light-green;
-  }
-
-  .loanable-buttons > .btn:not(:last-child):not(.dropdown-toggle),
-  .btn-group > .btn-group:not(:last-child) > .btn {
-    border-radius: 10px;
-    margin-right: 5px;
-  }
-
-  .loanable-buttons > .btn:not(:first-child),
-  .btn-group > .btn-group:not(:first-child) > .btn {
-    border-radius: 10px;
-    margin-left: 5px;
   }
 
   .loanable-buttons .btn:not(:disabled):not(.disabled):active,

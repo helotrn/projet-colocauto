@@ -1,9 +1,16 @@
 <template>
-  <div class="community-list">
+  <layout-loading v-if="loading" />
+  <div v-else class="community-list">
     <!-- loanable cards -->
     <div v-if="data.length > 0">
-      <b-row no-gutters>
-        <b-col v-for="loanable in data" class="community-list--mobile" :key="loanable.id" lg="3">
+      <b-row>
+        <b-col
+          v-for="loanable in data"
+          class="community-list--mobile"
+          :key="loanable.id"
+          md="3"
+          sm="4"
+        >
           <loanable-card
             v-bind="loanable"
             @test="emitTest(loanable)"
@@ -12,7 +19,7 @@
           />
         </b-col>
       </b-row>
-      <b-row no-gutters>
+      <b-row>
         <b-col class="community-list--margin">
           <b-pagination
             align="right"
@@ -67,6 +74,10 @@ export default {
       type: Number,
       required: true,
     },
+    loading: {
+      type: Boolean,
+      required: true,
+    },
   },
   methods: {
     emitPage(page) {
@@ -90,12 +101,6 @@ export default {
 
   &__no-results h3 {
     font-weight: 700;
-  }
-}
-
-.community-list--mobile {
-  @include media-breakpoint-down(md) {
-    margin: 0 15px;
   }
 }
 

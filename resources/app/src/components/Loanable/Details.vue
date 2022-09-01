@@ -177,7 +177,7 @@ export default {
     right: 1rem;
   }
   &__content {
-    height: 12rem;
+    max-height: 12rem;
     overflow-y: auto;
     padding: 0;
   }
