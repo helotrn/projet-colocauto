@@ -3,7 +3,7 @@
     <header class="loanable-details__header">
       <img
         v-if="loanableImage"
-        class="loanable-details__image"
+        class="loanable-details__image loanable-details__image--custom"
         :src="loanableImage"
         :alt="loanableTitle"
       />
@@ -195,6 +195,9 @@ export default {
     position: relative;
     height: 10rem;
     width: 100%;
+  }
+  &__image--custom {
+    object-fit: cover;
   }
   &__image--default {
     fill: $locomotion-green;

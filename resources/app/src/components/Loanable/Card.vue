@@ -1,78 +1,75 @@
 <template>
   <b-card class="loanable-card" no-body>
     <div class="loanable-card__image">
-      <div v-if="image" class="loanable-card__image__loanable" :style="loanableImageStyle" />
-
-      <svg-bike
-        v-else-if="type == 'bike'"
-        class="loanable-card__image__loanable loanable-card__image--default"
+      <img
+        v-if="image"
+        class="loanable-card__image__loanable loanable-card__image--custom"
+        :src="this.image.sizes.thumbnail"
       />
-      <svg-car
-        v-else-if="type == 'car'"
-        class="loanable-card__image__loanable loanable-card__image--default"
-      />
-      <svg-trailer
-        v-else-if="type == 'trailer'"
-        class="loanable-card__image__loanable loanable-card__image--default"
-      />
+      <div v-else class="loanable-card__image__loanable loanable-card__image--default">
+        <svg-bike v-if="type == 'bike'" />
+        <svg-car v-else-if="type == 'car'" />
+        <svg-trailer v-else-if="type == 'trailer'" />
+      </div>
 
       <div class="loanable-card__image__user" v-if="owner">
         <user-avatar :user="owner.user" variant="cut-out" />
       </div>
     </div>
+    <div class="loanable-card__body">
+      <h4 class="loanable-card__title">{{ name }}</h4>
 
-    <h4 class="loanable-card__title">{{ name }}</h4>
+      <div class="loanable-card__tags">
+        <div v-if="type === 'car'">
+          <b-badge> <svg-car class="icon icon--as-text" /> Auto </b-badge>
+        </div>
+        <div v-else-if="type === 'bike'">
+          <b-badge> <svg-bike class="icon icon--as-text" /> Vélo </b-badge>
+        </div>
+        <div v-else-if="type === 'trailer'">
+          <b-badge> <svg-trailer class="icon icon--as-text" /> Remorque </b-badge>
+        </div>
 
-    <div class="loanable-card__tags">
-      <div v-if="type === 'car'">
-        <b-badge> <svg-car class="icon icon--as-text" /> Auto </b-badge>
+        <div v-if="isElectric">
+          <img src="/icons/electric.png" />
+        </div>
       </div>
-      <div v-else-if="type === 'bike'">
-        <b-badge> <svg-bike class="icon icon--as-text" /> Vélo </b-badge>
+
+      <div class="loanable-card__estimated-fare" v-if="estimatedCost">
+        <i> Coût estimé: {{ estimatedCost.price | currency }} </i>
+        <i v-if="estimatedCost.insurance"> + Assurance: {{ estimatedCost.insurance | currency }} </i>
       </div>
-      <div v-else-if="type === 'trailer'">
-        <b-badge> <svg-trailer class="icon icon--as-text" /> Remorque </b-badge>
+      <div v-else class="loanable-card__estimated-fare">
+        <i class="muted" title="Recherchez pour valider la disponibilité et le coût">
+          Coût estimé: N/A
+        </i>
       </div>
 
-      <div v-if="isElectric">
-        <img src="/icons/electric.png" />
+      <div class="loanable-card__buttons">
+        <b-button variant="outline-primary" v-if="available" @click="$emit('select')">
+          Demande d'emprunt
+        </b-button>
+        <b-button v-else-if="loading" variant="outline-warning" disabled>
+          <b-spinner small v-if="loading" />
+          Valider la disponibilité
+        </b-button>
+        <b-button
+          v-else-if="!tested"
+          variant="outline-warning"
+          v-b-tooltip.hover
+          :title="
+            `Cliquez pour valider la disponibilité avec les paramètres ` + `d'emprunt sélectionnés`
+          "
+          :disabled="invalidDuration"
+          @click.stop.prevent="
+            loading = true;
+            $emit('test');
+          "
+        >
+          Valider la disponibilité
+        </b-button>
+        <b-button variant="outline-info" v-else disabled> Indisponible </b-button>
       </div>
-    </div>
-
-    <div class="loanable-card__estimated-fare" v-if="estimatedCost">
-      <i> Coût estimé: {{ estimatedCost.price | currency }} </i>
-      <i v-if="estimatedCost.insurance"> + Assurance: {{ estimatedCost.insurance | currency }} </i>
-    </div>
-    <div v-else class="loanable-card__estimated-fare">
-      <i class="muted" title="Recherchez pour valider la disponibilité et le coût">
-        Coût estimé: N/A
-      </i>
-    </div>
-
-    <div class="loanable-card__buttons">
-      <b-button variant="outline-primary" v-if="available" @click="$emit('select')">
-        Demande d'emprunt
-      </b-button>
-      <b-button v-else-if="loading" variant="outline-warning" disabled>
-        <b-spinner small v-if="loading" />
-        Valider la disponibilité
-      </b-button>
-      <b-button
-        v-else-if="!tested"
-        variant="outline-warning"
-        v-b-tooltip.hover
-        :title="
-          `Cliquez pour valider la disponibilité avec les paramètres ` + `d'emprunt sélectionnés`
-        "
-        :disabled="invalidDuration"
-        @click.stop.prevent="
-          loading = true;
-          $emit('test');
-        "
-      >
-        Valider la disponibilité
-      </b-button>
-      <b-button variant="outline-info" v-else disabled> Indisponible </b-button>
     </div>
   </b-card>
 </template>
@@ -169,15 +166,6 @@ export default {
           return false;
       }
     },
-    loanableImageStyle() {
-      if (!this.image) {
-        return {};
-      }
-
-      return {
-        backgroundImage: `url('${this.image.sizes.thumbnail}')`,
-      };
-    },
   },
 };
 </script>
@@ -186,7 +174,11 @@ export default {
 @import "~bootstrap/scss/mixins/breakpoints";
 
 .loanable-card {
-  padding: 20px;
+  overflow: hidden;
+
+  &__body {
+    padding: 10px 20px 20px 20px;
+  }
 
   &__tags {
     margin-bottom: 10px;
@@ -211,33 +203,28 @@ export default {
   &__image {
     height: 115px;
     position: relative;
-    width: 100%;
+    &--custom {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
 
     &--default {
       fill: $locomotion-green;
-    }
-
-    &__loanable,
-    &__user > div {
-      background-size: cover;
-      background-position: center center;
-      background-repeat: no-repeat;
-    }
-
-    &__loanable {
-      // For SVGs, which are inline elements.
-      display: block;
+      padding-top: 1rem;
       height: 100%;
-      width: 115px;
-      margin: 0 auto;
+
+      svg {
+        height: 100%;
+        margin: 0 auto;
+        display: block;
+      }
     }
 
     &__user {
       position: absolute;
-      bottom: 0;
-      left: calc(50% + 30px);
-      height: 50%;
-      width: 115px;
+      bottom: 1rem;
+      right: 1rem;
     }
   }
 }
