@@ -26,8 +26,7 @@ class LoanableTest extends TestCase
     public $otherMemberOfCommunity;
     public $memberOfOtherCommunity;
 
-    public $communityLoanable; // TODO
-    public $boroughLoanable; // TODO
+    public $boroughLoanable;
 
     public function setUp(): void
     {
