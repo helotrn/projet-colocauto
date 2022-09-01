@@ -285,6 +285,7 @@ class AvailabilityHelper
         $dateRange[1] = $dateRange[1]->copy()->setTime(0, 0, 0);
 
         $dailyIntervals = [];
+        $ruleIntervals = [];
 
         // Get availability or unavailability intervals.
         foreach ($availabilityParams["rules"] as $rule) {
