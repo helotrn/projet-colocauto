@@ -208,6 +208,20 @@
                 />
               </b-col>
             </b-row>
+
+            <community-users-list
+              :visibleFields="[
+                'id',
+                'user_full_name',
+                'role',
+                'approved_at',
+                'suspended_at',
+                'proof',
+                'actions',
+              ]"
+              :items="communityUsers"
+            >
+            </community-users-list>
           </div>
 
           <div class="form__buttons">
@@ -228,6 +242,8 @@
 </template>
 
 <script>
+import CommunityUsersList from "@/components/Community/CommunityUsersList.vue";
+
 import FormsBuilder from "@/components/Forms/Builder.vue";
 import PricingForm from "@/components/Pricing/PricingForm.vue";
 import PricingLanguageDefinition from "@/components/Pricing/LanguageDefinition.vue";
@@ -242,6 +258,7 @@ export default {
   name: "AdminCommunity",
   mixins: [DataRouteGuards, FormMixin],
   components: {
+    CommunityUsersList,
     FormsBuilder,
     FormsValidatedInput,
     PricingForm,
@@ -306,6 +323,38 @@ export default {
     },
     users() {
       return this.$store.state.users.data.filter(() => true);
+    },
+    /*
+      Ensure the format follows the community user format. This is what we are working on.
+    */
+    communityUsers() {
+      const users = this.$store.state.users.data.filter(() => true);
+
+      // Convert data recieved from the backend to communityUsers required by the list.
+      let communityUser;
+      let communityUsers = [];
+
+      for (const user of users) {
+        for (const community of user.communities) {
+          communityUser = {
+            // Pour pouvoir linker aus actions...
+            id: user.id,
+            user_id: user.id,
+            user_full_name: user.full_name,
+            community_id: community.id,
+            community_name: community.name,
+            // Member role is defined as null. List expects it to be explicitly defined.
+            role: community.role ? community.role : "member",
+            approved_at: community.approved_at,
+            suspended_at: community.suspended_at,
+            proof: community.proof,
+          };
+
+          communityUsers.push(communityUser);
+        }
+      }
+
+      return communityUsers;
     },
     usersFilter: {
       get() {
