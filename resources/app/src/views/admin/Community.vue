@@ -220,6 +220,9 @@
                 'actions',
               ]"
               :items="communityUsers"
+              :totalItemCount="communityUsersTotal"
+              :itemsPerPage="10"
+              @changePage="onChangePage"
             >
             </community-users-list>
           </div>
@@ -356,6 +359,9 @@ export default {
 
       return communityUsers;
     },
+    communityUsersTotal() {
+      return this.$store.state.users.total;
+    },
     usersFilter: {
       get() {
         return this.$store.state["admin.community"].usersFilter;
@@ -363,6 +369,9 @@ export default {
       set(val) {
         this.$store.commit("admin.community/usersFilter", val);
       },
+    },
+    communityUserListParams() {
+      return this.$store.state['admin.community'].communityUserListParams;
     },
     usersLoading() {
       return !!this.$store.state.users.cancelToken;
@@ -489,6 +498,56 @@ export default {
         userId: user.id,
       });
     },
+    communityUserSetListParam({ name, value }) {
+      this.$store.commit("admin.community/communityUserListParam", { name, value });
+    },
+    loadCommunityUserListData() {
+      let routeParams = {
+        fields: [
+          "id",
+          "full_name",
+          "communities.role",
+          "communities.proof",
+          "communities.approved_at",
+          "communities.suspended_at",
+        ].join(","),
+        is_deactivated: 0,
+        "communities.id": this.item.id,
+      };
+
+      let contextParams = {
+        page: this.communityUserListParams.page,
+      }
+
+      if (this.listDebounce) {
+        clearTimeout(this.listDebounce);
+      }
+
+      this.listDebounce = setTimeout(() => {
+        try {
+          this.$store.dispatch(`users/retrieve`, {
+            // Pas route params, mais les paramètres spécifiques à la liste.
+            ...routeParams,
+            // Pas context params, mais les paramètres spécifiques à la liste.
+            ...contextParams,
+          });
+          this.listDebounce = null;
+        } catch (e) {
+          this.$store.commit("addNotification", {
+            content: `Erreur de chargement de données (${this.slug})`,
+            title: `${this.slug}`,
+            variant: "warning",
+            type: "data",
+          });
+          console.log(e);
+        }
+      }, 250);
+
+      return true;
+    },
+    onChangePage(page) {
+      this.communityUserSetListParam({ name: "page", value: page });
+    },
   },
   i18n: {
     messages: {
@@ -499,6 +558,14 @@ export default {
       fr: {
         ...locales.fr.communities,
         ...locales.fr.forms,
+      },
+    },
+  },
+  watch: {
+    communityUserListParams: {
+      deep: true,
+      handler() {
+        this.loadCommunityUserListData();
       },
     },
   },

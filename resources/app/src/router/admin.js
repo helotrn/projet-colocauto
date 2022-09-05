@@ -69,6 +69,8 @@ export default [
                     params: { id },
                   },
                 }) => id,
+                page: 1,
+                per_page: 10,
                 fields: [
                   "id",
                   "full_name",
@@ -85,7 +87,6 @@ export default [
                   };
                   return newItem;
                 },
-                per_page: -1,
               },
             },
           },
