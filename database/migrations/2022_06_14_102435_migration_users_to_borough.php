@@ -26,33 +26,39 @@ class MigrationUsersToBorough extends Migration
                     $neighborhood->name
             );
 
-            $communityUsers = CommunityUser::where(
-                "community_id",
-                "=",
-                $neighborhood->id
-            )->get();
+            // Neighborhoods without parent borough were found in
+            // staging. Just make sure it does not crash the migration
+            // process.
+            if ($neighborhood->parent) {
+                $communityUsers = CommunityUser::where(
+                    "community_id",
+                    "=",
+                    $neighborhood->id
+                )->get();
 
-            foreach ($communityUsers as $communityUser) {
-                CommunityUser::withoutEvents(function () use (
-                    $communityUser,
-                    $neighborhood
-                ) {
-                    Log::info(
-                        sprintf(
-                            "    Updating user with id %4d: %s (%d) -> %s (%d)",
-                            $communityUser->user_id,
-                            $neighborhood->name,
-                            $neighborhood->id,
-                            $neighborhood->parent->name,
-                            $neighborhood->parent_id
-                        )
-                    );
-                    $communityUser->community_id = $neighborhood->parent_id;
-                    $communityUser->save();
-                });
+                foreach ($communityUsers as $communityUser) {
+                    CommunityUser::withoutEvents(function () use (
+                        $communityUser,
+                        $neighborhood
+                    ) {
+                        Log::info(
+                            sprintf(
+                                "    Updating user with id %4d: %s (%d) -> %s (%d)",
+                                $communityUser->user_id,
+                                $neighborhood->name,
+                                $neighborhood->id,
+                                $neighborhood->parent->name,
+                                $neighborhood->parent_id
+                            )
+                        );
+
+                        $communityUser->community_id = $neighborhood->parent_id;
+                        $communityUser->save();
+                    });
+                }
+
+                unset($communityUsers);
             }
-
-            unset($communityUsers);
         }
     }
 
