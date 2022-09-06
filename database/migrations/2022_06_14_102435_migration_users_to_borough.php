@@ -47,9 +47,7 @@ class MigrationUsersToBorough extends Migration
                                 $communityUser->user_id,
                                 $neighborhood->name,
                                 $neighborhood->id,
-                                $neighborhood->parent
-                                    ? $neighborhood->parent->name
-                                    : "",
+                                $neighborhood->parent->name,
                                 $neighborhood->parent_id
                             )
                         );
