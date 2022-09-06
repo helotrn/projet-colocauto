@@ -249,9 +249,12 @@ export default {
         borrower_id: this.user.borrower.id,
         loanable,
         loanable_id: loanable.id,
-        estimated_insurance: loanable.insurance,
-        estimated_price: loanable.price,
-        platform_tip: (loanable.price === 0 ? 0 : Math.max(loanable.price * 0.1, 2)).toFixed(2),
+        estimated_insurance: loanable.estimatedCost.insurance,
+        estimated_price: loanable.estimatedCost.price,
+        platform_tip: (loanable.estimatedCost.price === 0
+          ? 0
+          : Math.max(loanable.estimatedCost.price * 0.1, 2)
+        ).toFixed(2),
       });
 
       this.$router.push("/loans/new");
