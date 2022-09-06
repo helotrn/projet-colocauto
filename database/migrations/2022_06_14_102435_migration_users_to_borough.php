@@ -43,12 +43,20 @@ class MigrationUsersToBorough extends Migration
                             $communityUser->user_id,
                             $neighborhood->name,
                             $neighborhood->id,
-                            $neighborhood->parent->name,
+                            $neighborhood->parent
+                                ? $neighborhood->parent->name
+                                : "",
                             $neighborhood->parent_id
                         )
                     );
-                    $communityUser->community_id = $neighborhood->parent_id;
-                    $communityUser->save();
+
+                    // Neighborhoods without parent borough were found in
+                    // staging. Just make sure it does not crash the migration
+                    // process.
+                    if ($neighborhood->parent) {
+                        $communityUser->community_id = $neighborhood->parent_id;
+                        $communityUser->save();
+                    }
                 });
             }
 
