@@ -567,7 +567,7 @@ class UserController extends RestController
                         "type" => "file",
                     ],
                     "saaq" => [
-                        "type" => "file",
+                        "type" => "files",
                     ],
                 ],
             ],

@@ -1,46 +1,49 @@
 <template>
-  <b-form-group class="forms-file-uploader" :label="label" :label-for="field">
+  <b-form-group class="forms-files-uploader" :label="label" :label-for="field">
     <div v-if="loading">
       <img src="/loading.svg" />
     </div>
-    <div v-else-if="!value">
-      <b-form-file
-        :value="value"
-        :state="validationState"
-        :id="field"
-        :ref="`${field}fileinput`"
-        :placeholder="placeholder"
-        :disabled="disabled"
-        :name="field"
-        :accept="accept.join(',')"
-        browse-text="Sélectionner"
-        drop-placeholder="Déposer le fichier ici..."
-        @change="handleChange"
-      />
-      <div class="invalid-feedback" v-if="errors">
-        {{ errors.message }}
-      </div>
-    </div>
     <div v-else>
-      <figure class="preview">
-        <img v-if="!value" src="/loading.svg" />
-
-        <figcaption>
-          <a :href="value.url" target="_blank">
-            {{ value.original_filename }}
+      <ul>
+        <li v-if="value" v-for="file in value" class="mb-1">
+          <a :href="file.url" target="_blank">
+            {{ file.original_filename }}
           </a>
-        </figcaption>
-      </figure>
-      <b-button variant="warning" @click="removeFile" v-if="!disabled">
-        <small>{{ removeFileText }}</small>
-      </b-button>
+          <b-button
+            size="sm"
+            class="ml-2"
+            variant="warning"
+            @click="() => removeFile(file.id)"
+            v-if="!disabled"
+          >
+            {{ removeFileText }}
+          </b-button>
+        </li>
+      </ul>
+      <div>
+        <b-form-file
+          :state="validationState"
+          :id="field"
+          :ref="`${field}fileinput`"
+          :placeholder="placeholder"
+          :disabled="disabled"
+          :name="field"
+          :accept="accept.join(',')"
+          browse-text="Sélectionner"
+          drop-placeholder="Déposer le fichier ici..."
+          @change="handleChange"
+        />
+        <div class="invalid-feedback" v-if="errors">
+          {{ errors.message }}
+        </div>
+      </div>
     </div>
   </b-form-group>
 </template>
 
 <script>
 export default {
-  name: "FormsFileUploader",
+  name: "FormsFilesUploader",
   props: {
     accept: {
       default: () => [
@@ -70,7 +73,7 @@ export default {
       default: "",
     },
     placeholder: {
-      default: "Téléverser...",
+      default: "Ajouter un fichier...",
       type: String,
     },
     removeFileText: {
@@ -83,9 +86,9 @@ export default {
       default: false,
     },
     value: {
-      type: Object,
+      type: Array,
       require: false,
-      default: null,
+      default: [],
     },
   },
   computed: {
@@ -114,12 +117,11 @@ export default {
           break;
       }
     },
-    removeFile() {
-      this.$emit("input", null);
-
-      if (this.$refs[`${this.field}fileinput`]) {
-        this.$refs[`${this.field}fileinput`].reset();
-      }
+    removeFile(fileId) {
+      this.$emit(
+        "input",
+        this.value.filter((f) => f.id !== fileId)
+      );
     },
     async uploadFile(fieldName, fileList) {
       const formData = new FormData();
@@ -136,7 +138,11 @@ export default {
 
       const file = await this.$store.dispatch("files/upload", formData);
 
-      this.$emit("input", file);
+      this.$emit("input", [...this.value, file]);
+
+      if (this.$refs[`${this.field}fileinput`]) {
+        this.$refs[`${this.field}fileinput`].reset();
+      }
 
       return file;
     },
@@ -145,7 +151,7 @@ export default {
 </script>
 
 <style lang="scss">
-.forms-file-uploader {
+.forms-files-uploader {
   .preview img {
     max-width: 100%;
   }

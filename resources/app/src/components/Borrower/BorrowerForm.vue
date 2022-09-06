@@ -29,11 +29,10 @@
 
         <b-row>
           <b-col>
-            <forms-file-uploader
+            <forms-files-uploader
               field="saaq"
               :disabled="disabled"
               :label="$t('fields.saaq') | capitalize"
-              placeholder="Ex.: monfichier.pdf"
               v-model="borrower.saaq"
             />
           </b-col>
@@ -97,6 +96,7 @@
 <script>
 import FormsValidatedInput from "@/components/Forms/ValidatedInput.vue";
 import FormsFileUploader from "@/components/Forms/FileUploader.vue";
+import FormsFilesUploader from "@/components/Forms/FilesUploader.vue";
 
 import FormLabelsMixin from "@/mixins/FormLabelsMixin";
 
@@ -108,6 +108,7 @@ export default {
   components: {
     FormsFileUploader,
     FormsValidatedInput,
+    FormsFilesUploader,
   },
   props: {
     borrower: {

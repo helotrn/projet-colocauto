@@ -451,6 +451,14 @@ class RestRepository
                     );
                 }
 
+                foreach (array_keys($related->morphManys) as $morphMany) {
+                    $this->saveMorphManyRelation(
+                        $related,
+                        $morphMany,
+                        $data[$field]
+                    );
+                }
+
                 if (is_a($relation, BelongsTo::class)) {
                     $relation->associate($related);
                 }
@@ -953,6 +961,36 @@ class RestRepository
         }
 
         return $currentRelation;
+    }
+
+    protected function saveMorphManyRelation(&$model, $field, &$data)
+    {
+        $relation = $model->{$field}();
+
+        $relatedModel = $relation->getRelated();
+
+        $ids = [];
+        $newItems = [];
+        foreach ($data[$field] as $element) {
+            if (array_key_exists("id", $element) && $element["id"]) {
+                $existingItem = $relatedModel->find($element["id"]);
+                $existingItem->fill($element);
+                $newItems[] = $existingItem;
+                $ids[] = $element["id"];
+            } else {
+                $newItem = new $relatedModel();
+                $newItem->fill($element);
+                $newItems[] = $newItem;
+            }
+        }
+
+        $itemsToDelete = $relation->whereNotIn("id", $ids)->get();
+
+        foreach ($itemsToDelete as $itemToDelete) {
+            $itemToDelete->delete();
+        }
+
+        $relation->saveMany($newItems);
     }
 
     protected function savePolymorphicRelation(&$model, $field, &$data)
