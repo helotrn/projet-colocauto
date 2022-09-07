@@ -48,7 +48,8 @@
               <p class="font-weight-bold alert-heading">Solde suffisant</p>
               <p>
                 Vous avez assez d'argent pour payer cet emprunt. Ajoutez plus d'argent à votre solde
-                si vous pensez que le coût final pourrait être plus grand que votre solde actuel.
+                si vous pensez que le coût final (incluant votre contribution volontaire) pourrait
+                être plus grand que votre solde actuel.
               </p>
               <b-button variant="success" :disabled="actionLoading" @click="completeAction">
                 Continuer <strong>sans</strong> ajouter au solde
