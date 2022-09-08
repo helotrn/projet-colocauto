@@ -6,6 +6,7 @@ export default {
     usersFilter: "",
     communityUserListParams: {
       page: 1,
+      order: "",
     },
   },
   mutations: {

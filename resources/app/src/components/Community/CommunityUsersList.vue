@@ -1,6 +1,13 @@
 <template>
   <div>
-    <b-table striped hover :fields="fields" :items="items" class="community-users-list">
+    <b-table
+      striped
+      hover
+      no-local-sorting
+      :fields="fields"
+      :items="items"
+      @sort-changed="$emit('changeOrder', $event)"
+    >
       <template v-slot:cell(user_full_name)="row">
         <!-- Allow an URL-generating function in field definition -->
         <router-link v-if="row.field.urlFct" :to="row.field.urlFct(row.item)">
@@ -146,11 +153,12 @@ export default {
       required: false,
       default: function () {
         return [
-          { key: "id", label: this.$t("lists.id") },
+          { key: "id", label: this.$t("lists.id"), sortable: true },
           { key: "user_id", label: this.$t("communities.fields.user.id") },
           {
             key: "user_full_name",
             label: this.$t("communities.fields.user.name"),
+            sortable: true,
             urlFct: function (item) {
               return `/admin/users/${item.user_id}`;
             },

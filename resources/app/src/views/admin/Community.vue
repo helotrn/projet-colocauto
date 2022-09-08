@@ -222,7 +222,10 @@
               :items="communityUsers"
               :totalItemCount="communityUsersTotal"
               :itemsPerPage="10"
+              :sortBy="communityUsersSortBy"
+              :sortDesc="communityUsersSortDesc"
               @changePage="onChangePage"
+              @changeOrder="onChangeOrder"
             >
             </community-users-list>
           </div>
@@ -371,10 +374,37 @@ export default {
       },
     },
     communityUserListParams() {
-      return this.$store.state['admin.community'].communityUserListParams;
+      return this.$store.state["admin.community"].communityUserListParams;
     },
     usersLoading() {
       return !!this.$store.state.users.cancelToken;
+    },
+    communityUsersSortBy() {
+      // Field name without the minus sign indicating order.
+      const sortFieldName = this.communityUserListParams.order.replace("-", "");
+
+      let sortFieldKey = "";
+
+      // Convert backend field names to list field keys.
+      switch (sortFieldName) {
+        // Some remain unchanged
+        case "id":
+          sortFieldKey = sortFieldName;
+          break;
+
+        case "full_name":
+          sortFieldKey = "user_full_name";
+          break;
+
+        default:
+          sortFieldKey = "";
+          break;
+      }
+
+      return sortFieldKey;
+    },
+    communityUsersSortDesc() {
+      return this.communityUserListParams.order[0] === "-";
     },
   },
   methods: {
@@ -517,7 +547,8 @@ export default {
 
       let contextParams = {
         page: this.communityUserListParams.page,
-      }
+        order: this.communityUserListParams.order,
+      };
 
       if (this.listDebounce) {
         clearTimeout(this.listDebounce);
@@ -547,6 +578,28 @@ export default {
     },
     onChangePage(page) {
       this.communityUserSetListParam({ name: "page", value: page });
+    },
+    onChangeOrder(context) {
+      // If descending order, then prepend field key with minus sign.
+      let sortOrder = context.sortDesc ? "-" : "";
+
+      // Convert field keys to field names understood by the backend.
+      switch (context.sortBy) {
+        // Some remain unchanged
+        case "id":
+          sortOrder += context.sortBy;
+          break;
+
+        case "user_full_name":
+          sortOrder += "full_name";
+          break;
+
+        default:
+          sortOrder = "";
+          break;
+      }
+
+      this.communityUserSetListParam({ name: "order", value: sortOrder });
     },
   },
   i18n: {

@@ -29,9 +29,9 @@ describe("CommunityUsersList", () => {
 
     const colHeaders = wrapper.findAll("table th");
 
-    expect(colHeaders.at(0).text()).toBe("lists.id");
+    expect(colHeaders.at(0).text()).toBe("lists.id (Click to sort Ascending)");
     expect(colHeaders.at(1).text()).toBe("communities.fields.user.id");
-    expect(colHeaders.at(2).text()).toBe("communities.fields.user.name");
+    expect(colHeaders.at(2).text()).toBe("communities.fields.user.name (Click to sort Ascending)");
     expect(colHeaders.at(3).text()).toBe("communities.fields.community.id");
     expect(colHeaders.at(4).text()).toBe("communities.fields.community.name");
     expect(colHeaders.at(5).text()).toBe("communities.fields.user.role");
@@ -64,7 +64,7 @@ describe("CommunityUsersList", () => {
 
     expect(colHeaders.at(0).text()).toBe("communities.fields.user.proof");
     expect(colHeaders.at(1).text()).toBe("communities.fields.user.role");
-    expect(colHeaders.at(2).text()).toBe("lists.id");
+    expect(colHeaders.at(2).text()).toBe("lists.id (Click to sort Ascending)");
   });
 
   it("Does not complain if a field is not defined", () => {
@@ -79,7 +79,7 @@ describe("CommunityUsersList", () => {
 
     expect(colHeaders.at(0).text()).toBe("communities.fields.user.proof");
     expect(colHeaders.at(1).text()).toBe("communities.fields.user.role");
-    expect(colHeaders.at(2).text()).toBe("lists.id");
+    expect(colHeaders.at(2).text()).toBe("lists.id (Click to sort Ascending)");
 
     expect(wrapper.findAll("table th").length).toBe(3);
   });
