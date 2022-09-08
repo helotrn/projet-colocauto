@@ -564,7 +564,7 @@ class UserController extends RestController
                         "type" => "checkbox",
                     ],
                     "gaa" => [
-                        "type" => "file",
+                        "type" => "files",
                     ],
                     "saaq" => [
                         "type" => "files",

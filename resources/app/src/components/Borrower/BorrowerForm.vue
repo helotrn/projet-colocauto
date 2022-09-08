@@ -40,11 +40,10 @@
 
         <b-row>
           <b-col>
-            <forms-file-uploader
+            <forms-files-uploader
               field="gaa"
               :disabled="disabled"
               :label="$t('fields.gaa') | capitalize"
-              placeholder="Ex.: monfichier.pdf"
               v-model="borrower.gaa"
             />
           </b-col>
