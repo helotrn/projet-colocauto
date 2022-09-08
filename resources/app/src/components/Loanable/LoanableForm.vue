@@ -69,6 +69,8 @@
               <forms-image-uploader
                 field="image"
                 :label="$t('fields.image') | capitalize"
+                :preview-aspect-ratio="'16 / 10'"
+                :description="$t('descriptions.image')"
                 v-model="loanable.image"
               />
             </b-col>

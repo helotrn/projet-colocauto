@@ -27,7 +27,7 @@
     </div>
     <div v-else>
       <figure class="preview">
-        <img v-if="value.sizes" :src="value.sizes.thumbnail" />
+        <img v-if="value.sizes" :src="value.sizes.thumbnail" :style="[this.aspectRatioStyle]" />
         <img src="/loading.svg" v-else />
 
         <figcaption>
@@ -88,8 +88,22 @@ export default {
       require: false,
       default: null,
     },
+    previewAspectRatio: {
+      type: String,
+      required: false,
+      default: null,
+    },
   },
   computed: {
+    aspectRatioStyle() {
+      if (!this.previewAspectRatio) {
+        return {};
+      }
+      return {
+        aspectRatio: this.previewAspectRatio,
+        objectFit: "cover",
+      };
+    },
     errors() {
       return this.$store.state.images.errors;
     },
