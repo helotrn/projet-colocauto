@@ -8,8 +8,9 @@
           v-for="loanable in data"
           class="community-list--mobile"
           :key="loanable.id"
-          md="3"
-          sm="4"
+          xl="3"
+          md="4"
+          sm="6"
         >
           <loanable-card
             v-bind="loanable"
