@@ -209,25 +209,39 @@
               </b-col>
             </b-row>
 
-            <community-users-list
-              :visibleFields="[
-                'id',
-                'user_full_name',
-                'role',
-                'approved_at',
-                'suspended_at',
-                'proof',
-                'actions',
-              ]"
-              :items="communityUsers"
-              :totalItemCount="communityUsersTotal"
-              :itemsPerPage="10"
-              :sortBy="communityUsersSortBy"
-              :sortDesc="communityUsersSortDesc"
-              @changePage="onChangePage"
-              @changeOrder="onChangeOrder"
-            >
-            </community-users-list>
+            <b-row>
+              <b-col class="admin__filters">
+                <community-users-filters
+                  :visibleFields="['user_id', 'user_full_name']"
+                  :item="communityUserListParams.filters"
+                  @change="onChangeFilters"
+                />
+              </b-col>
+            </b-row>
+
+            <b-row>
+              <b-col>
+                <community-users-list
+                  :visibleFields="[
+                    'id',
+                    'user_full_name',
+                    'role',
+                    'approved_at',
+                    'suspended_at',
+                    'proof',
+                    'actions',
+                  ]"
+                  :items="communityUsers"
+                  :totalItemCount="communityUsersTotal"
+                  :itemsPerPage="10"
+                  :sortBy="communityUsersSortBy"
+                  :sortDesc="communityUsersSortDesc"
+                  @changePage="onChangePage"
+                  @changeOrder="onChangeOrder"
+                >
+                </community-users-list>
+              </b-col>
+            </b-row>
           </div>
 
           <div class="form__buttons">
@@ -248,6 +262,7 @@
 </template>
 
 <script>
+import CommunityUsersFilters from "@/components/Community/CommunityUsersFilters.vue";
 import CommunityUsersList from "@/components/Community/CommunityUsersList.vue";
 
 import FormsBuilder from "@/components/Forms/Builder.vue";
@@ -264,6 +279,7 @@ export default {
   name: "AdminCommunity",
   mixins: [DataRouteGuards, FormMixin],
   components: {
+    CommunityUsersFilters,
     CommunityUsersList,
     FormsBuilder,
     FormsValidatedInput,
@@ -532,6 +548,31 @@ export default {
       this.$store.commit("admin.community/communityUserListParam", { name, value });
     },
     loadCommunityUserListData() {
+      const filtersByKey = this.communityUserListParams.filters;
+      let filtersByName = {};
+
+      for (const fieldKey in filtersByKey) {
+        let fieldName = "";
+
+        switch (fieldKey) {
+          case "user_id":
+            fieldName = "id";
+            break;
+
+          case "user_full_name":
+            fieldName = "full_name";
+            break;
+
+          default:
+            fieldName = "";
+            break;
+        }
+
+        if ("" !== fieldName) {
+          filtersByName[fieldName] = filtersByKey[fieldKey];
+        }
+      }
+
       let routeParams = {
         fields: [
           "id",
@@ -548,6 +589,7 @@ export default {
       let contextParams = {
         page: this.communityUserListParams.page,
         order: this.communityUserListParams.order,
+        ...filtersByName,
       };
 
       if (this.listDebounce) {
@@ -576,6 +618,10 @@ export default {
 
       return true;
     },
+    onChangeFilters(filters) {
+      this.communityUserSetListParam({ name: "filters", value: filters });
+    },
+
     onChangePage(page) {
       this.communityUserSetListParam({ name: "page", value: page });
     },
