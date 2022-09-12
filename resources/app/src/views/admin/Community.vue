@@ -173,6 +173,42 @@
             </b-table>
 
             <b-row>
+              <b-col class="admin__filters">
+                <community-users-filters
+                  :visibleFields="['user_id', 'user_full_name']"
+                  :item="communityUserListParams.filters"
+                  @change="onChangeFilters"
+                />
+              </b-col>
+            </b-row>
+
+            <b-row>
+              <b-col>
+                <community-users-list
+                  :visibleFields="[
+                    'id',
+                    'user_full_name',
+                    'role',
+                    'approved_at',
+                    'suspended_at',
+                    'proof',
+                    'actions',
+                  ]"
+                  :items="communityUsers"
+                  :totalItemCount="communityUsersTotal"
+                  :itemsPerPage="10"
+                  :sortBy="communityUsersSortBy"
+                  :sortDesc="communityUsersSortDesc"
+                  @changePage="onChangePage"
+                  @changeOrder="onChangeOrder"
+                  @changeUserRole="onChangeUserRole"
+                  @action="onAction"
+                >
+                </community-users-list>
+              </b-col>
+            </b-row>
+
+            <b-row>
               <b-col md="6">
                 <b-button class="mr-3" variant="outline-primary" @click="exportCSV">
                   Générer (CSV)
@@ -206,42 +242,6 @@
                   }"
                   @relation="addUser"
                 />
-              </b-col>
-            </b-row>
-
-            <b-row>
-              <b-col class="admin__filters">
-                <community-users-filters
-                  :visibleFields="['user_id', 'user_full_name']"
-                  :item="communityUserListParams.filters"
-                  @change="onChangeFilters"
-                />
-              </b-col>
-            </b-row>
-
-            <b-row>
-              <b-col>
-                <community-users-list
-                  :visibleFields="[
-                    'id',
-                    'user_full_name',
-                    'role',
-                    'approved_at',
-                    'suspended_at',
-                    'proof',
-                    'actions',
-                  ]"
-                  :items="communityUsers"
-                  :totalItemCount="communityUsersTotal"
-                  :itemsPerPage="10"
-                  :sortBy="communityUsersSortBy"
-                  :sortDesc="communityUsersSortDesc"
-                  @changePage="onChangePage"
-                  @changeOrder="onChangeOrder"
-                  @changeUserRole="onChangeUserRole"
-                  @action="onCommunityUserAction"
-                >
-                </community-users-list>
               </b-col>
             </b-row>
           </div>
