@@ -232,7 +232,10 @@ export default {
     line-height: 24px;
     display: flex;
     flex-direction: column;
-    flex: 1 1 calc(33.3333% - 0.666rem);
+    // Make sure the buttons take about 1/3 of the space and grow/shrink together
+    // 6.6666px: 2 10px gaps between the 3 buttons,
+    // so each button has to be 2/3*10px shorter
+    flex: 1 1 calc(33.3333% - 6.6666px);
     border-radius: 10px !important;
     padding-left: 6px;
     padding-right: 6px;
