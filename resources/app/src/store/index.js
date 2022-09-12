@@ -79,6 +79,7 @@ const initialState = {
   loading: false,
   loansLoaded: false,
   loanablesLoaded: false,
+  hasMoreLoanables: false,
   notifications: [],
   user: null,
   token: null,
@@ -143,7 +144,7 @@ const actions = {
     const { data: loans } = await Vue.axios.get("/loans", {
       params: {
         order: "-updated_at",
-        per_page: 15,
+        per_page: 30,
         "borrower.id": state.user.borrower.id,
         fields: [
           "*",
@@ -158,6 +159,7 @@ const actions = {
           "loanable.owner.user.id",
           "loanable.type",
         ].join(","),
+        status: "in_process",
       },
     });
 
@@ -185,10 +187,12 @@ const actions = {
     commit("loanablesLoaded", false);
     commit("loading", true);
 
+    const maxLoanableCount = 5;
+
     const { data: loanables } = await Vue.axios.get("/loanables", {
       params: {
         order: "-updated_at",
-        per_page: 15,
+        per_page: maxLoanableCount,
         "owner.id": state.user.owner.id,
         fields: [
           "*",
@@ -207,6 +211,7 @@ const actions = {
     const newUser = {
       ...state.user,
       loanables: loanables.data,
+      hasMoreLoanables: loanables.total > maxLoanableCount,
     };
 
     commit("user", newUser);

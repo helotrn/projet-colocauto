@@ -3,9 +3,9 @@
     <h3>
       {{ widgetTitle }}
       <b-nav-item-dropdown right tag="h3" text="" v-model="loanHistoryType">
-        <b-dropdown-item :active="loanHistoryType === 'past'" @click="loanHistoryType = 'past'">
+        <!-- <b-dropdown-item :active="loanHistoryType === 'past'" @click="loanHistoryType = 'past'">
           Passés
-        </b-dropdown-item>
+        </b-dropdown-item> -->
         <b-dropdown-item
           :active="loanHistoryType === 'ongoing'"
           @click="loanHistoryType = 'ongoing'"
@@ -75,7 +75,7 @@ export default {
   },
   data() {
     return {
-      loanHistoryType: "past",
+      loanHistoryType: "ongoing",
     };
   },
   computed: {
