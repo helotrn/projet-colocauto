@@ -115,7 +115,12 @@ class FileController extends RestController
     protected function cleanupFilename($filename)
     {
         $filename = mb_ereg_replace(
-            "([^\w\s\d\-_~,;\[\]\(\).])",
+            "([\s])",
+            "_",
+            $filename
+        );
+        $filename = mb_ereg_replace(
+            "([^\w\d\-_~,;\[\]\(\).])",
             "",
             $filename
         );

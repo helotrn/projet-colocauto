@@ -583,15 +583,11 @@ class RestRepository
                                         as $pivotCollection
                                     ) {
                                         if (isset($element[$pivotCollection])) {
-                                            $targetPivot
-                                                ->{$pivotCollection}()
-                                                ->sync(
-                                                    array_map(function ($i) {
-                                                        return $i["id"];
-                                                    }, $element[
-                                                        $pivotCollection
-                                                    ])
-                                                );
+                                            $this->saveMorphManyRelation(
+                                                $targetPivot,
+                                                $pivotCollection,
+                                                $element
+                                            );
                                         }
                                     }
 
@@ -965,6 +961,11 @@ class RestRepository
 
     protected function saveMorphManyRelation(&$model, $field, &$data)
     {
+        if(!array_key_exists($field, $data)){
+            // No data for the current relationship
+            return;
+        }
+
         $relation = $model->{$field}();
 
         $relatedModel = $relation->getRelated();

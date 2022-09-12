@@ -8,7 +8,7 @@
       >
         <b-row>
           <b-col>
-            <forms-image-uploader field="proof" v-model="community.proof" />
+            <forms-files-uploader field="proof" v-model="community.proof" />
           </b-col>
         </b-row>
 
@@ -89,7 +89,7 @@
 import IconsCheck from "@/assets/icons/check.svg";
 import IconsX from "@/assets/icons/x.svg";
 
-import FormsImageUploader from "@/components/Forms/ImageUploader.vue";
+import FormsFilesUploader from "@/components/Forms/FilesUploader.vue";
 
 import locales from "@/locales";
 
@@ -98,7 +98,7 @@ export default {
   components: {
     "icons-check": IconsCheck,
     "icons-x": IconsX,
-    FormsImageUploader,
+    FormsFilesUploader,
   },
   props: {
     community: {

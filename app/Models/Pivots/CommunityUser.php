@@ -4,6 +4,7 @@ namespace App\Models\Pivots;
 
 use App\Events\RegistrationApprovedEvent;
 use App\Models\Community;
+use App\Models\File;
 use App\Models\Image;
 use App\Models\Tag;
 use App\Models\User;
@@ -40,12 +41,9 @@ class CommunityUser extends BasePivot
 
     protected $with = ["proof", "tags"];
 
-    public $morphOnes = [
-        "proof" => "imageable",
-    ];
-
     public $morphManys = [
         "tags" => "taggable",
+        "proof" => "fileable",
     ];
 
     public function user()
@@ -60,9 +58,8 @@ class CommunityUser extends BasePivot
 
     public function proof()
     {
-        return $this->morphOne(Image::class, "imageable")
-            ->where("field", "proof")
-            ->orderBy("updated_at", "desc");
+        return $this->morphMany(File::class, "fileable")
+            ->where("field", "proof");
     }
 
     public function tags()

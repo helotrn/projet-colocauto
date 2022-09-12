@@ -16,8 +16,6 @@ class ImagesTableSeeder extends Seeder
                 "filename" => "preuve de résidence.png",
                 "original_filename" => "preuve de résidence.png",
                 "field" => "proof",
-                "width" => "640",
-                "height" => "400",
                 "filesize" => 3817,
             ],
             [
