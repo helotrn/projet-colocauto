@@ -238,6 +238,7 @@
                   :sortDesc="communityUsersSortDesc"
                   @changePage="onChangePage"
                   @changeOrder="onChangeOrder"
+                  @changeUserRole="onChangeUserRole"
                 >
                 </community-users-list>
               </b-col>
@@ -650,6 +651,23 @@ export default {
       }
 
       this.communityUserSetListParam({ name: "order", value: sortOrder });
+    },
+    async onChangeUserRole(item, role) {
+      // Find the modified user.
+      const user = this.users.find((u) => u.id === item.user_id);
+
+      await this.updateUser(user, (u) => {
+        // Only update the community_user.role
+        const community = u.communities.find((c) => c.id === this.item.id);
+
+        // Backend interprets role as:
+        //   - null: User is a regular member of this community.
+        //   - "admin": User is an administrator of this community.
+        // The list components accepts {"member", "admin"}.
+        community.role = role === "member" ? null : role;
+
+        return u;
+      });
     },
   },
   i18n: {
