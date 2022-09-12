@@ -150,6 +150,11 @@
                     :key="loanable.id"
                     v-bind="loanable"
                   />
+                  <div class="text-right" v-if="user.hasMoreLoanables">
+                    <b-button variant="outline-primary" to="/profile/loanables">
+                      Tous mes véhicules
+                    </b-button>
+                  </div>
                 </div>
                 <div v-else>
                   Aucun véhicule.<br />
