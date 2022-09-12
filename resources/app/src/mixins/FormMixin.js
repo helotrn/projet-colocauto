@@ -114,7 +114,7 @@ export default {
     reset() {
       this.$store.commit(`${this.slug}/item`, this.initialItem);
     },
-    async submit() {
+    async submit(handleErrors = true) {
       try {
         if (!this.item.id) {
           await this.$store.dispatch(`${this.slug}/createItem`, this.params);
@@ -126,7 +126,7 @@ export default {
           this.afterSubmit();
         }
       } catch (e) {
-        if (e.request) {
+        if (e.request && handleErrors) {
           switch (e.request.status) {
             case 422:
               this.$store.commit("addNotification", {
