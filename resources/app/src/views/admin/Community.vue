@@ -286,6 +286,10 @@ export default {
     PricingForm,
     PricingLanguageDefinition,
   },
+  mounted() {
+    // Initial load of sublist data accounting for filter, order and page num.
+    this.loadCommunityUserListData();
+  },
   data() {
     return {
       newPricingType: null,
@@ -583,7 +587,7 @@ export default {
           "communities.suspended_at",
         ].join(","),
         is_deactivated: 0,
-        "communities.id": this.item.id,
+        "communities.id": this.$route.params.id,
       };
 
       let contextParams = {
