@@ -1,12 +1,12 @@
 <template>
   <div class="profile-form">
-    <validation-observer ref="profileFormObserver" v-slot="{ passes }">
-      <b-form novalidate class="profile-form__form form" @submit.stop.prevent="passes(submit)">
+    <validation-observer ref="profileFormObserver" v-slot="{ passes, pristine }">
+      <b-form class="profile-form__form form" @submit.stop.prevent="passes(submit)">
         <b-row>
           <b-col>
             <forms-validated-input
               name="name"
-              :label="$t('fields.name') | capitalize"
+              :label="($t('fields.name') + '*') | capitalize"
               :rules="form.general.name.rules"
               type="text"
               @keypress.native="onlyChars"
@@ -19,7 +19,7 @@
           <b-col>
             <forms-validated-input
               name="last_name"
-              :label="$t('fields.last_name') | capitalize"
+              :label="($t('fields.last_name') + '*') | capitalize"
               :rules="{ required: true }"
               type="text"
               v-model="user.last_name"
@@ -74,7 +74,7 @@
           <b-col>
             <forms-validated-input
               name="date_of_birth"
-              :label="$t('fields.date_of_birth') | capitalize"
+              :label="($t('fields.date_of_birth') + '*') | capitalize"
               description="Cette information est uniquement pour notre assureur"
               :rules="dateOfBirthRules"
               type="date"
@@ -95,7 +95,7 @@
           <b-col>
             <forms-validated-input
               name="phone"
-              :label="$t('fields.phone') | capitalize"
+              :label="($t('fields.phone') + '*') | capitalize"
               description="Nous permet de vous mettre en contact avec votre interlocuteur
 uniquement dans le cadre d’une réservation."
               :rules="form.general.phone.rules"
@@ -108,25 +108,32 @@ uniquement dans le cadre d’une réservation."
 
         <b-row>
           <b-col>
-            <label>Adresse complète</label>
-            <gmap-autocomplete
-              class="form-control"
-              v-bind:class="{ 'is-invalid': !user.address && submitted == true }"
-              @place_changed="setLocation"
-              :value="user.address"
-              placeholder=""
+            <label>Adresse complète*</label>
+
+            <validation-provider
+              :rules="{ required: true, isFromGoogle: true }"
+              name="Adresse complète*"
+              ref="addressValidator"
+              v-slot="{ validated, valid, errors, validate }"
+              :detect-input="false"
             >
-              <template>
-                <forms-validated-input
-                  name="address"
-                  label="Adresse complète"
-                  placeholder="Adresse"
-                  description="Elle nous permet de vous affecter au bon quartier et ne sera jamais divulguée aux
-              utilisateurs"
-                  type="text"
-                />
-              </template>
-            </gmap-autocomplete>
+              <gmap-autocomplete
+                class="form-control"
+                v-bind:class="{ 'is-invalid': validated && !valid, 'is-valid': validated && valid }"
+                @place_changed="setLocation"
+                :component-restrictions="{ country: 'ca' }"
+                :options="{ language: 'fr', fields: ['formatted_address'] }"
+                :types="['street_address']"
+                placeholder=""
+                :value="user.address"
+                @blur="(e) => onLocationBlur(validate)"
+                @input="onLocationInput"
+              >
+              </gmap-autocomplete>
+              <b-form-invalid-feedback :state="validated ? valid : null">
+                {{ errors[0] }}
+              </b-form-invalid-feedback>
+            </validation-provider>
 
             <small class="text-muted"
               >Elle nous permet de vous affecter au bon quartier et ne sera jamais divulguée aux
@@ -149,12 +156,7 @@ uniquement dans le cadre d’une réservation."
         <slot />
 
         <div class="form__buttons" v-if="!hideButtons">
-          <b-button
-            variant="primary"
-            type="submit"
-            :disabled="loading"
-            v-on:click="submitted = true"
-          >
+          <b-button variant="primary" type="submit" :disabled="loading || pristine">
             {{ $t("enregistrer") | capitalize }}
           </b-button>
           <layout-loading class="inline-with-buttons" v-if="loading" />
@@ -173,12 +175,25 @@ import locales from "@/locales";
 
 import SmilingHeart from "@/assets/svg/smiling-heart.svg";
 
+import { extend } from "vee-validate";
+
 export default {
   name: "ProfileForm",
   mixins: [FormLabelsMixin],
   components: {
     FormsValidatedInput,
     "svg-smiling-heart": SmilingHeart,
+  },
+  mounted() {
+    // Add custom validation for the address.
+    extend("isFromGoogle", {
+      validate: ({ addressFromGoogle }) => addressFromGoogle,
+      message: "L'adresse doit provenir de la liste.",
+    });
+    this.$refs.addressValidator.initialValue = {
+      address: this.user.address,
+      addressFromGoogle: this.addressFromGoogle,
+    };
   },
   props: {
     changed: {
@@ -189,10 +204,6 @@ export default {
     form: {
       type: Object,
       required: true,
-    },
-    submitted: {
-      type: Boolean,
-      default: false,
     },
     hideButtons: {
       type: Boolean,
@@ -217,6 +228,9 @@ export default {
       datesInTheFuture: {
         from,
       },
+      submitted: false,
+      // We assume that initially created addresses are correct.
+      addressFromGoogle: !!this.user.address,
     };
   },
   i18n: {
@@ -249,8 +263,23 @@ export default {
     },
   },
   methods: {
-    setLocation(value) {
-      this.user.address = value.formatted_address;
+    setLocation(event) {
+      this.$refs.addressValidator.setFlags({ pristine: false });
+      this.user.address = event.formatted_address;
+      this.addressFromGoogle = true;
+    },
+    onLocationInput(event) {
+      this.$refs.addressValidator.setFlags({ pristine: false });
+      this.user.address = event.target.value;
+      this.addressFromGoogle = false;
+    },
+    onLocationBlur(validate) {
+      // This timeout lets the setLocation callback run first, which is necessary
+      // if the blur happened when the user selected an address from the list
+      setTimeout(
+        () => validate({ address: this.user.address, addressFromGoogle: this.addressFromGoogle }),
+        200
+      );
     },
     onlyChars(event) {
       if (!this.isPerson) {

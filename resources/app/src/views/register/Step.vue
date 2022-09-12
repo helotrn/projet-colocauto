@@ -35,7 +35,7 @@
           <b-col>
             <forms-validated-input
               name="accept_conditions"
-              :label="$t('users.fields.accept_conditions') | capitalize"
+              :label="($t('users.fields.accept_conditions') + '*') | capitalize"
               :rules="form.general.accept_conditions.rules"
               type="checkbox"
               :placeholder="placeholderOrLabel('accept_conditions', 'users') | capitalize"
