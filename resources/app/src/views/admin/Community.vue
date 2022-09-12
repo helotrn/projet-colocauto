@@ -239,6 +239,7 @@
                   @changePage="onChangePage"
                   @changeOrder="onChangeOrder"
                   @changeUserRole="onChangeUserRole"
+                  @action="onCommunityUserAction"
                 >
                 </community-users-list>
               </b-col>
@@ -668,6 +669,29 @@ export default {
 
         return u;
       });
+    },
+    async onCommunityUserAction(item, action) {
+      // Find user.
+      const user = this.users.find((u) => u.id === item.user_id);
+
+      // Then call requested action.
+      switch (action) {
+        case "approve":
+          this.approveUser(user);
+          break;
+
+        case "suspend":
+          this.suspendUser(user);
+          break;
+
+        case "unsuspend":
+          this.unsuspendUser(user);
+          break;
+
+        case "remove":
+          this.removeUser(user);
+          break;
+      }
     },
   },
   i18n: {
