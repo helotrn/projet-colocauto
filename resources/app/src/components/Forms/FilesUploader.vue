@@ -16,7 +16,7 @@
         </b-button>
       </li>
       <li v-if="loading">
-        <layout-loading class="inline-with-buttons"> </layout-loading>
+        <layout-loading inline />
       </li>
     </ul>
     <div>

@@ -1,5 +1,5 @@
 <template>
-  <div class="layout-loading">
+  <div :class="{ 'layout-loading': true, 'inline-with-buttons': inline }">
     <img src="/loading.svg" />
   </div>
 </template>
@@ -7,6 +7,12 @@
 <script>
 export default {
   name: "LayoutLoading",
+  props: {
+    inline: {
+      type: Boolean,
+      default: false,
+    },
+  },
 };
 </script>
 
