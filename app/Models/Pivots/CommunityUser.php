@@ -5,7 +5,6 @@ namespace App\Models\Pivots;
 use App\Events\RegistrationApprovedEvent;
 use App\Models\Community;
 use App\Models\File;
-use App\Models\Image;
 use App\Models\Tag;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
@@ -58,8 +57,10 @@ class CommunityUser extends BasePivot
 
     public function proof()
     {
-        return $this->morphMany(File::class, "fileable")
-            ->where("field", "proof");
+        return $this->morphMany(File::class, "fileable")->where(
+            "field",
+            "proof"
+        );
     }
 
     public function tags()

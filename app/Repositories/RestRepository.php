@@ -961,7 +961,7 @@ class RestRepository
 
     protected function saveMorphManyRelation(&$model, $field, &$data)
     {
-        if(!array_key_exists($field, $data)){
+        if (!array_key_exists($field, $data)) {
             // No data for the current relationship
             return;
         }
