@@ -203,21 +203,21 @@ export default {
   }
 
   &__image {
-    height: 115px;
     position: relative;
     &--custom {
       width: 100%;
-      height: 100%;
+      aspect-ratio: 16 / 10;
       object-fit: cover;
     }
 
     &--default {
       fill: $locomotion-green;
       padding-top: 1rem;
-      height: 100%;
+      display: flex;
+      align-items: center;
 
       svg {
-        height: 100%;
+        max-height: 115px;
         margin: 0 auto;
         display: block;
       }
@@ -225,8 +225,8 @@ export default {
 
     &__user {
       position: absolute;
-      bottom: 1rem;
-      right: 1rem;
+      bottom: 5%;
+      right: 5%;
     }
   }
 }

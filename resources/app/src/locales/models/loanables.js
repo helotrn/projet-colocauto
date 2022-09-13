@@ -21,6 +21,8 @@ export default {
       community_id:
         "Le partage de mon véhicule peut être restreint à un voisinage ou un " +
         "quartier. Par défaut, un véhicule est accessible à tous mes voisinages.",
+      image:
+        "L'image de votre véhicule s'affichera dans un ratio d'aspect de 16 par 10. Assurez-vous qu'il est bien visible dans l'aperçu ici.",
       instructions: "Y a-t-il des choses à savoir sur ce véhicule?",
       location_description:
         "Généralement, votre véhicule se trouve où? Cliquez sur la carte " +
