@@ -203,7 +203,7 @@
                   @changePage="onChangePage"
                   @changeOrder="onChangeOrder"
                   @changeUserRole="onChangeUserRole"
-                  @action="onAction"
+                  @action="onCommunityUserAction"
                 >
                 </community-users-list>
               </b-col>
