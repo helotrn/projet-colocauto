@@ -39,14 +39,14 @@
           drop-placeholder="Déposer le fichier ici..."
           @change="handleChange"
         />
-        <b-alert variant="warning" show v-if="value.length >= max" class="mt-2">
-          Vous avez attein le nombre maximum de fichiers pour ce champs. Supprimez d'anciens
-          fichiers pour en ajouter des différents.
-        </b-alert>
         <div class="invalid-feedback" v-if="errors">
           {{ errors[0] }}
         </div>
       </validation-provider>
+      <b-alert variant="warning" show v-if="value.length >= max" class="mt-2">
+        Vous avez attein le nombre maximum de fichiers pour ce champs. Supprimez d'anciens fichiers
+        pour en ajouter des différents.
+      </b-alert>
     </div>
   </b-form-group>
 </template>

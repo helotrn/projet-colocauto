@@ -109,18 +109,30 @@
                 <span v-else>{{ row.item.suspended_at | date }}</span>
               </template>
               <template v-slot:cell(proof)="row">
-                <span v-if="row.item.proof" class="admin-community__users__table__proof">
-                  <a href="#" v-b-modal="`proof-${row.item.id}`">
-                    {{ row.item.proof.original_filename }}
-                  </a>
+                <span
+                  v-if="row.item.proof && row.item.proof.length > 0"
+                  class="admin-community__users__table__proof"
+                >
+                  <b-button
+                    size="sm"
+                    variant="outline-secondary"
+                    v-b-modal="`proof-${row.item.id}`"
+                  >
+                    Preuves
+                  </b-button>
 
                   <b-modal
-                    size="xl"
                     :title="`Preuve de résidence (${row.item.full_name})`"
                     :id="`proof-${row.item.id}`"
                     footer-class="d-none"
                   >
-                    <img class="img-fit" :src="row.item.proof.url" />
+                    <ul>
+                      <li v-for="proof in row.item.proof">
+                        <a target="_blank" :href="proof.url">
+                          {{ proof.original_filename }}
+                        </a>
+                      </li>
+                    </ul>
                   </b-modal>
                 </span>
               </template>
