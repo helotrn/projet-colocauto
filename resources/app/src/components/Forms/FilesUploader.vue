@@ -1,32 +1,38 @@
 <template>
   <b-form-group class="forms-files-uploader" :label="label" :label-for="field">
-    <div v-if="loading">
-      <img src="/loading.svg" />
-    </div>
-    <div v-else>
-      <ul>
-        <li v-if="value" v-for="file in value" class="mb-1">
-          <a :href="file.url" target="_blank">
-            {{ file.original_filename }}
-          </a>
-          <b-button
-            size="sm"
-            class="ml-2"
-            variant="warning"
-            @click="() => removeFile(file.id)"
-            v-if="!disabled"
-          >
-            {{ removeFileText }}
-          </b-button>
-        </li>
-      </ul>
-      <div>
+    <ul>
+      <li v-if="value" v-for="file in value" class="mb-1">
+        <a :href="file.url" target="_blank">
+          {{ file.original_filename }}
+        </a>
+        <b-button
+          size="sm"
+          class="ml-2"
+          variant="warning"
+          @click="() => removeFile(file.id)"
+          v-if="!disabled"
+        >
+          {{ removeFileText }}
+        </b-button>
+      </li>
+      <li v-if="loading">
+        <layout-loading class="inline-with-buttons"> </layout-loading>
+      </li>
+    </ul>
+    <div>
+      <validation-provider
+        ref="validator"
+        :rules="{ required }"
+        name="fichier"
+        v-slot="{ validated, valid, errors }"
+        :detect-input="false"
+      >
         <b-form-file
-          :state="validationState"
+          :state="validated ? valid : null"
           :id="field"
           :ref="`${field}fileinput`"
           :placeholder="placeholder"
-          :disabled="disabled"
+          :disabled="disabled || loading"
           :name="field"
           :accept="accept.join(',')"
           browse-text="Sélectionner"
@@ -34,9 +40,9 @@
           @change="handleChange"
         />
         <div class="invalid-feedback" v-if="errors">
-          {{ errors.message }}
+          {{ errors[0] }}
         </div>
-      </div>
+      </validation-provider>
     </div>
   </b-form-group>
 </template>
@@ -44,6 +50,14 @@
 <script>
 export default {
   name: "FormsFilesUploader",
+  mounted() {
+    this.$refs.validator.initialValue = this.value;
+  },
+  watch: {
+    value(newValue) {
+      this.$refs.validator.syncValue(newValue);
+    },
+  },
   props: {
     accept: {
       default: () => [
@@ -88,24 +102,12 @@ export default {
     value: {
       type: Array,
       require: false,
-      default: [],
+      default: () => [],
     },
   },
-  computed: {
-    errors() {
-      return this.$store.state.files.errors;
-    },
-    loading() {
-      return !!this.$store.state.files.cancelToken;
-    },
-    validationState() {
-      if (!this.required && !this.value) {
-        return null;
-      }
-
-      return !this.errors && (!this.required || !!this.value);
-    },
-  },
+  data: () => ({
+    loading: false,
+  }),
   methods: {
     handleChange(event) {
       switch (event.type) {
@@ -130,6 +132,8 @@ export default {
         return null;
       }
 
+      this.loading = true;
+
       Array.from(Array(fileList.length).keys()).map((x) =>
         formData.append(fieldName, fileList[x], fileList[x].name)
       );
@@ -143,6 +147,8 @@ export default {
       if (this.$refs[`${this.field}fileinput`]) {
         this.$refs[`${this.field}fileinput`].reset();
       }
+
+      this.loading = false;
 
       return file;
     },
