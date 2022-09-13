@@ -64,11 +64,6 @@ export default {
   &__communities__community {
     margin-bottom: 20px;
   }
-  &__community_proof {
-    .later-btn {
-      display: none;
-    }
-  }
   &__nocommunities {
     .btn {
       margin-left: 0;
