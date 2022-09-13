@@ -61,7 +61,6 @@ export default {
   forms: {
     actions: "actions",
     afficher: "afficher",
-    approuver: "approuver",
     archiver: "archiver",
     enregistrer: "enregistrer",
     facultatif: "facultatif",
@@ -71,7 +70,6 @@ export default {
     restaurer: "restaurer",
     rétablir: "rétablir",
     retirer: "retirer",
-    suspendre: "suspendre",
     supprimer: "supprimer",
   },
   invoices: invoices.fr,
