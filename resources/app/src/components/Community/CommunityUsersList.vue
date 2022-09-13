@@ -7,6 +7,8 @@
       :busy="busy"
       :fields="fields"
       :items="items"
+      :show-empty="true"
+      :empty-text="$t('communities.user_list_empty_text') | capitalize"
       @sort-changed="$emit('changeOrder', $event)"
     >
       <template v-slot:cell(user_full_name)="row">
