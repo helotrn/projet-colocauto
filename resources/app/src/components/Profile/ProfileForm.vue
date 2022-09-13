@@ -111,7 +111,7 @@ uniquement dans le cadre d’une réservation."
             <label>Adresse complète*</label>
 
             <validation-provider
-              :rules="{ required: true, isFromGoogle: true }"
+              :rules="{ isFromGoogle: true }"
               name="Adresse complète*"
               ref="addressValidator"
               v-slot="{ validated, valid, errors, validate }"
@@ -120,14 +120,14 @@ uniquement dans le cadre d’une réservation."
               <gmap-autocomplete
                 class="form-control"
                 v-bind:class="{ 'is-invalid': validated && !valid, 'is-valid': validated && valid }"
-                @place_changed="setLocation"
+                @place_changed="(e) => setLocation(e.formatted_address, true)"
                 :component-restrictions="{ country: 'ca' }"
                 :options="{ language: 'fr', fields: ['formatted_address'] }"
                 :types="['street_address']"
                 placeholder=""
                 :value="user.address"
-                @blur="(e) => onLocationBlur(validate)"
-                @input="onLocationInput"
+                @blur="() => onLocationBlur(validate)"
+                @input="(e) => setLocation(e.target.value, false)"
               >
               </gmap-autocomplete>
               <b-form-invalid-feedback :state="validated ? valid : null">
@@ -187,12 +187,13 @@ export default {
   mounted() {
     // Add custom validation for the address.
     extend("isFromGoogle", {
-      validate: ({ addressFromGoogle }) => addressFromGoogle,
-      message: "L'adresse doit provenir de la liste.",
+      validate: ({ address, addressFromGoogle }) => addressFromGoogle && address !== "",
+      message: "L'adresse doit provenir de la liste de suggestions.",
     });
     this.$refs.addressValidator.initialValue = {
       address: this.user.address,
-      addressFromGoogle: this.addressFromGoogle,
+      // We assume that initially created addresses are correct.
+      addressFromGoogle: !!this.user.address,
     };
   },
   props: {
@@ -229,8 +230,6 @@ export default {
         from,
       },
       submitted: false,
-      // We assume that initially created addresses are correct.
-      addressFromGoogle: !!this.user.address,
     };
   },
   i18n: {
@@ -263,23 +262,15 @@ export default {
     },
   },
   methods: {
-    setLocation(event) {
+    setLocation(address, addressFromGoogle) {
       this.$refs.addressValidator.setFlags({ pristine: false });
-      this.user.address = event.formatted_address;
-      this.addressFromGoogle = true;
-    },
-    onLocationInput(event) {
-      this.$refs.addressValidator.setFlags({ pristine: false });
-      this.user.address = event.target.value;
-      this.addressFromGoogle = false;
+      this.user.address = address;
+      this.$refs.addressValidator.syncValue({ address, addressFromGoogle });
     },
     onLocationBlur(validate) {
       // This timeout lets the setLocation callback run first, which is necessary
       // if the blur happened when the user selected an address from the list
-      setTimeout(
-        () => validate({ address: this.user.address, addressFromGoogle: this.addressFromGoogle }),
-        200
-      );
+      setTimeout(() => validate(), 200);
     },
     onlyChars(event) {
       if (!this.isPerson) {
