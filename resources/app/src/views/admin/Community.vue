@@ -68,7 +68,7 @@
             </b-row>
 
             <b-table
-              :busy="usersLoading"
+              :busy="communityUsersLoading"
               :filter="usersFilter"
               empty-filtered-text="Pas de membre correspondant"
               :filter-function="localizedFilter(userTableFilterFields)"
@@ -129,7 +129,7 @@
                   <div v-if="!row.item._new">
                     <b-button
                       v-if="!row.item.approved_at"
-                      :disabled="usersLoading || loading"
+                      :disabled="communityUsersLoading || loading"
                       size="sm"
                       class="ml-1 mb-1"
                       variant="primary"
@@ -139,7 +139,7 @@
                     </b-button>
                     <b-button
                       v-else-if="!row.item.suspended_at"
-                      :disabled="usersLoading || loading"
+                      :disabled="communityUsersLoading || loading"
                       size="sm"
                       class="ml-1 mb-1"
                       variant="warning"
@@ -149,7 +149,7 @@
                     </b-button>
                     <b-button
                       v-else
-                      :disabled="usersLoading || loading"
+                      :disabled="communityUsersLoading || loading"
                       size="sm"
                       class="ml-1 mb-1"
                       variant="success"
@@ -163,7 +163,7 @@
                     size="sm"
                     variant="danger"
                     class="ml-1 mb-1"
-                    :disabled="usersLoading || loading"
+                    :disabled="communityUsersLoading || loading"
                     @click="removeUser(row.item)"
                   >
                     {{ $t("retirer") | capitalize }}
@@ -199,6 +199,7 @@
                   :itemsPerPage="10"
                   :sortBy="communityUsersSortBy"
                   :sortDesc="communityUsersSortDesc"
+                  :busy="communityUsersLoading"
                   @changePage="onChangePage"
                   @changeOrder="onChangeOrder"
                   @changeUserRole="onChangeUserRole"
@@ -398,7 +399,7 @@ export default {
     communityUserListParams() {
       return this.$store.state["admin.community"].communityUserListParams;
     },
-    usersLoading() {
+    communityUsersLoading() {
       return !!this.$store.state.users.cancelToken;
     },
     communityUsersSortBy() {

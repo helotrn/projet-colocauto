@@ -4,6 +4,7 @@
       striped
       hover
       no-local-sorting
+      :busy="busy"
       :fields="fields"
       :items="items"
       @sort-changed="$emit('changeOrder', $event)"
@@ -78,6 +79,7 @@
       <template v-slot:cell(actions)="row">
         <b-button
           v-if="canDoActions.find((i) => i.id == row.item.id)['approve']"
+          :disabled="busy"
           size="sm"
           class="ml-1 mb-1"
           variant="primary"
@@ -87,6 +89,7 @@
         </b-button>
         <b-button
           v-if="canDoActions.find((i) => i.id == row.item.id)['suspend']"
+          :disabled="busy"
           size="sm"
           class="ml-1 mb-1"
           variant="warning"
@@ -96,6 +99,7 @@
         </b-button>
         <b-button
           v-if="canDoActions.find((i) => i.id == row.item.id)['unsuspend']"
+          :disabled="busy"
           size="sm"
           class="ml-1 mb-1"
           variant="success"
@@ -106,6 +110,7 @@
 
         <b-button
           v-if="canDoActions.find((i) => i.id == row.item.id)['remove']"
+          :disabled="busy"
           size="sm"
           variant="danger"
           class="ml-1 mb-1"
@@ -129,6 +134,10 @@
 export default {
   name: "CommunityUsersList",
   props: {
+    busy: {
+      type: Boolean,
+      required: false,
+    },
     /* List of fields to display and their order. Show all by default. */
     visibleFields: {
       type: Array,
