@@ -6,7 +6,7 @@ body {
     &__content {
         min-height: calc(100vh - #{$layout-navbar-height} - 1px);
 
-        @include media-breakpoint-down(lg) {
+        @include media-breakpoint-down(md) {
             min-height: calc(100vh - #{$layout-navbar-height-mobile} - 1px);
         }
 

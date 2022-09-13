@@ -181,20 +181,23 @@ export default {
 
 <style lang="scss">
 .community-map {
-  .gm-style-iw-d {
-    overflow-x: hidden;
-  }
-
   // Adapt Google InfoWindow to the loanable details.
   .gm-style-iw-c {
     padding: 0 !important;
     overflow: auto;
+    max-width: 16rem !important;
 
     .gm-style-iw-d {
       max-height: none !important;
 
       // Main content of loanable details will scroll
       overflow: hidden !important;
+    }
+
+    // close button
+    > button {
+      right: 0 !important;
+      top: 0 !important;
     }
   }
 }
