@@ -111,7 +111,7 @@ uniquement dans le cadre d’une réservation."
             <label>Adresse complète*</label>
 
             <validation-provider
-              :rules="{ isFromGoogle: true }"
+              :rules="{ isFromGoogleValidation: true }"
               name="Adresse complète*"
               ref="addressValidator"
               v-slot="{ validated, valid, errors, validate }"
@@ -186,14 +186,14 @@ export default {
   },
   mounted() {
     // Add custom validation for the address.
-    extend("isFromGoogle", {
-      validate: ({ address, addressFromGoogle }) => addressFromGoogle && address !== "",
+    extend("isFromGoogleValidation", {
+      validate: ({ address, isFromGoogle }) => isFromGoogle && address !== "",
       message: "L'adresse doit provenir de la liste de suggestions.",
     });
     this.$refs.addressValidator.initialValue = {
       address: this.user.address,
       // We assume that initially created addresses are correct.
-      addressFromGoogle: !!this.user.address,
+      isFromGoogle: !!this.user.address,
     };
   },
   props: {
@@ -262,10 +262,10 @@ export default {
     },
   },
   methods: {
-    setLocation(address, addressFromGoogle) {
+    setLocation(address, isFromGoogle) {
       this.$refs.addressValidator.setFlags({ pristine: false });
       this.user.address = address;
-      this.$refs.addressValidator.syncValue({ address, addressFromGoogle });
+      this.$refs.addressValidator.syncValue({ address, isFromGoogle });
     },
     onLocationBlur(validate) {
       // This timeout lets the setLocation callback run first, which is necessary

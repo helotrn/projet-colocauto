@@ -27,7 +27,7 @@ class Handler extends ExceptionHandler
         if ($exception instanceof HttpException) {
             if ($request->ajax() || $request->wantsJson()) {
                 // This returns a structure that matches Molotov\Traits\RespondsWithError.
-                // TODO(#1070): Standardize the error formats. 
+                // TODO(#1070): Standardize the error formats.
                 return response()->json(
                     [
                         "message" => $exception->getMessage(),
