@@ -32,13 +32,17 @@
           :id="field"
           :ref="`${field}fileinput`"
           :placeholder="placeholder"
-          :disabled="disabled || loading"
+          :disabled="disabled || loading || value.length >= max"
           :name="field"
           :accept="accept.join(',')"
           browse-text="Sélectionner"
           drop-placeholder="Déposer le fichier ici..."
           @change="handleChange"
         />
+        <b-alert variant="warning" show v-if="value.length >= max" class="mt-2">
+          Vous avez attein le nombre maximum de fichiers pour ce champs. Supprimez d'anciens
+          fichiers pour en ajouter des différents.
+        </b-alert>
         <div class="invalid-feedback" v-if="errors">
           {{ errors[0] }}
         </div>
@@ -56,6 +60,7 @@ export default {
   watch: {
     value(newValue) {
       this.$refs.validator.syncValue(newValue);
+      this.$refs.validator.validate();
     },
   },
   props: {
@@ -103,6 +108,11 @@ export default {
       type: Array,
       require: false,
       default: () => [],
+    },
+    max: {
+      type: Number,
+      require: false,
+      default: 5,
     },
   },
   data: () => ({

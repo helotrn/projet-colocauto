@@ -8,7 +8,7 @@
       >
         <b-row>
           <b-col>
-            <forms-files-uploader field="proof" v-model="community.proof" />
+            <forms-files-uploader field="proof" v-model="community.proof" required />
           </b-col>
         </b-row>
 
@@ -16,7 +16,7 @@
           ><b-col
             ><div class="community-proof-form__buttons">
               <b-button
-                :disabled="!community.proof || community.proof.length < 1 || loading || !changed"
+                :disabled="!community.proof || loading || !changed"
                 variant="primary"
                 type="submit"
               >
