@@ -27,8 +27,8 @@ class LocoMotionGeocoderService
 
     /**
      * RETURN A GEOCODER-PHP ADDRESS OBJECT FROM A TEXTUAL ADDRESS
-     * input @string
-     * return @Address
+     * @param string $full_text_address
+     * @return Location|null null if not found
      */
     public static function geocode(string $full_text_address)
     {
@@ -43,6 +43,11 @@ class LocoMotionGeocoderService
         $result = $geocoder->geocodeQuery(
             GeocodeQuery::create($full_text_address)
         );
+
+        if ($result->isEmpty()) {
+            return null;
+        }
+
         return $result->first();
     }
 

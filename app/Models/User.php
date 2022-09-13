@@ -82,10 +82,12 @@ class User extends AuthenticatableBaseModel
 
     public static function booted()
     {
-        self::saved(function ($model) {
-            // Address Update
-            if ($model->wasChanged("address")) {
-                $model->updateAddressAndRelocateCommunity($model->address);
+        self::saving(function ($user) {
+            if ($user->id) {
+                $userToUpdate = User::find($user->id);
+                if ($userToUpdate->address !== $user->address) {
+                    $user->updateAddressAndRelocateCommunity($user->address);
+                }
             }
         });
 
@@ -267,6 +269,9 @@ class User extends AuthenticatableBaseModel
                 // User has moved from covered to a non-covered area
                 $this->DetachMainCommunity($this->main_community);
             }
+        } else {
+            // Users cannot have an invalid address
+            abort(422, "The provided user address was not found.");
         }
     }
 

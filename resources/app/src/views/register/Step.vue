@@ -35,7 +35,7 @@
           <b-col>
             <forms-validated-input
               name="accept_conditions"
-              :label="$t('users.fields.accept_conditions') | capitalize"
+              :label="($t('users.fields.accept_conditions') + '*') | capitalize"
               :rules="form.general.accept_conditions.rules"
               type="checkbox"
               :placeholder="placeholderOrLabel('accept_conditions', 'users') | capitalize"
@@ -185,7 +185,7 @@ export default {
     },
     async submitAndReload() {
       try {
-        await this.submit();
+        await this.submit(false);
         this.$store.commit("user", this.item);
         // We found a community for his/her address
         if (this.item.communities.length > 0) {
@@ -213,7 +213,7 @@ export default {
     async submitCommunityProof() {
       try {
         // File attached
-        await this.submit();
+        await this.submit(false);
         // Go to the on-boarding slides
         this.$router.push("/register/4");
       } catch (e) {
