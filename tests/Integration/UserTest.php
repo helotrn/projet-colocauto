@@ -432,6 +432,28 @@ class UserTest extends TestCase
             ->assertJsonStructure(static::$userResponseStructure);
     }
 
+    public function testUpdateUserWithCommunityAndProof_triggersRegistrationSubmitted()
+    {
+        $user = factory(User::class)->create();
+        $community = factory(Community::class)->create();
+        $proof = factory(File::class)->create([
+            "field" => "proof",
+        ]);
+
+        $data = [
+            "communities" => [
+                ["id" => $community->id, "proof" => [["id" => $proof->id]]],
+            ],
+        ];
+
+        Event::fake([RegistrationSubmittedEvent::class]);
+        $response = $this->json("PUT", "/api/v1/users/$user->id", $data);
+        $response
+            ->assertStatus(200)
+            ->assertJsonStructure(static::$userResponseStructure);
+        Event::assertDispatched(RegistrationSubmittedEvent::class);
+    }
+
     public function testUpdateUserWithCommunityProof_triggersRegistrationSubmitted()
     {
         $user = factory(User::class)->create();

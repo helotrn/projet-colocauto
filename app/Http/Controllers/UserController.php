@@ -104,8 +104,9 @@ class UserController extends RestController
                 return $c->community_id == $community["id"];
             });
 
+            // Submitting proof together with new community
             if (!$previousCommunity) {
-                continue;
+                return true;
             }
 
             $newProofs = array_map(function ($p) {
