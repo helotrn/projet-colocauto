@@ -85,7 +85,14 @@ class User extends AuthenticatableBaseModel
         self::saving(function ($user) {
             if ($user->id) {
                 $userToUpdate = User::find($user->id);
-                if ($userToUpdate->address !== $user->address) {
+                // userToUpdate is NULL in seeds, because user is given an id, but is not saved yet.
+                // One would normally update address in this case, but it
+                // triggers geolocalization of addresses in seeds, and it fails.
+                // Just skip it for the moment as it only affects seeds.
+                if (
+                    !$userToUpdate ||
+                    $userToUpdate->address !== $user->address
+                ) {
                     $user->updateAddressAndRelocateCommunity($user->address);
                 }
             }
