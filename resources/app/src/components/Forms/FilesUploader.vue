@@ -168,10 +168,6 @@ export default {
 
 <style lang="scss">
 .forms-files-uploader {
-  .preview img {
-    max-width: 100%;
-  }
-
   .custom-file-label {
     overflow: hidden;
   }
