@@ -87,7 +87,7 @@ class UserController extends RestController
 
     private static function isSavingProofs($userId, $data): bool
     {
-        if (!$data && array_key_exists("communities", $data)) {
+        if (!$data || !array_key_exists("communities", $data)) {
             return false;
         }
 
