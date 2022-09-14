@@ -1127,4 +1127,71 @@ class LoanTest extends TestCase
             "actual_duration_in_minutes" => "40:",
         ])->assertStatus(404);
     }
+
+    public function testLoanDashboard()
+    {
+        $borrower = factory(Borrower::class)->create();
+        $owner = factory(Owner::class)->create([
+            "user_id" => $borrower->user_id,
+        ]);
+
+        // Waiting
+        factory(Loan::class, 1)
+            ->states("withInProcessIntention")
+            ->create([
+                "borrower_id" => $borrower->id,
+            ]);
+        $loanable = factory(Bike::class)->create([
+            "owner_id" => $owner->id,
+        ]);
+        factory(Loan::class, 2)
+            ->states("withInProcessIntention")
+            ->create([
+                "loanable_id" => $loanable->id,
+            ]);
+        // Starting in the future
+        factory(Loan::class, 5)
+            ->states("withCompletedIntention")
+            ->create([
+                "borrower_id" => $borrower->id,
+            ]);
+        // Started
+        factory(Loan::class, 4)
+            ->states(["withCompletedIntention", "withCompletedTakeover"])
+            ->create([
+                "borrower_id" => $borrower->id,
+            ]);
+        // Contested
+        factory(Loan::class, 1)
+            ->states(["withCompletedIntention", "withContestedTakeover"])
+            ->create([
+                "borrower_id" => $borrower->id,
+            ]);
+        factory(Loan::class, 9)
+            ->states([
+                "withCompletedIntention",
+                "withCompletedTakeover",
+                "withContestedHandover",
+            ])
+            ->create([
+                "borrower_id" => $borrower->id,
+            ]);
+        // recently_completed
+        factory(Loan::class, 7)
+            ->states("withAllStepsCompleted")
+            ->create([
+                "borrower_id" => $borrower->id,
+            ]);
+
+        $this->actAs($borrower->user);
+        $response = $this->json("get", "/api/v1/loans/dashboard");
+
+        $response->assertJsonCount(4, "started");
+        $response->assertJsonCount(10, "contested");
+        $response->assertJsonCount(1, "waiting");
+        $response->assertJsonCount(2, "need_approval");
+        $response->assertJsonCount(5, "future");
+        // Capped to 3 in the handler.
+        $response->assertJsonCount(3, "completed");
+    }
 }

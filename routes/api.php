@@ -165,6 +165,8 @@ Route::prefix("v1")->group(function () {
             "destroy",
             "restore",
         ]);
+
+        Route::get("/loans/dashboard", "LoanController@dashboard");
     });
 
     Route::get(

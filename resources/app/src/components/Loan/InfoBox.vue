@@ -28,10 +28,6 @@
                   <span class="loan-info-box__name__user" v-if="otherUser">
                     {{ otherUser.full_name }}
                   </span>
-                  <span class="loan-info-box__name__user" v-else-if="loan.loanable.community">
-                    {{ loan.loanable.community.name }}
-                  </span>
-
                   <br />
                   <span class="loan-info-box__name__loanable">{{ loan.loanable.name }}</span>
                 </span>
