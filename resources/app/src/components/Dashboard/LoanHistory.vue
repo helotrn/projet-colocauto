@@ -1,44 +1,48 @@
 <template>
   <div class="dashboard-loan-history">
-    <h3>
-      {{ widgetTitle }}
-      <b-nav-item-dropdown right tag="h3" text="" v-model="loanHistoryType">
-        <!-- <b-dropdown-item :active="loanHistoryType === 'past'" @click="loanHistoryType = 'past'">
-          Passés
-        </b-dropdown-item> -->
-        <b-dropdown-item
-          :active="loanHistoryType === 'ongoing'"
-          @click="loanHistoryType = 'ongoing'"
-        >
-          En cours
-        </b-dropdown-item>
-        <b-dropdown-item
-          :active="loanHistoryType === 'upcoming'"
-          @click="loanHistoryType = 'upcoming'"
-        >
-          À venir
-        </b-dropdown-item>
-        <b-dropdown-item
-          :active="loanHistoryType === 'waiting'"
-          @click="loanHistoryType = 'waiting'"
-        >
-          Nouveaux
-        </b-dropdown-item>
-      </b-nav-item-dropdown>
-    </h3>
+    <b-dropdown
+      variant="outline-secondary"
+      toggle-class="dashboard-h3 toggle border-0 px-0"
+      :text="widgetTitle"
+      v-model="loanHistoryType"
+    >
+      <b-dropdown-item :active="loanHistoryType === 'past'" @click="loanHistoryType = 'past'">
+        Passés
+      </b-dropdown-item>
+      <b-dropdown-item :active="loanHistoryType === 'ongoing'" @click="loanHistoryType = 'ongoing'">
+        En cours
+      </b-dropdown-item>
+      <b-dropdown-item
+        :active="loanHistoryType === 'upcoming'"
+        @click="loanHistoryType = 'upcoming'"
+      >
+        À venir
+      </b-dropdown-item>
+      <b-dropdown-item :active="loanHistoryType === 'waiting'" @click="loanHistoryType = 'waiting'">
+        Nouveaux
+      </b-dropdown-item>
+    </b-dropdown>
 
     <div v-if="loans.length > 0" class="dashboard-loan-history__loans">
       <ul class="dashboard-loan-history__loans" v-for="loan in loans" :key="loan.id">
         <li class="dashboard-loan-history__loans__loan">
-          {{ loan.loanable.name }}<br />
-          <span>{{ loan.departure_at | date }}</span
-          ><br />
-          <span v-if="loan.borrower.id === borrower.id">
-            Payé {{ loan.total_final_cost | currency }}
-          </span>
-          <span v-else>
-            Reçu {{ (loan.final_price - loan.final_purchases_amount) | currency }}
-          </span>
+          <a :href="`/loans/${loan.id}`">{{ loan.loanable.name }}</a>
+          <br />
+          <span>{{ loan.departure_at | date }}</span>
+          <br />
+          <span v-if="loan.borrower.id === borrower.id">{{
+            loan.loanable.owner.user.full_name
+          }}</span>
+          <span v-else>{{ loan.borrower.user.full_name }}</span>
+          <br />
+          <template v-if="loan.status === 'completed'">
+            <span v-if="loan.borrower.id === borrower.id">
+              Payé {{ loan.total_final_cost | currency }}
+            </span>
+            <span v-else>
+              Reçu {{ (loan.final_price - loan.final_purchases_amount) | currency }}
+            </span>
+          </template>
         </li>
       </ul>
     </div>
@@ -75,7 +79,7 @@ export default {
   },
   data() {
     return {
-      loanHistoryType: "ongoing",
+      loanHistoryType: "past",
     };
   },
   computed: {
@@ -112,20 +116,12 @@ export default {
 
 <style lang="scss">
 .dashboard-loan-history {
-  h3 {
+  .toggle {
     display: flex;
-
-    li {
-      style-type: none;
-      display: inline;
-      margin-left: 2px;
-      flex: 0 1 25px;
-
-      > a.nav-link {
-        color: $black;
-        padding: 0;
-      }
-    }
+    align-items: center;
+  }
+  .dropdown-item {
+    line-height: 1.5rem;
   }
 
   &__loans,

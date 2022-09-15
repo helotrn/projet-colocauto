@@ -84,13 +84,13 @@ export default new RestModule(
         throw e;
       }
     },
-    async completeAction({ commit }, action) {
+    async completeAction({ commit }, { action, type = "actions" }) {
       const { CancelToken } = Vue.axios;
       const cancelToken = CancelToken.source();
 
       try {
         commit("cancelToken", cancelToken);
-        await Vue.axios.put(`/loans/${action.loan_id}/actions/${action.id}/complete`, action, {
+        await Vue.axios.put(`/loans/${action.loan_id}/${type}/${action.id}/complete`, action, {
           cancelToken: cancelToken.token,
         });
 

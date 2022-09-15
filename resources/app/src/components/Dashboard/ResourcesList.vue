@@ -1,6 +1,6 @@
 <template>
   <div class="dashboard-resources-list">
-    <h3>Ressources</h3>
+    <h3 class="dashboard-h3">Ressources</h3>
 
     <ul class="dashboard-resources-list__list">
       <li class="dashboard-resources-list__item">

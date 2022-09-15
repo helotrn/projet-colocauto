@@ -27,6 +27,7 @@ import users from "./models/users";
 import AdminCommunity from "./pages/admin/community";
 import CommunityMap from "./pages/community/map";
 import CommunityView from "./pages/community/view";
+import Dashboard from "./pages/dashboard";
 import Login from "./pages/login";
 import Register from "./pages/register";
 import RegisterIntent from "./pages/register/intent";
@@ -66,6 +67,7 @@ const modules = {
   // Page modules
   "community.map": CommunityMap,
   "community.view": CommunityView,
+  dashboard: Dashboard,
   login: Login,
   register: Register,
   "register.intent": RegisterIntent,
@@ -97,13 +99,6 @@ const loadUserFields = [
 ].join(",");
 
 const actions = {
-  async loadUserAndLoans({ dispatch }) {
-    await dispatch("loadUser");
-    dispatch("loadAllLoans");
-  },
-  async loadAllLoans({ dispatch }) {
-    dispatch("loadLoans").then(() => dispatch("loadLoanables"));
-  },
   async loadUser({ commit, state }) {
     commit("loading", true);
 
@@ -126,98 +121,6 @@ const actions = {
     commit("loaded", true);
     commit("loading", false);
   },
-
-  async loadLoans({ commit, state }) {
-    if (!state.user.borrower || !state.user.borrower.id) {
-      const newUser = {
-        ...state.user,
-        loans: [],
-      };
-
-      commit("user", newUser);
-      commit("loansLoaded", true);
-      return;
-    }
-    commit("loansLoaded", false);
-    commit("loading", true);
-
-    const { data: loans } = await Vue.axios.get("/loans", {
-      params: {
-        order: "-updated_at",
-        per_page: 30,
-        "borrower.id": state.user.borrower.id,
-        fields: [
-          "*",
-          "actions.*",
-          "loanable.id",
-          "loanable.community.name",
-          "loanable.image.*",
-          "loanable.name",
-          "loanable.owner.id",
-          "loanable.owner.user.avatar.*",
-          "loanable.owner.user.full_name",
-          "loanable.owner.user.id",
-          "loanable.type",
-        ].join(","),
-        status: "in_process",
-      },
-    });
-
-    const newUser = {
-      ...state.user,
-      loans: loans.data,
-    };
-
-    commit("user", newUser);
-    commit("loansLoaded", true);
-    commit("loading", false);
-  },
-  async loadLoanables({ commit, state }) {
-    if (!state.user.owner || !state.user.owner.id) {
-      const newUser = {
-        ...state.user,
-        loanables: [],
-      };
-
-      commit("loanablesLoaded", true);
-      commit("user", newUser);
-      return;
-    }
-
-    commit("loanablesLoaded", false);
-    commit("loading", true);
-
-    const maxLoanableCount = 5;
-
-    const { data: loanables } = await Vue.axios.get("/loanables", {
-      params: {
-        order: "-updated_at",
-        per_page: maxLoanableCount,
-        "owner.id": state.user.owner.id,
-        fields: [
-          "*",
-          "!events",
-          "image.*",
-          "loans.*",
-          "loans.actions.*",
-          "loans.borrower.id",
-          "loans.borrower.user.avatar.*",
-          "loans.borrower.user.full_name",
-          "loans.borrower.user.id",
-        ].join(","),
-      },
-    });
-
-    const newUser = {
-      ...state.user,
-      loanables: loanables.data,
-      hasMoreLoanables: loanables.total > maxLoanableCount,
-    };
-
-    commit("user", newUser);
-    commit("loanablesLoaded", true);
-    commit("loading", false);
-  },
   async login({ commit, dispatch, state }, { email, password }) {
     const { data } = await Vue.axios.post("/auth/login", {
       email,
@@ -234,7 +137,6 @@ const actions = {
 
     await dispatch("loadUser");
     await dispatch("global/load");
-    dispatch("loadAllLoans");
   },
   async register({ commit, dispatch, state }, { email, password }) {
     const { data } = await Vue.axios.post("/auth/register", {
@@ -297,12 +199,6 @@ const mutations = {
   },
   loaded(state, value) {
     state.loaded = value;
-  },
-  loansLoaded(state, value) {
-    state.loansLoaded = value;
-  },
-  loanablesLoaded(state, value) {
-    state.loanablesLoaded = value;
   },
   loading(state, value) {
     state.loading = value;

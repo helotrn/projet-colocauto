@@ -4,7 +4,7 @@ export default {
       if (vm.auth.token) {
         if (!vm.$store.state.loaded && !vm.$store.state.loading) {
           try {
-            await vm.$store.dispatch("loadUserAndLoans");
+            await vm.$store.dispatch("loadUser");
             if (to.name === "login") {
               vm.skipToApp();
             }
@@ -22,36 +22,6 @@ export default {
     });
   },
   computed: {
-    allLoans() {
-      return [
-        ...(this.user.loanables || []).reduce((acc, loanable) => {
-          acc.push(
-            ...loanable.loans
-              .filter((l) => !l.canceled_at)
-              .map((l) => ({
-                ...l,
-                loanable: {
-                  ...loanable,
-                  owner: {
-                    ...this.user.owner,
-                    user: this.user,
-                  },
-                },
-              }))
-          );
-          return acc;
-        }, []),
-        ...(this.user.loans || [])
-          .filter((l) => !l.canceled_at)
-          .map((l) => ({
-            ...l,
-            borrower: {
-              ...this.user.borrower,
-              user: this.user,
-            },
-          })),
-      ];
-    },
     auth() {
       const { token, refreshToken } = this.$store.state;
       return {
@@ -59,64 +29,8 @@ export default {
         refreshToken,
       };
     },
-    hasOngoingLoans() {
-      return this.ongoingLoans.length > 0;
-    },
-    hasUpcomingLoans() {
-      return this.upcomingLoans.length > 0;
-    },
-    hasWaitingLoans() {
-      return this.waitingLoans.length > 0;
-    },
-    allLoansLoaded() {
-      return this.$store.state.loansLoaded && this.$store.state.loanablesLoaded;
-    },
-    ongoingLoans() {
-      const now = this.$dayjs().format("YYYY-MM-DD HH:mm:ss");
-
-      return this.allLoans
-        .filter((l) => l.status !== "canceled")
-        .filter((l) => {
-          if (l.actions.length <= 1) {
-            return false;
-          }
-
-          const payment = l.actions.find((a) => a.type === "payment");
-          return l.departure_at < now && (!payment || payment.status !== "completed");
-        });
-    },
-    pastLoans() {
-      return this.allLoans
-        .filter((l) => l.status !== "canceled")
-        .filter((l) => {
-          if (l.actions.length <= 1) {
-            return false;
-          }
-
-          const payment = l.actions.find((a) => a.type === "payment");
-          return !!payment && payment.status === "completed";
-        })
-        .slice(0, 3);
-    },
     user() {
       return this.$store.state.user;
-    },
-    upcomingLoans() {
-      const now = this.$dayjs().format("YYYY-MM-DD HH:mm:ss");
-
-      return this.allLoans
-        .filter((l) => l.status === "in_process")
-        .filter(
-          (l) =>
-            l.actions.length > 1 &&
-            l.departure_at > now &&
-            !l.actions.find((a) => a.type === "payment")
-        );
-    },
-    waitingLoans() {
-      return this.allLoans
-        .filter((l) => l.status !== "canceled")
-        .filter((l) => l.actions.length === 1);
     },
   },
   methods: {
