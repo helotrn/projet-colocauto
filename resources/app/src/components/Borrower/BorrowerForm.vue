@@ -94,7 +94,6 @@
 
 <script>
 import FormsValidatedInput from "@/components/Forms/ValidatedInput.vue";
-import FormsFileUploader from "@/components/Forms/FileUploader.vue";
 import FormsFilesUploader from "@/components/Forms/FilesUploader.vue";
 
 import FormLabelsMixin from "@/mixins/FormLabelsMixin";
@@ -105,7 +104,6 @@ export default {
   name: "BorrowerForm",
   mixins: [FormLabelsMixin],
   components: {
-    FormsFileUploader,
     FormsValidatedInput,
     FormsFilesUploader,
   },

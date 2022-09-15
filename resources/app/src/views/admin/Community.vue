@@ -122,7 +122,7 @@
                   </b-button>
 
                   <b-modal
-                    :title="`Preuve de résidence (${row.item.full_name})`"
+                    :title="`Preuves de résidence (${row.item.full_name})`"
                     :id="`proof-${row.item.id}`"
                     footer-class="d-none"
                   >
@@ -268,7 +268,7 @@ export default {
         { key: "role", label: "Rôle", sortable: true },
         { key: "approved_at", label: "Approuvé", sortable: true },
         { key: "suspended_at", label: "Suspendu", sortable: true },
-        { key: "proof", label: "Preuve", sortable: false },
+        { key: "proof", label: "Preuves", sortable: false },
         { key: "actions", label: "Actions", tdClass: "table__cell__actions" },
       ],
       userTableFilterFields: ["full_name"],
