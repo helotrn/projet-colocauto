@@ -131,6 +131,10 @@ Route::prefix("v1")->group(function () {
             "ActionController@complete"
         );
         Route::put(
+            "/loans/{loan_id}/intention/{action_id}/complete",
+            "IntentionController@complete"
+        );
+        Route::put(
             "/loans/{loan_id}/actions/{action_id}/cancel",
             "ActionController@cancel"
         );

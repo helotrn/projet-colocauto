@@ -142,8 +142,8 @@ class ActionController extends RestController
                 $intentionRequest = $request->redirect(IntentionRequest::class);
                 return $this->intentionController->complete(
                     $intentionRequest,
-                    $actionId,
-                    $loanId
+                    $loanId,
+                    $actionId
                 );
             case "pre_payment":
                 $prePaymentRequest = $request->redirect(

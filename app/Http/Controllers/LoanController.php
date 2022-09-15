@@ -22,7 +22,6 @@ use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Support\Facades\Log;
 
 class LoanController extends RestController
 {
@@ -499,38 +498,6 @@ class LoanController extends RestController
                 $q->where("status", "in_process");
             });
         });
-        return response(
-            [
-                "started" => $this->getCollectionFields(
-                    $startedLoans->get(),
-                    $fields
-                ),
-                "contested" => $this->getCollectionFields(
-                    $contestedLoans->get(),
-                    $fields
-                ),
-                "waiting" => $this->getCollectionFields(
-                    $waitingLoansAsBorrower->get(),
-                    $fields
-                ),
-                "need_approval" => $this->getCollectionFields(
-                    $waitingLoansAsOwner->get(),
-                    $fields
-                ),
-                // TODO: add a limit on the number of future loans once all loans can be displayed
-                // in the user profile.
-                "future" => $this->getCollectionFields(
-                    $approvedFutureLoans->get(),
-                    $fields
-                ),
-                "completed" => $this->getCollectionFields(
-                    $completedLoans->limit(3)->get(),
-                    $fields
-                ),
-            ],
-            200
-        );
-
         return response(
             [
                 "started" => $this->getCollectionFields(
