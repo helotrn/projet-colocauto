@@ -480,16 +480,10 @@ SQL
 
     public function getCalendarDaysAttribute()
     {
-        if (isset($this->attributes["calendar_days"])) {
-            return $this->attributes["calendar_days"];
-        }
-
-        $start = new Carbon($this->departure_at);
-        $end = $start
-            ->copy()
-            ->add($this->actual_duration_in_minutes, "minutes");
-
-        return static::getCalendarDays($start, $end);
+        return static::getCalendarDays(
+            new Carbon($this->departure_at),
+            new Carbon($this->actual_return_at)
+        );
     }
 
     public function getActualPriceAttribute()
