@@ -465,50 +465,17 @@ SQL
 
     public function getActualDurationInMinutesAttribute()
     {
-        if (isset($this->attributes["actual_duration_in_minutes"])) {
-            return $this->attributes["actual_duration_in_minutes"];
+        $actualDurationInMinutes = (new Carbon(
+            $this->departure_at
+        ))->diffInMinutes(new Carbon($this->actual_return_at), false);
+
+        // If the payment was made before the loan departure time, then return
+        // a duration of 0. Negative durations would enable a borrower to earn cash!
+        if ($actualDurationInMinutes < 0) {
+            return 0;
         }
 
-        // Initial duration
-        $durationInMinutes = $this->duration_in_minutes;
-
-        // Account for the longest approved duration
-        $completedExtensions = $this->extensions->where("status", "completed");
-        if (!$completedExtensions->isEmpty()) {
-            $durationInMinutes = $completedExtensions->reduce(function (
-                $acc,
-                $ext
-            ) {
-                if ($ext->new_duration > $acc) {
-                    return $ext->new_duration;
-                }
-                return $acc;
-            },
-            $this->duration_in_minutes);
-        }
-
-        // If payment is completed, then account for early termination
-        if ($this->payment && $this->payment->isCompleted()) {
-            // diffInMinutes:
-            //   - All values are truncated and not rounded
-            //   - Takes, as 2nd argument, an absolute boolean option (true by
-            //     default) that make the method return an absolute value no
-            //     matter which date is greater than the other.
-            // Notice the order of instances: A->diff(B) means B - A.
-            // From: https://carbon.nesbot.com/docs/
-            $diffPaymentAndDeparture = (new Carbon(
-                $this->departure_at
-            ))->diffInMinutes(new Carbon($this->payment->executed_at), false);
-
-            return min(
-                // If payment was executed before departure, diffPaymentAndDeparture < 0, then set duration = 0.
-                // Otherwise, account for early return (payment).
-                max($diffPaymentAndDeparture, 0),
-                $durationInMinutes
-            );
-        }
-
-        return $durationInMinutes;
+        return $actualDurationInMinutes;
     }
 
     public function getCalendarDaysAttribute()
