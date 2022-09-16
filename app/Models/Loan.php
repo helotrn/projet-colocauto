@@ -156,10 +156,10 @@ class Loan extends BaseModel
             },
             "calendar_days" => function ($query = null) {
                 $calendarDaysSql = <<<SQL
-extract(
+EXTRACT(
     'day'
-    from
-        date_trunc('day', departure_at + duration_in_minutes * interval '1 minute')
+    FROM
+        date_trunc('day', actual_return_at)
         - date_trunc('day', departure_at)
         + interval '1 day'
 )::integer
