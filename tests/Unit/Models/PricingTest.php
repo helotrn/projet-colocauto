@@ -6,6 +6,7 @@ use App\Models\Bike;
 use App\Models\Car;
 use App\Models\Loan;
 use App\Models\Pricing;
+use Carbon\Carbon;
 use Illuminate\Support\Str;
 use Tests\TestCase;
 
@@ -113,9 +114,10 @@ RULE;
 
     public function testRuleEvalationOnLoanVariables()
     {
-        $loan = new Loan();
-        $loan->duration_in_minutes = 12 * 60;
-        $loan->departure_at = new \DateTime("2020-01-01 16:00:00");
+        $loan = factory(Loan::class)->create([
+            "duration_in_minutes" => 12 * 60,
+            "departure_at" => new Carbon("2020-01-01 16:00:00"),
+        ]);
 
         $car = new Car();
         $car->pricing_category = "small";
@@ -135,6 +137,8 @@ RULE;
         $this->assertEquals(3, $pricing->evaluateRule(0, 0, $car, $loan));
 
         $loan->duration_in_minutes = 60;
+        $loan->save();
+
         $this->assertEquals(4, $pricing->evaluateRule(0, 0, $car, $loan));
 
         $car->pricing_category = "small";
