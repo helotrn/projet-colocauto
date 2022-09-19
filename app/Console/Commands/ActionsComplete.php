@@ -59,9 +59,7 @@ class ActionsComplete extends Command
         );
 
         foreach ($loans as $loan) {
-            $intentionEnd = (new Carbon($loan->departure_at))->addMinutes(
-                $loan->duration_in_minutes
-            );
+            // Calculate actual return considering extentions
             $actualEnd = (new Carbon($loan->departure_at))->addMinutes(
                 $loan->actual_duration_in_minutes
             );
@@ -70,16 +68,6 @@ class ActionsComplete extends Command
                 Log::info(
                     "Not autocompleting loan ID $loan->id because of an accepted extension."
                 );
-                continue;
-            }
-
-            // We could also check loan actions individually and issue better log messages.
-            if ($loan->isCancelable()) {
-                Log::info("Autocancelling loan ID $loan->id.");
-
-                $loan->cancel()->save();
-
-                Log::info("Canceled loan ID $loan->id.");
                 continue;
             }
 
@@ -127,10 +115,40 @@ class ActionsComplete extends Command
 
             // Canceled extensions will not change loan status. Not necessary to refresh loan.
 
-            // Cancelable pre-payments and takeovers were already canceled earlier.
+            /*
+              Takeovers:
+
+              Complete takeover if loan is selfservice
+            */
+            if ($loan->loanable->is_self_service) {
+                foreach ($loan->actions as $action) {
+                    if (
+                        "takeover" == $action->type &&
+                        "in_process" == $action->status
+                    ) {
+                        $request = new ActionRequest();
+                        $request->setUserResolver(function () use ($loan) {
+                            return $loan->borrower->user;
+                        });
+                        $request->merge([
+                            "type" => $action->type,
+                            "loan_id" => $loan->id,
+                            "mileage_beginning" => 0,
+                        ]);
+                        $this->controller->complete(
+                            $request,
+                            $loan->id,
+                            $action->id
+                        );
+                    }
+                }
+                continue;
+            }
 
             /*
               Handovers:
+
+              Complete handover if takeover is not contested
             */
             foreach ($loan->actions as $action) {
                 if (
@@ -229,6 +247,15 @@ class ActionsComplete extends Command
                         );
                     }
                 }
+            }
+
+            // We could also check loan actions individually and issue better log messages.
+            if ($loan->isCancelable()) {
+                Log::info("Autocancelling loan ID $loan->id.");
+
+                $loan->cancel()->save();
+
+                Log::info("Canceled loan ID $loan->id.");
             }
         }
 
