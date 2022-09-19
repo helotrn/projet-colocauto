@@ -1153,12 +1153,23 @@ class LoanTest extends TestCase
         factory(Loan::class, 5)
             ->states("withCompletedIntention")
             ->create([
+                "departure_at" => Carbon::now()->addHour(),
                 "borrower_id" => $borrower->id,
             ]);
         // Started
-        factory(Loan::class, 4)
+        factory(Loan::class, 2)
             ->states(["withCompletedIntention", "withCompletedTakeover"])
             ->create([
+                "departure_at" => Carbon::now()->subMinute(5),
+                "duration_in_minutes" => 60,
+                "borrower_id" => $borrower->id,
+            ]);
+        // Started without completed takeover
+        factory(Loan::class, 2)
+            ->states(["withCompletedIntention", "withInProcessTakeover"])
+            ->create([
+                "departure_at" => Carbon::now()->subMinute(5),
+                "duration_in_minutes" => 60,
                 "borrower_id" => $borrower->id,
             ]);
         // Contested

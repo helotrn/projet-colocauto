@@ -469,17 +469,20 @@ class LoanController extends RestController
         });
 
         // Started loans that aren't contested
-        $startedLoans = (clone $approvedLoans)
-            ->whereHas("takeover", function (Builder $q) {
-                $q->where("status", "completed");
-            })
-            ->where(function ($q) {
-                $q->doesntHave("handover")->orWhereHas("handover", function (
-                    Builder $q
-                ) {
+        $startedLoans = (clone $approvedLoans)->where(function ($q) {
+            $q->where("departure_at", "<=", Carbon::now())
+                ->whereHas("takeover", function (Builder $q) {
                     $q->where("status", "!=", "canceled");
+                })
+                ->where(function ($q) {
+                    $q->doesntHave("handover")->orWhereHas(
+                        "handover",
+                        function (Builder $q) {
+                            $q->where("status", "!=", "canceled");
+                        }
+                    );
                 });
-            });
+        });
 
         $contestedLoans = (clone $approvedLoans)
             ->whereHas("takeover", function (Builder $q) {
@@ -489,15 +492,15 @@ class LoanController extends RestController
                 $q->where("status", "canceled");
             });
 
-        $approvedFutureLoans = (clone $approvedLoans)->where(function (
-            Builder $q
-        ) {
-            $q->doesntHave("takeover")->orWhereHas("takeover", function (
-                Builder $q
-            ) {
-                $q->where("status", "in_process");
+        $approvedFutureLoans = (clone $approvedLoans)
+            ->where("departure_at", ">", Carbon::now())
+            ->where(function (Builder $q) {
+                $q->doesntHave("takeover")->orWhereHas("takeover", function (
+                    Builder $q
+                ) {
+                    $q->where("status", "in_process");
+                });
             });
-        });
         return response(
             [
                 "started" => $this->getCollectionFields(
