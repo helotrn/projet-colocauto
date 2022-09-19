@@ -50,7 +50,7 @@
             </b-col>
           </b-row>
         </div>
-        <div>
+        <div v-if="!loanIsCanceled">
           <b-row>
             <b-col>
               <b-alert show variant="info">
