@@ -364,6 +364,70 @@ class ActionsCompleteTest extends TestCase
         $this->assertEquals("canceled", $loan->status);
     }
 
+    public function testTakeoverInProcessSelfService_LoanExpired()
+    {
+        $loanableIsSelfService = true;
+        $loanCost = 0;
+
+        $twoDaysAgo = CarbonImmutable::now()->sub(48, "hours");
+        $moreThanTwoDaysAgo = CarbonImmutable::now()->sub(54, "hours");
+
+        $ownerUser = factory(User::class)
+            ->states("withOwner", "withPaidCommunity")
+            ->create();
+
+        $borrowerUser = factory(User::class)
+            ->states("withBorrower")
+            ->create([
+                "balance" => 15,
+            ]);
+
+        $loanable = factory(Car::class)->create([
+            "owner_id" => $ownerUser->owner_id,
+            "community_id" => $ownerUser->communities[0]->id,
+            "is_self_service" => $loanableIsSelfService,
+        ]);
+
+        CarbonImmutable::setTestNow($moreThanTwoDaysAgo);
+
+        $loan = factory(Loan::class)
+            ->states("withCompletedIntention", "withInProcessTakeover")
+            ->create([
+                "loanable_id" => $loanable->id,
+                "community_id" => $ownerUser->communities[0]->id,
+                "borrower_id" => $borrowerUser->borrower->id,
+                "departure_at" => $twoDaysAgo->subMinutes(60),
+                "duration_in_minutes" => 50,
+                "platform_tip" => $loanCost,
+            ]);
+
+        // Setup is finished, set back test time to now.
+        CarbonImmutable::setTestNow();
+
+        // Ensure we fetch loan back from the database
+        $loan->refresh();
+
+        // Validate preconditions
+        $this->assertEquals(
+            "in_process",
+            $loan->takeover ? $loan->takeover->status : ""
+        );
+        $this->assertEquals("in_process", $loan->status);
+
+        // Run the command
+        $this->artisan("actions:complete")->assertExitCode(0);
+
+        // Ensure we fetch loan back from the database
+        $loan->refresh();
+
+        // Takeover is completed, but loan can be completed.
+        $this->assertEquals(
+            "completed",
+            $loan->takeover ? $loan->takeover->status : ""
+        );
+        $this->assertEquals("in_process", $loan->status);
+    }
+
     public function testHandoverInProcess_LoanNotExpired_BalanceSufficient()
     {
         $loanableIsSelfService = false;
