@@ -176,60 +176,16 @@ SQL;
             "actual_duration_in_minutes" => function ($query = null) {
                 $sql = <<<SQL
 GREATEST(
-	0,
-	LEAST(
-		COALESCE(loan_payment.duration_according_to_payment, 1000000000000),
-		COALESCE(
-			extension_max_duration.max_duration,
-			loans.duration_in_minutes
-		)
-	)
-)
+    (    DATE_PART('day',    actual_return_at::timestamp - departure_at::timestamp) * 24
+       + DATE_PART('hour',   actual_return_at::timestamp - departure_at::timestamp)) * 60 +
+       + DATE_PART('minute', actual_return_at::timestamp - departure_at::timestamp),
+    0)
 SQL;
                 if (!$query) {
                     return $sql;
                 }
 
-                if (
-                    false === strpos($query->toSql(), "extension_max_duration")
-                ) {
-                    $query
-                        ->selectRaw("$sql AS actual_duration_in_minutes")
-                        ->leftJoinSub(
-                            <<<SQL
-SELECT
-    max(new_duration) AS max_duration,
-    loan_id
-FROM extensions
-WHERE status = 'completed'
-GROUP BY loan_id
-SQL
-                            ,
-                            "extension_max_duration",
-                            "extension_max_duration.loan_id",
-                            "=",
-                            "loans.id"
-                        )
-                        ->leftJoinSub(
-                            <<<SQL
-SELECT
-    DATE_PART('day', payments.executed_at::timestamp - l.departure_at::timestamp) * 24 +
-   DATE_PART('hour', payments.executed_at::timestamp - l.departure_at::timestamp) * 60 +
-   DATE_PART('minute', payments.executed_at::timestamp - l.departure_at::timestamp) AS duration_according_to_payment,
-    payments.loan_id
-FROM payments
-INNER JOIN loans l ON l.id = payments.loan_id
-WHERE payments.status = 'completed'
-SQL
-                            ,
-                            "loan_payment",
-                            "loan_payment.loan_id",
-                            "=",
-                            "loans.id"
-                        );
-                }
-
-                return $query;
+                return $query->selectRaw("$sql AS actual_duration_in_minutes");
             },
 
             "borrower_user_full_name" => function ($query = null) {
