@@ -156,10 +156,10 @@ class Loan extends BaseModel
             },
             "calendar_days" => function ($query = null) {
                 $calendarDaysSql = <<<SQL
-extract(
+EXTRACT(
     'day'
-    from
-        date_trunc('day', departure_at + duration_in_minutes * interval '1 minute')
+    FROM
+        date_trunc('day', actual_return_at)
         - date_trunc('day', departure_at)
         + interval '1 day'
 )::integer
@@ -176,60 +176,16 @@ SQL;
             "actual_duration_in_minutes" => function ($query = null) {
                 $sql = <<<SQL
 GREATEST(
-	0,
-	LEAST(
-		COALESCE(loan_payment.duration_according_to_payment, 1000000000000),
-		COALESCE(
-			extension_max_duration.max_duration,
-			loans.duration_in_minutes
-		)
-	)
-)
+    (    DATE_PART('day',    actual_return_at::timestamp - departure_at::timestamp) * 24
+       + DATE_PART('hour',   actual_return_at::timestamp - departure_at::timestamp)) * 60 +
+       + DATE_PART('minute', actual_return_at::timestamp - departure_at::timestamp),
+    0)
 SQL;
                 if (!$query) {
                     return $sql;
                 }
 
-                if (
-                    false === strpos($query->toSql(), "extension_max_duration")
-                ) {
-                    $query
-                        ->selectRaw("$sql AS actual_duration_in_minutes")
-                        ->leftJoinSub(
-                            <<<SQL
-SELECT
-    max(new_duration) AS max_duration,
-    loan_id
-FROM extensions
-WHERE status = 'completed'
-GROUP BY loan_id
-SQL
-                            ,
-                            "extension_max_duration",
-                            "extension_max_duration.loan_id",
-                            "=",
-                            "loans.id"
-                        )
-                        ->leftJoinSub(
-                            <<<SQL
-SELECT
-    DATE_PART('day', payments.executed_at::timestamp - l.departure_at::timestamp) * 24 +
-   DATE_PART('hour', payments.executed_at::timestamp - l.departure_at::timestamp) * 60 +
-   DATE_PART('minute', payments.executed_at::timestamp - l.departure_at::timestamp) AS duration_according_to_payment,
-    payments.loan_id
-FROM payments
-INNER JOIN loans l ON l.id = payments.loan_id
-WHERE payments.status = 'completed'
-SQL
-                            ,
-                            "loan_payment",
-                            "loan_payment.loan_id",
-                            "=",
-                            "loans.id"
-                        );
-                }
-
-                return $query;
+                return $query->selectRaw("$sql AS actual_duration_in_minutes");
             },
 
             "borrower_user_full_name" => function ($query = null) {
@@ -465,64 +421,25 @@ SQL
 
     public function getActualDurationInMinutesAttribute()
     {
-        if (isset($this->attributes["actual_duration_in_minutes"])) {
-            return $this->attributes["actual_duration_in_minutes"];
+        $actualDurationInMinutes = (new Carbon(
+            $this->departure_at
+        ))->diffInMinutes(new Carbon($this->actual_return_at), false);
+
+        // If the payment was made before the loan departure time, then return
+        // a duration of 0. Negative durations would enable a borrower to earn cash!
+        if ($actualDurationInMinutes < 0) {
+            return 0;
         }
 
-        // Initial duration
-        $durationInMinutes = $this->duration_in_minutes;
-
-        // Account for the longest approved duration
-        $completedExtensions = $this->extensions->where("status", "completed");
-        if (!$completedExtensions->isEmpty()) {
-            $durationInMinutes = $completedExtensions->reduce(function (
-                $acc,
-                $ext
-            ) {
-                if ($ext->new_duration > $acc) {
-                    return $ext->new_duration;
-                }
-                return $acc;
-            },
-            $this->duration_in_minutes);
-        }
-
-        // If payment is completed, then account for early termination
-        if ($this->payment && $this->payment->isCompleted()) {
-            // diffInMinutes:
-            //   - All values are truncated and not rounded
-            //   - Takes, as 2nd argument, an absolute boolean option (true by
-            //     default) that make the method return an absolute value no
-            //     matter which date is greater than the other.
-            // Notice the order of instances: A->diff(B) means B - A.
-            // From: https://carbon.nesbot.com/docs/
-            $diffPaymentAndDeparture = (new Carbon(
-                $this->departure_at
-            ))->diffInMinutes(new Carbon($this->payment->executed_at), false);
-
-            return min(
-                // If payment was executed before departure, diffPaymentAndDeparture < 0, then set duration = 0.
-                // Otherwise, account for early return (payment).
-                max($diffPaymentAndDeparture, 0),
-                $durationInMinutes
-            );
-        }
-
-        return $durationInMinutes;
+        return $actualDurationInMinutes;
     }
 
     public function getCalendarDaysAttribute()
     {
-        if (isset($this->attributes["calendar_days"])) {
-            return $this->attributes["calendar_days"];
-        }
-
-        $start = new Carbon($this->departure_at);
-        $end = $start
-            ->copy()
-            ->add($this->actual_duration_in_minutes, "minutes");
-
-        return static::getCalendarDays($start, $end);
+        return static::getCalendarDays(
+            new Carbon($this->departure_at),
+            new Carbon($this->actual_return_at)
+        );
     }
 
     public function getActualPriceAttribute()
