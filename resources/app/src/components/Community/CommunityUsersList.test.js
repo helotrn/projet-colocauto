@@ -6,6 +6,14 @@ import Vue from "vue";
 
 Vue.use(BootstrapVue);
 
+Vue.filter("capitalize", (value) => {
+  if (!value) {
+    return "";
+  }
+  const string = value.toString();
+  return string.charAt(0).toUpperCase() + string.slice(1);
+});
+
 describe("CommunityUsersList", () => {
   it("Renders correctly by default", () => {
     const wrapper = mount(CommunityUsersList, {
