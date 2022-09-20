@@ -232,13 +232,13 @@ export default {
       ].filter((p) => currentPricingTypes.indexOf(p.value) === -1);
     },
     users() {
-      return this.$store.state.users.data.filter(() => true);
+      return this.$store.state.users.data;
     },
     /*
       Ensure the format follows the community user format. This is what we are working on.
     */
     communityUsers() {
-      const users = this.$store.state.users.data.filter(() => true);
+      const users = this.$store.state.users.data;
 
       // Convert data recieved from the backend to communityUsers required by the list.
       let communityUser;
