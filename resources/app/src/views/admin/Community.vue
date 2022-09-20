@@ -67,7 +67,7 @@
               <b-col class="admin__filters">
                 <community-users-filters
                   :visibleFields="['user_id', 'user_full_name']"
-                  :item="communityUserListParams.filters"
+                  :filters="communityUserListParams.filters"
                   @change="onChangeFilters"
                 />
               </b-col>

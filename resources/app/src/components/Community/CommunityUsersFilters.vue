@@ -17,7 +17,7 @@
       >
         <b-form-input
           type="text"
-          :value="item.id"
+          :value="filters.id"
           :name="fieldDefs.find((f) => f.key == 'id').key"
           :id="'id'"
           @change="onInputChange('id', $event)"
@@ -33,7 +33,7 @@
       >
         <b-form-input
           type="text"
-          :value="item.user_id"
+          :value="filters.user_id"
           :name="fieldDefs.find((f) => f.key == 'user_id').key"
           :id="'user_id'"
           @change="onInputChange('user_id', $event)"
@@ -49,7 +49,7 @@
       >
         <b-form-input
           type="text"
-          :value="item.user_full_name"
+          :value="filters.user_full_name"
           :name="fieldDefs.find((f) => f.key == 'user_full_name').key"
           :id="'user_full_name'"
           @change="onInputChange('user_full_name', $event)"
@@ -85,14 +85,14 @@ export default {
         ];
       },
     },
-    item: {
+    filters: {
       type: [Object, Function],
       required: false,
     },
   },
   methods: {
     onInputChange(name, value) {
-      let newValue = this.item;
+      let newValue = this.filters;
       newValue[name] = value;
 
       this.$emit("change", newValue);
