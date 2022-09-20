@@ -100,8 +100,3 @@ export default {
   },
 };
 </script>
-
-<style lang="scss">
-.community-users-filters {
-}
-</style>
