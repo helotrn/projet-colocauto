@@ -208,13 +208,13 @@ export default {
   },
   computed: {
     fields() {
-      let visibleFields = [];
+      let visibleFieldDefs = [];
       for (const fieldName of this.visibleFields) {
         const fieldDef = this.fieldDefs.find((f) => f.key === fieldName);
-        if (fieldDef) visibleFields.push(fieldDef);
+        if (fieldDef) visibleFieldDefs.push(fieldDef);
       }
 
-      return visibleFields;
+      return visibleFieldDefs;
     },
     canDoActions() {
       let canDoActions = [];
