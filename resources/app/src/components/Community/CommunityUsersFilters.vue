@@ -92,10 +92,10 @@ export default {
   },
   methods: {
     onInputChange(name, value) {
-      let newValue = this.filters;
-      newValue[name] = value;
-
-      this.$emit("change", newValue);
+      this.$emit("change", {
+        ...this.filters,
+        [name]: value,
+      });
     },
   },
 };
