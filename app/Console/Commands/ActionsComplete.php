@@ -116,16 +116,53 @@ class ActionsComplete extends Command
             // Canceled extensions will not change loan status. Not necessary to refresh loan.
 
             /*
+              Intentions:
+
+              Cancel loan if intention is in process
+            */
+            foreach ($loan->actions as $action) {
+                if (
+                    "intention" == $action->type &&
+                    "in_process" == $action->status
+                ) {
+                    Log::info(
+                        "Autocancelling loan ID $loan->id on $action->type action..."
+                    );
+                    $loan->cancel()->save();
+                    Log::info("Canceled loan ID $loan->id.");
+                }
+            }
+
+            /*
+              Prepayments:
+
+              Cancel loan if prepayment is in process
+            */
+            foreach ($loan->actions as $action) {
+                if (
+                    "pre_payment" == $action->type &&
+                    "in_process" == $action->status
+                ) {
+                    Log::info(
+                        "Autocancelling loan ID $loan->id on $action->type action..."
+                    );
+                    $loan->cancel()->save();
+                    Log::info("Canceled loan ID $loan->id.");
+                }
+            }
+
+            /*
               Takeovers:
 
               Complete takeover if loan is selfservice
+              Cancel loan on takeover if it is not selfservice
             */
-            if ($loan->loanable->is_self_service) {
-                foreach ($loan->actions as $action) {
-                    if (
-                        "takeover" == $action->type &&
-                        "in_process" == $action->status
-                    ) {
+            foreach ($loan->actions as $action) {
+                if (
+                    "takeover" == $action->type &&
+                    "in_process" == $action->status
+                ) {
+                    if ($loan->loanable->is_self_service) {
                         $request = new ActionRequest();
                         $request->setUserResolver(function () use ($loan) {
                             return $loan->borrower->user;
@@ -140,9 +177,11 @@ class ActionsComplete extends Command
                             $loan->id,
                             $action->id
                         );
+                    } else {
+                        $loan->cancel()->save();
+                        Log::info("Canceled loan ID $loan->id.");
                     }
                 }
-                continue;
             }
 
             /*
@@ -173,6 +212,7 @@ class ActionsComplete extends Command
                     $request->merge([
                         "type" => $action->type,
                         "loan_id" => $loan->id,
+                        "purchases_amount" => 0,
                         "mileage_end" =>
                             $takeover->mileage_beginning +
                             $loan->estimated_distance,
@@ -247,15 +287,6 @@ class ActionsComplete extends Command
                         );
                     }
                 }
-            }
-
-            // We could also check loan actions individually and issue better log messages.
-            if ($loan->isCancelable()) {
-                Log::info("Autocancelling loan ID $loan->id.");
-
-                $loan->cancel()->save();
-
-                Log::info("Canceled loan ID $loan->id.");
             }
         }
 
