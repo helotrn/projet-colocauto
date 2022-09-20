@@ -90,16 +90,6 @@ export default {
       required: false,
     },
   },
-  computed: {
-    fields() {
-      let visibleFields = [];
-      for (const fieldName of this.visibleFields) {
-        const fieldDef = this.fieldDefs.find((f) => f.key === fieldName);
-        if (fieldDef) visibleFields.push(fieldDef);
-      }
-      return visibleFields;
-    },
-  },
   methods: {
     onInputChange(name, value) {
       let newValue = this.item;
