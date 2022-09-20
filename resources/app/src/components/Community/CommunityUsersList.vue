@@ -51,29 +51,26 @@
       </template>
 
       <template v-slot:cell(proof)="row">
-        <span v-if="row.item.proof" class="community-users-list__proof-of-residence">
-          <a href="#" v-b-modal="`community-users-list__proof-of-residence--${row.item.id}`">
-            {{ row.item.proof.original_filename }}
-          </a>
+        <span
+          v-if="row.item.proof && row.item.proof.length > 0"
+          class="admin-community__users__table__proof"
+        >
+          <b-button size="sm" variant="outline-secondary" v-b-modal="`proof-${row.item.id}`">
+            Preuves
+          </b-button>
+
           <b-modal
-            size="xl"
-            :id="`community-users-list__proof-of-residence--${row.item.id}`"
-            :title="
-              $t('communities.user_proof_of_residence', { user_full_name: row.item.user_full_name })
-                | capitalize
-            "
+            :title="`Preuves de résidence (${row.item.user_full_name})`"
+            :id="`proof-${row.item.id}`"
             footer-class="d-none"
-            class="proof-of-residence-modal"
           >
-            <img
-              class="proof-of-residence-modal__proof-image"
-              :src="row.item.proof.url"
-              :alt="
-                $t('communities.user_proof_of_residence', {
-                  user_full_name: row.item.user_full_name,
-                }) | capitalize
-              "
-            />
+            <ul>
+              <li v-for="proof in row.item.proof">
+                <a target="_blank" :href="proof.url">
+                  {{ proof.original_filename }}
+                </a>
+              </li>
+            </ul>
           </b-modal>
         </span>
       </template>

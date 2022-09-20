@@ -2,9 +2,12 @@
 
 namespace Tests\Integration;
 
+use App\Events\RegistrationSubmittedEvent;
 use App\Models\Community;
+use App\Models\File;
 use App\Models\PaymentMethod;
 use App\Models\User;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Str;
 use Illuminate\Testing\Assert;
 use Noke;
@@ -427,6 +430,91 @@ class UserTest extends TestCase
         $response
             ->assertStatus(200)
             ->assertJsonStructure(static::$userResponseStructure);
+    }
+
+    public function testUpdateUserWithProofForNewCommunity_fails()
+    {
+        $user = factory(User::class)->create();
+        $community = factory(Community::class)->create();
+        $proof = factory(File::class)->create([
+            "field" => "proof",
+        ]);
+
+        $data = [
+            "communities" => [
+                ["id" => $community->id, "proof" => [["id" => $proof->id]]],
+            ],
+        ];
+
+        $response = $this->json("PUT", "/api/v1/users/$user->id", $data);
+        $response->assertStatus(422);
+    }
+
+    public function testUpdateUserWithCommunityProof_triggersRegistrationSubmitted()
+    {
+        $user = factory(User::class)->create();
+        $community = factory(Community::class)->create();
+        $user->communities()->save($community);
+
+        $proof = factory(File::class)->create([
+            "field" => "proof",
+        ]);
+
+        $data = [
+            "communities" => [
+                ["id" => $community->id, "proof" => [["id" => $proof->id]]],
+            ],
+        ];
+
+        Event::fake([RegistrationSubmittedEvent::class]);
+        $response = $this->json("PUT", "/api/v1/users/$user->id", $data);
+        $response
+            ->assertStatus(200)
+            ->assertJsonStructure(static::$userResponseStructure);
+        Event::assertDispatched(RegistrationSubmittedEvent::class);
+    }
+
+    public function testUpdateUserWithIdenticCommunityProof_doesntTriggerRegistrationSubmitted()
+    {
+        $user = factory(User::class)->create();
+        $community = factory(Community::class)->create();
+        $user->communities()->save($community);
+
+        $proof = factory(File::class)->create([
+            "field" => "proof",
+        ]);
+        $user->communities[0]->pivot->proof()->save($proof);
+
+        $data = [
+            "communities" => [
+                ["id" => $community->id, "proof" => [["id" => $proof->id]]],
+            ],
+        ];
+
+        Event::fake([RegistrationSubmittedEvent::class]);
+        $response = $this->json("PUT", "/api/v1/users/$user->id", $data);
+        $response
+            ->assertStatus(200)
+            ->assertJsonStructure(static::$userResponseStructure);
+        Event::assertNotDispatched(RegistrationSubmittedEvent::class);
+    }
+
+    public function testUpdateUserWithoutCommunityProof_doesntTriggerRegistrationSubmitted()
+    {
+        $user = factory(User::class)->create();
+        $community = factory(Community::class)->create();
+        $user->communities()->save($community);
+
+        $data = [
+            "communities" => [["id" => $community->id]],
+        ];
+
+        Event::fake([RegistrationSubmittedEvent::class]);
+        $response = $this->json("PUT", "/api/v1/users/$user->id", $data);
+        $response
+            ->assertStatus(200)
+            ->assertJsonStructure(static::$userResponseStructure);
+        Event::assertNotDispatched(RegistrationSubmittedEvent::class);
     }
 
     public function testShowUsersCommunities()

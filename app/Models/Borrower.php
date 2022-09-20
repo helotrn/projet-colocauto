@@ -59,8 +59,11 @@ class Borrower extends BaseModel
 
     public $morphOnes = [
         "insurance" => "fileable",
-        "gaa" => "fileable",
+    ];
+
+    public $morphManys = [
         "saaq" => "fileable",
+        "gaa" => "fileable",
     ];
 
     public function user()
@@ -68,7 +71,7 @@ class Borrower extends BaseModel
         return $this->belongsTo(User::class);
     }
 
-    public $collections = ["loans"];
+    public $collections = ["loans", "saaq", "gaa"];
 
     public function loans()
     {
@@ -101,7 +104,7 @@ class Borrower extends BaseModel
 
     public function gaa()
     {
-        return $this->morphOne(File::class, "fileable")->where("field", "gaa");
+        return $this->morphMany(File::class, "fileable")->where("field", "gaa");
     }
 
     public function insurance()
@@ -114,6 +117,9 @@ class Borrower extends BaseModel
 
     public function saaq()
     {
-        return $this->morphOne(File::class, "fileable")->where("field", "saaq");
+        return $this->morphMany(File::class, "fileable")->where(
+            "field",
+            "saaq"
+        );
     }
 }

@@ -1,6 +1,6 @@
 <template>
   <div class="community-proof-form">
-    <validation-observer ref="observer" v-slot="{ passes }">
+    <validation-observer ref="observer" v-slot="{ passes, changed }">
       <b-form
         :novalidate="true"
         class="community-proof-form__form"
@@ -8,31 +8,30 @@
       >
         <b-row>
           <b-col>
-            <forms-image-uploader field="proof" v-model="community.proof" />
+            <forms-files-uploader field="proof" v-model="community.proof" required />
           </b-col>
         </b-row>
 
         <b-row
           ><b-col
             ><div class="community-proof-form__buttons">
-              <b-button variant="primary" type="submit"> Soumettre</b-button>
-              <b-button variant="outline-primary" to="/register/4" class="later-btn">
-                Plus tard</b-button
+              <b-button
+                :disabled="!community.proof || loading || !changed"
+                variant="primary"
+                type="submit"
               >
-            </div>
-          </b-col></b-row
-        >
+                Soumettre
+              </b-button>
+              &nbsp;
+              <b-button v-if="skip" variant="outline-primary" :to="skip"> Plus tard</b-button>
+              &nbsp;
+              <layout-loading inline v-if="loading" />
+            </div> </b-col
+        ></b-row>
 
         <b-row>
           <b-col>
             <div class="community-proof-form__instructions">
-              <p>
-                <strong
-                  >Merci de téléverser ou prendre une photo avec votre téléphone une preuve de
-                  résidence.</strong
-                >
-              </p>
-
               <p>
                 Elle doit contenir votre nom, votre adresse et la date. Elle doit dater de moins
                 d'un an ou ne pas être expirée. Au format JPG ou PNG. Nous n'acceptons pas encore
@@ -89,7 +88,7 @@
 import IconsCheck from "@/assets/icons/check.svg";
 import IconsX from "@/assets/icons/x.svg";
 
-import FormsImageUploader from "@/components/Forms/ImageUploader.vue";
+import FormsFilesUploader from "@/components/Forms/FilesUploader.vue";
 
 import locales from "@/locales";
 
@@ -98,7 +97,7 @@ export default {
   components: {
     "icons-check": IconsCheck,
     "icons-x": IconsX,
-    FormsImageUploader,
+    FormsFilesUploader,
   },
   props: {
     community: {
@@ -109,6 +108,11 @@ export default {
       type: Boolean,
       required: false,
       default: false,
+    },
+    skip: {
+      type: String,
+      required: false,
+      default: "",
     },
   },
   i18n: {
@@ -141,12 +145,6 @@ export default {
       li {
         margin-bottom: 10px;
       }
-    }
-  }
-  &__buttons {
-    margin-top: 30px;
-    button {
-      margin-left: 0;
     }
   }
   .accepted {

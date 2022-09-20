@@ -41,7 +41,7 @@ const i18n = {
         },
         approved_at: "Approuvé-e",
         suspended_at: "Suspendu-e",
-        proof: "Preuve",
+        proof: "Preuves",
         actions: "Actions",
         action_labels: {
           approve: "Approuver",

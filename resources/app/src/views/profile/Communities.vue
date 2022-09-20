@@ -12,7 +12,7 @@
         </div>
 
         <b-card-body class="profile-communities__community_proof">
-          <community-proof-form :community="community" @submit="submit" />
+          <community-proof-form :community="community" @submit="submit" :loading="loading" />
         </b-card-body>
       </b-card>
     </div>
@@ -63,11 +63,6 @@ export default {
   }
   &__communities__community {
     margin-bottom: 20px;
-  }
-  &__community_proof {
-    .later-btn {
-      display: none;
-    }
   }
   &__nocommunities {
     .btn {
