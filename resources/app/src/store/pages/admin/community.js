@@ -7,7 +7,6 @@ export default {
       page: 1,
       order: "",
       filters: {
-        id: "",
         user_id: "",
         user_full_name: "",
       },
