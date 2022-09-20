@@ -8,6 +8,7 @@
       id="community-users-filters__filter-pane"
       :title="$t('components.admin.filters.filters') | capitalize"
     >
+      <!-- TODO (#1078) -->
       <b-form-group
         v-if="visibleFields.includes('id')"
         :key="'id'"
@@ -23,6 +24,7 @@
         />
       </b-form-group>
 
+      <!-- TODO (#1078) -->
       <b-form-group
         v-if="visibleFields.includes('user_id')"
         :key="'user_id'"
@@ -38,6 +40,7 @@
         />
       </b-form-group>
 
+      <!-- TODO (#1078) -->
       <b-form-group
         v-if="visibleFields.includes('user_full_name')"
         :key="'user_full_name'"
