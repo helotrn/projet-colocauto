@@ -27,6 +27,7 @@ use Cache;
 use Mail;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use Stripe;
 
@@ -85,7 +86,13 @@ class UserController extends RestController
         return $this->respondWithItem($request, $item, 201);
     }
 
-    private static function isSavingProofs($userId, $data): bool
+    /**
+     * @return true if the data has a different proofs for communities than
+     *      the ones currently stored.
+     * @throws HttpException if attempting to update the proof for a community the
+     *      user isn't a part of.
+     */
+    private static function isChangedProof($userId, $data): bool
     {
         if (!$data || !array_key_exists("communities", $data)) {
             return false;
@@ -104,9 +111,12 @@ class UserController extends RestController
                 return $c->community_id == $community["id"];
             });
 
-            // Submitting proof together with new community
+            // Submitting proof for a community they are not a part of.
             if (!$previousCommunity) {
-                return true;
+                abort(
+                    422,
+                    "Cannot submit proof for community the user isn't a part of."
+                );
             }
 
             $newProofs = array_map(function ($p) {
@@ -119,6 +129,8 @@ class UserController extends RestController
                 })
                 ->toArray();
 
+            // Proof has changed if the number of files, or the ids of the files
+            // are different.
             if (
                 sizeof($newProofs) !== sizeof($previousProofs) ||
                 array_sort($previousProofs) != array_sort($newProofs)
@@ -131,7 +143,7 @@ class UserController extends RestController
 
     public function update(UpdateRequest $request, $id)
     {
-        $proofChanged = static::isSavingProofs($id, $request->json()->all());
+        $proofChanged = static::isChangedProof($id, $request->json()->all());
 
         try {
             $savedUser = parent::validateAndUpdate($request, $id);
