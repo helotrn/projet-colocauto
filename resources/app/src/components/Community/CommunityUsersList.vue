@@ -191,7 +191,7 @@ export default {
       },
     },
     items: {
-      type: [Array, Function],
+      type: [Array],
       required: false,
     },
     itemsPerPage: {
