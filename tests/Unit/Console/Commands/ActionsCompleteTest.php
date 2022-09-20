@@ -300,7 +300,7 @@ class ActionsCompleteTest extends TestCase
         $this->assertEquals("in_process", $loan->status);
     }
 
-    public function testTakeoverInProcess_LoanExpired()
+    public function testTakeoverInProcessNotSelfService_LoanExpired()
     {
         $loanableIsSelfService = false;
         $loanCost = 0;
