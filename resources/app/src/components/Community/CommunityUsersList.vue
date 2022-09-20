@@ -144,7 +144,7 @@ export default {
     visibleFields: {
       type: Array,
       required: false,
-      default: function () {
+      default: () => {
         return [
           "id",
           "user_id",
