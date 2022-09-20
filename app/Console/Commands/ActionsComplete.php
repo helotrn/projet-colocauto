@@ -66,7 +66,7 @@ class ActionsComplete extends Command
 
             if ($actualEnd->greaterThanOrEqualTo($loanExpirationTime)) {
                 Log::info(
-                    "Not autocompleting loan ID $loan->id because of an accepted extension."
+                    "Not autocompleting loan ID $loan->id because of an accepted extension..."
                 );
                 continue;
             }
@@ -163,6 +163,10 @@ class ActionsComplete extends Command
                     "in_process" == $action->status
                 ) {
                     if ($loan->loanable->is_self_service) {
+                        Log::info(
+                            "Autocompleting $action->type on loan ID $loan->id..."
+                        );
+
                         $request = new ActionRequest();
                         $request->setUserResolver(function () use ($loan) {
                             return $loan->borrower->user;
@@ -177,7 +181,14 @@ class ActionsComplete extends Command
                             $loan->id,
                             $action->id
                         );
+
+                        Log::info(
+                            "Completed $action->type on loan ID $loan->id."
+                        );
                     } else {
+                        Log::info(
+                            "Autocancelling loan ID $loan->id on $action->type action..."
+                        );
                         $loan->cancel()->save();
                         Log::info("Canceled loan ID $loan->id.");
                     }
@@ -223,9 +234,7 @@ class ActionsComplete extends Command
                         $action->id
                     );
 
-                    Log::info(
-                        "Autocompleted $action->type on loan ID $loan->id."
-                    );
+                    Log::info("Completed $action->type on loan ID $loan->id.");
                 }
             }
 
@@ -277,7 +286,7 @@ class ActionsComplete extends Command
                         );
 
                         Log::info(
-                            "Autocompleted $action->type on loan ID $loan->id."
+                            "Completed $action->type on loan ID $loan->id."
                         );
                     } else {
                         Log::info(
