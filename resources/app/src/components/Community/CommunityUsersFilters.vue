@@ -86,7 +86,7 @@ export default {
       },
     },
     filters: {
-      type: [Object, Function],
+      type: [Object],
       required: false,
     },
   },
