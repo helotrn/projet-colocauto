@@ -58,119 +58,47 @@
           <div class="form__section" v-if="item.id">
             <a id="members" />
             <b-row>
-              <b-col md="8">
+              <b-col>
                 <h2>Membres</h2>
-              </b-col>
-
-              <b-col md="4" class="text-right">
-                <b-input v-model="usersFilter" placeholder="Tapez pour filtrer..." />
               </b-col>
             </b-row>
 
-            <b-table
-              :busy="usersLoading"
-              :filter="usersFilter"
-              empty-filtered-text="Pas de membre correspondant"
-              :filter-function="localizedFilter(userTableFilterFields)"
-              striped
-              hover
-              :items="users"
-              sort-by="full_name"
-              no-sort-reset
-              :fields="userTable"
-              sticky-header="500px"
-              :show-empty="true"
-              empty-text="Pas de membre"
-            >
-              <template v-slot:table-busy>
-                <span>Chargement...</span>
-              </template>
-              <template v-slot:cell(full_name)="row">
-                <router-link :to="`/admin/users/${row.item.id}`">
-                  {{ row.item.full_name }}
-                </router-link>
-              </template>
-              <template v-slot:cell(role)="row">
-                <b-select
-                  :options="[
-                    { value: null, text: 'Membre' },
-                    { value: 'admin', text: 'Admin' },
-                  ]"
-                  :value="row.item.role"
-                  @change="setUserRole(row.item, $event)"
+            <b-row>
+              <b-col class="admin__filters">
+                <community-users-filters
+                  :visibleFields="['user_id', 'user_full_name']"
+                  :filters="communityUserListParams.filters"
+                  @change="onChangeFilters"
                 />
-              </template>
-              <template v-slot:cell(approved_at)="row">
-                <small class="muted" v-if="!row.item.approved_at">N/A</small>
-                <span v-else>{{ row.item.approved_at | date }}</span>
-              </template>
-              <template v-slot:cell(suspended_at)="row">
-                <small class="muted" v-if="!row.item.suspended_at">N/A</small>
-                <span v-else>{{ row.item.suspended_at | date }}</span>
-              </template>
-              <template v-slot:cell(proof)="row">
-                <span v-if="row.item.proof" class="admin-community__users__table__proof">
-                  <a href="#" v-b-modal="`proof-${row.item.id}`">
-                    {{ row.item.proof.original_filename }}
-                  </a>
+              </b-col>
+            </b-row>
 
-                  <b-modal
-                    size="xl"
-                    :title="`Preuve de résidence (${row.item.full_name})`"
-                    :id="`proof-${row.item.id}`"
-                    footer-class="d-none"
-                  >
-                    <img class="img-fit" :src="row.item.proof.url" />
-                  </b-modal>
-                </span>
-              </template>
-              <template v-slot:cell(actions)="row">
-                <div class="text-right">
-                  <div v-if="!row.item._new">
-                    <b-button
-                      v-if="!row.item.approved_at"
-                      :disabled="usersLoading || loading"
-                      size="sm"
-                      class="ml-1 mb-1"
-                      variant="primary"
-                      @click="approveUser(row.item)"
-                    >
-                      {{ $t("approuver") | capitalize }}
-                    </b-button>
-                    <b-button
-                      v-else-if="!row.item.suspended_at"
-                      :disabled="usersLoading || loading"
-                      size="sm"
-                      class="ml-1 mb-1"
-                      variant="warning"
-                      @click="suspendUser(row.item)"
-                    >
-                      {{ $t("suspendre") | capitalize }}
-                    </b-button>
-                    <b-button
-                      v-else
-                      :disabled="usersLoading || loading"
-                      size="sm"
-                      class="ml-1 mb-1"
-                      variant="success"
-                      @click="unsuspendUser(row.item)"
-                    >
-                      {{ $t("rétablir") | capitalize }}
-                    </b-button>
-                  </div>
-
-                  <b-button
-                    size="sm"
-                    variant="danger"
-                    class="ml-1 mb-1"
-                    :disabled="usersLoading || loading"
-                    @click="removeUser(row.item)"
-                  >
-                    {{ $t("retirer") | capitalize }}
-                  </b-button>
-                </div>
-              </template>
-            </b-table>
+            <b-row>
+              <b-col>
+                <community-users-list
+                  :visibleFields="[
+                    'id',
+                    'user_full_name',
+                    'role',
+                    'approved_at',
+                    'suspended_at',
+                    'proof',
+                    'actions',
+                  ]"
+                  :items="communityUsers"
+                  :totalItemCount="communityUsersTotal"
+                  :itemsPerPage="10"
+                  :sortBy="communityUsersSortBy"
+                  :sortDesc="communityUsersSortDesc"
+                  :busy="communityUsersLoading"
+                  @changePage="onChangePage"
+                  @changeOrder="onChangeOrder"
+                  @changeUserRole="onChangeUserRole"
+                  @action="onCommunityUserAction"
+                >
+                </community-users-list>
+              </b-col>
+            </b-row>
 
             <b-row>
               <b-col md="6">
@@ -228,6 +156,9 @@
 </template>
 
 <script>
+import CommunityUsersFilters from "@/components/Community/CommunityUsersFilters.vue";
+import CommunityUsersList from "@/components/Community/CommunityUsersList.vue";
+
 import FormsBuilder from "@/components/Forms/Builder.vue";
 import PricingForm from "@/components/Pricing/PricingForm.vue";
 import PricingLanguageDefinition from "@/components/Pricing/LanguageDefinition.vue";
@@ -242,24 +173,20 @@ export default {
   name: "AdminCommunity",
   mixins: [DataRouteGuards, FormMixin],
   components: {
+    CommunityUsersFilters,
+    CommunityUsersList,
     FormsBuilder,
     FormsValidatedInput,
     PricingForm,
     PricingLanguageDefinition,
   },
+  mounted() {
+    // Initial load of sublist data accounting for filter, order and page num.
+    this.loadCommunityUserListData();
+  },
   data() {
     return {
       newPricingType: null,
-      userTable: [
-        { key: "id", label: "ID", sortable: true },
-        { key: "full_name", label: "Nom complet", sortable: true },
-        { key: "role", label: "Rôle", sortable: true },
-        { key: "approved_at", label: "Approuvé", sortable: true },
-        { key: "suspended_at", label: "Suspendu", sortable: true },
-        { key: "proof", label: "Preuve", sortable: false },
-        { key: "actions", label: "Actions", tdClass: "table__cell__actions" },
-      ],
-      userTableFilterFields: ["full_name"],
     };
   },
   computed: {
@@ -305,18 +232,75 @@ export default {
       ].filter((p) => currentPricingTypes.indexOf(p.value) === -1);
     },
     users() {
-      return this.$store.state.users.data.filter(() => true);
+      return this.$store.state.users.data;
     },
-    usersFilter: {
-      get() {
-        return this.$store.state["admin.community"].usersFilter;
-      },
-      set(val) {
-        this.$store.commit("admin.community/usersFilter", val);
-      },
+    /*
+      Ensure the format follows the community user format. This is what we are working on.
+    */
+    communityUsers() {
+      const users = this.$store.state.users.data;
+
+      // Convert data recieved from the backend to communityUsers required by the list.
+      let communityUser;
+      let communityUsers = [];
+
+      for (const user of users) {
+        for (const community of user.communities) {
+          communityUser = {
+            // Pour pouvoir linker aus actions...
+            id: user.id,
+            user_id: user.id,
+            user_full_name: user.full_name,
+            community_id: community.id,
+            community_name: community.name,
+            // Member role is defined as null. List expects it to be explicitly defined.
+            role: community.role ? community.role : "member",
+            approved_at: community.approved_at,
+            suspended_at: community.suspended_at,
+            proof: community.proof,
+          };
+
+          communityUsers.push(communityUser);
+        }
+      }
+
+      return communityUsers;
     },
-    usersLoading() {
+    communityUsersTotal() {
+      return this.$store.state.users.total;
+    },
+    communityUserListParams() {
+      return this.$store.state["admin.community"].communityUserListParams;
+    },
+    communityUsersLoading() {
       return !!this.$store.state.users.cancelToken;
+    },
+    communityUsersSortBy() {
+      // Field name without the minus sign indicating order.
+      const sortFieldName = this.communityUserListParams.order.replace("-", "");
+
+      let sortFieldKey = "";
+
+      // Convert backend field names to list field keys.
+      switch (sortFieldName) {
+        // Some remain unchanged
+        case "id":
+          sortFieldKey = sortFieldName;
+          break;
+
+        case "full_name":
+          sortFieldKey = "user_full_name";
+          break;
+
+        default:
+          sortFieldKey = "";
+          break;
+      }
+
+      return sortFieldKey;
+    },
+    communityUsersSortDesc() {
+      return this.communityUserListParams.order[0] === "-";
     },
   },
   methods: {
@@ -358,15 +342,6 @@ export default {
         ...this.contextParams,
       });
     },
-    localizedFilter(columns) {
-      return (row, filter) =>
-        columns
-          .map((c) => row[c] || "")
-          .join(",")
-          .normalize("NFD")
-          .replace(/[\u0300-\u036f]/g, "")
-          .match(new RegExp(filter.normalize("NFD").replace(/[\u0300-\u036f]/g, ""), "i"));
-    },
     removePricing(pricing) {
       const pricings = this.item.pricings.filter((p) => p !== pricing);
 
@@ -385,19 +360,6 @@ export default {
     },
     resetUsersExportUrl() {
       this.$store.commit(`${this.slug}/usersExportUrl`, null);
-    },
-    async setUserRole(user, role) {
-      await this.updateUser(user, (u) => {
-        const data = {
-          ...u,
-        };
-        // Only update the community_user.role
-        const community = data.communities.find((c) => c.id === this.item.id);
-        community.role = role;
-        data.role = community.role; // the data was misplaced so we leave it also here
-
-        return data;
-      });
     },
     async suspendUser(user) {
       await this.updateUser(user, (u) => {
@@ -440,6 +402,148 @@ export default {
         userId: user.id,
       });
     },
+    communityUserSetListParam({ name, value }) {
+      this.$store.commit("admin.community/communityUserListParam", { name, value });
+    },
+    loadCommunityUserListData() {
+      const filtersByKey = this.communityUserListParams.filters;
+      let filtersByName = {};
+
+      for (const fieldKey in filtersByKey) {
+        let fieldName = "";
+
+        switch (fieldKey) {
+          case "user_id":
+            fieldName = "id";
+            break;
+
+          case "user_full_name":
+            fieldName = "full_name";
+            break;
+
+          default:
+            fieldName = "";
+            break;
+        }
+
+        if ("" !== fieldName) {
+          filtersByName[fieldName] = filtersByKey[fieldKey];
+        }
+      }
+
+      let routeParams = {
+        fields: [
+          "id",
+          "full_name",
+          "communities.role",
+          "communities.proof",
+          "communities.approved_at",
+          "communities.suspended_at",
+        ].join(","),
+        is_deactivated: 0,
+        "communities.id": this.$route.params.id,
+      };
+
+      let contextParams = {
+        page: this.communityUserListParams.page,
+        order: this.communityUserListParams.order,
+        ...filtersByName,
+      };
+
+      if (this.listDebounce) {
+        clearTimeout(this.listDebounce);
+      }
+
+      this.listDebounce = setTimeout(() => {
+        try {
+          this.$store.dispatch(`users/retrieve`, {
+            // Pas route params, mais les paramètres spécifiques à la liste.
+            ...routeParams,
+            // Pas context params, mais les paramètres spécifiques à la liste.
+            ...contextParams,
+          });
+          this.listDebounce = null;
+        } catch (e) {
+          this.$store.commit("addNotification", {
+            content: `Erreur de chargement de données (${this.slug})`,
+            title: `${this.slug}`,
+            variant: "warning",
+            type: "data",
+          });
+          console.log(e);
+        }
+      }, 250);
+
+      return true;
+    },
+    onChangeFilters(filters) {
+      this.communityUserSetListParam({ name: "filters", value: filters });
+    },
+    onChangePage(page) {
+      this.communityUserSetListParam({ name: "page", value: page });
+    },
+    onChangeOrder(context) {
+      // If descending order, then prepend field key with minus sign.
+      let sortOrder = context.sortDesc ? "-" : "";
+
+      // Convert field keys to field names understood by the backend.
+      switch (context.sortBy) {
+        // Some remain unchanged
+        case "id":
+          sortOrder += context.sortBy;
+          break;
+
+        case "user_full_name":
+          sortOrder += "full_name";
+          break;
+
+        default:
+          sortOrder = "";
+          break;
+      }
+
+      this.communityUserSetListParam({ name: "order", value: sortOrder });
+    },
+    async onChangeUserRole(item, role) {
+      // Find the modified user.
+      const user = this.users.find((u) => u.id === item.user_id);
+
+      await this.updateUser(user, (u) => {
+        // Only update the community_user.role
+        const community = u.communities.find((c) => c.id === this.item.id);
+
+        // Backend interprets role as:
+        //   - null: User is a regular member of this community.
+        //   - "admin": User is an administrator of this community.
+        // The list components accepts {"member", "admin"}.
+        community.role = role === "member" ? null : role;
+
+        return u;
+      });
+    },
+    async onCommunityUserAction(item, action) {
+      // Find user.
+      const user = this.users.find((u) => u.id === item.user_id);
+
+      // Then call requested action.
+      switch (action) {
+        case "approve":
+          this.approveUser(user);
+          break;
+
+        case "suspend":
+          this.suspendUser(user);
+          break;
+
+        case "unsuspend":
+          this.unsuspendUser(user);
+          break;
+
+        case "remove":
+          this.removeUser(user);
+          break;
+      }
+    },
   },
   i18n: {
     messages: {
@@ -450,6 +554,14 @@ export default {
       fr: {
         ...locales.fr.communities,
         ...locales.fr.forms,
+      },
+    },
+  },
+  watch: {
+    communityUserListParams: {
+      deep: true,
+      handler() {
+        this.loadCommunityUserListData();
       },
     },
   },

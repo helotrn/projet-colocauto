@@ -61,34 +61,6 @@ export default [
             fields: ["*", "pricings.*", "parent.*"].join(","),
             for: "edit",
           },
-          data: {
-            users: {
-              retrieve: {
-                "communities.id": ({
-                  route: {
-                    params: { id },
-                  },
-                }) => id,
-                fields: [
-                  "id",
-                  "full_name",
-                  "communities.role",
-                  "communities.proof",
-                  "communities.approved_at",
-                  "communities.suspended_at",
-                ].join(","),
-                mapResults(item) {
-                  const communityId = parseInt(this.route.params.id, 10);
-                  const newItem = {
-                    ...item.communities.find((c) => c.id === communityId),
-                    ...item,
-                  };
-                  return newItem;
-                },
-                per_page: -1,
-              },
-            },
-          },
         },
       },
       {
