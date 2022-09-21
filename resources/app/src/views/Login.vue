@@ -21,7 +21,7 @@ export default {
 
       if (to.query.token) {
         vm.$store.commit("token", to.query.token);
-        vm.$router.replace("/");
+        vm.$store.dispatch("loadUser").then(() => vm.$router.replace("/app"));
       }
     });
   },
