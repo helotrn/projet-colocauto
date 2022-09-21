@@ -4,15 +4,18 @@ namespace Tests\Integration;
 
 use App\Models\Bike;
 use App\Models\Borrower;
-use App\Models\Extension;
 use App\Models\Loan;
 use App\Models\Owner;
+use Carbon\CarbonImmutable;
 use Tests\TestCase;
+
+use function PHPUnit\Framework\assertTrue;
 
 class ExtensionTest extends TestCase
 {
     protected $loan;
     protected $loanable;
+    protected $departure;
 
     public function setUp(): void
     {
@@ -25,10 +28,12 @@ class ExtensionTest extends TestCase
         $this->loanable = factory(Bike::class)->create([
             "owner_id" => $owner->id,
         ]);
+        $this->departure = CarbonImmutable::now();
         $this->loan = factory(Loan::class)->create([
             "loanable_id" => $this->loanable->id,
             "borrower_id" => $borrower->id,
             "duration_in_minutes" => 20,
+            "departure_at" => $this->departure,
         ]);
     }
 
@@ -50,9 +55,9 @@ class ExtensionTest extends TestCase
         $response->assertStatus(201)->assertJson($data);
     }
 
-    public function testCreateExtensionsForCollectiveLoanable()
+    public function testCreateExtensionsForSelfServiceLoanable()
     {
-        $this->loanable->owner_id = null;
+        $this->loanable->is_self_service = true;
         $this->loanable->save();
 
         $data = [
@@ -72,6 +77,14 @@ class ExtensionTest extends TestCase
             array_merge($data, [
                 "status" => "completed",
             ])
+        );
+
+        $this->loan->refresh();
+        assertTrue(
+            $this->departure
+                ->copy()
+                ->addMinutes(30)
+                ->equalTo($this->loan->actual_return_at)
         );
     }
 }
