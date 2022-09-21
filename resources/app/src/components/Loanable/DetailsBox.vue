@@ -127,4 +127,9 @@ export default {
 };
 </script>
 
-<style lang="scss"></style>
+<style lang="scss">
+.loanable-details-box {
+  // Show line feeds in comments, instructions and location_description
+  white-space: pre;
+}
+</style>

@@ -53,24 +53,31 @@
         <div>
           <b-row>
             <b-col>
+              <b-alert show variant="warning" v-if="item.loanable.instructions">
+                <div class="alert-heading">
+                  <h4>Instructions du propriétaire pour l'utilisation du véhicule</h4>
+                </div>
+                <div class="owner-instructions-text">
+                  <p>{{ item.loanable.instructions }}</p>
+                </div>
+              </b-alert>
               <b-alert show variant="info">
                 <div class="alert-heading"><h4>À savoir</h4></div>
-
                 <div>
                   <p>
-                    Assurez-vous d'aller chercher votre attache-remorque avant votre premier
-                    emprunt.
-                    <a href="https://mailchi.mp/solon-collectif/locomotion-comment-ca-marche"
-                      >Voir le guide de départ</a
-                    >
+                    Assurez-vous d'avoir lu
+                    <a href="https://mailchi.mp/solon-collectif/locomotion-comment-ca-marche">
+                      le guide de départ
+                    </a>
+                    avant votre emprunt.
                   </p>
-                  <p>
+                  <p v-if="item.loanable.has_padlock">
                     Il faut attendre au minimum 5 minutes après avoir fait la réservation pour
                     pouvoir débarrer le cadenas intelligent sur le véhicule!
                   </p>
-                  <p>
-                    Pour garder l'accès au cadenas, prolongez votre emprunt avec le bouton
-                    «&nbsp;Signaler un retard&nbsp;».
+                  <p v-if="item.loanable.has_padlock">
+                    Pour garder l'accès au cadenas intelligent, prolongez votre emprunt avec le
+                    bouton «&nbsp;Signaler un retard&nbsp;».
                   </p>
                 </div>
               </b-alert>
@@ -113,4 +120,8 @@ export default {
 };
 </script>
 
-<style lang="scss"></style>
+<style lang="scss">
+.owner-instructions-text {
+  white-space: pre;
+}
+</style>

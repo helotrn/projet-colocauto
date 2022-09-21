@@ -27,6 +27,19 @@
             @reset.stop.prevent="$emit('reset')"
           >
             <b-row>
+              <b-col>
+                <b-alert show variant="warning" v-if="item.loanable.comments">
+                  <div class="alert-heading">
+                    <h4>Commentaires du propriétaire sur le véhicule</h4>
+                  </div>
+                  <div class="owner-comments-text">
+                    <p>{{ item.loanable.comments }}</p>
+                  </div>
+                </b-alert>
+              </b-col>
+            </b-row>
+
+            <b-row>
               <b-col lg="6">
                 <!--
                   Disable past times only if loan is editable.
@@ -288,5 +301,8 @@ export default {
 .loan-form__estimations__loading {
   max-width: 100px;
   max-height: 30px;
+}
+.owner-comments-text {
+  white-space: pre;
 }
 </style>

@@ -53,6 +53,15 @@
         </div>
         <div v-else-if="item.loanable.type === 'car'">
           <validation-observer ref="observer" v-slot="{ passes }">
+            <b-alert show variant="warning" v-if="item.loanable.instructions">
+              <div class="alert-heading">
+                <h4>Instructions du propriétaire pour l'utilisation du véhicule</h4>
+              </div>
+              <div class="owner-instructions-text">
+                <p>{{ item.loanable.instructions }}</p>
+              </div>
+            </b-alert>
+
             <!-- Add message if user is borrower, but not owner. -->
             <b-row v-if="userRoles.includes('borrower') && !userRoles.includes('owner')">
               <b-col>
@@ -148,12 +157,20 @@
 
         <div v-else-if="item.loanable.has_padlock">
           <!-- Loanable is not a car and has a padlock. -->
-          <p>
-            Le cadenas du véhicule sera automatiquement associé à votre application NOKE à temps
-            pour la prise de possession.
-          </p>
+          <b-alert show variant="warning" v-if="item.loanable.instructions">
+            <div class="alert-heading">
+              <h4>Instructions du propriétaire pour l'utilisation du véhicule</h4>
+            </div>
+            <div class="owner-instructions-text">
+              <p>{{ item.loanable.instructions }}</p>
+            </div>
+          </b-alert>
 
           <b-alert show variant="info">
+            <p>
+              Le cadenas du véhicule sera automatiquement associé à votre application NOKE à temps
+              pour la prise de possession.
+            </p>
             <p>Vous avez un problème avec le cadenas?</p>
             <p>
               Contactez-nous entre 9h et 20h au 438-476-3343<br />
@@ -229,6 +246,14 @@
 
         <div v-else>
           <!-- Loanable is not a car and it does not have a padlock. -->
+          <b-alert show variant="warning" v-if="item.loanable.instructions">
+            <div class="alert-heading">
+              <h4>Instructions du propriétaire pour l'utilisation du véhicule</h4>
+            </div>
+            <div class="owner-instructions-text">
+              <p>{{ item.loanable.instructions }}</p>
+            </div>
+          </b-alert>
           <b-row v-if="!action.executed_at">
             <b-col>
               <p v-if="userRoles.includes('borrower') && !userRoles.includes('owner')">
@@ -364,5 +389,8 @@ export default {
       margin-bottom: 1rem;
     }
   }
+}
+.owner-instructions-text {
+  white-space: pre;
 }
 </style>
