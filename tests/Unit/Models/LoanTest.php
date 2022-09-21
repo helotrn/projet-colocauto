@@ -208,6 +208,7 @@ class LoanTest extends TestCase
         $departureAt = CarbonImmutable::now()
             ->setHours(4)
             ->setMinutes(30)
+            ->setSeconds(0)
             ->setMilliseconds(0);
 
         $loan = factory(Loan::class)
@@ -254,6 +255,7 @@ class LoanTest extends TestCase
         $departureAt = CarbonImmutable::now()
             ->setHours(4)
             ->setMinutes(30)
+            ->setSeconds(0)
             ->setMilliseconds(0);
 
         $loan = factory(Loan::class)
@@ -300,6 +302,7 @@ class LoanTest extends TestCase
         $departureAt = CarbonImmutable::now()
             ->setHours(4)
             ->setMinutes(30)
+            ->setSeconds(0)
             ->setMilliseconds(0);
 
         $loan = factory(Loan::class)
@@ -363,6 +366,7 @@ class LoanTest extends TestCase
         $departureAt = CarbonImmutable::now()
             ->setHours(4)
             ->setMinutes(30)
+            ->setSeconds(0)
             ->setMilliseconds(0);
 
         $loan = factory(Loan::class)
@@ -436,6 +440,7 @@ class LoanTest extends TestCase
         $departureAt = CarbonImmutable::now()
             ->setHours(4)
             ->setMinutes(30)
+            ->setSeconds(0)
             ->setMilliseconds(0);
 
         $loan = factory(Loan::class)
@@ -500,6 +505,7 @@ class LoanTest extends TestCase
         $departureAt = CarbonImmutable::now()
             ->setHours(4)
             ->setMinutes(30)
+            ->setSeconds(0)
             ->setMilliseconds(0);
 
         $loan = factory(Loan::class)
@@ -564,6 +570,7 @@ class LoanTest extends TestCase
         $departureAt = CarbonImmutable::now()
             ->setHours(4)
             ->setMinutes(30)
+            ->setSeconds(0)
             ->setMilliseconds(0);
 
         $loan = factory(Loan::class)
@@ -636,6 +643,7 @@ class LoanTest extends TestCase
         $departureAt = CarbonImmutable::now()
             ->setHours(4)
             ->setMinutes(30)
+            ->setSeconds(0)
             ->setMilliseconds(0);
 
         $loan = factory(Loan::class)
@@ -708,6 +716,7 @@ class LoanTest extends TestCase
         $departureAt = CarbonImmutable::now()
             ->setHours(4)
             ->setMinutes(30)
+            ->setSeconds(0)
             ->setMilliseconds(0);
 
         $loan = factory(Loan::class)
@@ -790,6 +799,7 @@ class LoanTest extends TestCase
         $departureAt = CarbonImmutable::now()
             ->setHours(23)
             ->setMinutes(30)
+            ->setSeconds(0)
             ->setMilliseconds(0);
 
         $loan = factory(Loan::class)
@@ -836,6 +846,7 @@ class LoanTest extends TestCase
         $departureAt = CarbonImmutable::now()
             ->setHours(4)
             ->setMinutes(30)
+            ->setSeconds(0)
             ->setMilliseconds(0);
 
         $loan = factory(Loan::class)
@@ -883,6 +894,7 @@ class LoanTest extends TestCase
         $departureAt = CarbonImmutable::now()
             ->setHours(4)
             ->setMinutes(30)
+            ->setSeconds(0)
             ->setMilliseconds(0);
 
         $loan = factory(Loan::class)
@@ -947,6 +959,7 @@ class LoanTest extends TestCase
         $departureAt = CarbonImmutable::now()
             ->setHours(4)
             ->setMinutes(30)
+            ->setSeconds(0)
             ->setMilliseconds(0);
 
         $loan = factory(Loan::class)
@@ -1020,6 +1033,7 @@ class LoanTest extends TestCase
         $departureAt = CarbonImmutable::now()
             ->setHours(4)
             ->setMinutes(30)
+            ->setSeconds(0)
             ->setMilliseconds(0);
 
         $loan = factory(Loan::class)
