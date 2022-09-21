@@ -7,7 +7,6 @@ use App\Models\Handover;
 use App\Models\Loan;
 use App\Models\Payment;
 use Tests\TestCase;
-use Carbon\Carbon;
 use Carbon\CarbonImmutable;
 
 class LoanTest extends TestCase
@@ -86,7 +85,7 @@ class LoanTest extends TestCase
 
         $this->assertFalse($loan->isCanceled());
 
-        $loan->cancel(new Carbon("2022-04-16 12:34:56"));
+        $loan->cancel(new CarbonImmutable("2022-04-16 12:34:56"));
 
         $this->assertTrue($loan->isCanceled());
 
@@ -116,7 +115,7 @@ class LoanTest extends TestCase
 
         $this->assertFalse($loan->isCanceled());
 
-        $loan->canceled_at = new Carbon();
+        $loan->canceled_at = new CarbonImmutable();
 
         $this->assertTrue($loan->isCanceled());
     }
