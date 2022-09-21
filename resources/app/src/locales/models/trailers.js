@@ -1,7 +1,7 @@
 export default {
   fr: {
     fields: {
-      maximum_charge: "chage maximale",
+      maximum_charge: "charge maximale",
       id: "ID",
     },
   },

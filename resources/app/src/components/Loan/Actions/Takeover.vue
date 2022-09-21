@@ -67,9 +67,9 @@
               <b-col>
                 <p>
                   Avez-vous bien pris connaissance de l'état de cette auto?<br />
-                  Il est important de le faire avant de prendre en prendre possession. Ainsi, s'il
-                  arrive un pépin, vous allez être en mesure d'en discuter avec la personne
-                  propriétaire de l'auto.
+                  Il est important de le faire avant d'en prendre possession. Ainsi, s'il arrive un
+                  pépin, vous allez être en mesure d'en discuter avec la personne propriétaire de
+                  l'auto.
                 </p>
               </b-col>
             </b-row>
