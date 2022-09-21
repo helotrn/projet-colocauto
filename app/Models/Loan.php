@@ -276,17 +276,39 @@ SQL;
 
     public static function getCalendarDays($start, $end)
     {
-        if ($end->dayOfYear === $start->dayOfYear) {
-            return 1;
+        // These variables are built gradually to become start and end of the
+        // day as we move forward, hence their name.
+        $startOfDaysCovered = $start->copy()->setMilliseconds(0);
+        $endOfDaysCovered = $end->copy()->setMilliseconds(0);
+
+        // Milliseconds must be set so the comparison is accurate.
+        // Return 0 for degenerate loan intervals.
+        if ($endOfDaysCovered->lessThanOrEqualTo($startOfDaysCovered)) {
+            return 0;
         }
 
-        if ($end->dayOfYear < $start->dayOfYear) {
-            return 1 +
-                (365 + $start->format("L") + $end->dayOfYear) -
-                $start->dayOfYear;
+        // Snap to start of day.
+        $startOfDaysCovered = $startOfDaysCovered
+            ->setHours(0)
+            ->setMinutes(0)
+            ->setSeconds(0);
+
+        // Snap to end of day (beginning of next day). Consider [, ) intervals.
+        if (
+            $endOfDaysCovered->hour > 0 ||
+            $endOfDaysCovered->minute > 0 ||
+            $endOfDaysCovered->second > 0
+        ) {
+            $endOfDaysCovered = $endOfDaysCovered
+                ->addDays(1)
+                ->setHours(0)
+                ->setMinutes(0)
+                ->setSeconds(0);
         }
 
-        return 1 + $end->dayOfYear - $start->dayOfYear;
+        $days = $startOfDaysCovered->diffInDays($endOfDaysCovered, false);
+
+        return $days;
     }
 
     public static function getRules($action = "", $auth = null)
