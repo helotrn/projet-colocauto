@@ -7,11 +7,95 @@ use App\Models\Handover;
 use App\Models\Loan;
 use App\Models\Payment;
 use Tests\TestCase;
-use Carbon\Carbon;
 use Carbon\CarbonImmutable;
 
 class LoanTest extends TestCase
 {
+    // TODO: Move to a calendar helper (#1080).
+    public function testGetCalendarDays()
+    {
+        // Loan starts before midnight
+        $this->assertEquals(
+            5,
+            Loan::getCalendarDays(
+                new CarbonImmutable("2022-04-16 23:45:00"),
+                new CarbonImmutable("2022-04-20 12:30:00")
+            )
+        );
+
+        // Loan starts at midnight
+        $this->assertEquals(
+            4,
+            Loan::getCalendarDays(
+                new CarbonImmutable("2022-04-17 00:00:00"),
+                new CarbonImmutable("2022-04-20 12:30:00")
+            )
+        );
+
+        // Loan starts after midnight
+        $this->assertEquals(
+            4,
+            Loan::getCalendarDays(
+                new CarbonImmutable("2022-04-17 00:15:00"),
+                new CarbonImmutable("2022-04-20 12:30:00")
+            )
+        );
+
+        // Loan ends before midnight
+        $this->assertEquals(
+            5,
+            Loan::getCalendarDays(
+                new CarbonImmutable("2022-04-16 12:30:00"),
+                new CarbonImmutable("2022-04-20 23:45:00")
+            )
+        );
+
+        // Loan ends at midnight
+        $this->assertEquals(
+            5,
+            Loan::getCalendarDays(
+                new CarbonImmutable("2022-04-16 12:00:00"),
+                new CarbonImmutable("2022-04-21 00:00:00")
+            )
+        );
+
+        // Loan ends after midnight
+        $this->assertEquals(
+            6,
+            Loan::getCalendarDays(
+                new CarbonImmutable("2022-04-16 12:15:00"),
+                new CarbonImmutable("2022-04-21 00:15:00")
+            )
+        );
+
+        // Loan spans some years.
+        $this->assertEquals(
+            4024,
+            Loan::getCalendarDays(
+                new CarbonImmutable("2014-04-16 12:15:00"),
+                new CarbonImmutable("2025-04-21 22:15:00")
+            )
+        );
+
+        // Loan starts and ends at the same time.
+        $this->assertEquals(
+            0,
+            Loan::getCalendarDays(
+                new CarbonImmutable("2022-04-16 12:15:00"),
+                new CarbonImmutable("2022-04-16 12:15:00")
+            )
+        );
+
+        // Loan ends before it starts.
+        $this->assertEquals(
+            0,
+            Loan::getCalendarDays(
+                new CarbonImmutable("2022-04-20 12:30:00"),
+                new CarbonImmutable("2022-04-16 23:45:00")
+            )
+        );
+    }
+
     public function testIsCancelable_Canceled()
     {
         $loan = factory(Loan::class)
@@ -86,7 +170,7 @@ class LoanTest extends TestCase
 
         $this->assertFalse($loan->isCanceled());
 
-        $loan->cancel(new Carbon("2022-04-16 12:34:56"));
+        $loan->cancel(new CarbonImmutable("2022-04-16 12:34:56"));
 
         $this->assertTrue($loan->isCanceled());
 
@@ -116,7 +200,7 @@ class LoanTest extends TestCase
 
         $this->assertFalse($loan->isCanceled());
 
-        $loan->canceled_at = new Carbon();
+        $loan->canceled_at = new CarbonImmutable();
 
         $this->assertTrue($loan->isCanceled());
     }
@@ -209,6 +293,7 @@ class LoanTest extends TestCase
         $departureAt = CarbonImmutable::now()
             ->setHours(4)
             ->setMinutes(30)
+            ->setSeconds(0)
             ->setMilliseconds(0);
 
         $loan = factory(Loan::class)
@@ -255,6 +340,7 @@ class LoanTest extends TestCase
         $departureAt = CarbonImmutable::now()
             ->setHours(4)
             ->setMinutes(30)
+            ->setSeconds(0)
             ->setMilliseconds(0);
 
         $loan = factory(Loan::class)
@@ -301,6 +387,7 @@ class LoanTest extends TestCase
         $departureAt = CarbonImmutable::now()
             ->setHours(4)
             ->setMinutes(30)
+            ->setSeconds(0)
             ->setMilliseconds(0);
 
         $loan = factory(Loan::class)
@@ -364,6 +451,7 @@ class LoanTest extends TestCase
         $departureAt = CarbonImmutable::now()
             ->setHours(4)
             ->setMinutes(30)
+            ->setSeconds(0)
             ->setMilliseconds(0);
 
         $loan = factory(Loan::class)
@@ -437,6 +525,7 @@ class LoanTest extends TestCase
         $departureAt = CarbonImmutable::now()
             ->setHours(4)
             ->setMinutes(30)
+            ->setSeconds(0)
             ->setMilliseconds(0);
 
         $loan = factory(Loan::class)
@@ -501,6 +590,7 @@ class LoanTest extends TestCase
         $departureAt = CarbonImmutable::now()
             ->setHours(4)
             ->setMinutes(30)
+            ->setSeconds(0)
             ->setMilliseconds(0);
 
         $loan = factory(Loan::class)
@@ -565,6 +655,7 @@ class LoanTest extends TestCase
         $departureAt = CarbonImmutable::now()
             ->setHours(4)
             ->setMinutes(30)
+            ->setSeconds(0)
             ->setMilliseconds(0);
 
         $loan = factory(Loan::class)
@@ -637,6 +728,7 @@ class LoanTest extends TestCase
         $departureAt = CarbonImmutable::now()
             ->setHours(4)
             ->setMinutes(30)
+            ->setSeconds(0)
             ->setMilliseconds(0);
 
         $loan = factory(Loan::class)
@@ -709,6 +801,7 @@ class LoanTest extends TestCase
         $departureAt = CarbonImmutable::now()
             ->setHours(4)
             ->setMinutes(30)
+            ->setSeconds(0)
             ->setMilliseconds(0);
 
         $loan = factory(Loan::class)
@@ -791,6 +884,7 @@ class LoanTest extends TestCase
         $departureAt = CarbonImmutable::now()
             ->setHours(23)
             ->setMinutes(30)
+            ->setSeconds(0)
             ->setMilliseconds(0);
 
         $loan = factory(Loan::class)
@@ -837,6 +931,7 @@ class LoanTest extends TestCase
         $departureAt = CarbonImmutable::now()
             ->setHours(4)
             ->setMinutes(30)
+            ->setSeconds(0)
             ->setMilliseconds(0);
 
         $loan = factory(Loan::class)
@@ -884,6 +979,7 @@ class LoanTest extends TestCase
         $departureAt = CarbonImmutable::now()
             ->setHours(4)
             ->setMinutes(30)
+            ->setSeconds(0)
             ->setMilliseconds(0);
 
         $loan = factory(Loan::class)
@@ -948,6 +1044,7 @@ class LoanTest extends TestCase
         $departureAt = CarbonImmutable::now()
             ->setHours(4)
             ->setMinutes(30)
+            ->setSeconds(0)
             ->setMilliseconds(0);
 
         $loan = factory(Loan::class)
@@ -1021,6 +1118,7 @@ class LoanTest extends TestCase
         $departureAt = CarbonImmutable::now()
             ->setHours(4)
             ->setMinutes(30)
+            ->setSeconds(0)
             ->setMilliseconds(0);
 
         $loan = factory(Loan::class)
