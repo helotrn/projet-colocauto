@@ -274,6 +274,7 @@ SQL;
         ];
     }
 
+    // TODO: Move to a calendar helper (#1080).
     public static function getCalendarDays($start, $end)
     {
         // These variables are built gradually to become start and end of the

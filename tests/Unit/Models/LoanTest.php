@@ -11,6 +11,7 @@ use Carbon\CarbonImmutable;
 
 class LoanTest extends TestCase
 {
+    // TODO: Move to a calendar helper (#1080).
     public function testGetCalendarDays()
     {
         // Loan starts before midnight
