@@ -246,6 +246,9 @@ export default {
 
       for (const user of users) {
         for (const community of user.communities) {
+          if (community.id != this.$route.params.id) {
+            continue;
+          }
           communityUser = {
             // Pour pouvoir linker aus actions...
             id: user.id,
