@@ -3,12 +3,7 @@
     <h2 class="text-center">{{ $t("register") }}</h2>
 
     <div class="register-form__google">
-      <b-button :href="authUrl" variant="primary" class="btn-google">
-        <div class="btn-google__icon">
-          <svg-google />
-        </div>
-        {{ $t("google") }}
-      </b-button>
+      <google-auth-button :label="$t('google')" />
     </div>
 
     <div class="form__separator">
@@ -64,15 +59,15 @@
 import locales from "@/locales";
 
 import FormsValidatedInput from "@/components/Forms/ValidatedInput.vue";
+import GoogleAuthButton from "@/components/Misc/GoogleAuthButton.vue";
 
 import { extractErrors } from "@/helpers";
-import Google from "@/assets/svg/google.svg";
 
 export default {
   name: "registerBox",
   components: {
     FormsValidatedInput,
-    "svg-google": Google,
+    GoogleAuthButton,
   },
   data() {
     return {
@@ -82,7 +77,7 @@ export default {
   },
   computed: {
     loading() {
-      return this.$store.state.register.loading;
+      return this.$store.state.loading;
     },
     email: {
       get() {
@@ -92,13 +87,10 @@ export default {
         return this.$store.commit("register/email", value);
       },
     },
-    authUrl() {
-      return `${process.env.VUE_APP_BACKEND_URL}/auth/google`;
-    },
   },
   methods: {
     async register() {
-      this.$store.commit("register/loading", true);
+      this.$store.commit("loading", true);
 
       try {
         await this.$store.dispatch("register", {
@@ -110,8 +102,6 @@ export default {
           email: this.email,
           password: this.password,
         });
-
-        this.$store.commit("register/loading", false);
 
         this.$router.replace("/register/2");
       } catch (e) {
@@ -128,8 +118,6 @@ export default {
           }
         }
       }
-
-      this.$store.commit("register/loading", false);
     },
   },
   i18n: {
