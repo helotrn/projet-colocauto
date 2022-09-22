@@ -19,9 +19,10 @@ export default {
         "LocoMotion est un projet citoyen et collaboratif. Participez à son" +
         "fonctionnement en donnant une contribution volontaire.",
     },
+    loan_approved: "La réservation est confirmée!",
     modification_warning: {
       title: "Pour modifier votre réservation",
-      content: "Merci de l'annuler et de créer une nouvelle réservation.",
+      content: "Merci de l'annuler et d'en créer une nouvelle.",
     },
     insurance_warning: {
       title: "Avant d'emprunter une auto",

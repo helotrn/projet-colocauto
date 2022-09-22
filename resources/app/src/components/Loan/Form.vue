@@ -10,7 +10,7 @@
         <svg-check v-if="item.id" />
         <svg-waiting v-else />
 
-        Demande d'emprunt
+        {{ loanableIsSelfService ? "Réservation" : "Demande d'emprunt" }}
       </h2>
 
       <span v-if="!item.created_at">En cours de création</span>
@@ -188,7 +188,7 @@
                 <b-button
                   type="submit"
                   :disabled="loading || invalidDuration"
-                  v-else-if="isOwnedLoanable"
+                  v-else-if="!loanableIsSelfService"
                 >
                   Faire la demande d'emprunt
                 </b-button>
