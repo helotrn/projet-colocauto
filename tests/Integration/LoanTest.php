@@ -6,11 +6,15 @@ use App\Models\Bike;
 use App\Models\Borrower;
 use App\Models\Community;
 use App\Models\Extension;
+use App\Models\Intention;
 use App\Models\Loan;
 use App\Models\Owner;
 use App\Models\User;
 use Carbon\Carbon;
 use Tests\TestCase;
+
+use function PHPUnit\Framework\assertArrayHasKey;
+use function PHPUnit\Framework\assertEquals;
 
 class LoanTest extends TestCase
 {
@@ -1131,5 +1135,64 @@ class LoanTest extends TestCase
         $this->json("GET", "/api/v1/loans/$loan->id", [
             "actual_duration_in_minutes" => "40:",
         ])->assertStatus(404);
+    }
+
+    public function testRetrieveApprovedLoan_showsInstructions()
+    {
+        // Linking users and communities would trigger RegistrationApprovedEvent
+        // which would then send email using an external service.
+        // withoutEvents() makes the test robust to a non-existent or
+        // incorrectly-configured email service.
+        $this->withoutEvents();
+        $community = factory(Community::class)->create();
+
+        $borrowerUser = factory(User::class)->create();
+        $borrowerUser
+            ->communities()
+            ->attach($community->id, ["approved_at" => new \DateTime()]);
+        $borrower = factory(Borrower::class)->create([
+            "user_id" => $borrowerUser->id,
+        ]);
+
+        $ownerUser = factory(User::class)->create();
+        $ownerUser
+            ->communities()
+            ->attach($community->id, ["approved_at" => new \DateTime()]);
+        $owner = factory(Owner::class)->create(["user_id" => $ownerUser->id]);
+
+        $loanable = factory(Bike::class)->create([
+            "owner_id" => $owner->id,
+            "instructions" => "test",
+        ]);
+
+        $this->actAs($borrower->user);
+        $response = $this->json("GET", "/api/v1/loans");
+
+        $response->assertJsonMissing([
+            "instructions" => "test",
+        ]);
+
+        $loan = factory(Loan::class)->create([
+            "borrower_id" => $borrower->id,
+            "loanable_id" => $loanable->id,
+        ]);
+        $response = $this->json("GET", "/api/v1/loans/{$loan->id}");
+
+        $response->assertJsonMissing([
+            "instructions" => "test",
+        ]);
+
+        $loan->intention()->save(
+            factory(Intention::class)->make([
+                "executed_at" => Carbon::now(),
+                "status" => "completed",
+            ])
+        );
+
+        $response = $this->json("GET", "/api/v1/loans/{$loan->id}");
+
+        $response->assertJsonFragment([
+            "instructions" => "test",
+        ]);
     }
 }

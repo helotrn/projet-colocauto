@@ -25,6 +25,8 @@ class Loanable extends BaseModel
 
     protected $appends = ["community_ids"];
 
+    protected $hidden = ["instructions"];
+
     public static $filterTypes = [
         "id" => "number",
         "name" => "text",
@@ -325,6 +327,26 @@ class Loanable extends BaseModel
             "lat" => $this->position[0],
             "lng" => $this->position[1],
         ];
+    }
+
+    public function handleInstructionVisibilityFor($user, $loan = null)
+    {
+        if ($user->isAdmin() || $this->owner->user->id === $user->id) {
+            $this->makeVisible("instructions");
+            return;
+        }
+
+        // Make instructions visible for an approved loan in process
+        if (
+            $loan &&
+            $loan->loanable->id === $this->id &&
+            $loan->status === "in_process" &&
+            $loan->intention &&
+            $loan->intention->isCompleted() &&
+            $loan->borrower->user->id === $user->id
+        ) {
+            $this->makeVisible("instructions");
+        }
     }
 
     public function scopeWithDeleted(Builder $query, $value, $negative = false)

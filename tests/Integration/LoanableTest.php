@@ -704,6 +704,66 @@ class LoanableTest extends TestCase
         ]);
     }
 
+    public function testRetrieveLoanableForOwner_showsInstructions()
+    {
+        $this->withoutEvents();
+        $ownerUser = factory(User::class)->create();
+        $owner = factory(Owner::class)->create(["user_id" => $ownerUser->id]);
+
+        $loanable = factory(Bike::class)->create([
+            "owner_id" => $owner->id,
+            "instructions" => "test",
+        ]);
+
+        $this->actAs($ownerUser);
+        $response = $this->json("GET", "/api/v1/loanables/{$loanable->id}");
+
+        $response->assertJsonFragment([
+            "instructions" => "test",
+        ]);
+    }
+
+    public function testRetrieveLoanableForAdmin_showsInstructions()
+    {
+        $this->withoutEvents();
+        $ownerUser = factory(User::class)->create();
+        $owner = factory(Owner::class)->create(["user_id" => $ownerUser->id]);
+        $loanable = factory(Bike::class)->create([
+            "owner_id" => $owner->id,
+            "instructions" => "test",
+        ]);
+
+        $admin = factory(User::class)->create(["role" => "admin"]);
+
+        $this->actAs($admin);
+        $response = $this->json("GET", "/api/v1/loanables/{$loanable->id}");
+
+        $response->assertJsonFragment([
+            "instructions" => "test",
+        ]);
+    }
+
+    public function testRetrieveLoanable_hidesInstructions()
+    {
+        $this->withoutEvents();
+
+        $ownerUser = factory(User::class)->create();
+        $owner = factory(Owner::class)->create(["user_id" => $ownerUser->id]);
+        $loanable = factory(Bike::class)->create([
+            "owner_id" => $owner->id,
+            "instructions" => "test",
+        ]);
+
+        $otherUser = factory(User::class)->create();
+
+        $this->actAs($otherUser);
+        $response = $this->json("GET", "/api/v1/loanables/{$loanable->id}");
+
+        $response->assertJsonMissing([
+            "instructions" => "test",
+        ]);
+    }
+
     public function testLoanableTestEndpointValidation()
     {
         // Linking users and communities would trigger RegistrationApprovedEvent
