@@ -61,18 +61,18 @@
               <p>{{ item.loanable.instructions }}</p>
             </div>
           </b-alert>
-        
+
           <div v-if="item.loanable.type === 'car'">
             <validation-observer ref="observer" v-slot="{ passes }">
-
+              
               <!-- Add message if user is borrower, but not owner. -->
               <b-row v-if="userRoles.includes('borrower') && !userRoles.includes('owner')">
                 <b-col>
                   <p>
                     Avez-vous bien pris connaissance de l'état de cette auto?<br />
-                    Il est important de le faire avant d'en prendre possession. Ainsi, s'il arrive un
-                    pépin, vous allez être en mesure d'en discuter avec la personne propriétaire de
-                    l'auto.
+                    Il est important de le faire avant d'en prendre possession. Ainsi, s'il arrive
+                    un pépin, vous allez être en mesure d'en discuter avec la personne propriétaire
+                    de l'auto.
                   </p>
                 </b-col>
               </b-row>
@@ -98,8 +98,8 @@
 
                     <p>
                       <small>
-                        On vous demande une preuve? Prenez une photo du tableau de bord de l'auto pour
-                        rentrer les bonnes informations (kilométrage, essence). Cette photo est
+                        On vous demande une preuve? Prenez une photo du tableau de bord de l'auto
+                        pour rentrer les bonnes informations (kilométrage, essence). Cette photo est
                         facultative.
                       </small>
                     </p>
@@ -135,7 +135,9 @@
 
                 <b-row
                   class="loan-actions-takeover__buttons text-center"
-                  v-if="(!action.executed_at && !loanIsCanceled && !item.is_contested) || userIsAdmin"
+                  v-if="
+                    (!action.executed_at && !loanIsCanceled && !item.is_contested) || userIsAdmin
+                  "
                 >
                   <b-col>
                     <b-button type="submit" size="sm" variant="success" class="mr-3">
@@ -277,8 +279,8 @@
               <b-col>
                 <b-alert variant="warning" show>
                   Les informations de l'emprunt peuvent être modifiées jusqu'à 48h après sa
-                  conclusion. À partir de ce moment, le coût de l'emprunt sera validé avec les détails
-                  ci-dessus.
+                  conclusion. À partir de ce moment, le coût de l'emprunt sera validé avec les
+                  détails ci-dessus.
                 </b-alert>
               </b-col>
             </b-row>
