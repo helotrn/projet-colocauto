@@ -78,6 +78,7 @@
             <b-col lg="8">
               <forms-validated-input
                 name="comments"
+                :description="$t('descriptions.comments')"
                 :rules="form.general.comments.rules"
                 :label="$t('fields.comments') | capitalize"
                 type="textarea"

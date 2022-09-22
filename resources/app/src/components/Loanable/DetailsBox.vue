@@ -10,7 +10,7 @@
           <p>{{ loanable.comments }}</p>
         </div>
 
-        <div class="loanable-details-box__section" v-if="loanable.instructions">
+        <div v-if="showInstructions && loanable.instructions" class="loanable-details-box__section">
           <h3>{{ $t("fields.instructions") | capitalize }}</h3>
 
           <p>{{ loanable.instructions }}</p>
@@ -112,6 +112,11 @@ export default {
     loanable: {
       type: Object,
       required: true,
+    },
+    showInstructions: {
+      type: Boolean,
+      required: false,
+      default: false,
     },
   },
   i18n: {

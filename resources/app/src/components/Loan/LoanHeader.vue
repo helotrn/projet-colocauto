@@ -75,7 +75,7 @@
       id="loanable-modal"
       footer-class="d-none"
     >
-      <loanable-details-box :loanable="loan.loanable" />
+      <loanable-details-box :loanable="loan.loanable" showInstructions />
     </b-modal>
 
     <b-modal
@@ -129,6 +129,11 @@ export default {
     user: {
       type: Object,
       required: true,
+    },
+    showInstructions: {
+      type: Boolean,
+      required: false,
+      default: false,
     },
   },
   computed: {
