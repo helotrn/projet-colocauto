@@ -17,7 +17,7 @@ class Extension extends Action
     {
         parent::boot();
 
-        self::saved(function ($model) {
+        self::saving(function ($model) {
             if (!$model->executed_at) {
                 switch ($model->status) {
                     // Complete (meaning to accept) extension if loanable is self-service.
@@ -29,14 +29,12 @@ class Extension extends Action
                         ) {
                             $model->status = "completed";
                             $model->executed_at = Carbon::now();
-                            $model->save();
                         }
                         break;
                     case "completed":
                     case "canceled":
                     case "rejected":
                         $model->executed_at = Carbon::now();
-                        $model->save();
                         break;
                 }
             }
