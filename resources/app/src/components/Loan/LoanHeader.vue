@@ -91,7 +91,8 @@
 
       <dl>
         <dt>Téléphone</dt>
-        <dd>{{ loan.loanable.owner.user.phone }}</dd>
+        <dd v-if="loan.loanable.owner.user.phone">{{ loan.loanable.owner.user.phone }}</dd>
+        <dd v-else>Sera affiché quand la demande d'emprunt sera créée.</dd>
       </dl>
     </b-modal>
 
