@@ -10,6 +10,11 @@ const i18n = {
       "aucune communauté sélectionnée | {count} communauté sélectionnée | {count} communautés sélectionnées",
     fields: {
       chat_group_url: "URL du groupe de discussion",
+      // When community is referred to from outisde of this context.
+      community: {
+        id: "ID communauté",
+        name: "Communauté",
+      },
       description: "description",
       id: "ID",
       long_description: "texte de bienvenue / présentation",
@@ -26,8 +31,29 @@ const i18n = {
         borough: "quartier",
         private: "privée",
       },
+      user: {
+        id: "ID utilisateur-rice",
+        name: "Utilisateur-rice",
+        role: "Rôle",
+        role_labels: {
+          member: "Membre",
+          admin: "Admin",
+        },
+        approved_at: "Approuvé-e",
+        suspended_at: "Suspendu-e",
+        proof: "Preuves",
+        actions: "Actions",
+        action_labels: {
+          approve: "Approuver",
+          suspend: "Suspendre",
+          unsuspend: "Rétablir",
+          remove: "Retirer",
+        },
+      },
     },
     model_name: "communauté | communautés",
+    user_list_empty_text: "Aucun membre à afficher.",
+    user_proof_of_residence: "Preuve de résidence ({user_full_name})",
   },
   en: {
     communauté: "community | communities",
@@ -35,6 +61,11 @@ const i18n = {
     "{count} communauté sélectionnée":
       "no community selected | {count} community selected | {count} communities selected",
     fields: {
+      // When community is referred to from outisde of this context.
+      community: {
+        id: "Community ID",
+        _name: "Community",
+      },
       description: "description",
       id: "ID",
       name: "name",
@@ -49,7 +80,28 @@ const i18n = {
         borough: "borough",
         private: "private",
       },
+      user: {
+        id: "User ID",
+        name: "User",
+        role: "Role",
+        role_labels: {
+          member: "Member",
+          admin: "Admin",
+        },
+        approved_at: "Approved",
+        suspended_at: "Suspended",
+        proof: "Proof",
+        actions: "Actions",
+        action_labels: {
+          approve: "Approve",
+          suspend: "Suspend",
+          unsuspend: "Unsuspend",
+          remove: "Remove",
+        },
+      },
     },
+    user_list_empty_text: "No member to display.",
+    user_proof_of_residence: "Proof of residence ({user_full_name})",
   },
 };
 

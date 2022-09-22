@@ -90,10 +90,10 @@ export default {
   },
   computed: {
     errors() {
-      return this.$store.state.images.errors;
+      return this.$store.state.files.errors;
     },
     loading() {
-      return !!this.$store.state.images.cancelToken;
+      return !!this.$store.state.files.cancelToken;
     },
     validationState() {
       if (!this.required && !this.value) {

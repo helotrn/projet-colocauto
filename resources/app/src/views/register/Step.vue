@@ -59,6 +59,8 @@
           v-for="community in item.communities"
           :key="community.id"
           :community="community"
+          :loading="proofLoading"
+          skip="/register/4"
           @submit="submitCommunityProof"
         />
       </div>
@@ -140,7 +142,7 @@ export default {
     "svg-biking": Biking,
   },
   data() {
-    return { currentSlide: 1, currrentPage: 2 };
+    return { currentSlide: 1, currrentPage: 2, proofLoading: false };
   },
   beforeRouteEnter(to, from, next) {
     next((vm) => {
@@ -212,6 +214,7 @@ export default {
     },
     async submitCommunityProof() {
       try {
+        this.proofLoading = true;
         // File attached
         await this.submit(false);
         // Go to the on-boarding slides
@@ -229,6 +232,8 @@ export default {
               });
           }
         }
+      } finally {
+        this.proofLoading = false;
       }
     },
   },

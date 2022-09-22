@@ -88,6 +88,17 @@ class File extends BaseModel
 
             $model->path = $filePath;
         });
+
+        // TODO: In the UI call delete /files/id directly?
+        self::deleted(function ($model) {
+            $model->deleteFile();
+        });
+    }
+
+    public function deleteFile()
+    {
+        $fullPath = $this->path . DIRECTORY_SEPARATOR . $this->filename;
+        Storage::disk(env("FILESYSTEM_DRIVER"))->delete($fullPath);
     }
 
     public $items = ["user"];

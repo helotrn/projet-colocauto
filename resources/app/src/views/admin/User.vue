@@ -594,7 +594,10 @@ export default {
       await this.$store.dispatch(`${this.slug}/unsuspendBorrower`, user.id);
     },
     viewUserInCommunity(community) {
-      this.$store.commit("admin.community/usersFilter", this.item.full_name);
+      this.$store.commit("admin.community/communityUserListParam", {
+        name: "filters",
+        value: { user_id: this.item.id, user_full_name: this.item.full_name },
+      });
       this.$router.push(`/admin/communities/${community.id}#members`);
     },
     getSignedAmount(type, amount) {

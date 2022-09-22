@@ -18,6 +18,7 @@ use App\Http\Requests\User\UpdatePasswordRequest;
 use App\Http\Requests\User\UserTagRequest;
 use App\Models\Borrower;
 use App\Models\Invoice;
+use App\Models\Pivots\CommunityUser;
 use App\Models\User;
 use App\Repositories\CommunityRepository;
 use App\Repositories\InvoiceRepository;
@@ -26,6 +27,7 @@ use Cache;
 use Mail;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use Stripe;
 
@@ -84,17 +86,78 @@ class UserController extends RestController
         return $this->respondWithItem($request, $item, 201);
     }
 
+    /**
+     * @return true if the data has a different proofs for communities than
+     *      the ones currently stored.
+     * @throws HttpException if attempting to update the proof for a community the
+     *      user isn't a part of.
+     */
+    private static function isChangedProof($userId, $data): bool
+    {
+        if (!$data || !array_key_exists("communities", $data)) {
+            return false;
+        }
+
+        $previousCommunities = CommunityUser::where("user_id", $userId)->get();
+        $savingCommunities = $data["communities"];
+        foreach ($savingCommunities as $community) {
+            if (!array_key_exists("proof", $community)) {
+                continue;
+            }
+
+            $previousCommunity = array_first($previousCommunities, function (
+                $c
+            ) use ($community) {
+                return $c->community_id == $community["id"];
+            });
+
+            // Submitting proof for a community they are not a part of.
+            if (!$previousCommunity) {
+                abort(
+                    422,
+                    "Cannot submit proof for community the user isn't a part of."
+                );
+            }
+
+            $newProofs = array_map(function ($p) {
+                return $p["id"];
+            }, $community["proof"]);
+
+            $previousProofs = $previousCommunity->proof
+                ->map(function ($p) {
+                    return $p->id;
+                })
+                ->toArray();
+
+            // Proof has changed if the number of files, or the ids of the files
+            // are different.
+            if (
+                sizeof($newProofs) !== sizeof($previousProofs) ||
+                array_sort($previousProofs) != array_sort($newProofs)
+            ) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public function update(UpdateRequest $request, $id)
     {
+        $proofChanged = static::isChangedProof($id, $request->json()->all());
+
         try {
-            $item = parent::validateAndUpdate($request, $id);
+            $savedUser = parent::validateAndUpdate($request, $id);
         } catch (ValidationException $e) {
             return $this->respondWithErrors($e->errors(), $e->getMessage());
         } catch (ModelNotFoundException $e) {
             return $this->respondWithMessage("Not found", 404);
         }
 
-        return $this->respondWithItem($request, $item);
+        if ($proofChanged) {
+            event(new RegistrationSubmittedEvent($savedUser));
+        }
+
+        return $this->respondWithItem($request, $savedUser);
     }
 
     public function retrieve(Request $request, $id)
@@ -564,10 +627,10 @@ class UserController extends RestController
                         "type" => "checkbox",
                     ],
                     "gaa" => [
-                        "type" => "file",
+                        "type" => "files",
                     ],
                     "saaq" => [
-                        "type" => "file",
+                        "type" => "files",
                     ],
                 ],
             ],

@@ -103,6 +103,16 @@
         v-bind:value="value"
         v-on:input="emitInput"
       />
+      <forms-files-uploader
+        v-else-if="type === 'files'"
+        :id="name"
+        :name="name"
+        :field="name"
+        :placeholder="placeholder"
+        :disabled="disabled"
+        :value="value"
+        @input="emitInput"
+      />
       <forms-file-uploader
         v-else-if="type === 'file'"
         :id="name"
@@ -205,6 +215,7 @@ import { VueEditor } from "vue2-editor";
 import FormsDatePicker from "@/components/Forms/DatePicker.vue";
 import FormsDateTimePicker from "@/components/Forms/DateTimePicker.vue";
 import FormsFileUploader from "@/components/Forms/FileUploader.vue";
+import FormsFilesUploader from "@/components/Forms/FilesUploader.vue";
 import FormsImageUploader from "@/components/Forms/ImageUploader.vue";
 import FormsMapInput from "@/components/Forms/MapInput.vue";
 import FormsRelationInput from "@/components/Forms/RelationInput.vue";
@@ -380,6 +391,7 @@ export default {
     FormsDatePicker,
     FormsDateTimePicker,
     FormsFileUploader,
+    FormsFilesUploader,
     FormsImageUploader,
     FormsMapInput,
     FormsRelationInput,

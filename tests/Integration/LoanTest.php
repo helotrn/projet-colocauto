@@ -1026,6 +1026,11 @@ class LoanTest extends TestCase
             "actual_duration_in_minutes" => 360,
         ]);
         $this->json("GET", "/api/v1/loans/$loan->id", [
+            "actual_duration_in_minutes" => "350:370",
+        ])->assertJson([
+            "actual_duration_in_minutes" => 360,
+        ]);
+        $this->json("GET", "/api/v1/loans/$loan->id", [
             "actual_duration_in_minutes" => 120,
         ])->assertStatus(404);
     }

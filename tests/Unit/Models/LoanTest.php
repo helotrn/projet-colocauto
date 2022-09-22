@@ -7,11 +7,95 @@ use App\Models\Handover;
 use App\Models\Loan;
 use App\Models\Payment;
 use Tests\TestCase;
-use Carbon\Carbon;
 use Carbon\CarbonImmutable;
 
 class LoanTest extends TestCase
 {
+    // TODO: Move to a calendar helper (#1080).
+    public function testGetCalendarDays()
+    {
+        // Loan starts before midnight
+        $this->assertEquals(
+            5,
+            Loan::getCalendarDays(
+                new CarbonImmutable("2022-04-16 23:45:00"),
+                new CarbonImmutable("2022-04-20 12:30:00")
+            )
+        );
+
+        // Loan starts at midnight
+        $this->assertEquals(
+            4,
+            Loan::getCalendarDays(
+                new CarbonImmutable("2022-04-17 00:00:00"),
+                new CarbonImmutable("2022-04-20 12:30:00")
+            )
+        );
+
+        // Loan starts after midnight
+        $this->assertEquals(
+            4,
+            Loan::getCalendarDays(
+                new CarbonImmutable("2022-04-17 00:15:00"),
+                new CarbonImmutable("2022-04-20 12:30:00")
+            )
+        );
+
+        // Loan ends before midnight
+        $this->assertEquals(
+            5,
+            Loan::getCalendarDays(
+                new CarbonImmutable("2022-04-16 12:30:00"),
+                new CarbonImmutable("2022-04-20 23:45:00")
+            )
+        );
+
+        // Loan ends at midnight
+        $this->assertEquals(
+            5,
+            Loan::getCalendarDays(
+                new CarbonImmutable("2022-04-16 12:00:00"),
+                new CarbonImmutable("2022-04-21 00:00:00")
+            )
+        );
+
+        // Loan ends after midnight
+        $this->assertEquals(
+            6,
+            Loan::getCalendarDays(
+                new CarbonImmutable("2022-04-16 12:15:00"),
+                new CarbonImmutable("2022-04-21 00:15:00")
+            )
+        );
+
+        // Loan spans some years.
+        $this->assertEquals(
+            4024,
+            Loan::getCalendarDays(
+                new CarbonImmutable("2014-04-16 12:15:00"),
+                new CarbonImmutable("2025-04-21 22:15:00")
+            )
+        );
+
+        // Loan starts and ends at the same time.
+        $this->assertEquals(
+            0,
+            Loan::getCalendarDays(
+                new CarbonImmutable("2022-04-16 12:15:00"),
+                new CarbonImmutable("2022-04-16 12:15:00")
+            )
+        );
+
+        // Loan ends before it starts.
+        $this->assertEquals(
+            0,
+            Loan::getCalendarDays(
+                new CarbonImmutable("2022-04-20 12:30:00"),
+                new CarbonImmutable("2022-04-16 23:45:00")
+            )
+        );
+    }
+
     public function testIsCancelable_Canceled()
     {
         $loan = factory(Loan::class)
@@ -86,7 +170,7 @@ class LoanTest extends TestCase
 
         $this->assertFalse($loan->isCanceled());
 
-        $loan->cancel(new Carbon("2022-04-16 12:34:56"));
+        $loan->cancel(new CarbonImmutable("2022-04-16 12:34:56"));
 
         $this->assertTrue($loan->isCanceled());
 
@@ -116,7 +200,7 @@ class LoanTest extends TestCase
 
         $this->assertFalse($loan->isCanceled());
 
-        $loan->canceled_at = new Carbon();
+        $loan->canceled_at = new CarbonImmutable();
 
         $this->assertTrue($loan->isCanceled());
     }
@@ -202,16 +286,20 @@ class LoanTest extends TestCase
         $this->assertEquals("completed", $loan->getStatusFromActions());
     }
 
-    public function testGetActualReturnAtFromActions_IntentionInProcess()
+    public function testLoanTimesAndDurations_IntentionInProcess()
     {
         // Milliseconds get truncated in the database, zero them out so as to
         // compare on seconds only.
-        $now = CarbonImmutable::now()->setMilliseconds(0);
+        $departureAt = CarbonImmutable::now()
+            ->setHours(4)
+            ->setMinutes(30)
+            ->setSeconds(0)
+            ->setMilliseconds(0);
 
         $loan = factory(Loan::class)
             ->states("withInProcessIntention")
             ->create([
-                "departure_at" => $now,
+                "departure_at" => $departureAt,
                 "duration_in_minutes" => 75,
             ]);
 
@@ -233,20 +321,32 @@ class LoanTest extends TestCase
 
         // Validate loan return time.
         $this->assertTrue(
-            $now->addMinutes(75)->equalTo($loan->getActualReturnAtFromActions())
+            $departureAt
+                ->addMinutes(75)
+                ->equalTo($loan->getActualReturnAtFromActions())
         );
+
+        // Check the loan's actual duration.
+        $this->assertEquals(75, $loan->actual_duration_in_minutes);
+
+        // Check the loan's number of calendar days.
+        $this->assertEquals(1, $loan->calendar_days);
     }
 
-    public function testGetActualReturnAtFromActions_IntentionCompleted()
+    public function testLoanTimesAndDurations_IntentionCompleted()
     {
         // Milliseconds get truncated in the database, zero them out so as to
         // compare on seconds only.
-        $now = CarbonImmutable::now()->setMilliseconds(0);
+        $departureAt = CarbonImmutable::now()
+            ->setHours(4)
+            ->setMinutes(30)
+            ->setSeconds(0)
+            ->setMilliseconds(0);
 
         $loan = factory(Loan::class)
             ->states("withCompletedIntention")
             ->create([
-                "departure_at" => $now,
+                "departure_at" => $departureAt,
                 "duration_in_minutes" => 75,
             ]);
 
@@ -268,15 +368,27 @@ class LoanTest extends TestCase
 
         // Validate loan return time.
         $this->assertTrue(
-            $now->addMinutes(75)->equalTo($loan->getActualReturnAtFromActions())
+            $departureAt
+                ->addMinutes(75)
+                ->equalTo($loan->getActualReturnAtFromActions())
         );
+
+        // Check the loan's actual duration.
+        $this->assertEquals(75, $loan->actual_duration_in_minutes);
+
+        // Check the loan's number of calendar days.
+        $this->assertEquals(1, $loan->calendar_days);
     }
 
-    public function testGetActualReturnAtFromActions_ExtensionInProcess()
+    public function testLoanTimesAndDurations_ExtensionInProcess()
     {
         // Milliseconds get truncated in the database, zero them out so as to
         // compare on seconds only.
-        $now = CarbonImmutable::now()->setMilliseconds(0);
+        $departureAt = CarbonImmutable::now()
+            ->setHours(4)
+            ->setMinutes(30)
+            ->setSeconds(0)
+            ->setMilliseconds(0);
 
         $loan = factory(Loan::class)
             ->states([
@@ -285,7 +397,7 @@ class LoanTest extends TestCase
                 "withCompletedTakeover",
             ])
             ->create([
-                "departure_at" => $now,
+                "departure_at" => $departureAt,
                 "duration_in_minutes" => 75,
             ]);
 
@@ -320,15 +432,27 @@ class LoanTest extends TestCase
 
         // Assert that the loan return time was not changed
         $this->assertTrue(
-            $now->addMinutes(75)->equalTo($loan->getActualReturnAtFromActions())
+            $departureAt
+                ->addMinutes(75)
+                ->equalTo($loan->getActualReturnAtFromActions())
         );
+
+        // Check the loan's actual duration.
+        $this->assertEquals(75, $loan->actual_duration_in_minutes);
+
+        // Check the loan's number of calendar days.
+        $this->assertEquals(1, $loan->calendar_days);
     }
 
-    public function testGetActualReturnAtFromActions_ExtensionsCompleted()
+    public function testLoanTimesAndDurations_ExtensionsCompleted()
     {
         // Milliseconds get truncated in the database, zero them out so as to
         // compare on seconds only.
-        $now = CarbonImmutable::now()->setMilliseconds(0);
+        $departureAt = CarbonImmutable::now()
+            ->setHours(4)
+            ->setMinutes(30)
+            ->setSeconds(0)
+            ->setMilliseconds(0);
 
         $loan = factory(Loan::class)
             ->states([
@@ -337,7 +461,7 @@ class LoanTest extends TestCase
                 "withCompletedTakeover",
             ])
             ->create([
-                "departure_at" => $now,
+                "departure_at" => $departureAt,
                 "duration_in_minutes" => 75,
             ]);
 
@@ -346,7 +470,7 @@ class LoanTest extends TestCase
             factory(Extension::class)->make([
                 "new_duration" => 120,
                 "status" => "completed",
-                "executed_at" => Carbon::now(),
+                "executed_at" => $departureAt->addMinutes(15),
             ])
         );
 
@@ -354,7 +478,7 @@ class LoanTest extends TestCase
             factory(Extension::class)->make([
                 "new_duration" => 150,
                 "status" => "completed",
-                "executed_at" => Carbon::now(),
+                "executed_at" => $departureAt->addMinutes(15),
             ])
         );
 
@@ -382,17 +506,27 @@ class LoanTest extends TestCase
 
         // Assert that the loan return time accounts for extensions.
         $this->assertTrue(
-            $now
+            $departureAt
                 ->addMinutes(150)
                 ->equalTo($loan->getActualReturnAtFromActions())
         );
+
+        // Check the loan's actual duration.
+        $this->assertEquals(150, $loan->actual_duration_in_minutes);
+
+        // Check the loan's number of calendar days.
+        $this->assertEquals(1, $loan->calendar_days);
     }
 
-    public function testGetActualReturnAtFromActions_ExtensionRejected()
+    public function testLoanTimesAndDurations_ExtensionRejected()
     {
         // Milliseconds get truncated in the database, zero them out so as to
         // compare on seconds only.
-        $now = CarbonImmutable::now()->setMilliseconds(0);
+        $departureAt = CarbonImmutable::now()
+            ->setHours(4)
+            ->setMinutes(30)
+            ->setSeconds(0)
+            ->setMilliseconds(0);
 
         $loan = factory(Loan::class)
             ->states([
@@ -401,7 +535,7 @@ class LoanTest extends TestCase
                 "withCompletedTakeover",
             ])
             ->create([
-                "departure_at" => $now,
+                "departure_at" => $departureAt,
                 "duration_in_minutes" => 75,
             ]);
 
@@ -410,7 +544,7 @@ class LoanTest extends TestCase
             factory(Extension::class)->make([
                 "new_duration" => 120,
                 "status" => "rejected",
-                "executed_at" => Carbon::now(),
+                "executed_at" => $departureAt->addMinutes(15),
             ])
         );
 
@@ -437,15 +571,27 @@ class LoanTest extends TestCase
 
         // Assert that the loan return time accounts is not impacted by rejected extensions.
         $this->assertTrue(
-            $now->addMinutes(75)->equalTo($loan->getActualReturnAtFromActions())
+            $departureAt
+                ->addMinutes(75)
+                ->equalTo($loan->getActualReturnAtFromActions())
         );
+
+        // Check the loan's actual duration.
+        $this->assertEquals(75, $loan->actual_duration_in_minutes);
+
+        // Check the loan's number of calendar days.
+        $this->assertEquals(1, $loan->calendar_days);
     }
 
-    public function testGetActualReturnAtFromActions_ExtensionCanceled()
+    public function testLoanTimesAndDurations_ExtensionCanceled()
     {
         // Milliseconds get truncated in the database, zero them out so as to
         // compare on seconds only.
-        $now = CarbonImmutable::now()->setMilliseconds(0);
+        $departureAt = CarbonImmutable::now()
+            ->setHours(4)
+            ->setMinutes(30)
+            ->setSeconds(0)
+            ->setMilliseconds(0);
 
         $loan = factory(Loan::class)
             ->states([
@@ -454,7 +600,7 @@ class LoanTest extends TestCase
                 "withCompletedTakeover",
             ])
             ->create([
-                "departure_at" => $now,
+                "departure_at" => $departureAt,
                 "duration_in_minutes" => 75,
             ]);
 
@@ -463,7 +609,7 @@ class LoanTest extends TestCase
             factory(Extension::class)->make([
                 "new_duration" => 120,
                 "status" => "canceled",
-                "executed_at" => Carbon::now(),
+                "executed_at" => $departureAt->addMinutes(15),
             ])
         );
 
@@ -490,15 +636,27 @@ class LoanTest extends TestCase
 
         // Assert that the loan return time accounts is not impacted by canceled extensions.
         $this->assertTrue(
-            $now->addMinutes(75)->equalTo($loan->getActualReturnAtFromActions())
+            $departureAt
+                ->addMinutes(75)
+                ->equalTo($loan->getActualReturnAtFromActions())
         );
+
+        // Check the loan's actual duration.
+        $this->assertEquals(75, $loan->actual_duration_in_minutes);
+
+        // Check the loan's number of calendar days.
+        $this->assertEquals(1, $loan->calendar_days);
     }
 
-    public function testGetActualReturnAtFromActions_EarlyReturn_PaymentInProcess()
+    public function testLoanTimesAndDurations_EarlyReturn_PaymentInProcess()
     {
         // Milliseconds get truncated in the database, zero them out so as to
         // compare on seconds only.
-        $now = CarbonImmutable::now()->setMilliseconds(0);
+        $departureAt = CarbonImmutable::now()
+            ->setHours(4)
+            ->setMinutes(30)
+            ->setSeconds(0)
+            ->setMilliseconds(0);
 
         $loan = factory(Loan::class)
             ->states([
@@ -507,7 +665,7 @@ class LoanTest extends TestCase
                 "withCompletedTakeover",
             ])
             ->create([
-                "departure_at" => $now,
+                "departure_at" => $departureAt,
                 "duration_in_minutes" => 75,
             ]);
 
@@ -515,7 +673,7 @@ class LoanTest extends TestCase
         $loan->handover()->save(
             factory(Handover::class)->make([
                 "status" => "completed",
-                "executed_at" => $now->addMinutes(45),
+                "executed_at" => $departureAt->addMinutes(45),
             ])
         );
 
@@ -551,15 +709,27 @@ class LoanTest extends TestCase
         // Assert that the loan return time accounts is not impacted early
         // return (completed handover) when payment still in process.
         $this->assertTrue(
-            $now->addMinutes(75)->equalTo($loan->getActualReturnAtFromActions())
+            $departureAt
+                ->addMinutes(75)
+                ->equalTo($loan->getActualReturnAtFromActions())
         );
+
+        // Check the loan's actual duration.
+        $this->assertEquals(75, $loan->actual_duration_in_minutes);
+
+        // Check the loan's number of calendar days.
+        $this->assertEquals(1, $loan->calendar_days);
     }
 
-    public function testGetActualReturnAtFromActions_EarlyPayment()
+    public function testLoanTimesAndDurations_EarlyPayment()
     {
         // Milliseconds get truncated in the database, zero them out so as to
         // compare on seconds only.
-        $now = CarbonImmutable::now()->setMilliseconds(0);
+        $departureAt = CarbonImmutable::now()
+            ->setHours(4)
+            ->setMinutes(30)
+            ->setSeconds(0)
+            ->setMilliseconds(0);
 
         $loan = factory(Loan::class)
             ->states([
@@ -568,7 +738,7 @@ class LoanTest extends TestCase
                 "withCompletedTakeover",
             ])
             ->create([
-                "departure_at" => $now,
+                "departure_at" => $departureAt,
                 "duration_in_minutes" => 75,
             ]);
 
@@ -576,7 +746,7 @@ class LoanTest extends TestCase
         $loan->handover()->save(
             factory(Handover::class)->make([
                 "status" => "completed",
-                "executed_at" => $now->addMinutes(45),
+                "executed_at" => $departureAt->addMinutes(45),
             ])
         );
 
@@ -584,7 +754,7 @@ class LoanTest extends TestCase
         $loan->payment()->save(
             factory(Payment::class)->make([
                 "status" => "completed",
-                "executed_at" => $now->addMinutes(60),
+                "executed_at" => $departureAt->addMinutes(60),
             ])
         );
 
@@ -612,15 +782,27 @@ class LoanTest extends TestCase
 
         // Assert that the loan return time accounts for early payment.
         $this->assertTrue(
-            $now->addMinutes(60)->equalTo($loan->getActualReturnAtFromActions())
+            $departureAt
+                ->addMinutes(60)
+                ->equalTo($loan->getActualReturnAtFromActions())
         );
+
+        // Check the loan's actual duration.
+        $this->assertEquals(60, $loan->actual_duration_in_minutes);
+
+        // Check the loan's number of calendar days.
+        $this->assertEquals(1, $loan->calendar_days);
     }
 
-    public function testGetActualReturnAtFromActions_EarlyPaymentWithAcceptedExtension()
+    public function testLoanTimesAndDurations_EarlyPaymentWithAcceptedExtension()
     {
         // Milliseconds get truncated in the database, zero them out so as to
         // compare on seconds only.
-        $now = CarbonImmutable::now()->setMilliseconds(0);
+        $departureAt = CarbonImmutable::now()
+            ->setHours(4)
+            ->setMinutes(30)
+            ->setSeconds(0)
+            ->setMilliseconds(0);
 
         $loan = factory(Loan::class)
             ->states([
@@ -629,7 +811,7 @@ class LoanTest extends TestCase
                 "withCompletedTakeover",
             ])
             ->create([
-                "departure_at" => $now,
+                "departure_at" => $departureAt,
                 "duration_in_minutes" => 75,
             ]);
 
@@ -638,7 +820,7 @@ class LoanTest extends TestCase
             factory(Extension::class)->make([
                 "new_duration" => 120,
                 "status" => "completed",
-                "executed_at" => Carbon::now(),
+                "executed_at" => $departureAt->addMinutes(15),
             ])
         );
 
@@ -646,7 +828,7 @@ class LoanTest extends TestCase
         $loan->handover()->save(
             factory(Handover::class)->make([
                 "status" => "completed",
-                "executed_at" => $now->addMinutes(90),
+                "executed_at" => $departureAt->addMinutes(90),
             ])
         );
 
@@ -654,7 +836,7 @@ class LoanTest extends TestCase
         $loan->payment()->save(
             factory(Payment::class)->make([
                 "status" => "completed",
-                "executed_at" => $now->addMinutes(105),
+                "executed_at" => $departureAt->addMinutes(105),
             ])
         );
 
@@ -683,9 +865,332 @@ class LoanTest extends TestCase
 
         // Assert that the loan return time accounts for early payment with extensions.
         $this->assertTrue(
-            $now
+            $departureAt
                 ->addMinutes(105)
                 ->equalTo($loan->getActualReturnAtFromActions())
         );
+
+        // Check the loan's actual duration.
+        $this->assertEquals(105, $loan->actual_duration_in_minutes);
+
+        // Check the loan's number of calendar days.
+        $this->assertEquals(1, $loan->calendar_days);
+    }
+
+    public function testLoanTimesAndDurations_ShortSpanOverTwoCalendarDays()
+    {
+        // Milliseconds get truncated in the database, zero them out so as to
+        // compare on seconds only.
+        $departureAt = CarbonImmutable::now()
+            ->setHours(23)
+            ->setMinutes(30)
+            ->setSeconds(0)
+            ->setMilliseconds(0);
+
+        $loan = factory(Loan::class)
+            ->states(["withCompletedIntention"])
+            ->create([
+                "departure_at" => $departureAt,
+                "duration_in_minutes" => 60,
+            ]);
+
+        // Must refresh materialized views before asking for loan->actions.
+        \DB::statement("REFRESH MATERIALIZED VIEW actions");
+
+        // Refresh loan from database
+        $loan = $loan->fresh();
+
+        // Validate loan actions
+        $refActionStatuses = [["intention", "completed"]];
+
+        $testActionStatuses = [];
+        foreach ($loan->actions as $action) {
+            $testActionStatuses[] = [$action->type, $action->status];
+        }
+
+        $this->assertEquals($refActionStatuses, $testActionStatuses);
+
+        // Validate loan return time.
+        $this->assertTrue(
+            $departureAt
+                ->addMinutes(60)
+                ->equalTo($loan->getActualReturnAtFromActions())
+        );
+
+        // Check the loan's actual duration.
+        $this->assertEquals(60, $loan->actual_duration_in_minutes);
+
+        // Check the loan's number of calendar days.
+        $this->assertEquals(2, $loan->calendar_days);
+    }
+
+    public function testLoanTimesAndDurations_MultipleCalendarDays()
+    {
+        // Milliseconds get truncated in the database, zero them out so as to
+        // compare on seconds only.
+        $departureAt = CarbonImmutable::now()
+            ->setHours(4)
+            ->setMinutes(30)
+            ->setSeconds(0)
+            ->setMilliseconds(0);
+
+        $loan = factory(Loan::class)
+            ->states(["withCompletedIntention"])
+            ->create([
+                "departure_at" => $departureAt,
+                // Arbitrarily more than 3 days. Loan then spans onto 4 calendar days.
+                "duration_in_minutes" => 3 * 24 * 60 + 415,
+            ]);
+
+        // Must refresh materialized views before asking for loan->actions.
+        \DB::statement("REFRESH MATERIALIZED VIEW actions");
+
+        // Refresh loan from database
+        $loan = $loan->fresh();
+
+        // Validate loan actions
+        $refActionStatuses = [["intention", "completed"]];
+
+        $testActionStatuses = [];
+        foreach ($loan->actions as $action) {
+            $testActionStatuses[] = [$action->type, $action->status];
+        }
+
+        $this->assertEquals($refActionStatuses, $testActionStatuses);
+
+        // Validate loan return time.
+        $this->assertTrue(
+            $departureAt
+                ->addMinutes(4735)
+                ->equalTo($loan->getActualReturnAtFromActions())
+        );
+
+        // Check the loan's actual duration.
+        $this->assertEquals(4735, $loan->actual_duration_in_minutes);
+
+        // Check the loan's number of calendar days.
+        $this->assertEquals(4, $loan->calendar_days);
+    }
+
+    public function testLoanTimesAndDurations_MultipleCalendarDaysWithAcceptedExtension()
+    {
+        // Milliseconds get truncated in the database, zero them out so as to
+        // compare on seconds only.
+        $departureAt = CarbonImmutable::now()
+            ->setHours(4)
+            ->setMinutes(30)
+            ->setSeconds(0)
+            ->setMilliseconds(0);
+
+        $loan = factory(Loan::class)
+            ->states([
+                "withCompletedIntention",
+                "withCompletedPrePayment",
+                "withCompletedTakeover",
+            ])
+            ->create([
+                "departure_at" => $departureAt,
+                "duration_in_minutes" => 24 * 60 + 345,
+            ]);
+
+        // Accepted extension
+        $loan->extensions()->save(
+            factory(Extension::class)->make([
+                "new_duration" => 3 * 24 * 60 + 415,
+                "status" => "completed",
+                "executed_at" => $departureAt->addMinutes(15),
+            ])
+        );
+
+        // Must refresh materialized views before asking for loan->actions.
+        \DB::statement("REFRESH MATERIALIZED VIEW actions");
+
+        // Refresh loan from database
+        $loan = $loan->fresh();
+
+        // Validate loan actions
+        $refActionStatuses = [
+            ["intention", "completed"],
+            ["pre_payment", "completed"],
+            ["takeover", "completed"],
+            ["extension", "completed"],
+        ];
+
+        $testActionStatuses = [];
+        foreach ($loan->actions as $action) {
+            $testActionStatuses[] = [$action->type, $action->status];
+        }
+
+        $this->assertEquals($refActionStatuses, $testActionStatuses);
+
+        // Assert that the loan return time accounts for early payment with extensions.
+        $this->assertTrue(
+            $departureAt
+                ->addMinutes(4735)
+                ->equalTo($loan->getActualReturnAtFromActions())
+        );
+
+        // Check the loan's actual duration.
+        $this->assertEquals(4735, $loan->actual_duration_in_minutes);
+
+        // Check the loan's number of calendar days.
+        $this->assertEquals(4, $loan->calendar_days);
+    }
+
+    public function testLoanTimesAndDurations_MultipleCalendarDaysAndEarlyPayment()
+    {
+        // Milliseconds get truncated in the database, zero them out so as to
+        // compare on seconds only.
+        $departureAt = CarbonImmutable::now()
+            ->setHours(4)
+            ->setMinutes(30)
+            ->setSeconds(0)
+            ->setMilliseconds(0);
+
+        $loan = factory(Loan::class)
+            ->states([
+                "withCompletedIntention",
+                "withCompletedPrePayment",
+                "withCompletedTakeover",
+            ])
+            ->create([
+                "departure_at" => $departureAt,
+                // Arbitrarily more than 3 days. Loan then spans onto 4 calendar days.
+                "duration_in_minutes" => 3 * 24 * 60 + 415,
+            ]);
+
+        // Completed handover
+        $loan->handover()->save(
+            factory(Handover::class)->make([
+                "status" => "completed",
+                "executed_at" => $departureAt->addMinutes(90),
+            ])
+        );
+
+        // Completed payment
+        $loan->payment()->save(
+            factory(Payment::class)->make([
+                "status" => "completed",
+                "executed_at" => $departureAt->addMinutes(2 * 24 * 60 + 675),
+            ])
+        );
+
+        // Must refresh materialized views before asking for loan->actions.
+        \DB::statement("REFRESH MATERIALIZED VIEW actions");
+
+        // Refresh loan from database
+        $loan = $loan->fresh();
+
+        // Validate loan actions
+        $refActionStatuses = [
+            ["intention", "completed"],
+            ["pre_payment", "completed"],
+            ["takeover", "completed"],
+            ["handover", "completed"],
+            ["payment", "completed"],
+        ];
+
+        $testActionStatuses = [];
+        foreach ($loan->actions as $action) {
+            $testActionStatuses[] = [$action->type, $action->status];
+        }
+
+        $this->assertEquals($refActionStatuses, $testActionStatuses);
+
+        // Assert that the loan return time accounts for early payment with extensions.
+        $this->assertTrue(
+            $departureAt
+                ->addMinutes(3555)
+                ->equalTo($loan->getActualReturnAtFromActions())
+        );
+
+        // Check the loan's actual duration.
+        $this->assertEquals(3555, $loan->actual_duration_in_minutes);
+
+        // Check the loan's number of calendar days.
+        $this->assertEquals(3, $loan->calendar_days);
+    }
+
+    public function testLoanTimesAndDurations_MultipleCalendarDaysEarlyPaymentWithAcceptedExtension()
+    {
+        // Milliseconds get truncated in the database, zero them out so as to
+        // compare on seconds only.
+        $departureAt = CarbonImmutable::now()
+            ->setHours(4)
+            ->setMinutes(30)
+            ->setSeconds(0)
+            ->setMilliseconds(0);
+
+        $loan = factory(Loan::class)
+            ->states([
+                "withCompletedIntention",
+                "withCompletedPrePayment",
+                "withCompletedTakeover",
+            ])
+            ->create([
+                "departure_at" => $departureAt,
+                "duration_in_minutes" => 24 * 60 + 345,
+            ]);
+
+        // Accepted extension
+        $loan->extensions()->save(
+            factory(Extension::class)->make([
+                "new_duration" => 3 * 24 * 60 + 415,
+                "status" => "completed",
+                "executed_at" => $departureAt->addMinutes(15),
+            ])
+        );
+
+        // Completed handover
+        $loan->handover()->save(
+            factory(Handover::class)->make([
+                "status" => "completed",
+                "executed_at" => $departureAt->addMinutes(90),
+            ])
+        );
+
+        // Completed payment
+        $loan->payment()->save(
+            factory(Payment::class)->make([
+                "status" => "completed",
+                "executed_at" => $departureAt->addMinutes(2 * 24 * 60 + 675),
+            ])
+        );
+
+        // Must refresh materialized views before asking for loan->actions.
+        \DB::statement("REFRESH MATERIALIZED VIEW actions");
+
+        // Refresh loan from database
+        $loan = $loan->fresh();
+
+        // Validate loan actions
+        $refActionStatuses = [
+            ["intention", "completed"],
+            ["pre_payment", "completed"],
+            ["takeover", "completed"],
+            ["extension", "completed"],
+            ["handover", "completed"],
+            ["payment", "completed"],
+        ];
+
+        $testActionStatuses = [];
+        foreach ($loan->actions as $action) {
+            $testActionStatuses[] = [$action->type, $action->status];
+        }
+
+        $this->assertEquals($refActionStatuses, $testActionStatuses);
+
+        // Assert that the loan return time accounts for early payment with extensions.
+        $this->assertTrue(
+            $departureAt
+                ->addMinutes(3555)
+                ->equalTo($loan->getActualReturnAtFromActions())
+        );
+
+        // Check the loan's actual duration.
+        $this->assertEquals(3555, $loan->actual_duration_in_minutes);
+
+        // Check the loan's number of calendar days.
+        $this->assertEquals(3, $loan->calendar_days);
     }
 }

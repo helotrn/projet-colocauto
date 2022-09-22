@@ -9,18 +9,6 @@ class ImagesTableSeeder extends Seeder
     {
         $images = [
             [
-                "id" => 1,
-                "imageable_type" => "App\Models\Pivots\CommunityUser",
-                "imageable_id" => 1,
-                "path" => "/seeds/1",
-                "filename" => "preuve de résidence.png",
-                "original_filename" => "preuve de résidence.png",
-                "field" => "proof",
-                "width" => "640",
-                "height" => "400",
-                "filesize" => 3817,
-            ],
-            [
                 "id" => 2,
                 "imageable_type" => "App\Models\User",
                 "imageable_id" => 2,

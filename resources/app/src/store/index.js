@@ -102,50 +102,67 @@ const actions = {
   async loadUser({ commit, state }) {
     commit("loading", true);
 
-    const { data: user } = await Vue.axios.get("/auth/user", {
-      params: {
-        fields: loadUserFields,
-      },
-    });
+    try {
+      const { data: user } = await Vue.axios.get("/auth/user", {
+        params: {
+          fields: loadUserFields,
+        },
+      });
 
-    const newUser = {
-      ...user,
-      loanables: state.user?.loanables ?? [],
-      loans: state.user?.loans ?? [],
-    };
+      const newUser = {
+        ...user,
+        loanables: state.user?.loanables ?? [],
+        loans: state.user?.loans ?? [],
+      };
 
-    commit("user", newUser);
-
-    commit("account/transactionId", user.transaction_id + 1);
+      commit("user", newUser);
+      commit("account/transactionId", user.transaction_id + 1);
+    } catch (e) {
+      commit("loading", false);
+      throw e;
+    }
 
     commit("loaded", true);
     commit("loading", false);
   },
   async login({ commit, dispatch, state }, { email, password }) {
-    const { data } = await Vue.axios.post("/auth/login", {
-      email,
-      password,
-      rememberMe: state.login.rememberMe,
-    });
+    try {
+      commit("loading", true);
 
-    commit("token", data.access_token);
-    commit("refreshToken", data.refresh_token);
+      const { data } = await Vue.axios.post("/auth/login", {
+        email,
+        password,
+        rememberMe: state.login.rememberMe,
+      });
 
-    if (!state.login.rememberMe) {
-      commit("login/email", "");
+      commit("token", data.access_token);
+      commit("refreshToken", data.refresh_token);
+
+      if (!state.login.rememberMe) {
+        commit("login/email", "");
+      }
+    } catch (e) {
+      commit("loading", false);
+      throw e;
     }
 
     await dispatch("loadUser");
     await dispatch("global/load");
   },
   async register({ commit, dispatch, state }, { email, password }) {
-    const { data } = await Vue.axios.post("/auth/register", {
-      email,
-      password,
-    });
+    try {
+      commit("loading", true);
+      const { data } = await Vue.axios.post("/auth/register", {
+        email,
+        password,
+      });
 
-    commit("token", data.access_token);
-    commit("refreshToken", data.refresh_token);
+      commit("token", data.access_token);
+      commit("refreshToken", data.refresh_token);
+    } catch (e) {
+      commit("loading", false);
+      throw e;
+    }
 
     if (!state.login.rememberMe) {
       commit("login/email", "");
