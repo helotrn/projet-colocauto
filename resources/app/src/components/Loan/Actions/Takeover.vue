@@ -64,7 +64,6 @@
 
           <div v-if="item.loanable.type === 'car'">
             <validation-observer ref="observer" v-slot="{ passes }">
-              
               <!-- Add message if user is borrower, but not owner. -->
               <b-row v-if="userRoles.includes('borrower') && !userRoles.includes('owner')">
                 <b-col>
