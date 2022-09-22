@@ -75,7 +75,7 @@
       id="loanable-modal"
       footer-class="d-none"
     >
-      <loanable-details-box :loanable="loan.loanable" showInstructions />
+      <loanable-details-box :loanable="loan.loanable" :showInstructions="showInstructions" />
     </b-modal>
 
     <b-modal
