@@ -51,225 +51,239 @@
         >
           <p>L'emprunt a été annulé. Cette étape ne peut pas être complétée.</p>
         </div>
-        <div v-else-if="item.loanable.type === 'car'">
-          <validation-observer ref="observer" v-slot="{ passes }">
-            <!-- Add message if user is borrower, but not owner. -->
-            <b-row v-if="userRoles.includes('borrower') && !userRoles.includes('owner')">
+
+        <div v-else>
+          <b-alert show variant="warning" v-if="item.loanable.instructions">
+            <div class="alert-heading">
+              <h4>Instructions du propriétaire pour l'utilisation du véhicule</h4>
+            </div>
+            <div class="owner-instructions-text">
+              <p>{{ item.loanable.instructions }}</p>
+            </div>
+          </b-alert>
+
+          <div v-if="item.loanable.type === 'car'">
+            <validation-observer ref="observer" v-slot="{ passes }">
+              <!-- Add message if user is borrower, but not owner. -->
+              <b-row v-if="userRoles.includes('borrower') && !userRoles.includes('owner')">
+                <b-col>
+                  <p>
+                    Avez-vous bien pris connaissance de l'état de cette auto?<br />
+                    Il est important de le faire avant d'en prendre possession. Ainsi, s'il arrive
+                    un pépin, vous allez être en mesure d'en discuter avec la personne propriétaire
+                    de l'auto.
+                  </p>
+                </b-col>
+              </b-row>
+
+              <b-form
+                :novalidate="true"
+                class="loan-actions-takeover__form"
+                @submit.stop.prevent="passes(completeAction)"
+              >
+                <b-row>
+                  <b-col
+                    lg="6"
+                    v-if="(!action.executed_at && !loanIsCanceled) || userIsAdmin"
+                    class="loan-actions-takeover__form__image"
+                  >
+                    <p>Envoyez une photo du tableau de bord.</p>
+
+                    <forms-image-uploader
+                      label="Photo du tableau de bord"
+                      field="image"
+                      v-model="action.image"
+                    />
+
+                    <p>
+                      <small>
+                        On vous demande une preuve? Prenez une photo du tableau de bord de l'auto
+                        pour rentrer les bonnes informations (kilométrage, essence). Cette photo est
+                        facultative.
+                      </small>
+                    </p>
+                  </b-col>
+                  <b-col lg="6" v-else-if="action.image" class="loan-actions-takeover__form__image">
+                    <a href="#" v-b-modal="'takeover-image'">
+                      <img :src="action.image ? action.image.sizes.thumbnail : ''" />
+                    </a>
+
+                    <b-modal
+                      size="xl"
+                      title="Photo du tableau de bord"
+                      :id="'takeover-image'"
+                      footer-class="d-none"
+                    >
+                      <img class="img-fit" :src="action.image.url" />
+                    </b-modal>
+                  </b-col>
+
+                  <b-col lg="6">
+                    <forms-validated-input
+                      id="mileage_beginning"
+                      name="mileage_beginning"
+                      type="number"
+                      :rules="{ required: true }"
+                      label="KM au compteur, au début de la course"
+                      placeholder="KM au compteur"
+                      :disabled="(!!action.executed_at || loanIsCanceled) && !userIsAdmin"
+                      v-model="action.mileage_beginning"
+                    />
+                  </b-col>
+                </b-row>
+
+                <b-row
+                  class="loan-actions-takeover__buttons text-center"
+                  v-if="
+                    (!action.executed_at && !loanIsCanceled && !item.is_contested) || userIsAdmin
+                  "
+                >
+                  <b-col>
+                    <b-button type="submit" size="sm" variant="success" class="mr-3">
+                      <span v-if="isContested">Corriger</span>
+                      <span v-else>Enregistrer</span>
+                    </b-button>
+                  </b-col>
+                </b-row>
+
+                <b-row class="loan-actions__alert" v-if="!action.executed_at && !loanIsCanceled">
+                  <b-col>
+                    <b-alert variant="warning" show>
+                      Les informations de l'emprunt peuvent être modifiées jusqu'à 48h après sa
+                      conclusion. À partir de ce moment, le coût de l'emprunt sera validé avec les
+                      détails ci-dessus.
+                    </b-alert>
+                  </b-col>
+                </b-row>
+              </b-form>
+            </validation-observer>
+          </div>
+
+          <div v-else-if="item.loanable.has_padlock">
+            <!-- Loanable is not a car and has a padlock. -->
+
+            <b-alert show variant="info">
+              <p>
+                Le cadenas du véhicule sera automatiquement associé à votre application NOKE à temps
+                pour la prise de possession.
+              </p>
+              <p>Vous avez un problème avec le cadenas?</p>
+              <p>
+                Contactez-nous entre 9h et 20h au 438-476-3343<br />
+                (cette ligne est dédiée uniquement aux problèmes liés aux cadenas)
+              </p>
+            </b-alert>
+
+            <validation-observer ref="observer" v-slot="{ passes }">
+              <b-form
+                :novalidate="true"
+                class="register-form__form"
+                @submit.stop.prevent="passes(completeAction)"
+              >
+                <b-row v-if="!action.executed_at">
+                  <b-col>
+                    <p>Envoyez une photo de l'état du véhicule.</p>
+
+                    <forms-image-uploader
+                      label="Photo du véhicule"
+                      field="image"
+                      v-model="action.image"
+                    />
+
+                    <p>
+                      <small>
+                        Cette photo est optionnelle mais permet à LocoMotion de déterminer à quel
+                        moment un bris s'est produit, le cas échéant.
+                      </small>
+                    </p>
+                  </b-col>
+                </b-row>
+                <b-row v-else-if="action.image">
+                  <b-col>
+                    <a href="#" v-b-modal="'takeover-image'">
+                      <img :src="action.image ? action.image.sizes.thumbnail : ''" />
+                    </a>
+
+                    <b-modal
+                      size="xl"
+                      title="Photo de l'état du véhicule"
+                      :id="'takeover-image'"
+                      footer-class="d-none"
+                    >
+                      <img class="img-fit" :src="action.image.url" />
+                    </b-modal>
+                  </b-col>
+                </b-row>
+
+                <b-row
+                  class="loan-actions-takeover__buttons text-center"
+                  v-if="(!action.executed_at && !item.is_contested) || userIsAdmin"
+                >
+                  <b-col>
+                    <b-button type="submit" size="sm" variant="success" class="mr-3">
+                      <span v-if="isContested">Corriger</span>
+                      <span v-else>Enregistrer</span>
+                    </b-button>
+                  </b-col>
+                </b-row>
+
+                <b-row class="loan-actions__alert" v-if="!action.executed_at">
+                  <b-col>
+                    <b-alert variant="warning" show>
+                      Les informations de l'emprunt peuvent être modifiées jusqu'à 48h après sa
+                      conclusion. À partir de ce moment, le coût de l'emprunt sera validé avec les
+                      détails ci-dessus.
+                    </b-alert>
+                  </b-col>
+                </b-row>
+              </b-form>
+            </validation-observer>
+          </div>
+
+          <div v-else>
+            <!-- Loanable is not a car and it does not have a padlock. -->
+            <b-row v-if="!action.executed_at">
               <b-col>
-                <p>
-                  Avez-vous bien pris connaissance de l'état de cette auto?<br />
-                  Il est important de le faire avant de prendre en prendre possession. Ainsi, s'il
-                  arrive un pépin, vous allez être en mesure d'en discuter avec la personne
-                  propriétaire de l'auto.
+                <p v-if="userRoles.includes('borrower') && !userRoles.includes('owner')">
+                  Demandez au propriétaire de récupérer le véhicule.
+                </p>
+                <p v-if="!userRoles.includes('borrower') && userRoles.includes('owner')">
+                  L'emprunteur vous contactera pour arranger la prise de possession du véhicule.
                 </p>
               </b-col>
             </b-row>
+            <b-row v-else>
+              <b-col>
+                <p v-if="action.status !== 'canceled'">La prise de possession a été effectuée.</p>
+                <p v-else>La prise de possession a été annulée.</p>
+              </b-col>
+            </b-row>
 
-            <b-form
-              :novalidate="true"
-              class="loan-actions-takeover__form"
-              @submit.stop.prevent="passes(completeAction)"
-            >
-              <b-row>
-                <b-col
-                  lg="6"
-                  v-if="(!action.executed_at && !loanIsCanceled) || userIsAdmin"
-                  class="loan-actions-takeover__form__image"
+            <b-row class="loan-actions-takeover__buttons text-center" v-if="!action.executed_at">
+              <b-col>
+                <b-button
+                  type="submit"
+                  size="sm"
+                  variant="success"
+                  class="mr-3"
+                  :disabled="actionLoading"
+                  @click="completeAction"
                 >
-                  <p>Envoyez une photo du tableau de bord.</p>
+                  C'est fait!
+                </b-button>
+              </b-col>
+            </b-row>
 
-                  <forms-image-uploader
-                    label="Photo du tableau de bord"
-                    field="image"
-                    v-model="action.image"
-                  />
-
-                  <p>
-                    <small>
-                      On vous demande une preuve? Prenez une photo du tableau de bord de l'auto pour
-                      rentrer les bonnes informations (kilométrage, essence). Cette photo est
-                      facultative.
-                    </small>
-                  </p>
-                </b-col>
-                <b-col lg="6" v-else-if="action.image" class="loan-actions-takeover__form__image">
-                  <a href="#" v-b-modal="'takeover-image'">
-                    <img :src="action.image ? action.image.sizes.thumbnail : ''" />
-                  </a>
-
-                  <b-modal
-                    size="xl"
-                    title="Photo du tableau de bord"
-                    :id="'takeover-image'"
-                    footer-class="d-none"
-                  >
-                    <img class="img-fit" :src="action.image.url" />
-                  </b-modal>
-                </b-col>
-
-                <b-col lg="6">
-                  <forms-validated-input
-                    id="mileage_beginning"
-                    name="mileage_beginning"
-                    type="number"
-                    :rules="{ required: true }"
-                    label="KM au compteur, au début de la course"
-                    placeholder="KM au compteur"
-                    :disabled="(!!action.executed_at || loanIsCanceled) && !userIsAdmin"
-                    v-model="action.mileage_beginning"
-                  />
-                </b-col>
-              </b-row>
-
-              <b-row
-                class="loan-actions-takeover__buttons text-center"
-                v-if="(!action.executed_at && !loanIsCanceled && !item.is_contested) || userIsAdmin"
-              >
-                <b-col>
-                  <b-button type="submit" size="sm" variant="success" class="mr-3">
-                    <span v-if="isContested">Corriger</span>
-                    <span v-else>Enregistrer</span>
-                  </b-button>
-                </b-col>
-              </b-row>
-
-              <b-row class="loan-actions__alert" v-if="!action.executed_at && !loanIsCanceled">
-                <b-col>
-                  <b-alert variant="warning" show>
-                    Les informations de l'emprunt peuvent être modifiées jusqu'à 48h après sa
-                    conclusion. À partir de ce moment, le coût de l'emprunt sera validé avec les
-                    détails ci-dessus.
-                  </b-alert>
-                </b-col>
-              </b-row>
-            </b-form>
-          </validation-observer>
-        </div>
-
-        <div v-else-if="item.loanable.has_padlock">
-          <!-- Loanable is not a car and has a padlock. -->
-          <p>
-            Le cadenas du véhicule sera automatiquement associé à votre application NOKE à temps
-            pour la prise de possession.
-          </p>
-
-          <b-alert show variant="info">
-            <p>Vous avez un problème avec le cadenas?</p>
-            <p>
-              Contactez-nous entre 9h et 20h au 438-476-3343<br />
-              (cette ligne est dédiée uniquement aux problèmes liés aux cadenas)
-            </p>
-          </b-alert>
-
-          <validation-observer ref="observer" v-slot="{ passes }">
-            <b-form
-              :novalidate="true"
-              class="register-form__form"
-              @submit.stop.prevent="passes(completeAction)"
-            >
-              <b-row v-if="!action.executed_at">
-                <b-col>
-                  <p>Envoyez une photo de l'état du véhicule.</p>
-
-                  <forms-image-uploader
-                    label="Photo du véhicule"
-                    field="image"
-                    v-model="action.image"
-                  />
-
-                  <p>
-                    <small>
-                      Cette photo est optionnelle mais permet à LocoMotion de déterminer à quel
-                      moment un bris s'est produit, le cas échéant.
-                    </small>
-                  </p>
-                </b-col>
-              </b-row>
-              <b-row v-else-if="action.image">
-                <b-col>
-                  <a href="#" v-b-modal="'takeover-image'">
-                    <img :src="action.image ? action.image.sizes.thumbnail : ''" />
-                  </a>
-
-                  <b-modal
-                    size="xl"
-                    title="Photo de l'état du véhicule"
-                    :id="'takeover-image'"
-                    footer-class="d-none"
-                  >
-                    <img class="img-fit" :src="action.image.url" />
-                  </b-modal>
-                </b-col>
-              </b-row>
-
-              <b-row
-                class="loan-actions-takeover__buttons text-center"
-                v-if="(!action.executed_at && !item.is_contested) || userIsAdmin"
-              >
-                <b-col>
-                  <b-button type="submit" size="sm" variant="success" class="mr-3">
-                    <span v-if="isContested">Corriger</span>
-                    <span v-else>Enregistrer</span>
-                  </b-button>
-                </b-col>
-              </b-row>
-
-              <b-row class="loan-actions__alert" v-if="!action.executed_at">
-                <b-col>
-                  <b-alert variant="warning" show>
-                    Les informations de l'emprunt peuvent être modifiées jusqu'à 48h après sa
-                    conclusion. À partir de ce moment, le coût de l'emprunt sera validé avec les
-                    détails ci-dessus.
-                  </b-alert>
-                </b-col>
-              </b-row>
-            </b-form>
-          </validation-observer>
-        </div>
-
-        <div v-else>
-          <!-- Loanable is not a car and it does not have a padlock. -->
-          <b-row v-if="!action.executed_at">
-            <b-col>
-              <p v-if="userRoles.includes('borrower') && !userRoles.includes('owner')">
-                Demandez au propriétaire de récupérer le véhicule.
-              </p>
-              <p v-if="!userRoles.includes('borrower') && userRoles.includes('owner')">
-                L'emprunteur vous contactera pour arranger la prise de possession du véhicule.
-              </p>
-            </b-col>
-          </b-row>
-          <b-row v-else>
-            <b-col>
-              <p v-if="action.status !== 'canceled'">La prise de possession a été effectuée.</p>
-              <p v-else>La prise de possession a été annulée.</p>
-            </b-col>
-          </b-row>
-
-          <b-row class="loan-actions-takeover__buttons text-center" v-if="!action.executed_at">
-            <b-col>
-              <b-button
-                type="submit"
-                size="sm"
-                variant="success"
-                class="mr-3"
-                :disabled="actionLoading"
-                @click="completeAction"
-              >
-                C'est fait!
-              </b-button>
-            </b-col>
-          </b-row>
-
-          <b-row class="loan-actions__alert" v-if="!action.executed_at">
-            <b-col>
-              <b-alert variant="warning" show>
-                Les informations de l'emprunt peuvent être modifiées jusqu'à 48h après sa
-                conclusion. À partir de ce moment, le coût de l'emprunt sera validé avec les détails
-                ci-dessus.
-              </b-alert>
-            </b-col>
-          </b-row>
+            <b-row class="loan-actions__alert" v-if="!action.executed_at">
+              <b-col>
+                <b-alert variant="warning" show>
+                  Les informations de l'emprunt peuvent être modifiées jusqu'à 48h après sa
+                  conclusion. À partir de ce moment, le coût de l'emprunt sera validé avec les
+                  détails ci-dessus.
+                </b-alert>
+              </b-col>
+            </b-row>
+          </div>
         </div>
 
         <div v-if="!isContested">
@@ -364,5 +378,8 @@ export default {
       margin-bottom: 1rem;
     }
   }
+}
+.owner-instructions-text {
+  white-space: pre;
 }
 </style>

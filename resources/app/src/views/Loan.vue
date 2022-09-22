@@ -3,7 +3,7 @@
     <div v-if="pageLoaded">
       <vue-headful :title="fullTitle" />
 
-      <loan-header :user="user" :loan="item" />
+      <loan-header :user="user" :loan="item" :show-instructions="hasReachedStep('intention')" />
 
       <b-row>
         <b-col lg="3" class="loan__sidebar">

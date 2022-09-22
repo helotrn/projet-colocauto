@@ -18,12 +18,14 @@ export default {
     "{count} véhicule sélectionné":
       "aucun véhicule sélectionné | 1 véhicule sélectionné | {count} véhicules sélectionnés",
     descriptions: {
+      comments: "Quoi savoir sur ce véhicule avant de faire l'emprunt? (accessible publiquement)",
       community_id:
         "Le partage de mon véhicule peut être restreint à un voisinage ou un " +
         "quartier. Par défaut, un véhicule est accessible à tous mes voisinages.",
       image:
         "L'image de votre véhicule s'affichera dans un ratio d'aspect de 16 par 10. Assurez-vous qu'il est bien visible dans l'aperçu ici.",
-      instructions: "Y a-t-il des choses à savoir sur ce véhicule?",
+      instructions:
+        "Quoi à savoir sur l'utilisation de ce véhicule? (accessible à l'emprunteur seulement)",
       location_description:
         "Généralement, votre véhicule se trouve où? Cliquez sur la carte " +
         "pour définir sa position.",
@@ -77,10 +79,12 @@ export default {
       to_request_with_car: "à récupérer avec la voiture",
     },
     placeholders: {
-      comments: "ex.: J'ai un siège pour bébé et un support pour les vélos en arrière.",
+      comments:
+        "ex.: SVP ne pas fumer dans mon auto. Merci beaucoup!\n" +
+        "J'ai un siège pour bébé et un support pour les vélos en arrière.",
       instructions:
-        "ex.: SVP ne pas fumer dans mon auto. Aussi, j'apprécierai que le siège de " +
-        "bébé soit replacé, s'il y a lieu.  Merci beaucoup!",
+        "ex.: J'apprécierais que le siège de bébé soit replacé, s'il y a lieu.\n" +
+        "Le code du cadenas pour accéder à la cour est le 1234.",
       location_description: "ex.: Généralement dans la ruelle, textez-moi pour plus de précisions.",
       name: "ex.: la LocoMobile bleue",
     },
