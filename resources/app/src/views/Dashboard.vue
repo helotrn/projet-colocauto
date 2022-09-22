@@ -241,12 +241,13 @@ export default {
       this.skipToLogin();
     }
 
-    if (!this.user.name) {
-      this.$router.replace("/register");
+    if (this.isGlobalAdmin) {
+      this.$router.replace("/admin");
     }
 
-    if (this.user.role === "admin") {
-      this.$router.replace("/admin");
+    if (!this.hasCompletedRegistration) {
+      // Skip to 2 here since we already have an email (logged in)
+      this.$router.replace("/register/2");
     }
   },
   mounted() {

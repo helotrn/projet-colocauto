@@ -3,12 +3,7 @@
     <h1 class="login-box__title">{{ $t("login") }}</h1>
 
     <div class="google-login">
-      <b-button :href="authUrl" variant="primary" class="btn-google">
-        <div class="btn-google__icon">
-          <svg-google />
-        </div>
-        {{ $t("google") }}
-      </b-button>
+      <google-auth-button :label="$t('google')" />
     </div>
 
     <div class="form__separator">
@@ -47,13 +42,12 @@
 
 <script>
 import locales from "@/locales";
-
-import Google from "@/assets/svg/google.svg";
+import GoogleAuthButton from "@/components/Misc/GoogleAuthButton.vue";
 
 export default {
   name: "LoginBox",
   components: {
-    "svg-google": Google,
+    GoogleAuthButton,
   },
   data() {
     return {
@@ -62,7 +56,7 @@ export default {
   },
   computed: {
     loading() {
-      return this.$store.state.login.loading;
+      return this.$store.state.loading;
     },
     authUrl() {
       return `${process.env.VUE_APP_BACKEND_URL}/auth/google`;
@@ -86,15 +80,11 @@ export default {
   },
   methods: {
     async login() {
-      this.$store.commit("login/loading", true);
-
       try {
         await this.$store.dispatch("login", {
           email: this.email,
           password: this.password,
         });
-
-        this.$store.commit("login/loading", false);
 
         if (this.$route.query.r) {
           this.$router.replace(this.$route.query.r);
@@ -123,8 +113,6 @@ export default {
           }
         }
       }
-
-      this.$store.commit("login/loading", false);
     },
   },
   i18n: {
