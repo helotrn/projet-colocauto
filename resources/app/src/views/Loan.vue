@@ -19,25 +19,32 @@
           />
 
           <b-alert
+            variant="success"
             show
-            variant="warning"
             v-if="
-              !!item.id &&
+              item.id &&
               item.status === 'in_process' &&
-              !loanIsCanceled &&
+              hasReachedStep('intention') &&
               !hasReachedStep('takeover') &&
-              !hasReachedStep('handover') &&
-              !hasReachedStep('payment')
+              userIsBorrower
             "
           >
-            <h4>{{ $t("modification_warning.title") }}</h4>
+            <h4 class="alert-heading">
+              {{ $t("loan_approved") }}
+            </h4>
+            <strong>{{ $t("modification_warning.title") }}: </strong>
             {{ $t("modification_warning.content") }}
           </b-alert>
 
           <b-alert
             show
             variant="info"
-            v-if="item.loanable.type === 'car' && !loanIsCanceled && !hasReachedStep('handover')"
+            v-if="
+              item.loanable.type === 'car' &&
+              !loanIsCanceled &&
+              !hasReachedStep('handover') &&
+              userIsBorrower
+            "
           >
             <h4 class="alert-heading">
               {{ $t("insurance_warning.title") }}
