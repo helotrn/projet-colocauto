@@ -1155,8 +1155,15 @@ class LoanTest extends TestCase
                 "loanable_id" => $loanable->id,
             ]);
         // Starting in the future
-        factory(Loan::class, 5)
+        factory(Loan::class, 2)
             ->states("withCompletedIntention")
+            ->create([
+                "departure_at" => Carbon::now()->addHour(),
+                "borrower_id" => $borrower->id,
+            ]);
+        // Starting in the future with completed takeovers (if borrower clicks too fast)
+        factory(Loan::class, 3)
+            ->states("withCompletedIntention", "withCompletedTakeover")
             ->create([
                 "departure_at" => Carbon::now()->addHour(),
                 "borrower_id" => $borrower->id,

@@ -413,6 +413,7 @@ class LoanController extends RestController
             "id",
             "departure_at",
             "duration_in_minutes",
+            "actual_return_at",
             "status",
             "total_final_cost",
             "final_price",
@@ -434,7 +435,7 @@ class LoanController extends RestController
 
         $accessibleLoans = Loan::accessibleBy($request->user());
         $now = CarbonImmutable::now();
-        $aWeekAgo = $now->copy()->subtract(7, "days");
+        $aWeekAgo = $now->subtract(7, "days");
 
         $completedLoans = (clone $accessibleLoans)
             ->where("status", "completed")
@@ -469,8 +470,8 @@ class LoanController extends RestController
         });
 
         // Started loans that aren't contested
-        $startedLoans = (clone $approvedLoans)->where(function ($q) {
-            $q->where("departure_at", "<=", Carbon::now())
+        $startedLoans = (clone $approvedLoans)->where(function ($q) use ($now) {
+            $q->where("departure_at", "<=", $now)
                 ->whereHas("takeover", function (Builder $q) {
                     $q->where("status", "!=", "canceled");
                 })
@@ -484,23 +485,20 @@ class LoanController extends RestController
                 });
         });
 
-        $contestedLoans = (clone $approvedLoans)
-            ->whereHas("takeover", function (Builder $q) {
+        $contestedLoans = (clone $approvedLoans)->where(function ($q) {
+            $q->whereHas("takeover", function (Builder $q) {
                 $q->where("status", "canceled");
-            })
-            ->orWhereHas("handover", function (Builder $q) {
+            })->orWhereHas("handover", function (Builder $q) {
                 $q->where("status", "canceled");
             });
+        });
 
-        $approvedFutureLoans = (clone $approvedLoans)
-            ->where("departure_at", ">", Carbon::now())
-            ->where(function (Builder $q) {
-                $q->doesntHave("takeover")->orWhereHas("takeover", function (
-                    Builder $q
-                ) {
-                    $q->where("status", "in_process");
-                });
-            });
+        $approvedFutureLoans = (clone $approvedLoans)->where(
+            "departure_at",
+            ">",
+            $now
+        );
+
         return response(
             [
                 "started" => $this->getCollectionFields(

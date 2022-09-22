@@ -172,9 +172,7 @@ export default {
       return this.loan.borrower.user;
     },
     returnAt() {
-      return this.$dayjs(this.loan.departure_at)
-        .add(this.loan.duration_in_minutes, "minute")
-        .format("YYYY-MM-DD HH:mm:ss");
+      return this.$dayjs(this.loan.actual_return_at).format("YYYY-MM-DD HH:mm:ss");
     },
     /*
       Returns an array containing all user roles in the current loan.
