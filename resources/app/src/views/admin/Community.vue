@@ -238,18 +238,19 @@ export default {
       Ensure the format follows the community user format. This is what we are working on.
     */
     communityUsers() {
-      const users = this.$store.state.users.data;
-
       // Convert data recieved from the backend to communityUsers required by the list.
-      let communityUser;
       let communityUsers = [];
 
-      for (const user of users) {
+      for (const user of this.users) {
+        if (!user.communities) {
+          // When users are loaded from the list, they may not have their communities set.
+          continue;
+        }
         for (const community of user.communities) {
           if (community.id != this.$route.params.id) {
             continue;
           }
-          communityUser = {
+          communityUsers.push({
             // Pour pouvoir linker aus actions...
             id: user.id,
             user_id: user.id,
@@ -261,9 +262,7 @@ export default {
             approved_at: community.approved_at,
             suspended_at: community.suspended_at,
             proof: community.proof,
-          };
-
-          communityUsers.push(communityUser);
+          });
         }
       }
 
