@@ -25,8 +25,6 @@ class Loanable extends BaseModel
 
     protected $appends = ["community_ids"];
 
-    protected $hidden = ["instructions"];
-
     public static $filterTypes = [
         "id" => "number",
         "name" => "text",
@@ -346,6 +344,8 @@ class Loanable extends BaseModel
             $loan->borrower->user->id === $user->id
         ) {
             $this->makeVisible("instructions");
+        } else {
+            $this->makeHidden("instructions");
         }
     }
 

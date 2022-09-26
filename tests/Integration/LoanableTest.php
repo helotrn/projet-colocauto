@@ -706,7 +706,6 @@ class LoanableTest extends TestCase
 
     public function testRetrieveLoanableForOwner_showsInstructions()
     {
-        $this->withoutEvents();
         $ownerUser = factory(User::class)->create();
         $owner = factory(Owner::class)->create(["user_id" => $ownerUser->id]);
 
@@ -725,7 +724,6 @@ class LoanableTest extends TestCase
 
     public function testRetrieveLoanableForAdmin_showsInstructions()
     {
-        $this->withoutEvents();
         $ownerUser = factory(User::class)->create();
         $owner = factory(Owner::class)->create(["user_id" => $ownerUser->id]);
         $loanable = factory(Bike::class)->create([
@@ -747,6 +745,8 @@ class LoanableTest extends TestCase
     {
         $this->withoutEvents();
 
+        $community = factory(Community::class)->create();
+
         $ownerUser = factory(User::class)->create();
         $owner = factory(Owner::class)->create(["user_id" => $ownerUser->id]);
         $loanable = factory(Bike::class)->create([
@@ -755,6 +755,14 @@ class LoanableTest extends TestCase
         ]);
 
         $otherUser = factory(User::class)->create();
+
+        // Other user has access to loanable but not to instructions
+        $otherUser->communities()->attach($community->id, [
+            "approved_at" => new \DateTime(),
+        ]);
+        $ownerUser->communities()->attach($community->id, [
+            "approved_at" => new \DateTime(),
+        ]);
 
         $this->actAs($otherUser);
         $response = $this->json("GET", "/api/v1/loanables/{$loanable->id}");

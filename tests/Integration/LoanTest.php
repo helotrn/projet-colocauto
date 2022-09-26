@@ -13,9 +13,6 @@ use App\Models\User;
 use Carbon\Carbon;
 use Tests\TestCase;
 
-use function PHPUnit\Framework\assertArrayHasKey;
-use function PHPUnit\Framework\assertEquals;
-
 class LoanTest extends TestCase
 {
     private static $getLoanResponseStructure = [
