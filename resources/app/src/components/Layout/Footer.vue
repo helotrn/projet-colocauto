@@ -33,7 +33,7 @@
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <img src="@/assets/icons/f_logo_RGB-White_58.png" />
+                <img src="/f_logo_RGB-White_58.png" />
               </a>
             </p>
 
@@ -52,7 +52,7 @@
 </template>
 
 <script>
-import instagram from "@/assets/icons/Instagram_Glyph_White.svg";
+import instagram from "@/assets/svg/Instagram_Glyph_White.svg";
 
 export default {
   name: "LayoutFooter",
