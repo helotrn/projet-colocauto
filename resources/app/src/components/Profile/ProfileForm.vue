@@ -190,11 +190,13 @@ export default {
       validate: ({ address, isFromGoogle }) => isFromGoogle && address !== "",
       message: "L'adresse doit provenir de la liste de suggestions.",
     });
-    this.$refs.addressValidator.initialValue = {
+    const initialValue = {
       address: this.user.address,
       // We assume that initially created addresses are correct.
       isFromGoogle: !!this.user.address,
     };
+    this.$refs.addressValidator.initialValue = initialValue;
+    this.$refs.addressValidator.syncValue(initialValue);
   },
   props: {
     changed: {
