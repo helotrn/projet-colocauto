@@ -114,7 +114,7 @@
               <h2>Nouvelles demandes d'emprunt</h2>
 
               <p class="dashboard__instructions">
-                Ces personne devraient entrer en contact avec vous sous peu.
+                Ces personnes devraient entrer en contact avec vous sous peu.
               </p>
 
               <div
