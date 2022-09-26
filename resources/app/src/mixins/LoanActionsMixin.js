@@ -161,7 +161,7 @@ export default {
           if (!this.isAvailable) throw "unavailable";
         }
 
-        await this.$store.dispatch("loans/completeAction", this.action);
+        await this.$store.dispatch("loans/completeAction", { action: this.action });
       } catch (e) {
         if (e === "unavailable") {
           this.$store.commit("addNotification", {

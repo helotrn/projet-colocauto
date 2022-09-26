@@ -163,9 +163,7 @@ export default {
     async loadItemAndUser() {
       this.loadedFullLoanable = false;
 
-      await Promise.all([this.loadItem(), this.$store.dispatch("loadUser")]).then(() =>
-        this.$store.dispatch("loadLoans")
-      );
+      await Promise.all([this.loadItem(), this.$store.dispatch("loadUser")]);
     },
     skipLoadItem() {
       if (this.id === "new") {

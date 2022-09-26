@@ -18,7 +18,8 @@ use App\Models\PrePayment;
 use App\Models\Takeover;
 use App\Repositories\LoanRepository;
 use Carbon\Carbon;
-use Excel;
+use Carbon\CarbonImmutable;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
@@ -409,5 +410,130 @@ class LoanController extends RestController
         // moment.
 
         return $loan;
+    }
+
+    public function dashboard(Request $request)
+    {
+        $fields = [
+            "id",
+            "departure_at",
+            "duration_in_minutes",
+            "actual_return_at",
+            "status",
+            "total_final_cost",
+            "final_price",
+            "final_purchases_amount",
+            "intention.id",
+            "borrower.id",
+            "borrower.user.avatar.*",
+            "borrower.user.full_name",
+            "borrower.user.id",
+            "loanable.id",
+            "loanable.image.*",
+            "loanable.name",
+            "loanable.owner.id",
+            "loanable.owner.user.avatar.*",
+            "loanable.owner.user.full_name",
+            "loanable.owner.user.id",
+            "loanable.type",
+        ];
+
+        $accessibleLoans = Loan::accessibleBy($request->user());
+        $now = CarbonImmutable::now();
+        $aWeekAgo = $now->subtract(7, "days");
+
+        $completedLoans = (clone $accessibleLoans)
+            ->where("status", "completed")
+            ->where("actual_return_at", ">", $aWeekAgo)
+            ->orderBy("updated_at", "desc");
+
+        $ongoingLoans = (clone $accessibleLoans)
+            ->where("status", "in_process")
+            ->orderBy("departure_at", "asc");
+        $waitingLoans = (clone $ongoingLoans)->whereHas("intention", function (
+            Builder $q
+        ) {
+            $q->where("status", "in_process");
+        });
+        $userId = $request->user()->id;
+        $waitingLoansAsBorrower = (clone $waitingLoans)->whereHas(
+            "borrower",
+            function (Builder $q) use ($userId) {
+                $q->where("user_id", $userId);
+            }
+        );
+        $waitingLoansAsOwner = (clone $waitingLoans)->whereHas(
+            "loanable.owner",
+            function (Builder $q) use ($userId) {
+                $q->where("user_id", $userId);
+            }
+        );
+        $approvedLoans = (clone $ongoingLoans)->whereHas("intention", function (
+            Builder $q
+        ) {
+            $q->where("status", "completed");
+        });
+
+        // Started loans that aren't contested
+        $startedLoans = (clone $approvedLoans)->where(function ($q) use ($now) {
+            $q->where("departure_at", "<=", $now)
+                ->whereHas("takeover", function (Builder $q) {
+                    $q->where("status", "!=", "canceled");
+                })
+                ->where(function ($q) {
+                    $q->doesntHave("handover")->orWhereHas(
+                        "handover",
+                        function (Builder $q) {
+                            $q->where("status", "!=", "canceled");
+                        }
+                    );
+                });
+        });
+
+        $contestedLoans = (clone $approvedLoans)->where(function ($q) {
+            $q->whereHas("takeover", function (Builder $q) {
+                $q->where("status", "canceled");
+            })->orWhereHas("handover", function (Builder $q) {
+                $q->where("status", "canceled");
+            });
+        });
+
+        $approvedFutureLoans = (clone $approvedLoans)->where(
+            "departure_at",
+            ">",
+            $now
+        );
+
+        return response(
+            [
+                "started" => $this->getCollectionFields(
+                    $startedLoans->get(),
+                    $fields
+                ),
+                "contested" => $this->getCollectionFields(
+                    $contestedLoans->get(),
+                    $fields
+                ),
+                "waiting" => $this->getCollectionFields(
+                    $waitingLoansAsBorrower->get(),
+                    $fields
+                ),
+                "need_approval" => $this->getCollectionFields(
+                    $waitingLoansAsOwner->get(),
+                    $fields
+                ),
+                // TODO: add a limit on the number of future loans once all loans can be displayed
+                // in the user profile.
+                "future" => $this->getCollectionFields(
+                    $approvedFutureLoans->get(),
+                    $fields
+                ),
+                "completed" => $this->getCollectionFields(
+                    $completedLoans->limit(3)->get(),
+                    $fields
+                ),
+            ],
+            200
+        );
     }
 }

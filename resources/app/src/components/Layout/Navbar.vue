@@ -187,6 +187,8 @@ export default {
   },
   methods: {
     async logout() {
+      this.$router.push("/");
+
       await this.$store.dispatch("logout");
 
       this.$store.commit("addNotification", {
@@ -195,8 +197,6 @@ export default {
         variant: "success",
         type: "logout",
       });
-
-      this.$router.push("/");
     },
   },
 };

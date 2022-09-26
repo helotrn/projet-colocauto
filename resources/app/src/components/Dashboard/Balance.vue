@@ -1,6 +1,6 @@
 <template>
   <div class="dashboard-balance">
-    <h3>
+    <h3 class="dashboard-h3">
       Solde
       <b-badge pill variant="light" v-b-popover.hover="$t('approvisionner_popover')"> ? </b-badge>
     </h3>

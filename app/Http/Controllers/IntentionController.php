@@ -81,7 +81,7 @@ class IntentionController extends RestController
         return $response;
     }
 
-    public function complete(IntentionRequest $request, $actionId, $loanId)
+    public function complete(IntentionRequest $request, $loanId, $actionId)
     {
         $authRequest = $request->redirectAuth(Request::class);
 

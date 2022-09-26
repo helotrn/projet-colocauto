@@ -1,7 +1,7 @@
 <template>
   <div class="loan-info-box">
-    <b-card class="shadow" bg="white" no-body>
-      <router-link class="card-body" :to="`/loans/${this.loan.id}`">
+    <b-card :class="{ shadow: true, loading, border: !!variant }" :border-variant="variant" no-body>
+      <router-link :class="{ 'card-body': true, disabled: loading }" :to="`/loans/${this.loan.id}`">
         <b-row>
           <b-col lg="6">
             <b-row>
@@ -28,10 +28,6 @@
                   <span class="loan-info-box__name__user" v-if="otherUser">
                     {{ otherUser.full_name }}
                   </span>
-                  <span class="loan-info-box__name__user" v-else-if="loan.loanable.community">
-                    {{ loan.loanable.community.name }}
-                  </span>
-
                   <br />
                   <span class="loan-info-box__name__loanable">{{ loan.loanable.name }}</span>
                 </span>
@@ -56,6 +52,7 @@
             <div>
               <b-button
                 size="sm"
+                :disabled="loading"
                 variant="success"
                 v-if="hasButton('accept') && userRoles.includes('owner')"
                 @click.prevent="acceptLoan"
@@ -65,6 +62,7 @@
 
               <b-button
                 size="sm"
+                :disabled="loading"
                 variant="outline-primary"
                 v-if="hasButton('view')"
                 :to="`/loans/${this.loan.id}`"
@@ -74,6 +72,7 @@
 
               <b-button
                 size="sm"
+                :disabled="loading"
                 variant="outline-danger"
                 v-if="hasButton('deny') && userRoles.includes('owner')"
                 @click.prevent="denyLoan"
@@ -83,6 +82,7 @@
 
               <b-button
                 size="sm"
+                :disabled="loading"
                 variant="outline-danger"
                 v-if="hasButton('cancel')"
                 @click.prevent="cancelLoan"
@@ -99,15 +99,6 @@
         </b-row>
       </router-link>
     </b-card>
-    <div v-if="hasButton('accept')">
-      <p class="loan-info-box__instructions muted" v-if="userRoles.includes('owner')">
-        Cette personne devrait entrer en contact avec vous sous peu.
-      </p>
-      <p class="loan-info-box__instructions muted" v-else-if="userRoles.includes('borrower')">
-        La demande est envoyée! Maintenant contactez la personne propriétaire pour valider votre
-        demande.
-      </p>
-    </div>
   </div>
 </template>
 
@@ -138,7 +129,15 @@ export default {
       required: false,
       default: false,
     },
+    variant: {
+      type: String,
+      required: false,
+      default: "",
+    },
   },
+  data: () => ({
+    loading: false,
+  }),
   components: {
     LoanMenu,
     UserAvatar,
@@ -173,9 +172,7 @@ export default {
       return this.loan.borrower.user;
     },
     returnAt() {
-      return this.$dayjs(this.loan.departure_at)
-        .add(this.loan.duration_in_minutes, "minute")
-        .format("YYYY-MM-DD HH:mm:ss");
+      return this.$dayjs(this.loan.actual_return_at).format("YYYY-MM-DD HH:mm:ss");
     },
     /*
       Returns an array containing all user roles in the current loan.
@@ -208,14 +205,21 @@ export default {
       });
     },
     async acceptLoan() {
-      const intention = this.loan.actions.find((a) => a.type === "intention");
+      const intention = this.loan.intention;
       try {
+        this.loading = true;
         await this.$store.dispatch("loans/isAvailable", this.loan.id);
 
         if (!this.isAvailable) throw "unavailable";
         else {
-          await this.$store.dispatch("loans/completeAction", intention);
-          await this.$store.dispatch("loadAllLoans");
+          await this.$store.dispatch("loans/completeAction", {
+            action: {
+              ...intention,
+              loan_id: this.loan.id,
+            },
+            type: "intention",
+          });
+          await this.$store.dispatch("dashboard/loadLoans");
         }
       } catch (e) {
         if (e === "unavailable") {
@@ -226,20 +230,26 @@ export default {
             type: "loans",
           });
         } else throw e;
+      } finally {
+        this.loading = false;
       }
     },
     async cancelLoan() {
-      const intention = this.loan.actions.find((a) => a.type === "intention");
       try {
+        this.loading = true;
         await this.$store.dispatch("loans/cancel", this.loan.id);
-        await this.$store.dispatch("loadAllLoans");
+        await this.$store.dispatch("dashboard/loadLoans");
       } catch (e) {
         throw e;
+      } finally {
+        this.loading = false;
       }
     },
     async denyLoan() {
+      this.loading = true;
       await this.$store.dispatch("loans/cancel", this.loan.id);
-      await this.$store.dispatch("loadAllLoans");
+      await this.$store.dispatch("dashboard/loadLoans");
+      this.loading = false;
     },
     hasButton(name) {
       return this.buttons.indexOf(name) > -1;
@@ -252,6 +262,15 @@ export default {
 .loan-info-box {
   .card {
     margin-bottom: 20px;
+  }
+
+  .loading {
+    opacity: 0.5;
+  }
+
+  a.disabled {
+    cursor: default;
+    pointer-events: none;
   }
 
   a:hover,
