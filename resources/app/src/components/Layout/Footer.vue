@@ -20,6 +20,23 @@
               <a :href="googleFormUrl" target="_blank">envoyer vos idées et suggestions</a>.
             </p>
 
+            <p class="social-media-icons">
+              <a
+                href="https://www.instagram.com/locomotion.qc"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <insta-icon></insta-icon>
+              </a>
+              <a
+                href="https://www.facebook.com/locomotion.qc"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <img src="/f_logo_RGB-White_58.png" />
+              </a>
+            </p>
+
             <p class="cgu small">
               Organisme à but non lucratif basé à Montréal -
               <a href="/conditions" title="Conditions d'utilisation - LocoMotion"
@@ -35,8 +52,13 @@
 </template>
 
 <script>
+import instagram from "@/assets/svg/Instagram_Glyph_White.svg";
+
 export default {
   name: "LayoutFooter",
+  components: {
+    "insta-icon": instagram,
+  },
   data() {
     return {
       googleFormUrl:
@@ -60,6 +82,9 @@ export default {
 
     img {
       width: 200px;
+      &:hover {
+        opacity: 0.8;
+      }
     }
   }
 
@@ -82,6 +107,20 @@ export default {
       &:hover {
         text-decoration: none;
         color: $white;
+      }
+    }
+  }
+  .social-media-icons {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    justify-content: center;
+    img,
+    svg {
+      width: 2rem;
+
+      &:hover {
+        opacity: 0.8;
       }
     }
   }
