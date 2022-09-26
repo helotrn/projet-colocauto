@@ -331,7 +331,7 @@ class Loanable extends BaseModel
     {
         if (
             $user->isAdmin() ||
-            ($this->owner->user && $this->owner->user->id === $user->id)
+            ($this->owner && $this->owner->user->id === $user->id)
         ) {
             $this->makeVisible("instructions");
             return;
