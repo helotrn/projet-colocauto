@@ -9,9 +9,12 @@ class LoanableTransformer extends Transformer
 {
     public function transform($item, $options = [])
     {
+        $user = Auth::user();
+        if ($user) {
+            $item->handleInstructionVisibilityFor($user);
+        }
         $output = parent::transform($item, $options);
 
-        $user = Auth::user();
         if ($user && $user->isAdmin()) {
             return $output;
         }

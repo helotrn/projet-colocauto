@@ -139,8 +139,8 @@ export default {
   },
   methods: {
     async formMixinCallback() {
-      const { id, type } = this.item.loanable;
-      await this.$store.dispatch(`${type}s/retrieveOne`, {
+      const partialLoanable = this.item.loanable;
+      await this.$store.dispatch(`${partialLoanable.type}s/retrieveOne`, {
         params: {
           fields:
             "*,owner.id,owner.user.id,owner.user.avatar,owner.user.name,owner.user.phone," +
@@ -148,13 +148,15 @@ export default {
           "!fields": "events",
           with_deleted: true,
         },
-        id,
+        id: partialLoanable.id,
       });
-      const loanable = this.$store.state[`${type}s`].item;
+      const loanable = this.$store.state[`${partialLoanable.type}s`].item;
 
-      this.$store.commit(`${type}s/item`, null);
+      this.$store.commit(`${partialLoanable.type}s/item`, null);
 
-      this.$store.commit(`${this.slug}/mergeItem`, { loanable });
+      this.$store.commit(`${this.slug}/mergeItem`, {
+        loanable: { ...partialLoanable, ...loanable },
+      });
 
       this.loadedFullLoanable = true;
     },
