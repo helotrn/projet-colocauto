@@ -329,7 +329,10 @@ class Loanable extends BaseModel
 
     public function handleInstructionVisibilityFor($user, $loan = null)
     {
-        if ($user->isAdmin() || $this->owner->user->id === $user->id) {
+        if (
+            $user->isAdmin() ||
+            ($this->owner->user && $this->owner->user->id === $user->id)
+        ) {
             $this->makeVisible("instructions");
             return;
         }
