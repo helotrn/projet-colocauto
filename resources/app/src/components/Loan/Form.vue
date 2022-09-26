@@ -10,7 +10,7 @@
         <svg-check v-if="item.id" />
         <svg-waiting v-else />
 
-        Demande d'emprunt
+        {{ loanableIsSelfService ? "Réservation" : "Demande d'emprunt" }}
       </h2>
 
       <span v-if="!item.created_at">En cours de création</span>
@@ -26,6 +26,19 @@
             @submit.stop.prevent="passes(submit)"
             @reset.stop.prevent="$emit('reset')"
           >
+            <b-row>
+              <b-col>
+                <b-alert show variant="warning" v-if="item.loanable.comments">
+                  <div class="alert-heading">
+                    <h4>Commentaires du propriétaire sur le véhicule</h4>
+                  </div>
+                  <div class="owner-comments-text">
+                    <p>{{ item.loanable.comments }}</p>
+                  </div>
+                </b-alert>
+              </b-col>
+            </b-row>
+
             <b-row>
               <b-col lg="6">
                 <!--
@@ -188,7 +201,7 @@
                 <b-button
                   type="submit"
                   :disabled="loading || invalidDuration"
-                  v-else-if="isOwnedLoanable"
+                  v-else-if="!loanableIsSelfService"
                 >
                   Faire la demande d'emprunt
                 </b-button>
@@ -288,5 +301,8 @@ export default {
 .loan-form__estimations__loading {
   max-width: 100px;
   max-height: 30px;
+}
+.owner-comments-text {
+  white-space: pre;
 }
 </style>

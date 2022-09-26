@@ -10,7 +10,7 @@
           <p>{{ loanable.comments }}</p>
         </div>
 
-        <div class="loanable-details-box__section" v-if="loanable.instructions">
+        <div v-if="showInstructions && loanable.instructions" class="loanable-details-box__section">
           <h3>{{ $t("fields.instructions") | capitalize }}</h3>
 
           <p>{{ loanable.instructions }}</p>
@@ -113,6 +113,11 @@ export default {
       type: Object,
       required: true,
     },
+    showInstructions: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
   },
   i18n: {
     messages: {
@@ -127,4 +132,9 @@ export default {
 };
 </script>
 
-<style lang="scss"></style>
+<style lang="scss">
+.loanable-details-box {
+  // Show line feeds in comments, instructions and location_description
+  white-space: pre;
+}
+</style>

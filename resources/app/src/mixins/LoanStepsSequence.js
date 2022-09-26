@@ -52,6 +52,9 @@ export default {
 
       return this.user.id === this.item.loanable.owner.user.id;
     },
+    userIsBorrower() {
+      return this.user.id === this.item.borrower.user.id;
+    },
     borrowerIsOwner() {
       // If no owner, then false.
       if (!this.item.loanable.owner) {

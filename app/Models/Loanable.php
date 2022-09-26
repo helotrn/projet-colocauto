@@ -327,6 +327,28 @@ class Loanable extends BaseModel
         ];
     }
 
+    public function handleInstructionVisibilityFor($user, $loan = null)
+    {
+        if ($user->isAdmin() || $this->owner->user->id === $user->id) {
+            $this->makeVisible("instructions");
+            return;
+        }
+
+        // Make instructions visible for an approved loan in process
+        if (
+            $loan &&
+            $loan->loanable->id === $this->id &&
+            $loan->status === "in_process" &&
+            $loan->intention &&
+            $loan->intention->isCompleted() &&
+            $loan->borrower->user->id === $user->id
+        ) {
+            $this->makeVisible("instructions");
+        } else {
+            $this->makeHidden("instructions");
+        }
+    }
+
     public function scopeWithDeleted(Builder $query, $value, $negative = false)
     {
         if (filter_var($value, FILTER_VALIDATE_BOOLEAN) !== $negative) {

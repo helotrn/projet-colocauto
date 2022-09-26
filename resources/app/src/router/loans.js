@@ -42,6 +42,7 @@ export default [
           "loanable.owner.user.phone",
           "loanable.padlock.name",
           "loanable.type",
+          "loanable.instructions",
           "loanable.has_padlock",
           "payment.*",
           "pre_payment.*",

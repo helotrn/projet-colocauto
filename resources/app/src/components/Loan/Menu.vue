@@ -10,7 +10,7 @@
       <svg-check v-else-if="hasReachedStep('creation')" />
       <svg-waiting v-else />
 
-      <span>Demande d'emprunt</span>
+      <span>{{ loanableIsSelfService ? "Réservation" : "Demande d'emprunt" }}</span>
     </li>
     <li
       :class="{

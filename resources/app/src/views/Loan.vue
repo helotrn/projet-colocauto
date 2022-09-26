@@ -3,7 +3,7 @@
     <div v-if="pageLoaded">
       <vue-headful :title="fullTitle" />
 
-      <loan-header :user="user" :loan="item" />
+      <loan-header :user="user" :loan="item" :show-instructions="hasReachedStep('intention')" />
 
       <b-row>
         <b-col lg="3" class="loan__sidebar">
@@ -19,25 +19,32 @@
           />
 
           <b-alert
+            variant="success"
             show
-            variant="warning"
             v-if="
-              !!item.id &&
+              item.id &&
               item.status === 'in_process' &&
-              !loanIsCanceled &&
+              hasReachedStep('intention') &&
               !hasReachedStep('takeover') &&
-              !hasReachedStep('handover') &&
-              !hasReachedStep('payment')
+              userIsBorrower
             "
           >
-            <h4>{{ $t("modification_warning.title") }}</h4>
+            <h4 class="alert-heading">
+              {{ $t("loan_approved") }}
+            </h4>
+            <strong>{{ $t("modification_warning.title") }}: </strong>
             {{ $t("modification_warning.content") }}
           </b-alert>
 
           <b-alert
             show
             variant="info"
-            v-if="item.loanable.type === 'car' && !loanIsCanceled && !hasReachedStep('handover')"
+            v-if="
+              item.loanable.type === 'car' &&
+              !loanIsCanceled &&
+              !hasReachedStep('handover') &&
+              userIsBorrower
+            "
           >
             <h4 class="alert-heading">
               {{ $t("insurance_warning.title") }}
@@ -132,8 +139,8 @@ export default {
   },
   methods: {
     async formMixinCallback() {
-      const { id, type } = this.item.loanable;
-      await this.$store.dispatch(`${type}s/retrieveOne`, {
+      const partialLoanable = this.item.loanable;
+      await this.$store.dispatch(`${partialLoanable.type}s/retrieveOne`, {
         params: {
           fields:
             "*,owner.id,owner.user.id,owner.user.avatar,owner.user.name,owner.user.phone," +
@@ -141,13 +148,15 @@ export default {
           "!fields": "events",
           with_deleted: true,
         },
-        id,
+        id: partialLoanable.id,
       });
-      const loanable = this.$store.state[`${type}s`].item;
+      const loanable = this.$store.state[`${partialLoanable.type}s`].item;
 
-      this.$store.commit(`${type}s/item`, null);
+      this.$store.commit(`${partialLoanable.type}s/item`, null);
 
-      this.$store.commit(`${this.slug}/mergeItem`, { loanable });
+      this.$store.commit(`${this.slug}/mergeItem`, {
+        loanable: { ...partialLoanable, ...loanable },
+      });
 
       this.loadedFullLoanable = true;
     },

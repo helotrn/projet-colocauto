@@ -6,6 +6,7 @@ use App\Models\Bike;
 use App\Models\Borrower;
 use App\Models\Community;
 use App\Models\Extension;
+use App\Models\Intention;
 use App\Models\Loan;
 use App\Models\Owner;
 use App\Models\User;
@@ -1133,6 +1134,65 @@ class LoanTest extends TestCase
         ])->assertStatus(404);
     }
 
+    public function testRetrieveApprovedLoan_showsInstructions()
+    {
+        // Linking users and communities would trigger RegistrationApprovedEvent
+        // which would then send email using an external service.
+        // withoutEvents() makes the test robust to a non-existent or
+        // incorrectly-configured email service.
+        $this->withoutEvents();
+        $community = factory(Community::class)->create();
+
+        $borrowerUser = factory(User::class)->create();
+        $borrowerUser
+            ->communities()
+            ->attach($community->id, ["approved_at" => new \DateTime()]);
+        $borrower = factory(Borrower::class)->create([
+            "user_id" => $borrowerUser->id,
+        ]);
+
+        $ownerUser = factory(User::class)->create();
+        $ownerUser
+            ->communities()
+            ->attach($community->id, ["approved_at" => new \DateTime()]);
+        $owner = factory(Owner::class)->create(["user_id" => $ownerUser->id]);
+
+        $loanable = factory(Bike::class)->create([
+            "owner_id" => $owner->id,
+            "instructions" => "test",
+        ]);
+
+        $this->actAs($borrower->user);
+        $response = $this->json("GET", "/api/v1/loans");
+
+        $response->assertJsonMissing([
+            "instructions" => "test",
+        ]);
+
+        $loan = factory(Loan::class)->create([
+            "borrower_id" => $borrower->id,
+            "loanable_id" => $loanable->id,
+        ]);
+        $response = $this->json("GET", "/api/v1/loans/{$loan->id}");
+
+        $response->assertJsonMissing([
+            "instructions" => "test",
+        ]);
+
+        $loan->intention()->save(
+            factory(Intention::class)->make([
+                "executed_at" => Carbon::now(),
+                "status" => "completed",
+            ])
+        );
+
+        $response = $this->json("GET", "/api/v1/loans/{$loan->id}");
+
+        $response->assertJsonFragment([
+            "instructions" => "test",
+        ]);
+    }
+
     public function testLoanDashboard()
     {
         $borrower = factory(Borrower::class)->create();
@@ -1140,12 +1200,7 @@ class LoanTest extends TestCase
             "user_id" => $borrower->user_id,
         ]);
 
-        // Waiting
-        factory(Loan::class, 1)
-            ->states("withInProcessIntention")
-            ->create([
-                "borrower_id" => $borrower->id,
-            ]);
+        // Need of approval from $owner
         $loanable = factory(Bike::class)->create([
             "owner_id" => $owner->id,
         ]);
@@ -1154,12 +1209,24 @@ class LoanTest extends TestCase
             ->create([
                 "loanable_id" => $loanable->id,
             ]);
+        // $borrower waiting for approval
+        $otherOwner = factory(Owner::class)->create();
+        $otherLoanable = factory(Bike::class)->create([
+            "owner_id" => $otherOwner->id,
+        ]);
+        factory(Loan::class, 1)
+            ->states("withInProcessIntention")
+            ->create([
+                "borrower_id" => $borrower->id,
+                "loanable_id" => $otherLoanable->id,
+            ]);
         // Starting in the future
         factory(Loan::class, 2)
             ->states("withCompletedIntention")
             ->create([
                 "departure_at" => Carbon::now()->addHour(),
                 "borrower_id" => $borrower->id,
+                "loanable_id" => $loanable->id,
             ]);
         // Starting in the future with completed takeovers (if borrower clicks too fast)
         factory(Loan::class, 3)
@@ -1167,6 +1234,7 @@ class LoanTest extends TestCase
             ->create([
                 "departure_at" => Carbon::now()->addHour(),
                 "borrower_id" => $borrower->id,
+                "loanable_id" => $loanable->id,
             ]);
         // Started
         factory(Loan::class, 2)
@@ -1175,6 +1243,7 @@ class LoanTest extends TestCase
                 "departure_at" => Carbon::now()->subMinute(5),
                 "duration_in_minutes" => 60,
                 "borrower_id" => $borrower->id,
+                "loanable_id" => $loanable->id,
             ]);
         // Started without completed takeover
         factory(Loan::class, 2)
@@ -1183,12 +1252,14 @@ class LoanTest extends TestCase
                 "departure_at" => Carbon::now()->subMinute(5),
                 "duration_in_minutes" => 60,
                 "borrower_id" => $borrower->id,
+                "loanable_id" => $loanable->id,
             ]);
         // Contested
         factory(Loan::class, 1)
             ->states(["withCompletedIntention", "withContestedTakeover"])
             ->create([
                 "borrower_id" => $borrower->id,
+                "loanable_id" => $loanable->id,
             ]);
         factory(Loan::class, 9)
             ->states([
@@ -1198,12 +1269,14 @@ class LoanTest extends TestCase
             ])
             ->create([
                 "borrower_id" => $borrower->id,
+                "loanable_id" => $loanable->id,
             ]);
         // recently_completed
         factory(Loan::class, 7)
             ->states("withAllStepsCompleted")
             ->create([
                 "borrower_id" => $borrower->id,
+                "loanable_id" => $loanable->id,
             ]);
 
         $this->actAs($borrower->user);
