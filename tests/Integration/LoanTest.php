@@ -1173,7 +1173,10 @@ class LoanTest extends TestCase
             "borrower_id" => $borrower->id,
             "loanable_id" => $loanable->id,
         ]);
-        $response = $this->json("GET", "/api/v1/loans/{$loan->id}");
+        $response = $this->json(
+            "GET",
+            "/api/v1/loans/{$loan->id}?fields=*,loanable.*"
+        );
 
         $response->assertJsonMissing([
             "instructions" => "test",
@@ -1186,7 +1189,10 @@ class LoanTest extends TestCase
             ])
         );
 
-        $response = $this->json("GET", "/api/v1/loans/{$loan->id}");
+        $response = $this->json(
+            "GET",
+            "/api/v1/loans/{$loan->id}?fields=*,loanable.*"
+        );
 
         $response->assertJsonFragment([
             "instructions" => "test",
