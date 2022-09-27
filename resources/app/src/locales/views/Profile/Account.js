@@ -1,5 +1,6 @@
 export default {
   fr: {
+    current_email: "Courriel actuel",
     email_change_modal: {
       title: "Courriel mis à jour",
       content: `
