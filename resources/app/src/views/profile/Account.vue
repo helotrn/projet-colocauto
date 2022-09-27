@@ -28,6 +28,8 @@
     <div class="form__section">
       <h2>Changer mon courriel</h2>
 
+      <p>{{ $t("views.profile.account.current_email") }}&nbsp;: {{ item.email }}.</p>
+
       <user-email-form
         ref="emailForm"
         :user="item"
