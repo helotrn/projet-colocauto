@@ -105,11 +105,6 @@ class LoanController extends RestController
     {
         $item = $this->repo->find($request, $id);
 
-        $item->loanable->handleInstructionVisibilityFor(
-            $request->user(),
-            $item
-        );
-
         try {
             $response = $this->respondWithItem($request, $item);
         } catch (ValidationException $e) {
