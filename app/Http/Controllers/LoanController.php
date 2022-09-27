@@ -474,21 +474,21 @@ class LoanController extends RestController
             $q->where("status", "completed");
         });
 
-        // Started loans that aren't contested
-        $startedLoans = (clone $approvedLoans)->where(function ($q) use ($now) {
-            $q->where("departure_at", "<=", $now)
-                ->whereHas("takeover", function (Builder $q) {
+        $uncontestedLoans = (clone $approvedLoans)
+            ->where(function ($q) {
+                $q->doesntHave("takeover")->orWhereHas("takeover", function (
+                    Builder $q
+                ) {
                     $q->where("status", "!=", "canceled");
-                })
-                ->where(function ($q) {
-                    $q->doesntHave("handover")->orWhereHas(
-                        "handover",
-                        function (Builder $q) {
-                            $q->where("status", "!=", "canceled");
-                        }
-                    );
                 });
-        });
+            })
+            ->where(function ($q) {
+                $q->doesntHave("handover")->orWhereHas("handover", function (
+                    Builder $q
+                ) {
+                    $q->where("status", "!=", "canceled");
+                });
+            });
 
         $contestedLoans = (clone $approvedLoans)->where(function ($q) {
             $q->whereHas("takeover", function (Builder $q) {
@@ -498,7 +498,14 @@ class LoanController extends RestController
             });
         });
 
-        $approvedFutureLoans = (clone $approvedLoans)->where(
+        // Started loans that aren't contested
+        $startedLoans = (clone $uncontestedLoans)->where(
+            "departure_at",
+            "<=",
+            $now
+        );
+
+        $approvedFutureLoans = (clone $uncontestedLoans)->where(
             "departure_at",
             ">",
             $now
