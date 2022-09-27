@@ -1261,13 +1261,24 @@ class LoanTest extends TestCase
                 "borrower_id" => $borrower->id,
                 "loanable_id" => $loanable->id,
             ]);
-        factory(Loan::class, 9)
+        factory(Loan::class, 2)
             ->states([
                 "withCompletedIntention",
                 "withCompletedTakeover",
                 "withContestedHandover",
             ])
             ->create([
+                "borrower_id" => $borrower->id,
+                "loanable_id" => $loanable->id,
+            ]);
+        factory(Loan::class, 3)
+            ->states([
+                "withCompletedIntention",
+                "withCompletedTakeover",
+                "withContestedHandover",
+            ])
+            ->create([
+                "departure_at" => Carbon::now()->addHour(),
                 "borrower_id" => $borrower->id,
                 "loanable_id" => $loanable->id,
             ]);
@@ -1283,7 +1294,7 @@ class LoanTest extends TestCase
         $response = $this->json("get", "/api/v1/loans/dashboard");
 
         $response->assertJsonCount(4, "started");
-        $response->assertJsonCount(10, "contested");
+        $response->assertJsonCount(6, "contested");
         $response->assertJsonCount(1, "waiting");
         $response->assertJsonCount(2, "need_approval");
         $response->assertJsonCount(5, "future");
