@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
+use App\Exports\BaseExport;
 use App\Transformers\Transformer;
-use Molotov\Exports\BaseExport;
 use Illuminate\Database\Eloquent\Builder;
 
 trait BaseModelTrait
