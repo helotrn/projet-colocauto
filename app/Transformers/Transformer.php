@@ -159,7 +159,11 @@ class Transformer
     protected function shouldIncludeRelation($relation, &$item, $options)
     {
         return isset($options["fields"]) &&
-            (in_array($relation, wrap_array_keys($options["fields"]), true) ||
+            (in_array(
+                $relation,
+                self::wrapArrayKeys($options["fields"]),
+                true
+            ) ||
                 isset($options["fields"]["*"]["*"]) ||
                 in_array($relation, $item->getWith(), true));
     }
@@ -167,10 +171,14 @@ class Transformer
     protected function shouldIncludeField($field, $options)
     {
         return (!isset($options["fields"]) ||
-            in_array($field, wrap_array_keys($options["fields"]), true) ||
-            in_array("*", wrap_array_keys($options["fields"]), true)) &&
+            in_array($field, self::wrapArrayKeys($options["fields"]), true) ||
+            in_array("*", self::wrapArrayKeys($options["fields"]), true)) &&
             (!isset($options["!fields"]) ||
-                !in_array($field, wrap_array_keys($options["!fields"]), true));
+                !in_array(
+                    $field,
+                    self::wrapArrayKeys($options["!fields"]),
+                    true
+                ));
     }
 
     protected function addCollection($relation, $target, $transformer, $options)
@@ -254,5 +262,13 @@ class Transformer
     protected function filterKeys($output, $keys)
     {
         return array_intersect_key($output, array_flip($keys));
+    }
+
+    protected static function wrapArrayKeys($value)
+    {
+        if (!is_array($value)) {
+            return [$value];
+        }
+        return array_keys($value);
     }
 }
