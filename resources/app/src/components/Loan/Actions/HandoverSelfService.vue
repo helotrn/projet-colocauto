@@ -1,5 +1,8 @@
 <template>
-  <b-card no-body class="loan-form loan-actions loan-actions-handover-self-service">
+  <b-card
+    no-body
+    class="loan-form loan-actions loan-actions-handover loan-actions-handover-self-service"
+  >
     <b-card-header
       header-tag="header"
       role="tab"
@@ -57,7 +60,7 @@
               <b-form
                 :novalidate="true"
                 class="loan-actions-handover__form"
-                @submit.stop.prevent="passes(completeAction)"
+                @submit.stop.prevent="passes(completeHandover)"
               >
                 <b-row class="loan-actions-handover__form__image">
                   <b-col v-if="action.image">
@@ -128,7 +131,7 @@
                     variant="success"
                     class="mr-3"
                     :disabled="!hasEnoughBalance || actionLoading"
-                    @click="completeAction"
+                    @click="completeHandover"
                   >
                     Terminer l'emprunt
                   </b-button>
@@ -158,18 +161,6 @@ const { currency } = filters;
 export default {
   name: "LoanActionsHandoverSelfService",
   mixins: [LoanActionsMixin],
-  mounted() {
-    const platformTip = parseFloat(this.item.final_platform_tip || this.item.platform_tip);
-    this.action.platform_tip = Number.isNaN(platformTip) ? 0 : platformTip;
-
-    if (!this.item.actual_price) {
-      this.item.actual_price = 0;
-    }
-
-    if (!this.item.actual_insurance) {
-      this.item.actual_insurance = 0;
-    }
-  },
   components: {
     FormsImageUploader,
     FormsValidatedInput,
@@ -178,7 +169,7 @@ export default {
   },
   computed: {
     finalPrice() {
-      const platformTip = parseFloat(this.item.final_platform_tip || this.action.platform_tip);
+      const platformTip = parseFloat(this.item.final_platform_tip || this.action.platform_tip || 0);
       return this.item.actual_price + this.item.actual_insurance + platformTip;
     },
     hasEnoughBalance() {
@@ -207,6 +198,19 @@ export default {
     async reloadUserAndCloseModal() {
       await this.$store.dispatch("loadUser");
       this.closeModal();
+    },
+    completeHandover() {
+      const platformTip = parseFloat(this.item.final_platform_tip || this.item.platform_tip);
+      this.action.platform_tip = Number.isNaN(platformTip) ? 0 : platformTip;
+
+      if (!this.item.actual_price) {
+        this.item.actual_price = 0;
+      }
+
+      if (!this.item.actual_insurance) {
+        this.item.actual_insurance = 0;
+      }
+      this.completeAction();
     },
   },
 };

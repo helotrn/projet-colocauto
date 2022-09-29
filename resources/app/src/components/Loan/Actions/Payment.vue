@@ -267,7 +267,7 @@
                     :minimum-required="actualPrice - user.balance"
                     :trip-cost="actualPrice"
                     :no-cancel="true"
-                    @bought="completeAction"
+                    @bought="completePayment"
                   />
                 </b-col>
               </b-row>
@@ -278,7 +278,7 @@
                     size="sm"
                     variant="success"
                     :disabled="actionLoading"
-                    @click="completeAction"
+                    @click="completePayment"
                   >
                     Accepter
                   </b-button>
@@ -290,7 +290,7 @@
                     size="sm"
                     variant="success"
                     :disabled="actionLoading"
-                    @click="completeAction"
+                    @click="completePayment"
                   >
                     Accepter
                   </b-button>
@@ -326,9 +326,6 @@ import locales from "@/locales";
 export default {
   name: "LoanActionsPayment",
   mixins: [LoanActionsMixin, LoanStepsSequence],
-  mounted() {
-    this.action.platform_tip = this.platformTip;
-  },
   components: {
     FormsValidatedInput,
     UserAddCreditBox,
@@ -359,6 +356,12 @@ export default {
     },
     hasEnoughBalance() {
       return this.user.balance >= this.actualPrice;
+    },
+  },
+  methods: {
+    completePayment() {
+      this.action.platform_tip = this.normalizedTip;
+      this.completeAction();
     },
   },
   watch: {

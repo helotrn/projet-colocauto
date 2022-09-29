@@ -175,6 +175,7 @@ export default {
 .loan-actions {
   .card {
     margin-bottom: 20px;
+    box-shadow: 0 2px 5px $light-grey;
   }
 }
 </style>

@@ -90,84 +90,81 @@
             </div>
           </section>
           <!---->
-          <layout-loading v-if="loading && !loansLoaded" />
-          <template v-else>
-            <!-- contested loans container -->
-            <section class="page__section" v-if="loans.contested && loans.contested.length > 0">
-              <h2>Emprunts avec contestation</h2>
-
-              <p class="dashboard__instructions">
-                Un membre de l'équipe LocoMotion contactera les participant-e-s et ajustera les
-                données.
-              </p>
-
-              <div class="dashboard__ongoing-loans" v-for="loan in loans.contested" :key="loan.id">
-                <loan-info-box :loan="loan" :user="user" :buttons="['view']" variant="warning" />
-              </div>
-            </section>
-            <!---->
-            <!-- need approval loans container (user is owner)-->
-            <section
-              class="page__section"
-              v-if="loans.need_approval && loans.need_approval.length > 0"
-            >
-              <h2>Nouvelles demandes d'emprunt</h2>
-
-              <p class="dashboard__instructions">
-                Ces personnes devraient entrer en contact avec vous sous peu.
-              </p>
-
-              <div
-                class="dashboard__waiting-loans"
-                v-for="loan in loans.need_approval"
-                :key="loan.id"
+          <div class="position-relative">
+            <div class="loans-container" :class="{ loading: loading && !loansLoaded }">
+              <!-- contested loans container -->
+              <section class="page__section" v-if="loans.contested && loans.contested.length > 0">
+                <h2>Emprunts avec contestation</h2>
+                <p class="dashboard__instructions">
+                  Un membre de l'équipe LocoMotion contactera les participant-e-s et ajustera les
+                  données.
+                </p>
+                <div
+                  class="dashboard__ongoing-loans"
+                  v-for="loan in loans.contested"
+                  :key="loan.id"
+                >
+                  <loan-info-box :loan="loan" :user="user" :buttons="['view']" variant="warning" />
+                </div>
+              </section>
+              <!---->
+              <!-- need approval loans container (user is owner)-->
+              <section
+                class="page__section"
+                v-if="loans.need_approval && loans.need_approval.length > 0"
               >
-                <loan-info-box :loan="loan" :user="user" />
-              </div>
-            </section>
-            <!---->
-            <!-- ongoing loans container -->
-            <section class="page__section" v-if="loans.started && loans.started.length > 0">
-              <h2 class="dashboard--margin-bottom">Emprunts en cours</h2>
-
-              <div class="dashboard__ongoing-loans" v-for="loan in loans.started" :key="loan.id">
-                <loan-info-box :loan="loan" :user="user" :buttons="['view']" />
-              </div>
-            </section>
-            <!---->
-            <!-- awaiting loans container (user is borrower)-->
-            <section class="page__section" v-if="loans.waiting && loans.waiting.length > 0">
-              <h2>Demandes en attente d'approbation</h2>
-
-              <p class="dashboard__instructions">
-                La demande est envoyée! Maintenant contactez la personne propriétaire pour valider
-                votre demande.
-              </p>
-
-              <div class="dashboard__waiting-loans" v-for="loan in loans.waiting" :key="loan.id">
-                <loan-info-box :loan="loan" :user="user" :buttons="['view', 'cancel']" />
-              </div>
-            </section>
-            <!---->
-            <!-- upcoming loans container -->
-            <section class="page__section" v-if="loans.future && loans.future.length > 0">
-              <h2>Emprunts à venir approuvés</h2>
-
-              <p class="dashboard__instructions">
-                Assurez-vous de démarrer l'emprunt en ligne au moment de prendre possession du
-                véhicule!
-              </p>
-
-              <div class="dashboard__upcoming-loans" v-for="loan in loans.future" :key="loan.id">
-                <loan-info-box
-                  mode="upcoming"
-                  :loan="loan"
-                  :user="user"
-                  :buttons="['view', 'cancel']"
-                />
-              </div>
-            </section>
-          </template>
+                <h2>Nouvelles demandes d'emprunt</h2>
+                <p class="dashboard__instructions">
+                  Ces personnes devraient entrer en contact avec vous sous peu.
+                </p>
+                <div
+                  class="dashboard__waiting-loans"
+                  v-for="loan in loans.need_approval"
+                  :key="loan.id"
+                >
+                  <loan-info-box :loan="loan" :user="user" />
+                </div>
+              </section>
+              <!---->
+              <!-- ongoing loans container -->
+              <section class="page__section" v-if="loans.started && loans.started.length > 0">
+                <h2 class="dashboard--margin-bottom">Emprunts en cours</h2>
+                <div class="dashboard__ongoing-loans" v-for="loan in loans.started" :key="loan.id">
+                  <loan-info-box :loan="loan" :user="user" :buttons="['view']" />
+                </div>
+              </section>
+              <!---->
+              <!-- awaiting loans container (user is borrower)-->
+              <section class="page__section" v-if="loans.waiting && loans.waiting.length > 0">
+                <h2>Demandes en attente d'approbation</h2>
+                <p class="dashboard__instructions">
+                  La demande est envoyée! Maintenant contactez la personne propriétaire pour valider
+                  votre demande.
+                </p>
+                <div class="dashboard__waiting-loans" v-for="loan in loans.waiting" :key="loan.id">
+                  <loan-info-box :loan="loan" :user="user" :buttons="['view', 'cancel']" />
+                </div>
+              </section>
+              <!---->
+              <!-- upcoming loans container -->
+              <section class="page__section" v-if="loans.future && loans.future.length > 0">
+                <h2>Emprunts à venir approuvés</h2>
+                <p class="dashboard__instructions">
+                  Assurez-vous de démarrer l'emprunt en ligne au moment de prendre possession du
+                  véhicule!
+                </p>
+                <div class="dashboard__upcoming-loans" v-for="loan in loans.future" :key="loan.id">
+                  <loan-info-box
+                    mode="upcoming"
+                    :loan="loan"
+                    :user="user"
+                    :buttons="['view', 'cancel']"
+                  />
+                </div>
+              </section>
+            </div>
+            <layout-loading class="loans-loading-indicator" v-if="loading && !loansLoaded" />
+          </div>
           <!---->
           <!-- loanables container -->
           <section class="page__section" v-if="user.owner">
@@ -384,6 +381,17 @@ export default {
         margin-left: 0;
       }
     }
+  }
+
+  .loans-loading-indicator {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  .loans-container.loading {
+    opacity: 0.5;
+    pointer-events: none;
   }
 
   .page__content {

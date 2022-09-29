@@ -71,7 +71,7 @@
             <b-form
               :novalidate="true"
               class="loan-actions-handover__form"
-              @submit.stop.prevent="passes(completeAction)"
+              @submit.stop.prevent="passes(completeHandover)"
             >
               <b-row>
                 <b-col
@@ -282,7 +282,7 @@
             <b-form
               :novalidate="true"
               class="register-form__form"
-              @submit.stop.prevent="passes(completeAction)"
+              @submit.stop.prevent="passes(completeHandover)"
             >
               <b-row v-if="!action.executed_at">
                 <b-col>
@@ -371,7 +371,7 @@
                 variant="success"
                 class="mr-3"
                 :disabled="actionLoading"
-                @click="completeAction"
+                @click="completeHandover"
               >
                 C'est fait!
               </b-button>
@@ -450,7 +450,7 @@
               variant="success"
               class="mr-3"
               :disabled="actionLoading"
-              @click="completeAction"
+              @click="completeHandover"
             >
               Résoudre la contestation
             </b-button>
@@ -472,17 +472,21 @@ import LoanStepsSequence from "@/mixins/LoanStepsSequence";
 export default {
   name: "LoanActionsHandover",
   mixins: [LoanActionsMixin, LoanStepsSequence],
-  mounted() {
-    if (!this.action.mileage_end) {
-      this.action.mileage_end =
-        this.item.estimated_distance +
-        this.item.actions.find((a) => a.type === "takeover").mileage_beginning;
-    }
+  methods: {
+    completeHandover() {
+      if (!this.action.mileage_end) {
+        this.action.mileage_end =
+          this.item.estimated_distance +
+          this.item.actions.find((a) => a.type === "takeover").mileage_beginning;
+      }
 
-    if (!this.action.purchases_amount) {
-      this.action.purchases_amount = 0;
-    }
+      if (!this.action.purchases_amount) {
+        this.action.purchases_amount = 0;
+      }
+      this.completeAction();
+    },
   },
+
   components: {
     FormsImageUploader,
     FormsValidatedInput,

@@ -70,7 +70,9 @@
         <div v-else-if="action.status === 'in_process' && loanIsCanceled">
           <p>L'emprunt a été annulé. Cette étape ne peut pas être complétée.</p>
         </div>
-        <div v-else-if="userRoles.includes('borrower')">
+        <div
+          v-else-if="userRoles.includes('borrower') || (!action.id && userRoles.includes('admin'))"
+        >
           <div v-if="!action.id">
             <p>Indiquez une nouvelle heure de retour et laissez un message.</p>
 
@@ -227,22 +229,6 @@ export default {
     FormsValidatedInput,
     LoanNextDate,
     UserAvatar,
-  },
-  mounted: function () {
-    // to avoid an illegal value for new_duration, we need to verify if the return time is before the time right now.
-    // if this is the case, we set the extension time to right now and add 10 minutes
-    // if not, we set the extension time to the original return time and add 10 minutes
-
-    const min10 = this.$dayjs().add(10, "minute");
-    const returnTime = this.$dayjs(this.item.departure_at).add(this.action.new_duration, "minute");
-
-    if (returnTime < min10 && !this.action.id) {
-      this.action.new_duration = Math.floor(
-        (this.$dayjs().unix() - this.$dayjs(this.item.departure_at).unix() + 60 * 10) / 60
-      );
-    } else if (!this.action.id) {
-      this.action.new_duration += 10;
-    }
   },
   computed: {
     returnAt: {

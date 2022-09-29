@@ -188,7 +188,8 @@ export default [
           data: {
             loans: {
               retrieve: {
-                fields: "*,borrower.user.full_name,loanable.owner.user.full_name,community.name",
+                fields:
+                  "*,borrower.user.full_name,loanable.name,loanable.owner.user.full_name,community.name,loanable.is_self_service,incidents.status,intention.status,pre_payment.status,takeover.status,extensions.status,handover.status,payment.status,",
               },
             },
           },
@@ -209,7 +210,9 @@ export default [
               "actions.*",
               "borrower.id",
               "borrower.user.avatar",
+              "borrower.user.email",
               "borrower.user.name",
+              "borrower.user.last_name",
               "borrower.user.full_name",
               "borrower.user.phone",
               "extensions.*",
@@ -219,10 +222,14 @@ export default [
               "incidents.*",
               "intention.*",
               "loanable.name",
+              "loanable.is_self_service",
               "loanable.community.name",
+              "loanable.image",
               "loanable.owner.user.avatar",
               "loanable.owner.user.name",
+              "loanable.owner.user.last_name",
               "loanable.owner.user.full_name",
+              "loanable.owner.user.email",
               "loanable.owner.user.phone",
               "loanable.padlock.name",
               "loanable.type",

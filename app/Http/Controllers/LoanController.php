@@ -333,19 +333,17 @@ class LoanController extends RestController
             }
         }
 
-        // Ensure pre-payment exists if intention is completed.
-        $prePayment = null;
-        if ($intention && $intention->isCompleted()) {
-            $prePayment = $loan->prePayment;
-
-            if (!$prePayment) {
-                $prePayment = new PrePayment();
-                $loan->prePayment()->save($prePayment);
-            }
+        $loan->load("intention");
+        if (!$intention->isCompleted()) {
+            return $loan;
         }
 
+        // Ensure pre-payment exists if intention is completed.
+        $prePayment = $loan->prePayment;
+
         if (!$prePayment) {
-            return $loan;
+            $prePayment = new PrePayment();
+            $loan->prePayment()->save($prePayment);
         }
 
         // Autocomplete pre-payment if balance is sufficient.
@@ -359,46 +357,45 @@ class LoanController extends RestController
             }
         }
 
-        // Ensure takeover exists if pre-payment is completed.
-        $takeover = null;
-        if ($prePayment && $prePayment->isCompleted()) {
-            $takeover = $loan->takeover;
-
-            if (!$takeover) {
-                $takeover = new Takeover();
-                $loan->takeover()->save($takeover);
-            }
+        $loan->load("prePayment");
+        if (!$prePayment->isCompleted()) {
+            return $loan;
         }
 
+        // Ensure takeover exists if pre-payment is completed.
+        $takeover = $loan->takeover;
+
         if (!$takeover) {
+            $takeover = new Takeover();
+            $loan->takeover()->save($takeover);
+        }
+
+        $loan->load("takeover");
+        if (!$takeover->isCompleted()) {
             return $loan;
         }
 
         // Ensure handover exists if takeover is completed.
-        $handover = null;
-        if ($takeover && $takeover->isCompleted()) {
-            $handover = $loan->handover;
-
-            if (!$handover) {
-                $handover = new Handover();
-                $loan->handover()->save($handover);
-            }
-        }
+        $handover = $loan->handover;
 
         if (!$handover) {
+            $handover = new Handover();
+            $loan->handover()->save($handover);
+        }
+
+        $loan->load("handover");
+        if (!$handover->isCompleted()) {
             return $loan;
         }
 
         // Ensure payment exists if handover is completed.
-        $payment = null;
-        if ($handover->isCompleted()) {
-            $payment = $loan->payment;
+        $payment = $loan->payment;
 
-            if (!$payment) {
-                $payment = new Payment();
-                $loan->payment()->save($payment);
-            }
+        if (!$payment) {
+            $payment = new Payment();
+            $loan->payment()->save($payment);
         }
+        $loan->load("payment");
 
         // We don't complete payment here (yet?) because we would have to
         // generate the invoice which is done in PaymentController for the
@@ -431,6 +428,14 @@ class LoanController extends RestController
             "loanable.owner.user.full_name",
             "loanable.owner.user.id",
             "loanable.type",
+            "loanable.is_self_service",
+            "incidents.status",
+            "intention.status",
+            "pre_payment.status",
+            "takeover.status",
+            "extensions.status",
+            "handover.status",
+            "payment.status",
         ];
 
         $accessibleLoans = Loan::accessibleBy($request->user());

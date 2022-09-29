@@ -470,14 +470,6 @@ SQL;
         $takeover = $this->takeover;
         $handover = $this->handover;
 
-        if (!$takeover || !$handover) {
-            return null;
-        }
-
-        if (!$takeover->executed_at || !$handover->executed_at) {
-            return null;
-        }
-
         $loanable = $this->getFullLoanable();
 
         $pricing = $this->community->getPricingFor($loanable);
@@ -485,9 +477,13 @@ SQL;
         if (!$pricing) {
             return 0;
         }
+        $distance = $this->estimated_distance;
+        if ($takeover && $handover && $handover->isCompleted()) {
+            $distance = $handover->mileage_end - $takeover->mileage_beginning;
+        }
 
         $values = $pricing->evaluateRule(
-            $handover->mileage_end - $takeover->mileage_beginning,
+            $distance,
             $this->actual_duration_in_minutes,
             $loanable,
             $this
@@ -501,14 +497,6 @@ SQL;
         $takeover = $this->takeover;
         $handover = $this->handover;
 
-        if (!$takeover || !$handover) {
-            return null;
-        }
-
-        if (!$takeover->executed_at || !$handover->executed_at) {
-            return null;
-        }
-
         $loanable = $this->getFullLoanable();
 
         $pricing = $this->community->getPricingFor($loanable);
@@ -517,8 +505,13 @@ SQL;
             return 0;
         }
 
+        $distance = $this->estimated_distance;
+        if ($takeover && $handover && $handover->isCompleted()) {
+            $distance = $handover->mileage_end - $takeover->mileage_beginning;
+        }
+
         $values = $pricing->evaluateRule(
-            $handover->mileage_end - $takeover->mileage_beginning,
+            $distance,
             $this->actual_duration_in_minutes,
             $loanable,
             $this

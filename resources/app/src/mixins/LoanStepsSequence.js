@@ -24,6 +24,9 @@ export default {
         (handover && handover.status === "canceled") || (takeover && takeover.status === "canceled")
       );
     },
+    loanIsCompleted() {
+      return this.item.status === "completed";
+    },
     isOwnedLoanable() {
       return !!this.item.loanable.owner;
     },
@@ -43,7 +46,7 @@ export default {
       return !this.item.loanable.owner;
     },
     loanIsCanceled() {
-      return !!this.item.canceled_at;
+      return this.item.status === "canceled";
     },
     userIsOwner() {
       if (!this.item.loanable.owner) {
@@ -64,6 +67,26 @@ export default {
       // Otherwise, is the borrower the owner?
       return this.item.borrower.user.id === this.item.loanable.owner.user.id;
     },
+    currentStep() {
+      if (!this.item.id) {
+        return "creation";
+      }
+      if (this.loanIsCompleted) {
+        return "completed";
+      }
+      if (this.loanIsCanceled) {
+        return "canceled";
+      }
+      let currentStep = this.item.actions.find((a) => a.status === "in_process").type;
+      if (this.hasActiveIncidents) {
+        currentStep = "incident";
+      } else if (this.item.takeover && this.item.takeover.status === "canceled") {
+        currentStep = "takeover";
+      } else if (this.item.handover && this.item.handover.status === "canceled") {
+        currentStep = "handover";
+      }
+      return currentStep;
+    },
   },
   methods: {
     addExtension() {
@@ -71,9 +94,20 @@ export default {
 
       if (handover) {
         const indexOfHandover = this.item.actions.indexOf(handover);
+
+        let newDuration = this.item.actual_duration_in_minutes + 15;
+        const inTenMinutes = this.$dayjs().add(10, "minute");
+
+        // if return is (almost) in the past, add 15 minutes to current time as new return time.
+        if (inTenMinutes.isAfter(this.item.actual_return_at, "minute")) {
+          newDuration = this.$dayjs()
+            .add(15, "minute")
+            .diff(this.$dayjs(this.item.departure_at), "minute");
+        }
+
         this.item.actions.splice(indexOfHandover, 0, {
           status: "in_process",
-          new_duration: this.item.actual_duration_in_minutes,
+          new_duration: newDuration,
           comments_on_extension: "",
           type: "extension",
           loan_id: this.item.id,
@@ -202,29 +236,7 @@ export default {
       }
     },
     isCurrentStep(step) {
-      const { id, actions } = this.item;
-      const intention = actions.find((a) => a.type === "intention");
-      const prePayment = actions.find((a) => a.type === "pre_payment");
-      const takeover = actions.find((a) => a.type === "takeover");
-      const handover = actions.find((a) => a.type === "handover");
-      const payment = actions.find((a) => a.type === "payment");
-
-      switch (step) {
-        case "creation":
-          return !id;
-        case "intention":
-          return intention && !intention.executed_at;
-        case "pre_payment":
-          return prePayment && !prePayment.executed_at;
-        case "takeover":
-          return takeover && !takeover.executed_at;
-        case "handover":
-          return handover && !handover.executed_at;
-        case "payment":
-          return payment && !payment.executed_at;
-        default:
-          return false;
-      }
+      return this.currentStep === step;
     },
     /*
       This method determines whether a loan step should be displayed.

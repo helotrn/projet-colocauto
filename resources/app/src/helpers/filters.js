@@ -44,6 +44,28 @@ const date = (value) => {
   return dayjs(value).format("D MMMM YYYY");
 };
 
+const shortDate = (value) => {
+  if (!value) {
+    return "";
+  }
+
+  const date = dayjs(value);
+  if (date.year === dayjs().year) {
+    return date.format("ddd. D MMM.");
+  }
+
+  return date.format("ddd. D MMM. YYYY");
+};
+
+const durationInHours = (valueInMinutes) => {
+  if (valueInMinutes < 60) {
+    return `${valueInMinutes} minutes`;
+  }
+  let hours = Math.floor(valueInMinutes / 60);
+  let minutes = valueInMinutes - hours * 60;
+  return `${hours}h ${minutes}m`;
+};
+
 const day = (value) => {
   if (!value) {
     return "";
@@ -82,4 +104,16 @@ const titleize = (value) => {
   return parts.map(capitalize).join(" ");
 };
 
-export { capitalize, currency, date, datetime, day, percent, phone, time, titleize };
+export {
+  capitalize,
+  currency,
+  date,
+  datetime,
+  day,
+  durationInHours,
+  percent,
+  phone,
+  time,
+  titleize,
+  shortDate,
+};
