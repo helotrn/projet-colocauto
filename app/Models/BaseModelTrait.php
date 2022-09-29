@@ -14,13 +14,15 @@ trait BaseModelTrait
 
     public static $transformer = Transformer::class;
 
-    public static function getColumnsDefinition() {
+    public static function getColumnsDefinition()
+    {
         return [];
     }
 
-    public static function getRules($action = '', $auth = null) {
+    public static function getRules($action = "", $auth = null)
+    {
         switch ($action) {
-            case 'destroy':
+            case "destroy":
                 return [];
             default:
                 return static::$rules;
@@ -31,7 +33,13 @@ trait BaseModelTrait
 
     public static $validationMessages = [];
 
-    public static function addJoin($query, $table, $left, $operator = null, $right = null) {
+    public static function addJoin(
+        $query,
+        $table,
+        $left,
+        $operator = null,
+        $right = null
+    ) {
         if (!$query) {
             return $query;
         }
@@ -75,11 +83,17 @@ trait BaseModelTrait
 
     public $morphManys = [];
 
-    public function getWith() {
+    public function getWith()
+    {
         return $this->with;
     }
 
-    public function belongsTo($related, $foreignKey = null, $ownerKey = null, $relation = null) {
+    public function belongsTo(
+        $related,
+        $foreignKey = null,
+        $ownerKey = null,
+        $relation = null
+    ) {
         if (is_null($relation)) {
             $relation = $this->guessBelongsToRelation();
         }
