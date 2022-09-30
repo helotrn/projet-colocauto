@@ -2,12 +2,12 @@
 
 namespace App\Exports;
 
+use App\Http\Requests\ParsesFieldsTrait as ParsesFields;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
-use Molotov\Traits\ParsesFields;
 
 class BaseExport implements FromCollection, WithHeadings, WithMapping
 {

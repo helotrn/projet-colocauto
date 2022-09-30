@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ParsesFieldsTrait as ParsesFields;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
@@ -9,7 +10,6 @@ use Illuminate\Support\Str;
 use Illuminate\Support\LazyCollection;
 use Molotov\RestController as MolotovRestController;
 use Maatwebsite\Excel\Facades\Excel;
-use Molotov\Traits\ParsesFields;
 
 class RestController extends MolotovRestController
 {
