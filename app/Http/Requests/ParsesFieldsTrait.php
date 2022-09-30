@@ -4,11 +4,14 @@ namespace App\Http\Requests;
 
 trait ParsesFieldsTrait
 {
-    private function joinFieldsTree(array $fields, $prefix = "", &$output = [])
-    {
+    private static function joinFieldsTree(
+        array $fields,
+        $prefix = "",
+        &$output = []
+    ) {
         foreach ($fields as $field => $rest) {
             if (is_array($rest)) {
-                $this->joinFieldsTree(
+                self::joinFieldsTree(
                     $rest,
                     implode(".", array_filter([$prefix, $field])),
                     $output
@@ -21,7 +24,7 @@ trait ParsesFieldsTrait
         return $output;
     }
 
-    private function splitFields($fields)
+    private static function splitFields($fields)
     {
         $parts = array_map("trim", explode(",", $fields));
         return array_map(function ($f) {
@@ -29,7 +32,7 @@ trait ParsesFieldsTrait
         }, $parts);
     }
 
-    private function parseFields($fields, &$acc = [])
+    private static function parseFields($fields, &$acc = [])
     {
         return array_reduce(
             $fields,
@@ -41,8 +44,8 @@ trait ParsesFieldsTrait
                         }
 
                         if (strpos($t[1], ".") !== false) {
-                            $st = $this->splitFields($t[1]);
-                            $acc[$t[0]] = $this->parseFields($st, $acc[$t[0]]);
+                            $st = self::splitFields($t[1]);
+                            $acc[$t[0]] = self::parseFields($st, $acc[$t[0]]);
                         } else {
                             if (is_string($acc[$t[0]])) {
                                 $str = $acc[$t[0]];
