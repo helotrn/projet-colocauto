@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ParsesFieldsTrait as ParsesFields;
+use App\Http\Requests\ParseFieldsHelper;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
@@ -13,7 +13,7 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class RestController extends MolotovRestController
 {
-    use AuthorizesRequests, DispatchesJobs, ValidatesRequests, ParsesFields;
+    use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
     protected function respondWithCsv($request, $items, $model)
     {
@@ -54,8 +54,8 @@ class RestController extends MolotovRestController
     // without a dependency on the request
     protected function getCollectionFields($items, $fields, $notFields = [])
     {
-        $fields = $this->parseFields($this->split($fields));
-        $notFields = $this->parseFields($this->split($notFields));
+        $fields = ParseFieldsHelper::parseFields($this->split($fields));
+        $notFields = ParseFieldsHelper::parseFields($this->split($notFields));
         return $items->map(function ($item) use ($fields, $notFields) {
             return $this->getItemFields($item, $fields, $notFields);
         });

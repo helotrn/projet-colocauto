@@ -2,7 +2,7 @@
 
 namespace App\Exports;
 
-use App\Http\Requests\ParsesFieldsTrait as ParsesFields;
+use App\Http\Requests\ParseFieldsHelper;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Maatwebsite\Excel\Concerns\FromCollection;
@@ -11,8 +11,6 @@ use Maatwebsite\Excel\Concerns\WithMapping;
 
 class BaseExport implements FromCollection, WithHeadings, WithMapping
 {
-    use ParsesFields;
-
     protected $items;
     protected $fields;
 
@@ -45,8 +43,8 @@ class BaseExport implements FromCollection, WithHeadings, WithMapping
         $relationsCount = [];
         $relationsFields = [];
 
-        $parsedFields = $this->parseFields(
-            $this->splitFields(implode(",", $fields))
+        $parsedFields = ParseFieldsHelper::parseFields(
+            ParseFieldsHelper::splitFields(implode(",", $fields))
         );
 
         foreach ($parsedFields as $name => $rest) {
@@ -63,7 +61,7 @@ class BaseExport implements FromCollection, WithHeadings, WithMapping
             ) {
                 $explodedFields = array_merge(
                     $explodedFields,
-                    $this->joinFieldsTree($rest, $name)
+                    ParseFieldsHelper::joinFieldsTree($rest, $name)
                 );
             } elseif (
                 in_array(
@@ -100,7 +98,7 @@ class BaseExport implements FromCollection, WithHeadings, WithMapping
 
                 $camelName = Str::camel($name);
                 $subfields = $this->explodeFields(
-                    $this->joinFieldsTree($rest),
+                    ParseFieldsHelper::joinFieldsTree($rest),
                     $model->{$camelName}()->getRelated(),
                     $model->{$camelName}()
                 );
@@ -118,7 +116,7 @@ class BaseExport implements FromCollection, WithHeadings, WithMapping
                 ) {
                     $explodedFields = array_merge(
                         $explodedFields,
-                        $this->joinFieldsTree($rest, $name)
+                        ParseFieldsHelper::joinFieldsTree($rest, $name)
                     );
                 } elseif (
                     in_array(
@@ -155,7 +153,7 @@ class BaseExport implements FromCollection, WithHeadings, WithMapping
 
                     $camelName = Str::camel($name);
                     $subfields = $this->explodeFields(
-                        $this->joinFieldsTree($rest),
+                        ParseFieldsHelper::joinFieldsTree($rest),
                         $pivot->{$camelName}()->getRelated()
                     );
                     $relationsFields[$name] = $subfields;

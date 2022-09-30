@@ -2,9 +2,9 @@
 
 namespace App\Http\Requests;
 
-trait ParsesFieldsTrait
+trait ParseFieldsHelper
 {
-    private static function joinFieldsTree(
+    public static function joinFieldsTree(
         array $fields,
         $prefix = "",
         &$output = []
@@ -24,7 +24,7 @@ trait ParsesFieldsTrait
         return $output;
     }
 
-    private static function splitFields($fields)
+    public static function splitFields($fields)
     {
         $parts = array_map("trim", explode(",", $fields));
         return array_map(function ($f) {
@@ -32,7 +32,7 @@ trait ParsesFieldsTrait
         }, $parts);
     }
 
-    private static function parseFields($fields, &$acc = [])
+    public static function parseFields($fields, &$acc = [])
     {
         return array_reduce(
             $fields,
