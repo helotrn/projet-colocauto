@@ -16,31 +16,38 @@ class BaseExport implements FromCollection, WithHeadings, WithMapping
     protected $items;
     protected $fields;
 
-    public function __construct($items, $fields, $model) {
+    public function __construct($items, $fields, $model)
+    {
         $this->items = $items;
         $this->fields = $this->explodeFields($fields, $model);
     }
 
-    public function headings(): array {
+    public function headings(): array
+    {
         return $this->fields;
     }
 
-    public function map($item): array {
-        return  array_map(function ($f) use ($item) {
+    public function map($item): array
+    {
+        return array_map(function ($f) use ($item) {
             return array_get($item, $f);
         }, $this->fields);
     }
 
-    public function collection() {
+    public function collection()
+    {
         return $this->items;
     }
 
-    protected function explodeFields($fields, $model, $parent = null) {
+    protected function explodeFields($fields, $model, $parent = null)
+    {
         $explodedFields = [];
         $relationsCount = [];
         $relationsFields = [];
 
-        $parsedFields = $this->parseFields($this->splitFields(implode(',', $fields)));
+        $parsedFields = $this->parseFields(
+            $this->splitFields(implode(",", $fields))
+        );
 
         foreach ($parsedFields as $name => $rest) {
             if (!is_array($rest)) {
@@ -48,31 +55,42 @@ class BaseExport implements FromCollection, WithHeadings, WithMapping
                 continue;
             }
 
-            if (in_array(
-                $name,
-                array_merge($model->items, array_keys($model->morphOnes))
-            )) {
+            if (
+                in_array(
+                    $name,
+                    array_merge($model->items, array_keys($model->morphOnes))
+                )
+            ) {
                 $explodedFields = array_merge(
                     $explodedFields,
                     $this->joinFieldsTree($rest, $name)
                 );
-            } elseif (in_array(
-                $name,
-                array_merge($model->collections, array_keys($model->morphManys))
-            )) {
+            } elseif (
+                in_array(
+                    $name,
+                    array_merge(
+                        $model->collections,
+                        array_keys($model->morphManys)
+                    )
+                )
+            ) {
                 if (!isset($relationsCount[$name])) {
-                    $largestOccurence = $this->items->reduce(
-                        function ($acc, $i) use ($name) {
-                            $target = array_get($i, $name);
-                            if ((is_array($target) || is_a($target, Collection::class))
-                                && count($target) > $acc) {
-                                return count($target);
-                            }
+                    $largestOccurence = $this->items->reduce(function (
+                        $acc,
+                        $i
+                    ) use ($name) {
+                        $target = array_get($i, $name);
+                        if (
+                            (is_array($target) ||
+                                is_a($target, Collection::class)) &&
+                            count($target) > $acc
+                        ) {
+                            return count($target);
+                        }
 
-                            return $acc;
-                        },
-                        1
-                    );
+                        return $acc;
+                    },
+                    1);
                     $relationsCount[$name] = $largestOccurence;
                 }
 
@@ -87,36 +105,47 @@ class BaseExport implements FromCollection, WithHeadings, WithMapping
                     $model->{$camelName}()
                 );
                 $relationsFields[$name] = $subfields;
-            } elseif (!!$parent && $pivotClass = $parent->getPivotClass()) {
-                $pivot = new $pivotClass;
-                if (in_array(
-                    $name,
-                    array_merge($pivot->items, array_keys($pivot->morphOnes))
-                )) {
+            } elseif (!!$parent && ($pivotClass = $parent->getPivotClass())) {
+                $pivot = new $pivotClass();
+                if (
+                    in_array(
+                        $name,
+                        array_merge(
+                            $pivot->items,
+                            array_keys($pivot->morphOnes)
+                        )
+                    )
+                ) {
                     $explodedFields = array_merge(
                         $explodedFields,
                         $this->joinFieldsTree($rest, $name)
                     );
-                } elseif (in_array(
-                    $name,
-                    array_merge(
-                        $pivot->collections,
-                        array_keys($pivot->morphManys)
+                } elseif (
+                    in_array(
+                        $name,
+                        array_merge(
+                            $pivot->collections,
+                            array_keys($pivot->morphManys)
+                        )
                     )
-                )) {
+                ) {
                     if (!isset($relationsCount[$name])) {
-                        $largestOccurence = $this->items->reduce(
-                            function ($acc, $i) use ($name) {
-                                $target = array_get($i, $name);
-                                if ((is_array($target) || is_a($target, Collection::class))
-                                    && count($target) > $acc) {
-                                    return count($target);
-                                }
+                        $largestOccurence = $this->items->reduce(function (
+                            $acc,
+                            $i
+                        ) use ($name) {
+                            $target = array_get($i, $name);
+                            if (
+                                (is_array($target) ||
+                                    is_a($target, Collection::class)) &&
+                                count($target) > $acc
+                            ) {
+                                return count($target);
+                            }
 
-                                return $acc;
-                            },
-                            1
-                        );
+                            return $acc;
+                        },
+                        1);
                         $relationsCount[$name] = $largestOccurence;
                     }
 
