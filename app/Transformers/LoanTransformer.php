@@ -2,8 +2,6 @@
 
 namespace App\Transformers;
 
-use Molotov\Transformer;
-
 class LoanTransformer extends Transformer
 {
     public function transform($item, $options = [])

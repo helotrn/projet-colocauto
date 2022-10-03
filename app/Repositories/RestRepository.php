@@ -1158,7 +1158,7 @@ class RestRepository
         foreach ($traits as $trait => $same) {
             $traits = array_merge(class_uses($trait, $autoload), $traits);
         }
-        return in_array("Molotov\Traits\BaseModel", $traits);
+        return in_array("App\Models\BaseModelTrait", $traits);
     }
 
     protected function addColumnDefinition($query, $definition, $column)
