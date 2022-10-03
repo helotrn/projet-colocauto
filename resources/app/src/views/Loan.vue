@@ -103,7 +103,6 @@
 import LoanActions from "@/components/Loan/Actions.vue";
 import LoanActionButtons from "@/components/Loan/ActionButtons.vue";
 import LoanHeader from "@/components/Loan/LoanHeader.vue";
-import LoanMenu from "@/components/Loan/Menu.vue";
 
 import LoanDetailsBox from "@/components/Loan/DetailsBox.vue";
 
@@ -124,7 +123,6 @@ export default {
     LoanActions,
     LoanActionButtons,
     LoanHeader,
-    LoanMenu,
     LoanDetailsBox,
   },
   beforeRouteEnter(to, from, next) {
@@ -243,9 +241,6 @@ export default {
     padding-bottom: 45px;
   }
 
-  .loan-menu {
-    margin-bottom: 30px;
-  }
   .loan-actions.loading {
     opacity: 0.5;
     pointer-events: none;
