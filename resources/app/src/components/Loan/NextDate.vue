@@ -6,7 +6,7 @@
           <b-alert
             variant="warning"
             show
-            v-b-modal="'next-borrower-modal'"
+            v-b-modal="`next-borrower-modal-${extensionId}`"
             @click.native.stop.prevent
           >
             La prochaine réservation pour ce véhicule est
@@ -18,7 +18,7 @@
         <b-modal
           size="sm"
           title="Prochain emprunteur"
-          id="next-borrower-modal"
+          :id="`next-borrower-modal-${extensionId}`"
           footer-class="d-none"
         >
           <p>
@@ -47,6 +47,10 @@ export default {
       required: true,
     },
     loanableId: {
+      type: Number,
+      required: true,
+    },
+    extensionId: {
       type: Number,
       required: true,
     },

@@ -41,7 +41,11 @@
         </b-col>
 
         <b-col lg="8" v-if="item.status !== 'completed' && !loanIsCanceled">
-          <loan-next-date :loanable-id="item.loanable.id" :loan-id="item.id" />
+          <loan-next-date
+            :loanable-id="item.loanable.id"
+            :loan-id="item.id"
+            :extension-id="action.id || 'new'"
+          />
         </b-col>
       </b-row>
     </b-card-header>
