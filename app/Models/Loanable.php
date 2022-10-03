@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Calendar\AvailabilityHelper;
+use App\Exports\LoanableExport;
 use App\Models\Community;
 use App\Models\Loan;
 use App\Models\Owner;
@@ -20,6 +21,8 @@ class Loanable extends BaseModel
     use PostgisTrait, SoftDeletes;
 
     public $readOnly = true;
+
+    public static $export = LoanableExport::class;
 
     public static $transformer = LoanableTransformer::class;
 
