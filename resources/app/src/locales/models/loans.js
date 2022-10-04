@@ -34,7 +34,7 @@ export default {
     fields: {
       id: "ID",
       actual_duration_in_minutes: "durée (minutes)",
-      borrower_id: "emprunteur",
+      borrower_id: "emprunteur-se",
       borrower: borrowers.fr.fields,
       calendar_days: "jours calendaires",
       community_id: "communauté",
@@ -76,6 +76,106 @@ export default {
     model_name: "emprunt | emprunts",
     placeholders: {
       reason: "ex.: épicerie, déménagement, etc.",
+    },
+    payment: {
+      time_distance: "temps et distance",
+      deductions: "dépenses déduites",
+      transferred_amount: "montant transféré entre utilisateurs",
+      owner_total: "montant reçu",
+      borrower_total: "total pour l'emprunteur-se",
+      insurance: "assurances",
+      tip: "contribution volontaire",
+      total: "total",
+      tarification_explanation: "explication de la tarification",
+    },
+    details_box: {
+      details: "détails",
+      duration: "durée",
+      duration_over_days: "{hours} | {hours} | {hours} sur {days} jours",
+      estimated_distance: "distance prévue",
+      distance: "distance",
+      cost: "coût",
+      tip_modifiable: "pourra être modifié lors du paiement final.",
+    },
+    statuses: {
+      self_service: "En libre service",
+      new: {
+        text: "Nouveau emprunt",
+        description: "Emprunt en cours de création!",
+      },
+      canceled: {
+        text: "Emprunt annulé",
+        description: "L'emprunt n'a pas pu être complété.",
+      },
+      active_incident: {
+        text: "Incident",
+        description: "Un incident est en cours de résolution.",
+      },
+      contested: {
+        text: "Informations contestées",
+        description: "Les informations au retour ou au départ ont été contestées.",
+      },
+      completed: {
+        text: "Emprunt complété",
+        description: "L'emprunt a été complété avec succès!",
+      },
+      waiting_for_approval: {
+        text: "Attente d'approbation",
+        description: "Le propriétaire du véhicule doit approuver la demande d'emprunt.",
+      },
+      waiting_for_prepayment: {
+        text: "Attente de prépaiement",
+        description:
+          "L'emprunteur-se doir ajouter des fonds à son solde avant de débuter l'emprunt.",
+      },
+      expired_reservation: {
+        text: "Réservation expirée",
+        description:
+          "La réservation du véhicule est terminée. Vous pouvez clore l'emprunt en ligne.",
+      },
+      waiting_for_takeover_self_service: {
+        text: "Réservation en cours",
+        description: "La réservation du véhicule est en cours! Démarrez l'emprunt en ligne.",
+      },
+      confirmed_reservation_self_service: {
+        text: "Réservation confirmée",
+        description: "La réservation est confirmée!",
+      },
+      waiting_for_takeover: {
+        text: "Attente du début de l'emprunt",
+        description: "La réservation du véhicule est en cours! Démarrez l'emprunt en ligne.",
+      },
+      confirmed_reservation: {
+        text: "Emprunt confirmé",
+        description:
+          "L'emprunt est confirmé! Remplissez l'information en ligne lorsque l'emprunteur-se prend possession du véhicule.",
+      },
+      waiting_for_extension: {
+        text: "Attente d'approbation de retard",
+        description: "Le propriétaire doit approuver la demande de retard du véhicule.",
+      },
+      ongoing_reservation_self_service: {
+        text: "Réservation en cours",
+        description: "La réservation du véhicule est en cours!",
+      },
+      ongoing_reservation: {
+        text: "Emprunt en cours",
+        description: "L'emprunt du véhicule est en cours!",
+      },
+      waiting_for_handover: {
+        text: "Réservation terminée",
+        description:
+          "La réservation du véhicule est terminée. Veuillez le retourner et compléter les étapes l'emprunt en ligne.",
+      },
+      waiting_for_payment_self_service: {
+        text: "Attente de la fin de l'emprunt",
+        description:
+          "Merci pour votre emprunt! Vous pouvez maintenant clore l'emprunt en ligne et offrir une contribution volontaire.",
+      },
+      waiting_for_payment: {
+        text: "Attente de paiement",
+        description: "L'emprunteur-se doit payer l'emprunt en ligne.",
+      },
     },
   },
 };
