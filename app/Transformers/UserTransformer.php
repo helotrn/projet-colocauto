@@ -3,7 +3,6 @@
 namespace App\Transformers;
 
 use Auth;
-use Molotov\Transformer;
 
 class UserTransformer extends Transformer
 {

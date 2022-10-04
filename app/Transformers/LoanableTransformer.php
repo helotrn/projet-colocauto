@@ -4,7 +4,6 @@ namespace App\Transformers;
 
 use App\Models\Loan;
 use Auth;
-use Molotov\Transformer;
 
 class LoanableTransformer extends Transformer
 {

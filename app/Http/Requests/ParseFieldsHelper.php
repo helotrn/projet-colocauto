@@ -1,0 +1,70 @@
+<?php
+
+namespace App\Http\Requests;
+
+trait ParseFieldsHelper
+{
+    public static function joinFieldsTree(
+        array $fields,
+        $prefix = "",
+        &$output = []
+    ) {
+        foreach ($fields as $field => $rest) {
+            if (is_array($rest)) {
+                self::joinFieldsTree(
+                    $rest,
+                    implode(".", array_filter([$prefix, $field])),
+                    $output
+                );
+            } else {
+                $output[] = implode(".", array_filter([$prefix, $field]));
+            }
+        }
+
+        return $output;
+    }
+
+    public static function splitFields($fields)
+    {
+        $parts = array_map("trim", explode(",", $fields));
+        return array_map(function ($f) {
+            return array_map("trim", explode(".", $f, 2));
+        }, $parts);
+    }
+
+    public static function parseFields($fields, &$acc = [])
+    {
+        return array_reduce(
+            $fields,
+            function (&$acc, $t) {
+                switch (count($t)) {
+                    case 2:
+                        if (!isset($acc[$t[0]])) {
+                            $acc[$t[0]] = [];
+                        }
+
+                        if (strpos($t[1], ".") !== false) {
+                            $st = self::splitFields($t[1]);
+                            $acc[$t[0]] = self::parseFields($st, $acc[$t[0]]);
+                        } else {
+                            if (is_string($acc[$t[0]])) {
+                                $str = $acc[$t[0]];
+                                $acc[$t[0]] = [];
+                                $acc[$t[0]][$str] = $str;
+                            }
+                            $acc[$t[0]][$t[1]] = $t[1];
+                        }
+                        break;
+                    case 1:
+                        $acc[$t[0]] = $t[0];
+                        break;
+                    default:
+                        $acc[] = $t;
+                        break;
+                }
+                return $acc;
+            },
+            $acc
+        );
+    }
+}
