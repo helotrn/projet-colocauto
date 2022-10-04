@@ -392,6 +392,7 @@ export default {
   .loans-container.loading {
     opacity: 0.5;
     pointer-events: none;
+    min-height: 10rem;
   }
 
   .page__content {

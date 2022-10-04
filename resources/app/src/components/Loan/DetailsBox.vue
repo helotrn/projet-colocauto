@@ -139,8 +139,9 @@
               <template v-else>
                 <div v-if="showCostSummary" class="font-weight-bold">
                   <div v-if="isLoanAdmin">
-                    {{ $t("details_box.transferred_amount") }}: {{ ownerTotal | currency }}<br />
-                    {{ $t("details_box.borrower_total") }}: {{ borrowerTotal | currency }}
+                    {{ $t("payment.transferred_amount") | capitalize }}: {{ ownerTotal | currency
+                    }}<br />
+                    {{ $t("payment.borrower_total") | capitalize }}: {{ borrowerTotal | currency }}
                   </div>
                   <div v-else-if="isBorrower">{{ borrowerTotal | currency }}</div>
                   <div v-else-if="isOwner">{{ ownerTotal | currency }}</div>
@@ -408,6 +409,10 @@ export default {
 
 <style lang="scss">
 .loanable-details-box {
+  .card-img-top {
+    aspect-ratio: 16 / 10;
+    object-fit: cover;
+  }
   .user_text {
     // Show line feeds in comments, instructions and location_description
     white-space: pre-line;
