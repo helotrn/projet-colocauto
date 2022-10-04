@@ -46,7 +46,6 @@ export default [
           "loanable.image",
           "loanable.instructions",
           "loanable.has_padlock",
-          "loanable.position",
           "loanable.location_description",
           "loanable.is_self_service",
           "payment.*",

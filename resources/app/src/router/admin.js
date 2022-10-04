@@ -232,7 +232,6 @@ export default [
               "loanable.owner.user.email",
               "loanable.owner.user.phone",
               "loanable.padlock.name",
-              "loanable.position",
               "loanable.type",
               "loanable.location_description",
               "loanable.has_padlock",
