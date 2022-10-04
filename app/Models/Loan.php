@@ -22,6 +22,8 @@ class Loan extends BaseModel
 {
     use SoftDeletes;
 
+    protected $hidden = ["actual_pricing"];
+
     public static $rules = [
         "departure_at" => ["required"],
         "duration_in_minutes" => ["integer", "required", "min:15"],
@@ -465,14 +467,25 @@ SQL;
         );
     }
 
-    public function getActualPriceAttribute()
+    public function getActualPricingAttribute()
     {
         $takeover = $this->takeover;
         $handover = $this->handover;
 
         $loanable = $this->getFullLoanable();
 
-        $pricing = $this->community->getPricingFor($loanable);
+        // TODO(#1084): remove no owner case.
+        if ($this->loanable->owner) {
+            $community = $this->loanable->owner->user->main_community;
+        } else {
+            $community = $this->community;
+        }
+
+        if (!$community) {
+            return 0;
+        }
+
+        $pricing = $community->getPricingFor($loanable);
 
         if (!$pricing) {
             return 0;
@@ -482,42 +495,25 @@ SQL;
             $distance = $handover->mileage_end - $takeover->mileage_beginning;
         }
 
-        $values = $pricing->evaluateRule(
+        return $pricing->evaluateRule(
             $distance,
             $this->actual_duration_in_minutes,
             $loanable,
             $this
         );
+    }
 
-        return max(0, is_array($values) ? $values[0] : $values);
+    public function getActualPriceAttribute()
+    {
+        $pricing = $this->actual_pricing;
+
+        return max(0, is_array($pricing) ? $pricing[0] : $pricing);
     }
 
     public function getActualInsuranceAttribute()
     {
-        $takeover = $this->takeover;
-        $handover = $this->handover;
-
-        $loanable = $this->getFullLoanable();
-
-        $pricing = $this->community->getPricingFor($loanable);
-
-        if (!$pricing) {
-            return 0;
-        }
-
-        $distance = $this->estimated_distance;
-        if ($takeover && $handover && $handover->isCompleted()) {
-            $distance = $handover->mileage_end - $takeover->mileage_beginning;
-        }
-
-        $values = $pricing->evaluateRule(
-            $distance,
-            $this->actual_duration_in_minutes,
-            $loanable,
-            $this
-        );
-
-        return max(0, is_array($values) ? $values[1] : $values);
+        $pricing = $this->actual_pricing;
+        return is_array($pricing) ? max($pricing[1], 0) : 0;
     }
 
     public function getTotalActualCostAttribute()
@@ -733,13 +729,15 @@ SQL;
 
     public function getFullLoanable()
     {
+        // Avoid loading the relation to this model, so the loanable is not duplicated
+        // in the output. E.g. in the loanable and bike fields.
         switch ($this->loanable->type) {
             case "car":
-                return $this->car;
+                return Car::find($this->loanable->id);
             case "bike":
-                return $this->bike;
+                return Bike::find($this->loanable->id);
             case "trailer":
-                return $this->trailer;
+                return Trailer::find($this->loanable->id);
             default:
                 return $this->loanable;
         }
