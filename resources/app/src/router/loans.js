@@ -43,6 +43,7 @@ export default [
           "loanable.padlock.name",
           "loanable.type",
           "loanable.comments",
+          "loanable.image",
           "loanable.instructions",
           "loanable.has_padlock",
           "loanable.position",
