@@ -5,7 +5,7 @@
         <a v-if="loanableUrl" :href="loanableUrl">{{ loanable.name }}</a>
         <span v-else>{{ loanable.name }}</span>
       </b-card-title>
-      <div class="details-toggle mb-1 text-muted" v-b-toggle.loanable-details>
+      <div class="details-toggle mb-3 text-muted" v-b-toggle.loanable-details>
         Détails {{ prettyType }}
         <b-icon v-if="loadedFullLoanable" icon="caret-right-fill"></b-icon>
       </div>
@@ -49,8 +49,8 @@
             </div>
           </div>
         </b-collapse>
+        <hr />
         <template v-if="!isOwner || ownerUrl">
-          <hr />
           <dl>
             <dt>Propriétaire</dt>
             <dd class="owner-details">
@@ -67,29 +67,30 @@
         </template>
 
         <template v-if="!isBorrower || borrowerUrl">
-          <hr />
           <dl>
             <dt>Emprunteur-se</dt>
-            <a :href="borrowerUrl" v-if="borrowerUrl">
-              {{ loan.borrower.user.full_name }}
-            </a>
-            <span v-else>{{ loan.borrower.user.full_name }}</span>
-            <br v-if="loan.borrower.user.email" />
-            {{ loan.borrower.user.email }}
-            <br v-if="loan.borrower.user.phone" />
-            {{ loan.borrower.user.phone }}
+            <dd>
+              <a :href="borrowerUrl" v-if="borrowerUrl">
+                {{ loan.borrower.user.full_name }}
+              </a>
+              <span v-else>{{ loan.borrower.user.full_name }}</span>
+              <br v-if="loan.borrower.user.email" />
+              {{ loan.borrower.user.email }}
+              <br v-if="loan.borrower.user.phone" />
+              {{ loan.borrower.user.phone }}
+            </dd>
           </dl>
         </template>
 
         <hr />
         <b-row>
-          <b-col tag="dl">
+          <b-col tag="dl" cols="6">
             <dt>Début</dt>
             <dd>
               {{ loan.departure_at | shortDate | capitalize }}<br />{{ loan.departure_at | time }}
             </dd>
           </b-col>
-          <b-col tag="dl">
+          <b-col tag="dl" cols="6">
             <dt>Fin</dt>
             <dd>
               {{ returnAt | shortDate | capitalize }}<br />
@@ -97,7 +98,6 @@
             </dd>
           </b-col>
         </b-row>
-        <hr class="mt-0" />
         <b-row>
           <b-col tag="dl" cols="6">
             <dt>Durée</dt>
@@ -106,76 +106,91 @@
               <span v-if="loan.calendar_days > 1"> sur {{ loan.calendar_days }} jours</span>
             </dd>
           </b-col>
-          <b-col tag="dl" cols="6">
+          <b-col tag="dl" cols="6" v-if="price > 0">
             <dt>Distance <span v-if="!hasFinalDistance">estimée</span></dt>
             <dd v-if="distance > 0">{{ distance }} km</dd>
           </b-col>
           <b-col cols="12" v-if="price > 0 || insurance > 0">
-            <dt class="mb-2">
-              Coût <span v-if="!loan.final_price">estimé</span>
-              <div class="small">
-                <a href="https://mailchi.mp/solon-collectif/tarifs-locomotion" target="_blank"
-                  >Explication de la tarification</a
-                >
-              </div>
+            <dt class="mb-2 details-toggle" v-b-toggle.price-details>
+              Coût <span v-if="!loan.final_price">estimé</span>&nbsp;
+              <b-icon icon="caret-right-fill"></b-icon>
             </dt>
             <dd>
               <layout-loading inline v-if="loanLoading"></layout-loading>
               <template v-else>
-                <table class="price-table">
-                  <tr>
-                    <th>Temps et distance</th>
-                    <td class="text-right tabular-nums">{{ price | currency }}</td>
-                  </tr>
-                  <tr>
-                    <th :class="{ 'pb-2': !isBorrower }">Dépenses déduites</th>
-                    <td class="text-right tabular-nums">
-                      {{ -purchasesAmount | currency }}
-                    </td>
-                  </tr>
-                  <tr v-if="!isBorrower">
-                    <th v-if="isLoanAdmin" class="pt-2">Montant transféré entre utilisateurs</th>
-                    <th v-else-if="isOwner" class="pt-2">Montant reçu</th>
-                    <td
-                      v-if="isOwner || isLoanAdmin"
-                      class="pt-2 text-right tabular-nums font-weight-bold border-top border-dark"
-                    >
-                      {{ ownerTotal | currency }}
-                    </td>
-                  </tr>
-                  <template v-if="isBorrower || isLoanAdmin">
+                <div v-if="showCostSummary" class="font-weight-bold">
+                  <div v-if="isLoanAdmin">
+                    Montant transféré entre utilisateurs: {{ ownerTotal | currency }}<br />
+                    total pour l'emprunteur-se: {{ borrowerTotal | currency }}
+                  </div>
+                  <div v-else-if="isBorrower">{{ borrowerTotal | currency }}</div>
+                  <div v-else-if="isOwner">{{ ownerTotal | currency }}</div>
+                </div>
+                <b-collapse
+                  @input="(visible) => (showCostSummary = !visible)"
+                  :visible="isLoanAdmin"
+                  id="price-details"
+                  role="tabpanel"
+                  accordion="price-details"
+                >
+                  <table class="price-table">
                     <tr>
-                      <th>Assurances</th>
+                      <th>Temps et distance</th>
+                      <td class="text-right tabular-nums">{{ price | currency }}</td>
+                    </tr>
+                    <tr>
+                      <th :class="{ 'pb-2': !isBorrower }">Dépenses déduites</th>
                       <td class="text-right tabular-nums">
-                        {{ insurance | currency }}
+                        {{ -purchasesAmount | currency }}
                       </td>
                     </tr>
-                    <tr>
-                      <th class="pb-2">
-                        Contribution volontaire
-                        <div v-if="!loan.final_platform_tip" class="small muted">
-                          Pourra être modifié lors du paiement final.
-                        </div>
-                      </th>
-                      <td class="text-right tabular-nums pb-2">
-                        {{ tip | currency }}
-                      </td>
-                    </tr>
-                    <tr>
-                      <th>Total <span v-if="isLoanAdmin"> pour l'emptrunteur</span></th>
+                    <tr v-if="!isBorrower" class="total-row">
+                      <th v-if="isLoanAdmin">Montant transféré entre utilisateurs</th>
+                      <th v-else-if="isOwner">Montant reçu</th>
                       <td
-                        class="text-right tabular-nums font-weight-bold pt-2 border-top border-dark"
+                        v-if="isOwner || isLoanAdmin"
+                        class="text-right tabular-nums border-top border-dark"
                       >
-                        {{ borrowerTotal | currency }}
+                        {{ ownerTotal | currency }}
                       </td>
                     </tr>
-                  </template>
-                </table>
+                    <template v-if="isBorrower || isLoanAdmin">
+                      <tr>
+                        <th>Assurances</th>
+                        <td class="text-right tabular-nums">
+                          {{ insurance | currency }}
+                        </td>
+                      </tr>
+                      <tr>
+                        <th class="pb-2">
+                          Contribution volontaire
+                          <div v-if="!loan.final_platform_tip" class="small muted">
+                            Pourra être modifié lors du paiement final.
+                          </div>
+                        </th>
+                        <td class="text-right tabular-nums pb-2">
+                          {{ tip | currency }}
+                        </td>
+                      </tr>
+                      <tr class="total-row">
+                        <th>Total <span v-if="isLoanAdmin"> pour l'emptrunteur-se</span></th>
+                        <td class="text-right tabular-nums border-top border-dark">
+                          {{ borrowerTotal | currency }}
+                        </td>
+                      </tr>
+                    </template>
+                  </table>
+                  <div class="small">
+                    <a href="https://mailchi.mp/solon-collectif/tarifs-locomotion" target="_blank"
+                      >Explication de la tarification</a
+                    >
+                  </div>
+                </b-collapse>
               </template>
             </dd>
           </b-col>
         </b-row>
-        <hr class="mt-0" />
+        <hr />
 
         <dl class="mb-0">
           <template v-if="loanable.comments">
@@ -191,7 +206,7 @@
 
           <dt>Emplacement</dt>
           <dd>
-            <span>{{ loanable.location_description }}</span>
+            <div class="mb-2">{{ loanable.location_description }}</div>
             <forms-map-input v-if="loanable.position" :value="loanable.position" disabled bounded />
           </dd>
         </dl>
@@ -239,6 +254,9 @@ export default {
       required: false,
       default: false,
     },
+  },
+  data: function () {
+    return { showCostSummary: !this.isLoanAdmin };
   },
   computed: {
     duration() {
@@ -317,7 +335,7 @@ export default {
       return "";
     },
     isLoanAdmin() {
-      return this.isAdminOfLoanable(this.loan.loanable);
+      return this.loan.loanable && this.isAdminOfLoanable(this.loan.loanable);
     },
     isBorrower() {
       return this.user.id === this.loan.borrower.user.id;
@@ -368,19 +386,37 @@ export default {
       transform: rotate(90deg);
     }
   }
-  dd {
-    margin-top: 0.125rem;
+  dt {
+    font-weight: 400;
+    font-size: 0.8rem;
+    color: $content-neutral-secondary;
+    margin-bottom: 0.5rem;
   }
-  .row > dl {
-    margin-bottom: 8px;
+  dd {
+    margin-bottom: 1rem;
+  }
+  dl {
+    margin-bottom: 0;
+  }
+  hr {
+    margin-top: 0;
+    margin-bottom: 1rem;
   }
   .price-table {
     width: 100%;
+    font-size: 0.8rem;
     th {
-      font-weight: 500;
+      font-weight: 400;
     }
     td {
       vertical-align: top;
+    }
+    .total-row {
+      & > td,
+      th {
+        font-weight: bold;
+        padding-top: 0.5rem;
+      }
     }
   }
 }
