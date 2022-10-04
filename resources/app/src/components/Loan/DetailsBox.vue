@@ -99,12 +99,16 @@
         </b-row>
         <hr class="mt-0" />
         <b-row>
-          <b-col tag="dl" cols="12">
+          <b-col tag="dl" cols="6">
             <dt>Durée</dt>
             <dd v-if="duration > 0">
               {{ duration | durationInHours }}
               <span v-if="loan.calendar_days > 1"> sur {{ loan.calendar_days }} jours</span>
             </dd>
+          </b-col>
+          <b-col tag="dl" cols="6">
+            <dt>Distance <span v-if="!hasFinalDistance">estimée</span></dt>
+            <dd v-if="distance > 0">{{ distance }} km</dd>
           </b-col>
           <b-col cols="12" v-if="price > 0 || insurance > 0">
             <dt class="mb-2">
@@ -130,10 +134,8 @@
                     </td>
                   </tr>
                   <tr v-if="!isBorrower">
-                    <th v-if="isLoanAdmin" class="pt-2 font-weight-bold">
-                      Montant transféré entre utilisateurs
-                    </th>
-                    <th v-else-if="isOwner" class="pt-2 font-weight-bold">Montant reçu</th>
+                    <th v-if="isLoanAdmin" class="pt-2">Montant transféré entre utilisateurs</th>
+                    <th v-else-if="isOwner" class="pt-2">Montant reçu</th>
                     <td
                       v-if="isOwner || isLoanAdmin"
                       class="pt-2 text-right tabular-nums font-weight-bold border-top border-dark"
@@ -160,9 +162,7 @@
                       </td>
                     </tr>
                     <tr>
-                      <th class="font-weight-bold">
-                        Total <span v-if="isLoanAdmin"> pour l'emptrunteur</span>
-                      </th>
+                      <th>Total <span v-if="isLoanAdmin"> pour l'emptrunteur</span></th>
                       <td
                         class="text-right tabular-nums font-weight-bold pt-2 border-top border-dark"
                       >
@@ -246,6 +246,15 @@ export default {
         return this.loan.actual_duration_in_minutes;
       }
       return this.loan.duration_in_minutes;
+    },
+    hasFinalDistance() {
+      return this.loan.handover && this.loan.handover.mileage_end;
+    },
+    distance() {
+      if (this.hasFinalDistance) {
+        return this.loan.handover.mileage_end - this.loan.takeover.mileage_beginning;
+      }
+      return this.loan.estimated_distance;
     },
     returnAt() {
       if (this.loan.actual_return_at) {
