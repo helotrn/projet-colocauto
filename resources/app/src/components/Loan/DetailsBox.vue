@@ -239,7 +239,13 @@
           <dt>{{ $t("loanable.fields.position") | capitalize }}</dt>
           <dd>
             <div class="mb-2">{{ loanable.location_description }}</div>
-            <forms-map-input v-if="loanable.position" :value="loanable.position" disabled bounded />
+            <forms-map-input
+              v-if="loanable.position"
+              :value="loanable.position"
+              disabled
+              bounded
+              allow-fullscreen
+            />
           </dd>
         </dl>
       </b-card-text>
