@@ -55,9 +55,9 @@ class NokeSyncLoans extends Command
         Log::info("Done.");
     }
 
-    protected function getLocks($force = false)
+    protected function getLocks()
     {
-        $this->locks = $this->service->fetchLocks($force);
+        $this->locks = $this->service->fetchLocks();
 
         foreach ($this->locks as $lock) {
             $this->locksIndex[$lock->macAddress] = $lock;
@@ -65,18 +65,18 @@ class NokeSyncLoans extends Command
         }
     }
 
-    protected function getGroups($force = false)
+    protected function getGroups()
     {
-        $this->groups = $this->service->fetchGroups($force);
+        $this->groups = $this->service->fetchGroups();
 
         foreach ($this->groups as $group) {
             $this->groupsIndex[$group->name] = $group;
         }
     }
 
-    protected function getUsers($force = false)
+    protected function getUsers()
     {
-        $this->users = $this->service->fetchUsers($force);
+        $this->users = $this->service->fetchUsers();
 
         foreach ($this->users as $user) {
             $this->usersIndex[$user->username] = $user;

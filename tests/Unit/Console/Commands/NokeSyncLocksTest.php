@@ -35,7 +35,6 @@ class NokeSyncLocksTest extends TestCase
                 $mock
                     ->shouldReceive("fetchGroups")
                     ->once()
-                    ->with(true)
                     ->andReturn([]);
 
                 $mock
@@ -73,7 +72,6 @@ class NokeSyncLocksTest extends TestCase
                 $mock
                     ->shouldReceive("fetchLocks")
                     ->once()
-                    ->with(true)
                     ->andReturn([
                         (object) [
                             "id" => 1,
@@ -89,7 +87,6 @@ class NokeSyncLocksTest extends TestCase
                 $mock
                     ->shouldReceive("fetchGroups")
                     ->once()
-                    ->with(true)
                     ->andReturn([
                         (object) [
                             "id" => 1,
@@ -127,7 +124,6 @@ class NokeSyncLocksTest extends TestCase
                 $mock
                     ->shouldReceive("fetchLocks")
                     ->once()
-                    ->with(true)
                     ->andReturn([
                         (object) [
                             "id" => 1,
@@ -138,7 +134,6 @@ class NokeSyncLocksTest extends TestCase
                 $mock
                     ->shouldReceive("fetchGroups")
                     ->once()
-                    ->with(true)
                     ->andReturn([
                         (object) [
                             "id" => 1,

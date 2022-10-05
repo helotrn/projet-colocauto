@@ -38,7 +38,7 @@ class NokeSyncUsers extends Command
 
     private function getUsers()
     {
-        $this->users = $this->service->fetchUsers(true);
+        $this->users = $this->service->fetchUsers();
 
         foreach ($this->users as $user) {
             $this->usersIndex[$user->username] = $user;

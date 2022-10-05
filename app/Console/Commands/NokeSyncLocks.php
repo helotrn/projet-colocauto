@@ -37,7 +37,7 @@ class NokeSyncLocks extends Command
         }
 
         Log::info("Fetching locks...");
-        $this->locks = $this->service->fetchLocks(true);
+        $this->locks = $this->service->fetchLocks();
         Log::info("Found " . count($this->locks) . " locks.");
 
         Log::info("Synchronizing local locks...");
@@ -55,7 +55,7 @@ class NokeSyncLocks extends Command
 
     private function getGroups()
     {
-        $this->groups = $this->service->fetchGroups(true);
+        $this->groups = $this->service->fetchGroups();
 
         foreach ($this->groups as $group) {
             $this->groupsIndex[$group->name] = $group;
