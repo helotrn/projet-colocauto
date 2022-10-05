@@ -15,6 +15,7 @@ export default new RestModule(
       type: null,
       deleted_at: null,
     },
+    // Export fields should be correlated with that of app/Exports/LoanableExport.php
     exportFields: [
       "id",
       "name",
@@ -28,8 +29,8 @@ export default new RestModule(
       "owner.user.id",
       "owner.user.name",
       "owner.user.last_name",
-      "community.id",
-      "community.name",
+      "owner.user.communities.id",
+      "owner.user.communities.name",
       "car_insurer",
     ],
     exportNotFields: ["events"],
