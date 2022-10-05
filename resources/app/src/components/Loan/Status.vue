@@ -76,7 +76,7 @@ export default {
       if (this.item.takeover.status === "in_process") {
         if (this.$dayjs(this.item.actual_return_at).isBefore(this.$dayjs(), "minute")) {
           return {
-            statut: "expired_reservation",
+            status: "expired_reservation",
             variant: "warning",
           };
         }
