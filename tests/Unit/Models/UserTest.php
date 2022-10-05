@@ -72,8 +72,8 @@ class UserTest extends TestCase
         $changedEmail = "changed@email.com";
 
         Noke::shouldReceive("findUserByEmail")
-            ->withArgs(function ($a, $b) use ($originalEmail) {
-                return $a === $originalEmail && $b === true;
+            ->withArgs(function ($a) use ($originalEmail) {
+                return $a === $originalEmail;
             })
             ->andReturns(
                 (object) [
