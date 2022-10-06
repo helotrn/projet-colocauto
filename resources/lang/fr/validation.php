@@ -160,6 +160,8 @@ return [
                 'd\'utilisation</a> dans votre ' .
                 '<a href="/profile/account">profil LocoMotion</a>.',
         ],
+        "loanable_types" =>
+            "Les types demandés (:givenValues) sont invalides. Options possibles: :validValues.",
     ],
 
     "attributes" => [

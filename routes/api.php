@@ -157,6 +157,7 @@ Route::prefix("v1")->group(function () {
             "[0-9]+"
         );
         Route::get("/loanables/search", "LoanableController@search");
+        Route::get("/loanables/list", "LoanableController@list");
         Route::get(
             "/loanables/{loanable_id}/loans/{loan_id}/next",
             "LoanableController@retrieveNextLoan"
