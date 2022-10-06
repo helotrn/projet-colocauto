@@ -78,7 +78,7 @@ export default {
       reason: "ex.: épicerie, déménagement, etc.",
     },
     payment: {
-      time_distance: "temps et distance",
+      time_distance: "temps prévu et distance",
       deductions: "dépenses déduites",
       transferred_amount: "montant transféré entre utilisateurs",
       owner_total: "montant reçu",
