@@ -474,18 +474,7 @@ SQL;
 
         $loanable = $this->getFullLoanable();
 
-        // TODO(#1084): remove no owner case.
-        if ($this->loanable->owner) {
-            $community = $this->loanable->owner->user->main_community;
-        } else {
-            $community = $this->community;
-        }
-
-        if (!$community) {
-            return 0;
-        }
-
-        $pricing = $community->getPricingFor($loanable);
+        $pricing = $this->community->getPricingFor($loanable);
 
         if (!$pricing) {
             return 0;

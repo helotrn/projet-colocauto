@@ -19,7 +19,9 @@ $factory->define(Borrower::class, function (Faker $faker) {
 
 $factory->afterMaking(Borrower::class, function ($borrower) {
     if (!$borrower->user_id) {
-        $user = factory(User::class)->create();
+        $user = factory(User::class)
+            ->states("withCommunity")
+            ->create();
         $borrower->user_id = $user->id;
     }
 });
