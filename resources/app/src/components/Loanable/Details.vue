@@ -58,6 +58,8 @@
               <template v-else-if="loanable.type === 'trailer'">
                 <dt>{{ $t("fields.maximum_charge") | capitalize }}</dt>
                 <dd>{{ loanable.maximum_charge }}</dd>
+                <dt>{{ $t("fields.dimensions") | capitalize }}</dt>
+                <dd>{{ loanable.dimensions }}</dd>
               </template>
               <template v-else-if="loanable.type === 'car'">
                 <dt>{{ $t("fields.brand") | capitalize }}</dt>

@@ -298,6 +298,7 @@ class LoanableTest extends TestCase
                         ],
                         "image" => [],
                         "maximum_charge",
+                        "dimensions",
                     ],
                 ],
             ])

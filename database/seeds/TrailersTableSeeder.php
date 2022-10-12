@@ -16,7 +16,8 @@ class TrailersTableSeeder extends Seeder
                 "location_description" => "",
                 "comments" => "",
                 "instructions" => "",
-                "maximum_charge" => "5",
+                "maximum_charge" => "5kg",
+                "dimensions" => "10' x 4'",
                 "availability_mode" => "always",
                 // solonpetitepatrie@locomotion.app
                 "owner_id" => 3,
@@ -30,7 +31,8 @@ class TrailersTableSeeder extends Seeder
                 "location_description" => "",
                 "comments" => "",
                 "instructions" => "",
-                "maximum_charge" => "5",
+                "maximum_charge" => "5kg",
+                "dimensions" => "10' x 4'",
                 "availability_mode" => "always",
                 // solonahuntsic@locomotion.app
                 "owner_id" => 2,
@@ -45,7 +47,8 @@ class TrailersTableSeeder extends Seeder
                 "location_description" => "",
                 "comments" => "",
                 "instructions" => "",
-                "maximum_charge" => "5",
+                "maximum_charge" => "5lb",
+                "dimensions" => "2' x 4'",
                 "availability_mode" => "always",
                 // solonpetitepatrie@locomotion.app
                 "owner_id" => 3,
@@ -60,7 +63,8 @@ class TrailersTableSeeder extends Seeder
                 "location_description" => "",
                 "comments" => "",
                 "instructions" => "",
-                "maximum_charge" => "5",
+                "maximum_charge" => "5lb",
+                "dimensions" => "2' x 4'",
                 "availability_mode" => "never",
                 "availability_json" => <<<JSON
 [
@@ -85,7 +89,8 @@ JSON
                 "location_description" => "",
                 "comments" => "",
                 "instructions" => "",
-                "maximum_charge" => "5",
+                "maximum_charge" => "5kg",
+                "dimensions" => "2' x 4'",
                 "availability_mode" => "never",
                 "availability_json" => <<<JSON
 [

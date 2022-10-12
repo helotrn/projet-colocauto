@@ -28,6 +28,7 @@ class Trailer extends Loanable
         "instructions",
         "location_description",
         "maximum_charge",
+        "dimensions",
         "name",
         "position",
         "share_with_parent_communities",

@@ -20,6 +20,7 @@ class CreateRequest extends BaseRequest
             "comments" => "present",
             "instructions" => "present",
             "maximum_charge" => "required",
+            "dimensions" => "required",
         ];
 
         return $rules;
