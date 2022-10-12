@@ -532,7 +532,7 @@ class LoanableTest extends TestCase
     {
         $trailer = factory(Trailer::class)->create([
             "availability_json" =>
-                '[{"available":true,"type":"weekdays","scope":["MO","TU","WE","TH","FR"],"period":"00:00-23:59"}]',
+                '[{"available":true,"type":"weekdays","scope":["MO","TU","WE","TH","FR"],"period":"00:00-24:00"}]',
         ]);
 
         $rules = $trailer->getAvailabilityRules();
@@ -542,7 +542,7 @@ class LoanableTest extends TestCase
                 "available" => true,
                 "type" => "weekdays",
                 "scope" => ["MO", "TU", "WE", "TH", "FR"],
-                "period" => "00:00-23:59",
+                "period" => "00:00-24:00",
             ],
         ];
 

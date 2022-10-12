@@ -36,7 +36,7 @@ class CarsTableSeeder extends Seeder
     "available":true,
     "type":"weekdays",
     "scope":["MO","TU","TH","WE","FR"],
-    "period":"00:00-23:59"
+    "period":"00:00-24:00"
   }
 ]
 JSON
