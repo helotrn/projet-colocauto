@@ -120,7 +120,7 @@
                   :label="$t('fields.platform_tip') | capitalize"
                   :rules="{ required: true }"
                   description="LocoMotion est un projet citoyen et collaboratif. Les contributions volontaires
-                  financent son fonctionnement."
+                  aident à financer son fonctionnement."
                   type="currency"
                   :min="0"
                   :step="0.01"

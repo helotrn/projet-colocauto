@@ -95,7 +95,7 @@ export default {
       estimated_distance: "distance prévue",
       distance: "distance",
       cost: "coût",
-      tip_modifiable: "pourra être modifié lors du paiement final.",
+      tip_modifiable: "Pourra être modifié lors du paiement final.",
     },
     statuses: {
       self_service: "En libre service",

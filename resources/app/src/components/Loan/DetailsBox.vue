@@ -189,7 +189,7 @@
                         <th class="pb-2">
                           {{ $t("payment.tip") | capitalize }}
                           <div v-if="!loan.final_platform_tip" class="small muted">
-                            {{ $t("details_box.tip_modifiable") | capitalize }}
+                            {{ $t("details_box.tip_modifiable") }}
                           </div>
                         </th>
                         <td class="text-right tabular-nums pb-2">
