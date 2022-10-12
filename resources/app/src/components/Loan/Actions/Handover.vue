@@ -116,7 +116,7 @@
                     name="mileage_end"
                     type="number"
                     label="KM au compteur, à la fin de la course"
-                    :rules="{min_value: 1}"
+                    :rules="{ min_value: 1 }"
                     placholder="KM au compteur"
                     :disabled="(!!action.executed_at || loanIsCanceled) && !userIsAdmin"
                     v-model="action.mileage_end"
@@ -474,7 +474,7 @@ export default {
   name: "LoanActionsHandover",
   mixins: [LoanActionsMixin, LoanStepsSequence],
   watch: {
-    action(newValue){
+    action(newValue) {
       if (!newValue.mileage_end) {
         this.action.mileage_end =
           this.item.estimated_distance +
