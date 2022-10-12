@@ -1,11 +1,7 @@
 <template>
   <div class="loan-search-form">
     <validation-observer ref="observer" v-slot="{ passes }">
-      <b-form
-        class="form loan-search-form"
-        @submit.stop.prevent="passes(submit)"
-        @reset.stop.prevent="$emit('reset')"
-      >
+      <b-form class="form loan-search-form" @submit.stop.prevent="passes(submit)">
         <!-- title -->
         <div>
           <h4 class="loan-search-form--no-margin">Qu'aimeriez-vous emprunter</h4>
@@ -16,6 +12,7 @@
         <b-form-group>
           <b-form-checkbox-group
             buttons
+            :disabled="loading"
             class="loanable-buttons"
             id="loanable_type"
             :checked="selectedLoanableTypes"
@@ -260,11 +257,13 @@ export default {
     color: #7a7a7a;
   }
 
-  .loanable-buttons .btn:disabled,
   .btn.disabled {
     background-color: #fff;
-    border-color: #a9afb5 !important;
+    border-color: $light !important;
     color: #7a7a7a;
+  }
+  .loanable-buttons .active.btn.disabled {
+    background-color: $light;
   }
 }
 

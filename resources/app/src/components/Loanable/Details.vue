@@ -41,10 +41,42 @@
               <dt>Propriétaire</dt>
               <dd>{{ loanable.owner.user.full_name }}</dd>
 
-              <div v-if="loanable.comments">
+              <template v-if="loanable.comments">
                 <dt>Commentaires</dt>
                 <dd>&laquo;&nbsp;{{ loanable.comments }}&nbsp;&raquo;</dd>
-              </div>
+              </template>
+              <template v-if="loanable.type === 'bike'">
+                <dt>{{ $t("fields.model") | capitalize }}</dt>
+                <dd>{{ loanable.model }}</dd>
+                <dt>{{ $t("fields.bike_type") | capitalize }}</dt>
+                <dd>{{ $t(`bike_types.${loanable.bike_type}`) | capitalize }}</dd>
+                <dt>{{ $t("fields.size") | capitalize }}</dt>
+                <dd>
+                  {{ $t(`sizes.${loanable.size}`) | capitalize }}
+                </dd>
+              </template>
+              <template v-else-if="loanable.type === 'trailer'">
+                <dt>{{ $t("fields.maximum_charge") | capitalize }}</dt>
+                <dd>{{ loanable.maximum_charge }}</dd>
+              </template>
+              <template v-else-if="loanable.type === 'car'">
+                <dt>{{ $t("fields.brand") | capitalize }}</dt>
+                <dd>{{ loanable.brand }}</dd>
+                <dt>{{ $t("fields.model") | capitalize }}</dt>
+                <dd>{{ loanable.model }}</dd>
+                <dt>{{ $t("fields.year_of_circulation") | capitalize }}</dt>
+                <dd>{{ loanable.year_of_circulation }}</dd>
+                <dt>{{ $t("fields.transmission_mode") | capitalize }}</dt>
+                <dd>
+                  {{ $t(`transmission_modes.${loanable.transmission_mode}`) | capitalize }}
+                </dd>
+                <dt>{{ $t("fields.engine") | capitalize }}</dt>
+                <dd>{{ $t(`engines.${loanable.engine}`) | capitalize }}</dd>
+                <dt>{{ $t("fields.papers_location") | capitalize }}</dt>
+                <dd>
+                  {{ $t(`papers_locations.${loanable.papers_location}`) | capitalize }}
+                </dd>
+              </template>
             </dl>
           </b-tab>
           <b-tab title="Estimation">
@@ -114,6 +146,8 @@ import Trailer from "@/assets/svg/trailer.svg";
 
 import UserAvatar from "@/components/User/Avatar.vue";
 
+import locales from "@/locales";
+
 export default {
   name: "LoanableDetails",
   components: {
@@ -145,6 +179,16 @@ export default {
     },
     ownerUser() {
       return this?.loanable?.owner?.user;
+    },
+  },
+  i18n: {
+    messages: {
+      en: {
+        ...locales.en.loanables,
+      },
+      fr: {
+        ...locales.fr.loanables,
+      },
     },
   },
 };

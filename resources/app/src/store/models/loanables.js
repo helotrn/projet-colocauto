@@ -125,5 +125,63 @@ export default new RestModule(
         commit("cancelToken", null);
       }
     },
+    async list({ commit, state }, { types }) {
+      const { CancelToken } = Vue.axios;
+      const cancelToken = CancelToken.source();
+      commit("loaded", false);
+      commit("loading", true);
+      try {
+        commit("cancelToken", cancelToken);
+        const { data } = await Vue.axios.get(`/loanables/list`, {
+          params: { types },
+          cancelToken: cancelToken.token,
+        });
+
+        const newData = (data.bikes || [])
+          .map((bike) => ({
+            type: "bike",
+            ...bike,
+          }))
+          .concat(
+            (data.cars || []).map((car) => ({
+              type: "car",
+              ...car,
+            })),
+            (data.trailers || []).map((trailer) => ({
+              type: "trailer",
+              ...trailer,
+            }))
+          );
+
+        commit("data", newData);
+        commit("loaded", true);
+      } catch (e) {
+        const { request, response } = e;
+        if (request) {
+          switch (request.status) {
+            case 422:
+              commit(
+                "addNotification",
+                {
+                  content: extractErrors(response.data).join(", "),
+                  title: "Erreur de validation",
+                  variant: "danger",
+                  type: "extension",
+                },
+                { root: true }
+              );
+              return;
+            default:
+              break;
+          }
+        }
+        commit("error", { request, response });
+
+        throw e;
+      } finally {
+        commit("loading", false);
+        commit("cancelToken", null);
+      }
+    },
   }
 );
