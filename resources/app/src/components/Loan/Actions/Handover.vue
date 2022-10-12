@@ -71,7 +71,7 @@
             <b-form
               :novalidate="true"
               class="loan-actions-handover__form"
-              @submit.stop.prevent="passes(completeHandover)"
+              @submit.stop.prevent="passes(completeAction)"
             >
               <b-row>
                 <b-col
@@ -116,6 +116,7 @@
                     name="mileage_end"
                     type="number"
                     label="KM au compteur, à la fin de la course"
+                    :rules="{min_value: 1}"
                     placholder="KM au compteur"
                     :disabled="(!!action.executed_at || loanIsCanceled) && !userIsAdmin"
                     v-model="action.mileage_end"
@@ -282,7 +283,7 @@
             <b-form
               :novalidate="true"
               class="register-form__form"
-              @submit.stop.prevent="passes(completeHandover)"
+              @submit.stop.prevent="passes(completeAction)"
             >
               <b-row v-if="!action.executed_at">
                 <b-col>
@@ -371,7 +372,7 @@
                 variant="success"
                 class="mr-3"
                 :disabled="actionLoading"
-                @click="completeHandover"
+                @click="completeAction"
               >
                 C'est fait!
               </b-button>
@@ -450,7 +451,7 @@
               variant="success"
               class="mr-3"
               :disabled="actionLoading"
-              @click="completeHandover"
+              @click="completeAction"
             >
               Résoudre la contestation
             </b-button>
@@ -472,18 +473,16 @@ import LoanStepsSequence from "@/mixins/LoanStepsSequence";
 export default {
   name: "LoanActionsHandover",
   mixins: [LoanActionsMixin, LoanStepsSequence],
-  methods: {
-    completeHandover() {
-      if (!this.action.mileage_end) {
+  watch: {
+    action(newValue){
+      if (!newValue.mileage_end) {
         this.action.mileage_end =
           this.item.estimated_distance +
           this.item.actions.find((a) => a.type === "takeover").mileage_beginning;
       }
-
-      if (!this.action.purchases_amount) {
+      if (!newValue.purchases_amount) {
         this.action.purchases_amount = 0;
       }
-      this.completeAction();
     },
   },
 

@@ -123,7 +123,7 @@
                       id="mileage_beginning"
                       name="mileage_beginning"
                       type="number"
-                      :rules="{ required: true, min: 1 }"
+                      :rules="{ required: true, min_value: 1 }"
                       label="KM au compteur, au début de la course"
                       placeholder="KM au compteur"
                       :disabled="(!!action.executed_at || loanIsCanceled) && !userIsAdmin"
