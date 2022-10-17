@@ -128,7 +128,7 @@ export default {
   beforeRouteEnter(to, from, next) {
     next((vm) => {
       if (vm.id === "new" && (!vm.item || !vm.item.loanable)) {
-        vm.$router.replace("/community/map");
+        vm.$router.replace("/search/map");
       }
     });
   },

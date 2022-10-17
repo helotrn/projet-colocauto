@@ -100,7 +100,7 @@ export default {
     statuses: {
       self_service: "En libre service",
       new: {
-        text: "Nouveau emprunt",
+        text: "Nouvel emprunt",
         description: "Emprunt en cours de création!",
       },
       canceled: {
@@ -126,7 +126,7 @@ export default {
       waiting_for_prepayment: {
         text: "Attente de prépaiement",
         description:
-          "L'emprunteur-se doir ajouter des fonds à son solde avant de débuter l'emprunt.",
+          "L'emprunteur-se doit ajouter des fonds à son solde avant de débuter l'emprunt.",
       },
       expired_reservation: {
         text: "Réservation expirée",
@@ -152,7 +152,7 @@ export default {
       },
       waiting_for_extension: {
         text: "Attente d'approbation de retard",
-        description: "Le propriétaire doit approuver la demande de retard du véhicule.",
+        description: "Le-a propriétaire doit approuver la demande de retard du véhicule.",
       },
       ongoing_reservation_self_service: {
         text: "Réservation en cours",
