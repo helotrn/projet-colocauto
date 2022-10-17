@@ -16,17 +16,19 @@ class AddPaymentMethodCardCountry extends Migration
      */
     public function up()
     {
-        Schema::table("payment_methods", function(Blueprint $table){
+        Schema::table("payment_methods", function (Blueprint $table) {
             $table->char("country", 2)->nullable();
         });
 
         foreach (PaymentMethod::all() as $paymentMethod) {
             $source = Stripe::getSource($paymentMethod);
-            if($source){
+            if ($source) {
                 $paymentMethod->country = $source->country;
                 $paymentMethod->save();
-            }else {
-                Log::warning("Could not set country for payment method $paymentMethod->id");
+            } else {
+                Log::warning(
+                    "Could not set country for payment method $paymentMethod->id"
+                );
             }
         }
     }
@@ -38,7 +40,7 @@ class AddPaymentMethodCardCountry extends Migration
      */
     public function down()
     {
-        Schema::table("payment_methods", function(Blueprint $table){
+        Schema::table("payment_methods", function (Blueprint $table) {
             $table->dropColumn("country");
         });
     }
