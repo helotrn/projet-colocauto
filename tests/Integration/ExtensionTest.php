@@ -57,6 +57,59 @@ class ExtensionTest extends TestCase
         $response->assertStatus(201)->assertJson($data);
     }
 
+    public function testCreateExtension_failsIfTooShort()
+    {
+        $data = [
+            "new_duration" => 10,
+            "comments_on_extension" => $this->faker->paragraph,
+            "type" => "extension",
+            "status" => "in_process",
+        ];
+
+        $response = $this->json(
+            "POST",
+            "/api/v1/loans/{$this->loan->id}/actions",
+            $data
+        );
+
+        $response->assertStatus(422)->assertJson([
+            "errors" => [
+                "new_duration" => [],
+            ],
+        ]);
+    }
+
+    public function testCreateSecondExtension_failsIfEarlier()
+    {
+        $data = [
+            "new_duration" => 60,
+            "comments_on_extension" => $this->faker->paragraph,
+            "type" => "extension",
+            "status" => "in_process",
+        ];
+
+        $this->json("POST", "/api/v1/loans/{$this->loan->id}/actions", $data);
+
+        $data = [
+            "new_duration" => 40, // Before first extension
+            "comments_on_extension" => $this->faker->paragraph,
+            "type" => "extension",
+            "status" => "in_process",
+        ];
+
+        $response = $this->json(
+            "POST",
+            "/api/v1/loans/{$this->loan->id}/actions",
+            $data
+        );
+
+        $response->assertStatus(422)->assertJson([
+            "errors" => [
+                "new_duration" => [],
+            ],
+        ]);
+    }
+
     public function testCreateExtensionsForSelfServiceLoanable()
     {
         $this->loanable->is_self_service = true;
