@@ -29,6 +29,8 @@
               <dl>
                 <dt>{{ $t("loanable.fields.maximum_charge") | capitalize }}</dt>
                 <dd>{{ loanable.maximum_charge }}</dd>
+                <dt>{{ $t("loanable.fields.dimensions") | capitalize }}</dt>
+                <dd>{{ loanable.dimensions }}</dd>
               </dl>
             </div>
             <div v-else-if="loanable.type === 'car'">
