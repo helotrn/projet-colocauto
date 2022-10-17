@@ -143,6 +143,8 @@ return [
         "attribute-name" => [
             "rule-name" => "custom-message",
         ],
+        "loanable_types" =>
+            "Requested types (:givenValues) are invalid. Options are: :validValues.",
     ],
 
     /*

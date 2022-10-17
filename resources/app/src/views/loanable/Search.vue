@@ -23,7 +23,6 @@
                 :can-loan-car="canLoanCar"
                 @changed="resetLoanables"
                 @hide="searched = true"
-                @reset="reset"
                 @submit="searchLoanables"
               />
             </div>
@@ -34,29 +33,31 @@
         <!-- Results header -->
         <b-col lg="8" xl="9">
           <!-- Small screens -->
-          <b-card v-if="searched" class="d-lg-none my-4">
-            <h3>Résultats</h3>
-            <b-row align-v="center">
-              <b-col sm="6" class="mb-4 mb-sm-0">
-                <a class="community-view__button-modify-search" @click="searched = false"
-                  >Modifier votre recherche</a
-                >
-              </b-col>
-              <b-col sm="6">
-                <b-button v-if="view === 'map'" pill @click="gotoView('list')" class="ml-sm-auto">
-                  <div class="community-view__button-spacing">
-                    <div>Afficher la liste</div>
-                    <div><svg-list /></div>
-                  </div>
-                </b-button>
-                <b-button v-else pill @click="gotoView('map')" class="ml-sm-auto">
-                  <div class="community-view__button-spacing">
-                    <div>Afficher la carte</div>
-                    <div><svg-map /></div>
-                  </div>
-                </b-button>
-              </b-col>
-            </b-row>
+          <b-card class="d-lg-none my-4">
+            <div>
+              <h3>Résultats</h3>
+              <b-row align-v="center">
+                <b-col sm="6" class="mb-3 mb-sm-0" v-if="searched">
+                  <a class="community-view__button-modify-search" @click="searched = false"
+                    >Modifier votre recherche</a
+                  >
+                </b-col>
+                <b-col sm="6">
+                  <b-button v-if="view === 'map'" pill @click="gotoView('list')" class="ml-sm-auto">
+                    <div class="community-view__button-spacing">
+                      <div>Afficher la liste</div>
+                      <div><svg-list /></div>
+                    </div>
+                  </b-button>
+                  <b-button v-else pill @click="gotoView('map')" class="ml-sm-auto">
+                    <div class="community-view__button-spacing">
+                      <div>Afficher la carte</div>
+                      <div><svg-map /></div>
+                    </div>
+                  </b-button>
+                </b-col>
+              </b-row>
+            </div>
           </b-card>
           <!---->
 
@@ -94,14 +95,10 @@
           <!-- -->
 
           <!-- results display (loanable cards) -->
-          <community-list
+          <loanable-list
             v-if="view === 'list'"
-            :data="data"
-            :page="parseInt(params.page)"
-            :per-page="parseInt(params.per_page)"
-            :total="total ? total : 0"
+            :data="loanables"
             :loading="searching || loading"
-            @page="setParam({ name: 'page', value: $event })"
             @select="selectLoanable"
             @test="searchLoanables"
           />
@@ -111,8 +108,8 @@
     </div>
     <!-- map display -->
     <b-row v-if="view === 'map'">
-      <community-map
-        :data="data"
+      <loanable-map
+        :data="loanables"
         :communities="user.communities"
         @test="searchLoanables"
         @select="selectLoanable"
@@ -124,11 +121,10 @@
 <script>
 import Authenticated from "@/mixins/Authenticated";
 import DataRouteGuards from "@/mixins/DataRouteGuards";
-import ListMixin from "@/mixins/ListMixin";
 import UserMixin from "@/mixins/UserMixin";
 
-import CommunityList from "@/components/Community/List.vue";
-import CommunityMap from "@/components/Community/Map.vue";
+import LoanableList from "@/components/Loanable/List.vue";
+import LoanableMap from "@/components/Loanable/Map.vue";
 import LoanSearchForm from "@/components/Loan/SearchForm.vue";
 
 import ListIcon from "@/assets/svg/list.svg";
@@ -137,11 +133,11 @@ import MapIcon from "@/assets/svg/map.svg";
 import { buildComputed } from "@/helpers";
 
 export default {
-  name: "CommunityView",
-  mixins: [Authenticated, DataRouteGuards, ListMixin, UserMixin],
+  name: "LoanableSearch",
+  mixins: [Authenticated, DataRouteGuards, UserMixin],
   components: {
-    CommunityList,
-    CommunityMap,
+    LoanableList,
+    LoanableMap,
     LoanSearchForm,
     "svg-list": ListIcon,
     "svg-map": MapIcon,
@@ -176,13 +172,36 @@ export default {
     });
   },
   mounted() {
-    if (!this.canLoanCar) {
-      this.selectedLoanableTypes = this.selectedLoanableTypes.filter((t) => t !== "car");
+    let selectedTypes = [];
+    const possibleTypes = ["bike", "trailer", "car"];
+    const urlTypes = this.$route.query["types"];
+    if (urlTypes) {
+      selectedTypes = urlTypes
+        .split(",")
+        .filter((urlType) => !!possibleTypes.find((possibleType) => possibleType === urlType));
+    } else {
+      selectedTypes = this.selectedLoanableTypes;
     }
-    this.resetPagination(this.view);
+
+    if (!this.canLoanCar) {
+      selectedTypes = selectedTypes.filter((t) => t !== "car");
+    }
+
+    this.updateSelectedTypes(selectedTypes, true);
   },
   computed: {
-    ...buildComputed("community.view", ["center", "lastLoan", "searched", "selectedLoanableTypes"]),
+    ...buildComputed("loanable.search", [
+      "center",
+      "lastLoan",
+      "searched",
+      "selectedLoanableTypes",
+    ]),
+    loanables() {
+      return this.$store.state.loanables.data;
+    },
+    loading() {
+      return this.$store.state.loanables.loading;
+    },
     isMap() {
       return this.view === "map" ? "community-list--no-pointer-events" : "";
     },
@@ -215,39 +234,13 @@ export default {
   },
   methods: {
     gotoView(view) {
-      this.$router.push(`/community/${view}`);
-    },
-    reset() {
-      const newLoan = { ...this.$store.state.loans.empty };
-      delete newLoan.community;
-      delete newLoan.community_id;
-
-      this.$store.commit("loans/item", newLoan);
-
-      this.selectedLoanableTypes = ["bike", "trailer"];
-
-      if (this.canLoanCar) {
-        this.selectedLoanableTypes.push("car");
-      }
-    },
-    resetPagination(val) {
-      this.searched = false;
-      this.setParam({ name: "page", value: "1" });
-      switch (val) {
-        case "list":
-          this.setParam({ name: "per_page", value: "10" });
-          break;
-        case "map":
-        default:
-          this.setParam({ name: "per_page", value: "1000" });
-          break;
-      }
+      this.$router.push(`/search/${view}`);
     },
     resetLoanables() {
-      this.$store.dispatch(`${this.slug}/reset`);
+      this.$store.dispatch(`loanables/reset`);
     },
     selectLoanableTypes(value) {
-      this.selectedLoanableTypes = value.filter((item, i, ar) => ar.indexOf(item) === i);
+      this.updateSelectedTypes(value.filter((item, i, ar) => ar.indexOf(item) === i));
     },
     async selectLoanable(loanable) {
       this.$store.commit("loans/patchItem", {
@@ -274,13 +267,29 @@ export default {
     async searchLoanables() {
       this.searching = true;
       try {
-        await this.$store.dispatch(`${this.slug}/search`, {
+        await this.$store.dispatch("loanables/search", {
           loan: this.loan,
         });
       } finally {
         this.searching = false;
       }
       this.searched = true;
+    },
+    updateSelectedTypes(selectedTypes) {
+      this.selectedLoanableTypes = selectedTypes;
+      const types = selectedTypes.join(",");
+
+      if (this.$route.query.types !== types) {
+        const query = {
+          ...this.$route.query,
+          types,
+        };
+
+        this.$router.replace({ ...this.$route, query });
+      }
+
+      this.reloading = true;
+      this.$store.dispatch("loanables/list", { types });
     },
   },
   watch: {
@@ -311,16 +320,6 @@ export default {
           }
         }
       },
-    },
-    selectedLoanableTypes() {
-      this.reloading = true;
-      this.setParam({
-        name: "type",
-        value: this.selectedLoanableTypes.join(","),
-      });
-    },
-    view(val) {
-      this.resetPagination(val);
     },
   },
 };
@@ -385,7 +384,7 @@ export default {
   }
 
   &__search-container {
-    margin: 1.5rem auto;
+    margin-top: 1.5rem;
     overflow: auto;
   }
 

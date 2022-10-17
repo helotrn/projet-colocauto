@@ -2,10 +2,10 @@
   <layout-loading v-if="loading" />
   <div v-else class="community-list">
     <!-- loanable cards -->
-    <div v-if="data.length > 0">
+    <div v-if="visibleLoanables.length > 0">
       <b-row>
         <b-col
-          v-for="loanable in data"
+          v-for="loanable in visibleLoanables"
           class="community-list--mobile"
           :key="loanable.id"
           xl="3"
@@ -22,13 +22,7 @@
       </b-row>
       <b-row>
         <b-col class="community-list--margin">
-          <b-pagination
-            align="right"
-            :value="page"
-            :total-rows="total"
-            :per-page="perPage"
-            @input="emitPage"
-          />
+          <b-pagination align="right" v-model="page" :total-rows="total" :per-page="perPage" />
         </b-col>
       </b-row>
     </div>
@@ -58,21 +52,15 @@ export default {
   components: {
     LoanableCard,
   },
+  data() {
+    return {
+      page: 1,
+      perPage: 12,
+    };
+  },
   props: {
     data: {
       type: Array,
-      required: true,
-    },
-    page: {
-      type: Number,
-      required: true,
-    },
-    perPage: {
-      type: Number,
-      required: true,
-    },
-    total: {
-      type: Number,
       required: true,
     },
     loading: {
@@ -80,10 +68,15 @@ export default {
       required: true,
     },
   },
-  methods: {
-    emitPage(page) {
-      this.$emit("page", page);
+  computed: {
+    total() {
+      return this.data.length;
     },
+    visibleLoanables() {
+      return this.data.slice((this.page - 1) * this.perPage, this.page * this.perPage);
+    },
+  },
+  methods: {
     emitSelect(loanable) {
       this.$emit("select", loanable);
     },

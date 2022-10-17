@@ -9,6 +9,7 @@ import adminRoutes from "@/router/admin";
 import authRoutes from "@/router/auth";
 import baseRoutes from "@/router/base";
 import communityRoutes from "@/router/community";
+import loanableRoutes from "@/router/loanables";
 import loanRoutes from "@/router/loans";
 import profileRoutes from "@/router/profile";
 import registerRoutes from "@/router/register";
@@ -20,6 +21,7 @@ const routes = [
   ...authRoutes,
   ...baseRoutes,
   ...communityRoutes,
+  ...loanableRoutes,
   ...loanRoutes,
   ...profileRoutes,
   ...registerRoutes,

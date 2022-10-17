@@ -17,7 +17,7 @@
 
           <!-- button to search for vehicule -->
           <section class="page__section" v-if="canLoanVehicle">
-            <b-button pill to="/community/map" class="search_button">
+            <b-button pill to="/search/map" class="search_button">
               <div class="dashboard--justify-text">
                 <svg-magnifying-glass />
                 Rechercher un véhicule
