@@ -10,6 +10,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Str;
 use Illuminate\Testing\Assert;
+use Mockery;
 use Noke;
 use Stripe;
 use Tests\TestCase;
@@ -644,6 +645,7 @@ class UserTest extends TestCase
         $paymentMethod = factory(PaymentMethod::class)->create([
             "user_id" => $this->user->id,
             "type" => "credit_card",
+            "external_id" => "stripe source id",
         ]);
 
         Stripe::shouldReceive("getUserCustomer")
@@ -653,19 +655,25 @@ class UserTest extends TestCase
             })
             ->andReturn((object) ["id" => "cus_test"]);
 
+        Stripe::shouldReceive("computeAmountWithFee")
+            ->once()
+            ->with(10, Mockery::any())
+            ->andReturn(10.5);
+
         Stripe::shouldReceive("createCharge")
             ->once()
             ->with(
-                1065,
+                1050,
                 "cus_test",
-                "Ajout au compte LocoMotion: 10,12$ + 0,53$ (frais)"
+                "Ajout au compte LocoMotion: 10,00$ + 0,50$ (frais)",
+                "stripe source id"
             );
 
         $response = $this->json("PUT", "/api/v1/auth/user/balance", [
             "transaction_id" => 1,
-            "amount" => 10.12,
+            "amount" => 10,
             "payment_method_id" => $paymentMethod->id,
         ]);
-        $response->assertStatus(200)->assertSee("10.12");
+        $response->assertStatus(200)->assertSee("10");
     }
 }
