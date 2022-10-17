@@ -2,7 +2,7 @@
   <div class="payment-method-form">
     <validation-observer ref="observer" v-slot="{ passes }">
       <b-form class="form" @submit.prevent="passes(submit)">
-        <div class="form__section">
+        <div class="form__section" :class="{ 'd-none': definition.type.options.length < 2 }">
           <forms-builder
             :definition="definition"
             :disabled="!!paymentMethod.id"
@@ -101,6 +101,10 @@ export default {
 
       this.card = card;
       this.stripe = stripe;
+    }
+
+    if (this.definition.type.options.length === 1) {
+      this.paymentMethod.type = this.definition.type.options[0].value;
     }
   },
   components: {
