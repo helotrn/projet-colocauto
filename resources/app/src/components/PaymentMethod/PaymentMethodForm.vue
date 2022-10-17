@@ -12,7 +12,6 @@
         </div>
 
         <div
-          v-if="!paymentMethod.id"
           :class="{
             'payment-method-form__credit-card': true,
             form__section: true,
@@ -20,8 +19,26 @@
           }"
         >
           <h2>Carte de crédit</h2>
-
-          <div id="stripe-card" class="form-control" />
+          <div>
+            Des frais de transaction sont applicables.
+            <ul>
+              <li :class="{ 'font-weight-bold': cardType === 'amex' }">
+                Cartes American Express: {{ fees.amex.ratio | percent }}
+              </li>
+              <li :class="{ 'font-weight-bold': cardType === 'foreign' }">
+                Autres Cartes non-canadiennes: {{ fees.foreign.ratio | percent }} +
+                {{ fees.foreign.constant | currency }}
+              </li>
+              <li :class="{ 'font-weight-bold': cardType === 'canadian' }">
+                Autres Cartes canadiennes: {{ fees.default.ratio | percent }} +
+                {{ fees.default.constant | currency }}
+              </li>
+            </ul>
+          </div>
+          <div v-if="!paymentMethod.id">
+            <div id="stripe-card" class="form-control"></div>
+            <b-form-invalid-feedback v-if="error">{{ error.message }}</b-form-invalid-feedback>
+          </div>
         </div>
 
         <div
@@ -41,7 +58,7 @@
           <b-button
             variant="success"
             type="submit"
-            :disabled="loading"
+            :disabled="loading || error"
             class="mr-3"
             v-if="paymentMethod.type !== 'credit_card' || !paymentMethod.id"
           >
@@ -60,6 +77,7 @@
 import { loadStripe } from "@stripe/stripe-js";
 
 import FormsBuilder from "@/components/Forms/Builder.vue";
+import { cardFeeSpecs } from "@/helpers/transactionFees";
 
 export default {
   name: "PaymentMethodForm",
@@ -102,9 +120,29 @@ export default {
     return {
       card: null,
       stripe: null,
+      error: null,
+      fees: cardFeeSpecs,
     };
   },
   computed: {
+    country() {
+      return this.paymentMethod?.country;
+    },
+    brand() {
+      return this.paymentMethod?.credit_card_type;
+    },
+    cardType() {
+      if (!this.country || !this.brand) {
+        return undefined;
+      }
+      if (this.brand === "American Express") {
+        return "amex";
+      }
+      if (this.country !== "CA") {
+        return "foreign";
+      }
+      return "canadian";
+    },
     definition() {
       const { type } = this.form;
       return {
@@ -133,15 +171,6 @@ export default {
           address_line_1: `${this.user.address}`,
           address_zip: `${this.user.postal_code}`,
         });
-
-        if (error) {
-          this.$store.commit("addNotification", {
-            content: "Les informations de la carte sont incomplètes ou invalides.",
-            title: "Erreur sur la carte",
-            variant: "danger",
-            type: "payment-form",
-          });
-        }
 
         const { id, card } = token;
 

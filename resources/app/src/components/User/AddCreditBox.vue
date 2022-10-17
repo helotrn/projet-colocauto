@@ -75,6 +75,7 @@
 
 <script>
 import { currency } from "@/helpers/filters";
+import { feeSpec, addFeeToAmount } from "@/helpers/transactionFees";
 
 export default {
   name: "UserAddCreditBox",
@@ -84,8 +85,6 @@ export default {
         this.minimumRequired && this.minimumRequired > 0
           ? this.normalizeCurrency(this.minimumRequired)
           : 20,
-      feeRatio: 0.022,
-      feeConstant: 0.3,
       loading: false,
       paymentMethodId: this.paymentMethods
         ? this.paymentMethods.find((p) => p.is_default)?.id
@@ -123,6 +122,18 @@ export default {
     },
   },
   computed: {
+    paymentMethod() {
+      return this.paymentMethods?.find((p) => p.id === this.paymentMethodId);
+    },
+    fee() {
+      return feeSpec(this.paymentMethod);
+    },
+    feeRatio() {
+      return this.fee.ratio;
+    },
+    feeConstant() {
+      return this.fee.constant;
+    },
     amount() {
       if (this.selectedValue === "other") {
         const amount = parseFloat(this.customAmount);
@@ -132,14 +143,15 @@ export default {
       return parseFloat(this.selectedValue);
     },
     amountWithFee() {
-      // Passing fees on to customer:
-      // https://support.stripe.com/questions/passing-the-stripe-fee-on-to-customers
-      return (this.amount + this.feeConstant) / (1 - this.feeRatio);
+      return addFeeToAmount(this.amount, this.fee);
     },
     amounts() {
       const options = [];
 
-      if (this.normalizedMinimumRequired > 0) {
+      if (
+        this.normalizedMinimumRequired > 0 &&
+        this.normalizedMinimumRequired != this.normalizedTripCost
+      ) {
         options.push({
           text: `Minimum (${currency(this.normalizedMinimumRequired)})`,
           value: this.normalizedMinimumRequired,

@@ -1,23 +1,23 @@
 <template>
-  <div class="profile-payment_methods" v-if="routeDataLoaded">
-    <b-row v-if="data.length === 0">
-      <p>
-        Vous pouvez ajouter un mode de paiement pour accélérer l'ajout de crédits.
-        <router-link to="/profile/payment_methods/new"> Cliquez ici </router-link> pour commencer!
-      </p>
-    </b-row>
-    <b-row
-      v-else
-      v-for="paymentMethod in data"
-      :key="paymentMethod.id"
-      class="profile-payment_methods__payment_methods"
-    >
-      <b-col class="profile-payment_methods__payment_methods__payment_method">
-        <router-link :to="`/profile/payment_methods/${paymentMethod.id}`">
-          {{ paymentMethod.name }}
-        </router-link>
-      </b-col>
-    </b-row>
+  <div class="profile-payment_methods" v-if="routeDataLoaded && loaded && !loading">
+    <strong v-if="data.length > 0">Modes de paiements enregistrés:</strong>
+    <ul class="profile-payment_methods__payment_methods">
+      <li v-for="paymentMethod in data" :key="paymentMethod.id">
+        <router-link :to="'/profile/payment_methods/' + paymentMethod.id">{{
+          paymentMethod.name
+        }}</router-link>
+        <b-button
+          size="sm"
+          variant="outline-danger"
+          class="ml-2"
+          @click="() => destroy(paymentMethod.id)"
+          >Supprimer</b-button
+        >
+      </li>
+    </ul>
+    <div v-if="data.length < 3">
+      <b-button to="/profile/payment_methods/new"> Ajoutez un nouveau mode de paiement </b-button>
+    </div>
   </div>
   <layout-loading v-else />
 </template>
@@ -57,20 +57,21 @@ export default {
     },
   },
   methods: {
-    async createOwnerProfile() {
-      this.$store.commit("users/item", {
-        ...this.user,
-        owner: {},
-      });
-      await this.$store.dispatch("users/updateItem");
-      await this.$store.dispatch("loadUser");
+    async destroy(id) {
+      await this.$store.dispatch("paymentMethods/destroy", id);
+      await this.$store.dispatch("paymentMethods/retrieve");
     },
   },
 };
 </script>
-
 <style lang="scss">
-.profile-loanables__loanables__loanable {
-  margin-bottom: 20px;
+.profile-payment_methods {
+  &__payment_methods {
+    list-style: none;
+    padding-left: 0;
+    li {
+      margin-top: 0.5rem;
+    }
+  }
 }
 </style>

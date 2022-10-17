@@ -13,6 +13,40 @@ class StripeService
 {
     private $apiKey;
 
+    // Keep in sync with resources/app/src/helpers/transactionFees.js
+    public static $feeSpec = [
+        "amex" => [
+            "ratio" => 0.035,
+            "constant" => 0,
+        ],
+        "foreign" => [
+            "ratio" => 0.032,
+            "constant" => 0.3,
+        ],
+        "default" => [
+            "ratio" => 0.022,
+            "constant" => 0.3,
+        ],
+    ];
+
+    // Passing fees on to customer:
+    // https://support.stripe.com/questions/passing-the-stripe-fee-on-to-customers
+    public static function computeAmountWithFee($amount, $paymentMethod)
+    {
+        $feeType = "default";
+
+        if ($paymentMethod->credit_card_type === "American Express") {
+            $feeType = "amex";
+        } elseif ($paymentMethod->country !== "CA") {
+            $feeType = "foreign";
+        }
+
+        $feeConstant = static::$feeSpec[$feeType]["constant"];
+        $feeRatio = static::$feeSpec[$feeType]["ratio"];
+
+        return round(($amount + $feeConstant) / (1 - $feeRatio), 2);
+    }
+
     public function __construct(string $apiKey)
     {
         $this->apiKey = $apiKey;
@@ -84,11 +118,13 @@ class StripeService
     public function createCharge(
         $amountWithFeeInCents,
         $customerId,
-        $description
+        $description,
+        $paymentMethodId
     ) {
         return \Stripe\Charge::create([
             "amount" => $amountWithFeeInCents,
             "currency" => "cad",
+            "source" => $paymentMethodId,
             "customer" => $customerId,
             "description" => $description,
         ]);
