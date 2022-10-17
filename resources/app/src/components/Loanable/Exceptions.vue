@@ -6,7 +6,7 @@
           >X</b-button
         >
       </b-col>
-      <b-col class="exceptions__row__available">
+      <b-col class="d-none exceptions__row__available">
         <b-select :value="exception.available">
           <option :value="true" v-if="mode === 'never'">Rendre disponible</option>
           <option :value="false" v-if="mode === 'always'">Rendre indisponible</option>
@@ -45,7 +45,7 @@
             inline
             class="mt-3"
             :disabled-dates="selectedDates(exception.scope)"
-            :open-date="firstSelectedDate(selectedDates(exception.scope))"
+            :initial-date="firstSelectedDate(selectedDates(exception.scope))"
             @input="selectDate($event, exception)"
           />
         </div>
@@ -54,7 +54,7 @@
             inline
             class="mt-3"
             :disabled-dates="selectedDates(exception.scope)"
-            :open-date="firstSelectedDate(selectedDates(exception.scope))"
+            :initial-date="firstSelectedDate(selectedDates(exception.scope))"
             @input="selectPeriodDate($event, exception)"
           />
         </div>
@@ -152,15 +152,15 @@ export default {
       if (key === "type") {
         switch (value) {
           case "weekdays":
-            newTarget.period = "00:00-00:00";
+            newTarget.period = "00:00-24:00";
             newTarget.scope = [];
             break;
           case "dates":
-            newTarget.period = "00:00-00:00";
+            newTarget.period = "00:00-24:00";
             newTarget.scope = [];
             break;
           case "dateRange":
-            newTarget.period = "00:00-00:00";
+            newTarget.period = "00:00-24:00";
             newTarget.scope = [];
             break;
           default:

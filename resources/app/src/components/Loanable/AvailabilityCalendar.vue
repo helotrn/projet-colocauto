@@ -110,6 +110,7 @@
 
         <b-row>
           <b-col>
+            <p>Sauf:</p>
             <loanable-exceptions
               :mode="loanable.availability_mode"
               :exceptions="exceptions"
@@ -120,7 +121,7 @@
 
         <b-row>
           <b-col>
-            <a href="#" @click.prevent="addException">+ Ajouter une règle de disponibilité</a>
+            <a href="#" @click.prevent="addException">+ Ajouter une exception</a>
           </b-col>
         </b-row>
       </b-col>
