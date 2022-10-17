@@ -530,7 +530,7 @@ class Loanable extends BaseModel
         return $query;
     }
 
-    public function scopeHaveAvailabilities(Builder $query)
+    public function scopeHasAvailabilities(Builder $query)
     {
         return $query->where(function ($q) {
             return $q

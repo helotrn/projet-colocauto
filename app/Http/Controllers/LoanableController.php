@@ -246,7 +246,7 @@ class LoanableController extends RestController
             ]);
             $output["cars"] = $this->getCollectionFields(
                 Car::accessibleBy($request->user())
-                    ->haveAvailabilities()
+                    ->hasAvailabilities()
                     ->get(),
                 $carFields
             );
@@ -260,7 +260,7 @@ class LoanableController extends RestController
             ]);
             $output["bikes"] = $this->getCollectionFields(
                 Bike::accessibleBy($request->user())
-                    ->haveAvailabilities()
+                    ->hasAvailabilities()
                     ->get(),
                 $bikeFields
             );
@@ -270,7 +270,7 @@ class LoanableController extends RestController
             $trailerFields = array_merge($loanableFields, ["maximum_charge"]);
             $output["trailers"] = $this->getCollectionFields(
                 Trailer::accessibleBy($request->user())
-                    ->haveAvailabilities()
+                    ->hasAvailabilities()
                     ->get(),
                 $trailerFields
             );
