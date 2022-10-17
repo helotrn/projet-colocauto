@@ -17,7 +17,7 @@ class UpdateNokeUserEmail
             return;
         }
 
-        $nokeUser = Noke::findUserByEmail($event->previousEmail, true);
+        $nokeUser = Noke::findUserByEmail($event->previousEmail);
 
         if ($nokeUser) {
             $nokeUser->username = $event->newEmail;

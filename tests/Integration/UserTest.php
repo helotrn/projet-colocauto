@@ -583,8 +583,8 @@ class UserTest extends TestCase
         $newEmail = "different@hotmail.com";
 
         Noke::shouldReceive("findUserByEmail")
-            ->withArgs(function ($a, $b) use ($originalEmail) {
-                return $a === $originalEmail && $b === true;
+            ->withArgs(function ($a) use ($originalEmail) {
+                return $a === $originalEmail;
             })
             ->andReturns(
                 (object) [
@@ -614,8 +614,8 @@ class UserTest extends TestCase
         $newEmail = "different@hotmail.com";
 
         Noke::shouldReceive("findUserByEmail")
-            ->withArgs(function ($a, $b) use ($originalEmail) {
-                return $a === $originalEmail && $b === true;
+            ->withArgs(function ($a) use ($originalEmail) {
+                return $a === $originalEmail;
             })
             ->andReturns(
                 (object) [
