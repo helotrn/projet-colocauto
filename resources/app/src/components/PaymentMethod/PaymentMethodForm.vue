@@ -18,19 +18,25 @@
             'd-none': paymentMethod.type !== 'credit_card',
           }"
         >
-          <h2>Carte de crédit</h2>
+          <h2>{{ $t("types.credit_card") | capitalize }}</h2>
           <div>
-            Des frais de transaction sont applicables.
+            {{ $t("fees_notice") }}
             <ul>
               <li :class="{ 'font-weight-bold': cardType === 'amex' }">
-                Cartes American Express: {{ fees.amex.ratio | percent }}
+                {{ $t("fee_types.amex") | capitalize }}&nbsp;:&nbsp;{{ fees.amex.ratio | percent }}
               </li>
               <li :class="{ 'font-weight-bold': cardType === 'foreign' }">
-                Autres Cartes non-canadiennes: {{ fees.foreign.ratio | percent }} +
+                {{ $t("fee_types.non_canadian") | capitalize }}&nbsp;:&nbsp;{{
+                  fees.foreign.ratio | percent
+                }}
+                +
                 {{ fees.foreign.constant | currency }}
               </li>
               <li :class="{ 'font-weight-bold': cardType === 'canadian' }">
-                Autres Cartes canadiennes: {{ fees.default.ratio | percent }} +
+                {{ $t("fee_types.canadian") | capitalize }}&nbsp;:&nbsp;{{
+                  fees.default.ratio | percent
+                }}
+                +
                 {{ fees.default.constant | currency }}
               </li>
             </ul>
@@ -45,7 +51,7 @@
           class="payment-method-form__bank-account form__section"
           v-if="paymentMethod.type === 'bank_account'"
         >
-          <h2>Compte bancaire</h2>
+          <h2>{{ $t("types.bank_account") | capitalize }}</h2>
 
           <forms-builder
             :definition="restOfDefinition"
@@ -78,6 +84,8 @@ import { loadStripe } from "@stripe/stripe-js";
 
 import FormsBuilder from "@/components/Forms/Builder.vue";
 import { cardFeeSpecs } from "@/helpers/transactionFees";
+
+import locales from "@/locales";
 
 export default {
   name: "PaymentMethodForm",
@@ -182,7 +190,16 @@ export default {
       this.$emit("submit");
     },
   },
+
+  i18n: {
+    messages: {
+      en: {
+        ...locales.en.paymentMethods,
+      },
+      fr: {
+        ...locales.fr.paymentMethods,
+      },
+    },
+  },
 };
 </script>
-
-<style lang="scss"></style>

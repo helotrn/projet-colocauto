@@ -1,6 +1,6 @@
 <template>
   <div class="profile-payment_methods" v-if="routeDataLoaded && loaded && !loading">
-    <strong v-if="data.length > 0">Modes de paiements enregistrés:</strong>
+    <strong v-if="data.length > 0">{{ $t("saved_payment_methods") }}</strong>
     <ul class="profile-payment_methods__payment_methods">
       <li v-for="paymentMethod in data" :key="paymentMethod.id">
         <router-link :to="'/profile/payment_methods/' + paymentMethod.id">{{
@@ -11,12 +11,13 @@
           variant="outline-danger"
           class="ml-2"
           @click="() => destroy(paymentMethod.id)"
-          >Supprimer</b-button
+        >
+          {{ $t("forms.supprimer") | capitalize }}</b-button
         >
       </li>
     </ul>
     <div v-if="data.length < 3">
-      <b-button to="/profile/payment_methods/new"> Ajoutez un nouveau mode de paiement </b-button>
+      <b-button to="/profile/payment_methods/new"> {{ $t("add_new") }}</b-button>
     </div>
   </div>
   <layout-loading v-else />
@@ -47,12 +48,10 @@ export default {
   i18n: {
     messages: {
       en: {
-        ...locales.en.loanables,
-        ...locales.en.forms,
+        ...locales.en.paymentMethods,
       },
       fr: {
-        ...locales.fr.loanables,
-        ...locales.fr.forms,
+        ...locales.fr.paymentMethods,
       },
     },
   },
