@@ -116,7 +116,7 @@
                     name="mileage_end"
                     type="number"
                     label="KM au compteur, à la fin de la course"
-                    :rules="{ min_value: 1 }"
+                    :rules="{ min_value: mileageBeginning }"
                     placholder="KM au compteur"
                     :disabled="(!!action.executed_at || loanIsCanceled) && !userIsAdmin"
                     v-model="action.mileage_end"
@@ -473,12 +473,15 @@ import LoanStepsSequence from "@/mixins/LoanStepsSequence";
 export default {
   name: "LoanActionsHandover",
   mixins: [LoanActionsMixin, LoanStepsSequence],
+  computed: {
+    mileageBeginning() {
+      return this.item.actions.find((a) => a.type === "takeover").mileage_beginning;
+    },
+  },
   watch: {
     action(newValue) {
       if (!newValue.mileage_end) {
-        this.action.mileage_end =
-          this.item.estimated_distance +
-          this.item.actions.find((a) => a.type === "takeover").mileage_beginning;
+        this.action.mileage_end = this.item.estimated_distance + this.mileageBeginning;
       }
       if (!newValue.purchases_amount) {
         this.action.purchases_amount = 0;
