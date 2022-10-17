@@ -267,7 +267,10 @@ class LoanableController extends RestController
         }
 
         if (in_array("trailer", $types)) {
-            $trailerFields = array_merge($loanableFields, ["maximum_charge"]);
+            $trailerFields = array_merge($loanableFields, [
+                "maximum_charge",
+                "dimensions",
+            ]);
             $output["trailers"] = $this->getCollectionFields(
                 Trailer::accessibleBy($request->user())
                     ->hasAvailabilities()
@@ -678,6 +681,9 @@ class LoanableController extends RestController
                 ],
                 "trailer" => [
                     "maximum_charge" => [
+                        "type" => "text",
+                    ],
+                    "dimensions" => [
                         "type" => "text",
                     ],
                 ],

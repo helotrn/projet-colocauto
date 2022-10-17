@@ -24,6 +24,7 @@ class TrailerTest extends TestCase
         "instructions",
         "location_description",
         "maximum_charge",
+        "dimensions",
         "position",
     ];
 
@@ -39,6 +40,7 @@ class TrailerTest extends TestCase
                 $min = 1000,
                 $max = 9000
             ),
+            "dimensions" => $this->faker->sentence(2),
             "type" => "trailer",
         ];
 
