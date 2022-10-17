@@ -39,7 +39,7 @@ import { gmapApi } from "vue2-google-maps";
 import LoanableDetails from "@/components/Loanable/Details.vue";
 
 export default {
-  name: "CommunityMap",
+  name: "LoanableMap",
   components: {
     LoanableDetails,
   },
@@ -89,14 +89,14 @@ export default {
     },
     center: {
       get() {
-        if (this.$store.state["community.view"].center) {
-          return this.$store.state["community.view"].center;
+        if (this.$store.state["loanable.search"].center) {
+          return this.$store.state["loanable.search"].center;
         }
 
         return this.defaultCenter;
       },
       set(center) {
-        this.$store.commit("community.view/center", center);
+        this.$store.commit("loanable.search/center", center);
       },
     },
     communitiesWithArea() {

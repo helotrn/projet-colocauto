@@ -32,6 +32,278 @@ class LoanableTest extends TestCase
         "total",
     ];
 
+    public function testListLoanablesValidation()
+    {
+        // Avoid triggering emails
+        $this->withoutEvents();
+
+        $community = factory(Community::class)
+            ->states("withDefaultFreePricing")
+            ->create();
+
+        $this->user->communities()->sync([
+            $community->id => [
+                "approved_at" => Carbon::now(),
+            ],
+        ]);
+
+        $ownerUser = factory(User::class)->create();
+        $ownerUser->communities()->sync([
+            $community->id => [
+                "approved_at" => Carbon::now(),
+            ],
+        ]);
+
+        $owner = factory(Owner::class)->create([
+            "user_id" => $ownerUser->id,
+        ]);
+        factory(Car::class)->create([
+            "owner_id" => $owner->id,
+        ]);
+
+        // Complete valid request
+        $this->json("GET", "/api/v1/loanables/list")->assertStatus(200);
+        $this->json("GET", "/api/v1/loanables/list?types=car")->assertStatus(
+            200
+        );
+        $this->json(
+            "GET",
+            "/api/v1/loanables/list?types=car,bike,trailer"
+        )->assertStatus(200);
+        $this->json("GET", "/api/v1/loanables/list?types=couch")
+            ->assertStatus(422)
+            ->assertJson([
+                "errors" => [
+                    "types" => [
+                        "Les types demandés (couch) sont invalides. Options possibles: bike,car,trailer.",
+                    ],
+                ],
+            ]);
+    }
+
+    public function testListLoanables_doesntReturnUnaccessibleLoanables()
+    {
+        // Avoid triggering emails
+        $this->withoutEvents();
+
+        $community = factory(Community::class)->create();
+        $otherCommunity = factory(Community::class)->create();
+
+        $borrowerUser = factory(User::class)->create();
+        $borrowerUser->communities()->sync([
+            $community->id => [
+                "approved_at" => Carbon::now(),
+            ],
+        ]);
+
+        $ownerUser = factory(User::class)->create();
+        $ownerUser->communities()->sync([
+            $otherCommunity->id => [
+                "approved_at" => Carbon::now(),
+            ],
+        ]);
+
+        $owner = factory(Owner::class)->create([
+            "user_id" => $ownerUser->id,
+        ]);
+        factory(Car::class)->create([
+            "owner_id" => $owner->id,
+        ]);
+        factory(Bike::class)->create([
+            "owner_id" => $owner->id,
+        ]);
+        factory(Trailer::class)->create([
+            "owner_id" => $owner->id,
+        ]);
+
+        $this->actAs($borrowerUser);
+        $this->json("GET", "/api/v1/loanables/list?types=car,trailer,bike")
+            ->assertStatus(200)
+            ->assertExactJson([
+                "bikes" => [],
+                "cars" => [],
+                "trailers" => [],
+            ]);
+    }
+
+    public function testListLoanables_returnsDetailedCars()
+    {
+        // Avoid triggering emails
+        $this->withoutEvents();
+
+        $community = factory(Community::class)
+            ->states("withDefaultFreePricing")
+            ->create();
+
+        $this->user->communities()->sync([
+            $community->id => [
+                "approved_at" => Carbon::now(),
+            ],
+        ]);
+
+        $ownerUser = factory(User::class)->create();
+        $ownerUser->communities()->sync([
+            $community->id => [
+                "approved_at" => Carbon::now(),
+            ],
+        ]);
+
+        $owner = factory(Owner::class)->create([
+            "user_id" => $ownerUser->id,
+        ]);
+        factory(Car::class)->create([
+            "owner_id" => $owner->id,
+        ]);
+
+        $this->json("GET", "/api/v1/loanables/list?types=car")
+            ->assertStatus(200)
+            ->assertJsonStructure([
+                "cars" => [
+                    "*" => [
+                        "id",
+                        "type",
+                        "name",
+                        "position_google",
+                        "is_self_service",
+                        "comments",
+                        "owner" => [
+                            "user" => [
+                                "id",
+                                "name",
+                                "last_name",
+                                "full_name",
+                                "avatar",
+                            ],
+                        ],
+                        "image" => [],
+                        "brand",
+                        "engine",
+                        "transmission_mode",
+                        "year_of_circulation",
+                        "papers_location",
+                        "model",
+                    ],
+                ],
+            ])
+            ->assertJsonCount(1, "cars");
+    }
+
+    public function testListLoanables_returnsDetailedBikes()
+    {
+        // Avoid triggering emails
+        $this->withoutEvents();
+
+        $community = factory(Community::class)
+            ->states("withDefaultFreePricing")
+            ->create();
+
+        $this->user->communities()->sync([
+            $community->id => [
+                "approved_at" => Carbon::now(),
+            ],
+        ]);
+
+        $ownerUser = factory(User::class)->create();
+        $ownerUser->communities()->sync([
+            $community->id => [
+                "approved_at" => Carbon::now(),
+            ],
+        ]);
+
+        $owner = factory(Owner::class)->create([
+            "user_id" => $ownerUser->id,
+        ]);
+        factory(Bike::class)->create([
+            "owner_id" => $owner->id,
+        ]);
+
+        $this->json("GET", "/api/v1/loanables/list?types=bike")
+            ->assertStatus(200)
+            ->assertJsonStructure([
+                "bikes" => [
+                    "*" => [
+                        "id",
+                        "type",
+                        "name",
+                        "position_google",
+                        "is_self_service",
+                        "comments",
+                        "owner" => [
+                            "user" => [
+                                "id",
+                                "name",
+                                "last_name",
+                                "full_name",
+                                "avatar",
+                            ],
+                        ],
+                        "image" => [],
+                        "bike_type",
+                        "model",
+                        "size",
+                    ],
+                ],
+            ])
+            ->assertJsonCount(1, "bikes");
+    }
+
+    public function testListLoanables_returnsDetailedTrailers()
+    {
+        // Avoid triggering emails
+        $this->withoutEvents();
+
+        $community = factory(Community::class)
+            ->states("withDefaultFreePricing")
+            ->create();
+
+        $this->user->communities()->sync([
+            $community->id => [
+                "approved_at" => Carbon::now(),
+            ],
+        ]);
+
+        $ownerUser = factory(User::class)->create();
+        $ownerUser->communities()->sync([
+            $community->id => [
+                "approved_at" => Carbon::now(),
+            ],
+        ]);
+
+        $owner = factory(Owner::class)->create([
+            "user_id" => $ownerUser->id,
+        ]);
+        factory(Trailer::class)->create([
+            "owner_id" => $owner->id,
+        ]);
+
+        $this->json("GET", "/api/v1/loanables/list?types=trailer")
+            ->assertStatus(200)
+            ->assertJsonStructure([
+                "trailers" => [
+                    "*" => [
+                        "id",
+                        "type",
+                        "name",
+                        "position_google",
+                        "is_self_service",
+                        "comments",
+                        "owner" => [
+                            "user" => [
+                                "id",
+                                "name",
+                                "last_name",
+                                "full_name",
+                                "avatar",
+                            ],
+                        ],
+                        "image" => [],
+                        "maximum_charge",
+                    ],
+                ],
+            ])
+            ->assertJsonCount(1, "trailers");
+    }
+
     public function testSearchLoanablesValidation()
     {
         // Linking users and communities would trigger RegistrationApprovedEvent

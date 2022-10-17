@@ -182,6 +182,97 @@ class LoanableController extends RestController
         }
     }
 
+    public function list(Request $request)
+    {
+        $possibleTypes = ["bike", "car", "trailer"];
+        $validator = Validator::make($request->all(), [
+            "types" => [
+                "string",
+                function ($attribute, $value, $fail) use ($possibleTypes) {
+                    $typesToValidate = explode(",", $value);
+                    foreach ($typesToValidate as $type) {
+                        if (!in_array($type, $possibleTypes)) {
+                            $fail(
+                                trans("validation.custom.loanable_types", [
+                                    "givenValues" => $value,
+                                    "validValues" => implode(
+                                        ",",
+                                        $possibleTypes
+                                    ),
+                                ])
+                            );
+                        }
+                    }
+                },
+            ],
+        ]);
+
+        if ($validator->fails()) {
+            return $this->respondWithErrors($validator->errors());
+        }
+
+        // Default to all types
+        $types = $possibleTypes;
+        if ($request->has("types")) {
+            $types = explode(",", $request->query("types"));
+        }
+
+        $output = [];
+        $loanableFields = [
+            "id",
+            "type",
+            "name",
+            "position_google",
+            "is_self_service",
+            "comments",
+            "owner.user.id",
+            "owner.user.name",
+            "owner.user.last_name",
+            "owner.user.full_name",
+            "owner.user.avatar",
+            "image.*",
+        ];
+
+        // Possibly cache these per community per type.
+
+        if (in_array("car", $types)) {
+            $carFields = array_merge($loanableFields, [
+                "brand",
+                "engine",
+                "transmission_mode",
+                "year_of_circulation",
+                "papers_location",
+                "model",
+            ]);
+            $output["cars"] = $this->getCollectionFields(
+                Car::accessibleBy($request->user())->get(),
+                $carFields
+            );
+        }
+
+        if (in_array("bike", $types)) {
+            $bikeFields = array_merge($loanableFields, [
+                "bike_type",
+                "model",
+                "size",
+            ]);
+            $output["bikes"] = $this->getCollectionFields(
+                Bike::accessibleBy($request->user())->get(),
+                $bikeFields
+            );
+        }
+
+        if (in_array("trailer", $types)) {
+            $trailerFields = array_merge($loanableFields, ["maximum_charge"]);
+            $output["trailers"] = $this->getCollectionFields(
+                Trailer::accessibleBy($request->user())->get(),
+                $trailerFields
+            );
+        }
+
+        return response($output, 200);
+    }
+
     public function search(SearchRequest $request)
     {
         $departureAt = new \Carbon\Carbon($request->get("departure_at"));

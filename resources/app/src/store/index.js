@@ -26,7 +26,7 @@ import users from "./models/users";
 
 import AdminCommunity from "./pages/admin/community";
 import CommunityMap from "./pages/community/map";
-import CommunityView from "./pages/community/view";
+import LoanableSearch from "./pages/loanable/search";
 import Dashboard from "./pages/dashboard";
 import Login from "./pages/login";
 import Register from "./pages/register";
@@ -66,7 +66,7 @@ const modules = {
 
   // Page modules
   "community.map": CommunityMap,
-  "community.view": CommunityView,
+  "loanable.search": LoanableSearch,
   dashboard: Dashboard,
   login: Login,
   register: Register,
@@ -270,8 +270,8 @@ const vuexPersist = new VuexPersist({
     },
 
     // Page modules
-    "community.view": {
-      ...state["community.view"],
+    "loanable.search": {
+      ...state["loanable.search"],
       center: null,
     },
     login: {

@@ -1,7 +1,6 @@
 import Community from "@/views/Community.vue";
 import CommunityDashboard from "@/views/community/Dashboard.vue";
 import CommunityOverview from "@/views/community/Overview.vue";
-import CommunityView from "@/views/community/CommunityView.vue";
 
 export default [
   {
@@ -46,29 +45,6 @@ export default [
                   return user.communities[0].id;
                 },
               },
-            },
-          },
-        },
-      },
-      {
-        path: ":view",
-        name: "community-view",
-        component: CommunityView,
-        props: true,
-        meta: {
-          auth: true,
-          title: "titles.find_vehicle",
-          slug: "loanables",
-          data: {
-            loanables: {
-              retrieve: {
-                fields:
-                  "id,type,name,position_google,available,is_self_service,comments,owner.user.id,owner.user.name,owner.user.last_name,owner.user.full_name,owner.user.avatar,image.*",
-                per_page: 100,
-              },
-            },
-            loans: {
-              loadEmpty: {},
             },
           },
         },
