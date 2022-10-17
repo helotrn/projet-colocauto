@@ -2,8 +2,11 @@
 
 namespace App\Services;
 
+use App\Models\PaymentMethod;
 use App\Models\User;
-use Log;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\ValidationException;
+use Stripe\Exception\ApiErrorException;
 use Stripe\Exception\CardException;
 
 class StripeService
@@ -15,6 +18,20 @@ class StripeService
         $this->apiKey = $apiKey;
 
         \Stripe\Stripe::setApiKey($this->apiKey);
+    }
+
+    public function getSource(PaymentMethod $method)
+    {
+        $customer = $this->getUserCustomer($method->user);
+        try {
+            return \Stripe\Customer::retrieveSource(
+                $customer->id,
+                $method->external_id
+            );
+        } catch (ApiErrorException $e) {
+            Log::error($e);
+            return null;
+        }
     }
 
     public function getUserCustomer(User $user)
