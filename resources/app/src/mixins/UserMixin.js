@@ -77,7 +77,22 @@ export default {
   },
   methods: {
     isAdminOfCommunity(community) {
-      return !!this.user.communities.find((c) => c.id === community.id && c.role === "admin");
+      return (
+        this.isGlobalAdmin ||
+        (community &&
+          !!this.user.communities.find((c) => c.id === community.id && c.role === "admin"))
+      );
+    },
+    // has admin priveleges over other user.
+    isAdminOfUser(otherUser) {
+      return (
+        this.isGlobalAdmin || (otherUser && otherUser?.communities?.find(this.isAdminOfCommunity))
+      );
+    },
+    isAdminOfLoanable(loanable) {
+      return (
+        this.isAdminOfCommunity(loanable?.community) || this.isAdminOfUser(loanable?.owner.user)
+      );
     },
   },
 };

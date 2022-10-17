@@ -55,6 +55,9 @@
           <template v-slot:cell(actions)="row">
             <admin-list-actions :columns="['view']" :row="row" :slug="slug" />
           </template>
+          <template v-slot:cell(status)="row">
+            <loan-status :item="row.item"></loan-status>
+          </template>
         </b-table>
       </b-col>
     </b-row>
@@ -84,6 +87,7 @@
 
 <script>
 import AdminFilters from "@/components/Admin/Filters.vue";
+import LoanStatus from "@/components/Loan/Status.vue";
 import AdminListActions from "@/components/Admin/ListActions.vue";
 import AdminPagination from "@/components/Admin/Pagination.vue";
 
@@ -98,6 +102,7 @@ export default {
     AdminFilters,
     AdminListActions,
     AdminPagination,
+    LoanStatus,
   },
   data() {
     return {
@@ -107,6 +112,7 @@ export default {
         { key: "borrower.user.full_name", label: "Emprunteur", sortable: true },
         { key: "loanable.owner.user.full_name", label: "Propriétaire", sortable: true },
         { key: "community.name", label: "Communauté", sortable: true },
+        { key: "status", label: "Statut", sortable: false },
         { key: "actions", label: "Actions", tdClass: "table__cell__actions" },
       ],
     };

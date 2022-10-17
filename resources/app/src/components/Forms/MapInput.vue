@@ -41,6 +41,11 @@ export default {
       type: String,
       required: false,
     },
+    allowFullscreen: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
     disabled: {
       type: Boolean,
       required: false,
@@ -70,7 +75,7 @@ export default {
       },
       mapOptions: {
         streetViewControl: false,
-        fullscreenControl: false,
+        fullscreenControl: this.allowFullscreen,
         mapTypeControl: false,
         styles: [
           {

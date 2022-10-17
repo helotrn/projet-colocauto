@@ -30,6 +30,8 @@
                   </span>
                   <br />
                   <span class="loan-info-box__name__loanable">{{ loan.loanable.name }}</span>
+
+                  <loan-status :item="loan" class="mt-2"></loan-status>
                 </span>
               </b-col>
             </b-row>
@@ -92,18 +94,13 @@
             </div>
           </b-col>
         </b-row>
-        <b-row v-if="withSteps">
-          <b-col class="loan-info-box__steps">
-            <loan-menu :item="loan" :user="user" horizontal />
-          </b-col>
-        </b-row>
       </router-link>
     </b-card>
   </div>
 </template>
 
 <script>
-import LoanMenu from "@/components/Loan/Menu.vue";
+import LoanStatus from "@/components/Loan/Status.vue";
 import UserAvatar from "@/components/User/Avatar.vue";
 
 export default {
@@ -139,7 +136,7 @@ export default {
     loading: false,
   }),
   components: {
-    LoanMenu,
+    LoanStatus,
     UserAvatar,
   },
   computed: {

@@ -53,7 +53,7 @@
             <b-form
               :novalidate="true"
               class="form loan-actions-incident__form"
-              @submit.stop.prevent="passes(createAction)"
+              @submit.stop.prevent="passes(createIncident)"
               @reset.stop.prevent="$emit('reset')"
             >
               <forms-validated-input
@@ -199,10 +199,13 @@ export default {
     FormsValidatedInput,
     UserAvatar,
   },
-  mounted() {
-    if (this.item.loanable.type !== "car") {
-      this.action.incident_type = "general";
-    }
+  methods: {
+    createIncident() {
+      if (this.item.loanable.type !== "car") {
+        this.action.incident_type = "general";
+      }
+      this.createAction();
+    },
   },
   computed: {
     incidentTypes() {

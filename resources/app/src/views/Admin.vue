@@ -1,16 +1,27 @@
 <template>
-  <layout-page name="admin">
-    <b-row>
-      <b-col class="admin__sidebar">
-        <b-nav vertical>
-          <admin-sidebar :is-global-admin="isGlobalAdmin" />
-        </b-nav>
-      </b-col>
+  <layout-page name="admin" :fluid="isFluid">
+    <div class="position-relative">
+      <div class="toggles" :class="{ 'pl-3': showSidebar }">
+        <b-button variant="outline-primary" size="sm" :pressed.sync="isFluid"
+          ><b-icon-arrows-fullscreen v-if="!isFluid"></b-icon-arrows-fullscreen
+          ><b-icon-fullscreen-exit v-else></b-icon-fullscreen-exit></b-button
+        >&nbsp;
+        <b-button variant="outline-primary" size="sm" :pressed.sync="showSidebar"
+          ><b-icon-layout-sidebar
+        /></b-button>
+      </div>
+      <b-row>
+        <b-col class="admin__sidebar" v-if="showSidebar">
+          <b-nav vertical>
+            <admin-sidebar :is-global-admin="isGlobalAdmin" />
+          </b-nav>
+        </b-col>
 
-      <b-col class="admin__view">
-        <router-view />
-      </b-col>
-    </b-row>
+        <b-col class="admin__view">
+          <router-view />
+        </b-col>
+      </b-row>
+    </div>
   </layout-page>
 </template>
 
@@ -24,6 +35,10 @@ export default {
   name: "Admin",
   mixins: [Authenticated, UserMixin],
   components: { AdminSidebar },
+  data: () => ({
+    isFluid: false,
+    showSidebar: true,
+  }),
   mounted() {
     if (!this.isAdmin) {
       this.$router.replace("/app");
@@ -48,6 +63,10 @@ export default {
     margin-bottom: 10px;
     min-height: 19px;
     text-align: left;
+  }
+  .toggles {
+    position: absolute;
+    top: -2rem;
   }
 
   .page__content {

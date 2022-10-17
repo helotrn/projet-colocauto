@@ -84,68 +84,43 @@
             </b-row>
 
             <b-row>
-              <b-col lg="6">
-                <b-row>
-                  <b-col cols="6">
-                    <div class="form-group">
-                      <label>{{ $t("fields.duration_in_minutes") | capitalize }}</label>
-                      <div v-if="!invalidDuration">{{ item.duration_in_minutes }} minutes</div>
-                    </div>
-                  </b-col>
-
-                  <b-col cols="6" v-if="item.loanable.type === 'car'">
-                    <forms-validated-input
-                      name="estimated_distance"
-                      :label="$t('fields.estimated_distance') | capitalize"
-                      type="text"
-                      :min="10"
-                      :max="1000"
-                      :disabled="!!item.id"
-                      :placeholder="placeholderOrLabel('estimated_distance') | capitalize"
-                      v-model="formattedEstimatedDistance"
-                    />
-                  </b-col>
-                </b-row>
-              </b-col>
-
-              <b-col lg="6" v-if="item.estimated_price > 0 || item.estimated_insurance > 0">
-                <b-row>
-                  <b-col cols="6">
-                    <div class="form-group">
-                      <label>{{ $t("fields.estimated_price") | capitalize }}</label>
-                      <layout-loading
-                        v-if="priceUpdating"
-                        class="loan-form__estimations__loading"
-                      />
-                      <div v-else-if="!invalidDuration">
-                        {{ item.estimated_price | currency }}
-                      </div>
-                    </div>
-                  </b-col>
-
-                  <b-col cols="6">
-                    <div class="form-group">
-                      <label>{{ $t("fields.estimated_insurance") | capitalize }}</label>
-                      <layout-loading
-                        v-if="priceUpdating"
-                        class="loan-form__estimations__loading"
-                      />
-                      <div v-else-if="!invalidDuration">
-                        {{ item.estimated_insurance | currency }}
-                      </div>
-                    </div>
-                  </b-col>
-                </b-row>
+              <b-col>
+                <forms-validated-input
+                  name="reason"
+                  :disabled="!!item.id"
+                  :label="$t('fields.reason') | capitalize"
+                  :rules="form.reason.rules"
+                  type="text"
+                  :placeholder="placeholderOrLabel('reason') | capitalize"
+                  v-model="item.reason"
+                />
               </b-col>
             </b-row>
 
             <b-row>
-              <b-col cols="6">
+              <b-col md="6" v-if="item.loanable.type === 'car'">
+                <forms-validated-input
+                  name="estimated_distance"
+                  :label="$t('fields.estimated_distance') | capitalize"
+                  type="text"
+                  :min="10"
+                  :max="1000"
+                  :disabled="!!item.id"
+                  :placeholder="placeholderOrLabel('estimated_distance') | capitalize"
+                  v-model="formattedEstimatedDistance"
+                />
+              </b-col>
+            </b-row>
+
+            <b-row>
+              <b-col md="6">
                 <forms-validated-input
                   name="platform_tip"
                   :disabled="!!item.id"
                   :label="$t('fields.platform_tip') | capitalize"
                   :rules="{ required: true }"
+                  description="LocoMotion est un projet citoyen et collaboratif. Les contributions volontaires
+                  aident à financer son fonctionnement."
                   type="currency"
                   :min="0"
                   :step="0.01"
@@ -153,31 +128,11 @@
                   v-model="item.platform_tip"
                 />
               </b-col>
-
-              <b-col cols="6">
-                <p>
-                  LocoMotion est un projet citoyen et collaboratif. Les contributions volontaires
-                  financent son fonctionnement.
-                </p>
-              </b-col>
             </b-row>
 
             <b-row>
-              <b-col>
-                <forms-validated-input
-                  name="reason"
-                  :disabled="!!item.id"
-                  :label="$t('fields.reason') | capitalize"
-                  :rules="form.reason.rules"
-                  type="textarea"
-                  :rows="3"
-                  :placeholder="placeholderOrLabel('reason') | capitalize"
-                  v-model="item.reason"
-                />
-              </b-col>
-
               <!-- No message for owner if the loanable is self service. -->
-              <b-col xl="6" v-if="!loanableIsSelfService">
+              <b-col v-if="!loanableIsSelfService">
                 <forms-validated-input
                   name="message_for_owner"
                   :disabled="!!item.id"
@@ -303,6 +258,6 @@ export default {
   max-height: 30px;
 }
 .owner-comments-text {
-  white-space: pre;
+  white-space: pre-wrap;
 }
 </style>

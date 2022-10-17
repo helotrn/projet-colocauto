@@ -4,6 +4,7 @@ namespace Tests\Integration;
 
 use App\Models\Bike;
 use App\Models\Borrower;
+use App\Models\Community;
 use App\Models\Loan;
 use App\Models\Owner;
 use Carbon\CarbonImmutable;
@@ -21,6 +22,7 @@ class ExtensionTest extends TestCase
     {
         parent::setUp();
 
+        $this->user->communities()->save(factory(Community::class)->make());
         $owner = factory(Owner::class)->create(["user_id" => $this->user->id]);
         $borrower = factory(Borrower::class)->create([
             "user_id" => $this->user->id,

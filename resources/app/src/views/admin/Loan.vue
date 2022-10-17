@@ -1,11 +1,13 @@
 <template>
-  <b-container fluid v-if="item && (loadedFullLoanable || !item.id)">
+  <layout-loading v-if="!pageLoaded" />
+  <div class="admin-loan-page" v-else>
     <vue-headful :title="fullTitle" />
 
     <div v-if="item.id">
       <loan-header :user="user" :loan="item" />
 
       <loan-action-buttons
+        class="mb-3"
         :item="item"
         @extension="addExtension"
         @cancel="cancelLoan"
@@ -13,7 +15,31 @@
         @incident="addIncident('accident')"
       />
 
-      <loan-actions :item="item" @load="loadItem" :form="form" :user="user" @submit="submit" />
+      <b-row>
+        <b-col lg="8">
+          <div class="position-relative">
+            <loan-actions
+              :item="item"
+              @load="loadItem"
+              :form="form"
+              :user="user"
+              @submit="submit"
+              :class="{ loading }"
+            />
+            <layout-loading v-if="loading" class="actions-loading-spinner"></layout-loading>
+          </div>
+        </b-col>
+        <b-col lg="4" class="loan__sidebar" id="loan_details">
+          <loan-details-box
+            vertical
+            :loan="item"
+            :loanable="item.loanable"
+            showInstructions
+            :loan-loading="loading"
+            :loaded-full-loanable="loadedFullLoanable"
+          />
+        </b-col>
+      </b-row>
     </div>
     <div v-else-if="form">
       <b-row>
@@ -46,14 +72,14 @@
         </b-col>
       </b-row>
     </div>
-  </b-container>
-  <layout-loading v-else />
+  </div>
 </template>
 
 <script>
 import FormsBuilder from "@/components/Forms/Builder.vue";
 import LoanActions from "@/components/Loan/Actions.vue";
 import LoanActionButtons from "@/components/Loan/ActionButtons.vue";
+import LoanDetailsBox from "@/components/Loan/DetailsBox.vue";
 import LoanHeader from "@/components/Loan/LoanHeader.vue";
 
 import Authenticated from "@/mixins/Authenticated";
@@ -73,6 +99,7 @@ export default {
     LoanActions,
     LoanActionButtons,
     LoanHeader,
+    LoanDetailsBox,
   },
   data() {
     return {
@@ -95,6 +122,10 @@ export default {
     },
     pageTitle() {
       return this.item.name || capitalize(this.$i18n.tc("model_name", 1));
+    },
+    pageLoaded() {
+      // this.id is the route id
+      return this.item && this.item.id == this.id && this.form;
     },
   },
   methods: {
@@ -127,7 +158,7 @@ export default {
       this.$store.commit("loans/patchItem", {
         canceled_at: null,
       });
-      await this.$store.dispatch("loans/updateItem");
+      await this.$store.dispatch("loans/updateItem", this.$route.meta.params);
     },
     async submitAndReload() {
       await this.submit();
@@ -151,4 +182,16 @@ export default {
 };
 </script>
 
-<style lang="scss"></style>
+<style lang="scss">
+.admin-loan-page {
+  .actions-loading-spinner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  .loading {
+    opacity: 0.5;
+  }
+}
+</style>

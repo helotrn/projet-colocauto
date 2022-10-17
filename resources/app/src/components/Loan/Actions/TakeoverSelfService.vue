@@ -1,5 +1,8 @@
 <template>
-  <b-card no-body class="loan-form loan-actions loan-actions-takeover-self-service">
+  <b-card
+    no-body
+    class="loan-form loan-actions loan-actions-takeover loan-actions-takeover-self-service"
+  >
     <b-card-header
       header-tag="header"
       role="tab"
@@ -122,6 +125,6 @@ export default {
 
 <style lang="scss">
 .owner-instructions-text {
-  white-space: pre;
+  white-space: pre-wrap;
 }
 </style>

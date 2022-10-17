@@ -35,12 +35,21 @@ $factory->afterMaking(Loan::class, function ($loan) {
             ->states("withCommunity")
             ->create();
         $loan->loanable_id = $loanable->id;
-        $loan->community_id = $loanable->community_id;
     }
 
     if (!$loan->borrower_id) {
         $borrower = factory(Borrower::class)->create();
         $loan->borrower_id = $borrower->id;
+    }
+
+    if (!$loan->community_id) {
+        if ($loan->loanable->owner) {
+            $loan->community_id =
+                $loan->loanable->owner->user->main_community->id;
+        } else {
+            // TODO(#1084): remove no owner case.
+            $loan->community_id = $loan->loanable->community_id;
+        }
     }
 });
 

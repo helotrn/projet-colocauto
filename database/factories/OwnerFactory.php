@@ -14,7 +14,9 @@ $factory->define(Owner::class, function (Faker $faker) {
 
 $factory->afterMaking(Owner::class, function ($owner) {
     if (!$owner->user_id) {
-        $user = factory(User::class)->create();
+        $user = factory(User::class)
+            ->states("withCommunity")
+            ->create();
         $owner->user_id = $user->id;
     }
 });
