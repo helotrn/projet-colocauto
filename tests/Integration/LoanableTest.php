@@ -153,6 +153,7 @@ class LoanableTest extends TestCase
         ]);
         factory(Car::class)->create([
             "owner_id" => $owner->id,
+            "availability_mode" => "always",
         ]);
 
         $this->json("GET", "/api/v1/loanables/list?types=car")
@@ -215,6 +216,7 @@ class LoanableTest extends TestCase
         ]);
         factory(Bike::class)->create([
             "owner_id" => $owner->id,
+            "availability_mode" => "always",
         ]);
 
         $this->json("GET", "/api/v1/loanables/list?types=bike")
@@ -274,6 +276,7 @@ class LoanableTest extends TestCase
         ]);
         factory(Trailer::class)->create([
             "owner_id" => $owner->id,
+            "availability_mode" => "always",
         ]);
 
         $this->json("GET", "/api/v1/loanables/list?types=trailer")
@@ -302,6 +305,102 @@ class LoanableTest extends TestCase
                 ],
             ])
             ->assertJsonCount(1, "trailers");
+    }
+
+    public function testListLoanables_hidesUnavailableLoanables()
+    {
+        // Avoid triggering emails
+        $this->withoutEvents();
+
+        $community = factory(Community::class)
+            ->states("withDefaultFreePricing")
+            ->create();
+
+        $this->user->communities()->sync([
+            $community->id => [
+                "approved_at" => Carbon::now(),
+            ],
+        ]);
+
+        $ownerUser = factory(User::class)->create();
+        $ownerUser->communities()->sync([
+            $community->id => [
+                "approved_at" => Carbon::now(),
+            ],
+        ]);
+
+        $owner = factory(Owner::class)->create([
+            "user_id" => $ownerUser->id,
+        ]);
+        factory(Trailer::class)->create([
+            "owner_id" => $owner->id,
+            "availability_mode" => "never",
+        ]);
+        factory(Car::class)->create([
+            "owner_id" => $owner->id,
+            "availability_mode" => "never",
+        ]);
+        factory(Bike::class)->create([
+            "owner_id" => $owner->id,
+            "availability_mode" => "never",
+        ]);
+
+        $this->json("GET", "/api/v1/loanables/list")
+            ->assertStatus(200)
+            ->assertJsonCount(0, "trailers")
+            ->assertJsonCount(0, "cars")
+            ->assertJsonCount(0, "bikes");
+    }
+
+    public function testListLoanables_showsPartiallyAvailableLoanables()
+    {
+        // Avoid triggering emails
+        $this->withoutEvents();
+
+        $community = factory(Community::class)
+            ->states("withDefaultFreePricing")
+            ->create();
+
+        $this->user->communities()->sync([
+            $community->id => [
+                "approved_at" => Carbon::now(),
+            ],
+        ]);
+
+        $ownerUser = factory(User::class)->create();
+        $ownerUser->communities()->sync([
+            $community->id => [
+                "approved_at" => Carbon::now(),
+            ],
+        ]);
+
+        $owner = factory(Owner::class)->create([
+            "user_id" => $ownerUser->id,
+        ]);
+        factory(Trailer::class)->create([
+            "owner_id" => $owner->id,
+            "availability_mode" => "never",
+            "availability_json" =>
+                '[{"available":true,"type":"weekdays","scope":["SU"],"period":"00:00-24:00"}]',
+        ]);
+        factory(Car::class)->create([
+            "owner_id" => $owner->id,
+            "availability_mode" => "never",
+            "availability_json" =>
+                '[{"available":true,"type":"weekdays","scope":["SU"],"period":"00:00-24:00"}]',
+        ]);
+        factory(Bike::class)->create([
+            "owner_id" => $owner->id,
+            "availability_mode" => "never",
+            "availability_json" =>
+                '[{"available":true,"type":"weekdays","scope":["SU"],"period":"00:00-24:00"}]',
+        ]);
+
+        $this->json("GET", "/api/v1/loanables/list")
+            ->assertStatus(200)
+            ->assertJsonCount(1, "trailers")
+            ->assertJsonCount(1, "cars")
+            ->assertJsonCount(1, "bikes");
     }
 
     public function testSearchLoanablesValidation()
