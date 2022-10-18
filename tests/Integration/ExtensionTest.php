@@ -34,7 +34,7 @@ class ExtensionTest extends TestCase
         $this->loan = factory(Loan::class)->create([
             "loanable_id" => $this->loanable->id,
             "borrower_id" => $borrower->id,
-            "duration_in_minutes" => 20,
+            "duration_in_minutes" => 15,
             "departure_at" => $this->departure,
         ]);
     }
@@ -77,6 +77,25 @@ class ExtensionTest extends TestCase
                 "new_duration" => [],
             ],
         ]);
+
+        $data = [
+            "new_duration" => 25, // Only 10 minutes in the future
+            "comments_on_extension" => $this->faker->paragraph,
+            "type" => "extension",
+            "status" => "in_process",
+        ];
+
+        $response = $this->json(
+            "POST",
+            "/api/v1/loans/{$this->loan->id}/actions",
+            $data
+        );
+
+        $response->assertStatus(422)->assertJson([
+            "errors" => [
+                "new_duration" => [],
+            ],
+        ]);
     }
 
     public function testCreateSecondExtension_failsIfEarlier()
@@ -85,7 +104,7 @@ class ExtensionTest extends TestCase
             "new_duration" => 60,
             "comments_on_extension" => $this->faker->paragraph,
             "type" => "extension",
-            "status" => "in_process",
+            "status" => "completed",
         ];
 
         $this->json("POST", "/api/v1/loans/{$this->loan->id}/actions", $data);
