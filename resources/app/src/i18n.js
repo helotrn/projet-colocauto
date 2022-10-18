@@ -10,4 +10,24 @@ export default new VueI18n({
   fallbackLocale: "fr",
   formatFallbackMessages: true,
   messages,
+  numberFormats: {
+    fr: {
+      currency_cad: {
+        style: "currency",
+        currency: "CAD",
+        currencyDisplay: "narrowSymbol",
+      },
+      // Dollars only, no cents
+      dollars_cad: {
+        style: "currency",
+        currency: "CAD",
+        currencyDisplay: "narrowSymbol",
+        maximumFractionDigits: 0,
+      },
+      percent: {
+        style: "percent",
+        minimumFractionDigits: 2, // x.xx
+      },
+    },
+  },
 });

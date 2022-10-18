@@ -17,10 +17,12 @@
     <b-row>
       <b-col md="8" xl="6">
         <b-form-group label="Montant Personnalisé" v-if="selectedValue == 'other'">
-          <b-form-input
-            type="number"
-            :min="normalizedMinimumRequired"
-            :step="0.01"
+          <currency-input
+            locale="fr"
+            class="form-control"
+            :value-range="{ min: normalizedMinimumRequired }"
+            :currency="{ suffix: ' $' }"
+            :allow-negative="false"
             v-model="customAmount"
           />
         </b-form-group>
@@ -74,16 +76,20 @@
 </template>
 
 <script>
-import { currency } from "@/helpers/filters";
+import { CurrencyInput } from "vue-currency-input";
+import { currency, normalizeCurrency } from "@/helpers/filters";
 import { feeSpec, addFeeToAmount } from "@/helpers/transactionFees";
 
 export default {
   name: "UserAddCreditBox",
+  components: {
+    CurrencyInput,
+  },
   data() {
     return {
       customAmount:
         this.minimumRequired && this.minimumRequired > 0
-          ? this.normalizeCurrency(this.minimumRequired)
+          ? normalizeCurrency(this.minimumRequired)
           : 20,
       loading: false,
       paymentMethodId: this.paymentMethods
@@ -136,11 +142,10 @@ export default {
     },
     amount() {
       if (this.selectedValue === "other") {
-        const amount = parseFloat(this.customAmount);
-        return isNaN(amount) ? 0 : amount;
+        return normalizeCurrency(this.customAmount);
       }
 
-      return parseFloat(this.selectedValue);
+      return this.selectedValue;
     },
     amountWithFee() {
       return addFeeToAmount(this.amount, this.fee);
@@ -168,19 +173,19 @@ export default {
       if (this.addStandardOptions) {
         const standardOptions = [
           {
-            text: "10$",
+            text: this.$i18n.n(10, "dollars_cad"),
             value: 10,
           },
           {
-            text: "20$",
+            text: this.$i18n.n(20, "dollars_cad"),
             value: 20,
           },
           {
-            text: "50$",
+            text: this.$i18n.n(50, "dollars_cad"),
             value: 50,
           },
           {
-            text: "100$",
+            text: this.$i18n.n(100, "dollars_cad"),
             value: 100,
           },
         ];
@@ -188,7 +193,7 @@ export default {
         for (let i = 0, len = standardOptions.length; i < len; i += 1) {
           if (
             !this.normalizedMinimumRequired ||
-            standardOptions[i].value > parseFloat(this.normalizedMinimumRequired)
+            standardOptions[i].value > this.normalizedMinimumRequired
           ) {
             options.push(standardOptions[i]);
           }
@@ -202,10 +207,10 @@ export default {
       return options;
     },
     normalizedMinimumRequired() {
-      return this.normalizeCurrency(this.minimumRequired);
+      return normalizeCurrency(this.minimumRequired);
     },
     normalizedTripCost() {
-      return this.normalizeCurrency(this.tripCost);
+      return normalizeCurrency(this.tripCost);
     },
     paymentOptions() {
       if (!this.hasPaymentMethod) {
@@ -227,10 +232,10 @@ export default {
   methods: {
     initialSelectedValue() {
       if (this.tripCost) {
-        return this.normalizeCurrency(this.tripCost);
+        return normalizeCurrency(this.tripCost);
       }
       if (this.minimumRequired) {
-        return this.normalizeCurrency(this.minimumRequired);
+        return normalizeCurrency(this.minimumRequired);
       }
       if (this.addStandardOptions) {
         return 10;
@@ -240,11 +245,6 @@ export default {
     },
     emitCancel() {
       this.$emit("cancel");
-    },
-    normalizeCurrency(currency) {
-      // Rounding to get rid of floating point errors
-      const amount = Math.round(parseFloat(currency) * 100) / 100;
-      return !isNaN(amount) && amount > 0 ? amount : 0;
     },
     async buyCredit() {
       this.loading = true;
@@ -276,16 +276,16 @@ export default {
   },
   watch: {
     minimumRequired(newValue, oldValue) {
-      if (this.selectedValue === this.normalizeCurrency(oldValue)) {
-        this.selectedValue = this.normalizeCurrency(newValue);
+      if (this.selectedValue === normalizeCurrency(oldValue)) {
+        this.selectedValue = normalizeCurrency(newValue);
       }
-      if (this.customAmount <= this.normalizeCurrency(oldValue)) {
-        this.customAmount = this.normalizeCurrency(newValue);
+      if (this.customAmount <= normalizeCurrency(oldValue)) {
+        this.customAmount = normalizeCurrency(newValue);
       }
     },
     tripCost(newValue, oldValue) {
-      if (this.selectedValue === this.normalizeCurrency(oldValue)) {
-        this.selectedValue = this.normalizeCurrency(newValue);
+      if (this.selectedValue === normalizeCurrency(oldValue)) {
+        this.selectedValue = normalizeCurrency(newValue);
       }
     },
   },

@@ -156,7 +156,7 @@ import LoanActionsMixin from "@/mixins/LoanActionsMixin";
 
 import { filters } from "@/helpers";
 
-const { currency } = filters;
+const { currency, normalizeCurrency } = filters;
 
 export default {
   name: "LoanActionsHandoverSelfService",
@@ -169,7 +169,7 @@ export default {
   },
   computed: {
     loanTip() {
-      return parseFloat(this.item.final_platform_tip || this.item.platform_tip || 0);
+      return normalizeCurrency(this.item.final_platform_tip || this.item.platform_tip || 0);
     },
     finalPrice() {
       return this.item.actual_price + this.item.actual_insurance + this.loanTip;

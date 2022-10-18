@@ -20,7 +20,7 @@ export default {
     fees_notice: "Des frais de transaction sont applicables.",
     fee_types: {
       amex: "cartes American Express",
-      non_canadian: "autres cartes non-canadiennes",
+      non_canadian: "autres cartes non canadiennes",
       canadian: "autres cartes canadiennes",
     },
   },
