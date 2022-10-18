@@ -50,9 +50,9 @@ class ExtensionRequest extends BaseRequest
                 $loan->duration_in_minutes,
                 $loan
                     ->extensions()
-                    ->where("status", "!=", "in_process")
+                    ->where("status", "=", "completed")
                     ->max("new_duration")
-            ) + 10;
+            ) + 15;
 
         return [
             "new_duration" => ["min:$min", "numeric"],
