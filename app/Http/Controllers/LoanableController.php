@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\BaseRequest as Request;
 use App\Http\Requests\Loanable\DestroyRequest;
+use App\Http\Requests\Loanable\EventsRequest;
 use App\Http\Requests\Loanable\TestRequest;
 use App\Http\Requests\Loanable\RestoreRequest;
 use App\Http\Requests\Bike\CreateRequest as BikeCreateRequest;
@@ -81,6 +82,11 @@ class LoanableController extends RestController
             default:
                 throw new \Exception("invalid loanable type");
         }
+    }
+
+    public function events(EventsRequest $request)
+    {
+        return response("", 200);
     }
 
     public function index(Request $request)

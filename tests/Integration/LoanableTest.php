@@ -32,6 +32,57 @@ class LoanableTest extends TestCase
         "total",
     ];
 
+    public function testEvents()
+    {
+        // Linking users and communities would trigger RegistrationApprovedEvent
+        // which would then send email using an external service.
+        // withoutEvents() makes the test robust to a non-existent or
+        // incorrectly-configured email service.
+        $this->withoutEvents();
+        $community = factory(Community::class)
+            ->states("withDefaultFreePricing")
+            ->create();
+        $this->user->communities()->attach($community->id, [
+            "approved_at" => new \DateTime(),
+        ]);
+        $ownerUser = factory(User::class)->create();
+        $ownerUser->communities()->sync([
+            $community->id => [
+                "approved_at" => Carbon::now(),
+            ],
+        ]);
+
+        $owner = factory(Owner::class)->create([
+            "user_id" => $ownerUser->id,
+        ]);
+
+        $loanable = factory(Car::class)->create([
+            "owner_id" => $owner->id,
+        ]);
+
+        $borrowerUser = factory(User::class)->create();
+        factory(Borrower::class)->create([
+            "user_id" => $borrowerUser->id,
+            "approved_at" => new \DateTime(),
+        ]);
+
+        $this->actAs($borrowerUser);
+        $borrowerUser->communities()->attach($community->id, [
+            "approved_at" => Carbon::now(),
+        ]);
+
+        $response = $this->json(
+            "GET",
+            "/api/v1/loanables/{$loanable->id}/events",
+            [
+                "start" => "2022-10-09 00:00:00",
+                "end" => "2022-10-16 00:00:00",
+            ]
+        );
+
+        $response->assertStatus(200);
+    }
+
     public function testListLoanablesValidation()
     {
         // Avoid triggering emails
