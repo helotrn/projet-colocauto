@@ -1,4 +1,4 @@
-import { prefixFields } from "@/helpers";
+import prefixFields from "@/locales/prefixFields";
 
 import tags from "./tags";
 

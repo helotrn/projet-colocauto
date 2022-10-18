@@ -1,5 +1,5 @@
 import dayjs from "./dayjs";
-import { app } from "@/main.js";
+import i18n from "@/i18n.js";
 
 const capitalize = (value) => {
   if (!value) {
@@ -23,7 +23,7 @@ const currency = (value) => {
   if (Number.isNaN(floatVal)) {
     return "";
   }
-  return app.$i18n.n(floatVal, "currency_cad");
+  return i18n.n(floatVal, "currency_cad");
 };
 
 const percent = (value) => {
@@ -33,7 +33,7 @@ const percent = (value) => {
     return "";
   }
 
-  return app.$i18n.n(floatVal, "percent");
+  return i18n.n(floatVal, "percent");
 };
 
 const datetime = (value) => {
