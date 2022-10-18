@@ -110,7 +110,7 @@
 
         <b-row>
           <b-col>
-            <p>Sauf:</p>
+            <p>Sauf&nbsp;:</p>
             <loanable-exceptions
               :mode="loanable.availability_mode"
               :exceptions="exceptions"
