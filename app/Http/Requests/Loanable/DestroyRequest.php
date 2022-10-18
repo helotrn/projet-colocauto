@@ -4,7 +4,7 @@ namespace App\Http\Requests\Loanable;
 
 use App\Http\Requests\BaseRequest;
 use App\Models\Loan;
-use App\Models\PrePayment;
+use App\Models\Loanable;
 
 class DestroyRequest extends BaseRequest
 {
