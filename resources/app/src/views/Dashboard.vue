@@ -227,7 +227,7 @@
                       v-for="loanable in loanables"
                       :key="loanable.id"
                       v-bind="loanable"
-                      @disabled="deleteLoanable"
+                      @disabled="hideLoanable"
                     />
                   </transition-group>
                   <div class="text-right" v-if="hasMoreLoanables">
@@ -396,7 +396,7 @@ export default {
     isBorrower(loan) {
       return this.user.id === loan.borrower.user.id;
     },
-    async deleteLoanable(id) {
+    async hideLoanable(id) {
       this.$store.commit(
         "dashboard/setLoanables",
         this.loanables.filter((l) => l.id !== id)
