@@ -227,7 +227,7 @@
                       v-for="loanable in loanables"
                       :key="loanable.id"
                       v-bind="loanable"
-                      @disabled="loadLoanables"
+                      @disabled="deleteLoanable"
                     />
                   </transition-group>
                   <div class="text-right" v-if="hasMoreLoanables">
@@ -334,10 +334,7 @@ export default {
     }
   },
   mounted() {
-    this.$store.dispatch("dashboard/loadLoans");
-    if (this.user.owner) {
-      this.$store.dispatch("dashboard/loadLoanables", this.user.owner.id);
-    }
+    this.$store.dispatch("dashboard/reload", this.user.owner);
   },
   computed: {
     totalApprovedUsers() {
@@ -399,8 +396,11 @@ export default {
     isBorrower(loan) {
       return this.user.id === loan.borrower.user.id;
     },
-    async loadLoanables() {
-      await this.$store.dispatch("dashboard/loadLoanables", this.user.owner.id);
+    async deleteLoanable(id) {
+      this.$store.commit(
+        "dashboard/setLoanables",
+        this.loanables.filter((l) => l.id !== id)
+      );
     },
   },
   i18n: {

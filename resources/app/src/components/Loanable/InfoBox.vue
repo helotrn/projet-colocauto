@@ -122,7 +122,7 @@ export default {
       this.loading = true;
       try {
         await this.$store.dispatch("loanables/disable", this.id);
-        this.$emit("disabled");
+        this.$emit("disabled", this.id);
       } catch (e) {
         if (e.request?.status === 422) {
           this.$store.commit("addNotification", {

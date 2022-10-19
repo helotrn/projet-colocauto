@@ -20,6 +20,13 @@ const initialState = {
 const maxLoanableCount = 5;
 
 const actions = {
+  async reload({ commit, dispatch }, owner) {
+    commit("reloading");
+    dispatch("loadLoans");
+    if (owner) {
+      dispatch("loadLoanables", owner.id);
+    }
+  },
   async loadLoans({ commit }) {
     commit("loadLoans");
 
@@ -62,12 +69,14 @@ const actions = {
 };
 
 const mutations = {
-  loadLoans(state) {
+  reloading(state) {
     state.loansLoaded = false;
+    state.loanablesLoaded = false;
+  },
+  loadLoans(state) {
     state.loadRequests++;
   },
   loadLoanables(state) {
-    state.loanablesLoaded = false;
     state.loadRequests++;
   },
   loansLoaded(state, loans) {
@@ -83,6 +92,9 @@ const mutations = {
   },
   errorLoading(state) {
     state.loadRequests--;
+  },
+  setLoanables(state, loanables) {
+    state.loanables = loanables;
   },
 };
 
