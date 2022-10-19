@@ -50,7 +50,7 @@ export default new RestModule(
 
         commit("cancelToken", null);
 
-        await dispatch("loadLoanables", null, { root: true });
+        await dispatch("dashboard/loadLoanables", null, { root: true });
       } catch (e) {
         commit("cancelToken", null);
 
