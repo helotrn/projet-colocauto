@@ -90,84 +90,123 @@
             </div>
           </section>
           <!---->
-          <div class="position-relative">
+          <div class="page__section position-relative">
             <div class="loans-container" :class="{ loading: loading && !loansLoaded }">
               <!-- contested loans container -->
-              <section class="page__section" v-if="loans.contested && loans.contested.length > 0">
-                <h2>Emprunts avec contestation</h2>
-                <p class="dashboard__instructions">
-                  Un membre de l'équipe LocoMotion contactera les participant-e-s et ajustera les
-                  données.
-                </p>
-                <div
-                  class="dashboard__ongoing-loans"
-                  v-for="loan in loans.contested"
-                  :key="loan.id"
-                >
-                  <loan-info-box :loan="loan" :user="user" :buttons="['view']" variant="warning" />
-                </div>
-              </section>
+
+              <transition name="fade">
+                <section class="page__section" v-if="loans.contested && loans.contested.length > 0">
+                  <h2>Emprunts avec contestation</h2>
+                  <p class="dashboard__instructions">
+                    Un membre de l'équipe LocoMotion contactera les participant-e-s et ajustera les
+                    données.
+                  </p>
+                  <transition-group name="dashboard-list">
+                    <div
+                      class="dashboard-list-item dashboard__ongoing-loans"
+                      v-for="loan in loans.contested"
+                      :key="loan.id"
+                    >
+                      <loan-info-box
+                        :loan="loan"
+                        :user="user"
+                        :buttons="['view']"
+                        variant="warning"
+                      />
+                    </div>
+                  </transition-group>
+                </section>
+              </transition>
               <!---->
               <!-- need approval loans container (user is owner)-->
-              <section
-                class="page__section"
-                v-if="loans.need_approval && loans.need_approval.length > 0"
-              >
-                <h2>Nouvelles demandes d'emprunt</h2>
-                <p class="dashboard__instructions">
-                  Ces personnes devraient entrer en contact avec vous sous peu.
-                </p>
-                <div
-                  class="dashboard__waiting-loans"
-                  v-for="loan in loans.need_approval"
-                  :key="loan.id"
+              <transition name="fade">
+                <section
+                  class="page__section"
+                  v-if="loans.need_approval && loans.need_approval.length > 0"
                 >
-                  <loan-info-box :loan="loan" :user="user" />
-                </div>
-              </section>
+                  <h2>Nouvelles demandes d'emprunt</h2>
+                  <p class="dashboard__instructions">
+                    Ces personnes devraient entrer en contact avec vous sous peu.
+                  </p>
+                  <transition-group name="dashboard-list">
+                    <div
+                      class="dashboard-list-item dashboard__waiting-loans"
+                      v-for="loan in loans.need_approval"
+                      :key="loan.id"
+                    >
+                      <loan-info-box :loan="loan" :user="user" />
+                    </div>
+                  </transition-group>
+                </section>
+              </transition>
               <!---->
               <!-- ongoing loans container -->
-              <section class="page__section" v-if="loans.started && loans.started.length > 0">
-                <h2 class="dashboard--margin-bottom">Emprunts en cours</h2>
-                <div class="dashboard__ongoing-loans" v-for="loan in loans.started" :key="loan.id">
-                  <loan-info-box :loan="loan" :user="user" :buttons="['view']" />
-                </div>
-              </section>
+              <transition name="fade">
+                <section class="page__section" v-if="loans.started && loans.started.length > 0">
+                  <h2 class="dashboard--margin-bottom">Emprunts en cours</h2>
+                  <transition-group name="dashboard-list">
+                    <div
+                      class="dashboard-list-item dashboard__ongoing-loans"
+                      v-for="loan in loans.started"
+                      :key="loan.id"
+                    >
+                      <loan-info-box :loan="loan" :user="user" :buttons="['view']" />
+                    </div>
+                  </transition-group>
+                </section>
+              </transition>
               <!---->
               <!-- awaiting loans container (user is borrower)-->
-              <section class="page__section" v-if="loans.waiting && loans.waiting.length > 0">
-                <h2>Demandes en attente d'approbation</h2>
-                <p class="dashboard__instructions">
-                  La demande est envoyée! Maintenant contactez la personne propriétaire pour valider
-                  votre demande.
-                </p>
-                <div class="dashboard__waiting-loans" v-for="loan in loans.waiting" :key="loan.id">
-                  <loan-info-box :loan="loan" :user="user" :buttons="['view', 'cancel']" />
-                </div>
-              </section>
+              <transition name="fade">
+                <section class="page__section" v-if="loans.waiting && loans.waiting.length > 0">
+                  <h2>Demandes en attente d'approbation</h2>
+                  <p class="dashboard__instructions">
+                    La demande est envoyée! Maintenant contactez la personne propriétaire pour
+                    valider votre demande.
+                  </p>
+                  <transition-group name="dashboard-list">
+                    <div
+                      class="dashboard-list-item dashboard__waiting-loans"
+                      v-for="loan in loans.waiting"
+                      :key="loan.id"
+                    >
+                      <loan-info-box :loan="loan" :user="user" :buttons="['view', 'cancel']" />
+                    </div>
+                  </transition-group>
+                </section>
+              </transition>
               <!---->
               <!-- upcoming loans container -->
-              <section class="page__section" v-if="loans.future && loans.future.length > 0">
-                <h2>Emprunts à venir approuvés</h2>
-                <p class="dashboard__instructions">
-                  Assurez-vous de démarrer l'emprunt en ligne au moment de prendre possession du
-                  véhicule!
-                </p>
-                <div class="dashboard__upcoming-loans" v-for="loan in loans.future" :key="loan.id">
-                  <loan-info-box
-                    mode="upcoming"
-                    :loan="loan"
-                    :user="user"
-                    :buttons="['view', 'cancel']"
-                  />
-                </div>
-              </section>
+              <transition name="fade">
+                <section class="page__section" v-if="loans.future && loans.future.length > 0">
+                  <h2>Emprunts à venir approuvés</h2>
+                  <p class="dashboard__instructions">
+                    Assurez-vous de démarrer l'emprunt en ligne au moment de prendre possession du
+                    véhicule!
+                  </p>
+                  <transition-group name="dashboard-list">
+                    <div
+                      class="dashboard-list-item dashboard__upcoming-loans"
+                      v-for="loan in loans.future"
+                      :key="loan.id"
+                    >
+                      <loan-info-box
+                        mode="upcoming"
+                        :loan="loan"
+                        :user="user"
+                        :buttons="['view', 'cancel']"
+                      />
+                    </div>
+                  </transition-group>
+                </section>
+              </transition>
             </div>
-            <layout-loading class="loans-loading-indicator" v-if="loading && !loansLoaded" />
+            <layout-loading class="section-loading-indicator" v-if="loading && !loansLoaded" />
           </div>
           <!---->
           <!-- loanables container -->
-          <section class="page__section" v-if="user.owner">
+
+          <section class="page__section position-relative" v-if="user.owner">
             <b-row>
               <b-col>
                 <h2 class="dashboard--margin-bottom">Mes véhicules</h2>
@@ -179,26 +218,32 @@
               </b-col>
             </b-row>
 
-            <layout-loading v-if="loading && !loanablesLoaded" />
-            <div class="dashboard__vehicles">
-              <div v-if="loanables && loanables.length > 0">
-                <loanable-info-box
-                  v-for="loanable in loanables"
-                  :key="loanable.id"
-                  v-bind="loanable"
-                />
-                <div class="text-right" v-if="hasMoreLoanables">
-                  <b-button variant="outline-primary" to="/profile/loanables">
-                    Tous mes véhicules
-                  </b-button>
+            <div class="dashboard__vehicles" :class="{ loading: loading && !loanablesLoaded }">
+              <transition name="fade">
+                <div v-if="loanables && loanables.length > 0">
+                  <transition-group name="dashboard-list">
+                    <loanable-info-box
+                      class="dashboard-list-item"
+                      v-for="loanable in loanables"
+                      :key="loanable.id"
+                      v-bind="loanable"
+                      @disabled="hideLoanable"
+                    />
+                  </transition-group>
+                  <div class="text-right" v-if="hasMoreLoanables">
+                    <b-button variant="outline-primary" to="/profile/loanables">
+                      Tous mes véhicules
+                    </b-button>
+                  </div>
                 </div>
-              </div>
-              <div v-else>
+              </transition>
+              <div v-if="!loanables || loanables.length == 0">
                 Aucun véhicule.<br />
                 Ajoutez-en un
                 <router-link to="/profile/loanables/new">ici</router-link>.
               </div>
             </div>
+            <layout-loading class="section-loading-indicator" v-if="loading && !loanablesLoaded" />
           </section>
           <!---->
         </b-col>
@@ -257,6 +302,8 @@ import PartnersSection from "@/components/Misc/PartnersSection.vue";
 
 import MagnifyingGlass from "@/assets/svg/magnifying-glass.svg";
 
+const sendRectMap = new Map();
+
 export default {
   name: "Dashboard",
   mixins: [Authenticated, UserMixin],
@@ -287,10 +334,7 @@ export default {
     }
   },
   mounted() {
-    this.$store.dispatch("dashboard/loadLoans");
-    if (this.user.owner) {
-      this.$store.dispatch("dashboard/loadLoanables", this.user.owner.id);
-    }
+    this.$store.dispatch("dashboard/reload", this.user.owner);
   },
   computed: {
     totalApprovedUsers() {
@@ -352,6 +396,12 @@ export default {
     isBorrower(loan) {
       return this.user.id === loan.borrower.user.id;
     },
+    async hideLoanable(id) {
+      this.$store.commit(
+        "dashboard/setLoanables",
+        this.loanables.filter((l) => l.id !== id)
+      );
+    },
   },
   i18n: {
     messages: {
@@ -383,13 +433,37 @@ export default {
     }
   }
 
-  .loans-loading-indicator {
+  .fade-enter-active,
+  .fade-leave-active {
+    transition: opacity 0.8s;
+  }
+
+  .fade-enter,
+  .fade-leave-to {
+    opacity: 0;
+  }
+
+  .dashboard-list-item {
+    transition: all 0.8s;
+  }
+
+  .dashboard-list-leave-to,
+  .dashboard-list-enter {
+    opacity: 0;
+  }
+  .dashboard-list-leave-active {
+    position: absolute;
+    width: 100%;
+  }
+
+  .section-loading-indicator {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
   }
-  .loans-container.loading {
+  .loans-container.loading,
+  .dashboard__vehicles.loading {
     opacity: 0.5;
     pointer-events: none;
     min-height: 10rem;

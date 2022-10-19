@@ -1,5 +1,5 @@
 <template>
-  <div class="profile-loanables" v-if="routeDataLoaded">
+  <div class="profile-loanables" v-if="routeDataLoaded && !loading && loaded">
     <div v-if="user.owner">
       <b-row>
         <b-col class="admin__buttons">
