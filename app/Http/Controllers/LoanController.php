@@ -370,6 +370,12 @@ class LoanController extends RestController
             $loan->takeover()->save($takeover);
         }
 
+        // Auto-complete takeover for self-service.
+        // TODO: remove takeover for self-service altogether
+        if ($loan->loanable->is_self_service) {
+            $takeover->complete()->save();
+        }
+
         $loan->load("takeover");
         if (!$takeover->isCompleted()) {
             return $loan;

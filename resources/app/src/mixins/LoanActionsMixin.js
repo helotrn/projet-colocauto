@@ -123,6 +123,10 @@ export default {
     loanIsCanceled() {
       return !!this.item.canceled_at;
     },
+    loanIsFree() {
+      // TODO(#1101) Use a better attribute for this.
+      return this.item.estimated_price == 0 && this.item.estimated_insurance == 0;
+    },
   },
   methods: {
     abortAction() {
