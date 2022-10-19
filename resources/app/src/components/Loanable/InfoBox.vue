@@ -1,5 +1,5 @@
 <template>
-  <b-card class="loanable-info-box shadow" bg="white" no-body>
+  <b-card class="loanable-info-box shadow" bg="white" no-body :class="{ disabled: loading }">
     <router-link class="card-body" :to="`/profile/loanables/${id}`">
       <b-row>
         <b-col class="loanable-info-box__image">
@@ -15,6 +15,7 @@
             <b-button
               class="ml-3 mb-3"
               size="sm"
+              :disabled="loading"
               variant="outline-primary"
               v-if="hasButton('availability')"
               :to="`/profile/loanables/${id}#availability`"
@@ -25,6 +26,7 @@
             <b-button
               class="ml-3 mb-3"
               size="sm"
+              :disabled="loading"
               variant="outline-dark"
               v-if="false && hasButton('unavailable24h')"
               @click.prevent="makeLoanableUnavailableFor24h"
@@ -35,6 +37,7 @@
             <b-button
               class="ml-3 mb-3"
               size="sm"
+              :disabled="loading"
               variant="outline-danger"
               v-if="hasButton('remove')"
               @click.prevent="disableLoanableModal"
@@ -49,6 +52,8 @@
 </template>
 
 <script>
+import { extractErrors } from "@/helpers";
+
 export default {
   name: "LoanableInfoBox",
   props: {
@@ -72,6 +77,11 @@ export default {
       type: String,
       required: true,
     },
+  },
+  data() {
+    return {
+      loading: false,
+    };
   },
   computed: {
     loanableImage() {
@@ -109,8 +119,23 @@ export default {
         });
     },
     async disableLoanable() {
-      this.$store.dispatch("loanables/disable", this.id);
-      this.$emit("disabled");
+      this.loading = true;
+      try {
+        await this.$store.dispatch("loanables/disable", this.id);
+        this.$emit("disabled");
+      } catch (e) {
+        if (e.request?.status === 422) {
+          this.$store.commit("addNotification", {
+            content: extractErrors(e.response.data).join(", "),
+            title: "Impossible de retirer le véhicule",
+            variant: "danger",
+          });
+        } else {
+          throw e;
+        }
+      } finally {
+        this.loading = false;
+      }
     },
     hasButton(name) {
       return this.buttons.indexOf(name) > -1;
@@ -125,6 +150,11 @@ export default {
   a:active,
   a:focus {
     text-decoration: none;
+  }
+
+  &.disabled {
+    opacity: 0.5;
+    pointer-events: none;
   }
 
   &__image.col {
