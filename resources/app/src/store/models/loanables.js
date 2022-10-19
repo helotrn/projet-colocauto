@@ -49,8 +49,6 @@ export default new RestModule(
         commit("deleted", deleted);
 
         commit("cancelToken", null);
-
-        await dispatch("dashboard/loadLoanables", null, { root: true });
       } catch (e) {
         commit("cancelToken", null);
 
