@@ -1115,4 +1115,111 @@ class AvailabilityHelperTest extends TestCase
             )
         );
     }
+
+    public function testIsScheduleAvailable_overMultipleRules()
+    {
+        $available = false;
+        $rules = [
+            [
+                "available" => true,
+                "type" => "dates",
+                "scope" => ["2021-12-07"],
+                "period" => "11:00-24:00",
+            ],
+            [
+                "available" => true,
+                "type" => "dates",
+                "scope" => ["2021-12-08"],
+                "period" => "00:00-13:00",
+            ],
+        ];
+
+        $this->assertTrue(
+            AvailabilityHelper::isScheduleAvailable(
+                ["available" => $available, "rules" => $rules],
+                [
+                    new Carbon("2021-12-07 11:00:00"),
+                    new Carbon("2021-12-08 12:00:00"),
+                ]
+            )
+        );
+
+        $available = false;
+        $rules = [
+            [
+                "available" => true,
+                "type" => "dates",
+                "scope" => ["2021-12-07"], // Tuesday
+                "period" => "11:00-24:00",
+            ],
+            [
+                "available" => true,
+                "type" => "weekdays",
+                "scope" => ["WE"],
+                "period" => "00:00-13:00",
+            ],
+        ];
+
+        $this->assertTrue(
+            AvailabilityHelper::isScheduleAvailable(
+                ["available" => $available, "rules" => $rules],
+                [
+                    new Carbon("2021-12-07 11:00:00"),
+                    new Carbon("2021-12-08 12:00:00"),
+                ]
+            )
+        );
+
+        $available = false;
+        $rules = [
+            [
+                "available" => true,
+                "type" => "dates",
+                "scope" => ["2021-12-07"],
+                "period" => "11:00-24:00",
+            ],
+            [
+                "available" => true,
+                "type" => "dateRange",
+                "scope" => ["2021-12-08", "2021-12-09"],
+                "period" => "00:00-24:00",
+            ],
+        ];
+
+        $this->assertTrue(
+            AvailabilityHelper::isScheduleAvailable(
+                ["available" => $available, "rules" => $rules],
+                [
+                    new Carbon("2021-12-07 11:00:00"),
+                    new Carbon("2021-12-09 12:00:00"),
+                ]
+            )
+        );
+
+        $available = false;
+        $rules = [
+            [
+                "available" => true,
+                "type" => "weekdays",
+                "scope" => ["TU"],
+                "period" => "11:00-24:00",
+            ],
+            [
+                "available" => true,
+                "type" => "dateRange",
+                "scope" => ["2021-12-08", "2021-12-09"],
+                "period" => "00:00-24:00",
+            ],
+        ];
+
+        $this->assertTrue(
+            AvailabilityHelper::isScheduleAvailable(
+                ["available" => $available, "rules" => $rules],
+                [
+                    new Carbon("2021-12-07 11:00:00"),
+                    new Carbon("2021-12-09 12:00:00"),
+                ]
+            )
+        );
+    }
 }

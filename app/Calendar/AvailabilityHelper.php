@@ -370,48 +370,56 @@ class AvailabilityHelper
             $loanDateRange[1] = $loanInterval[1]->copy()->setTime(24, 0, 0);
         }
 
+        $ruleIntervals = [];
         // Get availability or unavailability intervals.
         foreach ($availabilityParams["rules"] as $rule) {
-            $ruleIntervals = [];
-
             switch ($rule["type"]) {
                 case "dates":
-                    $ruleIntervals = AvailabilityHelper::ruleGetDatesIntervals(
-                        $rule,
-                        $loanDateRange
+                    array_push(
+                        $ruleIntervals,
+                        ...AvailabilityHelper::ruleGetDatesIntervals(
+                            $rule,
+                            $loanDateRange
+                        )
                     );
                     break;
 
                 case "dateRange":
-                    $ruleIntervals = AvailabilityHelper::ruleGetDateRangeIntervals(
-                        $rule,
-                        $loanDateRange
+                    array_push(
+                        $ruleIntervals,
+                        ...AvailabilityHelper::ruleGetDateRangeIntervals(
+                            $rule,
+                            $loanDateRange
+                        )
                     );
                     break;
 
                 case "weekdays":
-                    $ruleIntervals = AvailabilityHelper::ruleGetWeekdaysIntervals(
-                        $rule,
-                        $loanDateRange
+                    array_push(
+                        $ruleIntervals,
+                        ...AvailabilityHelper::ruleGetWeekdaysIntervals(
+                            $rule,
+                            $loanDateRange
+                        )
                     );
                     break;
             }
+        }
 
-            if ($availabilityParams["available"] == true) {
-                // If intervals intersect with loanInterval, then loanable is unavailable
-                if (
-                    DateIntervalHelper::hasIntersection(
-                        $ruleIntervals,
-                        $loanInterval
-                    )
-                ) {
-                    return false;
-                }
-            } else {
-                // If intervals cover loanInterval, then loanable is available
-                if (DateIntervalHelper::cover($ruleIntervals, $loanInterval)) {
-                    return true;
-                }
+        if ($availabilityParams["available"] == true) {
+            // If intervals intersect with loanInterval, then loanable is unavailable
+            if (
+                DateIntervalHelper::hasIntersection(
+                    $ruleIntervals,
+                    $loanInterval
+                )
+            ) {
+                return false;
+            }
+        } else {
+            // If intervals cover loanInterval, then loanable is available
+            if (DateIntervalHelper::cover($ruleIntervals, $loanInterval)) {
+                return true;
             }
         }
 

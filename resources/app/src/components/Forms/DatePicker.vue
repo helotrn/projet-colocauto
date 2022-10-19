@@ -17,6 +17,7 @@
     :disabled="disabled"
     :value="dateValue"
     @selected="emitInput($event)"
+    ref="datePicker"
   />
 </template>
 
@@ -68,11 +69,18 @@ export default {
       required: false,
       default: "day",
     },
+    // Initial date to show on the calendar.
+    initialDate: {
+      type: Date,
+      required: false,
+      default: null,
+    },
     inline: {
       type: Boolean,
       required: false,
       default: false,
     },
+    // Force this date to be shown.
     openDate: {
       type: Date,
       required: false,
@@ -96,6 +104,11 @@ export default {
       type: String,
       required: false,
     },
+  },
+  mounted() {
+    if (this.initialDate) {
+      this.$refs.datePicker.setPageDate(this.initialDate);
+    }
   },
   computed: {
     // Combine disabledDates and disabledDatesFct into the proper format for
