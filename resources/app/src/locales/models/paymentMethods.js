@@ -15,7 +15,7 @@ export default {
       bank_account: "compte de banque",
     },
     model_name: "mode de paiement | modes de paiement",
-    saved_payment_methods: "Modes de paiements enregistrés",
+    saved_payment_methods: "Modes de paiement enregistrés",
     add_new: "Ajoutez un nouveau mode de paiement",
     fees_notice: "Des frais de transaction sont applicables.",
     fee_types: {
