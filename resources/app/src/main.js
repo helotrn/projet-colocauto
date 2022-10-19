@@ -151,9 +151,11 @@ Object.defineProperties(Vue.prototype, {
 });
 Vue.dayjs = dayjs;
 
-new Vue({
+export const app = new Vue({
   i18n,
   render: (h) => h(App),
   router,
   store,
-}).$mount("#app");
+});
+
+app.$mount("#app");

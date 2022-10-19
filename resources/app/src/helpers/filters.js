@@ -1,4 +1,5 @@
 import dayjs from "./dayjs";
+import i18n from "@/i18n.js";
 
 const capitalize = (value) => {
   if (!value) {
@@ -8,14 +9,21 @@ const capitalize = (value) => {
   return string.charAt(0).toUpperCase() + string.slice(1);
 };
 
+// For calculations
+const normalizeCurrency = (value) => {
+  // Rounding to get rid of floating point errors
+  const amount = Math.round(parseFloat(value) * 100) / 100;
+  return !isNaN(amount) && amount > 0 ? amount : 0;
+};
+
+// Filters
 const currency = (value) => {
   const floatVal = parseFloat(value);
 
   if (Number.isNaN(floatVal)) {
     return "";
   }
-
-  return `${floatVal.toFixed(2).replace(".", ",")}$`;
+  return i18n.n(floatVal, "currency_cad");
 };
 
 const percent = (value) => {
@@ -25,7 +33,7 @@ const percent = (value) => {
     return "";
   }
 
-  return `${(floatVal * 100).toFixed(2)}%`;
+  return i18n.n(floatVal, "percent");
 };
 
 const datetime = (value) => {
@@ -111,6 +119,7 @@ export {
   datetime,
   day,
   durationInHours,
+  normalizeCurrency,
   percent,
   phone,
   time,

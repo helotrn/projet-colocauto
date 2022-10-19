@@ -169,11 +169,10 @@
                         <forms-validated-input
                           id="platform_tip"
                           name="platform_tip"
-                          type="number"
+                          type="currency"
                           :label="$t('fields.platform_tip') | capitalize"
                           :description="$t('descriptions.platform_tip')"
                           :min="0"
-                          :step="0.01"
                           :rules="{ min_value: 0 }"
                           v-model="platformTip"
                         />
@@ -223,7 +222,7 @@
                 <tr>
                   <th>Contribution volontaire</th>
                   <td class="text-right tabular-nums">
-                    {{ parseFloat(this.normalizedTip) | currency }}
+                    {{ this.normalizedTip | currency }}
                   </td>
                 </tr>
                 <tr class="last">
@@ -321,6 +320,7 @@ import UserAddCreditBox from "@/components/User/AddCreditBox.vue";
 import LoanActionsMixin from "@/mixins/LoanActionsMixin";
 import LoanStepsSequence from "@/mixins/LoanStepsSequence";
 
+import { normalizeCurrency } from "@/helpers/filters";
 import locales from "@/locales";
 
 export default {
@@ -332,26 +332,28 @@ export default {
   },
   data() {
     return {
-      platformTip: parseFloat(this.item.platform_tip),
+      platformTip: normalizeCurrency(this.item.platform_tip),
     };
   },
   computed: {
     normalizedTip() {
-      const tip = parseFloat(this.platformTip);
-      return isNaN(tip) ? 0 : Math.max(tip, 0);
+      return normalizeCurrency(this.platformTip);
+    },
+    purchasesAmount() {
+      return normalizeCurrency(this.item.handover.purchases_amount);
     },
     actualOwnerPart() {
-      return this.item.actual_price - this.item.handover.purchases_amount;
+      return this.item.actual_price - this.purchasesAmount;
     },
     finalOwnerPart() {
-      return this.item.final_price - this.item.handover.purchases_amount;
+      return this.item.final_price - this.purchasesAmount;
     },
     actualPrice() {
-      return (
+      return normalizeCurrency(
         this.item.actual_price +
-        this.item.actual_insurance +
-        this.normalizedTip -
-        this.item.handover.purchases_amount
+          this.item.actual_insurance +
+          this.normalizedTip -
+          this.purchasesAmount
       );
     },
     hasEnoughBalance() {

@@ -15,5 +15,13 @@ export default {
       bank_account: "compte de banque",
     },
     model_name: "mode de paiement | modes de paiement",
+    saved_payment_methods: "Modes de paiement enregistrés",
+    add_new: "Ajoutez un nouveau mode de paiement",
+    fees_notice: "Des frais de transaction sont applicables.",
+    fee_types: {
+      amex: "cartes American Express",
+      non_canadian: "autres cartes non canadiennes",
+      canadian: "autres cartes canadiennes",
+    },
   },
 };

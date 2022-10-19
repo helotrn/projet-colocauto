@@ -45,7 +45,10 @@ class PaymentMethodController extends RestController
                 return $this->respondWithErrors($e->errors(), $e->getMessage());
             }
 
-            $request->merge(["external_id" => $card->id]);
+            $request->merge([
+                "external_id" => $card->id,
+                "country" => $card->country,
+            ]);
         }
 
         if (!$request->get("user_id")) {

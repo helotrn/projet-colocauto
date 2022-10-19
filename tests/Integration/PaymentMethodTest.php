@@ -64,7 +64,7 @@ class PaymentMethodTest extends TestCase
         Stripe::shouldReceive("createCardBySourceId")
             ->once()
             ->with("cus_test", "card_test")
-            ->andReturn((object) ["id" => "card_test"]);
+            ->andReturn((object) ["id" => "card_test", "country" => "CA"]);
 
         $response = $this->json("POST", "/api/v1/payment_methods", $data);
 

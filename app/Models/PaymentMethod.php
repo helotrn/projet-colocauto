@@ -23,6 +23,7 @@ class PaymentMethod extends BaseModel
         "four_last_digits" => ["digits:4", "nullable"],
         "credit_card_type" => ["nullable"],
         "user_id" => ["required"],
+        "country" => ["size:2", "nullable"],
     ];
 
     public static function getRules($action = "", $auth = null)
@@ -56,6 +57,7 @@ class PaymentMethod extends BaseModel
     protected $fillable = [
         "credit_card_type",
         "external_id",
+        "country",
         "four_last_digits",
         "name",
         "type",

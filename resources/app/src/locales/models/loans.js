@@ -1,4 +1,4 @@
-import { prefixFields } from "@/helpers";
+import prefixFields from "@/locales/prefixFields";
 
 import borrowers from "./borrowers";
 import communities from "./communities";

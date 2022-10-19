@@ -477,15 +477,9 @@ class UserController extends RestController
             return $this->respondWithMessage("no_payment_method", 400);
         }
 
-        // Passing fees on to customer:
-        // https://support.stripe.com/questions/passing-the-stripe-fee-on-to-customers
-        $feeRatio = 0.022;
-        $feeConstant = 0.3;
-
         $amountForDisplay = Invoice::formatAmountForDisplay($amount);
-        $amountWithFee = ($amount + $feeConstant) / (1 - $feeRatio);
+        $amountWithFee = Stripe::computeAmountWithFee($amount, $paymentMethod);
         $amountWithFeeInCents = intval($amountWithFee * 100);
-
         if ($amountWithFeeInCents <= 0) {
             return $this->respondWithMessage("amount_in_cents_is_nothing", 400);
         }
@@ -500,7 +494,8 @@ class UserController extends RestController
             $charge = Stripe::createCharge(
                 $amountWithFeeInCents,
                 $customerId,
-                "Ajout au compte LocoMotion: {$amountForDisplay}$ + {$feeForDisplay}$ (frais)"
+                "Ajout au compte LocoMotion: {$amountForDisplay}$ + {$feeForDisplay}$ (frais)",
+                $paymentMethod->external_id
             );
         } catch (\Exception $e) {
             $message = $e->getMessage();
