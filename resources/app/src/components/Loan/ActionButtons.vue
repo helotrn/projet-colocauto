@@ -1,10 +1,6 @@
 <template>
   <div class="loan__actions__buttons flex-column flex-md-row-reverse" v-if="!!item.id">
-    <b-button
-      variant="danger"
-      :disabled="(!isAdmin && hasReachedStep('takeover')) || loanIsCanceled"
-      @click="$emit('cancel')"
-    >
+    <b-button variant="danger" :disabled="loanIsCanceled || !canCancel" @click="$emit('cancel')">
       Annuler la réservation
     </b-button>
     <b-button
@@ -46,6 +42,21 @@ export default {
     item: {
       type: Object,
       required: true,
+    },
+  },
+  computed: {
+    canCancel() {
+      // Can cancel if:
+      return (
+        this.isAdmin ||
+        // or the loan is free
+        // TODO(#1101) Use a better attribute for this.
+        (this.item.estimated_price == 0 && this.item.estimated_insurance == 0) ||
+        // or the loanable has not yet been taken
+        !this.hasReachedStep("takeover") ||
+        // or the reservation has not yet started
+        this.$second.isBefore(this.item.departure_at, "minute")
+      );
     },
   },
 };

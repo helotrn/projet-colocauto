@@ -4,8 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Events\LoanCreatedEvent;
 use App\Events\Loan\CanceledEvent;
-use App\Exports\LoansExport;
-use App\Http\Requests\Action\ActionRequest;
 use App\Http\Requests\Action\CreateRequest as ActionCreateRequest;
 use App\Http\Requests\Loan\CreateRequest;
 use App\Http\Requests\BaseRequest as Request;
@@ -128,6 +126,26 @@ class LoanController extends RestController
     public function cancel(Request $request, $id)
     {
         $item = $this->repo->find($request, $id);
+
+        $canCancel =
+            // if request comes from admin
+            $request->user()->isAdmin() ||
+            $request->user()->isAdminOfCommunity($item->community->id) ||
+            // or the loan is free
+            // TODO(#1101) Use a better attribute for this.
+            ($item->estimated_price == 0 && $item->estimated_insurance == 0) ||
+            // or the loanable has not yet been taken
+            (!$item->takeover || $item->takeover->status == "in_process") ||
+            // or the reservation has not yet started
+            CarbonImmutable::now()->isBefore(
+                CarbonImmutable::parse($item->departure_at)
+            );
+
+        if (!$canCancel) {
+            return $this->respondWithErrors([
+                "status" => __("validation.custom.status.cannot_cancel"),
+            ]);
+        }
 
         $item->cancel();
         $item->save();

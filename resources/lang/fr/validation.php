@@ -149,6 +149,8 @@ return [
     "custom" => [
         "status" => [
             "action_completed" => "L'action a déjà été complétée.",
+            "cannot_cancel" =>
+                "L'emprunt ne peut être annulé, car il est en cours et a des frais associés.",
         ],
         "duration_in_minutes" => [
             "min" =>
