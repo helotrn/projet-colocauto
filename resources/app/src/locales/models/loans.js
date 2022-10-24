@@ -16,7 +16,7 @@ export default {
     "créer un emprunt": "créer un emprunt",
     descriptions: {
       platform_tip:
-        "LocoMotion est un projet citoyen et collaboratif. Participez à son" +
+        "LocoMotion est un projet citoyen et collaboratif. Participez à son " +
         "fonctionnement en donnant une contribution volontaire.",
     },
     loan_approved: "La réservation est confirmée!",
@@ -27,7 +27,7 @@ export default {
     insurance_warning: {
       title: "Avant d'emprunter une auto",
       warning: "Lisez attentivement les {link}. {emphasis}",
-      terms: "conditions d'utilisations de l'assurance",
+      terms: "conditions d'utilisation de l'assurance",
       terms_link: "/conditions-utilisation-desjardins-assurances.html",
       car_stays_in_quebec: "Notez que l'assurance couvre seulement les trajets au Québec.",
     },
@@ -95,7 +95,7 @@ export default {
       estimated_distance: "distance prévue",
       distance: "distance",
       cost: "coût",
-      tip_modifiable: "Pourra être modifié lors du paiement final.",
+      tip_modifiable: "Pourra être modifiée lors du paiement final.",
     },
     statuses: {
       self_service: "En libre service",

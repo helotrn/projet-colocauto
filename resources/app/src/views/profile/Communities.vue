@@ -7,7 +7,7 @@
         :key="community.id"
       >
         <div class="profile-communities__headers">
-          <h4>Afin que LocoMotion reste un service entre voisin.e.s sécuritaire,</h4>
+          <h4>Afin que LocoMotion reste un service sécuritaire entre voisin-e-s,</h4>
           <h3>Veuillez téléverser une preuve de résidence pour {{ community.name }}</h3>
         </div>
 
