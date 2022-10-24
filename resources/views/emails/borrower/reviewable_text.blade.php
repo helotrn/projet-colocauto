@@ -1,7 +1,7 @@
 @extends('emails.layouts.main_text')
 
 @section('content')
-Un·e nouveau·lle membre, {{ $user->name }}, a complété son profil d'emprunteur
+Un-e nouveau-lle membre, {{ $user->name }}, a complété son profil d'emprunteur
 dans les communautés suivantes :
 
 @foreach ($communities as $community)
