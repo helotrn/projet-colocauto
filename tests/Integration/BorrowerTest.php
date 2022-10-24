@@ -110,6 +110,39 @@ class BorrowerTest extends TestCase
 
     public function testApproveBorrowers()
     {
+        $meta = [];
+        $meta["sent_registration_approved_email"] = true;
+
+        // Fake User with registration approved
+        $user = factory(User::class)->create([
+            "meta" => $meta,
+        ]);
+
+        $borrower = factory(Borrower::class)->create([
+            "user_id" => $user->id,
+        ]);
+
+        $response = $this->json("GET", "/api/v1/borrowers/$borrower->id");
+        $response->assertStatus(200)->assertJson(["approved_at" => null]);
+
+        $approvedAtDate = Carbon::now()->format("Y-m-d h:m:s");
+        Carbon::setTestNow($approvedAtDate);
+
+        $response = $this->json(
+            "PUT",
+            "/api/v1/users/{$borrower->user->id}/borrower/approve"
+        );
+        $response->assertStatus(200);
+
+        $response = $this->json("GET", "/api/v1/borrowers/$borrower->id");
+        $response
+            ->assertStatus(200)
+            ->assertJson(["approved_at" => $approvedAtDate]);
+    }
+
+    public function testPendingBorrowers()
+    {
+        // Fake User without registration approved
         $borrower = factory(Borrower::class)->create([
             "user_id" => $this->user->id,
         ]);
