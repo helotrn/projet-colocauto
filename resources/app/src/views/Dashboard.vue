@@ -82,7 +82,7 @@
               <div v-if="hasTutorial('find-vehicle')">
                 <tutorial-block
                   title="Empruntez un véhicule"
-                  to="/community/list"
+                  to="/search/map"
                   bg-image="/img-vehicules.png"
                   variant="light"
                 />
