@@ -388,7 +388,7 @@ export default {
         case "fill-your-driving-profile":
           return this.hasCommunity && (!this.user.borrower || !this.user.borrower.is_complete);
         case "upload-proof-of-residency":
-          return this.hasNotSubmittedProofOfResidency;
+          return !this.hasSubmittedProofOfResidency;
         default:
           return false;
       }
