@@ -1,0 +1,30 @@
+<?php
+
+namespace App\Mail\Borrower;
+
+use App\Mail\BaseMailable;
+use App\Models\User;
+use Illuminate\Bus\Queueable;
+use Illuminate\Queue\SerializesModels;
+
+class Pending extends BaseMailable
+{
+    use Queueable, SerializesModels;
+
+    public $user;
+
+    public function __construct(User $user)
+    {
+        $this->user = $user;
+    }
+
+    public function build()
+    {
+        return $this->view("emails.borrower.pending")
+            ->subject("LocoMotion - Votre dossier de conduite est approuvé!")
+            ->text("emails.borrower.pending_text")
+            ->with([
+                "title" => "Votre dossier de conduite est approuvé!",
+            ]);
+    }
+}
