@@ -180,6 +180,9 @@ return [
         App\Providers\NokeServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         App\Providers\StripeServiceProvider::class,
+
+        // PHPDoc generation
+        Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
     ],
 
     /*
