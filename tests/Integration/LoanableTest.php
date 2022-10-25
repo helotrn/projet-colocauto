@@ -88,7 +88,7 @@ JSON
         ]);
 
         $borrowerUser = factory(User::class)->create();
-        factory(Borrower::class)->create([
+        $borrower = factory(Borrower::class)->create([
             "user_id" => $borrowerUser->id,
             "approved_at" => new \DateTime(),
         ]);
@@ -100,6 +100,7 @@ JSON
         $loanLessThanOneDay = factory(Loan::class)
             ->states("withInProcessHandover")
             ->create([
+                "borrower_id" => $borrower->id,
                 "loanable_id" => $loanable->id,
                 "departure_at" => (new Carbon("2022-10-11 11:15:00"))->format(
                     "Y-m-d H:i:s"
@@ -110,6 +111,7 @@ JSON
         $loanMoreThanOneDay = factory(Loan::class)
             ->states("withInProcessHandover")
             ->create([
+                "borrower_id" => $borrower->id,
                 "loanable_id" => $loanable->id,
                 "departure_at" => (new Carbon("2022-10-12 22:45:00"))->format(
                     "Y-m-d H:i:s"
@@ -120,6 +122,7 @@ JSON
         $loanMoreThanOneMonth = factory(Loan::class)
             ->states("withInProcessHandover")
             ->create([
+                "borrower_id" => $borrower->id,
                 "loanable_id" => $loanable->id,
                 "departure_at" => (new Carbon("2022-09-30 00:00:00"))->format(
                     "Y-m-d H:i:s"
@@ -340,7 +343,7 @@ JSON
         ]);
 
         $borrowerUser = factory(User::class)->create();
-        factory(Borrower::class)->create([
+        $borrower = factory(Borrower::class)->create([
             "user_id" => $borrowerUser->id,
             "approved_at" => new \DateTime(),
         ]);
@@ -353,6 +356,7 @@ JSON
         $loanLessThanOneDay = factory(Loan::class)
             ->states("withInProcessHandover")
             ->create([
+                "borrower_id" => $borrower->id,
                 "loanable_id" => $loanable->id,
                 "departure_at" => (new Carbon("2022-10-11 11:15:00"))->format(
                     "Y-m-d H:i:s"
@@ -363,6 +367,7 @@ JSON
         $loanMoreThanOneDay = factory(Loan::class)
             ->states("withInProcessHandover")
             ->create([
+                "borrower_id" => $borrower->id,
                 "loanable_id" => $loanable->id,
                 "departure_at" => (new Carbon("2022-10-12 22:45:00"))->format(
                     "Y-m-d H:i:s"
@@ -373,6 +378,7 @@ JSON
         $loanMoreThanOneMonth = factory(Loan::class)
             ->states("withInProcessHandover")
             ->create([
+                "borrower_id" => $borrower->id,
                 "loanable_id" => $loanable->id,
                 "departure_at" => (new Carbon("2022-09-30 00:00:00"))->format(
                     "Y-m-d H:i:s"
