@@ -4,6 +4,7 @@ namespace App\Http\Requests\Loanable;
 
 use App\Http\Requests\BaseRequest;
 use App\Models\Loanable;
+use App\Rules\OrderRule;
 
 class EventsRequest extends BaseRequest
 {
@@ -31,6 +32,7 @@ class EventsRequest extends BaseRequest
         $rules = [
             "start" => ["date", "required"],
             "end" => ["date", "required"],
+            "order" => [new OrderRule()],
         ];
 
         return $rules;

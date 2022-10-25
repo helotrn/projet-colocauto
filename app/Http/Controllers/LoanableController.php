@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Calendar\AvailabilityHelper;
+use App\Helpers\Order as OrderHelper;
 use App\Http\Requests\BaseRequest as Request;
 use App\Http\Requests\Loanable\DestroyRequest;
 use App\Http\Requests\Loanable\EventsRequest;
@@ -86,7 +88,80 @@ class LoanableController extends RestController
 
     public function events(EventsRequest $request)
     {
-        return response("", 200);
+        $start = new Carbon($request->start);
+        $end = new Carbon($request->end);
+
+        $loanable = Loanable::accessibleBy($request->user())
+            ->where("id", "=", $request->loanable_id)
+            ->first();
+
+        $events = [];
+
+        if ($loanable) {
+            $availabilityRules = $loanable->getAvailabilityRules();
+            $availabilityMode = $loanable->availability_mode;
+
+            $intervals = AvailabilityHelper::getScheduleDailyIntervals(
+                [
+                    "available" => $availabilityMode,
+                    "rules" => $availabilityRules,
+                ],
+                [$start, $end]
+            );
+
+            foreach ($intervals as $interval) {
+                $events[] = [
+                    "type" => "availability_rule",
+                    "start" => $interval[0],
+                    "end" => $interval[1],
+                    "uri" => "/loanables/{$loanable->id}",
+                    "data" => [
+                        // availability_mode == "always" means that events are of unavailability.
+                        "available" => $availabilityMode != "always",
+                    ],
+                ];
+            }
+
+            $loans = Loan::where("loanable_id", "=", $loanable->id)
+                // Departure before the end and return after the beginning of the period.
+                ->where("departure_at", "<", $end)
+                ->where("actual_return_at", ">", $start)
+                ->get();
+
+            foreach ($loans as $loan) {
+                $events[] = [
+                    "type" => "loan",
+                    "start" => new Carbon($loan->departure_at),
+                    "end" => new Carbon($loan->actual_return_at),
+                    "uri" => "/loans/{$loan->id}",
+                    "data" => [
+                        "status" => $loan->status,
+                    ],
+                ];
+            }
+
+            // Event field definitions for sorting.
+            $eventFieldDefs = [
+                "type" => ["type" => "string"],
+                "uri" => ["type" => "string"],
+                "start" => ["type" => "carbon"],
+                "end" => ["type" => "carbon"],
+            ];
+
+            $orderArray = OrderHelper::parseOrderRequestParam(
+                $request->order,
+                $eventFieldDefs
+            );
+            $events = OrderHelper::sortArray($events, $orderArray);
+
+            // Prepare data for response.
+            foreach ($events as $key => $event) {
+                $events[$key]["start"] = $event["start"]->toDateTimeString();
+                $events[$key]["end"] = $event["end"]->toDateTimeString();
+            }
+        }
+
+        return response($events, 200);
     }
 
     public function index(Request $request)
