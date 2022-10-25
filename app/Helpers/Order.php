@@ -95,7 +95,9 @@ class Order
 
                 // Account for direction.
                 if (0 !== $cmp) {
-                    $cmp *= "asc" == $fieldOrder["direction"] ? 1 : -1;
+                    if ("desc" == $fieldOrder["direction"]) {
+                        $cmp = -$cmp;
+                    }
                     break;
                 }
             }
