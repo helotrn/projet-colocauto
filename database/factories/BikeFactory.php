@@ -28,7 +28,7 @@ $factory->define(Bike::class, function (Faker $faker) {
 $factory->afterMaking(Bike::class, function ($bike) {
     if (!$bike->owner_id) {
         $owner = factory(Owner::class)->create();
-        $bike->owner_id = $bike->id;
+        $bike->owner_id = $owner->id;
     }
 });
 

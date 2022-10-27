@@ -2,6 +2,7 @@
 
 namespace Tests\Integration;
 
+use App\Mail\Loan\LoanCompleted;
 use App\Models\Bike;
 use App\Models\Borrower;
 use App\Models\Community;
@@ -11,6 +12,7 @@ use App\Models\Loan;
 use App\Models\Owner;
 use App\Models\User;
 use Carbon\Carbon;
+use Mail;
 use Tests\TestCase;
 
 class LoanTest extends TestCase
@@ -1306,5 +1308,71 @@ class LoanTest extends TestCase
         $response->assertJsonCount(5, "future");
         // Capped to 3 in the handler.
         $response->assertJsonCount(3, "completed");
+    }
+
+    public function testCompleteLoan_sendsAndMails()
+    {
+        // Bike with owner
+        $bike = factory(Bike::class)->create();
+
+        /** @var Loan */
+        $loan = factory(Loan::class)
+            ->states(["withAllStepsCompleted", "butPaymentInProcess"])
+            ->create([
+                "loanable_id" => $bike->id,
+            ]);
+
+        Mail::fake();
+
+        $response = $this->json(
+            "put",
+            "/api/v1/loans/$loan->id/actions/{$loan->payment->id}/complete",
+            [
+                "type" => "payment",
+                "platform_tip" => 0,
+            ]
+        );
+
+        $response->assertStatus(200);
+        Mail::assertQueued(LoanCompleted::class, function ($mail) use ($loan) {
+            return $mail->hasTo($loan->borrower->user->email);
+        });
+        Mail::assertQueued(LoanCompleted::class, function ($mail) use ($loan) {
+            return $mail->hasTo($loan->loanable->owner->user->email);
+        });
+    }
+
+    public function testCompleteSelfServiceLoan_sendsMailOnlyToBorrower()
+    {
+        // Bike without owner
+        $bike = factory(Bike::class)->create(["is_self_service" => true]);
+
+        /** @var Loan */
+        $loan = factory(Loan::class)
+            ->states(["withAllStepsCompleted", "butPaymentInProcess"])
+            ->create([
+                "loanable_id" => $bike->id,
+            ]);
+
+        Mail::fake();
+
+        $response = $this->json(
+            "put",
+            "/api/v1/loans/$loan->id/actions/{$loan->payment->id}/complete",
+            [
+                "type" => "payment",
+                "platform_tip" => 0,
+            ]
+        );
+
+        $response->assertStatus(200);
+        Mail::assertQueued(LoanCompleted::class, function ($mail) use ($loan) {
+            return $mail->hasTo($loan->borrower->user->email);
+        });
+        Mail::assertNotQueued(LoanCompleted::class, function ($mail) use (
+            $loan
+        ) {
+            return $mail->hasTo($loan->loanable->owner->user->email);
+        });
     }
 }
