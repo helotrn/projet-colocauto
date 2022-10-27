@@ -89,6 +89,9 @@ class Loan extends BaseModel
                 if ($newStatus != $loan->status) {
                     $loan->status = $newStatus;
                     $changed = true;
+                    if ($loan->status === "completed") {
+                        event(new LoanCompletedEvent($loan));
+                    }
                 }
 
                 // Work with Carbon objects.
@@ -104,9 +107,6 @@ class Loan extends BaseModel
 
                 if ($changed) {
                     $loan->save();
-                    if ($loan->status === "completed") {
-                        event(new LoanCompletedEvent($loan));
-                    }
                 }
             });
 
