@@ -8,13 +8,11 @@
 
 ## Comportement erroné actuel
 
-
 ## Résultat correct attendu
-
 
 ## Quel appareil/environnement
 
 (Si applicable, sur quel appareils/navigateurs web est-ce que ce problème est réplicable.)
 
 /label ~"type::bug"
-/cc @kfedorov-solon 
+/cc @kfedorov-solon
