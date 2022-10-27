@@ -14,7 +14,7 @@ class AddTrailerDimensions extends Migration
     public function up()
     {
         Schema::table("trailers", function (Blueprint $table) {
-            $table->string("dimensions");
+            $table->string("dimensions")->nullable();
         });
     }
 
