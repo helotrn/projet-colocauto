@@ -6,7 +6,6 @@ use App\Events\LoanHandoverContestationResolvedEvent;
 use App\Events\LoanHandoverContestedEvent;
 use App\Http\Controllers\LoanController;
 use App\Http\Requests\Action\HandoverRequest;
-use App\Http\Requests\Action\PaymentRequest;
 use App\Http\Requests\BaseRequest as Request;
 use App\Models\Handover;
 use App\Repositories\HandoverRepository;

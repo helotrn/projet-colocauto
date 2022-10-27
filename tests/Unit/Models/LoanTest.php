@@ -2,10 +2,16 @@
 
 namespace Tests\Unit\Models;
 
+use App\Models\Bike;
+use App\Models\Borrower;
+use App\Models\Community;
 use App\Models\Extension;
 use App\Models\Handover;
 use App\Models\Loan;
+use App\Models\Owner;
 use App\Models\Payment;
+use App\Models\User;
+use Carbon\Carbon;
 use Tests\TestCase;
 use Carbon\CarbonImmutable;
 
@@ -96,54 +102,212 @@ class LoanTest extends TestCase
         );
     }
 
-    public function testIsCancelable_Canceled()
+    public function testIsCancelableBy_Canceled_fails()
     {
         $loan = factory(Loan::class)
             ->states("withCompletedPrePayment")
             ->create();
 
-        // Must refresh materialized views before asking for loan->actions.
-        \DB::statement("REFRESH MATERIALIZED VIEW actions");
-
-        // Refresh loan from database
-        $loan = $loan->fresh();
-
-        $this->assertTrue($loan->isCancelable());
-
         $loan->cancel();
 
-        $this->assertTrue($loan->isCanceled());
-        $this->assertFalse($loan->isCancelable());
+        $this->assertFalse($loan->isCancelableBy($this->user));
     }
 
-    public function testIsCancelable_TakeoverInProcess()
+    public function testIsCancelableBy_OngoingPaying_fails()
     {
-        $loan = factory(Loan::class)
-            ->states("withInProcessTakeover")
+        $community = factory(Community::class)
+            ->state("withDefault10DollarsPricing")
             ->create();
 
-        // Must refresh materialized views before asking for loan->actions.
-        \DB::statement("REFRESH MATERIALIZED VIEW actions");
+        $borrowerUser = factory(User::class)->create();
+        $borrowerUser
+            ->communities()
+            ->attach($community->id, ["approved_at" => new \DateTime()]);
+        $borrower = factory(Borrower::class)->create([
+            "user_id" => $borrowerUser->id,
+        ]);
 
-        // Refresh loan from database
-        $loan = $loan->fresh();
+        $ownerUser = factory(User::class)->create();
+        $ownerUser
+            ->communities()
+            ->attach($community->id, ["approved_at" => new \DateTime()]);
+        $owner = factory(Owner::class)->create(["user_id" => $ownerUser->id]);
 
-        $this->assertTrue($loan->isCancelable());
+        $loanable = factory(Bike::class)->create([
+            "owner_id" => $owner->id,
+        ]);
+
+        $loan = factory(Loan::class)
+            ->state("withCompletedTakeover")
+            ->create([
+                "borrower_id" => $borrower->id,
+                "loanable_id" => $loanable->id,
+                "departure_at" => Carbon::now()->subMinutes(30),
+            ]);
+
+        $this->assertFalse($loan->isCancelableBy($borrower->user));
     }
 
-    public function testIsCancelable_TakeoverCompleted()
+    public function testIsCancelableBy_stranger_fails()
     {
+        $otherUser = factory(User::class)->create();
+
         $loan = factory(Loan::class)
-            ->states("withCompletedTakeover")
+            ->state("withCompletedPrePayment")
             ->create();
 
-        // Must refresh materialized views before asking for loan->actions.
-        \DB::statement("REFRESH MATERIALIZED VIEW actions");
+        $this->assertFalse($loan->isCancelableBy($otherUser));
+    }
 
-        // Refresh loan from database
-        $loan = $loan->fresh();
+    public function testIsCancelableBy_Free_succeeds()
+    {
+        $community = factory(Community::class)
+            ->state("withDefaultFreePricing")
+            ->create();
 
-        $this->assertFalse($loan->isCancelable());
+        $borrowerUser = factory(User::class)->create();
+        $borrowerUser
+            ->communities()
+            ->attach($community->id, ["approved_at" => new \DateTime()]);
+        $borrower = factory(Borrower::class)->create([
+            "user_id" => $borrowerUser->id,
+        ]);
+
+        $ownerUser = factory(User::class)->create();
+        $ownerUser
+            ->communities()
+            ->attach($community->id, ["approved_at" => new \DateTime()]);
+        $owner = factory(Owner::class)->create(["user_id" => $ownerUser->id]);
+
+        $loanable = factory(Bike::class)->create([
+            "owner_id" => $owner->id,
+        ]);
+
+        $loan = factory(Loan::class)
+            ->state("withCompletedTakeover")
+            ->create([
+                "borrower_id" => $borrower->id,
+                "loanable_id" => $loanable->id,
+                "departure_at" => Carbon::now()->subMinutes(30),
+            ]);
+
+        $this->assertTrue($loan->isCancelableBy($borrower->user));
+        $this->assertTrue($loan->isCancelableBy($owner->user));
+    }
+
+    public function testIsCancelableBy_future_succeeds()
+    {
+        $community = factory(Community::class)
+            ->state("withDefault10DollarsPricing")
+            ->create();
+
+        $borrowerUser = factory(User::class)->create();
+        $borrowerUser
+            ->communities()
+            ->attach($community->id, ["approved_at" => new \DateTime()]);
+        $borrower = factory(Borrower::class)->create([
+            "user_id" => $borrowerUser->id,
+        ]);
+
+        $ownerUser = factory(User::class)->create();
+        $ownerUser
+            ->communities()
+            ->attach($community->id, ["approved_at" => new \DateTime()]);
+        $owner = factory(Owner::class)->create(["user_id" => $ownerUser->id]);
+
+        $loanable = factory(Bike::class)->create([
+            "owner_id" => $owner->id,
+        ]);
+
+        $loan = factory(Loan::class)
+            ->state("withCompletedTakeover")
+            ->create([
+                "borrower_id" => $borrower->id,
+                "loanable_id" => $loanable->id,
+                "departure_at" => Carbon::now()->addMinutes(30),
+            ]);
+
+        $this->assertTrue($loan->isCancelableBy($borrower->user));
+        $this->assertTrue($loan->isCancelableBy($owner->user));
+    }
+
+    public function testIsCancelableBy_untaken_succeeds()
+    {
+        $community = factory(Community::class)
+            ->state("withDefault10DollarsPricing")
+            ->create();
+
+        $borrowerUser = factory(User::class)->create();
+        $borrowerUser
+            ->communities()
+            ->attach($community->id, ["approved_at" => new \DateTime()]);
+        $borrower = factory(Borrower::class)->create([
+            "user_id" => $borrowerUser->id,
+        ]);
+
+        $ownerUser = factory(User::class)->create();
+        $ownerUser
+            ->communities()
+            ->attach($community->id, ["approved_at" => new \DateTime()]);
+        $owner = factory(Owner::class)->create(["user_id" => $ownerUser->id]);
+
+        $loanable = factory(Bike::class)->create([
+            "owner_id" => $owner->id,
+        ]);
+
+        $loan = factory(Loan::class)
+            ->state("withInProcessTakeover")
+            ->create([
+                "borrower_id" => $borrower->id,
+                "loanable_id" => $loanable->id,
+                "departure_at" => Carbon::now()->subMinutes(30),
+            ]);
+
+        $this->assertTrue($loan->isCancelableBy($borrower->user));
+        $this->assertTrue($loan->isCancelableBy($owner->user));
+    }
+
+    public function testIsCancelableBy_admin_succeeds()
+    {
+        $community = factory(Community::class)
+            ->state("withDefault10DollarsPricing")
+            ->create();
+
+        $communityAdmin = factory(User::class)->create();
+        $communityAdmin->communities()->attach($community->id, [
+            "approved_at" => new \DateTime(),
+            "role" => "admin",
+        ]);
+
+        $borrowerUser = factory(User::class)->create();
+        $borrowerUser
+            ->communities()
+            ->attach($community->id, ["approved_at" => new \DateTime()]);
+        $borrower = factory(Borrower::class)->create([
+            "user_id" => $borrowerUser->id,
+        ]);
+
+        $ownerUser = factory(User::class)->create();
+        $ownerUser
+            ->communities()
+            ->attach($community->id, ["approved_at" => new \DateTime()]);
+        $owner = factory(Owner::class)->create(["user_id" => $ownerUser->id]);
+
+        $loanable = factory(Bike::class)->create([
+            "owner_id" => $owner->id,
+        ]);
+
+        $loan = factory(Loan::class)
+            ->state("withCompletedTakeover")
+            ->create([
+                "borrower_id" => $borrower->id,
+                "loanable_id" => $loanable->id,
+                "departure_at" => Carbon::now()->subMinutes(30),
+            ]);
+
+        // $this->user is global admin
+        $this->assertTrue($loan->isCancelableBy($this->user));
+        $this->assertTrue($loan->isCancelableBy($communityAdmin));
     }
 
     public function testCancel_Now()

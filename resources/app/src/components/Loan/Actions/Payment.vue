@@ -32,7 +32,7 @@
         <div v-if="!!action.executed_at">
           <p>L'emprunt s'est conclu avec succès!</p>
 
-          <div v-if="(userIsAdmin || userRoles.includes('borrower')) && !loanIsFree">
+          <div v-if="(userIsAdmin || userRoles.includes('borrower')) && !item.is_free">
             <h3>Coût du trajet</h3>
             <table class="trip-details">
               <tr>
@@ -189,7 +189,7 @@
                 </b-row>
               </div>
 
-              <template v-if="!loanIsFree">
+              <template v-if="!item.is_free">
                 <h3>Sommaire</h3>
                 <table class="trip-details">
                   <tr class="header">

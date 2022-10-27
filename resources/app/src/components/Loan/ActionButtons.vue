@@ -49,9 +49,7 @@ export default {
       // Can cancel if:
       return (
         this.isAdmin ||
-        // or the loan is free
-        // TODO(#1101) Use a better attribute for this.
-        (this.item.estimated_price == 0 && this.item.estimated_insurance == 0) ||
+        this.item.is_free ||
         // or the loanable has not yet been taken
         !this.hasReachedStep("takeover") ||
         // or the reservation has not yet started
