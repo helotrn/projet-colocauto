@@ -91,6 +91,15 @@
             >
               Terminer l'emprunt
             </b-button>
+            <br />
+            <div v-if="startsInTheFuture">
+              <small class="text-muted">
+                Il sera possible de terminer l'emprunt après l'heure du début de la réservation ({{
+                  item.departure_at | shortDate
+                }}
+                à {{ item.departure_at | time }}).
+              </small>
+            </div>
           </div>
         </div>
       </b-collapse>
@@ -104,6 +113,7 @@ import FormsValidatedInput from "@/components/Forms/ValidatedInput.vue";
 
 import UserAddCreditBox from "@/components/User/AddCreditBox.vue";
 import UserAvatar from "@/components/User/Avatar.vue";
+import { shortDate } from "@/helpers/filters";
 
 import LoanActionsMixin from "@/mixins/LoanActionsMixin";
 

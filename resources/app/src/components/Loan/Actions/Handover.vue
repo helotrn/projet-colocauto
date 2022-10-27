@@ -249,6 +249,13 @@
                     <span v-if="isContested">Corriger</span>
                     <span v-else>Enregistrer</span>
                   </b-button>
+                  <div v-if="!isContested && startsInTheFuture">
+                    <small class="text-muted">
+                      Il sera possible de terminer l'emprunt après l'heure du début de la
+                      réservation ({{ item.departure_at | shortDate }} à
+                      {{ item.departure_at | time }}).
+                    </small>
+                  </div>
                 </b-col>
               </b-row>
 
