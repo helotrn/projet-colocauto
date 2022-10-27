@@ -32,6 +32,517 @@ class LoanableTest extends TestCase
         "total",
     ];
 
+    public function testEvents_AvailabilityModeNever()
+    {
+        // Linking users and communities would trigger RegistrationApprovedEvent
+        // which would then send email using an external service.
+        // withoutEvents() makes the test robust to a non-existent or
+        // incorrectly-configured email service.
+        $this->withoutEvents();
+        $community = factory(Community::class)
+            ->states("withDefaultFreePricing")
+            ->create();
+        $this->user->communities()->attach($community->id, [
+            "approved_at" => new \DateTime(),
+        ]);
+        $ownerUser = factory(User::class)->create();
+        $ownerUser->communities()->sync([
+            $community->id => [
+                "approved_at" => Carbon::now(),
+            ],
+        ]);
+
+        $owner = factory(Owner::class)->create([
+            "user_id" => $ownerUser->id,
+        ]);
+
+        $loanable = factory(Car::class)->create([
+            "availability_mode" => "never",
+            "availability_json" => <<<JSON
+[
+  {
+    "available": true,
+    "type": "weekdays",
+    "scope": ["MO","TU","TH","WE","FR"],
+    "period": "17:00-22:00"
+  },{
+    "available": true,
+    "type": "weekdays",
+    "scope": ["SA","SU"],
+    "period":"00:00-24:00"
+  },{
+    "available": true,
+    "type": "dates",
+    "scope": ["2022-10-10","2022-10-12","2022-10-14"],
+    "period": "13:00-17:00"
+  },{
+    "available": true,
+    "type": "dateRange",
+    "scope": ["2022-10-10","2022-10-14"],
+    "period": "10:00-12:00"
+  }
+]
+JSON
+            ,
+            "owner_id" => $owner->id,
+        ]);
+
+        $borrowerUser = factory(User::class)->create();
+        $borrower = factory(Borrower::class)->create([
+            "user_id" => $borrowerUser->id,
+            "approved_at" => new \DateTime(),
+        ]);
+
+        $this->actAs($borrowerUser);
+        $borrowerUser->communities()->attach($community->id, [
+            "approved_at" => Carbon::now(),
+        ]);
+        $loanLessThanOneDay = factory(Loan::class)
+            ->states("withInProcessHandover")
+            ->create([
+                "borrower_id" => $borrower->id,
+                "loanable_id" => $loanable->id,
+                "departure_at" => (new Carbon("2022-10-11 11:15:00"))->format(
+                    "Y-m-d H:i:s"
+                ),
+                "duration_in_minutes" => 10 * 60,
+            ]);
+
+        $loanMoreThanOneDay = factory(Loan::class)
+            ->states("withInProcessHandover")
+            ->create([
+                "borrower_id" => $borrower->id,
+                "loanable_id" => $loanable->id,
+                "departure_at" => (new Carbon("2022-10-12 22:45:00"))->format(
+                    "Y-m-d H:i:s"
+                ),
+                "duration_in_minutes" => 3 * 24 * 60,
+            ]);
+
+        $loanMoreThanOneMonth = factory(Loan::class)
+            ->states("withInProcessHandover")
+            ->create([
+                "borrower_id" => $borrower->id,
+                "loanable_id" => $loanable->id,
+                "departure_at" => (new Carbon("2022-09-30 00:00:00"))->format(
+                    "Y-m-d H:i:s"
+                ),
+                "duration_in_minutes" => 44 * 24 * 60,
+            ]);
+
+        $response = $this->json(
+            "GET",
+            "/api/v1/loanables/{$loanable->id}/events",
+            [
+                "start" => "2022-10-09 00:00:00",
+                "end" => "2022-10-16 00:00:00",
+                // Set order to get the results in a predictable order.
+                "order" => "type,start,end",
+            ]
+        );
+
+        $response->assertStatus(200)->assertJson([
+            [
+                // "type": "weekdays", "scope": ["SA","SU"], "period":"00:00-24:00"
+                "type" => "availability_rule",
+                "start" => "2022-10-09 00:00:00",
+                "end" => "2022-10-10 00:00:00",
+                "uri" => "/loanables/{$loanable->id}",
+                "data" => ["available" => true],
+            ],
+            [
+                // "type": "dateRange", "scope": ["2022-10-10","2022-10-14"], "period": "10:00-12:00"
+                "type" => "availability_rule",
+                "start" => "2022-10-10 10:00:00",
+                "end" => "2022-10-10 12:00:00",
+                "uri" => "/loanables/{$loanable->id}",
+                "data" => ["available" => true],
+            ],
+            [
+                // "type": "dates", "scope": ["2022-10-10","2022-10-12","2022-10-14"], "period": "13:00-17:00"
+                "type" => "availability_rule",
+                "start" => "2022-10-10 13:00:00",
+                "end" => "2022-10-10 17:00:00",
+                "uri" => "/loanables/{$loanable->id}",
+                "data" => ["available" => true],
+            ],
+            [
+                // "type": "weekdays", "scope": ["MO","TU","TH","WE","FR"], "period": "17:00-22:00"
+                "type" => "availability_rule",
+                "start" => "2022-10-10 17:00:00",
+                "end" => "2022-10-10 22:00:00",
+                "uri" => "/loanables/{$loanable->id}",
+                "data" => ["available" => true],
+            ],
+            [
+                // "type": "dateRange", "scope": ["2022-10-10","2022-10-14"], "period": "10:00-12:00"
+                "type" => "availability_rule",
+                "start" => "2022-10-11 10:00:00",
+                "end" => "2022-10-11 12:00:00",
+                "uri" => "/loanables/{$loanable->id}",
+                "data" => ["available" => true],
+            ],
+            [
+                // "type": "weekdays", "scope": ["MO","TU","TH","WE","FR"], "period": "17:00-22:00"
+                "type" => "availability_rule",
+                "start" => "2022-10-11 17:00:00",
+                "end" => "2022-10-11 22:00:00",
+                "uri" => "/loanables/{$loanable->id}",
+                "data" => ["available" => true],
+            ],
+            [
+                // "type": "dateRange", "scope": ["2022-10-10","2022-10-14"], "period": "10:00-12:00"
+                "type" => "availability_rule",
+                "start" => "2022-10-12 10:00:00",
+                "end" => "2022-10-12 12:00:00",
+                "uri" => "/loanables/{$loanable->id}",
+                "data" => ["available" => true],
+            ],
+            [
+                // "type": "dates", "scope": ["2022-10-10","2022-10-12","2022-10-14"], "period": "13:00-17:00"
+                "type" => "availability_rule",
+                "start" => "2022-10-12 13:00:00",
+                "end" => "2022-10-12 17:00:00",
+                "uri" => "/loanables/{$loanable->id}",
+                "data" => ["available" => true],
+            ],
+            [
+                // "type": "weekdays", "scope": ["MO","TU","TH","WE","FR"], "period": "17:00-22:00"
+                "type" => "availability_rule",
+                "start" => "2022-10-12 17:00:00",
+                "end" => "2022-10-12 22:00:00",
+                "uri" => "/loanables/{$loanable->id}",
+                "data" => ["available" => true],
+            ],
+            [
+                // "type": "dateRange", "scope": ["2022-10-10","2022-10-14"], "period": "10:00-12:00"
+                "type" => "availability_rule",
+                "start" => "2022-10-13 10:00:00",
+                "end" => "2022-10-13 12:00:00",
+                "uri" => "/loanables/{$loanable->id}",
+                "data" => ["available" => true],
+            ],
+            [
+                // "type": "weekdays", "scope": ["MO","TU","TH","WE","FR"], "period": "17:00-22:00"
+                "type" => "availability_rule",
+                "start" => "2022-10-13 17:00:00",
+                "end" => "2022-10-13 22:00:00",
+                "uri" => "/loanables/{$loanable->id}",
+                "data" => ["available" => true],
+            ],
+            [
+                // "type": "dateRange", "scope": ["2022-10-10","2022-10-14"], "period": "10:00-12:00"
+                "type" => "availability_rule",
+                "start" => "2022-10-14 10:00:00",
+                "end" => "2022-10-14 12:00:00",
+                "uri" => "/loanables/{$loanable->id}",
+                "data" => ["available" => true],
+            ],
+            [
+                // "type": "dates", "scope": ["2022-10-10","2022-10-12","2022-10-14"], "period": "13:00-17:00"
+                "type" => "availability_rule",
+                "start" => "2022-10-14 13:00:00",
+                "end" => "2022-10-14 17:00:00",
+                "uri" => "/loanables/{$loanable->id}",
+                "data" => ["available" => true],
+            ],
+            [
+                // "type": "weekdays", "scope": ["MO","TU","TH","WE","FR"], "period": "17:00-22:00"
+                "type" => "availability_rule",
+                "start" => "2022-10-14 17:00:00",
+                "end" => "2022-10-14 22:00:00",
+                "uri" => "/loanables/{$loanable->id}",
+                "data" => ["available" => true],
+            ],
+            [
+                // "type": "weekdays", "scope": ["SA","SU"], "period":"00:00-24:00"
+                "type" => "availability_rule",
+                "start" => "2022-10-15 00:00:00",
+                "end" => "2022-10-16 00:00:00",
+                "uri" => "/loanables/{$loanable->id}",
+                "data" => ["available" => true],
+            ],
+            // Loans
+            [
+                "type" => "loan",
+                "start" => "2022-09-30 00:00:00",
+                "end" => "2022-11-13 00:00:00",
+                "uri" => "/loans/{$loanMoreThanOneMonth->id}",
+                "data" => ["status" => "in_process"],
+            ],
+            [
+                "type" => "loan",
+                "start" => "2022-10-11 11:15:00",
+                "end" => "2022-10-11 21:15:00",
+                "uri" => "/loans/{$loanLessThanOneDay->id}",
+                "data" => ["status" => "in_process"],
+            ],
+            [
+                "type" => "loan",
+                "start" => "2022-10-12 22:45:00",
+                "end" => "2022-10-15 22:45:00",
+                "uri" => "/loans/{$loanMoreThanOneDay->id}",
+                "data" => ["status" => "in_process"],
+            ],
+        ]);
+    }
+
+    public function testEvents_AvailabilityModeAlways()
+    {
+        // Linking users and communities would trigger RegistrationApprovedEvent
+        // which would then send email using an external service.
+        // withoutEvents() makes the test robust to a non-existent or
+        // incorrectly-configured email service.
+        $this->withoutEvents();
+        $community = factory(Community::class)
+            ->states("withDefaultFreePricing")
+            ->create();
+        $this->user->communities()->attach($community->id, [
+            "approved_at" => new \DateTime(),
+        ]);
+        $ownerUser = factory(User::class)->create();
+        $ownerUser->communities()->sync([
+            $community->id => [
+                "approved_at" => Carbon::now(),
+            ],
+        ]);
+
+        $owner = factory(Owner::class)->create([
+            "user_id" => $ownerUser->id,
+        ]);
+
+        $loanable = factory(Car::class)->create([
+            "availability_mode" => "always",
+            "availability_json" => <<<JSON
+[
+  {
+    "available": false,
+    "type": "weekdays",
+    "scope": ["MO","TU","TH","WE","FR"],
+    "period": "17:00-22:00"
+  },{
+    "available": false,
+    "type": "weekdays",
+    "scope": ["SA","SU"],
+    "period":"00:00-24:00"
+  },{
+    "available": false,
+    "type": "dates",
+    "scope": ["2022-10-10","2022-10-12","2022-10-14"],
+    "period": "13:00-17:00"
+  },{
+    "available": false,
+    "type": "dateRange",
+    "scope": ["2022-10-10","2022-10-14"],
+    "period": "10:00-12:00"
+  }
+]
+JSON
+            ,
+            "owner_id" => $owner->id,
+        ]);
+
+        $borrowerUser = factory(User::class)->create();
+        $borrower = factory(Borrower::class)->create([
+            "user_id" => $borrowerUser->id,
+            "approved_at" => new \DateTime(),
+        ]);
+
+        $this->actAs($borrowerUser);
+        $borrowerUser->communities()->attach($community->id, [
+            "approved_at" => Carbon::now(),
+        ]);
+
+        $loanLessThanOneDay = factory(Loan::class)
+            ->states("withInProcessHandover")
+            ->create([
+                "borrower_id" => $borrower->id,
+                "loanable_id" => $loanable->id,
+                "departure_at" => (new Carbon("2022-10-11 11:15:00"))->format(
+                    "Y-m-d H:i:s"
+                ),
+                "duration_in_minutes" => 10 * 60,
+            ]);
+
+        $loanMoreThanOneDay = factory(Loan::class)
+            ->states("withInProcessHandover")
+            ->create([
+                "borrower_id" => $borrower->id,
+                "loanable_id" => $loanable->id,
+                "departure_at" => (new Carbon("2022-10-12 22:45:00"))->format(
+                    "Y-m-d H:i:s"
+                ),
+                "duration_in_minutes" => 3 * 24 * 60,
+            ]);
+
+        $loanMoreThanOneMonth = factory(Loan::class)
+            ->states("withInProcessHandover")
+            ->create([
+                "borrower_id" => $borrower->id,
+                "loanable_id" => $loanable->id,
+                "departure_at" => (new Carbon("2022-09-30 00:00:00"))->format(
+                    "Y-m-d H:i:s"
+                ),
+                "duration_in_minutes" => 44 * 24 * 60,
+            ]);
+
+        $response = $this->json(
+            "GET",
+            "/api/v1/loanables/{$loanable->id}/events",
+            [
+                "start" => "2022-10-09 00:00:00",
+                "end" => "2022-10-16 00:00:00",
+                // Set order to get the results in a predictable order.
+                "order" => "type,start,end",
+            ]
+        );
+
+        $response->assertStatus(200)->assertJson([
+            [
+                // "type": "weekdays", "scope": ["SA","SU"], "period":"00:00-24:00"
+                "type" => "availability_rule",
+                "start" => "2022-10-09 00:00:00",
+                "end" => "2022-10-10 00:00:00",
+                "uri" => "/loanables/{$loanable->id}",
+                "data" => ["available" => false],
+            ],
+            [
+                // "type": "dateRange", "scope": ["2022-10-10","2022-10-14"], "period": "10:00-12:00"
+                "type" => "availability_rule",
+                "start" => "2022-10-10 10:00:00",
+                "end" => "2022-10-10 12:00:00",
+                "uri" => "/loanables/{$loanable->id}",
+                "data" => ["available" => false],
+            ],
+            [
+                // "type": "dates", "scope": ["2022-10-10","2022-10-12","2022-10-14"], "period": "13:00-17:00"
+                "type" => "availability_rule",
+                "start" => "2022-10-10 13:00:00",
+                "end" => "2022-10-10 17:00:00",
+                "uri" => "/loanables/{$loanable->id}",
+                "data" => ["available" => false],
+            ],
+            [
+                // "type": "weekdays", "scope": ["MO","TU","TH","WE","FR"], "period": "17:00-22:00"
+                "type" => "availability_rule",
+                "start" => "2022-10-10 17:00:00",
+                "end" => "2022-10-10 22:00:00",
+                "uri" => "/loanables/{$loanable->id}",
+                "data" => ["available" => false],
+            ],
+            [
+                // "type": "dateRange", "scope": ["2022-10-10","2022-10-14"], "period": "10:00-12:00"
+                "type" => "availability_rule",
+                "start" => "2022-10-11 10:00:00",
+                "end" => "2022-10-11 12:00:00",
+                "uri" => "/loanables/{$loanable->id}",
+                "data" => ["available" => false],
+            ],
+            [
+                // "type": "weekdays", "scope": ["MO","TU","TH","WE","FR"], "period": "17:00-22:00"
+                "type" => "availability_rule",
+                "start" => "2022-10-11 17:00:00",
+                "end" => "2022-10-11 22:00:00",
+                "uri" => "/loanables/{$loanable->id}",
+                "data" => ["available" => false],
+            ],
+            [
+                // "type": "dateRange", "scope": ["2022-10-10","2022-10-14"], "period": "10:00-12:00"
+                "type" => "availability_rule",
+                "start" => "2022-10-12 10:00:00",
+                "end" => "2022-10-12 12:00:00",
+                "uri" => "/loanables/{$loanable->id}",
+                "data" => ["available" => false],
+            ],
+            [
+                // "type": "dates", "scope": ["2022-10-10","2022-10-12","2022-10-14"], "period": "13:00-17:00"
+                "type" => "availability_rule",
+                "start" => "2022-10-12 13:00:00",
+                "end" => "2022-10-12 17:00:00",
+                "uri" => "/loanables/{$loanable->id}",
+                "data" => ["available" => false],
+            ],
+            [
+                // "type": "weekdays", "scope": ["MO","TU","TH","WE","FR"], "period": "17:00-22:00"
+                "type" => "availability_rule",
+                "start" => "2022-10-12 17:00:00",
+                "end" => "2022-10-12 22:00:00",
+                "uri" => "/loanables/{$loanable->id}",
+                "data" => ["available" => false],
+            ],
+            [
+                // "type": "dateRange", "scope": ["2022-10-10","2022-10-14"], "period": "10:00-12:00"
+                "type" => "availability_rule",
+                "start" => "2022-10-13 10:00:00",
+                "end" => "2022-10-13 12:00:00",
+                "uri" => "/loanables/{$loanable->id}",
+                "data" => ["available" => false],
+            ],
+            [
+                // "type": "weekdays", "scope": ["MO","TU","TH","WE","FR"], "period": "17:00-22:00"
+                "type" => "availability_rule",
+                "start" => "2022-10-13 17:00:00",
+                "end" => "2022-10-13 22:00:00",
+                "uri" => "/loanables/{$loanable->id}",
+                "data" => ["available" => false],
+            ],
+            [
+                // "type": "dateRange", "scope": ["2022-10-10","2022-10-14"], "period": "10:00-12:00"
+                "type" => "availability_rule",
+                "start" => "2022-10-14 10:00:00",
+                "end" => "2022-10-14 12:00:00",
+                "uri" => "/loanables/{$loanable->id}",
+                "data" => ["available" => false],
+            ],
+            [
+                // "type": "dates", "scope": ["2022-10-10","2022-10-12","2022-10-14"], "period": "13:00-17:00"
+                "type" => "availability_rule",
+                "start" => "2022-10-14 13:00:00",
+                "end" => "2022-10-14 17:00:00",
+                "uri" => "/loanables/{$loanable->id}",
+                "data" => ["available" => false],
+            ],
+            [
+                // "type": "weekdays", "scope": ["MO","TU","TH","WE","FR"], "period": "17:00-22:00"
+                "type" => "availability_rule",
+                "start" => "2022-10-14 17:00:00",
+                "end" => "2022-10-14 22:00:00",
+                "uri" => "/loanables/{$loanable->id}",
+                "data" => ["available" => false],
+            ],
+            [
+                // "type": "weekdays", "scope": ["SA","SU"], "period":"00:00-24:00"
+                "type" => "availability_rule",
+                "start" => "2022-10-15 00:00:00",
+                "end" => "2022-10-16 00:00:00",
+                "uri" => "/loanables/{$loanable->id}",
+                "data" => ["available" => false],
+            ],
+            // Loans
+            [
+                "type" => "loan",
+                "start" => "2022-09-30 00:00:00",
+                "end" => "2022-11-13 00:00:00",
+                "uri" => "/loans/{$loanMoreThanOneMonth->id}",
+                "data" => ["status" => "in_process"],
+            ],
+            [
+                "type" => "loan",
+                "start" => "2022-10-11 11:15:00",
+                "end" => "2022-10-11 21:15:00",
+                "uri" => "/loans/{$loanLessThanOneDay->id}",
+                "data" => ["status" => "in_process"],
+            ],
+            [
+                "type" => "loan",
+                "start" => "2022-10-12 22:45:00",
+                "end" => "2022-10-15 22:45:00",
+                "uri" => "/loans/{$loanMoreThanOneDay->id}",
+                "data" => ["status" => "in_process"],
+            ],
+        ]);
+    }
+
     public function testListLoanablesValidation()
     {
         // Avoid triggering emails

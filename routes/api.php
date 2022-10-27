@@ -159,6 +159,10 @@ Route::prefix("v1")->group(function () {
         Route::get("/loanables/search", "LoanableController@search");
         Route::get("/loanables/list", "LoanableController@list");
         Route::get(
+            "/loanables/{loanable_id}/events",
+            "LoanableController@events"
+        )->where("loanable_id", "[0-9]+");
+        Route::get(
             "/loanables/{loanable_id}/loans/{loan_id}/next",
             "LoanableController@retrieveNextLoan"
         )
