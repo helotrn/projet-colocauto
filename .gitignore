@@ -1,5 +1,5 @@
 .env
-/.idea
+/coverage-html
 /node_modules
 /public/hot
 /public/storage

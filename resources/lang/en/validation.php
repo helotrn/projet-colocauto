@@ -140,6 +140,10 @@ return [
     */
 
     "custom" => [
+        "status" => [
+            "cannot_cancel" =>
+                "The loan cannot be canceled because it's ongoing and it has fees.",
+        ],
         "attribute-name" => [
             "rule-name" => "custom-message",
         ],

@@ -4,8 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Events\LoanCreatedEvent;
 use App\Events\Loan\CanceledEvent;
-use App\Exports\LoansExport;
-use App\Http\Requests\Action\ActionRequest;
 use App\Http\Requests\Action\CreateRequest as ActionCreateRequest;
 use App\Http\Requests\Loan\CreateRequest;
 use App\Http\Requests\BaseRequest as Request;
@@ -128,6 +126,12 @@ class LoanController extends RestController
     public function cancel(Request $request, $id)
     {
         $item = $this->repo->find($request, $id);
+
+        if (!$item->isCancelableBy($request->user())) {
+            return $this->respondWithErrors([
+                "status" => __("validation.custom.status.cannot_cancel"),
+            ]);
+        }
 
         $item->cancel();
         $item->save();
@@ -368,6 +372,12 @@ class LoanController extends RestController
         if (!$takeover) {
             $takeover = new Takeover();
             $loan->takeover()->save($takeover);
+        }
+
+        // Auto-complete takeover for self-service.
+        // TODO: remove takeover for self-service altogether
+        if ($loan->loanable->is_self_service) {
+            $takeover->complete()->save();
         }
 
         $loan->load("takeover");

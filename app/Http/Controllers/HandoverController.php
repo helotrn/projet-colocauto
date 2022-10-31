@@ -6,7 +6,6 @@ use App\Events\LoanHandoverContestationResolvedEvent;
 use App\Events\LoanHandoverContestedEvent;
 use App\Http\Controllers\LoanController;
 use App\Http\Requests\Action\HandoverRequest;
-use App\Http\Requests\Action\PaymentRequest;
 use App\Http\Requests\BaseRequest as Request;
 use App\Models\Handover;
 use App\Repositories\HandoverRepository;
@@ -112,19 +111,6 @@ class HandoverController extends RestController
                     $item,
                     $request->user()
                 )
-            );
-        }
-
-        // For the moment we assume that self-service loanables are free.
-        // We may want to relax this constraint later.
-        // Auto-complete payment if loanable has no owner or if is self service.
-        if (!$loan->loanable->owner || $loan->loanable->is_self_service) {
-            $payment = $loan->payment()->first();
-            $paymentController = app(PaymentController::class);
-            $paymentController->complete(
-                $request->redirect(PaymentRequest::class),
-                $payment->id,
-                $loanId
             );
         }
 

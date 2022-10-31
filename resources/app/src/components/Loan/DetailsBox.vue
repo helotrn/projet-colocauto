@@ -223,6 +223,19 @@
               </template>
             </dd>
           </b-col>
+          <b-col v-else-if="tip > 0" cols="12">
+            <dl>
+              <dt>
+                {{ $t("payment.tip") | capitalize }}
+              </dt>
+              <dd>
+                {{ tip | currency }}
+                <p v-if="!loan.final_platform_tip" class="small muted">
+                  {{ $t("details_box.tip_modifiable") }}
+                </p>
+              </dd>
+            </dl>
+          </b-col>
         </b-row>
         <hr />
 

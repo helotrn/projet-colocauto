@@ -32,7 +32,7 @@
         <div v-if="!!action.executed_at">
           <p>L'emprunt s'est conclu avec succès!</p>
 
-          <div v-if="userIsAdmin || userRoles.includes('borrower')">
+          <div v-if="(userIsAdmin || userRoles.includes('borrower')) && !item.is_free">
             <h3>Coût du trajet</h3>
             <table class="trip-details">
               <tr>
@@ -104,7 +104,12 @@
         <div v-else>
           <!-- Action is not completed -->
           <!-- Whether userRoles includes 'borrower' or 'owner' -->
-          <div v-if="['borrower', 'owner'].some((role) => userRoles.includes(role))">
+          <div
+            v-if="
+              ['borrower', 'owner'].some((role) => userRoles.includes(role)) &&
+              !item.loanable.is_self_service
+            "
+          >
             <p v-if="item.loanable.type === 'car'">
               Validez dès maintenant les informations sur ce trajet&nbsp;: le kilomètrage, la
               facture d'essence&hellip;
@@ -157,7 +162,7 @@
                 <p>L'emprunt est en phase de validation par les participant-e-s.</p>
               </div>
 
-              <hr />
+              <hr v-if="!item.loanable.is_self_service" />
 
               <div v-if="!userIsAdmin">
                 <b-row>
@@ -184,78 +189,80 @@
                 </b-row>
               </div>
 
-              <h3>Sommaire</h3>
-              <table class="trip-details">
-                <tr class="header">
-                  <th>Coût du trajet</th>
-                  <td></td>
-                </tr>
-                <tr>
-                  <th>Temps et distance</th>
-                  <td class="text-right tabular-nums">{{ item.actual_price | currency }}</td>
-                </tr>
-
-                <tr>
-                  <th>Dépenses déduites</th>
-                  <td class="text-right tabular-nums">
-                    {{ -this.item.handover.purchases_amount | currency }}
-                  </td>
-                </tr>
-
-                <tr>
-                  <th v-if="userIsAdmin">
-                    Montant remis à {{ item.loanable.owner.user.full_name }} par
-                    {{ item.borrower.user.full_name }}
-                  </th>
-                  <th v-else>Montant remis à {{ item.loanable.owner.user.full_name }}</th>
-                  <td class="trip-details__total text-right tabular-nums">
-                    {{ actualOwnerPart | currency }}
-                  </td>
-                </tr>
-
-                <tr>
-                  <th>Assurances</th>
-                  <td class="text-right tabular-nums">
-                    {{ item.actual_insurance | currency }}
-                  </td>
-                </tr>
-                <tr>
-                  <th>Contribution volontaire</th>
-                  <td class="text-right tabular-nums">
-                    {{ this.normalizedTip | currency }}
-                  </td>
-                </tr>
-                <tr class="last">
-                  <th>Total</th>
-                  <td class="trip-details__total text-right tabular-nums">
-                    <strong>{{ actualPrice | currency }}</strong>
-                  </td>
-                </tr>
-                <template v-if="!userIsAdmin">
+              <template v-if="!item.is_free">
+                <h3>Sommaire</h3>
+                <table class="trip-details">
                   <tr class="header">
-                    <th>Paiement</th>
+                    <th>Coût du trajet</th>
                     <td></td>
                   </tr>
                   <tr>
-                    <th>Solde actuel</th>
+                    <th>Temps et distance</th>
+                    <td class="text-right tabular-nums">{{ item.actual_price | currency }}</td>
+                  </tr>
+
+                  <tr>
+                    <th>Dépenses déduites</th>
                     <td class="text-right tabular-nums">
-                      {{ user.balance | currency }}
+                      {{ -this.item.handover.purchases_amount | currency }}
                     </td>
                   </tr>
-                  <tr v-if="actualPrice > user.balance" class="last">
-                    <th>Minimum à ajouter</th>
+
+                  <tr>
+                    <th v-if="userIsAdmin">
+                      Montant remis à {{ item.loanable.owner.user.full_name }} par
+                      {{ item.borrower.user.full_name }}
+                    </th>
+                    <th v-else>Montant remis à {{ item.loanable.owner.user.full_name }}</th>
                     <td class="trip-details__total text-right tabular-nums">
-                      <strong>{{ (actualPrice - user.balance) | currency }}</strong>
+                      {{ actualOwnerPart | currency }}
                     </td>
                   </tr>
-                  <tr v-else class="last">
-                    <th>Solde après paiement</th>
+
+                  <tr>
+                    <th>Assurances</th>
+                    <td class="text-right tabular-nums">
+                      {{ item.actual_insurance | currency }}
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>Contribution volontaire</th>
+                    <td class="text-right tabular-nums">
+                      {{ this.normalizedTip | currency }}
+                    </td>
+                  </tr>
+                  <tr class="last">
+                    <th>Total</th>
                     <td class="trip-details__total text-right tabular-nums">
-                      <strong>{{ (user.balance - actualPrice) | currency }}</strong>
+                      <strong>{{ actualPrice | currency }}</strong>
                     </td>
                   </tr>
-                </template>
-              </table>
+                  <template v-if="!userIsAdmin">
+                    <tr class="header">
+                      <th>Paiement</th>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <th>Solde actuel</th>
+                      <td class="text-right tabular-nums">
+                        {{ user.balance | currency }}
+                      </td>
+                    </tr>
+                    <tr v-if="actualPrice > user.balance" class="last">
+                      <th>Minimum à ajouter</th>
+                      <td class="trip-details__total text-right tabular-nums">
+                        <strong>{{ (actualPrice - user.balance) | currency }}</strong>
+                      </td>
+                    </tr>
+                    <tr v-else class="last">
+                      <th>Solde après paiement</th>
+                      <td class="trip-details__total text-right tabular-nums">
+                        <strong>{{ (user.balance - actualPrice) | currency }}</strong>
+                      </td>
+                    </tr>
+                  </template>
+                </table>
+              </template>
 
               <b-row v-if="!userIsAdmin && !hasEnoughBalance">
                 <b-col>
@@ -296,7 +303,7 @@
                 </div>
               </div>
 
-              <b-row class="loan-actions__alert">
+              <b-row v-if="!item.loanable.is_self_service" class="loan-actions__alert">
                 <b-col>
                   <b-alert variant="warning" show>
                     Les informations de l'emprunt peuvent être modifiées jusqu'à 48h après sa
