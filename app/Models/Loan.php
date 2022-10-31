@@ -13,6 +13,7 @@ use App\Models\Payment;
 use App\Models\Takeover;
 use App\Transformers\LoanTransformer;
 use App\Casts\TimestampWithTimezoneCast;
+use App\Events\LoanCompletedEvent;
 use Carbon\Carbon;
 use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Builder;
@@ -88,6 +89,9 @@ class Loan extends BaseModel
                 if ($newStatus != $loan->status) {
                     $loan->status = $newStatus;
                     $changed = true;
+                    if ($loan->status === "completed") {
+                        event(new LoanCompletedEvent($loan));
+                    }
                 }
 
                 // Work with Carbon objects.
