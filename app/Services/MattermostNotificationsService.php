@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use GuzzleHttp\Client;
+use Illuminate\Support\Facades\Log;
 use ThibaudDauce\Mattermost\Mattermost;
 use ThibaudDauce\Mattermost\Message;
 use ThibaudDauce\Mattermost\Attachment;
@@ -35,6 +36,11 @@ class MattermostNotificationsService
      */
     public static function send($message)
     {
+        if (app()->environment() === "local") {
+            Log::info("Would send mattermost notification: '$message'");
+            return;
+        }
+
         $mattermost = new Mattermost(new Client());
         if (gettype($message) == "string") {
             $message = (new Message())
