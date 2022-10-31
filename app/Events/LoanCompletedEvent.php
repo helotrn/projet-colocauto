@@ -11,7 +11,7 @@ class LoanCompletedEvent
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public Loan $loan;
+    public $loan;
 
     public function __construct(Loan $loan)
     {
