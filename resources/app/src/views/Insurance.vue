@@ -22,6 +22,14 @@
                 Police d’assurance
               </a>
             </li>
+            <li>
+              <a
+                href="https://drive.google.com/file/d/1755OkK35_aph-ol9LpB3BJ2JCnkvkIp1/view"
+                target="_blank"
+              >
+                En cas d'accident
+              </a>
+            </li>
           </ol>
           <p><strong>Vous prêtez votre auto?</strong></p>
           <p>
