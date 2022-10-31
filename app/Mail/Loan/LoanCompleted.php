@@ -27,7 +27,7 @@ class LoanCompleted extends MandrillMailable
             "duration" => self::formatDuration(
                 $loan->actual_duration_in_minutes
             ),
-            "borrowDate" => (new Carbon(
+            "departureAt" => (new Carbon(
                 $loan->departure_at
             ))->toDateTimeString(),
             "loanableType" => self::formatLoanableType($loan->loanable->type),
