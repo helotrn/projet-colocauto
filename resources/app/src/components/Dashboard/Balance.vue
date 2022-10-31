@@ -1,9 +1,6 @@
 <template>
   <div class="dashboard-balance">
-    <h3 class="dashboard-h3">
-      Solde
-      <b-badge pill variant="light" v-b-popover.hover="$t('approvisionner_popover')"> ? </b-badge>
-    </h3>
+    <h3 class="dashboard-h3">Solde</h3>
 
     <div class="dashboard-balance__balance">{{ user.balance | currency }}</div>
 
@@ -100,19 +97,6 @@ export default {
 
 <style lang="scss">
 .dashboard-balance {
-  h3 {
-    .badge {
-      cursor: pointer;
-      position: relative;
-      top: -2px;
-      margin-left: 6px;
-      .badge-pill {
-        padding-left: 0.4em;
-        padding-right: 0.4em;
-      }
-    }
-  }
-
   .btn {
     margin-left: 0;
     margin-bottom: 10px;
