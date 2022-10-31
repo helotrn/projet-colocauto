@@ -1671,8 +1671,17 @@ JSON
                 "approved_at" => Carbon::now(),
             ],
         ]);
+        $ownerUser = factory(User::class)->create();
+        $ownerUser->communities()->sync([
+            $community->id => [
+                "approved_at" => Carbon::now(),
+            ],
+        ]);
+        $owner = factory(Owner::class)->create([
+            "user_id" => $ownerUser->id,
+        ]);
         $loanable = factory(Bike::class)->create([
-            "community_id" => $community->id,
+            "owner_id" => $owner->id,
         ]);
 
         $this->setTestLocale();
