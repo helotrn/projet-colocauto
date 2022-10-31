@@ -142,7 +142,13 @@ axios.interceptors.request.use((config) => {
 });
 Vue.use(VueAxios, axios);
 
-//Global clock
+/**
+ * Global clock. This allows us to use `this.$second` in any vue component
+ * either as a watch or a reactive property to depend on in computed attributes.
+ *
+ * Using this ensures all time-based UI (disabling buttons before time etc.) updates
+ * at the same time.
+ */
 const clock = Vue.observable({ second: dayjs() });
 Object.defineProperties(Vue.prototype, {
   $dayjs: {

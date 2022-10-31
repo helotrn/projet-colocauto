@@ -39,7 +39,16 @@
         accordion="loan-actions"
         :visible="open"
       >
-        <div class="loan-actions-handover-self-service__text">
+        <div v-if="action.status === 'in_process' && loanIsCanceled">
+          <b-row>
+            <b-col>
+              <b-alert show variant="danger">
+                <p>L'emprunt a été annulé. Cette étape ne peut pas être complétée.</p>
+              </b-alert>
+            </b-col>
+          </b-row>
+        </div>
+        <div v-if="!loanIsCanceled" class="loan-actions-handover-self-service__text">
           <b-row>
             <b-col>
               <b-alert show variant="warning" v-if="item.loanable.instructions">

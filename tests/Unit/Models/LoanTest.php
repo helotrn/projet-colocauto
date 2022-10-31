@@ -113,6 +113,45 @@ class LoanTest extends TestCase
         $this->assertFalse($loan->isCancelableBy($this->user));
     }
 
+    public function testIsCancelableBy_Paid_fails()
+    {
+        $community = factory(Community::class)
+            ->state("withDefault10DollarsPricing")
+            ->create();
+
+        $borrowerUser = factory(User::class)->create();
+        $borrowerUser
+            ->communities()
+            ->attach($community->id, ["approved_at" => new \DateTime()]);
+        $borrower = factory(Borrower::class)->create([
+            "user_id" => $borrowerUser->id,
+        ]);
+
+        $ownerUser = factory(User::class)->create();
+        $ownerUser
+            ->communities()
+            ->attach($community->id, ["approved_at" => new \DateTime()]);
+        $owner = factory(Owner::class)->create(["user_id" => $ownerUser->id]);
+
+        $loanable = factory(Bike::class)->create([
+            "owner_id" => $owner->id,
+        ]);
+
+        $loan = factory(Loan::class)
+            ->state("withAllStepsCompleted")
+            ->create([
+                "borrower_id" => $borrower->id,
+                "loanable_id" => $loanable->id,
+                "departure_at" => Carbon::now()->subMinutes(30),
+                "final_price" => 10,
+            ]);
+
+        $loan->refresh();
+
+        // Not cancelable even by admin
+        $this->assertFalse($loan->isCancelableBy($this->user));
+    }
+
     public function testIsCancelableBy_OngoingPaying_fails()
     {
         $community = factory(Community::class)

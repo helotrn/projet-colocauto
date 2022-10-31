@@ -692,8 +692,16 @@ SQL;
         if ($this->isCanceled()) {
             return false;
         }
+        // Cannot cancel loans with transfer of funds
+        if (
+            $this->payment &&
+            $this->payment->status === "completed" &&
+            $this->total_final_cost > 0
+        ) {
+            return false;
+        }
 
-        // Admins can cancel anytime
+        // Admins can cancel any other time
         if (
             $user->isAdmin() ||
             $user->isAdminOfCommunity($this->community->id)
