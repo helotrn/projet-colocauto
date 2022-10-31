@@ -69,11 +69,12 @@ test:jest:
     - cd resources/app
     - npm install
     - npm run test
+include:
+  - template: Security/SAST.gitlab-ci.yml
 sast:
   variables:
     SAST_EXCLUDED_ANALYZERS:
       bandit, brakeman, flawfinder, gosec, kubesec, nodejs-scan,
       pmd-apex, security-code-scan, sobelow, spotbugs
+    SAST_EXCLUDED_PATHS: spec, test, tests, tmp, vendor, resources/app/node_modules, *.test.js
   stage: test
-include:
-  - template: Security/SAST.gitlab-ci.yml
