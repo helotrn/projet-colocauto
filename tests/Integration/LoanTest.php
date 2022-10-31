@@ -906,12 +906,13 @@ class LoanTest extends TestCase
         $responseData = json_decode($response->getContent());
 
         // Validate loan actions
-        $this->assertEquals(3, count($responseData->actions));
+        $this->assertEquals(4, count($responseData->actions));
 
         $refActionStatuses = [
             "intention" => "completed",
             "pre_payment" => "completed",
-            "takeover" => "in_process",
+            "takeover" => "completed",
+            "handover" => "in_process",
         ];
         $testActionStatuses = [];
         foreach ($responseData->actions as $action) {
@@ -1306,5 +1307,205 @@ class LoanTest extends TestCase
         $response->assertJsonCount(5, "future");
         // Capped to 3 in the handler.
         $response->assertJsonCount(3, "completed");
+    }
+
+    function testCancelLoan_failsWhenDisallowed()
+    {
+        $this->withoutEvents();
+        $community = factory(Community::class)
+            ->state("withDefault10DollarsPricing")
+            ->create();
+
+        $borrowerUser = factory(User::class)->create();
+        $borrowerUser
+            ->communities()
+            ->attach($community->id, ["approved_at" => new \DateTime()]);
+        $borrower = factory(Borrower::class)->create([
+            "user_id" => $borrowerUser->id,
+        ]);
+
+        $ownerUser = factory(User::class)->create();
+        $ownerUser
+            ->communities()
+            ->attach($community->id, ["approved_at" => new \DateTime()]);
+        $owner = factory(Owner::class)->create(["user_id" => $ownerUser->id]);
+
+        $loanable = factory(Bike::class)->create([
+            "owner_id" => $owner->id,
+            "instructions" => "test",
+        ]);
+
+        $loan = factory(Loan::class)
+            ->state("withCompletedTakeover")
+            ->create([
+                "borrower_id" => $borrower->id,
+                "loanable_id" => $loanable->id,
+                "departure_at" => Carbon::now()->subMinutes(30),
+            ]);
+
+        $this->actAs($borrower->user);
+        $response = $this->json("PUT", "api/v1/loans/$loan->id/cancel");
+        $response->assertStatus(422)->assertJson([
+            "errors" => [
+                "status" =>
+                    "L'emprunt ne peut être annulé, car il est en cours et a des frais associés.",
+            ],
+        ]);
+    }
+
+    function testCancelLoan_succeedsAsAdmin()
+    {
+        $this->withoutEvents();
+        $community = factory(Community::class)
+            ->state("withDefault10DollarsPricing")
+            ->create();
+
+        $borrowerUser = factory(User::class)->create();
+        $borrowerUser
+            ->communities()
+            ->attach($community->id, ["approved_at" => new \DateTime()]);
+        $borrower = factory(Borrower::class)->create([
+            "user_id" => $borrowerUser->id,
+        ]);
+
+        $ownerUser = factory(User::class)->create();
+        $ownerUser
+            ->communities()
+            ->attach($community->id, ["approved_at" => new \DateTime()]);
+        $owner = factory(Owner::class)->create(["user_id" => $ownerUser->id]);
+
+        $loanable = factory(Bike::class)->create([
+            "owner_id" => $owner->id,
+            "instructions" => "test",
+        ]);
+
+        $loan = factory(Loan::class)
+            ->state("withCompletedTakeover")
+            ->create([
+                "borrower_id" => $borrower->id,
+                "loanable_id" => $loanable->id,
+                "departure_at" => Carbon::now()->subMinutes(30),
+            ]);
+
+        // $this->user is admin
+        $response = $this->json("PUT", "api/v1/loans/$loan->id/cancel");
+        $response->assertStatus(200);
+    }
+
+    function testCancelLoan_succeedsWhenNoTakeover()
+    {
+        $this->withoutEvents();
+        $community = factory(Community::class)
+            ->state("withDefault10DollarsPricing")
+            ->create();
+
+        $borrowerUser = factory(User::class)->create();
+        $borrowerUser
+            ->communities()
+            ->attach($community->id, ["approved_at" => new \DateTime()]);
+        $borrower = factory(Borrower::class)->create([
+            "user_id" => $borrowerUser->id,
+        ]);
+
+        $ownerUser = factory(User::class)->create();
+        $ownerUser
+            ->communities()
+            ->attach($community->id, ["approved_at" => new \DateTime()]);
+        $owner = factory(Owner::class)->create(["user_id" => $ownerUser->id]);
+
+        $loanable = factory(Bike::class)->create([
+            "owner_id" => $owner->id,
+            "instructions" => "test",
+        ]);
+
+        $loan = factory(Loan::class)->create([
+            "borrower_id" => $borrower->id,
+            "loanable_id" => $loanable->id,
+            "departure_at" => Carbon::now()->subMinutes(30),
+        ]);
+
+        $this->actAs($borrower->user);
+        $response = $this->json("PUT", "api/v1/loans/$loan->id/cancel");
+        $response->assertStatus(200);
+    }
+
+    function testCancelLoan_succeedsWhenInTheFuture()
+    {
+        $this->withoutEvents();
+        $community = factory(Community::class)
+            ->state("withDefault10DollarsPricing")
+            ->create();
+
+        $borrowerUser = factory(User::class)->create();
+        $borrowerUser
+            ->communities()
+            ->attach($community->id, ["approved_at" => new \DateTime()]);
+        $borrower = factory(Borrower::class)->create([
+            "user_id" => $borrowerUser->id,
+        ]);
+
+        $ownerUser = factory(User::class)->create();
+        $ownerUser
+            ->communities()
+            ->attach($community->id, ["approved_at" => new \DateTime()]);
+        $owner = factory(Owner::class)->create(["user_id" => $ownerUser->id]);
+
+        $loanable = factory(Bike::class)->create([
+            "owner_id" => $owner->id,
+            "instructions" => "test",
+        ]);
+
+        $loan = factory(Loan::class)
+            ->state("withCompletedTakeover")
+            ->create([
+                "borrower_id" => $borrower->id,
+                "loanable_id" => $loanable->id,
+                "departure_at" => Carbon::now()->addMinutes(30),
+            ]);
+
+        $this->actAs($borrower->user);
+        $response = $this->json("PUT", "api/v1/loans/$loan->id/cancel");
+        $response->assertStatus(200);
+    }
+
+    function testCancelLoan_succeedsWhenFree()
+    {
+        $this->withoutEvents();
+        $community = factory(Community::class)
+            ->state("withDefaultFreePricing")
+            ->create();
+
+        $borrowerUser = factory(User::class)->create();
+        $borrowerUser
+            ->communities()
+            ->attach($community->id, ["approved_at" => new \DateTime()]);
+        $borrower = factory(Borrower::class)->create([
+            "user_id" => $borrowerUser->id,
+        ]);
+
+        $ownerUser = factory(User::class)->create();
+        $ownerUser
+            ->communities()
+            ->attach($community->id, ["approved_at" => new \DateTime()]);
+        $owner = factory(Owner::class)->create(["user_id" => $ownerUser->id]);
+
+        $loanable = factory(Bike::class)->create([
+            "owner_id" => $owner->id,
+            "instructions" => "test",
+        ]);
+
+        $loan = factory(Loan::class)
+            ->state("withCompletedTakeover")
+            ->create([
+                "estimated_price" => 0,
+                "estimated_insurance" => 0,
+                "borrower_id" => $borrower->id,
+                "loanable_id" => $loanable->id,
+                "departure_at" => Carbon::now()->subMinutes(30),
+            ]);
+
+        $this->actAs($borrower->user);
+        $response = $this->json("PUT", "api/v1/loans/$loan->id/cancel");
+        $response->assertStatus(200);
     }
 }

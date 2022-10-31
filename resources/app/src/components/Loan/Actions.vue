@@ -32,17 +32,7 @@
       </div>
 
       <div v-else-if="action.type === 'takeover' && displayStep('takeover')">
-        <loan-actions-takeover-self-service
-          v-if="loanableIsSelfService"
-          :action="action"
-          :item="item"
-          :open="isCurrentStep('takeover')"
-          @completed="emitLoad"
-          @canceled="emitLoad"
-          :user="user"
-        />
         <loan-actions-takeover
-          v-else
           :action="action"
           :item="item"
           :open="isCurrentStep('takeover')"
@@ -117,13 +107,12 @@
 import LoanForm from "@/components/Loan/Form.vue";
 import LoanActionsExtension from "@/components/Loan/Actions/Extension.vue";
 import LoanActionsHandover from "@/components/Loan/Actions/Handover.vue";
-import LoanActionsHandoverSelfService from "@/components/Loan/Actions/HandoverSelfService.vue";
+import LoanActionsHandoverSelfService from "@/components/Loan/Actions/SelfService/HandoverSelfService.vue";
 import LoanActionsIncident from "@/components/Loan/Actions/Incident.vue";
 import LoanActionsIntention from "@/components/Loan/Actions/Intention.vue";
 import LoanActionsPayment from "@/components/Loan/Actions/Payment.vue";
 import LoanActionsPrePayment from "@/components/Loan/Actions/PrePayment.vue";
 import LoanActionsTakeover from "@/components/Loan/Actions/Takeover.vue";
-import LoanActionsTakeoverSelfService from "@/components/Loan/Actions/TakeoverSelfService.vue";
 
 import LoanStepsSequence from "@/mixins/LoanStepsSequence";
 
@@ -140,7 +129,6 @@ export default {
     LoanActionsPayment,
     LoanActionsPrePayment,
     LoanActionsTakeover,
-    LoanActionsTakeoverSelfService,
   },
   props: {
     form: {

@@ -1,13 +1,13 @@
 <template>
   <b-card
     no-body
-    class="loan-form loan-actions loan-actions-takeover loan-actions-takeover-self-service"
+    class="loan-form loan-actions loan-actions-handover loan-actions-handover-self-service"
   >
     <b-card-header
       header-tag="header"
       role="tab"
       class="loan-actions__header"
-      v-b-toggle.loan-actions-takeover-self-service
+      v-b-toggle.loan-actions-handover-self-service
     >
       <b-row>
         <b-col>
@@ -15,23 +15,18 @@
             <svg-waiting v-if="action.status === 'in_process' && !loanIsCanceled" />
             <svg-check v-else-if="action.status === 'completed'" />
             <svg-danger v-else-if="action.status === 'canceled' || loanIsCanceled" />
-
             Informations avant de partir
           </h2>
         </b-col>
       </b-row>
       <b-row>
         <b-col>
-          <!-- Canceled loans: current step remains in-process. -->
-          <span v-if="action.status === 'in_process' && loanIsCanceled">
+          <span v-if="loanIsCanceled">
             Emprunt annulé &bull; {{ item.canceled_at | datetime }}
           </span>
-          <span v-else-if="action.status === 'in_process' && !loanIsCanceled"> En attente </span>
+          <span v-else-if="action.status == 'in_process'"> En attente </span>
           <span v-else-if="action.status === 'completed'">
             Complété &bull; {{ action.executed_at | datetime }}
-          </span>
-          <span v-else-if="action.status === 'canceled'">
-            Annulé &bull; {{ action.executed_at | datetime }}
           </span>
         </b-col>
       </b-row>
@@ -39,7 +34,7 @@
 
     <b-card-body>
       <b-collapse
-        id="loan-actions-takeover-self-service"
+        id="loan-actions-handover-self-service"
         role="tabpanel"
         accordion="loan-actions"
         :visible="open"
@@ -53,7 +48,7 @@
             </b-col>
           </b-row>
         </div>
-        <div v-if="!loanIsCanceled">
+        <div v-if="!loanIsCanceled" class="loan-actions-handover-self-service__text">
           <b-row>
             <b-col>
               <b-alert show variant="warning" v-if="item.loanable.instructions">
@@ -93,21 +88,28 @@
             </b-col>
           </b-row>
 
-          <b-row
-            class="loan-actions-takeover-self-service__buttons text-center"
-            v-if="!action.executed_at"
+          <div
+            v-if="!action.executed_at && !loanIsCanceled"
+            class="loan-actions-handover-self-service text-center"
           >
-            <b-col>
-              <b-button
-                @click="completeAction"
-                :disabled="actionLoading"
-                size="sm"
-                variant="success"
-              >
-                Démarrer l'emprunt
-              </b-button>
-            </b-col>
-          </b-row>
+            <b-button
+              size="sm"
+              variant="success"
+              :disabled="actionLoading || startsInTheFuture"
+              @click="completeHandover"
+            >
+              Terminer l'emprunt
+            </b-button>
+            <br />
+            <div v-if="startsInTheFuture">
+              <small class="text-muted">
+                Il sera possible de terminer l'emprunt après l'heure du début de la réservation ({{
+                  item.departure_at | shortDate
+                }}
+                à {{ item.departure_at | time }}).
+              </small>
+            </div>
+          </div>
         </div>
       </b-collapse>
     </b-card-body>
@@ -115,16 +117,42 @@
 </template>
 
 <script>
+import FormsImageUploader from "@/components/Forms/ImageUploader.vue";
+import FormsValidatedInput from "@/components/Forms/ValidatedInput.vue";
+
+import UserAddCreditBox from "@/components/User/AddCreditBox.vue";
+import UserAvatar from "@/components/User/Avatar.vue";
+import { shortDate } from "@/helpers/filters";
+
 import LoanActionsMixin from "@/mixins/LoanActionsMixin";
 
 export default {
-  name: "LoanActionsTakeoverSelfService",
+  name: "LoanActionsHandoverSelfService",
   mixins: [LoanActionsMixin],
+  components: {
+    FormsImageUploader,
+    FormsValidatedInput,
+    UserAddCreditBox,
+    UserAvatar,
+  },
+  computed: {
+    startsInTheFuture() {
+      return this.$second.isBefore(this.item.departure_at, "minute");
+    },
+  },
+  methods: {
+    completeHandover() {
+      if (!this.item.actual_price) {
+        this.item.actual_price = 0;
+      }
+
+      if (!this.item.actual_insurance) {
+        this.item.actual_insurance = 0;
+      }
+      this.completeAction();
+    },
+  },
 };
 </script>
 
-<style lang="scss">
-.owner-instructions-text {
-  white-space: pre-wrap;
-}
-</style>
+<style lang="scss"></style>

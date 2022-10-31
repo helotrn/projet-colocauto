@@ -74,7 +74,7 @@ export default {
         };
       }
       if (this.item.takeover.status === "in_process") {
-        if (this.$dayjs(this.item.actual_return_at).isBefore(this.$dayjs(), "minute")) {
+        if (this.$dayjs(this.item.actual_return_at).isBefore(this.$second, "minute")) {
           return {
             status: "expired_reservation",
             variant: "warning",
@@ -82,7 +82,7 @@ export default {
         }
 
         if (this.item.loanable.is_self_service) {
-          if (this.$dayjs(this.item.departure_at).isBefore(this.$dayjs(), "minute")) {
+          if (this.$dayjs(this.item.departure_at).isBefore(this.$second, "minute")) {
             return {
               status: "waiting_for_takeover_self_service",
               variant: "warning",
@@ -94,7 +94,7 @@ export default {
           };
         }
 
-        if (this.$dayjs(this.item.departure_at).isBefore(this.$dayjs(), "minute")) {
+        if (this.$dayjs(this.item.departure_at).isBefore(this.$second, "minute")) {
           return {
             status: "waiting_for_takeover",
             variant: "warning",
@@ -115,7 +115,7 @@ export default {
         };
       }
       if (this.item.handover.status === "in_process") {
-        if (this.$dayjs(this.item.actual_return_at).isBefore(this.$dayjs(), "minute")) {
+        if (this.$dayjs(this.item.actual_return_at).isBefore(this.$second, "minute")) {
           return {
             status: "waiting_for_handover",
             variant: "warning",
@@ -123,7 +123,7 @@ export default {
         }
 
         if (this.item.loanable.is_self_service) {
-          if (this.$dayjs(this.item.departure_at).isAfter(this.$dayjs(), "minute")) {
+          if (this.$dayjs(this.item.departure_at).isAfter(this.$second, "minute")) {
             return {
               status: "confirmed_reservation_self_service",
               variant: "success",
@@ -135,7 +135,7 @@ export default {
           };
         }
 
-        if (this.$dayjs(this.item.departure_at).isAfter(this.$dayjs(), "minute")) {
+        if (this.$dayjs(this.item.departure_at).isAfter(this.$second, "minute")) {
           return {
             variant: "success",
             status: "confirmed_reservation",

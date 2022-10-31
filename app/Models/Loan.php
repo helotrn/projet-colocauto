@@ -357,6 +357,7 @@ SQL;
         "total_actual_cost",
         "total_final_cost",
         "total_estimated_cost",
+        "is_free",
     ];
 
     public $items = [
@@ -465,6 +466,11 @@ SQL;
             new Carbon($this->departure_at),
             new Carbon($this->actual_return_at)
         );
+    }
+
+    public function getIsFreeAttribute()
+    {
+        return $this->actual_price === 0 && $this->actual_insurance === 0;
     }
 
     public function getActualPricingAttribute()
@@ -681,26 +687,45 @@ SQL;
        This method checks whether this loan is in a state in which it can be
        canceled.
     */
-    public function isCancelable()
+    public function isCancelableBy(User $user)
     {
         if ($this->isCanceled()) {
             return false;
         }
-
-        foreach ($this->actions as $action) {
-            if (
-                // If takeover exists, then it must be in process.
-                ("takeover" == $action->type &&
-                    "in_process" != $action->status) ||
-                // If handover or payment exist, then loan can't be canceled.
-                "handover" == $action->type ||
-                "payment" == $action->type
-            ) {
-                return false;
-            }
+        // Cannot cancel loans with transfer of funds
+        if (
+            $this->payment &&
+            $this->payment->status === "completed" &&
+            $this->total_final_cost > 0
+        ) {
+            return false;
         }
 
-        return true;
+        // Admins can cancel any other time
+        if (
+            $user->isAdmin() ||
+            $user->isAdminOfCommunity($this->community->id)
+        ) {
+            return true;
+        }
+
+        // Unrelated users cannot cancel
+        if (
+            $this->borrower->user->id !== $user->id &&
+            (!$this->loanable->owner ||
+                $this->loanable->owner->user->id !== $user->id)
+        ) {
+            return false;
+        }
+
+        return // Free loans can be canceled at any time with no repercussions
+            $this->is_free ||
+                // If it's not free, then it can be canceled if the vehicle hasn't been taken
+                (!$this->takeover || $this->takeover->status == "in_process") ||
+                // or the reservation has not yet started (in case the takeover was completed too soon)
+                CarbonImmutable::now()->isBefore(
+                    CarbonImmutable::parse($this->departure_at)
+                );
     }
 
     public function cancel($at = null)

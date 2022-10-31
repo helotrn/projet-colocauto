@@ -239,10 +239,23 @@
                 v-if="!action.executed_at && !loanIsCanceled && !item.is_contested"
               >
                 <b-col>
-                  <b-button type="submit" size="sm" variant="success" class="mr-3">
+                  <b-button
+                    type="submit"
+                    size="sm"
+                    variant="success"
+                    class="mr-3"
+                    :disabled="!isContested && startsInTheFuture"
+                  >
                     <span v-if="isContested">Corriger</span>
                     <span v-else>Enregistrer</span>
                   </b-button>
+                  <div v-if="!isContested && startsInTheFuture">
+                    <small class="text-muted">
+                      Il sera possible de terminer l'emprunt après l'heure du début de la
+                      réservation ({{ item.departure_at | shortDate }} à
+                      {{ item.departure_at | time }}).
+                    </small>
+                  </div>
                 </b-col>
               </b-row>
 
@@ -325,7 +338,13 @@
                 v-if="(!action.executed_at && !item.is_contested) || userIsAdmin"
               >
                 <b-col>
-                  <b-button type="submit" size="sm" variant="success" class="mr-3">
+                  <b-button
+                    type="submit"
+                    size="sm"
+                    variant="success"
+                    class="mr-3"
+                    :disabled="!isContested && startsInTheFuture"
+                  >
                     <span v-if="isContested">Corriger</span>
                     <span v-else>Enregistrer</span>
                   </b-button>
@@ -371,7 +390,7 @@
                 size="sm"
                 variant="success"
                 class="mr-3"
-                :disabled="actionLoading"
+                :disabled="actionLoading || startsInTheFuture"
                 @click="completeAction"
               >
                 C'est fait!
@@ -476,6 +495,9 @@ export default {
   computed: {
     mileageBeginning() {
       return this.item.actions.find((a) => a.type === "takeover").mileage_beginning;
+    },
+    startsInTheFuture() {
+      return this.$second.isBefore(this.item.departure_at, "minute");
     },
   },
   watch: {
