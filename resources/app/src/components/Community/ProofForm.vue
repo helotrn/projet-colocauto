@@ -25,7 +25,7 @@
               &nbsp;
               <b-button v-if="skip" variant="outline-primary" :to="skip"> Plus tard</b-button>
               &nbsp;
-              <layout-loading inline v-if="loading" />
+              <layout-loading with-button v-if="loading" />
             </div> </b-col
         ></b-row>
 
