@@ -373,6 +373,9 @@ SQL;
         "payment",
         "pre_payment",
         "takeover",
+        "car",
+        "bike",
+        "trailer",
     ];
 
     public $collections = ["actions", "extensions", "incidents"];

@@ -7,49 +7,48 @@
       </b-card-title>
       <div class="details-toggle mb-3 text-muted" v-b-toggle.loanable-details>
         {{ $t("details_box.details") | capitalize }} {{ prettyType }}
-        <b-icon v-if="loadedFullLoanable" icon="caret-right-fill"></b-icon>
+        <b-icon icon="caret-right-fill"></b-icon>
       </div>
       <b-card-text>
         <b-collapse id="loanable-details" role="tabpanel" accordion="loanable-details">
-          <layout-loading v-if="!loadedFullLoanable"></layout-loading>
-          <div v-else>
+          <div>
             <div v-if="loanable.type === 'bike'">
               <dl>
                 <dt>{{ $t("loanable.fields.model") | capitalize }}</dt>
-                <dd>{{ loanable.model }}</dd>
+                <dd>{{ loan.bike.model }}</dd>
                 <dt>{{ $t("loanable.fields.bike_type") | capitalize }}</dt>
-                <dd>{{ $t(`loanable.bike_types.${loanable.bike_type}`) | capitalize }}</dd>
+                <dd>{{ $t(`loanable.bike_types.${loan.bike.bike_type}`) | capitalize }}</dd>
                 <dt>{{ $t("loanable.fields.size") | capitalize }}</dt>
                 <dd>
-                  {{ $t(`loanable.sizes.${loanable.size}`) | capitalize }}
+                  {{ $t(`loanable.sizes.${loan.bike.size}`) | capitalize }}
                 </dd>
               </dl>
             </div>
             <div v-else-if="loanable.type === 'trailer'">
               <dl>
                 <dt>{{ $t("loanable.fields.maximum_charge") | capitalize }}</dt>
-                <dd>{{ loanable.maximum_charge }}</dd>
+                <dd>{{ loan.trailer.maximum_charge }}</dd>
                 <dt>{{ $t("loanable.fields.dimensions") | capitalize }}</dt>
-                <dd>{{ loanable.dimensions }}</dd>
+                <dd>{{ loan.trailer.dimensions }}</dd>
               </dl>
             </div>
             <div v-else-if="loanable.type === 'car'">
               <dl>
                 <dt>{{ $t("loanable.fields.brand") | capitalize }}</dt>
-                <dd>{{ loanable.brand }}</dd>
+                <dd>{{ loan.car.brand }}</dd>
                 <dt>{{ $t("loanable.fields.model") | capitalize }}</dt>
-                <dd>{{ loanable.model }}</dd>
+                <dd>{{ loan.car.model }}</dd>
                 <dt>{{ $t("loanable.fields.year_of_circulation") | capitalize }}</dt>
-                <dd>{{ loanable.year_of_circulation }}</dd>
+                <dd>{{ loan.car.year_of_circulation }}</dd>
                 <dt>{{ $t("loanable.fields.transmission_mode") | capitalize }}</dt>
                 <dd>
-                  {{ $t(`loanable.transmission_modes.${loanable.transmission_mode}`) | capitalize }}
+                  {{ $t(`loanable.transmission_modes.${loan.car.transmission_mode}`) | capitalize }}
                 </dd>
                 <dt>{{ $t("loanable.fields.engine") | capitalize }}</dt>
-                <dd>{{ $t(`loanable.engines.${loanable.engine}`) | capitalize }}</dd>
+                <dd>{{ $t(`loanable.engines.${loan.car.engine}`) | capitalize }}</dd>
                 <dt>{{ $t("loanable.fields.papers_location") | capitalize }}</dt>
                 <dd>
-                  {{ $t(`loanable.papers_locations.${loanable.papers_location}`) | capitalize }}
+                  {{ $t(`loanable.papers_locations.${loan.car.papers_location}`) | capitalize }}
                 </dd>
               </dl>
             </div>
@@ -286,11 +285,6 @@ export default {
     loanable: {
       type: Object,
       required: true,
-    },
-    loadedFullLoanable: {
-      type: Boolean,
-      required: true,
-      default: true,
     },
     loanLoading: {
       type: Boolean,

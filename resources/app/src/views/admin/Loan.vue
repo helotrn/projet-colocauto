@@ -36,7 +36,6 @@
             :loanable="item.loanable"
             showInstructions
             :loan-loading="loading"
-            :loaded-full-loanable="loadedFullLoanable"
           />
         </b-col>
       </b-row>
@@ -101,11 +100,6 @@ export default {
     LoanHeader,
     LoanDetailsBox,
   },
-  data() {
-    return {
-      loadedFullLoanable: false,
-    };
-  },
   computed: {
     fullTitle() {
       const parts = [
@@ -129,31 +123,6 @@ export default {
     },
   },
   methods: {
-    async formMixinCallback() {
-      if (this.item.id) {
-        const { id, type } = this.item.loanable;
-        await this.$store.dispatch(`${type}s/retrieveOne`, {
-          params: {
-            fields: "*,owner.id,owner.user.id,owner.user.avatar,owner.user.name",
-            "!fields": "events",
-            with_deleted: true,
-          },
-          id,
-        });
-        const loanable = this.$store.state[`${type}s`].item;
-
-        this.$store.commit(`${type}s/item`, null);
-
-        this.$store.commit(`${this.slug}/mergeItem`, { loanable });
-      }
-
-      this.loadedFullLoanable = true;
-    },
-    async loadItemAndUser() {
-      this.loadedFullLoanable = false;
-
-      await this.loadItem();
-    },
     async resumeLoan() {
       this.$store.commit("loans/patchItem", {
         canceled_at: null,
@@ -162,7 +131,6 @@ export default {
     },
     async submitAndReload() {
       await this.submit();
-      await this.formMixinCallback();
     },
   },
   i18n: {
