@@ -86,7 +86,6 @@
 
         <b-col lg="4" class="loan__sidebar" id="loan_details">
           <loan-details-box
-            :loadedFullLoanable="loadedFullLoanable"
             vertical
             :loan="item"
             :loanLoading="loading"
@@ -133,13 +132,6 @@ export default {
     });
   },
   computed: {
-    loadedFullLoanable() {
-      if (!this.item.loanable) {
-        return false;
-      }
-      const loanable = this.$store.state[`${this.item.loanable.type}s`].item;
-      return !!loanable && loanable.id === this.item.loanable.id;
-    },
     pageLoaded() {
       // this.id is the route id
       return this.routeDataLoaded && this.item && (this.item.id == this.id || this.id === "new");
@@ -163,31 +155,6 @@ export default {
     },
   },
   methods: {
-    async formMixinCallback() {
-      if (!this.item) {
-        return;
-      }
-
-      setTimeout(this.scrollToActiveAction, 500);
-
-      const partialLoanable = this.item.loanable;
-
-      if (!this.loadedFullLoanable) {
-        await this.$store.dispatch(`${partialLoanable.type}s/retrieveOne`, {
-          params: {
-            fields: "*,owner.id,owner.user.id,owner.user.name,owner.user.phone,",
-            "!fields": "events",
-            with_deleted: true,
-          },
-          id: partialLoanable.id,
-        });
-      }
-
-      const loanable = this.$store.state[`${partialLoanable.type}s`].item;
-      this.$store.commit(`loans/mergeItem`, {
-        loanable: { ...partialLoanable, ...loanable },
-      });
-    },
     async loadItemAndUser() {
       await Promise.all([this.loadItem(), this.$store.dispatch("loadUser")]);
     },
@@ -218,7 +185,6 @@ export default {
     },
     async submitLoan() {
       await this.submit();
-      this.formMixinCallback();
     },
   },
   i18n: {

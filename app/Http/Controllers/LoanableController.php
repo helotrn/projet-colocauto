@@ -302,16 +302,18 @@ class LoanableController extends RestController
         $output = [];
         $loanableFields = [
             "id",
-            "type",
-            "name",
-            "position_google",
-            "is_self_service",
             "comments",
+            "is_self_service",
+            "location_description",
+            "name",
             "owner.user.id",
+            "owner.user.avatar",
             "owner.user.name",
             "owner.user.last_name",
             "owner.user.full_name",
-            "owner.user.avatar",
+            "position_google",
+            "position",
+            "type",
             "image.*",
         ];
 
