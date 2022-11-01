@@ -12,10 +12,12 @@ class Pending extends BaseMailable
     use Queueable, SerializesModels;
 
     public $user;
+    public $isRegistrationSubmitted;
 
-    public function __construct(User $user)
+    public function __construct(User $user, $isRegistrationSubmitted)
     {
         $this->user = $user;
+        $this->isRegistrationSubmitted = $isRegistrationSubmitted;
     }
 
     public function build()

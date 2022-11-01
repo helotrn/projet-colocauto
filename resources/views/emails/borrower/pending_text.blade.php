@@ -3,9 +3,13 @@
 @section('content')
 Bonjour {{ $user->name }},
 
-Félicitations, votre dossier de conduite est approuvé!
+Félicitations, votre dossier de conduite est approuvé! 
 
-Vous devez par contre attendre l'approbation de votre preuve de résidence pour pouvoir emprunter des véhicules. 
+@if($isRegistrationSubmitted)
+    Vous devez par contre attendre l'approbation de votre preuve de résidence pour pouvoir emprunter des véhicules. 
+@else
+    Vous devez par contre soumettre votre preuve de résidence pour pouvoir emprunter des véhicules. 
+@endif
 
 L'équipe LocoMotion
 info@locomotion.app

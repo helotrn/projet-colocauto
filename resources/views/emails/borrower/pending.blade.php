@@ -23,9 +23,11 @@
         color: #343a40;
     "
 >
-    Félicitations, votre dossier de conduite est approuvé! Vous devez par contre
-    attendre l'approbation de votre preuve de résidence pour pouvoir emprunter
-    des véhicules.
+    Félicitations, votre dossier de conduite est
+    approuvé!@if($isRegistrationSubmitted) Vous devez par contre attendre
+    l'approbation de votre preuve de résidence pour pouvoir emprunter des
+    véhicules.@else Vous devez par contre soumettre votre preuve de résidence
+    pour pouvoir emprunter des véhicules.@endif
 </p>
 
 @endsection
