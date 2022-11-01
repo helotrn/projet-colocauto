@@ -2,9 +2,14 @@
 
 namespace Tests\Integration;
 
+use App\Events\BorrowerApprovedEvent;
+use App\Listeners\SendBorrowerApprovedEmails;
 use App\Models\Borrower;
 use App\Models\User;
+use App\Mail\Borrower\Approved as BorrowerApproved;
+use App\Mail\Borrower\Pending as BorrowerPending;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Mail;
 use Tests\TestCase;
 
 class BorrowerTest extends TestCase
@@ -113,7 +118,7 @@ class BorrowerTest extends TestCase
         $meta = [];
         $meta["sent_registration_approved_email"] = true;
 
-        // Fake User with registration approved
+        // Fake user with registration approved
         $user = factory(User::class)->create([
             "meta" => $meta,
         ]);
@@ -138,13 +143,29 @@ class BorrowerTest extends TestCase
         $response
             ->assertStatus(200)
             ->assertJson(["approved_at" => $approvedAtDate]);
+
+        $event = new BorrowerApprovedEvent($user);
+
+        Mail::fake();
+
+        // Don't trigger event. Only test listener.
+        $listener = app()->make(SendBorrowerApprovedEmails::class);
+        $listener->handle($event);
+
+        // Mail to borrower.
+        Mail::assertQueued(BorrowerApproved::class, function ($mail) use (
+            $user
+        ) {
+            return $mail->hasTo($user->email);
+        });
     }
 
     public function testPendingBorrowers()
     {
-        // Fake User without registration approved
+        // Fake user without registration approved
+        $user = $this->user;
         $borrower = factory(Borrower::class)->create([
-            "user_id" => $this->user->id,
+            "user_id" => $user->id,
         ]);
 
         $response = $this->json("GET", "/api/v1/borrowers/$borrower->id");
@@ -163,5 +184,20 @@ class BorrowerTest extends TestCase
         $response
             ->assertStatus(200)
             ->assertJson(["approved_at" => $approvedAtDate]);
+
+        $event = new BorrowerApprovedEvent($user);
+
+        Mail::fake();
+
+        // Don't trigger event. Only test listener.
+        $listener = app()->make(SendBorrowerApprovedEmails::class);
+        $listener->handle($event);
+
+        // Mail to borrower.
+        Mail::assertQueued(BorrowerPending::class, function ($mail) use (
+            $user
+        ) {
+            return $mail->hasTo($user->email);
+        });
     }
 }
