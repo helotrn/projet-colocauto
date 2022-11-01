@@ -7,7 +7,7 @@ Félicitations, votre dossier de conduite est approuvé!
 
 Vous pouvez maintenant emprunter les autos de vos voisins et voisines ;-)
 
-Voir mon voisinage [{{ env('FRONTEND_URL') . '/community/list' }}]
+Voir mon voisinage [{{ env('FRONTEND_URL') . '/search/map' }}]
 
 L'équipe LocoMotion
 info@locomotion.app

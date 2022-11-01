@@ -5,7 +5,6 @@ namespace App\Mail\Borrower;
 use App\Mail\BaseMailable;
 use App\Models\User;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\SerializesModels;
 
 class Completed extends BaseMailable
@@ -22,7 +21,7 @@ class Completed extends BaseMailable
     public function build()
     {
         return $this->view("emails.borrower.completed")
-            ->subject("Dossier de conduite complété")
+            ->subject("LocoMotion - Dossier de conduite complété")
             ->text("emails.borrower.completed_text")
             ->with([
                 "title" => "Dossier de conduite complété",

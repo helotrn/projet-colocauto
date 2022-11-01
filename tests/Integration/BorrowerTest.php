@@ -2,9 +2,14 @@
 
 namespace Tests\Integration;
 
+use App\Events\BorrowerApprovedEvent;
+use App\Listeners\SendBorrowerApprovedEmails;
 use App\Models\Borrower;
 use App\Models\User;
+use App\Mail\Borrower\Approved as BorrowerApproved;
+use App\Mail\Borrower\Pending as BorrowerPending;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Mail;
 use Tests\TestCase;
 
 class BorrowerTest extends TestCase
@@ -110,8 +115,16 @@ class BorrowerTest extends TestCase
 
     public function testApproveBorrowers()
     {
+        $meta = [];
+        $meta["sent_registration_approved_email"] = true;
+
+        // Fake user with registration approved
+        $user = factory(User::class)->create([
+            "meta" => $meta,
+        ]);
+
         $borrower = factory(Borrower::class)->create([
-            "user_id" => $this->user->id,
+            "user_id" => $user->id,
         ]);
 
         $response = $this->json("GET", "/api/v1/borrowers/$borrower->id");
@@ -130,5 +143,61 @@ class BorrowerTest extends TestCase
         $response
             ->assertStatus(200)
             ->assertJson(["approved_at" => $approvedAtDate]);
+
+        $event = new BorrowerApprovedEvent($user);
+
+        Mail::fake();
+
+        // Don't trigger event. Only test listener.
+        $listener = app()->make(SendBorrowerApprovedEmails::class);
+        $listener->handle($event);
+
+        // Mail to borrower.
+        Mail::assertQueued(BorrowerApproved::class, function ($mail) use (
+            $user
+        ) {
+            return $mail->hasTo($user->email);
+        });
+    }
+
+    public function testPendingBorrowers()
+    {
+        // Fake user without registration approved
+        $user = $this->user;
+        $borrower = factory(Borrower::class)->create([
+            "user_id" => $user->id,
+        ]);
+
+        $response = $this->json("GET", "/api/v1/borrowers/$borrower->id");
+        $response->assertStatus(200)->assertJson(["approved_at" => null]);
+
+        $approvedAtDate = Carbon::now()->format("Y-m-d h:m:s");
+        Carbon::setTestNow($approvedAtDate);
+
+        $response = $this->json(
+            "PUT",
+            "/api/v1/users/{$borrower->user->id}/borrower/approve"
+        );
+        $response->assertStatus(200);
+
+        $response = $this->json("GET", "/api/v1/borrowers/$borrower->id");
+        $response
+            ->assertStatus(200)
+            ->assertJson(["approved_at" => $approvedAtDate]);
+
+        $event = new BorrowerApprovedEvent($user);
+
+        Mail::fake();
+
+        // Don't trigger event. Only test listener.
+        $listener = app()->make(SendBorrowerApprovedEmails::class);
+        $listener->handle($event);
+
+        // Mail to borrower.
+        Mail::assertQueued(BorrowerPending::class, function ($mail) use (
+            $user
+        ) {
+            return $mail->hasTo($user->email);
+        });
     }
 }

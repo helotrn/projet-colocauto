@@ -23,16 +23,16 @@ export default {
         return false;
       }
     },
-    hasNotSubmittedProofOfResidency() {
-      return (
-        this.user.communities && !this.user.communities.reduce((acc, c) => acc && !!c.proof, true)
-      );
+    hasSubmittedProofOfResidency() {
+      return this.user.communities?.reduce((hasProofForSomeCommunity, c) => {
+        return hasProofForSomeCommunity || this.userHasProofForCommunity(c);
+      }, false);
     },
     waitingForProfileApproval() {
       return (
         this.isLoggedIn &&
         this.hasCompletedRegistration &&
-        !this.hasNotSubmittedProofOfResidency &&
+        this.hasSubmittedProofOfResidency &&
         !this.hasProfileApproved
       );
     },
@@ -93,6 +93,9 @@ export default {
       return (
         this.isAdminOfCommunity(loanable?.community) || this.isAdminOfUser(loanable?.owner.user)
       );
+    },
+    userHasProofForCommunity(communityUser) {
+      return communityUser?.proof?.length > 0;
     },
   },
 };

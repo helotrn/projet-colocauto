@@ -6,7 +6,6 @@ use App\Mail\BaseMailable;
 use App\Models\Community;
 use App\Models\User;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\SerializesModels;
 
 class Reviewable extends BaseMailable
@@ -39,12 +38,12 @@ class Reviewable extends BaseMailable
     {
         $communitiesCount = count($this->communities);
         if ($communitiesCount > 1) {
-            $subject = "Profil d'emprunteur complété dans $communitiesCount communautés";
+            $subject = "LocoMotion - Profil d'emprunteur complété dans $communitiesCount communautés";
         } elseif (1 === $communitiesCount) {
             $communityName = $this->communities->first()->name;
-            $subject = "Profil d'emprunteur complété dans {$communityName}";
+            $subject = "LocoMotion - Profil d'emprunteur complété dans {$communityName}";
         } else {
-            $subject = "Profil d'emprunteur complété";
+            $subject = "LocoMotion - Profil d'emprunteur complété";
         }
 
         return $this->view("emails.borrower.reviewable")
