@@ -159,7 +159,7 @@ uniquement dans le cadre d’une réservation."
           <b-button variant="primary" type="submit" :disabled="loading || pristine">
             {{ $t("enregistrer") | capitalize }}
           </b-button>
-          <layout-loading inline v-if="loading" />
+          <layout-loading with-button v-if="loading" />
         </div>
       </b-form>
     </validation-observer>

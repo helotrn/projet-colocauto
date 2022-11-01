@@ -137,9 +137,9 @@
               <b-icon icon="caret-right-fill"></b-icon>
             </dt>
             <dd>
-              <layout-loading inline v-if="loanLoading"></layout-loading>
-              <template v-else>
-                <div v-if="showCostSummary" class="font-weight-bold">
+              <div v-if="showCostSummary" class="font-weight-bold">
+                <layout-loading with-text v-if="loanLoading"></layout-loading>
+                <template v-else>
                   <div v-if="isLoanAdmin">
                     {{ $t("payment.transferred_amount") | capitalize }}: {{ ownerTotal | currency
                     }}<br />
@@ -147,80 +147,79 @@
                   </div>
                   <div v-else-if="isBorrower">{{ borrowerTotal | currency }}</div>
                   <div v-else-if="isOwner">{{ ownerTotal | currency }}</div>
-                </div>
-                <b-collapse
-                  @input="(visible) => (showCostSummary = !visible)"
-                  :visible="isLoanAdmin"
-                  id="price-details"
-                  role="tabpanel"
-                  accordion="price-details"
-                >
-                  <table class="price-table">
-                    <tr>
-                      <th>{{ $t("payment.time_distance") | capitalize }}</th>
-                      <td class="text-right tabular-nums">{{ price | currency }}</td>
-                    </tr>
-                    <tr>
-                      <th :class="{ 'pb-2': !isBorrower }">
-                        {{ $t("payment.deductions") | capitalize }}
-                      </th>
-                      <td class="text-right tabular-nums">
-                        {{ -purchasesAmount | currency }}
-                      </td>
-                    </tr>
-                    <tr v-if="!isBorrower" class="total-row">
-                      <th v-if="isLoanAdmin">
-                        {{ $t("payment.transferred_amount") | capitalize }}
-                      </th>
-                      <th v-else-if="isOwner">{{ $t("payment.owner_total") | capitalize }}</th>
-                      <td
-                        v-if="isOwner || isLoanAdmin"
-                        class="text-right tabular-nums border-top border-dark"
-                      >
-                        {{ ownerTotal | currency }}
-                      </td>
-                    </tr>
-                    <template v-if="isBorrower || isLoanAdmin">
-                      <tr>
-                        <th>{{ $t("payment.insurance") | capitalize }}</th>
-                        <td class="text-right tabular-nums">
-                          {{ insurance | currency }}
-                        </td>
-                      </tr>
-                      <tr>
-                        <th class="pb-2">
-                          {{ $t("payment.tip") | capitalize }}
-                          <div v-if="!loan.final_platform_tip" class="small muted">
-                            {{ $t("details_box.tip_modifiable") }}
-                          </div>
-                        </th>
-                        <td class="text-right tabular-nums pb-2">
-                          {{ tip | currency }}
-                        </td>
-                      </tr>
-                      <tr class="total-row">
-                        <th>
-                          {{
-                            isLoanAdmin
-                              ? $t("payment.borrower_total")
-                              : $t("payment.total") | capitalize
-                          }}
-                        </th>
-                        <td class="text-right tabular-nums border-top border-dark">
-                          {{ borrowerTotal | currency }}
-                        </td>
-                      </tr>
-                    </template>
-                  </table>
-                  <div class="small">
-                    <a
-                      href="https://mailchi.mp/solon-collectif/tarifs-locomotion"
-                      target="_blank"
-                      >{{ $t("payment.tarification_explanation") | capitalize }}</a
+                </template>
+              </div>
+              <b-collapse
+                @input="(visible) => (showCostSummary = !visible)"
+                :visible="isLoanAdmin"
+                id="price-details"
+                role="tabpanel"
+                accordion="price-details"
+              >
+                <layout-loading v-if="loanLoading" class="table-loading-indicator"></layout-loading>
+                <table class="price-table" :class="{ loading: loanLoading }">
+                  <tr>
+                    <th>{{ $t("payment.time_distance") | capitalize }}</th>
+                    <td class="text-right tabular-nums">{{ price | currency }}</td>
+                  </tr>
+                  <tr>
+                    <th :class="{ 'pb-2': !isBorrower }">
+                      {{ $t("payment.deductions") | capitalize }}
+                    </th>
+                    <td class="text-right tabular-nums">
+                      {{ -purchasesAmount | currency }}
+                    </td>
+                  </tr>
+                  <tr v-if="!isBorrower" class="total-row">
+                    <th v-if="isLoanAdmin">
+                      {{ $t("payment.transferred_amount") | capitalize }}
+                    </th>
+                    <th v-else-if="isOwner">{{ $t("payment.owner_total") | capitalize }}</th>
+                    <td
+                      v-if="isOwner || isLoanAdmin"
+                      class="text-right tabular-nums border-top border-dark"
                     >
-                  </div>
-                </b-collapse>
-              </template>
+                      {{ ownerTotal | currency }}
+                    </td>
+                  </tr>
+                  <template v-if="isBorrower || isLoanAdmin">
+                    <tr>
+                      <th>{{ $t("payment.insurance") | capitalize }}</th>
+                      <td class="text-right tabular-nums">
+                        {{ insurance | currency }}
+                      </td>
+                    </tr>
+                    <tr>
+                      <th class="pb-2">
+                        {{ $t("payment.tip") | capitalize }}
+                        <div v-if="!loan.final_platform_tip" class="small muted">
+                          {{ $t("details_box.tip_modifiable") }}
+                        </div>
+                      </th>
+                      <td class="text-right tabular-nums pb-2">
+                        {{ tip | currency }}
+                      </td>
+                    </tr>
+                    <tr class="total-row">
+                      <th>
+                        {{
+                          isLoanAdmin
+                            ? $t("payment.borrower_total")
+                            : $t("payment.total") | capitalize
+                        }}
+                      </th>
+                      <td class="text-right tabular-nums border-top border-dark">
+                        {{ borrowerTotal | currency }}
+                      </td>
+                    </tr>
+                  </template>
+                </table>
+                <div class="small">
+                  <a href="https://mailchi.mp/solon-collectif/tarifs-locomotion" target="_blank">{{
+                    $t("payment.tarification_explanation") | capitalize
+                  }}</a>
+                </div>
+              </b-collapse>
             </dd>
           </b-col>
           <b-col v-else-if="tip > 0" cols="12">
@@ -463,11 +462,26 @@ export default {
   }
   hr {
     margin-top: 0;
+
     margin-bottom: 1rem;
   }
+  .table-loading-indicator {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    height: 75%;
+    opacity: 0.5;
+  }
+
   .price-table {
     width: 100%;
     font-size: 0.8rem;
+
+    &.loading {
+      opacity: 0.5;
+    }
+
     th {
       font-weight: 400;
     }
