@@ -320,20 +320,6 @@ class LoanController extends RestController
             if ($loan->loanable->is_self_service) {
                 // Autocomplete intention if loanable is self service.
                 $intention->complete()->save();
-            } elseif (
-                // Autocomplete intention in private communities.
-                $loan->loanable->owner->user->approvedCommunities
-                    ->where("type", "private")
-                    ->pluck("id")
-                    ->intersect(
-                        $loan->borrower->user->approvedCommunities
-                            ->where("type", "private")
-                            ->pluck("id")
-                    )
-                    ->intersect([$loan->community_id])
-                    ->isNotEmpty()
-            ) {
-                $intention->complete()->save();
             }
         }
 
