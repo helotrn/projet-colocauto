@@ -754,11 +754,11 @@ SQL;
         // in the output. E.g. in the loanable and bike fields.
         switch ($this->loanable->type) {
             case "car":
-                return Car::find($this->loanable->id);
+                return Car::withTrashed()->find($this->loanable->id);
             case "bike":
-                return Bike::find($this->loanable->id);
+                return Bike::withTrashed()->find($this->loanable->id);
             case "trailer":
-                return Trailer::find($this->loanable->id);
+                return Trailer::withTrashed()->find($this->loanable->id);
             default:
                 return $this->loanable;
         }
