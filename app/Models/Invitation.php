@@ -12,9 +12,9 @@ class Invitation extends BaseModel
 
     protected $fillable = ["community_id", "email"];
 
-    protected $hidden = ["token"];
+    protected $hidden = [];
 
-    public $items = ["community"];
+    public $items = ["community", "token"];
 
     public function community()
     {

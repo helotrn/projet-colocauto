@@ -59,6 +59,7 @@ class InvitationController extends RestController
             "item" => [
                 "email" => "",
                 "community" => null,
+                "token" => null,
             ],
             "form" => [
                 "email" => [
@@ -75,6 +76,10 @@ class InvitationController extends RestController
                         ],
                     ],
                 ],
+                "token" => [
+                    // readonly field, generated on the server side
+                    "disabled" => true
+                ]
             ],
             "filters" => $this->model::$filterTypes ?: new \stdClass(),
         ];
