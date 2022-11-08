@@ -126,7 +126,7 @@ uniquement dans le cadre d’une réservation."
                     validate();
                   }
                 "
-                :component-restrictions="{ country: 'ca' }"
+                :component-restrictions="{ country: 'fr' }"
                 :options="{ language: 'fr', fields: ['formatted_address'] }"
                 :types="['address']"
                 placeholder=""
