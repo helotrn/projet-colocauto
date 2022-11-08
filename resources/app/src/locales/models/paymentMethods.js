@@ -23,5 +23,7 @@ export default {
       non_canadian: "autres cartes non canadiennes",
       canadian: "autres cartes canadiennes",
     },
+    indisponible: "indisponible",
+    indisponibles: "indisponibles"
   },
 };

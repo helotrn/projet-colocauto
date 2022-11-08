@@ -14,6 +14,7 @@
     <b-row>
       <b-col>
         <payment-method-form
+          v-if="available"
           :payment-method="item"
           :form="form"
           :loading="loading"
@@ -21,6 +22,7 @@
           @destroy="destroy"
           :user="user"
         />
+        <em v-else>{{ $tc("model_name", 2) }} {{ $t("indisponibles") }}</em>
       </b-col>
     </b-row>
   </b-container>
@@ -28,8 +30,6 @@
 </template>
 
 <script>
-import PaymentMethodForm from "@/components/PaymentMethod/PaymentMethodForm.vue";
-
 import Authenticated from "@/mixins/Authenticated";
 import DataRouteGuards from "@/mixins/DataRouteGuards";
 import FormMixin from "@/mixins/FormMixin";
@@ -43,7 +43,7 @@ export default {
   name: "ProfilePaymentMethod",
   mixins: [Authenticated, DataRouteGuards, FormMixin, UserMixin],
   components: {
-    PaymentMethodForm,
+    PaymentMethodForm: () => import('@/components/PaymentMethod/PaymentMethodForm.vue')
   },
   computed: {
     fullTitle() {
@@ -62,6 +62,9 @@ export default {
     pageTitle() {
       return this.item.name || capitalize(this.$i18n.tc("model_name", 1));
     },
+    available() {
+      return process.env.VUE_APP_STRIPE_KEY !== undefined
+    }
   },
   methods: {
     async submitPaymentMethod() {
