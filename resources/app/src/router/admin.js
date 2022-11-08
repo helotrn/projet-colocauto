@@ -329,7 +329,7 @@ export default [
           data: {
             invitations: {
               retrieve: {
-                fields: "*",
+                fields: "*,community.name",
               },
             },
           },

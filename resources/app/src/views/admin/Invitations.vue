@@ -84,6 +84,8 @@ export default {
       table: [
         { key: "id", label: "ID", sortable: true, class: "text-right tabular-nums" },
         { key: "email", label: "Nom", sortable: true },
+        { key: "community.name", label: "Communauté", sortable: true },
+        { key: "token", label: "Code", sortable: false },
         { key: "actions", label: "Actions", tdClass: "table__cell__actions" },
       ],
     };
