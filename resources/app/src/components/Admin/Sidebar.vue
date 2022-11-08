@@ -8,6 +8,7 @@
     <b-nav-item to="/admin/invoices" v-if="isGlobalAdmin">Factures</b-nav-item>
     <b-nav-item to="/admin/padlocks" v-if="isGlobalAdmin">Cadenas</b-nav-item>
     <b-nav-item to="/admin/tags" v-if="isGlobalAdmin">Mots-clés</b-nav-item>
+    <b-nav-item to="/admin/invitations" v-if="isGlobalAdmin">Invitations</b-nav-item>
   </div>
 </template>
 

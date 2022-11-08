@@ -14,6 +14,8 @@ import AdminTag from "@/views/admin/Tag.vue";
 import AdminTags from "@/views/admin/Tags.vue";
 import AdminUser from "@/views/admin/User.vue";
 import AdminUsers from "@/views/admin/Users.vue";
+import AdminInvitations from "@/views/admin/Invitations.vue";
+import AdminInvitation from "@/views/admin/Invitation.vue";
 
 export default [
   {
@@ -315,6 +317,36 @@ export default [
             fields: "*",
           },
           title: "titles.tag",
+        },
+      },
+      {
+        path: "invitations",
+        component: AdminInvitations,
+        meta: {
+          auth: true,
+          creatable: true,
+          slug: "invitations",
+          data: {
+            invitations: {
+              retrieve: {
+                fields: "*",
+              },
+            },
+          },
+          title: "titles.invitations",
+        },
+      },
+      {
+        path: "invitations/:id",
+        component: AdminInvitation,
+        props: true,
+        meta: {
+          auth: true,
+          slug: "invitations",
+          params: {
+            fields: "*",
+          },
+          title: "titles.invitation",
         },
       },
     ],

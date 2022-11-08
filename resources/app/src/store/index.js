@@ -23,6 +23,7 @@ import tags from "./models/tags";
 import trailers from "./models/trailers";
 import owners from "./models/owners";
 import users from "./models/users";
+import invitations from "./models/invitations";
 
 import AdminCommunity from "./pages/admin/community";
 import CommunityMap from "./pages/community/map";
@@ -63,6 +64,7 @@ const modules = {
   tags,
   trailers,
   users,
+  invitations,
 
   // Page modules
   "community.map": CommunityMap,

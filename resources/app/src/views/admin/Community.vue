@@ -138,6 +138,20 @@
             </b-row>
           </div>
 
+          <div class="form__section" v-if="item.id">
+            <b-row>
+              <b-col>
+                <h2>Invitations</h2>
+              </b-col>
+            </b-row>
+            <b-row v-for="invitation in invitations" :key="invitation.id">
+              <b-col>invitation.id</b-col>
+            </b-row>
+            <b-button variant="success" :disabled="loading" @click="createInvitation">
+              Créer
+            </b-button>
+          </div>
+
           <div class="form__buttons">
             <b-button-group>
               <b-button variant="success" type="submit" :disabled="!changed || loading">
@@ -233,6 +247,9 @@ export default {
     },
     users() {
       return this.$store.state.users.data;
+    },
+    invitations() {
+      return this.$store.state.invitations.data;
     },
     /*
       Ensure the format follows the community user format. This is what we are working on.
@@ -476,6 +493,10 @@ export default {
         }
       }, 250);
 
+      console.log('dispatch invitations/retrieve');
+      this.$store.dispatch(`invitations/retrieve`);
+
+
       return true;
     },
     onChangeFilters(filters) {
@@ -546,6 +567,9 @@ export default {
           break;
       }
     },
+    async createInvitation(){
+      this.$store.dispatch(`invitations/retrieve`);
+    }
   },
   i18n: {
     messages: {

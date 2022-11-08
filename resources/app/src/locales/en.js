@@ -4,9 +4,11 @@ import RegisterForm from "@/locales/components/Register/RegisterForm";
 import Dashboard from "@/locales/views/Dashboard";
 import communities from "@/locales/models/communities";
 import loanables from "@/locales/models/loanables";
+import invitations from "@/locales/models/invitations";
 
 export default {
   communities: communities.en,
+  invitations: invitations.en,
   components: {
     admin: {
       filters: AdminFilters.en,
