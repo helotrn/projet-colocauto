@@ -3,7 +3,7 @@ services:
     php:
         build:
             context: .
-            target: dev
+            target: ${DOCKER_BUILD_ENV:-dev}
         depends_on:
             - postgres
         volumes:
@@ -30,9 +30,14 @@ services:
             DB_PASSWORD: locomotion
             MANDRILL_KEY:
             ENABLE_TEST_ROUTES: "true"
-            MAIL_DRIVER: log
-            PASSWORD_CLIENT_ID: BCZZHm4YsI14Rum2
-            PASSWORD_CLIENT_SECRET: uK6RMfHwnnSsFcia641MtbaSaopbRzhwqXs1GIjJ
+            MAIL_DRIVER: ${MAIL_DRIVER:-log}
+            MAIL_HOST: ${MAIL_HOST}
+            MAIL_PORT: ${MAIL_PORT}
+            MAIL_USERNAME: ${MAIL_USERNAME}
+            MAIL_PASSWORD: ${MAIL_PASSWORD}
+            MAIL_ENCRYPTION: ${MAIL_ENCRYPTION}
+            PASSWORD_CLIENT_ID: ${PASSWORD_CLIENT_ID}
+            PASSWORD_CLIENT_SECRET: ${PASSWORD_CLIENT_SECRET}
             FILESYSTEM_DRIVER: s3
             S3_DRIVER: minio
             S3_KEY: locomotion
@@ -40,16 +45,16 @@ services:
             S3_REGION: canada
             S3_BUCKET: locomotion
             S3_URL: http://minio:9000
-            GOOGLE_API_KEY:
-            GOOGLE_CLIENT_ID: 406326292737-7hbogvat3i32ungfngc8f0qn56cudbqr.apps.googleusercontent.com #dev id
-            GOOGLE_CLIENT_SECRET: 3M4rv8_3L6iL7AcCcuN6nJsa # dev secret
+            GOOGLE_API_KEY: ${GOOGLE_API_KEY}
+            GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
+            GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
             GOOGLE_REDIRECT: http://localhost:8000/auth/callback
             CACHE_DRIVER: database
             OAUTH_PRIVATE_PATH: /var/secret/oauth-private
             OAUTH_PUBLIC_PATH: /var/secret/oauth-public
             QUEUE_CONNECTION: database
-            STRIPE_KEY: pk_test_4lBQS366h37TcBC9IAvCaDEL00K5H3B8LH
-            STRIPE_SECRET: sk_test_9wI77kB8C1XR5EqkJTMdNEac00SomF64a1
+            STRIPE_KEY: ${STRIPE_KEY}
+            STRIPE_SECRET: ${STRIPE_SECRET}
             MAILCHIMP_SERVER_PREFIX:
             MAILCHIMP_KEY:
             MAILCHIMP_LIST_ID:
@@ -60,7 +65,7 @@ services:
             - php
         build:
             context: ./resources/app
-            target: dev
+            target: ${DOCKER_BUILD_ENV:-dev}
         volumes:
             - ./resources/app:/app
         ports:
@@ -71,8 +76,8 @@ services:
             VUE_APP_BACKEND_URL: http://localhost:8000
             VUE_APP_FRONTEND_URL: localhost:8080
             VUE_APP_GA_MEASUREMENT_ID:
-            VUE_APP_GOOGLE_MAPS_API_KEY: AIzaSyBJh_eLm28n5u4eQUq3aYije8VgXAd7Mlw
-            VUE_APP_STRIPE_KEY: pk_test_4lBQS366h37TcBC9IAvCaDEL00K5H3B8LH
+            VUE_APP_GOOGLE_MAPS_API_KEY: ${GOOGLE_API_KEY}
+            VUE_APP_STRIPE_KEY: ${STRIPE_KEY}
     postgres:
         build:
             context: psql
