@@ -18,12 +18,17 @@ Consultez le fichier [CONTRIBUTING.md](CONTRIBUTING.md)
 
 -   `docker-compose up --build`
 
+## Outils
+
+Le dossier [devtools](devtools) contient des alias pour simplifier le développement dans l'application. Voyez le [README](devtools/README.md) pour les instructions d'utilisation. Le reste des instructions qui suivent font références à ces alias.
+
 ## Initialisation de la base de données et de MinIO
 
 Une fois que l'application est démarrée,
 dans un autre terminal, faire:
 
 -   `docker-compose exec php php artisan migrate --seed`
+-   ou l'alias `locoseed`
 
 ## Variables d'environnement
 
@@ -66,15 +71,13 @@ Il est possible depuis le compte admin de se connecter comme n'importe quel autr
 
 Tests au complet, exécuter:
 
-`docker-compose exec php bash ./phpunit`
+`docker-compose exec php ./vendor/bin/phpunit` ou l'alias `locotest` qui va s'assurer que la base de données de test est à jour.
 
 :warning: à exécuter avant de soumettre votre MR.
 
 Pour tester une fraction des tests localement,
 
-`docker-compose exec php bash ./phpunit --filter ReviewableTest`
-
-Notez que `php artisan test` n'est pas une commande valide avec notre configuration.
+`docker-compose exec php bash ./vendor/bin/phpunit --filter ReviewableTest` ou l'alias `locotest --filter ReviewableTest`.
 
 Les variables dans l'environnement de test se trouvent dans: `.env.testing` ou `phpunit.xml`.
 
@@ -88,8 +91,11 @@ Pour VS Code, vous devez installer **prettier-php** en local et vérifier que pa
 
 Vous pouvez l'installer sur vos machines et l'exécuter onSave ou utiliser la commande suivante avant de publier vos commits.
 
-```
+```bash
 docker-compose exec php npx prettier --write .
+
+# ou avec l'alias:
+locopretty
 ```
 
 ## Envoi des courriels
