@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Events\LoanCreatedEvent;
 use App\Events\Loan\CanceledEvent;
+use App\Events\LoanCreatedEvent;
 use App\Http\Requests\Action\CreateRequest as ActionCreateRequest;
-use App\Http\Requests\Loan\CreateRequest;
 use App\Http\Requests\BaseRequest as Request;
+use App\Http\Requests\Loan\CreateRequest;
 use App\Models\Handover;
 use App\Models\Intention;
 use App\Models\Loan;
@@ -17,9 +17,12 @@ use App\Models\Takeover;
 use App\Repositories\LoanRepository;
 use Carbon\Carbon;
 use Carbon\CarbonImmutable;
+use Gate;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Validation\ValidationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Http\Response;
+use Illuminate\Validation\ValidationException;
 
 class LoanController extends RestController
 {
@@ -297,6 +300,37 @@ class LoanController extends RestController
             ],
             200
         );
+    }
+
+    /**
+     * Marks the loan as being validated: it's information has been checked by
+     * the loanable owner and payment can proceed.
+     *
+     * @throws AuthorizationException
+     */
+    public function validateInformation(Request $request, $loanId): Response
+    {
+        /** @var Loan $loan */
+        $loan = $this->repo->find($request, $loanId);
+
+        Gate::authorize("validate", $loan);
+
+        if ($loan->borrower->user->id === $request->user()->id) {
+            if (!$loan->borrower_validated_at) {
+                $loan->borrower_validated_at = new Carbon();
+                $loan->save();
+            }
+            return response()->noContent();
+        }
+        if ($loan->loanable->owner->user->id === $request->user()->id) {
+            if (!$loan->owner_validated_at) {
+                $loan->owner_validated_at = new Carbon();
+                $loan->save();
+            }
+            return response()->noContent();
+        }
+
+        return response("No validation needed from this user.", 404);
     }
 
     /*

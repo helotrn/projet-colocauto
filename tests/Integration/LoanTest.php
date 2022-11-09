@@ -12,6 +12,7 @@ use App\Models\Loan;
 use App\Models\Owner;
 use App\Models\User;
 use Carbon\Carbon;
+use DateTime;
 use Mail;
 use Tests\TestCase;
 
@@ -1487,5 +1488,132 @@ class LoanTest extends TestCase
         $this->actAs($borrower->user);
         $response = $this->json("PUT", "api/v1/loans/$loan->id/cancel");
         $response->assertStatus(200);
+    }
+
+    function testValidateLoan_succeedsForOwner()
+    {
+        $this->withoutEvents();
+        $community = factory(Community::class)
+            ->state("withDefaultFreePricing")
+            ->create();
+
+        $borrowerUser = factory(User::class)->create();
+        $borrowerUser
+            ->communities()
+            ->attach($community->id, ["approved_at" => new DateTime()]);
+        $borrower = factory(Borrower::class)->create([
+            "user_id" => $borrowerUser->id,
+        ]);
+
+        $ownerUser = factory(User::class)->create();
+        $ownerUser
+            ->communities()
+            ->attach($community->id, ["approved_at" => new DateTime()]);
+        $owner = factory(Owner::class)->create(["user_id" => $ownerUser->id]);
+
+        $loanable = factory(Bike::class)->create([
+            "owner_id" => $owner->id,
+            "instructions" => "test",
+        ]);
+
+        $loan = factory(Loan::class)
+            ->state("withCompletedHandover")
+            ->create([
+                "borrower_id" => $borrower->id,
+                "loanable_id" => $loanable->id,
+            ]);
+
+        $this->actAs($ownerUser);
+        $response = $this->json("PUT", "api/v1/loans/$loan->id/validate");
+        $response->assertStatus(204);
+        $loan->refresh();
+        self::assertNotNull($loan->owner_validated_at);
+    }
+
+    function testValidateLoan_doesntOverwriteInitialValidation()
+    {
+        $this->withoutEvents();
+        $community = factory(Community::class)
+            ->state("withDefaultFreePricing")
+            ->create();
+
+        $borrowerUser = factory(User::class)->create();
+        $borrowerUser
+            ->communities()
+            ->attach($community->id, ["approved_at" => new DateTime()]);
+        $borrower = factory(Borrower::class)->create([
+            "user_id" => $borrowerUser->id,
+        ]);
+
+        $ownerUser = factory(User::class)->create();
+        $ownerUser
+            ->communities()
+            ->attach($community->id, ["approved_at" => new DateTime()]);
+        $owner = factory(Owner::class)->create(["user_id" => $ownerUser->id]);
+
+        $loanable = factory(Bike::class)->create([
+            "owner_id" => $owner->id,
+            "instructions" => "test",
+        ]);
+
+        $twentyMinutesAgo = Carbon::now(0)
+            ->subMinutes(20)
+            ->milli(0);
+        $loan = factory(Loan::class)
+            ->state("withCompletedHandover")
+            ->create([
+                "borrower_id" => $borrower->id,
+                "loanable_id" => $loanable->id,
+                "owner_validated_at" => $twentyMinutesAgo,
+            ]);
+
+        $this->actAs($ownerUser);
+        $response = $this->json("PUT", "api/v1/loans/$loan->id/validate");
+        $response->assertStatus(204);
+        $loan->refresh();
+        self::assertEquals(
+            $twentyMinutesAgo,
+            new Carbon($loan->owner_validated_at)
+        );
+    }
+
+    function testValidateLoan_succeedsForBorrower()
+    {
+        $this->withoutEvents();
+        $community = factory(Community::class)
+            ->state("withDefaultFreePricing")
+            ->create();
+
+        $borrowerUser = factory(User::class)->create();
+        $borrowerUser
+            ->communities()
+            ->attach($community->id, ["approved_at" => new DateTime()]);
+        $borrower = factory(Borrower::class)->create([
+            "user_id" => $borrowerUser->id,
+        ]);
+
+        $ownerUser = factory(User::class)->create();
+        $ownerUser
+            ->communities()
+            ->attach($community->id, ["approved_at" => new DateTime()]);
+        $owner = factory(Owner::class)->create(["user_id" => $ownerUser->id]);
+
+        $loanable = factory(Bike::class)->create([
+            "owner_id" => $owner->id,
+            "instructions" => "test",
+        ]);
+
+        $loan = factory(Loan::class)
+            ->state("withCompletedHandover")
+            ->create([
+                "borrower_id" => $borrower->id,
+                "loanable_id" => $loanable->id,
+            ]);
+
+        $this->actAs($borrowerUser);
+        $response = $this->json("PUT", "api/v1/loans/$loan->id/validate");
+        $response->assertStatus(204);
+        $loan->refresh();
+        self::assertNotNull($loan->borrower_validated_at);
     }
 }
