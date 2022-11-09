@@ -106,13 +106,7 @@ class LoanController extends RestController
     {
         $item = $this->repo->find($request, $id);
 
-        try {
-            $response = $this->respondWithItem($request, $item);
-        } catch (ValidationException $e) {
-            return $this->respondWithErrors($e->errors(), $e->getMessage());
-        }
-
-        return $response;
+        return $this->respondWithItem($request, $item);
     }
 
     public function destroy(Request $request, $id)
@@ -139,11 +133,7 @@ class LoanController extends RestController
         $item->cancel();
         $item->save();
 
-        try {
-            $response = $this->respondWithItem($request, $item);
-        } catch (ValidationException $e) {
-            return $this->respondWithErrors($e->errors(), $e->getMessage());
-        }
+        $response = $this->respondWithItem($request, $item);
 
         event(new CanceledEvent($request->user(), $item));
 
@@ -165,7 +155,7 @@ class LoanController extends RestController
 
     public function createAction(ActionCreateRequest $request, $id)
     {
-        $item = $this->repo->find($request->redirectAuth(Request::class), $id);
+        $this->repo->find($request->redirectAuth(Request::class), $id);
 
         $request->merge(["loan_id" => $id]);
 
@@ -352,7 +342,7 @@ class LoanController extends RestController
         // Ensure intention is still in process to not complete the action every time we call this function.
         if ($intention->status == "in_process") {
             if ($loan->loanable->is_self_service) {
-                // Autocomplete intention if loanable is self service.
+                // Autocomplete intention if loanable is self-service.
                 $intention->complete()->save();
             }
         }
@@ -479,7 +469,7 @@ class LoanController extends RestController
 
         $ongoingLoans = (clone $accessibleLoans)
             ->where("status", "in_process")
-            ->orderBy("departure_at", "asc");
+            ->orderBy("departure_at");
         $waitingLoans = (clone $ongoingLoans)->whereHas("intention", function (
             Builder $q
         ) {

@@ -2,18 +2,9 @@
 
 namespace App\Models;
 
-use App\Models\Action;
-use App\Models\Borrower;
-use App\Models\Extension;
-use App\Models\Handover;
-use App\Models\Incident;
-use App\Models\Intention;
-use App\Models\Loanable;
-use App\Models\Payment;
-use App\Models\Takeover;
-use App\Transformers\LoanTransformer;
 use App\Casts\TimestampWithTimezoneCast;
 use App\Events\LoanCompletedEvent;
+use App\Transformers\LoanTransformer;
 use Carbon\Carbon;
 use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Builder;
@@ -137,6 +128,22 @@ class Loan extends BaseModel
                 }
             });
         }
+
+        Handover::saved(function (Handover $model) {
+            if ($model->isContested()) {
+                $model->loan->borrower_validated_at = null;
+                $model->loan->owner_validated_at = null;
+                $model->loan->save();
+            }
+        });
+
+        Takeover::saved(function (Takeover $model) {
+            if ($model->isContested()) {
+                $model->loan->borrower_validated_at = null;
+                $model->loan->owner_validated_at = null;
+                $model->loan->save();
+            }
+        });
 
         // Update loan.status and loan.actual_return_at before saving
         self::saving(function ($loan) {
