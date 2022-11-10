@@ -873,4 +873,38 @@ SQL;
 
         return $returnAt;
     }
+
+    public function hasBorrowerValidated()
+    {
+        return !!$this->borrower_validated_at;
+    }
+
+    public function hasOwnerValidated()
+    {
+        return !!$this->owner_validated_at;
+    }
+
+    public function isFullyValidated()
+    {
+        return $this->hasBorrowerValidated() && $this->hasOwnerValidated();
+    }
+
+    public function canBePaid(): bool
+    {
+        $twoDaysAgo = (new CarbonImmutable())->subDays(2);
+
+        return // The loan is in the correct state
+            $this->payment &&
+                $this->payment->status === "in_process" &&
+                $this->handover &&
+                !$this->handover->isContested() &&
+                $this->takeover &&
+                !$this->takeover->isContested() &&
+                // it can be paid by the borrower
+                floatval($this->borrower->user->balance) >=
+                    $this->total_actual_cost &&
+                // and it's either validated or two days after the planned return time.
+                (Carbon::parse($this->actual_return_at) <= $twoDaysAgo ||
+                    $this->isFullyValidated());
+    }
 }
