@@ -193,7 +193,7 @@ class AvailabilityHelper
                     ),
             ];
 
-            $currentDate->addDay();
+            $currentDate = $currentDate->addDay();
         }
 
         return $intervals;
@@ -260,7 +260,7 @@ class AvailabilityHelper
                 ];
             }
 
-            $currentDate->addDay();
+            $currentDate = $currentDate->addDay();
         }
 
         return $intervals;
@@ -325,7 +325,7 @@ class AvailabilityHelper
                             $intervals[] = $interval[0];
                         }
 
-                        $currentDate->addDay();
+                        $currentDate = $currentDate->addDay();
                     }
 
                     $ruleIntervals = $intervals;
