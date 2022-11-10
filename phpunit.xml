@@ -9,7 +9,7 @@
          convertWarningsToExceptions="true"
          processIsolation="false"
          printerClass="LimeDeck\Testing\Printer"
-         stopOnFailure="false" 
+         stopOnFailure="false"
          xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd">
   <coverage processUncoveredFiles="true">
     <include>
@@ -31,5 +31,6 @@
     <server name="MAIL_DRIVER" value="array"/>
     <server name="QUEUE_CONNECTION" value="sync"/>
     <server name="SESSION_DRIVER" value="array"/>
+    <server name="DB_DATABASE" value="locomotion_test"/>
   </php>
 </phpunit>
