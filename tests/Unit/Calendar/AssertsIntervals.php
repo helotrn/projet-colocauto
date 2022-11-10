@@ -8,9 +8,22 @@ trait AssertsIntervals
     {
         $this->assertEquals(count($expected), count($actual), $message);
 
-        foreach ($expected as $i => $interval) {
-            $this->assertTrue($interval[0]->equalTo($actual[$i][0]), $message);
-            $this->assertTrue($interval[1]->equalTo($actual[$i][1]), $message);
+        $expectedStr = [];
+        foreach ($expected as $interval) {
+            $expectedStr[] = [
+                $interval[0]->toDateTimeString(),
+                $interval[1]->toDateTimeString(),
+            ];
         }
+
+        $actualStr = [];
+        foreach ($actual as $interval) {
+            $actualStr[] = [
+                $interval[0]->toDateTimeString(),
+                $interval[1]->toDateTimeString(),
+            ];
+        }
+
+        $this->assertEqualsCanonicalizing($expectedStr, $actualStr, $message);
     }
 }
