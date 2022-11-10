@@ -424,6 +424,357 @@ class DateIntervalHelperTest extends TestCase
         );
     }
 
+    public function testUnion()
+    {
+        // 1. Interval starts before
+        $fromIntervals = [
+            [
+                new Carbon("2021-10-11 12:34:56"),
+                new Carbon("2021-10-19 23:45:01"),
+            ],
+        ];
+        $interval = [
+            new Carbon("2021-10-01 23:45:01"),
+            new Carbon("2021-10-10 12:34:56"),
+        ];
+
+        $union = DateIntervalHelper::union($fromIntervals, $interval);
+
+        $expected = [
+            [
+                new Carbon("2021-10-01 23:45:01"),
+                new Carbon("2021-10-10 12:34:56"),
+            ],
+            [
+                new Carbon("2021-10-11 12:34:56"),
+                new Carbon("2021-10-19 23:45:01"),
+            ],
+        ];
+        $this->assertSameIntervals($expected, $union, "Interval starts before");
+
+        // 2. Interval intersects at the beginning
+        $fromIntervals = [
+            [
+                new Carbon("2021-10-10 12:34:56"),
+                new Carbon("2021-10-19 23:45:01"),
+            ],
+        ];
+        $interval = [
+            new Carbon("2021-10-01 23:45:01"),
+            new Carbon("2021-10-13 12:34:56"),
+        ];
+
+        $union = DateIntervalHelper::union($fromIntervals, $interval);
+
+        $expected = [
+            [
+                new Carbon("2021-10-01 23:45:01"),
+                new Carbon("2021-10-19 23:45:01"),
+            ],
+        ];
+
+        $this->assertSameIntervals(
+            $expected,
+            $union,
+            "Interval intersects at the beginning"
+        );
+
+        // 2. Interval joins at the beginning
+        $fromIntervals = [
+            [
+                new Carbon("2021-10-10 12:34:56"),
+                new Carbon("2021-10-19 23:45:01"),
+            ],
+        ];
+        $interval = [
+            new Carbon("2021-10-01 23:45:01"),
+            new Carbon("2021-10-10 12:34:56"),
+        ];
+
+        $union = DateIntervalHelper::union($fromIntervals, $interval);
+
+        $expected = [
+            [
+                new Carbon("2021-10-01 23:45:01"),
+                new Carbon("2021-10-19 23:45:01"),
+            ],
+        ];
+
+        $this->assertSameIntervals(
+            $expected,
+            $union,
+            "Interval intersects at the beginning"
+        );
+
+        // 3. Interval is included.
+        $fromIntervals = [
+            [
+                new Carbon("2021-10-10 12:34:56"),
+                new Carbon("2021-10-19 23:45:01"),
+            ],
+        ];
+        $interval = [
+            new Carbon("2021-10-13 23:45:01"),
+            new Carbon("2021-10-17 12:34:56"),
+        ];
+
+        $union = DateIntervalHelper::union($fromIntervals, $interval);
+
+        $expected = [
+            [
+                new Carbon("2021-10-10 12:34:56"),
+                new Carbon("2021-10-19 23:45:01"),
+            ],
+        ];
+        $this->assertSameIntervals($expected, $union, "Interval is included");
+
+        // 4. Interval intersects at the end
+        $fromIntervals = [
+            [
+                new Carbon("2021-10-10 12:34:56"),
+                new Carbon("2021-10-19 23:45:01"),
+            ],
+        ];
+        $interval = [
+            new Carbon("2021-10-17 23:45:01"),
+            new Carbon("2021-10-31 12:34:56"),
+        ];
+
+        $union = DateIntervalHelper::union($fromIntervals, $interval);
+
+        $expected = [
+            [
+                new Carbon("2021-10-10 12:34:56"),
+                new Carbon("2021-10-31 12:34:56"),
+            ],
+        ];
+        $this->assertSameIntervals(
+            $expected,
+            $union,
+            "Interval intersects at the end"
+        );
+
+        // 4. Interval joins at the end
+        $fromIntervals = [
+            [
+                new Carbon("2021-10-10 12:34:56"),
+                new Carbon("2021-10-19 23:45:01"),
+            ],
+        ];
+        $interval = [
+            new Carbon("2021-10-19 23:45:01"),
+            new Carbon("2021-10-31 12:34:56"),
+        ];
+
+        $union = DateIntervalHelper::union($fromIntervals, $interval);
+
+        $expected = [
+            [
+                new Carbon("2021-10-10 12:34:56"),
+                new Carbon("2021-10-31 12:34:56"),
+            ],
+        ];
+        $this->assertSameIntervals(
+            $expected,
+            $union,
+            "Interval intersects at the end"
+        );
+
+        // 5. Interval ends after
+        $fromIntervals = [
+            [
+                new Carbon("2021-10-10 12:34:56"),
+                new Carbon("2021-10-19 23:45:01"),
+            ],
+        ];
+        $interval = [
+            new Carbon("2021-10-20 23:45:01"),
+            new Carbon("2021-10-31 12:34:56"),
+        ];
+
+        $union = DateIntervalHelper::union($fromIntervals, $interval);
+
+        $expected = [
+            [
+                new Carbon("2021-10-10 12:34:56"),
+                new Carbon("2021-10-19 23:45:01"),
+            ],
+            [
+                new Carbon("2021-10-20 23:45:01"),
+                new Carbon("2021-10-31 12:34:56"),
+            ],
+        ];
+        $this->assertSameIntervals($expected, $union, "Interval ends after");
+
+        // 6. Interval includes from interval
+        $fromIntervals = [
+            [
+                new Carbon("2021-10-10 12:34:56"),
+                new Carbon("2021-10-19 23:45:01"),
+            ],
+        ];
+        $interval = [
+            new Carbon("2021-10-08 23:45:01"),
+            new Carbon("2021-10-22 12:34:56"),
+        ];
+
+        $union = DateIntervalHelper::union($fromIntervals, $interval);
+
+        $expected = [
+            [
+                new Carbon("2021-10-08 23:45:01"),
+                new Carbon("2021-10-22 12:34:56"),
+            ],
+        ];
+        $this->assertSameIntervals($expected, $union, "Interval includes");
+
+        // 7. union with empty interval (null)
+        $fromIntervals = [
+            [
+                new Carbon("2021-10-10 12:34:56"),
+                new Carbon("2021-10-19 23:45:01"),
+            ],
+        ];
+
+        $union = DateIntervalHelper::union($fromIntervals, null);
+
+        $expected = [
+            [
+                new Carbon("2021-10-10 12:34:56"),
+                new Carbon("2021-10-19 23:45:01"),
+            ],
+        ];
+        $this->assertSameIntervals($expected, $union, "Empty interval (null)");
+
+        // 7. Intersect with empty interval (start = end)
+        $fromIntervals = [
+            [
+                new Carbon("2021-10-10 12:34:56"),
+                new Carbon("2021-10-19 23:45:01"),
+            ],
+        ];
+        $interval = [
+            new Carbon("2021-10-15 23:45:01"),
+            new Carbon("2021-10-15 23:45:01"),
+        ];
+
+        $union = DateIntervalHelper::union($fromIntervals, $interval);
+
+        $expected = [
+            [
+                new Carbon("2021-10-10 12:34:56"),
+                new Carbon("2021-10-19 23:45:01"),
+            ],
+        ];
+        $this->assertSameIntervals(
+            $expected,
+            $union,
+            "Empty interval (start = end)"
+        );
+
+        // 8. From intervals is empty (empty, not empty)
+        $fromIntervals = [
+            [
+                new Carbon("2021-10-15 23:45:01"),
+                new Carbon("2021-10-15 23:45:01"),
+            ],
+        ];
+        $interval = [
+            new Carbon("2021-10-13 23:45:01"),
+            new Carbon("2021-10-17 12:34:56"),
+        ];
+
+        $union = DateIntervalHelper::union($fromIntervals, $interval);
+
+        $expected = [
+            [
+                new Carbon("2021-10-13 23:45:01"),
+                new Carbon("2021-10-17 12:34:56"),
+            ],
+        ];
+        $this->assertSameIntervals(
+            $expected,
+            $union,
+            "From intervals empty interval (empty, not empty)"
+        );
+
+        // 8. From intervals is empty (null, not null)
+        $fromIntervals = [null];
+        $interval = [
+            new Carbon("2021-10-15 23:45:01"),
+            new Carbon("2021-10-15 23:45:01"),
+        ];
+
+        $union = DateIntervalHelper::union($fromIntervals, $interval);
+
+        $expected = [];
+        $this->assertSameIntervals(
+            $expected,
+            $union,
+            "From intervals empty interval (null, not null)"
+        );
+
+        // 8. From intervals is empty (null, null)
+        $fromIntervals = null;
+        $interval = null;
+
+        $union = DateIntervalHelper::union($fromIntervals, $interval);
+
+        $expected = [];
+        $this->assertSameIntervals(
+            $expected,
+            $union,
+            "From intervals empty interval ([], null)"
+        );
+
+        // 8. From intervals is empty ([], null)
+        $fromIntervals = [];
+        $interval = null;
+
+        $union = DateIntervalHelper::union($fromIntervals, $interval);
+
+        $expected = [];
+        $this->assertSameIntervals(
+            $expected,
+            $union,
+            "From intervals empty interval ([], null)"
+        );
+
+        // 8. From intervals is empty ([null], null)
+        $fromIntervals = [null];
+        $interval = null;
+
+        $union = DateIntervalHelper::union($fromIntervals, $interval);
+
+        $expected = [];
+        $this->assertSameIntervals(
+            $expected,
+            $union,
+            "From intervals empty interval ([null], null)"
+        );
+
+        // 8. From intervals is empty (empty, same empty)
+        $fromIntervals = [
+            [
+                new Carbon("2021-10-15 23:45:01"),
+                new Carbon("2021-10-15 23:45:01"),
+            ],
+        ];
+        $interval = [
+            new Carbon("2021-10-15 23:45:01"),
+            new Carbon("2021-10-15 23:45:01"),
+        ];
+
+        $union = DateIntervalHelper::union($fromIntervals, $interval);
+
+        $expected = [];
+        $this->assertSameIntervals(
+            $expected,
+            $union,
+            "From intervals empty interval (empty, same empty)"
+        );
+    }
+
     public function testRemoveInterval()
     {
         // 1. Interval to remove starts before
