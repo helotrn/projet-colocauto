@@ -345,6 +345,99 @@ class AvailabilityHelper
         return $dailyIntervals;
     }
 
+    /*
+     *  Return availability or unavailablity intervals per day according to
+     *  availability rules for the given date range.
+     *
+     * @param availabilityParams
+     *     available: boolean indicating the default availability.
+     *     rules: Exceptions to the default availability.
+     *
+     * @param dateRange
+     *     The date range over which to compute availability intervals
+     *
+     * @param returnAvailable
+     *     true: Return intervals of availability.
+     *     false: Return intervals of unavailability.
+     */
+    public static function getDailyAvailability(
+        $availabilityParams,
+        $dateRange,
+        $returnAvailable = true
+    ) {
+        // Set time to 0 to ensure consistency with the fact that we expect dates.
+        $dateRange[0] = $dateRange[0]->copy()->setTime(0, 0, 0);
+        $dateRange[1] = $dateRange[1]->copy()->setTime(0, 0, 0);
+
+        $dailyIntervals = [];
+        $ruleIntervals = [];
+
+        // Prepare initial set and operator depending on availability modes in and out.
+        $mustAddIntervals = true;
+        if ($availabilityParams["available"] == $returnAvailable) {
+            $mustAddIntervals = false;
+
+            // Start with intervals covering whole days.
+            $currentDate = $dateRange[0]->copy();
+            while ($currentDate->lessThan($dateRange[1])) {
+                $dateKey = $currentDate->toDateString();
+
+                // Each day must have an array of intervals.
+                $dailyIntervals[$dateKey] = [
+                    [
+                        $currentDate->copy()->setTime(0, 0, 0),
+                        $currentDate->copy()->setTime(24, 0, 0),
+                    ],
+                ];
+
+                $currentDate = $currentDate->addDay();
+            }
+        }
+
+        $ruleIntervals = self::getScheduleDailyIntervals(
+            $availabilityParams,
+            $dateRange
+        );
+
+        if ($mustAddIntervals) {
+            foreach ($ruleIntervals as $interval) {
+                $dateKey = $interval[0]->toDateString();
+
+                if (!isset($dailyIntervals[$dateKey])) {
+                    $dailyIntervals[$dateKey] = [$interval];
+                } else {
+                    $dailyIntervals[$dateKey] = DateIntervalHelper::Union(
+                        $dailyIntervals[$dateKey],
+                        $interval
+                    );
+                }
+            }
+        } else {
+            foreach ($ruleIntervals as $interval) {
+                $dateKey = $interval[0]->toDateString();
+
+                if (isset($dailyIntervals[$dateKey])) {
+                    $dailyIntervals[
+                        $dateKey
+                    ] = DateIntervalHelper::removeInterval(
+                        $dailyIntervals[$dateKey],
+                        $interval
+                    );
+                }
+            }
+        }
+
+        // Linearize intervals
+        $intervals = [];
+        foreach ($dailyIntervals as $dayIntervals) {
+            foreach ($dayIntervals as $interval) {
+                $intervals[] = $interval;
+            }
+        }
+
+        return $intervals;
+    }
+
     /**
      * This method checks whether the loanable is available based on the
      * availability schedule.

@@ -4,6 +4,7 @@ namespace Tests\Unit\Calendar;
 
 use App\Calendar\AvailabilityHelper;
 use Carbon\Carbon;
+use Carbon\CarbonImmutable;
 use Tests\TestCase;
 
 class AvailabilityHelperTest extends TestCase
@@ -733,6 +734,589 @@ class AvailabilityHelperTest extends TestCase
         $expected = [];
 
         $this->assertSameIntervals($expected, $intervals);
+    }
+
+    public function testGetDailyAvailability_UnvailableByDefaultReturnAvailable()
+    {
+        $dateRange = [
+            new CarbonImmutable("2022-11-06 00:00:00"),
+            new CarbonImmutable("2022-11-13 00:00:00"),
+        ];
+
+        $availableByDefault = false;
+        $returnAvailable = true;
+
+        // Start with a case with no rules at all.
+        $availability = AvailabilityHelper::getDailyAvailability(
+            [
+                "available" => $availableByDefault,
+                "rules" => [],
+            ],
+            $dateRange,
+            $returnAvailable
+        );
+
+        $this->assertSameIntervals([], $availability);
+
+        // Then add rules.
+        $availabilityRules = [
+            // Sunday: No rule
+            // Monday: One rule
+            [
+                "available" => !$availableByDefault,
+                "type" => "dates",
+                "scope" => ["2022-11-07"],
+                "period" => "11:00-13:00",
+            ],
+            // Tuesday: Adjacent rules
+            [
+                "available" => !$availableByDefault,
+                "type" => "dates",
+                "scope" => ["2022-11-08"],
+                "period" => "09:00-11:00",
+            ],
+            [
+                "available" => !$availableByDefault,
+                "type" => "dates",
+                "scope" => ["2022-11-08"],
+                "period" => "11:00-13:00",
+            ],
+            [
+                "available" => !$availableByDefault,
+                "type" => "dates",
+                "scope" => ["2022-11-08"],
+                "period" => "15:00-18:00",
+            ],
+            // Wednesday: Overlapping rules
+            [
+                "available" => !$availableByDefault,
+                "type" => "dates",
+                "scope" => ["2022-11-09"],
+                "period" => "09:00-12:00",
+            ],
+            [
+                "available" => !$availableByDefault,
+                "type" => "dates",
+                "scope" => ["2022-11-09"],
+                "period" => "11:00-19:00",
+            ],
+            [
+                "available" => !$availableByDefault,
+                "type" => "dates",
+                "scope" => ["2022-11-09"],
+                "period" => "15:00-18:00",
+            ],
+            // Saturday: Whole day
+            [
+                "available" => !$availableByDefault,
+                "type" => "dates",
+                "scope" => ["2022-11-12"],
+                "period" => "00:00-24:00",
+            ],
+        ];
+
+        // availability opartout
+        $availability = AvailabilityHelper::getDailyAvailability(
+            [
+                "available" => $availableByDefault,
+                "rules" => $availabilityRules,
+            ],
+            $dateRange,
+            $returnAvailable
+        );
+
+        $expected = [
+            // Sunday: No rule
+            // Monday: One rule
+            [
+                new CarbonImmutable("2022-11-07 11:00:00"),
+                new CarbonImmutable("2022-11-07 13:00:00"),
+            ],
+            // Tuesday: Adjacent rules
+            [
+                new CarbonImmutable("2022-11-08 09:00:00"),
+                new CarbonImmutable("2022-11-08 13:00:00"),
+            ],
+            [
+                new CarbonImmutable("2022-11-08 15:00:00"),
+                new CarbonImmutable("2022-11-08 18:00:00"),
+            ],
+            // Wednesday: Overlapping rules
+            [
+                new CarbonImmutable("2022-11-09 09:00:00"),
+                new CarbonImmutable("2022-11-09 19:00:00"),
+            ],
+            // Saturday: Whole day
+            [
+                new CarbonImmutable("2022-11-12 00:00:00"),
+                new CarbonImmutable("2022-11-12 24:00:00"),
+            ],
+        ];
+
+        $this->assertSameIntervals($expected, $availability);
+    }
+
+    public function testGetDailyAvailability_AvailableByDefaultReturnAvailable()
+    {
+        $dateRange = [
+            new CarbonImmutable("2022-11-06 00:00:00"),
+            new CarbonImmutable("2022-11-13 00:00:00"),
+        ];
+
+        $availableByDefault = true;
+        $returnAvailable = true;
+
+        // Start with a case with no rules at all.
+        $availability = AvailabilityHelper::getDailyAvailability(
+            [
+                "available" => $availableByDefault,
+                "rules" => [],
+            ],
+            $dateRange,
+            $returnAvailable
+        );
+
+        $expected = [
+            [
+                new CarbonImmutable("2022-11-06 00:00:00"),
+                new CarbonImmutable("2022-11-06 24:00:00"),
+            ],
+            [
+                new CarbonImmutable("2022-11-07 00:00:00"),
+                new CarbonImmutable("2022-11-07 24:00:00"),
+            ],
+            [
+                new CarbonImmutable("2022-11-08 00:00:00"),
+                new CarbonImmutable("2022-11-08 24:00:00"),
+            ],
+            [
+                new CarbonImmutable("2022-11-09 00:00:00"),
+                new CarbonImmutable("2022-11-09 24:00:00"),
+            ],
+            [
+                new CarbonImmutable("2022-11-10 00:00:00"),
+                new CarbonImmutable("2022-11-10 24:00:00"),
+            ],
+            [
+                new CarbonImmutable("2022-11-11 00:00:00"),
+                new CarbonImmutable("2022-11-11 24:00:00"),
+            ],
+            [
+                new CarbonImmutable("2022-11-12 00:00:00"),
+                new CarbonImmutable("2022-11-12 24:00:00"),
+            ],
+        ];
+
+        $this->assertSameIntervals($expected, $availability);
+
+        // Then add rules.
+        $availabilityRules = [
+            // Sunday: No rule
+            // Monday: One rule
+            [
+                "available" => !$availableByDefault,
+                "type" => "dates",
+                "scope" => ["2022-11-07"],
+                "period" => "11:00-13:00",
+            ],
+            // Tuesday: Adjacent rules
+            [
+                "available" => !$availableByDefault,
+                "type" => "dates",
+                "scope" => ["2022-11-08"],
+                "period" => "09:00-11:00",
+            ],
+            [
+                "available" => !$availableByDefault,
+                "type" => "dates",
+                "scope" => ["2022-11-08"],
+                "period" => "11:00-13:00",
+            ],
+            [
+                "available" => !$availableByDefault,
+                "type" => "dates",
+                "scope" => ["2022-11-08"],
+                "period" => "15:00-18:00",
+            ],
+            // Wednesday: Overlapping rules
+            [
+                "available" => !$availableByDefault,
+                "type" => "dates",
+                "scope" => ["2022-11-09"],
+                "period" => "09:00-12:00",
+            ],
+            [
+                "available" => !$availableByDefault,
+                "type" => "dates",
+                "scope" => ["2022-11-09"],
+                "period" => "11:00-19:00",
+            ],
+            [
+                "available" => !$availableByDefault,
+                "type" => "dates",
+                "scope" => ["2022-11-09"],
+                "period" => "15:00-18:00",
+            ],
+            // Saturday: Whole day
+            [
+                "available" => !$availableByDefault,
+                "type" => "dates",
+                "scope" => ["2022-11-12"],
+                "period" => "00:00-24:00",
+            ],
+        ];
+
+        $availability = AvailabilityHelper::getDailyAvailability(
+            [
+                "available" => $availableByDefault,
+                "rules" => $availabilityRules,
+            ],
+            $dateRange,
+            $returnAvailable
+        );
+
+        $expected = [
+            // Sunday: No rule
+            [
+                new CarbonImmutable("2022-11-06 00:00:00"),
+                new CarbonImmutable("2022-11-06 24:00:00"),
+            ],
+            // Monday: One rule
+            [
+                new CarbonImmutable("2022-11-07 00:00:00"),
+                new CarbonImmutable("2022-11-07 11:00:00"),
+            ],
+            [
+                new CarbonImmutable("2022-11-07 13:00:00"),
+                new CarbonImmutable("2022-11-07 24:00:00"),
+            ],
+            // Tuesday: Adjacent rules
+            [
+                new CarbonImmutable("2022-11-08 00:00:00"),
+                new CarbonImmutable("2022-11-08 09:00:00"),
+            ],
+            [
+                new CarbonImmutable("2022-11-08 13:00:00"),
+                new CarbonImmutable("2022-11-08 15:00:00"),
+            ],
+            [
+                new CarbonImmutable("2022-11-08 18:00:00"),
+                new CarbonImmutable("2022-11-08 24:00:00"),
+            ],
+            // Wednesday: Overlapping rules
+            [
+                new CarbonImmutable("2022-11-09 00:00:00"),
+                new CarbonImmutable("2022-11-09 09:00:00"),
+            ],
+            [
+                new CarbonImmutable("2022-11-09 19:00:00"),
+                new CarbonImmutable("2022-11-09 24:00:00"),
+            ],
+            // Thursday: No rule
+            [
+                new CarbonImmutable("2022-11-10 00:00:00"),
+                new CarbonImmutable("2022-11-10 24:00:00"),
+            ],
+            // Friday: No rule
+            [
+                new CarbonImmutable("2022-11-11 00:00:00"),
+                new CarbonImmutable("2022-11-11 24:00:00"),
+            ],
+            // Saturday: Whole day
+        ];
+
+        $this->assertSameIntervals($expected, $availability);
+    }
+
+    public function testGetDailyAvailability_UnavailableByDefaultReturnUnavailable()
+    {
+        $dateRange = [
+            new CarbonImmutable("2022-11-06 00:00:00"),
+            new CarbonImmutable("2022-11-13 00:00:00"),
+        ];
+
+        $availableByDefault = false;
+        $returnAvailable = false;
+
+        // Start with a case with no rules at all.
+        $availability = AvailabilityHelper::getDailyAvailability(
+            [
+                "available" => $availableByDefault,
+                "rules" => [],
+            ],
+            $dateRange,
+            $returnAvailable
+        );
+
+        $expected = [
+            [
+                new CarbonImmutable("2022-11-06 00:00:00"),
+                new CarbonImmutable("2022-11-06 24:00:00"),
+            ],
+            [
+                new CarbonImmutable("2022-11-07 00:00:00"),
+                new CarbonImmutable("2022-11-07 24:00:00"),
+            ],
+            [
+                new CarbonImmutable("2022-11-08 00:00:00"),
+                new CarbonImmutable("2022-11-08 24:00:00"),
+            ],
+            [
+                new CarbonImmutable("2022-11-09 00:00:00"),
+                new CarbonImmutable("2022-11-09 24:00:00"),
+            ],
+            [
+                new CarbonImmutable("2022-11-10 00:00:00"),
+                new CarbonImmutable("2022-11-10 24:00:00"),
+            ],
+            [
+                new CarbonImmutable("2022-11-11 00:00:00"),
+                new CarbonImmutable("2022-11-11 24:00:00"),
+            ],
+            [
+                new CarbonImmutable("2022-11-12 00:00:00"),
+                new CarbonImmutable("2022-11-12 24:00:00"),
+            ],
+        ];
+
+        $this->assertSameIntervals($expected, $availability);
+
+        // Then add rules.
+        $availabilityRules = [
+            // Sunday: No rule
+            // Monday: One rule
+            [
+                "available" => !$availableByDefault,
+                "type" => "dates",
+                "scope" => ["2022-11-07"],
+                "period" => "11:00-13:00",
+            ],
+            // Tuesday: Adjacent rules
+            [
+                "available" => !$availableByDefault,
+                "type" => "dates",
+                "scope" => ["2022-11-08"],
+                "period" => "09:00-11:00",
+            ],
+            [
+                "available" => !$availableByDefault,
+                "type" => "dates",
+                "scope" => ["2022-11-08"],
+                "period" => "11:00-13:00",
+            ],
+            [
+                "available" => !$availableByDefault,
+                "type" => "dates",
+                "scope" => ["2022-11-08"],
+                "period" => "15:00-18:00",
+            ],
+            // Wednesday: Overlapping rules
+            [
+                "available" => !$availableByDefault,
+                "type" => "dates",
+                "scope" => ["2022-11-09"],
+                "period" => "09:00-12:00",
+            ],
+            [
+                "available" => !$availableByDefault,
+                "type" => "dates",
+                "scope" => ["2022-11-09"],
+                "period" => "11:00-19:00",
+            ],
+            [
+                "available" => !$availableByDefault,
+                "type" => "dates",
+                "scope" => ["2022-11-09"],
+                "period" => "15:00-18:00",
+            ],
+            // Saturday: Whole day
+            [
+                "available" => !$availableByDefault,
+                "type" => "dates",
+                "scope" => ["2022-11-12"],
+                "period" => "00:00-24:00",
+            ],
+        ];
+
+        $availability = AvailabilityHelper::getDailyAvailability(
+            [
+                "available" => $availableByDefault,
+                "rules" => $availabilityRules,
+            ],
+            $dateRange,
+            $returnAvailable
+        );
+
+        $expected = [
+            // Sunday: No rule
+            [
+                new CarbonImmutable("2022-11-06 00:00:00"),
+                new CarbonImmutable("2022-11-06 24:00:00"),
+            ],
+            // Monday: One rule
+            [
+                new CarbonImmutable("2022-11-07 00:00:00"),
+                new CarbonImmutable("2022-11-07 11:00:00"),
+            ],
+            [
+                new CarbonImmutable("2022-11-07 13:00:00"),
+                new CarbonImmutable("2022-11-07 24:00:00"),
+            ],
+            // Tuesday: Adjacent rules
+            [
+                new CarbonImmutable("2022-11-08 00:00:00"),
+                new CarbonImmutable("2022-11-08 09:00:00"),
+            ],
+            [
+                new CarbonImmutable("2022-11-08 13:00:00"),
+                new CarbonImmutable("2022-11-08 15:00:00"),
+            ],
+            [
+                new CarbonImmutable("2022-11-08 18:00:00"),
+                new CarbonImmutable("2022-11-08 24:00:00"),
+            ],
+            // Wednesday: Overlapping rules
+            [
+                new CarbonImmutable("2022-11-09 00:00:00"),
+                new CarbonImmutable("2022-11-09 09:00:00"),
+            ],
+            [
+                new CarbonImmutable("2022-11-09 19:00:00"),
+                new CarbonImmutable("2022-11-09 24:00:00"),
+            ],
+            // Thursday: No rule
+            [
+                new CarbonImmutable("2022-11-10 00:00:00"),
+                new CarbonImmutable("2022-11-10 24:00:00"),
+            ],
+            // Friday: No rule
+            [
+                new CarbonImmutable("2022-11-11 00:00:00"),
+                new CarbonImmutable("2022-11-11 24:00:00"),
+            ],
+            // Saturday: Whole day
+        ];
+
+        $this->assertSameIntervals($expected, $availability);
+    }
+
+    public function testGetDailyAvailability_AvailableByDefaultReturnUnavailable()
+    {
+        $dateRange = [
+            new CarbonImmutable("2022-11-06 00:00:00"),
+            new CarbonImmutable("2022-11-13 00:00:00"),
+        ];
+
+        $availableByDefault = true;
+        $returnAvailable = false;
+
+        // Start with a case with no rules at all.
+        $availability = AvailabilityHelper::getDailyAvailability(
+            [
+                "available" => $availableByDefault,
+                "rules" => [],
+            ],
+            $dateRange,
+            $returnAvailable
+        );
+
+        $this->assertSameIntervals([], $availability);
+
+        // Then add rules.
+        $availabilityRules = [
+            // Sunday: No rule
+            // Monday: One rule
+            [
+                "available" => !$availableByDefault,
+                "type" => "dates",
+                "scope" => ["2022-11-07"],
+                "period" => "11:00-13:00",
+            ],
+            // Tuesday: Adjacent rules
+            [
+                "available" => !$availableByDefault,
+                "type" => "dates",
+                "scope" => ["2022-11-08"],
+                "period" => "09:00-11:00",
+            ],
+            [
+                "available" => !$availableByDefault,
+                "type" => "dates",
+                "scope" => ["2022-11-08"],
+                "period" => "11:00-13:00",
+            ],
+            [
+                "available" => !$availableByDefault,
+                "type" => "dates",
+                "scope" => ["2022-11-08"],
+                "period" => "15:00-18:00",
+            ],
+            // Wednesday: Overlapping rules
+            [
+                "available" => !$availableByDefault,
+                "type" => "dates",
+                "scope" => ["2022-11-09"],
+                "period" => "09:00-12:00",
+            ],
+            [
+                "available" => !$availableByDefault,
+                "type" => "dates",
+                "scope" => ["2022-11-09"],
+                "period" => "11:00-19:00",
+            ],
+            [
+                "available" => !$availableByDefault,
+                "type" => "dates",
+                "scope" => ["2022-11-09"],
+                "period" => "15:00-18:00",
+            ],
+            // Saturday: Whole day
+            [
+                "available" => !$availableByDefault,
+                "type" => "dates",
+                "scope" => ["2022-11-12"],
+                "period" => "00:00-24:00",
+            ],
+        ];
+
+        $availability = AvailabilityHelper::getDailyAvailability(
+            [
+                "available" => $availableByDefault,
+                "rules" => $availabilityRules,
+            ],
+            $dateRange,
+            $returnAvailable
+        );
+
+        $expected = [
+            // Sunday: No rule
+            // Monday: One rule
+            [
+                new CarbonImmutable("2022-11-07 11:00:00"),
+                new CarbonImmutable("2022-11-07 13:00:00"),
+            ],
+            // Tuesday: Adjacent rules
+            [
+                new CarbonImmutable("2022-11-08 09:00:00"),
+                new CarbonImmutable("2022-11-08 13:00:00"),
+            ],
+            [
+                new CarbonImmutable("2022-11-08 15:00:00"),
+                new CarbonImmutable("2022-11-08 18:00:00"),
+            ],
+            // Wednesday: Overlapping rules
+            [
+                new CarbonImmutable("2022-11-09 09:00:00"),
+                new CarbonImmutable("2022-11-09 19:00:00"),
+            ],
+            // Saturday: Whole day
+            [
+                new CarbonImmutable("2022-11-12 00:00:00"),
+                new CarbonImmutable("2022-11-12 24:00:00"),
+            ],
+        ];
+
+        $this->assertSameIntervals($expected, $availability);
     }
 
     public function testIsScheduleAvailable()
