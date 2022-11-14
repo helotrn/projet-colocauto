@@ -151,12 +151,13 @@ const actions = {
     await dispatch("loadUser");
     await dispatch("global/load");
   },
-  async register({ commit, dispatch, state }, { email, password }) {
+  async register({ commit, dispatch, state }, { email, password, invitationToken }) {
     try {
       commit("loading", true);
       const { data } = await Vue.axios.post("/auth/register", {
         email,
         password,
+        invitationToken,
       });
 
       commit("token", data.access_token);

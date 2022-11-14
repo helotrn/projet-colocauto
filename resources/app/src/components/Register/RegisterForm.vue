@@ -47,6 +47,16 @@
           v-model="passwordRepeat"
         />
 
+        <forms-validated-input
+          mode="eager"
+          name="invitationToken"
+          :label="$t('invitation_token')"
+          :rules="{ required: true }"
+          type="text"
+          :placeholder="$t('invitation_token')"
+          v-model="invitationToken"
+        />
+
         <b-button type="submit" :disabled="loading" variant="primary" block class="btn-register">
           {{ $t("register_submit") }}
         </b-button>
@@ -73,6 +83,7 @@ export default {
     return {
       password: "",
       passwordRepeat: "",
+      invitationToken: this.$route.query.invitation ? this.$route.query.invitation : ""
     };
   },
   computed: {
@@ -96,6 +107,7 @@ export default {
         await this.$store.dispatch("register", {
           email: this.email,
           password: this.password,
+          invitationToken: this.invitationToken,
         });
 
         await this.$store.dispatch("login", {

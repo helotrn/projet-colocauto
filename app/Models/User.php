@@ -78,14 +78,6 @@ class User extends AuthenticatableBaseModel
 
     public static function booted()
     {
-        self::saved(function ($user) {
-            if ($user->id) {
-                if ($user->wasChanged("address")) {
-                    $user->updateAddressAndRelocateCommunity($user->address);
-                }
-            }
-        });
-
         self::updated(function ($model) {
             // Detect email change
             if ($model->wasChanged("email")) {

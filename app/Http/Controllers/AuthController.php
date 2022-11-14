@@ -10,6 +10,7 @@ use App\Http\Requests\BaseRequest as Request;
 use App\Http\Requests\User\AddToBalanceRequest as UserAddToBalanceRequest;
 use App\Http\Requests\User\UpdateRequest as UserUpdateRequest;
 use App\Models\User;
+use App\Models\Invitation;
 use App\Services\GoogleAccountService;
 use Illuminate\Contracts\Auth\Factory as Auth;
 use Illuminate\Http\Response;
@@ -94,6 +95,10 @@ class AuthController extends RestController
     {
         $email = $request->get("email");
         $password = $request->get("password");
+        $invitation = Invitation::where('token', $request->get("invitationToken"))->first();
+        if( !$invitation ) {
+            return $this->respondWithErrors("Wrong invitation code.", 400);
+        }
 
         $user = new User();
         $user->email = $email;
@@ -101,6 +106,7 @@ class AuthController extends RestController
         $user->save();
 
         if ($user) {
+            $invitation->community->users()->attach($user->id);
             $loginRequest = new LoginRequest();
             $loginRequest->setMethod("POST");
             $loginRequest->request->add([

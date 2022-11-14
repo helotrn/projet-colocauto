@@ -9,6 +9,7 @@ export default {
     register: "Bienvenue sur LocoMotion",
     register_error: "Erreur d'inscription",
     register_submit: "S'inscrire",
+    invitation_token: "Code d'invitation",
   },
   en: {
     email: "Email",
@@ -20,5 +21,6 @@ export default {
     register: "Register",
     register_error: "Registration failed",
     register_submit: "Register",
+    invitation_token: "Invitation code",
   },
 };
