@@ -32,6 +32,344 @@ class LoanableTest extends TestCase
         "total",
     ];
 
+    public function testAvailability_AvailabilityModeNever()
+    {
+        // Linking users and communities would trigger RegistrationApprovedEvent
+        // which would then send email using an external service.
+        // withoutEvents() makes the test robust to a non-existent or
+        // incorrectly-configured email service.
+        $this->withoutEvents();
+        $community = factory(Community::class)
+            ->states("withDefaultFreePricing")
+            ->create();
+        $this->user->communities()->attach($community->id, [
+            "approved_at" => new \DateTime(),
+        ]);
+        $ownerUser = factory(User::class)->create();
+        $ownerUser->communities()->sync([
+            $community->id => [
+                "approved_at" => Carbon::now(),
+            ],
+        ]);
+
+        $owner = factory(Owner::class)->create([
+            "user_id" => $ownerUser->id,
+        ]);
+
+        $loanable = factory(Car::class)->create([
+            "availability_mode" => "never",
+            "availability_json" => <<<JSON
+[
+  {
+    "available": true,
+    "type": "weekdays",
+    "scope": ["MO","TU","TH","WE","FR"],
+    "period": "17:00-22:00"
+  },{
+    "available": true,
+    "type": "weekdays",
+    "scope": ["SA","SU"],
+    "period":"00:00-24:00"
+  },{
+    "available": true,
+    "type": "dates",
+    "scope": ["2022-10-10","2022-10-12","2022-10-14"],
+    "period": "13:00-17:00"
+  },{
+    "available": true,
+    "type": "dateRange",
+    "scope": ["2022-10-10","2022-10-14"],
+    "period": "10:00-12:00"
+  }
+]
+JSON
+            ,
+            "owner_id" => $owner->id,
+        ]);
+
+        $borrowerUser = factory(User::class)->create();
+        $borrower = factory(Borrower::class)->create([
+            "user_id" => $borrowerUser->id,
+            "approved_at" => new \DateTime(),
+        ]);
+
+        $this->actAs($borrowerUser);
+        $borrowerUser->communities()->attach($community->id, [
+            "approved_at" => Carbon::now(),
+        ]);
+
+        $loan = factory(Loan::class)
+            ->states("withInProcessHandover")
+            ->create([
+                "borrower_id" => $borrower->id,
+                "loanable_id" => $loanable->id,
+                "departure_at" => (new Carbon("2022-10-12 13:15:00"))->format(
+                    "Y-m-d H:i:s"
+                ),
+                "duration_in_minutes" => 8.5 * 60,
+            ]);
+
+        $response = $this->json(
+            "GET",
+            "/api/v1/loanables/{$loanable->id}/availability",
+            [
+                "start" => "2022-10-09 00:00:00",
+                "end" => "2022-10-16 00:00:00",
+                "responseMode" => "unavailable",
+            ]
+        );
+
+        $response->assertStatus(200)->assertExactJson([
+            [
+                "start" => "2022-10-10 00:00:00",
+                "end" => "2022-10-10 10:00:00",
+                "data" => ["available" => false],
+            ],
+            [
+                "start" => "2022-10-10 12:00:00",
+                "end" => "2022-10-10 13:00:00",
+                "data" => ["available" => false],
+            ],
+            [
+                "start" => "2022-10-10 22:00:00",
+                "end" => "2022-10-11 00:00:00",
+                "data" => ["available" => false],
+            ],
+
+            [
+                "start" => "2022-10-11 00:00:00",
+                "end" => "2022-10-11 10:00:00",
+                "data" => ["available" => false],
+            ],
+
+            [
+                "start" => "2022-10-11 12:00:00",
+                "end" => "2022-10-11 17:00:00",
+                "data" => ["available" => false],
+            ],
+            [
+                "start" => "2022-10-11 22:00:00",
+                "end" => "2022-10-12 00:00:00",
+                "data" => ["available" => false],
+            ],
+            [
+                "start" => "2022-10-12 00:00:00",
+                "end" => "2022-10-12 10:00:00",
+                "data" => ["available" => false],
+            ],
+            [
+                "start" => "2022-10-12 12:00:00",
+                "end" => "2022-10-12 13:00:00",
+                "data" => ["available" => false],
+            ],
+            // Loan
+            [
+                "start" => "2022-10-12 13:15:00",
+                "end" => "2022-10-12 21:45:00",
+                "data" => ["available" => false],
+            ],
+            [
+                "start" => "2022-10-12 22:00:00",
+                "end" => "2022-10-13 00:00:00",
+                "data" => ["available" => false],
+            ],
+
+            [
+                "start" => "2022-10-13 00:00:00",
+                "end" => "2022-10-13 10:00:00",
+                "data" => ["available" => false],
+            ],
+            [
+                "start" => "2022-10-13 12:00:00",
+                "end" => "2022-10-13 17:00:00",
+                "data" => ["available" => false],
+            ],
+            [
+                "start" => "2022-10-13 22:00:00",
+                "end" => "2022-10-14 00:00:00",
+                "data" => ["available" => false],
+            ],
+
+            [
+                "start" => "2022-10-14 00:00:00",
+                "end" => "2022-10-14 10:00:00",
+                "data" => ["available" => false],
+            ],
+            [
+                "start" => "2022-10-14 12:00:00",
+                "end" => "2022-10-14 13:00:00",
+                "data" => ["available" => false],
+            ],
+            [
+                "start" => "2022-10-14 22:00:00",
+                "end" => "2022-10-15 00:00:00",
+                "data" => ["available" => false],
+            ],
+        ]);
+    }
+
+    public function testAvailability_AvailabilityModeAlways()
+    {
+        // Linking users and communities would trigger RegistrationApprovedEvent
+        // which would then send email using an external service.
+        // withoutEvents() makes the test robust to a non-existent or
+        // incorrectly-configured email service.
+        $this->withoutEvents();
+        $community = factory(Community::class)
+            ->states("withDefaultFreePricing")
+            ->create();
+        $this->user->communities()->attach($community->id, [
+            "approved_at" => new \DateTime(),
+        ]);
+        $ownerUser = factory(User::class)->create();
+        $ownerUser->communities()->sync([
+            $community->id => [
+                "approved_at" => Carbon::now(),
+            ],
+        ]);
+
+        $owner = factory(Owner::class)->create([
+            "user_id" => $ownerUser->id,
+        ]);
+
+        $loanable = factory(Car::class)->create([
+            "availability_mode" => "always",
+            "availability_json" => <<<JSON
+[
+  {
+    "available": false,
+    "type": "weekdays",
+    "scope": ["MO","TU","TH","WE","FR"],
+    "period": "17:00-22:00"
+  },{
+    "available": false,
+    "type": "weekdays",
+    "scope": ["SA","SU"],
+    "period":"00:00-24:00"
+  },{
+    "available": false,
+    "type": "dates",
+    "scope": ["2022-10-10","2022-10-12","2022-10-14"],
+    "period": "13:00-17:00"
+  },{
+    "available": false,
+    "type": "dateRange",
+    "scope": ["2022-10-10","2022-10-14"],
+    "period": "10:00-12:00"
+  }
+]
+JSON
+            ,
+            "owner_id" => $owner->id,
+        ]);
+
+        $borrowerUser = factory(User::class)->create();
+        $borrower = factory(Borrower::class)->create([
+            "user_id" => $borrowerUser->id,
+            "approved_at" => new \DateTime(),
+        ]);
+
+        $this->actAs($borrowerUser);
+        $borrowerUser->communities()->attach($community->id, [
+            "approved_at" => Carbon::now(),
+        ]);
+
+        $loan = factory(Loan::class)
+            ->states("withInProcessHandover")
+            ->create([
+                "borrower_id" => $borrower->id,
+                "loanable_id" => $loanable->id,
+                "departure_at" => (new Carbon("2022-10-11 12:15:00"))->format(
+                    "Y-m-d H:i:s"
+                ),
+                "duration_in_minutes" => 4.5 * 60,
+            ]);
+
+        $response = $this->json(
+            "GET",
+            "/api/v1/loanables/{$loanable->id}/availability",
+            [
+                "start" => "2022-10-09 00:00:00",
+                "end" => "2022-10-16 00:00:00",
+                "responseMode" => "unavailable",
+            ]
+        );
+
+        $response->assertStatus(200)->assertExactJson([
+            [
+                "start" => "2022-10-09 00:00:00",
+                "end" => "2022-10-10 00:00:00",
+                "data" => ["available" => false],
+            ],
+
+            [
+                "start" => "2022-10-10 10:00:00",
+                "end" => "2022-10-10 12:00:00",
+                "data" => ["available" => false],
+            ],
+            [
+                "start" => "2022-10-10 13:00:00",
+                "end" => "2022-10-10 22:00:00",
+                "data" => ["available" => false],
+            ],
+
+            [
+                "start" => "2022-10-11 10:00:00",
+                "end" => "2022-10-11 12:00:00",
+                "data" => ["available" => false],
+            ],
+            // Loan
+            [
+                "start" => "2022-10-11 12:15:00",
+                "end" => "2022-10-11 16:45:00",
+                "data" => ["available" => false],
+            ],
+            [
+                "start" => "2022-10-11 17:00:00",
+                "end" => "2022-10-11 22:00:00",
+                "data" => ["available" => false],
+            ],
+
+            [
+                "start" => "2022-10-12 10:00:00",
+                "end" => "2022-10-12 12:00:00",
+                "data" => ["available" => false],
+            ],
+            [
+                "start" => "2022-10-12 13:00:00",
+                "end" => "2022-10-12 22:00:00",
+                "data" => ["available" => false],
+            ],
+            [
+                "start" => "2022-10-13 10:00:00",
+                "end" => "2022-10-13 12:00:00",
+                "data" => ["available" => false],
+            ],
+            [
+                "start" => "2022-10-13 17:00:00",
+                "end" => "2022-10-13 22:00:00",
+                "data" => ["available" => false],
+            ],
+
+            [
+                "start" => "2022-10-14 10:00:00",
+                "end" => "2022-10-14 12:00:00",
+                "data" => ["available" => false],
+            ],
+            [
+                "start" => "2022-10-14 13:00:00",
+                "end" => "2022-10-14 22:00:00",
+                "data" => ["available" => false],
+            ],
+
+            [
+                "start" => "2022-10-15 00:00:00",
+                "end" => "2022-10-16 00:00:00",
+                "data" => ["available" => false],
+            ],
+        ]);
+    }
+
     public function testEvents_AvailabilityModeNever()
     {
         // Linking users and communities would trigger RegistrationApprovedEvent
