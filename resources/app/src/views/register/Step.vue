@@ -189,14 +189,9 @@ export default {
       try {
         await this.submit(false);
         this.$store.commit("user", this.item);
-        // We found a community for his/her address
-        if (this.item.communities.length > 0) {
-          // Go to "Submit proof of residency"
-          this.$router.push("/register/3");
-        } else {
-          // LocoMotion doesn't covered their area => Go to onboarding
-          this.$router.push("/register/4");
-        }
+
+        // Skip "Submit proof of residency" third step
+        this.$router.push("/register/4");
       } catch (e) {
         if (e.request) {
           switch (e.request.status) {

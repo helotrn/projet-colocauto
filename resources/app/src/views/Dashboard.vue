@@ -52,15 +52,6 @@
             <h2 class="dashboard--margin-bottom">Pour commencer</h2>
 
             <div class="page__section__tutorials">
-              <div v-if="hasTutorial('upload-proof-of-residency')">
-                <tutorial-block
-                  title="Veuillez fournir une preuve de résidence"
-                  to="/profile/communities"
-                  bg-image="/img-tetes.png"
-                  variant="light"
-                />
-              </div>
-
               <div v-if="hasTutorial('fill-your-driving-profile')">
                 <tutorial-block
                   title="Remplissez votre dossier de conduite"
