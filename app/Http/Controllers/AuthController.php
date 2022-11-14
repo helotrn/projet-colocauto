@@ -97,7 +97,9 @@ class AuthController extends RestController
         $password = $request->get("password");
         $invitation = Invitation::where('token', $request->get("invitationToken"))->first();
         if( !$invitation ) {
-            return $this->respondWithErrors("Wrong invitation code.", 400);
+            return $this->respondWithErrors([
+                "status" => [__("validation.custom.invitation_invalid")]
+            ], 400);
         }
 
         $user = new User();

@@ -168,6 +168,8 @@ return [
         ],
         "loanable_types" =>
             "Les types demandés (:givenValues) sont invalides. Options possibles: :validValues.",
+        "invitation_invalid" =>
+            "Le code d'invitation fourni est invalide",
     ],
 
     "attributes" => [
