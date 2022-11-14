@@ -11,6 +11,7 @@ use App\Http\Requests\User\AddToBalanceRequest as UserAddToBalanceRequest;
 use App\Http\Requests\User\UpdateRequest as UserUpdateRequest;
 use App\Models\User;
 use App\Models\Invitation;
+use App\Models\Borrower;
 use App\Services\GoogleAccountService;
 use Illuminate\Contracts\Auth\Factory as Auth;
 use Illuminate\Http\Response;
@@ -109,6 +110,13 @@ class AuthController extends RestController
 
         if ($user) {
             $invitation->community->users()->attach($user->id);
+
+            // automatically approve new invited users
+            $user->borrower = new Borrower();
+            $user->borrower->user_id = $user->id;
+            $user->borrower->approved_at = new \Carbon\Carbon();
+            $user->borrower->save();
+
             $loginRequest = new LoginRequest();
             $loginRequest->setMethod("POST");
             $loginRequest->request->add([
