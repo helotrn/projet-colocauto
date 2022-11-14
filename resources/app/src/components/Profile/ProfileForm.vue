@@ -120,13 +120,18 @@ uniquement dans le cadre d’une réservation."
               <gmap-autocomplete
                 class="form-control"
                 v-bind:class="{ 'is-invalid': validated && !valid, 'is-valid': validated && valid }"
-                @place_changed="(e) => setLocation(e.formatted_address, true)"
+                @place_changed="
+                  (e) => {
+                    setLocation(e.formatted_address, true);
+                    validate();
+                  }
+                "
                 :component-restrictions="{ country: 'ca' }"
                 :options="{ language: 'fr', fields: ['formatted_address'] }"
-                :types="['street_address', 'premise', 'subpremise']"
+                :types="['address']"
                 placeholder=""
                 :value="user.address"
-                @blur="() => onLocationBlur(validate)"
+                @blur="validate()"
                 @input="(e) => setLocation(e.target.value, false)"
               >
               </gmap-autocomplete>
@@ -141,17 +146,6 @@ uniquement dans le cadre d’une réservation."
             >
           </b-col>
         </b-row>
-
-        <!-- TODO 
-        <b-row v-if="mainCommunity">
-          <b-col
-            ><div class="md-3">
-              Vous êtes actuellement inscrit au sein du quartier
-              <strong>{{ mainCommunity.name }}</strong
-              >.</br></br>
-            </div>
-          </b-col>
-        </b-row> -->
 
         <slot />
 
@@ -268,11 +262,6 @@ export default {
       this.$refs.addressValidator.setFlags({ pristine: false });
       this.user.address = address;
       this.$refs.addressValidator.syncValue({ address, isFromGoogle });
-    },
-    onLocationBlur(validate) {
-      // This timeout lets the setLocation callback run first, which is necessary
-      // if the blur happened when the user selected an address from the list
-      setTimeout(() => validate(), 200);
     },
     onlyChars(event) {
       if (!this.isPerson) {
