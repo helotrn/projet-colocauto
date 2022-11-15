@@ -151,6 +151,10 @@ return [
             "action_completed" => "L'action a déjà été complétée.",
             "cannot_cancel" =>
                 "L'emprunt ne peut être annulé, car il est en cours et a des frais associés.",
+            "borrower_cant_pay" =>
+                "L'emprunteur-se n'a pas assez de fonds dans son solde pour payer présentement.",
+            "payment_cant_be_paid" =>
+                "Le paiement ne peut être complété présentement.",
         ],
         "duration_in_minutes" => [
             "min" =>

@@ -8,7 +8,6 @@ use App\Models\Community;
 use App\Models\Loan;
 use App\Models\Owner;
 use App\Models\Pricing;
-use App\Models\Takeover;
 use App\Models\User;
 use Carbon\Carbon;
 use Tests\TestCase;
@@ -44,12 +43,11 @@ abstract class ActionTestCase extends TestCase
             "departure_at" => Carbon::now()->toDateTimeString(),
             "duration_in_minutes" => $this->faker->randomNumber(4),
             "estimated_distance" => $this->faker->randomNumber(4),
-            "estimated_insurance" => $this->faker->randomNumber(4),
             "borrower_id" => $borrower->id,
             "loanable_id" => $loanable->id,
             "estimated_price" => 1,
             "estimated_insurance" => 1,
-            "platform_tip" => 1,
+            "platform_tip" => 0,
             "message_for_owner" => "",
             "reason" => "Test",
             "community_id" => $community->id,

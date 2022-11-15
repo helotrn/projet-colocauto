@@ -7,13 +7,6 @@ use App\Models\Loan;
 
 class PaymentRequest extends BaseRequest
 {
-    public function rules()
-    {
-        return [
-            "platform_tip" => ["numeric", "present", "min:0"],
-        ];
-    }
-
     public function authorize()
     {
         $user = $this->user();
