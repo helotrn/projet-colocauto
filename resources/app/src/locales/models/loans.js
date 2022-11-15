@@ -172,6 +172,11 @@ export default {
         description:
           "Merci pour votre emprunt! Vous pouvez maintenant clore l'emprunt en ligne et offrir une contribution volontaire.",
       },
+      waiting_for_validation: {
+        text: "Attente de validation",
+        description:
+          "En attente de la validation des données de l'emprunt par le propriétaire et/ou l'emprunteur-se.",
+      },
       waiting_for_payment: {
         text: "Attente de paiement",
         description: "L'emprunteur-se doit payer l'emprunt en ligne.",
