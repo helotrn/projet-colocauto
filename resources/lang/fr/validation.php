@@ -166,6 +166,10 @@ return [
                 'd\'utilisation</a> dans votre ' .
                 '<a href="/profile/account">profil LocoMotion</a>.',
         ],
+        "gdpr" => [
+            "accepted" =>
+                'Vous devez accepter le traitement des données RGPD',
+        ],
         "loanable_types" =>
             "Les types demandés (:givenValues) sont invalides. Options possibles: :validValues.",
         "invitation_invalid" =>

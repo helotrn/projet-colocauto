@@ -11,6 +11,8 @@ use Illuminate\Support\Str;
 $factory->define(User::class, function (Faker $faker) {
     return [
         "accept_conditions" => true,
+        "gdpr" => true,
+        "newsletter" => true,
         "name" => $faker->firstName,
         "last_name" => $faker->lastName,
         "email" => $faker->unique()->safeEmail,

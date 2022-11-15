@@ -19,6 +19,8 @@ class User extends AuthenticatableBaseModel
 
     public static $rules = [
         "accept_conditions" => ["accepted"],
+        "gdpr" => ["accepted"],
+        "newsletter" => "nullable|boolean",
         "address" => ["nullable"],
         "date_of_birth" => ["nullable", "date", "before:18 years ago"],
         "description" => "nullable",
@@ -66,6 +68,8 @@ class User extends AuthenticatableBaseModel
 
         if ($auth && $auth->isAdmin()) {
             unset($rules["accept_conditions"]);
+            unset($rules["gdpr"]);
+            unset($rules["newsletter"]);
             unset($rules["avatar"]);
         }
 
@@ -118,6 +122,8 @@ class User extends AuthenticatableBaseModel
     protected $fillable = [
         "is_deactivated",
         "accept_conditions",
+        "gdpr",
+        "newsletter",
         "name",
         "last_name",
         "description",
@@ -133,6 +139,8 @@ class User extends AuthenticatableBaseModel
 
     protected $casts = [
         "accept_conditions" => "boolean",
+        "gdpr" => "boolean",
+        "newsletter" => "boolean",
         "balance" => "decimal:2",
         "email_verified_at" => "datetime",
         "meta" => "array",

@@ -570,6 +570,8 @@ class UserController extends RestController
                 "name" => "",
                 "borrower" => new \stdClass(),
                 "accept_conditions" => false,
+                "gdpr" => false,
+                "newsletter" => false,
             ],
             "form" => [
                 "general" => [
@@ -608,6 +610,12 @@ class UserController extends RestController
                         "type" => "text",
                     ],
                     "accept_conditions" => [
+                        "type" => "checkbox",
+                    ],
+                    "gdpr" => [
+                        "type" => "checkbox",
+                    ],
+                    "newsletter" => [
                         "type" => "checkbox",
                     ],
                 ],

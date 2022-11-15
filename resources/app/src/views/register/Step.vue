@@ -41,6 +41,22 @@
               :placeholder="placeholderOrLabel('accept_conditions', 'users') | capitalize"
               v-model="item.accept_conditions"
             />
+            <forms-validated-input
+              name="gdpr"
+              :label="($t('users.fields.gdpr') + '*') | capitalize"
+              :rules="form.general.gdpr.rules"
+              type="checkbox"
+              :placeholder="placeholderOrLabel('gdpr', 'users') | capitalize"
+              v-model="item.gdpr"
+            />
+            <forms-validated-input
+              name="newsletter"
+              :label="$t('users.fields.newsletter') | capitalize"
+              :rules="form.general.newsletter.rules"
+              type="checkbox"
+              :placeholder="placeholderOrLabel('newsletter', 'users') | capitalize"
+              v-model="item.newsletter"
+            />
           </b-col>
         </b-row>
       </profile-form>

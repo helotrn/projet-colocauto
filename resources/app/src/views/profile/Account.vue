@@ -63,6 +63,23 @@
         @input="updateAcceptConditions"
         :disabled="item.accept_conditions"
       />
+
+      <forms-validated-input
+        type="checkbox"
+        name="gdpr"
+        :label="$t('users.fields.gdpr') | capitalize"
+        :value="item.gdpr"
+        @input="updateGDPR"
+        :disabled="item.gdpr"
+      />
+
+      <forms-validated-input
+        type="checkbox"
+        name="newsletter"
+        :label="$t('users.fields.newsletter') | capitalize"
+        :value="item.newsletter"
+        @input="updateNewsletter"
+      />
     </div>
   </div>
   <layout-loading v-else />
@@ -107,7 +124,31 @@ export default {
           accept_conditions: value,
         },
         params: {
-          fields: "id,name,accept_conditions",
+          fields: "id,name,accept_conditions,gdpr,newsletter",
+        },
+      });
+    },
+    async updateGDPR(value) {
+      await this.$store.dispatch("users/update", {
+        id: this.item.id,
+        data: {
+          id: this.item.id,
+          gdpr: value,
+        },
+        params: {
+          fields: "id,name,accept_conditions,gdpr,newsletter",
+        },
+      });
+    },
+    async updateNewsletter(value) {
+      await this.$store.dispatch("users/update", {
+        id: this.item.id,
+        data: {
+          id: this.item.id,
+          newsletter: value,
+        },
+        params: {
+          fields: "id,name,accept_conditions,gdpr,newsletter",
         },
       });
     },

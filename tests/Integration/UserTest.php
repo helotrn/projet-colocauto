@@ -261,6 +261,8 @@ class UserTest extends TestCase
     {
         $data = [
             "accept_conditions" => true,
+            "gdpr" => true,
+            "newsletter" => true,
             "name" => $this->faker->name,
             "last_name" => $this->faker->name,
             "email" => $this->faker->unique()->safeEmail,
@@ -292,6 +294,8 @@ class UserTest extends TestCase
                 "is_smart_phone",
                 "other_phone",
                 "accept_conditions",
+                "gdpr",
+                "newsletter",
                 "created_at",
                 "updated_at",
             ]);

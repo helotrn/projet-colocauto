@@ -15,6 +15,8 @@ class UsersTableSeeder extends Seeder
             "postal_code" => "H2S 2G7",
             "phone" => "555 555-5555",
             "accept_conditions" => true,
+            "gdpr" => true,
+            "newsletter" => true,
         ];
 
         $users = [

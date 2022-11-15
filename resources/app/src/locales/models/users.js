@@ -15,6 +15,8 @@ export default {
     fields: {
       accept_conditions: `j'accepte les <a href="/conditions" target="_blank">conditions
         générales d'utilisation</a> incluant des communications par courriel`,
+      gdpr: "j'accepte que mes données soient traitées ... (RGPD)",
+      newsletter: "je m'abonne à l'infolettre",
       address: "adresse",
       avatar: "image de profil",
       communities: prefixFields(communities.fr.fields, "(Communauté)"),
