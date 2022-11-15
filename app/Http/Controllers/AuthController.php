@@ -101,6 +101,14 @@ class AuthController extends RestController
             return $this->respondWithErrors([
                 "status" => [__("validation.custom.invitation_invalid")]
             ], 400);
+        } else if( $invitation->consumed_at !== null){
+            $date = new \Carbon\Carbon($invitation->consumed_at);
+            return $this->respondWithErrors([
+                "status" => [trans("validation.custom.invitation_consumed", [
+                    "email" => $invitation->email,
+                    "date" => $date->diffForHumans(),
+                ])]
+            ], 400);
         }
 
         $user = new User();
@@ -110,6 +118,7 @@ class AuthController extends RestController
 
         if ($user) {
             $invitation->community->users()->attach($user->id);
+            $invitation->consume();
 
             // automatically approve new invited users
             $user->borrower = new Borrower();

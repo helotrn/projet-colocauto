@@ -174,6 +174,8 @@ return [
             "Les types demandés (:givenValues) sont invalides. Options possibles: :validValues.",
         "invitation_invalid" =>
             "Le code d'invitation fourni est invalide",
+        "invitation_consumed" =>
+            "Le code d'invitation a déjà été utilisé pour l'adresse :email le :date.",
     ],
 
     "attributes" => [

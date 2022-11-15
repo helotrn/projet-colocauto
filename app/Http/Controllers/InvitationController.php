@@ -79,6 +79,11 @@ class InvitationController extends RestController
                 "token" => [
                     // readonly field, generated on the server side
                     "disabled" => true
+                ],
+                "consumed_at" => [
+                    // readonly field, generated on the server side
+                    "type" => "datetime",
+                    "disabled" => true
                 ]
             ],
             "filters" => $this->model::$filterTypes ?: new \stdClass(),

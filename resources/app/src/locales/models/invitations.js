@@ -7,7 +7,8 @@ export default {
       id: "ID",
       email: "email",
       community_id: "communauté dans laquelle sera intégrée le nouveau membre",
-      token: "code (créé automatiquement)"
+      token: "code (créé automatiquement)",
+      consumed_at: "date d'utilisation (rempli automatiquement)"
     },
     list: {
       create: "créer une invitation",
