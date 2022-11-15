@@ -34,11 +34,11 @@
               Allo {{ user.name }}<span v-if="user.name">,</span>
             </h2>
 
-            <label>On brise la glace? Parlez-nous de vous.*</label>
+            <label>On brise la glace? Parlez-nous de vous.</label>
             <forms-validated-input
               name="description"
               description="Vos passions, votre film préféré ou vos plus grandes folies! Ce texte permet à vos voisin-e-s de vous découvrir sous un autre angle."
-              :rules="{ required: true }"
+              :rules="form.general.description.rules"
               label="Brise glace"
               type="textarea"
               v-model="user.description"
@@ -52,8 +52,8 @@
             <div class="circle">
               <forms-validated-input
                 type="image"
-                label="Une photo de profil?*"
-                :rules="{ required: true }"
+                label="Une photo de profil?"
+                :rules="form.general.avatar.rules"
                 name="avatar"
                 v-model="user.avatar"
               />
@@ -64,9 +64,6 @@
         <b-row class="safety-questions">
           <b-col>
             <h2>Quelques questions pour votre sécurité.</h2>
-            <h3>
-              LocoMotion et son partenaire d’assurance Desjardins ont besoin de ces informations.
-            </h3>
           </b-col>
         </b-row>
 
@@ -74,9 +71,9 @@
           <b-col>
             <forms-validated-input
               name="date_of_birth"
-              :label="($t('fields.date_of_birth') + '*') | capitalize"
+              :label="$t('fields.date_of_birth') | capitalize"
               description="Cette information est uniquement pour notre assureur"
-              :rules="dateOfBirthRules"
+              :rules="form.general.date_of_birth.rules"
               type="date"
               initial-view="year"
               :open-date="openDate"
@@ -95,12 +92,12 @@
           <b-col>
             <forms-validated-input
               name="phone"
-              :label="($t('fields.phone') + '*') | capitalize"
+              :label="$t('fields.phone') | capitalize"
               description="Nous permet de vous mettre en contact avec votre interlocuteur
 uniquement dans le cadre d’une réservation."
               :rules="form.general.phone.rules"
               type="text"
-              mask="(###) ###-####"
+              mask="## ## ## ## ##"
               v-model="user.phone"
             />
           </b-col>
@@ -108,42 +105,15 @@ uniquement dans le cadre d’une réservation."
 
         <b-row>
           <b-col>
-            <label>Adresse complète*</label>
-
-            <validation-provider
-              :rules="{ isFromGoogleValidation: true }"
-              name="Adresse complète*"
-              ref="addressValidator"
-              v-slot="{ validated, valid, errors, validate }"
-              :detect-input="false"
-            >
-              <gmap-autocomplete
-                class="form-control"
-                v-bind:class="{ 'is-invalid': validated && !valid, 'is-valid': validated && valid }"
-                @place_changed="
-                  (e) => {
-                    setLocation(e.formatted_address, true);
-                    validate();
-                  }
-                "
-                :component-restrictions="{ country: 'fr' }"
-                :options="{ language: 'fr', fields: ['formatted_address'] }"
-                :types="['address']"
-                placeholder=""
-                :value="user.address"
-                @blur="validate()"
-                @input="(e) => setLocation(e.target.value, false)"
-              >
-              </gmap-autocomplete>
-              <b-form-invalid-feedback :state="validated ? valid : null">
-                {{ errors[0] }}
-              </b-form-invalid-feedback>
-            </validation-provider>
-
-            <small class="text-muted"
-              >Elle nous permet de vous affecter au bon quartier et ne sera jamais divulguée aux
-              utilisateurs.</small
-            >
+            <forms-validated-input
+              name="address"
+              :label="$t('fields.address') | capitalize"
+              description="Elle nous permet de vous affecter au bon quartier et
+ne sera jamais divulguée aux utilisateurs."
+              :rules="form.general.address.rules"
+              type="text"
+              v-model="user.address"
+            />
           </b-col>
         </b-row>
 

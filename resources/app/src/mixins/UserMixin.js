@@ -61,7 +61,7 @@ export default {
     },
     // Has finalized his account creation
     isRegistered() {
-      const requiredFields = ["name", "date_of_birth", "address", "phone"];
+      const requiredFields = ["name"];
 
       for (let i = 0, len = requiredFields.length; i < len; i += 1) {
         if (!this.user[requiredFields[i]]) {

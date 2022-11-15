@@ -58,8 +58,6 @@ class User extends AuthenticatableBaseModel
             case "template":
                 $rules = parent::getRules($action, $auth);
                 $rules["name"][] = "required";
-                $rules["phone"][] = "required";
-                $rules["address"][] = "required";
                 break;
             default:
                 $rules = parent::getRules($action, $auth);
