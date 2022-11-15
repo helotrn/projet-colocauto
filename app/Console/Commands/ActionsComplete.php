@@ -114,6 +114,8 @@ class ActionsComplete extends Command
                 Log::info("Completed handover on loan ID $loan->id.");
             }
 
+            // Need to refresh since we check the state of the loan before paying.
+            $loan->refresh();
             // Completed handovers will not change loan status. Not necessary to refresh loan.
             if ($loan->canBePaid()) {
                 Log::info("Autocompleting payment on loan ID $loan->id...");
