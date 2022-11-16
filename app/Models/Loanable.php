@@ -129,15 +129,13 @@ class Loanable extends BaseModel
                     "loanables.owner_id"
                 );
 
-                $query = static::addJoin(
+                return static::addJoin(
                     $query,
                     "users as owner_users",
                     "owner_users.id",
                     "=",
                     "owners.user_id"
                 );
-
-                return $query;
             },
         ];
     }
@@ -224,6 +222,11 @@ class Loanable extends BaseModel
             ->delete();
     }
 
+    public function isCoowner(User $user): bool
+    {
+        return $this->coowners->where("user_id", $user->id)->isNotEmpty();
+    }
+
     public function getAvailabilityRules()
     {
         try {
@@ -249,8 +252,8 @@ class Loanable extends BaseModel
         $durationInMinutes,
         $ignoreLoanIds = []
     ) {
-        if (!is_a(\Carbon\Carbon::class, $departureAt)) {
-            $departureAt = new \Carbon\Carbon($departureAt);
+        if (!is_a(Carbon::class, $departureAt)) {
+            $departureAt = new Carbon($departureAt);
         }
 
         $returnAt = $departureAt->copy()->add($durationInMinutes, "minutes");

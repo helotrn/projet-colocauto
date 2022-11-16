@@ -4,18 +4,14 @@ namespace App\Models;
 
 use App\Events\UserEmailUpdated;
 use App\Mail\PasswordRequest;
-use App\Models\Community;
+use App\Services\LocoMotionGeocoderService as LocoMotionGeocoder;
 use App\Transformers\UserTransformer;
-use Auth;
-use GuzzleHttp\Client as HttpClient;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
-use App\Services\LocoMotionGeocoderService as LocoMotionGeocoder;
 use Mail;
 use Noke;
 use Stripe;
-use Log;
 
 class User extends AuthenticatableBaseModel
 {
@@ -489,10 +485,8 @@ class User extends AuthenticatableBaseModel
             ->whereId($user->id)
             // ...or belonging to a community of which he or she is a member
             ->orWhere(function ($q) use ($user) {
-                return $q->whereHas("communities", function ($q2) use ($user) {
-                    return $q2->whereHas("users", function ($q3) use ($user) {
-                        return $q3->where("community_user.user_id", $user->id);
-                    });
+                return $q->whereHas("communities", function ($q) use ($user) {
+                    $q->withApprovedUser($user);
                 });
             });
     }

@@ -1707,14 +1707,14 @@ JSON
         $loanAfter = factory(Loan::class)->create([
             "loanable_id" => $carToFind->id,
             "departure_at" => Carbon::now()
-                ->addDay(1)
+                ->addDay()
                 ->format("Y-m-d H:i:s"),
         ]);
         // Non-overlapping loan before
         $loanBefore = factory(Loan::class)->create([
             "loanable_id" => $carToFind->id,
             "departure_at" => Carbon::now()
-                ->subDay(1)
+                ->subDay()
                 ->format("Y-m-d H:i:s"),
             "duration_in_minutes" => 20,
         ]);
@@ -1780,7 +1780,7 @@ JSON
         $owner = factory(Owner::class)->create([
             "user_id" => $ownerUser->id,
         ]);
-        $carToIgnore = factory(Car::class)->create([
+        factory(Car::class)->create([
             "availability_mode" => "always",
             "owner_id" => $owner->id,
         ]);
@@ -1832,7 +1832,7 @@ JSON
         $loan = factory(Loan::class)->create([
             "loanable_id" => $carToIgnore->id,
             "departure_at" => Carbon::now()
-                ->subMinute(5)
+                ->subMinutes(5)
                 ->format("Y-m-d H:i:s"),
             "duration_in_minutes" => 20,
         ]);
@@ -1884,7 +1884,7 @@ JSON
             "user_id" => $ownerUser->id,
         ]);
 
-        $carToIgnore = factory(Car::class)->create([
+        factory(Car::class)->create([
             "community_id" => $community->id,
             "availability_mode" => "never",
             "owner_id" => $owner->id,
@@ -2355,29 +2355,21 @@ JSON
         $this->setTestLocale();
 
         // Complete valid request
-        $response = $this->json(
-            "GET",
-            "/api/v1/loanables/{$loanable->id}/test",
-            [
-                "departure_at" => Carbon::now()->format("Y-m-d H:i:s"),
-                "duration_in_minutes" => 20,
-                "estimated_distance" => 0,
-                "loanable_id" => $loanable->id,
-                "community_id" => $community->id,
-            ]
-        )->assertStatus(200);
+        $this->json("GET", "/api/v1/loanables/{$loanable->id}/test", [
+            "departure_at" => Carbon::now()->format("Y-m-d H:i:s"),
+            "duration_in_minutes" => 20,
+            "estimated_distance" => 0,
+            "loanable_id" => $loanable->id,
+            "community_id" => $community->id,
+        ])->assertStatus(200);
 
         // Departure missing
-        $response = $this->json(
-            "GET",
-            "/api/v1/loanables/{$loanable->id}/test",
-            [
-                "duration_in_minutes" => 20,
-                "estimated_distance" => 0,
-                "loanable_id" => $loanable->id,
-                "community_id" => $community->id,
-            ]
-        )
+        $this->json("GET", "/api/v1/loanables/{$loanable->id}/test", [
+            "duration_in_minutes" => 20,
+            "estimated_distance" => 0,
+            "loanable_id" => $loanable->id,
+            "community_id" => $community->id,
+        ])
             ->assertStatus(422)
             ->assertJson([
                 "errors" => [
@@ -2386,27 +2378,19 @@ JSON
             ]);
 
         // Community missing: OK
-        $response = $this->json(
-            "GET",
-            "/api/v1/loanables/{$loanable->id}/test",
-            [
-                "departure_at" => Carbon::now()->format("Y-m-d H:i:s"),
-                "duration_in_minutes" => 20,
-                "estimated_distance" => 0,
-                "loanable_id" => $loanable->id,
-            ]
-        )->assertStatus(200);
+        $this->json("GET", "/api/v1/loanables/{$loanable->id}/test", [
+            "departure_at" => Carbon::now()->format("Y-m-d H:i:s"),
+            "duration_in_minutes" => 20,
+            "estimated_distance" => 0,
+            "loanable_id" => $loanable->id,
+        ])->assertStatus(200);
 
         // Loanable missing
-        $response = $this->json(
-            "GET",
-            "/api/v1/loanables/{$loanable->id}/test",
-            [
-                "departure_at" => Carbon::now()->format("Y-m-d H:i:s"),
-                "duration_in_minutes" => 20,
-                "estimated_distance" => 0,
-            ]
-        )
+        $this->json("GET", "/api/v1/loanables/{$loanable->id}/test", [
+            "departure_at" => Carbon::now()->format("Y-m-d H:i:s"),
+            "duration_in_minutes" => 20,
+            "estimated_distance" => 0,
+        ])
             ->assertStatus(422)
             ->assertJson([
                 "errors" => [
@@ -2415,16 +2399,12 @@ JSON
             ]);
 
         // Duration 0
-        $response = $this->json(
-            "GET",
-            "/api/v1/loanables/{$loanable->id}/test",
-            [
-                "departure_at" => Carbon::now()->format("Y-m-d H:i:s"),
-                "duration_in_minutes" => 0,
-                "estimated_distance" => 0,
-                "loanable_id" => $loanable->id,
-            ]
-        )
+        $this->json("GET", "/api/v1/loanables/{$loanable->id}/test", [
+            "departure_at" => Carbon::now()->format("Y-m-d H:i:s"),
+            "duration_in_minutes" => 0,
+            "estimated_distance" => 0,
+            "loanable_id" => $loanable->id,
+        ])
             ->assertStatus(422)
             ->assertJson([
                 "errors" => [
@@ -2433,21 +2413,285 @@ JSON
             ]);
 
         // Estimated distance negative
-        $response = $this->json(
-            "GET",
-            "/api/v1/loanables/{$loanable->id}/test",
-            [
-                "departure_at" => Carbon::now()->format("Y-m-d H:i:s"),
-                "duration_in_minutes" => 0,
-                "estimated_distance" => -1,
-                "loanable_id" => $loanable->id,
-            ]
-        )
+        $this->json("GET", "/api/v1/loanables/{$loanable->id}/test", [
+            "departure_at" => Carbon::now()->format("Y-m-d H:i:s"),
+            "duration_in_minutes" => 0,
+            "estimated_distance" => -1,
+            "loanable_id" => $loanable->id,
+        ])
             ->assertStatus(422)
             ->assertJson([
                 "errors" => [
                     "estimated_distance" => ["validation.min.numeric"],
                 ],
             ]);
+    }
+
+    public function testAddCoowner()
+    {
+        $this->withoutEvents();
+
+        $community = factory(Community::class)
+            ->states("withDefaultFreePricing")
+            ->create();
+        $coOwnerUser = factory(User::class)->create();
+        $coOwnerUser->communities()->attach($community->id, [
+            "approved_at" => new \DateTime(),
+        ]);
+        $ownerUser = factory(User::class)->create();
+        $ownerUser->communities()->sync([
+            $community->id => [
+                "approved_at" => Carbon::now(),
+            ],
+        ]);
+
+        $owner = factory(Owner::class)->create([
+            "user_id" => $ownerUser->id,
+        ]);
+
+        $loanable = factory(Trailer::class)->create([
+            "owner_id" => $owner->id,
+        ]);
+
+        $this->actAs($ownerUser);
+
+        $this->json("PUT", "/api/v1/loanables/{$loanable->id}/coowners", [
+            "user_id" => $coOwnerUser->id,
+        ])->assertStatus(200);
+        $loanable->refresh();
+
+        $response = $this->json("GET", "/api/v1/loanables/{$loanable->id}", [
+            "fields" => "coowners.*",
+        ]);
+        $response->assertJson([
+            "coowners" => [
+                [
+                    "user_id" => $coOwnerUser->id,
+                    "loanable_id" => $loanable->id,
+                ],
+            ],
+        ]);
+    }
+
+    public function testAddCoowner_failsWithNoSharedCommunities()
+    {
+        $this->withoutEvents();
+
+        $community = factory(Community::class)
+            ->states("withDefaultFreePricing")
+            ->create();
+        $coOwnerUser = factory(User::class)->create();
+
+        $ownerUser = factory(User::class)->create();
+        $ownerUser->communities()->sync([
+            $community->id => [
+                "approved_at" => Carbon::now(),
+            ],
+        ]);
+
+        $owner = factory(Owner::class)->create([
+            "user_id" => $ownerUser->id,
+        ]);
+
+        $loanable = factory(Trailer::class)->create([
+            "owner_id" => $owner->id,
+        ]);
+
+        $this->actAs($ownerUser);
+
+        $this->json("PUT", "/api/v1/loanables/{$loanable->id}/coowners", [
+            "user_id" => $coOwnerUser->id,
+        ])->assertStatus(422);
+        $loanable->refresh();
+
+        $response = $this->json("GET", "/api/v1/loanables/{$loanable->id}", [
+            "fields" => "coowners.*",
+        ]);
+        $response->assertJson([
+            "coowners" => [],
+        ]);
+    }
+
+    public function testAddCoowner_failsForSelf()
+    {
+        $this->withoutEvents();
+
+        $community = factory(Community::class)
+            ->states("withDefaultFreePricing")
+            ->create();
+        $coOwnerUser = factory(User::class)->create();
+        $coOwnerUser->communities()->attach($community->id, [
+            "approved_at" => new \DateTime(),
+        ]);
+        $ownerUser = factory(User::class)->create();
+        $ownerUser->communities()->sync([
+            $community->id => [
+                "approved_at" => Carbon::now(),
+            ],
+        ]);
+
+        $owner = factory(Owner::class)->create([
+            "user_id" => $ownerUser->id,
+        ]);
+
+        $loanable = factory(Trailer::class)->create([
+            "owner_id" => $owner->id,
+        ]);
+
+        $this->actAs($coOwnerUser);
+
+        $this->json("PUT", "/api/v1/loanables/{$loanable->id}/coowners", [
+            "user_id" => $coOwnerUser->id,
+        ])->assertStatus(403);
+        $loanable->refresh();
+    }
+
+    public function testRemoveCoowner()
+    {
+        $this->withoutEvents();
+
+        $community = factory(Community::class)
+            ->states("withDefaultFreePricing")
+            ->create();
+        $coOwnerUser = factory(User::class)->create();
+        $coOwnerUser->communities()->attach($community->id, [
+            "approved_at" => new \DateTime(),
+        ]);
+        $ownerUser = factory(User::class)->create();
+        $ownerUser->communities()->sync([
+            $community->id => [
+                "approved_at" => Carbon::now(),
+            ],
+        ]);
+
+        $owner = factory(Owner::class)->create([
+            "user_id" => $ownerUser->id,
+        ]);
+
+        $loanable = factory(Trailer::class)->create([
+            "owner_id" => $owner->id,
+        ]);
+        $loanable->addCoowner($coOwnerUser->id);
+
+        $this->actAs($ownerUser);
+        $this->json("DELETE", "/api/v1/loanables/{$loanable->id}/coowners", [
+            "user_id" => $coOwnerUser->id,
+        ])->assertStatus(200);
+        $loanable->refresh();
+
+        $response = $this->json("GET", "/api/v1/loanables/{$loanable->id}", [
+            "fields" => "coowners.*",
+        ]);
+        $response->assertJsonCount(0, "coowners");
+    }
+
+    public function testRemoveCoowner_succeedsForSelf()
+    {
+        $this->withoutEvents();
+
+        $community = factory(Community::class)
+            ->states("withDefaultFreePricing")
+            ->create();
+        $coOwnerUser = factory(User::class)->create();
+        $coOwnerUser->communities()->attach($community->id, [
+            "approved_at" => new \DateTime(),
+        ]);
+        $ownerUser = factory(User::class)->create();
+        $ownerUser->communities()->sync([
+            $community->id => [
+                "approved_at" => Carbon::now(),
+            ],
+        ]);
+
+        $owner = factory(Owner::class)->create([
+            "user_id" => $ownerUser->id,
+        ]);
+
+        $loanable = factory(Trailer::class)->create([
+            "owner_id" => $owner->id,
+        ]);
+        $loanable->addCoowner($coOwnerUser->id);
+
+        $this->actAs($coOwnerUser);
+        $this->json("DELETE", "/api/v1/loanables/{$loanable->id}/coowners", [
+            "user_id" => $coOwnerUser->id,
+        ])->assertStatus(200);
+        $loanable->refresh();
+
+        $response = $this->json("GET", "/api/v1/loanables/{$loanable->id}", [
+            "fields" => "coowners.*",
+        ]);
+        $response->assertJsonCount(0, "coowners");
+    }
+
+    public function testRemoveCoowner_failsForDifferentCoowner()
+    {
+        $this->withoutEvents();
+
+        $community = factory(Community::class)
+            ->states("withDefaultFreePricing")
+            ->create();
+        $coOwnerUser = factory(User::class)->create();
+        $coOwnerUser->communities()->attach($community->id, [
+            "approved_at" => new \DateTime(),
+        ]);
+        $otherCoOwnerUser = factory(User::class)->create();
+        $otherCoOwnerUser->communities()->attach($community->id, [
+            "approved_at" => new \DateTime(),
+        ]);
+        $ownerUser = factory(User::class)->create();
+        $ownerUser->communities()->sync([
+            $community->id => [
+                "approved_at" => Carbon::now(),
+            ],
+        ]);
+
+        $owner = factory(Owner::class)->create([
+            "user_id" => $ownerUser->id,
+        ]);
+
+        $loanable = factory(Trailer::class)->create([
+            "owner_id" => $owner->id,
+        ]);
+        $loanable->addCoowner($coOwnerUser->id);
+        $loanable->addCoowner($otherCoOwnerUser->id);
+
+        $this->actAs($coOwnerUser);
+        $this->json("DELETE", "/api/v1/loanables/{$loanable->id}/coowners", [
+            "user_id" => $otherCoOwnerUser->id,
+        ])->assertStatus(403);
+    }
+
+    public function testRemoveCoowner_failsForNonCoowner()
+    {
+        $this->withoutEvents();
+
+        $community = factory(Community::class)
+            ->states("withDefaultFreePricing")
+            ->create();
+        $randomUser = factory(User::class)->create();
+        $randomUser->communities()->attach($community->id, [
+            "approved_at" => new \DateTime(),
+        ]);
+
+        $ownerUser = factory(User::class)->create();
+        $ownerUser->communities()->sync([
+            $community->id => [
+                "approved_at" => Carbon::now(),
+            ],
+        ]);
+
+        $owner = factory(Owner::class)->create([
+            "user_id" => $ownerUser->id,
+        ]);
+
+        $loanable = factory(Trailer::class)->create([
+            "owner_id" => $owner->id,
+        ]);
+
+        $this->actAs($ownerUser);
+        $this->json("DELETE", "/api/v1/loanables/{$loanable->id}/coowners", [
+            "user_id" => $randomUser->id,
+        ])->assertStatus(422);
     }
 }

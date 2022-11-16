@@ -6,30 +6,31 @@ use App\Calendar\AvailabilityHelper;
 use App\Calendar\DateIntervalHelper;
 use App\Helpers\Order as OrderHelper;
 use App\Http\Requests\BaseRequest as Request;
-use App\Http\Requests\Loanable\AvailabilityRequest;
-use App\Http\Requests\Loanable\DestroyRequest;
-use App\Http\Requests\Loanable\EventsRequest;
-use App\Http\Requests\Loanable\TestRequest;
-use App\Http\Requests\Loanable\RestoreRequest;
 use App\Http\Requests\Bike\CreateRequest as BikeCreateRequest;
 use App\Http\Requests\Bike\UpdateRequest as BikeUpdateRequest;
 use App\Http\Requests\Car\CreateRequest as CarCreateRequest;
 use App\Http\Requests\Car\UpdateRequest as CarUpdateRequest;
+use App\Http\Requests\Loanable\AddCoownerRequest;
+use App\Http\Requests\Loanable\AvailabilityRequest;
+use App\Http\Requests\Loanable\DestroyRequest;
+use App\Http\Requests\Loanable\EventsRequest;
+use App\Http\Requests\Loanable\RemoveCoownerRequest;
+use App\Http\Requests\Loanable\RestoreRequest;
 use App\Http\Requests\Loanable\SearchRequest;
+use App\Http\Requests\Loanable\TestRequest;
 use App\Http\Requests\Trailer\CreateRequest as TrailerCreateRequest;
 use App\Http\Requests\Trailer\UpdateRequest as TrailerUpdateRequest;
-use App\Models\Community;
 use App\Models\Bike;
 use App\Models\Car;
+use App\Models\Community;
 use App\Models\Loan;
 use App\Models\Loanable;
 use App\Models\Pricing;
 use App\Models\Trailer;
-use App\Repositories\LoanRepository;
 use App\Repositories\LoanableRepository;
+use App\Repositories\LoanRepository;
 use Carbon\Carbon;
 use Carbon\CarbonImmutable;
-use Excel;
 use Illuminate\Validation\ValidationException;
 use Validator;
 
@@ -203,7 +204,7 @@ class LoanableController extends RestController
                     "type" => "availability_rule",
                     "start" => $interval[0],
                     "end" => $interval[1],
-                    "uri" => "/loanables/{$loanable->id}",
+                    "uri" => "/loanables/$loanable->id",
                     "data" => [
                         // availability_mode == "always" means that events are of unavailability.
                         "available" => $availabilityMode != "always",
@@ -223,7 +224,7 @@ class LoanableController extends RestController
                     "type" => "loan",
                     "start" => new Carbon($loan->departure_at),
                     "end" => new Carbon($loan->actual_return_at),
-                    "uri" => "/loans/{$loan->id}",
+                    "uri" => "/loans/$loan->id",
                     "data" => [
                         "status" => $loan->status,
                     ],
@@ -457,7 +458,7 @@ class LoanableController extends RestController
 
     public function search(SearchRequest $request)
     {
-        $departureAt = new \Carbon\Carbon($request->get("departure_at"));
+        $departureAt = new Carbon($request->get("departure_at"));
         $durationInMinutes = $request->get("duration_in_minutes");
 
         $returnAt = $departureAt->copy()->add($durationInMinutes, "minutes");
@@ -612,7 +613,6 @@ class LoanableController extends RestController
     {
         $template = [
             "item" => [
-                "name" => "",
                 "type" => null,
                 "brand" => "",
                 "comments" => "",
@@ -908,7 +908,7 @@ class LoanableController extends RestController
 
     public function indexLoans(Request $request, $id)
     {
-        $item = $this->repo->find($request->redirectAuth(), $id);
+        $this->repo->find($request->redirectAuth(), $id);
 
         return $this->loanController->index($request->redirect(Request::class));
     }
@@ -936,5 +936,17 @@ class LoanableController extends RestController
         }
 
         return $this->respondWithItem($request, $nextLoan);
+    }
+
+    public function addCoowner(AddCoownerRequest $request, $loanableId)
+    {
+        $loanable = Loanable::findOrFail($loanableId);
+        $loanable->addCoowner($request->get("user_id"));
+    }
+
+    public function removeCoowner(RemoveCoownerRequest $request, $loanableId)
+    {
+        $loanable = Loanable::findOrFail($loanableId);
+        $loanable->removeCoowner($request->get("user_id"));
     }
 }
