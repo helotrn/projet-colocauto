@@ -2,10 +2,10 @@
 
 namespace Tests\Unit\Models;
 
-use App\Models\Borrower;
-use App\Models\Community;
 use App\Models\Bike;
+use App\Models\Borrower;
 use App\Models\Car;
+use App\Models\Community;
 use App\Models\Loan;
 use App\Models\Loanable;
 use App\Models\Owner;
@@ -547,5 +547,49 @@ class LoanableTest extends TestCase
         ];
 
         $this->assertEquals($expected, $rules);
+    }
+
+    public function testAddCoowner()
+    {
+        $loanableClasses = [Trailer::class, Car::class, Bike::class];
+
+        foreach ($loanableClasses as $loanableClass) {
+            $loanable = factory($loanableClass)->create();
+            $user = factory(User::class)->create();
+
+            $loanable->addCoowner($user->id);
+            $loanable->refresh();
+
+            self::assertCount(
+                1,
+                $loanable->coowners,
+                "$loanableClass has 1 coowner"
+            );
+            self::assertEquals($user->id, $loanable->coowners[0]->user->id);
+            self::assertEquals(
+                $loanable->id,
+                $loanable->coowners[0]->loanable->id,
+                "$loanableClass has the correct coowner"
+            );
+        }
+    }
+
+    public function testRemoveCoowner()
+    {
+        $loanableClasses = [Trailer::class, Car::class, Bike::class];
+
+        foreach ($loanableClasses as $loanableClass) {
+            $loanable = factory($loanableClass)->create();
+            $user = factory(User::class)->create();
+            $loanable->addCoowner($user->id);
+            $loanable->refresh();
+
+            $loanable->removeCoowner($user->id);
+
+            self::assertEmpty(
+                $loanable->coowners,
+                "$loanableClass has no coowner"
+            );
+        }
     }
 }

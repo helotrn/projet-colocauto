@@ -3,13 +3,9 @@
 namespace App\Models;
 
 use App\Calendar\AvailabilityHelper;
-use App\Exports\LoanableExport;
-use App\Models\Community;
-use App\Models\Loan;
-use App\Models\Owner;
-use App\Models\User;
-use App\Transformers\LoanableTransformer;
 use App\Casts\PointCast;
+use App\Exports\LoanableExport;
+use App\Transformers\LoanableTransformer;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -200,11 +196,32 @@ class Loanable extends BaseModel
         return $this->hasOne(Padlock::class, "loanable_id");
     }
 
-    public $collections = ["loans"];
+    public $collections = ["loans", "coowners"];
 
     public function loans()
     {
         return $this->hasMany(Loan::class);
+    }
+
+    public function coowners()
+    {
+        return $this->hasMany(Coowner::class);
+    }
+
+    public function addCoowner(int $userId)
+    {
+        $coowner = new Coowner();
+        $coowner->user_id = $userId;
+        $coowner->loanable_id = $this->id;
+
+        $this->coowners()->save($coowner);
+    }
+
+    public function removeCoowner(int $userId)
+    {
+        $this->coowners()
+            ->where("user_id", "=", $userId)
+            ->delete();
     }
 
     public function getAvailabilityRules()
