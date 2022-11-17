@@ -4,7 +4,7 @@
     :disable-views="['years', 'year']"
     :defaultView="defaultView"
     :time-step="15"
-    :time-cell-height="18"
+    :time-cell-height="variant == 'small' ? 13 : 18"
     :events="events"
     locale="fr"
     :xsmall="variant == 'small'"
@@ -69,6 +69,10 @@ export default {
 <style lang="scss">
 .loanable-calendar {
   &.loanable-calendar--small {
+    font-size: 13px;
+    .vuecal__title-bar {
+      font-size: 13px;
+    }
   }
 
   // Month view.
