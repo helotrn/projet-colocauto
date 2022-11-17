@@ -1,7 +1,9 @@
 <template>
   <vue-cal
+    :class="classList"
     :events="events"
     locale="fr"
+    :xsmall="variant == 'small'"
     @ready="$emit('ready', $event)"
     @view-change="$emit('view-change', $event)"
   >
@@ -18,12 +20,29 @@ export default {
     events: {
       type: Array,
     },
+    variant: {
+      type: String,
+      required: false,
+    },
   },
   components: { VueCal },
-  data() {
-    return {
-      events: [],
-    };
+  computed: {
+    classList: function () {
+      let classList = {
+        "loanable-calendar": true,
+      };
+      if (this.variant) {
+        classList["loanable-calendar--" + this.variant] = true;
+      }
+      return classList;
+    },
   },
 };
 </script>
+
+<style lang="scss">
+.loanable-calendar {
+  &.loanable-calendar--small {
+  }
+}
+</style>
