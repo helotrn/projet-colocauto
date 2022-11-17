@@ -11,6 +11,12 @@
     @ready="$emit('ready', $event)"
     @view-change="$emit('view-change', $event)"
   >
+    <template #cell-content="{ cell, view, events }">
+      <span class="vuecal__cell-date">
+        {{ cell.content }}
+      </span>
+    </template>
+
     <template v-slot:time-cell="{ hours, minutes }">
       <div
         :class="{
