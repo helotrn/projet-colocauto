@@ -1,6 +1,8 @@
 <template>
   <vue-cal
     :class="classList"
+    :disable-views="['years', 'year']"
+    :defaultView="defaultView"
     :events="events"
     locale="fr"
     :xsmall="variant == 'small'"
@@ -17,6 +19,10 @@ import "vue-cal/dist/i18n/fr";
 export default {
   name: "Calendar",
   props: {
+    defaultView: {
+      type: String,
+      default: "week",
+    },
     events: {
       type: Array,
     },
