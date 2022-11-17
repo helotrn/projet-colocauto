@@ -71,6 +71,11 @@ export default {
   &.loanable-calendar--small {
   }
 
+  // Month view.
+  .vuecal__cells.month-view .vuecal__cell {
+    height: 2rem;
+  }
+
   // Styling the time axis.
   // Specificity seems necessary here.
   .vuecal__time-column .loanable-calendar__time-step--hours .line::before {
