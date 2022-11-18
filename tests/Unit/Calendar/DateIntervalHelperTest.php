@@ -380,7 +380,7 @@ class DateIntervalHelperTest extends TestCase
 
     public function testHasIntersection()
     {
-        // Just a few tests as hasIntersection() uses Intersection(). Test more
+        // Just a few tests as hasIntersection() uses intersection(). Test more
         // thoroughly if this is to change.
 
         // 1. Interval starts before

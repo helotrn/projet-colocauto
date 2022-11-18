@@ -55,7 +55,7 @@ class DateIntervalHelper
      * @param interval
      *     Interval with which to intersect
      */
-    public static function Intersection($fromIntervals, $interval)
+    public static function intersection($fromIntervals, $interval)
     {
         if (self::isEmpty($interval)) {
             return [];
@@ -121,7 +121,7 @@ class DateIntervalHelper
 
     public static function hasIntersection($fromIntervals, $interval)
     {
-        return !empty(self::Intersection($fromIntervals, $interval));
+        return !empty(self::intersection($fromIntervals, $interval));
     }
 
     /**
@@ -137,7 +137,7 @@ class DateIntervalHelper
      * @param interval
      *     Interval to add to the current intervals.
      */
-    public static function Union($fromIntervals, $interval)
+    public static function union($fromIntervals, $interval)
     {
         if (!$fromIntervals) {
             $fromIntervals = [];

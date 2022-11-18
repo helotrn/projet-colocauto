@@ -313,7 +313,7 @@ class AvailabilityHelper
                         ];
 
                         // There should be only one interval per day.
-                        $interval = DateIntervalHelper::Intersection(
+                        $interval = DateIntervalHelper::intersection(
                             $ruleIntervals,
                             $dateInterval
                         );
@@ -406,7 +406,7 @@ class AvailabilityHelper
                 if (!isset($dailyIntervals[$dateKey])) {
                     $dailyIntervals[$dateKey] = [$interval];
                 } else {
-                    $dailyIntervals[$dateKey] = DateIntervalHelper::Union(
+                    $dailyIntervals[$dateKey] = DateIntervalHelper::union(
                         $dailyIntervals[$dateKey],
                         $interval
                     );
