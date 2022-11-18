@@ -828,14 +828,14 @@ class DateIntervalHelperTest extends TestCase
                 new Carbon("2021-10-19 23:45:01"),
             ],
         ];
-        $removeInterval = [
+        $intervalToSubtract = [
             new Carbon("2021-10-01 23:45:01"),
             new Carbon("2021-10-10 12:34:56"),
         ];
 
-        $intervals = DateIntervalHelper::removeInterval(
+        $intervals = DateIntervalHelper::subtraction(
             $fromIntervals,
-            $removeInterval
+            $intervalToSubtract
         );
         $this->assertSameIntervals(
             $fromIntervals,
@@ -850,14 +850,14 @@ class DateIntervalHelperTest extends TestCase
                 new Carbon("2021-10-19 23:45:01"),
             ],
         ];
-        $removeInterval = [
+        $intervalToSubtract = [
             new Carbon("2021-10-01 23:45:01"),
             new Carbon("2021-10-13 12:34:56"),
         ];
 
-        $intervals = DateIntervalHelper::removeInterval(
+        $intervals = DateIntervalHelper::subtraction(
             $fromIntervals,
-            $removeInterval
+            $intervalToSubtract
         );
 
         $expected = [
@@ -879,14 +879,14 @@ class DateIntervalHelperTest extends TestCase
                 new Carbon("2021-10-19 23:45:01"),
             ],
         ];
-        $removeInterval = [
+        $intervalToSubtract = [
             new Carbon("2021-10-13 23:45:01"),
             new Carbon("2021-10-17 12:34:56"),
         ];
 
-        $intervals = DateIntervalHelper::removeInterval(
+        $intervals = DateIntervalHelper::subtraction(
             $fromIntervals,
-            $removeInterval
+            $intervalToSubtract
         );
 
         $expected = [
@@ -912,14 +912,14 @@ class DateIntervalHelperTest extends TestCase
                 new Carbon("2021-10-19 23:45:01"),
             ],
         ];
-        $removeInterval = [
+        $intervalToSubtract = [
             new Carbon("2021-10-17 23:45:01"),
             new Carbon("2021-10-31 12:34:56"),
         ];
 
-        $intervals = DateIntervalHelper::removeInterval(
+        $intervals = DateIntervalHelper::subtraction(
             $fromIntervals,
-            $removeInterval
+            $intervalToSubtract
         );
 
         $expected = [
@@ -941,14 +941,14 @@ class DateIntervalHelperTest extends TestCase
                 new Carbon("2021-10-19 23:45:01"),
             ],
         ];
-        $removeInterval = [
+        $intervalToSubtract = [
             new Carbon("2021-10-19 23:45:01"),
             new Carbon("2021-10-31 12:34:56"),
         ];
 
-        $intervals = DateIntervalHelper::removeInterval(
+        $intervals = DateIntervalHelper::subtraction(
             $fromIntervals,
-            $removeInterval
+            $intervalToSubtract
         );
         $this->assertSameIntervals(
             $fromIntervals,
@@ -963,14 +963,14 @@ class DateIntervalHelperTest extends TestCase
                 new Carbon("2021-10-19 23:45:01"),
             ],
         ];
-        $removeInterval = [
+        $intervalToSubtract = [
             new Carbon("2021-10-08 23:45:01"),
             new Carbon("2021-10-22 12:34:56"),
         ];
 
-        $intervals = DateIntervalHelper::removeInterval(
+        $intervals = DateIntervalHelper::subtraction(
             $fromIntervals,
-            $removeInterval
+            $intervalToSubtract
         );
 
         $expected = [];
@@ -984,7 +984,7 @@ class DateIntervalHelperTest extends TestCase
             ],
         ];
 
-        $intervals = DateIntervalHelper::removeInterval($fromIntervals, null);
+        $intervals = DateIntervalHelper::subtraction($fromIntervals, null);
 
         $expected = [
             [
@@ -1005,14 +1005,14 @@ class DateIntervalHelperTest extends TestCase
                 new Carbon("2021-10-19 23:45:01"),
             ],
         ];
-        $removeInterval = [
+        $intervalToSubtract = [
             new Carbon("2021-10-15 23:45:01"),
             new Carbon("2021-10-15 23:45:01"),
         ];
 
-        $intervals = DateIntervalHelper::removeInterval(
+        $intervals = DateIntervalHelper::subtraction(
             $fromIntervals,
-            $removeInterval
+            $intervalToSubtract
         );
 
         $expected = [
@@ -1034,14 +1034,14 @@ class DateIntervalHelperTest extends TestCase
                 new Carbon("2021-10-15 23:45:01"),
             ],
         ];
-        $removeInterval = [
+        $intervalToSubtract = [
             new Carbon("2021-10-13 23:45:01"),
             new Carbon("2021-10-17 12:34:56"),
         ];
 
-        $intervals = DateIntervalHelper::removeInterval(
+        $intervals = DateIntervalHelper::subtraction(
             $fromIntervals,
-            $removeInterval
+            $intervalToSubtract
         );
 
         $expected = [];
@@ -1053,14 +1053,14 @@ class DateIntervalHelperTest extends TestCase
 
         // 8. From intervals is empty (null, not null)
         $fromIntervals = [null];
-        $removeInterval = [
+        $intervalToSubtract = [
             new Carbon("2021-10-15 23:45:01"),
             new Carbon("2021-10-15 23:45:01"),
         ];
 
-        $intervals = DateIntervalHelper::removeInterval(
+        $intervals = DateIntervalHelper::subtraction(
             $fromIntervals,
-            $removeInterval
+            $intervalToSubtract
         );
 
         $expected = [];
@@ -1072,11 +1072,11 @@ class DateIntervalHelperTest extends TestCase
 
         // 8. From intervals is empty (null, null)
         $fromIntervals = null;
-        $removeInterval = null;
+        $intervalToSubtract = null;
 
-        $intervals = DateIntervalHelper::removeInterval(
+        $intervals = DateIntervalHelper::subtraction(
             $fromIntervals,
-            $removeInterval
+            $intervalToSubtract
         );
 
         $expected = [];
@@ -1088,11 +1088,11 @@ class DateIntervalHelperTest extends TestCase
 
         // 8. From intervals is empty ([], null)
         $fromIntervals = [];
-        $removeInterval = null;
+        $intervalToSubtract = null;
 
-        $intervals = DateIntervalHelper::removeInterval(
+        $intervals = DateIntervalHelper::subtraction(
             $fromIntervals,
-            $removeInterval
+            $intervalToSubtract
         );
 
         $expected = [];
@@ -1104,11 +1104,11 @@ class DateIntervalHelperTest extends TestCase
 
         // 8. From intervals is empty ([null], null)
         $fromIntervals = [null];
-        $removeInterval = null;
+        $intervalToSubtract = null;
 
-        $intervals = DateIntervalHelper::removeInterval(
+        $intervals = DateIntervalHelper::subtraction(
             $fromIntervals,
-            $removeInterval
+            $intervalToSubtract
         );
 
         $expected = [];
@@ -1125,14 +1125,14 @@ class DateIntervalHelperTest extends TestCase
                 new Carbon("2021-10-15 23:45:01"),
             ],
         ];
-        $removeInterval = [
+        $intervalToSubtract = [
             new Carbon("2021-10-15 23:45:01"),
             new Carbon("2021-10-15 23:45:01"),
         ];
 
-        $intervals = DateIntervalHelper::removeInterval(
+        $intervals = DateIntervalHelper::subtraction(
             $fromIntervals,
-            $removeInterval
+            $intervalToSubtract
         );
 
         $expected = [];

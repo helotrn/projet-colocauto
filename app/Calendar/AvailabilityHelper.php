@@ -417,9 +417,7 @@ class AvailabilityHelper
                 $dateKey = $interval[0]->toDateString();
 
                 if (isset($dailyIntervals[$dateKey])) {
-                    $dailyIntervals[
-                        $dateKey
-                    ] = DateIntervalHelper::removeInterval(
+                    $dailyIntervals[$dateKey] = DateIntervalHelper::subtraction(
                         $dailyIntervals[$dateKey],
                         $interval
                     );

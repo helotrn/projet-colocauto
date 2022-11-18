@@ -203,7 +203,7 @@ class DateIntervalHelper
      * @param toRemove
      *     Interval to remove.
      */
-    public static function removeInterval($fromIntervals, $toRemove)
+    public static function subtraction($fromIntervals, $toRemove)
     {
         if (!$fromIntervals || empty($fromIntervals)) {
             return [];
@@ -291,7 +291,7 @@ class DateIntervalHelper
         $toCover = [$toCover];
 
         foreach ($intervals as $interval) {
-            $toCover = self::removeInterval($toCover, $interval);
+            $toCover = self::subtraction($toCover, $interval);
         }
 
         return empty($toCover);
