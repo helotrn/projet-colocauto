@@ -1,0 +1,103 @@
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: storage-pv-volume
+  labels:
+    type: local
+    app: minio
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 50Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/mnt/data"
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: storage-pv-claim
+  labels:
+    app: minio
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 50Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: minio
+  labels:
+    app: minio
+spec:
+  selector:
+    app: minio
+  ports:
+    - port: 9000
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: storage-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: minio
+  template:
+    metadata:
+      labels:
+        app: minio
+    spec:
+      containers:
+      - name: storage
+        image: minio/minio
+        imagePullPolicy: "IfNotPresent"
+        command: ["minio"]
+        args: ["server", "--console-address", ":9001", "/data"]
+        env:
+        - name: MINIO_ROOT_USER
+          valueFrom:
+            secretKeyRef:
+              name: colocauto-secret
+              key: minio.user
+        - name: MINIO_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: colocauto-secret
+              key: minio.password
+        ports:
+        - containerPort: 9000
+        - containerPort: 9001
+        resources:
+          limits:
+            cpu: 200m
+            memory: 400Mi
+        volumeMounts:
+        - name: storage-volume
+          mountPath: /data
+      # TODO: make this container gracefully exit if bucket is already created
+      #- name: createbuckets
+      #  image: minio/mc
+      #  command: ["/bin/sh"]
+      #  args: ["-c", "/usr/bin/mc config host add myminio http://minio:9000 $MINIO_ROOT_USER $MINIO_ROOT_PASSWORD; /usr/bin/mc mb myminio/colocauto; exit 0;"]
+      #  env:
+      #  - name: MINIO_ROOT_USER
+      #    valueFrom:
+      #      secretKeyRef:
+      #        name: colocauto-secret
+      #        key: minio.user
+      #  - name: MINIO_ROOT_PASSWORD
+      #    valueFrom:
+      #      secretKeyRef:
+      #        name: colocauto-secret
+      #        key: minio.password
+      volumes:
+        - name: storage-volume
+          persistentVolumeClaim:
+            claimName: storage-pv-claim
