@@ -96,58 +96,54 @@ class LoanableController extends RestController
             (new CarbonImmutable($request->end))->setTime(0, 0, 0),
         ];
 
-        $loanable = Loanable::accessibleBy($request->user())
-            ->where("id", "=", $request->loanable_id)
-            ->first();
+        // AvailabilityRequest checks that the loanable exists and is accessible by the user.
+        $loanable = Loanable::findOrFail($request->loanable_id);
 
         $events = [];
-        if ($loanable) {
-            $availabilityRules = $loanable->getAvailabilityRules();
-            $availabilityMode = $loanable->availability_mode;
 
-            $unavailability = AvailabilityHelper::getDailyAvailability(
-                [
-                    "available" => "always" == $availabilityMode,
-                    "rules" => $availabilityRules,
+        $availabilityRules = $loanable->getAvailabilityRules();
+        $availabilityMode = $loanable->availability_mode;
+
+        $unavailability = AvailabilityHelper::getDailyAvailability(
+            [
+                "available" => "always" == $availabilityMode,
+                "rules" => $availabilityRules,
+            ],
+            $dateRange,
+            $request->responseMode == "available"
+        );
+
+        foreach ($unavailability as $unavailabilityInterval) {
+            $events[] = [
+                "start" => $unavailabilityInterval[0],
+                "end" => $unavailabilityInterval[1],
+                "data" => [
+                    "available" => $request->responseMode == "available",
                 ],
-                $dateRange,
-                $request->responseMode == "available"
-            );
+            ];
+        }
 
-            foreach ($unavailability as $unavailabilityInterval) {
-                $events[] = [
-                    "start" => $unavailabilityInterval[0],
-                    "end" => $unavailabilityInterval[1],
-                    "data" => [
-                        "available" => $request->responseMode == "available",
-                    ],
-                ];
-            }
+        $loans = Loan::accessibleBy($request->user())
+            ->where("loanable_id", "=", $loanable->id)
+            // Departure before the end and return after the beginning of the period.
+            ->where("departure_at", "<", $dateRange[1])
+            ->where("actual_return_at", ">", $dateRange[0])
+            ->get();
 
-            $loans = Loan::accessibleBy($request->user())
-                ->where("loanable_id", "=", $loanable->id)
-                // Departure before the end and return after the beginning of the period.
-                ->where("departure_at", "<", $dateRange[1])
-                ->where("actual_return_at", ">", $dateRange[0])
-                ->get();
+        foreach ($loans as $loan) {
+            $events[] = [
+                "start" => new Carbon($loan->departure_at),
+                "end" => new Carbon($loan->actual_return_at),
+                "data" => [
+                    "available" => $request->responseMode == "available",
+                ],
+            ];
+        }
 
-            foreach ($loans as $loan) {
-                $events[] = [
-                    "start" => new Carbon($loan->departure_at),
-                    "end" => new Carbon($loan->actual_return_at),
-                    "data" => [
-                        "available" => $request->responseMode == "available",
-                    ],
-                ];
-            }
-
-            // Prepare data for response.
-            foreach ($events as $key => $event) {
-                $events[$key]["start"] = $events[$key][
-                    "start"
-                ]->toDateTimeString();
-                $events[$key]["end"] = $events[$key]["end"]->toDateTimeString();
-            }
+        // Prepare data for response.
+        foreach ($events as $key => $event) {
+            $events[$key]["start"] = $events[$key]["start"]->toDateTimeString();
+            $events[$key]["end"] = $events[$key]["end"]->toDateTimeString();
         }
 
         return response($events, 200);
