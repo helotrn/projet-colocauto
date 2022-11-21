@@ -267,6 +267,62 @@ class AvailabilityHelper
     }
 
     /*
+     * @param interval
+     *   The interval to split between different days.
+     *
+     * @return
+     *   Array containing an interval for each day with key in the format: YYYY-MM-DD
+     */
+    public static function splitIntervalByDay($interval)
+    {
+        // Split interval into individual days.
+        $currentDate = $interval[0]->copy()->setTime(0, 0, 0);
+        $intervalsByDay = [];
+        while ($currentDate->lessThan($interval[1])) {
+            $dateInterval = [
+                $currentDate->copy()->setTime(0, 0, 0),
+                $currentDate->copy()->setTime(24, 0, 0),
+            ];
+
+            // There should be only one interval per day.
+            $dayInterval = DateIntervalHelper::intersection(
+                [$interval],
+                $dateInterval
+            );
+            if (count($dayInterval) > 1) {
+                throw new \Exception("Only one interval expected.");
+            }
+
+            if ($dayInterval) {
+                $intervalsByDay[$currentDate->toDateString()] = $dayInterval[0];
+            }
+
+            $currentDate = $currentDate->addDay();
+        }
+
+        return $intervalsByDay;
+    }
+
+    /*
+     * @param intervalsByDay
+     *   Array containing an arry of intervals for each date.
+     *
+     * @return
+     *   Linear array of intervals.
+     */
+    public static function linearizeIntervalsByDay($intervalsByDay)
+    {
+        $intervals = [];
+        foreach ($intervalsByDay as $dayIntervals) {
+            foreach ($dayIntervals as $interval) {
+                $intervals[] = $interval;
+            }
+        }
+
+        return $intervals;
+    }
+
+    /*
      * For all availability rules, will generate daily intervals over a period
      * given by dateRange.
      * Daily means that any interval such as those returned by date ranges will
