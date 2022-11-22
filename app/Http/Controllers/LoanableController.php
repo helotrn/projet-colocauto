@@ -113,6 +113,8 @@ class LoanableController extends RestController
             $request->responseMode == "available"
         );
 
+        $unavailability = AvailabilityHelper::linearizeIntervalsByDay($unavailability);
+
         foreach ($unavailability as $unavailabilityInterval) {
             $events[] = [
                 "start" => $unavailabilityInterval[0],

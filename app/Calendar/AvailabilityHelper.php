@@ -481,15 +481,7 @@ class AvailabilityHelper
             }
         }
 
-        // Linearize intervals
-        $intervals = [];
-        foreach ($dailyIntervals as $dayIntervals) {
-            foreach ($dayIntervals as $interval) {
-                $intervals[] = $interval;
-            }
-        }
-
-        return $intervals;
+        return $dailyIntervals;
     }
 
     /**
