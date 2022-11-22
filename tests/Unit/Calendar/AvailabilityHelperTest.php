@@ -815,7 +815,6 @@ class AvailabilityHelperTest extends TestCase
             ],
         ];
 
-        // availability opartout
         $availability = AvailabilityHelper::getDailyAvailability(
             [
                 "available" => $availableByDefault,
@@ -823,6 +822,10 @@ class AvailabilityHelperTest extends TestCase
             ],
             $dateRange,
             $returnAvailable
+        );
+
+        $availability = AvailabilityHelper::linearizeIntervalsByDay(
+            $availability
         );
 
         $expected = [
@@ -874,6 +877,10 @@ class AvailabilityHelperTest extends TestCase
             ],
             $dateRange,
             $returnAvailable
+        );
+
+        $availability = AvailabilityHelper::linearizeIntervalsByDay(
+            $availability
         );
 
         $expected = [
@@ -973,6 +980,10 @@ class AvailabilityHelperTest extends TestCase
             ],
             $dateRange,
             $returnAvailable
+        );
+
+        $availability = AvailabilityHelper::linearizeIntervalsByDay(
+            $availability
         );
 
         $expected = [
@@ -1048,6 +1059,10 @@ class AvailabilityHelperTest extends TestCase
             $returnAvailable
         );
 
+        $availability = AvailabilityHelper::linearizeIntervalsByDay(
+            $availability
+        );
+
         $expected = [
             [
                 new CarbonImmutable("2022-11-06 00:00:00"),
@@ -1147,6 +1162,10 @@ class AvailabilityHelperTest extends TestCase
             $returnAvailable
         );
 
+        $availability = AvailabilityHelper::linearizeIntervalsByDay(
+            $availability
+        );
+
         $expected = [
             // Sunday: No rule
             [
@@ -1220,6 +1239,10 @@ class AvailabilityHelperTest extends TestCase
             $returnAvailable
         );
 
+        $availability = AvailabilityHelper::linearizeIntervalsByDay(
+            $availability
+        );
+
         $this->assertSameIntervals([], $availability);
 
         // Then add rules.
@@ -1286,6 +1309,10 @@ class AvailabilityHelperTest extends TestCase
             ],
             $dateRange,
             $returnAvailable
+        );
+
+        $availability = AvailabilityHelper::linearizeIntervalsByDay(
+            $availability
         );
 
         $expected = [

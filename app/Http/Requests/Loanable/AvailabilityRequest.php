@@ -34,7 +34,10 @@ class AvailabilityRequest extends BaseRequest
             "start" => ["date", "required"],
             "end" => ["date", "required"],
             // At the moment, only getting unavailability is implemented.
-            "responseMode" => ["required", Rule::in(["unavailable"])],
+            "responseMode" => [
+                "required",
+                Rule::in(["available", "unavailable"]),
+            ],
         ];
 
         return $rules;

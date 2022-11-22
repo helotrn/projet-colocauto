@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Calendar\AvailabilityHelper;
+use App\Calendar\DateIntervalHelper;
 use App\Helpers\Order as OrderHelper;
 use App\Http\Requests\BaseRequest as Request;
 use App\Http\Requests\Loanable\AvailabilityRequest;
@@ -104,7 +105,8 @@ class LoanableController extends RestController
         $availabilityRules = $loanable->getAvailabilityRules();
         $availabilityMode = $loanable->availability_mode;
 
-        $unavailability = AvailabilityHelper::getDailyAvailability(
+        // Availability or unavailability depending on responseMode.
+        $availabilityIntervalsByDay = AvailabilityHelper::getDailyAvailability(
             [
                 "available" => "always" == $availabilityMode,
                 "rules" => $availabilityRules,
@@ -112,18 +114,6 @@ class LoanableController extends RestController
             $dateRange,
             $request->responseMode == "available"
         );
-
-        $unavailability = AvailabilityHelper::linearizeIntervalsByDay($unavailability);
-
-        foreach ($unavailability as $unavailabilityInterval) {
-            $events[] = [
-                "start" => $unavailabilityInterval[0],
-                "end" => $unavailabilityInterval[1],
-                "data" => [
-                    "available" => $request->responseMode == "available",
-                ],
-            ];
-        }
 
         $loans = Loan::accessibleBy($request->user())
             ->where("loanable_id", "=", $loanable->id)
@@ -133,19 +123,62 @@ class LoanableController extends RestController
             ->get();
 
         foreach ($loans as $loan) {
-            $events[] = [
-                "start" => new Carbon($loan->departure_at),
-                "end" => new Carbon($loan->actual_return_at),
-                "data" => [
-                    "available" => $request->responseMode == "available",
-                ],
+            $loanInterval = [
+                new Carbon($loan->departure_at),
+                new Carbon($loan->actual_return_at),
             ];
+
+            $loanIntervalsByDay = AvailabilityHelper::splitIntervalByDay(
+                $loanInterval
+            );
+
+            $currentDate = $dateRange[0];
+            $intervalsByDay = [];
+            while ($currentDate->lessThan($dateRange[1])) {
+                $index = $currentDate->toDateString();
+
+                $loanInterval = isset($loanIntervalsByDay[$index])
+                    ? $loanIntervalsByDay[$index]
+                    : null;
+                $availabilityIntervals = isset(
+                    $availabilityIntervalsByDay[$index]
+                )
+                    ? $availabilityIntervalsByDay[$index]
+                    : [];
+
+                if ($request->responseMode == "available") {
+                    // Intervals are of availability.
+                    $availabilityIntervalsByDay[
+                        $index
+                    ] = DateIntervalHelper::subtraction(
+                        $availabilityIntervals,
+                        $loanInterval
+                    );
+                } else {
+                    // Intervals are of unavailability.
+                    $availabilityIntervalsByDay[
+                        $index
+                    ] = DateIntervalHelper::union(
+                        $availabilityIntervals,
+                        $loanInterval
+                    );
+                }
+
+                $currentDate = $currentDate->addDay();
+            }
         }
 
-        // Prepare data for response.
-        foreach ($events as $key => $event) {
-            $events[$key]["start"] = $events[$key]["start"]->toDateTimeString();
-            $events[$key]["end"] = $events[$key]["end"]->toDateTimeString();
+        // Generate events from intervals.
+        foreach ($availabilityIntervalsByDay as $dailyAvailabilityIntervals) {
+            foreach ($dailyAvailabilityIntervals as $availabilityInterval) {
+                $events[] = [
+                    "start" => $availabilityInterval[0]->toDateTimeString(),
+                    "end" => $availabilityInterval[1]->toDateTimeString(),
+                    "data" => [
+                        "available" => $request->responseMode == "available",
+                    ],
+                ];
+            }
         }
 
         return response($events, 200);
