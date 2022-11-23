@@ -1,0 +1,159 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-deployment
+spec:
+  selector:
+    matchLabels:
+      run: api-deployment
+  template:
+    metadata:
+      labels:
+        run: api-deployment
+    spec:
+      initContainers:
+        - name: createextension
+          image: registry.gitlab.com/mobicoop/colocauto/colocauto/database:latest
+          command: ["/bin/sh"]
+          args: ["-c", "psql --username=colocauto --dbname=colocauto --host=db -c 'CREATE EXTENSION IF NOT EXISTS postgis;' -c 'CREATE EXTENSION IF NOT EXISTS unaccent;' -c 'CREATE EXTENSION IF NOT EXISTS citext;'"]
+          env:
+          - name: PGPASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: database.password
+                name: colocauto-secret
+      containers:
+        - name: api
+          image: registry.gitlab.com/mobicoop/colocauto/colocauto/api:v2022-11-07
+          ports:
+            - containerPort: 80
+          env:
+          - name: APP_NAME
+            value: ColocAuto
+          - name: LOG_CHANNEL
+            value: stack
+          - name: BROADCAST_DRIVER
+            value: log
+          - name: SESSION_DRIVER
+            value: array
+          - name: SESSION_LIFETIME
+            value: '120'
+          - name: DB_HOST
+            value: db
+          - name: DB_PORT
+            value: '5432'
+          - name: DB_CONNECTION
+            value: pgsql
+          - name: ENABLE_TEST_ROUTES
+            value: "true"
+          - name: MAIL_DRIVER
+            value: log
+          - name: CACHE_DRIVER
+            value: database
+          - name: DB_DATABASE
+            valueFrom:
+              secretKeyRef:
+                key: database.name
+                name: colocauto-secret
+          - name: DB_USERNAME
+            valueFrom:
+              secretKeyRef:
+                key: database.user
+                name: colocauto-secret
+          - name: DB_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: database.password
+                name: colocauto-secret
+          - name: APP_ENV
+            valueFrom:
+              configMapKeyRef:
+                key: env
+                name: colocauto-config
+          - name: APP_KEY
+            valueFrom:
+              configMapKeyRef:
+                key: key
+                name: colocauto-config
+          - name: APP_DEBUG
+            valueFrom:
+              configMapKeyRef:
+                key: debug
+                name: colocauto-config
+          - name: FRONTEND_URL
+            valueFrom:
+              configMapKeyRef:
+                key: url.frontend
+                name: colocauto-config
+          - name: BACKEND_URL_FROM_BROWSER
+            valueFrom:
+              configMapKeyRef:
+                key: url.backend
+                name: colocauto-config
+          - name: MAIL_FROM_ADDRESS
+            valueFrom:
+              configMapKeyRef:
+                key: mail.fromAddress
+                name: colocauto-config
+          - name: MAIL_FROM_NAME
+            valueFrom:
+              configMapKeyRef:
+                key: mail.fromName
+                name: colocauto-config
+          - name: MANDRILL_KEY
+            value: '' #TODO
+          - name: GOOGLE_API_KEY
+            valueFrom:
+              configMapKeyRef:
+                key: google.apiKey
+                name: colocauto-config
+          - name: GOOGLE_CLIENT_ID
+            valueFrom:
+              configMapKeyRef:
+                key: google.clientId
+                name: colocauto-config
+          - name: GOOGLE_CLIENT_SECRET
+            valueFrom:
+              configMapKeyRef:
+                key: google.clientSecret
+                name: colocauto-config
+          - name: GOOGLE_REDIRECT
+            valueFrom:
+              configMapKeyRef:
+                key: google.redirect
+                name: colocauto-config
+          - name: FILESYSTEM_DRIVER
+            value: s3
+          - name: S3_DRIVER
+            value: minio
+          - name: S3_KEY
+            valueFrom:
+              secretKeyRef:
+                key: minio.user
+                name: colocauto-secret
+          - name: S3_SECRET
+            valueFrom:
+              secretKeyRef:
+                key: minio.password
+                name: colocauto-secret
+          - name: S3_REGION
+            value: france
+          - name: S3_BUCKET
+            value: colocauto
+          - name: S3_URL
+            value: http://minio:9000
+          - name: OAUTH_PRIVATE_PATH
+            value: /var/secret/oauth-private
+          - name: OAUTH_PUBLIC_PATH
+            value: /var/secret/oauth-public
+          - name: QUEUE_CONNECTION
+            value: database
+          volumeMounts:
+          - name: oauth
+            mountPath: "/var/secret/"
+            readOnly: true
+      volumes:
+        - name: oauth
+          secret:
+            defaultMode: 420
+            secretName: oauth-keys

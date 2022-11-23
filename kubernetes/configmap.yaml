@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: colocauto-config
+data:
+  env: production
+  key: # put base64 encoded data here
+  debug: 'false'
+  url.frontend: http://dev.colocauto.org
+  url.backend: http://api.dev.colocauto.org
+  mail.fromAddress: admin@colocauto.org
+  mail.fromName: 'Administrateur ColocAuto'
+  google.apiKey: # put clear data here
+  google.clientId: # put clear data here
+  google.clientSecret: # put clear data here
+  google.redirect: http://api.dev.colocauto.org/auth/callback
