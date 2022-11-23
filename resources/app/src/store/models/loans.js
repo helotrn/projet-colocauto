@@ -1,6 +1,6 @@
 import Vue from "vue";
 
-import {extractErrors} from "@/helpers";
+import { extractErrors } from "@/helpers";
 
 import RestModule from "../RestModule";
 

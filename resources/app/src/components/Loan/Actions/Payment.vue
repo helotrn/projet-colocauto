@@ -392,7 +392,7 @@ import PaymentDialog from "@/components/User/PaymentDialog.vue";
 import LoanActionsMixin from "@/mixins/LoanActionsMixin";
 import LoanStepsSequence from "@/mixins/LoanStepsSequence";
 
-import {normalizeCurrency} from "@/helpers/filters";
+import { normalizeCurrency } from "@/helpers/filters";
 import locales from "@/locales";
 
 export default {

@@ -64,8 +64,9 @@ class PaymentTest extends ActionTestCase
 
         $response->assertStatus(422)->assertJson([
             "errors" => [
-                "status" =>
+                "status" => [
                     "L'emprunteur-se n'a pas assez de fonds dans son solde pour payer présentement.",
+                ],
             ],
         ]);
     }
@@ -92,7 +93,7 @@ class PaymentTest extends ActionTestCase
 
         $response->assertStatus(422)->assertJson([
             "errors" => [
-                "status" => "Le paiement ne peut être complété présentement.",
+                "status" => ["Le paiement ne peut être complété présentement."],
             ],
         ]);
     }

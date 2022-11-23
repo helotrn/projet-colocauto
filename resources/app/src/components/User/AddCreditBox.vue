@@ -84,9 +84,9 @@
 </template>
 
 <script>
-import {CurrencyInput} from "vue-currency-input";
-import {currency, normalizeCurrency} from "@/helpers/filters";
-import {addFeeToAmount, feeSpec} from "@/helpers/transactionFees";
+import { CurrencyInput } from "vue-currency-input";
+import { currency, normalizeCurrency } from "@/helpers/filters";
+import { addFeeToAmount, feeSpec } from "@/helpers/transactionFees";
 
 export default {
   name: "UserAddCreditBox",
