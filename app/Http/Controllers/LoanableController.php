@@ -132,14 +132,7 @@ class LoanableController extends RestController
                 $loanInterval
             );
 
-            $currentDate = $dateRange[0];
-            $intervalsByDay = [];
-            while ($currentDate->lessThan($dateRange[1])) {
-                $index = $currentDate->toDateString();
-
-                $loanInterval = isset($loanIntervalsByDay[$index])
-                    ? $loanIntervalsByDay[$index]
-                    : null;
+            foreach ($loanIntervalsByDay as $index => $loanInterval) {
                 $availabilityIntervals = isset(
                     $availabilityIntervalsByDay[$index]
                 )
@@ -163,8 +156,6 @@ class LoanableController extends RestController
                         $loanInterval
                     );
                 }
-
-                $currentDate = $currentDate->addDay();
             }
         }
 
