@@ -193,7 +193,7 @@ class AvailabilityHelper
                     ),
             ];
 
-            $currentDate->addDay();
+            $currentDate = $currentDate->addDay();
         }
 
         return $intervals;
@@ -260,7 +260,63 @@ class AvailabilityHelper
                 ];
             }
 
-            $currentDate->addDay();
+            $currentDate = $currentDate->addDay();
+        }
+
+        return $intervals;
+    }
+
+    /*
+     * @param interval
+     *   The interval to split between different days.
+     *
+     * @return
+     *   Array containing an interval for each day with key in the format: YYYY-MM-DD
+     */
+    public static function splitIntervalByDay($interval)
+    {
+        // Split interval into individual days.
+        $currentDate = $interval[0]->copy()->setTime(0, 0, 0);
+        $intervalsByDay = [];
+        while ($currentDate->lessThan($interval[1])) {
+            $dateInterval = [
+                $currentDate->copy()->setTime(0, 0, 0),
+                $currentDate->copy()->setTime(24, 0, 0),
+            ];
+
+            // There should be only one interval per day.
+            $dayInterval = DateIntervalHelper::intersection(
+                [$interval],
+                $dateInterval
+            );
+            if (count($dayInterval) > 1) {
+                throw new \Exception("Only one interval expected.");
+            }
+
+            if ($dayInterval) {
+                $intervalsByDay[$currentDate->toDateString()] = $dayInterval[0];
+            }
+
+            $currentDate = $currentDate->addDay();
+        }
+
+        return $intervalsByDay;
+    }
+
+    /*
+     * @param intervalsByDay
+     *   Array containing an arry of intervals for each date.
+     *
+     * @return
+     *   Linear array of intervals.
+     */
+    public static function linearizeIntervalsByDay($intervalsByDay)
+    {
+        $intervals = [];
+        foreach ($intervalsByDay as $dayIntervals) {
+            foreach ($dayIntervals as $interval) {
+                $intervals[] = $interval;
+            }
         }
 
         return $intervals;
@@ -313,7 +369,7 @@ class AvailabilityHelper
                         ];
 
                         // There should be only one interval per day.
-                        $interval = DateIntervalHelper::Intersection(
+                        $interval = DateIntervalHelper::intersection(
                             $ruleIntervals,
                             $dateInterval
                         );
@@ -325,7 +381,7 @@ class AvailabilityHelper
                             $intervals[] = $interval[0];
                         }
 
-                        $currentDate->addDay();
+                        $currentDate = $currentDate->addDay();
                     }
 
                     $ruleIntervals = $intervals;
@@ -340,6 +396,89 @@ class AvailabilityHelper
             }
 
             $dailyIntervals = array_merge($dailyIntervals, $ruleIntervals);
+        }
+
+        return $dailyIntervals;
+    }
+
+    /*
+     *  Return availability or unavailablity intervals per day according to
+     *  availability rules for the given date range.
+     *
+     * @param availabilityParams
+     *     available: boolean indicating the default availability.
+     *     rules: Exceptions to the default availability.
+     *
+     * @param dateRange
+     *     The date range over which to compute availability intervals
+     *
+     * @param returnAvailable
+     *     true: Return intervals of availability.
+     *     false: Return intervals of unavailability.
+     */
+    public static function getDailyAvailability(
+        $availabilityParams,
+        $dateRange,
+        $returnAvailable = true
+    ) {
+        // Set time to 0 to ensure consistency with the fact that we expect dates.
+        $dateRange[0] = $dateRange[0]->copy()->setTime(0, 0, 0);
+        $dateRange[1] = $dateRange[1]->copy()->setTime(0, 0, 0);
+
+        $dailyIntervals = [];
+        $ruleIntervals = [];
+
+        // Prepare initial set and operator depending on availability modes in and out.
+        $mustAddIntervals = true;
+        if ($availabilityParams["available"] == $returnAvailable) {
+            $mustAddIntervals = false;
+
+            // Start with intervals covering whole days.
+            $currentDate = $dateRange[0]->copy();
+            while ($currentDate->lessThan($dateRange[1])) {
+                $dateKey = $currentDate->toDateString();
+
+                // Each day must have an array of intervals.
+                $dailyIntervals[$dateKey] = [
+                    [
+                        $currentDate->copy()->setTime(0, 0, 0),
+                        $currentDate->copy()->setTime(24, 0, 0),
+                    ],
+                ];
+
+                $currentDate = $currentDate->addDay();
+            }
+        }
+
+        $ruleIntervals = self::getScheduleDailyIntervals(
+            $availabilityParams,
+            $dateRange
+        );
+
+        if ($mustAddIntervals) {
+            foreach ($ruleIntervals as $interval) {
+                $dateKey = $interval[0]->toDateString();
+
+                if (!isset($dailyIntervals[$dateKey])) {
+                    $dailyIntervals[$dateKey] = [$interval];
+                } else {
+                    $dailyIntervals[$dateKey] = DateIntervalHelper::union(
+                        $dailyIntervals[$dateKey],
+                        $interval
+                    );
+                }
+            }
+        } else {
+            foreach ($ruleIntervals as $interval) {
+                $dateKey = $interval[0]->toDateString();
+
+                if (isset($dailyIntervals[$dateKey])) {
+                    $dailyIntervals[$dateKey] = DateIntervalHelper::subtraction(
+                        $dailyIntervals[$dateKey],
+                        $interval
+                    );
+                }
+            }
         }
 
         return $dailyIntervals;

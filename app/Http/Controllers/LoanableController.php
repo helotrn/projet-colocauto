@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Calendar\AvailabilityHelper;
+use App\Calendar\DateIntervalHelper;
 use App\Helpers\Order as OrderHelper;
 use App\Http\Requests\BaseRequest as Request;
+use App\Http\Requests\Loanable\AvailabilityRequest;
 use App\Http\Requests\Loanable\DestroyRequest;
 use App\Http\Requests\Loanable\EventsRequest;
 use App\Http\Requests\Loanable\TestRequest;
@@ -26,6 +28,7 @@ use App\Models\Trailer;
 use App\Repositories\LoanRepository;
 use App\Repositories\LoanableRepository;
 use Carbon\Carbon;
+use Carbon\CarbonImmutable;
 use Excel;
 use Illuminate\Validation\ValidationException;
 use Validator;
@@ -86,6 +89,92 @@ class LoanableController extends RestController
         }
     }
 
+    public function availability(AvailabilityRequest $request)
+    {
+        // Set time to 0 to ensure consistency with the fact that we expect dates.
+        $dateRange = [
+            (new CarbonImmutable($request->start))->setTime(0, 0, 0),
+            (new CarbonImmutable($request->end))->setTime(0, 0, 0),
+        ];
+
+        // AvailabilityRequest checks that the loanable exists and is accessible by the user.
+        $loanable = Loanable::findOrFail($request->loanable_id);
+
+        $events = [];
+
+        $availabilityRules = $loanable->getAvailabilityRules();
+        $availabilityMode = $loanable->availability_mode;
+
+        // Availability or unavailability depending on responseMode.
+        $availabilityIntervalsByDay = AvailabilityHelper::getDailyAvailability(
+            [
+                "available" => "always" == $availabilityMode,
+                "rules" => $availabilityRules,
+            ],
+            $dateRange,
+            $request->responseMode == "available"
+        );
+
+        $loans = Loan::accessibleBy($request->user())
+            ->where("loanable_id", "=", $loanable->id)
+            // Departure before the end and return after the beginning of the period.
+            ->where("departure_at", "<", $dateRange[1])
+            ->where("actual_return_at", ">", $dateRange[0])
+            ->get();
+
+        foreach ($loans as $loan) {
+            $loanInterval = [
+                new Carbon($loan->departure_at),
+                new Carbon($loan->actual_return_at),
+            ];
+
+            $loanIntervalsByDay = AvailabilityHelper::splitIntervalByDay(
+                $loanInterval
+            );
+
+            foreach ($loanIntervalsByDay as $index => $loanInterval) {
+                $availabilityIntervals = isset(
+                    $availabilityIntervalsByDay[$index]
+                )
+                    ? $availabilityIntervalsByDay[$index]
+                    : [];
+
+                if ($request->responseMode == "available") {
+                    // Intervals are of availability.
+                    $availabilityIntervalsByDay[
+                        $index
+                    ] = DateIntervalHelper::subtraction(
+                        $availabilityIntervals,
+                        $loanInterval
+                    );
+                } else {
+                    // Intervals are of unavailability.
+                    $availabilityIntervalsByDay[
+                        $index
+                    ] = DateIntervalHelper::union(
+                        $availabilityIntervals,
+                        $loanInterval
+                    );
+                }
+            }
+        }
+
+        // Generate events from intervals.
+        foreach ($availabilityIntervalsByDay as $dailyAvailabilityIntervals) {
+            foreach ($dailyAvailabilityIntervals as $availabilityInterval) {
+                $events[] = [
+                    "start" => $availabilityInterval[0]->toDateTimeString(),
+                    "end" => $availabilityInterval[1]->toDateTimeString(),
+                    "data" => [
+                        "available" => $request->responseMode == "available",
+                    ],
+                ];
+            }
+        }
+
+        return response($events, 200);
+    }
+
     public function events(EventsRequest $request)
     {
         $start = new Carbon($request->start);
@@ -103,7 +192,7 @@ class LoanableController extends RestController
 
             $intervals = AvailabilityHelper::getScheduleDailyIntervals(
                 [
-                    "available" => $availabilityMode,
+                    "available" => "always" == $availabilityMode,
                     "rules" => $availabilityRules,
                 ],
                 [$start, $end]

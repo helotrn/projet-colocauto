@@ -55,7 +55,7 @@ class DateIntervalHelper
      * @param interval
      *     Interval with which to intersect
      */
-    public static function Intersection($fromIntervals, $interval)
+    public static function intersection($fromIntervals, $interval)
     {
         if (self::isEmpty($interval)) {
             return [];
@@ -121,7 +121,72 @@ class DateIntervalHelper
 
     public static function hasIntersection($fromIntervals, $interval)
     {
-        return !empty(self::Intersection($fromIntervals, $interval));
+        return !empty(self::intersection($fromIntervals, $interval));
+    }
+
+    /**
+     * Consider a series of intervals, this function returns the union with the
+     * given interval, merging any joined or overlapping intervals.
+     *
+     * Remarks:
+     *   - This is a somewhat naive implementation.
+     *
+     * @param fromIntervals
+     *     Array of intervals to which to add the given interval.
+     *
+     * @param interval
+     *     Interval to add to the current intervals.
+     */
+    public static function union($fromIntervals, $interval)
+    {
+        if (!$fromIntervals) {
+            $fromIntervals = [];
+        }
+
+        if (self::isEmpty($interval)) {
+            return self::filterEmpty($fromIntervals);
+        }
+
+        // Starting from the given interval, the strategy is to add intervals
+        // from fromIntervals by merging any joinining or overlapping interval
+        // along the way.
+        $intervals = [$interval];
+
+        foreach ($fromIntervals as $fromInterval) {
+            if (self::isEmpty($fromInterval)) {
+                continue;
+            }
+
+            $unionInterval = $fromInterval;
+
+            // Find intersecting or joining intervals to create one united interval.
+            $intersectingKeys = [];
+            foreach ($intervals as $key => $interval) {
+                if (
+                    self::hasIntersection([$fromInterval], $interval) ||
+                    $interval[0]->equalTo($fromInterval[1]) ||
+                    $interval[1]->equalTo($fromInterval[0])
+                ) {
+                    if ($interval[0]->lessThan($unionInterval[0])) {
+                        $unionInterval[0] = $interval[0];
+                    }
+                    if ($interval[1]->greaterThan($unionInterval[1])) {
+                        $unionInterval[1] = $interval[1];
+                    }
+
+                    $intersectingKeys[] = $key;
+                }
+            }
+
+            // Remove intersecting intervals to replace them by the united interval.
+            foreach ($intersectingKeys as $key) {
+                unset($intervals[$key]);
+            }
+
+            $intervals[] = $unionInterval;
+        }
+
+        return $intervals;
     }
 
     /**
@@ -138,7 +203,7 @@ class DateIntervalHelper
      * @param toRemove
      *     Interval to remove.
      */
-    public static function removeInterval($fromIntervals, $toRemove)
+    public static function subtraction($fromIntervals, $toRemove)
     {
         if (!$fromIntervals || empty($fromIntervals)) {
             return [];
@@ -226,7 +291,7 @@ class DateIntervalHelper
         $toCover = [$toCover];
 
         foreach ($intervals as $interval) {
-            $toCover = self::removeInterval($toCover, $interval);
+            $toCover = self::subtraction($toCover, $interval);
         }
 
         return empty($toCover);
