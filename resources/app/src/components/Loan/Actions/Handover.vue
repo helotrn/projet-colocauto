@@ -492,6 +492,14 @@ import LoanStepsSequence from "@/mixins/LoanStepsSequence";
 export default {
   name: "LoanActionsHandover",
   mixins: [LoanActionsMixin, LoanStepsSequence],
+  mounted() {
+    if (!this.action.mileage_end) {
+      this.action.mileage_end = this.item.estimated_distance + this.mileageBeginning;
+    }
+    if (!this.action.purchases_amount) {
+      this.action.purchases_amount = 0;
+    }
+  },
   computed: {
     mileageBeginning() {
       return this.item.actions.find((a) => a.type === "takeover").mileage_beginning;
