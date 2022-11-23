@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 use App\Events\LoanPaidEvent;
 use App\Http\Requests\Action\PaymentRequest;
 use App\Http\Requests\BaseRequest as Request;
-use App\Listeners\SendInvoiceEmail;
 use App\Models\Invoice;
+use App\Models\Loan;
 use App\Models\Payment;
 use App\Repositories\LoanRepository;
 use App\Repositories\PaymentRepository;
@@ -83,22 +83,39 @@ class PaymentController extends RestController
 
     public function complete(PaymentRequest $request, $actionId, $loanId)
     {
-        $authRequest = $request->redirectAuth(Request::class);
+        $loan = Loan::findOrFail($loanId);
 
-        // Validation existence
-        $payment = $this->repo->find($authRequest, $actionId);
-        $loan = $this->loanRepo->find($authRequest, $loanId);
+        if (!$loan->payment || $loan->payment->id != $actionId) {
+            abort(404);
+        }
 
-        if ($payment->isCompleted()) {
+        if ($loan->payment->isCompleted()) {
             return $this->respondWithErrors([
                 "status" => _("validation.custom.status.action_completed"),
             ]);
         }
+        $this->pay($loan, false, floatval($request->get("platform_tip")));
 
+        return $loan->payment;
+    }
+
+    /**
+     * Creates the invoices and transfers the amounts from user's balance for the completion of this loan.
+     *
+     * @param Loan $loan
+     * @param bool $isAutomated Whether this is an automated payment or triggered by user action
+     * @param int|null $finalTip Tip to set in the final payment. If null, will use the loan->platform_tip value.
+     * @return void
+     */
+    public static function pay(
+        Loan $loan,
+        bool $isAutomated = false,
+        int $finalTip = null
+    ): void {
         // Prepare variables
         $price = $loan->actual_price;
         $insurance = $loan->actual_insurance;
-        $platformTip = floatval($request->get("platform_tip"));
+        $platformTip = $finalTip ?? $loan->platform_tip;
         $expenses = $loan->handover->purchases_amount;
         $object = $loan->loanable->name;
         $prettyDate = (new Carbon($loan->departure_at))
@@ -229,6 +246,7 @@ class PaymentController extends RestController
 
         // Save payment
         // Borrower invoice is always created.
+        $payment = $loan->payment;
         $payment->borrower_invoice_id = $borrowerInvoice->id;
         // If owner invoice exists, then add it to payment.
         if ($ownerInvoice) {
@@ -244,7 +262,7 @@ class PaymentController extends RestController
             $loan->loanable->owner &&
             $loan->total_final_cost > 0
         ) {
-            if ($request->get("automated")) {
+            if ($isAutomated) {
                 event(
                     new LoanPaidEvent(
                         $borrowerUser,
@@ -292,7 +310,5 @@ class PaymentController extends RestController
                 }
             }
         }
-
-        return $payment;
     }
 }

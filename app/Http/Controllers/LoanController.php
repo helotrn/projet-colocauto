@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Events\LoanCreatedEvent;
 use App\Events\Loan\CanceledEvent;
+use App\Events\LoanCreatedEvent;
 use App\Http\Requests\Action\CreateRequest as ActionCreateRequest;
-use App\Http\Requests\Loan\CreateRequest;
 use App\Http\Requests\BaseRequest as Request;
+use App\Http\Requests\Loan\CreateRequest;
 use App\Models\Handover;
 use App\Models\Intention;
 use App\Models\Loan;
@@ -17,9 +17,12 @@ use App\Models\Takeover;
 use App\Repositories\LoanRepository;
 use Carbon\Carbon;
 use Carbon\CarbonImmutable;
+use Gate;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Validation\ValidationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Http\Response;
+use Illuminate\Validation\ValidationException;
 
 class LoanController extends RestController
 {
@@ -103,13 +106,7 @@ class LoanController extends RestController
     {
         $item = $this->repo->find($request, $id);
 
-        try {
-            $response = $this->respondWithItem($request, $item);
-        } catch (ValidationException $e) {
-            return $this->respondWithErrors($e->errors(), $e->getMessage());
-        }
-
-        return $response;
+        return $this->respondWithItem($request, $item);
     }
 
     public function destroy(Request $request, $id)
@@ -136,11 +133,7 @@ class LoanController extends RestController
         $item->cancel();
         $item->save();
 
-        try {
-            $response = $this->respondWithItem($request, $item);
-        } catch (ValidationException $e) {
-            return $this->respondWithErrors($e->errors(), $e->getMessage());
-        }
+        $response = $this->respondWithItem($request, $item);
 
         event(new CanceledEvent($request->user(), $item));
 
@@ -162,7 +155,7 @@ class LoanController extends RestController
 
     public function createAction(ActionCreateRequest $request, $id)
     {
-        $item = $this->repo->find($request->redirectAuth(Request::class), $id);
+        $this->repo->find($request->redirectAuth(Request::class), $id);
 
         $request->merge(["loan_id" => $id]);
 
@@ -299,6 +292,37 @@ class LoanController extends RestController
         );
     }
 
+    /**
+     * Marks the loan as being validated: it's information has been checked by
+     * the loanable owner and payment can proceed.
+     *
+     * @throws AuthorizationException
+     */
+    public function validateInformation(Request $request, $loanId): Response
+    {
+        /** @var Loan $loan */
+        $loan = $this->repo->find($request, $loanId);
+
+        Gate::authorize("validate", $loan);
+
+        if ($loan->borrower->user->id === $request->user()->id) {
+            if (!$loan->borrower_validated_at) {
+                $loan->borrower_validated_at = new Carbon();
+                $loan->save();
+            }
+            return response()->noContent();
+        }
+        if ($loan->loanable->owner->user->id === $request->user()->id) {
+            if (!$loan->owner_validated_at) {
+                $loan->owner_validated_at = new Carbon();
+                $loan->save();
+            }
+            return response()->noContent();
+        }
+
+        return response("No validation needed from this user.", 404);
+    }
+
     /*
        This method creates next loan action upon completion of an action.
        It also checks if any action may be autocompleted.
@@ -318,7 +342,7 @@ class LoanController extends RestController
         // Ensure intention is still in process to not complete the action every time we call this function.
         if ($intention->status == "in_process") {
             if ($loan->loanable->is_self_service) {
-                // Autocomplete intention if loanable is self service.
+                // Autocomplete intention if loanable is self-service.
                 $intention->complete()->save();
             }
         }
@@ -445,7 +469,7 @@ class LoanController extends RestController
 
         $ongoingLoans = (clone $accessibleLoans)
             ->where("status", "in_process")
-            ->orderBy("departure_at", "asc");
+            ->orderBy("departure_at");
         $waitingLoans = (clone $ongoingLoans)->whereHas("intention", function (
             Builder $q
         ) {

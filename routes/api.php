@@ -1,6 +1,5 @@
 <?php
 
-use Illuminate\Http\Request;
 use Molotov\Utils\RouteHelper;
 
 Route::prefix("v1")->group(function () {
@@ -145,6 +144,10 @@ Route::prefix("v1")->group(function () {
         Route::get(
             "/loans/{loan_id}/isavailable",
             "LoanController@isAvailable"
+        );
+        Route::put(
+            "/loans/{loan_id}/validate",
+            "LoanController@validateInformation"
         );
 
         Route::put(
