@@ -30,6 +30,13 @@ spec:
             name: app
             port:
               number: 80
+      - path: /api
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: api
+            port:
+              number: 80
 ---
 apiVersion: apps/v1
 kind: Deployment
