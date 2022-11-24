@@ -107,3 +107,50 @@ Nous avons deux manières d'envoyer des courriels:
 2. Via [Mandrill](https://mandrillapp.com/) quand les templates sont créés sur [Mailchimp](https://us18.admin.mailchimp.com/templates/) puis envoyer à Mandrill.
 
     - Lorsqu'un template est modifié sur Mailchimp, il doit être envoyé à Mandrill via le [bouton](https://us18.admin.mailchimp.com/templates/) "Send to Mandrill" puis publier via le bouton "[Publish](https://mandrillapp.com/templates/code?id=confirmation-d-inscription-sp-13-au-27-oct)" sur Mandrill.
+
+## Kubernetes
+
+Les fichiers de configuration permettant de d'héberger l'application dans un cluster kubernetes sont dans le répertoire du même nom.
+
+### Création de l'application
+
+Commencer par remplir les fichiers `secret.yaml` et `configmap.yaml` (les infos "passport" seront remplies par la suite), puis par les créer.
+> `kubectl apply -f kubernetes/configmap.yaml`
+> `kubectl apply -f kubernetes/secret.yaml`
+
+Installer ensuite les différents éléments:
+> `kubectl apply -f kubernetes/database.yaml`
+> `kubectl apply -f kubernetes/storage.yaml`
+> `kubectl apply -f kubernetes/api.yaml`
+> `kubectl apply -f kubernetes/app.yaml`
+
+TODO: créer un conteneur createbuckets qui se lance une fois au démarrage pour initialiser le stockage
+
+### Publication sur un nom de domaine
+
+Pour que l'application soit accessible depuis l'extérieur, il faut installer ingress.
+Voilà la procédure à suite pour OVH :
+```
+helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+helm repo update
+helm -n ingress-nginx install ingress-nginx ingress-nginx/ingress-nginx --create-namespace
+```
+On obtient alors une adresse IP publique vers laquelle il faut faire pointer le domaine
+> `kubectl get ingress`
+> NAME          CLASS   HOSTS               ADDRESS         PORTS     AGE
+> ingress-app   nginx   dev.colocauto.org   57.128.40.124   80
+
+
+### certificat SSL
+
+Pour faire fonctionner l'application en HTTPS, on installe cert-manager qui va utiliser Let's Encryppt pour créer et renouveller automatiquement un certificat SSL pour notre domaine.
+
+Installer le certificat
+> `kubectl apply -f https://github.com/jetstack/cert-manager/releases/download/v1.10.1/cert-manager.yaml`
+> `kubectl apply -f kubernetes/certificate.yaml`
+
+Attendre quelques minutes que le certificat soit créé. Pour suivre le processus :
+
+```
+kubectl logs -n cert-manager -lapp=cert-manager
+```
