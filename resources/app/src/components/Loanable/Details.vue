@@ -32,8 +32,8 @@
     </header>
     <main class="loanable-details__content">
       <div>
-        <b-tabs content-class="mt-3" nav-wrapper-class="sticky-top bg-white">
-          <b-tab title="Véhicule">
+        <b-tabs nav-wrapper-class="sticky-top bg-white">
+          <b-tab class="mt-3" title="Véhicule">
             <dl>
               <dt>Nom du véhicule</dt>
               <dd>{{ loanable.name }}</dd>
@@ -81,7 +81,7 @@
               </template>
             </dl>
           </b-tab>
-          <b-tab title="Estimation">
+          <b-tab class="mt-3" title="Estimation">
             <div class="loanable-details__estimated-fare" v-if="loanable.estimatedCost">
               <table class="trip-details">
                 <tr>
