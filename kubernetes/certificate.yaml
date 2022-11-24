@@ -1,0 +1,38 @@
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-prod
+  namespace: cert-manager
+spec:
+
+  acme:
+    email: fabien.quatravaux@lemans.happy-dev.fr
+    server: https://acme-v02.api.letsencrypt.org/directory
+    privateKeySecretRef:
+      name: letsencrypt-prod-secret-key
+    solvers:
+    - http01:
+        ingress:
+          class: nginx
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: dev-colocauto-org-acme
+spec:
+  secretName: dev-colocauto-org-acme-tls
+  subject:
+    organizations:
+    - mobicoop
+  isCA: false
+  usages:
+    - server auth
+    - client auth
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+    group: cert-manager.io
+  commonName: dev.colocauto.org
+  dnsNames:
+  - dev.colocauto.org
+

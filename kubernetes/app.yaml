@@ -19,6 +19,10 @@ metadata:
   name: ingress-app
 spec:
   ingressClassName: nginx
+  tls:
+  - hosts:
+    - dev.colocauto.org
+    secretName: dev-colocauto-org-acme-tls
   rules:
   - host: dev.colocauto.org
     http:
