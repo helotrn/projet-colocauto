@@ -23,7 +23,7 @@ const currency = (value) => {
   if (Number.isNaN(floatVal)) {
     return "";
   }
-  return i18n.n(floatVal, "currency_cad");
+  return i18n.n(floatVal, "currency_euro");
 };
 
 const percent = (value) => {

@@ -123,7 +123,7 @@ class StripeService
     ) {
         return \Stripe\Charge::create([
             "amount" => $amountWithFeeInCents,
-            "currency" => "cad",
+            "currency" => "eur",
             "source" => $paymentMethodId,
             "customer" => $customerId,
             "description" => $description,

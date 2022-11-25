@@ -189,19 +189,19 @@ export default {
       if (this.addStandardOptions) {
         const standardOptions = [
           {
-            text: this.$i18n.n(10, "dollars_cad"),
+            text: this.$i18n.n(10, "euros_no_cents"),
             value: 10,
           },
           {
-            text: this.$i18n.n(20, "dollars_cad"),
+            text: this.$i18n.n(20, "euros_no_cents"),
             value: 20,
           },
           {
-            text: this.$i18n.n(50, "dollars_cad"),
+            text: this.$i18n.n(50, "euros_no_cents"),
             value: 50,
           },
           {
-            text: this.$i18n.n(100, "dollars_cad"),
+            text: this.$i18n.n(100, "euros_no_cents"),
             value: 100,
           },
         ];

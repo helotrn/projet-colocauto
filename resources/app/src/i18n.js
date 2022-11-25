@@ -24,6 +24,17 @@ export default new VueI18n({
         currencyDisplay: "narrowSymbol",
         maximumFractionDigits: 0,
       },
+      currency_euro: {
+        style: "currency",
+        currency: "EUR",
+        currencyDisplay: "narrowSymbol",
+      },
+      euros_no_cents: {
+        style: "currency",
+        currency: "EUR",
+        currencyDisplay: "narrowSymbol",
+        maximumFractionDigits: 0,
+      },
       percent: {
         style: "percent",
         minimumFractionDigits: 2, // x.xx
