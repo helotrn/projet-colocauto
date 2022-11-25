@@ -23,9 +23,7 @@ const actions = {
   async reload({ commit, dispatch }, owner) {
     commit("reloading");
     dispatch("loadLoans");
-    if (owner) {
-      dispatch("loadLoanables", owner.id);
-    }
+    dispatch("loadLoanables");
   },
   async loadLoans({ commit }) {
     commit("loadLoans");
@@ -38,7 +36,7 @@ const actions = {
       throw e;
     }
   },
-  async loadLoanables({ commit }, owner_id) {
+  async loadLoanables({ commit }) {
     commit("loadLoanables");
 
     try {
@@ -46,7 +44,6 @@ const actions = {
         params: {
           order: "-updated_at",
           per_page: maxLoanableCount,
-          "owner.id": owner_id,
           fields: [
             "*",
             "!events",

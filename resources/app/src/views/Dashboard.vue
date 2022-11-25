@@ -197,14 +197,14 @@
           <!---->
           <!-- loanables container -->
 
-          <section class="page__section position-relative" v-if="user.owner">
+          <section class="page__section position-relative">
             <b-row>
               <b-col>
-                <h2 class="dashboard--margin-bottom">Mes véhicules</h2>
+                <h2 class="dashboard--margin-bottom">Les véhicules de mon voisinage</h2>
               </b-col>
               <b-col class="text-right">
                 <b-button variant="outline-primary" to="/profile/loanables">
-                  Gérer mes véhicules
+                  Gérer les véhicules
                 </b-button>
               </b-col>
             </b-row>

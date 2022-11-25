@@ -125,7 +125,7 @@ export default [
           slug: "loanables",
           params: {
             fields:
-              "*,events,type,community.id,community.center,owner.id,owner.user.id," +
+              "*,events,type,community.id,community.center,owner.id,owner.user.id,owner.user.full_name," +
               "owner.user.communities.center,image.*,report.*",
           },
           title: "titles.loanable",

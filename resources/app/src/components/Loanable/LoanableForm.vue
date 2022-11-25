@@ -18,6 +18,13 @@
                 :description="$t('descriptions.name')"
                 v-model="loanable.name"
               />
+              <forms-validated-input
+                name="owner"
+                :label="$t('fields.owner.user.full_name') | capitalize"
+                type="text"
+                :disabled="true"
+                v-model="loanable.owner.user.full_name"
+              />
             </b-col>
 
             <b-col lg="4">
@@ -273,8 +280,6 @@ export default {
       }
     },
     submit(...params) {
-      const ownerId = this.$store.state.user.owner.id;
-      this.$store.commit("loanables/mergeItem", { owner: { id: ownerId } });
       this.$emit("submit", ...params);
     },
   },

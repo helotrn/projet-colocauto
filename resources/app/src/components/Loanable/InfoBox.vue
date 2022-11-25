@@ -7,7 +7,7 @@
         </b-col>
 
         <b-col class="loanable-info-box__name"
-          ><span>{{ name }}</span></b-col
+          ><span>{{ name }}</span> <span v-if="owner">({{ owner.user.full_name }})</span></b-col
         >
 
         <b-col class="loanable-info-box__actions">
@@ -76,6 +76,10 @@ export default {
     name: {
       type: String,
       required: true,
+    },
+    owner: {
+      type: Object,
+      required: false,
     },
   },
   data() {
