@@ -121,10 +121,14 @@ class AuthController extends RestController
             $invitation->consume();
 
             // automatically approve new invited users
-            $user->borrower = new Borrower();
-            $user->borrower->user_id = $user->id;
-            $user->borrower->approved_at = new \Carbon\Carbon();
-            $user->borrower->save();
+            $borrower = new Borrower();
+            $borrower->user_id = $user->id;
+            $borrower->approved_at = new \Carbon\Carbon();
+            $borrower->save();
+
+            // community approval
+            $user->communities->first()->pivot->approved_at = new \Carbon\Carbon();
+            $user->communities->first()->pivot->save();
 
             $loginRequest = new LoginRequest();
             $loginRequest->setMethod("POST");
