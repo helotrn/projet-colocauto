@@ -14,16 +14,21 @@ const initialState = {
   loansLoaded: false,
   loanablesLoaded: false,
   hasMoreLoanables: false,
+  members: [],
+  membersLoaded: false,
+  hasMoreMembers: false,
   loadRequests: 0,
 };
 
 const maxLoanableCount = 5;
+const maxMemberCount = 10;
 
 const actions = {
-  async reload({ commit, dispatch }, owner) {
+  async reload({ commit, dispatch }, user) {
     commit("reloading");
     dispatch("loadLoans");
     dispatch("loadLoanables");
+    dispatch("loadMembers", { user });
   },
   async loadLoans({ commit }) {
     commit("loadLoans");
@@ -63,6 +68,28 @@ const actions = {
       throw e;
     }
   },
+  async loadMembers({ commit }, { user }) {
+    commit("loadMembers");
+
+    try {
+      const { data: members } = await Vue.axios.get("/users", {
+        params: {
+          order: "-created_at",
+          per_page: maxMemberCount,
+          fields: "id,full_name,tags,avatar,description,communities.role,communities.proof,communities.approved_at,communities.suspended_at,owner",
+        },
+      });
+
+      // exclude current user from the list
+      members.data = members.data.filter(m => m.id !== user.id);
+      members.total--;
+
+      commit("membersLoaded", members);
+    } catch (e) {
+      commit("errorLoading", e);
+      throw e;
+    }
+  },
 };
 
 const mutations = {
@@ -85,6 +112,15 @@ const mutations = {
     state.loanablesLoaded = true;
     state.loanables = loanables.data;
     state.hasMoreLoanables = loanables.total > maxLoanableCount;
+    state.loadRequests--;
+  },
+  loadMembers(state) {
+    state.loadRequests++;
+  },
+  membersLoaded(state, members) {
+    state.membersLoaded = true;
+    state.members = members.data;
+    state.hasMoreMembers = members.total > maxMemberCount;
     state.loadRequests--;
   },
   errorLoading(state) {

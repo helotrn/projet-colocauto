@@ -195,16 +195,41 @@
             <layout-loading class="section-loading-indicator" v-if="loading && !loansLoaded" />
           </div>
           <!---->
-          <!-- loanables container -->
 
+          <!-- members container -->
           <section class="page__section position-relative">
             <b-row>
               <b-col>
-                <h2 class="dashboard--margin-bottom">Les véhicules de mon voisinage</h2>
+                <h2 class="dashboard--margin-bottom">Mon voisinage</h2>
+              </b-col>
+            </b-row>
+
+            <div class="dashboard__members" :class="{ loading: loading && !membersLoaded }">
+              <transition name="fade">
+                <div v-if="members && members.length > 0">
+                  <transition-group name="dashboard-list">
+                    <user-card
+                      v-for="member in members"
+                      :key="member.id"
+                      :user="member"
+                      :is-admin="false"
+                      :community-id="17"
+                    />
+                  </transition-group>
+                </div>
+              </transition>
+            </div>
+          </section>
+
+          <!-- loanables container -->
+          <section class="page__section position-relative">
+            <b-row>
+              <b-col>
+                <h2 class="dashboard--margin-bottom">Les véhicules</h2>
               </b-col>
               <b-col class="text-right">
                 <b-button variant="outline-primary" to="/profile/loanables">
-                  Gérer les véhicules
+                  Gérer mes véhicules
                 </b-button>
               </b-col>
             </b-row>
@@ -290,6 +315,7 @@ import MainFaq from "@/components/Misc/MainFaq.vue";
 import ReleaseInfoBox from "@/components/Dashboard/ReleaseInfoBox.vue";
 import TutorialBlock from "@/components/Dashboard/TutorialBlock.vue";
 import PartnersSection from "@/components/Misc/PartnersSection.vue";
+import UserCard from "@/components/User/UserCard.vue";
 
 import MagnifyingGlass from "@/assets/svg/magnifying-glass.svg";
 
@@ -309,6 +335,7 @@ export default {
     ReleaseInfoBox,
     TutorialBlock,
     "svg-magnifying-glass": MagnifyingGlass,
+    UserCard,
   },
   beforeMount() {
     if (!this.isLoggedIn) {
@@ -325,7 +352,7 @@ export default {
     }
   },
   mounted() {
-    this.$store.dispatch("dashboard/reload", this.user.owner);
+    this.$store.dispatch("dashboard/reload", this.user);
   },
   computed: {
     totalApprovedUsers() {
@@ -356,11 +383,17 @@ export default {
     loanables() {
       return this.$store.state.dashboard.loanables ?? [];
     },
+    members() {
+      return this.$store.state.dashboard.members ?? [];
+    },
     loansLoaded() {
       return this.$store.state.dashboard.loansLoaded;
     },
     loanablesLoaded() {
       return this.$store.state.dashboard.loanablesLoaded;
+    },
+    membersLoaded() {
+      return this.$store.state.dashboard.membersLoaded;
     },
     hasMoreLoanables() {
       return this.$store.state.dashboard.hasMoreLoanables;
