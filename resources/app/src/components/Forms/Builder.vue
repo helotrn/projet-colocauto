@@ -11,6 +11,7 @@
         :type="def.type"
         :options="def.options"
         :disabled="disabled || def.disabled"
+        :disabled-tooltip="def.disabledTooltip"
         :placeholder="placeholderOrLabel(key) | capitalize"
         :initial-view="def.initial_view"
         :max="def.max"

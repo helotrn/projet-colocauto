@@ -16,6 +16,8 @@
                 type="text"
                 :placeholder="placeholderOrLabel('name') | capitalize"
                 :description="$t('descriptions.name')"
+                :disabled="loanable.owner && loanable.owner.user.id !== user.id"
+                disabled-tooltip="Seul le propriétaire peut changer cela"
                 v-model="loanable.name"
               />
               <forms-validated-input
@@ -332,8 +334,13 @@ export default {
         const key = carKeys[i];
         form[key] = this.form.car[key];
 
+        // make car properties readonly for non-owners
+        form[key].disabled = this.loanable.owner && this.loanable.owner.user.id !== this.user.id;
+        form[key].disabledTooltip = "Seul le propriétaire peut changer cela";
+
         if (key === "report") {
           form["report_template"] = {};
+          form[key].disabled = false;
         }
       }
 
