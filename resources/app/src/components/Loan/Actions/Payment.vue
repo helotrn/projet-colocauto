@@ -188,7 +188,7 @@
                       size="sm"
                       variant="success"
                       :disabled="updating"
-                      @click="() => validate() && completeAction()"
+                      @click="validateAndPay"
                     >
                       Valider
                     </b-button>
@@ -319,7 +319,7 @@
                   <payment-dialog
                     :user="user"
                     :price="actualPrice"
-                    @complete="() => updateTip() && completeAction()"
+                    @complete="updateTipAndPay"
                     action-name="payer"
                   />
                 </div>
@@ -335,7 +335,7 @@
                     :user="user"
                     :price="actualPrice"
                     :loading="updating"
-                    @complete="() => updateTip() && validate()"
+                    @complete="updateTipAndValidate"
                     action-name="valider"
                   />
                 </div>
@@ -348,7 +348,7 @@
                   <payment-dialog
                     :user="user"
                     :price="actualPrice"
-                    @complete="() => updateTip() && validate() && completeAction()"
+                    @complete="updateTipValidateAndPay"
                     action-name="payer"
                     :loading="actionLoading || updating"
                   />
@@ -489,6 +489,30 @@ export default {
       } finally {
         this.updating = false;
       }
+    },
+    async updateTipAndValidate() {
+      if (await this.updateTip()) {
+        await this.validate();
+      }
+    },
+    async validateAndPay() {
+      if (await this.validate()) {
+        await this.completeAction();
+      }
+    },
+    async updateTipAndPay() {
+      if (await this.updateTip()) {
+        await this.completeAction();
+      }
+    },
+    async updateTipValidateAndPay() {
+      if (!(await this.updateTip())) {
+        return;
+      }
+      if (!(await this.validate())) {
+        return;
+      }
+      await this.completeAction();
     },
   },
   watch: {
