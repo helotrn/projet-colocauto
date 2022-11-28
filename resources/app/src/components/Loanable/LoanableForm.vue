@@ -19,11 +19,20 @@
                 v-model="loanable.name"
               />
               <forms-validated-input
+                v-if="loanable.owner"
                 name="owner"
                 :label="$t('fields.owner.user.full_name') | capitalize"
                 type="text"
                 :disabled="true"
                 v-model="loanable.owner.user.full_name"
+              />
+              <forms-validated-input
+                v-if="loanable.community"
+                name="community"
+                :label="$t('fields.community_name') | capitalize"
+                type="text"
+                :disabled="true"
+                v-model="loanable.community.name"
               />
             </b-col>
 
@@ -280,6 +289,10 @@ export default {
       }
     },
     submit(...params) {
+      if( !this.loanable.owner ) {
+        const ownerId = this.$store.state.user.owner.id;
+        this.$store.commit("loanables/mergeItem", { owner: { id: ownerId } });
+      }
       this.$emit("submit", ...params);
     },
   },

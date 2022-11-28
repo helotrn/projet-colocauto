@@ -50,10 +50,17 @@ export default {
   computed: {
     communityCenter() {
       if (!this.item.community) {
-        return null;
+        if(this.user.communities && this.user.communities[0]) {
+          return this.user.communities[0].center_google;
+        } else {
+          return null;
+        }
       }
 
-      return this.item.community.center;
+      // transform array [lat, lng] format into google format {lat: lat, lng: lng}
+      return Array.isArray(this.item.community.center) ?
+        { lat: this.item.community.center[0], lng: this.item.community.center[1] } :
+        this.item.community.center;
     },
     center() {
       return this.communityCenter || this.defaultCenter;
@@ -72,7 +79,8 @@ export default {
       return parts.reverse().join(" | ");
     },
     defaultCenter() {
-      return { lat: 45.53748, lng: -73.60145 };
+      // default center is near Mobicoop place in Nancy, France
+      return { lat: 48.69385, lng: 6.17902 };
     },
     pageTitle() {
       return this.item.name || capitalize(this.$i18n.tc("véhicule", 1));

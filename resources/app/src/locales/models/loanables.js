@@ -47,6 +47,7 @@ export default {
       ...trailers.fr.fields,
       comments: "commentaires",
       community_id: "voisinage",
+      community_name: "voisinage",
       deleted_at: "supprimé",
       image: "photo du véhicule",
       instructions: "instructions",
