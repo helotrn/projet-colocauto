@@ -5,7 +5,7 @@
     :defaultView="defaultView"
     :time-step="15"
     :time-cell-height="variant == 'small' ? 13 : 18"
-    :events="events"
+    :events="vueCalEvents"
     locale="fr"
     :xsmall="variant == 'small'"
     @ready="$emit('ready', $event)"
@@ -62,6 +62,41 @@ export default {
       }
       return classList;
     },
+    vueCalEvents: function () {
+      let baseEvent = {
+        deletable: false,
+        resizable: false,
+        draggable: false,
+        class: ["loanable-calendar__event"],
+      };
+
+      let vueCalEvents = this.events.map((e) => {
+        e = { ...baseEvent, ...e };
+
+        if (e.type == "availability") {
+          // Availability events go in the background.
+          e.background = true;
+          if (e.data.available) {
+            e.class.push("loanable-calendar__event--availability");
+          } else {
+            e.class.push("loanable-calendar__event--unavailability");
+          }
+        } else if (e.type == "loan") {
+          // Loans don't go in the background.
+          e.background = false;
+
+          // Class based on loan status.
+          e.class.push("loanable-calendar__event--loan_" + e.data.status);
+        }
+
+        // Pass class as a string to vue-cal.
+        e.class = e.class.join(" ");
+
+        return e;
+      });
+
+      return vueCalEvents;
+    },
   },
 };
 </script>
@@ -91,6 +126,37 @@ export default {
   }
   .loanable-calendar__time-step--minutes {
     font-size: 0.7em;
+  }
+
+  .loanable-calendar__event {
+    opacity: 0.8;
+  }
+  .loanable-calendar__event.vuecal__event--background {
+    // Leave background events in the background.
+    z-index: 0;
+  }
+  .loanable-calendar__event:not(.vuecal__event--background) {
+    z-index: 3;
+  }
+  .loanable-calendar__event--availability {
+    background-color: $success;
+  }
+  .loanable-calendar__event--unavailability {
+    background-color: $danger;
+  }
+  .loanable-calendar__event--loan_in_process {
+    background-color: $warning;
+    border: 1px solid $warning;
+  }
+  .loanable-calendar__event--loan_completed {
+    color: $success;
+    background-color: $success;
+    border: 1px solid $success;
+  }
+  .loanable-calendar__event--loan_canceled {
+    color: $danger;
+    background-color: $danger;
+    border: 1px solid $danger;
   }
 }
 </style>
