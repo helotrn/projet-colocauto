@@ -22,7 +22,6 @@ class PaymentTest extends ActionTestCase
             "/api/v1/loans/$loan->id/actions/$payment->id/complete",
             [
                 "type" => "payment",
-                "platform_tip" => 0,
             ]
         );
         $response->assertStatus(200);
@@ -45,5 +44,58 @@ class PaymentTest extends ActionTestCase
                 "type" => "payment",
             ]
         )->assertStatus(422);
+    }
+
+    public function testCompletePayments_failsIfNotEnoughMoney()
+    {
+        $this->withoutEvents();
+
+        $loan = $this->buildLoan("payment");
+        $loan->platform_tip = 5;
+        $loan->save();
+
+        $response = $this->json(
+            "PUT",
+            "/api/v1/loans/$loan->id/actions/{$loan->payment->id}/complete",
+            [
+                "type" => "payment",
+            ]
+        );
+
+        $response->assertStatus(422)->assertJson([
+            "errors" => [
+                "status" => [
+                    "L'emprunteur-se n'a pas assez de fonds dans son solde pour payer présentement.",
+                ],
+            ],
+        ]);
+    }
+
+    public function testCompletePayments_failsIfNotValidated()
+    {
+        $this->withoutEvents();
+
+        $loan = $this->buildLoan("payment");
+        $loan->borrower->user->balance = 20;
+        $loan->borrower->user->save();
+
+        $pricing = $loan->community->pricings[0];
+        $pricing->rule = "5";
+        $pricing->save();
+
+        $this->actAs($loan->loanable->owner->user);
+        $response = $this->json(
+            "PUT",
+            "/api/v1/loans/$loan->id/actions/{$loan->payment->id}/complete",
+            [
+                "type" => "payment",
+                "loan_id" => $loan->id,
+            ]
+        );
+        $response->assertStatus(422)->assertJson([
+            "errors" => [
+                "status" => ["Le paiement ne peut être complété présentement."],
+            ],
+        ]);
     }
 }

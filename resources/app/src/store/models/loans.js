@@ -108,7 +108,6 @@ export default new RestModule(
                   content: extractErrors(response.data).join(", "),
                   title: "Erreur de validation",
                   variant: "danger",
-                  type: "extension",
                 },
                 { root: true }
               );
@@ -206,6 +205,37 @@ export default new RestModule(
         const { request, response } = e;
         commit("error", { request, response });
 
+        throw e;
+      }
+    },
+    async validate({ commit }, { loan, user }) {
+      const { CancelToken } = Vue.axios;
+      const cancelToken = CancelToken.source();
+      try {
+        const { data } = await Vue.axios.put(`/loans/${loan.id}/validate`, null, cancelToken);
+        commit("cancelToken", null);
+
+        if (user.id === loan.borrower.user.id) {
+          commit("patchItem", {
+            borrower_validated_at: data,
+          });
+        }
+        if (user.id === loan.loanable.owner.id) {
+          commit("patchItem", {
+            owner_validated_at: data,
+          });
+        }
+      } catch (e) {
+        commit("cancelToken", null);
+        commit(
+          "addNotification",
+          {
+            content: extractErrors(e.response.data).join(",") ?? "Erreur serveur",
+            title: "Impossible de valider l'emprunt.",
+            variant: "danger",
+          },
+          { root: true }
+        );
         throw e;
       }
     },

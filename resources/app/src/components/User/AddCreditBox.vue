@@ -10,15 +10,22 @@
         button-variant="outline-secondary"
         v-model="selectedValue"
         :options="amounts"
+        :disabled="disabled"
         buttons
       />
-      <b-form-select class="d-md-none" v-model="selectedValue" :options="amounts" />
+      <b-form-select
+        class="d-md-none"
+        v-model="selectedValue"
+        :options="amounts"
+        :disabled="disabled"
+      />
     </b-form-group>
     <b-row>
       <b-col md="8" xl="6">
         <b-form-group label="Montant Personnalisé" v-if="selectedValue == 'other'">
           <currency-input
             locale="fr"
+            :disabled="disabled"
             class="form-control"
             :value-range="{ min: normalizedMinimumRequired }"
             :currency="{ suffix: ' $' }"
@@ -44,6 +51,7 @@
         <b-form-select
           id="payment_method_id"
           name="payment_method_id"
+          :disabled="disabled"
           :options="paymentOptions"
           v-if="hasPaymentMethod"
           v-model="paymentMethodId"
@@ -60,13 +68,13 @@
     <b-row class="mt-3">
       <b-col class="text-center">
         <b-button
-          class="mr-3"
+          :class="{ 'mr-3': !noCancel }"
           type="submit"
-          variant="primary"
+          variant="success"
           @click="buyCredit"
-          :disabled="amount <= 0 || amount < normalizedMinimumRequired || loading"
+          :disabled="amount <= 0 || amount < normalizedMinimumRequired || loading || disabled"
         >
-          Ajouter les fonds
+          {{ label }}
         </b-button>
 
         <b-button v-if="!noCancel" variant="outline-warning" @click="emitCancel">Annuler</b-button>
@@ -78,7 +86,7 @@
 <script>
 import { CurrencyInput } from "vue-currency-input";
 import { currency, normalizeCurrency } from "@/helpers/filters";
-import { feeSpec, addFeeToAmount } from "@/helpers/transactionFees";
+import { addFeeToAmount, feeSpec } from "@/helpers/transactionFees";
 
 export default {
   name: "UserAddCreditBox",
@@ -125,6 +133,14 @@ export default {
       type: Boolean,
       required: false,
       default: false,
+    },
+    label: {
+      type: String,
+      required: true,
+      default: "Ajouter les fonds",
+    },
+    disabled: {
+      type: Boolean,
     },
   },
   computed: {

@@ -94,6 +94,7 @@ SQL
 
     protected function actAs($user)
     {
+        \Cache::clear();
         Passport::actingAs($user);
     }
 

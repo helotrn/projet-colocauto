@@ -8,20 +8,16 @@ use App\Http\Requests\BaseRequest as Request;
 use App\Models\Invoice;
 use App\Models\Loan;
 use App\Models\Payment;
-use App\Repositories\LoanRepository;
 use App\Repositories\PaymentRepository;
 use Carbon\Carbon;
+use Illuminate\Validation\ValidationException;
 
 class PaymentController extends RestController
 {
-    public function __construct(
-        PaymentRepository $repository,
-        Payment $model,
-        LoanRepository $loanRepository
-    ) {
+    public function __construct(PaymentRepository $repository, Payment $model)
+    {
         $this->repo = $repository;
         $this->model = $model;
-        $this->loanRepo = $loanRepository;
     }
 
     public function index(Request $request)
@@ -60,14 +56,7 @@ class PaymentController extends RestController
     public function retrieve(Request $request, $id)
     {
         $item = $this->repo->find($request, $id);
-
-        try {
-            $response = $this->respondWithItem($request, $item);
-        } catch (ValidationException $e) {
-            return $this->respondWithErrors($e->errors(), $e->getMessage());
-        }
-
-        return $response;
+        return $this->respondWithItem($request, $item);
     }
 
     public function destroy(Request $request, $id)
@@ -91,10 +80,25 @@ class PaymentController extends RestController
 
         if ($loan->payment->isCompleted()) {
             return $this->respondWithErrors([
-                "status" => _("validation.custom.status.action_completed"),
+                "status" => [__("validation.custom.status.action_completed")],
             ]);
         }
-        $this->pay($loan, false, floatval($request->get("platform_tip")));
+
+        if (!$loan->borrowerCanPay()) {
+            return $this->respondWithErrors([
+                "status" => [__("validation.custom.status.borrower_cant_pay")],
+            ]);
+        }
+
+        if (!$loan->canBePaid($request->user())) {
+            return $this->respondWithErrors([
+                "status" => [
+                    __("validation.custom.status.payment_cant_be_paid"),
+                ],
+            ]);
+        }
+
+        $this->pay($loan);
 
         return $loan->payment;
     }
@@ -104,18 +108,14 @@ class PaymentController extends RestController
      *
      * @param Loan $loan
      * @param bool $isAutomated Whether this is an automated payment or triggered by user action
-     * @param int|null $finalTip Tip to set in the final payment. If null, will use the loan->platform_tip value.
      * @return void
      */
-    public static function pay(
-        Loan $loan,
-        bool $isAutomated = false,
-        int $finalTip = null
-    ): void {
+    public static function pay(Loan $loan, bool $isAutomated = false): void
+    {
         // Prepare variables
         $price = $loan->actual_price;
         $insurance = $loan->actual_insurance;
-        $platformTip = $finalTip ?? $loan->platform_tip;
+        $platformTip = $loan->platform_tip;
         $expenses = $loan->handover->purchases_amount;
         $object = $loan->loanable->name;
         $prettyDate = (new Carbon($loan->departure_at))
@@ -225,9 +225,9 @@ class PaymentController extends RestController
         // Update balances
         if ($ownerUser && $borrowerUser->is($ownerUser)) {
             // If the borrower is the owner we do a single atomic addToBalance
-            // or removeFromBalance instead of both calls so we can allow
+            // or removeFromBalance instead of both calls, so we can allow
             // temporarily going below a balance of zero if the final balance
-            // is above zero (e.g initial balance is 0.5 => debit 1 => balance
+            // is above zero (e.g. initial balance is 0.5 => debit 1 => balance
             // is -0.5 => credit 1 ==> final balance is 0.5)
             $movement = $creditAmount - $debitAmount;
 

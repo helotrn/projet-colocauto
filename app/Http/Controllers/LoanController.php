@@ -310,14 +310,16 @@ class LoanController extends RestController
                 $loan->borrower_validated_at = new Carbon();
                 $loan->save();
             }
-            return response()->noContent();
+            $loan->refresh();
+            return response($loan->borrower_validated_at);
         }
         if ($loan->loanable->owner->user->id === $request->user()->id) {
             if (!$loan->owner_validated_at) {
                 $loan->owner_validated_at = new Carbon();
                 $loan->save();
             }
-            return response()->noContent();
+            $loan->refresh();
+            return response($loan->owner_validated_at);
         }
 
         return response("No validation needed from this user.", 404);
@@ -435,6 +437,9 @@ class LoanController extends RestController
             "total_final_cost",
             "final_price",
             "final_purchases_amount",
+            "needs_validation",
+            "owner_validated_at",
+            "borrower_validated_at",
             "intention.id",
             "borrower.id",
             "borrower.user.avatar.*",

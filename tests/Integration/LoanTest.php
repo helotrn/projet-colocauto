@@ -1385,12 +1385,42 @@ class LoanTest extends TestCase
 
         $this->actAs($loan->loanable->owner->user);
         $response = $this->json("PUT", "api/v1/loans/$loan->id/validate");
-        $response->assertStatus(204);
+        $response->assertStatus(200);
         $loan->refresh();
         self::assertNotNull($loan->owner_validated_at);
+        self::assertEquals(
+            new Carbon($loan->owner_validated_at),
+            new Carbon($response->content())
+        );
     }
 
-    function testValidateLoan_doesntOverwriteInitialValidation()
+    function testValidateLoan_doesntOverwriteBorrowerInitialValidation()
+    {
+        $this->withoutEvents();
+
+        $twentyMinutesAgo = Carbon::now(0)
+            ->subMinutes(20)
+            ->milli(0);
+
+        $loan = self::createLoanInCommunity(
+            "withDefaultFreePricing",
+            "withCompletedHandover",
+            [
+                "borrower_validated_at" => $twentyMinutesAgo,
+            ]
+        );
+
+        $this->actAs($loan->borrower->user);
+        $response = $this->json("PUT", "api/v1/loans/$loan->id/validate");
+        $response->assertStatus(200);
+        $loan->refresh();
+        self::assertEquals(
+            $twentyMinutesAgo,
+            new Carbon($loan->borrower_validated_at)
+        );
+        self::assertEquals($twentyMinutesAgo, new Carbon($response->content()));
+    }
+    function testValidateLoan_doesntOverwriteOwnerInitialValidation()
     {
         $this->withoutEvents();
 
@@ -1408,12 +1438,13 @@ class LoanTest extends TestCase
 
         $this->actAs($loan->loanable->owner->user);
         $response = $this->json("PUT", "api/v1/loans/$loan->id/validate");
-        $response->assertStatus(204);
+        $response->assertStatus(200);
         $loan->refresh();
         self::assertEquals(
             $twentyMinutesAgo,
             new Carbon($loan->owner_validated_at)
         );
+        self::assertEquals($twentyMinutesAgo, new Carbon($response->content()));
     }
 
     function testValidateLoan_succeedsForBorrower()
@@ -1426,9 +1457,13 @@ class LoanTest extends TestCase
 
         $this->actAs($loan->borrower->user);
         $response = $this->json("PUT", "api/v1/loans/$loan->id/validate");
-        $response->assertStatus(204);
+        $response->assertStatus(200);
         $loan->refresh();
         self::assertNotNull($loan->borrower_validated_at);
+        self::assertEquals(
+            new Carbon($loan->borrower_validated_at),
+            new Carbon($response->content())
+        );
     }
 
     function testContestHandover_resetsValidation()

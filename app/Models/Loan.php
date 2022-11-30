@@ -369,6 +369,7 @@ SQL;
         "total_final_cost",
         "total_estimated_cost",
         "is_free",
+        "needs_validation",
     ];
 
     public $items = [
@@ -874,37 +875,74 @@ SQL;
         return $returnAt;
     }
 
-    public function hasBorrowerValidated()
+    public function hasBorrowerValidated(): bool
     {
         return !!$this->borrower_validated_at;
     }
 
-    public function hasOwnerValidated()
+    public function borrowerIsOwner(): bool
+    {
+        return $this->loanable->owner &&
+            $this->borrower->user->is($this->loanable->owner->user);
+    }
+
+    public function hasOwnerValidated(): bool
     {
         return !!$this->owner_validated_at;
     }
 
-    public function isFullyValidated()
+    public function isFullyValidated(): bool
     {
         return $this->hasBorrowerValidated() && $this->hasOwnerValidated();
     }
 
-    public function canBePaid(): bool
+    public function borrowerCanPay(): bool
     {
-        $twoDaysAgo = (new CarbonImmutable())->subDays(2);
+        return floatval($this->borrower->user->balance) >=
+            $this->total_actual_cost;
+    }
 
-        return // The loan is in the correct state
-            $this->payment &&
-                $this->payment->status === "in_process" &&
-                $this->handover &&
-                !$this->handover->isContested() &&
-                $this->takeover &&
-                !$this->takeover->isContested() &&
-                // it can be paid by the borrower
-                floatval($this->borrower->user->balance) >=
-                    $this->total_actual_cost &&
-                // and it's either validated or two days after the planned return time.
-                (Carbon::parse($this->actual_return_at) <= $twoDaysAgo ||
-                    $this->isFullyValidated());
+    public function getNeedsValidationAttribute(): bool
+    {
+        return $this->loanable->type === "car" &&
+            !$this->is_free &&
+            !$this->loanable->is_self_service &&
+            $this->validationLimit()->isAfter(Carbon::now()) &&
+            !$this->borrowerIsOwner();
+    }
+
+    public function validationLimit(): Carbon
+    {
+        return Carbon::parse($this->actual_return_at)->addHours(48);
+    }
+
+    /**
+     *  TODO(#1113) Move this logic to policy
+     * @param User|null $user
+     * @return bool
+     */
+    public function canBePaid(User $user = null): bool
+    {
+        if (!$this->payment || $this->payment->status !== "in_process") {
+            return false;
+        }
+
+        if (!$this->takeover || !$this->takeover->isCompleted()) {
+            return false;
+        }
+
+        if (!$this->handover || !$this->handover->isCompleted()) {
+            return false;
+        }
+
+        if (!$this->borrowerCanPay()) {
+            return false;
+        }
+
+        if ($user && $user->isAdmin()) {
+            return true;
+        }
+
+        return !$this->needs_validation || $this->isFullyValidated();
     }
 }

@@ -153,6 +153,16 @@ export default {
             variant: "success",
           };
         }
+        if (
+          this.item.needs_validation &&
+          (!this.item.borrower_validated_at || !this.item.owner_validated_at)
+        ) {
+          return {
+            status: "waiting_for_validation",
+            variant: "warning",
+          };
+        }
+
         return {
           status: "waiting_for_payment",
           variant: "warning",
