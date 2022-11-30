@@ -2,11 +2,10 @@
 
 namespace App\Models;
 
-use App\Rules\Polygon;
 use App\Casts\PointCast;
 use App\Casts\PolygonCast;
+use App\Rules\Polygon;
 use App\Transformers\CommunityTransformer;
-use Auth;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Validation\Rule;
@@ -53,7 +52,6 @@ class Community extends BaseModel
                         }),
                     ],
                 ]);
-                break;
             default:
                 return array_merge(static::$rules, [
                     "area" => ["nullable", new Polygon()],
@@ -116,15 +114,13 @@ SQL;
 
                 $query->selectRaw("parent.name AS parent_name");
 
-                $query = static::addJoin(
+                return static::addJoin(
                     $query,
                     "communities AS parent",
                     "parent.id",
                     "=",
                     "communities.parent_id"
                 );
-
-                return $query;
             },
         ];
     }
@@ -173,13 +169,11 @@ SQL;
 
     public function admins()
     {
-        $allAdmins = [];
         $globalAdmins = User::whereRole("admin")->get();
         $localAdmins = $this->users()
             ->where("community_user.role", "admin")
             ->get();
-        $allAdmins = $globalAdmins->merge($localAdmins);
-        return $allAdmins;
+        return $globalAdmins->merge($localAdmins);
     }
 
     public function loanables()
@@ -205,13 +199,6 @@ SQL;
                 "suspended_at",
                 "updated_at",
             ]);
-
-        $user = Auth::user();
-        if ($user && $user->isAdmin()) {
-            return $relation;
-        }
-
-        return $relation->whereSuspendedAt(null);
     }
 
     public function getPricingFor(Loanable $loanable)
@@ -272,6 +259,15 @@ SQL;
         });
     }
 
+    public function scopeWithApprovedUser(Builder $query, $user)
+    {
+        $query->whereHas("users", function ($q) use ($user) {
+            $q->where("community_user.user_id", $user->id)
+                ->whereNotNull("community_user.approved_at")
+                ->whereNull("community_user.suspended_at");
+        });
+    }
+
     public function scopeSearch(Builder $query, $q)
     {
         if (!$q) {
@@ -297,12 +293,7 @@ SQL;
 
         switch ($for) {
             case "loan":
-                return $query->whereHas("users", function ($q) use ($user) {
-                    return $q
-                        ->where("community_user.user_id", $user->id)
-                        ->whereNotNull("community_user.approved_at")
-                        ->whereNull("community_user.suspended_at");
-                });
+                return $query->withApprovedUser($user);
             case "edit":
                 return $query
                     ->whereHas("users", function ($q) use ($user) {

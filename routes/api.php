@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\LoanableController;
 use Molotov\Utils\RouteHelper;
 
 Route::prefix("v1")->group(function () {
@@ -175,6 +176,17 @@ Route::prefix("v1")->group(function () {
         )
             ->where("loanable_id", "[0-9]+")
             ->where("loan_id", "[0-9]+");
+
+        Route::put("/loanables/{loanable_id}/coowners", [
+            LoanableController::class,
+            "addCoowner",
+        ])->where("loanable_id", "[0-9]+");
+
+        Route::delete("/loanables/{loanable_id}/coowners", [
+            LoanableController::class,
+            "removeCoowner",
+        ])->where("loanable_id", "[0-9]+");
+
         RouteHelper::subresource("loanable", "loan", null, [
             "create",
             "update",

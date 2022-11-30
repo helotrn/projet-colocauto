@@ -2,9 +2,6 @@
 
 namespace App\Models;
 
-use App\Models\Loanable;
-use Illuminate\Database\Eloquent\Builder;
-
 class Trailer extends Loanable
 {
     public static function getColumnsDefinition()
@@ -46,5 +43,10 @@ class Trailer extends Loanable
     public function loans()
     {
         return $this->hasMany(Loan::class, "loanable_id");
+    }
+
+    public function coowners()
+    {
+        return $this->hasMany(Coowner::class, "loanable_id");
     }
 }
