@@ -90,7 +90,7 @@ class PaymentController extends RestController
             ]);
         }
 
-        if (!$loan->canBePaid()) {
+        if (!$loan->canBePaid($request->user())) {
             return $this->respondWithErrors([
                 "status" => [
                     __("validation.custom.status.payment_cant_be_paid"),

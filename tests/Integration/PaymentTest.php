@@ -83,14 +83,15 @@ class PaymentTest extends ActionTestCase
         $pricing->rule = "5";
         $pricing->save();
 
+        $this->actAs($loan->loanable->owner->user);
         $response = $this->json(
             "PUT",
             "/api/v1/loans/$loan->id/actions/{$loan->payment->id}/complete",
             [
                 "type" => "payment",
+                "loan_id" => $loan->id,
             ]
         );
-
         $response->assertStatus(422)->assertJson([
             "errors" => [
                 "status" => ["Le paiement ne peut être complété présentement."],

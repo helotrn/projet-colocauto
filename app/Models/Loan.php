@@ -916,15 +916,33 @@ SQL;
         return Carbon::parse($this->actual_return_at)->addHours(48);
     }
 
-    public function canBePaid(): bool
+    /**
+     *  TODO(#1113) Move this logic to policy
+     * @param User|null $user
+     * @return bool
+     */
+    public function canBePaid(User $user = null): bool
     {
-        return $this->payment &&
-            $this->payment->status === "in_process" &&
-            $this->handover &&
-            $this->handover->isCompleted() &&
-            $this->takeover &&
-            $this->takeover->isCompleted() &&
-            $this->borrowerCanPay() &&
-            (!$this->needs_validation || $this->isFullyValidated());
+        if (!$this->payment || $this->payment->status !== "in_process") {
+            return false;
+        }
+
+        if (!$this->takeover || !$this->takeover->isCompleted()) {
+            return false;
+        }
+
+        if (!$this->handover || !$this->handover->isCompleted()) {
+            return false;
+        }
+
+        if (!$this->borrowerCanPay()) {
+            return false;
+        }
+
+        if ($user && $user->isAdmin()) {
+            return true;
+        }
+
+        return !$this->needs_validation || $this->isFullyValidated();
     }
 }
