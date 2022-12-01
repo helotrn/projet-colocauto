@@ -41,6 +41,20 @@ spec:
             name: api
             port:
               number: 80
+      - path: /storage
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: api
+            port:
+              number: 80
+      - path: /auth/google
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: api
+            port:
+              number: 80
 ---
 apiVersion: apps/v1
 kind: Deployment
