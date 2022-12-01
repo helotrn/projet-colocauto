@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Invitation;
 use App\Repositories\InvitationRepository;
 use App\Http\Requests\Invitation\CreateRequest;
+use App\Events\InvitationCreatedEvent;
 
 use App\Http\Requests\BaseRequest as Request;
 
@@ -49,6 +50,8 @@ class InvitationController extends RestController
         } catch (ValidationException $e) {
             return $this->respondWithErrors($e->errors(), $e->getMessage());
         }
+
+        event(new InvitationCreatedEvent($item));
 
         return $this->respondWithItem($request, $item, 201);
     }
