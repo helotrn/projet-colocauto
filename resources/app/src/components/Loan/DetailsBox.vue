@@ -252,13 +252,6 @@
           <dt>{{ $t("loanable.fields.position") | capitalize }}</dt>
           <dd>
             <div class="mb-2">{{ loanable.location_description }}</div>
-            <forms-map-input
-              v-if="loanable.position"
-              :value="loanable.position"
-              disabled
-              bounded
-              allow-fullscreen
-            />
           </dd>
         </dl>
       </b-card-text>
@@ -267,7 +260,6 @@
 </template>
 
 <script>
-import FormsMapInput from "@/components/Forms/MapInput.vue";
 import { durationInHours } from "@/helpers/filters";
 
 import locales from "@/locales";
@@ -275,7 +267,6 @@ import UserMixin from "@/mixins/UserMixin";
 
 export default {
   name: "LoanDetailsBox",
-  components: { FormsMapInput },
   mixins: [UserMixin],
   props: {
     loan: {

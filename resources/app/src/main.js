@@ -46,14 +46,17 @@ Vue.use(VueTheMask);
 Vue.use(VueScrollTo);
 Vue.use(BootstrapVue);
 Vue.use(BootstrapVueIcons);
-Vue.use(VueGoogleMaps, {
-  load: {
-    key: process.env.VUE_APP_GOOGLE_MAPS_API_KEY,
-    region: "CA",
-    libraries: "drawing,places",
-    installComponents: true,
-  },
-});
+
+if (process.env.VUE_APP_GOOGLE_MAPS_API_KEY) {
+  Vue.use(VueGoogleMaps, {
+    load: {
+      key: process.env.VUE_APP_GOOGLE_MAPS_API_KEY,
+      region: "CA",
+      libraries: "drawing,places",
+      installComponents: true,
+    },
+  });
+}
 
 // Google Analytics configuration
 if (process.env.VUE_APP_GA_MEASUREMENT_ID) {

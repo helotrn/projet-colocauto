@@ -3,7 +3,6 @@ import VueRouter from "vue-router";
 
 import Loan from "@/views/Loan.vue";
 import NotFound from "@/views/NotFound.vue";
-import CommunityOverview from "@/views/community/Overview.vue";
 
 import adminRoutes from "@/router/admin";
 import authRoutes from "@/router/auth";

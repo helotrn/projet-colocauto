@@ -1,6 +1,5 @@
 import Community from "@/views/Community.vue";
 import CommunityDashboard from "@/views/community/Dashboard.vue";
-import CommunityOverview from "@/views/community/Overview.vue";
 
 export default [
   {
@@ -50,22 +49,5 @@ export default [
         },
       },
     ],
-  },
-  {
-    path: "/communities",
-    name: "communities-overview",
-    component: CommunityOverview,
-    meta: {
-      slug: "communities",
-      skipCleanup: true,
-      data: {
-        stats: {
-          retrieve: {
-            type: "neighborhood",
-          },
-        },
-      },
-      title: "titles.communities-overview",
-    },
   },
 ];

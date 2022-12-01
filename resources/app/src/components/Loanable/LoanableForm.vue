@@ -54,20 +54,6 @@
           </b-row>
 
           <b-row>
-            <b-col lg="8">
-              <forms-validated-input
-                name="position"
-                :description="form.general.position.description"
-                :rules="form.general.position.rules"
-                :center="center"
-                :label="$t('fields.position') | capitalize"
-                type="point"
-                :placeholder="placeholderOrLabel('position') | capitalize"
-                :polygons="loanablePolygons"
-                v-model="loanable.position"
-              />
-            </b-col>
-
             <b-col>
               <forms-validated-input
                 name="location_description"

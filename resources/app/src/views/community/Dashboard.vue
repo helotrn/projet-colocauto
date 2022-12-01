@@ -102,8 +102,6 @@
 
         <b-row v-if="borough && neighborhoods" class="page__section">
           <b-col class="community__map">
-            <schematized-community-map :borough="borough" :neighborhoods="neighborhoods" />
-
             <div class="community__map__total">
               {{ approvedUsersCount }}<br />
               voisines et voisins participent à LocoMotion dans votre quartier!
@@ -117,7 +115,6 @@
 
 <script>
 import BoroughDifferenceModal from "@/components/Misc/BoroughDifferenceModal.vue";
-import SchematizedCommunityMap from "@/components/Misc/SchematizedCommunityMap.vue";
 import UserCard from "@/components/User/UserCard.vue";
 
 import Arrow from "@/assets/svg/arrow.svg";
@@ -131,7 +128,6 @@ export default {
   mixins: [Authenticated, DataRouteGuards, UserMixin],
   components: {
     BoroughDifferenceModal,
-    SchematizedCommunityMap,
     "svg-arrow": Arrow,
     UserCard,
   },

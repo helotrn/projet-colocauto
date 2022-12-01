@@ -157,9 +157,6 @@
               </p>
 
               <div>
-                <b-button size="lg" variant="outline-light" to="/communities">
-                  LocoMotion sur la carte
-                </b-button>
               </div>
             </div>
           </b-col>

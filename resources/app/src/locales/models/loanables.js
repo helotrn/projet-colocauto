@@ -27,8 +27,7 @@ export default {
       instructions:
         "Quoi à savoir sur l'utilisation de ce véhicule? (accessible à l'emprunteur seulement)",
       location_description:
-        "Généralement, votre véhicule se trouve où? Cliquez sur la carte " +
-        "pour définir sa position.",
+        "Généralement, votre véhicule se trouve où ?",
       name:
         "Merci de nommer votre véhicule pour en informer votre voisinage. Le nom n'a pas " +
         "besoin d'être compliqué. Allez-y au plus simple... ou au plus drôle!",

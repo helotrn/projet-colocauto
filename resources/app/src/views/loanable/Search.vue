@@ -42,20 +42,6 @@
                     >Modifier votre recherche</a
                   >
                 </b-col>
-                <b-col sm="6">
-                  <b-button v-if="view === 'map'" pill @click="gotoView('list')" class="ml-sm-auto">
-                    <div class="community-view__button-spacing">
-                      <div>Afficher la liste</div>
-                      <div><svg-list /></div>
-                    </div>
-                  </b-button>
-                  <b-button v-else pill @click="gotoView('map')" class="ml-sm-auto">
-                    <div class="community-view__button-spacing">
-                      <div>Afficher la carte</div>
-                      <div><svg-map /></div>
-                    </div>
-                  </b-button>
-                </b-col>
               </b-row>
             </div>
           </b-card>
@@ -63,34 +49,11 @@
 
           <!-- Large Screens -->
           <div class="d-none d-lg-block">
-            <!-- button to view list -->
-            <div v-if="view === 'map'" class="community-view__button-container">
-              <b-button pill @click="gotoView('list')">
-                <div class="community-view__button-spacing">
-                  <div>Afficher la liste</div>
-                  <div><svg-list /></div>
-                </div>
-              </b-button>
-            </div>
-            <!---->
-
-            <div v-else-if="view === 'list'" class="d-none d-lg-block">
               <div class="my-4">
                 <!-- results header -->
                 <h3>Résultats</h3>
                 <!---->
-                <!-- button to view map  -->
-                <div class="community-view__button-container">
-                  <b-button pill @click="gotoView('map')">
-                    <div class="community-view__button-spacing">
-                      <div>Afficher la carte</div>
-                      <div><svg-map /></div>
-                    </div>
-                  </b-button>
-                </div>
-                <!---->
               </div>
-            </div>
           </div>
           <!-- -->
 
@@ -106,15 +69,6 @@
         </b-col>
       </b-row>
     </div>
-    <!-- map display -->
-    <b-row v-if="view === 'map'">
-      <loanable-map
-        :data="loanables"
-        :communities="user.communities"
-        @test="searchLoanables"
-        @select="selectLoanable"
-      />
-    </b-row>
     <!---->
   </layout-page>
 </template>
@@ -124,11 +78,9 @@ import DataRouteGuards from "@/mixins/DataRouteGuards";
 import UserMixin from "@/mixins/UserMixin";
 
 import LoanableList from "@/components/Loanable/List.vue";
-import LoanableMap from "@/components/Loanable/Map.vue";
 import LoanSearchForm from "@/components/Loan/SearchForm.vue";
 
 import ListIcon from "@/assets/svg/list.svg";
-import MapIcon from "@/assets/svg/map.svg";
 
 import { buildComputed } from "@/helpers";
 
@@ -137,10 +89,8 @@ export default {
   mixins: [Authenticated, DataRouteGuards, UserMixin],
   components: {
     LoanableList,
-    LoanableMap,
     LoanSearchForm,
     "svg-list": ListIcon,
-    "svg-map": MapIcon,
   },
   props: {
     view: {
