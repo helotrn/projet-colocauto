@@ -58,47 +58,6 @@ export default [
         },
       },
       {
-        path: "communities",
-        component: ProfileCommunities,
-        meta: {
-          auth: true,
-          title: "titles.communities",
-          slug: "users",
-          params: {
-            fields: "id,communities.id,communities.name,communities.requirements,communities.proof",
-          },
-        },
-      },
-      {
-        path: "invoices",
-        component: ProfileInvoices,
-        meta: {
-          auth: true,
-          title: "titles.invoices",
-          slug: "invoices",
-          data: {
-            invoices: {
-              retrieve: {
-                fields: "*",
-              },
-            },
-          },
-        },
-      },
-      {
-        path: "invoices/:id",
-        component: ProfileInvoice,
-        props: true,
-        meta: {
-          auth: true,
-          title: "titles.invoice",
-          slug: "invoices",
-          params: {
-            fields: "*,bill_items.*,user.*",
-          },
-        },
-      },
-      {
         path: "loanables",
         component: ProfileLoanables,
         meta: {
@@ -189,36 +148,6 @@ export default [
           params: {
             fields: "*,avatar.*",
           },
-        },
-      },
-      {
-        path: "payment_methods",
-        component: ProfilePaymentMethods,
-        meta: {
-          auth: true,
-          creatable: true,
-          title: "titles.payment_methods",
-          slug: "paymentMethods",
-          data: {
-            paymentMethods: {
-              retrieve: {
-                fields: "*",
-              },
-            },
-          },
-        },
-      },
-      {
-        path: "payment_methods/:id",
-        component: ProfilePaymentMethod,
-        props: true,
-        meta: {
-          auth: true,
-          slug: "paymentMethods",
-          params: {
-            fields: "*",
-          },
-          title: "titles.payment_method",
         },
       },
     ],

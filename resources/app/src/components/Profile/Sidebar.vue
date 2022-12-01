@@ -7,9 +7,6 @@
       <b-nav-item to="/profile/account">
         {{ $t("profile.titles.account") }}
       </b-nav-item>
-      <b-nav-item to="/profile/communities">
-        {{ $t("profile.titles.residency_proof") }}
-      </b-nav-item>
       <b-nav-item to="/profile/borrower">
         {{ $t("profile.titles.borrower") }}
       </b-nav-item>
@@ -18,12 +15,6 @@
       </b-nav-item>
       <b-nav-item to="/profile/loanables">
         {{ $t("profile.titles.loanables") }}
-      </b-nav-item>
-      <b-nav-item to="/profile/payment_methods" :disabled="!hasCompletedRegistration">
-        {{ $t("profile.titles.payment_methods") }}
-      </b-nav-item>
-      <b-nav-item to="/profile/invoices" :disabled="!hasCompletedRegistration">
-        {{ $t("profile.titles.invoices") }}
       </b-nav-item>
     </ul>
 
