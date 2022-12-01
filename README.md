@@ -110,19 +110,19 @@ Nous avons deux manières d'envoyer des courriels:
 
 ## Kubernetes
 
-Les fichiers de configuration permettant de d'héberger l'application dans un cluster kubernetes sont dans le répertoire du même nom.
+Les fichiers de configuration permettant d'héberger l'application dans un cluster kubernetes sont dans le répertoire du même nom.
 
 ### Création de l'application
 
 Commencer par remplir les fichiers `secret.yaml` et `configmap.yaml` (les infos "passport" seront remplies par la suite), puis par les créer.
-> `kubectl apply -f kubernetes/configmap.yaml`
-> `kubectl apply -f kubernetes/secret.yaml`
+> `kubectl apply -f kubernetes/configmap.yaml`  
+> `kubectl apply -f kubernetes/secret.yaml`  
 
 Installer ensuite les différents éléments:
-> `kubectl apply -f kubernetes/database.yaml`
-> `kubectl apply -f kubernetes/storage.yaml`
-> `kubectl apply -f kubernetes/api.yaml`
-> `kubectl apply -f kubernetes/app.yaml`
+> `kubectl apply -f kubernetes/database.yaml`  
+> `kubectl apply -f kubernetes/storage.yaml`  
+> `kubectl apply -f kubernetes/api.yaml`  
+> `kubectl apply -f kubernetes/app.yaml`  
 
 TODO: créer un conteneur createbuckets qui se lance une fois au démarrage pour initialiser le stockage
 
@@ -136,9 +136,11 @@ helm repo update
 helm -n ingress-nginx install ingress-nginx ingress-nginx/ingress-nginx --create-namespace
 ```
 On obtient alors une adresse IP publique vers laquelle il faut faire pointer le domaine
-> `kubectl get ingress`
-> NAME          CLASS   HOSTS               ADDRESS         PORTS     AGE
-> ingress-app   nginx   dev.colocauto.org   57.128.40.124   80
+> `kubectl get ingress`  
+```
+NAME          CLASS   HOSTS               ADDRESS         PORTS     AGE  
+ingress-app   nginx   dev.colocauto.org   57.128.40.124   80  
+```
 
 
 ### certificat SSL
@@ -146,8 +148,8 @@ On obtient alors une adresse IP publique vers laquelle il faut faire pointer le 
 Pour faire fonctionner l'application en HTTPS, on installe cert-manager qui va utiliser Let's Encryppt pour créer et renouveller automatiquement un certificat SSL pour notre domaine.
 
 Installer le certificat
-> `kubectl apply -f https://github.com/jetstack/cert-manager/releases/download/v1.10.1/cert-manager.yaml`
-> `kubectl apply -f kubernetes/certificate.yaml`
+> `kubectl apply -f https://github.com/jetstack/cert-manager/releases/download/v1.10.1/cert-manager.yaml`  
+> `kubectl apply -f kubernetes/certificate.yaml`  
 
 Attendre quelques minutes que le certificat soit créé. Pour suivre le processus :
 
