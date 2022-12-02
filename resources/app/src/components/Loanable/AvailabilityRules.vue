@@ -1,6 +1,6 @@
 <template>
-  <div class="availability-calendar">
-    <b-row class="availability-calendar__header">
+  <div class="availability-rules">
+    <b-row class="availability-rules__header">
       <b-col>
         <h2>Disponibilités</h2>
       </b-col>
@@ -14,8 +14,8 @@
       </b-col>
     </b-row>
 
-    <b-row class="availability-calendar__calendars">
-      <div v-if="changed" class="availability-calendar__calendars--changed">
+    <b-row class="availability-rules__calendars">
+      <div v-if="changed" class="availability-rules__calendars--changed">
         <div>Sauvegardez pour mettre à jour l'aperçu des disponibilités.</div>
       </div>
 
@@ -73,28 +73,28 @@
       </b-col>
     </b-row>
 
-    <b-row class="availability-calendar__legend">
+    <b-row class="availability-rules__legend">
       <b-col>
         <ul>
           <li>
-            <span class="availability-calendar__legend__available" />
+            <span class="availability-rules__legend__available" />
             Disponible
           </li>
           <li>
-            <span class="availability-calendar__legend__limited" />
+            <span class="availability-rules__legend__limited" />
             Disponibilité limitée
           </li>
           <li>
-            <span class="availability-calendar__legend__unavailable" />
+            <span class="availability-rules__legend__unavailable" />
             Indisponible
           </li>
         </ul>
       </b-col>
     </b-row>
 
-    <b-row class="availability-calendar__description">
+    <b-row class="availability-rules__description">
       <b-col>
-        <div class="form-inline availability-calendar__description__default">
+        <div class="form-inline availability-rules__description__default">
           <b-form-group label="Par défaut:" label-for="availability_mode" inline>
             <b-select
               v-model="loanable.availability_mode"
@@ -136,7 +136,7 @@ import "vue-cal/dist/i18n/fr";
 import LoanableExceptions from "@/components/Loanable/Exceptions.vue";
 
 export default {
-  name: "LoanableAvailabilityCalendar",
+  name: "LoanableAvailabilityRules",
   components: { LoanableExceptions, VueCal },
   props: {
     changed: {
@@ -262,7 +262,7 @@ export default {
 </script>
 
 <style lang="scss">
-.availability-calendar {
+.availability-rules {
   .vdp-datepicker__calendar .cell.selected {
     background-color: transparent !important;
   }

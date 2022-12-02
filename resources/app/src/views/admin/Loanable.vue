@@ -64,11 +64,7 @@
             </div>
 
             <div class="form__section" v-if="item.type && item.id">
-              <loanable-availability-calendar
-                :changed="changed"
-                :loanable="item"
-                :loading="loading"
-              />
+              <loanable-availability-rules :changed="changed" :loanable="item" :loading="loading" />
             </div>
 
             <div class="form__buttons">
@@ -93,7 +89,7 @@
 import FormsValidatedInput from "@/components/Forms/ValidatedInput.vue";
 import FormsBuilder from "@/components/Forms/Builder.vue";
 import FormsRelationInput from "@/components/Forms/RelationInput.vue";
-import LoanableAvailabilityCalendar from "@/components/Loanable/AvailabilityCalendar.vue";
+import LoanableAvailabilityRules from "@/components/Loanable/AvailabilityRules.vue";
 
 import DataRouteGuards from "@/mixins/DataRouteGuards";
 import FormMixin from "@/mixins/FormMixin";
@@ -109,7 +105,7 @@ export default {
     FormsBuilder,
     FormsRelationInput,
     FormsValidatedInput,
-    LoanableAvailabilityCalendar,
+    LoanableAvailabilityRules,
   },
   data() {
     return {

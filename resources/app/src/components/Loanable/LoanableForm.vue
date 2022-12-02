@@ -165,7 +165,7 @@
 
         <div class="form__section" v-if="loanable.type && loanable.id">
           <a id="availability" />
-          <loanable-availability-calendar
+          <loanable-availability-rules
             :changed="changed"
             :loanable="loanable"
             :loading="loading"
@@ -193,7 +193,7 @@
 <script>
 import FormsBuilder from "@/components/Forms/Builder.vue";
 import FormsValidatedInput from "@/components/Forms/ValidatedInput.vue";
-import LoanableAvailabilityCalendar from "@/components/Loanable/AvailabilityCalendar.vue";
+import LoanableAvailabilityRules from "@/components/Loanable/AvailabilityRules.vue";
 import FormsImageUploader from "@/components/Forms/ImageUploader.vue";
 
 import FormLabelsMixin from "@/mixins/FormLabelsMixin";
@@ -208,7 +208,7 @@ export default {
     FormsBuilder,
     FormsImageUploader,
     FormsValidatedInput,
-    LoanableAvailabilityCalendar,
+    LoanableAvailabilityRules,
   },
   props: {
     center: {
@@ -357,5 +357,3 @@ export default {
   },
 };
 </script>
-
-<style lang="scss"></style>
