@@ -104,10 +104,18 @@ export default {
 
 <style lang="scss">
 .loanable-calendar {
-  &.loanable-calendar--small {
+  &.vuecal--xsmall {
     font-size: 13px;
-    .vuecal__title-bar {
+    .vuecal__title-bar,
+    .vuecal__weekdays-headings {
+      background-color: transparent;
+      // Needs to be repeated for title-bar to overload .vuecal--xsmall .vuecal__title-bar
       font-size: 13px;
+    }
+    .vuecal__heading {
+      height: inherit;
+      min-height: 2em;
+      line-height: 1.3;
     }
   }
 
