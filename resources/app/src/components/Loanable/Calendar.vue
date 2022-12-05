@@ -32,6 +32,12 @@
         <span v-else>{{ minutes }}</span>
       </div>
     </template>
+
+    <template #cell-content="{ cell, view, events }">
+      <span class="vuecal__cell-date">
+        {{ cell.content }}
+      </span>
+    </template>
   </vue-cal>
 </template>
 
