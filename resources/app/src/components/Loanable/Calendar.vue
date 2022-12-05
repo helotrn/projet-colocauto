@@ -12,10 +12,12 @@
     @ready="$emit('ready', $event)"
     @view-change="$emit('view-change', $event)"
   >
-    <template #cell-content="{ cell, view, events }">
-      <span class="vuecal__cell-date">
-        {{ cell.content }}
-      </span>
+    <template v-slot:title="{ title, view }">
+      <span v-if="view.id === 'years'">Years</span>
+      <span v-else-if="view.id === 'year'">{{ view.startDate.format("YYYY") }}</span>
+      <span v-else-if="view.id === 'month'">{{ view.startDate.format("MMMM YYYY") }}</span>
+      <span v-else-if="view.id === 'week'">{{ view.startDate.format("MMMM YYYY") }}</span>
+      <span v-else-if="view.id === 'day'">{{ view.startDate.format("dddd D MMMM (YYYY)") }}</span>
     </template>
 
     <template v-slot:time-cell="{ hours, minutes }">
