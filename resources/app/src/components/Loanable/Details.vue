@@ -32,7 +32,7 @@
     </header>
     <main class="loanable-details__content">
       <div>
-        <b-tabs nav-wrapper-class="sticky-top bg-white">
+        <b-tabs nav-wrapper-class="sticky-top bg-white" fill>
           <b-tab class="mt-3" title="Véhicule">
             <dl>
               <dt>Nom du véhicule</dt>
@@ -81,7 +81,16 @@
               </template>
             </dl>
           </b-tab>
-          <b-tab class="mt-3" title="Estimation">
+          <b-tab title="Disponibilité">
+            <loanable-calendar
+              defaultView="week"
+              :events="availability"
+              variant="small"
+              @ready="getAvailability"
+              @view-change="getAvailability"
+            ></loanable-calendar>
+          </b-tab>
+          <b-tab class="mt-3" title="Tarifs">
             <div class="loanable-details__estimated-fare" v-if="loanable.estimatedCost">
               <table class="trip-details">
                 <tr>
@@ -142,10 +151,13 @@
 </template>
 
 <script>
+import Vue from "vue";
+
 import Bike from "@/assets/svg/bike.svg";
 import Car from "@/assets/svg/car.svg";
 import Trailer from "@/assets/svg/trailer.svg";
 
+import LoanableCalendar from "@/components/Loanable/Calendar.vue";
 import UserAvatar from "@/components/User/Avatar.vue";
 
 import locales from "@/locales";
@@ -156,6 +168,7 @@ export default {
     "svg-bike": Bike,
     "svg-car": Car,
     "svg-trailer": Trailer,
+    LoanableCalendar,
     UserAvatar,
   },
   props: {
@@ -164,6 +177,11 @@ export default {
       required: false,
       default: null,
     },
+  },
+  data() {
+    return {
+      availability: [],
+    };
   },
   computed: {
     loading() {
@@ -183,6 +201,41 @@ export default {
       return this?.loanable?.owner?.user;
     },
   },
+  methods: {
+    getAvailability({ view, startDate, endDate, week }) {
+      const { CancelToken } = Vue.axios;
+      const cancelToken = CancelToken.source();
+
+      // Must convert [, ] interval to [, ) by adding one second to the end time.
+      let start = this.$dayjs(startDate);
+      let end = this.$dayjs(endDate).add(1, "s");
+
+      try {
+        Vue.axios
+          .get(`/loanables/${this.loanable.id}/availability`, {
+            params: {
+              start: start.format("YYYY-MM-DD HH:mm:ss"),
+              end: end.format("YYYY-MM-DD HH:mm:ss"),
+              responseMode: "unavailable",
+            },
+            cancelToken: cancelToken.token,
+          })
+
+          .then((response) => {
+            this.availability = response.data.map((e) => {
+              e.type = "availability";
+              // Move available property to event data.
+              e.data = { available: e.available };
+              delete e.available;
+
+              return e;
+            });
+          });
+      } catch (e) {
+        throw e;
+      }
+    },
+  },
   i18n: {
     messages: {
       en: {
@@ -200,6 +253,9 @@ export default {
 .loanable-details {
   // Fixed width for the moment. We'll deal with resizing later.
   width: 16rem;
+  max-height: 28rem;
+  position: relative;
+  overflow-y: auto;
 
   .badge {
     padding: 0.5rem;
@@ -215,7 +271,6 @@ export default {
     // At the moment, thumbnails are 256px x 160px -> 16rem x 10rem.
     height: 10rem;
     width: 100%;
-    overflow-y: hidden;
   }
   &__avatar {
     position: absolute;
@@ -223,11 +278,17 @@ export default {
     right: 1rem;
   }
   &__content {
-    max-height: 12rem;
-    overflow-y: auto;
     padding: 0;
+    padding-bottom: 4.25rem;
   }
   &__footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+
+    background-color: white;
+    z-index: 10;
+
     height: 3.5rem;
     padding: 0.5rem;
     // To get past the arrow that display over the button.
