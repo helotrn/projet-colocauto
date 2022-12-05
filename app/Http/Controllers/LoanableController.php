@@ -118,9 +118,7 @@ class LoanableController extends RestController
 
         $loans = Loan::accessibleBy($request->user())
             ->where("loanable_id", "=", $loanable->id)
-            // Departure before the end and return after the beginning of the period.
-            ->where("departure_at", "<", $dateRange[1])
-            ->where("actual_return_at", ">", $dateRange[0])
+            ->isPeriodUnavailable($dateRange[0], $dateRange[1])
             ->get();
 
         foreach ($loans as $loan) {

@@ -99,7 +99,12 @@ JSON
         ]);
 
         $loan = factory(Loan::class)
-            ->states("withInProcessHandover")
+            ->states([
+                "withCompletedIntention",
+                "withCompletedPrePayment",
+                "withCompletedTakeover",
+                "withInProcessHandover",
+            ])
             ->create([
                 "borrower_id" => $borrower->id,
                 "loanable_id" => $loanable->id,
@@ -263,7 +268,12 @@ JSON
 
         // Loan that overlaps availability rules.
         $loan = factory(Loan::class)
-            ->states("withInProcessHandover")
+            ->states([
+                "withCompletedIntention",
+                "withCompletedPrePayment",
+                "withCompletedTakeover",
+                "withInProcessHandover",
+            ])
             ->create([
                 "borrower_id" => $borrower->id,
                 "loanable_id" => $loanable->id,
@@ -429,7 +439,12 @@ JSON
         ]);
 
         $loan = factory(Loan::class)
-            ->states("withInProcessHandover")
+            ->states([
+                "withCompletedIntention",
+                "withCompletedPrePayment",
+                "withCompletedTakeover",
+                "withInProcessHandover",
+            ])
             ->create([
                 "borrower_id" => $borrower->id,
                 "loanable_id" => $loanable->id,
@@ -605,7 +620,12 @@ JSON
         ]);
 
         $loan = factory(Loan::class)
-            ->states("withInProcessHandover")
+            ->states([
+                "withCompletedIntention",
+                "withCompletedPrePayment",
+                "withCompletedTakeover",
+                "withInProcessHandover",
+            ])
             ->create([
                 "borrower_id" => $borrower->id,
                 "loanable_id" => $loanable->id,
