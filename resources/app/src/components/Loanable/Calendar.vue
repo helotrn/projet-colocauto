@@ -1,6 +1,7 @@
 <template>
   <vue-cal
     :class="classList"
+    :hide-view-selector="true"
     :disable-views="['years', 'year']"
     :defaultView="defaultView"
     :time-step="15"
