@@ -469,7 +469,7 @@ class LoanableController extends RestController
                 $departureAt,
                 $returnAt
             ) {
-                return $loans->intersect($departureAt, $returnAt);
+                return $loans->isPeriodUnavailable($departureAt, $returnAt);
             })
             ->get();
 

@@ -263,7 +263,7 @@ class Loanable extends BaseModel
             $query = $query->whereNotIn("loans.id", $ignoreLoanIds);
         }
 
-        $query->intersect($departureAt, $returnAt);
+        $query->isPeriodUnavailable($departureAt, $returnAt);
 
         return $query->get()->count() === 0;
     }

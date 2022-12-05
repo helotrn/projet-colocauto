@@ -567,8 +567,11 @@ SQL;
             $this->platform_tip;
     }
 
-    public function scopeIntersect(Builder $query, $departureAt, $returnAt)
-    {
+    public function scopeIsPeriodUnavailable(
+        Builder $query,
+        $departureAt,
+        $returnAt
+    ) {
         $query
             ->where("status", "!=", "canceled")
             ->whereHas("intention", function ($q) {
