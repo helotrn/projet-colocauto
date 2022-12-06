@@ -156,7 +156,7 @@
         :disabled="disabled"
         :class="`form-control ${getValidationClass(getValidationState(validationContext))}`"
         locale="fr"
-        :currency="{ suffix: ' $' }"
+        :currency="{ suffix: ' €' }"
         :value-range="{ min, max }"
         :allow-negative="false"
         v-bind:value="floatValue"

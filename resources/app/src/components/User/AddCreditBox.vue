@@ -28,7 +28,7 @@
             :disabled="disabled"
             class="form-control"
             :value-range="{ min: normalizedMinimumRequired }"
-            :currency="{ suffix: ' $' }"
+            :currency="{ suffix: ' €' }"
             :allow-negative="false"
             v-model="customAmount"
           />
