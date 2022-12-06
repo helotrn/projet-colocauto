@@ -43,6 +43,14 @@
           <template v-slot:cell(actions)="row">
             <admin-list-actions :columns="['edit']" :row="row" :slug="slug" />
           </template>
+          <template v-slot:cell(status)="row">
+            <div class="status-container" v-if="row.item.consumed_at">
+              <div v-b-tooltip.hover
+                :title="row.item.consumed_at | date">
+                <span class="loan-status-pill success">Utilisée</span>
+              </div>
+            </div>
+          </template>
         </b-table>
       </b-col>
     </b-row>
@@ -83,9 +91,10 @@ export default {
       ],
       table: [
         { key: "id", label: "ID", sortable: true, class: "text-right tabular-nums" },
-        { key: "email", label: "Nom", sortable: true },
+        { key: "email", label: "Email", sortable: true },
         { key: "community.name", label: "Communauté", sortable: true },
         { key: "token", label: "Code", sortable: false },
+        { key: "status", label: "Statut", sortable: false },
         { key: "actions", label: "Actions", tdClass: "table__cell__actions" },
       ],
     };
