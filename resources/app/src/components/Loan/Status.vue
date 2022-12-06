@@ -67,7 +67,8 @@ export default {
           variant: "warning",
         };
       }
-      if (this.item.pre_payment.status === "in_process") {
+      // skip pre_payment if it does not exist
+      if (this.item?.pre_payment?.status === "in_process") {
         return {
           status: "waiting_for_prepayment",
           variant: "warning",

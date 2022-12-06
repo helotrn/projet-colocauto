@@ -343,10 +343,8 @@ class LoanController extends RestController
 
         // Ensure intention is still in process to not complete the action every time we call this function.
         if ($intention->status == "in_process") {
-            if ($loan->loanable->is_self_service) {
-                // Autocomplete intention if loanable is self-service.
-                $intention->complete()->save();
-            }
+            // Autocomplete intention
+            $intention->complete()->save();
         }
 
         $loan->load("intention");
@@ -354,29 +352,7 @@ class LoanController extends RestController
             return $loan;
         }
 
-        // Ensure pre-payment exists if intention is completed.
-        $prePayment = $loan->prePayment;
-
-        if (!$prePayment) {
-            $prePayment = new PrePayment();
-            $loan->prePayment()->save($prePayment);
-        }
-
-        // Autocomplete pre-payment if balance is sufficient.
-        if ("in_process" == $prePayment->status) {
-            if ($loan->borrower) {
-                $borrowerUser = $loan->borrower->user;
-
-                if ($borrowerUser->balance >= $loan->total_estimated_cost) {
-                    $prePayment->complete()->save();
-                }
-            }
-        }
-
-        $loan->load("prePayment");
-        if (!$prePayment->isCompleted()) {
-            return $loan;
-        }
+        // Pre-payment step doen not exist anymore
 
         // Ensure takeover exists if pre-payment is completed.
         $takeover = $loan->takeover;
