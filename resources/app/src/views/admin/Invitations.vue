@@ -30,28 +30,19 @@
 
     <b-row>
       <b-col>
-        <b-table
-          striped
-          hover
+        <invitations-table-list
+          :visibleFields="[
+            'id',
+            'email',
+            'token',
+            'community.name',
+            'status',
+            'actions',
+          ]"
           :items="data"
           :busy="loading"
-          :fields="table"
-          no-sort-reset
-          :show-empty="true"
-          empty-text="Pas d'invitation"
         >
-          <template v-slot:cell(actions)="row">
-            <admin-list-actions :columns="['edit']" :row="row" :slug="slug" />
-          </template>
-          <template v-slot:cell(status)="row">
-            <div class="status-container" v-if="row.item.consumed_at">
-              <div v-b-tooltip.hover
-                :title="row.item.consumed_at | date">
-                <span class="loan-status-pill success">Utilisée</span>
-              </div>
-            </div>
-          </template>
-        </b-table>
+        </invitations-table-list>
       </b-col>
     </b-row>
 
@@ -69,6 +60,7 @@
 import AdminFilters from "@/components/Admin/Filters.vue";
 import AdminListActions from "@/components/Admin/ListActions.vue";
 import AdminPagination from "@/components/Admin/Pagination.vue";
+import InvitationsTableList from "@/components/Invitation/InvitationsTableList.vue";
 
 import DataRouteGuards from "@/mixins/DataRouteGuards";
 import ListMixin from "@/mixins/ListMixin";
@@ -81,20 +73,13 @@ export default {
     AdminFilters,
     AdminListActions,
     AdminPagination,
+    InvitationsTableList,
   },
   data() {
     return {
       selected: [],
       fields: [
         { key: "id", label: "ID", sortable: true, class: "text-right tabular-nums" },
-        { key: "actions", label: "Actions", tdClass: "table__cell__actions" },
-      ],
-      table: [
-        { key: "id", label: "ID", sortable: true, class: "text-right tabular-nums" },
-        { key: "email", label: "Email", sortable: true },
-        { key: "community.name", label: "Communauté", sortable: true },
-        { key: "token", label: "Code", sortable: false },
-        { key: "status", label: "Statut", sortable: false },
         { key: "actions", label: "Actions", tdClass: "table__cell__actions" },
       ],
     };

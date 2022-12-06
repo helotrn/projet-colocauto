@@ -144,10 +144,23 @@
                 <h2>Invitations</h2>
               </b-col>
             </b-row>
-            <b-row v-for="invitation in invitations" :key="invitation.id">
-              <b-col>invitation.id</b-col>
+            <b-row>
+              <b-col>
+                <invitations-table-list
+                  :visibleFields="[
+                    'id',
+                    'email',
+                    'token',
+                    'status',
+                    'actions',
+                  ]"
+                  :items="item.invitations"
+                  :busy="loading"
+                >
+                </invitations-table-list>
+              </b-col>
             </b-row>
-            <b-button variant="success" :disabled="loading" @click="createInvitation">
+            <b-button variant="success" :disabled="loading" :to="`/admin/invitations/new`">
               Créer
             </b-button>
           </div>
@@ -172,6 +185,7 @@
 <script>
 import CommunityUsersFilters from "@/components/Community/CommunityUsersFilters.vue";
 import CommunityUsersList from "@/components/Community/CommunityUsersList.vue";
+import InvitationsTableList from "@/components/Invitation/InvitationsTableList.vue";
 
 import FormsBuilder from "@/components/Forms/Builder.vue";
 import PricingForm from "@/components/Pricing/PricingForm.vue";
@@ -189,6 +203,7 @@ export default {
   components: {
     CommunityUsersFilters,
     CommunityUsersList,
+    InvitationsTableList,
     FormsBuilder,
     FormsValidatedInput,
     PricingForm,
@@ -247,9 +262,6 @@ export default {
     },
     users() {
       return this.$store.state.users.data;
-    },
-    invitations() {
-      return this.$store.state.invitations.data;
     },
     /*
       Ensure the format follows the community user format. This is what we are working on.
@@ -567,9 +579,6 @@ export default {
           break;
       }
     },
-    async createInvitation(){
-      this.$store.dispatch(`invitations/retrieve`);
-    }
   },
   i18n: {
     messages: {

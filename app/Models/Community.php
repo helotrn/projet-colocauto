@@ -153,7 +153,7 @@ SQL;
 
     public $items = ["parent"];
 
-    public $collections = ["children", "users", "pricings", "loanables"];
+    public $collections = ["children", "users", "pricings", "loanables", "invitations"];
 
     public $computed = ["area_google", "center_google", "approved_users_count"];
 
@@ -199,6 +199,11 @@ SQL;
                 "suspended_at",
                 "updated_at",
             ]);
+    }
+
+    public function invitations()
+    {
+        return $this->hasMany(Invitation::class);
     }
 
     public function getPricingFor(Loanable $loanable)

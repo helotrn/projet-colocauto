@@ -60,7 +60,7 @@ export default [
           auth: true,
           slug: "communities",
           params: {
-            fields: ["*", "pricings.*", "parent.*"].join(","),
+            fields: ["*", "pricings.*", "parent.*", "invitations.*"].join(","),
             for: "edit",
           },
         },

@@ -5,14 +5,15 @@ export default {
     "créer une invitation": "créer une invitation",
     fields: {
       id: "ID",
-      email: "email",
+      email: "Couriel",
       community_id: "communauté dans laquelle sera intégrée le nouveau membre",
       token: "code (créé automatiquement)",
-      consumed_at: "date d'utilisation (rempli automatiquement)"
+      consumed_at: "date d'utilisation (rempli automatiquement)",
     },
     list: {
       create: "créer une invitation",
       selected: "{count} invitation sélectionnée | {count} invitations sélectionnées",
+      status: "Statut",
     },
   },
 };
