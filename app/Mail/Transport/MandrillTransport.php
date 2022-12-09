@@ -12,11 +12,13 @@ class MandrillTransport extends Transport
 {
     protected $client;
     protected $key;
+    protected $subaccount;
 
-    public function __construct(ClientInterface $client, string $key)
+    public function __construct(ClientInterface $client, string $key, string $subaccount)
     {
         $this->key = $key;
         $this->client = $client;
+        $this->subaccount = $subaccount;
     }
 
     public function send(
@@ -24,6 +26,10 @@ class MandrillTransport extends Transport
         &$failedRecipients = null
     ) {
         $this->beforeSendPerformed($message);
+
+        if($this->subaccount) {
+            $message->getHeaders()->addTextHeader('X-MC-Subaccount', $this->subaccount);
+        }
 
         if (app()->environment() !== "testing") {
             if (property_exists($message, "template") && !!$message->template) {
@@ -37,6 +43,7 @@ class MandrillTransport extends Transport
             $message
                 ->getHeaders()
                 ->addTextHeader("X-Message-ID", $this->getMessageId($response));
+            
         }
 
         $this->sendPerformed($message);
@@ -123,6 +130,9 @@ class MandrillTransport extends Transport
                 "locomotion_template_$message->template",
             ],
         ];
+        if($this->subaccount) {
+            $messageConfig["subaccount"] = $this->subaccount;
+        }
 
         $messageChildren = $message->getChildren();
         $textContent = isset($messageChildren[0])
@@ -194,6 +204,7 @@ class MandrillTransport extends Transport
                             "tracking_domain" => null,
                             "signing_domain" => null,
                             "return_path_domain" => null,
+                            "subaccount" => $this->subaccount ? $this->subaccount : null,
                         ],
                     ],
                 ]

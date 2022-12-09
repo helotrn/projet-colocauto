@@ -21,6 +21,7 @@ return [
 
     "mandrill" => [
         "secret" => env("MANDRILL_KEY"),
+        "subaccount" => env("MANDRILL_SUBACCOUNT"),
     ],
 
     "noke" => [
