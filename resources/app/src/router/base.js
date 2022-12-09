@@ -8,15 +8,7 @@ import Privacy from "@/views/Privacy.vue";
 export default [
   {
     path: "/",
-    name: "home",
-    component: Home,
-    meta: {
-      data: {
-        stats: {
-          retrieve: {},
-        },
-      },
-    },
+    redirect: "/login",
   },
   {
     path: "/privacy",
