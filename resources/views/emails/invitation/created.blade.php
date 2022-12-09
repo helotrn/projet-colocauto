@@ -29,7 +29,7 @@
 
 <p style="text-align: center; margin: 32px auto 0 auto">
     <a
-        href="{{ env('FRONTEND_URL') . '/register/1?invitation=' . $token }}"
+        href="{{ env('FRONTEND_URL') . '/register/1?invitation=' . $token . '&email=' . urlencode($email) }}"
         style="
             display: inline-block;
             background-color: #246aea;

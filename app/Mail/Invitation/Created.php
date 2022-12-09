@@ -12,6 +12,7 @@ class Created extends Mailable
 {
     use Queueable, SerializesModels;
 
+    public $email;
     public $community;
     public $token;
 
@@ -20,8 +21,9 @@ class Created extends Mailable
      *
      * @return void
      */
-    public function __construct(Community $community, $token)
+    public function __construct($email, Community $community, $token)
     {
+        $this->email = $email;
         $this->community = $community;
         $this->token = $token;
     }

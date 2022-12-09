@@ -142,6 +142,12 @@ export default {
       },
     },
   },
+  mounted(){
+    if(this.$route.query.email) {
+      // autocomplete the value contained in the registration link
+      this.email = this.$route.query.email;
+    }
+  }
 };
 </script>
 

@@ -16,7 +16,7 @@ class SendInvitationCreatedEmails
     public function handle(InvitationCreatedEvent $event)
     {
         Mail::to($event->invitation->email)->queue(
-            new InvitationCreated($event->invitation->community, $event->invitation->token)
+            new InvitationCreated($event->invitation->email, $event->invitation->community, $event->invitation->token)
         );
     }
 }
