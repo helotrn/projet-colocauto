@@ -62,7 +62,7 @@ class InvitationController extends RestController
             "item" => [
                 "email" => "",
                 "community" => null,
-                "token" => null,
+                "token" => "",
             ],
             "form" => [
                 "email" => [
@@ -80,12 +80,13 @@ class InvitationController extends RestController
                     ],
                 ],
                 "token" => [
+                    "type" => "text",
                     // readonly field, generated on the server side
                     "disabled" => true
                 ],
                 "consumed_at" => [
                     // readonly field, generated on the server side
-                    "type" => "datetime",
+                    "type" => "date",
                     "disabled" => true
                 ]
             ],
