@@ -49,8 +49,6 @@
     </template>
 
     <template v-slot:event="{ event, view }">
-      <v-icon>{{ event.icon }}</v-icon>
-
       <div class="vuecal__event-title" v-html="event.title" />
       <!-- Or if your events are editable: -->
       <div
