@@ -19,7 +19,7 @@
               <b-button variant="success" type="submit" :disabled="!changed || loading">
                 Sauvegarder
               </b-button>
-              <b-button type="reset" :disabled="!changed" @click="reset"> Réinitialiser </b-button>
+              <b-button v-if="!item.id" type="reset" :disabled="!changed" @click="reset"> Réinitialiser </b-button>
             </b-button-group>
           </div>
         </b-form>
