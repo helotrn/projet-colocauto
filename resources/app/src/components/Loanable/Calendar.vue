@@ -4,11 +4,11 @@
     :hide-view-selector="true"
     :disable-views="['years', 'year']"
     :defaultView="defaultView"
-    :time-step="15"
-    :time-cell-height="variant == 'small' ? 13 : 18"
+    :time-step="variant === 'small' ? 60 : 15"
+    :time-cell-height="variant === 'small' ? 24 : 18"
     :events="vueCalEvents"
     locale="fr"
-    :xsmall="variant == 'small'"
+    :xsmall="variant === 'small'"
     @ready="$emit('ready', $event)"
     @view-change="$emit('view-change', $event)"
   >
@@ -28,8 +28,17 @@
         }"
       >
         <span class="line"></span>
-        <span v-if="!minutes">{{ hours }}</span>
-        <span v-else>{{ minutes }}</span>
+        <template v-if="variant === 'small'">
+          <span
+            >{{ hours < 10 ? "0" + hours : hours }}:{{
+              minutes < 10 ? "0" + minutes : minutes
+            }}</span
+          >
+        </template>
+        <template v-else>
+          <span v-if="!minutes">{{ hours }}</span>
+          <span v-else>{{ minutes }}</span>
+        </template>
       </div>
     </template>
 
@@ -95,7 +104,7 @@ export default {
       let vueCalEvents = this.events.map((e) => {
         e = { ...baseEvent, ...e };
 
-        if (e.type == "availability") {
+        if (e.type === "availability") {
           // Availability events go in the background.
           e.background = true;
           if (e.data.available) {
@@ -103,7 +112,7 @@ export default {
           } else {
             e.class.push("loanable-calendar__event--unavailability");
           }
-        } else if (e.type == "loan") {
+        } else if (e.type === "loan") {
           // Loans don't go in the background.
           e.background = false;
 
