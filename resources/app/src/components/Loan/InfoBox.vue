@@ -5,34 +5,19 @@
         <b-row>
           <b-col lg="6">
             <b-row>
-              <b-col class="loan-info-box__image" v-if="otherUser">
-                <user-avatar :user="otherUser" class="loan-info-box__image__user" />
-
-                <div class="loan-info-box__image__loanable">
-                  <div :style="{ backgroundImage: loanableImage }" />
-                </div>
-              </b-col>
-              <b-col class="loan-info-box__image" v-else>
+              <b-col class="loan-info-box__image__wrapper">
+              <div class="loan-info-box__image">
                 <div
-                  class="loan-info-box__image__user"
+                  class="loan-info-box__image__loanable"
                   :style="{ backgroundImage: loanableImage }"
                 />
+              </div>
 
-                <div class="loan-info-box__image__loanable" v-if="otherUser">
-                  <div :style="{ backgroundImage: loanableImage }" />
-                </div>
-              </b-col>
-
-              <b-col class="loan-info-box__name">
+              <div class="loan-info-box__name">
                 <span>
-                  <span class="loan-info-box__name__user" v-if="otherUser">
-                    {{ otherUser.full_name }}
-                  </span>
-                  <br />
                   <span class="loan-info-box__name__loanable">{{ loan.loanable.name }}</span>
-
-                  <loan-status :item="loan" class="mt-2"></loan-status>
                 </span>
+              </div>
               </b-col>
             </b-row>
           </b-col>
@@ -48,6 +33,8 @@
                 {{ loan.departure_at | time }} à {{ returnAt | time }}
               </span>
             </span>
+            <span class="my-2">Coût estimé: {{ loan.estimated_price | currency }}</span>
+            <loan-status :item="loan" class="mt-2"></loan-status>
           </b-col>
 
           <b-col class="loan-info-box__actions" lg>
@@ -281,43 +268,30 @@ export default {
     margin-left: 20px;
   }
 
-  &__image.col {
+  &__image {
     height: 85px;
     position: relative;
     width: 85px;
-    flex: 0 1 115px;
+    &__wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
 
     .loan-info-box__image {
-      &__user,
-      &__loanable > div {
+      &__loanable {
         background-size: cover;
         background-position: center center;
         background-repeat: no-repeat;
         border-radius: 100%;
-      }
-
-      &__user {
         height: 100%;
         width: 85px;
         margin: 0 auto;
       }
-
-      &__loanable {
-        position: absolute;
-        bottom: 0;
-        left: calc(50% + 15px);
-        height: 50%;
-        width: 85px;
-
-        > div {
-          width: calc(85px / 2);
-          height: calc(85px / 2);
-        }
-      }
     }
   }
 
-  &__name.col {
+  &__name {
     flex-grow: 1;
     color: $black;
   }
@@ -328,13 +302,15 @@ export default {
   }
 
   &__name__loanable {
-    font-size: 20px;
+    font-size: 18px;
+    font-weight: bold;
   }
 
   &__details.col-lg {
     flex-grow: 1;
     color: $black;
     font-size: 15px;
+    line-height: 20px;
     text-align: center;
   }
 
@@ -347,13 +323,20 @@ export default {
   }
 
   &__actions.col-lg {
-    text-align: right;
+    div {
+      display: flex;
+      flex-direction: column;
+      margin-top: 8px;
+    }
 
     .btn {
-      margin-left: 16px;
-      margin-top: 8px;
+      width: 100%;
       margin-bottom: 8px;
     }
+  }
+  
+  .loan-status-pill {
+    width: 100%;
   }
 }
 </style>

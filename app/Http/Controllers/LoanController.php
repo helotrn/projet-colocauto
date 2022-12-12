@@ -408,6 +408,7 @@ class LoanController extends RestController
             "id",
             "departure_at",
             "duration_in_minutes",
+            "estimated_price",
             "actual_return_at",
             "status",
             "total_final_cost",

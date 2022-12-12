@@ -79,7 +79,7 @@
                     Un membre de l'équipe LocoMotion contactera les participant-e-s et ajustera les
                     données.
                   </p>
-                  <transition-group name="dashboard-list">
+                  <transition-group name="dashboard-list" tag="div" class="swiping-list">
                     <div
                       class="dashboard-list-item dashboard__ongoing-loans"
                       v-for="loan in loans.contested"
@@ -106,7 +106,7 @@
                   <p class="dashboard__instructions">
                     Ces personnes devraient entrer en contact avec vous sous peu.
                   </p>
-                  <transition-group name="dashboard-list">
+                  <transition-group name="dashboard-list" tag="div" class="swiping-list">
                     <div
                       class="dashboard-list-item dashboard__waiting-loans"
                       v-for="loan in loans.need_approval"
@@ -122,7 +122,7 @@
               <transition name="fade">
                 <section class="page__section" v-if="loans.started && loans.started.length > 0">
                   <h2 class="dashboard--margin-bottom">Emprunts en cours</h2>
-                  <transition-group name="dashboard-list">
+                  <transition-group name="dashboard-list" tag="div" class="swiping-list">
                     <div
                       class="dashboard-list-item dashboard__ongoing-loans"
                       v-for="loan in loans.started"
@@ -142,7 +142,7 @@
                     La demande est envoyée! Maintenant contactez la personne propriétaire pour
                     valider votre demande.
                   </p>
-                  <transition-group name="dashboard-list">
+                  <transition-group name="dashboard-list" tag="div" class="swiping-list">
                     <div
                       class="dashboard-list-item dashboard__waiting-loans"
                       v-for="loan in loans.waiting"
@@ -162,7 +162,7 @@
                     Assurez-vous de démarrer l'emprunt en ligne au moment de prendre possession du
                     véhicule!
                   </p>
-                  <transition-group name="dashboard-list">
+                  <transition-group name="dashboard-list" tag="div" class="swiping-list">
                     <div
                       class="dashboard-list-item dashboard__upcoming-loans"
                       v-for="loan in loans.future"
@@ -571,5 +571,22 @@ export default {
 
 .dashboard--justify-text {
   text-align: justify;
+}
+
+.swiping-list {
+  display: flex;
+  overflow-x: scroll;
+  scroll-snap-type: x mandatory;
+}
+
+.swiping-list .dashboard-list-item {
+  width: 67%;
+  flex-shrink: 0;
+  margin-right: 10px;
+  scroll-snap-align: start;
+
+}
+.swiping-list .dashboard-list-item:first-child:last-child {
+  margin: auto;
 }
 </style>
