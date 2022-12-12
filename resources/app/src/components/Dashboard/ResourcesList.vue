@@ -3,12 +3,6 @@
     <h3 class="dashboard-h3">Ressources</h3>
 
     <ul class="dashboard-resources-list__list">
-      <li class="dashboard-resources-list__item">
-        <router-link to="/assurances-desjardins" class="dashboard-resources-list__item-title">
-          <img class="dashboard-resources-list__item-title-icon" src="/icons/assurances.png" />
-          <span class="dashboard-resources-list__item-title-text"> Mon assurance </span>
-        </router-link>
-      </li>
 
       <li class="dashboard-resources-list__item" v-if="hasCommunity">
         <a
@@ -17,7 +11,7 @@
           class="dashboard-resources-list__item-title"
         >
           <img class="dashboard-resources-list__item-title-icon" src="/icons/allo.png" />
-          <span class="dashboard-resources-list__item-title-text"> Guide de départ </span>
+          <span class="dashboard-resources-list__item-title-text"> Notice de l'usager </span>
         </a>
       </li>
 

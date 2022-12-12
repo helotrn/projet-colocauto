@@ -4,25 +4,12 @@
       <b-row class="page__section page__section__main">
         <b-col class="page__content" xl="9" lg="8" md="7">
           <!-- main header -->
-          <h1>{{ $t("welcome_text", { name: user.name }) }}</h1>
-
-          <h3 v-if="hasCommunity" class="dashboard-h3">
-            {{
-              $t("welcome_description", {
-                approvedUserCount: totalApprovedUsers,
-                community: mainCommunity.name,
-              })
-            }}
-          </h3>
+          <h1 class="mb-4">{{ $t("welcome_text", { name: user.name }) }}</h1>
 
           <!-- button to search for vehicule -->
-          <section class="page__section" v-if="canLoanVehicle">
-            <b-button pill to="/search/map" class="search_button">
-              <div class="dashboard--justify-text">
-                <svg-magnifying-glass />
-                Rechercher un véhicule
-              </div>
-            </b-button>
+          <section class="page__section d-flex flex-column" v-if="canLoanVehicle">
+            <b-button class="mb-2 py-2" variant="primary" to="/search/list">Réserver un véhicule</b-button>
+            <b-button class="mb-2 py-2" variant="primary" to="/expenses/new">Déclarer une dépense</b-button>
           </section>
 
           <!-- profile pending container -->
@@ -196,37 +183,42 @@
           </div>
           <!---->
 
-          <!-- members container -->
+          <!-- Expenses container -->
           <section class="page__section position-relative">
             <b-row>
               <b-col>
-                <h2 class="dashboard--margin-bottom">Mon voisinage</h2>
+                <h2 class="dashboard--margin-bottom">Les comptes</h2>
               </b-col>
             </b-row>
+            <b-row>
+              <b-col>
+                <img src="/mockups/expenses.png" />
+              </b-col>
+            </b-row>
+            <b-row>
+              <b-col class="d-flex flex-column">
+                <b-button class="mb-2 py-2" variant="primary" to="/expenses">Voir le portefeuille</b-button>
+              </b-col>
+            </b-row>
+          </section>
 
-            <div class="dashboard__members" :class="{ loading: loading && !membersLoaded }">
-              <transition name="fade">
-                <div v-if="members && members.length > 0">
-                  <transition-group name="dashboard-list">
-                    <user-card
-                      v-for="member in members"
-                      :key="member.id"
-                      :user="member"
-                      :is-admin="false"
-                      :community-id="17"
-                    />
-                  </transition-group>
-                </div>
-              </transition>
-            </div>
+          <!-- Calendar container -->
+          <section class="page__section position-relative">
+            <b-row>
+              <b-col>
+                <h2 class="dashboard--margin-bottom">Réserver un véhicule</h2>
+              </b-col>
+            </b-row>
+            <b-row>
+              <b-col>
+                <img src="/mockups/calendar.png" />
+              </b-col>
+            </b-row>
           </section>
 
           <!-- loanables container -->
           <section class="page__section position-relative">
             <b-row>
-              <b-col>
-                <h2 class="dashboard--margin-bottom">Les véhicules</h2>
-              </b-col>
               <b-col class="text-right">
                 <b-button variant="outline-primary" to="/profile/loanables">
                   Gérer mes véhicules
@@ -238,6 +230,7 @@
               <transition name="fade">
                 <div v-if="loanables && loanables.length > 0">
                   <transition-group name="dashboard-list">
+                    <h3 class="dashboard--margin-bottom" key="title">{{ loanables.length }} véhicules</h3>
                     <loanable-info-box
                       class="dashboard-list-item"
                       v-for="loanable in loanables"
@@ -262,18 +255,38 @@
             <layout-loading class="section-loading-indicator" v-if="loading && !loanablesLoaded" />
           </section>
           <!---->
+
+          <!-- members container -->
+          <section class="page__section position-relative">
+            <div class="dashboard__members" :class="{ loading: loading && !membersLoaded }">
+              <transition name="fade">
+                <div v-if="members && members.length > 0">
+                  <transition-group name="dashboard-list">
+                    <h3 class="dashboard--margin-bottom" key="title">{{ members.length }} membres</h3>
+                    <user-card
+                      v-for="member in members"
+                      :key="member.id"
+                      :user="member"
+                      :is-admin="false"
+                      :community-id="17"
+                    />
+                  </transition-group>
+                </div>
+              </transition>
+            </div>
+          </section>
         </b-col>
 
         <b-col tag="aside" class="page__sidebar" xl="3" lg="4" md="5">
           <!-- sidebar -->
           <b-card>
-            <div v-if="hasCompletedRegistration">
+            <div v-if="false && hasCompletedRegistration">
               <dashboard-balance :user="user" />
 
               <hr />
             </div>
 
-            <div v-if="hasCompletedRegistration">
+            <div v-if="false && hasCompletedRegistration">
               <layout-loading v-if="loading && !loansLoaded"></layout-loading>
               <dashboard-loan-history
                 v-else
@@ -294,9 +307,6 @@
       </b-row>
     </b-container>
 
-    <main-faq />
-
-    <partners-section />
   </layout-page>
 </template>
 
@@ -311,10 +321,8 @@ import DashboardLoanHistory from "@/components/Dashboard/LoanHistory.vue";
 import DashboardResourcesList from "@/components/Dashboard/ResourcesList.vue";
 import LoanInfoBox from "@/components/Loan/InfoBox.vue";
 import LoanableInfoBox from "@/components/Loanable/InfoBox.vue";
-import MainFaq from "@/components/Misc/MainFaq.vue";
 import ReleaseInfoBox from "@/components/Dashboard/ReleaseInfoBox.vue";
 import TutorialBlock from "@/components/Dashboard/TutorialBlock.vue";
-import PartnersSection from "@/components/Misc/PartnersSection.vue";
 import UserCard from "@/components/User/UserCard.vue";
 
 import MagnifyingGlass from "@/assets/svg/magnifying-glass.svg";
@@ -330,8 +338,6 @@ export default {
     DashboardResourcesList,
     LoanInfoBox,
     LoanableInfoBox,
-    MainFaq,
-    PartnersSection,
     ReleaseInfoBox,
     TutorialBlock,
     "svg-magnifying-glass": MagnifyingGlass,
@@ -405,14 +411,6 @@ export default {
   methods: {
     hasTutorial(name) {
       switch (name) {
-        case "add-vehicle":
-          return this.user.owner && this.user.loanables && this.user.loanables.length === 0;
-        case "find-vehicle":
-          return this.canLoanVehicle;
-        case "fill-your-driving-profile":
-          return this.hasCommunity && (!this.user.borrower || !this.user.borrower.is_complete);
-        case "upload-proof-of-residency":
-          return !this.hasSubmittedProofOfResidency;
         default:
           return false;
       }
