@@ -6,6 +6,9 @@ use App\Calendar\AvailabilityHelper;
 use App\Casts\PointCast;
 use App\Exports\LoanableExport;
 use App\Transformers\LoanableTransformer;
+use App\Models\Car;
+use App\Models\Loan;
+use App\Models\Pricing;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -159,6 +162,7 @@ class Loanable extends BaseModel
         "events",
         "has_padlock",
         "position_google",
+        "estimated_cost"
     ];
 
     public $items = ["owner", "community", "padlock"];
@@ -347,6 +351,47 @@ class Loanable extends BaseModel
         return [
             "lat" => $this->position[0],
             "lng" => $this->position[1],
+        ];
+    }
+
+    public function getEstimatedCostAttribute()
+    {
+
+        $owner = $this->owner()->first();
+        $community = self::getCommunityForLoanBy($owner->user);
+        $pricing = $community->getPricingFor($this);
+        if (!$pricing) {
+            return (object) [
+                "price" => 0,
+                "insurance" => 0,
+                "pricing" => "Gratuit",
+            ];
+        }
+
+        // evaluate a fictive loan to get the price per km
+        $departureAt = new Carbon();
+        $estimatedCost = $pricing->evaluateRule(
+            1, // km
+            0, // minutes
+            Car::find($this->id)->toArray(),
+            (object) [
+                "days" => Loan::getCalendarDays($departureAt, $departureAt),
+                "start" => Pricing::dateToDataObject($departureAt),
+                "end" => Pricing::dateToDataObject($departureAt),
+            ]
+        );
+
+        if (is_array($estimatedCost)) {
+            [$price, $insurance] = $estimatedCost;
+        } else {
+            $price = $estimatedCost;
+            $insurance = 0;
+        }
+
+        return (object) [
+            "price" => $price,
+            "insurance" => $insurance,
+            "pricing" => $pricing->name,
         ];
     }
 
