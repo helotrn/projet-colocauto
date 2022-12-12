@@ -62,6 +62,10 @@ class UserTransformer extends Transformer
         if (isset($options["context"]["Loan"])) {
             $publicFields[] = "phone";
         }
+        // ...or if the user belongs the the same community
+        if($user->belongsToTheSameCommunityAs($item->id)) {
+            $publicFields[] = "phone";
+        }
 
         return $this->filterKeys($output, $publicFields);
     }

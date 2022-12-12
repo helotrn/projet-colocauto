@@ -401,6 +401,19 @@ class User extends AuthenticatableBaseModel
             ->exists();
     }
 
+    public function belongsToTheSameCommunityAs(int $userId)
+    {
+        return $this->communities()
+            ->whereHas("users", function ($q) {
+                return $q
+                    ->where("community_user.user_id", $this->id);
+            })
+            ->whereHas("users", function ($q) use ($userId) {
+                return $q->where("community_user.user_id", $userId);
+            })
+            ->exists();
+    }
+
     public function createInvoice($invoiceType)
     {
         $invoice = new Invoice();
