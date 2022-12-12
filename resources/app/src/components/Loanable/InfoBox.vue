@@ -1,51 +1,16 @@
 <template>
-  <b-card class="loanable-info-box shadow" bg="white" no-body :class="{ disabled: loading }">
-    <router-link class="card-body" :to="`/profile/loanables/${id}`">
+  <b-card no-body class="loanable-info-box shadow" bg="white" no-body :class="{ disabled: loading }">
+    <router-link :to="`/profile/loanables/${id}`">
       <b-row>
         <b-col class="loanable-info-box__image">
           <div :style="{ backgroundImage: loanableImage }" />
         </b-col>
 
         <b-col class="loanable-info-box__name"
-          ><span>{{ name }}</span> <span v-if="owner">({{ owner.user.full_name }})</span></b-col
+          ><span>{{ name }}</span>
+           <small v-if="estimated_cost">{{ estimated_cost.price | currency }}/km</small>
+           <small v-if="owner"><strong>{{ owner.user.full_name }}</strong></small></b-col
         >
-
-        <b-col class="loanable-info-box__actions">
-          <div>
-            <b-button
-              class="ml-3 mb-3"
-              size="sm"
-              :disabled="loading"
-              variant="outline-primary"
-              v-if="hasButton('availability')"
-              :to="`/profile/loanables/${id}#availability`"
-            >
-              Modifier les disponibilités
-            </b-button>
-
-            <b-button
-              class="ml-3 mb-3"
-              size="sm"
-              :disabled="loading"
-              variant="outline-dark"
-              v-if="false && hasButton('unavailable24h')"
-              @click.prevent="makeLoanableUnavailableFor24h"
-            >
-              Rendre indisponible (24h)
-            </b-button>
-
-            <b-button
-              class="ml-3 mb-3"
-              size="sm"
-              :disabled="loading"
-              variant="outline-danger"
-              v-if="hasButton('remove')"
-              @click.prevent="disableLoanableModal"
-            >
-              Retirer
-            </b-button>
-          </div>
-        </b-col>
       </b-row>
     </router-link>
   </b-card>
@@ -78,6 +43,10 @@ export default {
       required: true,
     },
     owner: {
+      type: Object,
+      required: false,
+    },
+    estimated_cost: {
       type: Object,
       required: false,
     },
@@ -156,36 +125,46 @@ export default {
     text-decoration: none;
   }
 
+  &.card {
+    border-radius: 10px;
+  }
+
   &.disabled {
     opacity: 0.5;
     pointer-events: none;
   }
 
   &__image.col {
-    flex: 0 1 115px;
-    height: 85px;
+    height: 103px;
+    flex-grow: 0;
+    flex-basis: 118px;
+    padding-right: 0;
 
     > div {
-      height: 85px;
-      width: 85px;
+      height: 103px;
+      width: 103px;
       background-size: cover;
       background-repeat: no-repeat;
       background-position: center center;
-      border-radius: 100%;
+      border-radius: 10px 0 0 10px;
     }
   }
 
   &__name.col {
     flex-grow: 1;
     color: $black;
-    font-size: 20px;
+    font-size: 18px;
+    strong {
+      font-weight: 600;
+      line-height: 3;
+    }
   }
 
   &__name.col,
   &__actions.col {
     display: flex;
     flex-direction: column;
-    justify-content: space-around;
+    justify-content: center;
   }
 
   &__actions.col {

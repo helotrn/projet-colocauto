@@ -566,7 +566,7 @@ export default {
 }
 
 .dashboard--margin-bottom {
-  margin-bottom: 25px;
+  margin-bottom: 11px;
 }
 
 .dashboard--justify-text {
