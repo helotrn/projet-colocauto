@@ -268,7 +268,7 @@
                       :key="member.id"
                       :user="member"
                       :is-admin="false"
-                      :community-id="17"
+                      :community-id="communityId"
                     />
                   </transition-group>
                 </div>
@@ -374,6 +374,13 @@ export default {
       }
 
       return "Découvrez votre voisinage";
+    },
+    communityId(){
+      if (this.hasCommunity) {
+        return this.user.communities[0].id
+      } else {
+        0;
+      }
     },
     hasTutorials() {
       return (
