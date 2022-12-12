@@ -262,7 +262,7 @@
               <transition name="fade">
                 <div v-if="members && members.length > 0">
                   <transition-group name="dashboard-list">
-                    <h3 class="dashboard--margin-bottom" key="title">{{ members.length }} membres</h3>
+                    <h3 class="dashboard--margin-bottom" key="title">{{ totalMembers }} membres</h3>
                     <user-card
                       v-for="member in members"
                       :key="member.id"
@@ -270,6 +270,14 @@
                       :is-admin="false"
                       :community-id="communityId"
                     />
+                    <b-button
+                      v-if="hasMoreMembers"
+                      key="moreMembers"
+                      class="mb-4 py-2"
+                      style="width: 100%"
+                      variant="outline-primary"
+                      to="/community"
+                    >Voir tous les membres</b-button>
                   </transition-group>
                 </div>
               </transition>
@@ -398,6 +406,12 @@ export default {
     },
     members() {
       return this.$store.state.dashboard.members ?? [];
+    },
+    totalMembers() {
+      return this.$store.state.dashboard.totalMembers;
+    },
+    hasMoreMembers() {
+      return this.$store.state.dashboard.hasMoreMembers;
     },
     loansLoaded() {
       return this.$store.state.dashboard.loansLoaded;

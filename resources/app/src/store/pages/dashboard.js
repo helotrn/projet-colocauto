@@ -17,11 +17,12 @@ const initialState = {
   members: [],
   membersLoaded: false,
   hasMoreMembers: false,
+  totalMembers: 0,
   loadRequests: 0,
 };
 
 const maxLoanableCount = 5;
-const maxMemberCount = 10;
+const maxMemberCount = 3;
 
 const actions = {
   async reload({ commit, dispatch }, user) {
@@ -76,7 +77,7 @@ const actions = {
         params: {
           order: "-created_at",
           per_page: maxMemberCount,
-          fields: "id,full_name,tags,avatar,description,communities.role,communities.proof,communities.approved_at,communities.suspended_at,owner",
+          fields: "id,full_name,tags,avatar,phone,communities.role,communities.proof,communities.approved_at,communities.suspended_at,owner",
         },
       });
 
@@ -121,6 +122,7 @@ const mutations = {
     state.membersLoaded = true;
     state.members = members.data;
     state.hasMoreMembers = members.total > maxMemberCount;
+    state.totalMembers = members.total;
     state.loadRequests--;
   },
   errorLoading(state) {

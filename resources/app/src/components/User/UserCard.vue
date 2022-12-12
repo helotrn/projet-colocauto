@@ -8,7 +8,8 @@
 
           <h3>{{ user.full_name }}</h3>
 
-          <p :title="user.description">{{ user.description }}</p>
+          <p v-if="user.description" :title="user.description">{{ user.description }}</p>
+          <a v-if="user.phone" :href="`tel:${user.phone}`">{{ user.phone }}</a>
 
           <div v-if="false && isAdmin && communityId" class="user-card__admin-actions">
             <a href="#" @click.prevent="unsetCommittee" v-if="isCommittee">
@@ -83,7 +84,7 @@ export default {
 
 <style lang="scss">
 .user-card {
-  margin-bottom: 30px;
+  margin-bottom: 10px;
   height: calc(100% - 30px);
   position: relative;
 
@@ -137,8 +138,15 @@ export default {
       }
 
       h3 {
-        font-size: 22px;
+        font-size: 18px;
+        font-weight: normal;
         margin-bottom: 20px;
+      }
+
+      a[href^="tel"] {
+        font-size: 14px;
+        text-decoration: underline;
+        color: $black;
       }
     }
   }
