@@ -198,6 +198,7 @@
             <b-row>
               <b-col class="d-flex flex-column">
                 <b-button class="mb-2 py-2" variant="primary" to="/expenses">Voir le portefeuille</b-button>
+                <info-link-block title="Comment sont calculés les coûts ?" to="/faq" img="/icons/faq.png" />
               </b-col>
             </b-row>
           </section>
@@ -287,7 +288,6 @@
 
         <b-col tag="aside" class="page__sidebar" xl="3" lg="4" md="5">
           <!-- sidebar -->
-          <b-card>
             <div v-if="false && hasCompletedRegistration">
               <dashboard-balance :user="user" />
 
@@ -308,8 +308,9 @@
               <hr />
             </div>
 
-            <dashboard-resources-list :user="user" />
-          </b-card>
+            <h2 class="dashboard--margin-bottom">Ressources</h2>
+            <info-link-block title="Notice de l'usager" to="https://bit.ly/locomotion-bienvenue" img="/icons/allo.png" />
+            <info-link-block title="FAQ / Contact" to="/faq" img="/icons/faq.png" />
           <!---->
         </b-col>
       </b-row>
@@ -326,12 +327,12 @@ import UserMixin from "@/mixins/UserMixin";
 
 import DashboardBalance from "@/components/Dashboard/Balance.vue";
 import DashboardLoanHistory from "@/components/Dashboard/LoanHistory.vue";
-import DashboardResourcesList from "@/components/Dashboard/ResourcesList.vue";
 import LoanInfoBox from "@/components/Loan/InfoBox.vue";
 import LoanableInfoBox from "@/components/Loanable/InfoBox.vue";
 import ReleaseInfoBox from "@/components/Dashboard/ReleaseInfoBox.vue";
 import TutorialBlock from "@/components/Dashboard/TutorialBlock.vue";
 import UserCard from "@/components/User/UserCard.vue";
+import InfoLinkBlock from "@/components/Dashboard/InfoLinkBlock.vue";
 
 import MagnifyingGlass from "@/assets/svg/magnifying-glass.svg";
 
@@ -343,13 +344,13 @@ export default {
   components: {
     DashboardBalance,
     DashboardLoanHistory,
-    DashboardResourcesList,
     LoanInfoBox,
     LoanableInfoBox,
     ReleaseInfoBox,
     TutorialBlock,
     "svg-magnifying-glass": MagnifyingGlass,
     UserCard,
+    InfoLinkBlock,
   },
   beforeMount() {
     if (!this.isLoggedIn) {
