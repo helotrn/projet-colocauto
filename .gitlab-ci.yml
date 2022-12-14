@@ -19,6 +19,7 @@ image: php:7.3
 
 stages:
   - test
+  - build
 
 before_script:
 
@@ -27,15 +28,42 @@ cache:
     - resources/app/node_modules/
     - vendor/
 
+build:
+  stage: build
+  image:
+    name: docker:latest
+  variables:
+    DOCKER_DRIVER: overlay2
+  services:
+    - docker:dind
+  before_script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker info
+    - echo $CI_REGISTRY_IMAGE
+    - echo $CI_PROJECT_NAME
+  script:
+    - DOCKER_BUILD_ENV=prod docker-compose build vue php
+    - docker images
+    - docker tag ${CI_PROJECT_NAME}-vue:latest ${CI_REGISTRY_IMAGE}/vue:latest
+    - docker push ${CI_REGISTRY_IMAGE}/vue:latest
+    - docker tag ${CI_PROJECT_NAME}-php:latest ${CI_REGISTRY_IMAGE}/api:latest
+    - docker push ${CI_REGISTRY_IMAGE}/api:latest
+
 test:prettier:
   image: node:15
   stage: test
+  only:
+    refs:
+      - test
   script:
     - npm install --global prettier @prettier/plugin-php
     - npx prettier . --list-different
 
 test:phpunit:
   stage: test
+  only:
+    refs:
+      - test
   coverage: '/^\s*Lines:\s*\d+.\d+\%/'
   script:
     - apt-get update -yqq
@@ -65,16 +93,11 @@ test:phpunit:
 test:jest:
   image: node:15
   stage: test
+  only:
+    refs:
+      - test
   script:
     - cd resources/app
     - npm install
     - npm run test
-include:
-  - template: Security/SAST.gitlab-ci.yml
-sast:
-  variables:
-    SAST_EXCLUDED_ANALYZERS:
-      bandit, brakeman, flawfinder, gosec, kubesec, nodejs-scan,
-      pmd-apex, security-code-scan, sobelow, spotbugs
-    SAST_EXCLUDED_PATHS: spec, test, tests, tmp, vendor, resources/app/node_modules, *.test.js
-  stage: test
+

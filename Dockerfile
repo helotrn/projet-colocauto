@@ -42,7 +42,7 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 RUN npm install --global prettier @prettier/plugin-php
 
 # xdebug
-RUN pecl install xdebug \
+RUN pecl install xdebug-3.1.6 \
     && docker-php-ext-enable xdebug
 RUN echo "xdebug.start_with_request = yes" >> ${PHP_INI_DIR}/conf.d/php.ini
 RUN echo "xdebug.mode = debug" >> ${PHP_INI_DIR}/conf.d/php.ini
