@@ -38,7 +38,7 @@ spec:
                 name: colocauto-secret
       containers:
         - name: api
-          image: registry.gitlab.com/mobicoop/colocauto/colocauto/api:v2022-11-07
+          image: registry.gitlab.com/mobicoop/colocauto/colocauto/api:latest
           ports:
             - containerPort: 80
           env:
@@ -61,7 +61,20 @@ spec:
           - name: ENABLE_TEST_ROUTES
             value: "true"
           - name: MAIL_DRIVER
-            value: log
+            valueFrom:
+              configMapKeyRef:
+                key: mail.driver
+                name: colocauto-config
+          - name: MANDRILL_KEY
+            valueFrom:
+              secretKeyRef:
+                key: mandrill.key
+                name: colocauto-secret
+          - name: MANDRILL_SUBACCOUNT
+            valueFrom:
+              configMapKeyRef:
+                key: mandrill.subaccount
+                name: colocauto-config
           - name: CACHE_DRIVER
             value: database
           - name: DB_DATABASE
@@ -124,8 +137,6 @@ spec:
               configMapKeyRef:
                 key: mail.fromName
                 name: colocauto-config
-          - name: MANDRILL_KEY
-            value: '' #TODO
           - name: GOOGLE_API_KEY
             valueFrom:
               configMapKeyRef:
