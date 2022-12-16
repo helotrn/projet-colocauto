@@ -8,6 +8,7 @@ export default {
     canLoanVehicle() {
       return (
         this.isLoggedIn &&
+        this.user.accept_conditions &&
         this.user.borrower &&
         this.user.communities &&
         this.user.communities.reduce((acc, c) => acc || (!!c.approved_at && !c.suspended_at), false)
