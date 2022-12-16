@@ -1,0 +1,34 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+class AddCostToCars extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::table('cars', function (Blueprint $table) {
+            $table->float('cost_per_km', 8, 2)->default(0.70);
+            $table->float('cost_per_month', 8, 2)->default(30);
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::table('cars', function (Blueprint $table) {
+            $table->dropColumn("cost_per_km");
+            $table->dropColumn("cost_per_month");
+        });
+    }
+}

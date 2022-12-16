@@ -25,6 +25,8 @@ export default {
       report_download: "télécharger le gabarit de la fiche",
       transmission_mode: "transmission",
       year_of_circulation: "année de mise en circulation",
+      cost_per_km: "coût au km",
+      cost_per_month: "coût fixe par mois",
     },
     transmission_modes: {
       automatic: "automatique",

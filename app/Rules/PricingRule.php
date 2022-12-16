@@ -25,6 +25,8 @@ class PricingRule implements Rule
                         "engine" => "hybrid",
                         "pricing_category" => "large",
                         "year_of_circulation" => 1999,
+                        "cost_per_km" => 0.70,
+                        "cost_per_month" => 30,
                         "type" => "car",
                     ],
                     "loan" => (object) [

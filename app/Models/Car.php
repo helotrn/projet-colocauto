@@ -20,12 +20,18 @@ class Car extends Loanable
         "transmission_mode" => ["required", "in:manual,automatic"],
         "type" => ["required", "in:car"],
         "year_of_circulation" => ["required", "digits:4", "numeric"],
+        "cost_per_km" => ["numeric", "present", "min:0"],
+        "cost_per_month" => ["numeric", "present", "min:0"],
     ];
 
     public static function getRules($action = "", $auth = null)
     {
         $rules = parent::getRules($action, $auth);
         $rules["year_of_circulation"][] = "max:" . ((int) date("Y") + 1);
+        if($action === "template") {
+            $rules["cost_per_km"][0] = "decimal";
+            $rules["cost_per_month"][0] = "decimal";
+        }
         return $rules;
     }
 
@@ -66,6 +72,8 @@ class Car extends Loanable
         "share_with_parent_communities",
         "transmission_mode",
         "year_of_circulation",
+        "cost_per_km",
+        "cost_per_month",
     ];
 
     public $items = ["owner", "community"];

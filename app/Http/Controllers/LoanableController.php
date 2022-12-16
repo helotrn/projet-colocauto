@@ -626,6 +626,8 @@ class LoanableController extends RestController
                 "share_with_parent_communities" => false,
                 "transmission_mode" => "",
                 "year_of_circulation" => "",
+                "cost_per_km" => 0.70,
+                "cost_per_month" => 30,
             ],
             "form" => [
                 "general" => [
@@ -769,6 +771,12 @@ class LoanableController extends RestController
                                 "value" => "electric",
                             ],
                         ],
+                    ],
+                    "cost_per_km" => [
+                        "type" => "currency",
+                    ],
+                    "cost_per_month" => [
+                        "type" => "currency",
                     ],
                     "year_of_circulation" => [
                         "type" => "number",
