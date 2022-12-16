@@ -280,7 +280,6 @@ class CommunityController extends RestController
                 "chat_group_url" => "",
                 "description" => "",
                 "long_description" => "",
-                "area" => [],
                 "type" => "neighborhood",
                 "pricings" => [],
             ],
