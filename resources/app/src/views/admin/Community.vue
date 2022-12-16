@@ -18,7 +18,7 @@
             <forms-builder :definition="formExceptArea" v-model="item" entity="communities" />
           </div>
 
-          <div class="form__section">
+          <div class="form__section" v-if="item.id">
             <h2>Tarifications</h2>
 
             <pricing-language-definition />

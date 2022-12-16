@@ -17,7 +17,6 @@ class CreateRequest extends BaseRequest
     {
         $rules = [
             "name" => "string",
-            "pricings" => [new CommunityPricingRule()],
         ];
 
         $pricingRules = Pricing::getRules("update", $this->user());

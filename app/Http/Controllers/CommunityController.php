@@ -12,6 +12,7 @@ use App\Http\Requests\Community\UpdateRequest;
 use App\Http\Requests\Community\CommunityUserTagRequest;
 use App\Models\Community;
 use App\Models\User;
+use App\Models\Pricing;
 use App\Repositories\CommunityRepository;
 use App\Repositories\UserRepository;
 use Excel;
@@ -65,6 +66,16 @@ class CommunityController extends RestController
             return $this->respondWithErrors($e->errors(), $e->getMessage());
         }
 
+        if(sizeof($item->pricings) === 0){
+            // create a default simple pricing
+            $pricing = new Pricing();
+            $pricing->rule = '$OBJET.cost_per_km * $KM';
+            $pricing->name = 'Par défaut';
+            $pricing->object_type = null;
+            $pricing->community_id = $item->id;
+            $pricing->save();
+            $item->pricings[] = $pricing;
+        }
         return $this->respondWithItem($request, $item, 201);
     }
 
