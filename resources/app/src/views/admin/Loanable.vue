@@ -176,7 +176,7 @@ export default {
         return [];
       }
 
-      if (this.item.owner) {
+      if (this.item.owner?.user?.communities) {
         return this.item.owner.user.communities.filter((c) => !!c.parent).map((c) => c.parent);
       }
 
@@ -194,7 +194,13 @@ export default {
   },
   methods: {
     async setLoanableOwner(user) {
-      if (!user.owner) {
+      if(!user) {
+        this.$store.commit("loanables/patchItem", {
+          owner: null,
+          owner_id: null,
+        });
+        return;
+      } else if (!user.owner) {
         await this.$store.dispatch("users/update", {
           id: user.id,
           data: {

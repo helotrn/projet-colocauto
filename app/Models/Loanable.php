@@ -335,8 +335,20 @@ class Loanable extends BaseModel
     public function getEstimatedCostAttribute()
     {
 
-        $owner = $this->owner()->first();
-        $community = self::getCommunityForLoanBy($owner->user);
+        // get loanable community ...
+        $community = $this->community;
+        if( !$community ) {
+            // ... or owner community
+            $owner = $this->owner()->first();
+            if( !$owner ) {
+                return (object) [
+                    "price" => 0,
+                    "insurance" => 0,
+                    "pricing" => "Gratuit",
+                ];
+            }
+            $community = self::getCommunityForLoanBy($owner->user);
+        }
         $pricing = $community->getPricingFor($this);
         if (!$pricing) {
             return (object) [
