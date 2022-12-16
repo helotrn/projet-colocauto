@@ -172,7 +172,7 @@ class MandrillTransport extends Transport
                         "send_at" => null,
                         "message" => [
                             "html" => $message->getBody(),
-                            "text" => $message->getChildren()[0]->getBody(),
+                            "text" => sizeof($message->getChildren()) ? $message->getChildren()[0]->getBody() : $message->getBody(),
                             "subject" => $message->getSubject(),
                             "from_email" => array_keys($message->getFrom())[0],
                             "from_name" => array_values($message->getFrom())[0],
