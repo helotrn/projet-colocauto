@@ -148,20 +148,6 @@ export default {
     FormsValidatedInput,
     "svg-smiling-heart": SmilingHeart,
   },
-  mounted() {
-    // Add custom validation for the address.
-    extend("isFromGoogleValidation", {
-      validate: ({ address, isFromGoogle }) => isFromGoogle && address !== "",
-      message: "L'adresse doit provenir de la liste de suggestions.",
-    });
-    const initialValue = {
-      address: this.user.address,
-      // We assume that initially created addresses are correct.
-      isFromGoogle: !!this.user.address,
-    };
-    this.$refs.addressValidator.initialValue = initialValue;
-    this.$refs.addressValidator.syncValue(initialValue);
-  },
   props: {
     changed: {
       type: Boolean,
