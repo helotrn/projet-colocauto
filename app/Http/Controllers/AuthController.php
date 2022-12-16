@@ -126,10 +126,6 @@ class AuthController extends RestController
             $borrower->approved_at = new \Carbon\Carbon();
             $borrower->save();
 
-            // community approval
-            $user->communities->first()->pivot->approved_at = new \Carbon\Carbon();
-            $user->communities->first()->pivot->save();
-
             $loginRequest = new LoginRequest();
             $loginRequest->setMethod("POST");
             $loginRequest->request->add([

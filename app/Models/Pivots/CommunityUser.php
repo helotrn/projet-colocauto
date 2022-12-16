@@ -20,8 +20,10 @@ class CommunityUser extends BasePivot
         parent::boot();
 
         self::saved(function ($model) {
-            if (!!$model->approved_at && !$model->suspended_at) {
-                event(new RegistrationApprovedEvent($model->user));
+            // approuve all community members by default
+            if(!$model->approved_at) {
+                $model->approved_at = new \Carbon\Carbon();
+                $model->save();
             }
         });
     }
