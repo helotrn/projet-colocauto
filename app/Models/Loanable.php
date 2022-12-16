@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use App\Calendar\AvailabilityHelper;
-use App\Casts\PointCast;
 use App\Exports\LoanableExport;
 use App\Transformers\LoanableTransformer;
 use App\Models\Car;
@@ -13,11 +12,10 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Log;
-use MStaack\LaravelPostgis\Eloquent\PostgisTrait;
 
 class Loanable extends BaseModel
 {
-    use PostgisTrait, SoftDeletes;
+    use SoftDeletes;
 
     public $readOnly = true;
 
@@ -40,7 +38,6 @@ class Loanable extends BaseModel
         "instructions" => ["present"],
         "location_description" => ["present"],
         "name" => ["required"],
-        "position" => ["required"],
         "type" => ["required", "in:car,bike,trailer"],
     ];
 
@@ -143,17 +140,7 @@ class Loanable extends BaseModel
         ];
     }
 
-    protected $postgisFields = ["position"];
-
-    protected $postgisTypes = [
-        "position" => [
-            "geomtype" => "geography",
-        ],
-    ];
-
-    protected $casts = [
-        "position" => PointCast::class,
-    ];
+    protected $casts = [];
 
     protected $with = [];
 
@@ -161,7 +148,6 @@ class Loanable extends BaseModel
         "car_insurer",
         "events",
         "has_padlock",
-        "position_google",
         "estimated_cost"
     ];
 
@@ -344,14 +330,6 @@ class Loanable extends BaseModel
         }
 
         return null;
-    }
-
-    public function getPositionGoogleAttribute()
-    {
-        return [
-            "lat" => $this->position[0],
-            "lng" => $this->position[1],
-        ];
     }
 
     public function getEstimatedCostAttribute()

@@ -25,7 +25,6 @@ class CreateRequest extends BaseRequest
             "name" => "required",
             "papers_location" => "required",
             "plate_number" => "required",
-            "position" => "required",
             "transmission_mode" => "required",
             "year_of_circulation" => "required|digits:4",
         ];

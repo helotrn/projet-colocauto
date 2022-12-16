@@ -401,8 +401,6 @@ class LoanableController extends RestController
             "owner.user.name",
             "owner.user.last_name",
             "owner.user.full_name",
-            "position_google",
-            "position",
             "type",
             "image.*",
         ];
@@ -625,7 +623,6 @@ class LoanableController extends RestController
                 "name" => "",
                 "papers_location" => "",
                 "plate_number" => "",
-                "position" => [],
                 "share_with_parent_communities" => false,
                 "transmission_mode" => "",
                 "year_of_circulation" => "",
@@ -637,9 +634,6 @@ class LoanableController extends RestController
                     ],
                     "image" => [
                         "type" => "image",
-                    ],
-                    "position" => [
-                        "type" => "point",
                     ],
                     "location_description" => [
                         "type" => "textarea",
@@ -656,14 +650,6 @@ class LoanableController extends RestController
                             [
                                 "text" => "Auto",
                                 "value" => "car",
-                            ],
-                            [
-                                "text" => "Vélo",
-                                "value" => "bike",
-                            ],
-                            [
-                                "text" => "Remorque",
-                                "value" => "trailer",
                             ],
                         ],
                     ],
