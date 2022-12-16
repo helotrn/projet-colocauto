@@ -19,23 +19,8 @@
               <h2>Informations</h2>
 
               <forms-builder :definition="form.general" v-model="item" entity="loanables">
-                <template v-slot:share_with_parent_communities="{ def, item, property }">
-                  <forms-validated-input
-                    v-if="hasBoroughs"
-                    :description="$t(`descriptions.${property}`)"
-                    :label="
-                      $t(`fields.${property}_dynamic`, {
-                        shared_with: loanableBoroughsMessage,
-                      }) | capitalize
-                    "
-                    :name="property"
-                    :rules="def.rules"
-                    :type="def.type"
-                    :options="def.options"
-                    :disabled="def.disabled"
-                    v-model="item[property]"
-                  />
-                </template>
+                <template v-slot:share_with_parent_communities></template>
+                <template v-slot:is_self_service></template>
                 <template v-slot:owner_id="{ def, item, property }">
                   <validation-provider
                     class="forms-validated-input"
