@@ -28,7 +28,8 @@ services:
             DB_DATABASE: locomotion
             DB_USERNAME: locomotion
             DB_PASSWORD: locomotion
-            MANDRILL_KEY:
+            MANDRILL_KEY: ${MANDRILL_KEY}
+            MANDRILL_SUBACCOUNT: ${MANDRILL_SUBACCOUNT}
             ENABLE_TEST_ROUTES: "true"
             MAIL_DRIVER: ${MAIL_DRIVER:-log}
             MAIL_HOST: ${MAIL_HOST}
