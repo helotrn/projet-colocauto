@@ -611,7 +611,7 @@ class LoanableController extends RestController
     {
         $template = [
             "item" => [
-                "type" => null,
+                "type" => "car",
                 "brand" => "",
                 "comments" => "",
                 "community" => null,
@@ -654,6 +654,7 @@ class LoanableController extends RestController
                                 "value" => "car",
                             ],
                         ],
+                        "disabled" => true,
                     ],
                     "community_id" => [
                         "type" => "relation",
