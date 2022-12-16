@@ -8,8 +8,9 @@
 
         <b-col class="loanable-info-box__name"
           ><span>{{ name }}</span>
-           <small v-if="estimated_cost">{{ estimated_cost.price | currency }}/km</small>
-           <small v-if="owner"><strong>{{ owner.user.full_name }}</strong></small></b-col
+           <small v-if="estimated_cost">{{ estimated_cost.cost_per_km | currency }}/km</small>
+           <small v-if="estimated_cost">{{ estimated_cost.cost_per_month | currency }}/mois</small>
+           <small v-if="owner"><strong>Propriétaire: {{ owner.user.full_name }}</strong></small></b-col
         >
       </b-row>
     </router-link>

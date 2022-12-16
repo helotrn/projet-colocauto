@@ -360,10 +360,11 @@ class Loanable extends BaseModel
 
         // evaluate a fictive loan to get the price per km
         $departureAt = new Carbon();
+        $car = Car::find($this->id)->toArray();
         $estimatedCost = $pricing->evaluateRule(
             1, // km
             0, // minutes
-            Car::find($this->id)->toArray(),
+            $car,
             (object) [
                 "days" => Loan::getCalendarDays($departureAt, $departureAt),
                 "start" => Pricing::dateToDataObject($departureAt),
@@ -382,6 +383,8 @@ class Loanable extends BaseModel
             "price" => $price,
             "insurance" => $insurance,
             "pricing" => $pricing->name,
+            "cost_per_km" => $car['cost_per_km'],
+            "cost_per_month" => $car['cost_per_month'],
         ];
     }
 
