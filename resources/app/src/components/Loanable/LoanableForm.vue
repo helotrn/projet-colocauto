@@ -1,11 +1,11 @@
 <template>
   <div class="loanable-form">
     <validation-observer ref="observer" v-slot="{ passes, valid }">
-      <b-form
-        :novalidate="true"
-        class="form loanable-form__form"
-        @submit.stop.prevent="checkInvalidThenSubmit(passes)"
-      >
+      <!--
+        Submit is bound to buttons directly so as to prevent vue-cal to
+        trigger a submit event for an unknown reason.
+      -->
+      <b-form :novalidate="true" class="form loanable-form__form" @submit.stop.prevent>
         <div class="form__section">
           <b-row>
             <b-col lg="8">
@@ -174,14 +174,23 @@
 
         <div class="form__buttons" v-if="!hideButtons">
           <b-button-group v-if="showReset">
-            <b-button variant="success" type="submit" :disabled="!changed || loading">
+            <b-button
+              variant="success"
+              @click="checkInvalidThenSubmit(passes)"
+              :disabled="!changed || loading"
+            >
               {{ $t("enregistrer") | capitalize }}
             </b-button>
             <b-button type="reset" :disabled="!changed || loading" @click="$emit('reset')">
               {{ $t("réinitialiser") | capitalize }}
             </b-button>
           </b-button-group>
-          <b-button variant="success" type="submit" v-else :disabled="!changed || loading">
+          <b-button
+            variant="success"
+            @click="checkInvalidThenSubmit(passes)"
+            v-else
+            :disabled="!changed || loading"
+          >
             {{ $t("enregistrer") | capitalize }}
           </b-button>
         </div>
