@@ -92,6 +92,15 @@
       </b-col>
     </b-row>
 
+    <b-row>
+      <loanable-calendar
+        defaultView="month"
+        :events="events"
+        @ready="getEvents"
+        @view-change="getEvents"
+      ></loanable-calendar>
+    </b-row>
+
     <b-row class="availability-rules__description">
       <b-col>
         <div class="form-inline availability-rules__description__default">
@@ -130,14 +139,21 @@
 </template>
 
 <script>
+import Vue from "vue";
+
 import VueCal from "vue-cal";
 import "vue-cal/dist/i18n/fr";
 
+import LoanableCalendar from "@/components/Loanable/Calendar.vue";
 import LoanableExceptions from "@/components/Loanable/Exceptions.vue";
 
 export default {
   name: "LoanableAvailabilityRules",
-  components: { LoanableExceptions, VueCal },
+  components: {
+    LoanableCalendar,
+    LoanableExceptions,
+    VueCal,
+  },
   props: {
     changed: {
       type: Boolean,
@@ -157,6 +173,7 @@ export default {
   data() {
     return {
       selectedDate: this.$dayjs().format("YYYY-MM-DD"),
+      events: [],
     };
   },
   computed: {
@@ -257,6 +274,61 @@ export default {
     resetDate() {
       this.selectedDate = this.$dayjs().format("YYYY-MM-DD");
     },
+    getEvents({ view, startDate, endDate, firstCellDate, lastCellDate, week }) {
+      const { CancelToken } = Vue.axios;
+      const cancelToken = CancelToken.source();
+
+      if (view === "month") {
+        // Must convert [, ] interval to [, ) by adding one second to the end time.
+        let start = this.$dayjs(firstCellDate);
+        let end = this.$dayjs(lastCellDate).add(1, "s");
+
+        try {
+          Vue.axios
+            .get(`/loanables/${this.loanable.id}/availability`, {
+              params: {
+                start: start.format("YYYY-MM-DD HH:mm:ss"),
+                end: end.format("YYYY-MM-DD HH:mm:ss"),
+                responseMode: "unavailable",
+              },
+              cancelToken: cancelToken.token,
+            })
+
+            .then((response) => {
+              this.events = response.data;
+            });
+        } catch (e) {
+          throw e;
+        }
+      } else {
+        // Must convert [, ] interval to [, ) by adding one second to the end time.
+        let start = this.$dayjs(startDate);
+        let end = this.$dayjs(endDate).add(1, "s");
+
+        try {
+          Vue.axios
+            .get(`/loanables/${this.loanable.id}/events`, {
+              params: {
+                start: start.format("YYYY-MM-DD HH:mm:ss"),
+                end: end.format("YYYY-MM-DD HH:mm:ss"),
+              },
+              cancelToken: cancelToken.token,
+            })
+
+            .then((response) => {
+              this.events = response.data.map((e) => {
+                if (e.type === "availability_rule") {
+                  e.type = "availability";
+                }
+
+                return e;
+              });
+            });
+        } catch (e) {
+          throw e;
+        }
+      }
+    },
   },
 };
 </script>
@@ -348,11 +420,6 @@ export default {
       font-size: 16px;
       color: $locomotion-dark-blue;
     }
-
-    &__arrow {
-      display: none;
-    }
-
     &__cell-date {
       &.available {
         color: $success;
