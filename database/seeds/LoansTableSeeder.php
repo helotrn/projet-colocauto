@@ -9,19 +9,6 @@ class LoansTableSeeder extends Seeder
     public function run()
     {
         $loans = [
-            [
-                "id" => 1,
-                "departure_at" => now(),
-                "duration_in_minutes" => 120,
-                "borrower_id" => 7,
-                "loanable_id" => 3,
-                "estimated_distance" => 20,
-                "estimated_price" => 2,
-                "estimated_insurance" => 0,
-                "platform_tip" => 2,
-                "reason" => "Promenade",
-                "community_id" => 1,
-            ],
         ];
 
         foreach ($loans as $loan) {

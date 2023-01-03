@@ -10,91 +10,145 @@ class UsersTableSeeder extends Seeder
     {
         $solon = [
             "password" => "locomotion",
-            "date_of_birth" => "1965-06-04",
-            "address" => "6450 Christophe-Colomb, Montréal",
-            "postal_code" => "H2S 2G7",
-            "phone" => "555 555-5555",
+            "date_of_birth" => "1981-07-19",
+            "address" => "61 boulevard Marie et Alexandre Oyon, Le Mans",
+            "postal_code" => "72000",
+            "phone" => "06 20 20 54 97",
             "accept_conditions" => true,
             "gdpr" => true,
             "newsletter" => true,
         ];
 
         $users = [
-            "soutien@locomotion.app" => array_merge($solon, [
+            "dev@colocauto.org" => array_merge($solon, [
                 "id" => 1,
                 "role" => "admin",
-                "name" => "Soutien Locomotion",
+                "name" => "Soutien Colocauto",
             ]),
-            "solonahuntsic@locomotion.app" => array_merge($solon, [
+            "pauline@colocauto.org" => array_merge($solon, [
                 "id" => 2,
-                "role" => "admin",
-                "name" => "Solon",
-                "last_name" => "Ahuntsic",
-                "description" => "Propriétaire de la flotte dans Ahuntsic.",
+                "name" => "Pauline",
+                "last_name" => "Bonneau",
+                "description" => "",
             ]),
-            "solonpetitepatrie@locomotion.app" => array_merge($solon, [
+            "isabelle@colocauto.org" => array_merge($solon, [
                 "id" => 3,
-                "role" => "admin",
-                "name" => "Solon",
-                "last_name" => "Petite-Patrie",
-                "description" =>
-                    "Propriétaire de la flotte dans La Petite-Patrie.",
+                "name" => "Isabelle",
+                "last_name" => "Deschamps",
+                "description" => "",
             ]),
-            "proprietaireahuntsic@locomotion.app" => array_merge($solon, [
+            "stephanie@colocauto.org" => array_merge($solon, [
                 "id" => 4,
-                "name" => "Propriétaire",
-                "last_name" => "Ahuntsic",
-                "description" => "Salut tout le monde :)",
-                "submitted_at" => new \DateTime(),
+                "name" => "Stéphanie",
+                "last_name" => "Pineau",
+                "description" => "",
             ]),
-            "emprunteurahuntsic@locomotion.app" => array_merge($solon, [
+            "joseph@colocauto.org" => array_merge($solon, [
                 "id" => 5,
-                "name" => "Emprunteur",
-                "last_name" => "Ahuntsic",
-                "submitted_at" => new \DateTime(),
+                "name" => "Joseph",
+                "last_name" => "Schmitt",
+                "description" => "",
             ]),
-            "proprietairepetitepatrie@locomotion.app" => array_merge($solon, [
+            "suzanne@colocauto.org" => array_merge($solon, [
                 "id" => 6,
-                "name" => "Propriétaire",
-                "last_name" => "Petite-Patrie",
-                "description" => "Salut tout le monde :)",
-                "submitted_at" => new \DateTime(),
+                "name" => "Suzanne",
+                "last_name" => "Chauvet",
+                "description" => "",
             ]),
-            "emprunteurpetitepatrie@locomotion.app" => array_merge($solon, [
+            "camille@colocauto.org" => array_merge($solon, [
                 "id" => 7,
-                "name" => "Emprunteur",
-                "last_name" => "Petite-Patrie",
-                "description" => "Salut tout le monde :)",
-                "submitted_at" => new \DateTime(),
+                "name" => "Camille",
+                "last_name" => "Dos Santos",
+                "description" => "",
+            ]),
+            "matthieu@colocauto.org" => array_merge($solon, [
+                "id" => 8,
+                "name" => "Matthieu",
+                "last_name" => "Arnaud",
+                "description" => "",
+            ]),
+            "theophile@colocauto.org" => array_merge($solon, [
+                "id" => 9,
+                "name" => "Théophile",
+                "last_name" => "Devaux",
+                "description" => "",
+            ]),
+            "marcelle@colocauto.org" => array_merge($solon, [
+                "id" => 10,
+                "name" => "Marcelle",
+                "last_name" => "Nicolas",
+                "description" => "",
+            ]),
+            "lucas@colocauto.org" => array_merge($solon, [
+                "id" => 11,
+                "name" => "Lucas ",
+                "last_name" => "Ferrand",
+                "description" => "",
+            ]),
+            "henriette@colocauto.org" => array_merge($solon, [
+                "id" => 12,
+                "name" => "Henriette",
+                "last_name" => "Schneider",
+                "description" => "",
+            ]),
+            "christiane@colocauto.org" => array_merge($solon, [
+                "id" => 13,
+                "name" => "Christiane",
+                "last_name" => "Girard",
+                "description" => "",
             ]),
         ];
 
         // Community memberships
         $memberships = [
-            "soutien@locomotion.app" => [],
-            "solonahuntsic@locomotion.app" => [
-                // 8: Ahuntsic
-                8 => ["approved_at" => new \DateTime()],
+            "dev@colocauto.org" => [],
+            "pauline@colocauto.org" => [
+                // 1: Asso Eolien
+                1 => ["approved_at" => new \DateTime()],
             ],
-            "solonpetitepatrie@locomotion.app" => [
-                // 9: Petite-Patrie
-                9 => ["approved_at" => new \DateTime()],
+            "isabelle@colocauto.org" => [
+                // 1: Asso Eolien
+                1 => ["approved_at" => new \DateTime()],
             ],
-            "proprietaireahuntsic@locomotion.app" => [
-                // 8: Ahuntsic
-                8 => ["approved_at" => new \DateTime()],
+            "stephanie@colocauto.org" => [
+                // 1: Asso Eolien
+                1 => ["approved_at" => new \DateTime()],
             ],
-            "emprunteurahuntsic@locomotion.app" => [
-                // 8: Ahuntsic
-                8 => ["approved_at" => new \DateTime()],
+            "joseph@colocauto.org" => [
+                // 1: Asso Eolien
+                1 => ["approved_at" => new \DateTime()],
             ],
-            "proprietairepetitepatrie@locomotion.app" => [
-                // 9: Petite-Patrie
-                9 => ["approved_at" => new \DateTime()],
+            "suzanne@colocauto.org" => [
+                // 1: Asso Eolien
+                1 => ["approved_at" => new \DateTime()],
             ],
-            "emprunteurpetitepatrie@locomotion.app" => [
-                // 9: Petite-Patrie
-                9 => ["approved_at" => new \DateTime()],
+            "camille@colocauto.org" => [
+                // 1: Asso Eolien
+                1 => ["approved_at" => new \DateTime()],
+            ],
+            "matthieu@colocauto.org" => [
+                // 1: Asso Eolien
+                1 => ["approved_at" => new \DateTime()],
+            ],
+            "theophile@colocauto.org" => [
+                // 1: Asso Eolien
+                1 => ["approved_at" => new \DateTime()],
+            ],
+            "marcelle@colocauto.org" => [
+                // 2: Groupe Citoyen
+                2 => ["approved_at" => new \DateTime()],
+            ],
+            "lucas@colocauto.org" => [
+                // 2: Groupe Citoyen
+                2 => ["approved_at" => new \DateTime()],
+            ],
+            "henriette@colocauto.org" => [
+                // 2: Groupe Citoyen
+                2 => ["approved_at" => new \DateTime()],
+            ],
+            "christiane@colocauto.org" => [
+                // 2: Groupe Citoyen
+                2 => ["approved_at" => new \DateTime()],
             ],
         ];
 

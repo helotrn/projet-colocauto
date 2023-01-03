@@ -9,13 +9,9 @@ class AdminsTableSeeder extends Seeder
     public function run()
     {
         $admins = [
-            "soutien@molotov.ca" => [
+            "dev@colocauto.org" => [
                 "role" => "admin",
-                "name" => "Molotov Communications",
-            ],
-            "info@solon-collectif.org" => [
-                "role" => "admin",
-                "name" => "Solon Collectif",
+                "name" => "Dev Colocauto",
             ],
         ];
 

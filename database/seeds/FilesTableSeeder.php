@@ -7,18 +7,7 @@ class FilesTableSeeder extends Seeder
 {
     public function run()
     {
-        $files = [
-            [
-                "id" => 1,
-                "fileable_type" => "App\Models\Pivots\CommunityUser",
-                "fileable_id" => 6, // Emprunteur Petite Patrie
-                "path" => "/seeds/1",
-                "filename" => "preuve_de_résidence.png",
-                "original_filename" => "preuve de résidence.png",
-                "field" => "proof",
-                "filesize" => 3817,
-            ],
-        ];
+        $files = [];
 
         foreach ($files as $file) {
             if (!File::where("id", $file["id"])->exists()) {

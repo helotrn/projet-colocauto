@@ -10,33 +10,11 @@ class ProductionPricingsTableSeeder extends Seeder
     {
         $pricings = [
             [
-                "name" => "Emprunt gratuit",
-                "object_type" => "trailer",
-                "rule" => "0",
-            ],
-            [
-                "name" => "Emprunt gratuit",
-                "object_type" => "bike",
-                "rule" => "0",
-            ],
-            [
-                "name" => "Tarif Voitures LocoMotion",
+                "name" => "Tarif Voitures Colocauto",
                 "object_type" => "car",
                 "rule" => <<<RULE
-# Retourne un tableau de deux éléments : [tarif, assurances]
-
-# Réservation de grandes voitures pour 6 blocs de 2 heures ou moins.
-SI \$OBJET.pricing_category == 'large' && \$MINUTES <= 6 * 120 ALORS [0.18 * \$KM + 34.12 * PLAFOND(\$MINUTES/120) / 6, 3 + \$SURCOUT_ASSURANCE]
-# Réservation de grandes voitures pour plus de 6 blocs.
-SI \$OBJET.pricing_category == 'large' ALORS [0.18 * \$KM + 34.12 * (1 + (PLAFOND(\$MINUTES/120) - 6) / 12), \$EMPRUNT.days * (5 + \$SURCOUT_ASSURANCE)]
-
-# Réservation de petites voitures pour 6 blocs de 2 heures ou moins.
-SI \$OBJET.pricing_category == 'small' && \$MINUTES <= 6 * 120 ALORS [0.13 * \$KM + 21.81 * PLAFOND(\$MINUTES/120) / 6, 3 + \$SURCOUT_ASSURANCE]
-# Réservation de petites voitures pour plus de 6 blocs.
-SI \$OBJET.pricing_category == 'small' ALORS [0.13 * \$KM + 21.81 * (1 + (PLAFOND(\$MINUTES/120) - 6) / 12), \$EMPRUNT.days * (5 + \$SURCOUT_ASSURANCE)]
-
-# Tous les autres cas, mais il n'y en a pas d'autres normalement.
-[0.13 * \$KM + 21.81 * (1 + PLAFOND(\$MINUTES/120) / 12), \$EMPRUNT.days * (5 + 1)]
+# Le coût ne dépend que du nombre de kilomètres et du tarif du véhicule
+\$OBJET.cost_per_km * \$KM
 RULE
             ,
             ],

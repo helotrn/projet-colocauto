@@ -12,12 +12,11 @@ class CarsTableSeeder extends Seeder
             [
                 "id" => 1001,
                 "name" => "Auto de Propriétaire Petite-Patrie sur demande",
-                "position" => "45.540, -73.590",
                 "location_description" => "Stationnée devant la maison.",
                 "comments" => "",
                 "instructions" => "",
-                // proprietairepetitepatrie@locomotion.app
-                "owner_id" => 6,
+                // pauline
+                "owner_id" => 2,
                 "brand" => "Toyota",
                 "model" => "Matrix",
                 "year_of_circulation" => "2015",
