@@ -156,6 +156,7 @@ class User extends AuthenticatableBaseModel
         "loans",
         "loanables",
         "payment_methods",
+        "expenses",
     ];
 
     public $items = ["borrower", "owner", "google_account"];
@@ -368,6 +369,11 @@ class User extends AuthenticatableBaseModel
     public function tags()
     {
         return $this->morphToMany(Tag::class, "taggable");
+    }
+
+    public function expenses()
+    {
+        return $this->hasMany(Expense::class);
     }
 
     public function isAdmin()

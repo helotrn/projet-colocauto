@@ -184,7 +184,7 @@ class Loanable extends BaseModel
         return $this->hasOne(Padlock::class, "loanable_id");
     }
 
-    public $collections = ["loans", "coowners"];
+    public $collections = ["loans", "coowners", "expenses"];
 
     public function loans()
     {
@@ -215,6 +215,11 @@ class Loanable extends BaseModel
     public function isCoowner(User $user): bool
     {
         return $this->coowners->where("user_id", $user->id)->isNotEmpty();
+    }
+
+    public function expenses()
+    {
+        return $this->hasMany(Expense::class);
     }
 
     public function getAvailabilityRules()
