@@ -21,6 +21,15 @@ class CreateExpensesTable extends Migration
             $table->enum("type", ["debit", "credit"]);
             $table->dateTimeTz("executed_at")->nullable();
             $table->timestamps();
+            $table->softDeletes();
+            $table->unsignedBigInteger("user_id");
+            $table
+                ->foreign("user_id")
+                ->references("id")
+                ->on("users")
+                ->onDelete("cascade");
+            // Cannot create foreign key to loanable since its more than one table
+            $table->unsignedBigInteger("loanable_id");
         });
     }
 

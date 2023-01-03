@@ -19,7 +19,7 @@ class Expense extends BaseModel
         ];
     }
 
-    protected $fillable = ["name", "amount", "type", "executed_at"];
+    protected $fillable = ["name", "amount", "type", "executed_at", "loanable_id", "user_id"];
 
     public $items = ["user", "loanable"];
 
