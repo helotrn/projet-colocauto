@@ -95,7 +95,8 @@ class ExpenseController extends RestController
                 "token" => [
                     "type" => "text",
                 ],
-            ]
+            ],
+            "filters" => $this->model::$filterTypes ?: new \stdClass(),
         ];
 
         $modelRules = $this->model->getRules("template", $request->user());

@@ -5,10 +5,12 @@ import Dashboard from "@/locales/views/Dashboard";
 import communities from "@/locales/models/communities";
 import loanables from "@/locales/models/loanables";
 import invitations from "@/locales/models/invitations";
+import expenses from "@/locales/models/expenses";
 
 export default {
   communities: communities.en,
   invitations: invitations.en,
+  expenses: expenses.en,
   components: {
     admin: {
       filters: AdminFilters.en,

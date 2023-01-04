@@ -16,6 +16,7 @@ import AdminUser from "@/views/admin/User.vue";
 import AdminUsers from "@/views/admin/Users.vue";
 import AdminInvitations from "@/views/admin/Invitations.vue";
 import AdminInvitation from "@/views/admin/Invitation.vue";
+import AdminExpenses from "@/views/admin/Expenses.vue";
 
 export default [
   {
@@ -347,6 +348,24 @@ export default [
             fields: "*",
           },
           title: "titles.invitation",
+        },
+      },
+      {
+        path: "expenses",
+        component: AdminExpenses,
+        meta: {
+          auth: true,
+          creatable: true,
+          slug: "expenses",
+          data: {
+            expenses: {
+              retrieve: {
+                fields: "*,loanable.name,user.name",
+                for: "edit",
+              },
+            },
+          },
+          title: "titles.expenses",
         },
       },
     ],

@@ -23,6 +23,7 @@ import tags from "@/locales/models/tags";
 import trailers from "@/locales/models/trailers";
 import users from "@/locales/models/users";
 import invitations from "@/locales/models/invitations";
+import expenses from "@/locales/models/expenses";
 
 export default {
   bikes: bikes.fr,
@@ -30,6 +31,7 @@ export default {
   cars: cars.fr,
   communities: communities.fr,
   invitations: invitations.fr,
+  expenses: expenses.fr,
   components: {
     admin: {
       filters: AdminFilters.fr,
@@ -147,6 +149,8 @@ export default {
     users: "membres",
     invitations: "Invitations",
     invitation: "Invitation",
+    expenses: "Dépenses",
+    expense: "Dépense",
   },
   trailers: trailers.fr,
   users: users.fr,
