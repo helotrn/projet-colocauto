@@ -17,6 +17,7 @@ import AdminUsers from "@/views/admin/Users.vue";
 import AdminInvitations from "@/views/admin/Invitations.vue";
 import AdminInvitation from "@/views/admin/Invitation.vue";
 import AdminExpenses from "@/views/admin/Expenses.vue";
+import AdminExpense from "@/views/admin/Expense.vue";
 
 export default [
   {
@@ -366,6 +367,19 @@ export default [
             },
           },
           title: "titles.expenses",
+        },
+      },
+      {
+        path: "expenses/:id",
+        component: AdminExpense,
+        props: true,
+        meta: {
+          auth: true,
+          slug: "expenses",
+          params: {
+            fields: "*",
+          },
+          title: "titles.expense",
         },
       },
     ],

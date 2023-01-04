@@ -3,7 +3,7 @@ export default {
     model_name: "dépense | dépenses",
     fields: {
       id: "ID",
-      name: "title",
+      name: "Titre",
       amount: "montant en Euros",
       executed_at: "date",
       user_id: "Payé par",

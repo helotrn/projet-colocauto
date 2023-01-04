@@ -54,6 +54,17 @@ class ExpenseController extends RestController
         return $this->respondWithItem($request, $item, 201);
     }
 
+    public function update(Request $request, $id)
+    {
+        try {
+            $item = parent::validateAndUpdate($request, $id);
+        } catch (ValidationException $e) {
+            return $this->respondWithErrors($e->errors(), $e->getMessage());
+        }
+
+        return $this->respondWithItem($request, $item);
+    }
+
     public function template(Request $request)
     {
         $template = [
@@ -73,27 +84,24 @@ class ExpenseController extends RestController
                 "user_id" => [
                     "type" => "relation",
                     "query" => [
-                        "slug" => "user",
+                        "slug" => "users",
                         "value" => "id",
-                        "text" => "name",
+                        "text" => "full_name",
                         "params" => [
-                            "fields" => "id,name,last_name",
+                            "fields" => "id,name,full_name",
                         ],
                     ],
                 ],
                 "loanable_id" => [
                     "type" => "relation",
                     "query" => [
-                        "slug" => "lonables",
+                        "slug" => "loanables",
                         "value" => "id",
                         "text" => "name",
                         "params" => [
                             "fields" => "id,name",
                         ],
                     ],
-                ],
-                "token" => [
-                    "type" => "text",
                 ],
             ],
             "filters" => $this->model::$filterTypes ?: new \stdClass(),
