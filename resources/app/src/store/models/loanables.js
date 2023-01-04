@@ -70,32 +70,49 @@ export default new RestModule(
 
       commit("data", newData);
     },
-    async search({ commit, state }, { loan }) {
+    async search({ commit, state }, payload) {
       const { CancelToken } = Vue.axios;
       const cancelToken = CancelToken.source();
 
       try {
         commit("cancelToken", cancelToken);
-        const { data } = await Vue.axios.get(`/loanables/search`, {
-          params: { ...loan },
-          cancelToken: cancelToken.token,
-        });
+        
+        // case of a loan search
+        if( payload.loan ){
+          const { data } = await Vue.axios.get(`/loanables/search`, {
+            params: { ...payload.loan },
+            cancelToken: cancelToken.token,
+          });
 
-        const availableLoanable = new Map(
-          Object.values(data).map((estimatedLoan) => [estimatedLoan.loanableId, estimatedLoan])
-        );
+          const availableLoanable = new Map(
+            Object.values(data).map((estimatedLoan) => [estimatedLoan.loanableId, estimatedLoan])
+          );
 
-        const newData = state.data.map((d) => {
-          const isAvailable = availableLoanable.has(d.id);
-          return {
-            ...d,
-            available: isAvailable,
-            estimatedCost: isAvailable ? availableLoanable.get(d.id).estimatedCost : null,
-            tested: true,
-          };
-        });
+          const newData = state.data.map((d) => {
+            const isAvailable = availableLoanable.has(d.id);
+            return {
+              ...d,
+              available: isAvailable,
+              estimatedCost: isAvailable ? availableLoanable.get(d.id).estimatedCost : null,
+              tested: true,
+            };
+          });
 
-        commit("data", newData);
+          commit("data", newData);
+        } else {
+          // case of a classic search to fill an input
+          const {
+            data: { data },
+          } = await Vue.axios.get(`/${state.slug}`, {
+            params: {
+              ...payload.params,
+              q: payload.q,
+            },
+            cancelToken: cancelToken.token,
+          });
+          commit("search", data);
+        }
+
       } catch (e) {
         const { request, response } = e;
         if (request) {
