@@ -81,6 +81,9 @@ class ExpenseController extends RestController
                 "executed_at" => [
                     "type" => "date",
                 ],
+                "amount" => [
+                    "type" => "currency",
+                ],
                 "user_id" => [
                     "type" => "relation",
                     "query" => [

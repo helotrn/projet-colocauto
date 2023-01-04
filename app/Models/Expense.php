@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Validation\Rule;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Carbon\Carbon;
 
 class Expense extends BaseModel
 {
@@ -15,7 +16,7 @@ class Expense extends BaseModel
             "name" => ["required"],
             "amount" => ["required","numeric","gt:0"],
             "type" => ["required", Rule::in('credit','debit')],
-            "executed_at" => ["nullable","date"], // TODO: use today date if not provided
+            "executed_at" => ["nullable","date"],
         ];
     }
 
@@ -31,5 +32,18 @@ class Expense extends BaseModel
     public function loanable()
     {
         return $this->belongsTo(Loanable::class);
+    }
+    
+    public static function boot()
+    {
+        parent::boot();
+
+        self::saved(function ($model) {
+            if (!$model->executed_at) {
+                // default date is today
+                $model->executed_at = Carbon::now();
+                $model->save();
+            }
+        });
     }
 }

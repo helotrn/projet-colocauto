@@ -14,16 +14,32 @@ class CreateRequest extends BaseRequest
 
     public function rules()
     {
-
-        return [
-            // TODO manage access rules
+        // TODO change rules depending on the user
+        $rules = [
+            "amount" => [
+                "numeric",
+                "required",
+                "gt:0"
+            ],
+            "loanable_id" => [
+                "numeric",
+                "required",
+            ],
+            "user_id" => [
+                "numeric",
+                "required",
+            ]
         ];
+
+        return $rules;
     }
 
-    public function messages()
+    public function attributes()
     {
         return [
-            // TODO manage error messages
+            "user_id" => "payé par",
+            "loanable_id" => "véhicule",
+            "amount" => "montant"
         ];
     }
 }
