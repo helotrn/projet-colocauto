@@ -157,6 +157,8 @@ class User extends AuthenticatableBaseModel
         "loanables",
         "payment_methods",
         "expenses",
+        "debited_refunds",
+        "credited_refunds"
     ];
 
     public $items = ["borrower", "owner", "google_account"];
@@ -376,6 +378,16 @@ class User extends AuthenticatableBaseModel
         return $this->hasMany(Expense::class);
     }
 
+    public function debitedRefunds()
+    {
+        return $this->hasMany(Refund::class, 'user_id');
+    }
+
+    public function creditedRefunds()
+    {
+        return $this->hasMany(Refund::class, 'credited_user_id');
+    }
+
     public function isAdmin()
     {
         return $this->role === "admin";
@@ -457,6 +469,18 @@ class User extends AuthenticatableBaseModel
         }
 
         return $communityIds;
+    }
+
+    public function getSameCommunityUserIds()
+    {
+        $communityIds = $this->getAccessibleCommunityIds();
+        $userIds = User::whereHas('community', function ($q) use (
+            $communityIds
+        ) {
+            return $q->whereIn('communities.id', $communityIds);
+        })->pluck("id");
+
+        return $userIds;
     }
 
     public function getNokeUser()
