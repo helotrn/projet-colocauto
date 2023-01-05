@@ -10,6 +10,7 @@
     <b-nav-item to="/admin/tags" v-if="isGlobalAdmin">Mots-clés</b-nav-item>
     <b-nav-item to="/admin/invitations" v-if="isGlobalAdmin">Invitations</b-nav-item>
     <b-nav-item to="/admin/expenses" v-if="isGlobalAdmin">Dépenses</b-nav-item>
+    <b-nav-item to="/admin/expense_tags" v-if="isGlobalAdmin">Types de dépenses</b-nav-item>
   </div>
 </template>
 

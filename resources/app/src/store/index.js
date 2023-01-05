@@ -25,6 +25,7 @@ import owners from "./models/owners";
 import users from "./models/users";
 import invitations from "./models/invitations";
 import expenses from "./models/expenses";
+import expense_tags from "./models/expense_tags";
 
 import AdminCommunity from "./pages/admin/community";
 import CommunityMap from "./pages/community/map";
@@ -67,6 +68,7 @@ const modules = {
   users,
   invitations,
   expenses,
+  expense_tags,
 
   // Page modules
   "community.map": CommunityMap,

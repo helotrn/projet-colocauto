@@ -24,6 +24,7 @@ import trailers from "@/locales/models/trailers";
 import users from "@/locales/models/users";
 import invitations from "@/locales/models/invitations";
 import expenses from "@/locales/models/expenses";
+import expense_tags from "@/locales/models/expense_tags";
 
 export default {
   bikes: bikes.fr,
@@ -32,6 +33,7 @@ export default {
   communities: communities.fr,
   invitations: invitations.fr,
   expenses: expenses.fr,
+  expense_tags: expense_tags.fr,
   components: {
     admin: {
       filters: AdminFilters.fr,
@@ -152,6 +154,7 @@ export default {
     expenses: "Dépenses",
     expense: "Dépense",
     wallet: "Portefeuille",
+    expense_tags: "Types de dépenses",
   },
   trailers: trailers.fr,
   users: users.fr,

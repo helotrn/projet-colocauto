@@ -18,6 +18,8 @@ import AdminInvitations from "@/views/admin/Invitations.vue";
 import AdminInvitation from "@/views/admin/Invitation.vue";
 import AdminExpenses from "@/views/admin/Expenses.vue";
 import AdminExpense from "@/views/admin/Expense.vue";
+import AdminExpenseTags from "@/views/admin/ExpenseTags.vue";
+import AdminExpenseTag from "@/views/admin/ExpenseTag.vue";
 
 export default [
   {
@@ -380,6 +382,36 @@ export default [
             fields: "*",
           },
           title: "titles.expense",
+        },
+      },
+      {
+        path: "expense_tags",
+        component: AdminExpenseTags,
+        meta: {
+          auth: true,
+          creatable: true,
+          slug: "expense_tags",
+          data: {
+            expense_tags: {
+              retrieve: {
+                fields: "*",
+              },
+            },
+          },
+          title: "titles.expense_tags",
+        },
+      },
+      {
+        path: "expense_tags/:id",
+        component: AdminExpenseTag,
+        props: true,
+        meta: {
+          auth: true,
+          slug: "expense_tags",
+          params: {
+            fields: "*",
+          },
+          title: "titles.expense_tag",
         },
       },
     ],

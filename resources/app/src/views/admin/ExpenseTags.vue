@@ -20,7 +20,7 @@
 
       <b-col class="admin__filters">
         <admin-filters
-          entity="expenses"
+          entity="expense_tags"
           :filters="filters"
           :params="contextParams"
           @change="setParam"
@@ -30,20 +30,26 @@
 
     <b-row>
       <b-col>
-        <expenses-table-list
-          :visibleFields="[
-            'id',
-            'name',
-            'amount',
-            'user.name',
-            'loanable.name',
-            'executed_at',
-            'actions'
-          ]"
+        <b-table
+          striped
+          hover
           :items="data"
           :busy="loading"
+          :fields="table"
+          no-local-sorting
+          :sort-by.sync="sortBy"
+          :sort-desc.sync="sortDesc"
+          no-sort-reset
+          :show-empty="true"
+          empty-text="Pas de mot-clé"
         >
-        </expenses-table-list>
+          <template v-slot:cell(color)="row">
+            <span class="badge" :class="`badge-${row.value}`">{{ colorNames[row.value] }}</span>
+          </template>
+          <template v-slot:cell(actions)="row">
+            <admin-list-actions :columns="['edit']" :row="row" :slug="slug" />
+          </template>
+        </b-table>
       </b-col>
     </b-row>
 
@@ -61,34 +67,43 @@
 import AdminFilters from "@/components/Admin/Filters.vue";
 import AdminListActions from "@/components/Admin/ListActions.vue";
 import AdminPagination from "@/components/Admin/Pagination.vue";
-import ExpensesTableList from "@/components/Expenses/TableList.vue";
 
 import DataRouteGuards from "@/mixins/DataRouteGuards";
 import ListMixin from "@/mixins/ListMixin";
 import locales from "@/locales";
 
 export default {
-  name: "AdminExpenses",
+  name: "AdminExpenseTags",
   mixins: [DataRouteGuards, ListMixin],
   components: {
     AdminFilters,
     AdminListActions,
     AdminPagination,
-    ExpensesTableList,
   },
   data() {
     return {
-      selected: [],
+      table: [
+        { key: "id", label: "ID", sortable: true, class: "text-right tabular-nums" },
+        { key: "name", label: "Nom", sortable: true },
+        { key: "color", label: "Couleur", sortable: true },
+        { key: "slug", label: "Nom système", sortable: true },
+        { key: "actions", label: "Actions", tdClass: "table__cell__actions" },
+      ],
+      colorNames: {
+        primary: 'Bleu',
+        success: 'Vert',
+        danger: 'Rouge',
+      }
     };
   },
   i18n: {
     messages: {
       en: {
-        ...locales.en.expenses,
+        ...locales.en.expense_tags,
         ...locales.en.forms,
       },
       fr: {
-        ...locales.fr.expenses,
+        ...locales.fr.expense_tags,
         ...locales.fr.forms,
       },
     },
