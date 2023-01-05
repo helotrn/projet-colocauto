@@ -8,6 +8,7 @@
     :time-cell-height="variant === 'small' ? 24 : 18"
     :events="vueCalEvents"
     locale="fr"
+    start-week-on-sunday
     :xsmall="variant === 'small'"
     @ready="$emit('ready', $event)"
     @view-change="$emit('view-change', $event)"
@@ -43,7 +44,13 @@
     </template>
 
     <template #cell-content="{ cell, view, events }">
-      <span class="vuecal__cell-date">
+      <span
+        v-if="view.id === 'month'"
+        :class="`vuecal__cell-date ${getMonthDayAvailabilityClass(events, cell)}`"
+      >
+        {{ cell.content }}
+      </span>
+      <span v-else class="vuecal__cell-date">
         {{ cell.content }}
       </span>
     </template>
@@ -127,6 +134,39 @@ export default {
       return vueCalEvents;
     },
   },
+  methods: {
+    getMonthDayAvailabilityClass(events, cell) {
+      const today = this.$dayjs().startOfDay();
+
+      const cellStartTime = this.$dayjs(cell.startDate).startOfDay();
+      const cellEndTime = cellStartTime.add(1, "day");
+
+      let eventStartTime, eventEndTime;
+
+      let availabilityClass = "vuecal__cell--available";
+
+      let nEvents = events.length;
+
+      // Month-view events are events of unavailability.
+      for (let e = 0; e < nEvents; e++) {
+        eventStartTime = this.$dayjs(events[e].start);
+        eventEndTime = this.$dayjs(events[e].end);
+
+        if (
+          0 == eventStartTime.diff(cellStartTime, "seconds") &&
+          0 == eventEndTime.diff(cellEndTime, "seconds")
+        ) {
+          // If event spans the whole day, then unavailable.
+          availabilityClass = "vuecal__cell--unavailable";
+        } else {
+          // If event does not span the whole day, then partially available.
+          availabilityClass = "vuecal__cell--partially-available";
+        }
+      }
+
+      return availabilityClass;
+    },
+  },
 };
 </script>
 
@@ -150,6 +190,18 @@ export default {
   // Month view.
   .vuecal__cells.month-view .vuecal__cell {
     height: 2rem;
+  }
+  .vuecal__cells.month-view .vuecal__cell::before {
+    border: none;
+  }
+  .vuecal__cells.month-view .vuecal__cell--available {
+    color: $success;
+  }
+  .vuecal__cells.month-view .vuecal__cell--partially-available {
+    color: $warning;
+  }
+  .vuecal__cells.month-view .vuecal__cell--unavailable {
+    color: $danger;
   }
 
   // Styling the time axis.
