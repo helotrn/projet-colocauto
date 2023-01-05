@@ -38,6 +38,7 @@
             'user.name',
             'loanable.name',
             'executed_at',
+            'tag',
             'actions'
           ]"
           :items="data"

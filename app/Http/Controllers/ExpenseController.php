@@ -75,6 +75,17 @@ class ExpenseController extends RestController
                 "executed_at" => null
             ],
             "form" => [
+                "expense_tag_id" => [
+                    "type" => "relation",
+                    "query" => [
+                        "slug" => "expense_tags",
+                        "value" => "id",
+                        "text" => "name",
+                        "params" => [
+                            "fields" => "id,name,color"
+                        ]
+                    ]
+                ],
                 "name" => [
                     "type" => "text",
                 ],

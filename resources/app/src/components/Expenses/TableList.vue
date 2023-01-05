@@ -13,6 +13,9 @@
       <template v-slot:cell(executed_at)="row">
         {{ new Date(row.value).toLocaleDateString('fr', {day:'numeric', month: 'short', year: 'numeric'}) }}
       </template>
+      <template v-slot:cell(tag)="row">
+        <span class="badge" :class="`badge-${row.value.color}`">{{row.value.name}}</span>
+      </template>
       <template v-slot:cell(actions)="row">
         <admin-list-actions :columns="['edit']" :row="row" slug="expenses" />
       </template>
@@ -64,6 +67,11 @@ export default {
             sortable: true,
           },
           { key: "executed_at", label: this.$t("expenses.fields.executed_at"), sortable: true },
+          {
+            key: "tag",
+            label: this.$t("expenses.fields.expense_tag_id"),
+            sortable: true,
+          },
           { key: "actions", label: this.$t("communities.fields.user.actions") },
         ];
       },

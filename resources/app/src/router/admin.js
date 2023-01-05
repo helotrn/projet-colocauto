@@ -363,7 +363,7 @@ export default [
           data: {
             expenses: {
               retrieve: {
-                fields: "*,loanable.name,user.name",
+                fields: "*,loanable.name,user.name,tag.name,tag.color",
                 for: "edit",
               },
             },

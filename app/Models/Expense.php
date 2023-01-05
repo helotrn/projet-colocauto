@@ -20,7 +20,7 @@ class Expense extends BaseModel
         ];
     }
 
-    protected $fillable = ["name", "amount", "type", "executed_at", "loanable_id", "user_id"];
+    protected $fillable = ["name", "amount", "type", "executed_at", "loanable_id", "user_id", "expense_tag_id"];
 
     public $items = ["user", "loanable", "tag"];
 
@@ -36,7 +36,7 @@ class Expense extends BaseModel
 
     public function tag()
     {
-        return $this->belongsTo(ExpenseTag::class);
+        return $this->belongsTo(ExpenseTag::class, 'expense_tag_id');
     }
 
     public static function boot()

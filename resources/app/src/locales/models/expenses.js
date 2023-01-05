@@ -8,6 +8,7 @@ export default {
       executed_at: "date",
       user_id: "Payé par",
       loanable_id: "Pour le véhicule",
+      expense_tag_id: "Type de dépense",
     },
     list: {
       create: "enregister une nouvelle dépense",
