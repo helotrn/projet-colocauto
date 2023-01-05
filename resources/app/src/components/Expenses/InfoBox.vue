@@ -3,7 +3,11 @@
     <router-link :to="`/wallet/expenses/${id}`">
       <div class="card-header">
           <b-row>
-            <b-col><span class="badge badge-primary">Emprunt</span></b-col>
+            <b-col>
+              <span v-if="tag" class="badge" :class="`badge-${tag.color}`">
+                {{tag.name}}
+              </span>
+            </b-col>
             <b-col class="text-right"><icons-edit class="svgicon action" /></b-col>
           </b-row>
           <b-row>
@@ -62,6 +66,10 @@ export default {
     loanable: {
       type: Object,
       required: true,
+    },
+    tag: {
+      type: Object,
+      required: false,
     },
   },
   data() {
@@ -123,6 +131,14 @@ export default {
   .badge-warning {
     background-color: #FFEFC8;
     color: #7E4C02;
+  }
+  .badge-success {
+    background-color: #E5F5F0;
+    color: #34A853;
+  }
+  .badge-danger {
+    background-color: #f5e5e5;
+    color: #a83434;
   }
   .small {
     font-size: 87.5%;

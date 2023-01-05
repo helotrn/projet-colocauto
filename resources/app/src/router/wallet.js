@@ -23,7 +23,7 @@ export default [
           data: {
             expenses: {
               retrieve: {
-                fields: "id,name,amount,executed_at,user.full_name,loanable.name",
+                fields: "id,name,amount,executed_at,user.full_name,loanable.name,tag.name,tag.color",
                 "user.id": "me",
               },
             },
@@ -38,16 +38,9 @@ export default [
           auth: true,
           slug: "expenses",
           params: {
-            fields: "id,name,amount,executed_at,user_id,loanable_id"
+            fields: "id,name,amount,executed_at,user_id,loanable_id,expense_tag_id"
           },
           title: "titles.expense",
-          data: {
-            loanables: {
-              retrieve: {
-                fields: "id,name",
-              },
-            },
-          },
         },
       },
     ],
