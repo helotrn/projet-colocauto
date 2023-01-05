@@ -45,7 +45,8 @@ Route::prefix("v1")->group(function () {
                 "trailer",
                 "user",
                 "invitation",
-                "expense"
+                "expense",
+                "expense_tag"
             ]
             as $entity
         ) {
