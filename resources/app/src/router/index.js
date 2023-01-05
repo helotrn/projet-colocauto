@@ -12,6 +12,7 @@ import loanableRoutes from "@/router/loanables";
 import loanRoutes from "@/router/loans";
 import profileRoutes from "@/router/profile";
 import registerRoutes from "@/router/register";
+import walletRoutes from "@/router/wallet";
 
 Vue.use(VueRouter);
 
@@ -24,6 +25,7 @@ const routes = [
   ...loanRoutes,
   ...profileRoutes,
   ...registerRoutes,
+  ...walletRoutes,
   {
     path: "/404",
     component: NotFound,

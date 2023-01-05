@@ -197,7 +197,7 @@
             </b-row>
             <b-row>
               <b-col class="d-flex flex-column">
-                <b-button class="mb-2 py-2" variant="primary" to="/expenses">Voir le portefeuille</b-button>
+                <b-button class="mb-2 py-2" variant="primary" to="/wallet">Voir le portefeuille</b-button>
                 <info-link-block title="Comment sont calculés les coûts ?" to="/faq" img="/icons/faq.png" />
               </b-col>
             </b-row>

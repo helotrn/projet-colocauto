@@ -151,6 +151,7 @@ export default {
     invitation: "Invitation",
     expenses: "Dépenses",
     expense: "Dépense",
+    wallet: "Portefeuille",
   },
   trailers: trailers.fr,
   users: users.fr,
