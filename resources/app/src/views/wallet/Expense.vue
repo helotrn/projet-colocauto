@@ -52,7 +52,7 @@ export default {
     fullTitle() {
       const parts = [
         "LocoMotion",
-        capitalize(this.$i18n.t("titles.wallet")),
+        capitalize(this.$i18n.t("wallet.titles.wallet")),
         capitalize(this.$i18n.tc("dépense", 2)),
       ];
 

@@ -1,6 +1,8 @@
 import Wallet from "@/views/Wallet.vue";
 import WalletExpenses from "@/views/wallet/Expenses.vue";
 import WalletExpense from "@/views/wallet/Expense.vue";
+import WalletRefunds from "@/views/wallet/Refunds.vue";
+import WalletBalance from "@/views/wallet/Balance.vue";
 
 export default [
   {
@@ -9,7 +11,7 @@ export default [
     component: Wallet,
     meta: {
       auth: true,
-      title: "titles.wallet",
+      title: "wallet.titles.wallet",
     },
     children: [
       {
@@ -18,7 +20,7 @@ export default [
         meta: {
           auth: true,
           creatable: true,
-          title: "titles.expenses",
+          title: "wallet.titles.expenses",
           slug: "expenses",
           data: {
             expenses: {
@@ -40,7 +42,26 @@ export default [
           params: {
             fields: "id,name,amount,executed_at,user_id,loanable_id,expense_tag_id"
           },
-          title: "titles.expense",
+          title: "wallet.titles.expense",
+        },
+      },
+      {
+        path: "refunds",
+        component: WalletRefunds,
+        meta: {
+          auth: true,
+          creatable: true,
+          title: "wallet.titles.refunds",
+          slug: "refunds",
+        },
+      },
+      {
+        path: "balance",
+        component: WalletBalance,
+        meta: {
+          auth: true,
+          title: "wallet.titles.balance",
+          slug: "balance",
         },
       },
     ],

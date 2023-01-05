@@ -25,6 +25,7 @@ import users from "@/locales/models/users";
 import invitations from "@/locales/models/invitations";
 import expenses from "@/locales/models/expenses";
 import expense_tags from "@/locales/models/expense_tags";
+import refunds from "@/locales/models/refunds";
 
 export default {
   bikes: bikes.fr,
@@ -34,6 +35,7 @@ export default {
   invitations: invitations.fr,
   expenses: expenses.fr,
   expense_tags: expense_tags.fr,
+  refunds: refunds.fr,
   components: {
     admin: {
       filters: AdminFilters.fr,
@@ -115,6 +117,14 @@ export default {
       profile: "Mon profil LocoMotion",
     },
   },
+  wallet: {
+    titles: {
+      expenses: "Dépenses",
+      wallet: "Portefeuille",
+      refunds: "Remboursements",
+      balance: "Équilibre",
+    }
+  },
   tags: tags.fr,
   titles: {
     account: "compte",
@@ -153,8 +163,8 @@ export default {
     invitation: "Invitation",
     expenses: "Dépenses",
     expense: "Dépense",
-    wallet: "Portefeuille",
     expense_tags: "Types de dépenses",
+    expense_tag: "Type de dépense",
   },
   trailers: trailers.fr,
   users: users.fr,
