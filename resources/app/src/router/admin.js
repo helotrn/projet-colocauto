@@ -20,6 +20,8 @@ import AdminExpenses from "@/views/admin/Expenses.vue";
 import AdminExpense from "@/views/admin/Expense.vue";
 import AdminExpenseTags from "@/views/admin/ExpenseTags.vue";
 import AdminExpenseTag from "@/views/admin/ExpenseTag.vue";
+import AdminRefunds from "@/views/admin/Refunds.vue";
+import AdminRefund from "@/views/admin/Refund.vue";
 
 export default [
   {
@@ -412,6 +414,37 @@ export default [
             fields: "*",
           },
           title: "titles.expense_tag",
+        },
+      },
+      {
+        path: "refunds",
+        component: AdminRefunds,
+        meta: {
+          auth: true,
+          creatable: true,
+          slug: "refunds",
+          data: {
+            refunds: {
+              retrieve: {
+                fields: "*,user.full_name,credited_user.full_name",
+                for: "edit",
+              },
+            },
+          },
+          title: "titles.refunds",
+        },
+      },
+      {
+        path: "refunds/:id",
+        component: AdminRefund,
+        props: true,
+        meta: {
+          auth: true,
+          slug: "refunds",
+          params: {
+            fields: "*",
+          },
+          title: "titles.refund",
         },
       },
     ],

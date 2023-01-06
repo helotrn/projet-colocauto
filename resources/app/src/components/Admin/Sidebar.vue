@@ -11,6 +11,7 @@
     <b-nav-item to="/admin/invitations" v-if="isGlobalAdmin">Invitations</b-nav-item>
     <b-nav-item to="/admin/expenses" v-if="isGlobalAdmin">Dépenses</b-nav-item>
     <b-nav-item to="/admin/expense_tags" v-if="isGlobalAdmin">Types de dépenses</b-nav-item>
+    <b-nav-item to="/admin/refunds" v-if="isGlobalAdmin">Remboursements</b-nav-item>
   </div>
 </template>
 
