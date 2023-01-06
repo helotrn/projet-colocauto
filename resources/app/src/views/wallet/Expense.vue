@@ -66,30 +66,6 @@ export default {
       return this.item.name || capitalize(this.$i18n.tc("dépense", 1));
     },
   },
-  methods: {
-    async submitLoanable() {
-      const isNew = !this.item.id;
-
-      await this.submit();
-
-      if (isNew) {
-        this.$store.commit("addNotification", {
-          content:
-            "Votre véhicule a bien été créé. Veuillez maintenant ajouter des disponibilités dans la section du bas.",
-          title: "Véhicule créé",
-          variant: "success",
-          type: "loanable",
-        });
-      } else {
-        this.$store.commit("addNotification", {
-          content: "Le véhicule a été enregistré avec succès.",
-          title: "Véhicule enregistré",
-          variant: "success",
-          type: "loanable",
-        });
-      }
-    },
-  },
   i18n: {
     messages: {
       en: {
