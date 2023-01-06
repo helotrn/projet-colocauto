@@ -21,7 +21,8 @@ class Expense extends BaseModel
     {
         $rules = parent::getRules($action, $auth);
         if($action === "template") {
-            $rules["amount"][2] = "decimal";
+            $rules["amount"][1] = "decimal";
+            unset($rules["amount"][2]);
         }
         return $rules;
     }
