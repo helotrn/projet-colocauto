@@ -165,6 +165,8 @@ export default {
     expense: "Dépense",
     expense_tags: "Types de dépenses",
     expense_tag: "Type de dépense",
+    refunds: "Remboursements",
+    refund: "Remboursement",
   },
   trailers: trailers.fr,
   users: users.fr,

@@ -2,6 +2,7 @@ import Wallet from "@/views/Wallet.vue";
 import WalletExpenses from "@/views/wallet/Expenses.vue";
 import WalletExpense from "@/views/wallet/Expense.vue";
 import WalletRefunds from "@/views/wallet/Refunds.vue";
+import WalletRefund from "@/views/wallet/Refund.vue";
 import WalletBalance from "@/views/wallet/Balance.vue";
 
 export default [
@@ -53,6 +54,27 @@ export default [
           creatable: true,
           title: "wallet.titles.refunds",
           slug: "refunds",
+          data: {
+            refunds: {
+              retrieve: {
+                fields: "id,amount,executed_at,user.full_name,credited_user.full_name",
+                "user.id": "me",
+              },
+            },
+          },
+        },
+      },
+      {
+        path: "refunds/:id",
+        component: WalletRefund,
+        props: true,
+        meta: {
+          auth: true,
+          slug: "refunds",
+          params: {
+            fields: "id,amount,executed_at,user_id,credited_user_id"
+          },
+          title: "wallet.titles.refunds",
         },
       },
       {

@@ -15,6 +15,15 @@ class Refund extends BaseModel
         "executed_at" => ["nullable","date"],
     ];
 
+    public static function getRules($action = "", $auth = null)
+    {
+        $rules = parent::getRules($action, $auth);
+        if($action === "template") {
+            $rules["amount"][2] = "decimal";
+        }
+        return $rules;
+    }
+
     protected $fillable = ["amount", "executed_at", "user_id", "credited_user_id"];
 
     public $items = ["user", "credited_user"];
