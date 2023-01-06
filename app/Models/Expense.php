@@ -10,14 +10,20 @@ class Expense extends BaseModel
 {
     use SoftDeletes;
 
-    public function rules()
+    public static $rules = [
+        "name" => ["nullable"],
+        "amount" => ["required","numeric","gt:0"],
+        "type" => ["required", "in:credit,debit"],
+        "executed_at" => ["nullable","date"],
+    ];
+
+    public static function getRules($action = "", $auth = null)
     {
-        return [
-            "name" => ["required"],
-            "amount" => ["required","numeric","gt:0"],
-            "type" => ["required", Rule::in('credit','debit')],
-            "executed_at" => ["nullable","date"],
-        ];
+        $rules = parent::getRules($action, $auth);
+        if($action === "template") {
+            $rules["amount"][2] = "decimal";
+        }
+        return $rules;
     }
 
     protected $fillable = ["name", "amount", "type", "executed_at", "loanable_id", "user_id", "expense_tag_id"];

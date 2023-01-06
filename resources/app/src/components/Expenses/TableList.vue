@@ -14,6 +14,7 @@
         {{ new Date(row.value).toLocaleDateString('fr', {day:'numeric', month: 'short', year: 'numeric'}) }}
       </template>
       <template v-slot:cell(tag)="row">
+        <div>{{row.item.type === 'credit' ? 'crédit' : 'débit'}}</div>
         <span class="badge" :class="`badge-${row.value.color}`">{{row.value.name}}</span>
       </template>
       <template v-slot:cell(actions)="row">

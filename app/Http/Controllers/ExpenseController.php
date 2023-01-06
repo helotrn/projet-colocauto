@@ -86,6 +86,19 @@ class ExpenseController extends RestController
                         ]
                     ]
                 ],
+                "type" => [
+                    "type" => "select",
+                    "options" => [
+                        [
+                            "text" => "Débit",
+                            "value" => "debit",
+                        ],
+                        [
+                            "text" => "Crédit",
+                            "value" => "credit",
+                        ],
+                    ]
+                ],
                 "name" => [
                     "type" => "text",
                 ],
