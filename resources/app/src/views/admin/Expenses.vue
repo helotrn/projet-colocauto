@@ -35,7 +35,7 @@
             'id',
             'name',
             'amount',
-            'user.name',
+            'user.full_name',
             'loanable.name',
             'executed_at',
             'tag',

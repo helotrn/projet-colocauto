@@ -57,7 +57,7 @@ export default {
           { key: "name", label: this.$t("expenses.fields.name"), sortable: true },
           { key: "amount", label: this.$t("expenses.fields.amount"), sortable: true },
           {
-            key: "user.name",
+            key: "user.full_name",
             label: this.$t("expenses.fields.user_id"),
             sortable: true,
           },
