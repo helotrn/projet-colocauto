@@ -199,6 +199,11 @@ Route::prefix("v1")->group(function () {
         ]);
 
         Route::get("/loans/dashboard", "LoanController@dashboard");
+
+        Route::get(
+            "communities/{community_id}/balance",
+            "CommunityController@getExpensesBalance"
+        );
     });
 
     Route::get(

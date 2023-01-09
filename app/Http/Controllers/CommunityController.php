@@ -283,6 +283,39 @@ class CommunityController extends RestController
         return $this->respondWithItem($request, $user);
     }
 
+    public function getExpensesBalance(Request $request, $communityId)
+    {
+        $community = $this->repo->find($request, $communityId);
+
+        // for each user ...
+        $users = $community->users->map(function ($user) use ($communityId) {
+            // compute expenses
+            $user->balance = 0;
+            $user->balance = $user->expenses->where('type', 'credit')->sum('amount');
+            $user->balance -= $user->expenses->where('type', 'debit')->sum('amount');
+            // compute refunds
+            $user->balance += $user->debitedRefunds->sum('amount');
+            $user->balance -= $user->creditedRefunds->sum('amount');
+
+            if( $user->owner ){
+                // remove owned loanable costs
+                $user->balance = $user->owner->loanables->reduce(function ($carry, $loanable) use ($communityId) {
+                    if( in_array($communityId, $loanable->getCommunityIdsAttribute()) ) {
+                        $carry -= $loanable->expenses->where('type', 'credit')->sum('amount');
+                        $carry +=  $loanable->expenses->where('type', 'debit')->sum('amount');
+                    }
+                    return $carry;
+                }, $user->balance);
+            }
+            return [
+                "balance" => $user->balance,
+                "full_name" => $user->full_name,
+            ];
+        });
+
+        return response($users->all(), 200);
+    }
+
     public function template(Request $request)
     {
         $template = [
