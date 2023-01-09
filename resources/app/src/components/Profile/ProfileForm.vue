@@ -93,8 +93,8 @@
             <forms-validated-input
               name="phone"
               :label="$t('fields.phone') | capitalize"
-              description="Nous permet de vous mettre en contact avec votre interlocuteur
-uniquement dans le cadre d’une réservation."
+              description="Pour faciliter la communication votre numéro est visible
+par les membres de votre groupe et l'équipe Coloc'Auto""
               :rules="form.general.phone.rules"
               type="text"
               mask="## ## ## ## ##"
