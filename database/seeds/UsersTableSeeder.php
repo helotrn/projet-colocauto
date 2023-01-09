@@ -97,6 +97,30 @@ class UsersTableSeeder extends Seeder
                 "last_name" => "Girard",
                 "description" => "",
             ]),
+            "alice@colocauto.org" => array_merge($solon, [
+                "id" => 14,
+                "name" => "Alice",
+                "last_name" => "Dupont",
+                "description" => "",
+            ]),
+            "bob@colocauto.org" => array_merge($solon, [
+                "id" => 15,
+                "name" => "Bob",
+                "last_name" => "Martin",
+                "description" => "",
+            ]),
+            "carole@colocauto.org" => array_merge($solon, [
+                "id" => 16,
+                "name" => "Carole",
+                "last_name" => "Deschamps",
+                "description" => "",
+            ]),
+            "david@colocauto.org" => array_merge($solon, [
+                "id" => 17,
+                "name" => "David",
+                "last_name" => "Bocher",
+                "description" => "",
+            ]),
         ];
 
         // Community memberships
@@ -149,6 +173,22 @@ class UsersTableSeeder extends Seeder
             "christiane@colocauto.org" => [
                 // 2: Groupe Citoyen
                 2 => ["approved_at" => new \DateTime()],
+            ],
+            "alice@colocauto.org" => [
+                // 3: Calcul équilibre
+                3 => ["approved_at" => new \DateTime()],
+            ],
+            "bob@colocauto.org" => [
+                // 3: Calcul équilibre
+                3 => ["approved_at" => new \DateTime()],
+            ],
+            "carole@colocauto.org" => [
+                // 3: Calcul équilibre
+                3 => ["approved_at" => new \DateTime()],
+            ],
+            "david@colocauto.org" => [
+                // 3: Calcul équilibre
+                3 => ["approved_at" => new \DateTime()],
             ],
         ];
 

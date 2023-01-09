@@ -21,6 +21,10 @@ class DatabaseSeeder extends Seeder
                 $this->call(LoansTableSeeder::class);
 
                 $this->call(ProductionPricingsTableSeeder::class);
+
+                $this->call(ExpenseTagsSeeder::class);
+                $this->call(ExpensesTableSeeder::class);
+                $this->call(RefundsTableSeeder::class);
                 break;
             case "production":
                 //$this->call(CommunitiesTableSeeder::class);

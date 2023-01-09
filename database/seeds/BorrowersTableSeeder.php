@@ -116,6 +116,42 @@ class BorrowersTableSeeder extends Seeder
                 "submitted_at" => new DateTime(),
                 "approved_at" => new DateTime(),
             ],
+            [
+                "id" => 14,
+                "user_id" => 14,
+                "drivers_license_number" => "",
+                "has_not_been_sued_last_ten_years" => true,
+                "noke_id" => null,
+                "submitted_at" => new DateTime(),
+                "approved_at" => new DateTime(),
+            ],
+            [
+                "id" => 15,
+                "user_id" => 15,
+                "drivers_license_number" => "",
+                "has_not_been_sued_last_ten_years" => true,
+                "noke_id" => null,
+                "submitted_at" => new DateTime(),
+                "approved_at" => new DateTime(),
+            ],
+            [
+                "id" => 16,
+                "user_id" => 16,
+                "drivers_license_number" => "",
+                "has_not_been_sued_last_ten_years" => true,
+                "noke_id" => null,
+                "submitted_at" => new DateTime(),
+                "approved_at" => new DateTime(),
+            ],
+            [
+                "id" => 17,
+                "user_id" => 17,
+                "drivers_license_number" => "",
+                "has_not_been_sued_last_ten_years" => true,
+                "noke_id" => null,
+                "submitted_at" => new DateTime(),
+                "approved_at" => new DateTime(),
+            ],
         ];
 
         foreach ($borrowers as $borrower) {

@@ -20,6 +20,18 @@ class OwnersTableSeeder extends Seeder
                 "user_id" => 10,
                 "submitted_at" => new DateTime(),
             ],
+            [
+                // alice
+                "id" => 14,
+                "user_id" => 14,
+                "submitted_at" => new DateTime(),
+            ],
+            [
+                // david
+                "id" => 17,
+                "user_id" => 17,
+                "submitted_at" => new DateTime(),
+            ],
         ];
 
         foreach ($owners as $owner) {

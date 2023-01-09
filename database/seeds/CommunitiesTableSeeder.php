@@ -25,6 +25,14 @@ class CommunitiesTableSeeder extends Seeder
                 "updated_at" => "2021-09-30 16:14:30",
                 "type" => "private",
             ],
+            [
+                "id" => 3,
+                "name" => "Calcul équilibre",
+                "description" => "",
+                "created_at" => "2023-01-06 15:08:53",
+                "updated_at" => "2023-01-06 15:08:53",
+                "type" => "private",
+            ],
         ];
 
         foreach ($communities as $community) {
