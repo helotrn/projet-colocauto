@@ -57,8 +57,7 @@ export default [
           data: {
             refunds: {
               retrieve: {
-                fields: "id,amount,executed_at,user.full_name,credited_user.full_name",
-                "user.id": "me",
+                fields: "id,amount,executed_at,user.full_name,credited_user.full_name"
               },
             },
           },

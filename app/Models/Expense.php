@@ -27,6 +27,26 @@ class Expense extends BaseModel
         return $rules;
     }
 
+    public static $filterTypes = [
+        "id" => "number",
+        "executed_at" => "date",
+        "name" => "text",
+        "type" => ["debit","credit"],
+        "user.full_name" => "text",
+        "loanable.name" => "text",
+        "tag.id" => [
+            "type" => "relation",
+            "query" => [
+                "slug" => "expense_tags",
+                "value" => "id",
+                "text" => "name",
+                "params" => [
+                    "fields" => "id,name"
+                ]
+            ]
+        ]
+    ];
+
     protected $fillable = ["name", "amount", "type", "executed_at", "loanable_id", "user_id", "expense_tag_id"];
 
     public $items = ["user", "loanable", "tag"];
