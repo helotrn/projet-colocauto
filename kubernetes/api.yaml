@@ -44,6 +44,8 @@ spec:
           env:
           - name: APP_NAME
             value: ColocAuto
+          - name: APP_TIMEZONE
+            value: Europe/Paris
           - name: LOG_CHANNEL
             value: stack
           - name: BROADCAST_DRIVER

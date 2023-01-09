@@ -20,6 +20,7 @@ services:
             APP_ENV: local
             APP_KEY: base64:QV7VlghMwXOXokIRP1ARpfEuyIF46hfYC/Y/lxFxdVc=
             APP_DEBUG: "true"
+            APP_TIMEZONE: ${APP_TIMEZONE},
             FRONTEND_URL: http://localhost:8080
             BACKEND_URL_FROM_BROWSER: http://localhost:8000 #this is the url that the browser uses to call us
             DB_HOST: postgres
