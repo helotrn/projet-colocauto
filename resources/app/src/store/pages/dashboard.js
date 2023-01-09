@@ -17,6 +17,8 @@ const initialState = {
   members: [],
   membersLoaded: false,
   hasMoreMembers: false,
+  balance: [],
+  balanceLoaded: false,
   totalMembers: 0,
   loadRequests: 0,
 };
@@ -30,6 +32,7 @@ const actions = {
     dispatch("loadLoans");
     dispatch("loadLoanables");
     dispatch("loadMembers", { user });
+    dispatch("loadBalance", { user });
   },
   async loadLoans({ commit }) {
     commit("loadLoans");
@@ -91,6 +94,17 @@ const actions = {
       throw e;
     }
   },
+  async loadBalance({ commit }, { user }) {
+    commit("loadBalance");
+
+    try {
+      const { data: balance } = await Vue.axios.get(`/communities/${user.communities[0].id}/balance`);
+      commit("balanceLoaded", balance);
+    } catch (e) {
+      commit("errorLoading", e);
+      throw e;
+    }
+  },
 };
 
 const mutations = {
@@ -124,6 +138,14 @@ const mutations = {
     state.hasMoreMembers = members.total > maxMemberCount;
     state.totalMembers = members.total;
     state.loadRequests--;
+  },
+  balanceLoaded(state, balance) {
+    state.balanceLoaded = true;
+    state.balance = balance;
+    state.loadRequests--;
+  },
+  loadBalance(state) {
+    state.loadRequests++;
   },
   errorLoading(state) {
     state.loadRequests--;

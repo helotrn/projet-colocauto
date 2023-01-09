@@ -192,7 +192,13 @@
             </b-row>
             <b-row>
               <b-col>
-                <img src="/mockups/expenses.png" />
+                <div class="dashboard__balance" :class="{ loading: loading && !balanceLoaded }">
+                  <transition name="fade">
+                    <div v-if="balance && balance.length > 0">
+                      <users-balance :users="balance"/>
+                    </div>
+                  </transition>
+                </div>
               </b-col>
             </b-row>
             <b-row>
@@ -333,6 +339,7 @@ import ReleaseInfoBox from "@/components/Dashboard/ReleaseInfoBox.vue";
 import TutorialBlock from "@/components/Dashboard/TutorialBlock.vue";
 import UserCard from "@/components/User/UserCard.vue";
 import InfoLinkBlock from "@/components/Dashboard/InfoLinkBlock.vue";
+import UsersBalance from "@/components/Balance/UsersBalance.vue";
 
 import MagnifyingGlass from "@/assets/svg/magnifying-glass.svg";
 
@@ -351,6 +358,7 @@ export default {
     "svg-magnifying-glass": MagnifyingGlass,
     UserCard,
     InfoLinkBlock,
+    UsersBalance,
   },
   beforeMount() {
     if (!this.isLoggedIn) {
@@ -408,6 +416,9 @@ export default {
     members() {
       return this.$store.state.dashboard.members ?? [];
     },
+    balance() {
+      return this.$store.state.dashboard.balance ?? [];
+    },
     totalMembers() {
       return this.$store.state.dashboard.totalMembers;
     },
@@ -425,6 +436,9 @@ export default {
     },
     hasMoreLoanables() {
       return this.$store.state.dashboard.hasMoreLoanables;
+    },
+    balanceLoaded() {
+      return this.$store.state.dashboard.balanceLoaded;
     },
     loading() {
       return this.$store.state.dashboard.loadRequests > 0;
