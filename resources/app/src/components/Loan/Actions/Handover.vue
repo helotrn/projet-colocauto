@@ -128,7 +128,7 @@
 
               <b-row>
                 <b-col lg="6" v-if="(!action.executed_at && !loanIsCanceled) || userIsAdmin">
-                  <p>Envoyez une photo de vos dépenses.</p>
+                  <p>Envoyez une photo de vos dépenses de carburant.</p>
 
                   <forms-image-uploader
                     label="Photo des dépenses"
@@ -136,7 +136,7 @@
                     v-model="action.expense"
                   />
 
-                  <p><small> Cette photo doit afficher le détails des dépenses. </small></p>
+                  <p><small> Cette photo doit afficher le détails des dépenses de carburant. Elle est facultative. </small></p>
                 </b-col>
                 <b-col lg="6" v-else-if="action.expense">
                   <a href="#" v-b-modal="'handover-expense'">
@@ -160,11 +160,12 @@
                     type="number"
                     :min="0"
                     :step="0.01"
-                    label="Total des dépenses"
-                    placholder="Total des dépenses"
+                    label="Total des dépenses de carburant (facultatif)"
+                    placeholder="Total des dépenses de carburant"
                     :disabled="(!!action.executed_at || loanIsCanceled) && !userIsAdmin"
                     v-model="action.purchases_amount"
                   />
+                  <p>Les autres dépenses éventuelles pourront être renseignées directement depuis le tableau de bord.</p>
                 </b-col>
               </b-row>
 

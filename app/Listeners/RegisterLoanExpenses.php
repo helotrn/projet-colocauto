@@ -16,7 +16,7 @@ class RegisterLoanExpenses
         $distance = $loan->handover->mileage_end - $loan->takeover->mileage_beginning;
 
         $expense = new Expense;
-        $expense->name = "$distance km parcourus";
+        $expense->name = "{$loan->reason} ($distance km)";
         $expense->amount = $loan->actual_price;
         $expense->user_id = $loan->borrower->id;
         $expense->loanable_id = $loan->loanable->id;
@@ -27,5 +27,22 @@ class RegisterLoanExpenses
         if( $tag ) $expense->tag()->associate($tag->first());
 
         $expense->save();
+
+        if( $loan->handover->purchases_amount > 0 ) {
+            $fuel = new Expense;
+            $fuel->name = "";
+            $fuel->amount = floatval($loan->handover->purchases_amount);
+            $fuel->user_id = $loan->borrower->id;
+            $fuel->loanable_id = $loan->loanable->id;
+            $fuel->type = 'credit'; // user has already payed for this fuel
+            $fuel->executed_at = $loan->handover->executed_at;
+
+            $fuel_tag = ExpenseTag::where('slug', 'fuel');
+            if( $fuel_tag ) $fuel->tag()->associate($fuel_tag->first());
+
+            $fuel->save();
+        }
+
+        
     }
 }

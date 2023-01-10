@@ -30,7 +30,7 @@ class HandoverRequest extends BaseRequest
 
             return [
                 "mileage_end" => ["required", "integer"],
-                "purchases_amount" => ["numeric", "lte:$price"],
+                "purchases_amount" => ["numeric", "gte:0"],
             ];
         }
 
