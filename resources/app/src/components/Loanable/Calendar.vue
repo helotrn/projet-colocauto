@@ -44,12 +44,26 @@
     </template>
 
     <template #cell-content="{ cell, view, events }">
-      <span
+      <div
         v-if="view.id === 'month'"
-        :class="`vuecal__cell-date ${getMonthDayAvailabilityClass(events, cell)}`"
+        :class="
+          'vuecal__cell-date loanable-calendar__cell-date loanable-calendar__cell-date--' +
+          getMonthDayAvailability(events, cell)
+        "
       >
-        {{ cell.content }}
-      </span>
+        <div class="loanable-calendar__cell-date-background">
+          <cal-cell-available v-if="getMonthDayAvailability(events, cell) == 'available'" />
+          <cal-cell-partially-available
+            v-if="getMonthDayAvailability(events, cell) == 'partially-available'"
+          />
+          <cal-cell-unavailable v-if="getMonthDayAvailability(events, cell) == 'unavailable'" />
+        </div>
+
+        <div class="loanable-calendar__cell-date-content">
+          {{ cell.content }}
+        </div>
+      </div>
+
       <span v-else class="vuecal__cell-date">
         {{ cell.content }}
       </span>
@@ -72,6 +86,10 @@
 import VueCal from "vue-cal";
 import "vue-cal/dist/i18n/fr";
 
+import CalCellAvailable from "@/assets/svg/loanable-calendar__cal-cell--available.svg";
+import CalCellPartiallyAvailable from "@/assets/svg/loanable-calendar__cal-cell--partially-available.svg";
+import CalCellUnavailable from "@/assets/svg/loanable-calendar__cal-cell--unavailable.svg";
+
 export default {
   name: "Calendar",
   props: {
@@ -87,7 +105,12 @@ export default {
       required: false,
     },
   },
-  components: { VueCal },
+  components: {
+    VueCal,
+    "cal-cell-available": CalCellAvailable,
+    "cal-cell-partially-available": CalCellPartiallyAvailable,
+    "cal-cell-unavailable": CalCellUnavailable,
+  },
   computed: {
     classList: function () {
       let classList = {
@@ -135,7 +158,7 @@ export default {
     },
   },
   methods: {
-    getMonthDayAvailabilityClass(events, cell) {
+    getMonthDayAvailability(events, cell) {
       const today = this.$dayjs().startOfDay();
 
       const cellStartTime = this.$dayjs(cell.startDate).startOfDay();
@@ -143,7 +166,7 @@ export default {
 
       let eventStartTime, eventEndTime;
 
-      let availabilityClass = "vuecal__cell--available";
+      let availability = "available";
 
       let nEvents = events.length;
 
@@ -157,14 +180,14 @@ export default {
           0 == eventEndTime.diff(cellEndTime, "seconds")
         ) {
           // If event spans the whole day, then unavailable.
-          availabilityClass = "vuecal__cell--unavailable";
+          availability = "unavailable";
         } else {
           // If event does not span the whole day, then partially available.
-          availabilityClass = "vuecal__cell--partially-available";
+          availability = "partially-available";
         }
       }
 
-      return availabilityClass;
+      return availability;
     },
   },
 };
@@ -172,7 +195,7 @@ export default {
 
 <style lang="scss">
 .loanable-calendar {
-  &.vuecal--xsmall {
+  &.loanable-calendar--small {
     font-size: 13px;
     .vuecal__title-bar,
     .vuecal__weekdays-headings {
@@ -188,22 +211,93 @@ export default {
   }
 
   // Month view.
-  .vuecal__cells.month-view .vuecal__cell {
-    height: 2rem;
-  }
-  .vuecal__cells.month-view .vuecal__cell::before {
-    border: none;
-  }
-  .vuecal__cells.month-view .vuecal__cell--available {
-    color: $success;
-  }
-  .vuecal__cells.month-view .vuecal__cell--partially-available {
-    color: $warning;
-  }
-  .vuecal__cells.month-view .vuecal__cell--unavailable {
-    color: $danger;
+  .vuecal__cells.month-view {
+    .vuecal__cell {
+      height: 3rem;
+
+      &::before {
+        border: none;
+      }
+    }
+
+    .vuecal__cell--today {
+      background-color: transparent;
+
+      .loanable-calendar__cell-date-background svg {
+        stroke: currentColor;
+      }
+      .loanable-calendar__cell-date--unavailable svg rect {
+        fill: $beige;
+      }
+    }
   }
 
+  &.loanable-calendar--small .vuecal__cells.month-view .vuecal__cell {
+    height: 2rem;
+  }
+
+  .loanable-calendar__cell-date {
+    position: relative;
+    width: 100%;
+    height: 100%;
+
+    .loanable-calendar__cell-date-background {
+      position: absolute;
+
+      top: 0;
+      left: 0;
+
+      height: 100%;
+      width: 100%;
+
+      svg {
+        height: 100%;
+        width: 100%;
+      }
+    }
+
+    .loanable-calendar__cell-date-content {
+      position: absolute;
+      top: 0;
+      left: 0;
+
+      height: 100%;
+      width: 100%;
+
+      display: flex;
+      flex-direction: column;
+      flex: 1 1 auto;
+      justify-content: center;
+    }
+
+    &.loanable-calendar__cell-date--available {
+      color: $content-alert-positive;
+
+      svg rect {
+        fill: $background-alert-positive;
+      }
+    }
+    &.loanable-calendar__cell-date--partially-available {
+      color: $content-alert-warning;
+
+      svg path {
+        fill: $background-alert-warning;
+      }
+    }
+    &.loanable-calendar__cell-date--unavailable {
+      color: $content-neutral-secondary;
+
+      // Only fill for "today" so as not to introduce visual clutter.
+      svg rect {
+        fill: none;
+      }
+      .loanable-calendar__cell-date-content {
+        text-decoration: line-through;
+      }
+    }
+  }
+
+  // Week and day views
   // Styling the time axis.
   // Specificity seems necessary here.
   .vuecal__time-column .loanable-calendar__time-step--hours .line::before {
