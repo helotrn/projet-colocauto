@@ -236,6 +236,11 @@ export default {
     height: 2rem;
   }
 
+  .vuecal__cell--out-of-scope {
+    // Disabled buttons have opacity: 0.65, but it does not feel clear enough here, hence 0.4.
+    opacity: 0.4;
+  }
+
   .loanable-calendar__cell-date {
     position: relative;
     width: 100%;
