@@ -202,13 +202,22 @@ export default {
     },
   },
   methods: {
-    getAvailability({ view, startDate, endDate, week }) {
+    getAvailability({ view, startDate, endDate, firstCellDate, lastCellDate, week }) {
       const { CancelToken } = Vue.axios;
       const cancelToken = CancelToken.source();
 
-      // Must convert [, ] interval to [, ) by adding one second to the end time.
-      let start = this.$dayjs(startDate);
-      let end = this.$dayjs(endDate).add(1, "s");
+      let start, end;
+
+      // Include out-of-scope days in month view.
+      if (view === "month") {
+        // Must convert [, ] interval to [, ) by adding one second to the end time.
+        start = this.$dayjs(firstCellDate);
+        end = this.$dayjs(lastCellDate).add(1, "s");
+      } else {
+        // Must convert [, ] interval to [, ) by adding one second to the end time.
+        start = this.$dayjs(startDate);
+        end = this.$dayjs(endDate).add(1, "s");
+      }
 
       try {
         Vue.axios
