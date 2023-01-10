@@ -939,4 +939,44 @@ SQL;
 
         return !$this->needs_validation || $this->isFullyValidated();
     }
+
+
+    /**
+        This method actualy create loan and fuel expenses in the database
+        for this loan.
+    */
+    public function writeExpenses() {
+        // a loan should be completed before generating expenses
+        if ($this->status !== "completed") return;
+
+        $distance = $this->handover->mileage_end - $this->takeover->mileage_beginning;
+
+        $loan_expense = new Expense;
+        $loan_expense->name = "{$this->reason} ($distance km)";
+        $loan_expense->amount = $this->actual_price;
+        $loan_expense->user_id = $this->borrower->id;
+        $loan_expense->loanable_id = $this->loanable->id;
+        $loan_expense->type = 'debit'; // user will pay for this loan
+        $loan_expense->executed_at = $this->handover->executed_at;
+
+        $loan_tag = ExpenseTag::where('slug', 'loan');
+        if( $loan_tag ) $loan_expense->tag()->associate($loan_tag->first());
+
+        $loan_expense->save();
+
+        if( $this->handover->purchases_amount > 0 ) {
+            $fuel_expense = new Expense;
+            $fuel_expense->name = "";
+            $fuel_expense->amount = floatval($this->handover->purchases_amount);
+            $fuel_expense->user_id = $this->borrower->id;
+            $fuel_expense->loanable_id = $this->loanable->id;
+            $fuel_expense->type = 'credit'; // user has already payed for this fuel
+            $fuel_expense->executed_at = $this->handover->executed_at;
+
+            $fuel_tag = ExpenseTag::where('slug', 'fuel');
+            if( $fuel_tag ) $fuel_expense->tag()->associate($fuel_tag->first());
+
+            $fuel_expense->save();
+        }
+    }
 }
