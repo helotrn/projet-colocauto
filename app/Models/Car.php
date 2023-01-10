@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
+
 class Car extends Loanable
 {
     public static $rules = [
@@ -121,5 +123,32 @@ class Car extends Loanable
         return $this->hasOne(Padlock::class, "loanable_id")->where(
             \DB::raw("1 = 0")
         );
+    }
+
+    public function writeMonthlySharedExpenses()
+    {
+        // get the users of the same community that joined the community
+        // before the current (previous ?) month
+        $users = $this->owner->user->main_community->users()
+            ->wherePivotNotBetween("approved_at", [
+                Carbon::now()->startOfMonth(),
+                Carbon::now()
+            ])->get();
+
+        $funds_tag = ExpenseTag::where('slug', 'funds');
+
+        $period_start = Carbon::now()->startOfMonth()->subDay();
+        $shared_cost = $this->cost_per_month / $users->count();
+        foreach($users as $user) {
+            Expense::create([
+                "name" => "Provision ".$period_start->monthName." ".$period_start->year,
+                "amount" => $shared_cost,
+                "type" => "debit",
+                "executed_at" => Carbon::now(),
+                "user_id" => $user->id,
+                "loanable_id" => $this->id,
+                "expense_tag_id" => $funds_tag ? $funds_tag->first()->id : null,
+            ]);
+        }
     }
 }
