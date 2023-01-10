@@ -789,18 +789,10 @@ SQL;
     */
     public function getStatusFromActions()
     {
-        // Loan is canceled if pre-payment is canceled.
-        $action = $this->prePayment;
-        if ($action) {
-            switch ($action->status) {
-                case "canceled":
-                    return "canceled";
-                    break;
-            }
-        }
+        // pre-payment step does not exist anymore
 
-        // Payment
-        $action = $this->payment;
+        // Handover
+        $action = $this->handover;
         if ($action) {
             switch ($action->status) {
                 case "in_process":
@@ -809,11 +801,13 @@ SQL;
                     break;
                 default:
                     throw new \Exception(
-                        "Unexpected status for loan action: payment."
+                        "Unexpected status for loan action: handover."
                     );
                     break;
             }
         }
+
+        // payment step does not exist anymore
 
         // Intention
         $action = $this->intention;

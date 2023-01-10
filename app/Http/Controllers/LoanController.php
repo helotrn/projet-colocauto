@@ -352,7 +352,7 @@ class LoanController extends RestController
             return $loan;
         }
 
-        // Pre-payment step doen not exist anymore
+        // Pre-payment step does not exist anymore
 
         // Ensure takeover exists if pre-payment is completed.
         $takeover = $loan->takeover;
@@ -386,18 +386,7 @@ class LoanController extends RestController
             return $loan;
         }
 
-        // Ensure payment exists if handover is completed.
-        $payment = $loan->payment;
-
-        if (!$payment) {
-            $payment = new Payment();
-            $loan->payment()->save($payment);
-        }
-        $loan->load("payment");
-
-        // We don't complete payment here (yet?) because we would have to
-        // generate the invoice which is done in PaymentController for the
-        // moment.
+        // Payment step does not exist anymore
 
         return $loan;
     }
