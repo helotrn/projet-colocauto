@@ -82,6 +82,15 @@ class User extends AuthenticatableBaseModel
 
     public static function booted()
     {
+        self::saving(function (User $user) {
+            if (
+                $user->isDirty("accept_conditions") &&
+                $user->accept_conditions
+            ) {
+                $user->terms_approved_at = new Carbon();
+            }
+        });
+
         self::updated(function ($model) {
             // Detect email change
             if ($model->wasChanged("email")) {
