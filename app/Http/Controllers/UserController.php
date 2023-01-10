@@ -666,6 +666,12 @@ class UserController extends RestController
         return $template;
     }
 
+    public function approveTerms(Request $request)
+    {
+        $request->user()->approveTerms();
+        $request->user()->save();
+    }
+
     private function triggerInvoicePaidEvent($user, $invoice)
     {
         $invoiceRequest = new Request();

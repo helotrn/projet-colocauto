@@ -9,6 +9,7 @@ use App\Transformers\UserTransformer;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Carbon;
 use Laravel\Passport\HasApiTokens;
 use Mail;
 use Noke;
@@ -675,5 +676,10 @@ class User extends AuthenticatableBaseModel
         } );
         $nbOfColors = sizeof(config("app.colors"));
         return config("app.colors")[$index % $nbOfColors];
+    }
+
+    public function approveTerms()
+    {
+        $this->terms_approved_at = new Carbon();
     }
 }

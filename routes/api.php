@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\LoanableController;
+use App\Http\Controllers\UserController;
 use Molotov\Utils\RouteHelper;
 
 Route::prefix("v1")->group(function () {
@@ -27,6 +28,8 @@ Route::prefix("v1")->group(function () {
             Route::put("user/claim", "AuthController@claimUserBalance");
             Route::put("logout", "AuthController@logout");
         });
+
+        Route::post("approveTerms", [UserController::class, "approveTerms"]);
 
         foreach (
             [

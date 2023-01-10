@@ -28,7 +28,11 @@
       </i18n>
 
       <div class="d-flex justify-content-between">
-        <b-button variant="success" size="sm">{{ $t("approve_changes_button") }}</b-button>
+        <div>
+          <b-button @click="approveTerms" :disabled="loading" variant="success" size="sm">{{
+            $t("approve_changes_button")
+          }}</b-button>
+        </div>
         <a v-b-toggle.unregister class="text-muted align-self-end" href="#">{{
           $t("unregister_link")
         }}</a>
@@ -49,7 +53,20 @@ import { date } from "./helpers/filters";
 
 export default {
   name: "ColocAuto",
-  methods: { date },
+  data() {
+    return {
+      loading: false,
+    };
+  },
+  methods: {
+    date,
+    async approveTerms() {
+      this.loading = true;
+      await this.axios.post("/approveTerms");
+      await this.$store.dispatch("loadUser");
+      this.loading = false;
+    },
+  },
   mixins: [Notification],
   mounted() {
     if (this.$store.state.token && !this.$store.state.loading && !this.$store.state.loaded) {
@@ -114,5 +131,14 @@ aside a {
 .terms-toast {
   max-height: calc(100vh - 16px);
   overflow: auto !important;
+}
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
 }
 </style>
