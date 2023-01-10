@@ -2,8 +2,6 @@
 
 namespace App\Providers;
 
-use App\Events\LoanCompletedEvent;
-use App\Listeners\SendLoanCompletedEmails;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
@@ -25,7 +23,10 @@ class EventServiceProvider extends ServiceProvider
         "App\Events\Loan\CanceledEvent" => [
             "App\Listeners\SendLoanCanceledEmails",
         ],
-        LoanCompletedEvent::class => [SendLoanCompletedEmails::class],
+        "App\Events\LoanCompletedEvent" => [
+            "App\Listeners\RegisterLoanExpenses",
+            "App\Listeners\SendLoanCompletedEmails"
+        ],
         "App\Events\LoanCreatedEvent" => [
             "App\Listeners\SendLoanCreatedEmails",
             "App\Listeners\CreateNokeUserIfNotExists",

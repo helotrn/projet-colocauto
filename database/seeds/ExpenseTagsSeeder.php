@@ -16,25 +16,25 @@ class ExpenseTagsSeeder extends Seeder
             [
                 "id" => 1,
                 "name" => "Emprunt",
-                "slug" => "emprunt",
+                "slug" => "loan",
                 "color" => "primary",
             ],
             [
                 "id" => 2,
                 "name" => "Carburant",
-                "slug" => "carburant",
+                "slug" => "fuel",
                 "color" => "success",
             ],
             [
                 "id" => 3,
                 "name" => "Dépense partagée",
-                "slug" => "partage",
+                "slug" => "shared",
                 "color" => "success",
             ],
             [
                 "id" => 4,
-                "name" => "Provision",
-                "slug" => "provision",
+                "name" => "Provisions",
+                "slug" => "funds",
                 "color" => "primary",
             ],
         ];
