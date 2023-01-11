@@ -29,7 +29,10 @@ Route::prefix("v1")->group(function () {
             Route::put("logout", "AuthController@logout");
         });
 
-        Route::post("approveTerms", [UserController::class, "approveTerms"]);
+        Route::post("acceptConditions", [
+            UserController::class,
+            "acceptConditions",
+        ]);
 
         foreach (
             [

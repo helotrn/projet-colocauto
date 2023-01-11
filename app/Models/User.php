@@ -83,11 +83,14 @@ class User extends AuthenticatableBaseModel
     public static function booted()
     {
         self::saving(function (User $user) {
+            // Make sure the date for accepting the conditions is set
+            // Todo(#1121) remove the 'accept_conditions' field and move this
+            // code when updating an user.
             if (
                 $user->isDirty("accept_conditions") &&
                 $user->accept_conditions
             ) {
-                $user->terms_approved_at = new Carbon();
+                $user->acceptConditions();
             }
         });
 
@@ -687,8 +690,9 @@ class User extends AuthenticatableBaseModel
         return config("app.colors")[$index % $nbOfColors];
     }
 
-    public function approveTerms()
+    public function acceptConditions()
     {
-        $this->terms_approved_at = new Carbon();
+        $this->conditions_accepted_at = new Carbon();
+        $this->accept_conditions = true;
     }
 }
