@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Validation\Rule;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Builder;
 use Carbon\Carbon;
 
 class Refund extends BaseModel
@@ -50,5 +51,23 @@ class Refund extends BaseModel
                 $model->save();
             }
         });
+    }
+
+    public function scopeAccessibleBy(Builder $query, $user)
+    {
+        if ($user->isAdmin()) {
+            return $query;
+        }
+
+        // A user has access to...
+        return $query
+            // ... refunds payed by himself or herself
+            ->where('user_id', $user->id)
+            // ...or refunds payed by somebody belonging to the same community
+            ->orWhereIn('user_id', $user->getSameCommunityUserIds())
+            // ... or refunds payed to himself or herself
+            ->orWhere('credited_user_id', $user->id)
+            // ...or refunds payed to somebody belonging to the same community
+            ->orWhereIn('credited_user_id', $user->getSameCommunityUserIds());
     }
 }
