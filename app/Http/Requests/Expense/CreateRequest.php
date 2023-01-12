@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Expense;
 
 use App\Http\Requests\BaseRequest;
+use App\Models\Loanable;
 
 class CreateRequest extends BaseRequest
 {
@@ -30,6 +31,24 @@ class CreateRequest extends BaseRequest
                 "required",
             ]
         ];
+
+        if( !$this->user()->isAdmin() ) {
+            $user = $this->user();
+            $accessibleUserIds = implode(
+                ",",
+                $user->getSameCommunityUserIds()
+                    ->toArray()
+            );
+            $rules["user_id"][] = "in:$accessibleUserIds";
+
+            $accessibleLoanableIds = implode(
+                ",",
+                Loanable::accessibleBy($user)
+                    ->pluck("id")
+                    ->toArray()
+            );
+            $rules["loanable_id"][] = "in:$accessibleLoanableIds";
+        }
 
         return $rules;
     }
