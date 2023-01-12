@@ -13,7 +13,7 @@ class Expense extends BaseModel
     public static $rules = [
         "name" => ["nullable"],
         "amount" => ["required","numeric","gt:0"],
-        "type" => ["required", "in:credit,debit"],
+        "type" => ["nullable", "in:credit,debit"],
         "executed_at" => ["nullable","date"],
     ];
 
@@ -48,6 +48,9 @@ class Expense extends BaseModel
     ];
 
     protected $fillable = ["name", "amount", "type", "executed_at", "loanable_id", "user_id", "expense_tag_id"];
+    protected $attributes = [
+        "type" => "credit",
+    ];
 
     public $items = ["user", "loanable", "tag"];
 

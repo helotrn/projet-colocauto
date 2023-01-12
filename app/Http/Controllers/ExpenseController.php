@@ -139,6 +139,11 @@ class ExpenseController extends RestController
             $template["form"][$field]["rules"] = $this->formatRules($rules);
         }
 
+        if (!$request->user()->isAdmin()) {
+            unset($template['form']['type']);
+            unset($template['item']['type']);
+        }
+
         return $template;
     }
 
