@@ -14,6 +14,8 @@ class Refund extends BaseModel
     public static $rules = [
         "amount" => ["required","numeric","gt:0"],
         "executed_at" => ["nullable","date"],
+        "user_id" => ["required","numeric"],
+        "credited_user_id" => ["required","numeric","different:user_id"],
     ];
 
     public static function getRules($action = "", $auth = null)

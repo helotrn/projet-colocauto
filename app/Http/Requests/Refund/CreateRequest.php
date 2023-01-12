@@ -8,13 +8,11 @@ class CreateRequest extends BaseRequest
 {
     public function authorize()
     {
-        // TODO manage access rights
         return true;
     }
 
     public function rules()
     {
-        // TODO change rules depending on the user
         $rules = [
             "amount" => [
                 "numeric",
@@ -28,8 +26,20 @@ class CreateRequest extends BaseRequest
             "credited_user_id" => [
                 "numeric",
                 "required",
+                "different:user_id"
             ]
         ];
+
+        if( !$this->user()->isAdmin() ) {
+            $user = $this->user();
+            $accessibleUserIds = implode(
+                ",",
+                $user->getSameCommunityUserIds()
+                    ->toArray()
+            );
+            $rules["user_id"][] = "in:$accessibleUserIds";
+            $rules["credited_user_id"][] = "in:$accessibleUserIds";
+        }
 
         return $rules;
     }
@@ -38,6 +48,7 @@ class CreateRequest extends BaseRequest
     {
         return [
             "user_id" => "payé par",
+            "credited_user_id" => "payé à",
             "amount" => "montant"
         ];
     }
@@ -46,6 +57,7 @@ class CreateRequest extends BaseRequest
     {
         return [
             "credited_user_id.required" => "Vous devez indiquer à qui vous avez remboursé une somme.",
+            "credited_user_id.different" => "La personne qui paye et celle qui est remboursée doivent être différentes",
         ];
     }
 }
