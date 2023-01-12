@@ -339,10 +339,10 @@ export default {
     z-index: 3;
   }
   .loanable-calendar__event--availability {
-    background-color: $success;
+    background-color: $background-alert-positive;
   }
   .loanable-calendar__event--unavailability {
-    background-color: $danger;
+    background-color: $background-alert-negative;
   }
   .loanable-calendar__event--loan_in_process {
     background-color: $warning;
