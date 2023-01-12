@@ -210,6 +210,18 @@ export default {
     }
   }
 
+  .vuecal__cell--selected {
+    background-color: transparent;
+  }
+  .vuecal__cell--current,
+  .vuecal__cell--today {
+    background-color: rgba(240, 240, 255, 0.4);
+  }
+  .vuecal__event--focus,
+  .vuecal__event:focus {
+    box-shadow: none;
+  }
+
   // Month view.
   .vuecal__cells.month-view {
     .vuecal__cell {
