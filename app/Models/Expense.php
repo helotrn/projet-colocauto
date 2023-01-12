@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Validation\Rule;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Builder;
 use Carbon\Carbon;
 
 class Expense extends BaseModel
@@ -80,5 +81,27 @@ class Expense extends BaseModel
                 $model->save();
             }
         });
+    }
+
+    public function scopeAccessibleBy(Builder $query, $user)
+    {
+        if ($user->isAdmin()) {
+            return $query;
+        }
+
+        // A user has access to...
+        return $query
+            ->where(function ($q) use ($user) {
+                // ... expenses payed by himself or herself
+                $q->where('user_id', $user->id)
+                // ...or expenses payed by somebody belonging to the same community
+                ->orWhereIn('user_id', $user->getSameCommunityUserIds());
+            })
+            // ...and expenses that is for a loanable belonging to the same community
+            ->whereHas("loanable", function ($q) use ($user) {
+                return $q->whereHas("owner", function ($q) use ($user) {
+                    return $q->whereIn('user_id', $user->getSameCommunityUserIds());
+                });
+            });
     }
 }

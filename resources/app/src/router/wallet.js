@@ -27,7 +27,6 @@ export default [
             expenses: {
               retrieve: {
                 fields: "id,name,amount,executed_at,user.full_name,loanable.name,tag.name,tag.color",
-                "user.id": "me",
               },
             },
           },

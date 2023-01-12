@@ -474,7 +474,7 @@ class User extends AuthenticatableBaseModel
     public function getSameCommunityUserIds()
     {
         $communityIds = $this->getAccessibleCommunityIds();
-        $userIds = User::whereHas('community', function ($q) use (
+        $userIds = User::whereHas('communities', function ($q) use (
             $communityIds
         ) {
             return $q->whereIn('communities.id', $communityIds);
