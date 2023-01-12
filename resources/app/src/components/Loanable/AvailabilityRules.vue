@@ -278,55 +278,37 @@ export default {
       const { CancelToken } = Vue.axios;
       const cancelToken = CancelToken.source();
 
+      let start, end;
+
+      // Include out-of-scope days in month view.
       if (view === "month") {
         // Must convert [, ] interval to [, ) by adding one second to the end time.
-        let start = this.$dayjs(firstCellDate);
-        let end = this.$dayjs(lastCellDate).add(1, "s");
-
-        try {
-          Vue.axios
-            .get(`/loanables/${this.loanable.id}/availability`, {
-              params: {
-                start: start.format("YYYY-MM-DD HH:mm:ss"),
-                end: end.format("YYYY-MM-DD HH:mm:ss"),
-                responseMode: "unavailable",
-              },
-              cancelToken: cancelToken.token,
-            })
-
-            .then((response) => {
-              this.events = response.data;
-            });
-        } catch (e) {
-          throw e;
-        }
+        start = this.$dayjs(firstCellDate);
+        end = this.$dayjs(lastCellDate).add(1, "s");
       } else {
         // Must convert [, ] interval to [, ) by adding one second to the end time.
-        let start = this.$dayjs(startDate);
-        let end = this.$dayjs(endDate).add(1, "s");
+        start = this.$dayjs(startDate);
+        end = this.$dayjs(endDate).add(1, "s");
+      }
 
-        try {
-          Vue.axios
-            .get(`/loanables/${this.loanable.id}/events`, {
-              params: {
-                start: start.format("YYYY-MM-DD HH:mm:ss"),
-                end: end.format("YYYY-MM-DD HH:mm:ss"),
-              },
-              cancelToken: cancelToken.token,
-            })
-
-            .then((response) => {
-              this.events = response.data.map((e) => {
-                if (e.type === "availability_rule") {
-                  e.type = "availability";
-                }
-
-                return e;
-              });
+      try {
+        Vue.axios
+          .get(`/loanables/${this.loanable.id}/availability`, {
+            params: {
+              start: start.format("YYYY-MM-DD HH:mm:ss"),
+              end: end.format("YYYY-MM-DD HH:mm:ss"),
+              responseMode: "available",
+            },
+            cancelToken: cancelToken.token,
+          })
+          .then((response) => {
+            this.events = response.data.map((e) => {
+              e.type = "availability";
+              return e;
             });
-        } catch (e) {
-          throw e;
-        }
+          });
+      } catch (e) {
+        throw e;
       }
     },
   },
