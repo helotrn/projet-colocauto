@@ -225,7 +225,7 @@ export default {
             params: {
               start: start.format("YYYY-MM-DD HH:mm:ss"),
               end: end.format("YYYY-MM-DD HH:mm:ss"),
-              responseMode: "unavailable",
+              responseMode: "available",
             },
             cancelToken: cancelToken.token,
           })
@@ -233,10 +233,6 @@ export default {
           .then((response) => {
             this.availability = response.data.map((e) => {
               e.type = "availability";
-              // Move available property to event data.
-              e.data = { available: e.available };
-              delete e.available;
-
               return e;
             });
           });
