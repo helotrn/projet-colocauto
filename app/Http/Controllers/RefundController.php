@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Refund;
 use App\Repositories\RefundRepository;
 use App\Http\Requests\Refund\CreateRequest;
+use App\Http\Requests\Refund\UpdateRequest;
 
 use App\Http\Requests\BaseRequest as Request;
 
@@ -54,7 +55,7 @@ class RefundController extends RestController
         return $this->respondWithItem($request, $item, 201);
     }
 
-    public function update(Request $request, $id)
+    public function update(UpdateRequest $request, $id)
     {
         try {
             $item = parent::validateAndUpdate($request, $id);
