@@ -54,7 +54,7 @@ export default {
       return this.$dayjs(this.$store.state.user.conditions_accepted_at);
     },
     showToast() {
-      // Avoid showing the
+      // Avoid showing the toast on the conditions page, which would make it unreadable on mobile.
       if (this.$route.name === "conditions") {
         return false;
       }
