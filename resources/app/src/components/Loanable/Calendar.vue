@@ -4,8 +4,8 @@
     :hide-view-selector="true"
     :disable-views="['years', 'year']"
     :defaultView="defaultView"
-    :time-step="variant === 'small' ? 60 : 15"
-    :time-cell-height="variant === 'small' ? 24 : 18"
+    :time-step="60"
+    :time-cell-height="variant === 'small' ? 24 : 32"
     :events="vueCalEvents"
     locale="fr"
     start-week-on-sunday
@@ -29,16 +29,12 @@
         }"
       >
         <span class="line"></span>
-        <template v-if="variant === 'small'">
+        <template v-if="!minutes">
           <span
             >{{ hours < 10 ? "0" + hours : hours }}:{{
               minutes < 10 ? "0" + minutes : minutes
             }}</span
           >
-        </template>
-        <template v-else>
-          <span v-if="!minutes">{{ hours }}</span>
-          <span v-else>{{ minutes }}</span>
         </template>
       </div>
     </template>
