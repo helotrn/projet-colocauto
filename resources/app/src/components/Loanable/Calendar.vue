@@ -44,25 +44,13 @@
     </template>
 
     <template #cell-content="{ cell, view, events }">
-      <div
+      <calendar-month-cell-content
         v-if="view.id === 'month'"
-        :class="
-          'vuecal__cell-date loanable-calendar__cell-date loanable-calendar__cell-date--' +
-          getMonthDayAvailability(events, cell)
-        "
+        :availability="getMonthDayAvailability(events, cell)"
+        :current="cell.today"
       >
-        <div class="loanable-calendar__cell-date-background">
-          <cal-cell-available v-if="getMonthDayAvailability(events, cell) == 'available'" />
-          <cal-cell-partially-available
-            v-if="getMonthDayAvailability(events, cell) == 'partially-available'"
-          />
-          <cal-cell-unavailable v-if="getMonthDayAvailability(events, cell) == 'unavailable'" />
-        </div>
-
-        <div class="loanable-calendar__cell-date-content">
-          {{ cell.content }}
-        </div>
-      </div>
+        {{ cell.content }}
+      </calendar-month-cell-content>
 
       <span v-else class="vuecal__cell-date">
         {{ cell.content }}
@@ -86,9 +74,7 @@
 import VueCal from "vue-cal";
 import "vue-cal/dist/i18n/fr";
 
-import CalCellAvailable from "@/assets/svg/loanable-calendar__cal-cell--available.svg";
-import CalCellPartiallyAvailable from "@/assets/svg/loanable-calendar__cal-cell--partially-available.svg";
-import CalCellUnavailable from "@/assets/svg/loanable-calendar__cal-cell--unavailable.svg";
+import CalendarMonthCellContent from "@/components/Loanable/CalendarMonthCellContent.vue";
 
 export default {
   name: "Calendar",
@@ -107,9 +93,7 @@ export default {
   },
   components: {
     VueCal,
-    "cal-cell-available": CalCellAvailable,
-    "cal-cell-partially-available": CalCellPartiallyAvailable,
-    "cal-cell-unavailable": CalCellUnavailable,
+    "calendar-month-cell-content": CalendarMonthCellContent,
   },
   computed: {
     classList: function () {
