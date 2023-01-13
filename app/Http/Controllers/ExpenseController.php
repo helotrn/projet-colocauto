@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Expense;
 use App\Repositories\ExpenseRepository;
 use App\Http\Requests\Expense\CreateRequest;
+use App\Http\Requests\Expense\UpdateRequest;
 
 use App\Http\Requests\BaseRequest as Request;
 
@@ -54,7 +55,7 @@ class ExpenseController extends RestController
         return $this->respondWithItem($request, $item, 201);
     }
 
-    public function update(Request $request, $id)
+    public function update(UpdateRequest $request, $id)
     {
         try {
             $item = parent::validateAndUpdate($request, $id);
