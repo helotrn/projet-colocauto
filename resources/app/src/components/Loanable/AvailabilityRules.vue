@@ -93,12 +93,14 @@
     </b-row>
 
     <b-row>
-      <loanable-calendar
-        defaultView="month"
-        :events="events"
-        @ready="getEvents"
-        @view-change="getEvents"
-      ></loanable-calendar>
+      <b-col>
+        <loanable-calendar
+          defaultView="month"
+          :events="events"
+          @ready="getEvents"
+          @view-change="getEvents"
+        ></loanable-calendar>
+      </b-col>
     </b-row>
 
     <b-row class="availability-rules__description">
