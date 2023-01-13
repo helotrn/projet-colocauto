@@ -177,6 +177,8 @@ export default {
 
 <style lang="scss">
 .loanable-calendar {
+  font-variant-numeric: tabular-nums;
+
   &.loanable-calendar--small {
     font-size: 13px;
     .vuecal__title-bar,
