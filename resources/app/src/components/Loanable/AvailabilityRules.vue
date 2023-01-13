@@ -103,6 +103,12 @@
       </b-col>
     </b-row>
 
+    <b-row>
+      <b-col>
+        <loanable-calendar-legend />
+      </b-col>
+    </b-row>
+
     <b-row class="availability-rules__description">
       <b-col>
         <div class="form-inline availability-rules__description__default">
@@ -147,12 +153,14 @@ import VueCal from "vue-cal";
 import "vue-cal/dist/i18n/fr";
 
 import LoanableCalendar from "@/components/Loanable/Calendar.vue";
+import LoanableCalendarLegend from "@/components/Loanable/CalendarLegend.vue";
 import LoanableExceptions from "@/components/Loanable/Exceptions.vue";
 
 export default {
   name: "LoanableAvailabilityRules",
   components: {
     LoanableCalendar,
+    LoanableCalendarLegend,
     LoanableExceptions,
     VueCal,
   },
