@@ -80,5 +80,13 @@ export default {
       },
     },
   },
+  watch: {
+      item(){
+        // get the amount from URL when needed
+        if( this.item && !this.item.id && this.item.amount == 0 && this.$route.query.amount) {
+          this.item.amount = this.$route.query.amount;
+        }
+      }
+  }
 };
 </script>

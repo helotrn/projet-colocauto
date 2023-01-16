@@ -35,6 +35,7 @@ import Dashboard from "./pages/dashboard";
 import Login from "./pages/login";
 import Register from "./pages/register";
 import RegisterIntent from "./pages/register/intent";
+import wallet from "./pages/wallet";
 
 Vue.use(Vuex);
 
@@ -80,6 +81,7 @@ const modules = {
   register: Register,
   "register.intent": RegisterIntent,
   "admin.community": AdminCommunity,
+  wallet,
 };
 
 const initialState = {

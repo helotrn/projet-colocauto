@@ -20,6 +20,18 @@
     border: 0;
 }
 
+.btn-outline-primary {
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+    font-weight: bold;
+}
+a.btn-outline-primary {
+    color: $primary;
+}
+a.btn-outline-primary:hover {
+    color: $white;
+}
+
 .clickable-shadow {
     @extend .shadow;
 
