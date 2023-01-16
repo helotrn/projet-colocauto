@@ -70,27 +70,6 @@
         <b-row>
           <b-col>
             <forms-validated-input
-              name="date_of_birth"
-              :label="$t('fields.date_of_birth') | capitalize"
-              description="Cette information est uniquement pour notre assureur"
-              :rules="form.general.date_of_birth.rules"
-              type="date"
-              initial-view="year"
-              :open-date="openDate"
-              :disabled-dates="datesInTheFuture"
-              v-model="user.date_of_birth"
-            />
-          </b-col>
-        </b-row>
-
-        <b-alert :variant="age < 18 ? 'danger' : 'warning'" :show="age < 21">
-          L'âge minimal pour utiliser LocoMotion est de 18 ans pour les vélos et les remorques; 21
-          ans pour les autos.
-        </b-alert>
-
-        <b-row>
-          <b-col>
-            <forms-validated-input
               name="phone"
               :label="$t('fields.phone') | capitalize"
               description="Pour faciliter la communication votre numéro est visible
@@ -99,20 +78,6 @@ par les membres de votre groupe et l'équipe Coloc'Auto""
               type="text"
               mask="## ## ## ## ##"
               v-model="user.phone"
-            />
-          </b-col>
-        </b-row>
-
-        <b-row>
-          <b-col>
-            <forms-validated-input
-              name="address"
-              :label="$t('fields.address') | capitalize"
-              description="Elle nous permet de vous affecter au bon quartier et
-ne sera jamais divulguée aux utilisateurs."
-              :rules="form.general.address.rules"
-              type="text"
-              v-model="user.address"
             />
           </b-col>
         </b-row>
@@ -197,21 +162,6 @@ export default {
     },
   },
   computed: {
-    age() {
-      const age = this.$dayjs(this.$dayjs()).diff(this.user.date_of_birth, "year");
-
-      if (Number.isNaN(age)) {
-        return Number.MAX_SAFE_INTEGER;
-      }
-
-      return age;
-    },
-    dateOfBirthRules() {
-      return {
-        ...this.form.general.date_of_birth.rules,
-        required: true,
-      };
-    },
   },
   methods: {
     setLocation(address, isFromGoogle) {
