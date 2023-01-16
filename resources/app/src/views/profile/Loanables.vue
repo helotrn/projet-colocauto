@@ -1,13 +1,6 @@
 <template>
   <div class="profile-loanables" v-if="routeDataLoaded && !loading && loaded">
     <div v-if="user.owner">
-      <b-row>
-        <b-col class="admin__buttons">
-          <b-btn v-if="creatable" :to="`/profile/${slug}/new`">
-            {{ $t("ajouter un véhicule") | capitalize }}
-          </b-btn>
-        </b-col>
-      </b-row>
 
       <b-row v-if="data.length === 0">
         <b-col>Pas de véhicule.</b-col>

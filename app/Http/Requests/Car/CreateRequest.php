@@ -8,7 +8,18 @@ class CreateRequest extends BaseRequest
 {
     public function authorize()
     {
-        return true;
+        // only authorize admins to create cars
+        $user = $this->user();
+
+        if (!$user) {
+            return false;
+        }
+
+        if ($user->isAdmin()) {
+            return true;
+        }
+
+        return false;
     }
 
     public function rules()

@@ -76,6 +76,10 @@ export default [
         },
       },
       {
+        path: "loanables/new",
+        redirect: "/404"
+      },
+      {
         path: "loanables/:id",
         component: ProfileLoanable,
         props: true,
