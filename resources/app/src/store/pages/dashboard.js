@@ -111,6 +111,7 @@ const mutations = {
   reloading(state) {
     state.loansLoaded = false;
     state.loanablesLoaded = false;
+    state.balanceLoaded = false;
   },
   loadLoans(state) {
     state.loadRequests++;
