@@ -843,9 +843,6 @@ class LoanableController extends RestController
                     "insurer" => [
                         "type" => "text",
                     ],
-                    "has_informed_insurer" => [
-                        "type" => "checkbox",
-                    ],
                 ],
                 "trailer" => [
                     "maximum_charge" => [
