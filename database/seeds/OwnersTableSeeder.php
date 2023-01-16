@@ -15,9 +15,21 @@ class OwnersTableSeeder extends Seeder
                 "submitted_at" => new DateTime(),
             ],
             [
+                // camille
+                "id" => 7,
+                "user_id" => 7,
+                "submitted_at" => new DateTime(),
+            ],
+            [
                 // marcelle
                 "id" => 10,
                 "user_id" => 10,
+                "submitted_at" => new DateTime(),
+            ],
+            [
+                // christiane
+                "id" => 13,
+                "user_id" => 13,
                 "submitted_at" => new DateTime(),
             ],
             [
