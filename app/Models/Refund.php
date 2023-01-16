@@ -23,7 +23,11 @@ class Refund extends BaseModel
         $rules = parent::getRules($action, $auth);
         if($action === "template") {
             $rules["amount"][1] = "decimal";
+            // remove greater than 0 rule for javascript
             unset($rules["amount"][2]);
+
+            // remove different rule for Javascript
+            unset($rules["credited_user_id"][2]);
         }
         return $rules;
     }
