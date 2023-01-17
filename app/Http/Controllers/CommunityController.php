@@ -307,13 +307,111 @@ class CommunityController extends RestController
                     return $carry;
                 }, $user->balance);
             }
-            return [
+            return (object) [
+                "id" => $user->id,
                 "balance" => $user->balance,
                 "full_name" => $user->full_name,
             ];
         });
 
-        return response($users->all(), 200);
+        // propose refund transactions to reach perfect balance
+        $refunds = [];
+        $debtors = $users->filter(function($user){
+          return $user->balance < 0;
+        })->sortBy('balance');
+        $creditors = $users->filter(function($user){
+          return $user->balance > 0;
+        })->sortByDesc('balance');
+
+        if( $debtors->isNotEmpty() ){
+          // [1] search matching balances to wipe out
+          foreach($debtors->all() as $debtor) {
+            $toWipe = $creditors->filter(function($creditor) use ($debtor) {
+              return $debtor->balance == -$creditor->balance;
+            });
+            if(!$toWipe->isEmpty()) {
+              $refunds[] = [
+                "user_id" => $debtor->id,
+                "user_id_full_name" => $debtor->full_name,
+                "credited_user_id" => $toWipe->first()->id,
+                "credited_user_id_full_name" => $toWipe->first()->full_name,
+                "amount" => -$debtor->balance
+              ];
+              $debtors = $debtors->reject(function($user) use ($debtor){
+                return $debtor->id == $user->id;
+              });
+              $creditors = $creditors->reject(function($user) use ($toWipe){
+                return $toWipe->first()->id == $user->id;
+              });
+            }
+          }
+        }
+
+        while( $debtors->isNotEmpty() && $creditors->isNotEmpty() ){
+          // [2] fill the bigger gap
+          $debtor = $debtors->first();
+          $creditor = $creditors->first();
+          $refunds[] = [
+            "user_id" => $debtor->id,
+            "user_full_name" => $debtor->full_name,
+            "credited_user_id" => $creditor->id,
+            "credited_user_full_name" => $creditor->full_name,
+            "amount" => $debtor->balance + $creditor->balance > 0 ? -$debtor->balance : $creditor->balance,
+          ];
+
+          // if debtor debt is not enougth to refund creditor ...
+          if( $debtor->balance + $creditor->balance > 0 ){
+            // ... decrease creditor balance ...
+            $creditors = $creditors->map(function($user) use($creditor, $debtor) {
+              if( $user->id == $creditor->id ) {
+                return (object) [
+                  "id" => $user->id,
+                  "full_name" => $user->full_name,
+                  "balance" => $user->balance + $debtor->balance,
+                ];
+              }
+              return $user;
+            })->sortByDesc('balance');
+
+            // ... and remove the debtor
+            $debtors = $debtors->reject(function($user) use ($debtor){
+              return $debtor->id == $user->id;
+            });
+
+          } else {
+
+            // if debtor debt is too much to refund the creditor ...
+            if( $debtor->balance + $creditor->balance < 0 ) {
+              /// ... decrease the debtor debt
+              $debtors = $debtors->map(function($user) use($creditor, $debtor) {
+                if( $user->id == $debtor->id ) {
+                  return (object) [
+                    "id" => $user->id,
+                    "full_name" => $user->full_name,
+                    "balance" => $user->balance + $creditor->balance,
+                  ];
+                }
+                return $user;
+              })->sortBy('balance');
+            } else {
+              // else remove the debtor
+              $debtors = $debtors->reject(function($user) use ($debtor){
+                return $debtor->id == $user->id;
+              });
+            }
+
+            // and remove the creditor
+            $creditors = $creditors->reject(function($user) use ($creditor){
+              return $creditor->id == $user->id;
+            });
+
+          }
+        }
+
+        return response([
+          "users" => $users->all(),
+          "refunds" => $refunds,
+        ], 200);
     }
 
     public function template(Request $request)
