@@ -83,8 +83,10 @@ export default {
   watch: {
       item(){
         // get the amount from URL when needed
-        if( this.item && !this.item.id && this.item.amount == 0 && this.$route.query.amount) {
-          this.item.amount = this.$route.query.amount;
+        if( this.item && !this.item.id) {
+          if(this.item.amount == 0 && this.$route.query.amount) this.item.amount = this.$route.query.amount;
+          if(!this.item.user_id && this.$route.query.user_id) this.item.user_id = this.$route.query.user_id;
+          if(!this.item.credited_user_id && this.$route.query.credited_user_id) this.item.credited_user_id = this.$route.query.credited_user_id;
         }
       }
   }
