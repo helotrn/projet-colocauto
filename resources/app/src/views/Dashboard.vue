@@ -194,8 +194,8 @@
               <b-col>
                 <div class="dashboard__balance" :class="{ loading: loading && !balanceLoaded }">
                   <transition name="fade">
-                    <div v-if="balance && balance.length > 0">
-                      <users-balance :users="balance"/>
+                    <div v-if="balance && balance.users && balance.users.length > 0">
+                      <users-balance :users="balance.users"/>
                     </div>
                   </transition>
                 </div>

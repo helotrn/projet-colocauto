@@ -1,7 +1,7 @@
 import Vue from "vue";
 
 const initialState = {
-  balance: [],
+  balance: {},
   balanceLoaded: false,
   loading: true,
 }

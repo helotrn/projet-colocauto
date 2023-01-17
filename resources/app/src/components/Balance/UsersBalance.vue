@@ -25,6 +25,7 @@ export default {
   },
   computed: {
     sum(){
+      if(this.users.length == 0) return 0;
       return this.users.reduce((sum, u) => {
         if( u.balance > 0 ) sum += parseFloat(u.balance);
         return sum;

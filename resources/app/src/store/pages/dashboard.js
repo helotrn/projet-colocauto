@@ -17,7 +17,7 @@ const initialState = {
   members: [],
   membersLoaded: false,
   hasMoreMembers: false,
-  balance: [],
+  balance: {},
   balanceLoaded: false,
   totalMembers: 0,
   loadRequests: 0,
