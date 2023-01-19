@@ -218,7 +218,20 @@
             </b-row>
             <b-row>
               <b-col>
-                <img src="/mockups/calendar.png" />
+                <b-tabs v-if="loanables && loanables.length > 0" pills card>
+                  <b-tab
+                    v-for="loanable in loanables"
+                    :title="loanable.name"
+                    :key="loanable.id"
+                    title-item-class="mr-2"
+                  >
+                    <b-card-text>
+                      <loans-calendar
+                        :loanable="loanable"
+                      ></loans-calendar>
+                    </b-card-text>
+                  </b-tab>
+                </b-tabs>
               </b-col>
             </b-row>
           </section>
@@ -340,6 +353,7 @@ import TutorialBlock from "@/components/Dashboard/TutorialBlock.vue";
 import UserCard from "@/components/User/UserCard.vue";
 import InfoLinkBlock from "@/components/Dashboard/InfoLinkBlock.vue";
 import UsersBalance from "@/components/Balance/UsersBalance.vue";
+import LoansCalendar from "@/components/Loanable/LoansCalendar.vue";
 
 import MagnifyingGlass from "@/assets/svg/magnifying-glass.svg";
 
@@ -359,6 +373,7 @@ export default {
     UserCard,
     InfoLinkBlock,
     UsersBalance,
+    LoansCalendar,
   },
   beforeMount() {
     if (!this.isLoggedIn) {
@@ -586,6 +601,32 @@ export default {
     &:hover {
       background: #fff;
       color: #7a7a7a;
+    }
+  }
+
+  .tabs {
+    .card-header {
+      background-color: transparent;
+      padding-left: 0.625rem;
+      padding-right: 0.625rem;
+    }
+
+    .tab-pane.card-body {
+      padding-left: 0;
+      padding-right: 0;
+    }
+
+    .nav-pills .nav-link {
+      color: $secondary;
+      background-color: $white;
+      border: solid 1px $white;
+      border-radius: 10px;
+    }
+    .nav-pills .nav-link.active,
+    .nav-pills .show > .nav-link {
+      color: $primary;
+      border-color: $primary;
+      font-weight: bold;
     }
   }
 }
