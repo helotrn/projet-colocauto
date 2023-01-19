@@ -145,12 +145,14 @@ export default {
         eventStartTime = this.$dayjs(events[e].start);
         eventEndTime = this.$dayjs(events[e].end);
 
-        if (
+        if( this.$dayjs().diff(cellEndTime) > 0 ) {
+          availability = "unavailable";
+        } else if (
           0 == eventStartTime.diff(cellStartTime, "seconds") &&
           0 == eventEndTime.diff(cellEndTime, "seconds")
         ) {
           // If event spans the whole day, then unavailable.
-          availability = "unavailable";
+          availability = events[e].data.available ? "available" : "unavailable";
         } else {
           // If event does not span the whole day, then partially available.
           availability = "partially-available";
