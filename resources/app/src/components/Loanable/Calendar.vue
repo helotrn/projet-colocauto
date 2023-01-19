@@ -8,7 +8,6 @@
     :time-cell-height="variant === 'small' ? 24 : 32"
     :events="vueCalEvents"
     locale="fr"
-    start-week-on-sunday
     :xsmall="variant === 'small'"
     @ready="$emit('ready', $event)"
     @view-change="$emit('view-change', $event)"
@@ -55,13 +54,6 @@
 
     <template v-slot:event="{ event, view }">
       <div class="vuecal__event-title" v-html="event.title" />
-      <!-- Or if your events are editable: -->
-      <div
-        class="vuecal__event-title vuecal__event-title--edit"
-        contenteditable
-        @blur="event.title = $event.target.innerHTML"
-        v-html="event.title"
-      />
     </template>
   </vue-cal>
 </template>
