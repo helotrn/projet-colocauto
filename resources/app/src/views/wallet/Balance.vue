@@ -12,6 +12,7 @@
       <section class="page__section" v-if="myRefunds.length">
         <h2>Vous devez</h2>
         <b-card v-for="refund in myRefunds"
+          :key="refund.credited_user_id"
           no-body bg="white"
           class="expense-info-box shadow my-4 pt-3"
           :class="{ disabled: loading }"
@@ -41,6 +42,7 @@
       <section class="page__section" v-if="otherRefunds.length">
         <h2>Ils doivent</h2>
         <b-card v-for="refund in otherRefunds"
+          :key="`${refund.user_id}_${refund.credited_user_id}`"
           no-body bg="white"
           class="expense-info-box shadow my-4 pt-3"
           :class="{ disabled: loading }"
