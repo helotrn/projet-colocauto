@@ -19,14 +19,8 @@
     <div class="loanable-card__body">
       <h4 class="loanable-card__title">{{ name }}</h4>
 
-      <loanable-calendar
-        defaultView="week"
-        :events="availability"
-        variant="small"
-        @ready="getAvailability"
-        @view-change="getAvailability"
-      ></loanable-calendar>
-      
+      <loans-calendar :loanable="$props"></loans-calendar>
+
       <div class="loanable-card__tags">
         <div v-if="type === 'car'">
           <b-badge> <svg-car class="icon icon--as-text" /> Auto </b-badge>
@@ -92,7 +86,7 @@ import Car from "@/assets/svg/car.svg";
 import Trailer from "@/assets/svg/trailer.svg";
 
 import UserAvatar from "@/components/User/Avatar.vue";
-import LoanableCalendar from "@/components/Loanable/Calendar.vue";
+import LoansCalendar from "@/components/Loanable/LoansCalendar.vue";
 
 export default {
   name: "LoanableCard",
@@ -101,7 +95,7 @@ export default {
     "svg-bike": Bike,
     "svg-car": Car,
     "svg-trailer": Trailer,
-    LoanableCalendar,
+    LoansCalendar,
   },
   props: {
     available: {
@@ -162,11 +156,6 @@ export default {
       required: true,
     },
   },
-  data() {
-    return {
-      availability: [],
-    };
-  },
   computed: {
     loading() {
       return this.$store.state.loans.cancelToken;
@@ -183,53 +172,6 @@ export default {
           return this.engine === "electric";
         default:
           return false;
-      }
-    },
-  },
-  methods: {
-    getAvailability({ view, startDate, endDate, firstCellDate, lastCellDate, week }) {
-      const { CancelToken } = Vue.axios;
-      const cancelToken = CancelToken.source();
-
-      let start, end;
-
-      // Include out-of-scope days in month view.
-      if (view === "month") {
-        // Must convert [, ] interval to [, ) by adding one second to the end time.
-        start = this.$dayjs(firstCellDate);
-        end = this.$dayjs(lastCellDate).add(1, "s");
-      } else {
-        // Must convert [, ] interval to [, ) by adding one second to the end time.
-        start = this.$dayjs(startDate);
-        end = this.$dayjs(endDate).add(1, "s");
-      }
-
-      try {
-        let load1 = Vue.axios
-          .get(`/loanables/${this.id}/availability`, {
-            params: {
-              start: start.format("YYYY-MM-DD HH:mm:ss"),
-              end: end.format("YYYY-MM-DD HH:mm:ss"),
-              responseMode: "available",
-            },
-            cancelToken: cancelToken.token,
-          });
-
-        let load2 = Vue.axios
-           .get(`/loanables/${this.id}/availability`, {
-             params: {
-               start: start.format("YYYY-MM-DD HH:mm:ss"),
-               end: end.format("YYYY-MM-DD HH:mm:ss"),
-              responseMode: "loans",
-             },
-             cancelToken: cancelToken.token,
-           });
-
-        Promise.all([load1, load2]).then(([response1, response2]) => {
-          this.availability = response1.data.concat(response2.data);
-        });
-      } catch (e) {
-        throw e;
       }
     },
   },
