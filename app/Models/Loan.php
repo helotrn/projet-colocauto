@@ -612,8 +612,7 @@ SQL;
             return $q->whereHas("community", function ($q) use ($user) {
                 return $q->whereHas("users", function ($q) use ($user) {
                     return $q
-                        ->where("community_user.user_id", $user->id)
-                        ->where("community_user.role", "admin");
+                        ->where("community_user.user_id", $user->id);
                 });
             });
         });
