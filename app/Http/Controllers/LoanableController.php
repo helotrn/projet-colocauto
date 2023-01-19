@@ -132,6 +132,18 @@ class LoanableController extends RestController
             );
 
             foreach ($loanIntervalsByDay as $index => $loanInterval) {
+                if( $request->responseMode == "loans" ) {
+                    $events[] = [
+                        "start" => $loanInterval[0]->toDateTimeString(),
+                        "end" => $loanInterval[1]->toDateTimeString(),
+                        "data" => [
+                            "available" => $request->responseMode == "available",
+                        ],
+                        "type" => "availability",
+                        "title" => $loan->borrower->user->full_name .' - '. $loan->reason,
+                    ];
+                } else {
+                
                 $availabilityIntervals = isset(
                     $availabilityIntervalsByDay[$index]
                 )
@@ -155,9 +167,11 @@ class LoanableController extends RestController
                         $loanInterval
                     );
                 }
+                }
             }
         }
 
+        if( $request->responseMode != "loans" ) {
         // Generate events from intervals.
         foreach ($availabilityIntervalsByDay as $dailyAvailabilityIntervals) {
             foreach ($dailyAvailabilityIntervals as $availabilityInterval) {
@@ -167,8 +181,10 @@ class LoanableController extends RestController
                     "data" => [
                         "available" => $request->responseMode == "available",
                     ],
+                    "type" => "availability",
                 ];
             }
+        }
         }
 
         return response($events, 200);

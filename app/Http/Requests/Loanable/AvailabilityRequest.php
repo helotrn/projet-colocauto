@@ -36,7 +36,7 @@ class AvailabilityRequest extends BaseRequest
             // At the moment, only getting unavailability is implemented.
             "responseMode" => [
                 "required",
-                Rule::in(["available", "unavailable"]),
+                Rule::in(["available", "unavailable", "loans"]),
             ],
         ];
 
