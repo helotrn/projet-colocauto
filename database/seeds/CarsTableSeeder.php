@@ -29,7 +29,10 @@ class CarsTableSeeder extends Seeder
                 "has_informed_insurer" => true,
                 "created_at" => new \DateTime(),
                 "availability_mode" => "always",
-                "availability_json" => "",
+                "availability_json" => <<<JSON
+[]
+JSON
+                ,
                 "pricing_category" => "large",
                 "cost_per_km" => 0.35,
                 "cost_per_month" => 100,
@@ -55,7 +58,10 @@ class CarsTableSeeder extends Seeder
                 "has_informed_insurer" => true,
                 "created_at" => new \DateTime(),
                 "availability_mode" => "always",
-                "availability_json" => "",
+                "availability_json" => <<<JSON
+[]
+JSON
+                ,
                 "pricing_category" => "large",
                 "cost_per_km" => 0.2,
                 "cost_per_month" => 80,
@@ -82,7 +88,10 @@ class CarsTableSeeder extends Seeder
                 "insurer" => "Macif",
                 "created_at" => new \DateTime(),
                 "availability_mode" => "always",
-                "availability_json" => "",
+                "availability_json" => <<<JSON
+[]
+JSON
+                ,
                 "pricing_category" => "large",
                 "cost_per_km" => 0.25,
                 "cost_per_month" => 70,
@@ -109,7 +118,10 @@ class CarsTableSeeder extends Seeder
                 "insurer" => "Macif",
                 "created_at" => new \DateTime(),
                 "availability_mode" => "always",
-                "availability_json" => "",
+                "availability_json" => <<<JSON
+[]
+JSON
+                ,
                 "pricing_category" => "large",
                 "cost_per_km" => 0.3,
                 "cost_per_month" => 80,
@@ -136,7 +148,10 @@ class CarsTableSeeder extends Seeder
                 "insurer" => "Macif",
                 "created_at" => new \DateTime(),
                 "availability_mode" => "always",
-                "availability_json" => "",
+                "availability_json" => <<<JSON
+[]
+JSON
+                ,
                 "pricing_category" => "large",
                 "cost_per_km" => 0.3,
                 "cost_per_month" => 100,
@@ -162,7 +177,10 @@ class CarsTableSeeder extends Seeder
                 "insurer" => "Macif",
                 "created_at" => new \DateTime(),
                 "availability_mode" => "always",
-                "availability_json" => "",
+                "availability_json" => <<<JSON
+[]
+JSON
+                ,
                 "pricing_category" => "large",
                 "cost_per_km" => 0.15,
                 "cost_per_month" => 80,
