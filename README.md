@@ -156,3 +156,12 @@ Attendre quelques minutes que le certificat soit créé. Pour suivre le processu
 ```
 kubectl logs -n cert-manager -lapp=cert-manager
 ```
+
+## Attributions
+
+Photos libres de droits:
+
+* Photo de Théophile Devaux par [Brooke Cagle](https://unsplash.com/@brookecagle) sur [Unsplash](https://unsplash.com/fr/photos/JrzzESCqeko)
+* Photo de Mathieu Arnaud par [Leilani Angel](https://unsplash.com/@leilaniangel) sur [Unsplash](https://unsplash.com/fr/photos/K84vnnzxmTQ)
+  
+  
