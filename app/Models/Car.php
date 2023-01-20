@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Carbon\Carbon;
+use Log;
 
 class Car extends Loanable
 {
@@ -127,18 +128,31 @@ class Car extends Loanable
 
     public function writeMonthlySharedExpenses()
     {
+        Log::info("Compute mounthy shared expenses for {$this->name}");
+        $community = $this->owner ? $this->owner->user->main_community : $this->community;
+
         // get the users of the same community that joined the community
         // before the current (previous ?) month
-        $users = $this->owner->user->main_community->users()
+        $users = $community->users()
             ->wherePivotNotBetween("approved_at", [
                 Carbon::now()->startOfMonth(),
                 Carbon::now()
             ])->get();
 
+        Log::info("{$users->count()} people in the community");
+        if( $users->count() === 0 ) return;
+
         $funds_tag = ExpenseTag::where('slug', 'funds');
+        $compensation_tag = ExpenseTag::where('slug', 'compensation');
 
         $period_start = Carbon::now()->startOfMonth()->subDay();
         $shared_cost = $this->cost_per_month / $users->count();
+        $owner = $this->owner;
+        if( $owner ) {
+            $owner_compensation = $this->owner_compensation / $users->filter(function($u) use ($owner){ return $owner->user->id !== $u->id; })->count();
+        } else {
+            $owner_compensation = 0;
+        }
         foreach($users as $user) {
             Expense::create([
                 "name" => "Provision ".$period_start->monthName." ".$period_start->year,
@@ -147,8 +161,19 @@ class Car extends Loanable
                 "executed_at" => Carbon::now(),
                 "user_id" => $user->id,
                 "loanable_id" => $this->id,
-                "expense_tag_id" => $funds_tag ? $funds_tag->first()->id : null,
+                "expense_tag_id" => $funds_tag->count() ? $funds_tag->first()->id : null,
             ]);
+            if( $owner_compensation && $this->owner->user->id !== $user->id ){
+                Expense::create([
+                    "name" => "Dédommagement propriétaire ".$period_start->monthName." ".$period_start->year,
+                    "amount" => $owner_compensation,
+                    "type" => "debit",
+                    "executed_at" => Carbon::now(),
+                    "user_id" => $user->id,
+                    "loanable_id" => $this->id,
+                    "expense_tag_id" => $compensation_tag->count() ? $compensation_tag->first()->id : null,
+                ]);
+            }
         }
     }
 }
