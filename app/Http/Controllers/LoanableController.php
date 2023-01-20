@@ -642,6 +642,7 @@ class LoanableController extends RestController
                 "year_of_circulation" => null,
                 "cost_per_km" => 0.70,
                 "cost_per_month" => 30,
+                "owner_compensation" => 30,
             ],
             "form" => [
                 "general" => [
@@ -867,6 +868,9 @@ class LoanableController extends RestController
                         "type" => "currency",
                     ],
                     "cost_per_month" => [
+                        "type" => "currency",
+                    ],
+                    "owner_compensation" => [
                         "type" => "currency",
                     ],
                 ]

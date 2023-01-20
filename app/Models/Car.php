@@ -22,6 +22,7 @@ class Car extends Loanable
         "type" => ["required", "in:car"],
         "cost_per_km" => ["numeric", "present", "min:0"],
         "cost_per_month" => ["numeric", "present", "min:0"],
+        "owner_compensation" => ["numeric", "present", "min:0"],
     ];
 
     public static function getRules($action = "", $auth = null)
@@ -30,6 +31,7 @@ class Car extends Loanable
         if($action === "template") {
             $rules["cost_per_km"][0] = "decimal";
             $rules["cost_per_month"][0] = "decimal";
+            $rules["owner_compensation"][0] = "decimal";
         }
         return $rules;
     }
@@ -73,6 +75,7 @@ class Car extends Loanable
         "year_of_circulation",
         "cost_per_km",
         "cost_per_month",
+        "owner_compensation",
     ];
 
     public $items = ["owner", "community"];

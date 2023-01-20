@@ -27,6 +27,7 @@ export default {
       year_of_circulation: "année de mise en circulation",
       cost_per_km: "coût en € par kilomètre parcouru",
       cost_per_month: "coût fixe par mois",
+      owner_compensation: "dédommagement propriétaire",
     },
     descriptions: {
       cost_per_km: 
@@ -36,6 +37,10 @@ export default {
         "Les dépenses qui concernent le véhicule sont faites au profit de tou·te·s." +
         " Les coûts fixes par mois sont la part estimée de contribution dûe par" +
         " les membres du groupe pour participer à l'entretien et l'assurance.",
+      owner_compensation:
+        "Ce montant est dû tous les mois par les utilisateur·ice·s de la voiture"+
+        " partagée à son proporiétaire en compensation de l'usure et de la décôte" +
+        " du véhicule.",
     },
     transmission_modes: {
       automatic: "automatique",

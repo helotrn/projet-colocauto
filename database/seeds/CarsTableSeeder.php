@@ -33,6 +33,7 @@ class CarsTableSeeder extends Seeder
                 "pricing_category" => "large",
                 "cost_per_km" => 0.35,
                 "cost_per_month" => 100,
+                "owner_compensation" => 80,
             ],
             [
                 "id" => 1003,
@@ -58,6 +59,7 @@ class CarsTableSeeder extends Seeder
                 "pricing_category" => "large",
                 "cost_per_km" => 0.2,
                 "cost_per_month" => 80,
+                "owner_compensation" => 50,
             ],
             [
                 "id" => 1004,
@@ -84,6 +86,7 @@ class CarsTableSeeder extends Seeder
                 "pricing_category" => "large",
                 "cost_per_km" => 0.25,
                 "cost_per_month" => 70,
+                "owner_compensation" => 30,
             ],
             [
                 "id" => 1005,
@@ -110,6 +113,7 @@ class CarsTableSeeder extends Seeder
                 "pricing_category" => "large",
                 "cost_per_km" => 0.3,
                 "cost_per_month" => 80,
+                "owner_compensation" => 50,
             ],
             [
                 "id" => 1006,
@@ -136,6 +140,7 @@ class CarsTableSeeder extends Seeder
                 "pricing_category" => "large",
                 "cost_per_km" => 0.3,
                 "cost_per_month" => 100,
+                "owner_compensation" => 80,
             ],
             [
                 "id" => 1007,
@@ -161,6 +166,7 @@ class CarsTableSeeder extends Seeder
                 "pricing_category" => "large",
                 "cost_per_km" => 0.15,
                 "cost_per_month" => 80,
+                "owner_compensation" => 0,
             ],
         ];
 
