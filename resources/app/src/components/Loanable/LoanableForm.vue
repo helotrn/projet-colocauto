@@ -47,23 +47,9 @@
                 :options="typeOptions"
                 :placeholder="placeholderOrLabel('type') | capitalize"
                 :disabled="!!loanable.id"
+                hidden
                 disabled-tooltip="On ne peut pas changer le type d'un véhicule existant."
                 v-model="loanable.type"
-              />
-            </b-col>
-          </b-row>
-
-          <b-row>
-            <b-col>
-              <forms-validated-input
-                name="location_description"
-                :description="$t('descriptions.location_description')"
-                :rules="form.general.location_description.rules"
-                :rows="12"
-                :label="$t('fields.location_description') | capitalize"
-                type="textarea"
-                :placeholder="placeholderOrLabel('location_description') | capitalize"
-                v-model="loanable.location_description"
               />
             </b-col>
           </b-row>
@@ -88,16 +74,6 @@
                 type="textarea"
                 :placeholder="placeholderOrLabel('comments') | capitalize"
                 v-model="loanable.comments"
-              />
-
-              <forms-validated-input
-                name="instructions"
-                :description="$t('descriptions.instructions')"
-                :rules="form.general.instructions.rules"
-                :label="$t('fields.instructions') | capitalize"
-                type="textarea"
-                :placeholder="placeholderOrLabel('instructions') | capitalize"
-                v-model="loanable.instructions"
               />
             </b-col>
           </b-row>
@@ -145,6 +121,10 @@
           <h2>Détails de la voiture</h2>
 
           <forms-builder :definition="carForm" v-model="loanable" entity="cars">
+            <!-- remove unused parameters -->
+            <template v-slot:year_of_circulation></template>
+            <template v-slot:plate_number></template>
+            <template v-slot:is_value_over_fifty_thousand></template>
             <template v-slot:report_template>
               <b-form-group>
                 <a href="/fiche_etat_de_l_auto.pdf" download>
@@ -161,6 +141,23 @@
         </div>
         <div class="form__section text-center" v-else>
           <span> Sélectionnez un type de véhicule pour poursuivre la configuration. </span>
+        </div>
+
+        <div class="form__section">
+          <h2>Partage des coûts</h2>
+          <b-row>
+            <b-col lg="6">
+              <forms-builder :definition="form.costs" v-model="loanable" entity="cars"></forms-builder>
+            </b-col>
+            <b-col lg="6">
+              <p>Équilibre financier du véhicule en fonction des dépenses
+              enregistrées pas les utilisateurs :</p>
+              <img src="/mockups/loanable-balance.png" />
+              <p>Les dépenses d'emprunt devraient équilibrer le coût du carburant.
+              Les dépenses partagées et l'entretient réalisé par le propriétaire
+              devraient équilibrer les provisions.</p>
+            </b-col>
+          </b-row>
         </div>
 
         <div class="form__section" v-if="loanable.type && loanable.id">
