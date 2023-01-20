@@ -18,7 +18,7 @@ export default {
     "{count} véhicule sélectionné":
       "aucun véhicule sélectionné | 1 véhicule sélectionné | {count} véhicules sélectionnés",
     descriptions: {
-      comments: "Quoi savoir sur ce véhicule avant de faire l'emprunt? (accessible publiquement)",
+      comments: "Quoi savoir sur ce véhicule avant de faire l'emprunt? Où se trouve-t-il généralement ?",
       community_id:
         "Le partage de mon véhicule peut être restreint à un voisinage ou un " +
         "quartier. Par défaut, un véhicule est accessible à tous mes voisinages.",
@@ -80,7 +80,8 @@ export default {
     },
     placeholders: {
       comments:
-        "ex.: SVP ne pas fumer dans mon auto. Merci beaucoup!\n" +
+        "ex.: La voiture est généralement garée dans la ruelle.\n" +
+        "SVP ne pas fumer dans mon auto. Merci beaucoup!\n" +
         "J'ai un siège pour bébé et un support pour les vélos en arrière.",
       instructions:
         "ex.: J'apprécierais que le siège de bébé soit replacé, s'il y a lieu.\n" +

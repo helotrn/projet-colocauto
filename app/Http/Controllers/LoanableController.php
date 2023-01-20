@@ -639,7 +639,7 @@ class LoanableController extends RestController
                 "plate_number" => "",
                 "share_with_parent_communities" => false,
                 "transmission_mode" => "",
-                "year_of_circulation" => "",
+                "year_of_circulation" => null,
                 "cost_per_km" => 0.70,
                 "cost_per_month" => 30,
             ],
@@ -669,6 +669,7 @@ class LoanableController extends RestController
                             ],
                         ],
                         "disabled" => true,
+                        "hidden" => true,
                     ],
                     "community_id" => [
                         "type" => "relation",
@@ -786,12 +787,7 @@ class LoanableController extends RestController
                                 "value" => "electric",
                             ],
                         ],
-                    ],
-                    "cost_per_km" => [
-                        "type" => "currency",
-                    ],
-                    "cost_per_month" => [
-                        "type" => "currency",
+                        "hidden" => true,
                     ],
                     "year_of_circulation" => [
                         "type" => "number",
@@ -866,6 +862,14 @@ class LoanableController extends RestController
                         "type" => "text",
                     ],
                 ],
+                "costs" => [
+                    "cost_per_km" => [
+                        "type" => "currency",
+                    ],
+                    "cost_per_month" => [
+                        "type" => "currency",
+                    ],
+                ]
             ],
             "filters" => $this->model::$filterTypes,
         ];

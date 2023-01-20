@@ -35,9 +35,9 @@ class CreateRequest extends BaseRequest
             "model" => "required",
             "name" => "required",
             "papers_location" => "required",
-            "plate_number" => "required",
+            "plate_number" => "present",
             "transmission_mode" => "required",
-            "year_of_circulation" => "required|digits:4",
+            "year_of_circulation" => "nullable|digits:4",
         ];
 
         return $rules;

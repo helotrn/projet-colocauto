@@ -17,11 +17,9 @@ class Car extends Loanable
         "model" => ["required"],
         "name" => ["required"],
         "papers_location" => ["required", "in:in_the_car,to_request_with_car"],
-        "plate_number" => ["required"],
         "pricing_category" => ["required", "in:small,large,electric"],
         "transmission_mode" => ["required", "in:manual,automatic"],
         "type" => ["required", "in:car"],
-        "year_of_circulation" => ["required", "digits:4", "numeric"],
         "cost_per_km" => ["numeric", "present", "min:0"],
         "cost_per_month" => ["numeric", "present", "min:0"],
     ];
@@ -29,7 +27,6 @@ class Car extends Loanable
     public static function getRules($action = "", $auth = null)
     {
         $rules = parent::getRules($action, $auth);
-        $rules["year_of_circulation"][] = "max:" . ((int) date("Y") + 1);
         if($action === "template") {
             $rules["cost_per_km"][0] = "decimal";
             $rules["cost_per_month"][0] = "decimal";
