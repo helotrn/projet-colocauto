@@ -81,12 +81,9 @@ const actions = {
           order: "-created_at",
           per_page: maxMemberCount,
           fields: "id,full_name,tags,avatar,phone,communities.role,communities.proof,communities.approved_at,communities.suspended_at,owner",
+          "!id": user.id // exclude current user from the list
         },
       });
-
-      // exclude current user from the list
-      members.data = members.data.filter(m => m.id !== user.id);
-      members.total--;
 
       commit("membersLoaded", members);
     } catch (e) {
