@@ -22,7 +22,6 @@
 
     <b-container
       fluid
-      v-if="community.type === 'neighborhood'"
       class="community__neighbors page__section"
     >
       <b-row no-gutters>
