@@ -13,6 +13,7 @@
       :description="type === 'image' ? null : description"
       v-b-tooltip.hover
       :title="disabled ? disabledTooltip : ''"
+      :hidden="hidden"
     >
       <b-form-select
         v-if="type === 'select'"
@@ -234,6 +235,11 @@ export default {
       default: "",
     },
     disabled: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
+    hidden: {
       type: Boolean,
       required: false,
       default: false,

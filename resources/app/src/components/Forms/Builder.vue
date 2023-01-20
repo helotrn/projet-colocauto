@@ -11,6 +11,7 @@
         :type="def.type"
         :options="def.options"
         :disabled="disabled || def.disabled"
+        :hidden="hidden || def.hidden"
         :disabled-tooltip="def.disabledTooltip"
         :placeholder="placeholderOrLabel(key) | capitalize"
         :initial-view="def.initial_view"
@@ -37,6 +38,11 @@ export default {
       required: true,
     },
     disabled: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
+    hidden: {
       type: Boolean,
       required: false,
       default: false,
