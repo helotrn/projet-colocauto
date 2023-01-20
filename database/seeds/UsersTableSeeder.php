@@ -128,27 +128,27 @@ class UsersTableSeeder extends Seeder
             "dev@colocauto.org" => [],
             "pauline@colocauto.org" => [
                 // 1: Asso Eolien
-                1 => ["approved_at" => new \DateTime()],
+                1 => ["approved_at" => new \DateTime('2022-12-06')],
             ],
             "isabelle@colocauto.org" => [
                 // 1: Asso Eolien
-                1 => ["approved_at" => new \DateTime()],
+                1 => ["approved_at" => new \DateTime('2022-12-06')],
             ],
             "stephanie@colocauto.org" => [
                 // 1: Asso Eolien
-                1 => ["approved_at" => new \DateTime()],
+                1 => ["approved_at" => new \DateTime('2022-11-25')],
             ],
             "joseph@colocauto.org" => [
                 // 1: Asso Eolien
-                1 => ["approved_at" => new \DateTime()],
+                1 => ["approved_at" => new \DateTime('2022-11-25')],
             ],
             "suzanne@colocauto.org" => [
                 // 1: Asso Eolien
-                1 => ["approved_at" => new \DateTime()],
+                1 => ["approved_at" => new \DateTime('2022-10-01')],
             ],
             "camille@colocauto.org" => [
                 // 1: Asso Eolien
-                1 => ["approved_at" => new \DateTime()],
+                1 => ["approved_at" => new \DateTime('2022-11-25')],
             ],
             "matthieu@colocauto.org" => [
                 // 1: Asso Eolien
@@ -160,35 +160,35 @@ class UsersTableSeeder extends Seeder
             ],
             "marcelle@colocauto.org" => [
                 // 2: Groupe Citoyen
-                2 => ["approved_at" => new \DateTime()],
+                2 => ["approved_at" => new \DateTime('2022-05-01')],
             ],
             "lucas@colocauto.org" => [
                 // 2: Groupe Citoyen
-                2 => ["approved_at" => new \DateTime()],
+                2 => ["approved_at" => new \DateTime('2022-05-01')],
             ],
             "henriette@colocauto.org" => [
                 // 2: Groupe Citoyen
-                2 => ["approved_at" => new \DateTime()],
+                2 => ["approved_at" => new \DateTime('2022-05-01')],
             ],
             "christiane@colocauto.org" => [
                 // 2: Groupe Citoyen
-                2 => ["approved_at" => new \DateTime()],
+                2 => ["approved_at" => new \DateTime('2022-05-01')],
             ],
             "alice@colocauto.org" => [
                 // 3: Calcul équilibre
-                3 => ["approved_at" => new \DateTime()],
+                3 => ["approved_at" => new \DateTime('2022-12-15')],
             ],
             "bob@colocauto.org" => [
                 // 3: Calcul équilibre
-                3 => ["approved_at" => new \DateTime()],
+                3 => ["approved_at" => new \DateTime('2022-12-15')],
             ],
             "carole@colocauto.org" => [
                 // 3: Calcul équilibre
-                3 => ["approved_at" => new \DateTime()],
+                3 => ["approved_at" => new \DateTime('2022-12-15')],
             ],
             "david@colocauto.org" => [
                 // 3: Calcul équilibre
-                3 => ["approved_at" => new \DateTime()],
+                3 => ["approved_at" => new \DateTime('2022-12-15')],
             ],
         ];
 
