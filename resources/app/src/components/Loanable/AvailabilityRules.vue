@@ -150,7 +150,6 @@
 import Vue from "vue";
 
 import VueCal from "vue-cal";
-import "vue-cal/dist/i18n/fr";
 
 import LoanableCalendar from "@/components/Loanable/Calendar.vue";
 import LoanableCalendarLegend from "@/components/Loanable/CalendarLegend.vue";

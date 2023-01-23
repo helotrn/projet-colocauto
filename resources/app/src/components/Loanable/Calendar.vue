@@ -60,7 +60,6 @@
 
 <script>
 import VueCal from "vue-cal";
-import "vue-cal/dist/i18n/fr";
 
 import CalendarMonthCellContent from "@/components/Loanable/CalendarMonthCellContent.vue";
 
