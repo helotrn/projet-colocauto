@@ -60,13 +60,17 @@
             <dt>{{ $t("loanable.fields.owner_id") | capitalize }}</dt>
             <dd class="owner-details">
               <a :href="ownerUrl" v-if="ownerUrl">
-                {{ loanable.owner.user.full_name }}
+                {{ ownerName }}
               </a>
-              <span v-else>{{ loanable.owner.user.full_name }}</span>
-              <br v-if="loanable.owner.user.email" />
-              {{ loanable.owner.user.email }}
-              <br v-if="loanable.owner.user.phone" />
-              {{ loanable.owner.user.phone }}
+              <span v-else>{{ ownerName }}</span>
+              <template v-if="loanable.owner && loanable.owner.user.email">
+                <br />
+                {{ loanable.owner.user.email }}
+              </template>
+              <template v-if="loanable.owner && loanable.owner.user.phone">
+                <br />
+                {{ loanable.owner.user.phone }}
+              </template>
             </dd>
           </dl>
         </template>
@@ -359,7 +363,7 @@ export default {
       return this.price - this.purchasesAmount + this.insurance + this.tip;
     },
     ownerUrl() {
-      const ownerId = this.loan.loanable?.owner.user.id;
+      const ownerId = this.loan.loanable?.owner?.user.id;
 
       if (ownerId && this.isLoanAdmin) return "/admin/users/" + ownerId;
 
@@ -379,7 +383,7 @@ export default {
       return this.user.id === this.loan.borrower.user.id;
     },
     isOwner() {
-      return this.user.id === this.loan.loanable?.owner.user.id;
+      return this.user.id === this.loan.loanable?.owner?.user.id;
     },
     prettyType() {
       switch (this.loan.loanable.type) {
@@ -393,6 +397,13 @@ export default {
           return "de l'objet";
       }
     },
+    ownerName() {
+      if( this.loanable.owner ) {
+        return this.loanable.owner.user.full_name;
+      } else if( this.loanable.community ) {
+        return `${this.loan.loanable.community.name} (${this.loanable.name})`;
+      } else return this.loanable.name;
+    }
   },
   methods: {
     durationInHours,

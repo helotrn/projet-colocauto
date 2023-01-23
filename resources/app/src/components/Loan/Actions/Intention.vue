@@ -37,7 +37,7 @@
           v-if="action.status !== 'in_process' || !loanIsCanceled"
           class="loan-actions-intention__image mb-3 text-center"
         >
-          <user-avatar v-if="userRoles.includes('borrower')" :user="owner.user" />
+          <user-avatar v-if="owner && userRoles.includes('borrower')" :user="owner.user" />
           <user-avatar v-else-if="userRoles.includes('owner')" :user="borrower.user" />
         </div>
 

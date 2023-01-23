@@ -92,7 +92,7 @@ export default {
     },
     isAdminOfLoanable(loanable) {
       return (
-        this.isAdminOfCommunity(loanable?.community) || this.isAdminOfUser(loanable?.owner.user)
+        this.isAdminOfCommunity(loanable?.community) || this.isAdminOfUser(loanable?.owner?.user)
       );
     },
     userHasProofForCommunity(communityUser) {
