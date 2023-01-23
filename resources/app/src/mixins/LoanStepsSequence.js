@@ -41,9 +41,8 @@ export default {
         return true;
       }
 
-      // If the loanable has no owner (Considered as belonging to
-      // the community, hence self-service)
-      return !this.item.loanable.owner;
+      // The loanable is not self service, even if beloinging to the community
+      return false;
     },
     loanIsCanceled() {
       return this.item.status === "canceled";
