@@ -11,6 +11,8 @@
     :xsmall="variant === 'small'"
     @ready="$emit('ready', $event)"
     @view-change="$emit('view-change', $event)"
+    :time-from="8 * 60"
+    :time-to="20 * 60"
   >
     <template v-slot:title="{ title, view }">
       <span v-if="view.id === 'years'">Years</span>
@@ -322,7 +324,7 @@ export default {
     border: 1px solid $warning;
   }
   .loanable-calendar__event--loan_completed {
-    color: $success;
+    color: black;
     background-color: $success;
     border: 1px solid $success;
   }
