@@ -15,6 +15,11 @@
     :time-from="8 * 60"
     :time-to="20 * 60"
     :on-event-click="showDetails"
+
+    :editable-events="{ create: true }"
+    :snap-to-time="15"
+    :on-event-create="registerCancel"
+    @event-drag-create="createNewLoan"
   >
     <template v-slot:title="{ title, view }">
       <span v-if="view.id === 'years'">Years</span>
@@ -55,10 +60,6 @@
         {{ cell.content }}
       </span>
     </template>
-
-    <template v-slot:event="{ event, view }">
-      <div class="vuecal__event-title" v-html="event.title" />
-    </template>
   </vue-cal>
 
   <b-modal v-model="showDialog"
@@ -66,6 +67,7 @@
     id="loanable-calendar-modal"
     hide-footer
     header-class="p-2 border-bottom-0"
+    @close="cancelNewEvent ? cancelNewEvent() : ''"
   >
     <b-card no-body v-if="selectedEvent.data">
       <layout-loading class="section-loading-indicator" v-if="loading" />
@@ -111,6 +113,44 @@
         </b-col>
       </b-row>
     </b-card>
+    <b-card no-body v-else-if="newEvent.data">
+      <layout-loading class="section-loading-indicator" v-if="loading" />
+      <b-row v-else>
+        <b-col lg="6">
+          <b-row>
+            <b-col class="loan-info-box__image__wrapper">
+              <user-avatar :user="newEvent.data.borrower.user" variant="cut-out" />
+
+              <div class="loan-info-box__name">
+                <span>
+                  <span class="loan-info-box__name__loanable">{{ newEvent.data.borrower.user.full_name }}</span>
+                </span>
+              </div>
+            </b-col>
+            <b-col class="loan-info-box__details mb-2 mt-2" lg>
+              <span>
+                <span>
+                  {{ newEvent.start | date }}<br />
+                  {{ newEvent.start | time }} à {{ newEvent.end | time }}
+                </span>
+              </span>
+            </b-col>
+
+            <b-col class="loan-info-box__actions" lg>
+              <div>
+                <b-button
+                  size="sm"
+                  variant="outline-primary"
+                  @click="askLoan"
+                >
+                  Demande d'emprunt
+                </b-button>
+              </div>
+            </b-col>
+          </b-row>
+        </b-col>
+      </b-row>
+    </b-card>
   </b-modal>
   </div>
 </template>
@@ -121,6 +161,7 @@ import Vue from "vue";
 
 import CalendarMonthCellContent from "@/components/Loanable/CalendarMonthCellContent.vue";
 import UserAvatar from "@/components/User/Avatar.vue";
+import UserMixin from "@/mixins/UserMixin";
 
 export default {
   name: "Calendar",
@@ -143,9 +184,12 @@ export default {
   },
   data: () => ({
     selectedEvent: {},
+    newEvent: {},
     showDialog: false,
     loading: false,
+    cancelNewEvent: undefined,
   }),
+  mixins: [UserMixin],
   components: {
     VueCal,
     "calendar-month-cell-content": CalendarMonthCellContent,
@@ -263,6 +307,66 @@ export default {
 
       // Prevent navigating to narrower view (default vue-cal behavior).
       e.stopPropagation()
+    },
+    async createNewLoan (event) {
+      // check if the event is not overlaping with another
+      let overlaping = this.vueCalEvents.filter(e =>
+        this.$dayjs(e.start) < event.end
+        && this.$dayjs(e.end) > event.start
+      );
+      if( overlaping.length ) {
+        // remove the event and do not go further
+        this.cancelNewEvent();
+        return false;
+      }
+
+      this.loading = true;
+      this.showDialog = true;
+      try {
+        await this.$store.dispatch("loans/loadEmpty");
+      } finally {
+        this.loading = false;
+      }
+
+      this.newEvent = {...event, data: {
+        status: 'creating',
+        borrower: {user: this.user},
+      }};
+    },
+    registerCancel (event, deleteEvent) {
+      // register cancel method to use later when needed
+      this.cancelNewEvent = deleteEvent;
+      return true;
+    },
+    async askLoan() {
+
+      await this.$store.dispatch("loans/test", {
+        departure_at: this.$dayjs(this.newEvent.start).format("YYYY-MM-DD HH:mm:ss"),
+        duration_in_minutes: this.$dayjs(this.newEvent.end).diff(this.newEvent.start, 'minutes'),
+        estimated_distance:10,
+        loanable_id:this.loanable.id,
+      });
+
+      this.$store.commit("loans/patchItem", {
+        departure_at: this.$dayjs(this.newEvent.start).format("YYYY-MM-DD HH:mm:ss"),
+        duration_in_minutes: this.$dayjs(this.newEvent.end).diff(this.newEvent.start, 'minutes'),
+        borrower: {
+          ...this.user.borrower,
+          user: {
+            id: this.user.id,
+            full_name: this.user.full_name,
+          },
+        },
+        borrower_id: this.user.borrower.id,
+        loanable: {...this.loanable, available: true},
+        car: this.loanable,
+        loanable_id: this.loanable.id,
+        platform_tip: 0,
+      });
+      this.cancelNewEvent = undefined;
+      this.showDialog = false;
+
+      this.$router.push("/loans/new");
     },
   },
 };
