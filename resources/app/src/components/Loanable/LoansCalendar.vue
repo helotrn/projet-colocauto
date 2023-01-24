@@ -48,29 +48,17 @@ export default {
       }
 
       try {
-        let load1 = Vue.axios
+        Vue.axios
           .get(`/loanables/${this.loanable.id}/availability`, {
             params: {
               start: start.format("YYYY-MM-DD HH:mm:ss"),
               end: end.format("YYYY-MM-DD HH:mm:ss"),
-              responseMode: "available",
+              responseMode: "loans",
             },
             cancelToken: cancelToken.token,
+          }).then(response => {
+            this.availability = response.data
           });
-
-        let load2 = Vue.axios
-           .get(`/loanables/${this.loanable.id}/availability`, {
-             params: {
-               start: start.format("YYYY-MM-DD HH:mm:ss"),
-               end: end.format("YYYY-MM-DD HH:mm:ss"),
-              responseMode: "loans",
-             },
-             cancelToken: cancelToken.token,
-           });
-
-        Promise.all([load1, load2]).then(([response1, response2]) => {
-          this.availability = response1.data.concat(response2.data);
-        });
       } catch (e) {
         throw e;
       }

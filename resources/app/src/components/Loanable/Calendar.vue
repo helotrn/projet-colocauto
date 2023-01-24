@@ -209,6 +209,9 @@ export default {
       const cellStartTime = this.$dayjs(cell.startDate).startOfDay();
       const cellEndTime = cellStartTime.add(1, "day");
 
+      // all past days are unavailable
+      if(this.$dayjs().diff(cellEndTime) > 0 ) return "unavailable";
+
       let eventStartTime, eventEndTime;
 
       let availability = "available";
@@ -220,9 +223,7 @@ export default {
         eventStartTime = this.$dayjs(events[e].start);
         eventEndTime = this.$dayjs(events[e].end);
 
-        if( this.$dayjs().diff(cellEndTime) > 0 ) {
-          availability = "unavailable";
-        } else if (
+        if (
           0 == eventStartTime.diff(cellStartTime, "seconds") &&
           0 == eventEndTime.diff(cellEndTime, "seconds")
         ) {
@@ -284,6 +285,11 @@ export default {
       min-height: 2em;
       line-height: 1.3;
     }
+  }
+
+  .week-view.vuecal__cells,
+  .day-view.vuecal__cells {
+    background-color: $background-alert-positive;
   }
 
   .vuecal__cell--selected {
