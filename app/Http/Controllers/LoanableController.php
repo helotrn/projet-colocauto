@@ -136,10 +136,13 @@ class LoanableController extends RestController
                     $events[] = [
                         "start" => $loanInterval[0]->toDateTimeString(),
                         "end" => $loanInterval[1]->toDateTimeString(),
+                        "uri" => "/loans/$loan->id",
                         "data" => [
                             "available" => $request->responseMode == "available",
+                            "status" => $loan->status,
+                            "reason" => $loan->reason,
                         ],
-                        "type" => "availability",
+                        "type" => "loan",
                         "title" => $loan->borrower->user->full_name .' - '. $loan->reason,
                     ];
                 } else {

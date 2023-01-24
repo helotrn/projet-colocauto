@@ -5,6 +5,7 @@
     variant="small"
     @ready="getAvailability"
     @view-change="getAvailability"
+    :loanable="loanable"
   ></loanable-calendar>
 </template>
 

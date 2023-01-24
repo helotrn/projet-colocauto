@@ -1,4 +1,5 @@
 <template>
+  <div>
   <vue-cal
     :class="classList"
     :hide-view-selector="true"
@@ -13,6 +14,7 @@
     @view-change="$emit('view-change', $event)"
     :time-from="8 * 60"
     :time-to="20 * 60"
+    :on-event-click="showDetails"
   >
     <template v-slot:title="{ title, view }">
       <span v-if="view.id === 'years'">Years</span>
@@ -58,12 +60,67 @@
       <div class="vuecal__event-title" v-html="event.title" />
     </template>
   </vue-cal>
+
+  <b-modal v-model="showDialog"
+    :title="loanable.name"
+    id="loanable-calendar-modal"
+    hide-footer
+    header-class="p-2 border-bottom-0"
+  >
+    <b-card no-body v-if="selectedEvent.data">
+      <layout-loading class="section-loading-indicator" v-if="loading" />
+      <b-row v-else>
+        <b-col lg="6">
+          <b-row>
+            <b-col class="loan-info-box__image__wrapper">
+            <user-avatar :user="selectedEvent.data.borrower.user" variant="cut-out" />
+
+            <div class="loan-info-box__name">
+              <span>
+                <span class="loan-info-box__name__loanable">{{ selectedEvent.data.borrower.user.full_name }}</span>
+                <span class="loan-info-box__reason__loanable d-block text-center">{{ selectedEvent.data.reason }}</span>
+              </span>
+            </div>
+            </b-col>
+          </b-row>
+        </b-col>
+
+        <b-col class="loan-info-box__details mb-2 mt-2" lg>
+          <span>
+            <span v-if="multipleDays">
+                {{ selectedEvent.data.departure_at | date }} {{ selectedEvent.data.departure_at | time }}<br />
+                {{ selectedEvent.data.actual_return_at | date }} {{ selectedEvent.data.actual_return_at | time }}
+              </span>
+              <span v-else>
+              {{ selectedEvent.data.departure_at | date }}<br />
+              {{ selectedEvent.data.departure_at | time }} à {{ selectedEvent.data.actual_return_at | time }}
+            </span>
+          </span>
+        </b-col>
+
+        <b-col class="loan-info-box__actions" lg>
+          <div>
+            <b-button
+              size="sm"
+              variant="outline-primary"
+              :to="selectedEvent.uri"
+            >
+              Consulter
+            </b-button>
+          </div>
+        </b-col>
+      </b-row>
+    </b-card>
+  </b-modal>
+  </div>
 </template>
 
 <script>
 import VueCal from "vue-cal";
+import Vue from "vue";
 
 import CalendarMonthCellContent from "@/components/Loanable/CalendarMonthCellContent.vue";
+import UserAvatar from "@/components/User/Avatar.vue";
 
 export default {
   name: "Calendar",
@@ -79,10 +136,20 @@ export default {
       type: String,
       required: false,
     },
+    loanable: {
+      type: Object,
+      required: false,
+    },
   },
+  data: () => ({
+    selectedEvent: {},
+    showDialog: false,
+    loading: false,
+  }),
   components: {
     VueCal,
     "calendar-month-cell-content": CalendarMonthCellContent,
+    UserAvatar,
   },
   computed: {
     classList: function () {
@@ -99,11 +166,11 @@ export default {
         deletable: false,
         resizable: false,
         draggable: false,
-        class: ["loanable-calendar__event"],
       };
 
       let vueCalEvents = this.events.map((e) => {
         e = { ...baseEvent, ...e };
+        e.class = ["loanable-calendar__event"];
 
         if (e.type === "availability") {
           // Availability events go in the background.
@@ -128,6 +195,13 @@ export default {
       });
 
       return vueCalEvents;
+    },
+    multipleDays() {
+      if( !this.selectedEvent || !this.selectedEvent.data ) return false;
+      return (
+        this.$dayjs(this.selectedEvent.data.departure_at).format("YYYY-MM-DD") !==
+        this.$dayjs(this.selectedEvent.data.actual_return_at).format("YYYY-MM-DD")
+      );
     },
   },
   methods: {
@@ -161,6 +235,33 @@ export default {
       }
 
       return availability;
+    },
+    showDetails (event, e) {
+      if(event.background) return;
+
+      const { CancelToken } = Vue.axios;
+      const cancelToken = CancelToken.source();
+
+      Vue.axios
+          .get(event.uri, {
+            params: {
+              fields: 'departure_at, actual_return_at, status, borrower.user.full_name,'
+              +' borrower.user.avatar, borrower.user.email, borrower.user.phone',
+            },
+            cancelToken: cancelToken.token,
+          })
+          .then(response => {
+            if(response.status == 200) {
+              this.selectedEvent.data = { ...response.data, ...this.selectedEvent.data };
+            }
+            this.loading = false;
+          });
+      this.loading = true;
+      this.selectedEvent = event
+      this.showDialog = true
+
+      // Prevent navigating to narrower view (default vue-cal behavior).
+      e.stopPropagation()
     },
   },
 };
@@ -197,7 +298,7 @@ export default {
     box-shadow: none;
   }
 
-  // Month view.
+  /* Month view. */
   .vuecal__cells.month-view {
     .vuecal__cell {
       height: 3rem;
@@ -289,9 +390,9 @@ export default {
     }
   }
 
-  // Week and day views
+  /* Week and day views
   // Styling the time axis.
-  // Specificity seems necessary here.
+  // Specificity seems necessary here. */
   .vuecal__time-column .loanable-calendar__time-step--hours .line::before {
     border-color: $locomotion-green;
   }
@@ -333,5 +434,8 @@ export default {
     background-color: $danger;
     border: 1px solid $danger;
   }
+}
+#loanable-calendar-modal .modal-dialog .card.shadow {
+  box-shadow: none !important;
 }
 </style>
