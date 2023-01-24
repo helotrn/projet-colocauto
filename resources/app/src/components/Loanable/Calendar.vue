@@ -1,6 +1,7 @@
 <template>
   <div>
   <vue-cal
+    style="height: 364px;"
     :class="classList"
     :hide-view-selector="true"
     :disable-views="['years', 'year']"
@@ -12,8 +13,6 @@
     :xsmall="variant === 'small'"
     @ready="$emit('ready', $event)"
     @view-change="$emit('view-change', $event)"
-    :time-from="8 * 60"
-    :time-to="20 * 60"
     :on-event-click="showDetails"
 
     :editable-events="{ create: true }"
@@ -194,6 +193,12 @@ export default {
     VueCal,
     "calendar-month-cell-content": CalendarMonthCellContent,
     UserAvatar,
+  },
+  mounted(){
+    // scroll the calendar to show 8-20 hours
+    const timeCellHeight = 24;
+    const hours = 8;
+    this.$el.querySelector('.vuecal__bg').scrollTo({ top: hours * timeCellHeight })
   },
   computed: {
     classList: function () {

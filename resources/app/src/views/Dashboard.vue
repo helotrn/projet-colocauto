@@ -224,6 +224,7 @@
                     :title="loanable.name"
                     :key="loanable.id"
                     title-item-class="mr-2"
+                    lazy
                   >
                     <b-card-text>
                       <loans-calendar
