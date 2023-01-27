@@ -10,8 +10,7 @@
           ><span>{{ name }}</span>
            <small v-if="estimated_cost">{{ estimated_cost.cost_per_km | currency }}/km</small>
            <small v-if="estimated_cost">{{ estimated_cost.cost_per_month | currency }}/mois</small>
-           <small class="mt-3" v-if="owner"><strong>Propriétaire: {{ owner.user.full_name }}</strong></small>
-           <small v-if="car_insurer"><strong>Assurance: {{ car_insurer }}</strong></small></b-col
+           <small class="mt-3" v-if="owner"><strong>Propriétaire: {{ owner.user.full_name }}</strong></small></b-col
         >
       </b-row>
     </router-link>
