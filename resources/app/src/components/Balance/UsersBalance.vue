@@ -6,7 +6,7 @@
       </dt>
       <dd
         :class="user.balance > 0 ? 'credit' : 'debit'"
-        :style="`--width:${Math.abs(user.balance) * 100 / sum}%`"
+        :style="`--width:${Math.min(100, Math.abs(user.balance) * 100 / sum)}%`"
       >
         {{user.balance}} €
       </dd>
