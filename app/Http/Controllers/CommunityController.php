@@ -314,6 +314,15 @@ class CommunityController extends RestController
             ];
         });
 
+        // make all balance=0 users appear grouped at the end
+        $users = $users->sort(function($u1, $u2) {
+            if($u1->balance == 0) {
+                return $u2->balance == 0 ? 0 : 1;
+            } else {
+                return $u2->balance == 0 ? -1 : $u1->id - $u2->id;
+            }
+        })->values();
+
         // propose refund transactions to reach perfect balance
         $refunds = [];
         $debtors = $users->filter(function($user){
