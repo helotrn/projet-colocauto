@@ -13,7 +13,7 @@ export default {
         "Ça aide à se faire confiance et à mieux profiter des avantages du partage.",
     },
     fields: {
-      accept_conditions: `j'accepte les <a href="/conditions" target="_blank">conditions
+      accept_conditions: `j'accepte les <a href="https://www.colocauto.org/conditions" target="_blank">conditions
         générales d'utilisation</a> incluant des communications par courriel`,
       gdpr: "j'accepte que mes données soient traitées ... (RGPD)",
       newsletter: "je m'abonne à l'infolettre",

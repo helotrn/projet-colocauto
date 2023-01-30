@@ -17,7 +17,7 @@
             </p>
 
             <p class="cgu small">
-              <a href="https://www.colocauto.org//conditions"
+              <a href="https://www.colocauto.org/conditions"
                 title="Conditions d'utilisation - Coloc'Auto"
                 target="_blank"
                 >Conditions d'utilisation</a

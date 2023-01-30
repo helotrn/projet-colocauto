@@ -28,7 +28,7 @@ export default {
       title: "Avant d'emprunter une auto",
       warning: "Lisez attentivement les {link}. {emphasis}",
       terms: "conditions d'utilisation de l'assurance",
-      terms_link: "/conditions-utilisation-desjardins-assurances.html",
+      terms_link: "https://colocauto.org/conditions",
       car_stays_in_quebec: "Notez que l'assurance couvre seulement les trajets au Québec.",
     },
     fields: {

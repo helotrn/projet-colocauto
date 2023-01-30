@@ -19,7 +19,7 @@
         Les informations ci-contre ne sont requises que si vous désirez emprunter des voitures.
         Celles-ci ne seront accessibles que par l'équipe de Coloc'Auto ou les représentants des
         assurances Desjardins. Consultez notre
-        <a href="/privacy" target="_blank">politique de confidentialité</a>.
+        <a href="https://colocauto.org/conditions" target="_blank">politique de confidentialité</a>.
       </p>
     </b-alert>
 

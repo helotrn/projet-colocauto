@@ -162,7 +162,7 @@ return [
         ],
         "accept_conditions" => [
             "accepted" =>
-                'Vous devez accepter les <a href="/conditions">conditions ' .
+                'Vous devez accepter les <a href="https://www.colocauto.org/conditions">conditions ' .
                 'd\'utilisation</a> dans votre ' .
                 '<a href="/profile/account">profil Coloc\'Auto</a>.',
         ],
