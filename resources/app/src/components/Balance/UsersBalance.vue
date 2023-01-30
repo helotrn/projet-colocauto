@@ -1,5 +1,12 @@
 <template>
-  <dl>
+  <div>
+    <div v-if="isTotallyBalanced" class="text-center w-75 m-auto">
+      <icons-check class="rounded-green-circle" />
+      Le compte est bon !<br/>
+      Les participant·es de votre groupe sont à l'équilibre.<br/>
+      <slash-illustration class="my-4"/>
+    </div>
+    <dl v-else>
     <template v-for="user in users">
       <dt :class="user.balance > 0 ? 'credit' : 'debit'">
         {{user.full_name}}
@@ -11,10 +18,14 @@
         {{user.balance}} €
       </dd>
     </template>
-  </dl>
+    </dl>
+  </div>
 </template>
 
 <script>
+import IconsCheck from "@/assets/icons/check.svg";
+import SlashIllustration from "@/assets/svg/slash_illustration-colocauto.svg";
+
 export default {
   name: "UsersBalance",
   props: {
@@ -31,7 +42,14 @@ export default {
         return sum;
       }, 0);
     },
-  }
+    isTotallyBalanced() {
+      return this.users.every(u => u.balance == 0);
+    }
+  },
+  components: {
+    IconsCheck,
+    SlashIllustration,
+  },
 }
 </script>
 
@@ -81,5 +99,16 @@ export default {
   dd.credit:after {
     background: #4FB999;
     left: 0;
+  }
+  .rounded-green-circle {
+    border-radius: 50%;
+    fill: white;
+    background-color: $locomotion-light-green;
+    display: block;
+    margin: auto;
+    margin-bottom: 1em;
+    width: 40px;
+    height: 40px;
+    padding: 8px;
   }
 </style>
