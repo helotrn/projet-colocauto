@@ -239,7 +239,7 @@
 
           <!-- loanables container -->
           <section class="page__section position-relative">
-            <b-row>
+            <b-row v-if="user.owner">
               <b-col class="text-right">
                 <b-button variant="outline-primary" to="/profile/loanables">
                   Gérer mes véhicules
@@ -261,17 +261,12 @@
                     />
                   </transition-group>
                   <div class="text-right" v-if="hasMoreLoanables">
-                    <b-button variant="outline-primary" to="/profile/loanables">
-                      Tous mes véhicules
+                    <b-button variant="outline-primary" to="/search/list">
+                      Voir tous les véhicules disponibles
                     </b-button>
                   </div>
                 </div>
               </transition>
-              <div v-if="!loanables || loanables.length == 0">
-                Aucun véhicule.<br />
-                Ajoutez-en un
-                <router-link to="/profile/loanables/new">ici</router-link>.
-              </div>
             </div>
             <layout-loading class="section-loading-indicator" v-if="loading && !loanablesLoaded" />
           </section>
