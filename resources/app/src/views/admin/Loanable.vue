@@ -140,7 +140,7 @@ export default {
     },
     fullTitle() {
       const parts = [
-        "LocoMotion",
+        "Coloc'Auto",
         capitalize(this.$i18n.t("titles.admin")),
         capitalize(this.$i18n.tc("véhicule", 2)),
       ];

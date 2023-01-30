@@ -9,6 +9,6 @@ Vous pouvez maintenant emprunter les autos de vos voisins et voisines ;-)
 
 Voir mon voisinage [{{ env('FRONTEND_URL') . '/search/map' }}]
 
-L'équipe LocoMotion
-info@locomotion.app
+L'équipe Coloc'Auto
+soutien@colocauto.org
 @endsection

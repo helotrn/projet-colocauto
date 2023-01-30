@@ -9,5 +9,5 @@ véhicule sur l'emprunt de votre {{ $loan->loanable->name }} qui commençait
 
 Voir l'emprunt [{{ env('FRONTEND_URL') . '/loans/' . $loan->id }}]
 
-        - L'équipe LocoMotion
+        - L'équipe Coloc'Auto
 @endsection

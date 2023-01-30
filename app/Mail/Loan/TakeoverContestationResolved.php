@@ -33,7 +33,7 @@ class TakeoverContestationResolved extends BaseMailable
     public function build()
     {
         return $this->view("emails.loan.takeover_contestation_resolved")
-            ->subject("LocoMotion - Données de l'emprunt mises à jour")
+            ->subject("Coloc'Auto - Données de l'emprunt mises à jour")
             ->text("emails.loan.takeover_contestation_resolved_text")
             ->with([
                 "title" => "Données de l'emprunt mises à jour",

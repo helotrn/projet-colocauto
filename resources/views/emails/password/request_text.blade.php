@@ -13,6 +13,6 @@ Ce lien expirera dans {{ $expiration }} heures.
 
 Si vous n'avez pas demandé de réinitialisation de mot de passe. Vous pouvez ignorer ce message.
 
-L'équipe LocoMotion
-info@locomotion.app
+L'équipe Coloc'Auto
+soutien@colocauto.org
 @endsection

@@ -4,11 +4,11 @@
       <b-alert v-if="!item.borrower.validated" variant="warning" show>
         <p>
           Votre profil d'emprunteur est complet et doit maintenant être validé par l'équipe de
-          LocoMotion.
+          Coloc'Auto.
         </p>
       </b-alert>
       <b-alert v-else variant="success" show>
-        <p>Votre profil d'emprunteur est complet et a été validé par l'équipe de LocoMotion.</p>
+        <p>Votre profil d'emprunteur est complet et a été validé par l'équipe de Coloc'Auto.</p>
         <p>Contactez le support si vous désirez y apporter des changements.</p>
       </b-alert>
     </div>
@@ -17,7 +17,7 @@
       <p>Notez que vous devez avoir 21 ans ou plus pour pouvoir emprunter une auto.</p>
       <p>
         Les informations ci-contre ne sont requises que si vous désirez emprunter des voitures.
-        Celles-ci ne seront accessibles que par l'équipe de LocoMotion ou les représentants des
+        Celles-ci ne seront accessibles que par l'équipe de Coloc'Auto ou les représentants des
         assurances Desjardins. Consultez notre
         <a href="/privacy" target="_blank">politique de confidentialité</a>.
       </p>

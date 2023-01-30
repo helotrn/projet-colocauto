@@ -4,45 +4,25 @@
       <b-row class="justify-content-md-center">
         <b-col class="text-center">
           <div class="layout-footer__logo">
-            <a href="https://solon-collectif.org" target="_blank">
-              <img src="/partners/logo-solon.png" />
+            <a href="https://www.mobicoop.fr/" target="_blank">
+              <img src="/partners/logo-mobicoop.png" />
             </a>
           </div>
 
           <div class="layout-footer__text">
             <p class="introduction">
-              <strong>LocoMotion</strong> est un projet citoyen accompagné par
-              <a href="https://solon-collectif.org">Solon</a>.
-            </p>
-
-            <p>
-              Ce site web s'améliore en continu. Merci de nous
-              <a :href="googleFormUrl" target="_blank">envoyer vos idées et suggestions</a>.
-            </p>
-
-            <p class="social-media-icons">
-              <a
-                href="https://www.instagram.com/locomotion.qc"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <insta-icon></insta-icon>
-              </a>
-              <a
-                href="https://www.facebook.com/locomotion.qc"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <img src="/f_logo_RGB-White_58.png" />
-              </a>
+              <strong>Coloc'Auto</strong> est un projet citoyen accompagné par
+              <a href="https://www.mobicoop.fr">Mobicoop</a> et basé sur le logiciel
+              <a href="https://locomotion.app/">LocoMotion</a>.
             </p>
 
             <p class="cgu small">
-              Organisme à but non lucratif basé à Montréal -
-              <a href="/conditions" title="Conditions d'utilisation - LocoMotion"
+              <a href="https://www.colocauto.org//conditions"
+                title="Conditions d'utilisation - Coloc'Auto"
+                target="_blank"
                 >Conditions d'utilisation</a
               >
-              - <a href="/faq" title="Nous contacter">Nous contacter</a>
+              - <a href="mailto:soutien@colocauto.org" title="Nous contacter">Nous contacter</a>
             </p>
           </div>
         </b-col>

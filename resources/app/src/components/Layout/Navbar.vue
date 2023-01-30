@@ -3,7 +3,7 @@
     <b-collapse class="layout-navbar__collapse" is-nav>
       <b-navbar-nav class="mr-auto">
         <b-navbar-brand :to="isLoggedIn ? '/app' : '/'">
-          <img src="/logo.svg" alt="Locomotion" />
+          <img src="/colocauto.png" alt="Coloc'Auto" />
         </b-navbar-brand>
 
         <b-navbar-brand class="layout-navbar__separator d-none d-sm-block" v-if="title" />
@@ -14,7 +14,7 @@
     </b-collapse>
 
     <b-navbar-brand :to="isLoggedIn ? '/app' : '/'">
-      <img src="/logo.svg" alt="Locomotion" class="logo d-lg-none" />
+      <img src="/colocauto.png" alt="Coloc'Auto" class="logo d-lg-none" />
     </b-navbar-brand>
 
     <b-navbar-toggle target="nav-collapse" />
@@ -38,7 +38,7 @@
         </b-nav-item>
 
         <b-nav-item
-          to="/profile/locomotion"
+          to="/profile/colocauto"
           class="d-block d-lg-none"
           v-if="!isGlobalAdmin && hasCompletedRegistration"
         >
@@ -87,7 +87,7 @@
             <span class="nav-link__text">Tableau de bord</span>
           </b-dropdown-item>
           <b-dropdown-item
-            to="/profile/locomotion"
+            to="/profile/colocauto"
             v-if="!isGlobalAdmin && hasCompletedRegistration"
           >
             <span class="nav-link__icon">
@@ -192,7 +192,7 @@ export default {
       await this.$store.dispatch("logout");
 
       this.$store.commit("addNotification", {
-        content: "Vous n'êtes plus connecté à LocoMotion. À bientôt!",
+        content: "Vous n'êtes plus connecté à Coloc'Auto. À bientôt!",
         title: "Déconnexion réussie.",
         variant: "success",
         type: "logout",

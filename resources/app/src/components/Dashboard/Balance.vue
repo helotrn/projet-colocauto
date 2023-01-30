@@ -41,7 +41,7 @@
 
     <b-modal
       id="claim-modal"
-      title="Demande de transfert du solde du compte LocoMotion vers un compte bancaire"
+      title="Demande de transfert du solde du compte Coloc'Auto vers un compte bancaire"
       size="md"
       footer-class="d-none"
     >

@@ -7,7 +7,7 @@
         :key="community.id"
       >
         <div class="profile-communities__headers">
-          <h4>Afin que LocoMotion reste un service sécuritaire entre voisin-e-s,</h4>
+          <h4>Afin que Coloc'Auto reste un service sécuritaire entre voisin-e-s,</h4>
           <h3>Veuillez téléverser une preuve de résidence pour {{ community.name }}</h3>
         </div>
 
@@ -19,14 +19,14 @@
 
     <b-card class="profile-communities__nocommunities" v-else>
       <div>
-        <h3>Vous n'êtes pas encore inscrit au sein d'un quartier soutenu par LocoMotion.</h3>
+        <h3>Vous n'êtes pas encore inscrit au sein d'un quartier soutenu par Coloc'Auto.</h3>
       </div>
       <b-card-body>
         <p>
-          Il se peut que LocoMotion ne soit pas encore ouvert dans votre quartier ou que votre
+          Il se peut que Coloc'Auto ne soit pas encore ouvert dans votre quartier ou que votre
           adresse n'est pas à jour.
         </p>
-        <b-button variant="primary" to="/profile/locomotion"> Modifier mon adresse </b-button>
+        <b-button variant="primary" to="/profile/colocauto"> Modifier mon adresse </b-button>
       </b-card-body>
     </b-card>
   </div>

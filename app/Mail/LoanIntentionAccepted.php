@@ -34,7 +34,7 @@ class LoanIntentionAccepted extends BaseMailable
     public function build()
     {
         return $this->view("emails.loan.intention_accepted")
-            ->subject("LocoMotion - Emprunt accepté")
+            ->subject("Coloc'Auto - Emprunt accepté")
             ->text("emails.loan.intention_accepted_text")
             ->with([
                 "title" => "Emprunt accepté",

@@ -164,7 +164,7 @@ return [
             "accepted" =>
                 'Vous devez accepter les <a href="/conditions">conditions ' .
                 'd\'utilisation</a> dans votre ' .
-                '<a href="/profile/account">profil LocoMotion</a>.',
+                '<a href="/profile/account">profil Coloc\'Auto</a>.',
         ],
         "gdpr" => [
             "accepted" =>

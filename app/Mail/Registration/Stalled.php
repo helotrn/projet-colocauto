@@ -21,10 +21,10 @@ class Stalled extends BaseMailable
     public function build()
     {
         return $this->view("emails.registration.stalled")
-            ->subject("LocoMotion - Suivi de votre inscription")
+            ->subject("Coloc'Auto - Suivi de votre inscription")
             ->text("emails.registration.stalled_text")
             ->with([
-                "title" => "LocoMotion - Suivi de votre inscription",
+                "title" => "Coloc'Auto - Suivi de votre inscription",
             ]);
     }
 }

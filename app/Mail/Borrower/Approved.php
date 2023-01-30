@@ -22,7 +22,7 @@ class Approved extends BaseMailable
     {
         return $this->view("emails.borrower.approved")
             ->subject(
-                "LocoMotion - Empruntez dès maintenant la voiture de vos voisin-e-s!"
+                "Coloc'Auto - Empruntez dès maintenant la voiture de vos voisin-e-s!"
             )
             ->text("emails.borrower.approved_text")
             ->with([

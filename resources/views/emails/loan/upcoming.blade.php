@@ -23,7 +23,7 @@
         color: #343a40;
     "
 >
-    Merci d'utiliser le programme LocoMotion!
+    Merci d'utiliser le programme Coloc'Auto!
 </p>
 
 <p

@@ -3,7 +3,7 @@
 @section('content')
 Bonjour {{ $user->name }},
 
-Merci d'utiliser le programme LocoMotion!
+Merci d'utiliser le programme Coloc'Auto!
 
 Votre réservation commence dans 3 heures, veuillez prendre connaisance de la marche
 à suivre si ce n'est pas déjà fait.
@@ -13,5 +13,5 @@ ici [{{ env('FRONTEND_URL') . '/loans/' . $loan->id }}].
 
 Merci de votre participation!
 
-            - L'équipe LocoMotion
+            - L'équipe Coloc'Auto
 @endsection

@@ -26,7 +26,7 @@ class LoanIncidentResolved extends BaseMailable
     public function build()
     {
         return $this->view("emails.loan.incident_resolved")
-            ->subject("LocoMotion - Incident résolu")
+            ->subject("Coloc'Auto - Incident résolu")
             ->text("emails.loan.incident_resolved_text")
             ->with([
                 "title" => "Incident résolu",

@@ -21,7 +21,7 @@ class Rejected extends BaseMailable
     public function build()
     {
         return $this->view("emails.registration.rejected")
-            ->subject("LocoMotion - Votre inscription a été refusée")
+            ->subject("Coloc'Auto - Votre inscription a été refusée")
             ->text("emails.registration.rejected_text")
             ->with([
                 "title" => "Votre inscription a été refusée",

@@ -1,7 +1,7 @@
 <template>
   <div class="profile-sidebar">
     <ul v-if="user">
-      <b-nav-item to="/profile/locomotion">
+      <b-nav-item to="/profile/colocauto">
         {{ $t("profile.titles.profile") }}
       </b-nav-item>
       <b-nav-item to="/profile/account">

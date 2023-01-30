@@ -4,7 +4,7 @@
       <b-col class="user-card__content__avatar" :style="{ backgroundImage: userAvatarStyle }" />
       <b-col class="user-card__content__details">
         <div>
-          <i>Membre LocoMotion</i>
+          <i>Membre Coloc'Auto</i>
 
           <h3>{{ user.full_name }}</h3>
 

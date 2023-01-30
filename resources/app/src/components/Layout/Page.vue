@@ -75,10 +75,10 @@ export default {
   computed: {
     fullTitle() {
       if (this.treeTitle) {
-        return `${this.treeTitle} | LocoMotion`;
+        return `${this.treeTitle} | Coloc'Auto`;
       }
 
-      return "LocoMotion";
+      return "Coloc'Auto";
     },
     mainClass() {
       return [

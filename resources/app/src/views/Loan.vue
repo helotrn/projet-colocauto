@@ -137,7 +137,7 @@ export default {
       return this.routeDataLoaded && this.item && (this.item.id == this.id || this.id === "new");
     },
     fullTitle() {
-      const parts = ["LocoMotion", capitalize(this.$i18n.tc("titles.loan", 2))];
+      const parts = ["Coloc'Auto", capitalize(this.$i18n.tc("titles.loan", 2))];
 
       if (this.pageTitle) {
         parts.push(this.pageTitle);

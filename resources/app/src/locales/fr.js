@@ -114,7 +114,7 @@ export default {
       loanables: "Mes véhicules",
       payment_method: "Mon mode de paiement",
       payment_methods: "Mes modes de paiement",
-      profile: "Mon profil LocoMotion",
+      profile: "Mon profil Coloc'Auto",
     },
   },
   wallet: {

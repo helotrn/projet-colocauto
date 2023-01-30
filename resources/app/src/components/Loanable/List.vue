@@ -34,7 +34,7 @@
           <b-card-body>
             <h3>Désolé, aucun véhicule ne correspond à ces critères.</h3>
             <p class="community-list--dark">
-              Essayez d'autres critères ou invitez vos voisins à rejoindre LocoMotion ;)
+              Essayez d'autres critères ou invitez vos voisins à rejoindre votre communauté ;)
             </p>
           </b-card-body>
         </b-card>

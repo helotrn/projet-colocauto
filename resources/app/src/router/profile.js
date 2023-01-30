@@ -34,7 +34,7 @@ export default [
         },
       },
       {
-        path: "locomotion",
+        path: "colocauto",
         component: ProfileLocomotion,
         meta: {
           auth: true,
@@ -139,18 +139,6 @@ export default [
                 ].join(","),
               },
             },
-          },
-        },
-      },
-      {
-        path: "locomotion",
-        component: ProfileLocomotion,
-        meta: {
-          auth: true,
-          title: "titles.profile",
-          slug: "users",
-          params: {
-            fields: "*,avatar.*",
           },
         },
       },

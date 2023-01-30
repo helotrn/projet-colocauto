@@ -25,7 +25,7 @@ class PrePaymentMissing extends BaseMailable
     {
         return $this->view("emails.loan.pre_payment_missing")
             ->subject(
-                "LocoMotion - Merci de faire le pré-paiement avant d'emprunter la " .
+                "Coloc'Auto - Merci de faire le pré-paiement avant d'emprunter la " .
                     "voiture de votre voisin-e"
             )
             ->text("emails.loan.pre_payment_missing_text")

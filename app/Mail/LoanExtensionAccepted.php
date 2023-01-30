@@ -34,7 +34,7 @@ class LoanExtensionAccepted extends BaseMailable
     public function build()
     {
         return $this->view("emails.loan.extension_accepted")
-            ->subject("LocoMotion - Demande d'extension")
+            ->subject("Coloc'Auto - Demande d'extension")
             ->text("emails.loan.extension_accepted_text")
             ->with([
                 "title" => "Demande d'extension acceptée",

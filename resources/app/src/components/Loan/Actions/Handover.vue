@@ -289,8 +289,8 @@
           </b-alert>
 
           <p>
-            Si vous prévoyez avoir du retard, ajoutez une extension: d'autres membres LocoMotion
-            attendent peut-être ce véhicule.
+            Si vous prévoyez avoir du retard, ajoutez une extension: d'autres membres
+            de votre communauté attendent peut-être ce véhicule.
           </p>
 
           <validation-observer ref="observer" v-slot="{ passes }">
@@ -311,7 +311,7 @@
 
                   <p>
                     <small>
-                      Cette photo est optionnelle mais permet à LocoMotion de déterminer à quel
+                      Cette photo est optionnelle mais permet à Coloc'Auto de déterminer à quel
                       moment un bris s'est produit, le cas échéant.
                     </small>
                   </p>
@@ -419,7 +419,7 @@
                 <p>Cette information est-elle incorrecte?</p>
                 <p>
                   Pour la modifier, vous pouvez procéder à une "contestation". Par cette procédure,
-                  un membre de l'équipe LocoMotion sera appelé à arbitrer la résolution du conflit
+                  un membre de l'équipe Coloc'Auto sera appelé à arbitrer la résolution du conflit
                   entre l'emprunteur et le propriétaire.
                 </p>
               </b-col>
@@ -461,7 +461,7 @@
           </b-alert>
 
           <p>
-            Un membre de l'équipe LocoMotion contactera les participant-e-s et ajustera les données.
+            Un membre de l'équipe Coloc'Auto contactera les participant-e-s et ajustera les données.
           </p>
 
           <div v-if="userIsAdmin" class="text-center">

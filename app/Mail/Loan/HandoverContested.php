@@ -33,7 +33,7 @@ class HandoverContested extends BaseMailable
     public function build()
     {
         return $this->view("emails.loan.handover_contested")
-            ->subject("LocoMotion - Données de retour du véhicule contestées")
+            ->subject("Coloc'Auto - Données de retour du véhicule contestées")
             ->text("emails.loan.handover_contested_text")
             ->with([
                 "title" => "Données de retour du véhicule contestées",

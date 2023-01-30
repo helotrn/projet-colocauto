@@ -494,7 +494,7 @@ class UserController extends RestController
             $charge = Stripe::createCharge(
                 $amountWithFeeInCents,
                 $customerId,
-                "Ajout au compte LocoMotion: {$amountForDisplay}$ + {$feeForDisplay}$ (frais)",
+                "Ajout au compte Coloc'Auto: {$amountForDisplay}$ + {$feeForDisplay}$ (frais)",
                 $paymentMethod->external_id
             );
         } catch (\Exception $e) {
@@ -519,7 +519,7 @@ class UserController extends RestController
 
             $invoice->billItems()->create([
                 "label" =>
-                    "Ajout au compte LocoMotion: " .
+                    "Ajout au compte Coloc'Auto: " .
                     "{$amountForDisplay}$ + {$fee}$ (frais)",
                 "amount" => $amountWithFee,
                 "item_date" => date("Y-m-d"),

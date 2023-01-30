@@ -24,7 +24,7 @@ class LoanableCreated extends BaseMailable
     public function build()
     {
         return $this->view("emails.loanable.created")
-            ->subject("LocoMotion - Véhicule ajouté")
+            ->subject("Coloc'Auto - Véhicule ajouté")
             ->text("emails.loanable.created_text")
             ->with([
                 "title" => "Véhicule ajouté",

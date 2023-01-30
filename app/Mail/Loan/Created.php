@@ -28,7 +28,7 @@ class Created extends BaseMailable
     public function build()
     {
         return $this->view("emails.loan.created")
-            ->subject("LocoMotion - Nouvel emprunt")
+            ->subject("Coloc'Auto - Nouvel emprunt")
             ->text("emails.loan.created_text")
             ->with([
                 "title" => "Nouvel emprunt",

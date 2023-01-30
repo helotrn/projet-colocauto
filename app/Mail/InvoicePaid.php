@@ -30,7 +30,7 @@ class InvoicePaid extends BaseMailable
 
         $this->title = $title;
         $this->text = $text;
-        $this->subject = $subject ?: "Locomotion - $this->title";
+        $this->subject = $subject ?: "Coloc'Auto - $this->title";
     }
 
     public function build()

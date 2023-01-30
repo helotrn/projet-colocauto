@@ -31,7 +31,7 @@ class LoanableReviewable extends BaseMailable
     {
         return $this->view("emails.loanable.reviewable")
             ->subject(
-                "LocoMotion - Nouveau véhicule ajouté dans " .
+                "Coloc'Auto - Nouveau véhicule ajouté dans " .
                     $this->community->name
             )
             ->text("emails.loanable.reviewable_text")

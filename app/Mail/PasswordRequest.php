@@ -23,7 +23,7 @@ class PasswordRequest extends BaseMailable
     public function build()
     {
         return $this->view("emails.password.request")
-            ->subject("LocoMotion - Réinitialisation du mot de passe")
+            ->subject("Coloc'Auto - Réinitialisation du mot de passe")
             ->text("emails.password.request_text")
             ->with([
                 "title" => "Réinitialisation de mot de passe",

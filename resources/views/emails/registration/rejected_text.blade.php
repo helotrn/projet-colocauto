@@ -3,13 +3,13 @@
 @section('content')
 Bonjour {{ $user->name }},
 
-Votre demande d'adhésion à LocoMotion a été refusée pour une des raisons suivantes:
+Votre demande d'adhésion à Coloc'Auto a été refusée pour une des raisons suivantes:
 
     1. Votre adresse n'est pas localisée dans un des voisinages.
     2. Il y a un problème avec votre preuve de résidence.
 
-Pour plus de détails, communiquez avec l'équipe LocoMotion au courriel info@locomotion.app .
+Pour plus de détails, communiquez avec l'équipe Coloc'Auto au courriel soutien@colocauto.org .
 
-L'équipe LocoMotion
-info@locomotion.app
+L'équipe Coloc'Auto
+soutien@colocauto.org
 @endsection

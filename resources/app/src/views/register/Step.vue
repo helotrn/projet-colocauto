@@ -67,7 +67,7 @@
 
     <div v-if="currentPage == 3" class="register-step__community">
       <div class="headers text-center">
-        <h4>Afin que LocoMotion reste un service entre voisin.e.s sécuritaire.</h4>
+        <h4>Afin que Coloc'Auto reste un service entre voisin.e.s sécuritaire.</h4>
         <h2>Veuillez téléverser une preuve de résidence pour {{ mainCommunity.name }}</h2>
       </div>
       <div v-if="item && item.communities">

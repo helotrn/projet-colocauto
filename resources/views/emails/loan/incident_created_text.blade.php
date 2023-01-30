@@ -9,5 +9,5 @@ Bonjour {{ $owner->user->name }},
 
 Voir l'emprunt [{{ env('FRONTEND_URL') . '/loans/' . $loan->id }}]
 
-            - L'équipe LocoMotion
+            - L'équipe Coloc'Auto
 @endsection

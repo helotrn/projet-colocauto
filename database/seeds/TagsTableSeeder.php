@@ -16,7 +16,7 @@ class TagsTableSeeder extends Seeder
             ],
             [
                 "id" => 2,
-                "name" => "Pionnier.ère LocoMotion",
+                "name" => "Pionnier.ère Coloc'Auto",
                 "slug" => "early_adopter",
                 "type" => "tag",
             ],

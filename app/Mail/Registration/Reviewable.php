@@ -33,7 +33,7 @@ class Reviewable extends BaseMailable
     public function build()
     {
         $subject =
-            "LocoMotion - " .
+            "Coloc'Auto - " .
             $this->user->full_name .
             " s'est inscrit dans " .
             $this->community->name;

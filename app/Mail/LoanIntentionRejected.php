@@ -34,7 +34,7 @@ class LoanIntentionRejected extends BaseMailable
     public function build()
     {
         return $this->view("emails.loan.intention_rejected")
-            ->subject("LocoMotion - Emprunt refusé")
+            ->subject("Coloc'Auto - Emprunt refusé")
             ->text("emails.loan.intention_rejected_text")
             ->with([
                 "title" => "Emprunt refusé",

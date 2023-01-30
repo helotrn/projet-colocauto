@@ -8,7 +8,7 @@
 import Notification from "@/mixins/Notification";
 
 export default {
-  name: "LocoMotion",
+  name: "Coloc'Auto",
   mixins: [Notification],
   mounted() {
     if (this.$store.state.token && !this.$store.state.loading && !this.$store.state.loaded) {

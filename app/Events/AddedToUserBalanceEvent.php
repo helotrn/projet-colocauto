@@ -14,6 +14,6 @@ class AddedToUserBalanceEvent extends SendInvoiceEmailEvent
         $this->title = "Facture payée";
         $this->text =
             "Vous trouvez ci-contre le relevé de votre plus récent paiement" .
-            " sur LocoMotion.";
+            " sur Coloc'Auto.";
     }
 }

@@ -23,7 +23,7 @@
         color: #343a40;
     "
 >
-    Votre demande d'adhésion à LocoMotion a été refusée pour une des raisons
+    Votre demande d'adhésion à Coloc'Auto a été refusée pour une des raisons
     suivantes:
 </p>
 
@@ -51,8 +51,8 @@
         color: #343a40;
     "
 >
-    Pour plus de détails, communiquez avec l'équipe LocoMotion au courriel
-    <a href="mailto:info@locomotion.app">info@locomotion.app</a> .
+    Pour plus de détails, communiquez avec l'équipe Coloc'Auto au courriel
+    <a href="mailto:soutien@colocauto.org">soutien@colocauto.org</a> .
 </p>
 
 @endsection

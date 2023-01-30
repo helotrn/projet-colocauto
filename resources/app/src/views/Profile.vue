@@ -20,7 +20,7 @@ import UserMixin from "@/mixins/UserMixin";
 
 const routeGuard = (to, from, next) => {
   if (to.name === "profile") {
-    next("/profile/locomotion");
+    next("/profile/colocauto");
   } else {
     next();
   }

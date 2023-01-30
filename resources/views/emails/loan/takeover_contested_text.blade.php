@@ -13,10 +13,10 @@ véhicule sur son emprunt de votre {{ $loan->loanable->name }} qui commençait
 "
 @endif
 
-Un membre de l'équipe LocoMotion a été notifié et sera appelé à arbitrer la résolution du
+Un membre de l'équipe Coloc'Auto a été notifié et sera appelé à arbitrer la résolution du
 problème.
 
 Voir l'emprunt [{{ env('FRONTEND_URL') . '/loans/' . $loan->id }}]
 
-        - L'équipe LocoMotion
+        - L'équipe Coloc'Auto
 @endsection

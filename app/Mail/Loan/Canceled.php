@@ -27,7 +27,7 @@ class Canceled extends BaseMailable
     public function build()
     {
         return $this->view("emails.loan.canceled")
-            ->subject("LocoMotion - Emprunt annulé")
+            ->subject("Coloc'Auto - Emprunt annulé")
             ->text("emails.loan.canceled_text")
             ->with([
                 "title" => "Emprunt annulé",

@@ -15,4 +15,4 @@
 (Si applicable, sur quel appareils/navigateurs web est-ce que ce problème est réplicable.)
 
 /label ~"type::bug"
-/cc @kfedorov-solon
+/cc @Fab1en

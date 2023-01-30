@@ -103,7 +103,7 @@
           <b-col class="community__map">
             <div class="community__map__total">
               {{ approvedUsersCount }}<br />
-              voisines et voisins participent à LocoMotion dans votre quartier!
+              voisines et voisins participent à Coloc'Auto dans votre quartier!
             </div>
           </b-col>
         </b-row>

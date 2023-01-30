@@ -28,7 +28,7 @@ class HandoverReviewable extends BaseMailable
     public function build()
     {
         return $this->view("emails.loan.handover_reviewable")
-            ->subject("LocoMotion - Contestation du retour du véhicule")
+            ->subject("Coloc'Auto - Contestation du retour du véhicule")
             ->text("emails.loan.handover_reviewable_text")
             ->with([
                 "title" => "Contestation du retour du véhicule",

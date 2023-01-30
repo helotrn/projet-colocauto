@@ -28,7 +28,7 @@ class TakeoverReviewable extends BaseMailable
     public function build()
     {
         return $this->view("emails.loan.takeover_reviewable")
-            ->subject("LocoMotion - Contestation d'une prise de possession")
+            ->subject("Coloc'Auto - Contestation d'une prise de possession")
             ->text("emails.loan.takeover_reviewable_text")
             ->with([
                 "title" => "Contestation d'une prise de possession",

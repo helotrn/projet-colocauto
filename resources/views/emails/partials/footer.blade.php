@@ -20,7 +20,7 @@
                 text-align: center;
             "
         >
-            Envoyé par l'équipe LocoMotion
+            Envoyé par l'équipe Coloc'Auto
         </p>
         <p
             style="
@@ -33,7 +33,7 @@
                 text-align: center;
             "
         >
-            info@locomotion.app
+            soutien@colocauto.org
         </p>
     </td>
 </tr>

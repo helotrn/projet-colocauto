@@ -23,7 +23,7 @@ class Pending extends BaseMailable
     public function build()
     {
         return $this->view("emails.borrower.pending")
-            ->subject("LocoMotion - Votre dossier de conduite est approuvé!")
+            ->subject("Coloc'Auto - Votre dossier de conduite est approuvé!")
             ->text("emails.borrower.pending_text")
             ->with([
                 "title" => "Votre dossier de conduite est approuvé!",

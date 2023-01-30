@@ -17,7 +17,7 @@
             <b-jumbotron
               bg-variant="light"
               header="Votre profil est en attente de validation."
-              lead="LocoMotion s'assure que vos voisin-e-s soient bien... vos voisin-e-s! C'est pourquoi un membre de notre équipe va vérifier votre preuve de résidence et valider votre compte. Vous recevrez un courriel de confirmation et aurez alors accès à toutes les fonctionnalités de LocoMotion!"
+              lead="Coloc'Auto s'assure que vos voisin-e-s soient bien... vos voisin-e-s! C'est pourquoi un membre de notre équipe va vérifier votre preuve de résidence et valider votre compte. Vous recevrez un courriel de confirmation et aurez alors accès à toutes les fonctionnalités de Coloc'Auto!"
             >
             </b-jumbotron>
           </section>
@@ -26,8 +26,8 @@
             <b-jumbotron
               bg-variant="light"
               class="no-communities-jumbotron"
-              header="LocoMotion n'existe pas encore dans votre quartier"
-              lead="Mais on y travaille! En attendant, devenez acteur de votre quartier et aidez LocoMotion à améliorer votre mobilité et celle de vos voisin-e-s."
+              header="Coloc'Auto n'existe pas encore dans votre quartier"
+              lead="Mais on y travaille! En attendant, devenez acteur de votre quartier et aidez Coloc'Auto à améliorer votre mobilité et celle de vos voisin-e-s."
             >
               <b-button variant="primary" href="https://bit.ly/locoquartier" target="_blank"
                 >En savoir plus</b-button
@@ -76,7 +76,7 @@
                 <section class="page__section" v-if="loans.contested && loans.contested.length > 0">
                   <h2>Emprunts avec contestation</h2>
                   <p class="dashboard__instructions">
-                    Un membre de l'équipe LocoMotion contactera les participant-e-s et ajustera les
+                    Un membre de l'équipe Coloc'Auto contactera les participant-e-s et ajustera les
                     données.
                   </p>
                   <transition-group name="dashboard-list" tag="div" class="swiping-list">

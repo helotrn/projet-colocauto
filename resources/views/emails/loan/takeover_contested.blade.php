@@ -65,7 +65,7 @@
         color: #343a40;
     "
 >
-    Un membre de l'équipe LocoMotion a été notifié et sera appelé à arbitrer la
+    Un membre de l'équipe Coloc'Auto a été notifié et sera appelé à arbitrer la
     résolution du problème.
 </p>
 

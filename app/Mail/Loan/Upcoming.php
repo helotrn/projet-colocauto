@@ -24,7 +24,7 @@ class Upcoming extends BaseMailable
     public function build()
     {
         return $this->view("emails.loan.upcoming")
-            ->subject("LocoMotion - Votre réservation commence dans 3 heures!")
+            ->subject("Coloc'Auto - Votre réservation commence dans 3 heures!")
             ->text("emails.loan.upcoming_text")
             ->with([
                 "title" => "Votre réservation commence dans 3 heures!",

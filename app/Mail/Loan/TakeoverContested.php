@@ -33,7 +33,7 @@ class TakeoverContested extends BaseMailable
     public function build()
     {
         return $this->view("emails.loan.takeover_contested")
-            ->subject("LocoMotion - Données de prise de possession contestées")
+            ->subject("Coloc'Auto - Données de prise de possession contestées")
             ->text("emails.loan.takeover_contested_text")
             ->with([
                 "title" => "Données de prise de possession contestées",

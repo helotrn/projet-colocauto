@@ -11,6 +11,6 @@ Félicitations, votre dossier de conduite est approuvé!
     Vous devez par contre soumettre votre preuve de résidence pour pouvoir emprunter des véhicules. 
 @endif
 
-L'équipe LocoMotion
-info@locomotion.app
+L'équipe Coloc'Auto
+soutien@colocauto.org
 @endsection

@@ -24,7 +24,7 @@
     "
 >
     Vous recevez ce courriel car vous avez récemment débuté votre inscription
-    sur le site LocoMotion.app. Ceci est un petit rappel pour finaliser votre
+    sur le site Coloc'Auto. Ceci est un petit rappel pour finaliser votre
     profil.
 </p>
 

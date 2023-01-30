@@ -11,6 +11,6 @@ Voir l'emprunt [{{ env('FRONTEND_URL') . '/loans/' . $loan->id }}]
 
 Merci de votre participation !
 
-L'équipe LocoMotion
-info@locomotion.app
+L'équipe Coloc'Auto
+soutien@colocauto.org
 @endsection
