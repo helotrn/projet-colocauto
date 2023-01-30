@@ -202,6 +202,7 @@ class LoanController extends RestController
                 ],
                 "platform_tip" => [
                     "type" => "number",
+                    "hidden" => true,
                 ],
                 "message_for_owner" => [
                     "type" => "textarea",

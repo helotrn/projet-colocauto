@@ -58,16 +58,6 @@
               </tr>
 
               <tr>
-                <th>Assurances&nbsp;:</th>
-                <td class="text-right tabular-nums">{{ item.final_insurance | currency }}</td>
-              </tr>
-              <tr>
-                <th>Contribution volontaire&nbsp;:</th>
-                <td class="text-right tabular-nums">
-                  {{ item.final_platform_tip | currency }}
-                </td>
-              </tr>
-              <tr>
                 <th>Total&nbsp;:</th>
                 <td class="trip-details__total text-right tabular-nums">
                   {{ item.total_final_cost | currency }}
@@ -255,12 +245,6 @@
                     <th>Assurances</th>
                     <td class="text-right tabular-nums">
                       {{ item.actual_insurance | currency }}
-                    </td>
-                  </tr>
-                  <tr>
-                    <th>Contribution volontaire</th>
-                    <td class="text-right tabular-nums">
-                      {{ this.normalizedTip | currency }}
                     </td>
                   </tr>
                   <tr class="last">

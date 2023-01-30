@@ -186,23 +186,6 @@
                     </td>
                   </tr>
                   <template v-if="isBorrower || isLoanAdmin">
-                    <tr>
-                      <th>{{ $t("payment.insurance") | capitalize }}</th>
-                      <td class="text-right tabular-nums">
-                        {{ insurance | currency }}
-                      </td>
-                    </tr>
-                    <tr>
-                      <th class="pb-2">
-                        {{ $t("payment.tip") | capitalize }}
-                        <div v-if="!loan.final_platform_tip" class="small muted">
-                          {{ $t("details_box.tip_modifiable") }}
-                        </div>
-                      </th>
-                      <td class="text-right tabular-nums pb-2">
-                        {{ tip | currency }}
-                      </td>
-                    </tr>
                     <tr class="total-row">
                       <th>
                         {{

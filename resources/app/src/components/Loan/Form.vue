@@ -113,23 +113,6 @@
             </b-row>
 
             <b-row>
-              <b-col md="6">
-                <forms-validated-input
-                  name="platform_tip"
-                  :disabled="!!item.id"
-                  :label="$t('fields.platform_tip') | capitalize"
-                  :rules="{ required: true }"
-                  description="LocoMotion est un projet citoyen et collaboratif. Les contributions volontaires aident à financer son fonctionnement."
-                  type="currency"
-                  :min="0"
-                  :step="0.01"
-                  :placeholder="placeholderOrLabel('platform_tip') | capitalize"
-                  v-model="item.platform_tip"
-                />
-              </b-col>
-            </b-row>
-
-            <b-row>
               <!-- No message for owner if the loanable is self service. -->
               <b-col v-if="!loanableIsSelfService">
                 <forms-validated-input
