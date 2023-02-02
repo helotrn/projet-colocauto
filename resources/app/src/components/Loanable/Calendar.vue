@@ -70,85 +70,56 @@
   >
     <b-card no-body v-if="selectedEvent.data">
       <layout-loading class="section-loading-indicator" v-if="loading" />
-      <b-row v-else>
-        <b-col lg="6">
-          <b-row>
-            <b-col class="loan-info-box__image__wrapper">
-            <user-avatar :user="selectedEvent.data.borrower.user" variant="cut-out" />
-
-            <div class="loan-info-box__name">
-              <span>
-                <span class="loan-info-box__name__loanable">{{ selectedEvent.data.borrower.user.full_name }}</span>
-                <span class="loan-info-box__reason__loanable d-block text-center">{{ selectedEvent.data.reason }}</span>
-              </span>
-            </div>
-            </b-col>
-          </b-row>
-        </b-col>
-
-        <b-col class="loan-info-box__details mb-2 mt-2" lg>
-          <span>
-            <span v-if="multipleDays">
-                {{ selectedEvent.data.departure_at | date }} {{ selectedEvent.data.departure_at | time }}<br />
-                {{ selectedEvent.data.actual_return_at | date }} {{ selectedEvent.data.actual_return_at | time }}
-              </span>
-              <span v-else>
-              {{ selectedEvent.data.departure_at | date }}<br />
-              {{ selectedEvent.data.departure_at | time }} à {{ selectedEvent.data.actual_return_at | time }}
-            </span>
-          </span>
-        </b-col>
-
-        <b-col class="loan-info-box__actions" lg>
+      <b-container v-else>
+        <div class="d-flex flex-column align-items-center">
+          <user-avatar :user="selectedEvent.data.borrower.user" variant="cut-out" />
           <div>
-            <b-button
+            <span>{{ selectedEvent.data.borrower.user.full_name }}</span>
+            <span class="d-block text-center">{{ selectedEvent.data.reason }}</span>
+          </div>
+        </div>
+        <div class="d-flex flex-column align-items-center my-2">
+          <div v-if="multipleDays">
+            {{ selectedEvent.data.departure_at | date }} {{ selectedEvent.data.departure_at | time }}<br />
+            {{ selectedEvent.data.actual_return_at | date }} {{ selectedEvent.data.actual_return_at | time }}
+          </div>
+          <div v-else>
+            {{ selectedEvent.data.departure_at | date }}<br />
+            {{ selectedEvent.data.departure_at | time }} à {{ selectedEvent.data.actual_return_at | time }}
+          </div>
+        </div>
+        <div class="d-flex flex-column align-items-center mt-4">
+          <b-button
               size="sm"
               variant="outline-primary"
               :to="selectedEvent.uri"
             >
               Consulter
             </b-button>
-          </div>
-        </b-col>
-      </b-row>
+        </div>
+      </b-container>
     </b-card>
     <b-card no-body v-else-if="newEvent.data">
       <layout-loading class="section-loading-indicator" v-if="loading" />
-      <b-row v-else>
-        <b-col lg="6">
-          <b-row>
-            <b-col class="loan-info-box__image__wrapper">
-              <user-avatar :user="newEvent.data.borrower.user" variant="cut-out" />
-
-              <div class="loan-info-box__name">
-                <span>
-                  <span class="loan-info-box__name__loanable">{{ newEvent.data.borrower.user.full_name }}</span>
-                </span>
-              </div>
-            </b-col>
-            <b-col class="loan-info-box__details mb-2 mt-2" lg>
-              <span>
-                <span>
-                  {{ newEvent.start | date }}<br />
-                  {{ newEvent.start | time }} à {{ newEvent.end | time }}
-                </span>
-              </span>
-            </b-col>
-
-            <b-col class="loan-info-box__actions" lg>
-              <div>
-                <b-button
-                  size="sm"
-                  variant="outline-primary"
-                  @click="askLoan"
-                >
-                  Demande d'emprunt
-                </b-button>
-              </div>
-            </b-col>
-          </b-row>
-        </b-col>
-      </b-row>
+      <b-container v-else>
+        <div class="d-flex flex-column align-items-center">
+          <user-avatar :user="newEvent.data.borrower.user" variant="cut-out" />
+          <div>{{ newEvent.data.borrower.user.full_name }}</div>
+        </div>
+        <div class="d-flex flex-column align-items-center my-2">
+            {{ newEvent.start | date }}<br />
+            {{ newEvent.start | time }} à {{ newEvent.end | time }}
+        </div>
+        <div class="d-flex flex-column align-items-center mt-4">
+          <b-button
+            size="sm"
+            variant="outline-primary"
+            @click="askLoan"
+          >
+            Réserver
+          </b-button>
+        </div>
+      </b-container>
     </b-card>
   </b-modal>
   </div>
