@@ -92,6 +92,7 @@
                   :rules="form.reason.rules"
                   type="text"
                   :placeholder="placeholderOrLabel('reason') | capitalize"
+                  :description="$t('descriptions.reason') | capitalize"
                   v-model="item.reason"
                 />
               </b-col>
@@ -112,24 +113,6 @@
               </b-col>
             </b-row>
 
-            <b-row>
-              <!-- No message for owner if the loanable is self service. -->
-              <b-col v-if="!loanableIsSelfService">
-                <forms-validated-input
-                  name="message_for_owner"
-                  :disabled="!!item.id"
-                  :label="
-                    (`${$t('fields.message_for_owner')} ` + `(${$t('facultatif')})`) | capitalize
-                  "
-                  :rules="form.message_for_owner.rules"
-                  type="textarea"
-                  :rows="3"
-                  :placeholder="placeholderOrLabel('message_for_owner') | capitalize"
-                  v-model="item.message_for_owner"
-                />
-              </b-col>
-            </b-row>
-
             <b-row class="form__buttons" v-if="!item.id">
               <b-col class="text-center">
                 <b-button disabled type="submit" v-if="!item.loanable.available">
@@ -138,11 +121,10 @@
                 <b-button
                   type="submit"
                   :disabled="loading || invalidDuration"
-                  v-else-if="!loanableIsSelfService"
+                  v-else
                 >
-                  Faire la demande d'emprunt
+                  Réserver
                 </b-button>
-                <b-button type="submit" :disabled="loading" v-else>Réserver</b-button>
               </b-col>
             </b-row>
           </b-form>

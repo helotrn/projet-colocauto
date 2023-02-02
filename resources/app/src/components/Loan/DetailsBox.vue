@@ -54,8 +54,8 @@
             </div>
           </div>
         </b-collapse>
-        <hr />
         <template v-if="!isOwner || ownerUrl">
+          <hr />
           <dl>
             <dt>{{ $t("loanable.fields.owner_id") | capitalize }}</dt>
             <dd class="owner-details">
@@ -236,10 +236,12 @@
             <dd class="user_text">{{ loanable.instructions }}</dd>
           </template>
 
-          <dt>{{ $t("loanable.fields.position") | capitalize }}</dt>
-          <dd>
-            <div class="mb-2">{{ loanable.location_description }}</div>
-          </dd>
+          <template v-if="loanable.location_description">
+            <dt >{{ $t("loanable.fields.position") | capitalize }}</dt>
+            <dd>
+              <div class="mb-2">{{ loanable.location_description }}</div>
+            </dd>
+          </template>
         </dl>
       </b-card-text>
     </b-card>

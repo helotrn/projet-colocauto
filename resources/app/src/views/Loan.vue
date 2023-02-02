@@ -41,34 +41,6 @@
             {{ $t("modification_warning.content") }}
           </b-alert>
 
-          <b-alert
-            show
-            variant="info"
-            v-if="
-              item.loanable.type === 'car' &&
-              !loanIsCanceled &&
-              !hasReachedStep('handover') &&
-              userIsBorrower
-            "
-          >
-            <h4 class="alert-heading">
-              {{ $t("insurance_warning.title") }}
-            </h4>
-
-            <i18n path="insurance_warning.warning" tag="p">
-              <template #link>
-                <a :href="$t('insurance_warning.terms_link')" target="_blank">{{
-                  $t("insurance_warning.terms")
-                }}</a>
-              </template>
-              <template #emphasis>
-                <strong>
-                  {{ $t("insurance_warning.car_stays_in_quebec") }}
-                </strong>
-              </template>
-            </i18n>
-          </b-alert>
-
           <div class="position-relative">
             <loan-actions
               class="loan-actions"

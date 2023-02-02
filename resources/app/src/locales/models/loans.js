@@ -70,12 +70,18 @@ export default {
         statuss, // FIXME
       },
     },
+    descriptions: {
+      reason:
+        "Vous allez en ville, au centre commercial, etc. ? Si vous le voulez, " +
+        "partagez cette info sur l’agenda du véhicule pour favoriser le " +
+        "covoiturage. Qui sait,  votre voisin·e· a peut-être besoin d’y aller aussi ?",
+    },
     model: {
       singular: "emprunt",
     },
     model_name: "emprunt | emprunts",
     placeholders: {
-      reason: "ex.: épicerie, déménagement, etc.",
+      reason: "Ex: centre-ville, supermarché, …",
     },
     payment: {
       time_distance: "temps prévu et distance",

@@ -25,7 +25,7 @@ class Loan extends BaseModel
         "platform_tip" => ["numeric", "present", "min:0"],
         "loanable_id" => "available",
         "message_for_owner" => ["present"],
-        "reason" => ["required"],
+        "reason" => ["present"],
     ];
 
     public static $transformer = LoanTransformer::class;
