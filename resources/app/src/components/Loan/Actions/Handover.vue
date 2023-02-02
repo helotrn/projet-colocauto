@@ -91,32 +91,6 @@
               <hr />
 
               <b-row>
-                <b-col lg="6" v-if="(!action.executed_at && !loanIsCanceled) || userIsAdmin">
-                  <p>Envoyez une photo de vos dépenses de carburant.</p>
-
-                  <forms-image-uploader
-                    label="Photo des dépenses"
-                    field="expense"
-                    v-model="action.expense"
-                  />
-
-                  <p><small> Cette photo doit afficher le détails des dépenses de carburant. Elle est facultative. </small></p>
-                </b-col>
-                <b-col lg="6" v-else-if="action.expense">
-                  <a href="#" v-b-modal="'handover-expense'">
-                    <img :src="action.expense ? action.expense.sizes.thumbnail : ''" />
-                  </a>
-
-                  <b-modal
-                    size="xl"
-                    title="Photo des dépenses"
-                    :id="'handover-expense'"
-                    footer-class="d-none"
-                  >
-                    <img class="img-fit" :src="action.expense.url" />
-                  </b-modal>
-                </b-col>
-
                 <b-col lg="6">
                   <forms-validated-input
                     id="purchases_amount"
