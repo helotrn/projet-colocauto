@@ -66,7 +66,7 @@
     id="loanable-calendar-modal"
     hide-footer
     header-class="p-2 border-bottom-0"
-    @close="cancelNewEvent ? cancelNewEvent() : ''"
+    @hidden="cancelNewEvent ? cancelNewEvent() : ''"
   >
     <b-card no-body v-if="selectedEvent.data">
       <layout-loading class="section-loading-indicator" v-if="loading" />
