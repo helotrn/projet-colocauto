@@ -39,7 +39,7 @@ export default {
         " les membres du groupe pour participer à l'entretien et l'assurance.",
       owner_compensation:
         "Ce montant est dû tous les mois par les utilisateur·ice·s de la voiture"+
-        " partagée à son proporiétaire en compensation de l'usure et de la décôte" +
+        " partagée à son propriétaire en compensation de l'usure et de la décôte" +
         " du véhicule.",
     },
     transmission_modes: {
