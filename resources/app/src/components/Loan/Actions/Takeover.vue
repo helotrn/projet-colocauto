@@ -86,7 +86,7 @@
                       :rules="{ required: true, min_value: 1 }"
                       label="KM au compteur, au début de la course"
                       placeholder="KM au compteur"
-                      :disabled="(!!action.executed_at || loanIsCanceled) && !userIsAdmin"
+                      :disabled="((lockMileage && !!action.executed_at) || loanIsFinished || loanIsCanceled) && !userIsAdmin"
                       v-model="action.mileage_beginning"
                     />
                   </b-col>
@@ -247,7 +247,7 @@
         </div>
 
         <div v-if="!isContested">
-          <div v-if="isContestable && !loanIsCanceled">
+          <div v-if="!loanIsFinished && isContestable && !loanIsCanceled">
             <hr />
 
             <validation-observer ref="observer" v-slot="{ passes }">
@@ -259,31 +259,11 @@
                 <b-row>
                   <b-col lg="6">
                     <p>Cette information est-elle incorrecte?</p>
-                    <p>
-                      Pour la modifier, vous pouvez procéder à une "contestation". Par cette
-                      procédure, un membre de l'équipe Coloc'Auto sera appelé à arbitrer la
-                      résolution du conflit entre l'emprunteur et le propriétaire.
-                    </p>
-                  </b-col>
-
-                  <b-col lg="6">
-                    <forms-validated-input
-                      id="comments_on_contestation"
-                      name="comments_on_contestation"
-                      :rules="{ required: true }"
-                      type="textarea"
-                      :rows="3"
-                      label="Commentaires sur la contestation"
-                      placeholder="Commentaire sur la contestation"
-                      v-model="action.comments_on_contestation"
-                    />
-                  </b-col>
-                </b-row>
-
-                <b-row class="loan-actions-takeover__buttons text-center">
-                  <b-col>
-                    <b-button size="sm" variant="outline-danger" type="submit">
-                      Contester
+                    <b-button v-if="lockMileage" @click="lockMileage = false">
+                      Modifier
+                    </b-button>
+                    <b-button v-else @click="update">
+                      Enregistrer
                     </b-button>
                   </b-col>
                 </b-row>
@@ -321,6 +301,17 @@ export default {
   components: {
     FormsImageUploader,
     FormsValidatedInput,
+  },
+  data(){
+    return {
+      lockMileage: true,
+    }
+  },
+  methods: {
+    update() {
+      this.updateMileage();
+      this.lockMileage = true;
+    }
   },
 };
 </script>

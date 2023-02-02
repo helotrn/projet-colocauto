@@ -123,6 +123,18 @@ export default {
     loanIsCanceled() {
       return !!this.item.canceled_at;
     },
+    loanIsFinished() {
+      if( !this.item.actions || this.item.actions.length == 0 ) return false;
+
+      let handover = this.item.actions.find(a => a.type == 'handover');
+      if(!handover) return false
+      return handover.status == "completed";
+    },
+    loanIsFinishedSinceMoreThan48h() {
+      if( !this.loanIsFinished ) return false;
+
+      return this.$dayjs().subtract(48, "hour").isAfter(this.item.actual_return_at);
+    },
   },
   methods: {
     abortAction() {
