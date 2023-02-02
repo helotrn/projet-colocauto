@@ -97,7 +97,7 @@
           </b-dropdown-item>
           <b-dropdown-item
             to="/profile/loanables"
-            v-if="!isGlobalAdmin && hasCompletedRegistration"
+            v-if="!isGlobalAdmin && hasCompletedRegistration && user.owner"
           >
             <span class="nav-link__icon">
               <svg-vector />

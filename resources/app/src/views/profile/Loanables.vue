@@ -28,10 +28,9 @@
       </b-row>
     </div>
     <div v-else>
-      <p>
-        Vous désirez mettre un véhicule à disposition de la communauté?
-        <a href="#" @click="createOwnerProfile">Cliquez ici</a> pour commencer!
-      </p>
+      <b-row>
+        <b-col>Pas de véhicule.</b-col>
+      </b-row>
     </div>
   </div>
   <layout-loading v-else />

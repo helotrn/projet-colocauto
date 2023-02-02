@@ -13,7 +13,7 @@
       <b-nav-item to="/profile/loans" :disabled="!user.borrower">
         {{ $t("profile.titles.loans") }}
       </b-nav-item>
-      <b-nav-item to="/profile/loanables">
+      <b-nav-item to="/profile/loanables" v-if="user.owner">
         {{ $t("profile.titles.loanables") }}
       </b-nav-item>
     </ul>
