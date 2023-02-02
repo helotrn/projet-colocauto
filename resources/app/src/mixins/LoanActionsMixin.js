@@ -195,5 +195,13 @@ export default {
       }
       this.$emit("rejected");
     },
+    async updateMileage() {
+      this.actionLoading = true;
+      try {
+        await this.$store.dispatch("loans/updateMileage", { action: this.action });
+      } finally {
+        this.actionLoading = false;
+      }
+    },
   },
 };

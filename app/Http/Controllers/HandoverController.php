@@ -11,6 +11,7 @@ use App\Models\Handover;
 use App\Repositories\HandoverRepository;
 use App\Repositories\LoanRepository;
 use Illuminate\Validation\ValidationException;
+use Carbon\CarbonImmutable;
 
 class HandoverController extends RestController
 {
@@ -113,6 +114,23 @@ class HandoverController extends RestController
                 )
             );
         }
+
+        return $item;
+    }
+
+    public function updateMileage(HandoverRequest $request, $actionId, $loanId)
+    {
+        $authRequest = $request->redirectAuth(Request::class);
+        $item = $this->repo->find($authRequest, $actionId);
+
+        if ($item->actual_return_at && $item->actual_return_at < CarbonImmutable::now()->subHours(48)) {
+            return $this->respondWithErrors([
+                "status" => [__("validation.custom.status.more_than_48h")],
+            ]);
+        }
+
+        $item->mileage_end = $request->input('mileage_end');
+        $item->save();
 
         return $item;
     }

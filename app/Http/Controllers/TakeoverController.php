@@ -11,6 +11,7 @@ use App\Models\Takeover;
 use App\Repositories\LoanRepository;
 use App\Repositories\TakeoverRepository;
 use Illuminate\Validation\ValidationException;
+use Carbon\CarbonImmutable;
 
 class TakeoverController extends RestController
 {
@@ -108,6 +109,23 @@ class TakeoverController extends RestController
                 )
             );
         }
+
+        return $item;
+    }
+
+    public function updateMileage(TakeoverRequest $request, $actionId, $loanId)
+    {
+        $authRequest = $request->redirectAuth(Request::class);
+        $item = $this->repo->find($authRequest, $actionId);
+
+        if ($item->actual_return_at && $item->actual_return_at < CarbonImmutable::now()->subHours(48)) {
+            return $this->respondWithErrors([
+                "status" => [__("validation.custom.status.more_than_48h")],
+            ]);
+        }
+
+        $item->mileage_beginning = $request->input('mileage_beginning');
+        $item->save();
 
         return $item;
     }

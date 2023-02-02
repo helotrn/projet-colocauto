@@ -155,6 +155,8 @@ return [
                 "L'emprunteur-se n'a pas assez de fonds dans son solde pour payer présentement.",
             "payment_cant_be_paid" =>
                 "Le paiement ne peut être complété présentement.",
+            "more_than_48h" =>
+                "L'emprunt s'est terminé il y a plus de 48h et n'est plus modifiable."
         ],
         "duration_in_minutes" => [
             "min" =>

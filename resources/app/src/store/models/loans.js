@@ -239,5 +239,41 @@ export default new RestModule(
         throw e;
       }
     },
+    async updateMileage({ commit }, { action, type = "actions" }) {
+      const { CancelToken } = Vue.axios;
+      const cancelToken = CancelToken.source();
+
+      try {
+        commit("cancelToken", cancelToken);
+        await Vue.axios.put(`/loans/${action.loan_id}/${type}/${action.id}/update_mileage`, action, {
+          cancelToken: cancelToken.token,
+        });
+
+        commit("cancelToken", null);
+      } catch (e) {
+        commit("cancelToken", null);
+
+        const { request, response } = e;
+        if (request) {
+          switch (request.status) {
+            case 422:
+              commit(
+                "addNotification",
+                {
+                  content: extractErrors(response.data).join(", "),
+                  title: "Erreur de validation",
+                  variant: "danger",
+                },
+                { root: true }
+              );
+              break;
+            default:
+              throw e;
+          }
+        } else {
+          throw e;
+        }
+      }
+    },
   }
 );

@@ -194,6 +194,28 @@ class ActionController extends RestController
         }
     }
 
+    public function updateMileage(ActionRequest $request, $loanId, $actionId)
+    {
+        switch ($request->get("type")) {
+            case "takeover":
+                $takeoverRequest = $request->redirect(TakeoverRequest::class);
+                return $this->takeoverController->updateMileage(
+                    $takeoverRequest,
+                    $actionId,
+                    $loanId
+                );
+            case "handover":
+                $handoverRequest = $request->redirect(HandoverRequest::class);
+                return $this->handoverController->updateMileage(
+                    $handoverRequest,
+                    $actionId,
+                    $loanId
+                );
+            default:
+                throw new \Exception("invalid action type");
+        }
+    }
+
     public function cancel(ActionRequest $request, $loanId, $actionId)
     {
         switch ($request->get("type")) {
