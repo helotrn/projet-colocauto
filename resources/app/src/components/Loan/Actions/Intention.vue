@@ -55,8 +55,10 @@
             </p>
           </div>
 
+          <template v-if="item.reason">
           <label>Raison de l'emprunt</label>
           <p>{{ item.reason }}</p>
+          </template>
 
           <blockquote v-if="item.message_for_owner">
             {{ item.message_for_owner }}

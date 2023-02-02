@@ -64,14 +64,10 @@
 
           <div v-if="item.loanable.type === 'car'">
             <validation-observer ref="observer" v-slot="{ passes }">
-              <!-- Add message if user is borrower, but not owner. -->
-              <b-row v-if="userRoles.includes('borrower') && !userRoles.includes('owner')">
+              <b-row>
                 <b-col>
                   <p>
-                    Avez-vous bien pris connaissance de l'état de cette auto?<br />
-                    Il est important de le faire avant d'en prendre possession. Ainsi, s'il arrive
-                    un pépin, vous allez être en mesure d'en discuter avec la personne propriétaire
-                    de l'auto.
+                    Avant votre départ, merci de penser à noter le kilométrage qui figure sur le compteur de la voiture.
                   </p>
                 </b-col>
               </b-row>
@@ -82,42 +78,6 @@
                 @submit.stop.prevent="passes(completeAction)"
               >
                 <b-row>
-                  <b-col
-                    lg="6"
-                    v-if="(!action.executed_at && !loanIsCanceled) || userIsAdmin"
-                    class="loan-actions-takeover__form__image"
-                  >
-                    <p>Envoyez une photo du tableau de bord.</p>
-
-                    <forms-image-uploader
-                      label="Photo du tableau de bord"
-                      field="image"
-                      v-model="action.image"
-                    />
-
-                    <p>
-                      <small>
-                        On vous demande une preuve? Prenez une photo du tableau de bord de l'auto
-                        pour rentrer les bonnes informations (kilométrage, essence). Cette photo est
-                        facultative.
-                      </small>
-                    </p>
-                  </b-col>
-                  <b-col lg="6" v-else-if="action.image" class="loan-actions-takeover__form__image">
-                    <a href="#" v-b-modal="'takeover-image'">
-                      <img :src="action.image ? action.image.sizes.thumbnail : ''" />
-                    </a>
-
-                    <b-modal
-                      size="xl"
-                      title="Photo du tableau de bord"
-                      :id="'takeover-image'"
-                      footer-class="d-none"
-                    >
-                      <img class="img-fit" :src="action.image.url" />
-                    </b-modal>
-                  </b-col>
-
                   <b-col lg="6">
                     <forms-validated-input
                       id="mileage_beginning"

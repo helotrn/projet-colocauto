@@ -108,17 +108,6 @@
           </b-col>
         </b-row>
         <b-row>
-          <b-col tag="dl" cols="6">
-            <dt>{{ $t("details_box.duration") | capitalize }}</dt>
-            <dd v-if="duration > 0">
-              {{
-                $tc("details_box.duration_over_days", loan.calendar_days, {
-                  hours: durationInHours(duration),
-                  days: loan.calendar_days,
-                })
-              }}
-            </dd>
-          </b-col>
           <b-col tag="dl" cols="6" v-if="price > 0 && distance > 0">
             <dt>
               {{

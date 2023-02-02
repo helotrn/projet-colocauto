@@ -74,42 +74,6 @@
               @submit.stop.prevent="passes(completeAction)"
             >
               <b-row>
-                <b-col
-                  lg="6"
-                  v-if="(!action.executed_at && !loanIsCanceled) || userIsAdmin"
-                  class="loan-actions-handover__form__image"
-                >
-                  <p>Envoyez une photo du tableau de bord.</p>
-
-                  <forms-image-uploader
-                    label="Photo du tableau de bord"
-                    field="image"
-                    v-model="action.image"
-                  />
-
-                  <p>
-                    <small>
-                      On vous demande une preuve? Prenez une photo du tableau de bord de l'auto pour
-                      rentrer les bonnes informations (kilométrage, essence). Cette photo est
-                      facultative.
-                    </small>
-                  </p>
-                </b-col>
-                <b-col lg="6" v-else-if="action.image" class="loan-actions-handover__form__image">
-                  <a href="#" v-b-modal="'handover-image'">
-                    <img :src="action.image ? action.image.sizes.thumbnail : ''" />
-                  </a>
-
-                  <b-modal
-                    size="xl"
-                    title="Photo du tableau de bord"
-                    :id="'handover-image'"
-                    footer-class="d-none"
-                  >
-                    <img class="img-fit" :src="action.image.url" />
-                  </b-modal>
-                </b-col>
-
                 <b-col lg="6">
                   <forms-validated-input
                     id="mileage_end"
@@ -182,58 +146,6 @@
                   action.comments_by_owner
                 "
               />
-
-              <b-row>
-                <b-col>
-                  <!-- Allow inputing a message to the owner if user is not the owner. -->
-                  <forms-validated-input
-                    v-if="
-                      !action.executed_at &&
-                      !loanIsCanceled &&
-                      userRoles.includes('borrower') &&
-                      !userRoles.includes('owner')
-                    "
-                    id="comments_by_borrower"
-                    name="comments_by_borrower"
-                    type="textarea"
-                    :rows="3"
-                    :disabled="!!action.commented_by_borrower_at"
-                    label="Laissez un message au propriétaire (facultatif)"
-                    placeholder="Commentaire sur la réservation"
-                    v-model="action.comments_by_borrower"
-                  />
-                  <blockquote v-else-if="action.comments_by_borrower">
-                    {{ action.comments_by_borrower }}
-                    <user-avatar :user="borrower.user" />
-                  </blockquote>
-                </b-col>
-              </b-row>
-
-              <b-row>
-                <b-col>
-                  <!-- Allow inputing a message to the borrower if user is not the borrower. -->
-                  <forms-validated-input
-                    v-if="
-                      !action.executed_at &&
-                      !loanIsCanceled &&
-                      userRoles.includes('owner') &&
-                      !userRoles.includes('borrower')
-                    "
-                    id="comments_by_owner"
-                    name="comments_by_owner"
-                    type="textarea"
-                    :rows="3"
-                    :disabled="!!action.commented_by_owner_at"
-                    label="Laissez un message à l'emprunteur (facultatif)"
-                    placeholder="Commentaire sur la réservation"
-                    v-model="action.comments_by_owner"
-                  />
-                  <blockquote v-else-if="action.comments_by_owner">
-                    {{ action.comments_by_owner }}
-                    <user-avatar :user="owner.user" />
-                  </blockquote>
-                </b-col>
-              </b-row>
 
               <b-row
                 class="loan-actions-handover__buttons text-center"
