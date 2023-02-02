@@ -90,7 +90,7 @@ class HandoverController extends RestController
 
         if ($item->isCompleted()) {
             return $this->respondWithErrors([
-                "status" => __("validation.custom.status.action_completed"),
+                "status" => [__("validation.custom.status.action_completed")],
             ]);
         }
 
