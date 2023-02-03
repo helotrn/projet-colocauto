@@ -7,7 +7,7 @@
   >
     <div :class="`community-view__overlay ${isMap}`">
       <b-row>
-        <b-col lg="4" xl="3">
+        <b-col lg="4" xl="3" v-if="view != 'calendar'">
           <!-- loan search form container -->
           <b-card class="community-view__search-container">
             <div class="community-view__search-menu">
@@ -31,9 +31,9 @@
         </b-col>
 
         <!-- Results header -->
-        <b-col lg="8" xl="9">
+        <b-col :lg="view=='calendar' ? 12 : 8" :xl="view=='calendar' ? 12 : 9">
           <!-- Small screens -->
-          <b-card class="d-lg-none my-4">
+          <b-card class="d-lg-none my-4" v-if="view != 'calendar'">
             <div>
               <h3>Résultats</h3>
               <b-row align-v="center">
@@ -42,6 +42,20 @@
                     >Modifier votre recherche</a
                   >
                 </b-col>
+                <b-col sm="6">
+                  <b-button v-if="view === 'calendar'" pill @click="gotoView('list')" class="ml-sm-auto">
+                    <div class="community-view__button-spacing">
+                      <div>Afficher la liste</div>
+                      <div><svg-list /></div>
+                    </div>
+                  </b-button>
+                  <b-button v-else pill @click="gotoView('calendar')" class="ml-sm-auto">
+                    <div class="community-view__button-spacing">
+                      <div>Afficher l'agenda</div>
+                      <div><svg-map /></div>
+                    </div>
+                  </b-button>
+                </b-col>
               </b-row>
             </div>
           </b-card>
@@ -49,11 +63,34 @@
 
           <!-- Large Screens -->
           <div class="d-none d-lg-block">
+              <!-- button to view list -->
+            <div v-if="view === 'calendar'" class="community-view__button-container">
+              <b-button pill @click="gotoView('list')">
+                <div class="community-view__button-spacing">
+                  <div>Afficher la liste</div>
+                  <div><svg-list /></div>
+                </div>
+              </b-button>
+            </div>
+            <!---->
+
+            <div v-else-if="view === 'list'" class="d-none d-lg-block">
               <div class="my-4">
                 <!-- results header -->
                 <h3>Résultats</h3>
                 <!---->
+                <!-- button to view calendar  -->
+                <div class="community-view__button-container">
+                  <b-button pill @click="gotoView('calendar')">
+                    <div class="community-view__button-spacing">
+                      <div>Afficher l'agenda</div>
+                      <div><svg-map /></div>
+                    </div>
+                  </b-button>
+                </div>
+                <!---->
               </div>
+            </div>
           </div>
           <!-- -->
 
@@ -69,6 +106,42 @@
         </b-col>
       </b-row>
     </div>
+    <!-- calendar display -->
+    <b-row v-if="view === 'calendar'">
+      <b-tabs v-if="loanables && loanables.length > 0" class="loanables__tabs w-100 m-3 mt-5">
+        <b-tab
+          v-for="loanable in loanables"
+          :title="loanable.name"
+          :key="loanable.id"
+          title-item-class="mr-2"
+          lazy
+          fill
+        >
+          <template #title>
+            <div class="loanable-card__image">
+              <img
+                v-if="loanable.image"
+                class="loanable-card__image__loanable loanable-card__image--custom"
+                :src="loanable.image.sizes.thumbnail"
+              />
+              <div v-else class="loanable-card__image__loanable loanable-card__image--default">
+                <svg-car v-if="loanable.type == 'car'" />
+              </div>
+
+              <div class="loanable-card__image__user" v-if="loanable.owner">
+                <user-avatar :user="loanable.owner.user" variant="cut-out" />
+              </div>
+            </div>
+            <h4 class="text-center">{{ loanable.name }}</h4>
+          </template>
+          <b-card-text class="bg-white">
+            <loans-calendar
+              :loanable="loanable"
+            ></loans-calendar>
+          </b-card-text>
+        </b-tab>
+      </b-tabs>
+    </b-row>
     <!---->
   </layout-page>
 </template>
@@ -79,8 +152,12 @@ import UserMixin from "@/mixins/UserMixin";
 
 import LoanableList from "@/components/Loanable/List.vue";
 import LoanSearchForm from "@/components/Loan/SearchForm.vue";
+import LoansCalendar from "@/components/Loanable/LoansCalendar.vue";
+import UserAvatar from "@/components/User/Avatar.vue";
 
 import ListIcon from "@/assets/svg/list.svg";
+import MapIcon from "@/assets/svg/map.svg";
+import CarIcon from "@/assets/svg/car.svg";
 
 import { buildComputed } from "@/helpers";
 
@@ -90,7 +167,11 @@ export default {
   components: {
     LoanableList,
     LoanSearchForm,
+    LoansCalendar,
+    UserAvatar,
     "svg-list": ListIcon,
+    "svg-map": MapIcon,
+    "svg-car": CarIcon,
   },
   props: {
     view: {
@@ -388,4 +469,26 @@ export default {
 .community-view--margin-top {
   margin-top: 20px;
 }
+
+.loanables__tabs {
+  .nav {
+    flex-wrap: nowrap;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    .nav-item {
+      flex-shrink: 0;
+      min-width: 180px;
+      max-width: 250px;
+      width: 48vw;
+      .nav-link[aria-selected="false"] {
+        filter: grayscale(1);
+        opacity: 0.5;
+      }
+      .nav-link {
+        height: 100%;
+      }
+    }
+  }
+}
+
 </style>
