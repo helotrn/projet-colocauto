@@ -8,43 +8,6 @@
           <h4 class="loan-search-form--green">à vos voisin-e-s?</h4>
         </div>
         <!---->
-        <!-- buttons to select types of vehicles -->
-        <b-form-group>
-          <b-form-checkbox-group
-            buttons
-            :disabled="loading"
-            class="loanable-buttons"
-            id="loanable_type"
-            :checked="selectedLoanableTypes"
-            @change="emitLoanableTypes"
-          >
-            <b-checkbox value="car" :disabled="!canLoanCar">
-              <svg-car />
-              <div>Auto</div>
-            </b-checkbox>
-            <b-checkbox value="bike">
-              <svg-bike />
-              <div>Vélo</div>
-            </b-checkbox>
-            <b-checkbox value="trailer">
-              <svg-trailer />
-              <div>Remorque</div>
-            </b-checkbox>
-          </b-form-checkbox-group>
-        </b-form-group>
-        <b-alert show variant="danger" v-if="!canLoanCar">
-          <strong>Oops! Pour emprunter l'auto de vos voisin-e-s</strong> vous devez remplir votre
-          dossier de conduite.
-          <b-button
-            to="/profile/borrower"
-            pill
-            class="loan-search-form__button-borrower"
-            variant="danger"
-          >
-            Remplissez votre dossier
-          </b-button>
-        </b-alert>
-        <!---->
         <div v-if="form">
           <div v-if="item.departure_at">
             <!-- field start time -->

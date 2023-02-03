@@ -123,7 +123,7 @@ export default {
   },
   mounted() {
     let selectedTypes = [];
-    const possibleTypes = ["bike", "trailer", "car"];
+    const possibleTypes = ["car"];
     const urlTypes = this.$route.query["types"];
     if (urlTypes) {
       selectedTypes = urlTypes
