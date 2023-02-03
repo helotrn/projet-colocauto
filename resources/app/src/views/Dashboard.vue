@@ -659,4 +659,18 @@ export default {
 .swiping-list .dashboard-list-item:first-child:last-child {
   margin: auto;
 }
+
+.tabs {
+  .card-header {
+    padding-bottom: 0;
+    .nav {
+      flex-wrap: nowrap;
+      overflow-y: scroll;
+      padding-bottom: 0.75rem;
+      .nav-item {
+        flex-shrink: 0;
+      }
+    }
+  }
+}
 </style>
