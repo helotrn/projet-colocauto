@@ -19,8 +19,6 @@
     <div class="loanable-card__body">
       <h4 class="loanable-card__title">{{ name }}</h4>
 
-      <loans-calendar :loanable="$props"></loans-calendar>
-
       <div class="loanable-card__tags">
         <div v-if="type === 'car'">
           <b-badge> <svg-car class="icon icon--as-text" /> Auto </b-badge>
