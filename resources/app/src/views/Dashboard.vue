@@ -229,6 +229,7 @@
                     <b-card-text>
                       <loans-calendar
                         :loanable="loanable"
+                        style="height: 364px;"
                       ></loans-calendar>
                     </b-card-text>
                   </b-tab>

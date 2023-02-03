@@ -1,7 +1,6 @@
 <template>
   <div>
   <vue-cal
-    style="height: 364px;"
     :class="classList"
     :hide-view-selector="true"
     :disable-views="['years', 'year']"
