@@ -43,7 +43,7 @@ class User extends AuthenticatableBaseModel
         "is_deactivated" => "boolean",
     ];
 
-    public $computed = ["admin_link"];
+    public $computed = ["admin_link", "color"];
 
     public static function getRules($action = "", $auth = null)
     {
@@ -571,5 +571,20 @@ class User extends AuthenticatableBaseModel
     public function getAdminLinkAttribute()
     {
         return env("FRONTEND_URL") . "/admin/users/" . $this->id;
+    }
+
+    /**
+    * assign a color to each user, unique within its main community
+    */
+    public function getColorAttribute()
+    {
+        $me = $this->id;
+        if( !$this->main_community || !$this->main_community->users ) return false;
+
+        $index = $this->main_community->users->sortBy('id')->search(function ($user) use ($me) {
+            return $user->id === $me;
+        } );
+        $nbOfColors = sizeof(config("app.colors"));
+        return config("app.colors")[$index % $nbOfColors];
     }
 }

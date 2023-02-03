@@ -189,7 +189,8 @@ export default {
 
       let vueCalEvents = this.events.map((e) => {
         e = { ...baseEvent, ...e };
-        e.class = ["loanable-calendar__event"];
+        if(!Array.isArray(e.class)) e.class = [e.class];
+        e.class.push("loanable-calendar__event");
 
         if (e.type === "availability") {
           // Availability events go in the background.
@@ -505,19 +506,33 @@ export default {
   .loanable-calendar__event--unavailability {
     background-color: $background-alert-negative;
   }
-  .loanable-calendar__event--loan_in_process {
-    background-color: $warning;
-    border: 1px solid $warning;
-  }
-  .loanable-calendar__event--loan_completed {
-    color: black;
-    background-color: $success;
-    border: 1px solid $success;
-  }
-  .loanable-calendar__event--loan_canceled {
-    color: $danger;
-    background-color: $danger;
-    border: 1px solid $danger;
+  .vuecal__event {
+    color: white;
+    border-radius: 5px;
+    &.color-persian-green {
+      background-color: #00ada8;
+    }
+    &.color-sunglo {
+      background-color: #B56457;
+    }
+    &.color-teal {
+      background-color: #127A8B;
+    }
+    &.color-outrageous-orange {
+      background-color: #FF6133;
+    }
+    &.color-governor-bay {
+      background-color: #556093;
+    }
+    &.color-sun {
+      background-color: #F38433;
+    }
+    &.color-kournikova {
+      background-color: #FFCA56;
+    }
+    &.color-buccaneer {
+      background-color: #664B4B;
+    }
   }
 }
 #loanable-calendar-modal .modal-dialog .card.shadow {

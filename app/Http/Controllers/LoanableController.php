@@ -144,6 +144,7 @@ class LoanableController extends RestController
                         ],
                         "type" => "loan",
                         "title" => $loan->borrower->user->full_name .' - '. $loan->reason,
+                        "class" => "color-".$loan->borrower->user->color,
                     ];
                 } else {
                 

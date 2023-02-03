@@ -55,6 +55,17 @@ return [
 
     "asset_url" => env("ASSET_URL", null),
 
+    "colors" => [
+        "persian-green",        // #00ada8
+        "sunglo",               // #B56457
+        "teal",                 // #127A8B
+        "outrageous-orange",    // #FF6133
+        "governor-bay",         // #556093
+        "sun",                  // #f38433
+        "kournikova",           // #FFCA56
+        "buccaneer",            // #664B4B
+    ],
+
     /*
     |--------------------------------------------------------------------------
     | Application Timezone
