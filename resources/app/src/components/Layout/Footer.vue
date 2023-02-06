@@ -9,20 +9,32 @@
             </a>
           </div>
 
-          <div class="layout-footer__text">
+          <div class="layout-footer__text w-75 m-auto">
             <p class="introduction">
-              <strong>Coloc'Auto</strong> est un projet citoyen accompagné par
-              <a href="https://www.mobicoop.fr">Mobicoop</a> et basé sur le logiciel
-              <a href="https://locomotion.app/">LocoMotion</a>.
+              <strong>Coloc'Auto</strong> est porté par <a href="https://www.mobicoop.fr" target="_blank">Mobicoop</a> :
+              une coopérative qui travaille depuis 2008 avec les citoyens, les entreprises et les acteurs
+              publics pour promouvoir les mobilités partagées.
+            <p/>
+            <p>Cette application est basée sur <a href="https://locomotion.app/" target="_blank">LocoMotion.app</a>,
+            un projet citoyen actuellement à l'œuvre au Québec et accompagné par Solon.
+            <a href="https://solon-collectif.org/action/locomotion/" target="_blank">En savoir plus</a>
             </p>
 
             <p class="cgu small">
               <a href="https://www.colocauto.org/conditions"
                 title="Conditions d'utilisation - Coloc'Auto"
                 target="_blank"
-                >Conditions d'utilisation</a
+                >Conditions Générales</a
               >
-              - <a href="mailto:soutien@colocauto.org" title="Nous contacter">Nous contacter</a>
+              - <a href="https://www.colocauto.org/faq"
+                title="F.A.Q. - Coloc'Auto"
+                target="_blank"
+                >F.A.Q.</a
+              >
+              - <a href="mailto:soutien@colocauto.org">Nous écrire</a>
+              - <a href="https://gitlab.com/mobicoop/colocauto"
+                target="_blank"
+                >Gitlab</a>
             </p>
           </div>
         </b-col>
