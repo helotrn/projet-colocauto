@@ -430,7 +430,17 @@ class LoanController extends RestController
             "payment.status",
         ];
 
-        $accessibleLoans = Loan::accessibleBy($request->user());
+        $userId = $request->user()->id;
+
+        if( $request->get('borrower') === "me" ) {
+            $accessibleLoans = Loan::whereHas("borrower",
+                function (Builder $q) use ($userId) {
+                    $q->where("user_id", $userId);
+                }
+            );
+        } else {
+            $accessibleLoans = Loan::accessibleBy($request->user());
+        }
         $now = CarbonImmutable::now();
         $aWeekAgo = $now->subtract(7, "days");
 
@@ -447,7 +457,6 @@ class LoanController extends RestController
         ) {
             $q->where("status", "in_process");
         });
-        $userId = $request->user()->id;
         $waitingLoansAsBorrower = (clone $waitingLoans)->whereHas(
             "borrower",
             function (Builder $q) use ($userId) {

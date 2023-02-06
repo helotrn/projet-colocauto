@@ -38,7 +38,7 @@ const actions = {
     commit("loadLoans");
 
     try {
-      const { data: loans } = await Vue.axios.get("/loans/dashboard");
+      const { data: loans } = await Vue.axios.get("/loans/dashboard", {params: {borrower: 'me'}});
       commit("loansLoaded", loans);
     } catch (e) {
       commit("errorLoading", e);
