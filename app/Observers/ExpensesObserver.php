@@ -12,10 +12,7 @@ class ExpensesObserver
 {
     public function saved($expense)
     {
-        if ($expense->wasRecentlyCreated == true) {
-            // Data was just created
-            $expense->changeDescription = 'creation';
-        } else {
+        if ($expense->wasRecentlyCreated == false) {
             if($expense->changeDescription) {
               // save changes in the database when saved event is triggered once again
               ExpenseChange::create([
