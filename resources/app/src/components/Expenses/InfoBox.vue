@@ -29,8 +29,8 @@
         </b-row>
       </div>
     </router-link>
-    <div class="card-footer text-right">
-      <span class="badge badge-warning small">2 modifications effectuées</span>
+    <div class="card-footer text-right" v-if="changes.length">
+      <span class="badge badge-warning small">{{changes.length}} modification{{changes.length > 1 ? 's' : ''}} effectuée{{changes.length > 1 ? 's' : ''}}</span>
     </div>
   </b-card>
 </template>
@@ -71,6 +71,11 @@ export default {
       type: Object,
       required: false,
     },
+    changes: {
+      type: Array,
+      required: false,
+      default: [],
+    }
   },
   data() {
     return {

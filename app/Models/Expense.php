@@ -6,6 +6,7 @@ use Illuminate\Validation\Rule;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Builder;
 use Carbon\Carbon;
+use App\Observers\ExpensesObserver;
 
 class Expense extends BaseModel
 {
@@ -55,6 +56,8 @@ class Expense extends BaseModel
 
     public $items = ["user", "loanable", "tag"];
 
+    public $collections = ["changes"];
+
     public function user()
     {
         return $this->belongsTo(User::class);
@@ -70,9 +73,16 @@ class Expense extends BaseModel
         return $this->belongsTo(ExpenseTag::class, 'expense_tag_id');
     }
 
+    public function changes()
+    {
+        return $this->hasMany(ExpenseChange::class);
+    }
+
     public static function boot()
     {
         parent::boot();
+
+        Expense::observe(new ExpensesObserver);
 
         self::saved(function ($model) {
             if (!$model->executed_at) {
