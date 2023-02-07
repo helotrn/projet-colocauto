@@ -5,7 +5,7 @@
     <b-row>
       <b-col>
         <h1>
-          {{ $t(item.id ? "modifier une" : "ajouter une") | capitalize }} {{ $tc("dépense", 1) }}
+          {{ $t(item.id ? (item.locked ? "afficher une" : "modifier une") : "ajouter une") | capitalize }} {{ $tc("dépense", 1) }}
         </h1>
       </b-col>
     </b-row>
@@ -43,7 +43,7 @@
     <b-row>
       <b-col>
         <b-form class="form" @submit.prevent="submit">
-          <forms-builder :definition="form" v-model="item" entity="expenses" />
+          <forms-builder :definition="form" v-model="item" entity="expenses" :disabled="item.locked" />
 
           <div class="form__buttons">
             <b-button-group>

@@ -212,4 +212,8 @@ return [
         "size" => "taille",
         "platform_tip" => "contribution volontaire",
     ],
+    
+    "cannot_modify" => [
+        "expense" => "la dépense ne peut pas être modifiée"
+    ],
 ];

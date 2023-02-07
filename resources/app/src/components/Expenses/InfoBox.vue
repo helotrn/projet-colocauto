@@ -8,7 +8,10 @@
                 {{tag.name}}
               </span>
             </b-col>
-            <b-col class="text-right"><icons-edit class="svgicon action" /></b-col>
+            <b-col class="text-right">
+              <icons-recurring v-if="locked" style="width:25px" class="svgicon action" />
+              <icons-edit v-else class="svgicon action" />
+            </b-col>
           </b-row>
           <b-row>
             <b-col><span class="small" v-if="executed_at">{{ new Date(executed_at).toLocaleDateString() }}</span></b-col>
@@ -39,6 +42,7 @@
 import { extractErrors } from "@/helpers";
 import IconsCar from "@/assets/icons/car.svg";
 import IconsEdit from "@/assets/icons/edit.svg";
+import IconsRecurring from "@/assets/icons/recurring.svg";
 
 export default {
   name: "ExpenseInfoBox",
@@ -75,7 +79,12 @@ export default {
       type: Array,
       required: false,
       default: [],
-    }
+    },
+    locked: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
   },
   data() {
     return {
@@ -85,6 +94,7 @@ export default {
   components: {
     IconsCar,
     IconsEdit,
+    IconsRecurring,
   }
 }
 </script>

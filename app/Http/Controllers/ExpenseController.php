@@ -58,6 +58,12 @@ class ExpenseController extends RestController
     public function update(UpdateRequest $request, $id)
     {
         try {
+            if (!$request->user()->isAdmin()) {
+                $old = $this->model->findOrFail($id);
+                if( $old->locked ) {
+                    return $this->respondWithErrors([[trans("validation.cannot_modify.expense")]]);
+                }
+            }
             $item = parent::validateAndUpdate($request, $id);
         } catch (ValidationException $e) {
             return $this->respondWithErrors($e->errors(), $e->getMessage());
@@ -131,6 +137,9 @@ class ExpenseController extends RestController
                         ],
                     ],
                 ],
+                "locked" => [
+                    "type" => "checkbox",
+                ],
             ],
             "filters" => $this->model::$filterTypes ?: new \stdClass(),
         ];
@@ -143,6 +152,8 @@ class ExpenseController extends RestController
         if (!$request->user()->isAdmin()) {
             unset($template['form']['type']);
             unset($template['item']['type']);
+            unset($template['form']['locked']);
+            unset($template['item']['locked']);
         }
 
         return $template;

@@ -26,7 +26,7 @@ export default [
           data: {
             expenses: {
               retrieve: {
-                fields: "id,name,amount,executed_at,user.full_name,loanable.name,tag.name,tag.color,changes.id",
+                fields: "id,name,amount,executed_at,user.full_name,loanable.name,tag.name,tag.color,changes.id,locked",
               },
             },
           },
@@ -40,7 +40,7 @@ export default [
           auth: true,
           slug: "expenses",
           params: {
-            fields: "id,name,amount,executed_at,user_id,loanable_id,expense_tag_id,changes,changes.user,changes.description,changes.created_at"
+            fields: "id,name,amount,executed_at,user_id,loanable_id,expense_tag_id,changes,changes.user,changes.description,changes.created_at,locked"
           },
           title: "wallet.titles.expense",
         },

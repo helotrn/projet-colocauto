@@ -17,7 +17,8 @@ export default {
         null: 'Tous',
         debit: 'Débit',
         credit: 'Crédit',
-      }
+      },
+      locked: 'Verrouillée',
     },
     list: {
       create: "enregister une nouvelle dépense",

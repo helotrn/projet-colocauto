@@ -154,7 +154,7 @@ class Car extends Loanable
             $owner_compensation = 0;
         }
         foreach($users as $user) {
-            Expense::create([
+            $expense = Expense::create([
                 "name" => "Provision ".$period_start->monthName." ".$period_start->year,
                 "amount" => $shared_cost,
                 "type" => "debit",
@@ -163,8 +163,10 @@ class Car extends Loanable
                 "loanable_id" => $this->id,
                 "expense_tag_id" => $funds_tag->count() ? $funds_tag->first()->id : null,
             ]);
+            $expense->locked = true;
+            $expense->save();
             if( $owner_compensation && $this->owner->user->id !== $user->id ){
-                Expense::create([
+                $expense = Expense::create([
                     "name" => "Dédommagement propriétaire ".$period_start->monthName." ".$period_start->year,
                     "amount" => $owner_compensation,
                     "type" => "debit",
@@ -173,6 +175,8 @@ class Car extends Loanable
                     "loanable_id" => $this->id,
                     "expense_tag_id" => $compensation_tag->count() ? $compensation_tag->first()->id : null,
                 ]);
+                $expense->locked = true;
+                $expense->save();
             }
         }
     }

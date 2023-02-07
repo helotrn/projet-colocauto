@@ -17,6 +17,7 @@ class Expense extends BaseModel
         "amount" => ["required","numeric","gt:0"],
         "type" => ["nullable", "in:credit,debit"],
         "executed_at" => ["nullable","date"],
+        "locked" => ["boolean"],
     ];
 
     public static function getRules($action = "", $auth = null)
@@ -50,8 +51,10 @@ class Expense extends BaseModel
     ];
 
     protected $fillable = ["name", "amount", "type", "executed_at", "loanable_id", "user_id", "expense_tag_id"];
+    protected $garded = ["locked"]; // locked is readonly
     protected $attributes = [
         "type" => "credit",
+        "locked" => "false",
     ];
 
     public $items = ["user", "loanable", "tag"];
