@@ -1,5 +1,9 @@
 <template>
-  <b-card no-body class="expense-info-box shadow my-2" bg="white" no-body :class="{ disabled: loading }">
+  <b-card no-body
+    class="expense-info-box my-2"
+    :class="{ disabled: loading, 'shadow-sm': user.id != me, shadow: user.id == me }"
+    :style="{backgroundColor: user.id == me ? 'white' : '#FFFFFF99'}"
+    >
     <router-link :to="`/wallet/expenses/${id}`">
       <div class="card-header">
           <b-row>
@@ -90,6 +94,11 @@ export default {
     return {
       loading: false,
     };
+  },
+  computed: {
+    me() {
+      return this.$store.state.user.id;
+    }
   },
   components: {
     IconsCar,
