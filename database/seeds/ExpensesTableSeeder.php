@@ -152,6 +152,7 @@ class ExpensesTableSeeder extends Seeder
                 "user_id" => 14,
                 "loanable_id" => 1002,
                 "expense_tag_id" => 4,
+                "locked" => true,
             ],
             [
                 "id" => 15,
@@ -162,6 +163,7 @@ class ExpensesTableSeeder extends Seeder
                 "user_id" => 15,
                 "loanable_id" => 1002,
                 "expense_tag_id" => 4,
+                "locked" => true,
             ],
             [
                 "id" => 16,
@@ -172,6 +174,7 @@ class ExpensesTableSeeder extends Seeder
                 "user_id" => 16,
                 "loanable_id" => 1002,
                 "expense_tag_id" => 4,
+                "locked" => true,
             ],
             [
                 "id" => 17,
@@ -182,6 +185,7 @@ class ExpensesTableSeeder extends Seeder
                 "user_id" => 17,
                 "loanable_id" => 1002,
                 "expense_tag_id" => 4,
+                "locked" => true,
             ],
             [
                 "id" => 18,
@@ -252,6 +256,7 @@ class ExpensesTableSeeder extends Seeder
                 "user_id" => 14,
                 "loanable_id" => 1003,
                 "expense_tag_id" => 4,
+                "locked" => true,
             ],
             [
                 "id" => 25,
@@ -262,6 +267,7 @@ class ExpensesTableSeeder extends Seeder
                 "user_id" => 15,
                 "loanable_id" => 1003,
                 "expense_tag_id" => 4,
+                "locked" => true,
             ],
             [
                 "id" => 26,
@@ -272,6 +278,7 @@ class ExpensesTableSeeder extends Seeder
                 "user_id" => 16,
                 "loanable_id" => 1003,
                 "expense_tag_id" => 4,
+                "locked" => true,
             ],
             [
                 "id" => 27,
@@ -282,6 +289,7 @@ class ExpensesTableSeeder extends Seeder
                 "user_id" => 17,
                 "loanable_id" => 1003,
                 "expense_tag_id" => 4,
+                "locked" => true,
             ],
             [
                 "id" => 28,
