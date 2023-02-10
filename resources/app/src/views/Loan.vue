@@ -37,8 +37,6 @@
             <h4 class="alert-heading">
               {{ $t("loan_approved") }}
             </h4>
-            <strong>{{ $t("modification_warning.title") }}: </strong>
-            {{ $t("modification_warning.content") }}
           </b-alert>
 
           <div class="position-relative">

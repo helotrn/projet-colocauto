@@ -10,7 +10,9 @@
 
     <div class="loan-actions__action" v-for="action in item.actions" :key="action.id">
       <div v-if="action.type === 'intention' && displayStep('intention')">
+        <!-- hide intention because loan is accepted automatically -->
         <loan-actions-intention
+          v-if="false"
           :action="action"
           :item="item"
           :open="isCurrentStep('intention')"
