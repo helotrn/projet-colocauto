@@ -62,6 +62,9 @@ class ExpenseController extends RestController
                 $old = $this->model->findOrFail($id);
                 if( $old->locked ) {
                     return $this->respondWithErrors([[trans("validation.cannot_modify.expense")]]);
+                } else {
+                    // cannot modify locked param
+                    $request->merge(['locked' => $old->locked]);
                 }
             }
             $item = parent::validateAndUpdate($request, $id);

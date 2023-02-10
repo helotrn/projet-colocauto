@@ -50,8 +50,7 @@ class Expense extends BaseModel
         ]
     ];
 
-    protected $fillable = ["name", "amount", "type", "executed_at", "loanable_id", "user_id", "expense_tag_id"];
-    protected $garded = ["locked"]; // locked is readonly
+    protected $fillable = ["name", "amount", "type", "executed_at", "loanable_id", "user_id", "expense_tag_id", "locked"];
     protected $attributes = [
         "type" => "credit",
         "locked" => "false",
