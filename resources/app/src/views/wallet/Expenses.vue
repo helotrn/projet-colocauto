@@ -8,11 +8,7 @@
       </b-col>
     </b-row>
 
-    <b-row>
-      <b-col>
-        <expense-filters />
-      </b-col>
-    </b-row>
+    <expense-filters />
 
     <div v-if="routeDataLoaded && !loading && loaded">
       <b-row v-if="data.length === 0">
