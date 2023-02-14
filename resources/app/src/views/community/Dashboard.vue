@@ -42,28 +42,21 @@
               </b-row>
             </b-container>
 
-            <b-row class="community__users">
-              <b-col>
-                <div class="community__users__before">
-                  <svg-arrow @click="slideUsers(-415)" />
-                </div>
-                <div class="community__users__slider" ref="users">
-                  <span class="community__users__slider__spacer" />
-                  <user-card
+            <b-container>
+              <b-row class="community__users">
+                  <b-col md="6" lg="4"
                     v-for="user in community.users"
                     :key="user.id"
-                    :user="user"
-                    :is-admin="isAdminOfCommunity(community)"
-                    :community-id="community.id"
-                    @updated="reload"
-                  />
-                  <span class="community__users__slider__spacer" />
-                </div>
-                <div class="community__users__after">
-                  <svg-arrow @click="slideUsers(415)" />
-                </div>
-              </b-col>
-            </b-row>
+                  >
+                    <user-card
+                      :user="user"
+                      :is-admin="isAdminOfCommunity(community)"
+                      :community-id="community.id"
+                      @updated="reload"
+                    />
+                  </b-col>
+              </b-row>
+            </b-container>
           </div>
         </b-col>
       </b-row>
