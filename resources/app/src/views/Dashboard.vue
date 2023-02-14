@@ -256,13 +256,15 @@
                 <div v-if="loanables && loanables.length > 0">
                   <transition-group name="dashboard-list">
                     <h3 class="dashboard--margin-bottom" key="title">{{ loanables.length }} véhicules</h3>
-                    <loanable-info-box
-                      class="dashboard-list-item"
-                      v-for="loanable in loanables"
-                      :key="loanable.id"
-                      v-bind="loanable"
-                      @disabled="hideLoanable"
-                    />
+                    <b-row key="loanables">
+                      <b-col lg="6" v-for="loanable in loanables" :key="loanable.id">
+                        <loanable-info-box
+                          class="dashboard-list-item"
+                          v-bind="loanable"
+                          @disabled="hideLoanable"
+                        />
+                      </b-col>
+                    </b-row>
                   </transition-group>
                   <div class="text-right" v-if="hasMoreLoanables">
                     <b-button variant="outline-primary" to="/search/list">
