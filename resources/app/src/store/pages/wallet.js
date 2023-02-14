@@ -23,6 +23,15 @@ const actions = {
       throw e;
     }
   },
+
+  async filterExpenses({ commit, dispatch }, params) {
+    try {
+      commit("expenses/setFilterParams", params, {root: true});
+    } catch (e) {
+      commit("errorLoading", e);
+      throw e;
+    }
+  }
 };
 
 const mutations = {
