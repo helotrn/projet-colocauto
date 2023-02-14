@@ -507,30 +507,37 @@ export default {
     background-color: $background-alert-negative;
   }
   .vuecal__event {
-    color: white;
     border-radius: 5px;
     &.color-persian-green {
+      color: white;
       background-color: #00ada8;
     }
     &.color-sunglo {
+      color: white;
       background-color: #B56457;
     }
     &.color-teal {
+      color: white;
       background-color: #127A8B;
     }
     &.color-outrageous-orange {
+      color: white;
       background-color: #FF6133;
     }
     &.color-governor-bay {
+      color: white;
       background-color: #556093;
     }
     &.color-sun {
+      color: white;
       background-color: #F38433;
     }
     &.color-kournikova {
+      color: white;
       background-color: #FFCA56;
     }
     &.color-buccaneer {
+      color: white;
       background-color: #664B4B;
     }
   }
