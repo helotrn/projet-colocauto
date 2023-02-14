@@ -1,5 +1,5 @@
 <template>
-  <b-card no-body class="loanable-info-box shadow" bg="white" no-body :class="{ disabled: loading }">
+  <b-card no-body class="loanable-info-box" bg="white" no-body :class="{ disabled: loading }">
     <router-link :to="`/profile/loanables/${id}`">
       <b-row>
         <b-col class="loanable-info-box__image">
