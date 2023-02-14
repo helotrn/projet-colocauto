@@ -85,7 +85,6 @@ export default {
 <style lang="scss">
 .user-card {
   margin-bottom: 10px;
-  height: calc(100% - 30px);
   position: relative;
 
   &__tags {
@@ -98,10 +97,6 @@ export default {
     }
   }
 
-  > div {
-    height: 100%;
-  }
-
   &__admin-actions {
     margin-top: 1rem;
   }
@@ -109,15 +104,17 @@ export default {
   &__content {
     &__avatar.col {
       border-radius: 15px 0 0 15px;
-      flex: 0 1 140px;
+      flex: 0 1 103px;
       background-size: cover;
       background-repeat: no-repeat;
       background-position: center center;
+      width: 103px;
+      height: 103px;
     }
 
     &__details {
       > div {
-        padding: 30px;
+        padding: 5px 20px;
       }
 
       p {

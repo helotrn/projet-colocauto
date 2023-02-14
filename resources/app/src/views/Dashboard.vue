@@ -285,13 +285,15 @@
                 <div v-if="members && members.length > 0">
                   <transition-group name="dashboard-list">
                     <h3 class="dashboard--margin-bottom" key="title">{{ totalMembers }} membres</h3>
-                    <user-card
-                      v-for="member in members"
-                      :key="member.id"
-                      :user="member"
-                      :is-admin="false"
-                      :community-id="communityId"
-                    />
+                    <b-row key="members">
+                      <b-col lg="6" v-for="member in members" :key="member.id">
+                        <user-card
+                          :user="member"
+                          :is-admin="false"
+                          :community-id="communityId"
+                        />
+                      </b-col>
+                    </b-row>
                     <b-button
                       v-if="hasMoreMembers"
                       key="moreMembers"
