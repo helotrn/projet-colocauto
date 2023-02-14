@@ -639,6 +639,7 @@ class LoanableController extends RestController
                 "location_description" => "",
                 "model" => "",
                 "name" => "",
+                "pricing_category" => "small",
                 "papers_location" => "",
                 "plate_number" => "",
                 "share_with_parent_communities" => false,

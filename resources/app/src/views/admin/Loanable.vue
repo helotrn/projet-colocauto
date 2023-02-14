@@ -54,7 +54,6 @@
 
               <forms-builder :definition="form.car" v-model="item" entity="cars">
                 <!-- remove unused parameters -->
-                <template v-slot:pricing_category></template>
                 <template v-slot:year_of_circulation></template>
                 <template v-slot:plate_number></template>
                 <template v-slot:is_value_over_fifty_thousand></template>
