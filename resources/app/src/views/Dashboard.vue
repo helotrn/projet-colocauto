@@ -651,6 +651,7 @@ export default {
 
 .swiping-list .dashboard-list-item {
   width: 67%;
+  max-width: 250px;
   flex-shrink: 0;
   margin-right: 10px;
   scroll-snap-align: start;

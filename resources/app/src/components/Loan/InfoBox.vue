@@ -1,86 +1,76 @@
 <template>
   <div class="loan-info-box">
-    <b-card :class="{ shadow: true, loading, border: !!variant }" :border-variant="variant" no-body>
+    <b-card class="text-center shadow" :class="{ loading, border: !!variant }" :border-variant="variant" no-body>
       <router-link :class="{ 'card-body': true, disabled: loading }" :to="`/loans/${this.loan.id}`">
-        <b-row>
-          <b-col lg="6">
-            <b-row>
-              <b-col class="loan-info-box__image__wrapper">
-              <div class="loan-info-box__image">
-                <div
-                  class="loan-info-box__image__loanable"
-                  :style="{ backgroundImage: loanableImage }"
-                />
-              </div>
+        <div class="loan-info-box__image__wrapper">
+          <div class="loan-info-box__image">
+            <div
+              class="loan-info-box__image__loanable"
+              :style="{ backgroundImage: loanableImage }"
+            />
+          </div>
 
-              <div class="loan-info-box__name">
-                <span>
-                  <span class="loan-info-box__name__loanable">{{ loan.loanable.name }}</span>
-                </span>
-              </div>
-              </b-col>
-            </b-row>
-          </b-col>
-
-          <b-col class="loan-info-box__details mb-2 mt-2" lg>
+          <div class="loan-info-box__name">
             <span>
-              <span v-if="multipleDays">
-                {{ loan.departure_at | date }} {{ loan.departure_at | time }}<br />
-                {{ returnAt | date }} {{ returnAt | time }}
-              </span>
-              <span v-else>
-                {{ loan.departure_at | date }}<br />
-                {{ loan.departure_at | time }} à {{ returnAt | time }}
-              </span>
+              <span class="loan-info-box__name__loanable">{{ loan.loanable.name }}</span>
             </span>
-            <span class="my-2">Coût estimé: {{ loan.estimated_price | currency }}</span>
-            <loan-status :item="loan" class="mt-2"></loan-status>
-          </b-col>
+          </div>
+        </div>
+        <div class="loan-info-box__details mb-2 mt-2">
+          <span>
+            <span v-if="multipleDays">
+              {{ loan.departure_at | date }} {{ loan.departure_at | time }}<br />
+              {{ returnAt | date }} {{ returnAt | time }}
+            </span>
+            <span v-else>
+              {{ loan.departure_at | date }}<br />
+              {{ loan.departure_at | time }} à {{ returnAt | time }}
+            </span>
+          </span>
+          <span class="my-2">Coût estimé: {{ loan.estimated_price | currency }}</span>
+          <loan-status :item="loan" class="mt-2"></loan-status>
+        </div>
+        <div class="loan-info-box__actions">
+            <b-button
+              size="sm"
+              :disabled="loading"
+              variant="success"
+              v-if="hasButton('accept') && userRoles.includes('owner')"
+              @click.prevent="acceptLoan"
+            >
+              Accepter
+            </b-button>
 
-          <b-col class="loan-info-box__actions" lg>
-            <div>
-              <b-button
-                size="sm"
-                :disabled="loading"
-                variant="success"
-                v-if="hasButton('accept') && userRoles.includes('owner')"
-                @click.prevent="acceptLoan"
-              >
-                Accepter
-              </b-button>
+            <b-button
+              size="sm"
+              :disabled="loading"
+              variant="outline-primary"
+              v-if="hasButton('view')"
+              :to="`/loans/${this.loan.id}`"
+            >
+              Consulter
+            </b-button>
 
-              <b-button
-                size="sm"
-                :disabled="loading"
-                variant="outline-primary"
-                v-if="hasButton('view')"
-                :to="`/loans/${this.loan.id}`"
-              >
-                Consulter
-              </b-button>
+            <b-button
+              size="sm"
+              :disabled="loading"
+              variant="outline-danger"
+              v-if="hasButton('deny') && userRoles.includes('owner')"
+              @click.prevent="denyLoan"
+            >
+              Refuser
+            </b-button>
 
-              <b-button
-                size="sm"
-                :disabled="loading"
-                variant="outline-danger"
-                v-if="hasButton('deny') && userRoles.includes('owner')"
-                @click.prevent="denyLoan"
-              >
-                Refuser
-              </b-button>
-
-              <b-button
-                size="sm"
-                :disabled="loading"
-                variant="outline-danger"
-                v-if="hasButton('cancel')"
-                @click.prevent="cancelLoan"
-              >
-                Annuler
-              </b-button>
-            </div>
-          </b-col>
-        </b-row>
+            <b-button
+              size="sm"
+              :disabled="loading"
+              variant="outline-danger"
+              v-if="hasButton('cancel')"
+              @click.prevent="cancelLoan"
+            >
+              Annuler
+            </b-button>
+          </div>
       </router-link>
     </b-card>
   </div>
@@ -306,7 +296,7 @@ export default {
     font-weight: bold;
   }
 
-  &__details.col-lg {
+  &__details {
     flex-grow: 1;
     color: $black;
     font-size: 15px;
@@ -314,15 +304,15 @@ export default {
     text-align: center;
   }
 
-  &__name.col,
-  &__details.col-lg,
-  &__actions.col-lg {
+  &__name,
+  &__details,
+  &__actions {
     display: flex;
     flex-direction: column;
     justify-content: space-around;
   }
 
-  &__actions.col-lg {
+  &__actions {
     div {
       display: flex;
       flex-direction: column;
