@@ -90,6 +90,12 @@ export default {
             text,
           };
         });
+    } else {
+      // make all data available at loading
+      this.$store.dispatch(`${this.slug}/search`, {
+        q: this.q,
+        params: this.params,
+      });
     }
   },
   data() {
