@@ -109,6 +109,18 @@
             </span>
             <span class="nav-link__text">Tableau de bord</span>
           </b-dropdown-item>
+          <b-dropdown-item to="/search/calendar" v-if="!isGlobalAdmin && canLoanVehicle">
+            <span class="nav-link__icon">
+              <svg-location />
+            </span>
+            <span class="nav-link__text">Emprunter un véhicule</span>
+          </b-dropdown-item>
+          <b-dropdown-item to="/wallet" v-if="!isGlobalAdmin && hasCompletedRegistration">
+            <span class="nav-link__icon">
+              <svg-profile />
+            </span>
+            <span class="nav-link__text">Portefeuille</span>
+          </b-dropdown-item>
           <b-dropdown-item
             to="/profile/colocauto"
             v-if="!isGlobalAdmin && hasCompletedRegistration"
