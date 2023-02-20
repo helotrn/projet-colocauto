@@ -14,9 +14,10 @@
     @view-change="$emit('view-change', $event)"
     :on-event-click="showDetails"
 
-    :editable-events="{ create: true }"
+    :editable-events="{ create: true, resize: true }"
     :snap-to-time="15"
     :on-event-create="registerCancel"
+    @event-duration-change="changeDuration"
     @event-drag-create="createNewLoan"
   >
     <template v-slot:title="{ title, view }">
@@ -53,10 +54,17 @@
       >
         {{ cell.content }}
       </calendar-month-cell-content>
+    </template>
 
-      <span v-else class="vuecal__cell-date">
-        {{ cell.content }}
-      </span>
+    <template #event="{ event, view }">
+      <div class="vuecal__event-wrapper">
+        <strong>{{ vueCalEvents.findIndex(e => e.uri == event.uri) }}</strong>
+        <div class="vuecal__event-title" v-html="event.title"></div>
+        <div class="vuecal__event-time">
+          {{ event.start.formatTime("HH:mm") }}
+          <span>&nbsp;- {{ event.end.formatTime("HH:mm") }}</span>
+        </div>
+      </div>
     </template>
   </vue-cal>
 
@@ -65,7 +73,7 @@
     id="loanable-calendar-modal"
     hide-footer
     header-class="p-2 border-bottom-0"
-    @hidden="cancelNewEvent ? cancelNewEvent() : ''"
+    @hidden="closeDialog"
   >
     <b-card no-body v-if="selectedEvent.data">
       <layout-loading class="section-loading-indicator" v-if="loading" />
@@ -87,13 +95,18 @@
             {{ selectedEvent.data.departure_at | time }} à {{ selectedEvent.data.actual_return_at | time }}
           </div>
         </div>
-        <div class="d-flex flex-column align-items-center mt-4">
+        <div class="d-flex justify-content-around w-50 mx-auto mt-4">
           <b-button
-              size="sm"
               variant="outline-primary"
               :to="selectedEvent.uri"
             >
               Consulter
+            </b-button>
+            <b-button
+              variant="outline-primary"
+              @click="changeSelected"
+            >
+              Modifier
             </b-button>
         </div>
       </b-container>
@@ -120,6 +133,80 @@
         </div>
       </b-container>
     </b-card>
+    <b-card no-body v-else-if="extendLoan.data">
+      <layout-loading class="section-loading-indicator" v-if="loading" />
+      <b-container v-else>
+        <div class="d-flex flex-column align-items-center">
+          <user-avatar :user="extendLoan.data.borrower.user" variant="cut-out" />
+          <div>
+            <span>{{ extendLoan.data.borrower.user.full_name }}</span>
+            <span class="d-block text-center">{{ extendLoan.data.reason }}</span>
+          </div>
+        </div>
+        <template v-if="extendLoan.updated">
+          <div class="d-flex flex-column align-items-center my-2">
+            {{ extendLoan.data.departure_at | date }}<br />
+            {{ extendLoan.data.departure_at | time }} à {{ extendLoan.data.actual_return_at | time }}
+          </div>
+          <div class="d-flex flex-column align-items-center my-2">
+            <b-alert variant="success" show>
+              Modification des horaires prise en compte
+            </b-alert>
+          </div>
+          <div class="d-flex justify-content-around mx-auto mt-4">
+            <b-button
+              variant="outline-primary"
+              @click="showDialog=false"
+            >
+              Fermer
+            </b-button>
+          </div>
+        </template>
+        <template v-else>
+          <div class="d-flex flex-column align-items-center my-2">
+            Horaires de l'emprunt
+            <div>
+              {{ extendLoan.data.departure_at | date }}<br />
+              {{ extendLoan.data.departure_at | time }} à {{ extendLoan.data.actual_return_at | time }}
+            </div>
+            <div>
+              <h2>Modifier les horaires</h2>
+                  <forms-validated-input
+                    name="departure_at"
+                    label="Départ"
+                    type="datetime"
+                    v-model="extendLoan.newDates.start"
+                  />
+                  <forms-validated-input
+                    name="return_at"
+                    label="Retour"
+                    type="datetime"
+                    v-model="extendLoan.newDates.end"
+                  />
+            </div>
+          </div>
+          <div v-if="extendLoan.error" class="d-flex flex-column align-items-center my-2">
+            <b-alert variant="danger" show>
+              {{extendLoan.error}}
+            </b-alert>
+          </div>
+          <div class="d-flex justify-content-around mx-auto mt-4">
+            <b-button
+              variant="danger"
+              @click="cancelChange"
+            >
+              Annuler
+            </b-button>
+            <b-button
+              variant="primary"
+              @click="confirmChange"
+            >
+              Valider la modification
+            </b-button>
+          </div>
+        </template>
+      </b-container>
+    </b-card>
   </b-modal>
   </div>
 </template>
@@ -131,6 +218,8 @@ import Vue from "vue";
 import CalendarMonthCellContent from "@/components/Loanable/CalendarMonthCellContent.vue";
 import UserAvatar from "@/components/User/Avatar.vue";
 import UserMixin from "@/mixins/UserMixin";
+import CalendarMixin from "@/mixins/CalendarMixin";
+import FormsValidatedInput from "@/components/Forms/ValidatedInput.vue";
 
 export default {
   name: "Calendar",
@@ -157,12 +246,14 @@ export default {
     showDialog: false,
     loading: false,
     cancelNewEvent: undefined,
+    extendLoan: {},
   }),
-  mixins: [UserMixin],
+  mixins: [UserMixin, CalendarMixin],
   components: {
     VueCal,
     "calendar-month-cell-content": CalendarMonthCellContent,
     UserAvatar,
+    FormsValidatedInput,
   },
   mounted(){
     // scroll the calendar to show 8-20 hours
@@ -183,7 +274,7 @@ export default {
     vueCalEvents: function () {
       let baseEvent = {
         deletable: false,
-        resizable: false,
+        resizable: true,
         draggable: false,
       };
 
@@ -260,23 +351,11 @@ export default {
     showDetails (event, e) {
       if(event.background) return;
 
-      const { CancelToken } = Vue.axios;
-      const cancelToken = CancelToken.source();
+      this.getLoanDetails(event).then(data => {
+        this.selectedEvent.data = { ...data, ...this.selectedEvent.data };
+        this.loading = false;
+      });
 
-      Vue.axios
-          .get(event.uri, {
-            params: {
-              fields: 'departure_at, actual_return_at, status, borrower.user.full_name,'
-              +' borrower.user.avatar, borrower.user.email, borrower.user.phone',
-            },
-            cancelToken: cancelToken.token,
-          })
-          .then(response => {
-            if(response.status == 200) {
-              this.selectedEvent.data = { ...response.data, ...this.selectedEvent.data };
-            }
-            this.loading = false;
-          });
       this.loading = true;
       this.selectedEvent = event
       this.showDialog = true
@@ -293,6 +372,7 @@ export default {
       if( overlaping.length ) {
         // remove the event and do not go further
         this.cancelNewEvent();
+        this.cancelNewEvent = undefined;
         return false;
       }
 
@@ -344,6 +424,89 @@ export default {
 
       this.$router.push("/loans/new");
     },
+    async changeDuration({event, oldDate, originalEvent}) {
+
+      if( event.end > originalEvent.end ){
+        // check if the resize is overlaping with anoter loan
+        let overlaping = this.events.find(e =>
+          this.$dayjs(e.start) < event.end
+          && this.$dayjs(e.end) > originalEvent.end
+        );
+        if( overlaping ) {
+          // restore the event and do not go further
+          let originalIndex = this.events.findIndex(e => e.uri == event.uri);
+          let originalEvent = this.events[originalIndex];
+          this.events.splice(originalIndex, 1);
+          this.events.push(originalEvent);
+          return false;
+        }
+
+        // test if this loan extension is possible
+        await this.$store.dispatch("loans/test", {
+          departure_at: this.$dayjs(originalEvent.end).format("YYYY-MM-DD HH:mm:ss"),
+          duration_in_minutes: this.$dayjs(event.end).diff(originalEvent.end, 'minutes'),
+          estimated_distance:10,
+          loanable_id:this.loanable.id,
+        });
+      }
+
+      this.extendLoan = {
+        ...event,
+        newDates: {
+          start: event.start.format("YYYY-MM-DD HH:mm:00"),
+          end: event.end.format("YYYY-MM-DD HH:mm:00"),
+        },
+        available: event.end > originalEvent.end ? this.$store.state.loans.item.loanable.available : true,
+      };
+      // get more information about the loan
+      this.loading = true;
+      this.getLoanDetails(event).then(data => {
+        this.extendLoan.data = { ...data, ...this.extendLoan.data };
+        this.loading = false;
+      });
+      this.showDialog = true
+    },
+    changeSelected(){
+      this.extendLoan = {
+        ...this.selectedEvent,
+        newDates: {
+          start: this.selectedEvent.start.format("YYYY-MM-DD HH:mm:00"),
+          end: this.selectedEvent.end.format("YYYY-MM-DD HH:mm:00"),
+        },
+        available: true,
+      };
+      this.selectedEvent = {};
+      this.showDialog = true;
+    },
+    confirmChange(){
+      this.extendLoan.updated = false;
+      this.updateLoanDates(this.extendLoan, this.extendLoan.newDates).then(() => {
+        this.extendLoan.data = this.$store.state.loans.item;
+        this.extendLoan.updated = true;
+      }).catch(error => {
+        Vue.set(this.extendLoan, 'error', this.$store.state.loans.error.response.data.errors.loanable_id[0]);
+      });
+    },
+    cancelChange(){
+      // restore the event and do not go further
+      let originalIndex = this.events.findIndex(e => e.uri == this.extendLoan.uri);
+      let originalEvent = this.events[originalIndex];
+      this.events.splice(originalIndex, 1);
+      this.events.push(originalEvent);
+      this.showDialog = false;
+    },
+    closeDialog(){
+
+      // when a new loan is in creation, cancel it
+      if (this.cancelNewEvent) {
+        this.cancelNewEvent();
+        this.cancelNewEvent = undefined;
+      }
+      // when a loan extension is in progress, revert it
+      if (this.extendLoan.data && !this.extendLoan.updated) {
+        this.cancelChange();
+      }
+    },
   },
 };
 </script>
@@ -365,6 +528,10 @@ export default {
       min-height: 2em;
       line-height: 1.3;
     }
+  }
+
+  .vuecal__no-event {
+    display: none;
   }
 
   .week-view.vuecal__cells,
@@ -506,37 +673,50 @@ export default {
   .loanable-calendar__event--unavailability {
     background-color: $background-alert-negative;
   }
+  .vuecal__event-wrapper {
+      margin: 3px;
+      background-color: white;
+      border-radius: 5px;
+      height: calc(100% - 6px);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+
+      .vuecal__event-title {
+        margin: 0 0.4em 1em;
+      }
+    }
   .vuecal__event {
-    border-radius: 5px;
-    &.color-persian-green {
+    background-color: transparent;
+    &.color-persian-green .vuecal__event-wrapper {
       color: white;
       background-color: #00ada8;
     }
-    &.color-sunglo {
+    &.color-sunglo .vuecal__event-wrapper {
       color: white;
       background-color: #B56457;
     }
-    &.color-teal {
+    &.color-teal .vuecal__event-wrapper {
       color: white;
       background-color: #127A8B;
     }
-    &.color-outrageous-orange {
+    &.color-outrageous-orange .vuecal__event-wrapper {
       color: white;
       background-color: #FF6133;
     }
-    &.color-governor-bay {
+    &.color-governor-bay .vuecal__event-wrapper {
       color: white;
       background-color: #556093;
     }
-    &.color-sun {
+    &.color-sun .vuecal__event-wrapper {
       color: white;
       background-color: #F38433;
     }
-    &.color-kournikova {
+    &.color-kournikova .vuecal__event-wrapper {
       color: white;
       background-color: #FFCA56;
     }
-    &.color-buccaneer {
+    &.color-buccaneer .vuecal__event-wrapper {
       color: white;
       background-color: #664B4B;
     }
