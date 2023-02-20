@@ -483,6 +483,13 @@ export default {
       this.updateLoanDates(this.extendLoan, this.extendLoan.newDates).then(() => {
         this.extendLoan.data = this.$store.state.loans.item;
         this.extendLoan.updated = true;
+        let originalIndex = this.events.findIndex(e => e.uri == this.extendLoan.uri);
+        let originalEvent = this.events[originalIndex];
+        this.events.splice(originalIndex, 1);
+        originalEvent.data = this.$store.state.loans.item;
+        originalEvent.start = originalEvent.data.departure_at;
+        originalEvent.end = originalEvent.data.actual_return_at;
+        this.events.push(originalEvent);
       }).catch(error => {
         Vue.set(this.extendLoan, 'error', this.$store.state.loans.error.response.data.errors.loanable_id[0]);
       });
