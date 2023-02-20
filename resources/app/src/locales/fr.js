@@ -120,6 +120,7 @@ export default {
   wallet: {
     titles: {
       expenses: "Dépenses",
+      expense: "Dépense",
       wallet: "Portefeuille",
       refunds: "Remboursements",
       balance: "Équilibre",
@@ -155,6 +156,7 @@ export default {
     profile: "profil",
     register: "s'inscrire",
     "register-map": "rejoindre mes voisin-e-s",
+    "search-loanable": "rechercher un véhicule",
     tags: "Mots-clés",
     tag: "Mot-clé",
     user: "membre",

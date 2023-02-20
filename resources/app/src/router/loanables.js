@@ -10,6 +10,7 @@ export default [
     meta: {
       auth: true,
       slug: "loanables",
+      title: "titles.search-loanable",
       data: {
         loans: {
           loadEmpty: {},
