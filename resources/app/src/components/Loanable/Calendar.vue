@@ -395,13 +395,6 @@ export default {
     },
     async askLoan() {
 
-      await this.$store.dispatch("loans/test", {
-        departure_at: this.$dayjs(this.newEvent.start).format("YYYY-MM-DD HH:mm:ss"),
-        duration_in_minutes: this.$dayjs(this.newEvent.end).diff(this.newEvent.start, 'minutes'),
-        estimated_distance:10,
-        loanable_id:this.loanable.id,
-      });
-
       this.$store.commit("loans/patchItem", {
         departure_at: this.$dayjs(this.newEvent.start).format("YYYY-MM-DD HH:mm:ss"),
         duration_in_minutes: this.$dayjs(this.newEvent.end).diff(this.newEvent.start, 'minutes'),
@@ -433,20 +426,11 @@ export default {
         );
         if( overlaping ) {
           // restore the event and do not go further
-          let originalIndex = this.events.findIndex(e => e.uri == event.uri);
-          let originalEvent = this.events[originalIndex];
-          this.events.splice(originalIndex, 1);
-          this.events.push(originalEvent);
+          this.restoreEventDisplay(originalEvent.uri, this.events);
           return false;
         }
 
-        // test if this loan extension is possible
-        await this.$store.dispatch("loans/test", {
-          departure_at: this.$dayjs(originalEvent.end).format("YYYY-MM-DD HH:mm:ss"),
-          duration_in_minutes: this.$dayjs(event.end).diff(originalEvent.end, 'minutes'),
-          estimated_distance:10,
-          loanable_id:this.loanable.id,
-        });
+        await this.testLoan(originalEvent.end, event.end, this.loanable.id);
       }
 
       this.extendLoan = {
@@ -482,27 +466,17 @@ export default {
       this.updateLoanDates(this.extendLoan, this.extendLoan.newDates).then(() => {
         this.extendLoan.data = this.$store.state.loans.item;
         this.extendLoan.updated = true;
-        let originalIndex = this.events.findIndex(e => e.uri == this.extendLoan.uri);
-        let originalEvent = this.events[originalIndex];
-        this.events.splice(originalIndex, 1);
-        originalEvent.data = this.$store.state.loans.item;
-        originalEvent.start = originalEvent.data.departure_at;
-        originalEvent.end = originalEvent.data.actual_return_at;
-        this.events.push(originalEvent);
+        this.updateEventDisplay(this.extendLoan, this.events);
       }).catch(error => {
         Vue.set(this.extendLoan, 'error', this.$store.state.loans.error.response.data.errors.loanable_id[0]);
       });
     },
     cancelChange(){
       // restore the event and do not go further
-      let originalIndex = this.events.findIndex(e => e.uri == this.extendLoan.uri);
-      let originalEvent = this.events[originalIndex];
-      this.events.splice(originalIndex, 1);
-      this.events.push(originalEvent);
+      this.restoreEventDisplay(this.extendLoan.uri, this.events);
       this.showDialog = false;
     },
     closeDialog(){
-
       // when a new loan is in creation, cancel it
       if (this.cancelNewEvent) {
         this.cancelNewEvent();
@@ -510,7 +484,7 @@ export default {
       }
       // when a loan extension is in progress, revert it
       if (this.extendLoan.data && !this.extendLoan.updated) {
-        this.cancelChange();
+        this.restoreEventDisplay(this.extendLoan.uri, this.events);
       }
     },
   },
