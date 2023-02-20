@@ -118,9 +118,22 @@
           <div>{{ newEvent.data.borrower.user.full_name }}</div>
         </div>
         <div class="d-flex flex-column align-items-center my-2">
-            {{ newEvent.start | date }}<br />
-            {{ newEvent.start | time }} à {{ newEvent.end | time }}
+            <forms-validated-input
+              name="departure_at"
+              label="Départ"
+              type="datetime"
+              v-model="newEvent.start"
+            />
+            <forms-validated-input
+              name="return_at"
+              label="Retour"
+              type="datetime"
+              v-model="newEvent.end"
+            />
         </div>
+        <b-alert v-if="!newEvent.data.available" variant="danger" show>
+          Le véhicule n'est pas disponible sur ces horaires
+        </b-alert>
         <div class="d-flex flex-column align-items-center mt-4">
           <b-button
             size="sm"
@@ -382,11 +395,18 @@ export default {
       } finally {
         this.loading = false;
       }
+      await this.testLoan(event.start, event.end, this.loanable.id);
 
-      this.newEvent = {...event, data: {
-        status: 'creating',
-        borrower: {user: this.user},
-      }};
+      this.newEvent = {
+        ...event,
+        data: {
+          status: 'creating',
+          borrower: {user: this.user},
+          available: this.$store.state.loans.item.loanable.available,
+        },
+        start: event.start.format("YYYY-MM-DD HH:mm:00"),
+        end: event.end.format("YYYY-MM-DD HH:mm:00"),
+      };
     },
     registerCancel (event, deleteEvent) {
       // register cancel method to use later when needed
