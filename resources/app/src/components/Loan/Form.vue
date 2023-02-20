@@ -11,6 +11,7 @@
         <svg-waiting v-else />
 
         {{ loanableIsSelfService ? "Réservation" : "Demande d'emprunt" }}
+        <small v-if="item.borrower && item.borrower.user">par {{ item.borrower.user.full_name }}</small>
       </h2>
 
       <span v-if="!item.created_at">En cours de création</span>
