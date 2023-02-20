@@ -58,7 +58,6 @@
 
     <template #event="{ event, view }">
       <div class="vuecal__event-wrapper">
-        <strong>{{ vueCalEvents.findIndex(e => e.uri == event.uri) }}</strong>
         <div class="vuecal__event-title" v-html="event.title"></div>
         <div class="vuecal__event-time">
           {{ event.start.formatTime("HH:mm") }}
