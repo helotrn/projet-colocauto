@@ -1,6 +1,5 @@
 .navbar.layout-navbar {
-    flex-direction: row-reverse;
-    justify-content: flex-end;
+    justify-content: space-between;
 
     @include media-breakpoint-up(lg) {
         flex-direction: row;

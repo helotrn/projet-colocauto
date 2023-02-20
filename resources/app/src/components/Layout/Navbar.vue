@@ -17,7 +17,7 @@
       <img src="/colocauto.png" alt="Coloc'Auto" class="logo d-lg-none" />
     </b-navbar-brand>
 
-    <b-navbar-toggle target="nav-collapse" />
+    <b-navbar-toggle target="nav-collapse" v-if="!isLoggedIn" />
 
     <b-collapse id="nav-collapse" class="layout-navbar__collapse" is-nav>
       <div class="layout-navbar__collapse__illustration d-md-none" />
@@ -68,7 +68,30 @@
 
         <locale-switcher />
 
-        <b-nav-item-dropdown class="layout-navbar__dropdown d-none d-lg-block" text="" right>
+      </b-navbar-nav>
+
+      <b-navbar-nav class="ml-auto" v-else>
+        <b-nav-item to="/register">
+          <span class="nav-link__icon d-lg-none">
+            <svg-register />
+          </span>
+          <span class="nav-link__text">S'inscrire</span>
+        </b-nav-item>
+        <b-nav-item to="/login">
+          <span class="nav-link__icon d-lg-none">
+            <svg-login />
+          </span>
+          <span class="nav-link__text">Se connecter</span>
+        </b-nav-item>
+
+        <locale-switcher />
+      </b-navbar-nav>
+
+      <div class="layout-navbar__collapse__buffer" />
+    </b-collapse>
+    
+    <b-navbar-nav class="ml-auto" v-if="isLoggedIn">
+        <b-nav-item-dropdown class="layout-navbar__dropdown d-lg-block" text="" right>
           <template v-slot:button-content>
             <user-avatar :user="user" />
           </template>
@@ -118,27 +141,7 @@
             <span class="nav-link__text">Déconnexion</span>
           </b-dropdown-item>
         </b-nav-item-dropdown>
-      </b-navbar-nav>
-
-      <b-navbar-nav class="ml-auto" v-else>
-        <b-nav-item to="/register">
-          <span class="nav-link__icon d-lg-none">
-            <svg-register />
-          </span>
-          <span class="nav-link__text">S'inscrire</span>
-        </b-nav-item>
-        <b-nav-item to="/login">
-          <span class="nav-link__icon d-lg-none">
-            <svg-login />
-          </span>
-          <span class="nav-link__text">Se connecter</span>
-        </b-nav-item>
-
-        <locale-switcher />
-      </b-navbar-nav>
-
-      <div class="layout-navbar__collapse__buffer" />
-    </b-collapse>
+    </b-navbar-nav>
   </b-navbar>
 </template>
 
@@ -202,4 +205,11 @@ export default {
 };
 </script>
 
-<style lang="scss"></style>
+<style lang="scss" scoped>
+.layout-navbar__dropdown::v-deep .nav-link.dropdown-toggle {
+  border-bottom: none;
+}
+.layout-navbar__collapse + .navbar-nav::v-deep .dropdown-menu-right {
+  position: absolute;
+}
+</style>
