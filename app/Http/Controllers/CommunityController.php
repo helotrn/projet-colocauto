@@ -417,6 +417,20 @@ class CommunityController extends RestController
           }
         }
 
+        // add loanables without owner to the balance
+        $withoutOwner = $community->loanables
+            ->filter(function ($loanable) {
+                return $loanable->owner == null;
+            })
+            ->map(function ($loanable) use ($users) {
+                $users->prepend((object) [
+                    "loanable_id" => $loanable->id,
+                    "balance" => $loanable->expenses->where('type', 'debit')->sum('amount')
+                        - $loanable->expenses->where('type', 'credit')->sum('amount'),
+                    "full_name" => $loanable->name,
+                ]);
+            });
+
         return response([
           "users" => $users->all(),
           "refunds" => $refunds,
