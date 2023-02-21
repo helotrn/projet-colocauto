@@ -113,6 +113,10 @@ class Expense extends BaseModel
             ->whereHas("loanable", function ($q) use ($user) {
                 return $q->whereHas("owner", function ($q) use ($user) {
                     return $q->whereIn('user_id', $user->getSameCommunityUserIds());
+                })
+                // case of o loanable without owner
+                ->orWhereHas("community", function ($q) use ($user) {
+                    return $q->whereIn('id', $user->getAccessibleCommunityIds());
                 });
             });
     }
