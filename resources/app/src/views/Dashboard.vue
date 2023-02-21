@@ -333,6 +333,7 @@
 
             <h2 class="dashboard--margin-bottom">Ressources</h2>
             <info-link-block title="Notice de l'usager" to="https://bit.ly/locomotion-bienvenue" img="/icons/allo.png" />
+            <info-link-block title="Faire un don" to="https://www.zeste.coop/fr/pages/lancez-votre-projet" img="/icons/allo.png" />
             <info-link-block title="FAQ / Contact" to="/faq" img="/icons/faq.png" />
           <!---->
         </b-col>

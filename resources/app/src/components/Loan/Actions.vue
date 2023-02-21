@@ -64,6 +64,7 @@
           @canceled="emitLoad"
           :user="user"
         />
+        <make-a-donation v-if="action.executed_at" />
       </div>
 
       <div v-else-if="action.type === 'payment' && displayStep('payment')">
@@ -115,6 +116,7 @@ import LoanActionsIntention from "@/components/Loan/Actions/Intention.vue";
 import LoanActionsPayment from "@/components/Loan/Actions/Payment.vue";
 import LoanActionsPrePayment from "@/components/Loan/Actions/PrePayment.vue";
 import LoanActionsTakeover from "@/components/Loan/Actions/Takeover.vue";
+import MakeADonation from "@/components/MakeADonation.vue";
 
 import LoanStepsSequence from "@/mixins/LoanStepsSequence";
 
@@ -131,6 +133,7 @@ export default {
     LoanActionsPayment,
     LoanActionsPrePayment,
     LoanActionsTakeover,
+    MakeADonation,
   },
   props: {
     form: {

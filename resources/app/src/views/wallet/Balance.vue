@@ -68,6 +68,10 @@
             </div>
         </b-card>
       </section>
+
+      <section class="page__section">
+        <make-a-donation />
+      </section>
     </b-col>
   </b-row>
 </template>
@@ -78,12 +82,14 @@ import locales from "@/locales";
 import Authenticated from "@/mixins/Authenticated";
 import UserMixin from "@/mixins/UserMixin";
 import UsersBalance from "@/components/Balance/UsersBalance.vue";
+import MakeADonation from "@/components/MakeADonation.vue";
 
 export default {
   name: "Balance",
   mixins: [Authenticated, UserMixin],
   components: {
     UsersBalance,
+    MakeADonation
   },
   beforeMount() {
     if (!this.isLoggedIn) {
