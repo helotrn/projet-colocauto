@@ -13,7 +13,7 @@
         <svg-waiting v-else-if="action.status === 'in_process'" />
         <svg-check v-else-if="action.status === 'completed'" />
 
-        Informations avant de partir
+        Au départ
       </h2>
 
       <span v-if="item.is_contested && action.status === 'in_process' && !loanIsCanceled">

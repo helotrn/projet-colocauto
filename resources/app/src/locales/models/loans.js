@@ -75,6 +75,10 @@ export default {
         "Vous allez en ville, au centre commercial, etc. ? Si vous le voulez, " +
         "partagez cette info sur l’agenda du véhicule pour favoriser le " +
         "covoiturage. Qui sait,  votre voisin·e· a peut-être besoin d’y aller aussi ?",
+      estimated_distance:
+        "Permet d'estimer le coût de l'emprunt, attention le cout final dépend " +
+        "des kilomètres réellement parcourus qui sont à renseigner pour clôre la " +
+        "réservation",
     },
     model: {
       singular: "emprunt",

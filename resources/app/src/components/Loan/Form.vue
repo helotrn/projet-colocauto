@@ -10,7 +10,7 @@
         <svg-check v-if="item.id" />
         <svg-waiting v-else />
 
-        {{ loanableIsSelfService ? "Réservation" : "Demande d'emprunt" }}
+        Réservation
         <small v-if="item.borrower && item.borrower.user">par {{ item.borrower.user.full_name }}</small>
       </h2>
 
@@ -109,6 +109,7 @@
                   :max="1000"
                   :disabled="!!item.id"
                   :placeholder="placeholderOrLabel('estimated_distance') | capitalize"
+                  :description="$t('descriptions.estimated_distance') | capitalize"
                   v-model="formattedEstimatedDistance"
                 />
               </b-col>

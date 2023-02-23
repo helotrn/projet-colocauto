@@ -17,7 +17,7 @@
         <svg-waiting v-else-if="action.status === 'in_process'" />
         <svg-check v-else-if="action.status === 'completed'" />
 
-        Retour
+        A l'arrivée
       </h2>
 
       <span
@@ -79,7 +79,7 @@
                     id="mileage_end"
                     name="mileage_end"
                     type="number"
-                    label="KM au compteur, à la fin de la course"
+                    label="KM au compteur, à l'arrivée"
                     :rules="{ min_value: mileageBeginning }"
                     placholder="KM au compteur"
                     :disabled="((lockMileage && !!action.executed_at) || loanIsFinishedSinceMoreThan48h || loanIsCanceled) && !userIsAdmin"
