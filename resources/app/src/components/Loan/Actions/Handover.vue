@@ -356,9 +356,6 @@ export default {
   name: "LoanActionsHandover",
   mixins: [LoanActionsMixin, LoanStepsSequence],
   mounted() {
-    if (!this.action.mileage_end) {
-      this.action.mileage_end = this.item.estimated_distance + this.mileageBeginning;
-    }
     if (!this.action.purchases_amount) {
       this.action.purchases_amount = 0;
     }
@@ -373,9 +370,6 @@ export default {
   },
   watch: {
     action(newValue) {
-      if (!newValue.mileage_end) {
-        this.action.mileage_end = this.item.estimated_distance + this.mileageBeginning;
-      }
       if (!newValue.purchases_amount) {
         this.action.purchases_amount = 0;
       }
