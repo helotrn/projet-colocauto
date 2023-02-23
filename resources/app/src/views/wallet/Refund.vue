@@ -10,6 +10,36 @@
       </b-col>
     </b-row>
 
+    <b-row v-if="item.changes && item.changes.length">
+      <b-col class="mb-3">
+        <h2>Historique des modifications</h2>
+        <b-button block v-b-toggle.changes variant="outline bg-white border d-flex justify-content-between align-items-center text-left">
+          {{item.changes.length}} modification{{item.changes.length > 1 ? 's' : ''}} effectuée{{item.changes.length > 1 ? 's' : ''}}
+          <open-indicator />
+        </b-button>
+        <b-collapse id="changes" class="mb-4">
+          <b-card>
+            <p v-for="change in item.changes" :key="change.id" class="card-text border-bottom pb-3">
+              <!-- split several lines descriptions -->
+              <template v-for="description in change.description.split(',')">
+                <!-- replace => with a SVG arrow -->
+                <span>{{ description.split('=>')[0] }}</span>
+                <template v-if="description.split('=>').length > 1">
+                  <arrow-right />
+                  <span>{{ description.split('=>')[1] }}</span>
+                </template>
+                <br/>
+              </template>
+              <small class="d-flex justify-content-between">
+                <span>par {{ change.user.full_name }}</span>
+                <span>le {{ new Date(change.created_at).toLocaleDateString() }}</span>
+              </small>
+            </p>
+          </b-card>
+        </b-collapse>
+      </b-col>
+    </b-row>
+
     <b-row>
       <b-col>
         <b-form class="form" @submit.prevent="submit">
@@ -41,12 +71,16 @@ import UserMixin from "@/mixins/UserMixin";
 import locales from "@/locales";
 
 import { capitalize } from "@/helpers/filters";
+import OpenIndicator from "vue-select/src/components/OpenIndicator.vue";
+import ArrowRight from "@/assets/svg/arrow-right.svg";
 
 export default {
   name: "WalletRefund",
   mixins: [Authenticated, DataRouteGuards, FormMixin, UserMixin],
   components: {
-    FormsBuilder
+    FormsBuilder,
+    OpenIndicator,
+    ArrowRight,
   },
   computed: {
     fullTitle() {
@@ -92,3 +126,20 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+  .btn > svg {
+    fill: rgba(60, 60, 60, 0.5);
+  }
+  .not-collapsed > svg {
+    transform: rotate(180deg);
+  }
+  .collapse .card-text:last-child {
+    border-bottom: none!important;
+    padding-bottom: 0!important;
+  }
+  .collapse .card {
+    border-top-right-radius: 0;
+    border-top-left-radius: 0;
+  }
+</style>

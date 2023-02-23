@@ -56,7 +56,7 @@ export default [
           data: {
             refunds: {
               retrieve: {
-                fields: "id,amount,executed_at,user.full_name,credited_user.full_name"
+                fields: "id,amount,executed_at,user.full_name,credited_user.full_name,changes.id"
               },
             },
           },
@@ -70,7 +70,7 @@ export default [
           auth: true,
           slug: "refunds",
           params: {
-            fields: "id,amount,executed_at,user_id,credited_user_id"
+            fields: "id,amount,executed_at,user_id,credited_user_id,changes,changes.user,changes.description,changes.created_at"
           },
           title: "wallet.titles.refunds",
         },

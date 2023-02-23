@@ -6,6 +6,7 @@ use Illuminate\Validation\Rule;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Builder;
 use Carbon\Carbon;
+use App\Observers\RefundsObserver;
 
 class Refund extends BaseModel
 {
@@ -36,6 +37,8 @@ class Refund extends BaseModel
 
     public $items = ["user", "credited_user"];
 
+    public $collections = ["changes"];
+
     public function user()
     {
         return $this->belongsTo(User::class);
@@ -46,9 +49,16 @@ class Refund extends BaseModel
         return $this->belongsTo(User::class, 'credited_user_id');
     }
 
+    public function changes()
+    {
+        return $this->hasMany(RefundChange::class);
+    }
+
     public static function boot()
     {
         parent::boot();
+        
+        Refund::observe(new RefundsObserver);
 
         self::saved(function ($model) {
             if (!$model->executed_at) {
