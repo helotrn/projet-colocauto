@@ -33,6 +33,12 @@ class Refund extends BaseModel
         return $rules;
     }
 
+    public static $filterTypes = [
+        "executed_at" => "date",
+        "user.full_name" => "text",
+        "credited_user.full_name" => "text",
+    ];
+
     protected $fillable = ["amount", "executed_at", "user_id", "credited_user_id"];
 
     public $items = ["user", "credited_user"];

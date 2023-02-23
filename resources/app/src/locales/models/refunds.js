@@ -4,7 +4,13 @@ export default {
     fields: {
       amount: "montant en euros",
       user_id: "Payé par",
+      user: {
+        full_name: "Payé par (nom)"
+      },
       credited_user_id: "Payé à",
+      credited_user: {
+        full_name: "Payé à (nom)"
+      },
       executed_at: "date",
     },
     list: {

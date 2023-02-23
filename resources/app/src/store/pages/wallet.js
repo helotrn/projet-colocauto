@@ -31,7 +31,16 @@ const actions = {
       commit("errorLoading", e);
       throw e;
     }
-  }
+  },
+
+  async filterRefunds({ commit, dispatch }, params) {
+    try {
+      commit("refunds/setFilterParams", params, {root: true});
+    } catch (e) {
+      commit("errorLoading", e);
+      throw e;
+    }
+  },
 };
 
 const mutations = {
