@@ -8,8 +8,14 @@
 
           <!-- button to search for vehicule -->
           <section class="page__section d-flex flex-column" v-if="canLoanVehicle">
-            <b-button class="mb-2 py-2" variant="primary" to="/search/calendar">Réserver un véhicule</b-button>
-            <b-button class="mb-2 py-2" variant="primary" to="/wallet/expenses/new">Déclarer une dépense</b-button>
+            <b-row>
+              <b-col md="6">
+                <b-button class="mb-2 py-2 w-100" variant="primary" to="/search/calendar">Réserver un véhicule</b-button>
+              </b-col>
+              <b-col md="6">
+                <b-button class="mb-2 py-2 w-100" variant="primary" to="/wallet/expenses/new">Déclarer une dépense</b-button>
+              </b-col>
+            </b-row>
           </section>
 
           <!-- profile pending container -->
