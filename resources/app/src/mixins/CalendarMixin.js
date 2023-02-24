@@ -10,7 +10,7 @@ export default {
         .get(event.uri, {
           params: {
             fields: 'departure_at, actual_return_at, status, borrower.user.full_name,'
-            +' borrower.user.avatar, borrower.user.email, borrower.user.phone',
+            +' borrower.user.avatar, borrower.user.email, borrower.user.phone, actions, loanable',
           },
           cancelToken: cancelToken.token,
         })
@@ -29,7 +29,7 @@ export default {
         },
         params: {
           fields: 'departure_at, actual_return_at, status, borrower.user.full_name,'
-          +' borrower.user.avatar, borrower.user.email, borrower.user.phone',
+          +' borrower.user.avatar, borrower.user.email, borrower.user.phone, actions loanable',
         },
       });
     },
@@ -57,6 +57,15 @@ export default {
         estimated_distance:10,
         loanable_id,
       });
-    }
+    },
+    loadItemAndUser() {
+      // reload calendar after loan cancelation
+      this.$emit('view-change', {
+        view: 'week',
+        startDate: this.$dayjs().startOf('week'),
+        endDate: this.$dayjs().endOf('week'),
+      });
+      this.showDialog = false;
+    },
   }
 }

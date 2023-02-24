@@ -108,6 +108,15 @@
               Modifier
             </b-button>
         </div>
+        <div class="d-flex justify-content-around w-50 mx-auto mt-4">
+          <loan-action-buttons
+            class="mb-3"
+            :item="selectedEvent.data"
+            @extension="addExtension"
+            @cancel="cancelLoan"
+            @incident="addIncident('accident')"
+          />
+        </div>
       </b-container>
     </b-card>
     <b-card no-body v-else-if="newEvent.data">
@@ -229,9 +238,12 @@ import Vue from "vue";
 
 import CalendarMonthCellContent from "@/components/Loanable/CalendarMonthCellContent.vue";
 import UserAvatar from "@/components/User/Avatar.vue";
+import FormsValidatedInput from "@/components/Forms/ValidatedInput.vue";
+import LoanActionButtons from "@/components/Loan/ActionButtons.vue";
+
 import UserMixin from "@/mixins/UserMixin";
 import CalendarMixin from "@/mixins/CalendarMixin";
-import FormsValidatedInput from "@/components/Forms/ValidatedInput.vue";
+import LoanStepsSequence from "@/mixins/LoanStepsSequence";
 
 export default {
   name: "Calendar",
@@ -260,12 +272,13 @@ export default {
     cancelNewEvent: undefined,
     extendLoan: {},
   }),
-  mixins: [UserMixin, CalendarMixin],
+  mixins: [UserMixin, CalendarMixin, LoanStepsSequence],
   components: {
     VueCal,
     "calendar-month-cell-content": CalendarMonthCellContent,
     UserAvatar,
     FormsValidatedInput,
+    LoanActionButtons,
   },
   mounted(){
     // scroll the calendar to show 8-20 hours
@@ -366,6 +379,7 @@ export default {
       this.getLoanDetails(event).then(data => {
         this.selectedEvent.data = { ...data, ...this.selectedEvent.data };
         this.loading = false;
+        this.item = this.selectedEvent.data;
       });
 
       this.loading = true;
