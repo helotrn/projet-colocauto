@@ -300,14 +300,16 @@
                         />
                       </b-col>
                     </b-row>
-                    <b-button
-                      v-if="hasMoreMembers"
-                      key="moreMembers"
-                      class="mb-4 py-2"
-                      style="width: 100%"
-                      variant="outline-primary"
-                      to="/community"
-                    >Voir tous les membres</b-button>
+                    <b-row key="moreMembers">
+                      <b-col class="text-right">
+                        <b-button
+                          v-if="hasMoreMembers"
+                          class="mb-4 py-2"
+                          variant="outline-primary"
+                          to="/community"
+                        >Voir tous les membres</b-button>
+                      </b-col>
+                    </b-row>
                   </transition-group>
                 </div>
               </transition>
@@ -652,6 +654,13 @@ export default {
       color: $primary;
       border-color: $primary;
       font-weight: bold;
+    }
+  }
+
+  .text-right .btn {
+    width: 100%;
+    @include media-breakpoint-up(md) {
+      width: auto;
     }
   }
 }
