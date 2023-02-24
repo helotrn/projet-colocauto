@@ -21,8 +21,12 @@ class RefundController extends RestController
 
     public function index(Request $request)
     {
-        
+
         try {
+            // default order is the late refund first
+            if(!$request->query('order')){
+                $request->merge(['order' => '-executed_at']);
+            }
             [$items, $total] = $this->repo->get($request);
         } catch (ValidationException $e) {
             return $this->respondWithErrors($e->errors(), $e->getMessage());
