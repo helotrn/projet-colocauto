@@ -190,7 +190,7 @@
           <!---->
 
           <!-- Expenses container -->
-          <section class="page__section position-relative">
+          <section class="page__section position-relative d-md-none">
             <b-row>
               <b-col>
                 <h2 class="dashboard--margin-bottom">Les comptes</h2>
@@ -321,6 +321,20 @@
               <dashboard-balance :user="user" />
 
               <hr />
+            </div>
+
+            <div class="mb-4 d-none d-md-block">
+              <b-card title="Les comptes" title-tag="h2">
+                <div class="dashboard__balance" :class="{ loading: loading && !balanceLoaded }">
+                  <transition name="fade">
+                    <div v-if="balance && balance.users && balance.users.length > 0">
+                      <users-balance :users="balance.users"/>
+                    </div>
+                  </transition>
+                </div>
+              </b-card>
+              <b-button class="my-4 py-2 w-100" variant="primary" to="/wallet">Voir le portefeuille</b-button>
+              <info-link-block title="Comment sont calculés les coûts ?" to="/faq" img="/icons/faq.png" />
             </div>
 
             <div v-if="false && hasCompletedRegistration">
