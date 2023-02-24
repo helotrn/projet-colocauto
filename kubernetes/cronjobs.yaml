@@ -1,0 +1,80 @@
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: pod-execute
+rules:
+- apiGroups:
+  - extensions
+  - apps
+  - ""
+  resources:
+  - pods
+  - pods/exec
+  verbs: ['get', 'list', 'exec', 'create']
+
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: cron-runner
+subjects:
+- kind: ServiceAccount
+  name: cron-runner
+roleRef:
+  kind: Role
+  name: pod-execute
+  apiGroup: ""
+
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: cron-runner
+
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: actions-complete
+spec:
+  schedule: "*/30 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          serviceAccountName: cron-runner
+          containers:
+          - name: actions-complete
+            image: google/cloud-sdk
+            imagePullPolicy: IfNotPresent
+            command:
+            - /bin/sh
+            - -c
+            - POD_NAME=$(kubectl get pods -l app=laravel -o=jsonpath='{.items[0].metadata.name}');
+              echo $POD_NAME;
+              kubectl exec $POD_NAME -c api -- php artisan actions:complete;
+          restartPolicy: Never
+
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: email-loan-upcoming
+spec:
+  schedule: "* * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          serviceAccountName: cron-runner
+          containers:
+          - name: email-loan-upcoming
+            image: google/cloud-sdk
+            imagePullPolicy: IfNotPresent
+            command:
+            - /bin/sh
+            - -c
+            - POD_NAME=$(kubectl get pods -l app=laravel -o=jsonpath='{.items[0].metadata.name}');
+              echo $POD_NAME;
+              kubectl exec $POD_NAME -c api -- php artisan email:loan:upcoming;
+          restartPolicy: OnFailure
