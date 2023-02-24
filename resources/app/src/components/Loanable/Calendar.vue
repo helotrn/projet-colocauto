@@ -111,6 +111,7 @@
         <div class="d-flex justify-content-around w-50 mx-auto mt-4">
           <loan-action-buttons
             class="mb-3"
+            :actions="['cancel']"
             :item="selectedEvent.data"
             @extension="addExtension"
             @cancel="cancelLoan"

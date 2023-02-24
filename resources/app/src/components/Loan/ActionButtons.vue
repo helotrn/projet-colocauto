@@ -1,10 +1,10 @@
 <template>
-  <div class="loan__actions__buttons flex-column flex-md-row-reverse" v-if="!!item.id">
+  <div class="loan__actions__buttons flex-column flex-md-row-reverse" v-if="!!item.id && actions.includes('cancel')">
     <b-button variant="danger" :disabled="loanIsCanceled || !canCancel" @click="$emit('cancel')">
       Annuler la réservation
     </b-button>
     <b-button
-      v-if="isAdmin || isGlobalAdmin"
+      v-if="(isAdmin || isGlobalAdmin) && actions.includes('resume')"
       variant="danger"
       :disabled="!loanIsCanceled"
       @click="$emit('resume')"
@@ -12,7 +12,7 @@
       Réactiver la réservation
     </b-button>
     <b-button
-      v-if="!userIsOwner"
+      v-if="!userIsOwner && actions.includes('extension')"
       variant="warning"
       :disabled="!hasReachedStep('takeover') || hasReachedStep('payment')"
       @click="$emit('extension')"
@@ -20,7 +20,7 @@
       Signaler un retard
     </b-button>
     <b-button
-      v-if="!userIsOwner"
+      v-if="!userIsOwner && actions.includes('incident')"
       variant="warning"
       :disabled="!hasReachedStep('takeover')"
       @click="$emit('incident')"
@@ -43,6 +43,10 @@ export default {
       type: Object,
       required: true,
     },
+    actions: {
+      type: Array,
+      default: ['cancel', 'resume', 'extension', 'incident']
+    }
   },
   computed: {
     canCancel() {
