@@ -21,7 +21,7 @@ export default {
       papers_location: "emplacement des papiers",
       plate_number: "numéro de plaque",
       pricing_category: "catégorie de tarification",
-      report: "fiche - état de l'auto",
+      report: "fiche état du véhicule",
       report_download: "télécharger le gabarit de la fiche",
       transmission_mode: "transmission",
       year_of_circulation: "année de mise en circulation",

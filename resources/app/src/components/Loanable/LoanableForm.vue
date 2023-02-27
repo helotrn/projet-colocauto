@@ -127,7 +127,7 @@
             <template v-slot:is_value_over_fifty_thousand></template>
             <template v-slot:report_template>
               <b-form-group>
-                <a href="/fiche_etat_de_l_auto.pdf" download>
+                <a href="/fiche_etat_du_vehicule.pdf" download>
                   {{ $i18n.t("cars.fields.report_download") }} <b-icon icon="download" />
                 </a>
               </b-form-group>
