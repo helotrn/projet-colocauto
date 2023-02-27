@@ -63,9 +63,25 @@
             <div class="form__section">
               <h2>Partage des coûts</h2>
 
-              <forms-builder :definition="form.costs" v-model="item" entity="cars">
-                
-              </forms-builder>
+              <b-row>
+                <b-col lg="6">
+                  <forms-builder :definition="form.costs" v-model="item" entity="cars"></forms-builder>
+                </b-col>
+                <b-col lg="6">
+                  <p>Équilibre financier du véhicule en fonction des dépenses
+                  enregistrées pas les utilisateurs :</p>
+                  <dl v-if="item.balance">
+                    <template v-for="(group, key) in item.balance" >
+                      <dt :key="key+'-t'">{{ group.name }}</dt>
+                      <dd :key="key+'-d'">{{ group.total }}€ ({{ group.type }})</dd>
+                    </template>
+                  </dl>
+                  <p v-else>Aucun dépense à afficher</p>
+                  <p>Les dépenses d'emprunt devraient équilibrer le coût du carburant.
+                  Les dépenses partagées et l'entretien réalisé par le propriétaire
+                  devraient équilibrer les provisions.</p>
+                </b-col>
+              </b-row>
             </div>
 
             <div class="form__section" v-if="item.type && item.id">

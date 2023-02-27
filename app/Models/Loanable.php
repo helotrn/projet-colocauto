@@ -148,7 +148,8 @@ class Loanable extends BaseModel
         "car_insurer",
         "events",
         "has_padlock",
-        "estimated_cost"
+        "estimated_cost",
+        "balance",
     ];
 
     public $items = ["owner", "community", "padlock"];
@@ -416,6 +417,22 @@ class Loanable extends BaseModel
         } else {
             $this->makeHidden("instructions");
         }
+    }
+
+    public function getBalanceAttribute()
+    {
+        // get all expenses sorted by tag and type
+        return Expense::where("loanable_id", $this->id)->get()
+        ->groupBy(function($item){
+            return $item->type.'-'.$item->tag->slug;
+        })->map(function($item){
+            // compute the total for each group
+            return [
+                "total" => intval($item->sum('amount') * 100) / 100,
+                "name" => $item->first()->tag->name,
+                "type" => $item->first()->type,
+            ];
+        });
     }
 
     public function scopeWithDeleted(Builder $query, $value, $negative = false)

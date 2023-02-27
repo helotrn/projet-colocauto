@@ -152,7 +152,13 @@
             <b-col lg="6">
               <p>Équilibre financier du véhicule en fonction des dépenses
               enregistrées pas les utilisateurs :</p>
-              <img src="/mockups/loanable-balance.png" />
+              <dl v-if="loanable.balance">
+                <template v-for="(group, key) in loanable.balance" >
+                  <dt :key="key+'-t'">{{ group.name }}</dt>
+                  <dd :key="key+'-d'">{{ group.total }}€ ({{ group.type }})</dd>
+                </template>
+              </dl>
+              <p v-else>Aucun dépense à afficher</p>
               <p>Les dépenses d'emprunt devraient équilibrer le coût du carburant.
               Les dépenses partagées et l'entretient réalisé par le propriétaire
               devraient équilibrer les provisions.</p>
