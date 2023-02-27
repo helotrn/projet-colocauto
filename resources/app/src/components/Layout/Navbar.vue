@@ -117,7 +117,7 @@
           </b-dropdown-item>
           <b-dropdown-item to="/wallet/expenses" v-if="!isGlobalAdmin && hasCompletedRegistration">
             <span class="nav-link__icon">
-              <svg-profile />
+              <svg-euro />
             </span>
             <span class="nav-link__text">Portefeuille</span>
           </b-dropdown-item>
@@ -168,6 +168,7 @@ import Logout from "@/assets/svg/logout.svg";
 import Profile from "@/assets/svg/profile.svg";
 import Register from "@/assets/svg/register.svg";
 import Vector from "@/assets/svg/vector.svg";
+import Euro from "@/assets/icons/euro.svg";
 
 import AdminSidebar from "@/components/Admin/Sidebar.vue";
 import LocaleSwitcher from "@/components/LocaleSwitcher.vue";
@@ -192,6 +193,7 @@ export default {
     "svg-profile": Profile,
     "svg-register": Register,
     "svg-vector": Vector,
+    "svg-euro": Euro,
   },
   props: {
     title: {
