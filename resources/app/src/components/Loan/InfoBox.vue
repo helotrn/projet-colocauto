@@ -27,7 +27,8 @@
               {{ loan.departure_at | time }} à {{ returnAt | time }}
             </span>
           </span>
-          <span class="my-2">Coût estimé: {{ loan.estimated_price | currency }}</span>
+          <span class="my-2" v-if="loan.final_price">Coût: {{ loan.final_price | currency }}</span>
+          <span class="my-2" v-else>Coût estimé: {{ loan.estimated_price | currency }}</span>
           <loan-status :item="loan" class="mt-2"></loan-status>
         </div>
         <div class="loan-info-box__actions">

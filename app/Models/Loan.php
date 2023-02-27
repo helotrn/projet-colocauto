@@ -951,11 +951,18 @@ SQL;
         // a loan should be completed before generating expenses
         if ($this->status !== "completed") return;
 
+        // Update loan prices
+        $this->final_price = $this->actual_price;
+        $this->final_insurance = $this->actual_insurance;
+        $this->final_platform_tip = $this->platform_tip;
+        $this->final_purchases_amount = $this->handover->purchases_amount;
+        $this->save();
+
         $distance = $this->handover->mileage_end - $this->takeover->mileage_beginning;
 
         $loan_expense = new Expense;
         $loan_expense->name = "{$this->reason} ($distance km)";
-        $loan_expense->amount = $this->actual_price;
+        $loan_expense->amount = $this->final_price;
         $loan_expense->user_id = $this->borrower->id;
         $loan_expense->loanable_id = $this->loanable->id;
         $loan_expense->type = 'debit'; // user will pay for this loan
@@ -966,10 +973,10 @@ SQL;
 
         $loan_expense->save();
 
-        if( $this->handover->purchases_amount > 0 ) {
+        if( $this->final_purchases_amount > 0 ) {
             $fuel_expense = new Expense;
             $fuel_expense->name = "";
-            $fuel_expense->amount = floatval($this->handover->purchases_amount);
+            $fuel_expense->amount = floatval($this->final_purchases_amount);
             $fuel_expense->user_id = $this->borrower->id;
             $fuel_expense->loanable_id = $this->loanable->id;
             $fuel_expense->type = 'credit'; // user has already payed for this fuel
