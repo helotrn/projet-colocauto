@@ -101,6 +101,14 @@ class ExpenseTagController extends RestController
                             "text" => "Rouge",
                             "value" => "danger",
                         ],
+                        [
+                            "text" => "Gris",
+                            "value" => "secondary",
+                        ],
+                        [
+                            "text" => "Noir",
+                            "value" => "dark",
+                        ],
                     ],
                 ],
             ],
