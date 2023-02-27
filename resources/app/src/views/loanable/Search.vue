@@ -203,22 +203,7 @@ export default {
     });
   },
   mounted() {
-    let selectedTypes = [];
-    const possibleTypes = ["car"];
-    const urlTypes = this.$route.query["types"];
-    if (urlTypes) {
-      selectedTypes = urlTypes
-        .split(",")
-        .filter((urlType) => !!possibleTypes.find((possibleType) => possibleType === urlType));
-    } else {
-      selectedTypes = this.selectedLoanableTypes;
-    }
-
-    if (!this.canLoanCar) {
-      selectedTypes = selectedTypes.filter((t) => t !== "car");
-    }
-
-    this.updateSelectedTypes(selectedTypes, true);
+    this.updateSelectedTypes(['car'], true);
   },
   computed: {
     ...buildComputed("loanable.search", [
