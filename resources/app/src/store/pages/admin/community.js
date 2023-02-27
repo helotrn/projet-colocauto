@@ -11,6 +11,7 @@ export default {
         user_full_name: "",
       },
     },
+    balance: [],
   },
   mutations: {
     communityUserListParam(state, { name, value }) {
@@ -22,5 +23,14 @@ export default {
         Vue.set(state.communityUserListParams, "page", 1);
       }
     },
+    balance(state, balance) {
+      state.balance = balance;
+    }
   },
+  actions: {
+    async loadUsersBalance({state, commit}, communityId) {
+      const { data: balance } = await Vue.axios.get(`/communities/${communityId}/balance`);
+      commit("balance", balance);
+    }
+  }
 };

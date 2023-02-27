@@ -125,6 +125,19 @@
             </b-row>
           </div>
 
+          <div class="form__section" v-if="item.id && balance && balance.users && balance.users.length > 0">
+            <b-row>
+              <b-col>
+                <h2>Les comptes</h2>
+              </b-col>
+            </b-row>
+            <b-row>
+              <b-col>
+                <users-balance :users="balance.users"/>
+              </b-col>
+            </b-row>
+          </div>
+
           <div class="form__section" v-if="item.id">
             <b-row>
               <b-col>
@@ -178,6 +191,7 @@ import FormsBuilder from "@/components/Forms/Builder.vue";
 import PricingForm from "@/components/Pricing/PricingForm.vue";
 import PricingLanguageDefinition from "@/components/Pricing/LanguageDefinition.vue";
 import FormsValidatedInput from "@/components/Forms/ValidatedInput.vue";
+import UsersBalance from "@/components/Balance/UsersBalance.vue";
 
 import FormMixin from "@/mixins/FormMixin";
 import DataRouteGuards from "@/mixins/DataRouteGuards";
@@ -195,6 +209,7 @@ export default {
     FormsValidatedInput,
     PricingForm,
     PricingLanguageDefinition,
+    UsersBalance,
   },
   mounted() {
     // Initial load of sublist data accounting for filter, order and page num.
@@ -320,6 +335,9 @@ export default {
     communityUsersSortDesc() {
       return this.communityUserListParams.order[0] === "-";
     },
+    balance() {
+      return this.$store.state['admin.community'].balance;
+    }
   },
   methods: {
     addPricing() {
@@ -494,6 +512,7 @@ export default {
 
       console.log('dispatch invitations/retrieve');
       this.$store.dispatch(`invitations/retrieve`);
+      this.$store.dispatch('admin.community/loadUsersBalance', this.$route.params.id);
 
 
       return true;
