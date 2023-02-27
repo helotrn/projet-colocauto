@@ -506,12 +506,10 @@ export default {
             variant: "warning",
             type: "data",
           });
-          console.log(e);
         }
       }, 250);
 
-      console.log('dispatch invitations/retrieve');
-      this.$store.dispatch(`invitations/retrieve`);
+      this.$store.dispatch('invitations/retrieve');
       this.$store.dispatch('admin.community/loadUsersBalance', this.$route.params.id);
 
 
