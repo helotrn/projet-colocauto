@@ -309,7 +309,7 @@ class CommunityController extends RestController
             }
             return (object) [
                 "id" => $user->id,
-                "balance" => $user->balance,
+                "balance" => number_format($user->balance, 2),
                 "full_name" => $user->full_name,
             ];
         });
@@ -423,10 +423,11 @@ class CommunityController extends RestController
                 return $loanable->owner == null;
             })
             ->map(function ($loanable) use ($users) {
+                $balance = $loanable->expenses->where('type', 'debit')->sum('amount');
+                $balance -= $loanable->expenses->where('type', 'credit')->sum('amount');
                 $users->prepend((object) [
                     "loanable_id" => $loanable->id,
-                    "balance" => $loanable->expenses->where('type', 'debit')->sum('amount')
-                        - $loanable->expenses->where('type', 'credit')->sum('amount'),
+                    "balance" => number_format($balance, 2),
                     "full_name" => $loanable->name,
                 ]);
             });
