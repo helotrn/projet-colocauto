@@ -10,6 +10,7 @@
     :filterable="false"
     :value="convertedObjectValue"
     @input="emitInput"
+    @search:focus="loadAllData"
   >
     <template #no-options>
       <span v-if="!q || q.length < 3">Tapez quelque chose pour commencer à chercher...</span>
@@ -90,12 +91,6 @@ export default {
             text,
           };
         });
-    } else {
-      // make all data available at loading
-      this.$store.dispatch(`${this.slug}/search`, {
-        q: this.q,
-        params: this.params,
-      });
     }
   },
   data() {
@@ -177,6 +172,13 @@ export default {
     reset() {
       this.lastSelectedItem = null;
     },
+    loadAllData() {
+      // make all data available at loading
+      this.$store.dispatch(`${this.slug}/search`, {
+        q: this.q,
+        params: this.params,
+      });
+    }
   },
   watch: {
     q(q) {
