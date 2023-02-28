@@ -1,7 +1,7 @@
 <template>
   <b-card no-body>
     <b-card-header style="background-color: transparent">
-      <a href="https://www.zeste.coop/fr/pages/lancez-votre-projet" class="d-flex" target="_blank">
+      <a href="https://www.zeste.coop/fr/associations/Colocauto" class="d-flex" target="_blank">
         <img class="p-2" style="object-fit: contain" src="/icons/allo.png" />
         <div class="pl-2">
           <h2 class="text-dark">Faire un don</h2>
