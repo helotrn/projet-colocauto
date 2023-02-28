@@ -110,7 +110,7 @@ class Expense extends BaseModel
                 ->orWhereIn('user_id', $user->getSameCommunityUserIds());
             })
             // ...and expenses that is for a loanable belonging to the same community
-            ->whereHas("loanable", function ($q) use ($user) {
+            ->orWhereHas("loanable", function ($q) use ($user) {
                 return $q->whereHas("owner", function ($q) use ($user) {
                     return $q->whereIn('user_id', $user->getSameCommunityUserIds());
                 })
