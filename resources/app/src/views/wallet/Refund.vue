@@ -43,7 +43,7 @@
     <b-row>
       <b-col>
         <b-form class="form" @submit.prevent="submit">
-          <forms-builder :definition="form" v-model="item" entity="refunds" />
+          <forms-builder :definition="form" v-model="item" entity="refunds" :disabled="!user.borrower.validated" />
 
           <div class="form__buttons">
             <b-button-group>
