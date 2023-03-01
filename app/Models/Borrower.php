@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Events\BorrowerApprovedEvent;
 use App\Events\BorrowerCompletedEvent;
+use App\Events\BorrowerSuspendedEvent;
 use App\Models\Loan;
 use App\Models\User;
 use App\Casts\TimestampWithTimezoneCast;
@@ -21,6 +22,11 @@ class Borrower extends BaseModel
         self::saved(function ($model) {
             // Stop all logic if the borrower is suspended
             if (!!$model->suspended_at) {
+                $changes = $model->getChanges();
+                if( array_key_exists("suspended_at", $changes) ) {
+                    // the borrower has just been suspended
+                    event(new BorrowerSuspendedEvent($model->user));
+                }
                 return;
             }
 
