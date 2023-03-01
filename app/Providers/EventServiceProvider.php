@@ -83,7 +83,10 @@ class EventServiceProvider extends ServiceProvider
             "App\Listeners\SendLoanableCreatedEmails",
         ],
         "App\Events\UserEmailUpdated" => ["App\Listeners\UpdateNokeUserEmail"],
-        "App\Events\BorrowerSuspendedEvent" => ["App\Listeners\CancelFutureLoans"],
+        "App\Events\BorrowerSuspendedEvent" => [
+            "App\Listeners\CancelFutureLoans",
+            "App\Listeners\SendBorrowerSuspendedEmails",
+        ],
     ];
 
     public function boot()
