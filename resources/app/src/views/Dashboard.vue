@@ -32,10 +32,10 @@
             <b-jumbotron
               bg-variant="light"
               class="no-communities-jumbotron"
-              header="Coloc'Auto n'existe pas encore dans votre quartier"
-              lead="Mais on y travaille! En attendant, devenez acteur de votre quartier et aidez Coloc'Auto à améliorer votre mobilité et celle de vos voisin-e-s."
+              header="Vous ne faites partie d'aucun groupe Coloc'Auto"
+              lead="Un membre de notre équipe va prendre contact avec vous pour une présentation détaillée du projet."
             >
-              <b-button variant="primary" href="https://bit.ly/locoquartier" target="_blank"
+              <b-button variant="primary" href="https://www.colocauto.org" target="_blank"
                 >En savoir plus</b-button
               >
             </b-jumbotron>
@@ -190,7 +190,7 @@
           <!---->
 
           <!-- Expenses container -->
-          <section class="page__section position-relative d-md-none">
+          <section class="page__section position-relative d-md-none" v-if="hasCommunity">
             <b-row>
               <b-col>
                 <h2 class="dashboard--margin-bottom">Les comptes</h2>
@@ -216,7 +216,7 @@
           </section>
 
           <!-- Calendar container -->
-          <section class="page__section position-relative">
+          <section class="page__section position-relative" v-if="carsList && carsList.length > 0">
             <b-row>
               <b-col>
                 <h2 class="dashboard--margin-bottom">Réserver un véhicule</h2>
@@ -224,9 +224,9 @@
             </b-row>
             <b-row>
               <b-col>
-                <b-tabs v-if="loanables && loanables.length > 0" pills card>
+                <b-tabs pills card>
                   <b-tab
-                    v-for="loanable in loanables"
+                    v-for="loanable in carsList"
                     :title="loanable.name"
                     :key="loanable.id"
                     title-item-class="mr-2"
@@ -285,7 +285,7 @@
           <!---->
 
           <!-- members container -->
-          <section class="page__section position-relative">
+          <section class="page__section position-relative" v-if="hasCommunity">
             <div class="dashboard__members" :class="{ loading: loading && !membersLoaded }">
               <transition name="fade">
                 <div v-if="members && members.length > 0">
@@ -325,7 +325,7 @@
               <hr />
             </div>
 
-            <div class="mb-4 d-none d-md-block">
+            <div class="mb-4 d-none d-md-block" v-if="hasCommunity">
               <b-card title="Les comptes" title-tag="h2">
                 <div class="dashboard__balance" :class="{ loading: loading && !balanceLoaded }">
                   <transition name="fade">
@@ -466,6 +466,9 @@ export default {
     },
     hasMoreMembers() {
       return this.$store.state.dashboard.hasMoreMembers;
+    },
+    carsList(){
+      return this.$store.state.dashboard.carsList;
     },
     loansLoaded() {
       return this.$store.state.dashboard.loansLoaded;
