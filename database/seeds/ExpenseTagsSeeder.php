@@ -37,6 +37,12 @@ class ExpenseTagsSeeder extends Seeder
                 "slug" => "funds",
                 "color" => "primary",
             ],
+            [
+                "id" => 5,
+                "name" => "Compensation propriétaire",
+                "slug" => "compensation",
+                "color" => "dark",
+            ],
         ];
 
         foreach ($tags as $tag) {
