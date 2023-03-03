@@ -424,12 +424,12 @@ class Loanable extends BaseModel
         // get all expenses sorted by tag and type
         return Expense::where("loanable_id", $this->id)->get()
         ->groupBy(function($item){
-            return $item->type.'-'.$item->tag->slug;
+            return $item->type.($item->tag ? '-'.$item->tag->slug : '');
         })->map(function($item){
             // compute the total for each group
             return [
                 "total" => number_format($item->sum('amount'), 2),
-                "name" => $item->first()->tag->name,
+                "name" => $item->first()->tag ? $item->first()->tag->name : 'Autres',
                 "type" => $item->first()->type,
             ];
         });
