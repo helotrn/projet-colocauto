@@ -130,14 +130,16 @@ class Car extends Loanable
     {
         Log::info("Compute mounthy shared expenses for {$this->name}");
         $community = $this->owner ? $this->owner->user->main_community : $this->community;
+        $period_start = config("app.month_as_day") ? Carbon::now()->startOfDay() : Carbon::now()->startOfMonth();
 
         // get the users of the same community that joined the community
         // before the current (previous ?) month
         $users = $community->users()
             ->wherePivotNotBetween("approved_at", [
-                Carbon::now()->startOfMonth(),
+                $period_start,
                 Carbon::now()
-            ])->get();
+            ])
+            ->wherePivotNull("suspended_at")->get();
 
         Log::info("{$users->count()} people in the community");
         if( $users->count() === 0 ) return;
@@ -145,7 +147,6 @@ class Car extends Loanable
         $funds_tag = ExpenseTag::where('slug', 'funds');
         $compensation_tag = ExpenseTag::where('slug', 'compensation');
 
-        $period_start = Carbon::now()->startOfMonth()->subDay();
         $shared_cost = $this->cost_per_month / $users->count();
         $owner = $this->owner;
         if( $owner ) {
@@ -154,8 +155,13 @@ class Car extends Loanable
             $owner_compensation = 0;
         }
         foreach($users as $user) {
+            $period = "";
+            if( config("app.month_as_day") ) {
+                $period .= $period_start->day." ";
+            }
+            $period .= $period_start->locale('fr')->monthName." ".$period_start->year;
             $expense = Expense::create([
-                "name" => "Provision ".$period_start->monthName." ".$period_start->year,
+                "name" => "Provision ".$period,
                 "amount" => $shared_cost,
                 "type" => "debit",
                 "executed_at" => Carbon::now(),
@@ -167,7 +173,7 @@ class Car extends Loanable
             $expense->save();
             if( $owner_compensation && $this->owner->user->id !== $user->id ){
                 $expense = Expense::create([
-                    "name" => "Dédommagement propriétaire ".$period_start->monthName." ".$period_start->year,
+                    "name" => "Dédommagement propriétaire ".$period,
                     "amount" => $owner_compensation,
                     "type" => "debit",
                     "executed_at" => Carbon::now(),

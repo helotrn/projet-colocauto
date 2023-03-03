@@ -67,6 +67,11 @@ return [
     ],
 
     /*
+    | Apply monthly expenses each day for debug purposes
+    */
+    "month_as_day" => env("MONTH_AS_DAY", false),
+
+    /*
     |--------------------------------------------------------------------------
     | Application Timezone
     |--------------------------------------------------------------------------
