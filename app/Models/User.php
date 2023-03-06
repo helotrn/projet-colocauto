@@ -7,6 +7,7 @@ use App\Mail\PasswordRequest;
 use App\Services\LocoMotionGeocoderService as LocoMotionGeocoder;
 use App\Transformers\UserTransformer;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
 use Mail;
@@ -15,7 +16,7 @@ use Stripe;
 
 class User extends AuthenticatableBaseModel
 {
-    use HasApiTokens, Notifiable;
+    use HasApiTokens, Notifiable, SoftDeletes;
 
     public static $rules = [
         "accept_conditions" => ["accepted"],
@@ -40,7 +41,7 @@ class User extends AuthenticatableBaseModel
         "full_name" => "text",
         "email" => "text",
         "communities.name" => "text",
-        "is_deactivated" => "boolean",
+        "is_deleted" => "boolean",
     ];
 
     public $computed = ["admin_link", "color"];
@@ -571,6 +572,26 @@ class User extends AuthenticatableBaseModel
     public function getAdminLinkAttribute()
     {
         return env("FRONTEND_URL") . "/admin/users/" . $this->id;
+    }
+
+    public function scopeWithDeleted(Builder $query, $value, $negative = false)
+    {
+        if (filter_var($value, FILTER_VALIDATE_BOOLEAN) !== $negative) {
+            return $query->withTrashed();
+        }
+
+        return $query;
+    }
+
+    public function scopeIsDeleted(Builder $query, $value, $negative = false)
+    {
+        if (filter_var($value, FILTER_VALIDATE_BOOLEAN) !== $negative) {
+            return $query
+                ->withTrashed()
+                ->where("{$this->getTable()}.deleted_at", "!=", null);
+        }
+
+        return $query;
     }
 
     /**

@@ -115,8 +115,7 @@ export default [
           data: {
             users: {
               retrieve: {
-                fields: "id,name,last_name,full_name,email,is_deactivated",
-                is_deactivated: 0,
+                fields: "id,name,last_name,full_name,email,deleted_at",
               },
             },
           },
@@ -137,6 +136,7 @@ export default [
               "loanables.loans.borrower.user.full_name,communities.*,loans.*," +
               "invoices.*,invoices.total,invoices.total_with_taxes,loans.borrower.user.*," +
               "loans.loanable.name,communities.tags.*,payment_methods.*",
+            with_deleted: true,
           },
           title: "titles.user",
         },

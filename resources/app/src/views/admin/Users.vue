@@ -89,11 +89,11 @@
             <div class="user-actions">
               <admin-list-actions :columns="['edit']" :row="row" :slug="slug" />
               <b-button
-                v-if="!row.item.is_deactivated"
+                v-if="!row.item.deleted_at"
                 size="sm"
                 class="mr-1"
                 variant="danger"
-                @click="destroyItemModal(row.item, () => deactivateUser(row.item.id))"
+                @click="destroyItemModal(row.item)"
               >
                 {{ $t("archive") | capitalize }}
               </b-button>
@@ -102,11 +102,12 @@
                 size="sm"
                 class="mr-1"
                 variant="warning"
-                @click="restoreItemModal(row.item, () => activateUser(row.item.id))"
+                @click="restoreItemModal(row.item)"
               >
                 {{ $t("restore") | capitalize }}
               </b-button>
               <b-button
+                v-if="!row.item.deleted_at"
                 :id="'mandate-' + row.item.id"
                 size="sm"
                 variant="warning"

@@ -185,6 +185,17 @@ class UserController extends RestController
         }
     }
 
+    public function restore(Request $request, $id)
+    {
+        try {
+            $response = parent::validateAndRestore($request, $id);
+        } catch (ValidationException $e) {
+            return $this->respondWithErrors($e->errors(), $e->getMessage());
+        }
+
+        return $response;
+    }
+
     public function updateEmail(UpdateEmailRequest $request, $id)
     {
         //retrieve user to update
