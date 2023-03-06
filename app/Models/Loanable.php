@@ -68,6 +68,20 @@ class Loanable extends BaseModel
         self::restored(function ($model) {
             $model->loans()->restore();
         });
+
+        self::saved(function ($model) {
+            // if the loanable is made always unavailable
+            if( array_key_exists("availability_mode", $model->getChanges())
+                && $model->availability_mode === "never"
+                && $model->availability_json === "[]" ) {
+
+                // cancel all not yet started loans
+                foreach($model->loans->where("status", "=", "in_process") as $loan) {
+                    $loan->cancel();
+                    $loan->save();
+                }
+            }
+        });
     }
 
     public function getCommunityIdsAttribute()
