@@ -32,7 +32,7 @@ export default {
   },
   computed: {
     isRouter() {
-      return !this.to.match(/^http/);
+      return !this.to.match(/^(http|mailto)/);
     }
   }
 }

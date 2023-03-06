@@ -210,7 +210,9 @@
             <b-row>
               <b-col class="d-flex flex-column">
                 <b-button class="mb-2 py-2" variant="primary" to="/wallet">Voir le portefeuille</b-button>
-                <info-link-block title="Comment sont calculés les coûts ?" to="/faq" img="/icons/faq.png" />
+                <info-link-block title="Comment sont calculés les coûts ?" to="https://colocauto.org/faq">
+                   <svg-pen-paper width="100px" class="p-2"/>
+                </info-link-block>
               </b-col>
             </b-row>
           </section>
@@ -336,7 +338,9 @@
                 </div>
               </b-card>
               <b-button class="my-4 py-2 w-100" variant="primary" to="/wallet">Voir le portefeuille</b-button>
-              <info-link-block title="Comment sont calculés les coûts ?" to="/faq" img="/icons/faq.png" />
+              <info-link-block title="Comment sont calculés les coûts ?" to="https://colocauto.org/faq">
+                 <svg-pen-paper width="100px" class="p-2" style="flex-shrink: 0"/>
+              </info-link-block>
             </div>
 
             <div v-if="false && hasCompletedRegistration">
@@ -354,11 +358,18 @@
             </div>
 
             <h2 class="dashboard--margin-bottom">Ressources</h2>
-            <info-link-block title="Notice de l'usager" to="https://bit.ly/locomotion-bienvenue" img="/icons/allo.png" />
             <info-link-block title="Faire un don" to="https://www.zeste.coop/fr/associations/Colocauto">
               <svg-salut-coeur width="100px" class="p-2"/>
             </info-link-block>
-            <info-link-block title="FAQ / Contact" to="/faq" img="/icons/faq.png" />
+            <info-link-block title="Foire aux questions" to="https://colocauto.org/faq">
+              <svg-question width="100px" class="p-2"/>
+            </info-link-block>
+            <info-link-block title="Assurance" to="https://colocauto.org/assurance">
+              <svg-pen-paper width="100px" class="p-2"/>
+            </info-link-block>
+            <info-link-block title="Contactez-nous" to="mailto:soutien@colocauto.org">
+              <svg-waving class="m-2 white-round"/>
+            </info-link-block>
           <!---->
         </b-col>
       </b-row>
@@ -386,6 +397,9 @@ import LoansCalendar from "@/components/Loanable/LoansCalendar.vue";
 
 import MagnifyingGlass from "@/assets/svg/magnifying-glass.svg";
 import SalutCoeur from "@/assets/svg/salut-coeur.svg";
+import Question from "@/assets/svg/question.svg";
+import PenPaper from "@/assets/svg/pen-paper.svg";
+import Waving from "@/assets/svg/waving.svg";
 
 const sendRectMap = new Map();
 
@@ -401,6 +415,9 @@ export default {
     TutorialBlock,
     "svg-magnifying-glass": MagnifyingGlass,
     "svg-salut-coeur": SalutCoeur,
+    "svg-question": Question,
+    "svg-pen-paper": PenPaper,
+    "svg-waving": Waving,
     UserCard,
     InfoLinkBlock,
     UsersBalance,
@@ -725,5 +742,12 @@ export default {
     border-radius: 4px;
     background-color: rgba(0,0,0,.5);
     -webkit-box-shadow: 0 0 1px rgba(255,255,255,.5);
+}
+
+.white-round {
+  background: #f9f9f9;
+  border-radius: 100%;
+  width: 82px;
+  height: 82px;
 }
 </style>
