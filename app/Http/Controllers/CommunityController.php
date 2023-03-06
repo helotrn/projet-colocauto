@@ -344,7 +344,7 @@ class CommunityController extends RestController
                 "user_id_full_name" => $debtor->full_name,
                 "credited_user_id" => $toWipe->first()->id,
                 "credited_user_id_full_name" => $toWipe->first()->full_name,
-                "amount" => -$debtor->balance
+                "amount" => number_format(-$debtor->balance, 2),
               ];
               $debtors = $debtors->reject(function($user) use ($debtor){
                 return $debtor->id == $user->id;
@@ -365,7 +365,7 @@ class CommunityController extends RestController
             "user_full_name" => $debtor->full_name,
             "credited_user_id" => $creditor->id,
             "credited_user_full_name" => $creditor->full_name,
-            "amount" => $debtor->balance + $creditor->balance > 0 ? -$debtor->balance : $creditor->balance,
+            "amount" => number_format($debtor->balance + $creditor->balance > 0 ? -$debtor->balance : $creditor->balance, 2),
           ];
 
           // if debtor debt is not enougth to refund creditor ...

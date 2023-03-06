@@ -162,7 +162,7 @@ class Car extends Loanable
             $period .= $period_start->locale('fr')->monthName." ".$period_start->year;
             $expense = Expense::create([
                 "name" => "Provision ".$period,
-                "amount" => $shared_cost,
+                "amount" => number_format($shared_cost,2),
                 "type" => "debit",
                 "executed_at" => Carbon::now(),
                 "user_id" => $user->id,
@@ -174,7 +174,7 @@ class Car extends Loanable
             if( $owner_compensation && $this->owner->user->id !== $user->id ){
                 $expense = Expense::create([
                     "name" => "Dédommagement propriétaire ".$period,
-                    "amount" => $owner_compensation,
+                    "amount" => number_format($owner_compensation,2),
                     "type" => "debit",
                     "executed_at" => Carbon::now(),
                     "user_id" => $user->id,
