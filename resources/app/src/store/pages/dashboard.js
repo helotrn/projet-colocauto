@@ -26,7 +26,7 @@ const initialState = {
 };
 
 const maxLoanableCount = 5;
-const maxMemberCount = 3;
+const maxMemberCount = 4;
 
 const actions = {
   async reload({ commit, dispatch }, user) {
@@ -86,7 +86,6 @@ const actions = {
           order: "-created_at",
           per_page: maxMemberCount,
           fields: "id,full_name,tags,avatar,phone,communities.role,communities.proof,communities.approved_at,communities.suspended_at,owner",
-          "!id": user.id // exclude current user from the list
         },
       });
 
