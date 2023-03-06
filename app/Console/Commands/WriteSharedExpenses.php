@@ -21,7 +21,7 @@ class WriteSharedExpenses extends Command
     {
         Log::info("Starting write expenses command...");
 
-        Car::all()->each(function ($car) {
+        Car::where("availability_mode", "always")->each(function ($car) {
             $car->writeMonthlySharedExpenses();
         });
 
