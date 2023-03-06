@@ -6,7 +6,8 @@
       :href="isRouter ? undefined : to"
       class="d-flex align-items-center"
     >
-      <img class="p-2" :src="img" />
+      <slot></slot>
+      <img v-if="img" class="p-2" :src="img" />
       <span class="text-dark pr-3"> {{ title }}</span>
     </component>
   </div>
@@ -26,7 +27,7 @@ export default {
     },
     img: {
       type: String,
-      required: true,
+      required: false,
     },
   },
   computed: {

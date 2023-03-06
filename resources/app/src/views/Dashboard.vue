@@ -355,7 +355,9 @@
 
             <h2 class="dashboard--margin-bottom">Ressources</h2>
             <info-link-block title="Notice de l'usager" to="https://bit.ly/locomotion-bienvenue" img="/icons/allo.png" />
-            <info-link-block title="Faire un don" to="https://www.zeste.coop/fr/associations/Colocauto" img="/icons/allo.png" />
+            <info-link-block title="Faire un don" to="https://www.zeste.coop/fr/associations/Colocauto">
+              <svg-salut-coeur width="100px" class="p-2"/>
+            </info-link-block>
             <info-link-block title="FAQ / Contact" to="/faq" img="/icons/faq.png" />
           <!---->
         </b-col>
@@ -383,6 +385,7 @@ import UsersBalance from "@/components/Balance/UsersBalance.vue";
 import LoansCalendar from "@/components/Loanable/LoansCalendar.vue";
 
 import MagnifyingGlass from "@/assets/svg/magnifying-glass.svg";
+import SalutCoeur from "@/assets/svg/salut-coeur.svg";
 
 const sendRectMap = new Map();
 
@@ -397,6 +400,7 @@ export default {
     ReleaseInfoBox,
     TutorialBlock,
     "svg-magnifying-glass": MagnifyingGlass,
+    "svg-salut-coeur": SalutCoeur,
     UserCard,
     InfoLinkBlock,
     UsersBalance,
