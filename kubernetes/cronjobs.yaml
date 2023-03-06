@@ -77,4 +77,28 @@ spec:
             - POD_NAME=$(kubectl get pods -l app=laravel -o=jsonpath='{.items[0].metadata.name}');
               echo $POD_NAME;
               kubectl exec $POD_NAME -c api -- php artisan email:loan:upcoming;
-          restartPolicy: OnFailure
+          restartPolicy: Never
+
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: expenses-write
+spec:
+  schedule: "55 23 * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          serviceAccountName: cron-runner
+          containers:
+          - name: expenses-write
+            image: google/cloud-sdk
+            imagePullPolicy: IfNotPresent
+            command:
+            - /bin/sh
+            - -c
+            - POD_NAME=$(kubectl get pods -l app=laravel -o=jsonpath='{.items[0].metadata.name}');
+              echo $POD_NAME;
+              kubectl exec $POD_NAME -c api -- php artisan expenses:write;
+          restartPolicy: Never
