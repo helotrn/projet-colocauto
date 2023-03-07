@@ -104,11 +104,10 @@ export default {
     }
   }
   &.loanable-calendar-month-cell-content--unavailable {
-    color: $content-neutral-secondary;
+    color: $content-alert-negative;
 
-    // Only fill for "today" so as not to introduce visual clutter.
     svg rect {
-      fill: none;
+      fill: $background-alert-negative;
     }
     .loanable-calendar-month-cell-content__content {
       text-decoration: line-through;
