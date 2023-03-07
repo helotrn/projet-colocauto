@@ -310,7 +310,7 @@ export default {
 
     &__header {
       height: 300px;
-      background-image: url("/img-tetes.png");
+      background-image: url("/img-tetes.svg");
       background-color: $locomotion-dark-green;
       background-size: auto 300px;
       background-repeat: no-repeat;
