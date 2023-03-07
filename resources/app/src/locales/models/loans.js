@@ -8,7 +8,7 @@ const statuss = {
   null: "-",
   in_process: "En cours",
   canceled: "Annulé",
-  completed: "Complété",
+  completed: "Terminé",
 };
 
 export default {
@@ -126,8 +126,8 @@ export default {
         description: "Les informations au retour ou au départ ont été contestées.",
       },
       completed: {
-        text: "Emprunt complété",
-        description: "L'emprunt a été complété avec succès!",
+        text: "Emprunt terminé",
+        description: "L'emprunt a été terminé avec succès!",
       },
       waiting_for_approval: {
         text: "Attente d'approbation",
@@ -173,7 +173,7 @@ export default {
         description: "L'emprunt du véhicule est en cours!",
       },
       waiting_for_handover: {
-        text: "Réservation terminée",
+        text: "À compléter",
         description:
           "Vous avez 48h à partir de la fin de votre emprunt pour compléter le relevé kilométrique au départ et à l'arrivée ! Merci d'y penser.",
       },

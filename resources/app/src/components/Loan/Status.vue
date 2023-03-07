@@ -119,7 +119,7 @@ export default {
         if (this.$dayjs(this.item.actual_return_at).isBefore(this.$second, "minute")) {
           return {
             status: "waiting_for_handover",
-            variant: "warning",
+            variant: "danger",
           };
         }
 
