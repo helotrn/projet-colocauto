@@ -959,14 +959,17 @@ SQL;
         $this->save();
 
         $distance = $this->handover->mileage_end - $this->takeover->mileage_beginning;
+        $date = Carbon::parse($this->departure_at)->addMinutes($this->duration_in_minutes);
+        $desc = $this->reason ? $this->reason. " - " : "";
+        $desc .= $date->locale('fr_FR')->isoFormat('ddd Do MMMM');
 
         $loan_expense = new Expense;
-        $loan_expense->name = "{$this->reason} ($distance km)";
+        $loan_expense->name = "$desc ($distance km)";
         $loan_expense->amount = $this->final_price;
         $loan_expense->user_id = $this->borrower->id;
         $loan_expense->loanable_id = $this->loanable->id;
         $loan_expense->type = 'debit'; // user will pay for this loan
-        $loan_expense->executed_at = $this->handover->executed_at;
+        $loan_expense->executed_at = $date;
 
         $loan_tag = ExpenseTag::where('slug', 'loan');
         if( $loan_tag ) $loan_expense->tag()->associate($loan_tag->first());
@@ -980,7 +983,7 @@ SQL;
             $fuel_expense->user_id = $this->borrower->id;
             $fuel_expense->loanable_id = $this->loanable->id;
             $fuel_expense->type = 'credit'; // user has already payed for this fuel
-            $fuel_expense->executed_at = $this->handover->executed_at;
+            $fuel_expense->executed_at = $date;
 
             $fuel_tag = ExpenseTag::where('slug', 'fuel');
             if( $fuel_tag ) $fuel_expense->tag()->associate($fuel_tag->first());
