@@ -34,10 +34,6 @@
                     <b-badge pill variant="warning">P</b-badge>
                     <span>Propriétaire de véhicule</span>
                   </span>
-                  <span>
-                    <b-badge pill variant="success">C</b-badge>
-                    <span>Comité du voisinage</span>
-                  </span>
                 </b-col>
               </b-row>
             </b-container>
