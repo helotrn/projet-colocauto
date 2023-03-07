@@ -135,6 +135,9 @@ export default {
 
       return this.$dayjs().subtract(48, "hour").isAfter(this.item.actual_return_at);
     },
+    loanDayIsTodayOrBefore() {
+      return this.$dayjs().isAfter(this.$dayjs(this.item.departure_at).startOf("day"));
+    }
   },
   methods: {
     abortAction() {

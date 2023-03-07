@@ -163,7 +163,7 @@
               <!-- upcoming loans container -->
               <transition name="fade">
                 <section class="page__section" v-if="loans.future && loans.future.length > 0">
-                  <h2>Emprunts à venir approuvés</h2>
+                  <h2>Réservations à venir</h2>
                   <p class="dashboard__instructions">
                     Assurez-vous de démarrer l'emprunt en ligne au moment de prendre possession du
                     véhicule!

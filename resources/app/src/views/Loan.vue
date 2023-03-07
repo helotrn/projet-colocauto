@@ -23,22 +23,6 @@
             </b-col>
           </b-row>
 
-          <b-alert
-            variant="success"
-            show
-            v-if="
-              item.id &&
-              item.status === 'in_process' &&
-              hasReachedStep('intention') &&
-              !hasReachedStep('takeover') &&
-              userIsBorrower
-            "
-          >
-            <h4 class="alert-heading">
-              {{ $t("loan_approved") }}
-            </h4>
-          </b-alert>
-
           <div class="position-relative">
             <loan-actions
               class="loan-actions"

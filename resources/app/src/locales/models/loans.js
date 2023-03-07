@@ -139,7 +139,7 @@ export default {
           "L'emprunteur-se doit ajouter des fonds à son solde avant de débuter l'emprunt.",
       },
       expired_reservation: {
-        text: "Réservation expirée",
+        text: "À compléter",
         description:
           "La réservation du véhicule est terminée. Vous pouvez clore l'emprunt en ligne.",
       },
@@ -175,7 +175,7 @@ export default {
       waiting_for_handover: {
         text: "Réservation terminée",
         description:
-          "La réservation du véhicule est terminée. Veuillez le retourner et compléter les étapes l'emprunt en ligne.",
+          "Vous avez 48h à partir de la fin de votre emprunt pour compléter le relevé kilométrique au départ et à l'arrivée ! Merci d'y penser.",
       },
       waiting_for_payment_self_service: {
         text: "Attente de la fin de l'emprunt",

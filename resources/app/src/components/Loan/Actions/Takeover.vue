@@ -61,6 +61,14 @@
 
           <div v-if="item.loanable.type === 'car'">
             <validation-observer ref="observer" v-slot="{ passes }">
+              <b-row class="loan-actions__alert mb-4" v-if="!action.executed_at && !loanIsCanceled && loanDayIsTodayOrBefore">
+                <b-col>
+                  <b-alert variant="warning" show>
+                    Vous avez 48h à partir de la fin de votre emprunt pour compléter le relevé kilométrique au départ et à l'arrivée !
+                    Sans action de votre part, l'emprunt sera clos avec le kilométrage estimé lors de la réservation.
+                  </b-alert>
+                </b-col>
+              </b-row>
               <b-row>
                 <b-col>
                   <p>
@@ -83,7 +91,7 @@
                       :rules="{ required: true, min_value: 1 }"
                       label="KM au compteur, au début de la course"
                       placeholder="KM au compteur"
-                      :disabled="((lockMileage && !!action.executed_at) || loanIsFinished || loanIsCanceled) && !userIsAdmin"
+                      :disabled="((lockMileage && !!action.executed_at) || loanIsFinished || loanIsCanceled || !loanDayIsTodayOrBefore) && !userIsAdmin"
                       v-model="action.mileage_beginning"
                     />
                   </b-col>
@@ -103,12 +111,10 @@
                   </b-col>
                 </b-row>
 
-                <b-row class="loan-actions__alert" v-if="!action.executed_at && !loanIsCanceled">
+                <b-row class="loan-actions__alert" v-if="!action.executed_at && !loanIsCanceled && !loanDayIsTodayOrBefore">
                   <b-col>
                     <b-alert variant="warning" show>
-                      Les informations de l'emprunt peuvent être modifiées jusqu'à 48h après sa
-                      conclusion. À partir de ce moment, le coût de l'emprunt sera validé avec les
-                      détails ci-dessus.
+                      Il sera possible de compléter le kilométrage de départ le jour J !
                     </b-alert>
                   </b-col>
                 </b-row>

@@ -75,10 +75,10 @@ export default {
         };
       }
       if (this.item.takeover.status === "in_process") {
-        if (this.$dayjs(this.item.actual_return_at).isBefore(this.$second, "minute")) {
+        if (this.$dayjs(this.item.actual_return_at).isBefore(this.$second.subtract(48, "hour"), "minute")) {
           return {
             status: "expired_reservation",
-            variant: "warning",
+            variant: "danger",
           };
         }
 
