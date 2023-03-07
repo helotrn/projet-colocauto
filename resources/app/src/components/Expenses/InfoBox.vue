@@ -28,7 +28,7 @@
             <span class="small">par {{ user.full_name }}</span>
           </b-col>
           <b-col class="text-right">
-            <strong class="huge">{{ amount }} €</strong>
+            <strong class="huge">{{ amount | currency }}</strong>
           </b-col>
         </b-row>
         <b-row style="line-height: 1.3em">

@@ -13,7 +13,7 @@
             <span class="big">de {{ user.full_name }} à {{ credited_user.full_name }}</span>
           </b-col>
           <b-col class="text-right">
-            <strong class="huge">{{ amount }} €</strong>
+            <strong class="huge">{{ amount | currency }}</strong>
           </b-col>
         </b-row>
       </div>

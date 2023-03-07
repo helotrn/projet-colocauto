@@ -25,7 +25,7 @@
                   <strong class="big">{{ refund.credited_user_full_name }}</strong>
                 </b-col>
                 <b-col class="text-right">
-                  <strong class="huge">{{ refund.amount }} €</strong>
+                  <strong class="huge">{{ refund.amount | currency }}</strong>
                 </b-col>
               </b-row>
               <b-row>
@@ -55,7 +55,7 @@
                   <strong class="big">{{ refund.credited_user_full_name }}</strong>
                 </b-col>
                 <b-col class="text-right">
-                  <strong class="huge">{{ refund.amount }} €</strong>
+                  <strong class="huge">{{ refund.amount | currency }}</strong>
                 </b-col>
               </b-row>
               <b-row>

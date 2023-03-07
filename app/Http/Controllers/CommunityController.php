@@ -309,7 +309,7 @@ class CommunityController extends RestController
             }
             return (object) [
                 "id" => $user->id,
-                "balance" => number_format($user->balance, 2),
+                "balance" => $user->balance,
                 "full_name" => $user->full_name,
             ];
         });
@@ -344,7 +344,7 @@ class CommunityController extends RestController
                 "user_id_full_name" => $debtor->full_name,
                 "credited_user_id" => $toWipe->first()->id,
                 "credited_user_id_full_name" => $toWipe->first()->full_name,
-                "amount" => number_format(-$debtor->balance, 2),
+                "amount" => -$debtor->balance,
               ];
               $debtors = $debtors->reject(function($user) use ($debtor){
                 return $debtor->id == $user->id;
@@ -365,7 +365,7 @@ class CommunityController extends RestController
             "user_full_name" => $debtor->full_name,
             "credited_user_id" => $creditor->id,
             "credited_user_full_name" => $creditor->full_name,
-            "amount" => number_format($debtor->balance + $creditor->balance > 0 ? -$debtor->balance : $creditor->balance, 2),
+            "amount" => $debtor->balance + $creditor->balance > 0 ? -$debtor->balance : $creditor->balance,
           ];
 
           // if debtor debt is not enougth to refund creditor ...
@@ -427,7 +427,7 @@ class CommunityController extends RestController
                 $balance -= $loanable->expenses->where('type', 'credit')->sum('amount');
                 $users->prepend((object) [
                     "loanable_id" => $loanable->id,
-                    "balance" => number_format($balance, 2),
+                    "balance" => $balance,
                     "full_name" => $loanable->name,
                 ]);
             });
