@@ -7,16 +7,9 @@
       v-b-toggle.loan-actions-handover
     >
       <h2>
-        <svg-danger
-          v-if="
-            (action.status === 'in_process' && loanIsCanceled) ||
-            action.status === 'canceled' ||
-            hasActiveExtensions
-          "
-        />
+        <svg-danger v-if="(action.status === 'in_process' && loanIsCanceled) || action.status === 'canceled' || hasActiveExtensions" />
         <svg-waiting v-else-if="action.status === 'in_process'" />
         <svg-check v-else-if="action.status === 'completed'" />
-
         A l'arrivée
       </h2>
 
