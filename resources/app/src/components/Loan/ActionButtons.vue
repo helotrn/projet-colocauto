@@ -45,7 +45,7 @@ export default {
     },
     actions: {
       type: Array,
-      default: ['cancel', 'resume', 'extension', 'incident']
+      default: () => ['cancel', 'resume']
     }
   },
   computed: {
