@@ -7,9 +7,6 @@
       <b-nav-item to="/profile/account">
         {{ $t("profile.titles.account") }}
       </b-nav-item>
-      <b-nav-item to="/profile/borrower">
-        {{ $t("profile.titles.borrower") }}
-      </b-nav-item>
       <b-nav-item to="/profile/loans" :disabled="!user.borrower">
         {{ $t("profile.titles.loans") }}
       </b-nav-item>
