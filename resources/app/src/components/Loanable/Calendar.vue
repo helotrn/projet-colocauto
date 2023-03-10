@@ -2,7 +2,6 @@
   <div :style="{height: variant == 'small' ? (89 + 12*48 + 24) + 'px' : 'auto' }">
   <vue-cal
     :class="classList"
-    :hide-view-selector="true"
     :disable-views="['years', 'year']"
     :defaultView="defaultView"
     :time-step="60"
