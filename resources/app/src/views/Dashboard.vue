@@ -238,6 +238,8 @@
                       <loans-calendar
                         :loanable="loanable"
                         variant="small"
+                        :defaultView="defaultView"
+                        @view-change="defaultView = $event"
                       ></loans-calendar>
                     </b-card-text>
                   </b-tab>
@@ -445,6 +447,9 @@ export default {
   mounted() {
     this.$store.dispatch("dashboard/reload", this.user);
   },
+  data: () => ({
+    defaultView: 'week',
+  }),
   computed: {
     totalApprovedUsers() {
       if (this.hasCommunity) {

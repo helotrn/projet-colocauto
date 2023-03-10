@@ -139,6 +139,8 @@
           <b-card-text class="bg-white">
             <loans-calendar
               :loanable="loanable"
+              :defaultView="defaultView"
+              @view-change="defaultView = $event"
             ></loans-calendar>
           </b-card-text>
         </b-tab>
@@ -197,6 +199,7 @@ export default {
       lastLoanMerged: false,
       reloading: false,
       searching: false,
+      defaultView: 'week',
     };
   },
   beforeRouteEnter(to, from, next) {

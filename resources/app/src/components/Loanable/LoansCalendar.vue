@@ -1,6 +1,6 @@
 <template>
   <loanable-calendar
-    defaultView="week"
+    :defaultView="defaultView"
     :events="availability"
     :variant="variant"
     @ready="getAvailability"
@@ -32,7 +32,12 @@ export default {
       type: String,
       required: false,
       default: 'big',
-    }
+    },
+    defaultView: {
+      type: String,
+      required: false,
+      default: 'week',
+    },
   },
   methods: {
     getAvailability({ view, startDate, endDate, firstCellDate, lastCellDate, week }) {
@@ -67,6 +72,7 @@ export default {
       } catch (e) {
         throw e;
       }
+      this.$emit('view-change', view);
     },
   },
 };

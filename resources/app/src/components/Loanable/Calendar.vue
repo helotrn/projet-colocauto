@@ -3,7 +3,7 @@
   <vue-cal
     :class="classList"
     :disable-views="['years', 'year']"
-    :defaultView="defaultView"
+    :active-view="defaultView"
     :time-step="60"
     :time-cell-height="variant === 'small' ? 48 : 72"
     :events="vueCalEvents"
