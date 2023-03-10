@@ -141,6 +141,10 @@ class LoanableController extends RestController
                             "available" => $request->responseMode == "available",
                             "status" => $loan->status,
                             "reason" => $loan->reason,
+                            "user" => [
+                                "first_name" => $loan->borrower->user->name,
+                                "last_name" => $loan->borrower->user->last_name,
+                            ],
                         ],
                         "type" => "loan",
                         "title" => $loan->borrower->user->full_name .' - '. $loan->reason,

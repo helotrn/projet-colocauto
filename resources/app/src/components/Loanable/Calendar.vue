@@ -58,9 +58,20 @@
     </template>
 
     <template #event="{ event, view }">
-      <div class="vuecal__event-wrapper">
-        <div class="vuecal__event-title" v-html="event.title"></div>
-        <div class="vuecal__event-time">
+      <div class="vuecal__event-wrapper" :class="
+        event.endTimeMinutes - event.startTimeMinutes > 90 ? 'vuecal__event_large' :
+        event.endTimeMinutes - event.startTimeMinutes > 60 ? 'vuecal__event_medium' :
+        event.endTimeMinutes - event.startTimeMinutes > 30 ? 'vuecal__event_small' :
+        'vuecal__event_tiny'
+      ">
+        <template  v-if="event.data">
+          <span class="vuecal__event_first_name">{{ event.data.user.first_name }}</span>
+          <span class="vuecal__event_last_name">{{ event.data.user.last_name }}</span>
+          <span class="vuecal__event_reason">{{ event.data.reason }}</span>
+        </template>
+        <div v-else class="vuecal__event-title" v-html="event.title"></div>
+
+        <div class="vuecal__event_time">
           {{ event.start.formatTime("HH:mm") }}
           <span>&nbsp;- {{ event.end.formatTime("HH:mm") }}</span>
         </div>
@@ -751,7 +762,27 @@ export default {
       color: white;
       background-color: #664B4B;
     }
+
+    &_tiny {
+      .vuecal__event_reason,
+      .vuecal__event_time,
+      .vuecal__event_last_name {
+        display: none;
+      }
+    }
+    &_small {
+      .vuecal__event_reason,
+      .vuecal__event_time {
+        display: none;
+      }
+    }
+    &_medium {
+      .vuecal__event_reason {
+        display: none;
+      }
+    }
   }
+  
 }
 #loanable-calendar-modal .modal-dialog .card.shadow {
   box-shadow: none !important;
