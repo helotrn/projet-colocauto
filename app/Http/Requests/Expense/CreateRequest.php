@@ -20,7 +20,7 @@ class CreateRequest extends BaseRequest
             "amount" => [
                 "numeric",
                 "required",
-                "gt:0"
+                "gte:0"
             ],
             "loanable_id" => [
                 "numeric",

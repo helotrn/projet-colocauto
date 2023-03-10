@@ -17,7 +17,7 @@ class CreateRequest extends BaseRequest
             "amount" => [
                 "numeric",
                 "required",
-                "gt:0"
+                "gte:0"
             ],
             "user_id" => [
                 "numeric",

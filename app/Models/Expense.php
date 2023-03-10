@@ -14,7 +14,7 @@ class Expense extends BaseModel
 
     public static $rules = [
         "name" => ["nullable"],
-        "amount" => ["required","numeric","gt:0"],
+        "amount" => ["required","numeric","gte:0"],
         "type" => ["nullable", "in:credit,debit"],
         "executed_at" => ["nullable","date"],
         "locked" => ["boolean"],

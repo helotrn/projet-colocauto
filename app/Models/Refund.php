@@ -13,7 +13,7 @@ class Refund extends BaseModel
     use SoftDeletes;
 
     public static $rules = [
-        "amount" => ["required","numeric","gt:0"],
+        "amount" => ["required","numeric","gte:0"],
         "executed_at" => ["nullable","date"],
         "user_id" => ["required","numeric"],
         "credited_user_id" => ["required","numeric","different:user_id"],
