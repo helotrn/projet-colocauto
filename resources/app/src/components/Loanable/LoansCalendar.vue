@@ -2,7 +2,7 @@
   <loanable-calendar
     defaultView="week"
     :events="availability"
-    variant="small"
+    :variant="variant"
     @ready="getAvailability"
     @view-change="getAvailability"
     :loanable="loanable"
@@ -28,6 +28,11 @@ export default {
       type: Object,
       required: true,
     },
+    variant: {
+      type: String,
+      required: false,
+      default: 'big',
+    }
   },
   methods: {
     getAvailability({ view, startDate, endDate, firstCellDate, lastCellDate, week }) {

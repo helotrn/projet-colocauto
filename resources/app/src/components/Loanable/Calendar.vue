@@ -1,15 +1,15 @@
 <template>
-  <div>
+  <div :style="{height: variant == 'small' ? (89 + 12*48 + 24) + 'px' : 'auto' }">
   <vue-cal
     :class="classList"
     :hide-view-selector="true"
     :disable-views="['years', 'year']"
     :defaultView="defaultView"
     :time-step="60"
-    :time-cell-height="variant === 'small' ? 24 : 32"
+    :time-cell-height="variant === 'small' ? 48 : 72"
     :events="vueCalEvents"
     locale="fr"
-    :xsmall="variant === 'small'"
+    :small="variant === 'small'"
     @ready="$emit('ready', $event)"
     @view-change="$emit('view-change', $event)"
     :on-event-click="showDetails"
@@ -283,9 +283,11 @@ export default {
   },
   mounted(){
     // scroll the calendar to show 8-20 hours
-    const timeCellHeight = 24;
-    const hours = 8;
-    this.$el.querySelector('.vuecal__bg').scrollTo({ top: hours * timeCellHeight })
+    if(this.variant === "small") {
+      const timeCellHeight = 48;
+      const hours = 8;
+      this.$el.querySelector('.vuecal__bg').scrollTo({ top: hours * timeCellHeight });
+    }
   },
   computed: {
     classList: function () {
@@ -542,6 +544,9 @@ export default {
       height: inherit;
       min-height: 2em;
       line-height: 1.3;
+    }
+    .weekday-label .small {
+      font-size: 1em;
     }
   }
 
