@@ -242,9 +242,14 @@
                     </b-card-text>
                   </b-tab>
                 </b-tabs>
-                <div class="d-flex flex-column">
-                  <b-button class="mb-2 py-2" variant="primary" to="/search/calendar">Voir tout l'agenda</b-button>
-                </div>
+              </b-col>
+            </b-row>
+            <b-row>
+              <b-col md="6">
+                <b-button class="mb-2 py-2 w-100" variant="primary" to="/search/calendar">Voir tout l'agenda</b-button>
+              </b-col>
+              <b-col md="6">
+                <b-button class="mb-2 py-2 w-100" variant="primary" to="/profile/loans">Historique d'emprunts</b-button>
               </b-col>
             </b-row>
           </section>
