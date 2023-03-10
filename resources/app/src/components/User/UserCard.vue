@@ -20,10 +20,6 @@
         </div>
       </b-col>
     </b-row>
-    <div class="user-card__tags">
-      <b-badge pill variant="warning" v-if="user.owner">P</b-badge>
-      <b-badge pill variant="success" v-if="isCommittee">C</b-badge>
-    </div>
   </b-card>
 </template>
 

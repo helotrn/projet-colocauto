@@ -27,19 +27,8 @@
       <b-row no-gutters>
         <b-col>
           <div v-if="community.users">
-            <b-container class="community__users-legend">
-              <b-row>
-                <b-col>
-                  <span>
-                    <b-badge pill variant="warning">P</b-badge>
-                    <span>Propriétaire de véhicule</span>
-                  </span>
-                </b-col>
-              </b-row>
-            </b-container>
-
             <b-container>
-              <b-row class="community__users">
+              <b-row class="community__users mt-4">
                   <b-col md="6" lg="4"
                     v-for="user in community.users"
                     :key="user.id"
