@@ -84,44 +84,16 @@
     </div>
 
     <div v-if="currentPage == 4" class="register-step__reasons-why">
-      <h2>Vous avez fait le bon choix</h2>
+      <h2>Bienvenue à bord</h2>
 
       <div class="swiping-card" v-show="currentSlide == 1">
         <svg-driving class="img" />
         <div class="text">
-          Soyez protégé-e avec <strong>une assurance complète</strong>, pas compliquée.
+          En route vers le partage de voiture entre voisin.e.s
         </div>
       </div>
 
-      <div class="swiping-card" v-show="currentSlide == 2">
-        <svg-lend class="img" />
-        <div class="text">
-          C’est un projet <strong>par et pour votre voisinage</strong>, qui évolue avec vous.
-        </div>
-      </div>
-
-      <div class="swiping-card" v-show="currentSlide == 3">
-        <svg-smiling-heart class="img" />
-        <div class="text">
-          Optez pour <strong>la seule solution locale</strong> d’autopartage entre voisin-e-s.
-        </div>
-      </div>
-
-      <div class="swiping-card" v-show="currentSlide == 4">
-        <svg-biking class="img" />
-        <div class="text">
-          <strong>Économisez</strong> grâce à ce projet citoyen à but non-lucratif.
-        </div>
-      </div>
-
-      <b-icon
-        class="nextSlide-btn"
-        v-on:click="nextSlide()"
-        v-if="currentSlide < 4"
-        icon="arrow-right-circle-fill"
-      ></b-icon>
-
-      <b-btn v-else variant="primary" to="/app" v-on:click="forcePageRefresh()"> J'embarque!</b-btn>
+      <b-btn variant="primary" to="/app" v-on:click="forcePageRefresh()"> J'embarque !</b-btn>
     </div>
   </div>
 </template>

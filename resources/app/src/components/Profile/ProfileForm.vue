@@ -31,7 +31,7 @@
           <b-col>
             <h2 class="allo-title">
               <svg-smiling-heart />
-              Allo {{ user.name }}<span v-if="user.name">,</span>
+              Bonjour {{ user.name }}<span v-if="user.name">,</span>
             </h2>
 
             <label>On brise la glace? Parlez-nous de vous.</label>
