@@ -13,7 +13,7 @@
     @view-change="$emit('view-change', $event)"
     :on-event-click="showDetails"
 
-    :editable-events="{ create: true, resize: true }"
+    :editable-events="{ create: !isTouchScreen, resize: !isTouchScreen }"
     :snap-to-time="15"
     :drag-to-create-threshold="30"
     :on-event-create="registerCancel"
@@ -342,6 +342,9 @@ export default {
         this.$dayjs(this.selectedEvent.data.departure_at).format("YYYY-MM-DD") !==
         this.$dayjs(this.selectedEvent.data.actual_return_at).format("YYYY-MM-DD")
       );
+    },
+    isTouchScreen() {
+      return matchMedia('(hover: none), (pointer: coarse)').matches;
     },
   },
   methods: {
