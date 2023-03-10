@@ -513,7 +513,7 @@ export default {
         this.extendLoan.updated = true;
         this.updateEventDisplay(this.extendLoan, this.events);
       }).catch(error => {
-        Vue.set(this.extendLoan, 'error', this.$store.state.loans.error.response.data.errors.loanable_id[0]);
+        Vue.set(this.extendLoan, 'error', Object.values(this.$store.state.loans.error.response.data.errors).map(v => v.join()).join());
       });
     },
     cancelChange(){
