@@ -160,7 +160,7 @@ return [
         ],
         "duration_in_minutes" => [
             "min" =>
-                "La durée de l'emprunt doit être supérieure ou égale à 15 minutes.",
+                "La durée de l'emprunt doit être supérieure ou égale à 30 minutes.",
         ],
         "accept_conditions" => [
             "accepted" =>

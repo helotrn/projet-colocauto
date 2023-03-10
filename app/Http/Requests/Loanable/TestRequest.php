@@ -26,7 +26,7 @@ class TestRequest extends BaseRequest
     {
         $rules = [
             "departure_at" => ["date", "required"],
-            "duration_in_minutes" => ["integer", "required", "min:15"],
+            "duration_in_minutes" => ["integer", "required", "min:30"],
             "estimated_distance" => ["integer", "required", "min:0"],
             "loanable_id" => ["integer", "required"],
             "community_id" => ["integer", "filled"],

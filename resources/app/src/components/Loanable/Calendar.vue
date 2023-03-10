@@ -15,6 +15,7 @@
 
     :editable-events="{ create: true, resize: true }"
     :snap-to-time="15"
+    :drag-to-create-threshold="30"
     :on-event-create="registerCancel"
     @event-duration-change="changeDuration"
     @event-drag-create="createNewLoan"
@@ -393,6 +394,13 @@ export default {
       e.stopPropagation()
     },
     async createNewLoan (event) {
+      // do not create loans shorter than 30 minutes
+      if( event.endTimeMinutes - event.startTimeMinutes < 30 ) {
+        this.cancelNewEvent();
+        this.cancelNewEvent = undefined;
+        return false;
+      }
+
       // check if the event is not overlaping with another
       let overlaping = this.vueCalEvents.filter(e =>
         this.$dayjs(e.start) < event.end

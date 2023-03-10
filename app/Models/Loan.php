@@ -18,7 +18,7 @@ class Loan extends BaseModel
 
     public static $rules = [
         "departure_at" => ["required"],
-        "duration_in_minutes" => ["integer", "required", "min:15"],
+        "duration_in_minutes" => ["integer", "required", "min:30"],
         "estimated_distance" => ["integer", "required"],
         "estimated_insurance" => ["numeric", "required"],
         "estimated_price" => ["numeric", "required"],

@@ -39,7 +39,7 @@
           <!---->
           <!-- text for loan invalid duration -->
           <b-alert show variant="danger" v-if="invalidDuration">
-            La durée de l'emprunt doit être supérieure ou égale à 15 minutes.
+            La durée de l'emprunt doit être supérieure ou égale à 30 minutes.
           </b-alert>
           <!---->
           <!-- field estimated distance -->
@@ -129,8 +129,8 @@ export default {
   },
   computed: {
     invalidDuration() {
-      // Invalid if the duration of a loan is not greater than 0 minute.
-      return !(this.item.duration_in_minutes > 0);
+      // Invalid if the duration of a loan is not greater than 30 minute.
+      return !(this.item.duration_in_minutes >= 30);
     },
     loanableTypesExceptCar() {
       return this.loanableTypes.filter((t) => t.value !== "car");
