@@ -1,5 +1,5 @@
 <template>
-  <div :class="classList">
+  <div :class="classList" @click="$emit('click')">
     <div class="loanable-calendar-month-cell-content__background">
       <cal-cell-available v-if="availability === 'available'" />
       <cal-cell-partially-available v-else-if="availability === 'partially-available'" />

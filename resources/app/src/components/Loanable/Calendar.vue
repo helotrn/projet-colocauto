@@ -45,11 +45,12 @@
       </div>
     </template>
 
-    <template #cell-content="{ cell, view, events }">
+    <template #cell-content="{ cell, view, events, goNarrower }">
       <calendar-month-cell-content
         v-if="view.id === 'month'"
         :availability="getMonthDayAvailability(events, cell)"
         :current="cell.today"
+        @click="goNarrower"
       >
         {{ cell.content }}
       </calendar-month-cell-content>
