@@ -477,6 +477,12 @@ export default {
     },
     async changeDuration({event, oldDate, originalEvent}) {
 
+      // do not make loans shorter than 30 minutes
+      if( event.endTimeMinutes - event.startTimeMinutes < 30 ) {
+        this.restoreEventDisplay(originalEvent.uri, this.events);
+        return false;
+      }
+
       if( event.end > originalEvent.end ){
         // check if the resize is overlaping with anoter loan
         let overlaping = this.events.find(e =>
