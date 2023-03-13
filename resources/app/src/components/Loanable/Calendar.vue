@@ -19,6 +19,7 @@
     :on-event-create="registerCancel"
     @event-duration-change="changeDuration"
     @event-drag-create="createNewLoan"
+    @cell-click="registerClick"
   >
     <template v-slot:title="{ title, view }">
       <span v-if="view.id === 'years'">Years</span>
@@ -451,6 +452,19 @@ export default {
       // register cancel method to use later when needed
       this.cancelNewEvent = deleteEvent;
       return true;
+    },
+    registerClick(date){
+      // check if a drag-n-drop event creation is in process
+      if(this.cancelNewEvent) return;
+
+      // create a 2 hour event from the clicked point
+      this.cancelNewEvent = () => {};
+      this.createNewLoan({
+        start: date,
+        end: this.$dayjs(date).add(2, 'hour').toDate(),
+        startTimeMinutes: this.$dayjs(date).startOf('day').diff(event, 'minute'),
+        endTimeMinutes: this.$dayjs(date).startOf('day').diff(event, 'minute') + 120,
+      });
     },
     async askLoan() {
 
