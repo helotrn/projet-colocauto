@@ -92,7 +92,7 @@
       </b-col>
     </b-row>
 
-    <b-row class="availability-rules__description">
+    <b-row v-if="user.role == 'admin'" class="availability-rules__description">
       <b-col>
         <div class="form-inline availability-rules__description__default">
           <b-form-group label="Par défaut:" label-for="availability_mode" inline>
@@ -135,6 +135,7 @@ import Vue from "vue";
 import VueCal from "vue-cal";
 
 import LoanableExceptions from "@/components/Loanable/Exceptions.vue";
+import UserMixin from "@/mixins/UserMixin";
 
 export default {
   name: "LoanableAvailabilityRules",
@@ -142,6 +143,7 @@ export default {
     LoanableExceptions,
     VueCal,
   },
+  mixins: [UserMixin],
   props: {
     changed: {
       type: Boolean,

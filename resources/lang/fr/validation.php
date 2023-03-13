@@ -214,6 +214,7 @@ return [
     ],
     
     "cannot_modify" => [
-        "expense" => "la dépense ne peut pas être modifiée"
+        "expense" => "la dépense ne peut pas être modifiée",
+        "availability" => "seul·e un·e admin peut modifier la disponibilité d'un véhicule",
     ],
 ];
