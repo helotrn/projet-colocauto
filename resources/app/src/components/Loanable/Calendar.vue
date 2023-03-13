@@ -551,6 +551,16 @@ export default {
       if (this.extendLoan.data && !this.extendLoan.updated) {
         this.restoreEventDisplay(this.extendLoan.uri, this.events);
       }
+      // cleanup
+      if( this.extendLoan.data) {
+        this.extendLoan = {};
+      }
+      if ( this.selectedEvent.data ) {
+        this.selectedEvent = {};
+      }
+      if ( this.newEvent.data ) {
+        this.newEvent = {};
+      }
     },
   },
 };
