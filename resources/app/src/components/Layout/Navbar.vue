@@ -3,7 +3,7 @@
     <b-collapse class="layout-navbar__collapse" is-nav>
       <b-navbar-nav class="mr-auto">
         <b-navbar-brand :to="isLoggedIn ? '/app' : '/'">
-          <img src="/colocauto.png" alt="Coloc'Auto" />
+          <img src="/logo-colocauto.svg" alt="Coloc'Auto" width="180px" />
         </b-navbar-brand>
 
         <b-navbar-brand class="layout-navbar__separator d-none d-sm-block" v-if="title" />
@@ -14,7 +14,7 @@
     </b-collapse>
 
     <b-navbar-brand :to="isLoggedIn ? '/app' : '/'">
-      <img src="/colocauto.png" alt="Coloc'Auto" class="logo d-lg-none" />
+      <img src="/logo-colocauto.svg" alt="Coloc'Auto" class="logo d-lg-none" />
     </b-navbar-brand>
 
     <b-navbar-toggle target="nav-collapse" v-if="!isLoggedIn" />
