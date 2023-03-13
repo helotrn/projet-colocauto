@@ -5,6 +5,7 @@ export default {
       name: "nom",
       slug: "nom système",
       color: "couleur",
+      admin: "Seulement visible pour l'admin dans la liste proposée"
     },
     list: {
       create: "ajouter un type",

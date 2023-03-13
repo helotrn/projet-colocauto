@@ -46,6 +46,9 @@
           <template v-slot:cell(color)="row">
             <span class="badge" :class="`badge-${row.value}`">{{ colorNames[row.value] }}</span>
           </template>
+          <template v-slot:cell(admin)="row">
+            <b-form-checkbox :checked="row.value" disabled />
+          </template>
           <template v-slot:cell(actions)="row">
             <admin-list-actions :columns="['edit']" :row="row" :slug="slug" />
           </template>
@@ -87,6 +90,7 @@ export default {
         { key: "name", label: "Nom", sortable: true },
         { key: "color", label: "Couleur", sortable: true },
         { key: "slug", label: "Nom système", sortable: true },
+        { key: "admin", label: "Admin uniquement", sortable: true },
         { key: "actions", label: "Actions", tdClass: "table__cell__actions" },
       ],
       colorNames: {

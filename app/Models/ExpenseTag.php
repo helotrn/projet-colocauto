@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Models;
+use Illuminate\Database\Eloquent\Builder;
 
 class ExpenseTag extends BaseModel
 {
@@ -8,7 +9,7 @@ class ExpenseTag extends BaseModel
         "name" => "required",
     ];
 
-    protected $fillable = ["name", "slug", "color"];
+    protected $fillable = ["name", "slug", "color", "admin"];
 
     public $collections = ["expenses"];
 
@@ -31,5 +32,15 @@ class ExpenseTag extends BaseModel
                 $model->save();
             }
         });
+    }
+
+    public function scopeAccessibleBy(Builder $query, $user)
+    {
+        // unless the tag is queried directly or by admin ...
+        if ($user->isAdmin() || request()->routeIs("expense_tags.retrieve")) {
+            return $query;
+        }
+        // .. remove "admin" ones from the list
+        return $query->where('admin', false);
     }
 }

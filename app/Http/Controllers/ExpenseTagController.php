@@ -78,6 +78,7 @@ class ExpenseTagController extends RestController
                 "name" => "",
                 "slug" => "",
                 "color" => "",
+                "admin" => false,
             ],
             "form" => [
                 "name" => [
@@ -110,6 +111,9 @@ class ExpenseTagController extends RestController
                             "value" => "dark",
                         ],
                     ],
+                ],
+                "admin" => [
+                    "type" => "checkbox",
                 ],
             ],
             "filters" => $this->model::$filterTypes ?: new \stdClass(),
