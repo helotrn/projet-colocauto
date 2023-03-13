@@ -110,7 +110,7 @@
     </div>
     <!-- calendar display -->
     <b-row v-if="view === 'calendar'">
-      <b-tabs v-if="!loading && loanables && loanables.length > 0" class="loanables__tabs w-100 m-3 mt-5">
+      <b-tabs v-if="!loading && loanables && loanables.length > 0" class="loanables__tabs w-100 m-md-3 mt-5">
         <b-tab
           v-for="loanable in loanables"
           :title="loanable.name"
