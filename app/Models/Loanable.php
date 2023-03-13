@@ -58,6 +58,12 @@ class Loanable extends BaseModel
     {
         parent::boot();
 
+        self::created(function ($model) {
+            // loanable is available by default
+            $model->availability_mode = "always";
+            $model->save();
+        });
+
         self::deleted(function ($model) {
             $model
                 ->loans()
