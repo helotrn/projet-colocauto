@@ -93,6 +93,8 @@ export default {
         primary: 'Bleu',
         success: 'Vert',
         danger: 'Rouge',
+        secondary: 'Gris',
+        dark: 'Noir',
       }
     };
   },
