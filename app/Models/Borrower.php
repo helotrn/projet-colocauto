@@ -18,6 +18,12 @@ class Borrower extends BaseModel
     {
         parent::boot();
 
+        self::created(function ($model) {
+            // borrower is approuved by default
+            $model->approved_at = new \Carbon\Carbon();
+            $model->save();
+        });
+
         // For every save
         self::saved(function ($model) {
             // Stop all logic if the borrower is suspended
