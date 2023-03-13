@@ -1,5 +1,12 @@
 <template>
-  <div :style="{height: variant == 'small' ? (89 + 12*48 + 24) + 'px' : 'auto' }">
+  <div :style="{height: variant == 'small' ? (89 + 12*48 + 24) + 'px' : 'auto', position: 'relative' }">
+  <b-button
+    class="top-corner"
+    variant="primary"
+    @click="createLoanForToday"
+  >
+    Créer
+  </b-button>
   <vue-cal
     :class="classList"
     :disable-views="['years', 'year']"
@@ -462,9 +469,13 @@ export default {
       this.createNewLoan({
         start: date,
         end: this.$dayjs(date).add(2, 'hour').toDate(),
-        startTimeMinutes: this.$dayjs(date).startOf('day').diff(event, 'minute'),
-        endTimeMinutes: this.$dayjs(date).startOf('day').diff(event, 'minute') + 120,
+        startTimeMinutes: this.$dayjs(date).startOf('day').diff(date, 'minute'),
+        endTimeMinutes: this.$dayjs(date).startOf('day').diff(date, 'minute') + 120,
       });
+    },
+    createLoanForToday(){
+      // create a 2 hour event from now
+      this.registerClick(new Date());
     },
     async askLoan() {
 
@@ -581,6 +592,10 @@ export default {
 </script>
 
 <style lang="scss">
+.btn.top-corner {
+  position: absolute;
+  right: 0;
+}
 .loanable-calendar {
   font-variant-numeric: tabular-nums;
 
