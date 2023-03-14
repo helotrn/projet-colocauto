@@ -424,17 +424,7 @@ export default {
         return false;
       }
 
-      // check if the event is not overlaping with another
-      let overlaping = this.vueCalEvents.filter(e =>
-        this.$dayjs(e.start) < event.end
-        && this.$dayjs(e.end) > event.start
-      );
-      if( overlaping.length ) {
-        // remove the event and do not go further
-        this.cancelNewEvent();
-        this.cancelNewEvent = undefined;
-        return false;
-      }
+      // let the popup display the warning message in case of overlaping
 
       this.loading = true;
       this.showDialog = true;
