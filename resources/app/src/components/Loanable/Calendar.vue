@@ -8,6 +8,7 @@
     Créer
   </b-button>
   <vue-cal
+    ref="vuecal"
     :class="classList"
     :disable-views="['years', 'year']"
     :active-view="defaultView"
@@ -465,17 +466,13 @@ export default {
       if(this.cancelNewEvent) return;
 
       // create a 2 hour event from the clicked point
-      this.cancelNewEvent = () => {};
-      this.createNewLoan({
-        start: date,
-        end: this.$dayjs(date).add(2, 'hour').toDate(),
-        startTimeMinutes: this.$dayjs(date).startOf('day').diff(date, 'minute'),
-        endTimeMinutes: this.$dayjs(date).startOf('day').diff(date, 'minute') + 120,
-      });
+      this.createNewLoan(this.$refs.vuecal.createEvent(date, 120));
     },
     createLoanForToday(){
+      // now rounded to the next quarter of hour
+      let date = this.$dayjs().minute(Math.ceil(this.$dayjs().minute() / 15) * 15).toDate();
       // create a 2 hour event from now
-      this.registerClick(new Date());
+      this.registerClick(date);
     },
     async askLoan() {
 
