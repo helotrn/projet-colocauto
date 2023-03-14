@@ -4,6 +4,7 @@ export default {
   namespaced: true,
   state: {
     errors: null,
+    cancelToken: undefined,
   },
   mutations: {
     errors(state, errors) {
