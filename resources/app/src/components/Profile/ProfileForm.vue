@@ -229,6 +229,12 @@ export default {
       display: inline-block;
       overflow: hidden;
       margin: 0 !important;
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
     }
     .custom-file-label {
       border: none;
