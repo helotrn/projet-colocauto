@@ -211,7 +211,7 @@
               <b-col class="d-flex flex-column">
                 <b-button class="mb-2 py-2" variant="primary" to="/wallet">Voir le portefeuille</b-button>
                 <info-link-block title="Comment sont calculés les coûts ?" to="https://www.colocauto.org/faq">
-                   <svg-pen-paper width="100px" class="p-2"/>
+                   <svg-magnifying-glass-euro width="100px" class="p-2"/>
                 </info-link-block>
               </b-col>
             </b-row>
@@ -346,7 +346,7 @@
               </b-card>
               <b-button class="my-4 py-2 w-100" variant="primary" to="/wallet">Voir le portefeuille</b-button>
               <info-link-block title="Comment sont calculés les coûts ?" to="https://www.colocauto.org/faq">
-                 <svg-pen-paper width="100px" class="p-2" style="flex-shrink: 0"/>
+                 <svg-magnifying-glass-euro width="100px" class="p-2" style="flex-shrink: 0"/>
               </info-link-block>
             </div>
 
@@ -407,6 +407,7 @@ import SalutCoeur from "@/assets/svg/salut-coeur.svg";
 import Question from "@/assets/svg/question.svg";
 import PenPaper from "@/assets/svg/pen-paper.svg";
 import Waving from "@/assets/svg/waving.svg";
+import MagnifyingGlassEuro from "@/assets/svg/magnifying-glass-euro.svg";
 
 const sendRectMap = new Map();
 
@@ -421,6 +422,7 @@ export default {
     ReleaseInfoBox,
     TutorialBlock,
     "svg-magnifying-glass": MagnifyingGlass,
+    "svg-magnifying-glass-euro": MagnifyingGlassEuro,
     "svg-salut-coeur": SalutCoeur,
     "svg-question": Question,
     "svg-pen-paper": PenPaper,
