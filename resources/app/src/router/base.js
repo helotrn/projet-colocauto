@@ -1,5 +1,4 @@
 import Dashboard from "@/views/Dashboard.vue";
-import Faq from "@/views/Faq.vue";
 import Help from "@/views/Help.vue";
 import Home from "@/views/Home.vue";
 
@@ -7,14 +6,6 @@ export default [
   {
     path: "/",
     redirect: "/login",
-  },
-  {
-    path: "/faq",
-    name: "faq",
-    component: Faq,
-    meta: {
-      title: "titles.faq",
-    },
   },
   {
     path: "/app",

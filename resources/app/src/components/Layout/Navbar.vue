@@ -48,13 +48,6 @@
           <span class="nav-link__text">Profil</span>
         </b-nav-item>
 
-        <b-nav-item to="/faq" class="d-block d-lg-none">
-          <span class="nav-link__icon">
-            <svg-help />
-          </span>
-          <span class="nav-link__text">Contact / FAQ</span>
-        </b-nav-item>
-
         <b-nav-item @click="logout" class="d-block d-lg-none">
           <span class="nav-link__icon">
             <svg-logout />
@@ -138,12 +131,6 @@
               <svg-vector />
             </span>
             <span class="nav-link__text">Mes véhicules</span>
-          </b-dropdown-item>
-          <b-dropdown-item to="/faq" v-if="!hasCompletedRegistration">
-            <span class="nav-link__icon">
-              <svg-help />
-            </span>
-            <span class="nav-link__text">FAQ</span>
           </b-dropdown-item>
           <b-dropdown-divider />
           <b-dropdown-item @click="logout">
