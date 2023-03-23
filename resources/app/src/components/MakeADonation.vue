@@ -1,7 +1,7 @@
 <template>
   <b-card no-body>
     <b-card-header style="background-color: transparent">
-      <a href="https://www.zeste.coop/fr/associations/Colocauto" class="d-flex" target="_blank">
+      <a href="https://www.colocauto.org/don" class="d-flex" target="_blank">
         <salut-coeur width="100px" class="p-2" />
         <div class="pl-2">
           <h2 class="text-dark">Faire un don</h2>
