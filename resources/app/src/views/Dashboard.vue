@@ -210,7 +210,7 @@
             <b-row>
               <b-col class="d-flex flex-column">
                 <b-button class="mb-2 py-2" variant="primary" to="/wallet">Voir le portefeuille</b-button>
-                <info-link-block title="Comment sont calculés les coûts ?" to="https://colocauto.org/faq">
+                <info-link-block title="Comment sont calculés les coûts ?" to="https://www.colocauto.org/faq">
                    <svg-pen-paper width="100px" class="p-2"/>
                 </info-link-block>
               </b-col>
@@ -345,7 +345,7 @@
                 </div>
               </b-card>
               <b-button class="my-4 py-2 w-100" variant="primary" to="/wallet">Voir le portefeuille</b-button>
-              <info-link-block title="Comment sont calculés les coûts ?" to="https://colocauto.org/faq">
+              <info-link-block title="Comment sont calculés les coûts ?" to="https://www.colocauto.org/faq">
                  <svg-pen-paper width="100px" class="p-2" style="flex-shrink: 0"/>
               </info-link-block>
             </div>
@@ -368,10 +368,10 @@
             <info-link-block title="Faire un don" to="https://www.zeste.coop/fr/associations/Colocauto">
               <svg-salut-coeur width="100px" class="p-2"/>
             </info-link-block>
-            <info-link-block title="Foire aux questions" to="https://colocauto.org/faq">
+            <info-link-block title="Foire aux questions" to="https://www.colocauto.org/faq">
               <svg-question width="100px" class="p-2"/>
             </info-link-block>
-            <info-link-block title="Assurance" to="https://colocauto.org/assurance">
+            <info-link-block title="Assurance" to="https://www.colocauto.org/assurance">
               <svg-pen-paper width="100px" class="p-2"/>
             </info-link-block>
             <info-link-block title="Contactez-nous" to="mailto:soutien@colocauto.org">
