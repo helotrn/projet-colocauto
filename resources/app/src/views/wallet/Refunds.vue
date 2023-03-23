@@ -60,6 +60,9 @@ export default {
   name: "WalletRefunds",
   mixins: [Authenticated, DataRouteGuards, ListMixin, UserMixin],
   components: { RefundInfoBox, RefundFilters },
+  mounted(){
+    this.contextParams.page = 1;
+  },
   i18n: {
     messages: {
       en: {

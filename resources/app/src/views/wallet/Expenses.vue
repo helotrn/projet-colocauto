@@ -56,6 +56,9 @@ export default {
   name: "WalletExpenses",
   mixins: [Authenticated, DataRouteGuards, ListMixin, UserMixin],
   components: { ExpenseInfoBox, ExpenseFilters },
+  mounted(){
+    this.contextParams.page = 1;
+  },
   i18n: {
     messages: {
       en: {
