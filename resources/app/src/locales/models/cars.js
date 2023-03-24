@@ -25,8 +25,8 @@ export default {
       report_download: "télécharger le gabarit de la fiche",
       transmission_mode: "transmission",
       year_of_circulation: "année de mise en circulation",
-      cost_per_km: "coût en € par kilomètre parcouru",
-      cost_per_month: "coût fixe par mois",
+      cost_per_km: "coût en € par kilomètre",
+      cost_per_month: "provisions",
       owner_compensation: "dédommagement propriétaire",
     },
     descriptions: {
@@ -34,13 +34,13 @@ export default {
         "Ce coût s’applique aux emprunts réalisées avec ce véhicule, et viendra" +
         " automatiquement s’ajouter à la liste des dépenses du groupe.",
       cost_per_month:
-        "Les dépenses qui concernent le véhicule sont faites au profit de tou·te·s." +
-        " Les coûts fixes par mois sont la part estimée de contribution dûe par" +
-        " les membres du groupe pour participer à l'entretien et l'assurance.",
+        "Les provisions sont partagées mensuellement entre les membres du groupe." +
+        " Elles couvrent des dépenses telles que l'assurance, l'entretien et la" +
+        " décote du véhicule.",
       owner_compensation:
-        "Ce montant est dû tous les mois par les utilisateur·ice·s de la voiture"+
-        " partagée à son propriétaire en compensation de l'usure et de la décôte" +
-        " du véhicule.",
+        "Ce montant est partagé mensuellement entre les membres du groupe (à" +
+        " l'exception du. de la propriétaire). Il permet de dédommager le ou la" +
+        " propriétaire du véhicule.",
     },
     transmission_modes: {
       automatic: "automatique",
