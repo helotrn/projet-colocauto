@@ -170,6 +170,7 @@ class Loanable extends BaseModel
         "has_padlock",
         "estimated_cost",
         "balance",
+        "stats",
     ];
 
     public $items = ["owner", "community", "padlock"];
@@ -453,6 +454,21 @@ class Loanable extends BaseModel
                 "type" => $item->first()->type,
             ];
         });
+    }
+
+    public function getStatsAttribute()
+    {
+        $loans = Loan::where("loanable_id", $this->id)
+            ->whereHas("handover", function ($query) {
+                $query->whereNotNull('executed_at');
+            })->get();
+
+        return [
+            "loans" => $loans->count(),
+            "km" => $loans->map(function($loan){
+                return $loan->handover->mileage_end - $loan->takeover->mileage_beginning;
+            })->sum(),
+        ];
     }
 
     public function scopeWithDeleted(Builder $query, $value, $negative = false)

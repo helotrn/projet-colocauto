@@ -68,18 +68,7 @@
                   <forms-builder :definition="form.costs" v-model="item" entity="cars"></forms-builder>
                 </b-col>
                 <b-col lg="6">
-                  <p>Équilibre financier du véhicule en fonction des dépenses
-                  enregistrées pas les utilisateurs :</p>
-                  <dl v-if="item.balance">
-                    <template v-for="(group, key) in item.balance" >
-                      <dt :key="key+'-t'">{{ group.name }}</dt>
-                      <dd :key="key+'-d'">{{ group.total }}€ ({{ group.type }})</dd>
-                    </template>
-                  </dl>
-                  <p v-else>Aucun dépense à afficher</p>
-                  <p>Les dépenses d'emprunt devraient équilibrer le coût du carburant.
-                  Les dépenses partagées et l'entretien réalisé par le propriétaire
-                  devraient équilibrer les provisions.</p>
+                  <loanable-balance :loanable="item" />
                 </b-col>
               </b-row>
             </div>
@@ -111,6 +100,7 @@ import FormsValidatedInput from "@/components/Forms/ValidatedInput.vue";
 import FormsBuilder from "@/components/Forms/Builder.vue";
 import FormsRelationInput from "@/components/Forms/RelationInput.vue";
 import LoanableAvailabilityRules from "@/components/Loanable/AvailabilityRules.vue";
+import LoanableBalance from "@/components/Loanable/Balance.vue";
 
 import DataRouteGuards from "@/mixins/DataRouteGuards";
 import FormMixin from "@/mixins/FormMixin";
@@ -127,6 +117,7 @@ export default {
     FormsRelationInput,
     FormsValidatedInput,
     LoanableAvailabilityRules,
+    LoanableBalance,
   },
   data() {
     return {
