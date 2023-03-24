@@ -59,7 +59,7 @@ const actions = {
           order: "-updated_at",
           per_page: maxLoanableCount,
           fields: [
-            "*",
+            "name", "owner", "estimated_cost",
             "!events",
             "image.*",
             "loans.*",
