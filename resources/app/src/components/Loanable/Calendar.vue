@@ -73,7 +73,7 @@
         event.endTimeMinutes - event.startTimeMinutes > 30 ? 'vuecal__event_small' :
         'vuecal__event_tiny'
       ">
-        <template  v-if="event.data">
+        <template  v-if="event.data && event.data.user">
           <span class="vuecal__event_first_name">{{ event.data.user.first_name }}</span>
           <span class="vuecal__event_last_name">{{ event.data.user.last_name }}</span>
           <span class="vuecal__event_reason">{{ event.data.reason }}</span>
