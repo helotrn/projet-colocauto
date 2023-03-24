@@ -495,7 +495,7 @@ export default {
         return false;
       }
 
-      if( event.end > originalEvent.end ){
+      if( event.end > originalEvent.end && event.end - originalEvent.end > 15*60*1000 ){
         // check if the resize is overlaping with anoter loan
         let overlaping = this.events.find(e =>
           this.$dayjs(e.start) < event.end
@@ -516,7 +516,7 @@ export default {
           start: event.start.format("YYYY-MM-DD HH:mm:00"),
           end: event.end.format("YYYY-MM-DD HH:mm:00"),
         },
-        available: event.end > originalEvent.end ? this.$store.state.loans.item.loanable.available : true,
+        available: event.end - originalEvent.end > 15*60*1000 ? this.$store.state.loans.item.loanable.available : true,
       };
       // get more information about the loan
       this.loading = true;
