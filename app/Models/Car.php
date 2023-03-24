@@ -129,7 +129,14 @@ class Car extends Loanable
     public function writeMonthlySharedExpenses()
     {
         Log::info("Compute mounthy shared expenses for {$this->name}");
-        $community = $this->owner ? $this->owner->user->main_community : $this->community;
+
+        $community = ($this->owner && $this->owner->user) ? $this->owner->user->main_community : $this->community;
+        // expenses on a loanable without community cannot be managed
+        if(!$community) {
+            Log::info("no community found");
+            return;
+        }
+
         $period_start = config("app.month_as_day") ? Carbon::now()->startOfDay() : Carbon::now()->startOfMonth();
 
         // get the users of the same community that joined the community
