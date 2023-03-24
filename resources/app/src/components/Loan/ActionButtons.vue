@@ -1,6 +1,6 @@
 <template>
   <div class="loan__actions__buttons flex-column flex-md-row-reverse" v-if="!!item.id && actions.includes('cancel')">
-    <b-button variant="danger" :disabled="loanIsCanceled || !canCancel" @click="$emit('cancel')">
+    <b-button variant="danger" :disabled="loanIsCanceled || !canCancel || !isBorrower" @click="$emit('cancel')">
       Annuler la réservation
     </b-button>
     <b-button
@@ -60,6 +60,9 @@ export default {
         this.$second.isBefore(this.item.departure_at, "minute")
       );
     },
+    isBorrower() {
+      return this.user.borrower.id === this.item.borrower.id;
+    }
   },
 };
 </script>
