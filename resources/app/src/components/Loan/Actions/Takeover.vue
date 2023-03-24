@@ -91,7 +91,7 @@
                       :rules="{ required: true, min_value: 1 }"
                       label="KM au compteur, au début de la course"
                       placeholder="KM au compteur"
-                      :disabled="((lockMileage && !!action.executed_at) || loanIsFinished || loanIsCanceled || !loanDayIsTodayOrBefore) && !userIsAdmin"
+                      :disabled="((lockMileage && !!action.executed_at) || loanIsFinished || loanIsCanceled || !loanDayIsTodayOrBefore || !userRoles.includes('borrower')) && !userIsAdmin"
                       v-model="action.mileage_beginning"
                     />
                   </b-col>
@@ -104,7 +104,7 @@
                   "
                 >
                   <b-col>
-                    <b-button type="submit" size="sm" variant="success" class="mr-3">
+                    <b-button type="submit" size="sm" variant="success" class="mr-3" :disabled="!userRoles.includes('borrower')">
                       <span v-if="isContested">Corriger</span>
                       <span v-else>Enregistrer</span>
                     </b-button>
