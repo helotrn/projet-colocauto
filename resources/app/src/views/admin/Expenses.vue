@@ -49,7 +49,20 @@
     </b-row>
 
     <b-row>
-      <b-col md="6" />
+      <b-col md="6">
+        <b-button class="mr-3" variant="outline-primary" @click="exportCSV">
+          Générer (CSV)
+        </b-button>
+        <a
+          variant="outline-primary"
+          :href="exportUrl"
+          target="_blank"
+          v-if="context.exportUrl"
+          @click="resetExportUrl"
+        >
+          Télécharger (CSV)
+        </a>
+      </b-col>
 
       <b-col md="6">
         <admin-pagination :params="contextParams" :total="total" @change="setParam" />

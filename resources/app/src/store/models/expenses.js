@@ -8,6 +8,15 @@ export default new RestModule(
       page: 1,
       per_page: 10,
     },
+    exportFields: [
+      "id",
+      "name",
+      "amount",
+      "user.full_name",
+      "loanable.name",
+      "executed_at",
+      "tag.name",
+    ],
   },
   {},
   {

@@ -32,7 +32,20 @@ class RefundController extends RestController
             return $this->respondWithErrors($e->errors(), $e->getMessage());
         }
 
-        return $this->respondWithCollection($request, $items, $total);
+        switch ($request->headers->get("accept")) {
+            case "text/csv":
+                $filename = $this->respondWithCsv(
+                    $request,
+                    $items,
+                    $this->model
+                );
+                return response(
+                    env("BACKEND_URL_FROM_BROWSER") . $filename,
+                    201
+                );
+            default:
+                return $this->respondWithCollection($request, $items, $total);
+        }
     }
 
     public function retrieve(Request $request, $id)
