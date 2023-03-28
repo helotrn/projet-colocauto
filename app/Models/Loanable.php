@@ -94,7 +94,7 @@ class Loanable extends BaseModel
     {
         $owner = $this->owner()->first();
         $loanableCommunities = [];
-        if ($owner) {
+        if ($owner && $owner->user) {
             if ($this->share_with_parent_communities) {
                 $loanableCommunities = $owner->user
                     ->getAccessibleCommunityIds()
