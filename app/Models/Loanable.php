@@ -449,7 +449,7 @@ class Loanable extends BaseModel
         })->map(function($item){
             // compute the total for each group
             return [
-                "total" => number_format($item->sum('amount'), 2),
+                "total" => $item->sum('amount'),
                 "name" => $item->first()->tag ? $item->first()->tag->name : 'Autres',
                 "type" => $item->first()->type,
             ];
