@@ -10,7 +10,7 @@
         {{ parseFloat(loanable.balance['debit-loan'].total) - parseFloat(loanable.balance['credit-fuel'].total)  | currency }}
       </dd>
     </dl>
-    <small v-if="!isLoanBalanced">Attention, le coût au kilimètre ne couvre pas les dépenses de carburant.</small>
+    <small v-if="!isLoanBalanced">Attention, le coût au kilomètre ne couvre pas les dépenses de carburant.</small>
     <dl>
       <dt>Provisions:</dt> <dd>{{ loanable.balance['debit-funds'].total | currency }}</dd>
       <dt>Dépenses partagées:</dt> <dd>{{ loanable.balance['credit-shared'].total | currency }}</dd>
