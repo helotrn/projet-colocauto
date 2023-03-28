@@ -14,9 +14,12 @@ export default {
     },
     fields: {
       accept_conditions: `j'accepte les <a href="https://www.colocauto.org/conditions" target="_blank">conditions
-        générales d'utilisation</a> incluant des communications par courriel`,
-      gdpr: "j'accepte que mes données soient traitées ... (RGPD)",
-      newsletter: "je m'abonne à l'infolettre",
+        générales d'utilisation</a>`,
+      gdpr: `Mobicoop traite les données recueillies pour assurer le bon fonctionnement
+        du service Coloc'Auto. Pour en savoir plus sur la gestion de vos données personnelles
+        et pour exercer vos droits, reportez-vous à notre <a href="https://www.colocauto.org/confidentialite"
+        target="_blank">politique de confidentialité</a>`,
+      newsletter: "J'accepte de recevoir des courriels de la part de l'équipe Coloc'Auto concernant le projet",
       address: "adresse",
       avatar: "image de profil",
       communities: prefixFields(communities.fr.fields, "(Communauté)"),
