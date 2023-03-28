@@ -22,18 +22,16 @@
 
             <p class="cgu small">
               <a href="https://www.colocauto.org/conditions"
-                title="Conditions d'utilisation - Coloc'Auto"
-                target="_blank"
                 >Conditions Générales</a
               >
+              - <a href="https://www.colocauto.org/confidentialite"
+                >Politique de confidentialité</a
+              >
               - <a href="https://www.colocauto.org/faq"
-                title="F.A.Q. - Coloc'Auto"
-                target="_blank"
                 >F.A.Q.</a
               >
               - <a href="mailto:soutien@colocauto.org">Nous écrire</a>
               - <a href="https://gitlab.com/mobicoop/colocauto"
-                target="_blank"
                 >Gitlab</a>
             </p>
           </div>
