@@ -42,7 +42,7 @@
 
     <b-row>
       <b-col>
-        <b-form class="form" @submit.prevent="submit">
+        <b-form class="form" @submit.prevent="showConfirm = true">
           <forms-builder :definition="form" v-model="item" entity="refunds" :disabled="!user.borrower.validated" />
 
           <div class="form__buttons">
@@ -56,6 +56,20 @@
         </b-form>
       </b-col>
     </b-row>
+    <b-modal
+      v-model="showConfirm"
+      hide-header centered no-close-on-backdrop
+      footer-class="justify-content-center mb-4"
+      cancel-title="Annuler l’écriture du remboursement"
+      cancel-variant="outline-primary"
+      ok-title="Enregistrer le remboursement"
+      @ok="submit"
+      @cancel="returnToRefundsList">
+      <round-warning width="50px" class="mx-auto d-block my-4" />
+      <p style="font-size:20px; text-align:center">
+        Avant d’enregistrer le remboursement dans l’application, assurez-vous d’avoir bien remboursé la personne indiquée.
+      </p>
+    </b-modal>
   </b-container>
   <layout-loading v-else />
 </template>
@@ -73,14 +87,20 @@ import locales from "@/locales";
 import { capitalize } from "@/helpers/filters";
 import OpenIndicator from "vue-select/src/components/OpenIndicator.vue";
 import ArrowRight from "@/assets/svg/arrow-right.svg";
+import RoundWarning from "@/assets/icons/round-warning.svg";
 
 export default {
   name: "WalletRefund",
+  data: () => ({
+    showConfirm: false,
+    
+  }),
   mixins: [Authenticated, DataRouteGuards, FormMixin, UserMixin],
   components: {
     FormsBuilder,
     OpenIndicator,
     ArrowRight,
+    RoundWarning,
   },
   computed: {
     fullTitle() {
@@ -99,6 +119,11 @@ export default {
     pageTitle() {
       return this.item.name || capitalize(this.$i18n.tc("remboursement", 1));
     },
+  },
+  methods: {
+    returnToRefundsList() {
+      this.$router.push('/wallet/refunds');
+    }
   },
   i18n: {
     messages: {
@@ -141,5 +166,11 @@ export default {
   .collapse .card {
     border-top-right-radius: 0;
     border-top-left-radius: 0;
+  }
+  ::v-deep .modal-content {
+    background: #F5F8FB;
+  }
+  ::v-deep .modal-footer {
+    border-top: none;
   }
 </style>
