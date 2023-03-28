@@ -155,15 +155,6 @@
           </b-row>
         </div>
 
-        <div class="form__section" v-if="loanable.type && loanable.id">
-          <a id="availability" />
-          <loanable-availability-rules
-            :changed="changed"
-            :loanable="loanable"
-            :loading="loading"
-          />
-        </div>
-
         <div class="form__buttons" v-if="!hideButtons">
           <b-button-group v-if="showReset">
             <b-button
