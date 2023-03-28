@@ -11,7 +11,7 @@
       empty-text="Pas de dépenses"
     >
       <template v-slot:cell(executed_at)="row">
-        {{ new Date(row.value).toLocaleDateString('fr', {day:'numeric', month: 'short', year: 'numeric'}) }}
+        {{ row.value | date }}
       </template>
       <template v-slot:cell(tag)="row">
         <div>{{row.item.type === 'credit' ? 'crédit' : 'débit'}}</div>

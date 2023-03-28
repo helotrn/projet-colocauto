@@ -11,7 +11,7 @@
       empty-text="Pas de remboursements"
     >
       <template v-slot:cell(executed_at)="row">
-        {{ new Date(row.value).toLocaleDateString('fr', {day:'numeric', month: 'short', year: 'numeric'}) }}
+        {{ row.value | date }}
       </template>
       <template v-slot:cell(actions)="row">
         <admin-list-actions :columns="['edit']" :row="row" slug="refunds" />

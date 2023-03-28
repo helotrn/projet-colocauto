@@ -18,7 +18,7 @@
             </b-col>
           </b-row>
           <b-row>
-            <b-col><span class="small" v-if="executed_at">{{ new Date(executed_at).toLocaleDateString() }}</span></b-col>
+            <b-col><span class="small" v-if="executed_at">{{ executed_at | date }}</span></b-col>
           </b-row>
       </div>
       <div class="card-body">

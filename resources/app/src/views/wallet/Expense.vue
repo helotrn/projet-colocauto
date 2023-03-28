@@ -32,7 +32,7 @@
               </template>
               <small class="d-flex justify-content-between">
                 <span>par {{ change.user.full_name }}</span>
-                <span>le {{ new Date(change.created_at).toLocaleDateString() }}</span>
+                <span>le {{ change.created_at | date }}</span>
               </small>
             </p>
           </b-card>
