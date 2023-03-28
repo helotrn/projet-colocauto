@@ -51,7 +51,7 @@
           </template>
           <template v-slot:cell(owner.user.full_name)="row">
             <span v-if="row.item.owner">
-              {{ row.item.owner.user.full_name }}
+              {{ row.item.owner.user ? row.item.owner.user.full_name : '' }}
             </span>
           </template>
           <template v-slot:cell(actions)="row">
