@@ -2,7 +2,7 @@
     <td align="center" style="height: 60px">
         <div style="text-align: center">
             <img
-                src="{{ env('BACKEND_URL_FROM_BROWSER') . '/mail-header-logo.png' }}"
+                src="{{ env('BACKEND_URL_FROM_BROWSER') . '/mail-header-logo.png?colocauto' }}"
                 alt="Coloc'Auto"
                 style="width: 125px; height: 17px"
             />
