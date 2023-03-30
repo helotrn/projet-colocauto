@@ -2,14 +2,6 @@
   <div class="register-form">
     <h2 class="text-center">{{ $t("register") }}</h2>
 
-    <div class="register-form__google">
-      <google-auth-button :label="$t('google')" />
-    </div>
-
-    <div class="form__separator">
-      <span class="form__separator__text">{{ $t("or") }}</span>
-    </div>
-
     <validation-observer ref="observer" v-slot="{ passes }">
       <b-form
         :novalidate="true"
@@ -69,7 +61,6 @@
 import locales from "@/locales";
 
 import FormsValidatedInput from "@/components/Forms/ValidatedInput.vue";
-import GoogleAuthButton from "@/components/Misc/GoogleAuthButton.vue";
 
 import { extractErrors } from "@/helpers";
 
@@ -77,7 +68,6 @@ export default {
   name: "registerBox",
   components: {
     FormsValidatedInput,
-    GoogleAuthButton,
   },
   data() {
     return {

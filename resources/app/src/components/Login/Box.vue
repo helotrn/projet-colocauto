@@ -2,14 +2,6 @@
   <div class="login-box">
     <h1 class="login-box__title">{{ $t("login") }}</h1>
 
-    <div class="google-login">
-      <google-auth-button :label="$t('google')" />
-    </div>
-
-    <div class="form__separator">
-      <span class="form__separator__text">{{ $t("or") }}</span>
-    </div>
-
     <b-form class="login-box__form" @submit.prevent="login" novalidate>
       <b-form-group :label="$t('email')">
         <b-form-input type="email" required :placeholder="$t('email')" v-model="email" />
@@ -42,13 +34,9 @@
 
 <script>
 import locales from "@/locales";
-import GoogleAuthButton from "@/components/Misc/GoogleAuthButton.vue";
 
 export default {
   name: "LoginBox",
-  components: {
-    GoogleAuthButton,
-  },
   data() {
     return {
       password: "",
@@ -57,9 +45,6 @@ export default {
   computed: {
     loading() {
       return this.$store.state.loading;
-    },
-    authUrl() {
-      return `${process.env.VUE_APP_BACKEND_URL}/auth/google`;
     },
     email: {
       get() {
