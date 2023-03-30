@@ -6,7 +6,7 @@ use App\Events\LoanCompletedEvent;
 use App\Mail\Loan\LoanCompleted;
 use App\Models\Loan;
 use App\Models\User;
-use Illuminate\Support\Facades\Mail;
+use Mail;
 
 class SendLoanCompletedEmails
 {
@@ -27,8 +27,7 @@ class SendLoanCompletedEmails
 
     private static function sendMail(User $user, Loan $loan, bool $isOwner)
     {
-        Mail::mailer("mandrill")
-            ->to($user, $user->full_name)
+        Mail::to($user, $user->full_name)
             ->queue(new LoanCompleted($user, $loan, $isOwner));
     }
 }

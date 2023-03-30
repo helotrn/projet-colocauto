@@ -2,36 +2,40 @@
 
 namespace App\Mail\Loan;
 
-use App\Mail\MandrillMailable;
+use App\Mail\BaseMailable;
 use App\Models\Loan;
 use App\Models\User;
-use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
 
-class LoanCompleted extends MandrillMailable
+class LoanCompleted extends BaseMailable
 {
     use Queueable, SerializesModels;
 
-    public $template = "loan-completed";
+    public $loan;
+    public $user;
+    public $isOwner;
+    public $duration;
+    public $departureAt;
 
     public function __construct(User $user, Loan $loan, bool $isOwner)
     {
-        $this->subject = "Emprunt Complété!";
-        $this->templateVars = [
-            "FNAME" => $user->name,
-            "email" => $user->email,
-            "isOwner" => $isOwner,
-            "loanableName" => $loan->loanable->name,
-            "borrowerName" => $loan->borrower->user->name,
-            "duration" => self::formatDuration(
-                $loan->actual_duration_in_minutes
-            ),
-            "departureAt" => (new Carbon(
-                $loan->departure_at
-            ))->toDateTimeString(),
-            "loanableType" => self::formatLoanableType($loan->loanable->type),
-        ];
+        $this->loan = $loan;
+        $this->user = $user;
+        $this->isOwner = $isOwner;
+        $this->duration = self::formatDuration(
+            $loan->actual_duration_in_minutes
+        );
+    }
+
+    public function build()
+    {
+        return $this->view("emails.loan.completed")
+            ->subject("Coloc'Auto - Emprunt complété !")
+            ->text("emails.loan.completed_text")
+            ->with([
+                "title" => "Emprunt complété !",
+            ]);
     }
 
     private static function formatDuration($duration)
@@ -42,26 +46,5 @@ class LoanCompleted extends MandrillMailable
         }
         $minutes = $duration - $hours * 60;
         return "${hours}h ${minutes}m";
-    }
-
-    private static function formatLoanableType($type)
-    {
-        switch ($type) {
-            case "car":
-                return "Auto";
-                break;
-
-            case "bike":
-                return "Vélo";
-                break;
-
-            case "trailer":
-                return "Remorque";
-                break;
-
-            default:
-                return "";
-                break;
-        }
     }
 }
