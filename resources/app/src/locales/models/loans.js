@@ -152,7 +152,7 @@ export default {
         description: "La réservation est confirmée!",
       },
       waiting_for_takeover: {
-        text: "Attente du début de l'emprunt",
+        text: "Emprunt en cours",
         description: "La réservation du véhicule est en cours! Démarrez l'emprunt en ligne.",
       },
       confirmed_reservation: {

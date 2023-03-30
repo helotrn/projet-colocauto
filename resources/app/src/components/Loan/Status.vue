@@ -95,10 +95,16 @@ export default {
           };
         }
 
+        if (this.$dayjs(this.item.departure_at).add(this.item.duration_in_minutes, 'minutes').isBefore(this.$second, "minute")) {
+          return {
+            status: "waiting_for_handover",
+            variant: "danger",
+          };
+        }
         if (this.$dayjs(this.item.departure_at).isBefore(this.$second, "minute")) {
           return {
             status: "waiting_for_takeover",
-            variant: "warning",
+            variant: "info",
           };
         }
         return {
