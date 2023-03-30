@@ -69,10 +69,6 @@ class EventServiceProvider extends ServiceProvider
             "App\Listeners\SendRegistrationSubmittedEmails",
             "App\Listeners\AddUserToNewsletterIfNotRegistered",
         ],
-        "App\Events\RegistrationApprovedEvent" => [
-            "App\Listeners\SendRegistrationApprovedEmails",
-            "App\Listeners\CreateNokeUserIfNotExists",
-        ],
         "App\Events\RegistrationRejectedEvent" => [
             "App\Listeners\SendRegistrationRejectedEmails",
         ],

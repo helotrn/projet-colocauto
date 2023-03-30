@@ -2,7 +2,6 @@
 
 namespace App\Models\Pivots;
 
-use App\Events\RegistrationApprovedEvent;
 use App\Models\Community;
 use App\Models\File;
 use App\Models\Tag;
