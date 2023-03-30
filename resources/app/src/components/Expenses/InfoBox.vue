@@ -2,7 +2,7 @@
   <b-card no-body
     class="expense-info-box my-2"
     :class="{ disabled: loading, 'shadow-sm': user.id != me, shadow: user.id == me }"
-    :style="{backgroundColor: user.id == me ? 'white' : '#FFFFFF99'}"
+    :style="{backgroundColor: user.id == me ? 'white' : '#FFFFFF4d'}"
     >
     <router-link :to="`/wallet/expenses/${id}`">
       <div class="card-header">
@@ -25,7 +25,7 @@
         <b-row>
           <b-col>
             <strong class="big">{{ name }}</strong><br/>
-            <span class="small">par {{ user.full_name }}</span>
+            <span :class="{small: true, 'text-primary': user.id == me}">par {{ user.full_name }}</span>
           </b-col>
           <b-col class="text-right">
             <strong class="huge">{{ amount | currency }}</strong>
