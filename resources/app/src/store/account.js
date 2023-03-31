@@ -76,15 +76,16 @@ export default {
         throw e;
       }
     },
-    async mandate({}, { mandatedUserId }) {
+    async mandate({ dispatch, commit }, { mandatedUserId }) {
       const response = await Vue.axios(`/auth/password/mandate/${mandatedUserId}`);
-      location.href = location.href.match(/http?.:\/\/.*?\//)[0];
       localStorage.setItem("locomotion", JSON.stringify({ token: response.data }));
 
-      // If we reload right now we are redirected to the login page
-      setTimeout(() => {
-        location.reload();
-      }, 500);
+      // sync the token in store with the one in localStorage
+      commit("token", response.data, {root: true});
+      commit("refreshToken", null, {root: true});
+
+      await dispatch('loadUser', null, {root: true});
+      location.href = location.href.match(/http?.:\/\/.*?\//)[0];
     },
   },
 };
