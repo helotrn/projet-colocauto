@@ -17,6 +17,9 @@
         <div>{{row.item.type === 'credit' ? 'crédit' : 'débit'}}</div>
         <span class="badge" :class="`badge-${row.value.color}`">{{row.value.name}}</span>
       </template>
+      <template v-slot:cell(changes)="row">
+        <div>{{ row.item.changes.length }}</div>
+      </template>
       <template v-slot:cell(actions)="row">
         <admin-list-actions :columns="['edit']" :row="row" slug="expenses" />
       </template>
@@ -73,6 +76,7 @@ export default {
             label: this.$t("expenses.fields.expense_tag_id"),
             sortable: true,
           },
+          { key: "changes", label: 'Modifs' },
           { key: "actions", label: this.$t("communities.fields.user.actions") },
         ];
       },

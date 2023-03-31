@@ -8,6 +8,36 @@
         </h1>
       </b-col>
     </b-row>
+    
+    <b-row v-if="item.changes && item.changes.length">
+      <b-col class="mb-3">
+        <h2>Historique des modifications</h2>
+        <b-button block v-b-toggle.changes variant="outline bg-white border d-flex justify-content-between align-items-center text-left">
+          {{item.changes.length}} modification{{item.changes.length > 1 ? 's' : ''}} effectuée{{item.changes.length > 1 ? 's' : ''}}
+          <open-indicator />
+        </b-button>
+        <b-collapse id="changes" class="mb-4">
+          <b-card>
+            <p v-for="change in item.changes" :key="change.id" class="card-text border-bottom pb-3">
+              <!-- split several lines descriptions -->
+              <template v-for="description in change.description.split(',')">
+                <!-- replace => with a SVG arrow -->
+                <span>{{ description.split('=>')[0] }}</span>
+                <template v-if="description.split('=>').length > 1">
+                  <arrow-right />
+                  <span>{{ description.split('=>')[1] }}</span>
+                </template>
+                <br/>
+              </template>
+              <small class="d-flex justify-content-between">
+                <span>par {{ change.user.full_name }}</span>
+                <span>le {{ change.created_at | date }}</span>
+              </small>
+            </p>
+          </b-card>
+        </b-collapse>
+      </b-col>
+    </b-row>
 
     <b-row>
       <b-col>
@@ -31,6 +61,8 @@
 
 <script>
 import FormsBuilder from "@/components/Forms/Builder.vue";
+import OpenIndicator from "vue-select/src/components/OpenIndicator.vue";
+import ArrowRight from "@/assets/svg/arrow-right.svg";
 
 import DataRouteGuards from "@/mixins/DataRouteGuards";
 import FormMixin from "@/mixins/FormMixin";
@@ -42,6 +74,8 @@ export default {
   mixins: [DataRouteGuards, FormMixin],
   components: {
     FormsBuilder,
+    OpenIndicator,
+    ArrowRight,
   },
   i18n: {
     messages: {

@@ -365,7 +365,7 @@ export default [
           data: {
             expenses: {
               retrieve: {
-                fields: "*,loanable.name,user.full_name,tag.name,tag.color",
+                fields: "*,loanable.name,user.full_name,tag.name,tag.color,changes",
                 for: "edit",
               },
             },
@@ -381,7 +381,7 @@ export default [
           auth: true,
           slug: "expenses",
           params: {
-            fields: "*",
+            fields: "*, changes, changes.user,changes.description,changes.created_at",
           },
           title: "titles.expense",
         },
@@ -426,7 +426,7 @@ export default [
           data: {
             refunds: {
               retrieve: {
-                fields: "*,user.full_name,credited_user.full_name",
+                fields: "*,user.full_name,credited_user.full_name,changes",
                 for: "edit",
               },
             },
@@ -442,7 +442,7 @@ export default [
           auth: true,
           slug: "refunds",
           params: {
-            fields: "*",
+            fields: "*, changes, changes.user,changes.description,changes.created_at",
           },
           title: "titles.refund",
         },

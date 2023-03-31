@@ -37,6 +37,7 @@
             'user.full_name',
             'credited_user.full_name',
             'executed_at',
+            'changes',
             'actions'
           ]"
           :items="data"

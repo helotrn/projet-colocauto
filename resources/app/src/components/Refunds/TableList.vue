@@ -13,6 +13,9 @@
       <template v-slot:cell(executed_at)="row">
         {{ row.value | date }}
       </template>
+      <template v-slot:cell(changes)="row">
+        <div>{{ row.item.changes.length }}</div>
+      </template>
       <template v-slot:cell(actions)="row">
         <admin-list-actions :columns="['edit']" :row="row" slug="refunds" />
       </template>
@@ -63,6 +66,7 @@ export default {
             sortable: true,
           },
           { key: "executed_at", label: this.$t("refunds.fields.executed_at"), sortable: true },
+          { key: "changes", label: 'Modifs' },
           { key: "actions", label: this.$t("communities.fields.user.actions") },
         ];
       },
