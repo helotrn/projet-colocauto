@@ -6,7 +6,7 @@ metadata:
     type: local
     app: postgres
 spec:
-  storageClassName: manual
+  storageClassName: csi-cinder-high-speed
   capacity:
     storage: 5Gi
   accessModes:
@@ -21,7 +21,7 @@ metadata:
   labels:
     app: postgres
 spec:
-  storageClassName: manual
+  storageClassName: csi-cinder-high-speed
   accessModes:
     - ReadWriteOnce
   resources:
@@ -77,7 +77,7 @@ spec:
                   key: database.password
                   name: colocauto-secret
           volumeMounts:
-            - mountPath: /var/lib/postgresql/data
+            - mountPath: /var/lib/postgresql/colocauto
               name: database-volume
       volumes:
         - name: database-volume
