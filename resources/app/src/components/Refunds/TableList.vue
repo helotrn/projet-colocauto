@@ -65,6 +65,11 @@ export default {
             label: this.$t("refunds.fields.credited_user_id"),
             sortable: true,
           },
+          {
+            key: "community.name",
+            label: this.$t("communities.fields.community.name"),
+            sortable: true,
+          },
           { key: "executed_at", label: this.$t("refunds.fields.executed_at"), sortable: true },
           { key: "changes", label: 'Modifs' },
           { key: "actions", label: this.$t("communities.fields.user.actions") },

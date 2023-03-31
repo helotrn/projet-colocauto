@@ -36,6 +36,7 @@
             'amount',
             'user.full_name',
             'credited_user.full_name',
+            'community.name',
             'executed_at',
             'changes',
             'actions'

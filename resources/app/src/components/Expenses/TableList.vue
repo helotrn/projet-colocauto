@@ -76,6 +76,11 @@ export default {
             label: this.$t("expenses.fields.expense_tag_id"),
             sortable: true,
           },
+          {
+            key: "community.name",
+            label: this.$t("communities.fields.community.name"),
+            sortable: true,
+          },
           { key: "changes", label: 'Modifs' },
           { key: "actions", label: this.$t("communities.fields.user.actions") },
         ];

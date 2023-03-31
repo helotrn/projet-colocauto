@@ -56,6 +56,8 @@ class Refund extends BaseModel
 
     public $collections = ["changes"];
 
+    public $computed = ["community"];
+
     public function user()
     {
         return $this->belongsTo(User::class);
@@ -102,5 +104,10 @@ class Refund extends BaseModel
             ->orWhere('credited_user_id', $user->id)
             // ...or refunds payed to somebody belonging to the same community
             ->orWhereIn('credited_user_id', $user->getSameCommunityUserIds());
+    }
+
+    public function getCommunityAttribute()
+    {
+        return $this->user->communities->first();
     }
 }

@@ -71,6 +71,8 @@ class Expense extends BaseModel
 
     public $collections = ["changes"];
 
+    public $computed = ["community"];
+
     public function user()
     {
         return $this->belongsTo(User::class);
@@ -130,5 +132,10 @@ class Expense extends BaseModel
                     return $q->whereIn('id', $user->getAccessibleCommunityIds());
                 });
             });
+    }
+
+    public function getCommunityAttribute()
+    {
+        return $this->user->communities->first();
     }
 }
