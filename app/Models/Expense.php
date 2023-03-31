@@ -47,7 +47,18 @@ class Expense extends BaseModel
                     "fields" => "id,name"
                 ]
             ]
-        ]
+        ],
+        "user.communities.id" => [
+            "type" => "relation",
+            "query" => [
+                "slug" => "communities",
+                "value" => "id",
+                "text" => "name",
+                "params" => [
+                    "fields" => "id,name"
+                ]
+            ]
+        ],
     ];
 
     protected $fillable = ["name", "amount", "type", "executed_at", "loanable_id", "user_id", "expense_tag_id", "locked"];

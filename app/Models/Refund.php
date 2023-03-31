@@ -37,6 +37,17 @@ class Refund extends BaseModel
         "executed_at" => "date",
         "user.full_name" => "text",
         "credited_user.full_name" => "text",
+        "user.communities.id" => [
+            "type" => "relation",
+            "query" => [
+                "slug" => "communities",
+                "value" => "id",
+                "text" => "name",
+                "params" => [
+                    "fields" => "id,name"
+                ]
+            ]
+        ],
     ];
 
     protected $fillable = ["amount", "executed_at", "user_id", "credited_user_id"];

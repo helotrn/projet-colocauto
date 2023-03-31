@@ -7,7 +7,10 @@ export default {
       amount: "montant en Euros",
       executed_at: "date",
       user_id: "Payé par",
-      user: {full_name: "Payé par"},
+      user: {
+        full_name: "Payé par",
+        communities: {id: "Communauté"},
+      },
       loanable_id: "Pour le véhicule",
       loanable: {name: "Pour le véhicule"},
       expense_tag_id: "Type de dépense",

@@ -5,7 +5,8 @@ export default {
       amount: "montant en euros",
       user_id: "Payé par",
       user: {
-        full_name: "Payé par (nom)"
+        full_name: "Payé par (nom)",
+        communities: {id: "Communauté"},
       },
       credited_user_id: "Payé à",
       credited_user: {
