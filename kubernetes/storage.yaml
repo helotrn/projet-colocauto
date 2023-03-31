@@ -6,7 +6,7 @@ metadata:
     type: local
     app: minio
 spec:
-  storageClassName: manual
+  storageClassName: csi-cinder-high-speed
   capacity:
     storage: 50Gi
   accessModes:
@@ -21,7 +21,7 @@ metadata:
   labels:
     app: minio
 spec:
-  storageClassName: manual
+  storageClassName: csi-cinder-high-speed
   accessModes:
     - ReadWriteOnce
   resources:
@@ -81,22 +81,22 @@ spec:
         volumeMounts:
         - name: storage-volume
           mountPath: /data
-      # TODO: make this container gracefully exit if bucket is already created
-      #- name: createbuckets
-      #  image: minio/mc
-      #  command: ["/bin/sh"]
-      #  args: ["-c", "/usr/bin/mc config host add myminio http://minio:9000 $MINIO_ROOT_USER $MINIO_ROOT_PASSWORD; /usr/bin/mc mb myminio/colocauto; exit 0;"]
-      #  env:
-      #  - name: MINIO_ROOT_USER
-      #    valueFrom:
-      #      secretKeyRef:
-      #        name: colocauto-secret
-      #        key: minio.user
-      #  - name: MINIO_ROOT_PASSWORD
-      #    valueFrom:
-      #      secretKeyRef:
-      #        name: colocauto-secret
-      #        key: minio.password
+      initContainers:
+      - name: createbuckets
+        image: minio/mc
+        command: ["/bin/sh"]
+        args: ["-c", "/usr/bin/mc config host add myminio http://minio:9000 $MINIO_ROOT_USER $MINIO_ROOT_PASSWORD; /usr/bin/mc mb myminio/colocauto; exit 0;"]
+        env:
+        - name: MINIO_ROOT_USER
+          valueFrom:
+            secretKeyRef:
+              name: colocauto-secret
+              key: minio.user
+        - name: MINIO_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: colocauto-secret
+              key: minio.password
       volumes:
         - name: storage-volume
           persistentVolumeClaim:
