@@ -42,6 +42,8 @@ export default {
             return vm.$router.replace("/register/2");
           }
           return null;
+        } else {
+          return vm.skipToApp();
         }
       }
 

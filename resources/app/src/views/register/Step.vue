@@ -140,6 +140,8 @@ export default {
           if (vm.$route.path !== "/register/2") {
             vm.$router.replace("/register/2");
           }
+        } else {
+          return vm.skipToApp();
         }
       }
     });
