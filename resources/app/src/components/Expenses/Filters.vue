@@ -22,6 +22,7 @@
         id="user_id"
         name="user_id"
         :query="form.user_id.query"
+        :value="params['user.id']"
         placeholder="Membre du groupe"
         @input="filter"
       />
@@ -31,6 +32,7 @@
         id="loanable_id"
         name="loanable_id"
         :query="form.loanable_id.query"
+        :value="params['loanable.id']"
         placeholder="Véhicule"
         @input="filter"
       />
@@ -114,6 +116,18 @@ export default {
       if( this.me ) this.params['user.id'] = 'me';
       this.$store.dispatch("wallet/filterExpenses", this.params);
     },
+  },
+  beforeMount(){
+    if( this.$store.state.expenses.params['user.id'] ) {
+      this.filterBy = 'user';
+      this.params['user.id'] = this.$store.state.expenses.params['user.id'];
+    } else if( this.$store.state.expenses.params['loanable.id'] ) {
+      this.filterBy = 'loanable';
+      this.params['loanable.id'] = this.$store.state.expenses.params['loanable.id'];
+    } else if( this.$store.state.expenses.params['executed_at'] ){
+      this.filterBy = 'date';
+      this.dates = this.$store.state.expenses.params['executed_at'];
+    }
   },
 }
 </script>

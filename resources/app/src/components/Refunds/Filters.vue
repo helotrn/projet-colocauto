@@ -22,6 +22,7 @@
         id="user_id"
         name="user_id"
         :query="form.user_id.query"
+        :value="params['user.id']"
         placeholder="Payé par"
         @input="filter"
       />
@@ -31,6 +32,7 @@
         id="credited_user_id"
         name="credited_user_id"
         :query="form.credited_user_id.query"
+        :value="params['credited_user.id']"
         placeholder="Payé à"
         @input="filter"
       />
@@ -92,6 +94,18 @@ export default {
       }
       this.$store.dispatch("wallet/filterRefunds", this.params);
     },
+  },
+  beforeMount(){
+    if( this.$store.state.refunds.params['user.id'] ) {
+      this.filterBy = 'user';
+      this.params['user.id'] = this.$store.state.refunds.params['user.id'];
+    } else if( this.$store.state.refunds.params['credited_user.id'] ) {
+      this.filterBy = 'credited_user';
+      this.params['credited_user.id'] = this.$store.state.refunds.params['credited_user.id'];
+    } else if( this.$store.state.refunds.params['executed_at'] ){
+      this.filterBy = 'date';
+      this.dates = this.$store.state.refunds.params['executed_at'];
+    }
   },
 }
 </script>
