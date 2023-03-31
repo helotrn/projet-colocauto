@@ -34,8 +34,8 @@ export default {
         if (val || this.to) {
           this.$emit(
             "input",
-            `${val ? dayjs(val).toISOString() : ""}@${
-              this.to ? dayjs(this.to).add(1, "day").toISOString() : ""
+            `${val ? dayjs(val).hour(2).toISOString() : ""}@${
+              this.to ? dayjs(this.to).hour(22).toISOString() : ""
             }`
           );
         } else {
@@ -50,7 +50,7 @@ export default {
         }
         return this.value.match(/.*@(.*?)T/)
           ? dayjs(this.value.match(/.*@(.*?)T/)[1])
-              .subtract(1, "day")
+              .hour(22)
               .format("YYYY-M-D")
           : null;
       },
@@ -58,8 +58,8 @@ export default {
         if (this.from || val) {
           this.$emit(
             "input",
-            `${this.from ? dayjs(this.from).toISOString() : ""}@${
-              val ? dayjs(val).add(1, "day").toISOString() : ""
+            `${this.from ? dayjs(this.from).hour(2).toISOString() : ""}@${
+              val ? dayjs(val).hour(22).toISOString() : ""
             }`
           );
         } else {
