@@ -22,6 +22,7 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
       lastPage: 1,
       loaded: false,
       loading: false,
+      generatingCSV: false,
       search: [],
       lastSearchQuery: "",
       params: {
@@ -122,6 +123,9 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
       },
       total(state, total) {
         state.total = total;
+      },
+      generatingCSV(state, value) {
+        state.generatingCSV = value;
       },
       ...mutations,
     },
@@ -354,6 +358,7 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
       async export({ state, commit }, params) {
         const { CancelToken } = Vue.axios;
         const cancelToken = CancelToken.source();
+        commit("generatingCSV", true);
 
         try {
           const { data } = await Vue.axios.get(`/${state.slug}`, {
@@ -374,8 +379,10 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
           commit("exportUrl", data);
 
           commit("cancelToken", null);
+          commit("generatingCSV", false);
         } catch (e) {
           commit("cancelToken", null);
+          commit("generatingCSV", false);
 
           const { request, response } = e;
           commit("error", { request, response });

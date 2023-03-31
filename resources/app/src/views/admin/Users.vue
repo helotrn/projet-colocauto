@@ -127,6 +127,7 @@
     <b-row>
       <b-col md="6">
         <b-button class="mr-3" variant="outline-primary" @click="exportCSV">
+          <b-spinner small v-if="generatingCSV"></b-spinner>
           Générer (CSV)
         </b-button>
         <a
@@ -278,5 +279,8 @@ export default {
   .btn {
     margin: 0 10px;
   }
+}
+.btn .spinner-border {
+  vertical-align: top;
 }
 </style>

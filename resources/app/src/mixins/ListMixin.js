@@ -106,6 +106,9 @@ export default {
     total() {
       return this.context.total;
     },
+    generatingCSV() {
+      return this.context.generatingCSV;
+    }
   },
   data() {
     return {
