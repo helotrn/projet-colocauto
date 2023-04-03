@@ -488,173 +488,147 @@ class RestRepository
             array_diff(array_keys($data), $this->model->getFillable())
             as $field
         ) {
-            if ($field === "id") {
+            if (
+                $field === "id" ||
+                !array_key_exists($field, $data) ||
+                !is_array($data[$field]) ||
+                !in_array(
+                    $field,
+                    array_merge(
+                        $this->model->collections,
+                        array_keys($this->model->morphManys)
+                    )
+                )
+            ) {
                 continue;
             }
 
-            if (array_key_exists($field, $data)) {
-                if (is_array($data[$field])) {
-                    $allowedRelations = array_merge(
-                        $this->model->collections,
-                        array_keys($this->model->morphManys)
+            $relation = $this->model->{Str::camel($field)}();
+
+            if (is_a($relation, HasManyThrough::class)) {
+                continue;
+            }
+
+            $ids = [];
+
+            if (method_exists($relation, "getPivotClass")) {
+                $pivotClass = $relation->getPivotClass();
+                $pivot = new $pivotClass();
+                $pivotAttributes = $pivot->getFillable();
+
+                $isExtendedPivot = $this->isBaseModel($pivot);
+                if ($isExtendedPivot) {
+                    $pivotItems = array_merge(
+                        $pivot->items,
+                        array_keys($pivot->morphOnes)
                     );
-                    if (in_array($field, $allowedRelations)) {
-                        $relation = $this->model->{Str::camel($field)}();
+                    $pivotCollections = array_merge(
+                        $pivot->collections,
+                        array_keys($pivot->morphManys)
+                    );
+                } else {
+                    $pivotItems = [];
+                    $pivotCollections = [];
+                }
 
-                        if (is_a($relation, HasManyThrough::class)) {
+                foreach ($data[$field] as $element) {
+                    $pivotData = [];
+                    $pivotItemData = [];
+
+                    foreach ($pivotAttributes as $pivotAttribute) {
+                        if (!array_key_exists($pivotAttribute, $element)) {
                             continue;
                         }
 
-                        $ids = [];
+                        $pivotData[$pivotAttribute] = $element[$pivotAttribute];
+                        unset($element[$pivotAttribute]);
+                    }
 
-                        if (method_exists($relation, "getPivotClass")) {
-                            $pivotClass = $relation->getPivotClass();
-                            $pivot = new $pivotClass();
-                            $pivotAttributes = $pivot->getFillable();
-
-                            $isExtendedPivot = $this->isBaseModel($pivot);
-                            if ($isExtendedPivot) {
-                                $pivotItems = array_merge(
-                                    $pivot->items,
-                                    array_keys($pivot->morphOnes)
-                                );
-                                $pivotCollections = array_merge(
-                                    $pivot->collections,
-                                    array_keys($pivot->morphManys)
-                                );
-                            } else {
-                                $pivotItems = [];
-                                $pivotCollections = [];
-                            }
-
-                            foreach ($data[$field] as $element) {
-                                $pivotData = [];
-                                $pivotItemData = [];
-
-                                foreach ($pivotAttributes as $pivotAttribute) {
-                                    if (
-                                        !array_key_exists(
-                                            $pivotAttribute,
-                                            $element
-                                        )
-                                    ) {
-                                        continue;
-                                    }
-
-                                    $pivotData[$pivotAttribute] =
-                                        $element[$pivotAttribute];
-                                    unset($element[$pivotAttribute]);
-                                }
-
-                                foreach ($pivotItems as $pivotItem) {
-                                    if (
-                                        !array_key_exists($pivotItem, $element)
-                                    ) {
-                                        continue;
-                                    }
-
-                                    $pivotItemData[$pivotItem] =
-                                        $element[$pivotItem];
-                                    unset($element[$pivotItem]);
-                                }
-
-                                if (
-                                    array_key_exists("id", $element) &&
-                                    $element["id"]
-                                ) {
-                                    $sync = [];
-                                    $sync[$element["id"]] = $pivotData;
-                                    $relation->syncWithoutDetaching($sync);
-
-                                    $targetPivot = $this->model
-                                        ->{Str::camel($field)}()
-                                        ->find($element["id"])->pivot;
-
-                                    foreach ($pivotItems as $pivotItem) {
-                                        $this->savePolymorphicRelation(
-                                            $targetPivot,
-                                            $pivotItem,
-                                            $pivotItemData
-                                        );
-                                    }
-
-                                    foreach (
-                                        $pivotCollections
-                                        as $pivotCollection
-                                    ) {
-                                        if (isset($element[$pivotCollection])) {
-                                            $this->saveMorphManyRelation(
-                                                $targetPivot,
-                                                $pivotCollection,
-                                                $element
-                                            );
-                                        }
-                                    }
-
-                                    $ids[] = $element["id"];
-                                }
-                            }
-                        } else {
-                            foreach ($data[$field] as $element) {
-                                if (
-                                    array_key_exists("id", $element) &&
-                                    $element["id"]
-                                ) {
-                                    $ids[] = $element["id"];
-                                }
-                            }
-                        }
-
-                        $relatedClass = $relation->getRelated();
-
-                        if ($relatedClass->readOnly) {
+                    foreach ($pivotItems as $pivotItem) {
+                        if (!array_key_exists($pivotItem, $element)) {
                             continue;
                         }
 
-                        if (is_a($relation, MorphMany::class)) {
-                            foreach ($ids as $id) {
-                                $item = $relatedClass->find($id);
-                                $relation->save($id);
-                            }
-                            $relation->sync($ids);
-                        } elseif (is_a($relation, HasMany::class)) {
-                            $newItems = [];
-                            foreach ($data[$field] as $element) {
-                                if (
-                                    array_key_exists("id", $element) &&
-                                    $element["id"]
-                                ) {
-                                    $existingItem = $relatedClass->find(
-                                        $element["id"]
-                                    );
-                                    $existingItem->fill($element);
-                                    $newItems[] = $existingItem;
-                                } else {
-                                    $newItem = new $relatedClass();
-                                    $newItem->fill($element);
-                                    $newItems[] = $newItem;
-                                }
-                            }
+                        $pivotItemData[$pivotItem] = $element[$pivotItem];
+                        unset($element[$pivotItem]);
+                    }
 
-                            $existingIds = $relation
-                                ->get()
-                                ->pluck("id")
-                                ->toArray();
-                            $removedIds = array_diff($existingIds, $ids);
+                    if (array_key_exists("id", $element) && $element["id"]) {
+                        $sync = [];
+                        $sync[$element["id"]] = $pivotData;
+                        $relation->syncWithoutDetaching($sync);
 
-                            if (!empty($removedIds)) {
-                                $relation
-                                    ->getRelated()
-                                    ->whereIn("id", $removedIds)
-                                    ->delete();
-                            }
+                        $targetPivot = $this->model
+                            ->{Str::camel($field)}()
+                            ->find($element["id"])->pivot;
 
-                            $relation->saveMany($newItems);
-                        } else {
-                            $relation->sync($ids);
+                        foreach ($pivotItems as $pivotItem) {
+                            $this->savePolymorphicRelation(
+                                $targetPivot,
+                                $pivotItem,
+                                $pivotItemData
+                            );
                         }
+
+                        foreach ($pivotCollections as $pivotCollection) {
+                            if (isset($element[$pivotCollection])) {
+                                $this->saveMorphManyRelation(
+                                    $targetPivot,
+                                    $pivotCollection,
+                                    $element
+                                );
+                            }
+                        }
+
+                        $ids[] = $element["id"];
                     }
                 }
+            } else {
+                foreach ($data[$field] as $element) {
+                    if (array_key_exists("id", $element) && $element["id"]) {
+                        $ids[] = $element["id"];
+                    }
+                }
+            }
+
+            $relatedClass = $relation->getRelated();
+
+            if ($relatedClass->readOnly) {
+                continue;
+            }
+
+            if (is_a($relation, MorphMany::class)) {
+                $this->saveMorphManyRelation($this->model, $field, $data);
+            } elseif (is_a($relation, HasMany::class)) {
+                $newItems = [];
+                foreach ($data[$field] as $element) {
+                    if (array_key_exists("id", $element) && $element["id"]) {
+                        $existingItem = $relatedClass->find($element["id"]);
+                        $existingItem->fill($element);
+                        $newItems[] = $existingItem;
+                    } else {
+                        $newItem = new $relatedClass();
+                        $newItem->fill($element);
+                        $newItems[] = $newItem;
+                    }
+                }
+
+                $existingIds = $relation
+                    ->get()
+                    ->pluck("id")
+                    ->toArray();
+                $removedIds = array_diff($existingIds, $ids);
+
+                if (!empty($removedIds)) {
+                    $relation
+                        ->getRelated()
+                        ->whereIn("id", $removedIds)
+                        ->delete();
+                }
+
+                $relation->saveMany($newItems);
+            } else {
+                $relation->sync($ids);
             }
         }
     }
