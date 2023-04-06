@@ -29,12 +29,22 @@ spec:
         - name: createextension
           image: registry.gitlab.com/mobicoop/colocauto/colocauto/database:latest
           command: ["/bin/sh"]
-          args: ["-c", "psql --username=colocauto --dbname=colocauto --host=db -c 'CREATE EXTENSION IF NOT EXISTS postgis;' -c 'CREATE EXTENSION IF NOT EXISTS unaccent;' -c 'CREATE EXTENSION IF NOT EXISTS citext;'"]
+          args: ["-c", "psql -U $PGUSER -d $PGDB --host=db -c 'CREATE EXTENSION IF NOT EXISTS postgis;' -c 'CREATE EXTENSION IF NOT EXISTS unaccent;' -c 'CREATE EXTENSION IF NOT EXISTS citext;'"]
           env:
           - name: PGPASSWORD
             valueFrom:
               secretKeyRef:
                 key: database.password
+                name: colocauto-secret
+          - name: PGDB
+            valueFrom:
+              secretKeyRef:
+                key: database.name
+                name: colocauto-secret
+          - name: PGUSER
+            valueFrom:
+              secretKeyRef:
+                key: database.user
                 name: colocauto-secret
       containers:
         - name: api
@@ -138,26 +148,6 @@ spec:
             valueFrom:
               configMapKeyRef:
                 key: mail.fromName
-                name: colocauto-config
-          - name: GOOGLE_API_KEY
-            valueFrom:
-              configMapKeyRef:
-                key: google.apiKey
-                name: colocauto-config
-          - name: GOOGLE_CLIENT_ID
-            valueFrom:
-              configMapKeyRef:
-                key: google.clientId
-                name: colocauto-config
-          - name: GOOGLE_CLIENT_SECRET
-            valueFrom:
-              configMapKeyRef:
-                key: google.clientSecret
-                name: colocauto-config
-          - name: GOOGLE_REDIRECT
-            valueFrom:
-              configMapKeyRef:
-                key: google.redirect
                 name: colocauto-config
           - name: FILESYSTEM_DRIVER
             value: s3

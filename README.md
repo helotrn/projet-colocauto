@@ -118,13 +118,17 @@ Commencer par remplir les fichiers `secret.yaml` et `configmap.yaml` (les infos 
 > `kubectl apply -f kubernetes/configmap.yaml`  
 > `kubectl apply -f kubernetes/secret.yaml`  
 
+Puis générer les clés oAuth 
+> `ssh-keygen -t rsa -m PEM -h -f oauth-private -b 4096`
+> `openssl rsa -in oauth-private -outform PEM -pubout -out oauth-public`
+> `kubectl create secret generic oauth-keys --from-file=oauth-public=oauth-public  --from-file=oauth-private=oauth-private`  
+
 Installer ensuite les différents éléments:
 > `kubectl apply -f kubernetes/database.yaml`  
 > `kubectl apply -f kubernetes/storage.yaml`  
 > `kubectl apply -f kubernetes/api.yaml`  
 > `kubectl apply -f kubernetes/app.yaml`  
 
-TODO: créer un conteneur createbuckets qui se lance une fois au démarrage pour initialiser le stockage
 
 ### Publication sur un nom de domaine
 
