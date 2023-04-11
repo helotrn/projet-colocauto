@@ -12,6 +12,7 @@ class AdminsTableSeeder extends Seeder
             "dev@colocauto.org" => [
                 "role" => "admin",
                 "name" => "Dev Colocauto",
+                "password" => "colocauto",
             ],
         ];
 

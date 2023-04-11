@@ -27,10 +27,7 @@ class DatabaseSeeder extends Seeder
                 $this->call(RefundsTableSeeder::class);
                 break;
             case "production":
-                //$this->call(CommunitiesTableSeeder::class);
-                //$this->call(TagsTableSeeder::class);
-                //$this->call(ProductionPricingsTableSeeder::class);
-                //$this->call(AdminsTableSeeder::class);
+                $this->call(AdminsTableSeeder::class);
                 break;
         }
 
