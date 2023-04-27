@@ -1,5 +1,8 @@
 <template>
   <div id="locomotion">
+    <aside v-if="environment" class="p-4" :class="environment">
+      <p class="mb-0 text-center">👋 Vous consultez actuellement une page de {{ environment }}, pour vous rendre sur l'application Coloc'Auto c'est par ici : <a href="https://app.colocauto.org">app.colocauto.org</a></p>
+    </aside>
     <router-view />
   </div>
 </template>
@@ -15,7 +18,25 @@ export default {
       this.$store.dispatch("loadUser");
     }
   },
+  computed: {
+    environment(){
+      const subdomain = location.host.split('.').shift();
+      if( subdomain == 'test' || subdomain == 'dev' ) return subdomain;
+      else if ( subdomain.match(/localhost/) ) return 'dev';
+      return '';
+    }
+  }
 };
 </script>
 
-<style lang="scss"></style>
+<style lang="scss" scoped>
+aside.dev {
+  background: #ffccaa;
+}
+aside.test {
+  background: #87aade;
+}
+aside a {
+  color: #212529;
+}
+</style>
