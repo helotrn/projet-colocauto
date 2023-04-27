@@ -966,7 +966,7 @@ SQL;
         $loan_expense = new Expense;
         $loan_expense->name = "$desc ($distance km)";
         $loan_expense->amount = $this->final_price;
-        $loan_expense->user_id = $this->borrower->id;
+        $loan_expense->user_id = $this->borrower->user_id;
         $loan_expense->loanable_id = $this->loanable->id;
         $loan_expense->type = 'debit'; // user will pay for this loan
         $loan_expense->executed_at = $date;
@@ -980,7 +980,7 @@ SQL;
             $fuel_expense = new Expense;
             $fuel_expense->name = "";
             $fuel_expense->amount = floatval($this->final_purchases_amount);
-            $fuel_expense->user_id = $this->borrower->id;
+            $fuel_expense->user_id = $this->borrower->user_id;
             $fuel_expense->loanable_id = $this->loanable->id;
             $fuel_expense->type = 'credit'; // user has already payed for this fuel
             $fuel_expense->executed_at = $date;
