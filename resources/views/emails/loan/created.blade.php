@@ -22,7 +22,7 @@
         color: #343a40;
     "
 >
-    {{ $borrower->user->name }} a demandé à emprunter votre {{
+    {{ $borrower->user->name }} a reservé votre véhicule {{
     $loan->loanable->name }} à partir de {{ $loan->departure_at }} et pour une
     durée de {{ $loan->duration_in_minutes }} minutes.
 </p>
