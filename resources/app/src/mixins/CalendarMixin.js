@@ -54,7 +54,7 @@ export default {
       await this.$store.dispatch("loans/test", {
         departure_at: this.$dayjs(start).format("YYYY-MM-DD HH:mm:ss"),
         duration_in_minutes: this.$dayjs(end).diff(start, 'minutes'),
-        estimated_distance:10,
+        estimated_distance:30,
         loanable_id,
       });
     },
