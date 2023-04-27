@@ -21,9 +21,7 @@
         color: #343a40;
     "
 >
-    {{ $sender->name }} a annulé l'emprunt à votre {{ $loan->loanable->name }} à
-    partir de {{ $loan->departure_at }} et pour une durée de {{
-    $loan->duration_in_minutes }} minutes.
+    {{ $sender->name }} a annulé l'emprunt de {{ $loan->loanable->name }} du {{ $loan->departure_at }} 
 </p>
 
 <p style="text-align: center; margin-top: 32px">
