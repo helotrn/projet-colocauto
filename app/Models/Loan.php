@@ -363,6 +363,7 @@ SQL;
         "actual_price",
         "actual_insurance",
         "actual_duration_in_minutes",
+        "final_distance",
         "calendar_days",
         "is_contested",
         "total_actual_cost",
@@ -473,6 +474,15 @@ SQL;
         }
 
         return $actualDurationInMinutes;
+    }
+    
+    public function getFinalDistanceAttribute()
+    {
+        if ($this->takeover && $this->handover && $this->handover->isCompleted()) {
+            return $this->handover->mileage_end - $this->takeover->mileage_beginning;
+        } else {
+            return 0;
+        }
     }
 
     public function getCalendarDaysAttribute()

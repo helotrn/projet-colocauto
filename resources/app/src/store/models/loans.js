@@ -41,6 +41,7 @@ export default new RestModule(
       "final_price",
       "final_insurance",
       "final_platform_tip",
+      "final_distance",
       "calendar_days",
       "canceled_at",
     ],
