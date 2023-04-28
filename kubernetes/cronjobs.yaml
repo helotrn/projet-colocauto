@@ -85,7 +85,7 @@ kind: CronJob
 metadata:
   name: expenses-write
 spec:
-  schedule: "55 23 * * *"
+  schedule: "55 23 28-31 * *"
   jobTemplate:
     spec:
       template:
@@ -100,5 +100,5 @@ spec:
             - -c
             - POD_NAME=$(kubectl get pods -l app=laravel -o=jsonpath='{.items[0].metadata.name}');
               echo $POD_NAME;
-              kubectl exec $POD_NAME -c api -- php artisan expenses:write;
+              [ "$(date +%d -d tomorrow)" = "01" ] && kubectl exec $POD_NAME -c api -- php artisan expenses:write;
           restartPolicy: Never
