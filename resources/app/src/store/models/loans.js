@@ -42,6 +42,8 @@ export default new RestModule(
       "final_insurance",
       "final_platform_tip",
       "final_distance",
+      "takeover.mileage_beginning",
+      "handover.mileage_end",
       "calendar_days",
       "canceled_at",
     ],
