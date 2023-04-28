@@ -64,7 +64,7 @@
                 <div>
                   <p>
                     Assurez-vous d'avoir lu
-                    <a href="https://mailchi.mp/solon-collectif/locomotion-comment-ca-marche">
+                    <a href="https://www.colocauto.org/faq">
                       le guide de départ
                     </a>
                     avant votre emprunt.

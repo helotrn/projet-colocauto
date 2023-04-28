@@ -190,7 +190,7 @@
                   </template>
                 </table>
                 <div class="small">
-                  <a href="https://mailchi.mp/solon-collectif/tarifs-locomotion" target="_blank">{{
+                  <a href="https://www.colocauto.org/tarification" target="_blank">{{
                     $t("payment.tarification_explanation") | capitalize
                   }}</a>
                 </div>
