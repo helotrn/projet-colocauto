@@ -114,6 +114,7 @@ export default {
         { key: "loanable.owner.user.full_name", label: "Propriétaire", sortable: true },
         { key: "community.name", label: "Communauté", sortable: true },
         { key: "status", label: "Statut", sortable: false },
+        { key: "final_distance", label: "Km parcourus", sortable: true},
         { key: "actions", label: "Actions", tdClass: "table__cell__actions" },
       ],
     };

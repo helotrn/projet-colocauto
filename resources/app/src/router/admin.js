@@ -215,6 +215,7 @@ export default [
             fields: [
               "*",
               "total_estimated_cost",
+              "final_distance",
               "actions.*",
               "borrower.id",
               "borrower.user.avatar",

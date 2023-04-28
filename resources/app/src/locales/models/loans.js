@@ -34,6 +34,7 @@ export default {
     fields: {
       id: "ID",
       actual_duration_in_minutes: "durée (minutes)",
+      final_distance: "km parcourus",
       borrower_id: "emprunteur-se",
       borrower: borrowers.fr.fields,
       calendar_days: "jours calendaires",

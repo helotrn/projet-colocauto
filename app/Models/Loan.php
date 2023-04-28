@@ -33,6 +33,7 @@ class Loan extends BaseModel
     public static $filterTypes = [
         "id" => "number",
         "actual_duration_in_minutes" => "number",
+        "final_distance" => "number",
         "departure_at" => "date",
         "calendar_days" => "number",
         "loanable.type" => ["car", "bike", "trailer"],
@@ -199,6 +200,30 @@ SQL;
                 }
 
                 return $query->selectRaw("$sql AS actual_duration_in_minutes");
+            },
+
+            "final_distance" => function ($query = null) {
+                $sql = "GREATEST( handovers.mileage_end - takeovers.mileage_beginning, 0 )";
+                if (!$query) {
+                    return $sql;
+                }
+                $query->selectRaw("$sql AS final_distance");
+                $query = static::addJoin(
+                    $query,
+                    "handovers",
+                    "loans.id",
+                    "=",
+                    "handovers.loan_id"
+                );
+                $query = static::addJoin(
+                    $query,
+                    "takeovers",
+                    "loans.id",
+                    "=",
+                    "takeovers.loan_id"
+                );
+
+                return $query;
             },
 
             "borrower_user_full_name" => function ($query = null) {
