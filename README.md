@@ -118,6 +118,9 @@ Commencer par remplir les fichiers `secret.yaml` et `configmap.yaml` (les infos 
 > `kubectl apply -f kubernetes/configmap.yaml`  
 > `kubectl apply -f kubernetes/secret.yaml`  
 
+Pour les secrets, il faut utiliser l'encodage base64, et ne pas oublier l'option -n pour éviter d'encoder de saut de ligne
+> `echo -n "[secret à encoder]" | base64`
+
 Puis générer les clés oAuth 
 > `ssh-keygen -t rsa -m PEM -h -f oauth-private -b 4096`
 > `openssl rsa -in oauth-private -outform PEM -pubout -out oauth-public`
@@ -129,6 +132,24 @@ Installer ensuite les différents éléments:
 > `kubectl apply -f kubernetes/api.yaml`  
 > `kubectl apply -f kubernetes/app.yaml`  
 
+Une fois l'application laravel lancée, il faut générer les clés "passport" et les enregistrer dans les secrets
+> `kubectl exec -it pods/<nom du pod> -- php artisan passport:client --password`
+> What should we name the password grant client? [ColocAuto Password Grant Client]:
+> > 
+> 
+> Which user provider should this client use to retrieve users? [users]:
+>  [0] users
+> > 
+> 
+> Password grant client created successfully.
+> Client ID: .........
+> Client secret: ..........
+
+Redémarrer ensuite le pod pour prendre en compte les nouveaux secrets.
+
+
+On finit pas la mise en place des actions récurrentes (cronjobs)
+> `kubectl apply -f kubernetes/cronjobs.yaml`  
 
 ### Publication sur un nom de domaine
 
