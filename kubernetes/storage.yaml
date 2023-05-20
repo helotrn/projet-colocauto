@@ -1,7 +1,7 @@
 kind: PersistentVolume
 apiVersion: v1
 metadata:
-  name: storage-pv-volume
+  name: storage-pv-dev-volume
   labels:
     type: local
     app: minio
@@ -12,12 +12,20 @@ spec:
   accessModes:
     - ReadWriteOnce
   hostPath:
-    path: "/mnt/data"
+    path: "/mnt/storage"
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: database
+          operator: In
+          values:
+          - dev
 ---
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: storage-pv-claim
+  name: storage-pv-dev-claim
   labels:
     app: minio
 spec:
@@ -54,6 +62,15 @@ spec:
       labels:
         app: minio
     spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: database
+                operator: In
+                values:
+                - dev
       containers:
       - name: storage
         image: minio/minio
@@ -100,4 +117,4 @@ spec:
       volumes:
         - name: storage-volume
           persistentVolumeClaim:
-            claimName: storage-pv-claim
+            claimName: storage-pv-dev-claim

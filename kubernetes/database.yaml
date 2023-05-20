@@ -1,7 +1,7 @@
 kind: PersistentVolume
 apiVersion: v1
 metadata:
-  name: database-pv-volume
+  name: database-pv-dev-volume
   labels:
     type: local
     app: postgres
@@ -13,11 +13,19 @@ spec:
     - ReadWriteOnce
   hostPath:
     path: "/mnt/data"
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: database
+          operator: In
+          values:
+          - dev
 ---
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: database-pv-claim
+  name: database-pv-dev-claim
   labels:
     app: postgres
 spec:
@@ -54,6 +62,15 @@ spec:
       labels:
         app: postgres
     spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: database
+                operator: In
+                values:
+                - dev
       containers:
         - name: database
           image: registry.gitlab.com/mobicoop/colocauto/colocauto/database:latest
@@ -82,5 +99,5 @@ spec:
       volumes:
         - name: database-volume
           persistentVolumeClaim:
-            claimName: database-pv-claim
+            claimName: database-pv-dev-claim
 
