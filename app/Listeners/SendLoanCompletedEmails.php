@@ -15,14 +15,6 @@ class SendLoanCompletedEmails
         $loan = $event->loan;
 
         self::sendMail($loan->borrower->user, $loan, false);
-
-        if (
-            !$loan->loanable->is_self_service &&
-            $loan->loanable->owner &&
-            $loan->loanable->owner->user->id != $loan->borrower->user->id
-        ) {
-            self::sendMail($loan->loanable->owner->user, $loan, true);
-        }
     }
 
     private static function sendMail(User $user, Loan $loan, bool $isOwner)
