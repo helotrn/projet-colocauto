@@ -94,7 +94,7 @@ spec:
                   key: database.password
                   name: colocauto-secret
           volumeMounts:
-            - mountPath: /var/lib/postgresql/colocauto
+            - mountPath: /var/lib/postgresql/data
               name: database-volume
       volumes:
         - name: database-volume
