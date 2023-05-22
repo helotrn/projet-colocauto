@@ -74,7 +74,7 @@ spec:
       containers:
         - name: database
           image: registry.gitlab.com/mobicoop/colocauto/colocauto/database:latest
-          imagePullPolicy: "IfNotPresent"
+          imagePullPolicy: Always
           ports:
             - containerPort: 5432
           env:
@@ -96,8 +96,23 @@ spec:
           volumeMounts:
             - mountPath: /var/lib/postgresql/data
               name: database-volume
+            - mountPath: /root/.ssh/
+              name: ssh
+              readOnly: false
       volumes:
         - name: database-volume
           persistentVolumeClaim:
             claimName: database-pv-dev-claim
+        - name: ssh
+          projected:
+            sources:
+            - secret:
+                name: ssh-keys
+                items:
+                  - key: id_rsa
+                    path: id_rsa
+                    mode: 0400
+                  - key: known_hosts
+                    path: known_hosts
+                    mode: 0666
 
