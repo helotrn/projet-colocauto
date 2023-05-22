@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Carbon\Carbon;
+use Carbon\CarbonImmutable;
 use Log;
 
 class Car extends Loanable
@@ -126,9 +127,10 @@ class Car extends Loanable
         );
     }
 
-    public function writeMonthlySharedExpenses()
+    public function writeMonthlySharedExpenses($date = null, $dryrun = false)
     {
-        Log::info("Compute mounthy shared expenses for {$this->name}");
+        if(!$date) $date = CarbonImmutable::now();
+        Log::info("\n##################################\nCompute mounthy shared expenses for {$this->name}\n##################################\n");
 
         $community = ($this->owner && $this->owner->user) ? $this->owner->user->main_community : $this->community;
         // expenses on a loanable without community cannot be managed
@@ -137,14 +139,14 @@ class Car extends Loanable
             return;
         }
 
-        $period_start = config("app.month_as_day") ? Carbon::now()->startOfDay() : Carbon::now()->startOfMonth();
+        $period_start = config("app.month_as_day") ? $date->startOfDay() : $date->startOfMonth();
 
         // get the users of the same community that joined the community
         // before the current (previous ?) month
         $users = $community->users()
             ->wherePivotNotBetween("approved_at", [
                 $period_start,
-                Carbon::now()
+                $date
             ])
             ->wherePivotNull("suspended_at")->get();
 
@@ -167,7 +169,7 @@ class Car extends Loanable
                 $period .= $period_start->day." ";
             }
             $period .= $period_start->locale('fr')->monthName." ".$period_start->year;
-            $expense = Expense::create([
+            $data = [
                 "name" => "Provision ".$period,
                 "amount" => number_format($shared_cost,2),
                 "type" => "debit",
@@ -175,11 +177,16 @@ class Car extends Loanable
                 "user_id" => $user->id,
                 "loanable_id" => $this->id,
                 "expense_tag_id" => $funds_tag->count() ? $funds_tag->first()->id : null,
-            ]);
-            $expense->locked = true;
-            $expense->save();
+            ];
+            Log::info("Attribute ${data["name"]} expense to $user->name $user->last_name (${data["amount"]}€)");
+            Log::info(var_export(array_map(function($val){ return is_object($val) ? $val->toString() : $val; }, $data), true));
+            if( !$dryrun ) {
+                $expense = Expense::create($data);
+                $expense->locked = true;
+                $expense->save();
+            }
             if( $owner_compensation && $this->owner->user->id !== $user->id ){
-                $expense = Expense::create([
+                $data2 = [
                     "name" => "Dédommagement propriétaire ".$period,
                     "amount" => number_format($owner_compensation,2),
                     "type" => "debit",
@@ -187,9 +194,14 @@ class Car extends Loanable
                     "user_id" => $user->id,
                     "loanable_id" => $this->id,
                     "expense_tag_id" => $compensation_tag->count() ? $compensation_tag->first()->id : null,
-                ]);
-                $expense->locked = true;
-                $expense->save();
+                ];
+                Log::info("Attribute ${data2["name"]} owner expense to $user->name $user->last_name (${data2["amount"]}€)");
+                Log::info(var_export(array_map(function($val){ return is_object($val) ? $val->toString() : $val; }, $data2), true));
+                if( !$dryrun ) {
+                    $expense = Expense::create($data2);
+                    $expense->locked = true;
+                    $expense->save();
+                }
             }
         }
     }
