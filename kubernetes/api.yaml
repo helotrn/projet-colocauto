@@ -149,6 +149,11 @@ spec:
               configMapKeyRef:
                 key: mail.fromName
                 name: colocauto-config
+          - name: SENTRY_LARAVEL_DSN
+            valueFrom:
+              configMapKeyRef:
+                key: sentry.laravel
+                name: colocauto-config
           - name: FILESYSTEM_DRIVER
             value: s3
           - name: S3_DRIVER

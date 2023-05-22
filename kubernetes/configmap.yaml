@@ -12,3 +12,5 @@ data:
   mail.fromName: 'Administrateur ColocAuto'
   mail.driver: log
   mandrill.subaccount: # put clean data here
+  sentry.laravel:  # put DSN here starting wih https
+  sentry.vue:  # put DSN here starting wih https

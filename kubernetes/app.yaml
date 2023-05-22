@@ -97,5 +97,10 @@ spec:
             configMapKeyRef:
               key: url.backend
               name: colocauto-config
+        - name: VUE_APP_SENTRY_DSN
+          valueFrom:
+            configMapKeyRef:
+              key: sentry.vue
+              name: colocauto-config
       restartPolicy: Always
 
