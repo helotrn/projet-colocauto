@@ -9,11 +9,13 @@ use Log;
 class WriteSharedExpenses extends Command
 {
     protected $signature = 'expenses:write
-                            {--dry-run : Do not actualy save expenses in database}';
+                            {--dry-run : Do not actualy save expenses in database}
+                            {date? : pretend the current date is not now (d-m-Y format)}';
 
     protected $description = 'Write shared expenses in each user wallet for each loanable on a monthly basis';
-    
+
     private $dryrun = false;
+    private $date = null;
 
     public function __construct()
     {
@@ -25,10 +27,11 @@ class WriteSharedExpenses extends Command
         if ($this->option("dry-run")) {
             $this->dryrun = true;
         }
+        $this->date = $this->argument("date");
         Log::info("Starting write expenses command...");
 
         Car::where("availability_mode", "always")->each(function ($car) {
-            $car->writeMonthlySharedExpenses(null, $this->dryrun);
+            $car->writeMonthlySharedExpenses($this->date, $this->dryrun);
         });
 
         Log::info("Completed write expenses command.");

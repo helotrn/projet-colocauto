@@ -129,7 +129,11 @@ class Car extends Loanable
 
     public function writeMonthlySharedExpenses($date = null, $dryrun = false)
     {
-        if(!$date) $date = CarbonImmutable::now();
+        if(!$date) {
+            $date = CarbonImmutable::now();
+        } elseif (is_string($date)) {
+            $date = Carbon::createFromFormat('d-m-Y', $date);
+        }
         Log::info("\n##################################\nCompute mounthy shared expenses for {$this->name}\n##################################\n");
 
         $community = ($this->owner && $this->owner->user) ? $this->owner->user->main_community : $this->community;
