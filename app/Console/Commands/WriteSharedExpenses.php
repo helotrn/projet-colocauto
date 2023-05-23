@@ -30,7 +30,9 @@ class WriteSharedExpenses extends Command
         $this->date = $this->argument("date");
         Log::info("Starting write expenses command...");
 
-        Car::where("availability_mode", "always")->each(function ($car) {
+        Car::where("availability_mode", "always")
+        ->where("cost_per_month", ">", 0)
+        ->each(function ($car) {
             $car->writeMonthlySharedExpenses($this->date, $this->dryrun);
         });
 
