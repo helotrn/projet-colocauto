@@ -1,0 +1,39 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: backup
+spec:
+  schedule: "*/5 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          serviceAccountName: cron-runner
+          containers:
+          - name: backup
+            image: google/cloud-sdk
+            imagePullPolicy: IfNotPresent
+            env:
+            - name: POSTGRES_DB
+              valueFrom:
+                secretKeyRef:
+                  key: database.name
+                  name: colocauto-secret
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  key: database.user
+                  name: colocauto-secret
+            command:
+            - /bin/sh
+            - -c
+            - POD_NAME=$(kubectl get pods -l app=postgres -o=jsonpath='{.items[0].metadata.name}');
+              echo $POD_NAME; kubectl exec $POD_NAME -c database -- bash -c '
+                pg_dump --inserts -U $POSTGRES_USER $POSTGRES_DB | gzip --best > tmp/backup-dev-db-`date +%Y%m%d-%Hh%M`.sql.gz &&
+                echo "Database backup:" &&
+                ls tmp/ &&
+                scp -P 2288 tmp/backup-dev-* colocauto@178.170.65.35:dev &&
+                echo "Remote copy done" &&
+                rm tmp/backup-dev-*';
+          restartPolicy: Never
+
