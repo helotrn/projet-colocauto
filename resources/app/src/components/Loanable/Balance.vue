@@ -4,18 +4,18 @@
     <dl v-if="loanable.stats && loanable.balance">
       <dt>Nombre d'emprunts:</dt> <dd>{{ loanable.stats.loans }}</dd>
       <dt>Kilomètres parcourus:</dt> <dd>{{ loanable.stats.km }} km</dd>
-      <dt>Montant des emprunts:</dt> <dd>{{ loanable.balance['debit-loan'].total | currency }}</dd>
-      <dt>Dépenses de carburant:</dt> <dd>{{ loanable.balance['credit-fuel'].total | currency }}</dd>
+      <dt>Montant des emprunts:</dt> <dd>{{ debitLoan | currency }}</dd>
+      <dt>Dépenses de carburant:</dt> <dd>{{ creditFuel | currency }}</dd>
       <dt class="diff">Différence:</dt> <dd :class="{diff: true, negative: !isLoanBalanced}">
-        {{ parseFloat(loanable.balance['debit-loan'].total) - parseFloat(loanable.balance['credit-fuel'].total)  | currency }}
+        {{ debitLoan - creditFuel  | currency }}
       </dd>
     </dl>
     <small v-if="!isLoanBalanced">Attention, le coût au kilomètre ne couvre pas les dépenses de carburant.</small>
     <dl>
-      <dt>Provisions:</dt> <dd>{{ loanable.balance['debit-funds'].total | currency }}</dd>
-      <dt>Dépenses partagées:</dt> <dd>{{ loanable.balance['credit-shared'].total | currency }}</dd>
+      <dt>Provisions:</dt> <dd>{{ debitFunds | currency }}</dd>
+      <dt>Dépenses partagées:</dt> <dd>{{ creditShared | currency }}</dd>
       <dt class="diff">Différence:</dt> <dd :class="{diff: true, negative: !isSharedExpensesBalanded }">
-        {{ parseFloat(loanable.balance['debit-funds'].total) - parseFloat(loanable.balance['credit-shared'].total) | currency }}
+        {{ debitFunds - creditShared | currency }}
       </dd>
     </dl>
     <small v-if="!isSharedExpensesBalanded">Attention, les provisions sont insuffisantes pour couvrir les dépenses partagées.</small>
@@ -30,12 +30,24 @@ export default {
     required: true,
   },
   computed: {
+    debitLoan(){
+      return this.loanable.balance['debit-loan'] ? parseFloat(this.loanable.balance['debit-loan'].total) : 0
+    },
+    debitFunds(){
+      return this.loanable.balance['debit-funds'] ? parseFloat(this.loanable.balance['debit-funds'].total) : 0
+    },
+    creditFuel(){
+      return this.loanable.balance['credit-fuel'] ? parseFloat(this.loanable.balance['credit-fuel'].total) : 0
+    },
+    creditShared(){
+      return this.loanable.balance['credit-shared'] ? parseFloat(this.loanable.balance['credit-shared'].total) : 0
+    },
     isLoanBalanced(){
-      return parseFloat(this.loanable.balance['debit-loan'].total) >= parseFloat(this.loanable.balance['credit-fuel'].total);
+      return this.debitLoan >= this.creditFuel;
     },
     isSharedExpensesBalanded(){
-      return parseFloat(this.loanable.balance['debit-funds'].total) >= parseFloat(this.loanable.balance['credit-shared'].total);
-    }
+      return this.debitFunds >= this.creditShared;
+    },
   }
 }
 </script>
