@@ -43,11 +43,18 @@ build:
     - echo $CI_PROJECT_NAME
   script:
     - DOCKER_BUILD_ENV=prod docker-compose build vue php
+    - if [ "$CI_COMMIT_REF_NAME" == 'master' ]; then
+        TAG=production;
+      elif [ "$CI_COMMIT_REF_NAME" == 'testenv' ]; then
+        TAG=test;
+      else
+        TAG=latest;
+      fi
     - docker images
-    - docker tag ${CI_PROJECT_NAME}-vue:latest ${CI_REGISTRY_IMAGE}/vue:latest
-    - docker push ${CI_REGISTRY_IMAGE}/vue:latest
-    - docker tag ${CI_PROJECT_NAME}-php:latest ${CI_REGISTRY_IMAGE}/api:latest
-    - docker push ${CI_REGISTRY_IMAGE}/api:latest
+    - docker tag ${CI_PROJECT_NAME}-vue:latest ${CI_REGISTRY_IMAGE}/vue:${TAG}
+    - docker push ${CI_REGISTRY_IMAGE}/vue:${TAG}
+    - docker tag ${CI_PROJECT_NAME}-php:latest ${CI_REGISTRY_IMAGE}/api:${TAG}
+    - docker push ${CI_REGISTRY_IMAGE}/api:${TAG}
 
 test:prettier:
   image: node:15
