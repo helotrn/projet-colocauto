@@ -270,7 +270,7 @@
               <transition name="fade">
                 <div v-if="loanables && loanables.length > 0">
                   <transition-group name="dashboard-list">
-                    <h3 class="dashboard--margin-bottom" key="title">{{ loanables.length }} véhicules</h3>
+                    <h3 class="dashboard--margin-bottom" key="title">{{ totalLoanables }} véhicules</h3>
                     <b-row key="loanables">
                       <b-col lg="6" v-for="loanable in loanables" :key="loanable.id">
                         <loanable-info-box
@@ -511,6 +511,9 @@ export default {
     },
     membersLoaded() {
       return this.$store.state.dashboard.membersLoaded;
+    },
+    totalLoanables() {
+      return this.$store.state.dashboard.totalLoanables;
     },
     hasMoreLoanables() {
       return this.$store.state.dashboard.hasMoreLoanables;

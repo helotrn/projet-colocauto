@@ -22,10 +22,11 @@ const initialState = {
   balance: {},
   balanceLoaded: false,
   totalMembers: 0,
+  totalLoanables: 0,
   loadRequests: 0,
 };
 
-const maxLoanableCount = 5;
+const maxLoanableCount = 4;
 const maxMemberCount = 4;
 
 const actions = {
@@ -144,6 +145,7 @@ const mutations = {
     state.loanablesLoaded = true;
     state.loanables = loanables.data;
     state.hasMoreLoanables = loanables.total > maxLoanableCount;
+    state.totalLoanables = loanables.total;
     state.loadRequests--;
   },
   carsListed(state, cars) {
