@@ -6,7 +6,7 @@ return [
     // capture release as git sha
     "release" => trim(
         exec(
-            "git --git-dir " . base_path(".git") . ' log --pretty="%h" -n1 HEAD'
+            'GIT_WORK_TREE=' . base_path() . ' git --git-dir ' . env('GIT_DIR', base_path('.git')) . ' log --pretty="%h" -n1 HEAD'
         )
     ),
 
