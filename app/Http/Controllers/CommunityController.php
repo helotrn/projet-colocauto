@@ -341,9 +341,9 @@ class CommunityController extends RestController
             if(!$toWipe->isEmpty()) {
               $refunds[] = [
                 "user_id" => $debtor->id,
-                "user_id_full_name" => $debtor->full_name,
+                "user_full_name" => $debtor->full_name,
                 "credited_user_id" => $toWipe->first()->id,
-                "credited_user_id_full_name" => $toWipe->first()->full_name,
+                "credited_user_full_name" => $toWipe->first()->full_name,
                 "amount" => -$debtor->balance,
               ];
               $debtors = $debtors->reject(function($user) use ($debtor){
