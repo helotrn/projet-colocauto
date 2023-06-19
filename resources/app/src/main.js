@@ -156,7 +156,7 @@ Vue.component("vue-headful", vueHeadful);
 Object.keys(filters).forEach((f) => Vue.filter(f, filters[f]));
 Vue.prototype.$filters = filters;
 
-axios.defaults.baseURL = `/api/v1`;
+axios.defaults.baseURL = `${process.env.VUE_APP_BACKEND_URL}/api/v1`;
 axios.interceptors.request.use((config) => {
   if (store.state.token) {
     // eslint-disable-next-line

@@ -15,18 +15,21 @@ class Cors
      */
     public function handle($request, Closure $next)
     {
-        /**
-         * Cross-Origin Resource Sharing (CORS)
-         * is only allowed for local
-         * environment. */
+        if($request->getMethod() == 'OPTIONS'){
+            header('Access-Control-Allow-Origin: '.env('FRONTEND_URL', '*'));
+            header('Access-Control-Allow-Methods: POST, GET, OPTIONS, PUT, DELETE');
+            header('Access-Control-Allow-Headers: Content-Type, X-Auth-Token, Origin, Authorization');
+            header('Access-Control-Allow-Credentials: true');
+            exit(0);
+        }
+
         if (
-            app()->environment() === "local" &&
-            is_callable($request, "header")
+            is_callable([$request, "header"])
         ) {
             $response = $next($request);
 
             return $response
-                ->header("Access-Control-Allow-Origin", "*")
+                ->header("Access-Control-Allow-Origin", env('FRONTEND_URL', '*') )
                 ->header(
                     "Access-Control-Allow-Methods",
                     "POST, GET, OPTIONS, PUT, DELETE"
