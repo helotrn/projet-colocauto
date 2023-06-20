@@ -15,7 +15,7 @@ class Cors
      */
     public function handle($request, Closure $next)
     {
-        if($request->getMethod() == 'OPTIONS'){
+        if($request->getMethod() == 'OPTIONS' && !$request->hasHeader('Authorization')){
             header('Access-Control-Allow-Origin: '.env('FRONTEND_URL', '*'));
             header('Access-Control-Allow-Methods: POST, GET, OPTIONS, PUT, DELETE');
             header('Access-Control-Allow-Headers: Content-Type, X-Auth-Token, Origin, Authorization');
