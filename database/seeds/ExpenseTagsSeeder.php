@@ -18,6 +18,7 @@ class ExpenseTagsSeeder extends Seeder
                 "name" => "Emprunt",
                 "slug" => "loan",
                 "color" => "primary",
+                "admin" => true,
             ],
             [
                 "id" => 2,
@@ -36,12 +37,14 @@ class ExpenseTagsSeeder extends Seeder
                 "name" => "Provisions",
                 "slug" => "funds",
                 "color" => "primary",
+                "admin" => true,
             ],
             [
                 "id" => 5,
                 "name" => "Compensation propriétaire",
                 "slug" => "compensation",
                 "color" => "dark",
+                "admin" => true,
             ],
         ];
 
