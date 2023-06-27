@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Http\Controllers\ActionController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Requests\Action\ActionRequest;
+use App\Events\LoanAutoCompleteEvent;
 use App\Models\Loan;
 use Carbon\CarbonImmutable;
 use Illuminate\Console\Command;
@@ -110,6 +111,7 @@ class ActionsComplete extends Command
                     $loan->id,
                     $loan->handover->id
                 );
+                event(new LoanAutoCompleteEvent($loan));
 
                 Log::info("Completed handover on loan ID $loan->id.");
             }
