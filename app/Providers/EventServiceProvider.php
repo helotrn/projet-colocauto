@@ -29,7 +29,6 @@ class EventServiceProvider extends ServiceProvider
         ],
         "App\Events\LoanCreatedEvent" => [
             "App\Listeners\SendLoanCreatedEmails",
-            "App\Listeners\CreateNokeUserIfNotExists",
         ],
         "App\Events\LoanIntentionAcceptedEvent" => [
             "App\Listeners\SendLoanIntentionAcceptedEmails",
@@ -78,7 +77,6 @@ class EventServiceProvider extends ServiceProvider
         "App\Events\LoanableCreatedEvent" => [
             "App\Listeners\SendLoanableCreatedEmails",
         ],
-        "App\Events\UserEmailUpdated" => ["App\Listeners\UpdateNokeUserEmail"],
         "App\Events\BorrowerSuspendedEvent" => [
             "App\Listeners\CancelFutureLoans",
             "App\Listeners\SendBorrowerSuspendedEmails",
