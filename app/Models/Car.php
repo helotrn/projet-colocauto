@@ -163,7 +163,8 @@ class Car extends Loanable
         $shared_cost = $this->cost_per_month / $users->count();
         $owner = $this->owner;
         if( $owner && $owner->user ) {
-            $owner_compensation = $this->owner_compensation / $users->filter(function($u) use ($owner){ return $owner->user->id !== $u->id; })->count();
+            $nb_users_without_owner = $users->filter(function($u) use ($owner){ return $owner->user->id !== $u->id; })->count();
+            $owner_compensation = $nb_users_without_owner ? $this->owner_compensation / $nb_users_without_owner : 0;
         } else {
             $owner_compensation = 0;
         }
