@@ -134,7 +134,7 @@ class Car extends Loanable
         } elseif (is_string($date)) {
             $date = Carbon::createFromFormat('d-m-Y', $date);
         }
-        Log::info("\n##################################\nCompute mounthy shared expenses for {$this->name}\n##################################\n");
+        Log::info("\n##################################\nCompute mounthy shared expenses for {$this->name} on {$date->toDateString()}\n##################################\n");
 
         $community = ($this->owner && $this->owner->user) ? $this->owner->user->main_community : $this->community;
         // expenses on a loanable without community cannot be managed
@@ -143,32 +143,70 @@ class Car extends Loanable
             return;
         }
 
-        $period_start = config("app.month_as_day") ? $date->startOfDay() : $date->startOfMonth();
+        if( config("app.month_as_day") ) {
+            $period_start = $date->copy()->startOfDay();
+        } else if( $this->created_at > $date->copy()->startOfMonth() ) {
+            $period_start = $this->created_at;
+        } else {
+            $period_start = $date->copy()->startOfMonth();
+        }
+        Log::info("Period start: ".$period_start->toDateString());
 
-        // get the users of the same community that joined the community
-        // before the current (previous ?) month
+        // get the users of the same community
         $users = $community->users()
-            ->wherePivotNotBetween("approved_at", [
-                $period_start,
-                $date
-            ])
-            ->wherePivotNull("suspended_at")->get();
+            ->wherePivotNull("suspended_at")->get()
+            ->map(function($user) use ($period_start, $date) {
+                // compute the number of days the car was available to the user
+                $start = $period_start->maximum($user->borrower->approved_at)->startOfDay();
+                $user->days_present = $start->diffInDays($date) + 1;
+                Log::info("$user->name $user->last_name : ".$start->toDateString().", $user->days_present presence");
+                return $user;
+            });
+
+        $total_days_present = $users->reduce(function($sum, $user) {
+            return $sum + $user->days_present;
+        }, 0);
+        Log::info("Total presence days: $total_days_present");
+
+        $owner = $this->owner;
+        if( $owner && $owner->user ) {
+            $total_days_present_without_owner = $users->reduce(function($sum, $user) use ($owner) {
+                return $sum + ($owner->user->id == $user->id ? 0 : $user->days_present);
+            }, 0);
+            Log::info("Total presence days without owner: $total_days_present_without_owner");
+        } else {
+            $total_days_present_without_owner = 0;
+        }
 
         Log::info("{$users->count()} people in the community");
-        if( $users->count() === 0 ) return;
+        if( $users->count() === 0 || $total_days_present === 0 ) return;
 
         $funds_tag = ExpenseTag::where('slug', 'funds');
         $compensation_tag = ExpenseTag::where('slug', 'compensation');
 
-        $shared_cost = $this->cost_per_month / $users->count();
-        $owner = $this->owner;
-        if( $owner && $owner->user ) {
-            $nb_users_without_owner = $users->filter(function($u) use ($owner){ return $owner->user->id !== $u->id; })->count();
-            $owner_compensation = $nb_users_without_owner ? $this->owner_compensation / $nb_users_without_owner : 0;
-        } else {
-            $owner_compensation = 0;
+        $days_in_month = $date->copy()->startOfMonth()->diffInDays($date);
+        if( $days_in_month == 0 ) {
+            Log::info("cannot compute expenses on the month first day");
+            return;
         }
+        $total_shared_cost = $this->cost_per_month * $period_start->diffInDays($date) / $days_in_month;
+        Log::info("Total shared cost: $total_shared_cost");
+
+        if( $total_days_present_without_owner ) {
+            // get the oldest date when the car could have been used by a non-owner
+            $period_start_without_owner = $users->reduce(function($min_date,$user) use ($owner) {
+                return $owner->user->id == $user->id ? $min_date : $min_date->minimum($user->borrower->approved_at)->startOfDay();
+            }, $date);
+            $period_start_without_owner = $period_start_without_owner->maximum($period_start);
+            // compute owner compensation pro rata
+            $total_owner_compensation = $this->owner_compensation * ($period_start_without_owner->diffInDays($date)+1) / ($days_in_month+1);
+        } else {
+            $total_owner_compensation = 0;
+        }
+        Log::info("Total owner compensation: $total_owner_compensation");
+
         foreach($users as $user) {
+            $shared_cost = $total_shared_cost * $user->days_present / $total_days_present;
             $period = "";
             if( config("app.month_as_day") ) {
                 $period .= $period_start->day." ";
@@ -190,7 +228,8 @@ class Car extends Loanable
                 $expense->locked = true;
                 $expense->save();
             }
-            if( $owner_compensation && $this->owner->user->id !== $user->id ){
+            if( $total_owner_compensation && $this->owner->user->id !== $user->id ){
+                $owner_compensation = $total_owner_compensation * $user->days_present / $total_days_present_without_owner;
                 $data2 = [
                     "name" => "Dédommagement propriétaire ".$period,
                     "amount" => number_format($owner_compensation,2),
