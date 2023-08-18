@@ -15,24 +15,24 @@ export default new VueI18n({
       currency_cad: {
         style: "currency",
         currency: "CAD",
-        currencyDisplay: "narrowSymbol",
+        currencyDisplay: "symbol",
       },
       // Dollars only, no cents
       dollars_cad: {
         style: "currency",
         currency: "CAD",
-        currencyDisplay: "narrowSymbol",
+        currencyDisplay: "symbol",
         maximumFractionDigits: 0,
       },
       currency_euro: {
         style: "currency",
         currency: "EUR",
-        currencyDisplay: "narrowSymbol",
+        currencyDisplay: "symbol",
       },
       euros_no_cents: {
         style: "currency",
         currency: "EUR",
-        currencyDisplay: "narrowSymbol",
+        currencyDisplay: "symbol",
         maximumFractionDigits: 0,
       },
       percent: {
