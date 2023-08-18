@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Builder;
 use Carbon\Carbon;
 use App\Observers\ExpensesObserver;
+use App\Casts\TimestampWithTimezoneCast;
 
 class Expense extends BaseModel
 {
@@ -72,6 +73,10 @@ class Expense extends BaseModel
     public $collections = ["changes"];
 
     public $computed = ["community"];
+
+    protected $casts = [
+        "executed_at" => TimestampWithTimezoneCast::class,
+    ];
 
     public function user()
     {
