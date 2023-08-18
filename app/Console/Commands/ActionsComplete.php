@@ -82,7 +82,7 @@ class ActionsComplete extends Command
             }
 
             if ($loan->takeover && $loan->takeover->status === "in_process") {
-                self::cancelLoan($loan, "takeover");
+                // do not cancel loans where begining mileage has not been filled in
                 continue;
             }
 
@@ -92,6 +92,11 @@ class ActionsComplete extends Command
               Complete handover if takeover is not contested
             */
             if ($loan->handover && $loan->handover->status === "in_process") {
+                if ($loan->estimated_distance === 30 ) {
+                    // do not complete loans where estimated distance is still the default one
+                    continue;
+                }
+                
                 Log::info("Autocompleting handover on loan ID $loan->id...");
 
                 $request = new ActionRequest();
