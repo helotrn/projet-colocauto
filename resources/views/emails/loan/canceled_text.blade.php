@@ -3,8 +3,7 @@
 @section('content')
 Bonjour {{ $receiver->name }},
 
-{{ $sender->name }} a annulé l'emprunt à votre {{ $loan->loanable->name }}
-à partir de {{ $loan->departure_at }} et pour une durée de {{ $loan->duration_in_minutes }} minutes.
+{{ $sender->name }} a annulé l'emprunt de {{ $loan->loanable->name }} du {{ $loan->departure_at }}
 
 Voir l'emprunt [{{ env('FRONTEND_URL') . '/loans/' . $loan->id }}]
 
