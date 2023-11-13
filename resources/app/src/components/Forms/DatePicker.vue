@@ -124,7 +124,7 @@ export default {
         return null;
       }
 
-      return this.$dayjs(this.value, { timeZone: "America/Montreal" }).toDate();
+      return this.$dayjs(this.value).toDate();
     },
     language() {
       return fr;
