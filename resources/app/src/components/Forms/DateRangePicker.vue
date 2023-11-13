@@ -9,6 +9,10 @@
 <script>
 import DatePicker from "@/components/Forms/DatePicker.vue";
 import dayjs from "dayjs";
+import timeZone from "dayjs/plugin/timezone";
+import utc from "dayjs/plugin/utc";
+dayjs.extend(timeZone);
+dayjs.extend(utc);
 
 export default {
   name: "FormsDateRangePicker",
@@ -28,14 +32,19 @@ export default {
         if (!this.value || this.value === ":") {
           return null;
         }
-        return this.value.match(/(.*?)T.*@/) ? this.value.match(/(.*?)T.*@/)[1] : null;
+
+        return this.value.match(/(.*?)T.*@/)
+          ? dayjs.tz(this.value.match(/(.*?)T.*@/)[1])
+              .startOf('day')
+              .format('YYYY-MM-DDT00:00:00[Z]')
+          : null;
       },
       set(val) {
         if (val || this.to) {
           this.$emit(
             "input",
-            `${val ? dayjs(val).hour(2).toISOString() : ""}@${
-              this.to ? dayjs(this.to).hour(22).toISOString() : ""
+            `${val ? dayjs.tz(val).format('YYYY-MM-DDT00:00:00[Z]') : ""}@${
+              this.to ? dayjs.tz(this.to).endOf('day').toISOString() : ""
             }`
           );
         } else {
@@ -49,17 +58,17 @@ export default {
           return null;
         }
         return this.value.match(/.*@(.*?)T/)
-          ? dayjs(this.value.match(/.*@(.*?)T/)[1])
-              .hour(22)
-              .format("YYYY-M-D")
+          ? dayjs.tz(this.value.match(/.*@(.*?)T/)[1])
+              .endOf('day')
+              .toISOString()
           : null;
       },
       set(val) {
         if (this.from || val) {
           this.$emit(
             "input",
-            `${this.from ? dayjs(this.from).hour(2).toISOString() : ""}@${
-              val ? dayjs(val).hour(22).toISOString() : ""
+            `${this.from ? dayjs.tz(this.from).format('YYYY-MM-DDT00:00:00[Z]') : ""}@${
+              val ? dayjs.tz(val).endOf('day').toISOString() : ""
             }`
           );
         } else {
