@@ -33,7 +33,7 @@
                     name="owner_id"
                     v-slot="validationContext"
                   >
-                    <b-form-group label="Propriétaire" label-for="owner_id">
+                    <b-form-group label="Propriétaire" label-for="owner_id" class="input-and-button">
                       <forms-relation-input
                         id="owner_id"
                         name="owner_id"
@@ -43,6 +43,14 @@
                         :value="item.owner_id"
                         @input="setLoanableOwner"
                       />
+                      <b-button
+                        size="sm"
+                        variant="success"
+                        @click="viewUser(itemOwner)"
+                        :disabled="!itemOwner"
+                      >
+                        Voir le profil
+                      </b-button>
                     </b-form-group>
                   </validation-provider>
                 </template>
@@ -231,6 +239,9 @@ export default {
         },
         owner_id: user.owner_id,
       });
+    },
+    viewUser(item){
+      if( item ) this.$router.push(`/admin/users/${item.id}`);
     },
   },
   i18n: {
