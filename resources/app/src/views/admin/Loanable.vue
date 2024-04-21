@@ -25,6 +25,43 @@
                 <template v-slot:location_description></template>
                 <template v-slot:instructions></template>
                 <template v-slot:padlock_id></template>
+                <template v-slot:community_id="{ def, item, property }">
+                  <validation-provider
+                    class="forms-validated-input"
+                    mode="eager"
+                    name="community_id"
+                    :rules="def.rules"
+                    v-slot="validationContext"
+                  >
+                    <b-form-group
+                      :label="$t('loanables.fields.community_id') | capitalize"
+                      label-for="community_id"
+                      :description="$t('loanables.descriptions.community_id')"
+                      v-b-tooltip.hover
+                      class="input-and-button"
+                    >
+                      <forms-relation-input
+                        id="community_id"
+                        name="community_id"
+                        :query="form.general.community_id.query"
+                        :placeholder="$t('loanables.fields.community_id') | capitalize"
+                        :disabled="form.general.community_id.disabled"
+                        :state="getValidationState(validationContext)"
+                        :object-value="item.community"
+                        :value="item.community_id"
+                        @input="setLoanableCommunity"
+                      />
+                      <b-button
+                        size="sm"
+                        variant="success"
+                        @click="viewCommunity(item.community)"
+                        :disabled="!item.community"
+                      >
+                        Voir la communauté
+                      </b-button>
+                    </b-form-group>
+                  </validation-provider>
+                </template>
 
                 <template v-slot:owner_id="{ def, item, property }">
                   <validation-provider
@@ -240,8 +277,30 @@ export default {
         owner_id: user.owner_id,
       });
     },
-    viewUser(item){
-      if( item ) this.$router.push(`/admin/users/${item.id}`);
+    viewUser(owner){
+      if( owner ) this.$router.push(`/admin/users/${owner.id}`);
+    },
+    viewCommunity(community){
+      if( community ) this.$router.push(`/admin/communities/${community.id}`);
+    },
+    setLoanableCommunity(selection) {
+      this.item.community = selection
+      if (!selection) {
+        this.item.community_id = null;
+      } else {
+        this.item.community_id = selection.id;
+      }
+    },
+    getValidationState({ dirty, validated, valid = null }) {
+      if (this.rulesOrNothing === "") {
+        return null;
+      }
+
+      if (dirty && !validated) {
+        return null;
+      }
+
+      return validated ? valid : null;
     },
   },
   i18n: {

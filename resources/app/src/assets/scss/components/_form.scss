@@ -69,9 +69,16 @@
 
     .input-and-button .bv-no-focus-ring {
         display: flex;
-        gap: 1em;
+        flex-wrap: wrap;
+        button {
+            margin-left: 1em;
+        }
         @include media-breakpoint-down(md) {
             flex-direction: column;
+            button {
+                margin-left: 0;
+                margin-top: 1em;
+            }
         }
         :first-child {
             flex-grow: 1;
