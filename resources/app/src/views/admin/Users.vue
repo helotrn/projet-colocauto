@@ -85,6 +85,9 @@
               {{ row.item.owner.user.full_name }}
             </span>
           </template>
+          <template v-slot:cell(communities_name)="row">
+            {{ row.item.communities && row.item.communities.length ? row.item.communities[0].name : '' }}
+          </template>
           <template v-slot:cell(actions)="row">
             <div class="user-actions">
               <admin-list-actions :columns="['edit']" :row="row" :slug="slug" />
@@ -171,6 +174,7 @@ export default {
         { key: "id", label: "ID", sortable: true, class: "text-right tabular-nums" },
         { key: "full_name", label: "Nom", sortable: true },
         { key: "email", label: "Courriel", sortable: true },
+        { key: "communities_name", label: "Communauté", sortable: true },
         { key: "actions", label: "Actions", tdClass: "table__cell__actions" },
       ],
     };

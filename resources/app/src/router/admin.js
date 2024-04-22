@@ -115,7 +115,7 @@ export default [
           data: {
             users: {
               retrieve: {
-                fields: "id,name,last_name,full_name,email,deleted_at",
+                fields: "id,name,last_name,full_name,email,deleted_at,communities.id,communities.name",
               },
             },
           },
