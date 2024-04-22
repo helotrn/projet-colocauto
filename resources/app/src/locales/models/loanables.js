@@ -1,7 +1,9 @@
+import prefixFields from "@/locales/prefixFields";
 import bikes from "./bikes";
 import cars from "./cars";
 import trailers from "./trailers";
 import owners from "./owners";
+import communities from "./communities";
 
 export default {
   en: {
@@ -47,6 +49,7 @@ export default {
       comments: "commentaires",
       community_id: "voisinage",
       community_name: "voisinage",
+      community: prefixFields(communities.fr.fields, "(Voisinage)"),
       deleted_at: "supprimé",
       image: "photo du véhicule",
       instructions: "instructions",

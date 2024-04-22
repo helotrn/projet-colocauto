@@ -114,6 +114,7 @@ export default {
         { key: "name", label: "Nom", sortable: true },
         { key: "type", label: "Type", sortable: true },
         { key: "owner.user.full_name", label: "Propriétaire", sortable: true },
+        { key: "community.name", label: "Voisinage", sortable: true },
         { key: "actions", label: "Actions", tdClass: "table__cell__actions" },
       ],
     };

@@ -29,6 +29,7 @@ class Loanable extends BaseModel
         "id" => "number",
         "name" => "text",
         "type" => ["bike", "car", "trailer"],
+        "community.name" => "text",
         "deleted_at" => "date",
         "is_deleted" => "boolean",
     ];
@@ -156,6 +157,24 @@ class Loanable extends BaseModel
                     "=",
                     "owners.user_id"
                 );
+            },
+
+            "community_name" => function ($query = null) {
+                if (!$query) {
+                    return "loanable_communities.name";
+                }
+
+                $query->selectRaw("loanable_communities.name AS community_name");
+
+                $query = static::addJoin(
+                    $query,
+                    "communities as loanable_communities",
+                    "loanable_communities.id",
+                    "=",
+                    "loanables.community_id"
+                );
+
+                return $query;
             },
         ];
     }
