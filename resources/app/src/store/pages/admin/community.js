@@ -11,6 +11,10 @@ export default {
         user_full_name: "",
       },
     },
+    communityAdminListParams: {
+      page: 1,
+      order: "",
+    },
     balance: [],
   },
   mutations: {
@@ -22,6 +26,10 @@ export default {
       if ("filters" === name) {
         Vue.set(state.communityUserListParams, "page", 1);
       }
+    },
+    communityAdminListParams(state, { name, value }) {
+      // Vue.set ensures reactivity of the view to the property.
+      Vue.set(state.communityAdminListParams, name, value);
     },
     balance(state, balance) {
       state.balance = balance;

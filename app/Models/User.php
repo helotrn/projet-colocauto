@@ -153,6 +153,7 @@ class User extends AuthenticatableBaseModel
         "actions",
         "invoices",
         "communities",
+        "administrable_communities",
         "files",
         "loans",
         "loanables",
@@ -326,6 +327,21 @@ class User extends AuthenticatableBaseModel
             ->distinct();
     }
 
+    public function administrableCommunities()
+    {
+        return $this->belongsToMany(Community::class, 'community_admin')
+            ->using(Pivots\CommunityAdmin::class)
+            ->withTimestamps()
+            ->withPivot([
+                "id",
+                "created_at",
+                "organisation",
+                "suspended_at",
+                "updated_at",
+            ])
+            ->distinct();
+    }
+
     public function approvedCommunities()
     {
         return $this->communities()
@@ -396,6 +412,7 @@ class User extends AuthenticatableBaseModel
 
     public function isAdminOfCommunity(int $communityId)
     {
+        // TODO: change this
         return $this->communities()
             ->where("communities.id", $communityId)
             ->whereHas("users", function ($q) {
@@ -408,6 +425,7 @@ class User extends AuthenticatableBaseModel
 
     public function isAdminOfCommunityFor(int $userId)
     {
+        // TODO: change this
         return $this->communities()
             ->whereHas("users", function ($q) {
                 return $q
@@ -458,6 +476,7 @@ class User extends AuthenticatableBaseModel
 
     public function getAccessibleCommunityIds()
     {
+        // TODO: add administrable communities here
         $communityIds = $this->communities
             ->whereNotNull("pivot.approved_at")
             ->whereNull("pivot.suspended_at")
@@ -517,6 +536,7 @@ class User extends AuthenticatableBaseModel
 
     public function scopeAccessibleBy(Builder $query, $user)
     {
+        // TODO change this
         if ($user->isAdmin()) {
             return $query;
         }

@@ -26,6 +26,7 @@ export default new RestModule(
       "communities.name",
       "communities.approved_at",
       "communities.suspended_at",
+      "administrable_communities.id",
       "accept_conditions",
       "gdpr",
       "newsletter",

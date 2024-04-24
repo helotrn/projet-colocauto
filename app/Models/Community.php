@@ -153,7 +153,7 @@ SQL;
 
     public $items = ["parent"];
 
-    public $collections = ["children", "users", "pricings", "loanables", "invitations"];
+    public $collections = ["children", "users", "pricings", "loanables", "invitations", "admins"];
 
     public $computed = ["area_google", "center_google", "approved_users_count"];
 
@@ -169,11 +169,16 @@ SQL;
 
     public function admins()
     {
-        $globalAdmins = User::whereRole("admin")->get();
-        $localAdmins = $this->users()
-            ->where("community_user.role", "admin")
-            ->get();
-        return $globalAdmins->merge($localAdmins);
+        return $this->belongsToMany(User::class, 'community_admin')
+            ->using(Pivots\CommunityAdmin::class)
+            ->withTimestamps()
+            ->withPivot([
+                "id",
+                "created_at",
+                "organisation",
+                "suspended_at",
+                "updated_at",
+            ]);
     }
 
     public function loanables()

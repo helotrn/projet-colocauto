@@ -120,6 +120,19 @@ Route::prefix("v1")->group(function () {
         );
 
         Route::get(
+            "communities/{community_id}/admins",
+            "CommunityController@listAdmins"
+        );
+        Route::post(
+            "communities/{community_id}/admins",
+            "CommunityController@createAdmins"
+        );
+        Route::delete(
+            "communities/{community_id}/admins/{user_id}",
+            "CommunityController@destroyAdmins"
+        );
+
+        Route::get(
             "/loans/{loan_id}/borrower",
             "LoanController@retrieveBorrower"
         );

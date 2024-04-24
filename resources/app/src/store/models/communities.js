@@ -38,6 +38,10 @@ export default new RestModule(
       "tags.slug",
     ],
     usersExportUrl: null,
+    admins: {
+      data: [],
+      total: 0,
+    },
   },
   {
     async addUser({ commit }, { id, data }) {
@@ -53,6 +57,28 @@ export default new RestModule(
           cancelToken: cancelToken.token,
         });
         commit("users/addData", [response.data], { root: true });
+        commit("cancelToken", null);
+      } catch (e) {
+        commit("cancelToken", null);
+        const { request, response } = e;
+        commit("error", { request, response });
+
+        throw e;
+      }
+    },
+    async addAdmin({ commit }, { id, data }) {
+      const { CancelToken } = Vue.axios;
+      const cancelToken = CancelToken.source();
+
+      try {
+        commit("cancelToken", cancelToken);
+        const response = await Vue.axios.post(`/communities/${id}/admins`, data, {
+          params: {
+            fields: "*,administrable_communities.*",
+          },
+          cancelToken: cancelToken.token,
+        });
+        commit("adminAddUsers", [response.data]);
         commit("cancelToken", null);
       } catch (e) {
         commit("cancelToken", null);
@@ -100,6 +126,26 @@ export default new RestModule(
       try {
         commit("cancelToken", cancelToken);
         await Vue.axios.delete(`/communities/${id}/users/${userId}`, {
+          cancelToken: cancelToken.token,
+        });
+
+        commit("cancelToken", null);
+      } catch (e) {
+        commit("cancelToken", null);
+
+        const { request, response } = e;
+        commit("error", { request, response });
+
+        throw e;
+      }
+    },
+    async removeAdmin({ commit }, { id, userId }) {
+      const { CancelToken } = Vue.axios;
+      const cancelToken = CancelToken.source();
+
+      try {
+        commit("cancelToken", cancelToken);
+        await Vue.axios.delete(`/communities/${id}/admins/${userId}`, {
           cancelToken: cancelToken.token,
         });
 
@@ -184,10 +230,44 @@ export default new RestModule(
         throw e;
       }
     },
+    async getAdmins({ state, commit }, params) {
+      const { CancelToken } = Vue.axios;
+      const cancelToken = CancelToken.source();
+
+      try {
+        commit("cancelToken", cancelToken);
+        const { data } = await Vue.axios.get(`/${state.slug}/${state.item.id}/admins`, {
+          params: {
+            ...state.params,
+            ...params,
+          },
+          cancelToken: cancelToken.token,
+        });
+        commit("adminUsers", data);
+
+        commit("cancelToken", null);
+      } catch (e) {
+        commit("cancelToken", null);
+
+        const { request, response } = e;
+        commit("error", { request, response });
+
+        throw e;
+      }
+    }
   },
   {
     usersExportUrl(state, usersExportUrl) {
       state.usersExportUrl = usersExportUrl;
+    },
+    adminUsers(state, users) {
+      state.admins = users;
+    },
+    adminAddUsers(state, users) {
+      state.admins.data.push(...users);
+    },
+    adminUsersData(state, data) {
+      state.admins.data = data;
     },
   }
 );

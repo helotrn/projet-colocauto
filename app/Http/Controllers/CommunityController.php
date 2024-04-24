@@ -206,6 +206,18 @@ class CommunityController extends RestController
         return $this->userController->retrieve($request, $userId);
     }
 
+    public function listAdmins(Request $request, $id)
+    {
+        $community = $this->repo->find(
+            $request->redirectAuth(Request::class),
+            $id
+        );
+
+        $items = $community->admins;
+
+        return $this->respondWithCollection($request, $items, sizeof($items));
+    }
+
     public function createUsers(Request $request, $id)
     {
         $community = $this->repo->find(
@@ -228,6 +240,31 @@ class CommunityController extends RestController
         return $this->respondWithItem(
             $request,
             $community->users->where("id", $userId)->first()
+        );
+    }
+
+    public function createAdmins(Request $request, $id)
+    {
+        $community = $this->repo->find(
+            $request->redirectAuth(Request::class),
+            $id
+        );
+
+        $userId = $request->get("id");
+        $user = $this->userRepo->find(
+            $request->redirectAuth(Request::class),
+            $userId
+        );
+
+        if ($community->admins->where("id", $userId)->isEmpty()) {
+            $community->admins()->attach($userId);
+
+            return $this->respondWithItem($request, $user);
+        }
+
+        return $this->respondWithItem(
+            $request,
+            $community->admins->where("id", $userId)->first()
         );
     }
 
@@ -279,6 +316,26 @@ class CommunityController extends RestController
         if (!$wasApproved) {
             event(new RegistrationRejectedEvent($user, $community));
         }
+
+        return $this->respondWithItem($request, $user);
+    }
+
+    public function destroyAdmins(Request $request, $communityId, $userId)
+    {
+        $community = $this->repo->find(
+            $request->redirectAuth(Request::class),
+            $communityId
+        );
+        $user = $this->userRepo->find(
+            $request->redirectAuth(Request::class),
+            $userId
+        );
+
+        if ($community->admins->where("id", $userId)->isEmpty()) {
+            return $this->respondWithMessage(null, 404);
+        }
+
+        $community->admins()->detach($user);
 
         return $this->respondWithItem($request, $user);
     }

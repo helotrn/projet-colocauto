@@ -125,6 +125,75 @@
             </b-row>
           </div>
 
+          <div class="form__section" v-if="item.id">
+            <a id="admins" />
+            <b-row>
+              <b-col>
+                <h2>Admins</h2>
+              </b-col>
+            </b-row>
+
+            <b-row>
+              <b-col>
+                <community-users-list
+                  :visibleFields="[
+                    'id',
+                    'user_full_name',
+                    'actions',
+                  ]"
+                  :items="communityAdmins"
+                  :totalItemCount="communityAdminsTotal"
+                  :itemsPerPage="10"
+                  :sortBy="communityAdminsSortBy"
+                  :sortDesc="communityAdminsSortDesc"
+                  :busy="communityAdminsLoading"
+                  @changePage="onAdminChangePage"
+                  @changeOrder="onAdminChangeOrder"
+                  @action="onCommunityAdminAction"
+                >
+                </community-users-list>
+              </b-col>
+            </b-row>
+
+            <b-row>
+              <b-col md="6">
+                <b-button class="mr-3" variant="outline-primary" @click="exportCSV">
+                  Générer (CSV)
+                </b-button>
+                <a
+                  variant="outline-primary"
+                  :href="usersExportUrl"
+                  target="_blank"
+                  v-if="usersExportUrl"
+                  @click="resetUsersExportUrl"
+                >
+                  Télécharger (CSV)
+                </a>
+              </b-col>
+
+              <b-col md="6">
+                <forms-validated-input
+                  type="relation"
+                  name="administrable_community"
+                  label="Ajouter un admin"
+                  :value="null"
+                  reset-after-select
+                  :query="{
+                    slug: 'users',
+                    value: 'id',
+                    text: 'full_name',
+                    params: {
+                      fields: 'id,full_name',
+                      '!id': users.map((u) => u.id).join(','),
+                      role: 'community_admin'
+                    },
+                  }"
+                  @relation="addAdmin"
+                />
+              </b-col>
+            </b-row>
+          </div>
+
           <div class="form__section" v-if="item.id && balance && balance.users && balance.users.length > 0">
             <b-row>
               <b-col>
@@ -214,10 +283,15 @@ export default {
   mounted() {
     // Initial load of sublist data accounting for filter, order and page num.
     this.loadCommunityUserListData();
+    setTimeout(() => {
+      // wait for state.item.it to be loaded
+      this.loadCommunityAdminsListData();
+    }, 1000);
   },
   data() {
     return {
       newPricingType: null,
+      adminsListDebounce: null,
     };
   },
   computed: {
@@ -265,6 +339,9 @@ export default {
     users() {
       return this.$store.state.users.data;
     },
+    admins() {
+      return this.$store.state.communities.admins.data;
+    },
     /*
       Ensure the format follows the community user format. This is what we are working on.
     */
@@ -302,11 +379,20 @@ export default {
     communityUsersTotal() {
       return this.$store.state.users.total;
     },
+    communityAdminsTotal() {
+      return this.$store.state.communities.admins.total;
+    },
     communityUserListParams() {
       return this.$store.state["admin.community"].communityUserListParams;
     },
+    communityAdminListParams() {
+      return this.$store.state["admin.community"].communityAdminListParams;
+    },
     communityUsersLoading() {
       return !!this.$store.state.users.cancelToken;
+    },
+    communityAdminsLoading() {
+      return !!this.$store.state.communities.cancelToken;
     },
     communityUsersSortBy() {
       // Field name without the minus sign indicating order.
@@ -332,8 +418,64 @@ export default {
 
       return sortFieldKey;
     },
+    communityAdminsSortBy() {
+      // Field name without the minus sign indicating order.
+      const sortFieldName = this.communityAdminListParams.order.replace("-", "");
+
+      let sortFieldKey = "";
+
+      // Convert backend field names to list field keys.
+      switch (sortFieldName) {
+        // Some remain unchanged
+        case "id":
+          sortFieldKey = sortFieldName;
+          break;
+
+        case "full_name":
+          sortFieldKey = "user_full_name";
+          break;
+
+        default:
+          sortFieldKey = "";
+          break;
+      }
+
+      return sortFieldKey;
+    },
     communityUsersSortDesc() {
       return this.communityUserListParams.order[0] === "-";
+    },
+    communityAdminsSortDesc() {
+      return this.communityAdminListParams.order[0] === "-";
+    },
+    communityAdmins() {
+      // Convert data recieved from the backend to communityAdmins required by the list.
+      let communityAdmins = [];
+
+      for (const user of this.admins) {
+        if (!user.administrable_communities) {
+          // When users are loaded from the list, they may not have their communities set.
+          continue;
+        }
+        for (const community of user.administrable_communities) {
+          if (community.id != this.$route.params.id) {
+            continue;
+          }
+          communityAdmins.push({
+            // Pour pouvoir linker aus actions...
+            id: user.id,
+            user_id: user.id,
+            user_full_name: user.full_name,
+            community_id: community.id,
+            community_name: community.name,
+            organisation: community.organisation ? community.organisation : "",
+            approved_at: community.approved_at,
+            suspended_at: community.suspended_at,
+          });
+        }
+      }
+
+      return communityAdmins;
     },
     balance() {
       return this.$store.state['admin.community'].balance;
@@ -353,6 +495,14 @@ export default {
     },
     async addUser(user) {
       await this.$store.dispatch(`${this.slug}/addUser`, {
+        id: this.item.id,
+        data: {
+          id: user.id,
+        },
+      });
+    },
+    async addAdmin(user) {
+      await this.$store.dispatch(`${this.slug}/addAdmin`, {
         id: this.item.id,
         data: {
           id: user.id,
@@ -392,6 +542,17 @@ export default {
       this.$store.commit(
         "users/data",
         this.$store.state.users.data.filter((u) => u.id !== user.id)
+      );
+    },
+    async removeAdmin(user) {
+      await this.$store.dispatch(`${this.slug}/removeAdmin`, {
+        id: this.item.id,
+        userId: user.id,
+      });
+
+      this.$store.commit(
+        "communities/adminUsersData",
+        this.$store.state.communities.admins.data.filter((u) => u.id !== user.id)
       );
     },
     resetUsersExportUrl() {
@@ -498,6 +659,7 @@ export default {
             // Pas context params, mais les paramètres spécifiques à la liste.
             ...contextParams,
           });
+          
           this.listDebounce = null;
         } catch (e) {
           this.$store.commit("addNotification", {
@@ -515,11 +677,53 @@ export default {
 
       return true;
     },
+    loadCommunityAdminsListData() {
+
+      let routeParams = {
+        fields: [
+          "id",
+          "full_name",
+          "administrable_communities.organisation",
+          "administrable_communities.approved_at",
+          "administrable_communities.suspended_at",
+        ].join(","),
+      };
+
+      let contextParams = {
+        page: this.communityAdminListParams.page,
+        order: this.communityAdminListParams.order,
+      };
+
+      if (this.adminListDebounce) {
+        clearTimeout(this.adminListDebounce);
+      }
+
+      this.adminListDebounce = setTimeout(() => {
+        try {
+          this.$store.dispatch(`communities/getAdmins`, {
+            // Pas route params, mais les paramètres spécifiques à la liste.
+            ...routeParams,
+            // Pas context params, mais les paramètres spécifiques à la liste.
+            ...contextParams,
+          });
+        } catch (e) {
+          this.$store.commit("addNotification", {
+            content: `Erreur de chargement de données (${this.slug})`,
+            title: `${this.slug}`,
+            variant: "warning",
+            type: "data",
+          });
+        }
+      }, 250);
+    },
     onChangeFilters(filters) {
       this.communityUserSetListParam({ name: "filters", value: filters });
     },
     onChangePage(page) {
       this.communityUserSetListParam({ name: "page", value: page });
+    },
+    onAdminChangePage(page) {
+      this.communityAdminSetListParam({ name: "page", value: page });
     },
     onChangeOrder(context) {
       // If descending order, then prepend field key with minus sign.
@@ -542,6 +746,28 @@ export default {
       }
 
       this.communityUserSetListParam({ name: "order", value: sortOrder });
+    },
+    onAdminChangeOrder(context) {
+      // If descending order, then prepend field key with minus sign.
+      let sortOrder = context.sortDesc ? "-" : "";
+
+      // Convert field keys to field names understood by the backend.
+      switch (context.sortBy) {
+        // Some remain unchanged
+        case "id":
+          sortOrder += context.sortBy;
+          break;
+
+        case "user_full_name":
+          sortOrder += "full_name";
+          break;
+
+        default:
+          sortOrder = "";
+          break;
+      }
+
+      this.communityAdminSetListParam({ name: "order", value: sortOrder });
     },
     async onChangeUserRole(item, role) {
       // Find the modified user.
@@ -580,6 +806,17 @@ export default {
 
         case "remove":
           this.removeUser(user);
+          break;
+      }
+    },
+    async onCommunityAdminAction(item, action) {
+      // Find user.
+      const user = this.admins.find((u) => u.id === item.user_id);
+
+      // Then call requested action.
+      switch (action) {
+        case "remove":
+          this.removeAdmin(user);
           break;
       }
     },
