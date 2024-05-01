@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Community;
 use App\Casts\TimestampWithTimezoneCast;
+use Illuminate\Database\Eloquent\Builder;
 
 class Invitation extends BaseModel
 {
@@ -31,5 +32,21 @@ class Invitation extends BaseModel
     {
         $this->consumed_at = new \DateTime();
         $this->save();
+    }
+
+    public function scopeAccessibleBy(Builder $query, $user)
+    {
+        if ($user->isAdmin()) {
+            return $query;
+        }
+
+        // a user has access to ...
+        return $query->where(function ($q) use ($user) {
+            // ... invitations in communities ...
+            return $q->whereHas("community", function ($q) use ($user) {
+                // ... where he or she has access
+                $q->accessibleBy($user);
+            });
+        });
     }
 }
