@@ -4,12 +4,17 @@ namespace App\Http\Requests\Expense;
 
 use App\Http\Requests\BaseRequest;
 use App\Models\Loanable;
+use App\Models\User;
 
 class UpdateRequest extends BaseRequest
 {
     public function authorize()
     {
-        return true;
+        return $this->user()->isAdmin() ||
+            ($this->user()->isCommunityAdmin()
+                && Loanable::accessibleBy($this->user())->find($this->route("loanable_id"))
+                && User::accessibleBy($this->user())->find($this->route("user_id"))
+            );
     }
 
     public function rules()

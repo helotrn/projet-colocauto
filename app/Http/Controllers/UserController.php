@@ -202,7 +202,7 @@ class UserController extends RestController
         $user = $this->repo->find($request->redirectAuth(Request::class), $id);
 
         // verify if the user who sent the request is not an admin. if so, we need to check for its current password.
-        if (!$request->user()->isAdmin()) {
+        if (!$request->user()->isAdmin() && !$request->user()->isCommunityAdmin()) {
             $currentPassword = $request->get("password");
 
             // if the current password entered is invalid, return bad response
@@ -226,7 +226,7 @@ class UserController extends RestController
         $user = $this->repo->find($request->redirectAuth(Request::class), $id);
 
         // verify if the user who sent the request is not an admin. if so, we need to check for its current password.
-        if (!$request->user()->isAdmin()) {
+        if (!$request->user()->isAdmin() && !$request->user()->isCommunityAdmin()) {
             $currentPassword = $request->get("current");
 
             // if the current password entered is invalid, return bad response

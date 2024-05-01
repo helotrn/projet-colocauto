@@ -8,10 +8,10 @@
     <b-nav-item to="/admin/invoices" v-if="isGlobalAdmin">Factures</b-nav-item>
     <b-nav-item to="/admin/padlocks" v-if="isGlobalAdmin">Cadenas</b-nav-item>
     <b-nav-item to="/admin/tags" v-if="isGlobalAdmin">Mots-clés</b-nav-item>
-    <b-nav-item to="/admin/invitations" v-if="isGlobalAdmin">Invitations</b-nav-item>
-    <b-nav-item to="/admin/expenses" v-if="isGlobalAdmin">Dépenses</b-nav-item>
-    <b-nav-item to="/admin/expense_tags" v-if="isGlobalAdmin">Types de dépenses</b-nav-item>
-    <b-nav-item to="/admin/refunds" v-if="isGlobalAdmin">Remboursements</b-nav-item>
+    <b-nav-item to="/admin/invitations" v-if="isGlobalAdmin || isCommunityAdmin">Invitations</b-nav-item>
+    <b-nav-item to="/admin/expenses" v-if="isGlobalAdmin || isCommunityAdmin">Dépenses</b-nav-item>
+    <b-nav-item to="/admin/expense_tags" v-if="isGlobalAdmin || isCommunityAdmin">Types de dépenses</b-nav-item>
+    <b-nav-item to="/admin/refunds" v-if="isGlobalAdmin || isCommunityAdmin">Remboursements</b-nav-item>
   </div>
 </template>
 
@@ -20,6 +20,10 @@ export default {
   name: "AdminSidebar",
   props: {
     isGlobalAdmin: {
+      required: true,
+      type: Boolean,
+    },
+    isCommunityAdmin: {
       required: true,
       type: Boolean,
     },

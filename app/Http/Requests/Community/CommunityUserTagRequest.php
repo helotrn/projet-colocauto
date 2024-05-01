@@ -14,6 +14,12 @@ class CommunityUserTagRequest extends BaseRequest
             return true;
         }
 
+        if ($user->isCommunityAdmin()) {
+            if (Community::accessibleBy($user)->find($this->route('community_id'))) {
+                return true;
+            }
+        }
+
         if ($user->isAdminOfCommunity($this->route("community_id"))) {
             return true;
         }

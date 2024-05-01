@@ -8,7 +8,16 @@ class DestroyRequest extends BaseRequest
 {
     public function authorize()
     {
-        return $this->user()->isAdmin();
+        if ($this->user()->isAdmin()) {
+            return true;
+        }
+
+        if ($this->user()->isCommunityAdmin()) {
+            if (Community::accessibleBy($this->user())->find($this->route('community_id')) {
+                return true;
+            }
+        }
+        return false
     }
 
     public function rules()

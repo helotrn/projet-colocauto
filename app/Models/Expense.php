@@ -119,6 +119,15 @@ class Expense extends BaseModel
             return $query;
         }
 
+        if ($user->isCommunityAdmin()) {
+            return $query->whereHas("user", function ($q) use ($user) {
+                return $q->accessibleBy($user);
+            })
+            ->orWhereHas("loanable", function ($q) use ($user) {
+                return $q->accessibleBy($user);
+            });
+        }
+
         // A user has access to...
         return $query
             ->where(function ($q) use ($user) {

@@ -11,6 +11,7 @@ class RestoreRequest extends BaseRequest
     {
         $user = $this->user();
         return $user->isAdmin() ||
+            ($user->isCommunityAdmin() && Loanable::accessibleBy($user)->find($this->id)) ||
             Loanable::where("owner_id", $user->owner->id)
                 ->withTrashed()
                 ->where("id", $this->route("id"))

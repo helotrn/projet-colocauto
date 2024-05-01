@@ -99,6 +99,15 @@ class Refund extends BaseModel
             return $query;
         }
 
+        if ($user->isCommunityAdmin()) {
+            return $query->whereHas("user", function ($q) use ($user) {
+                return $q->accessibleBy($user);
+            })
+            ->orWhereHas("creditedUser", function ($q) use ($user) {
+                return $q->accessibleBy($user);
+            });
+        }
+
         // A user has access to...
         return $query
             // ... refunds payed by himself or herself

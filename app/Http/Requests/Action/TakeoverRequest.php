@@ -37,6 +37,13 @@ class TakeoverRequest extends BaseRequest
 
         $loan = Loan::find($this->get("loan_id"));
 
+        // community admin can only change loans that are parts of its communities
+        if ($user->isCommunityAdmin()) {
+            if (Loan::accessibleBy($user)->find($loan->id)) {
+                return true;
+            }
+        }
+
         if ($user->borrower && $user->borrower->id === $loan->borrower->id) {
             return true;
         }

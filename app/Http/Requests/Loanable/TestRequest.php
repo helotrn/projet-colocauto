@@ -11,11 +11,16 @@ class TestRequest extends BaseRequest
     public function authorize()
     {
         $user = $this->user();
-        if ($user && $user->borrower) {
+        if( !$user ) return false;
+        if ($user->borrower) {
             return true;
         }
 
-        if ($user && $user->isAdmin()) {
+        if ($user->isAdmin()) {
+            return true;
+        }
+
+        if ($user->isCommunityAdmin() && Loanable::accessibleBy($user)->find($this->id)) {
             return true;
         }
 

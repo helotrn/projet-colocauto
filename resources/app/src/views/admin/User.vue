@@ -44,6 +44,7 @@
                 :options="[
                   { value: null, text: 'Régulier' },
                   { value: 'admin', text: 'Admin global' },
+                  { value: 'community_admin', text: 'Administrateur de communauté' },
                 ]"
                 v-model="item.role"
               />

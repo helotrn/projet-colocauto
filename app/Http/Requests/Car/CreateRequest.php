@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Car;
 
 use App\Http\Requests\BaseRequest;
+use App\Models\Community;
 
 class CreateRequest extends BaseRequest
 {
@@ -17,6 +18,12 @@ class CreateRequest extends BaseRequest
 
         if ($user->isAdmin()) {
             return true;
+        }
+
+        if ($user->isCommunityAdmin()) {
+            if (Community::accessibleBy($user)->find($this->get('community_id'))) {
+                return true;
+            }
         }
 
         return false;

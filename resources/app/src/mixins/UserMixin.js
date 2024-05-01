@@ -50,10 +50,14 @@ export default {
     isGlobalAdmin() {
       return this.isLoggedIn && this.user.role === "admin";
     },
+    isCommunityAdmin() {
+      return this.isLoggedIn && this.user.role === "community_admin";
+    },
     isAdmin() {
       return (
         this.isLoggedIn &&
         (this.user.role === "admin" ||
+          this.user.role === "community_admin" ||
           (this.user.communities && !!this.user.communities.find((c) => c.role === "admin")))
       );
     },

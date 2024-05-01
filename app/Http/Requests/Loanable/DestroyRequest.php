@@ -12,9 +12,12 @@ class DestroyRequest extends BaseRequest
     {
         $user = $this->user();
         return $user->isAdmin() ||
+            ($user->isCommunityAdmin() &&
+            Loanable::accessibleBy($this->user())->find($this->route("id"))) ||
+            ($user->owner &&
             Loanable::where("owner_id", $user->owner->id)
                 ->where("id", $this->route("id"))
-                ->exists();
+                ->exists());
     }
 
     public function rules()

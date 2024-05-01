@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Loanable;
 
 use App\Http\Requests\BaseRequest;
+use App\Models\Loanable;
 
 class SearchRequest extends BaseRequest
 {
@@ -13,7 +14,9 @@ class SearchRequest extends BaseRequest
             return false;
         }
 
-        return $user->borrower || $user->isAdmin();
+        return $user->borrower ||
+            $user->isAdmin() ||
+            ($user->isCommunityAdmin() && Loanable::accessibleBy($user)->find($this->id));
     }
 
     public function rules()

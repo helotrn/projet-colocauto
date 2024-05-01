@@ -23,14 +23,14 @@
       <div class="layout-navbar__collapse__illustration d-md-none" />
 
       <b-navbar-nav class="ml-auto" v-if="isLoggedIn">
-        <b-nav-item to="/app" v-if="!isGlobalAdmin && isRegistered">
+        <b-nav-item to="/app" v-if="!(isGlobalAdmin || isCommunityAdmin) && isRegistered">
           <span class="nav-link__icon d-lg-none">
             <svg-dashboard />
           </span>
           <span class="nav-link__text">{{ $t("titles.dashboard") | capitalize }}</span>
         </b-nav-item>
 
-        <b-nav-item to="/search/calendar" v-if="!isGlobalAdmin && canLoanVehicle">
+        <b-nav-item to="/search/calendar" v-if="!(isGlobalAdmin || isCommunityAdmin) && canLoanVehicle">
           <span class="nav-link__icon d-lg-none">
             <svg-location />
           </span>
@@ -40,7 +40,7 @@
         <b-nav-item
           to="/profile/colocauto"
           class="d-block d-lg-none"
-          v-if="!isGlobalAdmin && hasCompletedRegistration"
+          v-if="!(isGlobalAdmin || isCommunityAdmin) && hasCompletedRegistration"
         >
           <span class="nav-link__icon">
             <svg-profile />
@@ -56,7 +56,7 @@
         </b-nav-item>
 
         <b-nav-item-dropdown class="layout-navbar__admin" text="Admin" right v-if="isAdmin">
-          <admin-sidebar :is-global-admin="isGlobalAdmin" />
+          <admin-sidebar :is-global-admin="isGlobalAdmin" :is-community-admin="isCommunityAdmin" />
         </b-nav-item-dropdown>
 
         <locale-switcher />
@@ -88,27 +88,27 @@
           <template v-slot:button-content>
             <user-avatar :user="user" />
           </template>
-          <b-dropdown-item v-if="!isGlobalAdmin && hasCompletedRegistration">
+          <b-dropdown-item v-if="!(isGlobalAdmin || isCommunityAdmin) && hasCompletedRegistration">
             <user-avatar :user="user" />
             <span class="dropdown-container">
               <span class="username"> {{ user.name }}</span>
               <span class="username-title"></span>
             </span>
           </b-dropdown-item>
-          <b-dropdown-divider v-if="!isGlobalAdmin && hasCompletedRegistration" />
-          <b-dropdown-item to="/app" v-if="!isGlobalAdmin && hasCompletedRegistration">
+          <b-dropdown-divider v-if="!(isGlobalAdmin || isCommunityAdmin) && hasCompletedRegistration" />
+          <b-dropdown-item to="/app" v-if="!(isGlobalAdmin || isCommunityAdmin) && hasCompletedRegistration">
             <span class="nav-link__icon">
               <svg-category />
             </span>
             <span class="nav-link__text">Tableau de bord</span>
           </b-dropdown-item>
-          <b-dropdown-item to="/search/calendar?types=car" v-if="!isGlobalAdmin && canLoanVehicle">
+          <b-dropdown-item to="/search/calendar?types=car" v-if="!(isGlobalAdmin || isCommunityAdmin) && canLoanVehicle">
             <span class="nav-link__icon">
               <svg-location />
             </span>
             <span class="nav-link__text">Emprunter un véhicule</span>
           </b-dropdown-item>
-          <b-dropdown-item to="/wallet/expenses" v-if="!isGlobalAdmin && hasCompletedRegistration">
+          <b-dropdown-item to="/wallet/expenses" v-if="!(isGlobalAdmin || isCommunityAdmin) && hasCompletedRegistration">
             <span class="nav-link__icon">
               <svg-euro />
             </span>
@@ -116,7 +116,7 @@
           </b-dropdown-item>
           <b-dropdown-item
             to="/profile/colocauto"
-            v-if="!isGlobalAdmin && hasCompletedRegistration"
+            v-if="!(isGlobalAdmin || isCommunityAdmin) && hasCompletedRegistration"
           >
             <span class="nav-link__icon">
               <svg-profile />
@@ -125,7 +125,7 @@
           </b-dropdown-item>
           <b-dropdown-item
             to="/profile/loanables"
-            v-if="!isGlobalAdmin && hasCompletedRegistration && user.owner"
+            v-if="!(isGlobalAdmin || isCommunityAdmin) && hasCompletedRegistration && user.owner"
           >
             <span class="nav-link__icon">
               <svg-vector />

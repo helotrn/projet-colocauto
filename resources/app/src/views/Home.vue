@@ -311,7 +311,7 @@ export default {
     },
   },
   updated() {
-    if (this.isLoggedIn && !this.isGlobalAdmin && !this.hasCompletedRegistration) {
+    if (this.isLoggedIn && !this.isGlobalAdmin && !this.isCommunityAdmin && !this.hasCompletedRegistration) {
       this.$router.push("register");
     }
   },

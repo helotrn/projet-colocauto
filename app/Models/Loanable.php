@@ -497,6 +497,27 @@ class Loanable extends BaseModel
             return $query;
         }
 
+        if ($user->isCommunityAdmin()) {
+            // a community admin has access to ...
+            return $query->where(function ($q) use ($user) {
+                // loanables in communities where he or she is admin
+                return $q->whereHas("community", function ($q) use ($user) {
+                    $q->withAdminUser($user);
+                });
+            })
+            ->orWhere(function ($q) use ($user) {
+                // loanables where the owner ...
+                return $q->whereHas("owner", function ($q) use ($user) {
+                    return $q->whereHas("user", function ($q) use ($user) {
+                        // ...belongs to a community where he or she is admin
+                        return $q->whereHas("communities", function ($q) use ($user) {
+                            $q->withAdminUser($user);
+                        });
+                    });
+                });
+            });
+        }
+
         $allowedTypes = ["bike", "trailer"];
         if ($user->borrower && $user->borrower->validated) {
             $allowedTypes[] = "car";

@@ -67,7 +67,7 @@ class User extends AuthenticatableBaseModel
                 break;
         }
 
-        if ($auth && $auth->isAdmin()) {
+        if ($auth && ($auth->isAdmin() || $auth->isCommunityAdmin())) {
             unset($rules["accept_conditions"]);
             unset($rules["gdpr"]);
             unset($rules["newsletter"]);
@@ -410,9 +410,14 @@ class User extends AuthenticatableBaseModel
         return $this->role === "admin";
     }
 
+    public function isCommunityAdmin()
+    {
+        return $this->role === "community_admin";
+    }
+
     public function isAdminOfCommunity(int $communityId)
     {
-        // TODO: change this
+        // TODO: change this => not used ?
         return $this->communities()
             ->where("communities.id", $communityId)
             ->whereHas("users", function ($q) {
@@ -539,6 +544,18 @@ class User extends AuthenticatableBaseModel
         // TODO change this
         if ($user->isAdmin()) {
             return $query;
+        }
+
+        if ($user->isCommunityAdmin()) {
+            return $query
+                // ...himself or herself
+                ->whereId($user->id)
+                // ...or belonging to a community of which he or she is an admin
+                ->orWhere(function ($q) use ($user) {
+                    return $q->whereHas("communities", function ($q) use ($user) {
+                        $q->withAdminUser($user);
+                    });
+                });
         }
 
         // A user has access to...

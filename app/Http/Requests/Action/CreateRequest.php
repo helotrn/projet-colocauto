@@ -16,6 +16,8 @@ class CreateRequest extends BaseRequest
         }
 
         if ($user->isAdmin()) {
+            // global admin can do everything
+            // community admin can only change loans that are parts of its communities
             return true;
         }
 

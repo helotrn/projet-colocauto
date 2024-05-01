@@ -260,6 +260,10 @@ SQL;
             return $query;
         }
 
+        if ($user->isCommunityAdmin()) {
+            return $query->withAdminUser($user);
+        }
+
         return $query->where(function ($q) use ($user) {
             return $q
                 ->whereHas("users", function ($q2) use ($user) {
@@ -275,6 +279,13 @@ SQL;
             $q->where("community_user.user_id", $user->id)
                 ->whereNotNull("community_user.approved_at")
                 ->whereNull("community_user.suspended_at");
+        });
+    }
+
+    public function scopeWithAdminUser(Builder $query, $user)
+    {
+        $query->whereHas("admins", function ($q) use ($user) {
+            $q->where("community_admin.user_id", $user->id);
         });
     }
 
@@ -297,7 +308,7 @@ SQL;
             $for = "read";
         }
 
-        if ($user->isAdmin()) {
+        if ($user->isAdmin() || $user->isCommunityAdmin()) {
             return $query;
         }
 

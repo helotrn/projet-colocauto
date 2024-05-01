@@ -75,7 +75,7 @@ class ExpenseController extends RestController
     public function update(UpdateRequest $request, $id)
     {
         try {
-            if (!$request->user()->isAdmin()) {
+            if (!$request->user()->isAdmin() && !$request->user()->isCommunityAdmin()) {
                 $old = $this->model->findOrFail($id);
                 if( $old->locked ) {
                     return $this->respondWithErrors([[trans("validation.cannot_modify.expense")]]);
@@ -169,7 +169,7 @@ class ExpenseController extends RestController
             $template["form"][$field]["rules"] = $this->formatRules($rules);
         }
 
-        if (!$request->user()->isAdmin()) {
+        if (!$request->user()->isAdmin() && !$request->user()->isCommunityAdmin()) {
             unset($template['form']['type']);
             unset($template['item']['type']);
             unset($template['form']['locked']);

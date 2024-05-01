@@ -630,6 +630,14 @@ SQL;
             return $query;
         }
 
+        if ($user->isCommunityAdmin()) {
+            return $query->where(function ($q) use ($user) {
+                return $q->whereHas("community", function ($q) use ($user) {
+                    $q->withAdminUser($user);
+                });
+            });
+        }
+
         if ($user->owner) {
             $ownerId = $user->owner->id;
             $query = $query->whereHas("loanable", function ($q) use ($ownerId) {
@@ -756,6 +764,7 @@ SQL;
         // Admins can cancel any other time
         if (
             $user->isAdmin() ||
+            $user->isCommunityAdmin() ||
             $user->isAdminOfCommunity($this->community->id)
         ) {
             return true;

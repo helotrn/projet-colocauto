@@ -437,7 +437,7 @@ export default {
       this.skipToLogin();
     }
 
-    if (this.isGlobalAdmin) {
+    if (this.isGlobalAdmin || this.isCommunityAdmin) {
       this.$router.replace("/admin");
     }
 

@@ -4,18 +4,19 @@ namespace App\Http\Requests\Expense;
 
 use App\Http\Requests\BaseRequest;
 use App\Models\Loanable;
+use App\Models\User;
 
 class CreateRequest extends BaseRequest
 {
     public function authorize()
     {
-        // TODO manage access rights
-        return true;
+        return $this->user()->isAdmin() ||
+            (Loanable::accessibleBy($this->user())->find($this->route("loanable_id"))
+            && User::accessibleBy($this->user())->find($this->route("user_id")));
     }
 
     public function rules()
     {
-        // TODO change rules depending on the user
         $rules = [
             "amount" => [
                 "numeric",
@@ -32,7 +33,7 @@ class CreateRequest extends BaseRequest
             ]
         ];
 
-        if( !$this->user()->isAdmin() ) {
+        if( !$this->user()->isAdmin() && !$this->user()->isCommunityAdmin() ) {
             $user = $this->user();
             $accessibleUserIds = implode(
                 ",",

@@ -3,12 +3,15 @@
 namespace App\Http\Requests\Refund;
 
 use App\Http\Requests\BaseRequest;
+use App\Models\User;
 
 class UpdateRequest extends BaseRequest
 {
     public function authorize()
     {
-        return true;
+        return $this->user()->isAdmin() ||
+            (User::accessibleBy($this->user())->find($this->route("user_id"))
+            && User::accessibleBy($this->user())->find($this->route("credited_user_id")));
     }
 
     public function rules()
@@ -31,7 +34,7 @@ class UpdateRequest extends BaseRequest
             ]
         ];
 
-        if( !$this->user()->isAdmin() ) {
+        if( !$this->user()->isAdmin() && !$this->user()->isCommunityAdmin()) {
             $user = $this->user();
             $accessibleUserIds = implode(
                 ",",

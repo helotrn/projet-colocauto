@@ -328,7 +328,7 @@ class LoanableController extends RestController
         }
 
         // only admin can modify loanable availability
-        if (!$request->user()->isAdmin()) {
+        if (!$request->user()->isAdmin() && !$request->user()->isCommunityAdmin()) {
             $item = $this->model->findOrFail($id);
             if($item->availability_mode != $request->get("availability_mode")) {
                 return $this->respondWithErrors([[trans("validation.cannot_modify.availability")]]);

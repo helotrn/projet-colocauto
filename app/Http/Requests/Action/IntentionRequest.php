@@ -27,6 +27,13 @@ class IntentionRequest extends BaseRequest
             return true;
         }
 
+        // community admin can only change loans that are parts of its communities
+        if ($user->isCommunityAdmin()) {
+            if (Loan::accessibleBy($user)->find($loan->id)) {
+                return true;
+            }
+        }
+
         if ($user->owner->id === $loan->loanable->owner->id) {
             return true;
         }

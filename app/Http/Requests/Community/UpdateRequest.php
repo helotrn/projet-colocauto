@@ -13,7 +13,8 @@ class UpdateRequest extends BaseRequest
     {
         $id = $this->route("id");
         return $this->user()->isAdmin() ||
-            $this->user()->isAdminOfCommunity($id);
+            $this->user()->isAdminOfCommunity($id) ||
+            ($this->user()->isCommunityAdmin() && Community::accessibleBy($this->user())->find($id));
     }
 
     public function rules()

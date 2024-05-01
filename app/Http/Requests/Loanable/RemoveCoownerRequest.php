@@ -17,6 +17,7 @@ class RemoveCoownerRequest extends BaseRequest
 
         return $user->is($loanable->owner->user) ||
             $user->isAdmin() ||
+            ($user->isCommunityAdmin() && Loanable::accessibleBy($user)->find($loanable->id)) ||
             ($loanable->isCoowner($user) && $this->get("user_id") == $user->id);
     }
 

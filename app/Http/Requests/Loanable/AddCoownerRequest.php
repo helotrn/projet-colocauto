@@ -16,7 +16,17 @@ class AddCoownerRequest extends BaseRequest
         }
         $loanable = Loanable::find($this->route("loanable_id"));
 
-        return $user->is($loanable->owner->user) || $user->isAdmin();
+        if( $user->isAdmin() ){
+            return true;
+        }
+
+        if( $user->isCommunityAdmin() ){
+            if( Loanable::accessibleBy($user)->find($this->route("loanable_id")) ){
+                return true;
+            }
+        }
+
+        return $user->is($loanable->owner->user);
     }
 
     public function rules(): array

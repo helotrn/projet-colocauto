@@ -13,7 +13,7 @@
       <b-row>
         <b-col class="admin__sidebar" v-if="showSidebar">
           <b-nav vertical>
-            <admin-sidebar :is-global-admin="isGlobalAdmin" />
+            <admin-sidebar :is-global-admin="isGlobalAdmin" :is-community-admin="isCommunityAdmin" />
           </b-nav>
         </b-col>
 
