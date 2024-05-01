@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Validation\Rule;
 use Molotov\Traits\TreeScopes;
 use MStaack\LaravelPostgis\Eloquent\PostgisTrait;
+use Carbon\Carbon;
 
 class Community extends BaseModel
 {
@@ -261,7 +262,15 @@ SQL;
         }
 
         if ($user->isCommunityAdmin()) {
-            return $query->withAdminUser($user);
+            return $query
+                ->withAdminUser($user)
+                ->orWhere(function ($q) {
+                    // make newly created communities accessible to community admins
+                    // so that they can be added as admin for this new community
+                    $oneSecondAgo = Carbon::now()->subSecond();
+                    return $q->whereDate('communities.created_at', '=', $oneSecondAgo)
+                        ->whereTime('communities.created_at', '>=', $oneSecondAgo);
+                });
         }
 
         return $query->where(function ($q) use ($user) {

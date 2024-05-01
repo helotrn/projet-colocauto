@@ -76,6 +76,13 @@ class CommunityController extends RestController
             $pricing->save();
             $item->pricings[] = $pricing;
         }
+
+        if( $request->user()->isCommunityAdmin() ){
+            // add the user as admin of this community
+            $item->admins()->attach($request->user());
+            $item->save();
+        }
+        
         return $this->respondWithItem($request, $item, 201);
     }
 
