@@ -7,7 +7,7 @@
       <b-nav-item to="/profile/account">
         {{ $t("profile.titles.account") }}
       </b-nav-item>
-      <b-nav-item to="/profile/loans" :disabled="!user.borrower">
+      <b-nav-item v-if="!isGlobalAdmin && !isCommunityAdmin" to="/profile/loans" :disabled="!user.borrower">
         {{ $t("profile.titles.loans") }}
       </b-nav-item>
       <b-nav-item to="/profile/loanables" v-if="user.owner">

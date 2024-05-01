@@ -40,7 +40,7 @@
         <b-nav-item
           to="/profile/colocauto"
           class="d-block d-lg-none"
-          v-if="!(isGlobalAdmin || isCommunityAdmin) && hasCompletedRegistration"
+          v-if="hasCompletedRegistration"
         >
           <span class="nav-link__icon">
             <svg-profile />
@@ -116,7 +116,7 @@
           </b-dropdown-item>
           <b-dropdown-item
             to="/profile/colocauto"
-            v-if="!(isGlobalAdmin || isCommunityAdmin) && hasCompletedRegistration"
+            v-if="hasCompletedRegistration"
           >
             <span class="nav-link__icon">
               <svg-profile />
