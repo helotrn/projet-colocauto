@@ -37,10 +37,29 @@ class ExpenseTag extends BaseModel
     public function scopeAccessibleBy(Builder $query, $user)
     {
         // unless the tag is queried directly or by admin ...
-        if ($user->isAdmin() || request()->routeIs("expense_tags.retrieve")) {
+        if ($user->isAdmin() ||
+            $user->isCommunityAdmin() ||
+            request()->routeIs("expense_tags.retrieve")
+        ) {
             return $query;
         }
         // .. remove "admin" ones from the list
         return $query->where('admin', false);
+    }
+
+    public function scopeFor(Builder $query, $for, $user)
+    {
+        if (!$user) {
+            $for = "read";
+        }
+
+        if ($user->isAdmin() || $for == "read") {
+            return $query;
+        }
+
+        if ($for == "edit") {
+            // non-admins cannot edit expense tags
+            return $query->whereNotNull(\DB::raw('NULL'));
+        }
     }
 }

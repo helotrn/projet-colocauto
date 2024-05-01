@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\BaseRequest as Request;
 use App\Models\ExpenseTag;
 use App\Repositories\ExpenseTagRepository;
+use App\Http\Requests\ExpenseTag\Request as AdminOnlyRequest;
 
 class ExpenseTagController extends RestController
 {
@@ -38,7 +39,7 @@ class ExpenseTagController extends RestController
         return $response;
     }
 
-    public function create(Request $request)
+    public function create(AdminOnlyRequest $request)
     {
         try {
             $item = parent::validateAndCreate($request);
@@ -49,7 +50,7 @@ class ExpenseTagController extends RestController
         return $this->respondWithItem($request, $item, 201);
     }
 
-    public function update(Request $request, $id)
+    public function update(AdminOnlyRequest $request, $id)
     {
         try {
             $item = parent::validateAndUpdate($request, $id);
@@ -60,7 +61,7 @@ class ExpenseTagController extends RestController
         return $this->respondWithItem($request, $item);
     }
 
-    public function destroy(Request $request, $id)
+    public function destroy(AdminOnlyRequest $request, $id)
     {
         try {
             $response = parent::validateAndDestroy($request, $id);
@@ -83,12 +84,15 @@ class ExpenseTagController extends RestController
             "form" => [
                 "name" => [
                     "type" => "text",
+                    "disabled" => !$request->user()->isAdmin(),
                 ],
                 "slug" => [
                     "type" => "text",
+                    "disabled" => !$request->user()->isAdmin(),
                 ],
                 "color" => [
                     "type" => "select",
+                    "disabled" => !$request->user()->isAdmin(),
                     "options" => [
                         [
                             "text" => "Bleu",
@@ -114,6 +118,7 @@ class ExpenseTagController extends RestController
                 ],
                 "admin" => [
                     "type" => "checkbox",
+                    "disabled" => !$request->user()->isAdmin(),
                 ],
             ],
             "filters" => $this->model::$filterTypes ?: new \stdClass(),

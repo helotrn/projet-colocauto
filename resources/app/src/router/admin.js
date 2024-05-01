@@ -398,6 +398,7 @@ export default [
             expense_tags: {
               retrieve: {
                 fields: "*",
+                for: "edit",
               },
             },
           },
