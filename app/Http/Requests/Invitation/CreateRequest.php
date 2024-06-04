@@ -10,7 +10,7 @@ class CreateRequest extends BaseRequest
     public function authorize()
     {
         return $this->user()->isAdmin() ||
-            ($this->user()->isCommunityAdmin() && Community::accessibleBy($this->user())->find($this->route('community_id'));
+            ($this->user()->isCommunityAdmin() && Community::accessibleBy($this->user())->find($this->route('community_id')));
     }
 
     public function rules()
