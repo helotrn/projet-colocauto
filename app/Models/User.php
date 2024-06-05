@@ -417,7 +417,12 @@ class User extends AuthenticatableBaseModel
 
     public function isAdminOfCommunity(int $communityId)
     {
-        // TODO: change this => not used ?
+        if( $this->isCommunityAdmin() ){
+            return $this->administrableCommunities()
+                ->where("communities.id", $communityId)
+                ->exists();
+        }
+
         return $this->communities()
             ->where("communities.id", $communityId)
             ->whereHas("users", function ($q) {
@@ -430,7 +435,13 @@ class User extends AuthenticatableBaseModel
 
     public function isAdminOfCommunityFor(int $userId)
     {
-        // TODO: change this
+        if( $this->isCommunityAdmin() ){
+            return $this->administrableCommunities()
+                ->whereHas("users", function ($q) use ($userId) {
+                    return $q->where("community_user.user_id", $userId);
+                })
+                ->exists();
+        }
         return $this->communities()
             ->whereHas("users", function ($q) {
                 return $q
@@ -555,6 +566,10 @@ class User extends AuthenticatableBaseModel
                     return $q->whereHas("communities", function ($q) use ($user) {
                         $q->withAdminUser($user);
                     });
+                })
+                // ...or a newly created member that does not have a community yet
+                ->orWhere(function ($q) use ($user) {
+                    return $q->whereDoesntHave("communities")->whereNull('role');
                 });
         }
 

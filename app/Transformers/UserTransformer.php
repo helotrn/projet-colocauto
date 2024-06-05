@@ -20,7 +20,9 @@ class UserTransformer extends Transformer
                 return $output;
             }
             // ...a community admin
-            if ($user->isAdminOfCommunityFor($item->id)) {
+            if ($user->isAdminOfCommunityFor($item->id)
+                || ($item->communities->isEmpty() && $user->isCommunityAdmin())
+            ) {
                 $adminOfCommunityFields = [
                     "id",
                     "avatar",
@@ -40,6 +42,7 @@ class UserTransformer extends Transformer
                     "name",
                     "owner",
                     "tags",
+                    "borrower",
                 ];
 
                 return $this->filterKeys($output, $adminOfCommunityFields);

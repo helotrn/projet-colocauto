@@ -513,7 +513,7 @@ export default {
     },
     loggedInUserIsAdmin() {
       const { user } = this.$store.state;
-      return user && user.role === "admin";
+      return user && (user.role === "admin" || user.role === "community_admin");
     },
     communitySelected() {
       return this.communitiesSelected[0];
