@@ -50,9 +50,14 @@
             {{ $t(`fields.types.${row.item.type}`) | capitalize }}
           </template>
           <template v-slot:cell(owner.user.full_name)="row">
-            <span v-if="row.item.owner">
-              {{ row.item.owner.user ? row.item.owner.user.full_name : '' }}
-            </span>
+            <router-link v-if="row.item.owner && row.item.owner.user" :to="'/admin/users/'+row.item.owner.user.id">
+              {{ row.item.owner.user.full_name }}
+            </router-link>
+          </template>
+          <template v-slot:cell(community.name)="row">
+            <router-link v-if="row.item.community" :to="'/admin/communities/'+row.item.community.id">
+              {{ row.item.community.name }}
+            </router-link>
           </template>
           <template v-slot:cell(actions)="row">
             <admin-list-actions

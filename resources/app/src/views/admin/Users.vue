@@ -77,16 +77,10 @@
             />
             {{ data.label.toUpperCase() }}
           </template>
-          <template v-slot:cell(type)="row">
-            {{ $t(`types.${row.item.type}`) | capitalize }}
-          </template>
-          <template v-slot:cell(owner)="row">
-            <span v-if="row.item.owner">
-              {{ row.item.owner.user.full_name }}
-            </span>
-          </template>
           <template v-slot:cell(communities_name)="row">
-            {{ row.item.communities && row.item.communities.length ? row.item.communities[0].name : '' }}
+            <router-link v-if="row.item.communities && row.item.communities.length" :to="'/admin/communities/'+row.item.communities[0].id">
+              {{ row.item.communities[0].name }}
+            </router-link>
           </template>
           <template v-slot:cell(actions)="row">
             <div class="user-actions">
