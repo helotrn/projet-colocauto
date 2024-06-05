@@ -510,7 +510,7 @@ class CommunityController extends RestController
                 "chat_group_url" => "",
                 "description" => "",
                 "long_description" => "",
-                "type" => "neighborhood",
+                "type" => "private",
                 "pricings" => [],
             ],
             "filters" => $this->model::$filterTypes,
@@ -563,6 +563,12 @@ class CommunityController extends RestController
         $modelRules = $this->model->getRules("template", $request->user());
         foreach ($modelRules as $field => $rules) {
             $template["form"][$field]["rules"] = $this->formatRules($rules);
+        }
+
+        if( !$request->user()->isAdmin() ){
+            unset($template["form"]["type"]);
+            unset($template["form"]["parent_id"]);
+            unset($template["form"]["chat_group_url"]);
         }
 
         return $template;
