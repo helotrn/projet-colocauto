@@ -631,20 +631,8 @@ class UserController extends RestController
                     ],
                 ],
                 "borrower" => [
-                    "noke_id" => [
-                        "type" => "text",
-                    ],
                     "drivers_license_number" => [
                         "type" => "text",
-                    ],
-                    "has_not_been_sued_last_ten_years" => [
-                        "type" => "checkbox",
-                    ],
-                    "gaa" => [
-                        "type" => "files",
-                    ],
-                    "saaq" => [
-                        "type" => "files",
                     ],
                 ],
             ],
