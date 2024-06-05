@@ -234,6 +234,9 @@ export default new RestModule(
       const { CancelToken } = Vue.axios;
       const cancelToken = CancelToken.source();
 
+      // on community creation form, is is not defined
+      if( !state.item || !state.item.id ) return
+
       try {
         commit("cancelToken", cancelToken);
         const { data } = await Vue.axios.get(`/${state.slug}/${state.item.id}/admins`, {

@@ -252,6 +252,7 @@
 </template>
 
 <script>
+import { watch } from "vue";
 import CommunityUsersFilters from "@/components/Community/CommunityUsersFilters.vue";
 import CommunityUsersList from "@/components/Community/CommunityUsersList.vue";
 import InvitationsTableList from "@/components/Invitation/InvitationsTableList.vue";
@@ -283,10 +284,17 @@ export default {
   mounted() {
     // Initial load of sublist data accounting for filter, order and page num.
     this.loadCommunityUserListData();
-    setTimeout(() => {
-      // wait for state.item.it to be loaded
-      this.loadCommunityAdminsListData();
-    }, 1000);
+
+    // wait for state.item.it to be loaded
+    if( this.item ) this.loadCommunityAdminsListData();
+    else {
+      const done = watch( this.context, () => {
+        if( this.item ) {
+          this.loadCommunityAdminsListData();
+          done();
+        }
+      })
+    }
   },
   data() {
     return {
@@ -672,7 +680,9 @@ export default {
       }, 250);
 
       this.$store.dispatch('invitations/retrieve');
-      this.$store.dispatch('admin.community/loadUsersBalance', this.$route.params.id);
+      if( this.$route.params.id !== 'new' ) {
+        this.$store.dispatch('admin.community/loadUsersBalance', this.$route.params.id);
+      }
 
 
       return true;
@@ -820,6 +830,12 @@ export default {
           break;
       }
     },
+    afterSubmit() {
+      if( this.item.created_at == this.item.updated_at ){
+        // reload the page to have more edition details after creation
+        location.reload();
+      }
+    }
   },
   i18n: {
     messages: {
