@@ -68,7 +68,7 @@
                   <forms-builder :definition="form.costs" v-model="item" entity="cars"></forms-builder>
                 </b-col>
                 <b-col lg="6">
-                  <loanable-balance :loanable="item" />
+                  <loanable-balance v-if="item.balance" :loanable="item" />
                 </b-col>
               </b-row>
             </div>
