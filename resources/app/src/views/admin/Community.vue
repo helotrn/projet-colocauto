@@ -150,6 +150,7 @@
                   @changePage="onAdminChangePage"
                   @changeOrder="onAdminChangeOrder"
                   @action="onCommunityAdminAction"
+                  :allowedActions="['remove']"
                 >
                 </community-users-list>
               </b-col>

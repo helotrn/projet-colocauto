@@ -156,6 +156,19 @@ export default {
         ];
       },
     },
+    /* List of actions buttons present on each row */
+    allowedActions: {
+      type: Array,
+      required: false,
+      default: () => {
+        return [
+          "approve",
+          "suspend",
+          "unsuspend",
+          "remove",
+        ];
+      },
+    },
     fieldDefs: {
       type: Array,
       required: false,
@@ -220,13 +233,13 @@ export default {
         canDoActions.push({
           id: item.id,
           // Approval is possible if not alerady approved and not suspended.
-          approve: !item.approved_at && !item.suspended_at,
+          approve: this.allowedActions.includes('approve') && !item.approved_at && !item.suspended_at,
           // Suspension is possible if approved and not already suspended.
-          suspend: item.approved_at && !item.suspended_at,
+          suspend: this.allowedActions.includes('suspend') && item.approved_at && !item.suspended_at,
           // Restoration of approval is possible if suspended.
-          unsuspend: item.suspended_at,
+          unsuspend: this.allowedActions.includes('unsuspend') && item.suspended_at,
           // It is always allowed to remove a user from a community.
-          remove: true,
+          remove: this.allowedActions.includes('remove'),
         });
       }
 
