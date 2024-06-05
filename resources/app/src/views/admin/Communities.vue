@@ -102,7 +102,6 @@ export default {
       fields: [
         { key: "id", label: "ID", sortable: true, class: "text-right tabular-nums" },
         { key: "name", label: "Nom", sortable: true },
-        { key: "parent.name", label: "Quartier", sortable: true },
         { key: "type", label: "Type", sortable: true },
         { key: "actions", label: "Actions", tdClass: "table__cell__actions" },
       ],

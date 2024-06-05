@@ -66,10 +66,8 @@
                   :visibleFields="[
                     'id',
                     'user_full_name',
-                    'role',
                     'approved_at',
                     'suspended_at',
-                    'proof',
                     'actions',
                   ]"
                   :items="communityUsers"
