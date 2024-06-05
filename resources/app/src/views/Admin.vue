@@ -10,7 +10,7 @@
           ><b-icon-layout-sidebar
         /></b-button>
       </div>
-      <b-row>
+      <b-row class="md-stack">
         <b-col class="admin__sidebar" v-if="showSidebar">
           <b-nav vertical>
             <admin-sidebar :is-global-admin="isGlobalAdmin" :is-community-admin="isCommunityAdmin" />
@@ -66,11 +66,11 @@ export default {
   }
   .toggles {
     position: absolute;
-    top: -2rem;
+    top: -3rem;
   }
 
   .page__content {
-    padding-top: 45px;
+    padding-top: 55px;
     padding-bottom: 45px;
 
     .admin__sidebar.col {

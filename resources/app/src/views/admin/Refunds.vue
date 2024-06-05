@@ -1,6 +1,6 @@
 <template>
   <b-container fluid>
-    <b-row>
+    <b-row class="sm-stack">
       <b-col>
         <h1>{{ $tc("model_name", 2) | capitalize }}</h1>
       </b-col>

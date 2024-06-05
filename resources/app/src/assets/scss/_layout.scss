@@ -28,3 +28,14 @@ body {
 .layout-navbar {
     @extend .container;
 }
+
+.row.md-stack {
+    @include media-breakpoint-down(md) {
+        flex-direction: column;
+    }
+}
+.row.sm-stack {
+    @include media-breakpoint-down(sm) {
+        flex-direction: column;
+    }
+}
