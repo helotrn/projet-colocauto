@@ -360,7 +360,10 @@ export default {
           return acc;
         }, []),
         ...this.item.loans,
-      ];
+      ].filter(
+        // deduplication
+        (loan, index, loans) => loans.findIndex(l => l.id == loan.id) == index
+      );
     },
     borrowerStatus() {
       if (!this.item.borrower) {
