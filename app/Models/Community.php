@@ -30,8 +30,18 @@ class Community extends BaseModel
     public static $filterTypes = [
         "id" => "number",
         "name" => "text",
-        "type" => ["neighborhood", "borough", "private"],
-        "parent.name" => "text",
+        "admins.id" => [
+            "type" => "relation",
+            "query" => [
+                "slug" => "users",
+                "value" => "id",
+                "text" => "full_name",
+                "params" => [
+                    "fields" => "id,full_name",
+                    "role" => "community_admin",
+                ]
+            ]
+        ],
     ];
 
     public static $transformer = CommunityTransformer::class;

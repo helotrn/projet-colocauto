@@ -50,6 +50,9 @@ const i18n = {
           remove: "Retirer",
         },
       },
+      admins: {
+        id: "Administrateur·ice"
+      }
     },
     model_name: "communauté | communautés",
     user_list_empty_text: "Aucun membre à afficher.",

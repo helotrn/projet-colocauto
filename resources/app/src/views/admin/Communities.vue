@@ -107,7 +107,6 @@ export default {
       fields: [
         { key: "id", label: "ID", sortable: true, class: "text-right tabular-nums" },
         { key: "name", label: "Nom", sortable: true },
-        { key: "type", label: "Type", sortable: true },
         { key: "admins.full_name", label: "Administrateur·ices", sortable: true },
         { key: "actions", label: "Actions", tdClass: "table__cell__actions" },
       ],
