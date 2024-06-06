@@ -49,6 +49,11 @@
           <template v-slot:cell(parent.name)="row">
             {{ row.item.parent ? row.item.parent.name : "-" }}
           </template>
+          <template v-slot:cell(admins.full_name)="{item}">
+            <router-link v-for="admin in item.admins" :to="'/admin/users/'+admin.id" class="comma-list">
+              {{ admin.full_name }}
+            </router-link>
+          </template>
           <template v-slot:cell(actions)="row">
             <admin-list-actions :columns="['edit']" :row="row" :slug="slug" />
           </template>
@@ -103,6 +108,7 @@ export default {
         { key: "id", label: "ID", sortable: true, class: "text-right tabular-nums" },
         { key: "name", label: "Nom", sortable: true },
         { key: "type", label: "Type", sortable: true },
+        { key: "admins.full_name", label: "Administrateur·ices", sortable: true },
         { key: "actions", label: "Actions", tdClass: "table__cell__actions" },
       ],
     };
@@ -122,4 +128,11 @@ export default {
 };
 </script>
 
-<style lang="scss"></style>
+<style lang="scss">
+  .comma-list:after {
+    content: ", ";
+  }
+  .comma-list:last-child:after {
+    content: "";
+  }
+</style>

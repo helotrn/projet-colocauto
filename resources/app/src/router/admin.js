@@ -50,7 +50,7 @@ export default [
           data: {
             communities: {
               retrieve: {
-                fields: "id,name,type,parent.id,parent.name",
+                fields: "id,name,type,parent.id,parent.name,admins.id,admins.full_name",
                 for: "edit",
               },
             },
