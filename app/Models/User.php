@@ -111,6 +111,15 @@ class User extends AuthenticatableBaseModel
 
                 return $query->selectRaw("$sql AS full_name");
             },
+            // insert this field here so it can be queried
+            "main_community" => function ($query = null) {
+                $sql = "'main_community'"; // why is this working ?
+                if (!$query) {
+                    return \DB::raw($sql);
+                }
+
+                return $query->selectRaw("$sql AS main_community");
+            },
         ];
     }
 
