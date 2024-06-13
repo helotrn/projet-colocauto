@@ -81,6 +81,14 @@
             <router-link v-if="row.item.communities && row.item.communities.length" :to="'/admin/communities/'+row.item.communities[0].id">
               {{ row.item.communities[0].name }}
             </router-link>
+            <template v-else-if="row.item.administrable_communities && row.item.administrable_communities.length">
+              <router-link v-for="community in row.item.administrable_communities" :to="'/admin/communities/'+community.id">
+                {{ community.name }}
+              </router-link>
+            </template>
+          </template>
+          <template v-slot:cell(role)="{item}">
+            {{ item.role == 'community_admin' ? 'Admin de communauté' : (item.role == 'admin' ? 'Admin global' : item.role) }}
           </template>
           <template v-slot:cell(actions)="row">
             <div class="user-actions">
@@ -169,6 +177,7 @@ export default {
         { key: "full_name", label: "Nom", sortable: true },
         { key: "email", label: "Courriel", sortable: true },
         { key: "communities_name", label: "Communauté", sortable: true },
+        { key: "role", label: "Admin", sortable: true },
         { key: "actions", label: "Actions", tdClass: "table__cell__actions" },
       ],
     };
