@@ -11,7 +11,7 @@ export default new RestModule(
       q: "",
       type: null,
     },
-    exportFields: ["id", "name", "type", "center", "area", "area_google"],
+    exportFields: ["id", "name", "type", "center", "area", "area_google", "admins.full_name"],
     usersExportFields: [
       "id",
       "created_at",
