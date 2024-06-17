@@ -8,7 +8,7 @@ Félicitations, votre véhicule {{ $loanable->name }} a bien été ajouté!
 Pour les autos en partage, allez chercher un carnet de bord chez les commerces
 participants et déposez le dans votre coffre à gants.
 
-Vous recevrez un message quand une personne du voisinage voudra l'utiliser.
+Vous recevrez un message quand une personne de la communauté voudra l'utiliser.
 
 N'oubliez pas, en tout temps, vous pouvez modifier sa disponibilité.
 

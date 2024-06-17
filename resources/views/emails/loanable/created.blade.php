@@ -36,7 +36,7 @@
         color: #343a40;
     "
 >
-    Vous recevrez un message quand une personne du voisinage voudra l'utiliser.
+    Vous recevrez un message quand une personne de la communauté voudra l'utiliser.
 </p>
 
 <p

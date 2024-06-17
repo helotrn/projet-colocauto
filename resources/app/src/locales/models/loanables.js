@@ -22,8 +22,7 @@ export default {
     descriptions: {
       comments: "Quoi savoir sur ce véhicule avant de faire l'emprunt? Où se trouve-t-il généralement ?",
       community_id:
-        "Le partage de mon véhicule peut être restreint à un voisinage ou un " +
-        "quartier. Par défaut, un véhicule est accessible à tous mes voisinages.",
+        "Le partage de mon véhicule peut être restreint à une communauté. Par défaut, c'est la communauté à laquelle j'appartiens.",
       image:
         "L'image de votre véhicule s'affichera dans un ratio d'aspect de 16 par 10. Assurez-vous qu'il est bien visible dans l'aperçu ici.",
       instructions:
@@ -31,7 +30,7 @@ export default {
       location_description:
         "Généralement, votre véhicule se trouve où ?",
       name:
-        "Merci de nommer votre véhicule pour en informer votre voisinage. Le nom n'a pas " +
+        "Merci de nommer votre véhicule pour en informer votre communauté. Le nom n'a pas " +
         "besoin d'être compliqué. Allez-y au plus simple... ou au plus drôle!",
       share_with_parent_communities:
         "Mon véhicule pourra être visible et demandé en réservation " +
@@ -47,9 +46,9 @@ export default {
       ...cars.fr.fields,
       ...trailers.fr.fields,
       comments: "commentaires",
-      community_id: "voisinage",
-      community_name: "voisinage",
-      community: prefixFields(communities.fr.fields, "(Voisinage)"),
+      community_id: "communauté",
+      community_name: "communauté",
+      community: prefixFields(communities.fr.fields, "(Communauté)"),
       deleted_at: "supprimé",
       image: "photo du véhicule",
       instructions: "instructions",
