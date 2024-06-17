@@ -266,6 +266,10 @@ class AuthController extends RestController
         }
 
         $user = User::find($userId);
+        if( $request->user()->isCommunityAdmin() && $user->isAdmin() ){
+            // avoid privileges escalation
+            return new Response("you are not authorized", 403);
+        }
         $token = $user->createToken("mandate token")->accessToken;
         return $token;
     }
