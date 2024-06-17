@@ -6,6 +6,7 @@ export default {
     fields: {
       id: "ID",
       email: "Couriel",
+      for_community_admin: "Donner le droit d'administration de communauté",
       community_id: "communauté dans laquelle sera intégrée le nouveau membre",
       token: "code (créé automatiquement)",
       consumed_at: "date d'utilisation (rempli automatiquement)",

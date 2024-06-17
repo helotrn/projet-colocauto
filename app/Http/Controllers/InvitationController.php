@@ -63,10 +63,14 @@ class InvitationController extends RestController
                 "email" => "",
                 "community" => null,
                 "token" => "",
+                "for_community_admin" => false,
             ],
             "form" => [
                 "email" => [
                     "type" => "email",
+                ],
+                "for_community_admin" => [
+                    "type" => "checkbox",
                 ],
                 "community_id" => [
                     "type" => "relation",

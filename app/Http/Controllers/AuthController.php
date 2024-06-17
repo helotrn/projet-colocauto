@@ -114,17 +114,28 @@ class AuthController extends RestController
         $user = new User();
         $user->email = $email;
         $user->password = Hash::make($password);
+        if( $invitation->for_community_admin) {
+            $user->role = 'community_admin';
+        }
         $user->save();
 
         if ($user) {
-            $invitation->community->users()->attach($user->id);
-            $invitation->consume();
+            if( $invitation->for_community_admin) {
+                // set the user as admin for this community
+                if ($invitation->community) {
+                    $invitation->community->admins()->attach($user->id);
+                }
+            } else {
+                // set the user as community member
+                $invitation->community->users()->attach($user->id);
 
-            // automatically approve new invited users
-            $borrower = new Borrower();
-            $borrower->user_id = $user->id;
-            $borrower->approved_at = new \Carbon\Carbon();
-            $borrower->save();
+                // automatically approve new invited users
+                $borrower = new Borrower();
+                $borrower->user_id = $user->id;
+                $borrower->approved_at = new \Carbon\Carbon();
+                $borrower->save();
+            }
+            $invitation->consume();
 
             $loginRequest = new LoginRequest();
             $loginRequest->setMethod("POST");
