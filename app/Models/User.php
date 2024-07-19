@@ -501,7 +501,6 @@ class User extends AuthenticatableBaseModel
 
     public function getAccessibleCommunityIds()
     {
-        // TODO: add administrable communities here
         $communityIds = $this->communities
             ->whereNotNull("pivot.approved_at")
             ->whereNull("pivot.suspended_at")
@@ -510,6 +509,14 @@ class User extends AuthenticatableBaseModel
         if ($communityIds->count() > 0) {
             $communityIds = $communityIds->concat(
                 Community::parentOf($communityIds->toArray())->pluck("id")
+            );
+        }
+
+        // add administrable communities
+        if( $this->isCommunityAdmin() ) {
+            $communityIds = $communityIds->concat($this->administrableCommunities
+                ->whereNull("suspended_at")
+                ->pluck("id")
             );
         }
 
