@@ -16,14 +16,8 @@ class CreateRequest extends BaseRequest
             return false;
         }
 
-        if ($user->isAdmin()) {
+        if ($user->isAdmin() || $user->isCommunityAdmin()) {
             return true;
-        }
-
-        if ($user->isCommunityAdmin()) {
-            if (Community::accessibleBy($user)->find($this->get('community_id'))) {
-                return true;
-            }
         }
 
         return false;
@@ -47,6 +41,22 @@ class CreateRequest extends BaseRequest
             "year_of_circulation" => "nullable|digits:4",
         ];
 
+        if ($this->user()->isCommunityAdmin()) {
+            $accessibleCommunityIds = implode(
+                ",",
+                Community::accessibleBy($this->user())
+                    ->pluck("id")
+                    ->toArray()
+            );
+            $rules["community"] = ["required", "filled"];
+            $rules["community.id"] = [
+                "required",
+                "numeric",
+                "filled",
+                "in:$accessibleCommunityIds",
+            ];
+        }
+
         return $rules;
     }
 
@@ -54,6 +64,7 @@ class CreateRequest extends BaseRequest
     {
         return [
             "name.required" => "Le nom est requis.",
+            "community.id.in" => "Vous n'avez pas accès à cette communauté.",
         ];
     }
 }
