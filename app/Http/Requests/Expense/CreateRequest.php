@@ -10,9 +10,7 @@ class CreateRequest extends BaseRequest
 {
     public function authorize()
     {
-        return $this->user()->isAdmin() ||
-            (Loanable::accessibleBy($this->user())->find($this->route("loanable_id"))
-            && User::accessibleBy($this->user())->find($this->route("user_id")));
+        return true;
     }
 
     public function rules()
@@ -33,11 +31,12 @@ class CreateRequest extends BaseRequest
             ]
         ];
 
-        if( !$this->user()->isAdmin() && !$this->user()->isCommunityAdmin() ) {
+        if( !$this->user()->isAdmin() ) {
             $user = $this->user();
             $accessibleUserIds = implode(
                 ",",
-                $user->getSameCommunityUserIds()
+                User::accessibleBy($user)
+                    ->pluck("id")
                     ->toArray()
             );
             $rules["user_id"][] = "in:$accessibleUserIds";
