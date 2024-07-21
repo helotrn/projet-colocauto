@@ -43,6 +43,14 @@ export default {
   components: {
     FormsBuilder,
   },
+  mounted: async function() {
+    // set default pre-selected community
+    if( this.$route.query.community_id ) {
+      this.$store.commit('invitations/patchItem', {
+        community_id: this.$route.query.community_id,
+      })
+    }
+  },
   i18n: {
     messages: {
       en: {

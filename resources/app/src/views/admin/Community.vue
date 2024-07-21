@@ -228,7 +228,7 @@
                 </invitations-table-list>
               </b-col>
             </b-row>
-            <b-button variant="success" :disabled="loading" :to="`/admin/invitations/new`">
+            <b-button variant="success" :disabled="loading" :to="`/admin/invitations/new?community_id=${item.id}`">
               Créer
             </b-button>
           </div>
