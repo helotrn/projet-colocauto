@@ -22,9 +22,13 @@ class CreateRequest extends BaseRequest
                 ->toArray()
         );
 
+        // only super admin can invite community admins without communities
+        $required = $this->user()->isAdmin() ? "required_if:for_community_admin,false" : "required";
+
         return [
             "email" => "string",
             "community_id" => [
+                $required,
                 "numeric",
                 "filled",
                 "in:$accessibleCommunityIds",
@@ -37,6 +41,7 @@ class CreateRequest extends BaseRequest
         return [
             "email.required" => "L'adresse email est requise.",
             "community_id.in" => "Vous n'avez pas accès à cette communauté.",
+            "community_id.required_if" => "Vous devez indiquer une communauté.",
         ];
     }
 }

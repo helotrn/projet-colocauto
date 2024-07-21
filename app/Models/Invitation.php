@@ -10,7 +10,7 @@ class Invitation extends BaseModel
 {
     public static $rules = [
         "email" => ["required", "email"],
-        "community_id" => ["requiredIf:for_community_admin,false"],
+        "community_id" => ["required_if:for_community_admin,false"],
         "consumed_at" => ["nullable", "date"],
     ];
 
