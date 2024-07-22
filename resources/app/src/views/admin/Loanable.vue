@@ -97,11 +97,18 @@
             <div class="form__section" v-if="item.type === 'car'">
               <h2>Détails de la voiture</h2>
 
-              <forms-builder :definition="form.car" v-model="item" entity="cars">
+              <forms-builder :definition="carForm" v-model="item" entity="cars">
                 <!-- remove unused parameters -->
                 <template v-slot:year_of_circulation></template>
                 <template v-slot:plate_number></template>
                 <template v-slot:is_value_over_fifty_thousand></template>
+                <template v-slot:report_template>
+                  <b-form-group>
+                    <a href="/fiche_etat_du_vehicule.pdf" download>
+                      {{ $i18n.t("cars.fields.report_download") }} <b-icon icon="download" />
+                    </a>
+                  </b-form-group>
+                </template>
               </forms-builder>
             </div>
 
@@ -228,6 +235,24 @@ export default {
     },
     pageTitle() {
       return this.item.name || capitalize(this.$i18n.tc("véhicule", 1));
+    },
+    carForm() {
+      const carKeys = Object.keys(this.form.car);
+
+      const form = {};
+
+      // we add all the car form property and our custom report_template property at the right time, see https://262.ecma-international.org/6.0/#sec-ordinary-object-internal-methods-and-internal-slots-ownpropertykeys
+      for (let i = 0; i < carKeys.length; i++) {
+        const key = carKeys[i];
+        form[key] = this.form.car[key];
+
+        if (key === "report") {
+          form["report_template"] = {};
+          form[key].disabled = false;
+        }
+      }
+
+      return form;
     },
   },
   methods: {
