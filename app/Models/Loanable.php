@@ -670,7 +670,7 @@ class Loanable extends BaseModel
                         }
                         break;
                     default:
-                        return $q->whereIn("type", $allowedTypes);
+                        return $q->whereIn("loanables.type", $allowedTypes);
                 }
             });
 
