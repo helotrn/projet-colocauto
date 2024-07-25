@@ -658,6 +658,10 @@ class UserController extends RestController
                 $rules
             );
         }
+        if( !$request->user()->isAdmin() ){
+            // remove this field for community admins
+            unset ($template["form"]["general"]["is_smart_phone"]);
+        }
 
         return $template;
     }
