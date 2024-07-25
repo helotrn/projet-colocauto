@@ -395,7 +395,11 @@ class Loanable extends BaseModel
             }
             $community = self::getCommunityForLoanBy($owner->user);
         }
-        $pricing = $community->getPricingFor($this);
+        if($community) {
+            $pricing = $community->getPricingFor($this);
+        } else {
+            $pricing = null;
+        }
         if (!$pricing) {
             return (object) [
                 "price" => 0,
