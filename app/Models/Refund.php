@@ -122,6 +122,7 @@ class Refund extends BaseModel
 
     public function getCommunityAttribute()
     {
+        if( !$this->user ) return NULL;
         return $this->user->communities->first();
     }
 }
