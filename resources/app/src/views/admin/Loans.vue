@@ -47,18 +47,24 @@
           empty-text="Pas d'emprunt"
         >
           <template v-slot:cell(borrower.user.full_name)="row">
-            <router-link :to="'/admin/users/'+row.item.borrower.user.id">
-              {{ row.item.borrower.user.full_name }}
+            <router-link v-if="row.item.borrower.user" :to="'/admin/users/'+row.item.borrower.user.id">
+              {{ row.item.borrower_user_full_name }}
             </router-link>
+            <span v-else>
+              {{ row.item.borrower_user_full_name }} (archivé)
+            </span>
           </template>
           <template v-slot:cell(loanable.owner.user.full_name)="row">
-            <router-link v-if="row.item.loanable.owner" :to="'/admin/users/'+row.item.loanable.owner.user.id">
-              {{ row.item.loanable.owner.user.full_name }}
+            <router-link v-if="row.item.loanable.owner && row.item.loanable.owner.user" :to="'/admin/users/'+row.item.loanable.owner.user.id">
+              {{ row.item.loanable_owner_user_full_name }}
             </router-link>
+            <span v-else-if="row.item.loanable.owner">
+              {{ row.item.loanable_owner_user_full_name }} (archivé)
+            </span>
           </template>
           <template v-slot:cell(community.name)="row">
             <router-link :to="'/admin/communities/'+row.item.community.id">
-              {{ row.item.community.name }}
+              {{ row.item.community_name }}
             </router-link>
           </template>
           <template v-slot:cell(departure_at)="row">
