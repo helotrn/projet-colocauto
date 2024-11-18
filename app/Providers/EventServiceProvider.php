@@ -33,6 +33,9 @@ class EventServiceProvider extends ServiceProvider
         "App\Events\LoanCreatedEvent" => [
             "App\Listeners\SendLoanCreatedEmails",
         ],
+        "App\Events\LoanModifiedEvent" => [
+            "App\Listeners\SendLoanModifiedEmails",
+        ],
         "App\Events\LoanIntentionAcceptedEvent" => [
             "App\Listeners\SendLoanIntentionAcceptedEmails",
         ],

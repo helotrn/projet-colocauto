@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Events\Loan\CanceledEvent;
 use App\Events\LoanCreatedEvent;
+use App\Events\LoanModifiedEvent;
 use App\Http\Requests\Action\CreateRequest as ActionCreateRequest;
 use App\Http\Requests\BaseRequest as Request;
 use App\Http\Requests\Loan\CreateRequest;
@@ -98,6 +99,8 @@ class LoanController extends RestController
         } catch (ValidationException $e) {
             return $this->respondWithErrors($e->errors(), $e->getMessage());
         }
+
+        event(new LoanModifiedEvent($request->user(), $item));
 
         return $this->respondWithItem($request, $item);
     }
