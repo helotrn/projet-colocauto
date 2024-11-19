@@ -23,8 +23,8 @@
     "
 >
     {{ $borrower->user->name }} a reservé votre véhicule {{
-    $loan->loanable->name }} à partir de {{ $loan->departure_at }} et pour une
-    durée de {{ $loan->duration_in_minutes }} minutes.
+    $loan->loanable->name }} à partir du @datetime($loan->departure_at) et pour une
+    durée de @duration($loan->duration_in_minutes).
 </p>
 
 <br />

@@ -26,6 +26,14 @@ class AppServiceProvider extends ServiceProvider
         Blade::directive("money", function ($amount) {
             return "<?php echo number_format($amount, 2, ',', ' ') . '$'; ?>";
         });
+
+        Blade::directive("datetime", function (string $expression) {
+            return "<?php echo \Carbon\Carbon::parse($expression)->isoFormat('LLLL'); ?>";
+        });
+
+        Blade::directive("duration", function (string $duration_in_minutes) {
+             return "<?php echo \Carbon\CarbonInterval::minutes($duration_in_minutes)->cascade()->forHumans(); ?>";
+        });
     }
 
     private function generateClientId(
