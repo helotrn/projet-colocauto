@@ -6,8 +6,8 @@ use App\Models\Refund;
 use App\Repositories\RefundRepository;
 use App\Http\Requests\Refund\CreateRequest;
 use App\Http\Requests\Refund\UpdateRequest;
-
 use App\Http\Requests\BaseRequest as Request;
+use Carbon\Carbon;
 
 class RefundController extends RestController
 {
@@ -88,6 +88,7 @@ class RefundController extends RestController
         $template = [
             "item" => [
                 "amount" => "0",
+                "executed_at" => Carbon::now(),
             ],
             "form" => [
                 "executed_at" => [
