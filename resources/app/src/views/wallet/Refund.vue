@@ -123,7 +123,11 @@ export default {
   methods: {
     returnToRefundsList() {
       this.$router.push('/wallet/refunds');
-    }
+    },
+    afterSubmit() {
+      // immediately show balance screen once refund has been added
+      this.$router.push('/wallet/balance');
+    },
   },
   i18n: {
     messages: {
