@@ -4,6 +4,7 @@ namespace App\Listeners;
 
 use App\Events\LoanModifiedEvent;
 use App\Mail\Loan\Modified as LoanModified;
+use App\Mail\Loan\ModifiedForBorrower as LoanModifiedForBorrower;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Mail;
@@ -11,8 +12,7 @@ use Mail;
 class SendLoanModifiedEmails
 {
     /*
-       Send loan-modified notification to owner if loanable is not self-service
-       and borrower is not also the owner.
+       Send loan-modified notification to users that are concerned
     */
     public function handle(LoanModifiedEvent $event)
     {
@@ -21,6 +21,7 @@ class SendLoanModifiedEmails
         $owner = $loanable->owner;
         $borrower = $loan->borrower;
 
+        // notify the owner if it's not the borrower
         if (
             !$loanable->is_self_service &&
             $owner &&
@@ -28,6 +29,16 @@ class SendLoanModifiedEmails
         ) {
             Mail::to($owner->user->email, $owner->user->full_name)->queue(
                 new LoanModified($borrower, $owner, $event->loan)
+            );
+        }
+
+        // notify the borrower if the modification is done by someone else
+        if(
+            !$loanable->is_self_service &&
+            $event->user->id !== $borrower->user->id
+        ) {
+            Mail::to($borrower->user->email, $borrower->user->full_name)->queue(
+                new LoanModifiedForBorrower($borrower, $owner, $event->loan, $event->user)
             );
         }
     }
