@@ -149,6 +149,10 @@ export default {
   .vdp-datepicker__calendar {
     width: 100%;
 
+    .today {
+      background: #44bbdd20;
+    }
+
     @include media-breakpoint-down(sm) {
       min-width: 300px;
     }
