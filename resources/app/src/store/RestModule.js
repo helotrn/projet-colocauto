@@ -104,6 +104,12 @@ export default function RestModule(slug, initialState, actions = {}, mutations =
           ...partial,
         };
       },
+      patchInitialItem(state, partial) {
+        state.initialItemJson = JSON.stringify({
+          ...JSON.parse(state.initialItemJson),
+          ...partial,
+        });
+      },
       search(state, search) {
         state.search = search;
       },

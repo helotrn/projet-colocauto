@@ -82,10 +82,11 @@ const day = (value) => {
   return dayjs(value).format("dddd");
 };
 
+// Matches phone numbers like (123) 456 7890 or 123-456-7890
+const phoneRegex = /^\(?([1-9][0-9]{2})([- ]*|\) ?)?([1-9][0-9]{2})[- ]?([0-9]{4})$/;
+
 const phone = (value) => {
-  const m = value
-    .toString()
-    .match(/^\(?([1-9][0-9]{2})([- ]*|\) ?)?([1-9][0-9]{2})[- ]?([0-9]{4})$/);
+  const m = value.toString().match(phoneRegex);
 
   if (m) {
     return `(${m[1]}) ${m[3]}-${m[4]}`;
@@ -112,6 +113,21 @@ const titleize = (value) => {
   return parts.map(capitalize).join(" ");
 };
 
+const numberOnlyPhone = (value) => {
+  if (!value) {
+    return "";
+  }
+
+  const m = value.toString().match(phoneRegex);
+
+  if (m) {
+    // Extract 123456789
+    return `${m[1]}${m[3]}${m[4]}`;
+  }
+
+  return "";
+};
+
 export {
   capitalize,
   currency,
@@ -125,4 +141,5 @@ export {
   time,
   titleize,
   shortDate,
+  numberOnlyPhone,
 };

@@ -144,6 +144,11 @@
         </div>
 
         <div class="form__section">
+          <h2>Droits de gestion</h2>
+          <coowners-form :loanable="loanable" />
+        </div>
+
+        <div class="form__section">
           <h2>Partage des coûts</h2>
           <b-row>
             <b-col lg="6">
@@ -188,6 +193,7 @@ import FormsValidatedInput from "@/components/Forms/ValidatedInput.vue";
 import LoanableAvailabilityRules from "@/components/Loanable/AvailabilityRules.vue";
 import FormsImageUploader from "@/components/Forms/ImageUploader.vue";
 import LoanableBalance from "@/components/Loanable/Balance.vue";
+import CoownersForm from "@/components/Loanable/CoownersForm.vue";
 
 import FormLabelsMixin from "@/mixins/FormLabelsMixin";
 import UserMixin from "@/mixins/UserMixin";
@@ -203,6 +209,7 @@ export default {
     FormsValidatedInput,
     LoanableAvailabilityRules,
     LoanableBalance,
+    CoownersForm,
   },
   props: {
     center: {
