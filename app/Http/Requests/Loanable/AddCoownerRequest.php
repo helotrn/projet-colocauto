@@ -33,17 +33,24 @@ class AddCoownerRequest extends BaseRequest
     {
         /** @var User $user */
         $user = $this->user();
-        $usersSharingCommunity = User::whereHas(
-            "approvedCommunities",
-            function ($q) use ($user) {
-                $q->withApprovedUser($user);
-            }
-        )
-            ->pluck("id")
-            ->join(",");
+
+        if ($user->isAdmin() || $user->isCommunityAdmin()) {
+            $authorizedUsers = User::accessibleBy($this->user())
+                ->pluck("id")
+                ->join(",");
+        } else {
+            $authorizedUsers = User::whereHas(
+                "approvedCommunities",
+                function ($q) use ($user) {
+                    $q->withApprovedUser($user);
+                }
+            )
+                ->pluck("id")
+                ->join(",");
+        }
 
         return [
-            "user_id" => ["required", "in:$usersSharingCommunity"],
+            "user_id" => ["required", "in:$authorizedUsers"],
         ];
     }
 }

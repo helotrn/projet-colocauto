@@ -113,6 +113,11 @@
             </div>
 
             <div class="form__section">
+              <h2>Droits de gestion</h2>
+              <coowners-form :loanable="item" />
+            </div>
+
+            <div class="form__section">
               <h2>Partage des coûts</h2>
 
               <b-row>
@@ -153,6 +158,7 @@ import FormsBuilder from "@/components/Forms/Builder.vue";
 import FormsRelationInput from "@/components/Forms/RelationInput.vue";
 import LoanableAvailabilityRules from "@/components/Loanable/AvailabilityRules.vue";
 import LoanableBalance from "@/components/Loanable/Balance.vue";
+import CoownersForm from "@/components/Loanable/CoownersForm.vue";
 
 import DataRouteGuards from "@/mixins/DataRouteGuards";
 import FormMixin from "@/mixins/FormMixin";
@@ -170,6 +176,7 @@ export default {
     FormsValidatedInput,
     LoanableAvailabilityRules,
     LoanableBalance,
+    CoownersForm,
   },
   data() {
     return {
@@ -178,7 +185,7 @@ export default {
         value: "owner.id",
         text: "full_name",
         params: {
-          fields: "full_name, owner.id",
+          fields: "full_name, avatar, owner.id",
         },
       },
     };
@@ -271,7 +278,7 @@ export default {
             owner: {},
           },
           params: {
-            fields: "owner.id,full_name",
+            fields: "owner.id,full_name,avatar",
           },
         });
 
@@ -283,6 +290,7 @@ export default {
             user: {
               id: updatedUser.id,
               full_name: updatedUser.full_name,
+              avatar: updatedUser.avatar,
             },
           },
           owner_id: updatedUser.owner_id,
@@ -297,6 +305,7 @@ export default {
           user: {
             id: user.id,
             full_name: user.full_name,
+            avatar: user.avatar,
           },
         },
         owner_id: user.owner_id,

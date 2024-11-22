@@ -97,8 +97,9 @@ export default [
           slug: "loanables",
           params: {
             fields:
-              "*,owner.user.full_name,owner.user.communities.name," +
+              "*,owner.user.full_name,owner.user.communities.name,owner.user.avatar," +
               "owner.user.communities.parent.name,community.name," +
+              "coowners.user,coowners.user.full_name,coowners.user.phone,coowners.user.avatar," +
               "community.parent.name,padlock.name,report.*,image.*,balance",
             with_deleted: true,
           },

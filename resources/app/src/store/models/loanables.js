@@ -237,5 +237,14 @@ export default new RestModule(
       commit("patchItem", { coowners });
       commit("patchInitialItem", { coowners });
     },
+
+    // treat loanable update as a particular case
+    async updateItem({ dispatch, state }, params) {
+      await dispatch("update", { id: state.item.id, data: {
+        ...state.item,
+        // coowners must not be saved here but via add/removeCoowner
+        coowners: undefined
+      }, params });
+    },
   }
 );

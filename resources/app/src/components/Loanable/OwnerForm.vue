@@ -71,7 +71,7 @@ export default {
         details: "email",
         params: {
           fields:
-            "full_name,owner.id,communities.id,communities.name,available_loanable_types,communities.area",
+            "full_name,avatar,owner.id,communities.id,communities.name,available_loanable_types,communities.area",
         },
       },
     };
