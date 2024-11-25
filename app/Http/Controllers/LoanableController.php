@@ -15,6 +15,7 @@ use App\Http\Requests\Loanable\AvailabilityRequest;
 use App\Http\Requests\Loanable\DestroyRequest;
 use App\Http\Requests\Loanable\EventsRequest;
 use App\Http\Requests\Loanable\RemoveCoownerRequest;
+use App\Http\Requests\Loanable\UpdateCoownerRequest;
 use App\Http\Requests\Loanable\RestoreRequest;
 use App\Http\Requests\Loanable\SearchRequest;
 use App\Http\Requests\Loanable\TestRequest;
@@ -25,6 +26,7 @@ use App\Models\Car;
 use App\Models\Community;
 use App\Models\Loan;
 use App\Models\Loanable;
+use App\Models\Coowner;
 use App\Models\Pricing;
 use App\Models\Trailer;
 use App\Repositories\LoanableRepository;
@@ -978,5 +980,13 @@ class LoanableController extends RestController
     {
         $loanable = Loanable::findOrFail($loanableId);
         $loanable->removeCoowner($request->get("user_id"));
+    }
+
+    public function updateCoowner(UpdateCoownerRequest $request, $loanableId, $coownerId)
+    {
+        $coowner = Coowner::findOrFail($coownerId);
+        $coowner->title = $request->get("title");
+        $coowner->receive_notifications = $request->get("receive_notifications") ?: false;
+        $coowner->save();
     }
 }

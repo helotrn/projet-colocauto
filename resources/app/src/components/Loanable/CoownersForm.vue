@@ -3,9 +3,6 @@
     <b-alert v-if="!loanable.owner" variant="info" show>
       Ajoutez un propriétaire avant de configurer les droits de gestion.
     </b-alert>
-    <b-alert v-if="hasNoVisibleContacts" variant="warning" show>
-      Personne n'est présentement affiché comme contact lors des emprunts.
-    </b-alert>
     <b-row>
       <b-col v-if="loanable.owner" xl="6" class="mb-3">
         <user-blurb
@@ -15,19 +12,10 @@
           show-phone
           description="Propriétaire"
         >
-          <template #nameicon>
-            <b-icon
-              v-if="loanable.show_owner_as_contact"
-              v-b-tooltip.hover
-              title="Visible aux emprunteurs"
-              variant="primary"
-              icon="eye-fill"
-            />
-          </template>
-          <template v-if="canEditOwner" #buttons>
+          <template v-if="canEditOwner || canChangeOwner" #buttons>
             <div class="action-buttons">
               <icon-button
-                v-if="loanable.id"
+                v-if="loanable.id && canEditOwner"
                 :disabled="disabled"
                 size="sm"
                 role="edit"
@@ -108,8 +96,7 @@
           v-else
           :disabled="disabled"
           :coowner="coowner"
-          :can-edit-paid-amounts="canEditCoownerPaidAmounts(coowner)"
-          :has-paid-insurance="loanable.type === 'car'"
+          :loanable="loanable"
           @done="finishEditCoowner"
         />
       </b-col>
@@ -157,7 +144,6 @@ import {
   canAddCoowner,
   canChangeOwner,
   canEditCoowner,
-  canEditCoownerPaidAmounts,
   canRemoveCoowner,
 } from "@/helpers/permissions/loanables";
 import { isGlobalAdmin } from "@/helpers/permissions/users";
@@ -187,19 +173,14 @@ export default {
       return this.loanable.owner.user.id === this.user.id;
     },
     canEditOwner() {
-      return this.userIsOwner || isGlobalAdmin(this.user);
+      // there is nothing to edit in the owner for the moment
+      return false
     },
     canChangeOwner() {
       return canChangeOwner(this.user, this.loanable);
     },
     canAddCoowner() {
       return canAddCoowner(this.user, this.loanable);
-    },
-    hasNoVisibleContacts() {
-      return (
-        !this.loanable.show_owner_as_contact &&
-        this.loanable.coowners?.reduce((acc, c) => acc && !c.show_as_contact, true)
-      );
     },
     userFilter() {
       const denyList = this.loanable.coowners ? this.loanable.coowners.map((c) => c.user.id) : [];
@@ -266,9 +247,6 @@ export default {
     },
     canEditCoowner(coowner) {
       return canEditCoowner(this.user, this.loanable, coowner);
-    },
-    canEditCoownerPaidAmounts() {
-      return canEditCoownerPaidAmounts(this.user, this.loanable);
     },
     canDeleteCoowner(coowner) {
       return canRemoveCoowner(this.user, this.loanable, coowner);

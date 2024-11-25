@@ -208,6 +208,12 @@ Route::prefix("v1")->group(function () {
             "removeCoowner",
         ])->where("loanable_id", "[0-9]+");
 
+        Route::put("/loanables/{loanable_id}/coowners/{coowner_id}", [
+            LoanableController::class,
+            "updateCoowner",
+        ])->where("loanable_id", "[0-9]+")
+        ->where("coowner_id", "[0-9]+");
+
         RouteHelper::subresource("loanable", "loan", null, [
             "create",
             "update",

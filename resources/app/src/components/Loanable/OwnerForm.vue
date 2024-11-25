@@ -13,24 +13,6 @@
       @relation="setLoanableOwner"
     />
 
-    <template v-else>
-      <b-form>
-        <div class="mb-3 font-weight-bold">{{ loanable.owner.user.full_name }}</div>
-        <forms-validated-input
-          v-model="show_as_contact"
-          label="Afficher comme contact"
-          name="title"
-          type="checkbox"
-          :disabled="disabled || loading"
-          description="Si ses coordonnées devraient être affichées aux emprunteurs-ses."
-        ></forms-validated-input>
-      </b-form>
-      <!-- form with two fields: show on contact and title -->
-
-      <icon-button role="save" :disabled="disabled" :loading="loading" @click.prevent="save">
-        Enregistrer
-      </icon-button>
-    </template>
     &nbsp;
     <icon-button
       v-if="!noCancel"
@@ -62,7 +44,6 @@ export default {
   },
   data() {
     return {
-      show_as_contact: null,
       loading: false,
       ownerQuery: {
         slug: "users",
@@ -90,29 +71,7 @@ export default {
       return null;
     },
   },
-  mounted() {
-    this.show_as_contact = this.loanable.show_owner_as_contact;
-  },
   methods: {
-    async save() {
-      this.loading = true;
-      await Vue.ajax.put(
-        "/loanables/" + this.loanable.id,
-        {
-          show_owner_as_contact: this.show_as_contact,
-        },
-        {
-          cleanupCallback: () => (this.loading = false),
-          notifications: {
-            action: "changement",
-            onSuccess: "changements sauvegardés!",
-          },
-        }
-      );
-
-      this.loanable.show_owner_as_contact = this.show_as_contact;
-      this.$emit("done");
-    },
 
     async setLoanableOwner(user) {
       this.loading = true;

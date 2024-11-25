@@ -112,7 +112,7 @@
               </forms-builder>
             </div>
 
-            <div class="form__section">
+            <div class="form__section" v-if="item.owner && item.owner.user">
               <h2>Droits de gestion</h2>
               <coowners-form :loanable="item" />
             </div>

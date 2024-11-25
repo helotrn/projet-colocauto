@@ -3,12 +3,12 @@
     <div class="mb-3 font-weight-bold">{{ coowner.user.full_name }}</div>
     <b-form>
       <forms-validated-input
-        v-model="show_as_contact"
-        label="Afficher comme contact"
+        v-model="receive_notifications"
+        label="Reçoit les notifications"
         name="title"
         type="checkbox"
         :disabled="disabled || loading"
-        description="Si ses coordonnées devraient être affichées aux emprunteurs-ses."
+        description="Si cette personne reçoit également les notifications par email lors d'un emprunt"
       ></forms-validated-input>
       <forms-validated-input
         v-model="title"
@@ -18,33 +18,6 @@
         type="text"
         :disabled="disabled || loading"
       ></forms-validated-input>
-
-      <template v-if="canEditPaidAmounts">
-        <div class="mb-3 font-weight-bold">Tarification&nbsp;:</div>
-
-        <forms-validated-input
-          v-model="pays_loan_price"
-          label="Paie le tarif de l'emprunt"
-          name="pays_loan_price"
-          description="Si applicable, cette personne paie le coût lié à la durée et à la distance parcourue lors de ses emprunts de ce véhicule."
-          type="checkbox"
-          :disabled="disabled || loading"
-        ></forms-validated-input>
-        <template v-if="hasPaidInsurance || !pays_loan_insurance">
-          <forms-validated-input
-            v-model="pays_loan_insurance"
-            label="Paie l'assurance liée à l'emprunt"
-            name="pays_loan_insurance"
-            description="Si applicable, cette personne paie le coût lié à l'assurance lors de ses emprunts de ce véhicule."
-            type="checkbox"
-            :disabled="disabled || loading"
-          ></forms-validated-input>
-          <b-alert v-if="!pays_loan_insurance" variant="warning" show>
-            <strong>Attention&nbsp;:</strong> cette personne ne sera pas assurée par LocoMotion lors
-            de ses trajets.
-          </b-alert>
-        </template>
-      </template>
     </b-form>
     <!-- form with two fields: show on contact and title -->
 
@@ -62,6 +35,7 @@
 import FormsValidatedInput from "@/components/Forms/ValidatedInput.vue";
 import LayoutLoading from "@/components/Layout/Loading.vue";
 import IconButton from "@/components/shared/IconButton.vue";
+import Vue from "vue";
 
 export default {
   name: "CoownerForm",
@@ -71,30 +45,22 @@ export default {
       type: Object,
       required: true,
     },
-    canEditPaidAmounts: {
-      type: Boolean,
-      default: false,
+    loanable: {
+      type: Object,
+      required: true,
     },
     disabled: { type: Boolean, default: false },
-    hasPaidInsurance: {
-      type: Boolean,
-      default: false,
-    },
   },
   data() {
     return {
-      show_as_contact: null,
+      receive_notifications: null,
       title: null,
-      pays_loan_price: null,
-      pays_loan_insurance: null,
       loading: false,
     };
   },
   mounted() {
-    this.show_as_contact = this.coowner.show_as_contact;
+    this.receive_notifications = this.coowner.receive_notifications;
     this.title = this.coowner.title;
-    this.pays_loan_price = this.coowner.pays_loan_price;
-    this.pays_loan_insurance = this.coowner.pays_loan_insurance;
   },
   methods: {
     cancel() {
@@ -103,21 +69,12 @@ export default {
     async save() {
       this.loading = true;
 
-      let paidAmountParams = {};
-      if (this.canEditPaidAmounts) {
-        paidAmountParams = {
-          pays_loan_price: this.pays_loan_price,
-          pays_loan_insurance: this.pays_loan_insurance,
-        };
-      }
-
-      await Vue.ajax.put(
-        "/loanables/roles/" + this.coowner.id,
+      await Vue.axios.put(
+        `/loanables/${this.loanable.id}/coowners/${this.coowner.id}`,
         {
           id: this.coowner.id,
-          show_as_contact: this.show_as_contact,
+          receive_notifications: this.receive_notifications,
           title: this.title,
-          ...paidAmountParams,
         },
         {
           cleanupCallback: () => (this.loading = false),
@@ -128,10 +85,8 @@ export default {
         }
       );
 
-      this.coowner.show_as_contact = this.show_as_contact;
+      this.coowner.receive_notifications = this.receive_notifications;
       this.coowner.title = this.title;
-      this.coowner.pays_loan_price = this.pays_loan_price;
-      this.coowner.pays_loan_insurance = this.pays_loan_insurance;
       this.$emit("done", this.coowner.id);
     },
   },

@@ -99,7 +99,7 @@ export default [
             fields:
               "*,owner.user.full_name,owner.user.communities.name,owner.user.avatar," +
               "owner.user.communities.parent.name,community.name," +
-              "coowners.user,coowners.user.full_name,coowners.user.phone,coowners.user.avatar," +
+              "coowners.user,coowners.user.full_name,coowners.user.phone,coowners.user.avatar,coowners.title,coowners.receive_notifications," +
               "community.parent.name,padlock.name,report.*,image.*,balance",
             with_deleted: true,
           },
