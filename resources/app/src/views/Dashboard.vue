@@ -126,15 +126,15 @@
               <!---->
               <!-- ongoing loans container -->
               <transition name="fade">
-                <section class="page__section" v-if="loans.started && loans.started.length > 0">
+                <section class="page__section" v-if="startedOrFutureLoans && startedOrFutureLoans.length > 0">
                   <h2 class="dashboard--margin-bottom">Emprunts en cours</h2>
                   <transition-group name="dashboard-list" tag="div" class="swiping-list">
                     <div
-                      class="dashboard-list-item dashboard__ongoing-loans"
-                      v-for="loan in loans.started"
+                      class="dashboard-list-item dashboard__ongoing-future-loans"
+                      v-for="loan in startedOrFutureLoans"
                       :key="loan.id"
                     >
-                      <loan-info-box :loan="loan" :user="user" :buttons="['view']" />
+                      <loan-info-box :loan="loan" :user="user" :buttons="['view','cancel']" />
                     </div>
                   </transition-group>
                 </section>
@@ -160,30 +160,6 @@
                 </section>
               </transition>
               <!---->
-              <!-- upcoming loans container -->
-              <transition name="fade">
-                <section class="page__section" v-if="loans.future && loans.future.length > 0">
-                  <h2>Réservations à venir</h2>
-                  <p class="dashboard__instructions">
-                    Assurez-vous de démarrer l'emprunt en ligne au moment de prendre possession du
-                    véhicule!
-                  </p>
-                  <transition-group name="dashboard-list" tag="div" class="swiping-list">
-                    <div
-                      class="dashboard-list-item dashboard__upcoming-loans"
-                      v-for="loan in loans.future"
-                      :key="loan.id"
-                    >
-                      <loan-info-box
-                        mode="upcoming"
-                        :loan="loan"
-                        :user="user"
-                        :buttons="['view', 'cancel']"
-                      />
-                    </div>
-                  </transition-group>
-                </section>
-              </transition>
             </div>
             <layout-loading class="section-loading-indicator" v-if="loading && !loansLoaded" />
           </div>
@@ -524,6 +500,9 @@ export default {
     loading() {
       return this.$store.state.dashboard.loadRequests > 0;
     },
+    startedOrFutureLoans() {
+      return this.$store.state.dashboard.loans.started.concat(this.$store.state.dashboard.loans.future)
+    }
   },
   methods: {
     hasTutorial(name) {
