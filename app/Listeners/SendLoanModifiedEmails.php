@@ -20,16 +20,28 @@ class SendLoanModifiedEmails
         $loanable = $loan->loanable;
         $owner = $loanable->owner;
         $borrower = $loan->borrower;
+        $coowners = [];
+        if( $loanable->coowners ) {
+            // also notify coowners if they want
+            $coowners = $loanable->coowners->map( function($coowner){
+                return $coowner->receive_notifications ? $coowner->user->email : null;
+            } )->filter()->all();
+        }
 
         // notify the owner if it's not the borrower
         if (
             !$loanable->is_self_service &&
             $owner &&
-            $owner->user->id !== $borrower->user->id
+            (
+                ($owner->user->id !== $borrower->user->id) ||
+                sizeof($coowners) > 0
+            )
         ) {
-            Mail::to($owner->user->email, $owner->user->full_name)->queue(
-                new LoanModified($borrower, $owner, $event->loan)
-            );
+            Mail::to($owner->user->email, $owner->user->full_name)
+                ->cc($coowners)
+                ->queue(
+                    new LoanModified($borrower, $owner, $event->loan)
+                );
         }
 
         // notify the borrower if the modification is done by someone else
