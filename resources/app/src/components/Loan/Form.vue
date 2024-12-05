@@ -9,7 +9,6 @@
       <h2>
         <svg-check v-if="item.id" />
         <svg-waiting v-else />
-
         Réservation
         <small v-if="item.borrower && item.borrower.user">par {{ item.borrower.user.full_name }}</small>
       </h2>
@@ -47,7 +46,7 @@
                 -->
                 <forms-validated-input
                   name="departure_at"
-                  :disabled="!!item.id"
+                  :disabled="!canEdit"
                   :label="$t('fields.departure_at') | capitalize"
                   :rules="form.departure_at.rules"
                   type="datetime"
@@ -64,7 +63,7 @@
                 -->
                 <forms-validated-input
                   name="return_at"
-                  :disabled="!!item.id"
+                  :disabled="!canEdit"
                   :label="$t('fields.return_at') | capitalize"
                   :rules="form.departure_at.rules"
                   type="datetime"
@@ -88,7 +87,7 @@
               <b-col>
                 <forms-validated-input
                   name="reason"
-                  :disabled="!!item.id"
+                  :disabled="!canEdit"
                   :label="$t('fields.reason') | capitalize"
                   :rules="form.reason.rules"
                   type="text"
@@ -107,7 +106,7 @@
                   type="text"
                   :min="10"
                   :max="1000"
-                  :disabled="!!item.id"
+                  :disabled="!canEdit"
                   :placeholder="placeholderOrLabel('estimated_distance') | capitalize"
                   :description="$t('descriptions.estimated_distance') | capitalize"
                   v-model="formattedEstimatedDistance"
@@ -115,7 +114,7 @@
               </b-col>
             </b-row>
 
-            <b-row class="form__buttons" v-if="!item.id">
+            <b-row class="form__buttons" v-if="canEdit">
               <b-col class="text-center">
                 <b-button disabled type="submit" v-if="!item.loanable.available">
                   Indisponible
@@ -192,6 +191,17 @@ export default {
         estimated_distance: this.item.estimated_distance,
         loanable_id: this.item.loanable.id,
       });
+    },
+    canEdit() {
+      // Can edit if:
+      return (
+        !this.item.id ||
+        this.isAdmin ||
+        // or the loanable has not yet been taken
+        !this.hasReachedStep("takeover") ||
+        // or the reservation has not yet started
+        this.$second.isBefore(this.item.departure_at, "minute")
+      );
     },
   },
   watch: {

@@ -55,6 +55,16 @@
             <b-button
               size="sm"
               :disabled="loading"
+              variant="outline-primary"
+              v-if="hasButton('modify')"
+              @click.prevent="editLoan"
+            >
+              Modifier
+            </b-button>
+
+            <b-button
+              size="sm"
+              :disabled="loading"
               variant="outline-danger"
               v-if="hasButton('deny') && userRoles.includes('owner')"
               @click.prevent="denyLoan"
@@ -225,6 +235,9 @@ export default {
       await this.$store.dispatch("loans/cancel", this.loan.id);
       await this.$store.dispatch("dashboard/loadLoans");
       this.loading = false;
+    },
+    editLoan() {
+      this.$emit('edit', this.loan);
     },
     hasButton(name) {
       return this.buttons.indexOf(name) > -1;

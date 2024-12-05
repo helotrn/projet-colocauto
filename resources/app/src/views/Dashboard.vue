@@ -134,7 +134,7 @@
                       v-for="loan in startedOrFutureLoans"
                       :key="loan.id"
                     >
-                      <loan-info-box :loan="loan" :user="user" :buttons="['view','cancel']" />
+                      <loan-info-box :loan="loan" :user="user" :buttons="['modify','cancel']" @edit="showLoanModal(loan)" />
                     </div>
                   </transition-group>
                 </section>
@@ -231,6 +231,8 @@
               </b-col>
             </b-row>
           </section>
+
+          <loan-modal-box v-model="showModal" :loan="currentLoan" @hidden="refresh"/>
 
           <!-- loanables container -->
           <section class="page__section position-relative">
@@ -370,6 +372,7 @@ import UserMixin from "@/mixins/UserMixin";
 import DashboardBalance from "@/components/Dashboard/Balance.vue";
 import DashboardLoanHistory from "@/components/Dashboard/LoanHistory.vue";
 import LoanInfoBox from "@/components/Loan/InfoBox.vue";
+import LoanModalBox from "@/components/Loan/ModalBox.vue";
 import LoanableInfoBox from "@/components/Loanable/InfoBox.vue";
 import ReleaseInfoBox from "@/components/Dashboard/ReleaseInfoBox.vue";
 import TutorialBlock from "@/components/Dashboard/TutorialBlock.vue";
@@ -394,6 +397,7 @@ export default {
     DashboardBalance,
     DashboardLoanHistory,
     LoanInfoBox,
+    LoanModalBox,
     LoanableInfoBox,
     ReleaseInfoBox,
     TutorialBlock,
@@ -427,6 +431,7 @@ export default {
   },
   data: () => ({
     defaultView: 'week',
+    showModal: false,
   }),
   computed: {
     totalApprovedUsers() {
@@ -502,7 +507,13 @@ export default {
     },
     startedOrFutureLoans() {
       return this.$store.state.dashboard.loans.started.concat(this.$store.state.dashboard.loans.future)
-    }
+    },
+    loansRoute() {
+      return this.$router.options.routes.find(r => r.meta && r.meta.slug == 'loans')
+    },
+    currentLoan() {
+      return this.$store.state.loans.item
+    },
   },
   methods: {
     hasTutorial(name) {
@@ -520,6 +531,16 @@ export default {
         this.loanables.filter((l) => l.id !== id)
       );
     },
+    async showLoanModal(loan) {
+      await this.$store.dispatch('loans/retrieveOne', {
+        id: loan.id,
+        params: this.loansRoute.meta.params,
+      });
+      this.showModal = true;
+    },
+    refresh() {
+      this.$store.dispatch("dashboard/reload", this.user);
+    }
   },
   i18n: {
     messages: {
