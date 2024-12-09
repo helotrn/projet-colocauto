@@ -370,7 +370,7 @@ export default {
   methods: {
     getMonthDayAvailability(events, cell) {
       const cellStartTime = this.$dayjs(cell.startDate).startOfDay();
-      const cellEndTime = cellStartTime.add(1, "day").subtract(1, "sencond");
+      const cellEndTime = cellStartTime.add(1, "day").subtract(1, "second");
 
       // all past days are unavailable
       if(this.$dayjs().diff(cellEndTime) > 0 ) return "unavailable";
