@@ -1,7 +1,19 @@
 <template>
   <div class="loan-info-box">
     <b-card class="text-center shadow" :class="{ loading, border: !!variant }" :border-variant="variant" no-body>
-      <router-link :class="{ 'card-body': true, disabled: loading }" :to="`/loans/${this.loan.id}`">
+      <template #header v-if="!isInCurrentCommunity">
+        <div class="loan-info-box__community-name">{{ loan.loanable.community.name }}</div>
+      </template>
+      <template #footer v-if="!isInCurrentCommunity">
+        <b-button
+          size="sm"
+          variant="outline-primary"
+          :to="`/loans/${loan.id}`"
+        >
+          Voir la réservation
+        </b-button>
+      </template>
+      <router-link :class="{ 'card-body': true, disabled: loading }" :to="`/loans/${loan.id}`">
         <div class="loan-info-box__image__wrapper">
           <div class="loan-info-box__image">
             <div
@@ -31,7 +43,7 @@
           <span class="my-2" v-else>Coût estimé: {{ loan.estimated_price | currency }}</span>
           <loan-status :item="loan" class="mt-2"></loan-status>
         </div>
-        <div class="loan-info-box__actions">
+        <div v-if="isInCurrentCommunity" class="loan-info-box__actions">
             <b-button
               size="sm"
               :disabled="loading"
@@ -180,6 +192,14 @@ export default {
 
       return roles;
     },
+    currentCommunity() {
+      return this.$store.state.communities.current
+        ? this.$store.state.communities.current
+        : this.user.main_community.id;
+    },
+    isInCurrentCommunity() {
+      return !this.loan.loanable.community || (this.loan.loanable.community.id == this.currentCommunity)
+    },
   },
   methods: {
     async makeloanUnavailableFor24h() {
@@ -248,8 +268,40 @@ export default {
 
 <style lang="scss">
 .loan-info-box {
+  display: flex;
+  flex-grow: 1;
   .card {
     margin-bottom: 20px;
+    flex-grow: 1;
+  }
+  .card-header {
+    position: absolute;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    background: transparent;
+    padding: 0;
+    .loan-info-box__community-name {
+      background: $locomotion-light-green;
+      color: white;
+      font-weight: bold;
+      padding: 6px 10px;
+      border-radius: 0 0 3px 3px;
+    }
+  }
+
+  .card-footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.1) 0%, #FFFFFF 100%);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    .btn {
+      margin-bottom: 2rem;
+    }
   }
 
   .loading {

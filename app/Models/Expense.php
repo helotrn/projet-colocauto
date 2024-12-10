@@ -150,7 +150,7 @@ class Expense extends BaseModel
 
     public function getCommunityAttribute()
     {
-        if( !$this->user ) return NULL;
-        return $this->user->communities->first();
+        if( !$this->loanable ) return NULL;
+        return $this->loanable->community;
     }
 }

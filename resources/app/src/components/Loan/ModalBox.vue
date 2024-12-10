@@ -68,6 +68,7 @@ export default {
       return this.$store.state.loans.form;
     },
     loanableImage() {
+      if( !this.loan.loanable ) return "";
       const { image } = this.loan.loanable;
       if (!image) {
         return "";

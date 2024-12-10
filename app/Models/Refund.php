@@ -123,6 +123,16 @@ class Refund extends BaseModel
     public function getCommunityAttribute()
     {
         if( !$this->user ) return NULL;
+
+        // if user has multiple communities, find the one in common with credited user
+        if( $this->user->communities->count() > 1 && $this->creditedUser ) {
+            $creditedUserCommunities = $this->creditedUser->communities->pluck('id')->all();
+            foreach($this->user->communities as $community) {
+                if( in_array($community->id, $creditedUserCommunities) ){
+                    return $community;
+                }
+            }
+        }
         return $this->user->communities->first();
     }
 }

@@ -85,6 +85,14 @@ export default {
       }
     });
   },
+  watch: {
+    pageLoaded() {
+      // make loan community the current one
+      if(this.item?.loanable?.community?.id) {
+        this.$store.dispatch('communities/setCurrent', {communityId: this.item.loanable.community.id})
+      }
+    }
+  },
   computed: {
     pageLoaded() {
       // this.id is the route id

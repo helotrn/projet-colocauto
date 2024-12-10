@@ -16,7 +16,7 @@
       </b-row>
       <b-row
         v-else
-        v-for="expense in data"
+        v-for="expense in currentCommunityExpenses"
         :key="expense.id"
         class="wallet-expenses__expenses"
       >
@@ -58,6 +58,16 @@ export default {
   components: { ExpenseInfoBox, ExpenseFilters },
   mounted(){
     this.contextParams.page = 1;
+  },
+  computed: {
+    currentCommunity() {
+      return this.$store.state.communities.current
+        ? this.$store.state.communities.current
+        : this.user.main_community.id;
+    },
+    currentCommunityExpenses() {
+      return this.data.filter(e => e.community.id == this.currentCommunity)
+    }
   },
   i18n: {
     messages: {

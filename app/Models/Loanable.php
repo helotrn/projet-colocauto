@@ -387,7 +387,7 @@ class Loanable extends BaseModel
         if( !$community ) {
             // ... or owner community
             $owner = $this->owner()->first();
-            if( !$owner ) {
+            if( !$owner || !$owner->user ) {
                 return (object) [
                     "price" => 0,
                     "insurance" => 0,

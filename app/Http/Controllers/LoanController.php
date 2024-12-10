@@ -423,6 +423,7 @@ class LoanController extends RestController
             "loanable.owner.user.full_name",
             "loanable.owner.user.id",
             "loanable.type",
+            "loanable.community",
             "loanable.is_self_service",
             "incidents.status",
             "intention.status",

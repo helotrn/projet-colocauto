@@ -20,7 +20,7 @@
       </b-row>
       <b-row
         v-else
-        v-for="refund in data"
+        v-for="refund in currentCommunityRefunds"
         :key="refund.id"
         class="wallet-refunds__refunds"
       >
@@ -62,6 +62,16 @@ export default {
   components: { RefundInfoBox, RefundFilters },
   mounted(){
     this.contextParams.page = 1;
+  },
+  computed: {
+    currentCommunity() {
+      return this.$store.state.communities.current
+        ? this.$store.state.communities.current
+        : this.user.main_community.id;
+    },
+    currentCommunityRefunds() {
+      return this.data.filter(e => e.community.id == this.currentCommunity)
+    }
   },
   i18n: {
     messages: {

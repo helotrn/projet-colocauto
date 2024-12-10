@@ -7,16 +7,16 @@ const initialState = {
 }
 
 const actions = {
-  async reload({ commit, dispatch }, user) {
+  async reload({ commit, dispatch, rootState }, user) {
     commit("reloading");
-    dispatch("loadBalance", { user });
+    dispatch("loadBalance", { community: user.communities[0] });
   },
 
-  async loadBalance({ commit }, { user }) {
+  async loadBalance({ commit }, { community }) {
     commit("loadBalance");
 
     try {
-      const { data: balance } = await Vue.axios.get(`/communities/${user.communities[0].id}/balance`);
+      const { data: balance } = await Vue.axios.get(`/communities/${community.id}/balance`);
       commit("balanceLoaded", balance);
     } catch (e) {
       commit("errorLoading", e);

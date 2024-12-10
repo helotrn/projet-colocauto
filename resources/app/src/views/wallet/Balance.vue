@@ -106,7 +106,10 @@ export default {
     }
   },
   mounted() {
-    this.$store.dispatch("dashboard/reload", this.user);
+    const community = {
+      id: this.$store.state.communities.current ? this.$store.state.communities.current : this.user.main_community.id
+    }
+    this.$store.dispatch("dashboard/loadBalance", { community })
   },
   computed: {
     balance() {

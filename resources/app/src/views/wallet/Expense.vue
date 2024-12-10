@@ -100,6 +100,14 @@ export default {
       return this.item.name || capitalize(this.$i18n.tc("dépense", 1));
     },
   },
+  watch: {
+    item(){
+      // make loanable community the current one
+      if(this.item?.loanable?.community?.id) {
+        this.$store.dispatch('communities/setCurrent', {communityId: this.item.loanable.community.id})
+      }
+    }
+  },
   i18n: {
     messages: {
       en: {

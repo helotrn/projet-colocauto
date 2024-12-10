@@ -3,8 +3,6 @@
     <b-container>
       <b-row class="page__section page__section__main">
         <b-col class="page__content" xl="9" lg="8" md="7">
-          <!-- main header -->
-          <h1 class="mb-4">{{ $t("welcome_text", { name: user.name }) }}</h1>
 
           <!-- button to search for vehicule -->
           <section class="page__section d-flex flex-column" v-if="canLoanVehicle">
@@ -505,8 +503,45 @@ export default {
     loading() {
       return this.$store.state.dashboard.loadRequests > 0;
     },
+    currentCommunity() {
+      return this.$store.state.communities.current
+        ? this.$store.state.communities.current
+        : this.user.main_community.id;
+    },
     startedOrFutureLoans() {
-      return this.$store.state.dashboard.loans.started.concat(this.$store.state.dashboard.loans.future)
+      return this.$store.state.dashboard.loans.started.concat(this.$store.state.dashboard.loans.future).toSorted((a,b) => {
+
+        // display current community loans first
+        if( a.loanable.community ){
+          if( b.loanable.community ){
+            if( a.loanable.community.id == this.currentCommunity ){
+              if( b.loanable.community.id == this.currentCommunity ) {
+                return b.departure_at > a.departure_at ? -1 : 1
+              } else {
+                return -1
+              }
+            } else {
+              return 1
+            }
+          } else {
+            if( a.loanable.community.id == this.currentCommunity ) {
+              return b.departure_at > a.departure_at ? -1 : 1
+            } else {
+              return 1
+            }
+          }
+        } else {
+          if( b.loanable.community ){
+            if( b.loanable.community.id == this.currentCommunity ) {
+              return b.departure_at > a.departure_at ? -1 : 1
+            } else {
+              return -1
+            }
+          } else {
+            return b.departure_at > a.departure_at ? -1 : 1
+          }
+        }
+      });
     },
     loansRoute() {
       return this.$router.options.routes.find(r => r.meta && r.meta.slug == 'loans')
@@ -728,6 +763,8 @@ export default {
   flex-shrink: 0;
   margin-right: 10px;
   scroll-snap-align: start;
+  display: flex;
+  flex-direction: column;
 
 }
 .swiping-list .dashboard-list-item:first-child:last-child {

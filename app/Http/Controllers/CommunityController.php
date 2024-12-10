@@ -355,6 +355,7 @@ class CommunityController extends RestController
         $users = $community->users->map(function ($user) use ($communityId) {
             // compute expenses
             $user->balance = 0;
+            // FIXME use only expenses related to this community
             $user->balance = $user->expenses->where('type', 'credit')->sum('amount');
             $user->balance -= $user->expenses->where('type', 'debit')->sum('amount');
             // compute refunds

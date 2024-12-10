@@ -17,6 +17,7 @@ export default [
     children: [
       {
         path: "expenses",
+        name: "expenses",
         component: WalletExpenses,
         meta: {
           auth: true,
@@ -26,7 +27,7 @@ export default [
           data: {
             expenses: {
               retrieve: {
-                fields: "id,name,amount,executed_at,user.full_name,loanable.name,tag.name,tag.color,changes.id,locked",
+                fields: "id,name,amount,executed_at,user.full_name,loanable.name,tag.name,tag.color,changes.id,locked,community.id",
               },
             },
           },
@@ -34,19 +35,21 @@ export default [
       },
       {
         path: "expenses/:id",
+        name: "single-expense",
         component: WalletExpense,
         props: true,
         meta: {
           auth: true,
           slug: "expenses",
           params: {
-            fields: "id,name,amount,executed_at,user_id,loanable_id,expense_tag_id,changes,changes.user,changes.description,changes.created_at,locked"
+            fields: "id,name,amount,executed_at,user_id,loanable_id,expense_tag_id,changes,changes.user,changes.description,changes.created_at,locked,loanable.name,loanable.community.id"
           },
           title: "wallet.titles.expense",
         },
       },
       {
         path: "refunds",
+        name: "refunds",
         component: WalletRefunds,
         meta: {
           auth: true,
@@ -56,7 +59,7 @@ export default [
           data: {
             refunds: {
               retrieve: {
-                fields: "id,amount,executed_at,user.full_name,credited_user.full_name,changes.id"
+                fields: "id,amount,executed_at,user.full_name,credited_user.full_name,changes.id,community.id"
               },
             },
           },
@@ -64,19 +67,21 @@ export default [
       },
       {
         path: "refunds/:id",
+        name: "single-refund",
         component: WalletRefund,
         props: true,
         meta: {
           auth: true,
           slug: "refunds",
           params: {
-            fields: "id,amount,executed_at,user_id,credited_user_id,changes,changes.user,changes.description,changes.created_at"
+            fields: "id,amount,executed_at,user_id,credited_user_id,changes,changes.user,changes.description,changes.created_at,community.id"
           },
           title: "wallet.titles.refunds",
         },
       },
       {
         path: "balance",
+        name: "balance",
         component: WalletBalance,
         meta: {
           auth: true,

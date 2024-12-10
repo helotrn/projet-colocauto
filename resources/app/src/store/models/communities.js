@@ -42,6 +42,7 @@ export default new RestModule(
       data: [],
       total: 0,
     },
+    current: null,
   },
   {
     async addUser({ commit }, { id, data }) {
@@ -257,7 +258,10 @@ export default new RestModule(
 
         throw e;
       }
-    }
+    },
+    async setCurrent({state, commit}, { communityId }) {
+      commit("setCurrent", communityId);
+    },
   },
   {
     usersExportUrl(state, usersExportUrl) {
@@ -271,6 +275,9 @@ export default new RestModule(
     },
     adminUsersData(state, data) {
       state.admins.data = data;
+    },
+    setCurrent(state, communityId) {
+      state.current = communityId
     },
   }
 );

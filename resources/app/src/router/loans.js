@@ -3,6 +3,7 @@ import Loan from "@/views/Loan.vue";
 export default [
   {
     path: "/loans/:id",
+    name: "single-loan",
     component: Loan,
     props: true,
     meta: {

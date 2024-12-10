@@ -30,14 +30,14 @@ const maxLoanableCount = 4;
 const maxMemberCount = 4;
 
 const actions = {
-  async reload({ commit, dispatch }, user) {
+  async reload({ commit, dispatch, rootState }, user) {
     commit("reloading");
     dispatch("loadLoans");
     dispatch("loadLoanables");
     dispatch("listLoanableCars");
     dispatch("loadMembers", { user });
     if( user.communities && user.communities[0] ) {
-      dispatch("loadBalance", { user });
+      dispatch("loadBalance", { community: user.communities[0] });
     }
   },
   async loadLoans({ commit }) {
@@ -96,11 +96,11 @@ const actions = {
       throw e;
     }
   },
-  async loadBalance({ commit }, { user }) {
+  async loadBalance({ commit }, { community }) {
     commit("loadBalance");
 
     try {
-      const { data: balance } = await Vue.axios.get(`/communities/${user.communities[0].id}/balance`);
+      const { data: balance } = await Vue.axios.get(`/communities/${community.id}/balance`);
       commit("balanceLoaded", balance);
     } catch (e) {
       commit("errorLoading", e);

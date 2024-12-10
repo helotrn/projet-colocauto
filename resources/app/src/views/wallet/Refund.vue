@@ -151,6 +151,10 @@ export default {
           if(!this.item.user_id && this.$route.query.user_id) this.item.user_id = this.$route.query.user_id;
           if(!this.item.credited_user_id && this.$route.query.credited_user_id) this.item.credited_user_id = this.$route.query.credited_user_id;
         }
+        // make loanable community the current one
+        if(this.item?.community?.id) {
+          this.$store.dispatch('communities/setCurrent', {communityId: this.item.community.id})
+        }
       }
   }
 };

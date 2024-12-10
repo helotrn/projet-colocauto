@@ -1,9 +1,8 @@
 @import "@/assets/scss/tools";
 
 .layout-header {
-    border-bottom: 1px solid $light-grey;
-
     &__navbar {
+        border-bottom: 1px solid $light-grey;
         @include size(
             "height",
             $layout-navbar-height-mobile,
@@ -16,5 +15,23 @@
         display: flex;
         flex-direction: column;
         justify-content: space-around;
+    }
+    &__communities-navbar {
+        background-color: $main-bg;
+        font-weight: bold;
+
+        .navbar {
+            padding: 2rem 0 0;
+            border-bottom: 1px solid $light-grey;
+            .nav-link {
+                &:hover, &.active {
+                    color: $primary;
+                }
+                border-bottom: solid 3px transparent;
+                &.active {
+                    border-bottom-color: $primary;
+                }
+            }
+        }
     }
 }
