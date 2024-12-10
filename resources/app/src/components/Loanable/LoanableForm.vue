@@ -79,39 +79,6 @@
           </b-row>
         </div>
 
-        <div
-          class="form__section"
-          v-if="!!loanable.type && (user.communities.length > 1 || loanableBoroughs.length > 0)"
-        >
-          <h2>Accessibilité</h2>
-
-          <forms-validated-input
-            v-if="user.communities.length > 1"
-            :description="$t('descriptions.community_id')"
-            :label="$t('fields.community_id') | capitalize"
-            name="community_id"
-            type="relation"
-            v-bind="form.general.community_id"
-            :extra-params="{ 'users.id': 'me' }"
-            :placeholder="placeholderOrLabel('community_id') | capitalize"
-            @relation="loanable.community = $event"
-            v-model="loanable.community_id"
-          />
-
-          <forms-validated-input
-            v-if="loanableBoroughs.length > 0"
-            :description="$t('descriptions.share_with_parent_communities')"
-            :label="
-              $t('fields.share_with_parent_communities_dynamic', {
-                shared_with: loanableBoroughsMessage,
-              }) | capitalize
-            "
-            name="share_with_parent_communities"
-            type="checkbox"
-            v-model="loanable.share_with_parent_communities"
-          />
-        </div>
-
         <div class="form__section" v-if="loanable.type === 'bike'">
           <h2>Détails du vélo</h2>
 

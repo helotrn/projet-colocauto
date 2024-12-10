@@ -10,8 +10,11 @@
           ><span>{{ name }}</span>
            <small v-if="estimated_cost">{{ estimated_cost.cost_per_km | currency }}/km</small>
            <small v-if="estimated_cost">{{ estimated_cost.cost_per_month | currency }}/mois</small>
-           <small class="mt-3" v-if="owner"><strong>Propriétaire: {{ owner.user.full_name }}</strong></small></b-col
-        >
+           <small class="mt-3" v-if="owner"><strong>Propriétaire: {{ owner.user.full_name }}</strong></small>
+           <span v-if="show_community" class="loanable-info-box__community">
+             <svg-community /> {{ community.name }}
+          </span>
+        </b-col>
       </b-row>
     </router-link>
   </b-card>
@@ -19,6 +22,7 @@
 
 <script>
 import { extractErrors } from "@/helpers";
+import Community from "@/assets/icons/community.svg";
 
 export default {
   name: "LoanableInfoBox",
@@ -33,6 +37,11 @@ export default {
       default() {
         return ["availability", "unavailable24h", "remove"];
       },
+    },
+    show_community: {
+      type: Boolean,
+      default: false,
+      required: false,
     },
     image: {
       required: false,
@@ -54,7 +63,14 @@ export default {
     car_insurer: {
       type: String,
       required: false,
-    }
+    },
+    community: {
+      type: Object,
+      required: false,
+    },
+  },
+  components: {
+    "svg-community": Community,
   },
   data() {
     return {
@@ -174,6 +190,14 @@ export default {
   &__actions.col {
     flex: 1 1 0;
     text-align: right;
+  }
+
+  &__community {
+    line-height: 24px;
+    font-size: 16px;
+    svg {
+      height: 24px;
+    }
   }
 }
 </style>

@@ -2,17 +2,17 @@
   <div class="profile-loanables" v-if="routeDataLoaded && !loading && loaded">
     <div v-if="user.owner">
 
-      <b-row v-if="data.length === 0">
+      <b-row v-if="loanables.length === 0">
         <b-col>Pas de véhicule.</b-col>
       </b-row>
       <b-row
         v-else
-        v-for="loanable in data"
+        v-for="loanable in loanables"
         :key="loanable.id"
         class="profile-loanables__loanables"
       >
         <b-col class="profile-loanables__loanables__loanable">
-          <loanable-info-box :buttons="['remove']" v-bind="loanable" @disabled="loadListData" />
+          <loanable-info-box :buttons="['remove']" :show_community="true" v-bind="loanable" @disabled="loadListData" />
         </b-col>
       </b-row>
 
@@ -61,6 +61,16 @@ export default {
         { key: "actions", label: "Actions", tdClass: "table__cell__actions" },
       ],
     };
+  },
+  computed: {
+    currentCommunity() {
+      return this.$store.state.communities.current
+        ? this.$store.state.communities.current
+        : this.user.main_community.id;
+    },
+    loanables() {
+      return this.data.filter(l => l.community.id == this.currentCommunity)
+    }
   },
   i18n: {
     messages: {

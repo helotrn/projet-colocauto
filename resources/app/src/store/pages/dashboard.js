@@ -69,6 +69,8 @@ const actions = {
             "loans.borrower.user.avatar.*",
             "loans.borrower.user.full_name",
             "loans.borrower.user.id",
+            "community.id",
+            "community.name",
           ].join(","),
         },
       });
@@ -78,15 +80,16 @@ const actions = {
       throw e;
     }
   },
-  async loadMembers({ commit }, { user }) {
+  async loadMembers({ commit, rootState }, { user }) {
     commit("loadMembers");
 
     try {
       const { data: members } = await Vue.axios.get("/users", {
         params: {
           order: "-created_at",
+          "communities.id": rootState.communities.current ?? user.main_community.id,
           per_page: maxMemberCount,
-          fields: "id,full_name,tags,avatar,phone,communities.role,communities.proof,communities.approved_at,communities.suspended_at,owner",
+          fields: "id,full_name,tags,avatar,phone,owner",
         },
       });
 

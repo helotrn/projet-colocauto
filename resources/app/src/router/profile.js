@@ -68,7 +68,7 @@ export default [
           data: {
             loanables: {
               retrieve: {
-                fields: "id,name,type,image.*",
+                fields: "id,name,type,image.*,community.id,community.name",
                 "owner.user.id": "me",
               },
             },
@@ -81,6 +81,7 @@ export default [
       },
       {
         path: "loanables/:id",
+        name: "single-loanable",
         component: ProfileLoanable,
         props: true,
         meta: {

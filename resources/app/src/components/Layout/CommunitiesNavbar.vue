@@ -30,11 +30,13 @@ export default {
     changeCommunity(communityId) {
       this.$store.dispatch("communities/setCurrent", { communityId })
       this.$store.dispatch("dashboard/loadBalance", { community: {id:communityId} })
+      this.$store.dispatch("dashboard/loadMembers", { user: this.user })
     },
   },
   computed: {
     isCommunityForcedByRoute() {
-      return ['single-loan', 'single-expense', 'single-refund'].includes(this.$route.name)
+      console.log('route', this.$route.name)
+      return ['single-loan', 'single-loanable', 'single-expense', 'single-refund'].includes(this.$route.name)
     },
   },
 }

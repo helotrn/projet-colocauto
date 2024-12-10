@@ -257,6 +257,18 @@
                       </b-col>
                     </b-row>
                   </transition-group>
+                  <div class="text-right" style="margin-bottom: 1rem" v-if="otherCommunitiesLoanables.length">
+                    Il y a d'autres véhicules dans
+                    {{ otherCommunitiesLoanables.length == 1 ? "la communauté" : "les communautés" }}
+                    <b-button
+                      v-for="community in otherCommunitiesLoanables"
+                      :key="community.id"
+                      variant="link"
+                      @click="changeCommunity(community.id)"
+                    >
+                      {{ community.name }} ({{community.id}})
+                    </b-button>
+                  </div>
                   <div class="text-right" v-if="hasMoreLoanables">
                     <b-button variant="outline-primary" to="/search/list">
                       Voir tous les véhicules disponibles
@@ -465,7 +477,19 @@ export default {
       return this.$store.state.dashboard.loans ?? {};
     },
     loanables() {
-      return this.$store.state.dashboard.loanables ?? [];
+      if(!this.$store.state.dashboard.loanables) return [];
+      else return this.$store.state.dashboard.loanables.filter(l => l.community.id == this.currentCommunity);
+    },
+    otherCommunitiesLoanables() {
+      if(!this.$store.state.dashboard.loanables) return [];
+      else return this.$store.state.dashboard.loanables
+        .filter(l => l.community.id != this.currentCommunity)
+        .reduce((acc, current) => {
+          if(!acc.find(c => c.id == current.community.id)){
+            acc.push(current.community)
+          }
+          return acc;
+        }, []);
     },
     members() {
       return this.$store.state.dashboard.members ?? [];
@@ -480,7 +504,7 @@ export default {
       return this.$store.state.dashboard.hasMoreMembers;
     },
     carsList(){
-      return this.$store.state.dashboard.carsList;
+      return this.$store.state.dashboard.carsList.filter(car => car.community.id == this.currentCommunity);
     },
     loansLoaded() {
       return this.$store.state.dashboard.loansLoaded;
@@ -575,7 +599,12 @@ export default {
     },
     refresh() {
       this.$store.dispatch("dashboard/reload", this.user);
-    }
+    },
+    changeCommunity(communityId) {
+      this.$store.dispatch("communities/setCurrent", { communityId })
+      this.$store.dispatch("dashboard/loadBalance", { community: {id:communityId} })
+      this.$store.dispatch("dashboard/loadMembers", { user: this.user })
+    },
   },
   i18n: {
     messages: {
@@ -659,6 +688,10 @@ export default {
   &__vehicles {
     .loanable-info-box {
       margin-bottom: 20px;
+    }
+    .btn-link {
+      vertical-align: baseline;
+      padding: 0;
     }
   }
 

@@ -7,7 +7,7 @@
     header-class="p-2 border-bottom-0"
     @hidden="closeDialog"
   >
-    <b-card no-body v-if="loan">
+    <b-card no-body v-if="loan && loan.loanable">
       <div class="loan-modal-box__image__wrapper">
         <div class="loan-modal-box__image">
           <div
