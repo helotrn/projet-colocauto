@@ -355,12 +355,41 @@ class CommunityController extends RestController
         $users = $community->users->map(function ($user) use ($communityId) {
             // compute expenses
             $user->balance = 0;
-            // FIXME use only expenses related to this community
-            $user->balance = $user->expenses->where('type', 'credit')->sum('amount');
-            $user->balance -= $user->expenses->where('type', 'debit')->sum('amount');
+            // use only expenses related to this community
+            $user->balance = $user->expenses()
+                ->where('type', 'credit')
+                ->whereHas("loanable", function ($q) use ($communityId) {
+                    $q->whereHas("community", function ($q) use ($communityId) {
+                        return $q->where('id', $communityId);
+                    });
+                })
+                ->sum('amount');
+
+            $user->balance -= $user->expenses()
+                ->where('type', 'debit')
+                ->whereHas("loanable", function ($q) use ($communityId) {
+                    $q->whereHas("community", function ($q) use ($communityId) {
+                        return $q->where('id', $communityId);
+                    });
+                })
+                ->sum('amount');
+
             // compute refunds
-            $user->balance += $user->debitedRefunds->sum('amount');
-            $user->balance -= $user->creditedRefunds->sum('amount');
+            // use only refunds related to this community
+            $user->balance += $user->debitedRefunds()
+                ->whereHas('creditedUser', function ($q) use ($communityId) {
+                    $q->whereHas("communities", function ($q) use ($communityId) {
+                        return $q->where("community_user.community_id", $communityId);
+                    });
+                })
+                ->sum('amount');
+            $user->balance -= $user->creditedRefunds()
+                ->whereHas('user', function ($q) use ($communityId) {
+                    $q->whereHas("communities", function ($q) use ($communityId) {
+                        return $q->where("community_user.community_id", $communityId);
+                    });
+                })
+                ->sum('amount');
 
             if( $user->owner ){
                 // remove owned loanable costs
