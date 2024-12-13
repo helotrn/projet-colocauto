@@ -51,7 +51,7 @@ services:
             GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
             GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
             GOOGLE_REDIRECT: http://localhost:8000/auth/callback
-            CACHE_DRIVER: database
+            CACHE_DRIVER: ${CACHE_DRIVER:-database}
             OAUTH_PRIVATE_PATH: /var/secret/oauth-private
             OAUTH_PUBLIC_PATH: /var/secret/oauth-public
             QUEUE_CONNECTION: database
@@ -87,7 +87,7 @@ services:
             - postgres-data:/var/lib/postgresql/data
             - ./psql/init:/docker-entrypoint-initdb.d
         ports:
-            - 5432:5432
+            - ${POSTGRES_HOST_PORT:-5432}:5432
         environment:
             POSTGRES_DB: locomotion
             POSTGRES_PASSWORD: locomotion
