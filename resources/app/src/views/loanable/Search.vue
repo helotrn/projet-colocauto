@@ -228,11 +228,6 @@ export default {
       "searched",
       "selectedLoanableTypes",
     ]),
-    currentCommunity() {
-      return this.$store.state.communities.current
-        ? this.$store.state.communities.current
-        : this.user.main_community.id;
-    },
     loanables() {
       return this.$store.state.loanables.data.filter(l => l.community.id == this.currentCommunity);
     },

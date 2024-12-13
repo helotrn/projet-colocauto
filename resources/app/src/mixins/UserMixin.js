@@ -79,6 +79,11 @@ export default {
     user() {
       return this.$store.state.user;
     },
+    currentCommunity() {
+      return this.$store.state.communities.current
+        ? this.$store.state.communities.current
+        : this.user.main_community.id;
+    },
   },
   methods: {
     isAdminOfCommunity(community) {

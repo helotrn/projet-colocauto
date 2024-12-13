@@ -527,11 +527,6 @@ export default {
     loading() {
       return this.$store.state.dashboard.loadRequests > 0;
     },
-    currentCommunity() {
-      return this.$store.state.communities.current
-        ? this.$store.state.communities.current
-        : this.user.main_community.id;
-    },
     startedOrFutureLoans() {
       return this.$store.state.dashboard.loans.started.concat(this.$store.state.dashboard.loans.future).toSorted((a,b) => {
 
