@@ -3,11 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\Expense;
+use App\Models\Loanable;
+use App\Models\User;
 use App\Repositories\ExpenseRepository;
 use App\Http\Requests\Expense\CreateRequest;
 use App\Http\Requests\Expense\UpdateRequest;
 
 use App\Http\Requests\BaseRequest as Request;
+use Illuminate\Validation\ValidationException;
 
 class ExpenseController extends RestController
 {
@@ -64,6 +67,11 @@ class ExpenseController extends RestController
     public function create(CreateRequest $request)
     {
         try {
+            $user = User::findOrFail($request->user_id);
+            $loanable = Loanable::findOrFail($request->loanable_id);
+            if( !$user->communities->pluck('id')->contains($loanable->community->id) ) {
+                throw ValidationException::withMessages(['loanable' => trans("validation.should_belong_to_same_community.expense")]);
+            }
             $item = parent::validateAndCreate($request);
         } catch (ValidationException $e) {
             return $this->respondWithErrors($e->errors(), $e->getMessage());
@@ -83,6 +91,12 @@ class ExpenseController extends RestController
                     // cannot modify locked param
                     $request->merge(['locked' => $old->locked]);
                 }
+            }
+
+            $user = User::findOrFail($request->user_id);
+            $loanable = Loanable::findOrFail($request->loanable_id);
+            if( !$user->communities->pluck('id')->contains($loanable->community->id) ) {
+                throw ValidationException::withMessages(['loanable' => trans("validation.should_belong_to_same_community.expense")]);
             }
             $item = parent::validateAndUpdate($request, $id);
         } catch (ValidationException $e) {

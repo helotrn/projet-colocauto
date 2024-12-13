@@ -217,4 +217,9 @@ return [
         "expense" => "la dépense ne peut pas être modifiée",
         "availability" => "seul·e un·e admin peut modifier la disponibilité d'un véhicule",
     ],
+
+    "should_belong_to_same_community" => [
+        "expense" => "L'utilisateur et le véhicule doivent appartenir à la même communauté.",
+        "refund" => "Les deux personnes doivent appartenir à la même communauté.",
+    ]
 ];

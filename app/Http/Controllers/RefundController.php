@@ -3,11 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Refund;
+use App\Models\User;
 use App\Repositories\RefundRepository;
 use App\Http\Requests\Refund\CreateRequest;
 use App\Http\Requests\Refund\UpdateRequest;
 use App\Http\Requests\BaseRequest as Request;
 use Carbon\Carbon;
+use Illuminate\Validation\ValidationException;
 
 class RefundController extends RestController
 {
@@ -64,6 +66,11 @@ class RefundController extends RestController
     public function create(CreateRequest $request)
     {
         try {
+            $user = User::findOrFail($request->user_id);
+            $creditedUser = User::findOrFail($request->credited_user_id);
+            if( !$user->communities->intersect($creditedUser->communities)->count() ) {
+                throw ValidationException::withMessages(['credited_user' => trans("validation.should_belong_to_same_community.refund")]);
+            }
             $item = parent::validateAndCreate($request);
         } catch (ValidationException $e) {
             return $this->respondWithErrors($e->errors(), $e->getMessage());
@@ -75,6 +82,11 @@ class RefundController extends RestController
     public function update(UpdateRequest $request, $id)
     {
         try {
+            $user = User::findOrFail($request->user_id);
+            $creditedUser = User::findOrFail($request->credited_user_id);
+            if( !$user->communities->intersect($creditedUser->communities)->count() ) {
+                throw ValidationException::withMessages(['credited_user' => trans("validation.should_belong_to_same_community.refund")]);
+            }
             $item = parent::validateAndUpdate($request, $id);
         } catch (ValidationException $e) {
             return $this->respondWithErrors($e->errors(), $e->getMessage());
