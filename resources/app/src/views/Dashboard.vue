@@ -215,6 +215,7 @@
                         :defaultView="defaultView"
                         @view-change="defaultView = $event"
                       ></loans-calendar>
+                      <loanable-calendar-legend />
                     </b-card-text>
                   </b-tab>
                 </b-tabs>
@@ -390,6 +391,7 @@ import UserCard from "@/components/User/UserCard.vue";
 import InfoLinkBlock from "@/components/Dashboard/InfoLinkBlock.vue";
 import UsersBalance from "@/components/Balance/UsersBalance.vue";
 import LoansCalendar from "@/components/Loanable/LoansCalendar.vue";
+import LoanableCalendarLegend from "@/components/Loanable/CalendarLegend.vue";
 
 import MagnifyingGlass from "@/assets/svg/magnifying-glass.svg";
 import SalutCoeur from "@/assets/svg/salut-coeur.svg";
@@ -421,6 +423,7 @@ export default {
     InfoLinkBlock,
     UsersBalance,
     LoansCalendar,
+    LoanableCalendarLegend,
   },
   beforeMount() {
     if (!this.isLoggedIn) {
@@ -743,6 +746,7 @@ export default {
     .tab-pane.card-body {
       padding-left: 0;
       padding-right: 0;
+      padding-top: 0;
     }
 
     .nav-pills .nav-link {

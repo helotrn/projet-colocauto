@@ -1,11 +1,14 @@
 <template>
+  <div class="loanable-calendar-legend__wrap">
+  <strong class="loanable-calendar-legend__title">
+    Légende:
+  </strong>
   <ul class="loanable-calendar-legend">
     <li class="loanable-calendar-legend__item">
       <loanable-calendar-month-cell-content
         class="loanable-calendar-legend__icon"
         availability="available"
-        current
-        >XX</loanable-calendar-month-cell-content
+        ></loanable-calendar-month-cell-content
       >
       Disponible
     </li>
@@ -13,21 +16,20 @@
       <loanable-calendar-month-cell-content
         class="loanable-calendar-legend__icon"
         availability="partially-available"
-        current
-        >XX</loanable-calendar-month-cell-content
+        ></loanable-calendar-month-cell-content
       >
-      Disponibilité limitée
+      Partiellement disponible
     </li>
     <li class="loanable-calendar-legend__item">
       <loanable-calendar-month-cell-content
         class="loanable-calendar-legend__icon"
         availability="unavailable"
-        current
-        >XX</loanable-calendar-month-cell-content
+        ></loanable-calendar-month-cell-content
       >
       Indisponible
     </li>
   </ul>
+  </div>
 </template>
 
 <script>
@@ -42,18 +44,27 @@ export default {
 </script>
 
 <style lang="scss">
+
 .loanable-calendar-legend {
   padding: 0;
   list-style: none;
   display: flex;
   justify-content: flex-start;
 
-  .loanable-calendar-legend__item {
+  &__title {
+    margin: 0 0.5rem;
+  }
+  &__wrap {
+    background: white;
+    padding: 10px 16px 1px;
+  }
+  &__item {
     display: flex;
     align-items: center;
+    margin-right: 1rem;
   }
 
-  .loanable-calendar-legend__icon {
+  &__icon {
     width: 3rem;
     height: 3rem;
   }

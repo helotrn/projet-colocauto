@@ -99,7 +99,7 @@ export default {
   &.loanable-calendar-month-cell-content--partially-available {
     color: $content-alert-warning;
 
-    svg path {
+    svg rect {
       fill: $background-alert-warning;
     }
   }
@@ -108,9 +108,6 @@ export default {
 
     svg rect {
       fill: $background-alert-negative;
-    }
-    .loanable-calendar-month-cell-content__content {
-      text-decoration: line-through;
     }
   }
 

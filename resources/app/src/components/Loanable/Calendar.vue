@@ -1,5 +1,5 @@
 <template>
-  <div :style="{height: variant == 'small' ? (89 + 12*48 + 24) + 'px' : 'auto', position: 'relative' }">
+  <div :style="{position: 'relative' }">
   <b-button
     class="top-corner"
     variant="primary"
@@ -586,13 +586,27 @@ export default {
 .loanable-calendar {
   font-variant-numeric: tabular-nums;
 
+  &.vuecal {
+    box-shadow: none;
+  }
+  .vuecal__header {
+    background: white;
+  }
+  .vuecal__menu {
+    padding: 16px 0;
+    background: white;
+  }
+
   &.loanable-calendar--small {
-    font-size: 13px;
+    font-size: 0.82rem;
+    max-height: 35.68rem;
     .vuecal__title-bar,
     .vuecal__weekdays-headings {
       background-color: transparent;
       // Needs to be repeated for title-bar to overload .vuecal--xsmall .vuecal__title-bar
-      font-size: 13px;
+      font-size: 1rem;
+      padding-top: 10px;
+      padding-bottom: 10px;
     }
     .vuecal__heading {
       height: inherit;
@@ -648,12 +662,25 @@ export default {
   }
 
   &.loanable-calendar--small .vuecal__cells.month-view .vuecal__cell {
-    height: 2rem;
+    height: 3.5rem;
   }
 
   .vuecal__cell--out-of-scope {
-    // Disabled buttons have opacity: 0.65, but it does not feel clear enough here, hence 0.4.
-    opacity: 0.4;
+    .loanable-calendar-month-cell-content {
+      &__content {
+        opacity: 0.4;
+        color: black;
+        text-decoration: line-through;
+      }
+      &__background {
+        display: none;
+      }
+    }
+  }
+
+  .loanable-calendar-month-cell-content {
+    font-size: 1rem;
+    background: white;
   }
 
   .loanable-calendar__cell-date {
@@ -813,6 +840,9 @@ export default {
         display: none;
       }
     }
+  }
+  .loanable-calendar__event--loan_in_process + .loanable-calendar__event--unavailability {
+     background-color: transparent;
   }
   
 }
