@@ -139,9 +139,11 @@
           <b-card-text class="bg-white">
             <loans-calendar
               :loanable="loanable"
+              variant="small"
               :defaultView="defaultView"
               @view-change="defaultView = $event"
             ></loans-calendar>
+            <loanable-calendar-legend />
           </b-card-text>
         </b-tab>
       </b-tabs>
@@ -168,6 +170,7 @@ import UserMixin from "@/mixins/UserMixin";
 import LoanableList from "@/components/Loanable/List.vue";
 import LoanSearchForm from "@/components/Loan/SearchForm.vue";
 import LoansCalendar from "@/components/Loanable/LoansCalendar.vue";
+import LoanableCalendarLegend from "@/components/Loanable/CalendarLegend.vue";
 import UserAvatar from "@/components/User/Avatar.vue";
 
 import ListIcon from "@/assets/svg/list.svg";
@@ -183,6 +186,7 @@ export default {
     LoanableList,
     LoanSearchForm,
     LoansCalendar,
+    LoanableCalendarLegend,
     UserAvatar,
     "svg-list": ListIcon,
     "svg-map": MapIcon,
