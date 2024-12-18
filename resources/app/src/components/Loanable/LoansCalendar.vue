@@ -6,6 +6,7 @@
     @ready="getAvailability"
     @view-change="getAvailability"
     :loanable="loanable"
+    :loading="loading"
   ></loanable-calendar>
 </template>
 
@@ -21,6 +22,7 @@ export default {
   data() {
     return {
       availability: [],
+      loading: true,
     }
   },
   props: {
@@ -58,6 +60,7 @@ export default {
       }
 
       try {
+        this.loading = true;
         this.availability = await Promise.all([Vue.axios
           .get(`/loanables/${this.loanable.id}/availability`, {
             params: {
@@ -79,6 +82,7 @@ export default {
       } catch (e) {
         throw e;
       }
+      this.loading = false;
       this.$emit('view-change', view);
     },
   },

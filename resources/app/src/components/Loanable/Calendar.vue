@@ -87,6 +87,7 @@
       </div>
     </template>
   </vue-cal>
+  <layout-loading class="section-loading-indicator" v-if="loading" />
 
   <b-modal v-model="showDialog"
     :title="loanable.name"
@@ -96,7 +97,7 @@
     @hidden="closeDialog"
   >
     <b-card no-body v-if="selectedEvent.data">
-      <layout-loading class="section-loading-indicator" v-if="loading" />
+      <layout-loading class="section-loading-indicator" v-if="loanLoading" />
       <b-container v-else>
         <div class="d-flex flex-column align-items-center">
           <user-avatar :user="selectedEvent.data.borrower.user" variant="cut-out" />
@@ -285,12 +286,16 @@ export default {
       type: Object,
       required: false,
     },
+    loading: {
+      type: Boolean,
+      default: true,
+    },
   },
   data: () => ({
     selectedEvent: {},
     newEvent: {},
     showDialog: false,
-    loading: false,
+    loanLoading: false,
     cancelNewEvent: undefined,
     extendLoan: {},
   }),
@@ -408,11 +413,11 @@ export default {
 
       this.getLoanDetails(event).then(data => {
         this.selectedEvent.data = { ...data, ...this.selectedEvent.data };
-        this.loading = false;
+        this.loanLoading = false;
         this.item = this.selectedEvent.data;
       });
 
-      this.loading = true;
+      this.loanLoading = true;
       this.selectedEvent = event
       this.showDialog = true
 
@@ -429,12 +434,12 @@ export default {
 
       // let the popup display the warning message in case of overlaping
 
-      this.loading = true;
+      this.loanLoading = true;
       this.showDialog = true;
       try {
         await this.$store.dispatch("loans/loadEmpty");
       } finally {
-        this.loading = false;
+        this.loanLoading = false;
       }
       await this.testLoan(event.start, event.end, this.loanable.id);
 
@@ -522,10 +527,10 @@ export default {
         available: event.end - originalEvent.end > 15*60*1000 ? this.$store.state.loans.item.loanable.available : true,
       };
       // get more information about the loan
-      this.loading = true;
+      this.loanLoading = true;
       this.getLoanDetails(event).then(data => {
         this.extendLoan.data = { ...data, ...this.extendLoan.data };
-        this.loading = false;
+        this.loanLoading = false;
       });
       this.showDialog = true
     },
@@ -865,9 +870,20 @@ export default {
   .loanable-calendar__event--loan_in_process + .loanable-calendar__event--unavailability {
      background-color: transparent;
   }
-  
 }
 #loanable-calendar-modal .modal-dialog .card.shadow {
   box-shadow: none !important;
+}
+</style>
+<style scoped>
+.layout-loading {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  align-items: center;
+}
+.layout-loading >>> img {
+  max-height: 200px;
 }
 </style>
