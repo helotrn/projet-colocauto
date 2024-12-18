@@ -127,6 +127,10 @@
           </b-row>
         </div>
 
+        <div class="form__section">
+          <loanable-availability-rules :changed="changed" :loanable="loanable" :loading="loading" />
+        </div>
+
         <div class="form__buttons" v-if="!hideButtons">
           <b-button-group v-if="showReset">
             <b-button

@@ -92,7 +92,7 @@
       </b-col>
     </b-row>
 
-    <b-row v-if="user.role == 'admin'" class="availability-rules__description">
+    <b-row v-if="user.role == 'admin' || loanable.owner.user.id == user.id" class="availability-rules__description">
       <b-col>
         <div class="form-inline availability-rules__description__default">
           <b-form-group label="Par défaut:" label-for="availability_mode" inline>
