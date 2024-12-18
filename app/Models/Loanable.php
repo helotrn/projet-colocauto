@@ -296,7 +296,13 @@ class Loanable extends BaseModel
         $returnAt = $departureAt->copy()->add($durationInMinutes, "minutes");
 
         if (!$this->isLoanableScheduleOpen($departureAt, $returnAt)) {
-            return false;
+            $request = request();
+            if( $request && $request->user() ) {
+              // loanable owner can create a loan even if the schedule is closed
+              return $request->user()->id == $this->owner->user->id;
+            } else {
+              return false;
+            }
         }
 
         $query = Loan::where("loanable_id", $this->id);

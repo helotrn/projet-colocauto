@@ -80,7 +80,7 @@
         </template>
         <div v-else class="vuecal__event-title" v-html="event.title"></div>
 
-        <div class="vuecal__event_time">
+        <div class="vuecal__event_time" v-if="event.type=='loan'">
           {{ event.start.formatTime("HH:mm") }}
           <span>&nbsp;- {{ event.end.formatTime("HH:mm") }}</span>
         </div>
@@ -318,6 +318,8 @@ export default {
       if (this.variant) {
         classList["loanable-calendar--" + this.variant] = true;
       }
+      // if current user is the loanable owner
+      classList["loanable-owner"] = this.user.id == this.loanable.owner?.user?.id
       return classList;
     },
     vueCalEvents: function () {
@@ -330,17 +332,18 @@ export default {
       let vueCalEvents = this.events.map((e) => {
         e = { ...baseEvent, ...e };
         if(!Array.isArray(e.class)) e.class = [e.class];
-        e.class.push("loanable-calendar__event");
 
         if (e.type === "availability") {
           // Availability events go in the background.
           e.background = true;
+          e.resizable = false;
           if (e.data.available) {
             e.class.push("loanable-calendar__event--availability");
           } else {
             e.class.push("loanable-calendar__event--unavailability");
           }
         } else if (e.type === "loan") {
+          e.class.push("loanable-calendar__event");
           // Loans don't go in the background.
           e.background = false;
 
@@ -787,8 +790,26 @@ export default {
         margin: 0 0.4em 1em;
       }
     }
+  .owner-exception .vuecal__event-wrapper {
+    background-color: transparent;
+  }
+  &.loanable-owner {
+    /* only if user=owner */
+    .owner-exception {
+      z-index: -1;
+      .vuecal__event-wrapper {
+        display: none;
+      }
+    }
+    .vuecal__cell--has-events {
+      z-index: 2;
+    }
+  }
   .vuecal__event {
     background-color: transparent;
+    &.owner-exception.loanable-calendar__event--unavailability {
+      background-color: #FFE6E4;
+    }
     &.color-persian-green .vuecal__event-wrapper {
       color: white;
       background-color: #00ada8;

@@ -192,6 +192,7 @@ class LoanableController extends RestController
                         "available" => $request->responseMode == "available",
                     ],
                     "type" => "availability",
+                    "class" => array_key_exists('class', $availabilityInterval) ? $availabilityInterval['class'] : '',
                 ];
             }
         }

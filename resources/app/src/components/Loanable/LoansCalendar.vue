@@ -40,7 +40,7 @@ export default {
     },
   },
   methods: {
-    getAvailability({ view, startDate, endDate, firstCellDate, lastCellDate, week }) {
+    async getAvailability({ view, startDate, endDate, firstCellDate, lastCellDate, week }) {
       const { CancelToken } = Vue.axios;
       const cancelToken = CancelToken.source();
 
@@ -58,7 +58,7 @@ export default {
       }
 
       try {
-        Vue.axios
+        this.availability = await Promise.all([Vue.axios
           .get(`/loanables/${this.loanable.id}/availability`, {
             params: {
               start: start.format("YYYY-MM-DD HH:mm:ss"),
@@ -66,9 +66,16 @@ export default {
               responseMode: "loans",
             },
             cancelToken: cancelToken.token,
-          }).then(response => {
-            this.availability = response.data
-          });
+          }),
+          Vue.axios
+          .get(`/loanables/${this.loanable.id}/availability`, {
+            params: {
+              start: start.format("YYYY-MM-DD HH:mm:ss"),
+              end: end.format("YYYY-MM-DD HH:mm:ss"),
+              responseMode: "unavailable",
+            },
+            cancelToken: cancelToken.token,
+          })]).then(responses => [...responses[0].data, ...responses[1].data])
       } catch (e) {
         throw e;
       }
