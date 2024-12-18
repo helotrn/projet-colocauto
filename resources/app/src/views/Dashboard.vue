@@ -481,7 +481,8 @@ export default {
     },
     loanables() {
       if(!this.$store.state.dashboard.loanables) return [];
-      else return this.$store.state.dashboard.loanables.filter(l => l.community.id == this.currentCommunity);
+      else return this.$store.state.dashboard.loanables
+        .filter(l => l.community.id == this.currentCommunity);
     },
     otherCommunitiesLoanables() {
       if(!this.$store.state.dashboard.loanables) return [];
@@ -507,7 +508,24 @@ export default {
       return this.$store.state.dashboard.hasMoreMembers;
     },
     carsList(){
-      return this.$store.state.dashboard.carsList.filter(car => car.community.id == this.currentCommunity);
+      return this.$store.state.dashboard.carsList
+        .filter(car => car.community.id == this.currentCommunity)
+        .sort((c1,c2) => {
+          // cars owned by current user should appear first
+          if(c1.owner?.user.id == this.user.id) {
+            if(c2.owner?.user.id == this.user.id) {
+              return c1.id - c2.id
+            } else {
+              return -1
+            }
+          } else {
+            if(c2.owner?.user.id == this.user.id) {
+              return 1
+            } else {
+              return c1.id - c2.id
+            }
+          }
+        });
     },
     loansLoaded() {
       return this.$store.state.dashboard.loansLoaded;

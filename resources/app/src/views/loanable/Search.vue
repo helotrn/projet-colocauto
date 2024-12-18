@@ -229,7 +229,24 @@ export default {
       "selectedLoanableTypes",
     ]),
     loanables() {
-      return this.$store.state.loanables.data.filter(l => l.community.id == this.currentCommunity);
+      return this.$store.state.loanables.data
+        .filter(l => l.community.id == this.currentCommunity)
+        .sort((c1,c2) => {
+          // cars owned by current user should appear first
+          if(c1.owner?.user.id == this.user.id) {
+            if(c2.owner?.user.id == this.user.id) {
+              return c1.id - c2.id
+            } else {
+              return -1
+            }
+          } else {
+            if(c2.owner?.user.id == this.user.id) {
+              return 1
+            } else {
+              return c1.id - c2.id
+            }
+          }
+        });
     },
     loading() {
       return this.$store.state.loanables.loading;
