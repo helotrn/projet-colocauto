@@ -64,7 +64,7 @@ export default {
   },
   computed: {
     loanables() {
-      return this.data.filter(l => l.community.id == this.currentCommunity)
+      return this.data.filter(l => l.community?.id == this.currentCommunity)
     }
   },
   i18n: {

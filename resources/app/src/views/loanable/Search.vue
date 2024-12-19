@@ -234,7 +234,7 @@ export default {
     ]),
     loanables() {
       return this.$store.state.loanables.data
-        .filter(l => l.community.id == this.currentCommunity)
+        .filter(l => l.community?.id == this.currentCommunity)
         .sort((c1,c2) => {
           // cars owned by current user should appear first
           if(c1.owner?.user.id == this.user.id) {

@@ -482,14 +482,14 @@ export default {
     loanables() {
       if(!this.$store.state.dashboard.loanables) return [];
       else return this.$store.state.dashboard.loanables
-        .filter(l => l.community.id == this.currentCommunity);
+        .filter(l => l.community?.id == this.currentCommunity);
     },
     otherCommunitiesLoanables() {
       if(!this.$store.state.dashboard.loanables) return [];
       else return this.$store.state.dashboard.loanables
-        .filter(l => l.community.id != this.currentCommunity)
+        .filter(l => l.community?.id != this.currentCommunity)
         .reduce((acc, current) => {
-          if(!acc.find(c => c.id == current.community.id)){
+          if(current.community && !acc.find(c => c.id == current.community.id)){
             acc.push(current.community)
           }
           return acc;
@@ -509,7 +509,7 @@ export default {
     },
     carsList(){
       return this.$store.state.dashboard.carsList
-        .filter(car => car.community.id == this.currentCommunity)
+        .filter(car => car.community?.id == this.currentCommunity)
         .sort((c1,c2) => {
           // cars owned by current user should appear first
           if(c1.owner?.user.id == this.user.id) {
