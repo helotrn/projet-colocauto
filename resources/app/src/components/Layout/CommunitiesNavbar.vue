@@ -35,7 +35,6 @@ export default {
   },
   computed: {
     isCommunityForcedByRoute() {
-      console.log('route', this.$route.name)
       return ['single-loan', 'single-loanable', 'single-expense', 'single-refund'].includes(this.$route.name)
     },
   },
