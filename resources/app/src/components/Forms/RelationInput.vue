@@ -1,6 +1,7 @@
 <template>
   <v-select
     class="forms-relation-input"
+    :class="{'is-invalid': state === false}"
     label="text"
     :options="data"
     :placeholder="placeholder"
@@ -11,6 +12,8 @@
     :value="convertedObjectValue"
     @input="emitInput"
     @search:focus="loadAllData"
+    :state="state"
+    :name="name"
   >
     <template #no-options>
       <span v-if="!q || q.length < 3">Tapez quelque chose pour commencer à chercher...</span>
@@ -221,6 +224,9 @@ export default {
     .vs__clear {
       background-color: #e9ecef;
     }
+  }
+  &.is-invalid .vs__dropdown-toggle {
+    border-color: $danger;
   }
 }
 </style>
