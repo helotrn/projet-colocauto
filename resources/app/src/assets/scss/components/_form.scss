@@ -70,8 +70,11 @@
     .input-and-button .bv-no-focus-ring {
         display: flex;
         flex-wrap: wrap;
-        button {
+        button, .btn {
             margin-left: 1em;
+        }
+        .btn {
+            line-height: 1.8em;
         }
         @include media-breakpoint-down(md) {
             flex-direction: column;
@@ -83,5 +86,9 @@
         :first-child {
             flex-grow: 1;
         }
+    }
+
+    .long-description small.form-text.text-muted {
+        min-width: 100%;
     }
 }

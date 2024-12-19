@@ -62,13 +62,13 @@ class Expense extends BaseModel
         ],
     ];
 
-    protected $fillable = ["name", "amount", "type", "executed_at", "loanable_id", "user_id", "expense_tag_id", "locked"];
+    protected $fillable = ["name", "amount", "type", "executed_at", "loanable_id", "user_id", "expense_tag_id", "locked", "loan_id"];
     protected $attributes = [
         "type" => "credit",
         "locked" => "false",
     ];
 
-    public $items = ["user", "loanable", "tag"];
+    public $items = ["user", "loanable", "tag", "loan"];
 
     public $collections = ["changes"];
 
@@ -96,6 +96,11 @@ class Expense extends BaseModel
     public function changes()
     {
         return $this->hasMany(ExpenseChange::class);
+    }
+    
+    public function loan()
+    {
+        return $this->belongsTo(Loan::class);
     }
 
     public static function boot()

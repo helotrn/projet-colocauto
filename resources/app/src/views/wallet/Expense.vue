@@ -43,7 +43,45 @@
     <b-row>
       <b-col>
         <b-form class="form" @submit.prevent="submit">
-          <forms-builder :definition="form" v-model="item" entity="expenses" :disabled="item.locked || !user.borrower.validated" />
+          <forms-builder :definition="form" v-model="item" entity="expenses" :disabled="item.locked || !user.borrower.validated">
+            <template v-slot:loan_id="{ def, item, property }">
+              <validation-provider
+                class="forms-validated-input"
+                mode="eager"
+                name="loan_id"
+                :rules="def.rules"
+                v-slot="validationContext"
+              >
+                <b-form-group
+                  :label="$t('expenses.fields.loan_id') | capitalize"
+                  label-for="loan_id"
+                  :state="getValidationState(validationContext)"
+                  v-b-tooltip.hover
+                  class="input-and-button"
+                >
+                  <forms-relation-input
+                    id="loan_id"
+                    name="loan_id"
+                    :query="form.loan_id.query"
+                    :placeholder="$t('expenses.fields.loan_id') | capitalize"
+                    :disabled="form.loan_id.disabled"
+                    :state="getValidationState(validationContext)"
+                    :object-value="item.loan"
+                    :value="item.loan_id"
+                    @input="setExpenseLoan"
+                  />
+                  <b-button
+                    size="sm"
+                    variant="success"
+                    :to="`/loans/${item.loan.id}`"
+                    :disabled="!item.loan"
+                  >
+                    Voir l'emprunt
+                  </b-button>
+                </b-form-group>
+              </validation-provider>
+            </template>
+          </forms-builder>
 
           <div class="form__buttons">
             <b-button-group>
@@ -62,6 +100,7 @@
 
 <script>
 import FormsBuilder from "@/components/Forms/Builder.vue";
+import FormsRelationInput from "@/components/Forms/RelationInput.vue";
 
 import Authenticated from "@/mixins/Authenticated";
 import DataRouteGuards from "@/mixins/DataRouteGuards";
@@ -79,8 +118,30 @@ export default {
   mixins: [Authenticated, DataRouteGuards, FormMixin, UserMixin],
   components: {
     FormsBuilder,
+    FormsRelationInput,
     OpenIndicator,
     ArrowRight,
+  },
+  methods: {
+    getValidationState({ dirty, validated, valid = null }) {
+      if (this.rulesOrNothing === "") {
+        return null;
+      }
+
+      if (dirty && !validated) {
+        return null;
+      }
+
+      return validated ? valid : null;
+    },
+    setExpenseLoan(selection) {
+      this.item.loan = selection
+      if (!selection) {
+        this.item.loan_id = null;
+      } else {
+        this.item.loan_id = selection.id;
+      }
+    },
   },
   computed: {
     fullTitle() {

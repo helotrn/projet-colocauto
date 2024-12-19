@@ -42,7 +42,7 @@ export default [
           auth: true,
           slug: "expenses",
           params: {
-            fields: "id,name,amount,executed_at,user_id,loanable_id,expense_tag_id,changes,changes.user,changes.description,changes.created_at,locked,loanable.name,loanable.community.id"
+            fields: "id,name,amount,executed_at,user_id,loanable_id,expense_tag_id,changes,changes.user,changes.description,changes.created_at,locked,loanable.name,loanable.community.id,loan.id,loan.name,loan_id"
           },
           title: "wallet.titles.expense",
         },

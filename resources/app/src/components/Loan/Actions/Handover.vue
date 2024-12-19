@@ -88,6 +88,10 @@
                     v-model="action.mileage_end"
                   />
                 </b-col>
+                <b-col lg="6" v-if="loanExpense">
+                  <div style="margin-bottom: 0.5rem">Coût de l'emprunt: {{ loanExpense.amount | currency }}</div>
+                  <b-btn :to="`/wallet/expenses/${loanExpense.id}`">Détails de la dépense</b-btn>
+                </b-col>
               </b-row>
 
               <hr />
@@ -106,6 +110,10 @@
                     v-model="action.purchases_amount"
                   />
                   <p>Les autres dépenses éventuelles pourront être renseignées directement depuis le tableau de bord.</p>
+                </b-col>
+                <b-col lg="6" v-if="fuelExpense">
+                  <div style="margin-bottom: 0.5rem">Dépense de carburant: {{ fuelExpense.amount | currency }}</div>
+                  <b-btn :to="`/wallet/expenses/${fuelExpense.id}`">Détails de la dépense</b-btn>
                 </b-col>
               </b-row>
 
@@ -359,6 +367,12 @@ export default {
     },
     startsInTheFuture() {
       return this.$second.isBefore(this.item.departure_at, "minute");
+    },
+    loanExpense() {
+      return this.item.expenses.find(e => e.tag?.slug == 'loan')
+    },
+    fuelExpense() {
+      return this.item.expenses.find(e => e.tag?.slug == 'fuel')
     },
   },
   watch: {

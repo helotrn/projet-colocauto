@@ -396,6 +396,7 @@ SQL;
         "total_estimated_cost",
         "is_free",
         "needs_validation",
+        "name",
     ];
 
     public $items = [
@@ -412,7 +413,7 @@ SQL;
         "trailer",
     ];
 
-    public $collections = ["actions", "extensions", "incidents"];
+    public $collections = ["actions", "extensions", "incidents", "expenses"];
 
     public function actions()
     {
@@ -484,6 +485,11 @@ SQL;
     public function trailer()
     {
         return $this->belongsTo(Trailer::class, "loanable_id")->withTrashed();
+    }
+    
+    public function expenses()
+    {
+        return $this->hasMany(Expense::class);
     }
 
     public function getActualDurationInMinutesAttribute()
@@ -956,6 +962,15 @@ SQL;
         return Carbon::parse($this->actual_return_at)->addHours(48);
     }
 
+    public function getNameAttribute(): string
+    {
+        $name = $this->loanable->name." emprunté par ".$this->borrower->user->full_name." le ".Carbon::parse($this->departure_at)->isoFormat('LLLL');
+        if( $this->reason ){
+            $name .= " (".$this->reason.")";
+        }
+        return $name;
+    }
+
     /**
      *  TODO(#1113) Move this logic to policy
      * @param User|null $user
@@ -1012,6 +1027,7 @@ SQL;
         $loan_expense->amount = $this->final_price;
         $loan_expense->user_id = $this->borrower->user_id;
         $loan_expense->loanable_id = $this->loanable->id;
+        $loan_expense->loan_id = $this->id;
         $loan_expense->type = 'debit'; // user will pay for this loan
         $loan_expense->executed_at = $date;
 
@@ -1026,6 +1042,7 @@ SQL;
             $fuel_expense->amount = floatval($this->final_purchases_amount);
             $fuel_expense->user_id = $this->borrower->user_id;
             $fuel_expense->loanable_id = $this->loanable->id;
+            $fuel_expense->loan_id = $this->id;
             $fuel_expense->type = 'credit'; // user has already payed for this fuel
             $fuel_expense->executed_at = $date;
 

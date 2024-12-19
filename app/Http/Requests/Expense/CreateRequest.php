@@ -5,6 +5,7 @@ namespace App\Http\Requests\Expense;
 use App\Http\Requests\BaseRequest;
 use App\Models\Loanable;
 use App\Models\User;
+use App\Models\Loan;
 
 class CreateRequest extends BaseRequest
 {
@@ -28,7 +29,10 @@ class CreateRequest extends BaseRequest
             "user_id" => [
                 "numeric",
                 "required",
-            ]
+            ],
+            "loan_id" => [
+                "numeric",
+            ],
         ];
 
         if( !$this->user()->isAdmin() ) {
@@ -48,6 +52,14 @@ class CreateRequest extends BaseRequest
                     ->toArray()
             );
             $rules["loanable_id"][] = "in:$accessibleLoanableIds";
+
+            $accessibleLoanIds = implode(
+                ",",
+                Loan::accessibleBy($user)
+                    ->pluck("id")
+                    ->toArray()
+            );
+            $rules["loan_id"][] = "in:$accessibleLoanIds";
         }
 
         return $rules;

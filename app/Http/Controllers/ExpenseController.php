@@ -171,6 +171,17 @@ class ExpenseController extends RestController
                         ],
                     ],
                 ],
+                "loan_id" => [
+                    "type" => "relation",
+                    "query" => [
+                        "slug" => "loans",
+                        "value" => "id",
+                        "text" => "name",
+                        "params" => [
+                            "fields" => "id,name,departure_at,reason",
+                        ],
+                    ],
+                ],
                 "locked" => [
                     "type" => "checkbox",
                 ],

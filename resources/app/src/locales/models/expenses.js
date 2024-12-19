@@ -13,6 +13,7 @@ export default {
       },
       loanable_id: "Pour le véhicule",
       loanable: {name: "Pour le véhicule"},
+      loan_id: "Correspond à l'emprunt",
       expense_tag_id: "Type de dépense",
       tag: {name: "Type de dépense", id: "Type de dépense"},
       type: 'Débit/Crédit',

@@ -37,13 +37,14 @@
                       :label="$t('loanables.fields.community_id') | capitalize"
                       label-for="community_id"
                       :description="$t('loanables.descriptions.community_id')"
+                      :invalid-feedback="getInvalidFeedback(validationContext)"
+                      :state="getValidationState(validationContext)"
                       v-b-tooltip.hover
-                      class="input-and-button"
+                      class="input-and-button long-description"
                     >
                       <forms-relation-input
                         id="community_id"
                         name="community_id"
-                        style="min-width: 80%"
                         :query="form.general.community_id.query"
                         :placeholder="$t('loanables.fields.community_id') | capitalize"
                         :disabled="form.general.community_id.disabled"
@@ -60,17 +61,7 @@
                       >
                         Voir la communauté
                       </b-button>
-                      <b-form-invalid-feedback :state="getValidationState(validationContext)">
-                        <span v-if="validationContext && validationContext.errors && validationContext.errors[0] == 'Le champ community_id est obligatoire'">
-                          La communauté est obligatoire
-                        </span>
-                        <span v-else>
-                          {{ validationContext.errors[0] }}
-                        </span>
-                      </b-form-invalid-feedback>
                     </b-form-group>
-                    
-                      
                   </validation-provider>
                 </template>
 
@@ -350,6 +341,11 @@ export default {
 
       return validated ? valid : null;
     },
+    getInvalidFeedback({errors}){
+      if( errors ) {
+        return errors.map(e => e.replace('community_id', this.$t('loanables.fields.community_id')))
+      }
+    }
   },
   i18n: {
     messages: {

@@ -7,6 +7,7 @@ use App\Models\ExpenseChange;
 use App\Models\Expense;
 use App\Models\Loanable;
 use App\Models\User;
+use App\Models\Loan;
 
 class ExpensesObserver
 {
@@ -41,6 +42,15 @@ class ExpensesObserver
                 $users = User::all();
                 if($expense->changeDescription) $expense->changeDescription .= ", ";
                 $expense->changeDescription .= $users->find($expense->getOriginal("user_id"))->full_name . " => " . $users->find($expense->getChanges()["user_id"])->full_name;
+              }
+              if( array_key_exists("loan_id", $changes)
+                && $changes["loan_id"] != $expense->getOriginal("loan_id")
+              ) {
+                $loans = Loan::all();
+                if($expense->changeDescription) $expense->changeDescription .= ", ";
+                $originalLoan = $loans->find($expense->getOriginal("loan_id"));
+                $newLoan = $loans->find($expense->getChanges()["loan_id"]);
+                $expense->changeDescription .= ($originalLoan ? $originalLoan->name : '') . " => " . ($newLoan ? $newLoan->name : '');
               }
             }
         }
