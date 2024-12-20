@@ -18,6 +18,7 @@
     :value="dateValue"
     @selected="emitInput($event)"
     ref="datePicker"
+    :monday-first="true"
   />
 </template>
 
