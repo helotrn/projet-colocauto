@@ -28,7 +28,6 @@
           :selected-date="selectedMonth"
           hide-view-selector
           :time="false"
-          start-week-on-sunday
           default-view="month"
           :disable-views="['years', 'year', 'week', 'day']"
         >
@@ -54,7 +53,6 @@
           :selected-date="followingMonth"
           hide-view-selector
           :time="false"
-          start-week-on-sunday
           default-view="month"
           :disable-views="['years', 'year', 'week', 'day']"
         >
