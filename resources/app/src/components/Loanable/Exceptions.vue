@@ -173,7 +173,38 @@ export default {
       this.$emit("input", newExceptions);
     },
     emitPeriodChange(target, event) {
-      this.emitChange(target, "period", event.target.value);
+      this.emitChange(target, "period", this.formatHourRange(event.target.value));
+    },
+    formatHourRange(range) {
+      // hours should be separated by a - in the range
+      if( !range.match(/.*-.*/) ) range = '00:00-'+range
+      let times = range.split('-')
+
+      // time should be separated by a :
+      if( !times[0].match(/.*:.*/) ) times[0] = times[0]+':00'
+      if( !times[1].match(/.*:.*/) ) times[1] = times[1]+':00'
+
+      // format hours and minutes
+      let [hour0, min0] = times[0].split(':')
+      let [hour1, min1] = times[1].split(':')
+      hour0 = Math.min(hour0,23)
+      hour1 = Math.min(hour1,23)
+      min0 = Math.min(min0,59)
+      min1 = Math.min(min1,59)
+
+      if( hour1*60 + min1 < hour0*60 + min0 ) {
+        let hour2 = hour1
+        let min2 = min1
+        hour1 = hour0
+        min1 = min0
+        hour0 = hour2
+        min0 = min2
+      }
+      hour0 = hour0.toString().padStart(2,'0')
+      hour1 = hour1.toString().padStart(2,'0')
+      min0 = min0.toString().padStart(2,'0')
+      min1 = min1.toString().padStart(2,'0')
+      return `${hour0}:${min0}-${hour1}:${min1}`
     },
     firstSelectedDate({ dates }) {
       return dates.length > 0 ? dates[0] : new Date();
