@@ -99,6 +99,18 @@ class ExpenseController extends RestController
                 throw ValidationException::withMessages(['loanable' => trans("validation.should_belong_to_same_community.expense")]);
             }
             $item = parent::validateAndUpdate($request, $id);
+
+            // update the attached loan
+            if( $item->loan_id) {
+                if( $item->type == 'credit' ) {
+                    $item->loan->final_purchases_amount = $item->amount;
+                    $item->loan->handover->purchases_amount = $item->amount;
+                    $item->loan->handover->save();
+                } else {
+                    $item->loan->final_price = $item->amount;
+                }
+                $item->loan->save();
+            }
         } catch (ValidationException $e) {
             return $this->respondWithErrors($e->errors(), $e->getMessage());
         }
