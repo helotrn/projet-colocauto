@@ -4,19 +4,18 @@ namespace App\Http\Requests\Refund;
 
 use App\Http\Requests\BaseRequest;
 use App\Models\User;
+use App\Models\Refund;
 
 class UpdateRequest extends BaseRequest
 {
     public function authorize()
     {
         return $this->user()->isAdmin() ||
-            (User::accessibleBy($this->user())->find($this->route("user_id"))
-            && User::accessibleBy($this->user())->find($this->route("credited_user_id")));
+            Refund::accessibleBy($this->user())->find($this->route('id'));
     }
 
     public function rules()
     {
-        // TODO change rules depending on the user
         $rules = [
             "amount" => [
                 "numeric",

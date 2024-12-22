@@ -6,16 +6,14 @@ use App\Http\Requests\BaseRequest;
 use App\Models\Loanable;
 use App\Models\User;
 use App\Models\Loan;
+use App\Models\Expense;
 
 class UpdateRequest extends BaseRequest
 {
     public function authorize()
     {
         return $this->user()->isAdmin() ||
-            ($this->user()->isCommunityAdmin()
-                && Loanable::accessibleBy($this->user())->find($this->route("loanable_id"))
-                && User::accessibleBy($this->user())->find($this->route("user_id"))
-            );
+            Expense::accessibleBy($this->user())->find($this->route('id'));
     }
 
     public function rules()
