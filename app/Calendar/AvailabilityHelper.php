@@ -72,6 +72,11 @@ class AvailabilityHelper
             $periodInterval = [[0, 0, 0], [24, 0, 0]];
         }
 
+        // 24:00 format is not supported on the front
+        if($periodInterval[1] == [24, 0, 0]) {
+          $periodInterval[1] = [23, 59, 59];
+        }
+
         // Set time to 0 to ensure consistency with the fact that we expect dates.
         if ($dateRange) {
             $dateRange[0] = $dateRange[0]->copy()->setTime(0, 0, 0);
@@ -134,6 +139,11 @@ class AvailabilityHelper
             $periodInterval = self::ruleParsePeriodStr($rule["period"]);
         } else {
             $periodInterval = [[0, 0, 0], [24, 0, 0]];
+        }
+
+        // 24:00 format is not supported on the front
+        if($periodInterval[1] == [24, 0, 0]) {
+          $periodInterval[1] = [23, 59, 59];
         }
 
         // Get first and last days of interval no matter the
@@ -227,6 +237,11 @@ class AvailabilityHelper
             $periodInterval = self::ruleParsePeriodStr($rule["period"]);
         } else {
             $periodInterval = [[0, 0, 0], [24, 0, 0]];
+        }
+
+        // 24:00 format is not supported on the front
+        if($periodInterval[1] == [24, 0, 0]) {
+          $periodInterval[1] = [23, 59, 59];
         }
 
         // Set time to 0 to ensure consistency with the fact that we expect dates.

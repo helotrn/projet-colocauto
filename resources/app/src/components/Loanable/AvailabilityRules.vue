@@ -219,8 +219,8 @@ export default {
 
           // If event spans the whole day, then unavailable.
           if (
-            0 == eventStartTime.diff(cellStartTime, "seconds") &&
-            0 == eventEndTime.diff(cellEndTime, "seconds")
+            -1 <= eventStartTime.diff(cellStartTime, "seconds") &&
+            -1 <= eventEndTime.diff(cellEndTime, "seconds")
           ) {
             return "unavailable";
           }
@@ -238,8 +238,8 @@ export default {
 
           // If event spans the whole day, then available.
           if (
-            0 == eventStartTime.diff(cellStartTime, "seconds") &&
-            0 == eventEndTime.diff(cellEndTime, "seconds")
+            -1 <= eventStartTime.diff(cellStartTime, "seconds") &&
+            -1 <= eventEndTime.diff(cellEndTime, "seconds")
           ) {
             return "available";
           }
