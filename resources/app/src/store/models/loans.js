@@ -244,7 +244,7 @@ export default new RestModule(
         throw e;
       }
     },
-    async updateMileage({ commit }, { action, type = "actions" }) {
+    async updateMileage({ commit, state }, { action, type = "actions" }) {
       const { CancelToken } = Vue.axios;
       const cancelToken = CancelToken.source();
 
@@ -252,8 +252,22 @@ export default new RestModule(
         commit("cancelToken", cancelToken);
         await Vue.axios.put(`/loans/${action.loan_id}/${type}/${action.id}/update_mileage`, action, {
           cancelToken: cancelToken.token,
-        });
+        }).then(response => {
 
+          // update loan information following mileage update
+          let expenses = [...state.item.expenses];
+          expenses[0].amount = response.data.loan.expenses[0].amount;
+          let handover = {...state.item.handover};
+          handover.mileage_end = response.data.loan.handover.mileage_end
+
+          commit('item', {
+            ...state.item,
+            final_distance: response.data.loan.final_distance,
+            final_price: response.data.loan.final_price,
+            expenses,
+            handover,
+          });
+        });
         commit("cancelToken", null);
       } catch (e) {
         commit("cancelToken", null);

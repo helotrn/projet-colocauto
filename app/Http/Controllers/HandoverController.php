@@ -132,6 +132,20 @@ class HandoverController extends RestController
         $item->mileage_end = $request->input('mileage_end');
         $item->save();
 
+        // update loan price when distance is updated
+        if($item->loan->final_price !== $item->loan->actual_price) {
+            $item->loan->final_price = $item->loan->actual_price;
+            $item->loan->save();
+            // and synchronize loan expense
+            if($item->loan->expenses) {
+                $expense = $item->loan->expenses->where('type', 'debit');
+                if($expense) {
+                    $expense->first()->amount = $item->loan->final_price;
+                    $expense->first()->save();
+                }
+            }
+        }
+
         return $item;
     }
 
