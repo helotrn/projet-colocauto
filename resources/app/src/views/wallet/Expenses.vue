@@ -58,6 +58,7 @@ export default {
   components: { ExpenseInfoBox, ExpenseFilters },
   mounted(){
     this.contextParams.page = 1;
+    this.contextParams['loanable.community.id'] = this.currentCommunity
   },
   computed: {
     currentCommunity() {
@@ -67,6 +68,14 @@ export default {
     },
     currentCommunityExpenses() {
       return this.data.filter(e => e.community.id == this.currentCommunity)
+    }
+  },
+  watch:{
+    currentCommunity(){
+      // reload data when community change
+      this.contextParams.page = 1;
+      this.contextParams['loanable.community.id'] = this.currentCommunity
+      this.loadListData()
     }
   },
   i18n: {

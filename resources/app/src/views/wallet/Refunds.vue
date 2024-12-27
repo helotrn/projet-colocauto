@@ -62,6 +62,7 @@ export default {
   components: { RefundInfoBox, RefundFilters },
   mounted(){
     this.contextParams.page = 1;
+    this.contextParams['user.communities.id'] = this.currentCommunity;
   },
   computed: {
     currentCommunity() {
@@ -71,6 +72,14 @@ export default {
     },
     currentCommunityRefunds() {
       return this.data.filter(e => e.community.id == this.currentCommunity)
+    }
+  },
+  watch:{
+    currentCommunity(){
+      // reload data when community change
+      this.contextParams.page = 1;
+      this.contextParams['user.communities.id'] = this.currentCommunity
+      this.loadListData()
     }
   },
   i18n: {
