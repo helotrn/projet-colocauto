@@ -50,6 +50,7 @@ export default {
   list-style: none;
   display: flex;
   justify-content: flex-start;
+  flex-wrap: wrap;
 
   &__title {
     margin: 0 0.5rem;
