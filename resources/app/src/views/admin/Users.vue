@@ -78,9 +78,13 @@
             {{ data.label.toUpperCase() }}
           </template>
           <template v-slot:cell(communities_name)="row">
-            <router-link v-if="row.item.communities && row.item.communities.length" :to="'/admin/communities/'+row.item.communities[0].id">
-              {{ row.item.communities[0].name }}
-            </router-link>
+            <template v-if="row.item.communities && row.item.communities.length">
+              <router-link
+                v-for="community in row.item.communities"
+                :to="'/admin/communities/'+community.id">
+                {{ community.name }}
+              </router-link>
+            </template>
             <template v-else-if="row.item.administrable_communities && row.item.administrable_communities.length">
               <router-link v-for="community in row.item.administrable_communities" :to="'/admin/communities/'+community.id">
                 {{ community.name }}
