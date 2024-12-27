@@ -90,7 +90,7 @@
       </b-col>
     </b-row>
 
-    <b-row v-if="user.role == 'admin' || loanable.owner.user.id == user.id" class="availability-rules__description">
+    <b-row v-if="canChangeAvailabilityRules" class="availability-rules__description">
       <b-col>
         <div class="form-inline availability-rules__description__default">
           <b-form-group label="Par défaut:" label-for="availability_mode" inline>
@@ -178,6 +178,11 @@ export default {
     },
     followingMonth() {
       return this.$dayjs(this.selectedDate).add(1, "month").format("YYYY-MM-DD");
+    },
+    canChangeAvailabilityRules() {
+      return this.user.role == 'admin'
+        || this.loanable.owner.user.id == this.user.id
+        || this.loanable.coowners.some(coowner => coowner.user.id == this.user.id)
     },
   },
   methods: {
