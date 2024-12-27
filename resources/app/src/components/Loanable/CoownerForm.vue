@@ -14,7 +14,7 @@
         v-model="title"
         label="Titre"
         name="title"
-        description="Ce titre clarifie la responsabilité de cette personne pour le véhicule. Ex. marraine/parrain, gardien-ne, coordinateur-rice, copropriétaire, etc."
+        description="Ce titre clarifie la responsabilité de cette personne pour le véhicule. Ex. dépositaire des clés, copropriétaire, etc."
         type="text"
         :disabled="disabled || loading"
       ></forms-validated-input>
