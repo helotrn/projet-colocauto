@@ -26,8 +26,8 @@ const initialState = {
   loadRequests: 0,
 };
 
-const maxLoanableCount = 4;
-const maxMemberCount = 4;
+const maxLoanableCount = 8;
+const maxMemberCount = 8;
 
 const actions = {
   async reload({ commit, dispatch, rootState }, user) {

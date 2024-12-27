@@ -258,18 +258,6 @@
                       </b-col>
                     </b-row>
                   </transition-group>
-                  <div class="text-right" style="margin-bottom: 1rem" v-if="otherCommunitiesLoanables.length">
-                    Il y a d'autres véhicules dans
-                    {{ otherCommunitiesLoanables.length == 1 ? "la communauté" : "les communautés" }}
-                    <b-button
-                      v-for="community in otherCommunitiesLoanables"
-                      :key="community.id"
-                      variant="link"
-                      @click="changeCommunity(community.id)"
-                    >
-                      {{ community.name }} ({{community.id}})
-                    </b-button>
-                  </div>
                   <div class="text-right" v-if="hasMoreLoanables">
                     <b-button variant="outline-primary" to="/search/list">
                       Voir tous les véhicules disponibles
@@ -487,13 +475,7 @@ export default {
     otherCommunitiesLoanables() {
       if(!this.$store.state.dashboard.loanables) return [];
       else return this.$store.state.dashboard.loanables
-        .filter(l => l.community?.id != this.currentCommunity)
-        .reduce((acc, current) => {
-          if(current.community && !acc.find(c => c.id == current.community.id)){
-            acc.push(current.community)
-          }
-          return acc;
-        }, []);
+        .filter(l => l.community?.id !== this.currentCommunity);
     },
     members() {
       return this.$store.state.dashboard.members ?? [];
@@ -537,10 +519,10 @@ export default {
       return this.$store.state.dashboard.membersLoaded;
     },
     totalLoanables() {
-      return this.$store.state.dashboard.totalLoanables;
+      return this.$store.state.dashboard.totalLoanables - this.otherCommunitiesLoanables.length;
     },
     hasMoreLoanables() {
-      return this.$store.state.dashboard.hasMoreLoanables;
+      return this.$store.state.dashboard.hasMoreLoanables || this.otherCommunitiesLoanables.length;
     },
     balanceLoaded() {
       return this.$store.state.dashboard.balanceLoaded;
