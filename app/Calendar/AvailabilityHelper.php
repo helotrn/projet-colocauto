@@ -472,8 +472,6 @@ class AvailabilityHelper
 
         if ($mustAddIntervals) {
             foreach ($ruleIntervals as $interval) {
-                // make owner reservation range appear in the calendar
-                $interval['class'] = 'owner-exception';
                 $dateKey = $interval[0]->toDateString();
 
                 if (!isset($dailyIntervals[$dateKey])) {

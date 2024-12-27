@@ -795,12 +795,12 @@ export default {
         margin: 0 0.4em 1em;
       }
     }
-  .owner-exception .vuecal__event-wrapper {
+  .loanable-calendar__event--unavailability .vuecal__event-wrapper {
     background-color: transparent;
   }
   &.loanable-owner {
     /* only if user=owner */
-    .owner-exception {
+    .loanable-calendar__event--unavailability {
       z-index: -1;
       .vuecal__event-wrapper {
         display: none;
@@ -812,7 +812,7 @@ export default {
   }
   .vuecal__event {
     background-color: transparent;
-    &.owner-exception.loanable-calendar__event--unavailability {
+    &.loanable-calendar__event--unavailability {
       background-color: #FFE6E4;
     }
     &.color-persian-green .vuecal__event-wrapper {
