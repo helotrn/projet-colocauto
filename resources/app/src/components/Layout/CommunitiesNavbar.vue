@@ -9,7 +9,7 @@
           :disabled="isCommunityForcedByRoute && !isCurrentCommunity(community.id)"
           @click="changeCommunity(community.id)"
         >
-          <span class="nav-link__text">{{ community.name }} ({{community.id}})</span>
+          <span class="nav-link__text">{{ community.name }}</span>
         </b-nav-item>
       </b-navbar-nav>
     </b-navbar>
