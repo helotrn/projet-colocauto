@@ -80,14 +80,14 @@
           <template v-slot:cell(communities_name)="row">
             <template v-if="row.item.communities && row.item.communities.length">
               <router-link
-                v-for="community in row.item.communities"
+                v-for="community,i in row.item.communities"
                 :to="'/admin/communities/'+community.id">
-                {{ community.name }}
+                {{ community.name }}<template v-if="i<row.item.communities.length-1">,</template>
               </router-link>
             </template>
             <template v-else-if="row.item.administrable_communities && row.item.administrable_communities.length">
-              <router-link v-for="community in row.item.administrable_communities" :to="'/admin/communities/'+community.id">
-                {{ community.name }}
+              <router-link v-for="community,i in row.item.administrable_communities" :to="'/admin/communities/'+community.id">
+                {{ community.name }}<template v-if="i<row.item.administrable_communities.length-1">,</template>
               </router-link>
             </template>
           </template>
