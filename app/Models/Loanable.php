@@ -333,7 +333,7 @@ class Loanable extends BaseModel
     public function getCommunityForLoanBy(User $user): ?Community
     {
         $userComunities = $user->getAccessibleCommunityIds()->toArray();
-        if ($this->owner) {
+        if ($this->owner && !$this->community) {
             $loanableCommunities = $this->owner->user
                 ->getAccessibleCommunityIds()
                 ->toArray();
