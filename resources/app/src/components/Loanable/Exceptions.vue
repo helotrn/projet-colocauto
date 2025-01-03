@@ -31,13 +31,13 @@
             name="`weekdays-${index}`"
             @change="emitChange(exception, 'scope', $event)"
           >
-            <b-form-checkbox value="SU">Dimanche</b-form-checkbox><br />
             <b-form-checkbox value="MO">Lundi</b-form-checkbox><br />
             <b-form-checkbox value="TU">Mardi</b-form-checkbox><br />
             <b-form-checkbox value="WE">Mercredi</b-form-checkbox><br />
             <b-form-checkbox value="TH">Jeudi</b-form-checkbox><br />
             <b-form-checkbox value="FR">Vendredi</b-form-checkbox><br />
-            <b-form-checkbox value="SA">Samedi</b-form-checkbox>
+            <b-form-checkbox value="SA">Samedi</b-form-checkbox><br />
+            <b-form-checkbox value="SU">Dimanche</b-form-checkbox>
           </b-form-checkbox-group>
         </div>
         <div v-if="exception.type === 'dates'" class="exceptions__row__type__calendar">
