@@ -223,7 +223,7 @@ class Car extends Loanable
             ];
             Log::info("Attribute ${data["name"]} expense to $user->name $user->last_name (${data["amount"]}€)");
             Log::info(var_export(array_map(function($val){ return is_object($val) ? $val->toString() : $val; }, $data), true));
-            if( !$dryrun ) {
+            if( !$dryrun &&  $shared_cost) {
                 $expense = Expense::create($data);
                 $expense->locked = true;
                 $expense->save();
