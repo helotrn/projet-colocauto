@@ -964,7 +964,8 @@ SQL;
 
     public function getNameAttribute(): string
     {
-        $name = $this->loanable->name." emprunté par ".$this->borrower->user->full_name." le ".Carbon::parse($this->departure_at)->isoFormat('LLLL');
+        $borrower_name = $this->borrower->user ? $this->borrower->user->full_name : 'Inconnu·e';
+        $name = $this->loanable->name." emprunté par ".$borrower_name." le ".Carbon::parse($this->departure_at)->isoFormat('LLLL');
         if( $this->reason ){
             $name .= " (".$this->reason.")";
         }
