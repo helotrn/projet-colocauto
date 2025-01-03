@@ -394,7 +394,12 @@ class CommunityController extends RestController
             if( $user->owner ){
                 // remove owned loanable costs
                 $user->balance = $user->owner->loanables->reduce(function ($carry, $loanable) use ($communityId) {
-                    if( in_array($communityId, $loanable->getCommunityIdsAttribute()) ) {
+                    if( $loanable->community ) {
+                        if( $loanable->community->id == $communityId ) {
+                            $carry -= $loanable->expenses->where('type', 'credit')->sum('amount');
+                            $carry +=  $loanable->expenses->where('type', 'debit')->sum('amount');
+                        }
+                    } else if( in_array($communityId, $loanable->getCommunityIdsAttribute()) ) {
                         $carry -= $loanable->expenses->where('type', 'credit')->sum('amount');
                         $carry +=  $loanable->expenses->where('type', 'debit')->sum('amount');
                     }
