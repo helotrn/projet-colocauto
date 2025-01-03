@@ -457,7 +457,7 @@ class AvailabilityHelper
                 $dailyIntervals[$dateKey] = [
                     [
                         $currentDate->copy()->setTime(0, 0, 0),
-                        $currentDate->copy()->setTime(24, 0, 0),
+                        $currentDate->copy()->setTime(23, 59, 59),
                     ],
                 ];
 

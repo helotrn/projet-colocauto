@@ -152,15 +152,15 @@ export default {
       if (key === "type") {
         switch (value) {
           case "weekdays":
-            newTarget.period = "00:00-24:00";
+            newTarget.period = "00:00-23:59";
             newTarget.scope = [];
             break;
           case "dates":
-            newTarget.period = "00:00-24:00";
+            newTarget.period = "00:00-23:59";
             newTarget.scope = [];
             break;
           case "dateRange":
-            newTarget.period = "00:00-24:00";
+            newTarget.period = "00:00-23:59";
             newTarget.scope = [];
             break;
           default:
@@ -280,7 +280,7 @@ export default {
       if (exception.period === "00:00-23:59" || exception.period === "00:00-24:00") {
         this.emitChange(exception, "period", "00:00-00:00");
       } else {
-        this.emitChange(exception, "period", "00:00-24:00");
+        this.emitChange(exception, "period", "00:00-23:59");
       }
     },
   },
