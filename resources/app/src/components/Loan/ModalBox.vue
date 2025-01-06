@@ -84,6 +84,7 @@ export default {
     async updateLoan() {
       try {
         await this.$store.dispatch('loans/updateItem', this.loansRoute.meta.params);
+        this.showDialog = false;
       } catch (e) {
         if (e.request) {
           switch (e.request.status) {

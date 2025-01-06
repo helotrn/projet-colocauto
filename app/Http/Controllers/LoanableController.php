@@ -622,7 +622,8 @@ class LoanableController extends RestController
                 ],
                 "available" => $item->isAvailable(
                     $departureAt,
-                    $durationInMinutes
+                    $durationInMinutes,
+                    [$request->get("loan_to_change")]
                 ),
                 "price" => $estimatedCost->price,
                 "insurance" => $estimatedCost->insurance,

@@ -66,6 +66,9 @@ export default {
       // Otherwise, is the borrower the owner?
       return this.item.borrower.user.id === this.item.loanable.owner.user.id;
     },
+    isBorrower() {
+      return this.user.borrower.id === this.item.borrower.id;
+    },
     currentStep() {
       if (!this.item.id) {
         return "creation";

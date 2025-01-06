@@ -273,6 +273,7 @@ export default {
   .card {
     margin-bottom: 20px;
     flex-grow: 1;
+    min-height: 387px;
   }
   .card-header {
     position: absolute;

@@ -115,16 +115,25 @@
             </b-row>
 
             <b-row class="form__buttons" v-if="canEdit">
-              <b-col class="text-center">
-                <b-button disabled type="submit" v-if="!item.loanable.available">
-                  Indisponible
+              <b-col md="6">
+                <b-button
+                  v-if="item.id"
+                  @click="cancelLoan"
+                  :disabled="loanIsCanceled || !isBorrower"
+                  class="mb-2 py-2 w-100"
+                  variant="outline-danger"
+                >
+                  Annuler la réservation
                 </b-button>
+              </b-col>
+              <b-col md="6">
                 <b-button
                   type="submit"
-                  :disabled="loading || invalidDuration"
-                  v-else
+                  :disabled="item.id && (!changed || !item.loanable.available || priceUpdating || invalidDuration)"
+                  class="mb-2 py-2 w-100"
+                  variant="primary"
                 >
-                  Réserver
+                  {{ changed && !priceUpdating && !item.loanable.available ? 'Indisponible' : 'Enregistrer les modifications' }}
                 </b-button>
               </b-col>
             </b-row>
@@ -169,11 +178,15 @@ export default {
   data() {
     return {
       priceUpdating: false,
+      changed: false,
+      throttle: new Date,
+      debounce: null,
     };
   },
   methods: {
     submit() {
       this.$emit("submit");
+      this.changed = false;
     },
   },
   computed: {
@@ -190,6 +203,7 @@ export default {
         duration_in_minutes: this.item.duration_in_minutes,
         estimated_distance: this.item.estimated_distance,
         loanable_id: this.item.loanable.id,
+        reason: this.item.reason,
       });
     },
     canEdit() {
@@ -206,12 +220,17 @@ export default {
   },
   watch: {
     async loanParams(newValue, oldValue) {
-      if (newValue !== oldValue) {
-        this.priceUpdating = true;
-        await this.$store.dispatch("loans/test", JSON.parse(newValue));
-        this.priceUpdating = false;
+      // avoid calling the test function too early or too often
+      if (new Date - this.throttle > 800 && newValue !== oldValue) {
+        if( this.debounce ) clearTimeout(this.debounce);
+        this.debounce = setTimeout(async () => {
+          this.priceUpdating = true;
+          this.changed = true;
+          await this.$store.dispatch("loans/test", { ...JSON.parse(newValue), loan_to_change: this.item.id});
+          this.priceUpdating = false;
+        }, 200);
       }
-    },
+    }
   },
   i18n: {
     messages: {
