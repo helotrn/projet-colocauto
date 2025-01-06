@@ -104,8 +104,10 @@ class ExpenseController extends RestController
             if( $item->loan_id) {
                 if( $item->type == 'credit' ) {
                     $item->loan->final_purchases_amount = $item->amount;
-                    $item->loan->handover->purchases_amount = $item->amount;
-                    $item->loan->handover->save();
+                    if($item->loan->handover) {
+                        $item->loan->handover->purchases_amount = $item->amount;
+                        $item->loan->handover->save();
+                    }
                 } else {
                     $item->loan->final_price = $item->amount;
                 }
