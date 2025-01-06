@@ -18,7 +18,18 @@ export default new RestModule(
       "tag.name",
     ],
   },
-  {},
+  {
+    // treat expense update as a particular case
+    async updateItem({ dispatch, state }, params) {
+      await dispatch("update", { id: state.item.id, data: {
+        ...state.item,
+        // do not send those parameters on update
+        changes: undefined,
+        loan: undefined,
+        loanable: undefined,
+      }, params });
+    },
+  },
   {
     setFilterParams(state, params){
       // cancel other filters
