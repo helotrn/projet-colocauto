@@ -120,7 +120,7 @@
                   v-if="item.id"
                   @click="cancelLoan"
                   :disabled="loanIsCanceled || !isBorrower"
-                  class="mb-2 py-2 w-100"
+                  class="mb-2 py-2 w-100 leading-6"
                   variant="outline-danger"
                 >
                   Annuler la réservation
@@ -130,7 +130,7 @@
                 <b-button
                   type="submit"
                   :disabled="item.id && (!changed || !item.loanable.available || priceUpdating || invalidDuration)"
-                  class="mb-2 py-2 w-100"
+                  class="mb-2 py-2 w-100 leading-6"
                   variant="primary"
                 >
                   {{ changed && !priceUpdating && !item.loanable.available ? 'Indisponible' : 'Enregistrer les modifications' }}
