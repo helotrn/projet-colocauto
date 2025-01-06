@@ -99,7 +99,7 @@
             </b-row>
 
             <b-row>
-              <b-col md="6" v-if="item.loanable.type === 'car'">
+              <b-col v-if="item.loanable.type === 'car'">
                 <forms-validated-input
                   name="estimated_distance"
                   :label="$t('fields.estimated_distance') | capitalize"
