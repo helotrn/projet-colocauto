@@ -79,14 +79,22 @@
           </b-row>
         </div>
 
-        <div class="form__section" v-if="loanable.type === 'bike'">
-          <h2>Détails du vélo</h2>
-
+        <form-section
+          v-if="loanable.type === 'bike'"
+          toggleable
+          class="mt-2"
+          section-title="Détails du vélo"
+          :inititally-visible="false"
+        >
           <forms-builder :definition="form.bike" v-model="loanable" entity="bikes" />
-        </div>
-        <div class="form__section" v-else-if="loanable.type === 'car'">
-          <h2>Détails de la voiture</h2>
-
+        </form-section>
+        <form-section
+          v-else-if="loanable.type === 'car'"
+          toggleable
+          class="mt-2"
+          section-title="Détails de la voiture"
+          :inititally-visible="false"
+        >
           <forms-builder :definition="carForm" v-model="loanable" entity="cars">
             <!-- remove unused parameters -->
             <template v-slot:year_of_circulation></template>
@@ -100,23 +108,35 @@
               </b-form-group>
             </template>
           </forms-builder>
-        </div>
-        <div class="form__section" v-else-if="loanable.type === 'trailer'">
-          <h2>Détails de la remorque</h2>
-
+        </form-section>
+        <form-section
+          v-else-if="loanable.type === 'trailer'"
+          toggleable
+          class="mt-2"
+          section-title="Détails de la remorque"
+          :inititally-visible="false"
+        >
           <forms-builder :definition="form.trailer" v-model="loanable" entity="trailers" />
-        </div>
+        </form-section>
         <div class="form__section text-center" v-else>
           <span> Sélectionnez un type de véhicule pour poursuivre la configuration. </span>
         </div>
 
-        <div class="form__section">
-          <h2>Droits de gestion</h2>
+        <form-section
+          toggleable
+          class="mt-2"
+          section-title="Droits de gestion"
+          :inititally-visible="false"
+        >
           <coowners-form :loanable="loanable" />
-        </div>
+        </form-section>
 
-        <div class="form__section">
-          <h2>Partage des coûts</h2>
+        <form-section
+          toggleable
+          class="mt-2"
+          section-title="Partage des coûts"
+          :inititally-visible="false"
+        >
           <b-row>
             <b-col lg="6">
               <forms-builder :definition="form.costs" v-model="loanable" entity="cars"></forms-builder>
@@ -125,11 +145,16 @@
               <loanable-balance :loanable="loanable" />
             </b-col>
           </b-row>
-        </div>
+        </form-section>
 
-        <div class="form__section">
+        <form-section
+          toggleable
+          class="mt-2"
+          section-title="Disponibilités"
+          :inititally-visible="false"
+        >
           <loanable-availability-rules :changed="changed" :loanable="loanable" :loading="loading" />
-        </div>
+        </form-section>
 
         <div class="form__buttons" v-if="!hideButtons">
           <b-button-group v-if="showReset">
@@ -165,6 +190,7 @@ import LoanableAvailabilityRules from "@/components/Loanable/AvailabilityRules.v
 import FormsImageUploader from "@/components/Forms/ImageUploader.vue";
 import LoanableBalance from "@/components/Loanable/Balance.vue";
 import CoownersForm from "@/components/Loanable/CoownersForm.vue";
+import FormSection from "@/components/Loanable/FormSection.vue";
 
 import FormLabelsMixin from "@/mixins/FormLabelsMixin";
 import UserMixin from "@/mixins/UserMixin";
@@ -181,6 +207,7 @@ export default {
     LoanableAvailabilityRules,
     LoanableBalance,
     CoownersForm,
+    FormSection,
   },
   props: {
     center: {

@@ -1,10 +1,7 @@
 <template>
   <div class="availability-rules">
     <b-row class="availability-rules__header">
-      <b-col>
-        <h2>Disponibilités</h2>
-      </b-col>
-      <b-col class="text-right">
+      <b-col class="text-right mb-2">
         <b-button @click="resetDate()">Auj.</b-button>
 
         <b-button-group class="ml-1">
