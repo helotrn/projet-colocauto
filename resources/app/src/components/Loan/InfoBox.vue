@@ -31,11 +31,11 @@
         <div class="loan-info-box__details mb-2 mt-2">
           <span>
             <span v-if="multipleDays">
-              {{ loan.departure_at | date }} {{ loan.departure_at | time }}<br />
-              {{ returnAt | date }} {{ returnAt | time }}
+              {{ loan.departure_at | day }} {{ loan.departure_at | date }} {{ loan.departure_at | time }}<br />
+              {{ returnAt | day }} {{ returnAt | date }} {{ returnAt | time }}
             </span>
             <span v-else>
-              {{ loan.departure_at | date }}<br />
+              {{ loan.departure_at | day }} {{ loan.departure_at | date }}<br />
               {{ loan.departure_at | time }} à {{ returnAt | time }}
             </span>
           </span>
