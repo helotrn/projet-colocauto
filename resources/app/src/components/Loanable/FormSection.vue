@@ -2,7 +2,7 @@
   <div class="form__section">
     <template v-if="toggleable">
       <h2 v-b-toggle:toggleable="'collapse_' + id" class="section-toggle">
-        <b-icon font-scale="0.75" icon="chevron-right"></b-icon> {{ sectionTitle }}
+        {{ sectionTitle }} <b-icon font-scale="0.75" icon="chevron-down"></b-icon>
       </h2>
       <b-collapse
         :id="'collapse_' + id"
@@ -63,9 +63,15 @@ export default {
 <style scoped lang="scss">
 .section-toggle {
   transition-duration: 0.5s;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.25rem;
+  margin: -1.25rem;
+  margin-bottom: 0;
 
   &.collapsed {
-    margin-bottom: 0;
+    margin-bottom: -1.25rem;
   }
 
   .b-icon {
@@ -73,7 +79,12 @@ export default {
   }
 
   &.not-collapsed .b-icon {
-    transform: rotate(90deg);
+    transform: rotate(180deg);
   }
+}
+.form__section {
+  background: $white;
+  padding: 1.25rem;
+  border: solid 1px $locomotion-grey;
 }
 </style>
