@@ -1,11 +1,12 @@
 <template>
   <b-card no-body class="loan-form loan-actions loan-actions-intention">
     <b-card-header header-tag="header" role="tab" class="loan-actions__header">
-      <h2 v-b-toggle.loan-actions-intention>
+      <h2
+        v-b-toggle.loan-actions-intention
+      >
         <svg-waiting v-if="action.status === 'in_process' && !loanIsCanceled" />
         <svg-check v-else-if="action.status === 'completed'" />
         <svg-danger v-else-if="action.status === 'canceled' || loanIsCanceled" />
-
         Confirmation de l'emprunt
       </h2>
 

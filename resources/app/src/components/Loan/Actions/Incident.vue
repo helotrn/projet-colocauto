@@ -9,7 +9,6 @@
         <svg-waiting v-if="action.status === 'in_process' && !loanIsCanceled" />
         <svg-check v-else-if="action.status === 'completed'" />
         <svg-danger v-else-if="action.status === 'canceled' || loanIsCanceled" />
-
         Incident
       </h2>
 
