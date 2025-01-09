@@ -6,6 +6,7 @@
       class="loan-actions__header"
       v-b-toggle.loan-actions-new
     >
+      <b-icon icon="chevron-down" class="toggle-icon"></b-icon>
       <h2>
         <svg-check v-if="item.id" />
         <svg-waiting v-else />
@@ -15,6 +16,41 @@
 
       <span v-if="!item.created_at">En cours de création</span>
       <span v-else>Complété &bull; {{ item.created_at | datetime }}</span>
+      <b-row class="show-if-collapsed">
+        <b-col tag="dl" md="3" cols="6">
+          <dt>{{ $t("fields.departure_at") | capitalize }}</dt>
+          <dd>
+            {{ item.departure_at | dateWithWeekDay | capitalize }}<br />{{ item.departure_at | time }}
+          </dd>
+        </b-col>
+        <b-col tag="dl" md="3" cols="6">
+          <dt>{{ $t("fields.return_at") | capitalize }}</dt>
+          <dd>
+            {{ formatReturnAt | dateWithWeekDay | capitalize }}<br />
+            {{ formatReturnAt | time }}
+          </dd>
+        </b-col>
+        <b-col tag="dl" md="3" cols="6" v-if="price > 0 && distance > 0">
+          <dt>
+            {{
+              hasFinalDistance
+                ? $t("details_box.distance")
+                : $t("details_box.estimated_distance") | capitalize
+            }}
+          </dt>
+          <dd>{{ distance }} km</dd>
+        </b-col>
+        <b-col tag="dl" md="3" cols="6" v-if="price > 0 && distance > 0">
+          <dt>
+            {{
+              item.final_price
+                ? $t("details_box.cost")
+                : $t("fields.estimated_price") | capitalize
+            }}
+          </dt>
+          <dd>{{ totalPrice | currency }}</dd>
+        </b-col>
+      </b-row>
     </b-card-header>
 
     <b-card-body>
@@ -98,8 +134,8 @@
               </b-col>
             </b-row>
 
-            <b-row>
-              <b-col v-if="item.loanable.type === 'car'">
+            <b-row v-if="item.loanable.type === 'car'">
+              <b-col md="6" >
                 <forms-validated-input
                   name="estimated_distance"
                   :label="$t('fields.estimated_distance') | capitalize"
@@ -111,6 +147,9 @@
                   :description="$t('descriptions.estimated_distance') | capitalize"
                   v-model="formattedEstimatedDistance"
                 />
+              </b-col>
+              <b-col md="6" >
+                <loan-price-details :loan="item" :loan-loading="loading" />
               </b-col>
             </b-row>
 
@@ -146,6 +185,7 @@
 
 <script>
 import FormsValidatedInput from "@/components/Forms/ValidatedInput.vue";
+import LoanPriceDetails from "@/components/Loan/PriceDetails";
 
 import FormLabelsMixin from "@/mixins/FormLabelsMixin";
 import LoanFormMixin from "@/mixins/LoanFormMixin";
@@ -161,6 +201,7 @@ export default {
   mixins: [FormLabelsMixin, LoanFormMixin, LoanStepsSequence],
   components: {
     FormsValidatedInput,
+    LoanPriceDetails,
     "svg-check": Check,
     "svg-waiting": Waiting,
   },
@@ -217,6 +258,30 @@ export default {
         this.$second.isBefore(this.item.departure_at, "minute")
       );
     },
+    formatReturnAt() {
+      if (this.item.actual_return_at) {
+        return this.item.actual_return_at;
+      }
+      return this.$dayjs(this.item.departure_at)
+        .add(this.item.duration_in_minutes, "minute")
+        .format("YYYY-MM-DD HH:mm:ss");
+    },
+    hasFinalDistance() {
+      return this.item.handover && this.item.handover.mileage_end;
+    },
+    distance() {
+      if (this.hasFinalDistance) {
+        return this.item.handover.mileage_end - this.item.takeover.mileage_beginning;
+      }
+      return this.item.estimated_distance;
+    },
+    price() {
+      return this.item.final_price
+        ? parseFloat(this.item.final_price)
+        : this.item.actual_price
+        ? parseFloat(this.item.actual_price)
+        : parseFloat(this.item.estimated_price);
+    },
   },
   watch: {
     async loanParams(newValue, oldValue) {
@@ -254,5 +319,13 @@ export default {
 }
 .owner-comments-text {
   white-space: pre-wrap;
+}
+.loan-actions__header {
+  dt, dd {
+    line-height: 1.2;
+  }
+  &.not-collapsed .show-if-collapsed {
+    display: none;
+  }
 }
 </style>

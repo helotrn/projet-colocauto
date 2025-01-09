@@ -6,6 +6,7 @@
       class="loan-actions__header"
       v-b-toggle.loan-actions-takeover
     >
+      <b-icon icon="chevron-down" class="toggle-icon"></b-icon>
       <h2>
         <svg-danger v-if="(action.status === 'in_process' && loanIsCanceled) || action.status === 'canceled'" />
         <svg-waiting v-else-if="action.status === 'in_process'" />

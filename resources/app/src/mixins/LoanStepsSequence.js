@@ -69,6 +69,21 @@ export default {
     isBorrower() {
       return this.user.borrower.id === this.item.borrower.id;
     },
+    price() {
+      return this.item.final_price
+        ? parseFloat(this.item.final_price)
+        : this.item.actual_price
+        ? parseFloat(this.item.actual_price)
+        : parseFloat(this.item.estimated_price);
+    },
+    purchasesAmount() {
+      return this.item.handover?.purchases_amount
+        ? parseFloat(this.item.handover.purchases_amount)
+        : 0;
+    },
+    totalPrice() {
+      return this.price - this.purchasesAmount;
+    },
     currentStep() {
       if (!this.item.id) {
         return "creation";

@@ -58,11 +58,19 @@ const shortDate = (value) => {
   }
 
   const date = dayjs(value);
-  if (date.year === dayjs().year) {
+  if (date.year() === dayjs().year()) {
     return date.format("ddd. D MMM.");
   }
 
   return date.format("ddd. D MMM. YYYY");
+};
+
+const dateWithWeekDay = (value) => {
+  if (!value) {
+    return "";
+  }
+
+  return dayjs(value).format("dddd D MMMM");
 };
 
 const durationInHours = (valueInMinutes) => {
@@ -134,6 +142,7 @@ export {
   date,
   datetime,
   day,
+  dateWithWeekDay,
   durationInHours,
   normalizeCurrency,
   percent,

@@ -12,15 +12,6 @@
                 <a href="#" v-scroll-to="'#loan_details'" to="#detail">Détails de l'emprunt</a>
               </div>
             </b-col>
-            <b-col md="9" lg="12">
-              <loan-action-buttons
-                class="mb-3"
-                :item="item"
-                @extension="addExtension"
-                @cancel="cancelLoan"
-                @incident="addIncident('accident')"
-              />
-            </b-col>
           </b-row>
 
           <div class="position-relative">

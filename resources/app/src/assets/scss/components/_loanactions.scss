@@ -63,6 +63,15 @@
         flex-wrap: wrap;
         justify-content: space-between;
 
+        .toggle-icon {
+            position: absolute;
+            top: 33px;
+            right: 20px;
+            transition: 0.3s;
+        }
+        &.not-collapsed .toggle-icon{
+            transform: rotate(180deg);
+        }
         h2 {
             font-size: 28px;
             margin-bottom: 0;
