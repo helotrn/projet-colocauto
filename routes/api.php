@@ -54,6 +54,7 @@ Route::prefix("v1")->group(function () {
                 "expense",
                 "expense_tag",
                 "refund",
+                "report",
             ]
             as $entity
         ) {

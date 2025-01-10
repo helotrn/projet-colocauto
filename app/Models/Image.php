@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Pivots\CommunityUser;
 use App\Models\User;
+use App\Models\Report;
 use Auth;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Database\Eloquent\Builder;
@@ -230,6 +231,15 @@ class Image extends BaseModel
             CommunityUser::class,
             "imageable_id"
         )->whereImageableType(CommunityUser::class);
+    }
+
+    public function report()
+    {
+        return $this->belongsTo(
+            Report::class,
+            "id",
+            "imageable_id"
+        )->whereImageableType(Report::class);
     }
 
     public function getSizesAttribute()

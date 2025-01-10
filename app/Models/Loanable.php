@@ -8,6 +8,7 @@ use App\Transformers\LoanableTransformer;
 use App\Models\Car;
 use App\Models\Loan;
 use App\Models\Pricing;
+use App\Models\Report;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -228,7 +229,7 @@ class Loanable extends BaseModel
         return $this->hasOne(Padlock::class, "loanable_id");
     }
 
-    public $collections = ["loans", "coowners", "expenses"];
+    public $collections = ["loans", "coowners", "expenses", "reports"];
 
     public function loans()
     {
@@ -272,6 +273,11 @@ class Loanable extends BaseModel
     public function expenses()
     {
         return $this->hasMany(Expense::class);
+    }
+
+    public function reports()
+    {
+        return $this->hasMany(Report::class, "loanable_id");
     }
 
     public function getAvailabilityRules()
