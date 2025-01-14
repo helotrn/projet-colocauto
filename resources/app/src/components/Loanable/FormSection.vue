@@ -1,9 +1,9 @@
 <template>
   <div class="form__section">
     <template v-if="toggleable">
-      <h2 v-b-toggle:toggleable="'collapse_' + id" class="section-toggle">
+      <component :is="`h${headerLevel}`" v-b-toggle:toggleable="'collapse_' + id" class="section-toggle">
         {{ sectionTitle }} <b-icon font-scale="0.75" icon="chevron-down"></b-icon>
-      </h2>
+      </component>
       <b-collapse
         :id="'collapse_' + id"
         ref="collapse"
@@ -41,6 +41,10 @@ export default {
       type: Boolean,
       default: false,
     },
+    headerLevel: {
+      type: Number,
+      default: 2,
+    }
   },
   data() {
     return {
