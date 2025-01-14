@@ -128,7 +128,7 @@
             <template v-slot:report_template>
               <b-form-group>
                 <a href="/fiche_etat_du_vehicule.pdf" download>
-                  {{ $i18n.t("cars.fields.report_download") }} <b-icon icon="download" />
+                  {{ $i18n.t("fields.report_download") }} <b-icon icon="download" />
                 </a>
               </b-form-group>
             </template>
