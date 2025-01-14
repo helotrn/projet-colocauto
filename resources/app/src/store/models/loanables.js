@@ -242,11 +242,36 @@ export default new RestModule(
 
     // treat loanable update as a particular case
     async updateItem({ dispatch, state }, params) {
+
+      state.item.reports.forEach(report => dispatch('saveReport', report))
+
       await dispatch("update", { id: state.item.id, data: {
         ...state.item,
         // coowners must not be saved here but via add/removeCoowner
-        coowners: undefined
+        coowners: undefined,
+        // reports must not be saved here but via saveReport
+        reports: undefined,
       }, params });
+    },
+
+    async saveReport({ commit, state }, report) {
+      if( report.id ){
+        await Vue.axios.put(
+          `/reports/${report.id}?fields=*,pictures`,
+          {
+            ...report,
+            loanable_id: state.item.id,
+          },
+        );
+      } else {
+        await Vue.axios.post(
+          `/reports?fields=*,pictures`,
+          {
+            ...report,
+            loanable_id: state.item.id,
+          },
+        );
+      }
     },
   }
 );

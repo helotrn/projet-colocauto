@@ -26,6 +26,7 @@ import invitations from "@/locales/models/invitations";
 import expenses from "@/locales/models/expenses";
 import expense_tags from "@/locales/models/expense_tags";
 import refunds from "@/locales/models/refunds";
+import reports from "@/locales/models/reports";
 
 export default {
   bikes: bikes.fr,
@@ -36,6 +37,7 @@ export default {
   expenses: expenses.fr,
   expense_tags: expense_tags.fr,
   refunds: refunds.fr,
+  reports: reports.fr,
   components: {
     admin: {
       filters: AdminFilters.fr,

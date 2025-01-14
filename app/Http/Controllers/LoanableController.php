@@ -896,7 +896,13 @@ class LoanableController extends RestController
                     "owner_compensation" => [
                         "type" => "currency",
                     ],
-                ]
+                ],
+                "types" => [
+                    "car" => [
+                        "locations" => ["front", "back", "right", "left", "inside"],
+                        "damages" => ["scratch", "bumps", "stain"],
+                    ],
+                ],
             ],
             "filters" => $this->model::$filterTypes,
         ];

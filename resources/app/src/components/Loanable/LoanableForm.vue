@@ -126,6 +126,24 @@
           <span> Sélectionnez un type de véhicule pour poursuivre la configuration. </span>
         </div>
 
+        <div class="form__section" v-if="loanable.reports">
+          <h2>État du véhicule</h2>
+          <div v-if="lastReportDate" class="mb-4">
+            <small>Date de dernière modification : {{lastReportDate | datetime}}</small>
+          </div>
+          <form-section
+            v-for="location in reportLocations"
+            :key="location.slug"
+            toggleable
+            class="mt-2"
+            :section-title="location.label"
+            :header-level="3"
+            :inititally-visible="false"
+          >
+            <report-form :report="lastReportOfLocation(location.slug)" />
+          </form-section>
+        </div>
+
         <form-section
           v-if="loanable.id"
           toggleable
@@ -200,6 +218,7 @@ import FormsImageUploader from "@/components/Forms/ImageUploader.vue";
 import LoanableBalance from "@/components/Loanable/Balance.vue";
 import CoownersForm from "@/components/Loanable/CoownersForm.vue";
 import FormSection from "@/components/Loanable/FormSection.vue";
+import ReportForm from "@/components/Loanable/ReportForm.vue";
 
 import FormLabelsMixin from "@/mixins/FormLabelsMixin";
 import UserMixin from "@/mixins/UserMixin";
@@ -217,6 +236,7 @@ export default {
     LoanableBalance,
     CoownersForm,
     FormSection,
+    ReportForm,
   },
   props: {
     center: {
@@ -320,6 +340,25 @@ export default {
       }
       this.$emit("submit", ...params);
     },
+    lastReportOfLocation(location) {
+      if(this.loanable.reports) {
+        let reportsOfLocation = this.loanable.reports
+          .filter(r => r.location == location)
+          .toSorted((a,b) => a.updated_at < b.updated_at ? -1 : 1)
+        if( reportsOfLocation.length ) return reportsOfLocation[0]
+      }
+      let blankReport = {
+        location,
+        details: null,
+        loanable_id: this.loanable.id,
+        pictures: [],
+      }
+      this.$store.state.loanables.form.types.car.damages.forEach(type => {
+        blankReport[type] = false;
+      })
+
+      return blankReport;
+    },
   },
   computed: {
     hasBoroughs() {
@@ -379,6 +418,20 @@ export default {
         ...this.form.general.type.options,
       ];
     },
+    reportLocations() {
+      return this.$store.state.loanables.form.types.car.locations.map(location => ({
+        slug: location,
+        label: locales.fr.reports.location.label[location]
+      }))
+    },
+    lastReportDate() {
+      if( this.loanable.reports ) {
+        let reports = this.loanable.reports
+          .toSorted((a,b) => a.updated_at < b.updated_at ? -1 : 1)
+        if( reports.length ) return reports[0].updated_at
+      }
+      return null
+    }
   },
   i18n: {
     messages: {
