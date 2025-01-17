@@ -1,5 +1,5 @@
 <template>
-  <b-container v-if="user.communities.length > 1">
+  <b-container v-if="!isAdmin && user.communities.length > 1">
     <b-navbar>
       <b-navbar-nav align="start" v-if="isLoggedIn">
         <b-nav-item

@@ -87,7 +87,7 @@ const actions = {
       const { data: members } = await Vue.axios.get("/users", {
         params: {
           order: "-created_at",
-          "communities.id": rootState.communities.current ?? user.main_community.id,
+          "communities.id": rootState.communities.current ?? user.main_community?.id,
           per_page: maxMemberCount,
           fields: "id,full_name,tags,avatar,phone,owner",
         },
