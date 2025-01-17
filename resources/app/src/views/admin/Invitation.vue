@@ -49,6 +49,20 @@ export default {
       this.$store.commit('invitations/patchItem', {
         community_id: this.$route.query.community_id,
       })
+
+      // when relation input load data, community_id is reset : set it again
+      const unwatch = this.$watch(() => this.$store.state.invitations.item.community_id, community_id => {
+        if( community_id == undefined ) {
+          this.$store.commit('invitations/patchItem', {
+            community_id: this.$route.query.community_id,
+          })
+          unwatch()
+          // remove parameter from url
+          this.$router.replace(this.$route.path)
+        }
+      })
+
+      
     }
   },
   i18n: {
