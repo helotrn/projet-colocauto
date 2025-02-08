@@ -159,6 +159,7 @@ export default new RestModule(
         commit("mergeItem", {
           estimated_insurance: data.insurance,
           estimated_price: data.price,
+          actual_price: data.price,
           loanable: {
             ...data,
           },
