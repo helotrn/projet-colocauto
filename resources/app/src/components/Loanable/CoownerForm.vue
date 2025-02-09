@@ -75,19 +75,39 @@ export default {
           id: this.coowner.id,
           receive_notifications: this.receive_notifications,
           title: this.title,
-        },
-        {
-          cleanupCallback: () => (this.loading = false),
-          notifications: {
-            action: "changement",
-            onSuccess: "changements sauvegardés!",
-          },
         }
-      );
+      ).then(() => {
+        this.coowner.receive_notifications = this.receive_notifications;
+        this.coowner.title = this.title;
+        this.loading = false
+        this.$emit("done", this.coowner.id);
 
-      this.coowner.receive_notifications = this.receive_notifications;
-      this.coowner.title = this.title;
-      this.$emit("done", this.coowner.id);
+        this.$store.commit("addNotification", {
+          content: this.coowner.user.full_name,
+          title: "Changements sauvegardés !",
+          variant: "success",
+          type: "loanable",
+        })
+      }).catch(error => {
+        let message = error.request?.response
+        if(message) {
+          message = JSON.parse(message);
+          if( message.errors ){
+            message = Object.values(message.errors).join("\n ");
+          }
+        } else {
+          message = error.message;
+        }
+        this.loading = false
+
+        this.$store.commit("addNotification", {
+          content: message,
+          title: "Erreur de sauvegarde",
+          variant: "danger",
+          type: "loanable",
+        })
+      });
+
     },
   },
 };

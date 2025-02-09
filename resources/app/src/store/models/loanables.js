@@ -204,12 +204,6 @@ export default new RestModule(
         {
           user_id: user.id,
         },
-        {
-          notifications: {
-            action: "ajout de copropriétaire",
-            onSuccess: "Copropriétaire ajouté(e)!",
-          },
-        }
       );
       const coowners = [
         ...(state.item.coowners ?? []),
@@ -222,20 +216,28 @@ export default new RestModule(
 
       commit("patchItem", { coowners });
       commit("patchInitialItem", { coowners });
+      commit("addNotification", {
+        content: user.full_name,
+        title: "Copropriétaire ajouté·e !",
+        variant: "success",
+        type: "loanable",
+      },{ root: true });
     },
     async removeCoowner({ commit, state }, { loanable, user, coownerId }) {
       await Vue.axios.delete(`/loanables/${loanable.id}/coowners`,
         {data: {
           user_id: user.id,
-        }},{
-        notifications: {
-          action: "retrait de copropriétaire",
-          onSuccess: "Copropriétaire retiré-e!",
-        },
-      });
+        }});
       const coowners = [...state.item.coowners.filter((c) => c.id !== coownerId)];
       commit("patchItem", { coowners });
       commit("patchInitialItem", { coowners });
+
+      commit("addNotification", {
+        content: user.full_name,
+        title: "Copropriétaire retiré·e !",
+        variant: "success",
+        type: "loanable",
+      },{ root: true });
     },
 
     // treat loanable update as a particular case
