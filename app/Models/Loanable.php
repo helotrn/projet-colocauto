@@ -244,6 +244,7 @@ class Loanable extends BaseModel
         $coowner->loanable_id = $this->id;
 
         $this->coowners()->save($coowner);
+        return $coowner;
     }
 
     public function removeCoowner(int $userId)

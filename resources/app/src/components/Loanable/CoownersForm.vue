@@ -124,7 +124,7 @@
         text: 'full_name',
         details: 'description',
         params: {
-          fields: 'id,full_name,description,avatar.*',
+          fields: 'id,full_name,description,avatar.*,phone',
           '!id': userFilter,
           ...loanableCommunitiesFilter,
         },

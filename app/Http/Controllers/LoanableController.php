@@ -973,7 +973,9 @@ class LoanableController extends RestController
     public function addCoowner(AddCoownerRequest $request, $loanableId)
     {
         $loanable = Loanable::findOrFail($loanableId);
-        $loanable->addCoowner($request->get("user_id"));
+        $coowner = $loanable->addCoowner($request->get("user_id"));
+
+        return $this->respondWithItem($request, $coowner);
     }
 
     public function removeCoowner(RemoveCoownerRequest $request, $loanableId)

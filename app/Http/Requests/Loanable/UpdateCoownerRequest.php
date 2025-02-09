@@ -28,9 +28,6 @@ class UpdateCoownerRequest extends BaseRequest
 
     public function rules(): array
     {
-        return [
-            "title" => "string",
-            "receive_notifications" => "boolean",
-        ];
+        return Coowner::getRules();
     }
 }
