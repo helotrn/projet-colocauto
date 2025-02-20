@@ -3,7 +3,7 @@
     <div class="layout-header__navbar">
       <layout-navbar :title="title" />
     </div>
-    <div v-if="!isAdmin" class="layout-header__communities-navbar">
+    <div v-if="hasCommunity && !isAdmin" class="layout-header__communities-navbar">
       <layout-communities-navbar />
     </div>
   </header>
