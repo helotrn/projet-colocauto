@@ -372,10 +372,10 @@ export default {
       return this.$second.isBefore(this.item.departure_at, "minute");
     },
     loanExpense() {
-      return this.item.expenses.find(e => e.tag?.slug == 'loan')
+      return this.item.expenses?.find(e => e.tag?.slug == 'loan')
     },
     fuelExpense() {
-      return this.item.expenses.find(e => e.tag?.slug == 'fuel')
+      return this.item.expenses?.find(e => e.tag?.slug == 'fuel')
     },
   },
   watch: {

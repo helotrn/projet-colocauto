@@ -257,7 +257,9 @@ export default new RestModule(
 
           // update loan information following mileage update
           let expenses = [...state.item.expenses];
-          expenses[0].amount = response.data.loan.expenses[0].amount;
+          if( response.data.loan.expenses ) {
+            expenses[0].amount = response.data.loan.expenses[0].amount;
+          }
           let handover = {...state.item.handover};
           handover.mileage_end = response.data.loan.handover.mileage_end
 
