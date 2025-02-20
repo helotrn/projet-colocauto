@@ -262,11 +262,13 @@
               >
                 <b-row>
                   <b-col lg="6">
-                    <p>Cette information est-elle incorrecte?</p>
-                    <b-button v-if="lockMileage" @click="lockMileage = false">
-                      Modifier
-                    </b-button>
-                    <b-button v-else @click="update">
+                    <template v-if="lockMileage">
+                      <p>Cette information est-elle incorrecte?</p>
+                      <b-button  @click="lockMileage = false" variant="primary">
+                        Modifier
+                      </b-button>
+                    </template>
+                    <b-button v-else @click="update" variant="primary">
                       Enregistrer
                     </b-button>
                   </b-col>
