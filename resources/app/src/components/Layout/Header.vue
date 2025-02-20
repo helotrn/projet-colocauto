@@ -3,7 +3,7 @@
     <div class="layout-header__navbar">
       <layout-navbar :title="title" />
     </div>
-    <div class="layout-header__communities-navbar">
+    <div v-if="!isAdmin" class="layout-header__communities-navbar">
       <layout-communities-navbar />
     </div>
   </header>
@@ -12,9 +12,11 @@
 <script>
 import LayoutNavbar from "@/components/Layout/Navbar.vue";
 import LayoutCommunitiesNavbar from "@/components/Layout/CommunitiesNavbar.vue";
+import UserMixin from "@/mixins/UserMixin";
 
 export default {
   name: "Header",
+  mixins: [UserMixin],
   components: {
     LayoutNavbar,
     LayoutCommunitiesNavbar,
