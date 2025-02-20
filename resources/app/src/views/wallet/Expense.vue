@@ -42,7 +42,7 @@
 
     <b-row>
       <b-col>
-        <b-form class="form" @submit.prevent="submit">
+        <b-form class="form" @submit.prevent="submitExpense">
           <forms-builder :definition="form" v-model="item" entity="expenses" :disabled="item.locked || !user.borrower.validated">
             <template v-slot:loan_id="{ def, item, property }">
               <validation-provider
@@ -140,6 +140,28 @@ export default {
         this.item.loan_id = null;
       } else {
         this.item.loan_id = selection.id;
+      }
+    },
+    async submitExpense() {
+      const isNew = !this.item.id;
+
+      await this.submit();
+
+      if (isNew) {
+        this.$store.commit("addNotification", {
+          content:
+            "La dépense a bien été créée.",
+          title: "Dépense créée",
+          variant: "success",
+          type: "expense",
+        });
+      } else {
+        this.$store.commit("addNotification", {
+          content: "La dépense a été enregistrée avec succès.",
+          title: "Dépense enregistrée",
+          variant: "success",
+          type: "expense",
+        });
       }
     },
   },

@@ -63,7 +63,7 @@
       cancel-title="Annuler l’écriture du remboursement"
       cancel-variant="outline-primary"
       ok-title="Enregistrer le remboursement"
-      @ok="submit"
+      @ok="submitRefund"
       @cancel="returnToRefundsList">
       <round-warning width="50px" class="mx-auto d-block my-4" />
       <p style="font-size:20px; text-align:center">
@@ -127,6 +127,28 @@ export default {
     afterSubmit() {
       // immediately show balance screen once refund has been added
       this.$router.push('/wallet/balance');
+    },
+    async submitRefund() {
+      const isNew = !this.item.id;
+
+      await this.submit();
+
+      if (isNew) {
+        this.$store.commit("addNotification", {
+          content:
+            "Le remboursement a bien été créé.",
+          title: "Remboursement créé",
+          variant: "success",
+          type: "refund",
+        });
+      } else {
+        this.$store.commit("addNotification", {
+          content: "Le remboursement a été enregistré avec succès.",
+          title: "Remboursement enregistré",
+          variant: "success",
+          type: "refund",
+        });
+      }
     },
   },
   i18n: {
