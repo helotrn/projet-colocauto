@@ -343,7 +343,7 @@ export default {
     },
     getInvalidFeedback({errors}){
       if( errors ) {
-        return errors.map(e => e.replace('community_id', this.$t('fields.community_id')))
+        return errors.map(e => e.replace('community_id', this.$t('fields.community_id'))).join(', ')
       }
     }
   },
