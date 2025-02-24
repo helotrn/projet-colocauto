@@ -5,9 +5,9 @@
         <a v-if="loanableUrl" :href="loanableUrl">{{ loanable.name }}</a>
         <span v-else>{{ loanable.name }}</span>
       </b-card-title>
-      <div class="details-toggle mb-3 text-muted" v-b-toggle.loanable-details>
+      <div class="details-toggle mb-3" v-b-toggle.loanable-details>
         {{ $t("details_box.details") | capitalize }} {{ prettyType }}
-        <b-icon icon="caret-right-fill"></b-icon>
+        <icons-caret class="b-icon" />
       </div>
       <b-card-text>
         <b-collapse id="loanable-details" role="tabpanel" accordion="loanable-details">
@@ -167,11 +167,12 @@ import { durationInHours } from "@/helpers/filters";
 import locales from "@/locales";
 import UserMixin from "@/mixins/UserMixin";
 import LoanPriceDetails from "@/components/Loan/PriceDetails";
+import IconsCaret from "@/assets/icons/caret.svg";
 
 export default {
   name: "LoanDetailsBox",
   mixins: [UserMixin],
-  components: {LoanPriceDetails},
+  components: {LoanPriceDetails, IconsCaret},
   props: {
     loan: {
       type: Object,
@@ -298,6 +299,23 @@ export default {
 
 <style lang="scss">
 .loanable-details-box {
+  .details-toggle {
+    color: $primary;
+    position: relative;
+    &:hover {
+      text-decoration: underline;
+    }
+    .b-icon {
+      transition: 0.3s;
+      fill: $primary;
+      position: absolute;
+      right: 0;
+      transform: rotate(90deg);
+    }
+    &.not-collapsed .b-icon {
+      transform: rotate(270deg);
+    }
+  }
   .card-img-top {
     aspect-ratio: 16 / 10;
     object-fit: cover;
