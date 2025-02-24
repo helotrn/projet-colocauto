@@ -1,6 +1,7 @@
 <template>
   <b-card no-body class="loan-form loan-actions loan-actions-handover">
     <b-card-header
+      id="handover"
       header-tag="header"
       role="tab"
       class="loan-actions__header"

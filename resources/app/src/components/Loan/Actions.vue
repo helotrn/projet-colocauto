@@ -37,7 +37,7 @@
         <loan-actions-takeover
           :action="action"
           :item="item"
-          :open="isCurrentStep('takeover')"
+          :open="isCurrentStep('takeover') || $route.hash == '#takeover'"
           @completed="emitLoad"
           @canceled="emitLoad"
           :user="user"
@@ -59,7 +59,7 @@
           v-else
           :action="action"
           :item="item"
-          :open="isCurrentStep('handover')"
+          :open="isCurrentStep('handover') || $route.hash == '#handover'"
           @completed="emitLoad"
           @canceled="emitLoad"
           :user="user"
@@ -161,6 +161,17 @@ export default {
       this.$emit("submit");
     },
   },
+  mounted() {
+    if (this.$route.hash) {
+      // scroll to the pointed section if needed
+      setTimeout(() => {
+        const el = document.getElementById(this.$route.hash.substring(1));
+        if (el) {
+          this.$scrollTo(el);
+        }
+      }, 100);
+    }
+  }
 };
 </script>
 

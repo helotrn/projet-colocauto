@@ -1,6 +1,7 @@
 <template>
   <b-card no-body class="loan-form loan-actions loan-actions-takeover">
     <b-card-header
+      id="takeover"
       header-tag="header"
       role="tab"
       class="loan-actions__header"

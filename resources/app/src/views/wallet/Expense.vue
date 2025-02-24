@@ -73,7 +73,7 @@
                   <b-button
                     size="sm"
                     variant="success"
-                    :to="`/loans/${item.loan.id}`"
+                    :to="`/loans/${item.loan.id}#handover`"
                     :disabled="!item.loan"
                   >
                     Voir l'emprunt
