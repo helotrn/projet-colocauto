@@ -71,6 +71,7 @@
                     @input="setExpenseLoan"
                   />
                   <b-button
+                    v-if="item.loan"
                     size="sm"
                     variant="success"
                     :to="`/loans/${item.loan.id}#handover`"
