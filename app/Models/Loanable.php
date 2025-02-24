@@ -300,7 +300,7 @@ class Loanable extends BaseModel
             $request = request();
             if( $request && $request->user() ) {
               // loanable owner can create a loan even if the schedule is closed
-              return $request->user()->id == $this->owner->user->id;
+              return $request->user()->id == $this->owner->user->id || $this->isCoowner($request->user());
             } else {
               return false;
             }

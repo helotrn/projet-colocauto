@@ -428,6 +428,7 @@ class LoanableController extends RestController
             "type",
             "image.*",
             "community.id",
+            "coowners.user.id",
         ];
 
         // Possibly cache these per community per type.

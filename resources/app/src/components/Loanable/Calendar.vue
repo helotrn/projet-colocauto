@@ -323,8 +323,13 @@ export default {
       if (this.variant) {
         classList["loanable-calendar--" + this.variant] = true;
       }
-      // if current user is the loanable owner
-      classList["loanable-owner"] = this.user.id == this.loanable.owner?.user?.id
+      // if current user is the loanable owner or coowner
+      if( this.user.id == this.loanable.owner?.user?.id
+        || (this.loanable.coowners
+          && this.loanable.coowners.find(c => c.user?.id == this.user.id)
+        ) ) {
+        classList["loanable-owner"] = true
+      }
       return classList;
     },
     vueCalEvents: function () {
