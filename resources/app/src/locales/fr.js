@@ -169,6 +169,7 @@ export default {
     expense_tag: "Type de dépense",
     refunds: "Remboursements",
     refund: "Remboursement",
+    wallet: "Portefeuille",
   },
   trailers: trailers.fr,
   users: users.fr,

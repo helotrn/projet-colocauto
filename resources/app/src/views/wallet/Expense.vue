@@ -5,7 +5,7 @@
     <b-row>
       <b-col>
         <h1>
-          {{ $t(item.id ? (item.locked ? "afficher une" : "modifier une") : "ajouter une") | capitalize }} {{ $tc("dépense", 1) }}
+          {{ $tc(item.id ? (item.locked ? "list.display" : "list.edit") : "list.add") | capitalize }}
         </h1>
       </b-col>
     </b-row>
@@ -53,7 +53,7 @@
                 v-slot="validationContext"
               >
                 <b-form-group
-                  :label="$t('expenses.fields.loan_id') | capitalize"
+                  :label="$t('fields.loan_id') | capitalize"
                   label-for="loan_id"
                   :state="getValidationState(validationContext)"
                   v-b-tooltip.hover
@@ -63,7 +63,7 @@
                     id="loan_id"
                     name="loan_id"
                     :query="form.loan_id.query"
-                    :placeholder="$t('expenses.fields.loan_id') | capitalize"
+                    :placeholder="$t('fields.loan_id') | capitalize"
                     :disabled="form.loan_id.disabled"
                     :state="getValidationState(validationContext)"
                     :object-value="item.loan"
@@ -170,8 +170,8 @@ export default {
     fullTitle() {
       const parts = [
         "Coloc'Auto",
-        capitalize(this.$i18n.t("wallet.titles.wallet")),
-        capitalize(this.$i18n.tc("dépense", 2)),
+        capitalize(this.$i18n.t("titles.wallet")),
+        capitalize(this.$i18n.t("titles.expense")),
       ];
 
       if (this.pageTitle) {
@@ -181,7 +181,7 @@ export default {
       return parts.reverse().join(" | ");
     },
     pageTitle() {
-      return this.item.name || capitalize(this.$i18n.tc("dépense", 1));
+      return this.item.name;
     },
   },
   watch: {

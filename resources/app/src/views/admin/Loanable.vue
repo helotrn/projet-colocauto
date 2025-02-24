@@ -34,9 +34,9 @@
                     v-slot="validationContext"
                   >
                     <b-form-group
-                      :label="$t('loanables.fields.community_id') | capitalize"
+                      :label="$t('fields.community_id') | capitalize"
                       label-for="community_id"
-                      :description="$t('loanables.descriptions.community_id')"
+                      :description="$t('descriptions.community_id')"
                       :invalid-feedback="getInvalidFeedback(validationContext)"
                       :state="getValidationState(validationContext)"
                       v-b-tooltip.hover
@@ -46,7 +46,7 @@
                         id="community_id"
                         name="community_id"
                         :query="form.general.community_id.query"
-                        :placeholder="$t('loanables.fields.community_id') | capitalize"
+                        :placeholder="$t('fields.community_id') | capitalize"
                         :disabled="form.general.community_id.disabled"
                         :state="getValidationState(validationContext)"
                         :object-value="item.community"
@@ -343,7 +343,7 @@ export default {
     },
     getInvalidFeedback({errors}){
       if( errors ) {
-        return errors.map(e => e.replace('community_id', this.$t('loanables.fields.community_id')))
+        return errors.map(e => e.replace('community_id', this.$t('fields.community_id')))
       }
     }
   },

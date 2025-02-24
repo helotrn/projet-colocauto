@@ -17,6 +17,8 @@ export default {
     list: {
       create: "ajouter un remboursement",
       selected: "{count} remboursement sélectionné | {count} remboursements sélectionnés",
+      edit: "modifier un remboursement",
+      add: "ajouter un remboursement",
     }
   }
 }

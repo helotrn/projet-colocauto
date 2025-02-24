@@ -3,7 +3,7 @@
     <b-row>
       <b-col class="admin__buttons">
         <b-btn v-if="creatable" :to="`/wallet/${slug}/new`">
-          {{ $t("ajouter un remboursement") | capitalize }}
+          {{ $t("list.add") | capitalize }}
         </b-btn>
       </b-col>
     </b-row>

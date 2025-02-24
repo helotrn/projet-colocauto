@@ -5,7 +5,7 @@
     <b-row>
       <b-col>
         <h1>
-          {{ $t(item.id ? "modifier un" : "ajouter un") | capitalize }} {{ $tc("remboursement", 1) }}
+          {{ $t(item.id ? "list.edit" : "list.add") | capitalize }}
         </h1>
       </b-col>
     </b-row>
@@ -106,8 +106,8 @@ export default {
     fullTitle() {
       const parts = [
         "Coloc'Auto",
-        capitalize(this.$i18n.t("wallet.titles.wallet")),
-        capitalize(this.$i18n.tc("remboursement", 2)),
+        capitalize(this.$i18n.t("titles.wallet")),
+        capitalize(this.$i18n.t("titles.refund")),
       ];
 
       if (this.pageTitle) {
@@ -117,7 +117,7 @@ export default {
       return parts.reverse().join(" | ");
     },
     pageTitle() {
-      return this.item.name || capitalize(this.$i18n.tc("remboursement", 1));
+      return this.item.name;
     },
   },
   methods: {

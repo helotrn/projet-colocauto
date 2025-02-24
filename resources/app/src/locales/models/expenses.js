@@ -27,6 +27,9 @@ export default {
     list: {
       create: "enregister une nouvelle dépense",
       selected: "{count} dépenses sélectionnée | {count} dépenses sélectionnées",
+      edit: "modifier une dépense",
+      add: "ajouter une dépense",
+      display: "afficher une dépense",
     }
   }
 }
