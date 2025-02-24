@@ -299,8 +299,12 @@ class Loanable extends BaseModel
         if (!$this->isLoanableScheduleOpen($departureAt, $returnAt)) {
             $request = request();
             if( $request && $request->user() ) {
-              // loanable owner can create a loan even if the schedule is closed
-              return $request->user()->id == $this->owner->user->id || $this->isCoowner($request->user());
+                // loanable owner can create a loan even if the schedule is closed
+                if( $request->user()->id == $this->owner->user->id || $this->isCoowner($request->user()) ) {
+                    // continue
+                } else {
+                    return false;
+                }
             } else {
               return false;
             }
@@ -308,7 +312,7 @@ class Loanable extends BaseModel
 
         $query = Loan::where("loanable_id", $this->id);
 
-        if ($ignoreLoanIds) {
+        if (sizeof(array_filter($ignoreLoanIds))) {
             $query = $query->whereNotIn("loans.id", $ignoreLoanIds);
         }
 
