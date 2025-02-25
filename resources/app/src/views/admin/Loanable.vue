@@ -99,9 +99,13 @@
               </forms-builder>
             </div>
 
-            <div class="form__section" v-if="item.type === 'car'">
-              <h2>Détails de la voiture</h2>
-
+            <form-section
+              v-if="item.type === 'car'"
+              toggleable
+              class="mt-2"
+              section-title="Détails de la voiture"
+              :inititally-visible="false"
+            >
               <forms-builder :definition="carForm" v-model="item" entity="cars">
                 <!-- remove unused parameters -->
                 <template v-slot:year_of_circulation></template>
@@ -115,16 +119,24 @@
                   </b-form-group>
                 </template>
               </forms-builder>
-            </div>
+            </form-section>
 
-            <div class="form__section" v-if="item.owner && item.owner.user">
-              <h2>Droits de gestion</h2>
+            <form-section
+              v-if="item.owner && item.owner.user"
+              toggleable
+              class="mt-2"
+              section-title="Droits de gestion"
+              :inititally-visible="false"
+            >
               <coowners-form :loanable="item" />
-            </div>
+            </form-section>
 
-            <div class="form__section">
-              <h2>Partage des coûts</h2>
-
+            <form-section
+              toggleable
+              class="mt-2"
+              section-title="Partage des coûts"
+              :inititally-visible="false"
+            >
               <b-row>
                 <b-col lg="6">
                   <forms-builder :definition="form.costs" v-model="item" entity="cars"></forms-builder>
@@ -133,11 +145,17 @@
                   <loanable-balance v-if="item.balance" :loanable="item" />
                 </b-col>
               </b-row>
-            </div>
+            </form-section>
 
-            <div class="form__section" v-if="item.type && item.id">
+            <form-section
+              v-if="item.type && item.id"
+              toggleable
+              class="mt-2"
+              section-title="Disponibilités"
+              :inititally-visible="false"
+            >
               <loanable-availability-rules :changed="changed" :loanable="item" :loading="loading" />
-            </div>
+            </form-section>
 
             <div class="form__buttons">
               <b-button-group>
@@ -164,6 +182,7 @@ import FormsRelationInput from "@/components/Forms/RelationInput.vue";
 import LoanableAvailabilityRules from "@/components/Loanable/AvailabilityRules.vue";
 import LoanableBalance from "@/components/Loanable/Balance.vue";
 import CoownersForm from "@/components/Loanable/CoownersForm.vue";
+import FormSection from "@/components/Loanable/FormSection.vue";
 
 import DataRouteGuards from "@/mixins/DataRouteGuards";
 import FormMixin from "@/mixins/FormMixin";
@@ -182,6 +201,7 @@ export default {
     LoanableAvailabilityRules,
     LoanableBalance,
     CoownersForm,
+    FormSection,
   },
   data() {
     return {
