@@ -760,9 +760,11 @@ SQL;
         }
         // Cannot cancel loans with transfer of funds
         if (
-            $this->payment &&
-            $this->payment->status === "completed" &&
-            $this->total_final_cost > 0
+            (
+                ($this->payment && $this->payment->status === "completed")
+             || ($this->handover && $this->handover->status === "completed")
+            )
+            && $this->final_price > 0
         ) {
             return false;
         }
