@@ -3,7 +3,9 @@
 namespace Tests\Integration;
 
 use App\Models\User;
+use App\Models\Invitation;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 use Tests\TestCase;
 
 class AuthTest extends TestCase
@@ -67,14 +69,30 @@ class AuthTest extends TestCase
 
     public function testRegister()
     {
+        $invitation = $this->createInvitation();
+        $data = [
+            "email" => $this->faker->unique()->safeEmail,
+            "password" => "molotov",
+            "invitationToken" => $invitation->token,
+        ];
+        $response = $this->json("POST", "/api/v1/auth/register", $data);
+        //var_dump($response);
+        $response
+            ->assertStatus(200)
+            ->assertJsonStructure(static::$loginResponseStructure);
+    }
+    
+    public function testRegisterWithoutInvitation()
+    {
         $data = [
             "email" => $this->faker->unique()->safeEmail,
             "password" => "molotov",
         ];
         $response = $this->json("POST", "/api/v1/auth/register", $data);
+
         $response
-            ->assertStatus(200)
-            ->assertJsonStructure(static::$loginResponseStructure);
+            ->assertStatus(422)
+            ->assertJsonStructure(TestCase::$validationErrorStructure);
     }
 
     public function testRegisterWithMissingFields()
@@ -129,5 +147,15 @@ class AuthTest extends TestCase
         $user->save();
 
         return $user;
+    }
+
+    private function createInvitation()
+    {
+        $invitation = new Invitation();
+        $invitation->email = "emile@locomotion.app";
+        $invitation->token = Str::random(20);
+        $invitation->save();
+
+        return $invitation;
     }
 }
