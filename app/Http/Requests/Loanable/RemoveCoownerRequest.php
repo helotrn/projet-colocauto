@@ -14,6 +14,9 @@ class RemoveCoownerRequest extends BaseRequest
             return false;
         }
         $loanable = Loanable::find($this->route("loanable_id"));
+        if (!$loanable) {
+            return false;
+        }
 
         return $user->is($loanable->owner->user) ||
             $user->isAdmin() ||

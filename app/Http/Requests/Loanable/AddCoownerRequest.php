@@ -15,6 +15,9 @@ class AddCoownerRequest extends BaseRequest
             return false;
         }
         $loanable = Loanable::find($this->route("loanable_id"));
+        if (!$loanable) {
+            return false;
+        }
 
         if( $user->isAdmin() ){
             return true;
