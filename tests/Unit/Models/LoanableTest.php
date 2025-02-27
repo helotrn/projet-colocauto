@@ -409,6 +409,58 @@ class LoanableTest extends TestCase
                 "canceled_at" => now(),
             ]);
 
+        $confirmedLoan = factory(Loan::class)
+            ->states("withCompletedIntention", "withInProcessPrePayment")
+            ->create([
+                "borrower_id" => $user->borrower->id,
+                "loanable_id" => $bike->id,
+                "community_id" => $this->community->id,
+                "departure_at" => "3000-10-12 10:10:00",
+                "duration_in_minutes" => 60,
+            ])
+            ->refresh();
+        $confirmedLoan->intention->complete()->save();
+        $confirmedLoan->refresh();
+
+        $this->assertEquals(
+            true,
+            $bike->isAvailable("3000-10-10 10:20:00", 60)
+        );
+        $this->assertEquals(
+            true,
+            $bike->isAvailable("3000-10-10 11:20:00", 60)
+        );
+
+        $this->assertEquals(
+            true,
+            $bike->isAvailable("3000-10-11 10:20:00", 60)
+        );
+        $this->assertEquals(
+            true,
+            $bike->isAvailable("3000-10-11 11:20:00", 60)
+        );
+
+        $this->assertEquals(
+            false,
+            $bike->isAvailable("3000-10-12 10:20:00", 60)
+        );
+        $this->assertEquals(
+            true,
+            $bike->isAvailable("3000-10-12 11:20:00", 60)
+        );
+    }
+
+    public function testIsAvailableEventIfLoanExistsWithIntentionPrePaymentCanceled()
+    {
+        $bike = factory(Bike::class)->create([
+            "owner_id" => $this->memberOfCommunity->owner->id,
+            "community_id" => $this->community->id,
+        ]);
+
+        $user = factory(User::class)
+            ->states("withBorrower")
+            ->create();
+
         $canceledPrePaymentLoan = factory(Loan::class)
             ->states("withCompletedIntention", "withCanceledPrePayment")
             ->create([
@@ -431,15 +483,6 @@ class LoanableTest extends TestCase
             ->refresh();
         $confirmedLoan->intention->complete()->save();
         $confirmedLoan->refresh();
-
-        $this->assertEquals(
-            true,
-            $bike->isAvailable("3000-10-10 10:20:00", 60)
-        );
-        $this->assertEquals(
-            true,
-            $bike->isAvailable("3000-10-10 11:20:00", 60)
-        );
 
         $this->assertEquals(
             true,
