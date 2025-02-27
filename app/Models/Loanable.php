@@ -62,7 +62,9 @@ class Loanable extends BaseModel
 
         self::created(function ($model) {
             // loanable is available by default
-            $model->availability_mode = "always";
+            if(!$model->availability_mode) {
+                $model->availability_mode = "always";
+            }
             $model->save();
         });
 
