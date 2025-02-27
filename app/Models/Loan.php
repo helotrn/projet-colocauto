@@ -851,6 +851,7 @@ SQL;
             switch ($action->status) {
                 case "in_process":
                 case "completed":
+                case "canceled":
                     return $action->status;
                     break;
                 default:
