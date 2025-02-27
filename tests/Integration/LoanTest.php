@@ -652,7 +652,7 @@ class LoanTest extends TestCase
         $response->assertStatus(201);
     }
 
-    public function testCreateLoansOnlyBuildsOneIntention()
+    public function testCreateLoansBuildsIntentionAndTakeover()
     {
         $borrower = factory(Borrower::class)->create([
             "user_id" => $this->user->id,
@@ -692,10 +692,11 @@ class LoanTest extends TestCase
         $responseData = json_decode($response->getContent());
 
         // Validate loan actions
-        $this->assertCount(1, $responseData->actions);
+        $this->assertCount(2, $responseData->actions);
 
         $refActionStatuses = [
-            "intention" => "in_process",
+            "intention" => "completed",
+            "takeover" => "in_process",
         ];
         $testActionStatuses = [];
         foreach ($responseData->actions as $action) {
@@ -752,7 +753,7 @@ class LoanTest extends TestCase
 
         $refActionStatuses = [
             "intention" => "completed",
-            "pre_payment" => "in_process",
+            "takeover" => "in_process",
         ];
         $testActionStatuses = [];
         foreach ($responseData->actions as $action) {
