@@ -414,8 +414,9 @@ class LoanTest extends TestCase
 
         $this->json("POST", "/api/v1/loans", $approvedData)->assertStatus(201);
         $this->json("POST", "/api/v1/loans", $suspendedData)->assertStatus(422);
+        // just registered community is approved by default
         $this->json("POST", "/api/v1/loans", $justRegisteredData)->assertStatus(
-            422
+            201
         );
 
         // Approve previously suspended or not approved communities
@@ -423,16 +424,8 @@ class LoanTest extends TestCase
             "approved_at" => new DateTime(),
             "suspended_at" => null,
         ]);
-        $user
-            ->communities()
-            ->updateExistingPivot($justRegisteredCommunity->id, [
-                "approved_at" => new DateTime(),
-            ]);
 
         $this->json("POST", "/api/v1/loans", $suspendedData)->assertStatus(201);
-        $this->json("POST", "/api/v1/loans", $justRegisteredData)->assertStatus(
-            201
-        );
     }
 
     public function testShowLoans()
