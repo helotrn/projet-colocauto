@@ -27,7 +27,6 @@ $factory->define(Car::class, function (Faker $faker) {
             "to_request_with_car",
         ]),
         "plate_number" => $faker->shuffle("9F29J2"),
-        "position" => [$faker->latitude, $faker->longitude],
         "pricing_category" => $faker->randomElement(["small", "large"]),
         "transmission_mode" => $faker->randomElement(["automatic", "manual"]),
         "year_of_circulation" => $faker->year($max = "now"),

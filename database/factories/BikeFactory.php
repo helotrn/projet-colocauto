@@ -9,7 +9,6 @@ use Faker\Generator as Faker;
 $factory->define(Bike::class, function (Faker $faker) {
     return [
         "name" => $faker->name,
-        "position" => [$faker->latitude, $faker->longitude],
         "location_description" => $faker->sentence,
         "comments" => $faker->paragraph,
         "instructions" => $faker->paragraph,
