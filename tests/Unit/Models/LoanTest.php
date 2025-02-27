@@ -423,6 +423,7 @@ class LoanTest extends TestCase
             ->states("withContestedHandover")
             ->create();
 
+        $loan->refresh();
         $this->assertTrue($loan->is_contested);
     }
 
