@@ -100,7 +100,7 @@ export default [
               "*,owner.user.full_name,owner.user.communities.name,owner.user.avatar," +
               "owner.user.communities.parent.name,community.name,community.users.id," +
               "coowners.user,coowners.user.full_name,coowners.user.phone,coowners.user.avatar,coowners.title,coowners.receive_notifications," +
-              "community.parent.name,padlock.name,report.*,image.*,balance",
+              "community.parent.name,padlock.name,report.*,image.*,balance,reports.*,reports.pictures",
             with_deleted: true,
           },
           title: "titles.loanable",

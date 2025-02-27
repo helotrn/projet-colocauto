@@ -125,6 +125,27 @@
               </forms-builder>
             </form-section>
 
+            <div class="form__section">
+              <h2 id="reports">État du véhicule</h2>
+              <div v-if="lastReportDate" class="mb-4">
+                <small>Date de dernière modification : {{lastReportDate | datetime}}</small>
+              </div>
+              <form-section
+                v-for="location in reportLocations"
+                :key="location.slug"
+                toggleable
+                class="mt-2"
+                :section-title="location.label"
+                :header-level="3"
+                :inititally-visible="false"
+              >
+                <report-form
+                  :report="lastReportOfLocation(location.slug)"
+                  @update="updateReport"
+                />
+              </form-section>
+            </div>
+
             <form-section
               v-if="item.owner && item.owner.user"
               toggleable
@@ -187,6 +208,7 @@ import LoanableAvailabilityRules from "@/components/Loanable/AvailabilityRules.v
 import LoanableBalance from "@/components/Loanable/Balance.vue";
 import CoownersForm from "@/components/Loanable/CoownersForm.vue";
 import FormSection from "@/components/Loanable/FormSection.vue";
+import ReportForm from "@/components/Loanable/ReportForm.vue";
 
 import DataRouteGuards from "@/mixins/DataRouteGuards";
 import FormMixin from "@/mixins/FormMixin";
@@ -206,6 +228,7 @@ export default {
     LoanableBalance,
     CoownersForm,
     FormSection,
+    ReportForm,
   },
   data() {
     return {
@@ -296,6 +319,19 @@ export default {
       }
 
       return form;
+    },
+    reportLocations() {
+      return Object.entries(locales.fr.reports.location.label).map(l => ({
+        slug: l[0],
+        label: l[1]
+      }))
+    },
+    lastReportDate() {
+      if( !this.item.reports ) return null;
+      let reports = this.item.reports
+        .toSorted((a,b) => a.updated_at < b.updated_at ? -1 : 1)
+      if( reports.length ) return reports[0].updated_at
+      else return null
     },
   },
   methods: {
@@ -399,7 +435,41 @@ export default {
       if( errors ) {
         return errors.map(e => e.replace('community_id', this.$t('fields.community_id'))).join(', ')
       }
-    }
+    },
+    lastReportOfLocation(location) {
+      let reportsOfLocation;
+      if( !this.item.reports ) {
+        reportsOfLocation = [];
+      } else {
+        reportsOfLocation = this.item.reports
+          .filter(r => r.location == location)
+          .toSorted((a,b) => a.updated_at < b.updated_at ? -1 : 1)
+      }
+      if( reportsOfLocation.length ) return reportsOfLocation[0]
+      else return {
+        location,
+        scratch: false,
+        bumps: false,
+        stain: false,
+        details: null,
+        loanable_id: this.item.id,
+        pictures: [],
+      }
+    },
+    updateReport(report) {
+      let reports = [...this.$store.state.loanables.item.reports]
+      if( report.id ){
+        // update existing report
+        reports = reports.map(r => r.id == report.id ? ({...r, ...report}) : r)
+      } else {
+        // create a new report
+        reports.push({
+          ...report,
+          id: 'new'+this._uid
+        })
+      }
+      this.$store.commit("loanables/patchItem", {reports});
+    },
   },
   i18n: {
     messages: {
