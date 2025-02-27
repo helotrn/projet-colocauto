@@ -1642,13 +1642,13 @@ JSON
         // Complete valid request
         $this->json("GET", "/api/v1/loanables/search", [
             "departure_at" => Carbon::now()->format("Y-m-d H:i:s"),
-            "duration_in_minutes" => 20,
+            "duration_in_minutes" => 30,
             "estimated_distance" => 0,
         ])->assertStatus(200);
 
         // Departure missing
         $this->json("GET", "/api/v1/loanables/search", [
-            "duration_in_minutes" => 20,
+            "duration_in_minutes" => 30,
             "estimated_distance" => 0,
         ])
             ->assertStatus(422)
@@ -1661,7 +1661,7 @@ JSON
         // Distance missing
         $this->json("GET", "/api/v1/loanables/search", [
             "departure_at" => Carbon::now()->format("Y-m-d H:i:s"),
-            "duration_in_minutes" => 20,
+            "duration_in_minutes" => 30,
         ])
             ->assertStatus(422)
             ->assertJson([
@@ -1736,7 +1736,7 @@ JSON
             "departure_at" => Carbon::now()
                 ->subDay()
                 ->format("Y-m-d H:i:s"),
-            "duration_in_minutes" => 20,
+            "duration_in_minutes" => 30,
         ]);
         factory(Intention::class)->create([
             "status" => "completed",
@@ -1749,7 +1749,7 @@ JSON
 
         $response = $this->json("GET", "/api/v1/loanables/search", [
             "departure_at" => Carbon::now()->format("Y-m-d H:i:s"),
-            "duration_in_minutes" => 20,
+            "duration_in_minutes" => 30,
             "estimated_distance" => 0,
         ]);
 
@@ -1807,7 +1807,7 @@ JSON
 
         $response = $this->json("GET", "/api/v1/loanables/search", [
             "departure_at" => Carbon::now()->format("Y-m-d H:i:s"),
-            "duration_in_minutes" => 20,
+            "duration_in_minutes" => 30,
             "estimated_distance" => 0,
         ]);
 
@@ -1854,7 +1854,7 @@ JSON
             "departure_at" => Carbon::now()
                 ->subMinutes(5)
                 ->format("Y-m-d H:i:s"),
-            "duration_in_minutes" => 20,
+            "duration_in_minutes" => 30,
         ]);
         factory(Intention::class)->create([
             "status" => "completed",
@@ -1863,7 +1863,7 @@ JSON
 
         $response = $this->json("GET", "/api/v1/loanables/search", [
             "departure_at" => Carbon::now()->format("Y-m-d H:i:s"),
-            "duration_in_minutes" => 20,
+            "duration_in_minutes" => 30,
             "estimated_distance" => 0,
         ]);
 
@@ -1912,7 +1912,7 @@ JSON
 
         $response = $this->json("GET", "/api/v1/loanables/search", [
             "departure_at" => Carbon::now()->format("Y-m-d H:i:s"),
-            "duration_in_minutes" => 20,
+            "duration_in_minutes" => 30,
             "estimated_distance" => 0,
         ]);
 
@@ -1988,7 +1988,7 @@ JSON
 
         $response = $this->json("GET", "/api/v1/loanables/search", [
             "departure_at" => Carbon::now()->format("Y-m-d H:i:s"),
-            "duration_in_minutes" => 20,
+            "duration_in_minutes" => 30,
             "estimated_distance" => 0,
         ]);
 
@@ -2375,9 +2375,9 @@ JSON
         $this->setTestLocale();
 
         // Complete valid request
-        $this->json("GET", "/api/v1/loanables/{$loanable->id}/test", [
+        $response = $this->json("GET", "/api/v1/loanables/{$loanable->id}/test", [
             "departure_at" => Carbon::now()->format("Y-m-d H:i:s"),
-            "duration_in_minutes" => 20,
+            "duration_in_minutes" => 30,
             "estimated_distance" => 0,
             "loanable_id" => $loanable->id,
             "community_id" => $community->id,
@@ -2385,7 +2385,7 @@ JSON
 
         // Departure missing
         $this->json("GET", "/api/v1/loanables/{$loanable->id}/test", [
-            "duration_in_minutes" => 20,
+            "duration_in_minutes" => 30,
             "estimated_distance" => 0,
             "loanable_id" => $loanable->id,
             "community_id" => $community->id,
@@ -2400,7 +2400,7 @@ JSON
         // Community missing: OK
         $this->json("GET", "/api/v1/loanables/{$loanable->id}/test", [
             "departure_at" => Carbon::now()->format("Y-m-d H:i:s"),
-            "duration_in_minutes" => 20,
+            "duration_in_minutes" => 30,
             "estimated_distance" => 0,
             "loanable_id" => $loanable->id,
         ])->assertStatus(200);
@@ -2408,7 +2408,7 @@ JSON
         // Loanable missing
         $this->json("GET", "/api/v1/loanables/{$loanable->id}/test", [
             "departure_at" => Carbon::now()->format("Y-m-d H:i:s"),
-            "duration_in_minutes" => 20,
+            "duration_in_minutes" => 30,
             "estimated_distance" => 0,
         ])
             ->assertStatus(422)
