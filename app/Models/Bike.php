@@ -11,7 +11,6 @@ class Bike extends Loanable
         "location_description" => ["present"],
         "model" => ["required"],
         "name" => ["required"],
-        "position" => ["required"],
         "size" => ["required"],
         "type" => ["required", "in:bike"],
     ];
@@ -26,7 +25,6 @@ class Bike extends Loanable
         "location_description",
         "model",
         "name",
-        "position",
         "share_with_parent_communities",
         "size",
     ];
