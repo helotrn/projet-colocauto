@@ -1363,7 +1363,6 @@ JSON
                         "id",
                         "type",
                         "name",
-                        "position_google",
                         "is_self_service",
                         "comments",
                         "owner" => [
@@ -1426,7 +1425,6 @@ JSON
                         "id",
                         "type",
                         "name",
-                        "position_google",
                         "is_self_service",
                         "comments",
                         "owner" => [
@@ -1486,7 +1484,6 @@ JSON
                         "id",
                         "type",
                         "name",
-                        "position_google",
                         "is_self_service",
                         "comments",
                         "owner" => [
