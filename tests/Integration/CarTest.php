@@ -30,9 +30,11 @@ class CarTest extends TestCase
         "name",
         "papers_location",
         "plate_number",
-        "position",
         "transmission_mode",
         "year_of_circulation",
+        "cost_per_km",
+        "cost_per_month",
+        "owner_compensation",
     ];
 
     public function testCreateCars()
@@ -60,7 +62,6 @@ class CarTest extends TestCase
                 "to_request_with_car",
             ]),
             "plate_number" => $this->faker->shuffle("9F29J2"),
-            "position" => [$this->faker->latitude, $this->faker->longitude],
             "pricing_category" => "large",
             "transmission_mode" => $this->faker->randomElement([
                 "automatic",
@@ -68,6 +69,9 @@ class CarTest extends TestCase
             ]),
             "type" => "car",
             "year_of_circulation" => $this->faker->year($max = "now"),
+            "cost_per_km" => 1.00,
+            "cost_per_month" => 2.00,
+            "owner_compensation" => 3.00,
         ];
 
         $response = $this->json("POST", "/api/v1/cars", $data);
