@@ -9,6 +9,8 @@ use App\Models\Loan;
 use App\Models\Owner;
 use App\Models\Payment;
 use App\Models\PrePayment;
+use App\Models\Takeover;
+use App\Models\Handover;
 use App\Models\Pricing;
 use App\Models\User;
 use Carbon\Carbon;
@@ -148,11 +150,11 @@ class CarTest extends TestCase
 
         // Only completed loan
         $loan = $this->buildLoan();
-        $prePayment = factory(PrePayment::class)->create([
+        $takeover = factory(Takeover::class)->create([
             "loan_id" => $loan->id,
             "status" => "completed",
         ]);
-        $payment = factory(Payment::class)->create([
+        $handover = factory(Handover::class)->create([
             "loan_id" => $loan->id,
             "status" => "completed",
         ]);
