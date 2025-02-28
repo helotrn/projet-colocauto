@@ -495,7 +495,7 @@ class LoanController extends RestController
                 });
             });
 
-        $contestedLoans = (clone $approvedLoans)->where(function ($q) {
+        $contestedLoans = (clone $accessibleLoans)->where(function ($q) {
             $q->whereHas("takeover", function (Builder $q) {
                 $q->where("status", "canceled");
             })->orWhereHas("handover", function (Builder $q) {
