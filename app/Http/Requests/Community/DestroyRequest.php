@@ -13,11 +13,11 @@ class DestroyRequest extends BaseRequest
         }
 
         if ($this->user()->isCommunityAdmin()) {
-            if (Community::accessibleBy($this->user())->find($this->route('community_id')) {
+            if (Community::accessibleBy($this->user())->find($this->route('community_id'))) {
                 return true;
             }
         }
-        return false
+        return false;
     }
 
     public function rules()
