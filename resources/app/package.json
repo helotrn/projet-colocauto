@@ -21,6 +21,7 @@
         "dayjs-ext": "^2.2.0",
         "deepmerge": "^4.2.2",
         "locutus": "^2.0.11",
+        "posthog-js": "^1.231.0",
         "react-google-places-autocomplete": "^3.3.4",
         "simple-progress-webpack-plugin": "^2.0.0",
         "vee-validate": "^3.2.2",

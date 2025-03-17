@@ -9,6 +9,8 @@ import VueTheMask from "vue-the-mask";
 import * as Sentry from "@sentry/browser";
 import * as Integrations from "@sentry/integrations";
 import VueGtag from "vue-gtag";
+import PosthogPlugin from './plugins/posthog';
+import posthog from 'posthog-js';
 
 import { ValidationObserver, ValidationProvider, extend, localize } from "vee-validate";
 import { strtotime } from "locutus/php/datetime";
@@ -46,6 +48,18 @@ Vue.use(VueTheMask);
 Vue.use(VueScrollTo);
 Vue.use(BootstrapVue);
 Vue.use(BootstrapVueIcons);
+Vue.use(PosthogPlugin);
+
+router.beforeEach((to, from, next) => {
+  posthog.capture('$pageleave')
+  next()
+})
+
+router.afterEach(() => {
+  Vue.nextTick(() => {
+    posthog.capture('$pageview')
+  })
+})
 
 if (process.env.VUE_APP_GOOGLE_MAPS_API_KEY) {
   Vue.use(VueGoogleMaps, {
