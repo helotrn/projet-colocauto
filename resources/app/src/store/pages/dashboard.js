@@ -17,8 +17,6 @@ const initialState = {
   members: [],
   membersLoaded: false,
   hasMoreMembers: false,
-  carsList: [],
-  carsListed: false,
   balance: {},
   balanceLoaded: false,
   totalMembers: 0,
@@ -34,7 +32,6 @@ const actions = {
     commit("reloading");
     dispatch("loadLoans");
     dispatch("loadLoanables");
-    dispatch("listLoanableCars");
     dispatch("loadMembers", { user });
     if( user.communities && user.communities[0] ) {
       dispatch("loadBalance", { community: user.communities[0] });
@@ -110,21 +107,6 @@ const actions = {
       throw e;
     }
   },
-  async listLoanableCars({ commit }) {
-    commit("loadLoanables");
-
-    try {
-      const { data } = await Vue.axios.get("/loanables/list", {
-        params: {
-          types: 'car',
-        },
-      });
-      commit("carsListed", data.cars);
-    } catch (e) {
-      commit("errorLoading", e);
-      throw e;
-    }
-  },
 };
 
 const mutations = {
@@ -149,11 +131,6 @@ const mutations = {
     state.loanables = loanables.data;
     state.hasMoreLoanables = loanables.total > maxLoanableCount;
     state.totalLoanables = loanables.total;
-    state.loadRequests--;
-  },
-  carsListed(state, cars) {
-    state.carsListed = true;
-    state.carsList = cars;
     state.loadRequests--;
   },
   loadMembers(state) {

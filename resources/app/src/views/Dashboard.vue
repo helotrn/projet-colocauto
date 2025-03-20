@@ -490,7 +490,7 @@ export default {
       return this.$store.state.dashboard.hasMoreMembers;
     },
     carsList(){
-      return this.$store.state.dashboard.carsList
+      return this.$store.state.dashboard.loanables
         .filter(car => car.community?.id == this.currentCommunity)
         .sort((c1,c2) => {
           // cars owned by current user should appear first
