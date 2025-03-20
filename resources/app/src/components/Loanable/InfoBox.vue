@@ -3,7 +3,11 @@
     <router-link :to="`/profile/loanables/${id}`">
       <b-row>
         <b-col class="loanable-info-box__image">
-          <div :style="{ backgroundImage: loanableImage }" />
+          <div v-if="loanableImage" :style="{ backgroundImage: loanableImage }" />
+          <div v-else class="loanable-card__image--default" style="padding-left:1rem">
+            <svg-car v-if="type == 'car'" />
+            <svg-bike v-else-if="type == 'bike'" />
+          </div>
         </b-col>
 
         <b-col class="loanable-info-box__name"
@@ -23,6 +27,8 @@
 <script>
 import { extractErrors } from "@/helpers";
 import Community from "@/assets/icons/community.svg";
+import CarIcon from "@/assets/svg/car.svg";
+import BikeIcon from "@/assets/svg/bike.svg";
 
 export default {
   name: "LoanableInfoBox",
@@ -68,9 +74,15 @@ export default {
       type: Object,
       required: false,
     },
+    type: {
+      type: String,
+      required: false,
+    },
   },
   components: {
     "svg-community": Community,
+    "svg-car": CarIcon,
+    "svg-bike": BikeIcon,
   },
   data() {
     return {

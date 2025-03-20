@@ -17,9 +17,14 @@
         <div class="loan-info-box__image__wrapper">
           <div class="loan-info-box__image">
             <div
+              v-if="loanableImage"
               class="loan-info-box__image__loanable"
               :style="{ backgroundImage: loanableImage }"
             />
+            <div v-else class="loanable-card__image--default">
+              <svg-car v-if="loanableType == 'car'" />
+              <svg-bike v-else-if="loanableType == 'bike'" />
+            </div>
           </div>
 
           <div class="loan-info-box__name">
@@ -102,6 +107,8 @@
 <script>
 import LoanStatus from "@/components/Loan/Status.vue";
 import UserAvatar from "@/components/User/Avatar.vue";
+import CarIcon from "@/assets/svg/car.svg";
+import BikeIcon from "@/assets/svg/bike.svg";
 
 export default {
   name: "LoanInfoBox",
@@ -138,6 +145,8 @@ export default {
   components: {
     LoanStatus,
     UserAvatar,
+    "svg-car": CarIcon,
+    "svg-bike": BikeIcon,
   },
   computed: {
     isAvailable() {
@@ -150,6 +159,9 @@ export default {
       }
 
       return `url('${image.sizes.thumbnail}')`;
+    },
+    loanableType() {
+      return this.loan.loanable.type;
     },
     multipleDays() {
       return (
