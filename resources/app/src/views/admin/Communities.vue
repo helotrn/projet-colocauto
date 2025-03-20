@@ -50,7 +50,7 @@
             {{ row.item.parent ? row.item.parent.name : "-" }}
           </template>
           <template v-slot:cell(admins.full_name)="{item}">
-            <router-link v-for="admin in item.admins" :to="'/admin/users/'+admin.id" class="comma-list">
+            <router-link v-for="admin in item.admins" :key="admin.id" :to="'/admin/users/'+admin.id" class="comma-list">
               {{ admin.full_name }}
             </router-link>
           </template>

@@ -81,12 +81,13 @@
             <template v-if="row.item.communities && row.item.communities.length">
               <router-link
                 v-for="community,i in row.item.communities"
+                :key="community.id"
                 :to="'/admin/communities/'+community.id">
                 {{ community.name }}<template v-if="i<row.item.communities.length-1">,</template>
               </router-link>
             </template>
             <template v-else-if="row.item.administrable_communities && row.item.administrable_communities.length">
-              <router-link v-for="community,i in row.item.administrable_communities" :to="'/admin/communities/'+community.id">
+              <router-link v-for="community,i in row.item.administrable_communities" :key="community.id" :to="'/admin/communities/'+community.id">
                 {{ community.name }}<template v-if="i<row.item.administrable_communities.length-1">,</template>
               </router-link>
             </template>
