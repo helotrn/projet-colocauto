@@ -14,7 +14,7 @@
               <strong>Coloc'Auto</strong> est porté par <a href="https://www.mobicoop.fr" target="_blank">Mobicoop</a> :
               une coopérative qui travaille depuis 2008 avec les citoyens, les entreprises et les acteurs
               publics pour promouvoir les mobilités partagées.
-            <p/>
+            </p>
             <p>Cette application est basée sur <a href="https://locomotion.app/" target="_blank">LocoMotion.app</a>,
             un projet citoyen actuellement à l'œuvre au Québec et accompagné par Solon.
             <a href="https://solon-collectif.org/action/locomotion/" target="_blank">En savoir plus</a>

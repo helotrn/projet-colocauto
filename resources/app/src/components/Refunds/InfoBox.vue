@@ -1,5 +1,5 @@
 <template>
-  <b-card no-body class="refund-info-box shadow my-2" bg="white" no-body :class="{ disabled: loading }">
+  <b-card no-body class="refund-info-box shadow my-2" bg="white" :class="{ disabled: loading }">
     <router-link :to="`/wallet/refunds/${id}`">
       <div class="card-header">
           <b-row>
