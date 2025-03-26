@@ -8,6 +8,10 @@ export default {
     or: "OU",
     password: "Mot de passe",
     remember_me: "Se souvenir de moi",
+    show_password: "Afficher le mot de passe",
+    hide_password: "Masquer le mot de passe",
+    password_shown: "Votre mot de passe est affiché !",
+    password_hidden: "Votre mot de passe est masqué",
   },
   en: {
     email: "Email",
@@ -18,5 +22,9 @@ export default {
     or: "OR",
     password: "Password",
     remember_me: "Remember me",
+    show_password: "Show password",
+    hide_password: "Hide password",
+    password_shown: "Your password is shown!",
+    password_hidden: "Your password is hidden",
   },
 };

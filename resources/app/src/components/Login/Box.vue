@@ -7,8 +7,26 @@
         <b-form-input type="email" required :placeholder="$t('email')" v-model="email" />
       </b-form-group>
 
-      <b-form-group :label="$t('password')">
-        <b-form-input type="password" required :placeholder="$t('password')" v-model="password" />
+      <b-form-group :label="$t('password')" class="login-box__pw-group">
+        <b-form-input
+          :type="passwordIsVisible ? 'text' : 'password'"
+          required
+          :placeholder="$t('password')"
+          v-model="password"
+          id="password"
+        />
+        <button
+          type="button"
+          class="login-box__show-pw"
+          :aria-pressed="passwordIsVisible ? 'true' : 'false'"
+          aria-controls="password"
+          @click="hideShowPassword"
+          :title="passwordIsVisible ? $t('hide_password') : $t('show_password')"
+        >
+          <eye-slash-icon v-if="passwordIsVisible" aria-hidden="true" focusable="false" />
+          <eye-icon v-else aria-hidden="true" focusable="false" />
+          <span class="sr-only">{{ passwordIsVisible ? $t("hide_password") : $t("show_password") }}</span>
+        </button>
       </b-form-group>
 
       <b-form-group>
@@ -23,6 +41,11 @@
         </b-button>
       </b-form-group>
     </b-form>
+    <div class="sr-only" aria-live="assertive">
+      <template v-if="announcePasswordVisibility">
+        {{ passwordIsVisible ? $t("password_shown") : $t("password_hidden") }}
+      </template>
+    </div>
 
     <div class="text-right">
       <router-link to="/password/request">
@@ -34,13 +57,21 @@
 
 <script>
 import locales from "@/locales";
+import eyeIcon from "@/assets/icons/eye.svg"
+import eyeSlashIcon from "@/assets/icons/eye-slash.svg"
 
 export default {
   name: "LoginBox",
   data() {
     return {
       password: "",
+      passwordIsVisible: false,
+      announcePasswordVisibility: false,
     };
+  },
+  components: {
+    eyeIcon,
+    eyeSlashIcon,
   },
   computed: {
     loading() {
@@ -64,8 +95,14 @@ export default {
     },
   },
   methods: {
+    hideShowPassword() {
+      this.announcePasswordVisibility = true;
+      this.passwordIsVisible = !this.passwordIsVisible;
+    },
     async login() {
       try {
+        this.announcePasswordVisibility = false;
+        this.passwordIsVisible = false;
         await this.$store.dispatch("login", {
           email: this.email,
           password: this.password,
@@ -121,15 +158,33 @@ export default {
   max-width: 100%;
   margin: 0 auto;
 
-  .login-box__form {
+  &__form {
     margin-top: 32px;
   }
 
-  .login-box__title {
+  &__title {
     text-align: center;
     color: $black;
     font-size: 24px;
     margin-bottom: 20px;
+  }
+
+  &__pw-group {
+    position: relative;
+  }
+
+  &__show-pw {
+    background: transparent;
+    border: none;
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 0.375rem 0.75rem;
+
+    &:focus {
+      outline: 0;
+      box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 0 0.2rem rgba(36, 90, 234, 0.25);
+    }
   }
 
   .google-login {
