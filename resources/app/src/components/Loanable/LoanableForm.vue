@@ -270,9 +270,22 @@ export default {
 
       const invalidItems = document.getElementsByClassName("is-invalid");
       if (invalidItems.length > 0) {
-        invalidItems[0].scrollIntoView({
-          behavior: "smooth",
-        });
+        const collapse = invalidItems[0].closest(".collapse")
+        if(collapse && !collapse.classList.contains('show')) {
+          // open the collapsed section
+          this.$root.$emit('bv::toggle::collapse', collapse.id)
+          setTimeout(() => {
+            // scroll to show the first invalid element
+            invalidItems[0].scrollIntoView({
+              behavior: "smooth",
+            });
+          }, 100)
+        } else {
+          // scroll to show the first invalid element
+          invalidItems[0].scrollIntoView({
+            behavior: "smooth",
+          });
+        }
       }
     },
     submit(...params) {

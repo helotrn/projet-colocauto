@@ -14,7 +14,7 @@
     <b-row>
       <b-col>
         <validation-observer ref="observer" v-slot="{ passes }">
-          <b-form class="form" @submit.prevent="passes(submit)">
+          <b-form class="form" @submit.prevent="checkInvalidThenSubmit(passes)">
             <div class="form__section">
               <h2>Informations</h2>
 
@@ -104,7 +104,7 @@
               toggleable
               class="mt-2"
               section-title="Détails de la voiture"
-              :inititally-visible="false"
+              :inititally-visible="!item.id"
             >
               <forms-builder :definition="carForm" v-model="item" entity="cars">
                 <!-- remove unused parameters -->
@@ -288,6 +288,29 @@ export default {
     },
   },
   methods: {
+    async checkInvalidThenSubmit(passes) {
+      await passes(this.submit);
+
+      const invalidItems = document.getElementsByClassName("is-invalid");
+      if (invalidItems.length > 0) {
+        const collapse = invalidItems[0].closest(".collapse")
+        if(collapse && !collapse.classList.contains('show')) {
+          // open the collapsed section
+          this.$root.$emit('bv::toggle::collapse', collapse.id)
+          setTimeout(() => {
+            // scroll to show the first invalid element
+            invalidItems[0].scrollIntoView({
+              behavior: "smooth",
+            });
+          }, 100)
+        } else {
+          // scroll to show the first invalid element
+          invalidItems[0].scrollIntoView({
+            behavior: "smooth",
+          });
+        }
+      }
+    },
     async setLoanableOwner(user) {
       if(!user) {
         this.$store.commit("loanables/patchItem", {
