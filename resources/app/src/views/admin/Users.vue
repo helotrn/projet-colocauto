@@ -124,6 +124,7 @@
                 v-on:click="mandate(row.item.id)"
               >
                 <i class="bi bi-person-badge"></i>
+                <person-badge-icon />
               </b-button>
               <b-tooltip :target="'mandate-' + row.item.id" triggers="hover">
                 {{ $t("mandate_tool_tip") }}
@@ -166,6 +167,7 @@ import AdminPagination from "@/components/Admin/Pagination.vue";
 import DataRouteGuards from "@/mixins/DataRouteGuards";
 import ListMixin from "@/mixins/ListMixin";
 import locales from "@/locales";
+import PersonBadgeIcon from "@/assets/icons/person-badge.svg";
 
 export default {
   name: "AdminUsers",
@@ -174,6 +176,7 @@ export default {
     AdminFilters,
     AdminListActions,
     AdminPagination,
+    PersonBadgeIcon,
   },
   data() {
     return {
