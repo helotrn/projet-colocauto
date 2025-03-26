@@ -183,7 +183,7 @@ export default {
       table: [
         { key: "id", label: "ID", sortable: true, class: "text-right tabular-nums" },
         { key: "full_name", label: "Nom", sortable: true },
-        { key: "email", label: "Courriel", sortable: true },
+        { key: "email", label: "Courriel", sortable: true, tdClass: "table__cell__overflow" },
         { key: "communities_name", label: "Communauté", sortable: true },
         { key: "role", label: "Admin", sortable: true },
         { key: "actions", label: "Actions", tdClass: "table__cell__actions" },
@@ -297,5 +297,10 @@ export default {
 }
 .btn .spinner-border {
   vertical-align: top;
+}
+.table__cell__overflow {
+  max-width: 200px;
+  text-overflow: ellipsis;
+  overflow: hidden;
 }
 </style>
