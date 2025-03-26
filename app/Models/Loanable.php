@@ -726,4 +726,21 @@ class Loanable extends BaseModel
             \DB::raw("unaccent('%$q%')")
         );
     }
+
+    public function scopeFor(Builder $query, $for, $user)
+    {
+        // list loanable owned or coowned by current user
+        if( $for == "coowned" ){
+            return $query
+                ->whereHas("owner", function ($q) use ($user) {
+                    return $q
+                        ->where("owners.user_id", $user->id);
+                })
+                ->orWhereHas("coowners", function ($q) use ($user) {
+                    return $q
+                        ->where("coowners.user_id", $user->id);
+                });
+        }
+        return $query;
+    }
 }

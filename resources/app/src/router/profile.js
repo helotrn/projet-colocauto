@@ -69,7 +69,7 @@ export default [
             loanables: {
               retrieve: {
                 fields: "id,name,type,image.*,community.id,community.name",
-                "owner.user.id": "me",
+                "for": "coowned",
               },
             },
           },
