@@ -104,13 +104,6 @@
             <template v-slot:year_of_circulation></template>
             <template v-slot:plate_number></template>
             <template v-slot:is_value_over_fifty_thousand></template>
-            <template v-slot:report_template>
-              <b-form-group>
-                <a href="/fiche_etat_du_vehicule.pdf" download>
-                  {{ $i18n.t("fields.report_download") }} <b-icon icon="download" />
-                </a>
-              </b-form-group>
-            </template>
           </forms-builder>
         </form-section>
         <form-section
@@ -135,6 +128,11 @@
         >
           <div v-if="lastReportDate" class="mb-4">
             <small>Date de dernière modification : {{lastReportDate | datetime}}</small>
+          </div>
+          <div v-if="loanable.report" class="mb-4">
+            <a :href="loanable.report.url" target="_blank">
+              Voir l'ancienne fiche état du véhicule du {{loanable.report.updated_at | datetime}}
+            </a>
           </div>
           <form-section
             v-for="location in reportLocations"
@@ -396,7 +394,7 @@ export default {
 
       const form = {};
 
-      // we add all the car form property and our custom report_template property at the right time, see https://262.ecma-international.org/6.0/#sec-ordinary-object-internal-methods-and-internal-slots-ownpropertykeys
+      // we add all the car form property at the right time, see https://262.ecma-international.org/6.0/#sec-ordinary-object-internal-methods-and-internal-slots-ownpropertykeys
       for (let i = 0; i < carKeys.length; i++) {
         const key = carKeys[i];
         form[key] = this.form.car[key];
@@ -404,11 +402,6 @@ export default {
         // make car properties readonly for non-owners
         form[key].disabled = this.loanable.owner && this.loanable.owner.user.id !== this.user.id;
         form[key].disabledTooltip = "Seul le propriétaire peut changer cela";
-
-        if (key === "report") {
-          form["report_template"] = {};
-          form[key].disabled = false;
-        }
       }
 
       return form;

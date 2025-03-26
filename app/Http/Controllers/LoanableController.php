@@ -858,9 +858,6 @@ class LoanableController extends RestController
                     "is_value_over_fifty_thousand" => [
                         "type" => "checkbox",
                     ],
-                    "report" => [
-                        "type" => "file",
-                    ],
                     "papers_location" => [
                         "type" => "select",
                         "options" => [
