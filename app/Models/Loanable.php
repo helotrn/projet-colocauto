@@ -262,6 +262,13 @@ class Loanable extends BaseModel
         return $this->coowners->where("user_id", $user->id)->isNotEmpty();
     }
 
+    public function isPayingForLoans(User $user): bool
+    {
+        return $this->coowners->where("user_id", $user->id)
+            ->where("pays_loan_price", true)
+            ->isNotEmpty();
+    }
+
     public function expenses()
     {
         return $this->hasMany(Expense::class);

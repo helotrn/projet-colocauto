@@ -152,26 +152,52 @@ class Car extends Loanable
         }
         Log::info("Period start: ".$period_start->toDateString());
 
-        // get the users of the same community
-        $users = $community->users()
-            ->wherePivotNull("suspended_at")->get()
-            ->map(function($user) use ($period_start, $date) {
-                // compute the number of days the car was available to the user
-                $start = $period_start->maximum($user->borrower->approved_at)->startOfDay();
-                $user->days_present = $start->diffInDays($date) + 1;
-                Log::info("$user->name $user->last_name : ".$start->toDateString().", $user->days_present presence");
-                return $user;
-            });
+        // make exception for users that do not pay provisions
+        $non_paying_provisions_users = $this->coowners
+            ->filter(fn($co) => !$co->pays_provisions)
+            ->pluck('user_id')
+            ->toArray();
 
-        $total_days_present = $users->reduce(function($sum, $user) {
-            return $sum + $user->days_present;
-        }, 0);
-        Log::info("Total presence days: $total_days_present");
+        // make exception for users that do not pay compensation to the owner
+        $non_paying_users = $this->coowners
+                ->filter(fn($co) => !$co->pays_owner)
+                ->pluck('user_id')
+                ->toArray();
 
         $owner = $this->owner;
         if( $owner && $owner->user ) {
-            $total_days_present_without_owner = $users->reduce(function($sum, $user) use ($owner) {
-                return $sum + ($owner->user->id == $user->id ? 0 : $user->days_present);
+            $non_paying_users[] = $owner->user->id;
+        }
+
+        // get the users of the same community
+        $users = $community->users()
+            ->wherePivotNull("suspended_at")->get()
+            ->map(function($user) use ($period_start, $date, $non_paying_provisions_users, $non_paying_users) {
+                // compute the number of days the car was available to the user
+                $start = $period_start->maximum($user->borrower->approved_at)->startOfDay();
+                $user->days_present = $start->diffInDays($date) + 1;
+                $paying_status = [];
+                if( in_array($user->id, $non_paying_provisions_users) ) {
+                    $paying_status[] = 'does NOT pay provision';
+                }
+                if( in_array($user->id, $non_paying_users) ) {
+                    $paying_status[] = 'does NOT pay owner compensation';
+                }
+                Log::info("$user->name $user->last_name : ".$start->toDateString()
+                    .", $user->days_present presence"
+                    . (sizeof($paying_status) ? " (".join(', ', $paying_status).")" : "")
+                );
+                return $user;
+            });
+
+        $total_days_present = $users->reduce(function($sum, $user) use($non_paying_provisions_users) {
+            return $sum + (in_array($user->id, $non_paying_provisions_users) ? 0 : $user->days_present);
+        }, 0);
+        Log::info("Total presence days for paying provisions users: $total_days_present");
+
+        if( $owner && $owner->user ) {
+            $total_days_present_without_owner = $users->reduce(function($sum, $user) use ($non_paying_users) {
+                return $sum + (in_array($user->id, $non_paying_users) ? 0 : $user->days_present);
             }, 0);
             Log::info("Total presence days without owner: $total_days_present_without_owner");
         } else {
@@ -194,8 +220,8 @@ class Car extends Loanable
 
         if( $total_days_present_without_owner ) {
             // get the oldest date when the car could have been used by a non-owner
-            $period_start_without_owner = $users->reduce(function($min_date,$user) use ($owner) {
-                return $owner->user->id == $user->id ? $min_date : $min_date->minimum($user->borrower->approved_at)->startOfDay();
+            $period_start_without_owner = $users->reduce(function($min_date,$user) use ($non_paying_users) {
+                return in_array($user->id, $non_paying_users) ? $min_date : $min_date->minimum($user->borrower->approved_at)->startOfDay();
             }, $date);
             $period_start_without_owner = $period_start_without_owner->maximum($period_start);
             // compute owner compensation pro rata
@@ -228,7 +254,7 @@ class Car extends Loanable
                 $expense->locked = true;
                 $expense->save();
             }
-            if( $total_owner_compensation && $this->owner->user->id !== $user->id ){
+            if( $total_owner_compensation && !in_array($user->id, $non_paying_users) ){
                 $owner_compensation = $total_owner_compensation * $user->days_present / $total_days_present_without_owner;
                 $data2 = [
                     "name" => "Dédommagement propriétaire ".$period,

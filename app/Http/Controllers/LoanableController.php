@@ -607,13 +607,22 @@ class LoanableController extends RestController
         } else {
             $community = $item->getCommunityForLoanBy($request->user());
         }
-        $estimatedCost = self::estimateLoanCost(
-            $item,
-            $community,
-            $estimatedDistance,
-            $durationInMinutes,
-            $departureAt
-        );
+
+        if( $item->isPayingForLoans($request->user()) ) {
+            $estimatedCost = self::estimateLoanCost(
+                $item,
+                $community,
+                $estimatedDistance,
+                $durationInMinutes,
+                $departureAt
+            );
+        } else {
+            $estimatedCost = (object) [
+                "price" => 0,
+                "insurance" => 0,
+                "pricing" => "Gratuit",
+            ];
+        }
 
         return response(
             [
@@ -984,7 +993,10 @@ class LoanableController extends RestController
     {
         $coowner = Coowner::findOrFail($coownerId);
         $coowner->title = $request->get("title");
-        $coowner->receive_notifications = $request->get("receive_notifications") ?: false;
+        $coowner->receive_notifications = is_bool($request->get("receive_notifications")) ? $request->get("receive_notifications") : false;
+        $coowner->pays_loan_price = is_bool($request->get("pays_loan_price")) ? $request->get("pays_loan_price") : true;
+        $coowner->pays_provisions = is_bool($request->get("pays_provisions")) ? $request->get("pays_provisions") : true;
+        $coowner->pays_owner = is_bool($request->get("pays_owner")) ? $request->get("pays_owner") : true;
         $coowner->save();
     }
 }

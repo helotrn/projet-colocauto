@@ -18,6 +18,35 @@
         type="text"
         :disabled="disabled || loading"
       ></forms-validated-input>
+
+      <div class="mb-3 font-weight-bold">Tarification&nbsp;:</div>
+
+      <forms-validated-input
+          v-model="pays_loan_price"
+          label="Paie le tarif de l'emprunt"
+          name="pays_loan_price"
+          description="Si applicable, cette personne paie le coût lié à la durée et à la distance parcourue lors de ses emprunts de ce véhicule."
+          type="checkbox"
+          :disabled="disabled || loading"
+        ></forms-validated-input>
+        <forms-validated-input
+          v-if="loanable.type == 'car'"
+          v-model="pays_provisions"
+          label="Paie les provisions mensuelles"
+          name="pays_provisions"
+          description="Cette personne paie les provisions partagées mensuellement entre les membres du groupe."
+          type="checkbox"
+          :disabled="disabled || loading"
+        ></forms-validated-input>
+        <forms-validated-input
+          v-if="loanable.type == 'car'"
+          v-model="pays_owner"
+          label="Paie le dédommagement au propriétaire"
+          name="pays_owner"
+          description="Cette personne participe au paiement mensuel pour dédommager le ou la propriétaire du véhicule."
+          type="checkbox"
+          :disabled="disabled || loading"
+        ></forms-validated-input>
     </b-form>
     <!-- form with two fields: show on contact and title -->
 
@@ -54,12 +83,18 @@ export default {
   data() {
     return {
       receive_notifications: null,
+      pays_loan_price: null,
+      pays_provisions: null,
+      pays_owner: null,
       title: null,
       loading: false,
     };
   },
   mounted() {
     this.receive_notifications = this.coowner.receive_notifications;
+    this.pays_loan_price = this.coowner.pays_loan_price;
+    this.pays_provisions = this.coowner.pays_provisions;
+    this.pays_owner = this.coowner.pays_owner;
     this.title = this.coowner.title;
   },
   methods: {
@@ -74,10 +109,16 @@ export default {
         {
           id: this.coowner.id,
           receive_notifications: this.receive_notifications,
+          pays_loan_price: this.pays_loan_price,
+          pays_provisions: this.pays_provisions,
+          pays_owner: this.pays_owner,
           title: this.title,
         }
       ).then(() => {
         this.coowner.receive_notifications = this.receive_notifications;
+        this.coowner.pays_loan_price = this.pays_loan_price;
+        this.coowner.pays_provisions = this.pays_provisions;
+        this.coowner.pays_owner = this.pays_owner;
         this.coowner.title = this.title;
         this.loading = false
         this.$emit("done", this.coowner.id);

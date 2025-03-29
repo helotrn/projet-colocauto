@@ -91,7 +91,8 @@ export default [
             fields:
               "*,events,type,community.id,community.center,community.name,owner.id,owner.user.id,owner.user.full_name," +
               "owner.user.communities.center,owner.user.communities.id,owner.user.avatar,image.*,report.*,balance," +
-              "coowners,coowners.user,coowners.user.full_name,coowners.user.avatar,coowners.user.phone,coowners.title,coowners.receive_notifications",
+              "coowners,coowners.user,coowners.user.full_name,coowners.user.avatar,coowners.user.phone,coowners.title," +
+              "coowners.receive_notifications,coowners.pays_loan_price,coowners.pays_provisions,coowners.pays_owner"
           },
           title: "titles.loanable",
           data: {

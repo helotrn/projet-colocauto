@@ -536,7 +536,11 @@ SQL;
 
         $loanable = $this->getFullLoanable();
 
-        $pricing = $this->community->getPricingFor($loanable);
+        if( $loanable->isPayingForLoans($this->borrower->user) ) {
+            $pricing = $this->community->getPricingFor($loanable);
+        } else {
+            return 0;
+        }
 
         if (!$pricing) {
             return 0;
