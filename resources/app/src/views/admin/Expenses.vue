@@ -37,10 +37,8 @@
             'amount',
             'user.full_name',
             'loanable.name',
-            'community.name',
             'executed_at',
             'tag',
-            'changes',
             'actions'
           ]"
           :items="data"
