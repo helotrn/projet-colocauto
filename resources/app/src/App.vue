@@ -4,17 +4,14 @@
       <p class="mb-0 text-center">👋 Vous consultez actuellement une page de {{ environment }}, pour vous rendre sur l'application Coloc'Auto c'est par ici : <a href="https://app.colocauto.org">app.colocauto.org</a></p>
     </aside>
     <router-view />
-    <conditions-updated-toast />
   </div>
 </template>
 
 <script>
 import Notification from "@/mixins/Notification";
-import ConditionsUpdatedToast from "@/views/ConditionsUpdatedToast.vue";
 
 export default {
   name: "ColocAuto",
-  components: { ConditionsUpdatedToast },
   mixins: [Notification],
   mounted() {
     if (this.$store.state.token && !this.$store.state.loading && !this.$store.state.loaded) {

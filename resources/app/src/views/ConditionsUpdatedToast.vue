@@ -1,14 +1,10 @@
 <template>
-  <b-toast
-    toast-class="conditions-toast"
+  <b-alert
     variant="warning"
-    visible
+    show
     v-if="showToast"
-    no-auto-hide
-    no-close-button
-    solid
-    :title="$t('conditions_updated_title')"
   >
+    <h2>{{ $t('conditions_updated_title') }}</h2>
     <p>{{ $t("conditions_updated_text") }}</p>
 
     <dl>
@@ -28,7 +24,7 @@
           $t("accept_updates_button")
         }}</b-button>
       </div>
-      <a v-b-toggle.unregister class="text-muted align-self-end" href="#">{{
+      <a v-b-toggle.unregister class="text-muted align-self-end" href="#" @click.prevent>{{
         $t("unregister_link")
       }}</a>
     </div>
@@ -37,7 +33,7 @@
         <a href="mailto:soutien@colocauto.org">soutien@colocauto.org</a>
       </i18n>
     </b-collapse>
-  </b-toast>
+  </b-alert>
 </template>
 
 <script>
@@ -114,10 +110,3 @@ export default {
   },
 };
 </script>
-
-<style scoped lang="scss">
-.conditions-toast {
-  max-height: calc(100vh - 1rem);
-  overflow: auto !important;
-}
-</style>

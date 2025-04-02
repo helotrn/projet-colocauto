@@ -55,6 +55,8 @@
     <div class="form__section">
       <h2>Conditions d'utilisation</h2>
 
+      <conditions-updated-toast />
+
       <forms-validated-input
         type="checkbox"
         name="accept_conditions"
@@ -89,6 +91,7 @@
 import FormsValidatedInput from "@/components/Forms/ValidatedInput.vue";
 import UserEmailForm from "@/components/User/EmailForm.vue";
 import UserPasswordForm from "@/components/User/PasswordForm.vue";
+import ConditionsUpdatedToast from "@/views/ConditionsUpdatedToast.vue";
 
 import DataRouteGuards from "@/mixins/DataRouteGuards";
 import FormMixin from "@/mixins/FormMixin";
@@ -100,6 +103,7 @@ export default {
     FormsValidatedInput,
     UserEmailForm,
     UserPasswordForm,
+    ConditionsUpdatedToast,
   },
   props: {
     id: {

@@ -16,6 +16,8 @@
             </b-row>
           </section>
 
+          <conditions-updated-toast />
+
           <!-- profile pending container -->
           <section class="page__section" v-if="waitingForProfileApproval && hasCommunity">
             <b-jumbotron
@@ -380,6 +382,7 @@ import InfoLinkBlock from "@/components/Dashboard/InfoLinkBlock.vue";
 import UsersBalance from "@/components/Balance/UsersBalance.vue";
 import LoansCalendar from "@/components/Loanable/LoansCalendar.vue";
 import LoanableCalendarLegend from "@/components/Loanable/CalendarLegend.vue";
+import ConditionsUpdatedToast from "@/views/ConditionsUpdatedToast.vue";
 
 import MagnifyingGlass from "@/assets/svg/magnifying-glass.svg";
 import SalutCoeur from "@/assets/svg/salut-coeur.svg";
@@ -412,6 +415,7 @@ export default {
     UsersBalance,
     LoansCalendar,
     LoanableCalendarLegend,
+    ConditionsUpdatedToast,
   },
   beforeMount() {
     if (!this.isLoggedIn) {
