@@ -307,4 +307,34 @@ class LoanableTest extends TestCase
             );
         }
     }
+
+    public function testDefaultCoownerFlags()
+    {
+        $loanable = factory(Car::class)->create();
+        $user = factory(User::class)->create();
+        $loanable->addCoowner($user->id);
+        $loanable->refresh();
+        self::assertEquals(false, $loanable->coowners[0]->receive_notifications);
+        self::assertEquals(true, $loanable->coowners[0]->pays_loan_price);
+        self::assertEquals(true, $loanable->coowners[0]->pays_provisions);
+        self::assertEquals(true, $loanable->coowners[0]->pays_owner);
+    }
+
+    public function testWhoIsPayingForLoans()
+    {
+        $loanable = factory(Car::class)->create();
+        $user = factory(User::class)->create();
+        $coowner = factory(User::class)->create();
+        $non_paying_coowner = factory(User::class)->create();
+        $loanable->addCoowner($coowner->id);
+        $loanable->addCoowner($non_paying_coowner->id);
+        $loanable->refresh();
+
+        $loanable->coowners[1]->pays_loan_price = false;
+        $loanable->coowners[1]->save();
+
+        self::assertEquals(true, $loanable->isPayingForLoans($user));
+        self::assertEquals(true, $loanable->isPayingForLoans($coowner));
+        self::assertEquals(false, $loanable->isPayingForLoans($non_paying_coowner));
+    }
 }

@@ -3,6 +3,7 @@
 namespace Tests\Unit\Models;
 
 use App\Models\Bike;
+use App\Models\Car;
 use App\Models\Borrower;
 use App\Models\Community;
 use App\Models\Extension;
@@ -1307,5 +1308,114 @@ class LoanTest extends TestCase
 
         // Check the loan's number of calendar days.
         $this->assertEquals(3, $loan->calendar_days);
+    }
+
+    function testLoanPrice()
+    {
+        $community = factory(Community::class)
+            ->state("withDefault10DollarsPricing")
+            ->create();
+
+        $borrowerUser = factory(User::class)->create();
+        $borrowerUser
+            ->communities()
+            ->attach($community->id, ["approved_at" => new \DateTime()]);
+        $borrower = factory(Borrower::class)->create([
+            "user_id" => $borrowerUser->id,
+        ]);
+
+        $ownerUser = factory(User::class)->create();
+        $ownerUser
+            ->communities()
+            ->attach($community->id, ["approved_at" => new \DateTime()]);
+        $owner = factory(Owner::class)->create(["user_id" => $ownerUser->id]);
+
+        $loanable = factory(Car::class)->create([
+            "owner_id" => $owner->id,
+        ]);
+
+        $loan = factory(Loan::class)
+            ->create([
+                "borrower_id" => $borrower->id,
+                "loanable_id" => $loanable->id,
+                "departure_at" => Carbon::now()->subMinutes(30),
+            ]);
+
+        $this->assertEquals(10, $loan->actual_price);
+    }
+
+    function testLoanPriceForCoowner()
+    {
+        $community = factory(Community::class)
+            ->state("withDefault10DollarsPricing")
+            ->create();
+
+        $borrowerUser = factory(User::class)->create();
+        $borrowerUser
+            ->communities()
+            ->attach($community->id, ["approved_at" => new \DateTime()]);
+        $borrower = factory(Borrower::class)->create([
+            "user_id" => $borrowerUser->id,
+        ]);
+
+        $ownerUser = factory(User::class)->create();
+        $ownerUser
+            ->communities()
+            ->attach($community->id, ["approved_at" => new \DateTime()]);
+        $owner = factory(Owner::class)->create(["user_id" => $ownerUser->id]);
+
+        $loanable = factory(Car::class)->create([
+            "owner_id" => $owner->id,
+        ]);
+        $loanable->addCoowner($borrowerUser->id);
+
+        $loan = factory(Loan::class)
+            ->create([
+                "borrower_id" => $borrower->id,
+                "loanable_id" => $loanable->id,
+                "departure_at" => Carbon::now()->subMinutes(30),
+            ]);
+
+        $this->assertEquals(10, $loan->actual_price);
+    }
+
+    function testLoanPriceForNonPayingCoowner()
+    {
+        $community = factory(Community::class)
+            ->state("withDefault10DollarsPricing")
+            ->create();
+
+        $borrowerUser = factory(User::class)->create();
+        $borrowerUser
+            ->communities()
+            ->attach($community->id, ["approved_at" => new \DateTime()]);
+        $borrower = factory(Borrower::class)->create([
+            "user_id" => $borrowerUser->id,
+        ]);
+
+        $ownerUser = factory(User::class)->create();
+        $ownerUser
+            ->communities()
+            ->attach($community->id, ["approved_at" => new \DateTime()]);
+        $owner = factory(Owner::class)->create(["user_id" => $ownerUser->id]);
+
+        $loanable = factory(Car::class)->create([
+            "owner_id" => $owner->id,
+        ]);
+        $loanable->addCoowner($borrowerUser->id);
+        $loanable->refresh();
+
+        // the coowner does not pay the loan price
+        $loanable->coowners[0]->pays_loan_price = false;
+        $loanable->coowners[0]->save();
+
+        $loan = factory(Loan::class)
+            ->create([
+                "borrower_id" => $borrower->id,
+                "loanable_id" => $loanable->id,
+                "departure_at" => Carbon::now()->subMinutes(30),
+            ]);
+
+        $this->assertEquals(0, $loan->actual_price);
     }
 }
