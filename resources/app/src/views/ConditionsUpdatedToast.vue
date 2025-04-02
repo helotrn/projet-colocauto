@@ -19,7 +19,7 @@
     </dl>
 
     <i18n path="read_all_conditions" tag="p">
-      <router-link to="/conditions">{{ $t("conditions") }}</router-link>
+      <a href="https://www.colocauto.org/conditions" target="_blank">{{ $t("conditions") }}</a>
     </i18n>
 
     <div class="d-flex justify-content-between">
@@ -34,7 +34,7 @@
     </div>
     <b-collapse id="unregister">
       <i18n path="unregister_instructions" tag="div" class="mt-2">
-        <a href="mailto:info@locomotion.app">info@locomotion.app</a>
+        <a href="mailto:soutien@colocauto.org">soutien@colocauto.org</a>
       </i18n>
     </b-collapse>
   </b-toast>

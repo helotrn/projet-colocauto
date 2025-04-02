@@ -9,8 +9,6 @@ export default {
     unregister_link: "Je veux me désinscrire",
     unregister_instructions: "Envoyez un courriel à {0} pour vous désinscrire.",
     updates: {
-      "2022-10-06":
-        "Changement du calcul de la franchise de l'assurance de Desjardins Assurances en cas de dommages à une auto.",
     },
   },
 };
