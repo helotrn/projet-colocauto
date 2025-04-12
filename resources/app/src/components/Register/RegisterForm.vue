@@ -43,7 +43,6 @@
           mode="eager"
           name="invitationToken"
           :label="$t('invitation_token')"
-          :rules="{ required: true }"
           type="text"
           :placeholder="$t('invitation_token')"
           v-model="invitationToken"

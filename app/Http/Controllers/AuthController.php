@@ -97,11 +97,7 @@ class AuthController extends RestController
         $email = $request->get("email");
         $password = $request->get("password");
         $invitation = Invitation::where('token', $request->get("invitationToken"))->first();
-        if( !$invitation ) {
-            return $this->respondWithErrors([
-                "status" => [__("validation.custom.invitation_invalid")]
-            ], 400);
-        } else if( $invitation->consumed_at !== null){
+        if( $invitation && $invitation->consumed_at !== null){
             $date = new \Carbon\Carbon($invitation->consumed_at);
             return $this->respondWithErrors([
                 "status" => [trans("validation.custom.invitation_consumed", [
@@ -114,28 +110,30 @@ class AuthController extends RestController
         $user = new User();
         $user->email = $email;
         $user->password = Hash::make($password);
-        if( $invitation->for_community_admin) {
+        if( $invitation && $invitation->for_community_admin) {
             $user->role = 'community_admin';
         }
         $user->save();
 
         if ($user) {
-            if( $invitation->for_community_admin) {
-                // set the user as admin for this community
-                if ($invitation->community) {
-                    $invitation->community->admins()->attach($user->id);
-                }
-            } else {
-                // set the user as community member
-                $invitation->community->users()->attach($user->id);
+            if( $invitation) {
+                if( $invitation->for_community_admin) {
+                    // set the user as admin for this community
+                    if ($invitation->community) {
+                        $invitation->community->admins()->attach($user->id);
+                    }
+                } else {
+                    // set the user as community member
+                    $invitation->community->users()->attach($user->id);
 
-                // automatically approve new invited users
-                $borrower = new Borrower();
-                $borrower->user_id = $user->id;
-                $borrower->approved_at = new \Carbon\Carbon();
-                $borrower->save();
+                    // automatically approve new invited users
+                    $borrower = new Borrower();
+                    $borrower->user_id = $user->id;
+                    $borrower->approved_at = new \Carbon\Carbon();
+                    $borrower->save();
+                }
+                $invitation->consume();
             }
-            $invitation->consume();
 
             $loginRequest = new LoginRequest();
             $loginRequest->setMethod("POST");
