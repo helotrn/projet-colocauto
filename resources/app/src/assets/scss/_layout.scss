@@ -25,6 +25,14 @@ body {
     }
 }
 
+.box {
+  background-color: $white;
+  padding: 53px $grid-gutter-width / 2 45px;
+  width: 590px;
+  max-width: 100%;
+  margin: 0 auto;
+}
+
 .layout-navbar {
     @extend .container;
 }

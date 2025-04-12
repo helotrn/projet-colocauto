@@ -1,5 +1,6 @@
 <template>
-  <div class="register-intro">
+  <div>
+  <div class="register-intro box">
     <b-pagination-nav
       v-bind:value="currentPage"
       :number-of-pages="3"
@@ -19,6 +20,8 @@
 
     <register-form v-if="currentPage == 1" />
   </div>
+  <login-hint />
+  </div>
 </template>
 
 <script>
@@ -26,12 +29,14 @@ import Authenticated from "@/mixins/Authenticated";
 import UserMixin from "@/mixins/UserMixin";
 
 import RegisterForm from "@/components/Register/RegisterForm.vue";
+import LoginHint from "@/components/Login/LoginHint.vue";
 
 export default {
   name: "RegisterIntro",
   mixins: [Authenticated, UserMixin],
   components: {
     RegisterForm,
+    LoginHint,
   },
   beforeRouteEnter(to, from, next) {
     next((vm) => {
@@ -61,13 +66,3 @@ export default {
   },
 };
 </script>
-
-<style lang="scss">
-.register-intro {
-  background-color: $white;
-  padding: 53px $grid-gutter-width / 2 45px;
-  width: 590px;
-  max-width: 100%;
-  margin: 0 auto;
-}
-</style>

@@ -1,5 +1,5 @@
 <template>
-  <div class="login-box">
+  <div class="login-box box">
     <h1 class="login-box__title">{{ $t("login") }}</h1>
 
     <b-form class="login-box__form" @submit.prevent="login" novalidate>
@@ -152,11 +152,6 @@ export default {
 
 <style lang="scss">
 .login-box {
-  background-color: $white;
-  padding: 53px $grid-gutter-width / 2 45px;
-  width: 590px;
-  max-width: 100%;
-  margin: 0 auto;
 
   &__form {
     margin-top: 32px;

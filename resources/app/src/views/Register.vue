@@ -1,5 +1,5 @@
 <template>
-  <layout-page name="register" wide bg-color="green" bg-image centered>
+  <layout-page name="register" wide bg-color="green" bg-image padded>
     <router-view />
   </layout-page>
 </template>
