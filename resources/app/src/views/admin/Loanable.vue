@@ -96,7 +96,11 @@
                     </b-form-group>
                   </validation-provider>
                 </template>
+
               </forms-builder>
+              <b-alert variant="warning" v-if="item.owner && item.community && !ownerIsPartOfCommunity" show>
+                Attention {{ item.owner.user.full_name }} n'est pas dans la communauté {{ item.community.name }}. Le véhicule ne sera pas visible.
+              </b-alert>
             </div>
 
             <form-section
@@ -227,6 +231,13 @@ export default {
       }
 
       return null;
+    },
+    ownerIsPartOfCommunity() {
+      if( this.item.owner && this.item.community ){
+        return this.item.community.users.map(u => u.id).includes(this.item.owner.user.id);
+      } else {
+        return false;
+      }
     },
     fullTitle() {
       const parts = [
