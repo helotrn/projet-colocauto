@@ -158,7 +158,6 @@ export default {
     submit(...params) {
       this.$emit("submit", ...params);
       this.submitted = true;
-      this.loading = true;
     },
   },
 };
