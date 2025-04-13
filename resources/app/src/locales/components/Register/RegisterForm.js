@@ -6,7 +6,7 @@ export default {
     password: "Mot de passe",
     password_length: "Minimum 8 caractères",
     password_repeat: "Mot de passe (confirmation)",
-    register: "Bienvenue sur Coloc'Auto",
+    register: "Inscription à Coloc'Auto",
     register_error: "Erreur d'inscription",
     register_submit: "S'inscrire",
     invitation_token: "Code d'invitation",

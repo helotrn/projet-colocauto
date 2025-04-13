@@ -1,23 +1,6 @@
 <template>
   <div>
   <div class="register-intro box">
-    <b-pagination-nav
-      v-bind:value="currentPage"
-      :number-of-pages="3"
-      pills
-      align="center"
-      use-router
-      :hide-goto-end-buttons="true"
-      :disabled="true"
-    >
-      <template v-slot:page="{ page, active }">
-        <span v-if="page < currentPage" class="checked">
-          <b-icon icon="check" font-scale="2" />
-        </span>
-        <span v-else>{{ page }}</span>
-      </template>
-    </b-pagination-nav>
-
     <register-form v-if="currentPage == 1" />
   </div>
   <login-hint />

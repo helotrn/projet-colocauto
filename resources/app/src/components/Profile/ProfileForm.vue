@@ -29,20 +29,15 @@
 
         <b-row>
           <b-col>
-            <h2 class="allo-title">
-              <svg-smiling-heart />
-              Bonjour {{ user.name }}<span v-if="user.name">,</span>
-            </h2>
-
-            <label>On brise la glace? Parlez-nous de vous.</label>
             <forms-validated-input
-              name="description"
-              description="Vos passions, votre film préféré ou vos plus grandes folies! Ce texte permet à vos voisin-e-s de vous découvrir sous un autre angle."
-              :rules="form.general.description.rules"
-              label="Brise glace"
-              type="textarea"
-              v-model="user.description"
-              class="hide-label"
+              name="phone"
+              :label="$t('fields.phone') | capitalize"
+              description="Pour faciliter la communication votre numéro est visible
+par les membres de votre groupe et l'équipe Coloc'Auto""
+              :rules="form.general.phone.rules"
+              type="text"
+              mask="## ## ## ## ##"
+              v-model="user.phone"
             />
           </b-col>
         </b-row>
@@ -61,32 +56,11 @@
           </b-col>
         </b-row>
 
-        <b-row class="safety-questions">
-          <b-col>
-            <h2>Quelques questions pour votre sécurité.</h2>
-          </b-col>
-        </b-row>
-
-        <b-row>
-          <b-col>
-            <forms-validated-input
-              name="phone"
-              :label="$t('fields.phone') | capitalize"
-              description="Pour faciliter la communication votre numéro est visible
-par les membres de votre groupe et l'équipe Coloc'Auto""
-              :rules="form.general.phone.rules"
-              type="text"
-              mask="## ## ## ## ##"
-              v-model="user.phone"
-            />
-          </b-col>
-        </b-row>
-
         <slot />
 
         <div class="form__buttons" v-if="!hideButtons">
           <b-button variant="primary" type="submit" :disabled="loading || pristine">
-            {{ $t("enregistrer") | capitalize }}
+            {{ ($route.name == 'register-step' ? $t("suivant") : $t("enregistrer")) | capitalize }}
           </b-button>
           <layout-loading with-button v-if="loading" />
         </div>

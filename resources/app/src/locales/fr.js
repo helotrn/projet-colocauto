@@ -79,6 +79,7 @@ export default {
     rétablir: "rétablir",
     retirer: "retirer",
     supprimer: "supprimer",
+    suivant: "suivant",
   },
   invoices: invoices.fr,
   lists: {

@@ -1,27 +1,9 @@
 <template>
   <div class="register-step">
-    <b-pagination-nav
-      v-bind:value="currentPage"
-      :number-of-pages="3"
-      pills
-      align="center"
-      use-router
-      :hide-goto-end-buttons="true"
-      disabled
-      v-show="currrentPage < 4"
-    >
-      <template v-slot:page="{ page, active }">
-        <span v-if="page < currentPage" class="checked">
-          <b-icon icon="check" font-scale="2" />
-        </span>
-        <span v-else>{{ page }}</span>
-      </template>
-    </b-pagination-nav>
 
     <div v-if="item && currentPage == 2">
-      <h2>Ravi de vous rencontrer</h2>
+      <h2>{{ $t("components.register.registerform.register") }}</h2>
 
-      <h3>Remplissez votre profil de membre pour faciliter la rencontre avec vos voisin-e-s.</h3>
       <profile-form
         v-if="item"
         :form="form"
@@ -83,17 +65,15 @@
       <layout-loading v-else />
     </div>
 
-    <div v-if="currentPage == 4" class="register-step__reasons-why">
-      <h2>Bienvenue à bord</h2>
+    <div v-if="currentPage == 4">
+      <p>Sur Coloc'Auto, des groupes de personnes se partagent l'usage d'un ou
+      plusieurs véhicules. Pour cela, il se regroupent au sein de communautés.</p>
 
-      <div class="swiping-card" v-show="currentSlide == 1">
-        <svg-driving class="img" />
-        <div class="text">
-          En route vers le partage de voiture entre voisin.e.s
-        </div>
-      </div>
+      <h2>Créer votre première communauté</h2>
 
-      <b-btn variant="primary" to="/app" v-on:click="forcePageRefresh()"> J'embarque !</b-btn>
+      <b-btn variant="outline-primary" to="/app" v-on:click="forcePageRefresh()">
+        Passer et aller au tableau de bord
+      </b-btn>
     </div>
   </div>
 </template>
@@ -265,31 +245,6 @@ export default {
 
   &__completed__button {
     text-align: center;
-  }
-
-  &__reasons-why {
-    text-align: center;
-    height: 460px;
-    margin-top: 40px;
-    h2 {
-      margin-bottom: 30px;
-    }
-    .swiping-card {
-      margin: 20px 0;
-      text-align: center;
-      .img {
-        max-height: 280px;
-      }
-      .text {
-        font-size: 22px;
-        margin: 30px 20px 0 20px;
-        text-align: center;
-      }
-    }
-    .nextSlide-btn {
-      cursor: pointer;
-      font-size: 30px;
-    }
   }
 
   &__community {
