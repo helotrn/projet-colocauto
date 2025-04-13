@@ -29,16 +29,18 @@
           </section>
 
           <section class="page__section" v-if="!hasCommunity">
-            <b-jumbotron
-              bg-variant="light"
-              class="no-communities-jumbotron"
-              header="Vous ne faites partie d'aucun groupe Coloc'Auto"
-              lead="Un membre de notre équipe va prendre contact avec vous pour une présentation détaillée du projet."
-            >
-              <b-button variant="primary" href="https://www.colocauto.org" target="_blank"
-                >En savoir plus</b-button
+            <div class="box centered">
+              <svg-discussion width="135px" class="p-2"/>
+              <p>Pour utiliser Colocauto, vous devez faire partie d'une communauté.
+              C'est au sein des communautés que les conducteurs partagent l'utilisation
+              de véhicules.</p>
+              <b-button
+                variant="primary"
+                to="/communities/new"
               >
-            </b-jumbotron>
+                Créer une communauté
+              </b-button>
+            </div>
           </section>
 
           <section class="page__section" v-if="hasTutorials">
@@ -390,6 +392,7 @@ import Question from "@/assets/svg/question.svg";
 import PenPaper from "@/assets/svg/pen-paper.svg";
 import Waving from "@/assets/svg/waving.svg";
 import MagnifyingGlassEuro from "@/assets/svg/magnifying-glass-euro.svg";
+import Discussion from "@/assets/svg/discussion.svg";
 
 const sendRectMap = new Map();
 
@@ -410,6 +413,7 @@ export default {
     "svg-question": Question,
     "svg-pen-paper": PenPaper,
     "svg-waving": Waving,
+    "svg-discussion": Discussion,
     UserCard,
     InfoLinkBlock,
     UsersBalance,

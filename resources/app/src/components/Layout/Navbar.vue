@@ -108,7 +108,7 @@
             </span>
             <span class="nav-link__text">Emprunter un véhicule</span>
           </b-dropdown-item>
-          <b-dropdown-item to="/wallet/expenses" v-if="!(isGlobalAdmin || isCommunityAdmin) && hasCompletedRegistration">
+          <b-dropdown-item to="/wallet/expenses" v-if="!(isGlobalAdmin || isCommunityAdmin) && hasCompletedRegistration" :disabled="!user.main_community">
             <span class="nav-link__icon">
               <svg-euro />
             </span>

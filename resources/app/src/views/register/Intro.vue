@@ -1,6 +1,6 @@
 <template>
   <div>
-  <div class="register-intro box">
+  <div class="register-intro box fixed-width">
     <register-form v-if="currentPage == 1" />
   </div>
   <login-hint />

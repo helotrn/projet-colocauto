@@ -28,9 +28,14 @@ body {
 .box {
   background-color: $white;
   padding: 53px $grid-gutter-width / 2 45px;
-  width: 590px;
   max-width: 100%;
-  margin: 0 auto;
+  &.fixed-width {
+    width: 590px;
+    margin: 0 auto;
+  }
+  &.centered {
+    text-align: center;
+  }
 }
 
 .layout-navbar {

@@ -1,5 +1,5 @@
 <template>
-  <div class="login-box box">
+  <div class="login-box box fixed-width">
     <h1 class="login-box__title">{{ $t("login") }}</h1>
 
     <b-form class="login-box__form" @submit.prevent="login" novalidate>
