@@ -1,5 +1,5 @@
 <template>
-  <layout-page name="loan" :loading="!pageLoaded">
+  <layout-page name="loan" :loading="!pageLoaded" padded>
     <div v-if="pageLoaded">
       <vue-headful :title="fullTitle" />
       <loan-header class="mb-5" :loan="item" :user="user"></loan-header>
@@ -155,11 +155,6 @@ export default {
 
 <style lang="scss">
 .loan.page {
-  .page__content {
-    padding-top: 45px;
-    padding-bottom: 45px;
-  }
-
   .loan-actions.loading {
     opacity: 0.5;
     pointer-events: none;

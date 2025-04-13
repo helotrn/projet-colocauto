@@ -1,5 +1,5 @@
 <template>
-  <layout-page name="profile">
+  <layout-page name="profile" padded>
     <b-row>
       <b-col md="4" lg="3">
         <profile-sidebar />
@@ -46,12 +46,3 @@ export default {
   },
 };
 </script>
-
-<style lang="scss">
-.profile.page {
-  .page__content {
-    padding-top: 45px;
-    padding-bottom: 45px;
-  }
-}
-</style>
