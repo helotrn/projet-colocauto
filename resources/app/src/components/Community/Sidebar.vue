@@ -1,14 +1,17 @@
 <template>
-  <div class="profile-sidebar">
+  <div class="community-sidebar">
     <ul v-if="user">
-      <b-nav-item to="/profile">
-        {{ $t("profile.titles.profile") }}
+      <b-nav-item to="/community">
+        Informations
       </b-nav-item>
-      <b-nav-item to="/profile/account">
-        {{ $t("profile.titles.account") }}
+      <b-nav-item to="/community/members">
+        Membres
       </b-nav-item>
-      <b-nav-item to="/profile/loanables" v-if="user.owner">
-        {{ $t("profile.titles.loanables") }}
+      <b-nav-item to="/community/loanables">
+        Véhicules
+      </b-nav-item>
+      <b-nav-item to="/community/loans">
+        Historique d'emprunts
       </b-nav-item>
     </ul>
 
@@ -20,13 +23,13 @@
 import UserMixin from "@/mixins/UserMixin";
 
 export default {
-  name: "ProfileSidebar",
+  name: "CommunitySidebar",
   mixins: [UserMixin],
 };
 </script>
 
 <style lang="scss">
-.profile-sidebar {
+.community-sidebar {
   hr {
     margin: 30px 0;
   }

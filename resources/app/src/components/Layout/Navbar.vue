@@ -38,7 +38,7 @@
         </b-nav-item>
 
         <b-nav-item
-          to="/profile/colocauto"
+          to="/profile"
           class="d-block d-lg-none"
           v-if="hasCompletedRegistration"
         >
@@ -96,6 +96,15 @@
             </span>
           </b-dropdown-item>
           <b-dropdown-divider v-if="!(isGlobalAdmin || isCommunityAdmin) && hasCompletedRegistration" />
+          <b-dropdown-item
+            to="/profile"
+            v-if="hasCompletedRegistration"
+          >
+            <span class="nav-link__icon">
+              <svg-profile />
+            </span>
+            <span class="nav-link__text">Mon compte</span>
+          </b-dropdown-item>
           <b-dropdown-item to="/app" v-if="!(isGlobalAdmin || isCommunityAdmin) && hasCompletedRegistration">
             <span class="nav-link__icon">
               <svg-category />
@@ -115,22 +124,19 @@
             <span class="nav-link__text">Portefeuille</span>
           </b-dropdown-item>
           <b-dropdown-item
-            to="/profile/colocauto"
-            v-if="hasCompletedRegistration"
-          >
-            <span class="nav-link__icon">
-              <svg-profile />
-            </span>
-            <span class="nav-link__text">Mon profil</span>
-          </b-dropdown-item>
-          <b-dropdown-item
-            to="/profile/loanables"
-            v-if="!(isGlobalAdmin || isCommunityAdmin) && hasCompletedRegistration && user.owner"
+            to="/community"
+            v-if="!(isGlobalAdmin || isCommunityAdmin) && hasCompletedRegistration && user.main_community"
           >
             <span class="nav-link__icon">
               <svg-vector />
             </span>
-            <span class="nav-link__text">Mes véhicules</span>
+            <span class="nav-link__text">Espace référent</span>
+          </b-dropdown-item>
+          <b-dropdown-item to="/community/loans" v-if="!(isGlobalAdmin || isCommunityAdmin) && hasCompletedRegistration" :disabled="!user.main_community">
+            <span class="nav-link__icon">
+              <b-icon icon="list-check" />
+            </span>
+            <span class="nav-link__text">Historique des emprunts</span>
           </b-dropdown-item>
           <b-dropdown-divider />
           <b-dropdown-item @click="logout">

@@ -1,9 +1,5 @@
 <template>
-  <layout-page name="community" wide :loading="!routeDataLoaded">
-    <div class="community__header">
-      <h1>{{ community.name }}</h1>
-    </div>
-
+  <div>
     <b-container>
       <b-row class="community__description page__section" v-if="community.long_description">
         <b-col>
@@ -87,7 +83,7 @@
         </b-row>
       </div>
     </b-container>
-  </layout-page>
+  </div>
 </template>
 
 <script>

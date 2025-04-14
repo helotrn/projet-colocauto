@@ -18,22 +18,12 @@ import ProfileSidebar from "@/components/Profile/Sidebar.vue";
 import Authenticated from "@/mixins/Authenticated";
 import UserMixin from "@/mixins/UserMixin";
 
-const routeGuard = (to, from, next) => {
-  if (to.name === "profile") {
-    next("/profile/colocauto");
-  } else {
-    next();
-  }
-};
-
 export default {
   name: "Account",
   mixins: [Authenticated, UserMixin],
   components: {
     ProfileSidebar,
   },
-  beforeRouteEnter: routeGuard,
-  beforeRouteUpdate: routeGuard,
   beforeRouteLeave(to, from, next) {
     // Set the root store as not loaded to force a reload of the user
     this.$store.commit("loaded", false);

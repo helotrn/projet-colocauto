@@ -36,7 +36,7 @@
               de véhicules.</p>
               <b-button
                 variant="primary"
-                to="/communities/new"
+                to="/community/new"
               >
                 Créer une communauté
               </b-button>
