@@ -300,7 +300,14 @@ SQL;
                 ->whereHas("users", function ($q2) use ($user) {
                     return $q2->where("users.id", $user->id);
                 })
-                ->orWhere("communities.type", "!=", "private");
+                ->orWhere("communities.type", "!=", "private")
+                ->orWhere(function ($q2) {
+                    // make newly created communities accessible to users
+                    // so that they can be added as referents for this new community
+                    $oneSecondAgo = Carbon::now()->subSecond();
+                    return $q2->whereDate('communities.created_at', '=', $oneSecondAgo)
+                        ->whereTime('communities.created_at', '>=', $oneSecondAgo);
+                });
         });
     }
 

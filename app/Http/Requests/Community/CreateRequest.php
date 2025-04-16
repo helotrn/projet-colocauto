@@ -10,7 +10,7 @@ class CreateRequest extends BaseRequest
 {
     public function authorize()
     {
-        return $this->user()->isAdmin()  || $this->user()->isCommunityAdmin();
+        return true;
     }
 
     public function rules()

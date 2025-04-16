@@ -18,7 +18,7 @@ const i18n = {
       description: "description",
       id: "ID",
       long_description: "texte de bienvenue / présentation",
-      name: "nom",
+      name: "nom de la communauté",
       proof: "preuve de résidence",
       tags: {
         ...prefixFields(tags.fr.fields, "(Mot-clé)"),

@@ -81,8 +81,13 @@ class CommunityController extends RestController
             // add the user as admin of this community
             $item->admins()->attach($request->user());
             $item->save();
+        } else if( !$request->user()->isAdmin() ) {
+            // add the user as referent for this community
+            $item->users()->attach($request->user());
+            // TODO add referent role
+            $item->save();
         }
-        
+
         return $this->respondWithItem($request, $item, 201);
     }
 

@@ -2,7 +2,7 @@
   <layout-page name="community" padded :loading="!routeDataLoaded">
     <b-row>
       <b-col md="4" lg="3">
-        <community-sidebar />
+        <community-sidebar v-if="user.main_community" />
       </b-col>
 
       <b-col md="8" lg="9">

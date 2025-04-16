@@ -1,5 +1,6 @@
 import Community from "@/views/Community.vue";
 import CommunityDashboard from "@/views/community/Dashboard.vue";
+import CommunityInfo from "@/views/community/Info.vue";
 import ProfileLoanables from "@/views/profile/Loanables.vue";
 import ProfileLoans from "@/views/profile/Loans.vue";
 
@@ -12,6 +13,17 @@ export default [
       titles: "titles.community",
     },
     children: [
+      {
+        path: "",
+        component: CommunityInfo,
+        props: { id: 'new' },
+        meta: {
+          auth: true,
+          creatable: true,
+          slug: "communities",
+          title: "titles.community",
+        },
+      },
       {
         path: "members",
         component: CommunityDashboard,
@@ -26,15 +38,8 @@ export default [
               retrieveOne: {
                 params: {
                   fields:
-                    "id,name,long_description,chat_group_url,type,parent.id,parent.name," +
-                    "area,area_google,center,center_google,approved_users_count," +
-                    "parent.area,parent.center,parent.area_google,parent.center_google," +
-                    "parent.children.id,parent.children.name,parent.children.area," +
-                    "parent.children.center,parent.children.area_google," +
-                    "parent.children.approved_users_count," +
-                    "parent.children.center_google,parent.approved_users_count," +
-                    "children.id,children.name,children.area,children.center," +
-                    "children.area_google,children.center_google,children.approved_users_count," +
+                    "id,name," +
+                    "approved_users_count," +
                     "users.id,users.full_name,users.avatar,users.description," +
                     "users.owner.id,users.tags.*",
                 },
