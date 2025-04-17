@@ -82,6 +82,7 @@ services:
             VUE_APP_STRIPE_KEY: ${STRIPE_KEY}
             VUE_APP_POSTHOG_KEY: ${POSTHOG_KEY}
             VUE_APP_POSTHOG_HOST: ${POSTHOG_HOST}
+            VUE_APP_THEME: ${APP_THEME:-default}
     postgres:
         build:
             context: psql

@@ -1,4 +1,5 @@
 const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer");
+const path = require('path');
 
 module.exports = {
   chainWebpack: (config) => {
@@ -28,7 +29,7 @@ module.exports = {
   css: {
     loaderOptions: {
       sass: {
-        prependData: '@import "@/assets/scss/_variables.scss";',
+        prependData: '@import "@theme/scss/_variables.scss";',
       },
     },
   },
@@ -69,6 +70,7 @@ module.exports = {
     if (process.env.WEBPACK_ANALYZE) {
       config.plugins.push(new BundleAnalyzerPlugin());
     }
+    config.resolve.alias['@theme'] = path.resolve(__dirname, `src/assets/themes/${process.env.VUE_APP_THEME}`);
   },
 
   assetsDir: "dist/",

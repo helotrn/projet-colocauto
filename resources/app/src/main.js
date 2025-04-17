@@ -30,7 +30,7 @@ import LayoutPage from "./components/Layout/Page.vue";
 import { filters } from "./helpers";
 import dayjs from "./helpers/dayjs";
 
-import "@/assets/scss/main.scss";
+import "@theme/scss/main.scss";
 import "vue-cal/dist/vuecal.css";
 
 if (process.env.NODE_ENV !== "development" && process.env.VUE_APP_SENTRY_DSN) {
