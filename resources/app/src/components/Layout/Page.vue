@@ -120,27 +120,3 @@ export default {
   },
 };
 </script>
-
-<style lang="scss">
-.page {
-  &__content {
-    &.with-tiled-bg {
-      background-image: url("/bg-tile.png");
-    }
-
-    &.green {
-      background-color: $locomotion-green;
-    }
-
-    &.centered {
-      display: flex;
-      flex-direction: column;
-      justify-content: space-around;
-    }
-  }
-
-  &__background {
-    background-color: $main-bg;
-  }
-}
-</style>

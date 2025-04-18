@@ -24,7 +24,7 @@ body {
         }
 
         &.with-tiled-bg {
-          background-image: url("/bg-tile.png");
+          background-image: url("../bg-tile-20.png");
         }
 
         &.green {
@@ -45,11 +45,13 @@ body {
 
 .box {
   background-color: $white;
-  padding: 53px $grid-gutter-width / 2 45px;
+  padding: 30px $grid-gutter-width / 2 30px;
   max-width: 100%;
+  border-radius: 10px;
   &.fixed-width {
     width: 590px;
     margin: 0 auto;
+    border-radius: 20px;
   }
   &.centered {
     text-align: center;

@@ -3,7 +3,7 @@
     <b-collapse class="layout-navbar__collapse" is-nav>
       <b-navbar-nav class="mr-auto">
         <b-navbar-brand :to="isLoggedIn ? '/app' : '/'">
-          <img src="/logo-colocauto.svg" alt="Coloc'Auto" width="180px" />
+          <svg-logo alt="Coloc'Auto" width="180px" />
         </b-navbar-brand>
 
         <b-navbar-brand class="layout-navbar__separator d-none d-sm-block" v-if="title" />
@@ -14,7 +14,7 @@
     </b-collapse>
 
     <b-navbar-brand :to="isLoggedIn ? '/app' : '/'">
-      <img src="/logo-colocauto.svg" alt="Coloc'Auto" class="logo d-lg-none" />
+      <svg-logo alt="Coloc'Auto" class="logo d-lg-none" />
     </b-navbar-brand>
 
     <b-navbar-toggle target="nav-collapse" v-if="!isLoggedIn" />
@@ -163,6 +163,8 @@ import Register from "@/assets/svg/register.svg";
 import Vector from "@/assets/svg/vector.svg";
 import Euro from "@/assets/icons/euro.svg";
 
+import Logo from "@theme/svg/logo-colocauto.svg";
+
 import AdminSidebar from "@/components/Admin/Sidebar.vue";
 import LocaleSwitcher from "@/components/LocaleSwitcher.vue";
 import UserAvatar from "@/components/User/Avatar.vue";
@@ -187,6 +189,7 @@ export default {
     "svg-register": Register,
     "svg-vector": Vector,
     "svg-euro": Euro,
+    "svg-logo": Logo,
   },
   props: {
     title: {

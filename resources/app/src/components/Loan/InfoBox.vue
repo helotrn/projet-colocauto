@@ -82,7 +82,7 @@
             <b-button
               size="sm"
               :disabled="loading"
-              variant="outline-danger"
+              variant="outline-primary"
               v-if="hasButton('deny') && userRoles.includes('owner')"
               @click.prevent="denyLoan"
             >
@@ -92,7 +92,7 @@
             <b-button
               size="sm"
               :disabled="loading"
-              variant="outline-danger"
+              variant="outline-primary"
               v-if="hasButton('cancel')"
               @click.prevent="cancelLoan"
             >
