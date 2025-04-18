@@ -15,6 +15,7 @@ export default [
     children: [
       {
         path: "",
+        name: "community-info",
         component: CommunityInfo,
         props: { id: 'new' },
         meta: {

@@ -1,12 +1,13 @@
 <template>
-  <b-form v-if="community" class="form" @submit.prevent="submit">
-    <forms-builder :definition="formName" v-model="community" entity="communities" />
+  <b-form v-if="community" class="form text-end" @submit.prevent="submit">
+    <forms-builder :definition="formName" v-model="community" entity="communities" class="text-start" />
+    <slot />
     <b-button
       variant="primary"
       type="submit"
       :disabled="!changed || loading"
     >
-      {{ $route.name == 'register-step' ? 'Suivant' : 'Enregistrer' }}
+      {{ $route.name.match('register-') ? 'Suivant' : 'Enregistrer' }}
     </b-button>
   </b-form>
 </template>

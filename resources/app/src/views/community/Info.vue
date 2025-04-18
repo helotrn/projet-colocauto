@@ -1,16 +1,10 @@
 <template>
   <b-container v-if="item" fluid tag="section">
-    <b-row v-if="!user.main_community" align-v="center">
-      <b-col lg="2" md="3" sm="4" cols="6">
-        <svg-discussion width="100px" class="p-2"/>
-      </b-col>
-      <b-col>
-        <p class="mb-0">
-          Sur Coloc'Auto, des groupes de personnes se partagent l'usage d'un ou
-          plusieurs véhicules. Pour cela, il se regroupent au sein de communautés.
-        </p>
-      </b-col>
-    </b-row>
+    <div v-if="!user.main_community" class="note">
+      <svg-discussion width="100px" class="p-2"/>
+      <p>Sur Coloc'Auto, des groupes de personnes se partagent l'usage d'un ou
+      plusieurs véhicules. Pour cela, il se regroupent au sein de communautés.</p>
+    </div>
 
     <h1 v-if="!user.main_community">Créer votre première communauté</h1>
     <community-form

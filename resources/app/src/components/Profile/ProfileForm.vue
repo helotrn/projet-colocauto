@@ -60,7 +60,7 @@ par les membres de votre groupe et l'équipe Coloc'Auto""
 
         <div class="form__buttons" v-if="!hideButtons">
           <b-button variant="primary" type="submit" :disabled="loading || pristine">
-            {{ ($route.name == 'register-step' ? $t("suivant") : $t("enregistrer")) | capitalize }}
+            {{ ($route.name.match('register-') ? $t("suivant") : $t("enregistrer")) | capitalize }}
           </b-button>
           <layout-loading with-button v-if="loading" />
         </div>
@@ -197,7 +197,7 @@ export default {
     figure {
       height: 200px;
       width: 200px;
-      background-color: #00ada8;
+      background-color: $locomotion-green;
       border-radius: 50%;
       display: inline-block;
       overflow: hidden;
@@ -214,7 +214,7 @@ export default {
       background-image: none;
       height: 200px;
       width: 200px;
-      background-color: #00ada8;
+      background-color: $locomotion-green;
       border-radius: 50%;
       margin: 0 auto;
       overflow: inherit;

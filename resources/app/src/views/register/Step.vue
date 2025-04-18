@@ -1,5 +1,5 @@
 <template>
-  <div class="register-step">
+  <div class="register-step box">
 
     <div v-if="item && currentPage == 2">
       <h2>{{ $t("components.register.registerform.register") }}</h2>
@@ -47,34 +47,6 @@
 
     <layout-loading v-if="!item && currentPage == 2" />
 
-    <div v-if="currentPage == 3" class="register-step__community">
-      <div class="headers text-center">
-        <h4>Afin que Coloc'Auto reste un service entre voisin.e.s sécuritaire.</h4>
-        <h2>Veuillez téléverser une preuve de résidence pour {{ mainCommunity.name }}</h2>
-      </div>
-      <div v-if="item && item.communities">
-        <community-proof-form
-          v-for="community in item.communities"
-          :key="community.id"
-          :community="community"
-          :loading="proofLoading"
-          skip="/register/4"
-          @submit="submitCommunityProof"
-        />
-      </div>
-      <layout-loading v-else />
-    </div>
-
-    <div v-if="currentPage == 4">
-      <p>Sur Coloc'Auto, des groupes de personnes se partagent l'usage d'un ou
-      plusieurs véhicules. Pour cela, il se regroupent au sein de communautés.</p>
-
-      <h2>Créer votre première communauté</h2>
-
-      <b-btn variant="outline-primary" to="/app" v-on:click="forcePageRefresh()">
-        Passer et aller au tableau de bord
-      </b-btn>
-    </div>
   </div>
 </template>
 
