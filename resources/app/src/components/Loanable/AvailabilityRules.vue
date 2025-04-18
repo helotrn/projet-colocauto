@@ -312,7 +312,7 @@ export default {
   }
 
   .vdp-datepicker__calendar .cell.disabled {
-    background-color: #4bd !important;
+    background-color: $locomotion-green !important;
   }
 
   &__calendars {
