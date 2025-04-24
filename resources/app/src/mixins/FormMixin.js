@@ -118,7 +118,10 @@ export default {
       try {
         if (!this.item.id) {
           await this.$store.dispatch(`${this.slug}/createItem`, this.params);
-          this.$router.replace(this.$route.fullPath.replace("new", this.item.id));
+          const itemPath = this.$route.fullPath.replace("new", this.item.id);
+          if( itemPath != this.$route.fullPath ) {
+            this.$router.replace(itemPath);
+          }
         } else {
           await this.$store.dispatch(`${this.slug}/updateItem`, this.params);
         }
