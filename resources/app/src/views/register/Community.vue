@@ -53,6 +53,12 @@ export default {
       // Hack to get the dashboard to refresh with the latest UserMixin
       window.location.reload();
     },
+    async afterSubmit() {
+      await this.$store.dispatch('invitations/loadEmpty');
+      this.$store.state.invitations.item.community_id = this.item.id;
+      this.$store.state.invitations.item.community = this.item;
+      await this.$store.dispatch('invitations/retrieve', {community_id: this.item.id});
+    },
   },
 }
 </script>

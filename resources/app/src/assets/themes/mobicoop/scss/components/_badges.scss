@@ -1,0 +1,13 @@
+.badge-list {
+	display: flex;
+	gap: 1em;
+	padding: 0;
+	margin: 0;
+	list-style: none;
+}
+
+.badge {
+	font-size: 100%;
+	font-weight: normal;
+	padding: .5em .8em;
+}

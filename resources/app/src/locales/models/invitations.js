@@ -5,7 +5,7 @@ export default {
     "créer une invitation": "créer une invitation",
     fields: {
       id: "ID",
-      email: "Couriel",
+      email: "Envoyer une invitation par email",
       for_community_admin: "Donner le droit d'administration de communauté",
       community_id: "communauté dans laquelle sera intégrée le nouveau membre",
       community: {
@@ -13,6 +13,9 @@ export default {
       },
       token: "code (créé automatiquement)",
       consumed_at: "date d'utilisation (rempli automatiquement)",
+    },
+    placeholders: {
+      email: 'Couriel',
     },
     list: {
       create: "créer une invitation",

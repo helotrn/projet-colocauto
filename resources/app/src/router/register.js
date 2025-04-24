@@ -43,6 +43,10 @@ export default [
           auth: true,
           slug: "communities",
           creatable: true,
+          params: {
+            fields:
+              "id,name,invitations",
+          },
         },
       },
     ],
