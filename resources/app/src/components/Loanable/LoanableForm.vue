@@ -8,7 +8,7 @@
       <b-form :novalidate="true" class="form loanable-form__form" @submit.stop.prevent>
         <div class="form__section">
           <b-row>
-            <b-col lg="8">
+            <b-col lg="12">
               <forms-validated-input
                 name="name"
                 :label="$t('fields.name') | capitalize"
@@ -123,6 +123,7 @@
         </div>
 
         <form-section
+          v-if="loanable.id"
           toggleable
           class="mt-2"
           section-title="Droits de gestion"
@@ -132,6 +133,7 @@
         </form-section>
 
         <form-section
+          v-if="loanable.id"
           toggleable
           class="mt-2"
           section-title="Partage des coûts"
@@ -142,18 +144,19 @@
               <forms-builder :definition="form.costs" v-model="loanable" entity="cars"></forms-builder>
             </b-col>
             <b-col lg="6">
-              <loanable-balance :loanable="loanable" />
+              <loanable-balance v-if="loanable.type == 'car' && loanable.balance" :loanable="loanable" />
             </b-col>
           </b-row>
         </form-section>
 
         <form-section
+          v-if="loanable.id"
           toggleable
           class="mt-2"
           section-title="Disponibilités"
           :inititally-visible="false"
         >
-          <loanable-availability-rules :changed="changed" :loanable="loanable" :loading="loading" />
+          <loanable-availability-rules v-if="loanable.events" :changed="changed" :loanable="loanable" :loading="loading" />
         </form-section>
 
         <div class="form__buttons" v-if="!hideButtons">
@@ -288,10 +291,26 @@ export default {
         }
       }
     },
-    submit(...params) {
+    async submit(...params) {
       if( !this.loanable.owner ) {
-        const ownerId = this.$store.state.user.owner.id;
-        this.$store.commit("loanables/mergeItem", { owner: { id: ownerId } });
+        let ownerId;
+        if (this.user.owner) {
+          ownerId = this.user.owner.id;
+        } else {
+          await this.$store.dispatch("users/update", {
+            id: this.user.id,
+            data: {
+              id: this.user.id,
+              owner: {},
+            },
+            params: {
+              fields: "owner.id,full_name,avatar",
+            },
+          });
+        }
+        ownerId = this.user.owner.id;
+
+        this.$store.commit("loanables/mergeItem", { owner: { id: ownerId, user: this.user } });
       }
       this.$emit("submit", ...params);
     },

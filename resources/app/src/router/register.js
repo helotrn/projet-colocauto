@@ -2,6 +2,7 @@ import Register from "@/views/Register.vue";
 import RegisterIntro from "@/views/register/Intro.vue";
 import RegisterStep from "@/views/register/Step.vue";
 import RegisterCommunity from "@/views/register/Community.vue";
+import RegisterLoanable from "@/views/register/Loanable.vue";
 
 export default [
   {
@@ -46,6 +47,21 @@ export default [
           params: {
             fields:
               "id,name,invitations",
+          },
+        },
+      },
+      {
+        path: "5",
+        name: "register-loanable",
+        component: RegisterLoanable,
+        props: true,
+        meta: {
+          auth: true,
+          slug: "loanables",
+          creatable: true,
+          params: {
+            fields:
+              "id,name,type,owner",
           },
         },
       },

@@ -15,6 +15,7 @@
         @reset="reset"
         :changed="changed"
         @submit="submit"
+        @next="nextStep"
       >
         <b-btn variant="outline-primary" to="/app" class="mr-4" v-on:click="forcePageRefresh()">
           Passer et aller au tableau de bord
@@ -36,7 +37,7 @@ import CommunityForm from "@/components/Community/CommunityForm.vue";
 import SvgDiscussion from "@/assets/svg/discussion.svg";
 
 export default {
-  name: "RegisterStep",
+  name: "RegisterCommunity",
   mixins: [Authenticated, FormLabelsMixin, FormMixin, Notification, UserMixin],
   components: {
     CommunityForm,
@@ -58,6 +59,10 @@ export default {
       this.$store.state.invitations.item.community_id = this.item.id;
       this.$store.state.invitations.item.community = this.item;
       await this.$store.dispatch('invitations/retrieve', {community_id: this.item.id});
+    },
+    async nextStep() {
+      await this.$store.dispatch("loadUser");
+      this.$router.push("/register/5");
     },
   },
 }
