@@ -11,10 +11,10 @@
         coûts et sa disponibilité. </p>
       </div>
       <div class="text-end">
-         <b-btn variant="outline-primary" to="/app" class="mt-4" @click="forcePageRefresh()">
+         <b-btn variant="outline-primary" to="/app" class="mt-4" @click="forcePageRefresh">
           Remplir plus tard
         </b-btn>
-        <b-btn variant="primary" to="/app" class="mt-4 ml-4" @click="$router.push('/register/6')">
+        <b-btn variant="primary" class="mt-4 ml-4" @click="showExtendedForm">
           Remplir la fiche
       </b-btn>
       </div>
@@ -42,7 +42,7 @@
           :changed="changed"
           :center="{}"
         >
-          <b-btn variant="outline-primary" to="/app" class="mr-4" v-on:click="forcePageRefresh()">
+          <b-btn variant="outline-primary" to="/app" class="mr-4" @click="forcePageRefresh">
             Passer et aller au tableau de bord
           </b-btn>
         </loanable-form>
@@ -52,6 +52,7 @@
   </div>
 </template>
 <script>
+import Vue from "vue";
 import Authenticated from "@/mixins/Authenticated";
 import Notification from "@/mixins/Notification";
 import UserMixin from "@/mixins/UserMixin";
@@ -78,6 +79,7 @@ export default {
   data() {
     return {
       showConfirmation: false,
+      created: false,
     }
   },
   methods: {
@@ -85,11 +87,27 @@ export default {
       // Hack to get the dashboard to refresh with the latest UserMixin
       window.location.reload();
     },
-    async afterSubmit() {
-      this.showConfirmation = true
+    formMixinCallback(){
+      // set uset main community as the default loanable community
+      this.item.community = this.user.main_community;
+      this.item.community_id = this.user.main_community.id;
     },
-    nextStep() {
-      this.$router.push("/register/6");
+    afterSubmit() {
+      if(this.created) {
+        // go to the dashboard
+        this.$router.push("/app")
+        this.forcePageRefresh()
+      } else {
+        this.created = true
+        this.showConfirmation = true
+      }
+    },
+    showExtendedForm() {
+      this.showConfirmation = false
+      Vue.nextTick(() => {
+        const reportsSection = this.$el.querySelector('.loanable-form #reports')
+        if( reportsSection ) reportsSection.scrollIntoView(true)
+      })
     },
   },
 }

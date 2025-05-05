@@ -61,7 +61,7 @@ export default [
           creatable: true,
           params: {
             fields:
-              "id,name,type,owner",
+              "*,owner,reports,report.*,events,coowners,coowners.*",
           },
         },
       },
