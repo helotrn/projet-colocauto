@@ -119,6 +119,25 @@ SQL;
                 );
             },
 
+            "loanable_count" => function ($query = null) {
+                $loanableCountSql = <<<SQL
+  (
+    SELECT count(id)
+    FROM loanables
+    WHERE loanables.community_id = communities.id
+    AND loanables.deleted_at IS NULL
+  )
+SQL;
+
+                if (!$query) {
+                    return $loanableCountSql;
+                }
+
+                return $query->selectRaw(
+                    "$loanableCountSql AS loanable_count"
+                );
+            },
+
             "parent_name" => function ($query = null) {
                 if (!$query) {
                     return "parent.name";
@@ -167,7 +186,7 @@ SQL;
 
     public $collections = ["children", "users", "pricings", "loanables", "invitations", "admins"];
 
-    public $computed = ["area_google", "center_google", "approved_users_count"];
+    public $computed = ["area_google", "center_google", "approved_users_count", "loanables_count"];
 
     public function parent()
     {
@@ -264,6 +283,15 @@ SQL;
         }
 
         return $this->users->count();
+    }
+
+    public function getLoanablesCountAttribute()
+    {
+        if (isset($this->attributes["loanable_count"])) {
+            return $this->attributes["loanable_count"];
+        }
+
+        return $this->loanables->count();
     }
 
     public function scopeIsDeleted(Builder $query, $value, $negative = false)

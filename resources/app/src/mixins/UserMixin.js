@@ -11,7 +11,7 @@ export default {
         this.user.accept_conditions &&
         this.user.borrower &&
         this.user.communities &&
-        this.user.communities.reduce((acc, c) => acc || (!!c.approved_at && !c.suspended_at), false)
+        this.user.communities.reduce((acc, c) => acc || (!!c.approved_at && !c.suspended_at && c.loanables_count > 0), false)
       );
     },
     hasCommunity() {
