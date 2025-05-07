@@ -104,7 +104,7 @@ export default {
       try {
         await this.$store.dispatch('invitations/createItem');
         this.$store.commit("addNotification", {
-          content: `Une invitations pour rejoindre ${this.community.name}
+          content: `Une invitation pour rejoindre ${this.community.name}
           a été envoyée à ${this.invitation.email}.`,
           title: "Invitation envoyée !",
           variant: "success",
