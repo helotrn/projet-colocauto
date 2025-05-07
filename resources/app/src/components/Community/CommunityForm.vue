@@ -19,7 +19,7 @@
         </ul>
       </b-collapse>
     </fieldset>
-    <layout-loading v-else-if="community.id" />
+    <layout-loading v-else-if="community.id && invitationLoading" />
 
     <slot />
     <b-button
@@ -142,6 +142,7 @@ export default {
 <style lang="scss">
 .collapsible-fieldset {
   border: solid 1px $gray-400;
+  background-color: $white;
   padding: 20px;
   margin-bottom: 20px;
   .toggle {

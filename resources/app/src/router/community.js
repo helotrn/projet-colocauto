@@ -23,6 +23,10 @@ export default [
           creatable: true,
           slug: "communities",
           title: "titles.community",
+          params: {
+            fields:
+              "id,name,invitations",
+          },
         },
       },
       {
