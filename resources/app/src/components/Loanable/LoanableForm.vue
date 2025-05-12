@@ -5,7 +5,7 @@
         Submit is bound to buttons directly so as to prevent vue-cal to
         trigger a submit event for an unknown reason.
       -->
-      <b-form :novalidate="true" class="form loanable-form__form" @submit.stop.prevent>
+      <b-form :novalidate="true" class="form text-end loanable-form__form" @submit.stop.prevent>
         <div class="form__section">
           <b-row>
             <b-col lg="12">
@@ -159,7 +159,9 @@
           <loanable-availability-rules v-if="loanable.events" :changed="changed" :loanable="loanable" :loading="loading" />
         </form-section>
 
+
         <div class="form__buttons" v-if="!hideButtons">
+          <slot />
           <b-button-group v-if="showReset">
             <b-button
               variant="success"
@@ -173,12 +175,12 @@
             </b-button>
           </b-button-group>
           <b-button
-            variant="success"
+            variant="primary"
             @click="checkInvalidThenSubmit(passes)"
             v-else
             :disabled="!changed || loading"
           >
-            {{ $t("enregistrer") | capitalize }}
+            {{ ($route.name.match('register-') ? $t("suivant") : $t("enregistrer")) | capitalize }}
           </b-button>
         </div>
       </b-form>
