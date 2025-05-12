@@ -1,22 +1,22 @@
 <template>
   <b-card no-body class="user-card">
     <b-row no-gutters class="user-card__content">
-      <b-col class="user-card__content__avatar" :style="{ backgroundImage: userAvatarStyle }" />
+      <b-col
+        v-if="user.avatar"
+        class="user-card__content__avatar"
+        :style="`background-image: url('${user.avatar.sizes.thumbnail}')`"
+      />
+      <b-col v-else class="user-card__content__avatar">
+        <default-avatar class="default-avatar" />
+      </b-col>
       <b-col class="user-card__content__details">
-        <div>
-          <i>Membre Coloc'Auto</i>
+        <div class="p-3">
+          <small class="uppercase">{{ user.owner && user.owner.id ? 'Propriétaire' : 'Membre' }}</small>
 
-          <h3>{{ user.full_name }}</h3>
+          <h3><strong>{{ user.full_name }}</strong></h3>
 
-          <p v-if="user.description" :title="user.description">{{ user.description }}</p>
-          <a v-if="user.phone" :href="`tel:${user.phone}`">{{ user.phone }}</a>
-
-          <div v-if="false && isAdmin && communityId" class="user-card__admin-actions">
-            <a href="#" @click.prevent="unsetCommittee" v-if="isCommittee">
-              Désaffecter du comité du voisinage
-            </a>
-            <a href="#" @click.prevent="setCommittee" v-else> Affecter au comité du voisinage </a>
-          </div>
+          <a v-if="user.phone" :href="`tel:${user.phone}`" class="d-block">{{ user.phone }}</a>
+          <a v-if="user.email" :href="`mailto:${user.email}`" class="d-block">{{ user.email }}</a>
         </div>
       </b-col>
     </b-row>
@@ -24,6 +24,7 @@
 </template>
 
 <script>
+import Avatar  from "@/assets/svg/avatar.svg";
 export default {
   name: "UserCard",
   props: {
@@ -42,20 +43,8 @@ export default {
       required: true,
     },
   },
-  computed: {
-    committeeTag() {
-      return this.$store.state.global.tags.find((t) => t.slug === "committee");
-    },
-    isCommittee() {
-      return this.user.tags.find((t) => t.slug === "committee");
-    },
-    userAvatarStyle() {
-      if (!this.user.avatar) {
-        return "";
-      }
-
-      return `url('${this.user.avatar.sizes.thumbnail}')`;
-    },
+  components: {
+    DefaultAvatar: Avatar,
   },
   methods: {
     async setCommittee() {
@@ -83,63 +72,30 @@ export default {
   margin-bottom: 10px;
   position: relative;
 
-  &__tags {
-    position: absolute;
-    top: -8px;
-    left: -8px;
-
-    .badge {
-      margin-right: 5px;
-    }
-  }
-
-  &__admin-actions {
-    margin-top: 1rem;
-  }
-
   &__content {
     &__avatar.col {
-      border-radius: 15px 0 0 15px;
+      border-radius: 15px 0 15px;
       flex: 0 1 103px;
       background-size: cover;
       background-repeat: no-repeat;
       background-position: center center;
       width: 103px;
       height: 103px;
+      .default-avatar {
+        fill: $danger;
+        background: #ffe6e5; // FIXME use a variable here
+        border-radius: 15px 0 15px;
+        width: 103px;
+        height: 103px;
+      }
     }
 
     &__details {
       > div {
         padding: 5px 20px;
       }
-
-      p {
-        margin-bottom: 0;
-
-        display: -webkit-box; /* stylelint-disable-line value-no-vendor-prefix */
-        overflow: hidden;
-        text-overflow: ellipsis;
-        -webkit-line-clamp: 3; /* stylelint-disable-line property-no-vendor-prefix */
-        -webkit-box-orient: vertical; /* stylelint-disable-line property-no-vendor-prefix */
-      }
-
-      i {
-        text-transform: uppercase;
-        margin-bottom: 20px;
-        font-size: 12px;
-        font-weight: 600;
-      }
-
       h3 {
-        font-size: 18px;
-        font-weight: normal;
-        margin-bottom: 20px;
-      }
-
-      a[href^="tel"] {
-        font-size: 14px;
-        text-decoration: underline;
-        color: $black;
+        line-height: 1.2;
       }
     }
   }

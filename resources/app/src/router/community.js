@@ -1,5 +1,5 @@
 import Community from "@/views/Community.vue";
-import CommunityDashboard from "@/views/community/Dashboard.vue";
+import CommunityMembers from "@/views/community/Members.vue";
 import CommunityInfo from "@/views/community/Info.vue";
 import ProfileLoanables from "@/views/profile/Loanables.vue";
 import ProfileLoans from "@/views/profile/Loans.vue";
@@ -31,29 +31,26 @@ export default [
       },
       {
         path: "members",
-        component: CommunityDashboard,
+        component: CommunityMembers,
         meta: {
           auth: true,
           title: "titles.community",
           data: {
-            global: {
-              load: {},
-            },
             communities: {
               retrieveOne: {
                 params: {
                   fields:
                     "id,name," +
                     "approved_users_count," +
-                    "users.id,users.full_name,users.avatar,users.description," +
-                    "users.owner.id,users.tags.*",
+                    "users.*,users.avatar.*," +
+                    "users.owner.id,invitations",
                 },
                 id({ user }) {
-                  if (!user || !user.communities || !user.communities[0]) {
+                  if (!user || !user.main_community || !user.main_community.id) {
                     return 0;
                   }
 
-                  return user.communities[0].id;
+                  return user.main_community.id;
                 },
               },
             },

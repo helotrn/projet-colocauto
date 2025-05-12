@@ -41,26 +41,21 @@ export default {
     skipLoadItem() {
       return true;
     },
-    currentCommunityId() {
-      return this.$store.state.communities.current
-        ? this.$store.state.communities.current
-        : this.user.main_community?.id;
-    },
   },
   beforeRouteEnter(to, from, next) {
     next((vm) => {
-      if( vm.currentCommunityId ){
+      if( vm.hasCommunity ){
         vm.$store.dispatch(`communities/retrieveOne`, {
-          id: vm.currentCommunityId,
+          id: vm.currentCommunity,
           params: vm.params,
         });
         // load invitations
         vm.$store.dispatch('invitations/retrieve', {
-          community_id: vm.currentCommunityId,
+          community_id: vm.currentCommunity,
         });
         vm.$store.dispatch('invitations/loadEmpty').then(() => {
-          vm.$store.state.invitations.item.community_id = vm.currentCommunityId;
-          vm.$store.state.invitations.item.community = vm.currentCommunityId;
+          vm.$store.state.invitations.item.community_id = vm.currentCommunity;
+          vm.$store.state.invitations.item.community = vm.currentCommunity;
         })
       } else {
         vm.$store.dispatch(`communities/loadEmpty`);
@@ -70,7 +65,7 @@ export default {
   methods: {
     async afterSubmit() {
       // reload user to get the main community
-      if(!this.currentCommunityId) this.$store.dispatch("loadUser");
+      if(!this.hasCommunity) this.$store.dispatch("loadUser");
 
       await this.$store.dispatch('invitations/loadEmpty');
       this.$store.state.invitations.item.community_id = this.item.id;
@@ -79,7 +74,7 @@ export default {
     },
   },
   beforeMount(){
-    if( !this.currentCommunityId ) this.isFirstCommunity = true;
+    if( !this.hasCommunity ) this.isFirstCommunity = true;
   }
 }
 </script>

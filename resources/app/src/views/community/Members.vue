@@ -1,31 +1,19 @@
 <template>
   <div>
-    <b-container>
-      <b-row class="community__description page__section" v-if="community.long_description">
-        <b-col>
-          <b-alert variant="info" show>
-            <div v-html="community.long_description" />
-          </b-alert>
-        </b-col>
-      </b-row>
-
-      <b-row class="page__section text-center" v-if="community.type === 'neighborhood'">
-        <b-col>
-          <h2>Mon voisinage</h2>
-        </b-col>
-      </b-row>
-    </b-container>
-
     <b-container
       fluid
       class="community__neighbors page__section"
     >
+      <b-row no-gutters class="px-3 header">
+        <h2 v-if="approvedUsersCount > 1">{{ approvedUsersCount }} membres</h2>
+        <b-btn variant="outline-primary" to="/community#email">Inviter un membre</b-btn>
+      </b-row>
       <b-row no-gutters>
         <b-col>
           <div v-if="community.users">
             <b-container>
               <b-row class="community__users mt-4">
-                  <b-col md="6" lg="4"
+                  <b-col md="12" lg="6"
                     v-for="user in community.users"
                     :key="user.id"
                   >
@@ -42,52 +30,10 @@
         </b-col>
       </b-row>
     </b-container>
-
-    <b-container>
-      <b-row class="community__organize page__section" v-if="community.chat_group_url">
-        <b-col>
-          <h2>Un espace pour s'organiser</h2>
-        </b-col>
-      </b-row>
-
-      <b-row class="page__section text-center" v-if="community.chat_group_url">
-        <b-col>
-          <p>
-            La prochaine fête de voisinage c’est quand? Besoin d’aide? Où proposer mon idée pour
-            améliorer la vie de quartier? Quand on ne se voit pas en personne, les réponses à ces
-            questions se trouvent sur notre groupe Facebook!
-          </p>
-
-          <p>
-            <a :href="community.chat_group_url" target="_blank">
-              <img src="/icons/messenger.png" />
-            </a>
-          </p>
-        </b-col>
-      </b-row>
-
-      <div v-if="borough && neighborhoods">
-        <b-row class="community__area page__section">
-          <b-col>
-            <h2>Les voisinages du quartier</h2>
-          </b-col>
-        </b-row>
-
-        <b-row v-if="borough && neighborhoods" class="page__section">
-          <b-col class="community__map">
-            <div class="community__map__total">
-              {{ approvedUsersCount }}<br />
-              voisines et voisins participent à Coloc'Auto dans votre quartier!
-            </div>
-          </b-col>
-        </b-row>
-      </div>
-    </b-container>
   </div>
 </template>
 
 <script>
-import BoroughDifferenceModal from "@/components/Misc/BoroughDifferenceModal.vue";
 import UserCard from "@/components/User/UserCard.vue";
 
 import Arrow from "@/assets/svg/arrow.svg";
@@ -97,30 +43,22 @@ import DataRouteGuards from "@/mixins/DataRouteGuards";
 import UserMixin from "@/mixins/UserMixin";
 
 export default {
-  name: "CommunityDashboard",
+  name: "CommunityMembers",
   mixins: [Authenticated, DataRouteGuards, UserMixin],
   components: {
-    BoroughDifferenceModal,
     "svg-arrow": Arrow,
     UserCard,
   },
   computed: {
-    borough() {
-      return this.community.type === "borough" ? this.community : this.community.parent;
+    // item is loaded manually in beforeRouteEnter
+    skipLoadItem() {
+      return true;
     },
     community() {
       return this.$store.state.communities.item || {};
     },
-    neighborhoods() {
-      return this.community.type === "borough"
-        ? this.community.children
-        : this.community.parent.children;
-    },
     approvedUsersCount() {
-      return (
-        this.borough.approved_users_count +
-        this.neighborhoods.reduce((acc, c) => acc + c.approved_users_count, 0)
-      );
+      return this.community.approved_users_count;
     },
   },
   methods: {
@@ -153,11 +91,6 @@ export default {
     margin-top: 60px;
   }
 
-  .page__section h2 {
-    margin-bottom: 40px;
-    text-align: center;
-  }
-
   .community {
     &__organize {
       margin-bottom: 0;
@@ -172,6 +105,16 @@ export default {
 
       &:nth-child(2) {
         margin-top: -30px;
+      }
+      .header {
+        position: relative;
+        min-height: 3.7em;
+        padding-bottom: 1em;
+        border-bottom: solid 1px rgba(0, 0, 0, 0.1);
+        .btn {
+          position: absolute;
+          right: 0;
+        }
       }
     }
 
