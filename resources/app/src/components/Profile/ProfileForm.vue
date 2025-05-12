@@ -58,11 +58,11 @@ par les membres de votre groupe et l'équipe Coloc'Auto""
 
         <slot />
 
-        <div class="form__buttons" v-if="!hideButtons">
+        <div class="form__buttons text-end" v-if="!hideButtons">
+          <layout-loading with-button v-if="loading" />
           <b-button variant="primary" type="submit" :disabled="loading || pristine">
             {{ ($route.name.match('register-') ? $t("suivant") : $t("enregistrer")) | capitalize }}
           </b-button>
-          <layout-loading with-button v-if="loading" />
         </div>
       </b-form>
     </validation-observer>
