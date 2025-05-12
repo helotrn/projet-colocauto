@@ -49,6 +49,24 @@ export default {
       default: "new",
     },
   },
+  computed: {
+    // item is loaded manually in beforeRouteEnter
+    skipLoadItem() {
+      return true;
+    },
+  },
+  beforeRouteEnter(to, from, next) {
+    next(vm => {
+      if( vm.user.main_community ) {
+        vm.$store.dispatch(`communities/retrieveOne`, {
+          id: vm.currentCommunity,
+          params: vm.$route.meta.params,
+        }).then(vm.afterSubmit);
+      } else {
+        vm.$store.dispatch(`communities/loadEmpty`);
+      }
+    })
+  },
   methods: {
     forcePageRefresh() {
       // Hack to get the dashboard to refresh with the latest UserMixin

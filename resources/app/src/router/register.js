@@ -1,6 +1,6 @@
 import Register from "@/views/Register.vue";
 import RegisterIntro from "@/views/register/Intro.vue";
-import RegisterStep from "@/views/register/Step.vue";
+import RegisterProfile from "@/views/register/Profile.vue";
 import RegisterCommunity from "@/views/register/Community.vue";
 import RegisterLoanable from "@/views/register/Loanable.vue";
 
@@ -24,8 +24,7 @@ export default [
       {
         path: "2",
         name: "register-profile",
-        component: RegisterStep,
-        props: { step: '2' },
+        component: RegisterProfile,
         meta: {
           auth: true,
           slug: "users",

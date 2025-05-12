@@ -1,7 +1,7 @@
 <template>
   <div class="register-step box">
 
-    <div v-if="item && currentPage == 2">
+    <div v-if="item">
       <h2>{{ $t("components.register.registerform.register") }}</h2>
 
       <profile-form
@@ -45,7 +45,7 @@
       <layout-loading v-else />
     </div>
 
-    <layout-loading v-if="!item && currentPage == 2" />
+    <layout-loading v-if="!item" />
 
   </div>
 </template>
@@ -70,7 +70,7 @@ import Lend from "@/assets/svg/home-lend.svg";
 import Biking from "@/assets/svg/biking.svg";
 
 export default {
-  name: "RegisterStep",
+  name: "RegisterProfile",
   mixins: [Authenticated, FormLabelsMixin, FormMixin, Notification, UserMixin],
   components: {
     CommunityProofForm,
@@ -82,41 +82,27 @@ export default {
     "svg-biking": Biking,
   },
   data() {
-    return { currentSlide: 1, currrentPage: 2, proofLoading: false };
+    return { currentSlide: 1, proofLoading: false };
   },
   beforeRouteEnter(to, from, next) {
-    next((vm) => {
-      if (vm.isLoggedIn) {
-        // Has not finalized his account creation
-        if (!vm.isRegistered) {
-          if (vm.$route.path !== "/register/2") {
-            vm.$router.replace("/register/2");
-          }
-        } else {
-          return vm.skipToApp();
-        }
+    next(vm => {
+      if( vm.isLoggedIn && !vm.isRegistered) {
+        vm.$store.dispatch(`users/retrieveOne`, {
+          id: 'me',
+          params: vm.$route.meta.params,
+        });
       }
-    });
+    })
   },
   props: {
     id: {
       required: false,
-      default: "me",
-    },
-    step: {
-      type: String,
-      required: true,
     },
   },
   computed: {
-    currentPage() {
-      const stepIndex = parseInt(this.step, 10);
-
-      if (Number.isNaN(stepIndex)) {
-        return 1;
-      }
-
-      return stepIndex;
+    // item is loaded manually in beforeRouteEnter
+    skipLoadItem() {
+      return true;
     },
   },
   methods: {
