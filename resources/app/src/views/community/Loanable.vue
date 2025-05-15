@@ -87,6 +87,13 @@ export default {
     },
   },
   methods: {
+    formMixinCallback(){
+      if( !this.item.id ) {
+        // set user main community as the default loanable community
+        this.item.community = this.user.main_community;
+        this.item.community_id = this.user.main_community.id;
+      }
+    },
     async submitLoanable() {
       const isNew = !this.item.id;
 

@@ -28,6 +28,20 @@
             </b-jumbotron>
           </section>
 
+          <section class="page__section" v-if="!loanables || loanables.length == 0">
+            <div class="box centered">
+              <svg-loanables width="244px" class="p-2"/>
+              <h2>Cette communauté n'a pas encore de véhicule</h2>
+              <p>Au sein de chaque communauté, vous pouvez partager avec les membres l’usage d’un ou plusieurs véhicules.</p>
+              <b-button
+                variant="primary"
+                to="/community/loanables/new"
+              >
+                Ajouter un véhicule
+              </b-button>
+            </div>
+          </section>
+
           <section class="page__section" v-if="!hasCommunity">
             <div class="box centered">
               <svg-discussion width="135px" class="p-2"/>
@@ -43,38 +57,6 @@
             </div>
           </section>
 
-          <section class="page__section" v-if="hasTutorials">
-            <h2 class="dashboard--margin-bottom">Pour commencer</h2>
-
-            <div class="page__section__tutorials">
-              <div v-if="hasTutorial('fill-your-driving-profile')">
-                <tutorial-block
-                  title="Remplissez votre dossier de conduite"
-                  to="/profile/borrower"
-                  bg-image="/img-voiture.png"
-                  variant="dark"
-                />
-              </div>
-
-              <div v-if="hasTutorial('add-vehicle')">
-                <tutorial-block
-                  title="Inscrivez un véhicule"
-                  to="/profile/loanables/new"
-                  bg-image="/img-voiture.png"
-                  variant="dark"
-                />
-              </div>
-
-              <div v-if="hasTutorial('find-vehicle')">
-                <tutorial-block
-                  title="Empruntez un véhicule"
-                  to="/search/map"
-                  bg-image="/img-vehicules.png"
-                  variant="light"
-                />
-              </div>
-            </div>
-          </section>
           <!---->
           <div class="page__section position-relative">
             <div class="loans-container" :class="{ loading: loading && !loansLoaded }">
@@ -393,6 +375,7 @@ import PenPaper from "@/assets/svg/pen-paper.svg";
 import Waving from "@/assets/svg/waving.svg";
 import MagnifyingGlassEuro from "@/assets/svg/magnifying-glass-euro.svg";
 import Discussion from "@/assets/svg/discussion.svg";
+import LoanablesImage from "@/assets/svg/loanables.svg";
 
 const sendRectMap = new Map();
 
@@ -414,6 +397,7 @@ export default {
     "svg-pen-paper": PenPaper,
     "svg-waving": Waving,
     "svg-discussion": Discussion,
+    "svg-loanables": LoanablesImage,
     UserCard,
     InfoLinkBlock,
     UsersBalance,
