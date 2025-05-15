@@ -58,7 +58,7 @@
           </section>
 
           <!---->
-          <div class="page__section position-relative">
+          <div class="page__section position-relative" v-if="hasLoans">
             <div class="loans-container" :class="{ loading: loading && !loansLoaded }">
               <!-- contested loans container -->
 
@@ -466,6 +466,12 @@ export default {
     },
     loans() {
       return this.$store.state.dashboard.loans ?? {};
+    },
+    hasLoans() {
+      return (this.loading && !this.loansLoaded)
+        || (this.startedOrFutureLoans && this.startedOrFutureLoans.length)
+        || (this.loans.contested && this.loans.contested.length)
+        || (this.loans.need_approval && this.loans.need_approval.length);
     },
     loanables() {
       if(!this.$store.state.dashboard.loanables) return [];
