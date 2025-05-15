@@ -14,14 +14,19 @@
             <b-container>
               <b-row class="community__users mt-4">
                   <b-col md="12" lg="6"
-                    v-for="user in community.users"
-                    :key="user.id"
+                    v-for="item in membersAndInvitations"
+                    :key="`${item.type}-${item.id}`"
                   >
                     <user-card
-                      :user="user"
+                      v-if="item.type == 'user'"
+                      :user="item"
                       :is-admin="isAdminOfCommunity(community)"
                       :community-id="community.id"
                       @updated="reload"
+                    />
+                    <invitation-card
+                      v-else
+                      :invitation="item"
                     />
                   </b-col>
               </b-row>
@@ -35,6 +40,7 @@
 
 <script>
 import UserCard from "@/components/User/UserCard.vue";
+import InvitationCard from "@/components/Invitation/InvitationCard.vue";
 
 import Arrow from "@/assets/svg/arrow.svg";
 
@@ -48,6 +54,7 @@ export default {
   components: {
     "svg-arrow": Arrow,
     UserCard,
+    InvitationCard,
   },
   computed: {
     // item is loaded manually in beforeRouteEnter
@@ -59,6 +66,12 @@ export default {
     },
     approvedUsersCount() {
       return this.community.approved_users_count;
+    },
+    membersAndInvitations(){
+      return [
+        ...this.community.users.map(u => ({...u, type: 'user'})),
+        ...this.community.invitations.filter(i => !i.consumed_at).map(i => ({...i, type: 'invitation'})),
+      ]
     },
   },
   methods: {
