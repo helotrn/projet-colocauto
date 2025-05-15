@@ -1,7 +1,6 @@
 import Profile from "@/views/Profile.vue";
 import ProfileAccount from "@/views/profile/Account.vue";
-import ProfileLoanables from "@/views/profile/Loanables.vue";
-import ProfileLoanable from "@/views/profile/Loanable.vue";
+import CommunityLoanables from "@/views/community/Loanables.vue";
 import ProfileLocomotion from "@/views/profile/Locomotion.vue";
 
 export default [
@@ -44,7 +43,7 @@ export default [
       },
       {
         path: "loanables",
-        component: ProfileLoanables,
+        component: CommunityLoanables,
         meta: {
           auth: true,
           creatable: true,
@@ -66,28 +65,7 @@ export default [
       },
       {
         path: "loanables/:id",
-        name: "single-loanable",
-        component: ProfileLoanable,
-        props: true,
-        meta: {
-          auth: true,
-          slug: "loanables",
-          params: {
-            fields:
-              "*,events,type,community.id,community.center,community.name,owner.id,owner.user.id,owner.user.full_name," +
-              "owner.user.communities.center,owner.user.communities.id,owner.user.avatar,image.*,report.*,balance," +
-              "coowners,coowners.user,coowners.user.full_name,coowners.user.avatar,coowners.user.phone,coowners.title," +
-              "coowners.receive_notifications,coowners.pays_loan_price,coowners.pays_provisions,coowners.pays_owner"
-          },
-          title: "titles.loanable",
-          data: {
-            communities: {
-              retrieve: {
-                fields: "id,name,center",
-              },
-            },
-          },
-        },
+        redirect: "/community/loanables/:id"
       },
       {
         path: "loans",

@@ -1,6 +1,6 @@
 <template>
   <b-card no-body class="loanable-info-box" bg="white" :class="{ disabled: loading }">
-    <router-link :to="`/profile/loanables/${id}`">
+    <router-link :to="`/community/loanables/${id}`">
       <b-row>
         <b-col class="loanable-info-box__image">
           <div v-if="loanableImage" :style="{ backgroundImage: loanableImage }" />

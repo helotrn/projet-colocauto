@@ -230,7 +230,7 @@
                 <b-button v-if="canLoanVehicle" class="mb-2 py-2 w-100" variant="primary" to="/search/calendar">Voir tout l'agenda</b-button>
               </b-col>
               <b-col md="6">
-                <b-button class="mb-2 py-2 w-100" variant="primary" to="/profile/loans">Historique d'emprunts</b-button>
+                <b-button class="mb-2 py-2 w-100" variant="primary" to="/community/loans">Historique d'emprunts</b-button>
               </b-col>
             </b-row>
           </section>

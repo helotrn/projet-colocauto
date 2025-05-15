@@ -43,7 +43,7 @@ export default {
         : this.user.main_community.id;
     },
     currentCommunityLoans() {
-      return this.data.filter(e => e.community.id == this.currentCommunity)
+      return this.data.filter(e => e.community && e.community.id == this.currentCommunity)
     }
   },
   watch:{

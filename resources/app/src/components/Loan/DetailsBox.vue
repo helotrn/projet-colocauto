@@ -92,36 +92,13 @@
         </template>
 
         <hr />
-        <b-row>
-          <b-col tag="dl" cols="6">
-            <dt>{{ $t("fields.departure_at") | capitalize }}</dt>
-            <dd>
-              {{ loan.departure_at | shortDate | capitalize }}<br />{{ loan.departure_at | time }}
-            </dd>
-          </b-col>
-          <b-col tag="dl" cols="6">
-            <dt>{{ $t("fields.return_at") | capitalize }}</dt>
-            <dd>
-              {{ returnAt | shortDate | capitalize }}<br />
-              {{ returnAt | time }}
-            </dd>
-          </b-col>
-        </b-row>
-        <b-row>
-          <b-col tag="dl" cols="6" v-if="price > 0 && distance > 0">
-            <dt>
-              {{
-                hasFinalDistance
-                  ? $t("details_box.distance")
-                  : $t("details_box.estimated_distance") | capitalize
-              }}
-            </dt>
-            <dd>{{ distance }} km</dd>
-          </b-col>
-          <b-col cols="12" v-if="price > 0">
-            <loan-price-details :loan="loan" :loan-loading="loanLoading" />
-          </b-col>
-        </b-row>
+        <div class="reports-pictures">
+          <h5>État du véhicule</h5>
+          <router-link :to="`/profile/loanables/${loanable.id}#reports`" class="d-block mb-2">
+            <icons-caret class="b-icon" />
+            Fiche de l’état complet du véhicule
+          </router-link>
+        </div>
         <hr />
 
         <dl class="mb-0">
@@ -149,17 +126,14 @@
 </template>
 
 <script>
-import { durationInHours } from "@/helpers/filters";
-
 import locales from "@/locales";
 import UserMixin from "@/mixins/UserMixin";
-import LoanPriceDetails from "@/components/Loan/PriceDetails";
 import IconsCaret from "@/assets/icons/caret.svg";
 
 export default {
   name: "LoanDetailsBox",
   mixins: [UserMixin],
-  components: {LoanPriceDetails, IconsCaret},
+  components: {IconsCaret},
   props: {
     loan: {
       type: Object,
@@ -186,42 +160,12 @@ export default {
     },
   },
   computed: {
-    duration() {
-      if (this.loan.actual_duration_in_minutes) {
-        return this.loan.actual_duration_in_minutes;
-      }
-      return this.loan.duration_in_minutes;
-    },
-    hasFinalDistance() {
-      return this.loan.handover && this.loan.handover.mileage_end;
-    },
-    distance() {
-      if (this.hasFinalDistance) {
-        return this.loan.handover.mileage_end - this.loan.takeover.mileage_beginning;
-      }
-      return this.loan.estimated_distance;
-    },
-    returnAt() {
-      if (this.loan.actual_return_at) {
-        return this.loan.actual_return_at;
-      }
-      return this.$dayjs(this.loan.departure_at)
-        .add(this.loan.duration_in_minutes, "minute")
-        .format("YYYY-MM-DD HH:mm:ss");
-    },
     loanableUrl() {
       if (this.isLoanAdmin) {
         return "/admin/loanables/" + this.loan.loanable.id;
       }
 
       return "";
-    },
-    price() {
-      return this.loan.final_price
-        ? parseFloat(this.loan.final_price)
-        : this.loan.actual_price
-        ? parseFloat(this.loan.actual_price)
-        : parseFloat(this.loan.estimated_price);
     },
     ownerUrl() {
       const ownerId = this.loan.loanable?.owner?.user.id;
@@ -264,10 +208,9 @@ export default {
       } else if( this.loanable.community ) {
         return `${this.loan.loanable.community.name} (${this.loanable.name})`;
       } else return this.loanable.name;
-    }
+    },
   },
   methods: {
-    durationInHours,
   },
   i18n: {
     messages: {
@@ -327,6 +270,19 @@ export default {
     margin-top: 0;
 
     margin-bottom: 1rem;
+  }
+  .reports-pictures {
+    .b-icon {
+      fill: $primary;
+    }
+    .row {
+      padding-right: 10px;
+      padding-left: 10px;
+      .col-md-3 {
+        padding-right: 5px;
+        padding-left: 5px;
+      }
+    }
   }
 }
 </style>

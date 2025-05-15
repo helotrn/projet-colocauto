@@ -294,7 +294,7 @@ export default {
           {
             title: "Je partage mon véhicule au voisinage ou au quartier?",
             content:
-              '<p>Par défaut, on met à disposition votre auto, votre vélo ou autre véhicule à très petite échelle, à votre voisinage. Ensuite, vous avez le choix. Vous pouvez <a href="/profile/loanables">changer vos préférences de partage</a> pour en faire profiter tout le quartier!</p>',
+              '<p>Par défaut, on met à disposition votre auto, votre vélo ou autre véhicule à très petite échelle, à votre voisinage. Ensuite, vous avez le choix. Vous pouvez <a href="/community/loanables">changer vos préférences de partage</a> pour en faire profiter tout le quartier!</p>',
           },
           {
             title:
