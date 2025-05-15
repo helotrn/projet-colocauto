@@ -40,3 +40,8 @@ a.btn-outline-primary:hover {
         @extend .shadow-none;
     }
 }
+
+a.btn-primary.btn-rounded {
+  border-radius: 100%;
+  padding: .375em;
+}

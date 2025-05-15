@@ -221,20 +221,19 @@
 
           <!-- loanables container -->
           <section class="page__section position-relative">
-            <b-row v-if="user.owner">
-              <b-col class="text-right">
-                <b-button variant="outline-primary" to="/profile/loanables">
-                  Gérer mes véhicules
-                </b-button>
-              </b-col>
-            </b-row>
-
             <div class="dashboard__vehicles" :class="{ loading: loading && !loanablesLoaded }">
               <transition name="fade">
                 <div v-if="loanables && loanables.length > 0">
                   <transition-group name="dashboard-list">
-                    <h3 class="dashboard--margin-bottom" key="title">{{ totalLoanables }} véhicules</h3>
-                    <b-row key="loanables">
+                    <b-row no-gutters class="header" key="header">
+                      <h3 class="mb-0">{{ totalLoanables }} véhicule{{totalLoanables > 1 ? 's' : ''}}</h3>
+                      <b-btn variant="outline-primary" to="/community/loanables">Gérer les véhicules</b-btn>
+                      <b-btn variant="primary" to="/community/loanables/new" class="btn-rounded">
+                        <span class="sr-only">Ajouter</span>
+                        <plus-icon width="24"/>
+                      </b-btn>
+                    </b-row>
+                    <b-row key="loanables" class="mt-4">
                       <b-col lg="6" v-for="loanable in loanables" :key="loanable.id">
                         <loanable-info-box
                           class="dashboard-list-item"
@@ -262,8 +261,15 @@
               <transition name="fade">
                 <div v-if="members && members.length > 0">
                   <transition-group name="dashboard-list">
-                    <h3 class="dashboard--margin-bottom" key="title">{{ totalMembers }} membres</h3>
-                    <b-row key="members">
+                    <b-row no-gutters class="header" key="header">
+                      <h3 class="mb-0">{{ totalMembers }} membre{{totalMembers > 1 ? 's' : ''}}</h3>
+                      <b-btn variant="outline-primary" to="/community/members">Gérer les membres</b-btn>
+                      <b-btn variant="primary" to="/community#email" class="btn-rounded">
+                        <span class="sr-only">Ajouter</span>
+                        <plus-icon width="24"/>
+                      </b-btn>
+                    </b-row>
+                    <b-row key="members" class="mt-4">
                       <b-col lg="6" v-for="member in members" :key="member.id">
                         <user-card
                           :user="member"
@@ -376,6 +382,7 @@ import Waving from "@/assets/svg/waving.svg";
 import MagnifyingGlassEuro from "@/assets/svg/magnifying-glass-euro.svg";
 import Discussion from "@/assets/svg/discussion.svg";
 import LoanablesImage from "@/assets/svg/loanables.svg";
+import PlusIcon from "@/assets/icons/plus.svg";
 
 const sendRectMap = new Map();
 
@@ -398,6 +405,7 @@ export default {
     "svg-waving": Waving,
     "svg-discussion": Discussion,
     "svg-loanables": LoanablesImage,
+    PlusIcon,
     UserCard,
     InfoLinkBlock,
     UsersBalance,
@@ -634,6 +642,21 @@ export default {
   .fade-enter,
   .fade-leave-to {
     opacity: 0;
+  }
+
+  .header {
+    align-items: center;
+    gap: 1em;
+    flex-wrap: nowrap;
+    min-height: 3.7em;
+    padding-bottom: 1em;
+    border-bottom: solid 1px rgba(0, 0, 0, 0.1);
+    h3 {
+      width: 100%;
+    }
+    .btn {
+      flex-shrink: 0;
+    }
   }
 
   .dashboard-list-item {
