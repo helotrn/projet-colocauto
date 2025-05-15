@@ -5,7 +5,7 @@
         Submit is bound to buttons directly so as to prevent vue-cal to
         trigger a submit event for an unknown reason.
       -->
-      <b-form :novalidate="true" class="form text-end loanable-form__form" @submit.stop.prevent>
+      <b-form :novalidate="true" class="form loanable-form__form" @submit.stop.prevent>
         <div class="form__section">
           <b-row>
             <b-col lg="12">
@@ -160,7 +160,7 @@
         </form-section>
 
 
-        <div class="form__buttons" v-if="!hideButtons">
+        <div class="form__buttons text-end" v-if="!hideButtons">
           <slot />
           <b-button-group v-if="showReset">
             <b-button
