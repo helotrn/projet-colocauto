@@ -14,8 +14,8 @@
             Ajouter cet email
           </b-button>
         </div>
-        <ul v-if="community.invitations && community.invitations.length" class="badge-list">
-          <li v-for="inv in community.invitations" :key="inv.id"><b-badge>{{inv.email}}</b-badge></li>
+        <ul v-if="pendingInvitations && pendingInvitations.length" class="badge-list">
+          <li v-for="inv in pendingInvitations" :key="inv.id"><b-badge>{{inv.email}}</b-badge></li>
         </ul>
       </b-collapse>
     </fieldset>
@@ -83,6 +83,10 @@ export default {
     },
     invitationLoading() {
       return this.$store.state.invitations.loading;
+    },
+    pendingInvitations() {
+      if(!this.community?.invitations) return []
+      else return this.community.invitations.filter(i => !i.consumed_at)
     },
     canSubmit() {
       if( this.$route.name.match('register-') ) {
