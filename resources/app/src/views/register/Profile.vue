@@ -109,17 +109,18 @@ export default {
     nextSlide() {
       this.currentSlide += 1;
     },
-    forcePageRefresh() {
-      // Hack to get the dashboard to refresh with the latest UserMixin
-      window.location.reload();
-    },
     async submitAndReload() {
       try {
         await this.submit(false);
         this.$store.commit("user", this.item);
 
-        // Skip "Submit proof of residency" third step
-        this.$router.push("/register/4");
+        if( this.hasCommunity ) {
+          // it was an invitation, skip the step-by-step registration process
+          this.$router.push("/app");
+        } else {
+          // Skip "Submit proof of residency" third step
+          this.$router.push("/register/4");
+        }
       } catch (e) {
         if (e.request) {
           switch (e.request.status) {
