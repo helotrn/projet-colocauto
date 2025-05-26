@@ -6,8 +6,7 @@ import * as VueGoogleMaps from "vue2-google-maps";
 import vueHeadful from "vue-headful";
 import VueScrollTo from "vue-scrollto";
 import VueTheMask from "vue-the-mask";
-import * as Sentry from "@sentry/browser";
-import * as Integrations from "@sentry/integrations";
+import * as Sentry from "@sentry/vue";
 import VueGtag from "vue-gtag";
 import PosthogPlugin from './plugins/posthog';
 import posthog from 'posthog-js';
@@ -38,7 +37,7 @@ if (process.env.NODE_ENV !== "development" && process.env.VUE_APP_SENTRY_DSN) {
   Sentry.init({
     dsn: process.env.VUE_APP_SENTRY_DSN,
     release: process.env.VUE_APP_RELEASE,
-    integrations: [new Integrations.Vue({ Vue, attachProps: true, logErrors: true })],
+    integrations: [Sentry.vueIntegration({ Vue, attachProps: true, logErrors: true })],
   });
 }
 
