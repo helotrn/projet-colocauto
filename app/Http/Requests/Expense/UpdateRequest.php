@@ -34,6 +34,7 @@ class UpdateRequest extends BaseRequest
             ],
             "loan_id" => [
                 "numeric",
+                "nullable",
             ],
         ];
 

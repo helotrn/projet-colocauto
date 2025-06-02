@@ -32,6 +32,7 @@ class CreateRequest extends BaseRequest
             ],
             "loan_id" => [
                 "numeric",
+                "nullable",
             ],
         ];
 
