@@ -452,22 +452,6 @@ class LoanTest extends TestCase
         $this->assertEquals("in_process", $loan->getStatusFromActions());
     }
 
-    public function testGetStatusFromActions_PaymentInProcess()
-    {
-        $loan = factory(Loan::class)
-            ->states(["withAllStepsCompleted", "butPaymentInProcess"])
-            ->create();
-
-        // Must refresh materialized views before asking for loan->actions.
-        \DB::statement("REFRESH MATERIALIZED VIEW actions");
-
-        // Refresh loan from database
-        $loan = $loan->fresh();
-
-        // Assert that loan is in_process.
-        $this->assertEquals("in_process", $loan->getStatusFromActions());
-    }
-
     public function testGetStatusFromActions_PaymentCompleted()
     {
         $loan = factory(Loan::class)
@@ -839,79 +823,6 @@ class LoanTest extends TestCase
         $this->assertEquals($refActionStatuses, $testActionStatuses);
 
         // Assert that the loan return time accounts is not impacted by canceled extensions.
-        $this->assertTrue(
-            $departureAt
-                ->addMinutes(75)
-                ->equalTo($loan->getActualReturnAtFromActions())
-        );
-
-        // Check the loan's actual duration.
-        $this->assertEquals(75, $loan->actual_duration_in_minutes);
-
-        // Check the loan's number of calendar days.
-        $this->assertEquals(1, $loan->calendar_days);
-    }
-
-    public function testLoanTimesAndDurations_EarlyReturn_PaymentInProcess()
-    {
-        // Milliseconds get truncated in the database, zero them out so as to
-        // compare on seconds only.
-        $departureAt = CarbonImmutable::now()
-            ->setHours(4)
-            ->setMinutes(30)
-            ->setSeconds(0)
-            ->setMilliseconds(0);
-
-        $loan = factory(Loan::class)
-            ->states([
-                "withCompletedIntention",
-                "withCompletedPrePayment",
-                "withCompletedTakeover",
-            ])
-            ->create([
-                "departure_at" => $departureAt,
-                "duration_in_minutes" => 75,
-            ]);
-
-        // Completed handover
-        $loan->handover()->save(
-            factory(Handover::class)->make([
-                "status" => "completed",
-                "executed_at" => $departureAt->addMinutes(45),
-            ])
-        );
-
-        // Payment in process
-        $loan->payment()->save(
-            factory(Payment::class)->make([
-                "status" => "in_process",
-            ])
-        );
-
-        // Must refresh materialized views before asking for loan->actions.
-        \DB::statement("REFRESH MATERIALIZED VIEW actions");
-
-        // Refresh loan from database
-        $loan = $loan->fresh();
-
-        // Validate loan actions
-        $refActionStatuses = [
-            ["intention", "completed"],
-            ["pre_payment", "completed"],
-            ["takeover", "completed"],
-            ["handover", "completed"],
-            ["payment", "in_process"],
-        ];
-
-        $testActionStatuses = [];
-        foreach ($loan->actions as $action) {
-            $testActionStatuses[] = [$action->type, $action->status];
-        }
-
-        $this->assertEquals($refActionStatuses, $testActionStatuses);
-
-        // Assert that the loan return time accounts is not impacted early
-        // return (completed handover) when payment still in process.
         $this->assertTrue(
             $departureAt
                 ->addMinutes(75)

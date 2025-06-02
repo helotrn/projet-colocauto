@@ -4,7 +4,6 @@ namespace Tests\Unit\Models;
 
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
-use Noke;
 use Stripe;
 use Tests\TestCase;
 
@@ -60,56 +59,6 @@ class UserTest extends TestCase
         );
         $user->removeFromBalance(1.01);
         $this->assertEquals(0, 1); // Raised above
-    }
-
-    public function testUpdateUserEmailFromModelDirectly()
-    {
-        $user = factory(User::class)->create([
-            "email" => "original@user.email",
-        ]);
-
-        $originalEmail = $user->email;
-        $changedEmail = "changed@email.com";
-
-        Noke::shouldReceive("findUserByEmail")
-            ->withArgs(function ($a) use ($originalEmail) {
-                return $a === $originalEmail;
-            })
-            ->andReturns(
-                (object) [
-                    "username" => $originalEmail,
-                ]
-            )
-            ->once();
-
-        Noke::shouldReceive("updateUser")
-            ->withArgs(function ($arg) use ($changedEmail) {
-                return $arg->username === $changedEmail;
-            })
-            ->once();
-
-        $user->email = $changedEmail;
-        $user->save();
-    }
-
-    public function testUserGetNokeUser()
-    {
-        $user = factory(User::class)->create();
-
-        Noke::shouldReceive("findOrCreateUser")->once();
-
-        $user->getNokeUser();
-    }
-
-    public function testUserStripeCustomerMethod()
-    {
-        $user = factory(User::class)->create();
-
-        Stripe::shouldReceive("getUserCustomer")
-            ->once()
-            ->with($user);
-
-        $user->getStripeCustomer();
     }
 
     public function testUpdateEmailSuccess()

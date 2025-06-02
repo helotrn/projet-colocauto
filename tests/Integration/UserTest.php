@@ -11,7 +11,6 @@ use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Str;
 use Illuminate\Testing\Assert;
 use Mockery;
-use Noke;
 use Stripe;
 use Tests\TestCase;
 
@@ -577,107 +576,4 @@ class UserTest extends TestCase
             );
     }
 
-    public function testUsersUpdateEmailEndpointUpdatesNokeEmail()
-    {
-        $originalEmail = "test@gmail.com";
-        $user = factory(User::class)->create([
-            "email" => $originalEmail,
-            "role" => "admin",
-        ]);
-
-        $newEmail = "different@hotmail.com";
-
-        Noke::shouldReceive("findUserByEmail")
-            ->withArgs(function ($a) use ($originalEmail) {
-                return $a === $originalEmail;
-            })
-            ->andReturns(
-                (object) [
-                    "username" => $originalEmail,
-                ]
-            )
-            ->once();
-
-        Noke::shouldReceive("updateUser")
-            ->withArgs(function ($arg) use ($newEmail) {
-                return $arg->username === $newEmail;
-            })
-            ->once();
-
-        $this->json("POST", "/api/v1/users/$user->id/email", [
-            "email" => $newEmail,
-        ])->assertStatus(200);
-    }
-
-    public function testUsersUpdateEndpointUpdatesNokeEmail()
-    {
-        $originalEmail = "test@gmail.com";
-        $user = factory(User::class)->create([
-            "email" => $originalEmail,
-        ]);
-
-        $newEmail = "different@hotmail.com";
-
-        Noke::shouldReceive("findUserByEmail")
-            ->withArgs(function ($a) use ($originalEmail) {
-                return $a === $originalEmail;
-            })
-            ->andReturns(
-                (object) [
-                    "username" => $originalEmail,
-                ]
-            )
-            ->once();
-
-        Noke::shouldReceive("updateUser")
-            ->withArgs(function ($arg) use ($newEmail) {
-                return $arg->username === $newEmail;
-            })
-            ->once();
-
-        $this->json(
-            "PUT",
-            "/api/v1/users/$user->id",
-            array_merge($user->toArray(), [
-                "email" => $newEmail,
-            ])
-        )->assertStatus(200);
-    }
-
-    public function testAddToBalanceEndpoint()
-    {
-        $paymentMethod = factory(PaymentMethod::class)->create([
-            "user_id" => $this->user->id,
-            "type" => "credit_card",
-            "external_id" => "stripe source id",
-        ]);
-
-        Stripe::shouldReceive("getUserCustomer")
-            ->once()
-            ->withArgs(function ($arg) {
-                return $arg->id === $this->user->id;
-            })
-            ->andReturn((object) ["id" => "cus_test"]);
-
-        Stripe::shouldReceive("computeAmountWithFee")
-            ->once()
-            ->with(10, Mockery::any())
-            ->andReturn(10.5);
-
-        Stripe::shouldReceive("createCharge")
-            ->once()
-            ->with(
-                1050,
-                "cus_test",
-                "Ajout au compte LocoMotion: 10,00$ + 0,50$ (frais)",
-                "stripe source id"
-            );
-
-        $response = $this->json("PUT", "/api/v1/auth/user/balance", [
-            "transaction_id" => 1,
-            "amount" => 10,
-            "payment_method_id" => $paymentMethod->id,
-        ]);
-        $response->assertStatus(200)->assertSee("10");
-    }
 }

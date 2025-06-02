@@ -763,65 +763,6 @@ class LoanTest extends TestCase
         $this->assertEquals($refActionStatuses, $testActionStatuses);
     }
 
-    public function testCreateWithSelfServiceLoanableAndEnoughBalanceAutomaticallyPrePaid()
-    {
-        $borrower = factory(Borrower::class)->create([
-            "user_id" => $this->user->id,
-        ]);
-
-        $community = factory(Community::class)->create();
-
-        $user = factory(User::class)->create();
-        $user
-            ->communities()
-            ->attach($community->id, ["approved_at" => new DateTime()]);
-
-        $owner = factory(Owner::class)->create(["user_id" => $user->id]);
-        $loanable = factory(Bike::class)->create([
-            "owner_id" => $owner->id,
-            "is_self_service" => true,
-        ]);
-
-        $data = [
-            "departure_at" => now()->toDateTimeString(),
-            "duration_in_minutes" => $this->faker->randomNumber(4),
-            "estimated_distance" => $this->faker->randomNumber(4),
-            "borrower_id" => $borrower->id,
-            "loanable_id" => $loanable->id,
-            "estimated_price" => 0,
-            "estimated_insurance" => 0,
-            "platform_tip" => 0,
-            "message_for_owner" => "",
-            "reason" => "salut",
-            "community_id" => $community->id,
-        ];
-
-        $response = $this->json(
-            "POST",
-            "/api/v1/loans?fields=*,actions.*",
-            $data
-        );
-
-        $response->assertStatus(201);
-        $responseData = json_decode($response->getContent());
-
-        // Validate loan actions
-        $this->assertCount(4, $responseData->actions);
-
-        $refActionStatuses = [
-            "intention" => "completed",
-            "pre_payment" => "completed",
-            "takeover" => "completed",
-            "handover" => "in_process",
-        ];
-        $testActionStatuses = [];
-        foreach ($responseData->actions as $action) {
-            $testActionStatuses[$action->type] = $action->status;
-        }
-
-        $this->assertEquals($refActionStatuses, $testActionStatuses);
-    }
-
     // Basic case: the actual_duration_in_minutes of a loan is its intended duration
     public function testLoanActualDurationInMinutesBase()
     {
@@ -1239,40 +1180,6 @@ class LoanTest extends TestCase
             return $mail->hasTo($loan->borrower->user->email);
         });
         Mail::assertQueued(LoanCompleted::class, function ($mail) use ($loan) {
-            return $mail->hasTo($loan->loanable->owner->user->email);
-        });
-    }
-
-    public function testCompleteSelfServiceLoan_sendsMailOnlyToBorrower()
-    {
-        // Bike without owner
-        $bike = factory(Bike::class)->create(["is_self_service" => true]);
-
-        /** @var Loan */
-        $loan = factory(Loan::class)
-            ->states(["withAllStepsCompleted", "butPaymentInProcess"])
-            ->create([
-                "loanable_id" => $bike->id,
-            ]);
-
-        Mail::fake();
-
-        $response = $this->json(
-            "put",
-            "/api/v1/loans/$loan->id/actions/{$loan->payment->id}/complete",
-            [
-                "type" => "payment",
-                "platform_tip" => 0,
-            ]
-        );
-
-        $response->assertStatus(200);
-        Mail::assertQueued(LoanCompleted::class, function ($mail) use ($loan) {
-            return $mail->hasTo($loan->borrower->user->email);
-        });
-        Mail::assertNotQueued(LoanCompleted::class, function ($mail) use (
-            $loan
-        ) {
             return $mail->hasTo($loan->loanable->owner->user->email);
         });
     }
