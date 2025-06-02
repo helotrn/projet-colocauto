@@ -69,7 +69,7 @@ class ExpenseController extends RestController
         try {
             $user = User::findOrFail($request->user_id);
             $loanable = Loanable::findOrFail($request->loanable_id);
-            if( !$user->communities->pluck('id')->contains($loanable->community->id) ) {
+            if( !$loanable->community || !$user->communities->pluck('id')->contains($loanable->community->id) ) {
                 throw ValidationException::withMessages(['loanable' => trans("validation.should_belong_to_same_community.expense")]);
             }
             $item = parent::validateAndCreate($request);
@@ -95,7 +95,7 @@ class ExpenseController extends RestController
 
             $user = User::findOrFail($request->user_id);
             $loanable = Loanable::findOrFail($request->loanable_id);
-            if( !$user->communities->pluck('id')->contains($loanable->community->id) ) {
+            if( !$loanable->community || !$user->communities->pluck('id')->contains($loanable->community->id) ) {
                 throw ValidationException::withMessages(['loanable' => trans("validation.should_belong_to_same_community.expense")]);
             }
             $item = parent::validateAndUpdate($request, $id);
