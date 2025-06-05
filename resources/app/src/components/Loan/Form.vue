@@ -189,6 +189,7 @@ import LoanPriceDetails from "@/components/Loan/PriceDetails";
 
 import FormLabelsMixin from "@/mixins/FormLabelsMixin";
 import LoanFormMixin from "@/mixins/LoanFormMixin";
+import UserMixin from "@/mixins/UserMixin";
 import LoanStepsSequence from "@/mixins/LoanStepsSequence";
 
 import Check from "@/assets/svg/check.svg";
@@ -198,7 +199,7 @@ import locales from "@/locales";
 
 export default {
   name: "LoanForm",
-  mixins: [FormLabelsMixin, LoanFormMixin, LoanStepsSequence],
+  mixins: [FormLabelsMixin, LoanFormMixin, LoanStepsSequence, UserMixin],
   components: {
     FormsValidatedInput,
     LoanPriceDetails,
@@ -210,10 +211,6 @@ export default {
       type: Boolean,
       required: false,
       default: false,
-    },
-    user: {
-      type: Object,
-      required: true,
     },
   },
   data() {
@@ -245,6 +242,7 @@ export default {
         estimated_distance: this.item.estimated_distance,
         loanable_id: this.item.loanable.id,
         reason: this.item.reason,
+        community_id: this.item.community_id,
       });
     },
     canEdit() {
