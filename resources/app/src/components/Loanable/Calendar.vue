@@ -124,6 +124,7 @@
               Consulter
             </b-button>
             <b-button
+              v-if="canEditSelectedEvent"
               variant="outline-primary"
               @click="changeSelected"
             >
@@ -154,12 +155,14 @@
               name="departure_at"
               label="Départ"
               type="datetime"
+              :disabled="!canEditSelectedEvent"
               v-model="newEvent.start"
             />
             <forms-validated-input
               name="return_at"
               label="Retour"
               type="datetime"
+              :disabled="!canEditSelectedEvent"
               v-model="newEvent.end"
             />
         </div>
@@ -379,6 +382,17 @@ export default {
     isTouchScreen() {
       return matchMedia('(hover: none), (pointer: coarse)').matches;
     },
+    canEditSelectedEvent() {
+      // Can edit if:
+      return (
+        !this.selectedEvent.data ||
+        this.isAdmin ||
+        // or the loanable has not yet been taken
+        !this.selectedEventHasReachedStep("takeover") ||
+        // or the reservation has not yet started
+        this.$second.isBefore(this.selectedEvent.data.departure_at, "minute")
+      );
+    },
   },
   methods: {
     getMonthDayAvailability(events, cell) {
@@ -585,6 +599,31 @@ export default {
       }
       if ( this.newEvent.data ) {
         this.newEvent = {};
+      }
+    },
+    selectedEventHasReachedStep(step) {
+      const { id, actions } = this.selectedEvent.data;
+      const intention = actions.find((a) => a.type === "intention");
+      const prePayment = actions.find((a) => a.type === "pre_payment");
+      const takeover = actions.find((a) => a.type === "takeover");
+      const handover = actions.find((a) => a.type === "handover");
+      const payment = actions.find((a) => a.type === "payment");
+
+      switch (step) {
+        case "creation":
+          return !!id;
+        case "intention":
+          return intention && !!intention.executed_at;
+        case "pre_payment":
+          return prePayment && !!prePayment.executed_at;
+        case "takeover":
+          return takeover && !!takeover.executed_at;
+        case "handover":
+          return handover && !!handover.executed_at;
+        case "payment":
+          return payment && !!payment.executed_at;
+        default:
+          return false;
       }
     },
   },
