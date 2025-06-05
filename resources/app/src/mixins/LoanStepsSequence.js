@@ -12,7 +12,7 @@ export default {
       );
     },
     hasActiveIncidents() {
-      if (!this.item.id) {
+      if (!this.item.id || !this.item.incidents) {
         return false;
       }
 
