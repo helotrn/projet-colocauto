@@ -84,9 +84,9 @@
                       type="number"
                       :rules="{ required: true, min_value: 1 }"
                       label="KM au compteur, au début de la course"
-                      placeholder="KM au compteur"
+                      :placeholder="mileageWasFilledAutomatically ? 'donnée non disponible' : 'KM au compteur'"
                       :disabled="((lockMileage && !!action.executed_at) || loanIsFinished || loanIsCanceled || !loanDayIsTodayOrBefore || !userRoles.includes('borrower')) && !userIsAdmin"
-                      v-model="action.mileage_beginning"
+                      v-model="mileageWasFilledAutomatically ? '' : action.mileage_beginning"
                     />
                   </b-col>
                 </b-row>

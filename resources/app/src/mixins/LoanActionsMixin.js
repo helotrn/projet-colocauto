@@ -137,6 +137,12 @@ export default {
     },
     loanDayIsTodayOrBefore() {
       return this.$dayjs().isAfter(this.$dayjs(this.item.departure_at).startOf("day"));
+    },
+    mileageWasFilledAutomatically() {
+      return this.loanIsFinishedSinceMoreThan48h && (
+        (this.action.mileage_beginning && this.action.mileage_beginning == 1)
+        || (this.action.mileage_end && this.action.mileage_end == this.item.final_distance + 1)
+      )
     }
   },
   methods: {
