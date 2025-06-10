@@ -6,8 +6,10 @@ use App\Http\Controllers\ActionController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Requests\Action\ActionRequest;
 use App\Events\LoanAutoCompleteEvent;
+use App\Events\LoanToCompleteEvent;
 use App\Models\Loan;
 use Carbon\CarbonImmutable;
+use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Log;
 
@@ -82,21 +84,44 @@ class ActionsComplete extends Command
             }
 
             if ($loan->takeover && $loan->takeover->status === "in_process") {
-                // do not cancel loans where begining mileage has not been filled in
-                continue;
+                // first warn the user that begining mileage has not been filled in
+                if( $loan->actual_return_at > $loanExpirationTime->subHours(24) ) {
+                    // save the notification date to avoid sending it repeatedly
+                    if( !$loan->takeover->to_complete_notified_at ) {
+                        Log::info("Notification to ask to complete loan ID $loan->id...");
+                        event(new LoanToCompleteEvent($loan));
+                        $loan->takeover->to_complete_notified_at = Carbon::now();
+                        $loan->takeover->save();
+                    }
+                    continue;
+                }
+                // if the loan return time is more than 3 days in the past, autocomplete it
+                Log::info("Autocompleting takeover on loan ID $loan->id...");
+
+                $request = new ActionRequest();
+                $request->setUserResolver(function () use ($loan) {
+                    return $loan->borrower->user;
+                });
+                $request->merge([
+                    "type" => "takeover",
+                    "loan_id" => $loan->id,
+                    "mileage_beginning" => 1,
+                ]);
+                $this->controller->complete(
+                    $request,
+                    $loan->id,
+                    $loan->takeover->id
+                );
+                Log::info("Completed takeover on loan ID $loan->id.");
+                $loan->refresh();
             }
 
             /*
               Handovers:
-
               Complete handover if takeover is not contested
             */
             if ($loan->handover && $loan->handover->status === "in_process") {
-                if ($loan->estimated_distance === 30 ) {
-                    // do not complete loans where estimated distance is still the default one
-                    continue;
-                }
-                
+
                 Log::info("Autocompleting handover on loan ID $loan->id...");
 
                 $request = new ActionRequest();
@@ -139,6 +164,7 @@ class ActionsComplete extends Command
     public static function getActiveLoansScheduledToReturnBefore($datetime)
     {
         return Loan::where("status", "=", "in_process")
+            ->where("actual_return_at", ">", $datetime->subHours(48)) // do not take into account older loans
             ->where("actual_return_at", "<=", $datetime)
             ->get();
     }

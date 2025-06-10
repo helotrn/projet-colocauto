@@ -30,6 +30,9 @@ class EventServiceProvider extends ServiceProvider
         "App\Events\LoanAutoCompleteEvent" => [
             "App\Listeners\SendLoanAutoCompleteEmails"
         ],
+        "App\Events\LoanToCompleteEvent" => [
+            "App\Listeners\SendLoanToCompleteEmails"
+        ],
         "App\Events\LoanCreatedEvent" => [
             "App\Listeners\SendLoanCreatedEmails",
         ],

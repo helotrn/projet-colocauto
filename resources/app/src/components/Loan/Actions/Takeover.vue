@@ -63,14 +63,6 @@
 
           <div v-if="item.loanable.type === 'car'">
             <validation-observer ref="observer" v-slot="{ passes }">
-              <b-row class="loan-actions__alert mb-4" v-if="!action.executed_at && !loanIsCanceled && loanDayIsTodayOrBefore">
-                <b-col>
-                  <b-alert variant="warning" show>
-                    Vous avez 48h à partir de la fin de votre emprunt pour compléter le relevé kilométrique au départ et à l'arrivée !
-                    Sans action de votre part, l'emprunt sera clos avec le kilométrage estimé lors de la réservation.
-                  </b-alert>
-                </b-col>
-              </b-row>
               <b-row>
                 <b-col>
                   <p>
