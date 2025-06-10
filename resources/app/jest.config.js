@@ -7,6 +7,7 @@ module.exports = {
   },
   moduleNameMapper: {
     "^@/(.*)$": "<rootDir>/src/$1",
+    "^axios$": "axios/dist/browser/axios.cjs",
   },
   snapshotSerializers: ["jest-serializer-vue"],
   testMatch: ["<rootDir>/(**/*.test.(js|jsx|ts|tsx)|**/__tests__/*.(js|jsx|ts|tsx))"],
