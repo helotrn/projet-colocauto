@@ -15,7 +15,7 @@
         <h2>Historique des modifications</h2>
         <b-button block v-b-toggle.changes variant="outline bg-white border d-flex justify-content-between align-items-center text-left">
           {{item.changes.length}} modification{{item.changes.length > 1 ? 's' : ''}} effectuée{{item.changes.length > 1 ? 's' : ''}}
-          <open-indicator />
+          <b-icon icon="chevron-down" />
         </b-button>
         <b-collapse id="changes" class="mb-4">
           <b-card>
@@ -85,7 +85,6 @@ import UserMixin from "@/mixins/UserMixin";
 import locales from "@/locales";
 
 import { capitalize } from "@/helpers/filters";
-import OpenIndicator from "vue-select/src/components/OpenIndicator.vue";
 import ArrowRight from "@/assets/svg/arrow-right.svg";
 import RoundWarning from "@/assets/icons/round-warning.svg";
 
@@ -98,7 +97,6 @@ export default {
   mixins: [Authenticated, DataRouteGuards, FormMixin, UserMixin],
   components: {
     FormsBuilder,
-    OpenIndicator,
     ArrowRight,
     RoundWarning,
   },

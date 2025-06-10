@@ -14,7 +14,7 @@
         <h2>Historique des modifications</h2>
         <b-button block v-b-toggle.changes variant="outline bg-white border d-flex justify-content-between align-items-center text-left">
           {{item.changes.length}} modification{{item.changes.length > 1 ? 's' : ''}} effectuée{{item.changes.length > 1 ? 's' : ''}}
-          <open-indicator />
+          <b-icon icon="chevron-down" />
         </b-button>
         <b-collapse id="changes" class="mb-4">
           <b-card>
@@ -61,7 +61,6 @@
 
 <script>
 import FormsBuilder from "@/components/Forms/Builder.vue";
-import OpenIndicator from "vue-select/src/components/OpenIndicator.vue";
 import ArrowRight from "@/assets/svg/arrow-right.svg";
 
 import DataRouteGuards from "@/mixins/DataRouteGuards";
@@ -74,7 +73,6 @@ export default {
   mixins: [DataRouteGuards, FormMixin],
   components: {
     FormsBuilder,
-    OpenIndicator,
     ArrowRight,
   },
   i18n: {
@@ -92,4 +90,16 @@ export default {
 };
 </script>
 
-<style lang="scss"></style>
+<style lang="scss" scoped>
+  .not-collapsed > svg {
+    transform: rotate(180deg);
+  }
+  .collapse .card-text:last-child {
+    border-bottom: none!important;
+    padding-bottom: 0!important;
+  }
+  .collapse .card {
+    border-top-right-radius: 0;
+    border-top-left-radius: 0;
+  }
+</style>
