@@ -156,7 +156,13 @@ export default {
     },
     async cancelLoan() {
       await this.$store.dispatch("loans/cancel", this.item.id);
-      await this.loadItemAndUser();
+      await Promise.all([
+        this.$store.dispatch(`loans/retrieveOne`, {
+          id: this.item.id,
+          params: this.$route.meta.params,
+        }),
+        this.$store.dispatch("loadUser")
+      ]);
     },
     hasCanceledStep(step) {
       const { actions } = this.item;

@@ -251,7 +251,7 @@ export default {
         !this.item.id ||
         this.isAdmin ||
         // or the loanable has not yet been taken
-        !this.hasReachedStep("takeover") ||
+        (!this.hasReachedStep("takeover") && !this.loanIsCanceled) ||
         // or the reservation has not yet started
         this.$second.isBefore(this.item.departure_at, "minute")
       );
