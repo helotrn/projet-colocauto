@@ -221,5 +221,11 @@ return [
     "should_belong_to_same_community" => [
         "expense" => "L'utilisateur et le véhicule doivent appartenir à la même communauté.",
         "refund" => "Les deux personnes doivent appartenir à la même communauté.",
+    ],
+
+    "invitation" => [
+        "cannot_resend" => "Impossible de renvoyer l'invitation car elle a déjà été utilisée ou désactivée.",
+        "cannot_deactivate" => "Impossible de désactiver l'invitation car elle a déjà été utilisée ou désactivée.",
+        "cannot_modify" => "Impossible de modifer une invitation déjà envoyée.",
     ]
 ];

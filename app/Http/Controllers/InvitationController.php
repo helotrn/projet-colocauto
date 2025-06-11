@@ -6,6 +6,7 @@ use App\Models\Invitation;
 use App\Repositories\InvitationRepository;
 use App\Http\Requests\Invitation\CreateRequest;
 use App\Events\InvitationCreatedEvent;
+use Carbon\CarbonImmutable;
 
 use App\Http\Requests\BaseRequest as Request;
 
@@ -43,6 +44,11 @@ class InvitationController extends RestController
         return $response;
     }
 
+    public function update(Request $request, $id)
+    {
+        return $this->respondWithMessage(__("validation.invitation.cannot_modify"), 403);
+    }
+
     public function create(CreateRequest $request)
     {
         try {
@@ -54,6 +60,44 @@ class InvitationController extends RestController
         event(new InvitationCreatedEvent($item));
 
         return $this->respondWithItem($request, $item, 201);
+    }
+
+    public function resend(Request $request, $id)
+    {
+        $item = $this->repo->find($request, $id);
+
+        if($item && $item->consumed_at !== null) {
+            return $this->respondWithMessage(__("validation.invitation.cannot_resend"), 403);
+        }
+
+        try {
+            $item->updated_at = CarbonImmutable::now();
+            $item->save();
+            event(new InvitationCreatedEvent($item));
+            $response = $this->respondWithItem($request, $item);
+        } catch (ValidationException $e) {
+            return $this->respondWithErrors($e->errors(), $e->getMessage());
+        }
+
+        return $response;
+    }
+
+    public function destroy(Request $request, $id)
+    {
+        $item = $this->repo->find($request, $id);
+
+        if($item && $item->consumed_at !== null) {
+            return $this->respondWithMessage(__("validation.invitation.cannot_deactivate"), 403);
+        }
+
+        try {
+            $item->consume();
+            $response = $this->respondWithItem($request, $item);
+        } catch (ValidationException $e) {
+            return $this->respondWithErrors($e->errors(), $e->getMessage());
+        }
+
+        return $response;
     }
 
     public function template(Request $request)

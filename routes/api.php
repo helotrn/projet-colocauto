@@ -227,6 +227,8 @@ Route::prefix("v1")->group(function () {
             "communities/{community_id}/balance",
             "CommunityController@getExpensesBalance"
         );
+
+        Route::post("/invitations/{invitation_id}/resend", "InvitationController@resend");
     });
 
     Route::get(

@@ -23,10 +23,10 @@ class CreateRequest extends BaseRequest
         );
 
         // only super admin can invite community admins without communities
-        $required = $this->user()->isAdmin() ? "required_if:for_community_admin,false" : "required";
+        $required = $this->user()->isAdmin() ? "required_unless:for_community_admin,true" : "required";
 
         return [
-            "email" => "string",
+            "email" => "string|required",
             "community_id" => [
                 $required,
                 "numeric",
