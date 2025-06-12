@@ -12,14 +12,26 @@
     <b-row>
       <b-col>
         <b-form class="form" @submit.prevent="submit">
-          <forms-builder :definition="form" v-model="item" entity="invitations" />
+          <forms-builder :definition="maybeReadonlyFormRules" v-model="item" entity="invitations" />
 
           <div class="form__buttons">
-            <b-button-group>
+            <b-button-group v-if="!item.id">
               <b-button variant="success" type="submit" :disabled="!changed || loading">
                 Sauvegarder
               </b-button>
-              <b-button v-if="!item.id" type="reset" :disabled="!changed" @click="reset"> Réinitialiser </b-button>
+              <b-button type="reset" :disabled="!changed" @click="reset"> Réinitialiser </b-button>
+            </b-button-group>
+            <b-button-group v-else>
+              <b-button
+                variant="success"
+                :disabled="loading || !!item.consumed_at"
+                @click="resend"
+              >Renvoyer</b-button>
+              <b-button
+                variant="danger"
+                :disabled="loading || !!item.consumed_at"
+                @click="destroy"
+                >Désactiver</b-button>
             </b-button-group>
           </div>
         </b-form>
@@ -43,6 +55,30 @@ export default {
   components: {
     FormsBuilder,
   },
+  methods: {
+    async resend() {
+      await this.$store.dispatch("invitations/resend", this.item.id);
+    },
+    async destroy() {
+      await this.$store.dispatch("invitations/destroy", this.item.id);
+      this.loadItem();
+    },
+  },
+  computed: {
+    maybeReadonlyFormRules() {
+      // make email and community readonly for already sent invitations
+      if(this.item.id) {
+        return {
+          ...this.form,
+          email: {...this.form.email, disabled: true},
+          for_community_admin: {...this.form.for_community_admin, disabled: true},
+          community_id: {...this.form.community_id, disabled: true},
+        }
+      } else {
+        return this.form;
+      }
+    }
+  },
   mounted: async function() {
     // set default pre-selected community
     if( this.$route.query.community_id ) {
@@ -61,8 +97,6 @@ export default {
           this.$router.replace(this.$route.path)
         }
       })
-
-      
     }
   },
   i18n: {
