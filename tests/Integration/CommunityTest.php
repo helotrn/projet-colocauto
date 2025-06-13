@@ -489,4 +489,82 @@ class CommunityTest extends TestCase
                 "errors" => ["parent_id"],
             ]);
     }
+
+    public function testCommunityAdminCanCreateCommunity()
+    {
+
+        $admin_user = factory(User::class)->create();
+        $admin_user->role = "community_admin";
+        $admin_user->save();
+
+        $this->actAs($admin_user);
+        $data = [
+            "name" => $this->faker->name,
+            "description" => $this->faker->sentence,
+            "area" => null,
+        ];
+
+        $response = $this->json("POST", "/api/v1/communities/", $data);
+        $response
+            ->assertStatus(201)
+            ->assertJsonStructure(static::$getCommunityResponseStructure);
+    }
+
+    public function testUserCannotCreateCommunity()
+    {
+        $community = factory(Community::class)->create();
+        $user = factory(User::class)->create();
+        $user->communities()->attach($community, ["approved_at" => new Carbon()]);
+
+        $admin_user = factory(User::class)->create();
+        $admin_user->role = "community_admin";
+        $admin_user->save();
+        $admin_user->administrableCommunities()->attach($community);
+
+        $this->actAs($user);
+        $data = [
+            "name" => $this->faker->name,
+            "description" => $this->faker->sentence,
+            "area" => null,
+        ];
+
+        $response = $this->json("POST", "/api/v1/communities/", $data);
+        $response->assertStatus(403);
+    }
+
+    public function testUserWithoutCommunityCanCreateCommunity()
+    {
+        $user = factory(User::class)->create();
+
+        $this->actAs($user);
+        $data = [
+            "name" => $this->faker->name,
+            "description" => $this->faker->sentence,
+            "area" => null,
+        ];
+
+        $response = $this->json("POST", "/api/v1/communities/", $data);
+        $response
+            ->assertStatus(201)
+            ->assertJsonStructure(static::$getCommunityResponseStructure);
+    }
+
+    public function testUserWithNonManagedCommunityCanCreateCommunity()
+    {
+        $community = factory(Community::class)->create();
+        $user = factory(User::class)->create();
+        $user->communities()->attach($community, ["approved_at" => new Carbon()]);
+
+        $this->actAs($user);
+        $data = [
+            "name" => $this->faker->name,
+            "description" => $this->faker->sentence,
+            "area" => null,
+        ];
+
+        $response = $this->json("POST", "/api/v1/communities/", $data);
+        $response
+            ->assertStatus(201)
+            ->assertJsonStructure(static::$getCommunityResponseStructure);
+    }
 }

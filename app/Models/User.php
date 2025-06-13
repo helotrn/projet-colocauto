@@ -579,6 +579,15 @@ class User extends AuthenticatableBaseModel
         }
     }
 
+    public function canCreateCommunity()
+    {
+        return $this->isAdmin()
+            || $this->isCommunityAdmin()
+            || $this->communities->count() == 0
+            // Users that are part of a community already managed by an admin cannot create new communities
+            || $this->communities()->whereHas("admins")->doesntExist();
+    }
+
     public function scopeAccessibleBy(Builder $query, $user)
     {
         // TODO change this
