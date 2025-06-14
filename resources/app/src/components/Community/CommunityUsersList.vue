@@ -36,6 +36,7 @@
           :options="[
             { value: 'member', text: $t('communities.fields.user.role_labels.member') },
             { value: 'admin', text: $t('communities.fields.user.role_labels.admin') },
+            { value: 'responsible', text: $t('communities.fields.user.role_labels.responsible') },
           ]"
           :value="row.item.role"
           @change="$emit('changeUserRole', row.item, $event)"

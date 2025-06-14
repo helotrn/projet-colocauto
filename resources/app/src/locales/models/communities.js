@@ -38,6 +38,7 @@ const i18n = {
         role_labels: {
           member: "Membre",
           admin: "Admin",
+          responsible: "Référent"
         },
         approved_at: "Approuvé-e",
         suspended_at: "Suspendu-e",
@@ -92,6 +93,7 @@ const i18n = {
         role_labels: {
           member: "Member",
           admin: "Admin",
+          responsible: "Responsible",
         },
         approved_at: "Approved",
         suspended_at: "Suspended",

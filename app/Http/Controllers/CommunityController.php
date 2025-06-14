@@ -77,14 +77,13 @@ class CommunityController extends RestController
             $item->pricings[] = $pricing;
         }
 
-        if( $request->user()->isCommunityAdmin() ){
+        if( $request->user()->isCommunityAdmin() || $request->user()->isAdmin() ){
             // add the user as admin of this community
             $item->admins()->attach($request->user());
             $item->save();
-        } else if( !$request->user()->isAdmin() ) {
+        } else {
             // add the user as referent for this community
-            $item->users()->attach($request->user());
-            // TODO add referent role
+            $item->users()->attach($request->user(), ['role' => 'responsible']);
             $item->save();
         }
 

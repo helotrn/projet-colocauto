@@ -66,6 +66,7 @@
                   :visibleFields="[
                     'id',
                     'user_full_name',
+                    'role',
                     'approved_at',
                     'suspended_at',
                     'actions',
@@ -789,7 +790,7 @@ export default {
         // Backend interprets role as:
         //   - null: User is a regular member of this community.
         //   - "admin": User is an administrator of this community.
-        // The list components accepts {"member", "admin"}.
+        // The list components accepts {"member", "admin", "responsible"}.
         community.role = role === "member" ? null : role;
 
         return u;

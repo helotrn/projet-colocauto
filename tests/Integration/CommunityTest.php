@@ -567,4 +567,22 @@ class CommunityTest extends TestCase
             ->assertStatus(201)
             ->assertJsonStructure(static::$getCommunityResponseStructure);
     }
+
+    public function testUserThatCreateCommunityIsResponsible()
+    {
+        $user = factory(User::class)->create();
+
+        $this->actAs($user);
+        $data = [
+            "name" => $this->faker->name,
+            "description" => $this->faker->sentence,
+            "area" => null,
+        ];
+
+        $response = $this->json("POST", "/api/v1/communities/", $data);
+        $response->assertStatus(201);
+
+        $user->refresh();
+        $this->assertEquals($user->communities[0]->pivot->role, "responsible");
+    }
 }
