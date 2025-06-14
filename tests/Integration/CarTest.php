@@ -39,10 +39,9 @@ class CarTest extends TestCase
         "owner_compensation",
     ];
 
-    public function testCreateCars()
+    private function getCarCreationData($owner)
     {
-        $owner = factory(Owner::class)->create(["user_id" => $this->user->id]);
-        $data = [
+        return [
             "brand" => $this->faker->word,
             "comments" => $this->faker->paragraph,
             "engine" => $this->faker->randomElement([
@@ -75,12 +74,55 @@ class CarTest extends TestCase
             "cost_per_month" => 2.00,
             "owner_compensation" => 3.00,
         ];
+    }
+
+    public function testCreateCars()
+    {
+        $owner = factory(Owner::class)->create(["user_id" => $this->user->id]);
+        $data = $this->getCarCreationData($owner);
 
         $response = $this->json("POST", "/api/v1/cars", $data);
         $response
             ->assertStatus(201)
             ->assertJsonStructure(static::$carResponseStructure)
             ->assertJson(["pricing_category" => "large"]);
+    }
+
+    public function testUserCannotCreateCars()
+    {
+        $community = factory(Community::class)->create();
+        $user = factory(User::class)->states("withOwner")->create();
+        $user->communities()->attach($community, ["approved_at" => new Carbon()]);
+
+        $admin_user = factory(User::class)->create();
+        $admin_user->role = "community_admin";
+        $admin_user->save();
+        $admin_user->administrableCommunities()->attach($community);
+
+        $this->actAs($user);
+
+        $data = $this->getCarCreationData($user->owner);
+
+        $response = $this->json("POST", "/api/v1/cars", $data);
+        $response->assertStatus(403);
+    }
+
+    public function testUserWithNonManagedCommunityCanCreateCarsInTheCommunity()
+    {
+        $this->withoutEvents();
+        $community = factory(Community::class)->create();
+        $user = factory(User::class)->states("withOwner")->create();
+        $user->communities()->attach($community, ["approved_at" => new Carbon()]);
+
+        $this->actAs($user);
+
+        $data = $this->getCarCreationData($user->owner);
+        $data['community'] = $community;
+
+        $response = $this->json("POST", "/api/v1/cars", $data);
+        $response
+            ->assertStatus(201)
+            ->assertJsonStructure(static::$carResponseStructure);
     }
 
     public function testShowCars()

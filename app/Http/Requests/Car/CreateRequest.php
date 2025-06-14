@@ -15,7 +15,11 @@ class CreateRequest extends BaseRequest
             return false;
         }
 
-        return true;
+        if( $this->community ){
+            return $user->canCreateLoanableInCommunity($this->community['id']);
+        } else {
+            return $user->isAdmin() || $user->isCommunityAdmin();
+        }
     }
 
     public function rules()

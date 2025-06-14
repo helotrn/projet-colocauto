@@ -588,6 +588,17 @@ class User extends AuthenticatableBaseModel
             || $this->communities()->whereHas("admins")->doesntExist();
     }
 
+    public function canCreateLoanableInCommunity($communityId)
+    {
+        return $this->isAdmin()
+            || ($this->isCommunityAdmin() && $this->isAdminOfCommunity($communityId))
+            // If the community is already managed by an admin, users cannot create loanables
+            || $this->communities()
+                ->where("communities.id", $communityId)
+                ->whereHas("admins")
+                ->doesntExist();
+    }
+
     public function scopeAccessibleBy(Builder $query, $user)
     {
         // TODO change this
