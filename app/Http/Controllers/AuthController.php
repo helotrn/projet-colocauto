@@ -100,7 +100,7 @@ class AuthController extends RestController
         if( $invitation && $invitation->consumed_at !== null){
             $date = new \Carbon\Carbon($invitation->consumed_at);
             return $this->respondWithErrors([
-                "status" => [trans("validation.custom.invitation_consumed", [
+                "status" => [trans("validation.invitation.consumed", [
                     "email" => $invitation->email,
                     "date" => $date->diffForHumans(),
                 ])]

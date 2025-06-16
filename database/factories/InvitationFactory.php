@@ -15,6 +15,6 @@ $factory->define(Invitation::class, function (Faker $faker) {
 
 $factory->afterCreatingState(Invitation::class, "withCommunity", function ($invitation) {
     $community = factory(Community::class)->create();
-    $invitation->community_id = $community->id;
+    $invitation->community()->associate($community);
     $invitation->save();
 });

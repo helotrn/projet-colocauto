@@ -174,10 +174,6 @@ return [
         ],
         "loanable_types" =>
             "Les types demandés (:givenValues) sont invalides. Options possibles: :validValues.",
-        "invitation_invalid" =>
-            "Le code d'invitation fourni est invalide",
-        "invitation_consumed" =>
-            "Le code d'invitation a déjà été utilisé pour l'adresse :email le :date.",
     ],
 
     "attributes" => [
@@ -227,5 +223,8 @@ return [
         "cannot_resend" => "Impossible de renvoyer l'invitation car elle a déjà été utilisée ou désactivée.",
         "cannot_deactivate" => "Impossible de désactiver l'invitation car elle a déjà été utilisée ou désactivée.",
         "cannot_modify" => "Impossible de modifer une invitation déjà envoyée.",
+        "invalid" => "Le code d'invitation fourni est invalide",
+        "consumed" => "Le code d'invitation a déjà été utilisé pour l'adresse :email :date.",
+        "community_is_missing" => "Aucune communauté liée à cette invitation.",
     ]
 ];

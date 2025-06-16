@@ -4,6 +4,7 @@ namespace Tests\Integration;
 
 use App\Models\Invitation;
 use App\Models\Community;
+use App\Models\User;
 use Tests\TestCase;
 use Illuminate\Support\Facades\Mail;
 
@@ -21,13 +22,6 @@ class InvitationTest extends TestCase
         "updated_at",
         "created_at",
     ];
-
-    /** @var EventDispatcher **/
-    /*private $dispatcher;
-
-    public function setUp(){
-        $this->dispatcher = new EventDispatcher();
-    }*/
 
     public function testCreateInvitationsWithoutEmail()
     {
@@ -64,7 +58,60 @@ class InvitationTest extends TestCase
 
         $response = $this->json("POST", "/api/v1/invitations", $data);
         $response->assertStatus(201)
+            ->assertJsonStructure(static::$getInvitationResponseStructure)
+            ->assertJson([
+                "email" => $data['email'],
+                "community_id" => $community->id,
+            ]);
+    }
+
+    public function testAcceptInvitations()
+    {
+        $invitation = factory(Invitation::class)->states("withCommunity")->create();
+        $user = factory(User::class)->create();
+
+        $this->actAs($user);
+        $data = [
+            "token" => $invitation->token,
+        ];
+        $response = $this->json("POST", "/api/v1/invitations/accept", $data);
+        $response->assertStatus(200)
             ->assertJsonStructure(static::$getInvitationResponseStructure);
+
+        $invitation->refresh();
+        $this->assertNotNull($invitation->consumed_at);
+
+        $user->refresh();
+        $this->assertEquals($user->communities[0]->id, $invitation->community->id);
+    }
+
+    public function testCannotAcceptConsumedInvitations()
+    {
+        $invitation = factory(Invitation::class)->states("withCommunity")->create();
+        $invitation->consume();
+        $user = factory(User::class)->create();
+
+        $this->actAs($user);
+        $data = [
+            "token" => $invitation->token,
+        ];
+        $response = $this->json("POST", "/api/v1/invitations/accept", $data);
+        $response->assertStatus(403);
+        $this->assertStringStartsWith("Le code d'invitation a déjà été utilisé", json_decode($response->getContent())->message);
+    }
+
+    public function testCannotAcceptInvitationsWithoutToken()
+    {
+        $invitation = factory(Invitation::class)->states("withCommunity")->create();
+        $user = factory(User::class)->create();
+
+        $this->actAs($user);
+        $response = $this->json("POST", "/api/v1/invitations/accept", []);
+        $response->assertStatus(422)->assertJson([
+            "errors" => [
+                "token" => ["Le champ token est obligatoire."]
+            ]
+        ]);
     }
 
     public function testCannotUpdateInvitations()

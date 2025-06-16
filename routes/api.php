@@ -235,6 +235,7 @@ Route::prefix("v1")->group(function () {
         );
 
         Route::post("/invitations/{invitation_id}/resend", "InvitationController@resend");
+        Route::post("/invitations/accept", "InvitationController@accept");
     });
 
     Route::get(

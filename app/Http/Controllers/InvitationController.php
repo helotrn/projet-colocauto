@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Invitation;
 use App\Repositories\InvitationRepository;
 use App\Http\Requests\Invitation\CreateRequest;
+use App\Http\Requests\Invitation\AcceptRequest;
 use App\Events\InvitationCreatedEvent;
 use Carbon\CarbonImmutable;
 
@@ -98,6 +99,27 @@ class InvitationController extends RestController
         }
 
         return $response;
+    }
+
+    public function accept(AcceptRequest $request)
+    {
+        $item = Invitation::where('token', $request->get("token"))->first();
+        if( !$item ) {
+            return $this->respondWithMessage(__("validation.invitation.invalid"), 400);
+        } else if( $item->consumed_at !== null ) {
+            $date = new \Carbon\Carbon($item->consumed_at);
+            return $this->respondWithMessage(__("validation.invitation.consumed", [
+                "email" => $item->email,
+                "date" => $date->diffForHumans(),
+            ]), 403);
+        } else if( !$item->community ){
+            return $this->respondWithMessage(__("validation.invitation.community_is_missing"), 400);
+        }
+
+        $item->consume();
+        $item->community->users()->attach($request->user());
+
+        return $this->respondWithItem($request, $item, 200);
     }
 
     public function template(Request $request)
