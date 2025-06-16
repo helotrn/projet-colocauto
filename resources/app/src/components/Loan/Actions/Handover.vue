@@ -300,7 +300,7 @@
         </div>
 
         <div v-if="!isContested">
-          <div v-if="!loanIsFinishedSinceMoreThan48h && isContestable && !loanIsCanceled">
+          <div v-if="(!loanIsFinishedSinceMoreThan48h && isContestable && !loanIsCanceled) || userIsAdmin">
             <hr />
 
             <b-row>

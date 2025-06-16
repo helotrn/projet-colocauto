@@ -85,7 +85,7 @@ export default {
         return false; // Can't be admin on your own loans
       }
 
-      if (this.user.role === "admin") {
+      if (this.user.role === "admin" || this.user.role === "community_admin") {
         return true;
       }
 
@@ -139,7 +139,7 @@ export default {
       return this.$dayjs().isAfter(this.$dayjs(this.item.departure_at).startOf("day"));
     },
     mileageWasFilledAutomatically() {
-      return this.loanIsFinishedSinceMoreThan48h && (
+      return !this.userIsAdmin && this.loanIsFinishedSinceMoreThan48h && (
         (this.action.mileage_beginning && this.action.mileage_beginning == 1)
         || (this.action.mileage_end && this.action.mileage_end == this.item.final_distance + 1)
       )

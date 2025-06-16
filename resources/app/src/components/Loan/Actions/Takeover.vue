@@ -98,7 +98,7 @@
                   "
                 >
                   <b-col>
-                    <b-button type="submit" size="sm" variant="success" class="mr-3" :disabled="!userRoles.includes('borrower')">
+                    <b-button type="submit" size="sm" variant="success" class="mr-3" :disabled="!userIsAdmin && !userRoles.includes('borrower')">
                       <span v-if="isContested">Corriger</span>
                       <span v-else>Enregistrer</span>
                     </b-button>
