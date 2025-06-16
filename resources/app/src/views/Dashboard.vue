@@ -28,7 +28,7 @@
             </b-jumbotron>
           </section>
 
-          <section class="page__section" v-if="loanablesLoaded && (!loanables || loanables.length == 0)">
+          <section class="page__section" v-if="hasCommunity && loanablesLoaded && (!loanables || loanables.length == 0)">
             <div class="box centered">
               <svg-loanables width="244px" class="p-2"/>
               <h2>Cette communauté n'a pas encore de véhicule</h2>
