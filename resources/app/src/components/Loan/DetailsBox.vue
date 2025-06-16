@@ -91,6 +91,7 @@
           </dl>
         </template>
 
+        <!-- temporary remove loanable reports for debug
         <hr />
         <div class="reports-pictures">
           <h5>État du véhicule</h5>
@@ -99,6 +100,7 @@
             Fiche de l’état complet du véhicule
           </router-link>
         </div>
+        -->
         <hr />
 
         <dl class="mb-0">
