@@ -4,7 +4,7 @@
       <div class="note">
         <svg-discussion width="100px" class="p-2"/>
         <p>Sur Coloc'Auto, des groupes de personnes se partagent l'usage d'un ou
-        plusieurs véhicules. Pour cela, il se regroupent au sein de communautés.</p>
+        plusieurs véhicules. Pour cela, ils se regroupent au sein de communautés.</p>
       </div>
 
       <h2>Créer votre première communauté</h2>
