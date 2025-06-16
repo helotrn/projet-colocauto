@@ -49,6 +49,7 @@ export default new RestModule(
       "calendar_days",
       "canceled_at",
     ],
+    otherCancelToken: null,
   },
   {
     async cancel({ commit }, loanId) {
@@ -147,13 +148,13 @@ export default new RestModule(
     },
     async test({ commit }, params) {
       const { CancelToken } = Vue.axios;
-      const cancelToken = CancelToken.source();
+      const otherCancelToken = CancelToken.source();
 
       try {
-        commit("cancelToken", cancelToken);
+        commit("otherCancelToken", otherCancelToken);
         const { data } = await Vue.axios.get(`/loanables/${params.loanable_id}/test`, {
           params,
-          cancelToken: cancelToken.token,
+          cancelToken: otherCancelToken.token,
         });
 
         commit("mergeItem", {
@@ -165,9 +166,9 @@ export default new RestModule(
           },
         });
 
-        commit("cancelToken", null);
+        commit("otherCancelToken", null);
       } catch (e) {
-        commit("cancelToken", null);
+        commit("otherCancelToken", null);
         if (!e.message || e.message !== "loans canceled test") {
           throw e;
         }
@@ -296,6 +297,13 @@ export default new RestModule(
           throw e;
         }
       }
+    },
+  },{
+    otherCancelToken(state, otherCancelToken) {
+      if (otherCancelToken && state.otherCancelToken) {
+        state.otherCancelToken.cancel(`${state.slug} canceled`);
+      }
+      state.otherCancelToken = otherCancelToken;
     },
   }
 );

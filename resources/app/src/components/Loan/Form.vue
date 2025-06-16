@@ -241,7 +241,6 @@ export default {
         duration_in_minutes: this.item.duration_in_minutes,
         estimated_distance: this.item.estimated_distance,
         loanable_id: this.item.loanable.id,
-        reason: this.item.reason,
         community_id: this.item.community_id,
       });
     },
