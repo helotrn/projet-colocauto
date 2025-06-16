@@ -45,7 +45,7 @@ class User extends AuthenticatableBaseModel
         "is_deleted" => "boolean",
     ];
 
-    public $computed = ["admin_link", "color"];
+    public $computed = ["admin_link", "color", "can"];
 
     public static function getRules($action = "", $auth = null)
     {
@@ -599,6 +599,17 @@ class User extends AuthenticatableBaseModel
                 ->doesntExist();
     }
 
+    public function canInviteMemberInCommunity($communityId)
+    {
+        return $this->isAdmin()
+            || ($this->isCommunityAdmin() && $this->isAdminOfCommunity($communityId))
+            // If the community is already managed by an admin, users cannot invite new members
+            || $this->communities()
+                ->where("communities.id", $communityId)
+                ->whereHas("admins")
+                ->doesntExist();
+    }
+
     public function scopeAccessibleBy(Builder $query, $user)
     {
         // TODO change this
@@ -673,6 +684,15 @@ class User extends AuthenticatableBaseModel
     public function getAdminLinkAttribute()
     {
         return env("FRONTEND_URL") . "/admin/users/" . $this->id;
+    }
+
+    public function getCanAttribute()
+    {
+        return [
+            'createCommunity' => $this->canCreateCommunity(),
+            'createLoanableIn' => $this->communities->map(fn($c) => $this->canCreateLoanableInCommunity($c->id) ? $c->id : null)->filter(),
+            'inviteMemberIn' => $this->communities->map(fn($c) => $this->canInviteMemberInCommunity($c->id) ? $c->id : null)->filter(),
+        ];
     }
 
     public function scopeWithDeleted(Builder $query, $value, $negative = false)

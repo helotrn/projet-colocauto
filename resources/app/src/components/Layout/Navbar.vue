@@ -125,7 +125,7 @@
           </b-dropdown-item>
           <b-dropdown-item
             to="/community"
-            v-if="!(isGlobalAdmin || isCommunityAdmin) && hasCompletedRegistration && user.main_community"
+            v-if="!(isGlobalAdmin || isCommunityAdmin) && hasCompletedRegistration && user.main_community && isResponsibleOfCurrentCommunity"
           >
             <span class="nav-link__icon">
               <svg-vector />

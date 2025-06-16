@@ -73,6 +73,7 @@ export default {
       window.location.reload();
     },
     async afterSubmit() {
+      await this.$store.dispatch("loadUser");
       await this.$store.dispatch('invitations/loadEmpty');
       this.$store.state.invitations.item.community_id = this.item.id;
       this.$store.state.invitations.item.community = this.item;

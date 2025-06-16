@@ -32,6 +32,13 @@
         <b-col>Pas de véhicule.</b-col>
       </b-row>
     </div>
+    <b-row no-gutters :style="{justifyContent: 'end'}">
+      <b-btn
+        v-if="canCreateLoanableInCurrentCommunity"
+        variant="outline-primary"
+        to="/community/loanables/new"
+      >Ajouter un véhicule</b-btn>
+    </b-row>
   </div>
   <layout-loading v-else />
 </template>

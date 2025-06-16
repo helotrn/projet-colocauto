@@ -2,7 +2,7 @@
   <b-form v-if="community" class="form text-end" @submit.prevent="submit">
     <forms-builder :definition="formName" v-model="community" entity="communities" class="text-start" />
 
-    <fieldset v-if="community.id && invitation" class="collapsible-fieldset text-start">
+    <fieldset v-if="community.id && invitation && canInviteMemberInCurrentCommunity" class="collapsible-fieldset text-start">
       <h2 v-b-toggle:collapse-invitations class="toggle">
         Inviter des membres à la communauté <icons-caret class="b-icon" />
       </h2>
@@ -23,6 +23,7 @@
 
     <slot />
     <b-button
+      v-if="!community.id || isReponsibleForThisCommunity"
       variant="primary"
       type="submit"
       :disabled="!canSubmit"
@@ -36,9 +37,11 @@
 import FormsBuilder from "@/components/Forms/Builder.vue";
 import IconsCaret from "@/assets/icons/caret.svg";
 import { extractErrors } from "@/helpers";
+import UserMixin from "@/mixins/UserMixin";
 
 export default {
   name: "CommunityForm",
+  mixins: [UserMixin],
   components: { FormsBuilder, IconsCaret },
   data() {
     return ({
@@ -66,7 +69,13 @@ export default {
   },
   computed: {
     formName() {
-      return { name: this.form.name }
+      return { name: {
+        ...this.form.name,
+        disabled: this.community.id && !this.isReponsibleForThisCommunity,
+      } }
+    },
+    isReponsibleForThisCommunity() {
+      return this.community.id && this.user.communities.find(c => c.id == this.community.id)?.role == 'responsible'
     },
     invitationForm() {
       if( this.$store.state.invitations.form ) {

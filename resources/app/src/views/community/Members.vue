@@ -1,12 +1,15 @@
 <template>
-  <div>
     <b-container
+      v-if="routeDataLoaded && !loading && loaded"
       fluid
-      class="community__neighbors page__section"
     >
-      <b-row no-gutters class="px-3 header">
+      <b-row no-gutters class="px-3 header" :style="{justifyContent: approvedUsersCount > 1 ? 'space-between' : 'end'}">
         <h2 v-if="approvedUsersCount > 1">{{ approvedUsersCount }} membres</h2>
-        <b-btn variant="outline-primary" to="/community#email">Inviter un membre</b-btn>
+        <b-btn
+          v-if="canInviteMemberInCurrentCommunity"
+          variant="outline-primary"
+          to="/community#email"
+        >Inviter un membre</b-btn>
       </b-row>
       <b-row no-gutters>
         <b-col>
@@ -35,7 +38,7 @@
         </b-col>
       </b-row>
     </b-container>
-  </div>
+    <layout-loading v-else />
 </template>
 
 <script>
@@ -72,6 +75,12 @@ export default {
         ...this.community.users.map(u => ({...u, type: 'user'})),
         ...this.community.invitations.filter(i => !i.consumed_at).map(i => ({...i, type: 'invitation'})),
       ]
+    },
+    loaded() {
+      return this.$store.state.communities.loaded;
+    },
+    loading() {
+      return !!this.$store.state.communities.cancelToken;
     },
   },
   methods: {

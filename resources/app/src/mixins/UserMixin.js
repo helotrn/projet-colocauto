@@ -82,8 +82,17 @@ export default {
     currentCommunity() {
       return this.$store.state.communities.current
         ? this.$store.state.communities.current
-        : this.user.main_community.id;
+        : this.user.main_community?.id;
     },
+    canCreateLoanableInCurrentCommunity() {
+      return this.user.can.createLoanableIn.includes(this.currentCommunity);
+    },
+    canInviteMemberInCurrentCommunity() {
+      return this.user.can.inviteMemberIn.includes(this.currentCommunity);
+    },
+    isResponsibleOfCurrentCommunity() {
+      return this.user.communities.find(c => c.id == this.currentCommunity)?.role == 'responsible';
+    }
   },
   methods: {
     isAdminOfCommunity(community) {

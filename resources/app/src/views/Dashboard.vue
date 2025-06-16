@@ -28,7 +28,7 @@
             </b-jumbotron>
           </section>
 
-          <section class="page__section" v-if="!loanables || loanables.length == 0">
+          <section class="page__section" v-if="loanablesLoaded && (!loanables || loanables.length == 0)">
             <div class="box centered">
               <svg-loanables width="244px" class="p-2"/>
               <h2>Cette communauté n'a pas encore de véhicule</h2>
@@ -227,8 +227,15 @@
                   <transition-group name="dashboard-list">
                     <b-row no-gutters class="header" key="header">
                       <h3 class="mb-0">{{ totalLoanables }} véhicule{{totalLoanables > 1 ? 's' : ''}}</h3>
-                      <b-btn variant="outline-primary" to="/community/loanables">Gérer les véhicules</b-btn>
-                      <b-btn variant="primary" to="/community/loanables/new" class="btn-rounded">
+                      <b-btn variant="outline-primary" to="/community/loanables">
+                        {{ isResponsibleOfCurrentCommunity ? 'Gérer les véhicules' : 'Voir les véhicules' }}
+                      </b-btn>
+                      <b-btn
+                        v-if="canCreateLoanableInCurrentCommunity"
+                        variant="primary"
+                        to="/community/loanables/new"
+                        class="btn-rounded"
+                      >
                         <span class="sr-only">Ajouter</span>
                         <plus-icon width="24"/>
                       </b-btn>
@@ -263,8 +270,15 @@
                   <transition-group name="dashboard-list">
                     <b-row no-gutters class="header" key="header">
                       <h3 class="mb-0">{{ totalMembers }} membre{{totalMembers > 1 ? 's' : ''}}</h3>
-                      <b-btn variant="outline-primary" to="/community/members">Gérer les membres</b-btn>
-                      <b-btn variant="primary" to="/community#email" class="btn-rounded">
+                      <b-btn variant="outline-primary" to="/community/members">
+                        {{ isResponsibleOfCurrentCommunity ? 'Gérer les membres' : 'Voir les membres' }}
+                      </b-btn>
+                      <b-btn
+                        v-if="canInviteMemberInCurrentCommunity"
+                        variant="primary"
+                        to="/community#email"
+                        class="btn-rounded"
+                      >
                         <span class="sr-only">Ajouter</span>
                         <plus-icon width="24"/>
                       </b-btn>
