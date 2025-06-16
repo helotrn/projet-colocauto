@@ -2,6 +2,7 @@ import Register from "@/views/Register.vue";
 import RegisterIntro from "@/views/register/Intro.vue";
 import RegisterProfile from "@/views/register/Profile.vue";
 import RegisterCommunity from "@/views/register/Community.vue";
+import RegisterInvitation from "@/views/register/Invitation.vue";
 import RegisterLoanable from "@/views/register/Loanable.vue";
 
 export default [
@@ -47,6 +48,14 @@ export default [
             fields:
               "id,name,invitations",
           },
+        },
+      },
+      {
+        path: "4bis",
+        name: "invitation-to-community",
+        component: RegisterInvitation,
+        meta: {
+          auth: true,
         },
       },
       {

@@ -33,5 +33,25 @@ export default new RestModule(
         throw e;
       }
     },
+    async accept({ commit, dispatch, state }, token) {
+      const { CancelToken } = Vue.axios;
+      const cancelToken = CancelToken.source();
+
+      try {
+        commit("cancelToken", cancelToken);
+        await Vue.axios.post(`/${state.slug}/accept`, {token}, {
+          cancelToken: cancelToken.token,
+        });
+
+        commit("cancelToken", null);
+      } catch (e) {
+        commit("cancelToken", null);
+
+        const { request, response } = e;
+        commit("error", { request, response });
+
+        throw e;
+      }
+    },
   }
 );

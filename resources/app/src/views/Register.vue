@@ -28,6 +28,10 @@ const routeGuard = (to, from, next) => {
       return goToStep(2)
     }
 
+    if(vm.$route.query.invitation) {
+      // account already created but invitation to join a community
+      return vm.$router.replace(`/register/4bis?`+Object.keys(vm.$route.query).map(key => `${key}=${vm.$route.query[key]}`).join('&'));
+    }
     if( !vm.hasCommunity ) {
       return goToStep(4)
     }
