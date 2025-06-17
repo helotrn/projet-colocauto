@@ -10,6 +10,7 @@
         <default-avatar class="default-avatar" />
       </b-col>
       <b-col class="user-card__content__details">
+        <b-badge v-if="user.role == 'responsible'" class="role">Référent</b-badge>
         <div class="p-3">
           <small class="uppercase">{{ user.owner && user.owner.id ? 'Propriétaire' : 'Membre' }}</small>
 
@@ -91,11 +92,17 @@ export default {
     }
 
     &__details {
+      position: relative;
       > div {
         padding: 5px 20px;
       }
       h3 {
         line-height: 1.2;
+      }
+      .role {
+        position: absolute;
+        top: .5em;
+        right: 1em;
       }
     }
   }
