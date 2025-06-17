@@ -311,11 +311,6 @@
 
         <b-col tag="aside" class="page__sidebar" xl="3" lg="4" md="5">
           <!-- sidebar -->
-            <div v-if="false && hasCompletedRegistration">
-              <dashboard-balance :user="user" />
-
-              <hr />
-            </div>
 
             <div class="mb-4 d-none d-md-block" v-if="hasCommunity">
               <b-card title="Les comptes" title-tag="h2">
