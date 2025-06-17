@@ -312,6 +312,18 @@
         <b-col tag="aside" class="page__sidebar" xl="3" lg="4" md="5">
           <!-- sidebar -->
 
+            <div class="mb-4 d-none d-md-block" v-if="hasCommunity && isResponsibleOfCurrentCommunity">
+              <b-card>
+                <guy-with-hat class="d-block mx-auto mb-3" />
+                <h2 class="leading-6 text-center mb-4">Vous êtes référent de cette communauté</h2>
+                <b-btn variant="primary" to="/community" class="w-full">Voir l'espace de gestion</b-btn>
+              </b-card>
+              <b-button class="my-4 py-2 w-100" variant="primary" to="/wallet">Voir le portefeuille</b-button>
+              <info-link-block title="Comment sont calculés les coûts ?" to="https://www.colocauto.org/tarification">
+                 <svg-magnifying-glass-euro width="100px" class="p-2" style="flex-shrink: 0"/>
+              </info-link-block>
+            </div>
+
             <div class="mb-4 d-none d-md-block" v-if="hasCommunity">
               <b-card title="Les comptes" title-tag="h2">
                 <div class="dashboard__balance" :class="{ loading: loading && !balanceLoaded }">
@@ -392,6 +404,7 @@ import MagnifyingGlassEuro from "@/assets/svg/magnifying-glass-euro.svg";
 import Discussion from "@/assets/svg/discussion.svg";
 import LoanablesImage from "@/assets/svg/loanables.svg";
 import PlusIcon from "@/assets/icons/plus.svg";
+import GuyWithHat from "@/assets/svg/guy-with-hat.svg";
 
 const sendRectMap = new Map();
 
@@ -421,6 +434,7 @@ export default {
     LoansCalendar,
     LoanableCalendarLegend,
     ConditionsUpdatedToast,
+    GuyWithHat,
   },
   beforeMount() {
     if (!this.isLoggedIn) {
