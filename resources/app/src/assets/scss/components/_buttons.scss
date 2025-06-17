@@ -25,6 +25,10 @@
     padding-bottom: 0.75rem;
     font-weight: bold;
 }
+.btn-outline-primary.btn-sm, .btn-primary.btn-sm {
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
+}
 a.btn-outline-primary {
     color: $primary;
 }

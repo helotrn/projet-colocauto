@@ -30,6 +30,7 @@
                     <invitation-card
                       v-else
                       :invitation="item"
+                      @updated="reload"
                     />
                   </b-col>
               </b-row>

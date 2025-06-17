@@ -12,7 +12,14 @@
             </b-badge>
           </small>
           <a :href="`mailto:${invitation.email}`" class="d-block">{{ invitation.email }}</a>
+          <b-btn variant="outline-primary" size="sm" class="mt-4" @click="resendInvitation">Renvoyer l'invitation</b-btn>
         </div>
+        <b-icon
+          icon="trash"
+          class="trash"
+          @click="deactivateInvitation"
+          title="Désactiver l'invitation"
+        ></b-icon>
       </b-col>
     </b-row>
   </b-card>
@@ -30,6 +37,27 @@ export default {
   },
   components: {
     DefaultAvatar: Avatar,
+  },
+  methods: {
+    async resendInvitation(){
+       await this.$store.dispatch("invitations/resend", this.invitation.id)
+       this.$store.commit("addNotification", {
+          content: `L'invitation pour ${this.invitation.email} a été envoyée de nouveau.`,
+          title: "Invitation renvoyée !",
+          variant: "success",
+          type: "community",
+        })
+    },
+    async deactivateInvitation(){
+       await this.$store.dispatch("invitations/destroy", this.invitation.id)
+       this.$store.commit("addNotification", {
+          content: `L'invitation pour ${this.invitation.email} a été désactivée.`,
+          title: "Invitation désactivée !",
+          variant: "success",
+          type: "community",
+        })
+        this.$emit("updated");
+    },
   },
 };
 </script>
@@ -58,13 +86,26 @@ export default {
     }
 
     &__details {
+      position: relative;
       > div {
         padding: 5px 20px;
       }
       h3 {
         line-height: 1.2;
       }
+      .trash.b-icon{
+        position: absolute;
+        top: 1em;
+        right: 1em;
+        cursor: pointer;
+        opacity: 0.75;
+        &:hover {
+          opacity: 1;
+        }
+      }
     }
   }
+
+  
 }
 </style>
