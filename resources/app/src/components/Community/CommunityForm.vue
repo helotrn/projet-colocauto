@@ -15,7 +15,15 @@
           </b-button>
         </div>
         <ul v-if="pendingInvitations && pendingInvitations.length" class="badge-list">
-          <li v-for="inv in pendingInvitations" :key="inv.id"><b-badge>{{inv.email}}</b-badge></li>
+          <li v-for="inv in pendingInvitations" :key="inv.id">
+            <b-badge>{{inv.email}} 
+              <b-icon
+                icon="trash"
+                @click="() => deactivateInvitation(inv)"
+                title="Désactiver l'invitation"
+              ></b-icon>
+            </b-badge>
+          </li>
         </ul>
       </b-collapse>
     </fieldset>
@@ -148,7 +156,20 @@ export default {
       this.$store.state.invitations.item.community_id = this.community.id;
       // force component re-render to avoid the "empty field" error message
       this.refreshKey = Math.random();
-    }
+    },
+    async deactivateInvitation(invitation){
+       await this.$store.dispatch("invitations/destroy", invitation.id)
+       this.$store.commit("addNotification", {
+          content: `L'invitation pour ${invitation.email} a été désactivée.`,
+          title: "Invitation désactivée !",
+          variant: "success",
+          type: "community",
+        })
+        await this.$store.dispatch('communities/retrieveOne', {
+          id: this.community.id,
+          params: this.$route.meta.params,
+        });
+    },
   },
 }
 </script>
@@ -182,6 +203,13 @@ export default {
 #collapse-invitations {
   .forms-builder {
     flex-grow: 1;
+  }
+  .badge .b-icon{
+    cursor: pointer;
+    opacity: 0.75;
+    &:hover {
+      opacity: 1;
+    }
   }
 }
 </style>
