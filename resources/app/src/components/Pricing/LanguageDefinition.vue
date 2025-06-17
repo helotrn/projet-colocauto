@@ -157,7 +157,7 @@
         <p>On peut ajouter des commentaires en les faisant commencer par <code>#</code>.</p>
 
         <p>
-          Se référer à <a :href="unitTestUrl" target="_blank">ce fichier</a> pour des exemple
+          Se référer à <a :href="unitTestUrl" target="_blank">ce fichier</a> pour des exemples
           d'utilisation.
         </p>
       </div>
