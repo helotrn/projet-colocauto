@@ -171,8 +171,8 @@ export default {
   data() {
     return {
       unitTestUrl:
-        "https://gitlab.com/Solon-collectif/locomotion.app/" +
-        "-/blob/master/tests/Unit/PricingTest.php",
+        "https://gitlab.com/mobicoop/colocauto/colocauto/" +
+        "-/blob/master/tests/Unit/Models/PricingTest.php",
     };
   },
 };
