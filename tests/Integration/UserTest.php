@@ -576,4 +576,51 @@ class UserTest extends TestCase
             );
     }
 
+    public function testUserCannotPromoteItself()
+    {
+        $user = factory(User::class)->create();
+
+        foreach( ["admin", "community_admin"] as $role ){
+            $data = [
+                "role" => $role
+            ];
+            $this->actAs($user);
+            $response = $this->json("PUT", "/api/v1/users/$user->id", $data);
+            $response->assertStatus(422);
+            $user->refresh();
+            $this->assertNull($user->role);
+        }
+    }
+
+    public function testCommunityAdminCannotPromoteItself()
+    {
+        $communityAdmin = factory(User::class)->create();
+        $communityAdmin->role = "community_admin";
+        $communityAdmin->save();
+
+        $data = [
+            "role" => "admin"
+        ];
+        $this->actAs($communityAdmin);
+        $response = $this->json("PUT", "/api/v1/users/$communityAdmin->id", $data);
+        $response->assertStatus(422);
+        $communityAdmin->refresh();
+        $this->assertEquals($communityAdmin->role, "community_admin");
+    }
+
+    public function testAdminCanPromoteUser()
+    {
+        $user = factory(User::class)->create();
+
+        foreach( ["admin", "community_admin"] as $role ){
+            $data = [
+                "role" => $role
+            ];
+            $response = $this->json("PUT", "/api/v1/users/$user->id", $data);
+            $response->assertStatus(200);
+            $user->refresh();
+            $this->assertEquals($user->role, $role);
+        }
+    }
+
 }
