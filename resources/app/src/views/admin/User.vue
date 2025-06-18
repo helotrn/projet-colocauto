@@ -29,7 +29,7 @@
               <forms-builder :definition="form.general" v-model="item" entity="users" />
             </div>
 
-            <div class="form__section" v-if="loggedInUserIsAdmin">
+            <div class="form__section" v-if="loggedInUserIsAdmin && isGlobalAdmin">
               <h2>Administrateur global</h2>
 
               <b-alert show variant="danger">
@@ -376,6 +376,10 @@ export default {
     loggedInUserIsAdmin() {
       const { user } = this.$store.state;
       return user && (user.role === "admin" || user.role === "community_admin");
+    },
+    isGlobalAdmin() {
+      const { user } = this.$store.state;
+      return user && user.role === "admin";
     },
     communitySelected() {
       return this.communitiesSelected[0];
