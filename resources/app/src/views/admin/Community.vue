@@ -679,7 +679,6 @@ export default {
         }
       }, 250);
 
-      this.$store.dispatch('invitations/retrieve');
       if( this.$route.params.id !== 'new' ) {
         this.$store.dispatch('admin.community/loadUsersBalance', this.$route.params.id);
       }
