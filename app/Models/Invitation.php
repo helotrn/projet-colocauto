@@ -14,11 +14,28 @@ class Invitation extends BaseModel
         "consumed_at" => ["nullable", "date"],
     ];
 
+    public static $filterTypes = [
+        "id" => "number",
+        "email" => "text",
+        "token" => "text",
+        "community.id" => [
+            "type" => "relation",
+            "query" => [
+                "slug" => "communities",
+                "value" => "id",
+                "text" => "name",
+                "params" => [
+                    "fields" => "id,name",
+                ]
+            ]
+        ],
+    ];
+
     protected $fillable = ["community_id", "email", "for_community_admin"];
 
     protected $hidden = [];
 
-    public $items = ["community", "token"];
+    public $items = ["community"];
 
     protected $casts = [
         "consumed_at" => TimestampWithTimezoneCast::class,

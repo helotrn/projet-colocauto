@@ -5,6 +5,7 @@ export default new RestModule(
   "invitations",
   {
     params: {
+      order: "-id",
       page: 1,
       per_page: 10,
       q: "",

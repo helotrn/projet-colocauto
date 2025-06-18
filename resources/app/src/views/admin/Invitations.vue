@@ -20,7 +20,7 @@
 
       <b-col class="admin__filters">
         <admin-filters
-          entity="tags"
+          entity="invitations"
           :filters="filters"
           :params="contextParams"
           @change="setParam"
@@ -30,19 +30,31 @@
 
     <b-row>
       <b-col>
-        <invitations-table-list
-          :visibleFields="[
-            'id',
-            'email',
-            'token',
-            'community.name',
-            'status',
-            'actions',
-          ]"
+        <b-table
+          striped
+          hover
           :items="data"
           :busy="loading"
+          :fields="fields"
+          no-local-sorting
+          :sort-by.sync="sortBy"
+          :sort-desc.sync="sortDesc"
+          no-sort-reset
+          :show-empty="true"
+          empty-text="Pas d'invitation"
         >
-        </invitations-table-list>
+          <template v-slot:cell(actions)="row">
+            <admin-list-actions :columns="['edit']" :row="row" slug="invitations" />
+          </template>
+          <template v-slot:cell(status)="row">
+            <div class="status-container" v-if="row.item.consumed_at">
+              <div v-b-tooltip.hover
+                :title="row.item.consumed_at | date">
+                <span class="loan-status-pill success">Utilisée</span>
+              </div>
+            </div>
+          </template>
+        </b-table>
       </b-col>
     </b-row>
 
@@ -80,7 +92,14 @@ export default {
       selected: [],
       fields: [
         { key: "id", label: "ID", sortable: true, class: "text-right tabular-nums" },
-        { key: "actions", label: "Actions", tdClass: "table__cell__actions" },
+        { key: "email", label: "Email", sortable: true },
+        { key: "token", label: "Code", sortable: true },
+        {
+          key: "community.name",
+          label: this.$t("communities.fields.community.name"),
+        },
+        { key: "status", label: this.$t("invitations.list.status") },
+        { key: "actions", label: this.$t("communities.fields.user.actions"), tdClass: "table__cell__actions" },
       ],
     };
   },

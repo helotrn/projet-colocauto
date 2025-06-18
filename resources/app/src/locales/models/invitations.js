@@ -8,6 +8,9 @@ export default {
       email: "Couriel",
       for_community_admin: "Donner le droit d'administration de communauté",
       community_id: "communauté dans laquelle sera intégrée le nouveau membre",
+      community: {
+        id: 'communauté'
+      },
       token: "code (créé automatiquement)",
       consumed_at: "date d'utilisation (rempli automatiquement)",
     },
