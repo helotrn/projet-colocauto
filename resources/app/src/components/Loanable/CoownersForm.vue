@@ -214,6 +214,11 @@ export default {
       this.newUser = user;
       try {
         await this.$store.dispatch("loanables/addCoowner", { loanable: this.loanable, user });
+
+        // edit the newly added coowner right now
+        const addedCoowner = this.loanable.coowners.find(co => co.user.id == user.id)
+        if(addedCoowner) this.editCoowner(addedCoowner.id)
+
       } finally {
         this.newUser = null;
       }
