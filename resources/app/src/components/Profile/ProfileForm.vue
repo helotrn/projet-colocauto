@@ -30,6 +30,18 @@
         <b-row>
           <b-col>
             <forms-validated-input
+              name="postal_code"
+              :label="($t('fields.postal_code') + '*') | capitalize"
+              :rules="{ required: true }"
+              type="text"
+              v-model="user.postal_code"
+            />
+          </b-col>
+        </b-row>
+
+        <b-row>
+          <b-col>
+            <forms-validated-input
               name="phone"
               :label="$t('fields.phone') | capitalize"
               description="Pour faciliter la communication votre numéro est visible
