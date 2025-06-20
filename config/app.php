@@ -72,6 +72,11 @@ return [
     "month_as_day" => env("MONTH_AS_DAY", false),
 
     /*
+    | require invitation to create an account
+    */
+    "require_invitation" => env("REQUIRE_INVITATION", false),
+
+    /*
     |--------------------------------------------------------------------------
     | Application Timezone
     |--------------------------------------------------------------------------

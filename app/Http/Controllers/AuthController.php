@@ -97,6 +97,13 @@ class AuthController extends RestController
         $email = $request->get("email");
         $password = $request->get("password");
         $invitation = Invitation::where('token', $request->get("invitationToken"))->first();
+
+        if( !$invitation && config("app.require_invitation") ) {
+            return $this->respondWithErrors([
+                "status" => [__("validation.invitation.invalid")]
+            ], 400);
+        }
+
         if( $invitation && $invitation->consumed_at !== null){
             $date = new \Carbon\Carbon($invitation->consumed_at);
             return $this->respondWithErrors([
