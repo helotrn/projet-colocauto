@@ -429,7 +429,7 @@ SQL;
 
     public function borrower()
     {
-        return $this->belongsTo(Borrower::class);
+        return $this->belongsTo(Borrower::class)->withTrashed();
     }
 
     public function car()

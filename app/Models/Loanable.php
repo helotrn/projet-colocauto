@@ -220,7 +220,7 @@ class Loanable extends BaseModel
 
     public function owner()
     {
-        return $this->belongsTo(Owner::class);
+        return $this->belongsTo(Owner::class)->withTrashed();
     }
 
     public function padlock()
@@ -386,7 +386,7 @@ class Loanable extends BaseModel
     public function getCarInsurerAttribute()
     {
         if ($this->type === "car") {
-            return Car::find($this->id)->insurer;
+            return Car::withTrashed()->find($this->id)->insurer;
         }
 
         return null;
@@ -424,7 +424,7 @@ class Loanable extends BaseModel
 
         // evaluate a fictive loan to get the price per km
         $departureAt = new Carbon();
-        $car = Car::find($this->id)->toArray();
+        $car = Car::withTrashed()->find($this->id)->toArray();
         $estimatedCost = $pricing->evaluateRule(
             1, // km
             0, // minutes
