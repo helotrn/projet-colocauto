@@ -40,11 +40,12 @@ class InvitationTest extends TestCase
         ];
 
         $response = $this->json("POST", "/api/v1/invitations", $data);
-        $response->assertStatus(422)->assertJson([
-            "errors" => [
-                "community_id" => ["Le champ community id est obligatoire sauf si for community admin est true."]
-            ],
-        ]);
+        $response->assertStatus(201)
+            ->assertJsonStructure(static::$getInvitationResponseStructure)
+            ->assertJson([
+                "email" => $data['email'],
+                "community_id" => null,
+            ]);
     }
 
     public function testCreateInvitations()
@@ -62,6 +63,46 @@ class InvitationTest extends TestCase
             ->assertJson([
                 "email" => $data['email'],
                 "community_id" => $community->id,
+            ]);
+    }
+
+    public function testCannotCreateInvitationsForCommunityAdmin()
+    {
+        $community = factory(Community::class)->create();
+        $user = factory(User::class)->create();
+
+        $this->actAs($user);
+        $data = [
+            "email" => $this->faker->email,
+            "community_id" => $community->id,
+            "for_community_admin" => true,
+        ];
+
+        $response = $this->json("POST", "/api/v1/invitations", $data);
+        $response->assertStatus(422)->assertJson([
+            "errors" => [
+                "for_community_admin" => ["Le champ for community admin est invalide."],
+            ],
+        ]);
+    }
+
+    public function testAdminCanCreateInvitationsForCommunityAdmin()
+    {
+        $this->withoutEvents();
+        $community = factory(Community::class)->create();
+        $data = [
+            "email" => $this->faker->email,
+            "community_id" => $community->id,
+            "for_community_admin" => true,
+        ];
+
+        $response = $this->json("POST", "/api/v1/invitations", $data);
+        $response->assertStatus(201)
+            ->assertJsonStructure(static::$getInvitationResponseStructure)
+            ->assertJson([
+                "email" => $data['email'],
+                "community_id" => $community->id,
+                "for_community_admin" => true,
             ]);
     }
 

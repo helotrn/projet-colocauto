@@ -136,7 +136,8 @@ export default [
               "loanables.*,loanables.loans.*,avatar.*," +
               "loanables.loans.borrower.user.full_name,communities.*,loans.*," +
               "invoices.*,invoices.total,invoices.total_with_taxes,loans.borrower.user.*," +
-              "loans.loanable.name,communities.tags.*,payment_methods.*",
+              "loans.loanable.name,communities.tags.*,payment_methods.*,invitations.*," +
+              "invitations.community.name",
             with_deleted: true,
           },
           title: "titles.user",
@@ -355,7 +356,7 @@ export default [
           auth: true,
           slug: "invitations",
           params: {
-            fields: "*",
+            fields: "*, user.full_name",
           },
           title: "titles.invitation",
         },

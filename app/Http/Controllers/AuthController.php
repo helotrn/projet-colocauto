@@ -123,15 +123,18 @@ class AuthController extends RestController
         $user->save();
 
         if ($user) {
-            if( $invitation) {
+            if( $invitation ) {
+                $user->invitations()->save($invitation);
                 if( $invitation->for_community_admin) {
                     // set the user as admin for this community
                     if ($invitation->community) {
                         $invitation->community->admins()->attach($user->id);
                     }
                 } else {
-                    // set the user as community member
-                    $invitation->community->users()->attach($user->id);
+                    if ($invitation->community) {
+                        // set the user as community member
+                        $invitation->community->users()->attach($user->id);
+                    }
 
                     // automatically approve new invited users
                     $borrower = new Borrower();

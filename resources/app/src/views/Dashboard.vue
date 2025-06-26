@@ -57,6 +57,17 @@
             </div>
           </section>
 
+          <section class="page__section position-relative" v-if="waitingInvitations && waitingInvitations.length">
+            <b-row no-gutters class="header">
+              <h2 class="mb-0">Invitation{{waitingInvitations.length > 1 ? 's' : ''}} de communauté en attente ({{ waitingInvitations.length }})</h2>
+            </b-row>
+            <b-row class="mt-4">
+              <b-col lg="6" v-for="waitingInvitation in waitingInvitations" :key="waitingInvitation.id">
+                <invitation-card :invitation="waitingInvitation" for-me @updated="reloadUser" />
+              </b-col>
+            </b-row>
+          </section>
+
           <!---->
           <div class="page__section position-relative" v-if="hasLoans">
             <div class="loans-container" :class="{ loading: loading && !loansLoaded }">
@@ -394,6 +405,7 @@ import UsersBalance from "@/components/Balance/UsersBalance.vue";
 import LoansCalendar from "@/components/Loanable/LoansCalendar.vue";
 import LoanableCalendarLegend from "@/components/Loanable/CalendarLegend.vue";
 import ConditionsUpdatedToast from "@/views/ConditionsUpdatedToast.vue";
+import InvitationCard from "@/components/Invitation/InvitationCard.vue";
 
 import MagnifyingGlass from "@/assets/svg/magnifying-glass.svg";
 import SalutCoeur from "@/assets/svg/salut-coeur.svg";
@@ -419,6 +431,7 @@ export default {
     LoanableInfoBox,
     ReleaseInfoBox,
     TutorialBlock,
+    InvitationCard,
     "svg-magnifying-glass": MagnifyingGlass,
     "svg-magnifying-glass-euro": MagnifyingGlassEuro,
     "svg-salut-coeur": SalutCoeur,
@@ -451,7 +464,7 @@ export default {
     }
   },
   mounted() {
-    this.$store.dispatch("dashboard/reload", this.user);
+    this.reloadDashboard();
   },
   data: () => ({
     defaultView: 'week',
@@ -600,6 +613,10 @@ export default {
     currentLoan() {
       return this.$store.state.loans.item
     },
+    waitingInvitations() {
+      if( !Array.isArray(this.user.invitations) ) return [];
+      return this.user.invitations.filter(inv => inv.consumed_at == null);
+    }
   },
   methods: {
     hasTutorial(name) {
@@ -632,6 +649,12 @@ export default {
       this.$store.dispatch("dashboard/loadBalance", { community: {id:communityId} })
       this.$store.dispatch("dashboard/loadMembers", { user: this.user })
     },
+    reloadDashboard() { 
+      this.$store.dispatch("dashboard/reload", this.user);
+    },
+    reloadUser() {
+      this.$store.dispatch("loadUser");
+    }
   },
   i18n: {
     messages: {

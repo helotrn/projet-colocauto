@@ -1,6 +1,19 @@
 <template>
-  <b-card no-body class="invitation-card">
-    <b-row no-gutters class="invitation-card__content">
+  <b-card class="invitation-card">
+    <template v-if="forMe" no-gutters>
+      <h3 class="text-center mb-4"><strong>{{invitation.community.name}}</strong></h3>
+      <b-button
+        variant="outline-primary"
+        class="w-full mb-2"
+        @click="acceptInvitation"
+      >Rejoindre la communauté</b-button>
+      <b-button
+        variant="outline-primary"
+        class="w-full"
+        @click="deactivateInvitation"
+      >Refuser l'invitation</b-button>
+    </template>
+    <b-row v-else no-gutters class="invitation-card__content">
       <b-col class="user-card__content__avatar">
         <default-avatar class="default-avatar" />
       </b-col>
@@ -34,6 +47,10 @@ export default {
       type: Object,
       required: true,
     },
+    forMe: {
+      type: Boolean,
+      default: false,
+    },
   },
   components: {
     DefaultAvatar: Avatar,
@@ -57,6 +74,16 @@ export default {
           type: "community",
         })
         this.$emit("updated");
+    },
+    async acceptInvitation(){
+      await this.$store.dispatch("invitations/accept", this.invitation.token)
+      this.$store.commit("addNotification", {
+        content: `L'invitation pour ${this.invitation.community.name} a été acceptée.`,
+        title: "Invitation acceptée !",
+        variant: "success",
+        type: "community",
+      })
+      this.$emit("updated");
     },
   },
 };

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Invitation;
+use App\Models\User;
 use App\Repositories\InvitationRepository;
 use App\Http\Requests\Invitation\CreateRequest;
 use App\Http\Requests\Invitation\AcceptRequest;
@@ -54,6 +55,10 @@ class InvitationController extends RestController
     {
         try {
             $item = parent::validateAndCreate($request);
+            $user = User::where('email', $request->get("email"))->first();
+            if($user) {
+                $user->invitations()->save($item);
+            }
         } catch (ValidationException $e) {
             return $this->respondWithErrors($e->errors(), $e->getMessage());
         }
@@ -117,7 +122,10 @@ class InvitationController extends RestController
         }
 
         $item->consume();
-        $item->community->users()->attach($request->user());
+        $request->user()->invitations()->save($item);
+        if( !$item->community->users()->pluck('id')->contains($request->user()->id) ) {
+            $item->community->users()->attach($request->user());
+        }
 
         return $this->respondWithItem($request, $item, 200);
     }
@@ -158,7 +166,19 @@ class InvitationController extends RestController
                     // readonly field, generated on the server side
                     "type" => "date",
                     "disabled" => true
-                ]
+                ],
+                "user_id" => [
+                    "type" => "relation",
+                    "query" => [
+                        "slug" => "users",
+                        "value" => "id",
+                        "text" => "full_name",
+                        "params" => [
+                            "fields" => "id,full_name",
+                        ],
+                    ],
+                    "disabled" => true,
+                ],
             ],
             "filters" => $this->model::$filterTypes ?: new \stdClass(),
         ];

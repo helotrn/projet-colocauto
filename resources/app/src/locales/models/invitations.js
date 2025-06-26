@@ -13,6 +13,7 @@ export default {
       },
       token: "code (créé automatiquement)",
       consumed_at: "date d'utilisation (rempli automatiquement)",
+      user_id: 'Utilisateur',
     },
     placeholders: {
       email: 'Couriel',

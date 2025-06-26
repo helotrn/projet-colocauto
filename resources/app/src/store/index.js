@@ -106,6 +106,8 @@ const loadUserFields = [
   "communities.*",
   "owner.*",
   "payment_methods.*",
+  "invitations.*",
+  "invitations.community.name",
 ].join(",");
 
 const actions = {

@@ -195,6 +195,46 @@
             </div>
 
             <div class="form__section" v-if="!!item.id">
+              <h2>Invitations</h2>
+
+              <b-table
+                striped
+                hover
+                :items="item.invitations"
+                select-mode="single"
+                :fields="invitationsTable"
+                no-sort-reset
+                :show-empty="true"
+                empty-text="Pas d'invitations"
+              >
+                <template v-slot:cell(actions)="row">
+                  <div class="text-right">
+                    <b-button size="sm" :to="`/admin/invitations/${row.item.id}`">
+                      {{ $t("modifier") | capitalize }}
+                    </b-button>
+                  </div>
+                </template>
+                <template v-slot:cell(community.name)="row">
+                  <router-link :to="`/admin/communities/${row.item.community_id}`">
+                    {{row.item.community.name}}
+                  </router-link>
+                </template>
+                <template v-slot:cell(status)="row">
+                  <div class="status-container" v-if="row.item.consumed_at">
+                    <div v-b-tooltip.hover
+                      :title="row.item.consumed_at | date">
+                      <span class="loan-status-pill success">Utilisée</span>
+                    </div>
+                  </div>
+                </template>
+              </b-table>
+
+              <b-button variant="primary" :disabled="loading" :to="`/admin/invitations/new?email=${item.email}`">
+                Créer
+              </b-button>
+            </div>
+
+            <div class="form__section" v-if="!!item.id">
               <h2>Emprunts</h2>
 
               <b-table
@@ -337,6 +377,15 @@ export default {
           label: capitalize(this.$t("fields.communities.tags.slug")),
           sortable: true,
         },
+        { key: "actions", label: "Actions", tdClass: "table__cell__actions" },
+      ],
+      invitationsTable: [
+        { key: "id", label: "ID", sortable: true },
+        {
+          key: "community.name",
+          label: this.$t("communities.fields.community.name"),
+        },
+        { key: "status", label: this.$t("invitations.list.status") },
         { key: "actions", label: "Actions", tdClass: "table__cell__actions" },
       ],
     };

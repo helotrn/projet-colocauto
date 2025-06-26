@@ -182,7 +182,8 @@ class User extends AuthenticatableBaseModel
         "payment_methods",
         "expenses",
         "debited_refunds",
-        "credited_refunds"
+        "credited_refunds",
+        "invitations",
     ];
 
     public $items = ["borrower", "owner", "google_account"];
@@ -347,6 +348,11 @@ class User extends AuthenticatableBaseModel
                 "updated_at",
             ])
             ->distinct();
+    }
+
+    public function invitations()
+    {
+        return $this->hasMany(Invitation::class)->orderBy("updated_at", "asc");
     }
 
     public function administrableCommunities()

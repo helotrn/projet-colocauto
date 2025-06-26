@@ -21,14 +21,14 @@ class CreateRequest extends BaseRequest
                 ->pluck("id")
                 ->toArray()
         );
-
-        // only super admin can invite community admins without communities
-        $required = $this->user()->isAdmin() ? "required_unless:for_community_admin,true" : "required";
+        
 
         return [
             "email" => "string|required",
+             // force false or null for non admins
+            "for_community_admin" => "nullable|boolean".($this->user()->isAdmin() ? "" : "|in:false"),
             "community_id" => [
-                $required,
+                "nullable",
                 "numeric",
                 "filled",
                 "in:$accessibleCommunityIds",

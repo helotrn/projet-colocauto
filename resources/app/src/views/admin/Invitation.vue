@@ -12,7 +12,14 @@
     <b-row>
       <b-col>
         <b-form class="form" @submit.prevent="submit">
-          <forms-builder :definition="maybeReadonlyFormRules" v-model="item" entity="invitations" />
+          <forms-builder :definition="maybeReadonlyFormRules" v-model="item" entity="invitations">
+            <template v-slot:user_id="{item}">
+              <b-form-group :label="$t('fields.user_id')">
+                <router-link v-if="item.user_id" :to="`/admin/users/${item.user_id}`">{{ item.user.full_name }}</router-link>
+                <p v-else>Aucun utilisateur lié</p>
+              </b-form-group>
+            </template>
+          </forms-builder>
 
           <div class="form__buttons">
             <b-button-group v-if="!item.id">
@@ -85,17 +92,25 @@ export default {
       this.$store.commit('invitations/patchItem', {
         community_id: this.$route.query.community_id,
       })
+    }
+    if( this.$route.query.email ) {
+      this.$store.commit('invitations/patchItem', {
+        email: this.$route.query.email,
+      })
+    }
 
+    if( this.$route.query.community_id || this.$route.query.email ) {
       // when relation input load data, community_id is reset : set it again
       const unwatch = this.$watch(() => this.$store.state.invitations.item.community_id, community_id => {
         if( community_id == undefined ) {
           this.$store.commit('invitations/patchItem', {
             community_id: this.$route.query.community_id,
+            email: this.$route.query.email,
           })
-          unwatch()
-          // remove parameter from url
-          this.$router.replace(this.$route.path)
         }
+        // remove parameter from url
+        this.$router.replace(this.$route.path)
+        unwatch()
       })
     }
   },

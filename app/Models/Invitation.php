@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Community;
+use App\Models\User;
 use App\Casts\TimestampWithTimezoneCast;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -10,7 +11,7 @@ class Invitation extends BaseModel
 {
     public static $rules = [
         "email" => ["required", "email"],
-        "community_id" => ["required_if:for_community_admin,false"],
+        "community_id" => ["nullable"],
         "consumed_at" => ["nullable", "date"],
     ];
 
@@ -29,13 +30,24 @@ class Invitation extends BaseModel
                 ]
             ]
         ],
+        "user.id" => [
+            "type" => "relation",
+            "query" => [
+                "slug" => "unsers",
+                "value" => "id",
+                "text" => "full_name",
+                "params" => [
+                    "fields" => "id,full_name",
+                ]
+            ]
+        ],
     ];
 
     protected $fillable = ["community_id", "email", "for_community_admin"];
 
     protected $hidden = [];
 
-    public $items = ["community"];
+    public $items = ["community", "user"];
 
     protected $casts = [
         "consumed_at" => TimestampWithTimezoneCast::class,
@@ -44,6 +56,11 @@ class Invitation extends BaseModel
     public function community()
     {
         return $this->belongsTo(Community::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 
     public function consume()
@@ -64,6 +81,8 @@ class Invitation extends BaseModel
             return $q->whereHas("community", function ($q) use ($user) {
                 // ... where he or she has access
                 $q->accessibleBy($user);
+            })->orWhereHas("user", function ($q) use ($user) {
+                $q->where("id", $user->id);
             });
         });
     }
