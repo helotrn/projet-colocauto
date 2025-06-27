@@ -65,22 +65,10 @@
         color: #343a40;
     "
 >
-    <a
-        href="{{ env('FRONTEND_URL') . '/loans/' . $loan->id }}"
-        style="
-            display: inline-block;
-            background-color: #246aea;
-            padding: 8px 16px;
-            border-radius: 5px;
-            color: white;
-            font-weight: bold;
-            font-size: 17px;
-            line-height: 24px;
-            text-decoration: none;
-        "
-        target="_blank"
-        >Voir l'emprunt</a
-    >
+    @include('emails.partials.button', [
+        'url' => env('FRONTEND_URL'). '/loans/' . $loan->id,
+        'text' => 'Voir l\'emprunt'
+    ])
 </p>
 
 @endsection

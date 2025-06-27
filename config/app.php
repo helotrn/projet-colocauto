@@ -66,6 +66,8 @@ return [
         "buccaneer",            // #664B4B
     ],
 
+    "theme" => env("APP_THEME", "default"),
+
     /*
     | Apply monthly expenses each day for debug purposes
     */

@@ -15,7 +15,7 @@
             padding: 0;
         }
     </style>
-    <body style="background-color: #f5f8fb">
+    <body style="background-color: @color(light-background)">
         <table style="width: 100%; border-collapse: collapse">
             <tbody>
                 @include('emails.partials.header')

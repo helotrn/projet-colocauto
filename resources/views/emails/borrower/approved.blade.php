@@ -27,23 +27,10 @@
     maintenant emprunter les autos de vos voisins et voisines ;-)
 </p>
 <p style="text-align: center; margin-top: 32px; margin-bottom: 0">
-    <a
-        href="{{ env('FRONTEND_URL') . '/search/map' }}"
-        style="
-            display: inline-block;
-            background-color: #246aea;
-            padding: 8px 16px;
-            border-radius: 5px;
-            color: white;
-            font-weight: bold;
-            font-size: 17px;
-            line-height: 24px;
-            text-decoration: none;
-        "
-        target="_blank"
-    >
-        Voir mon voisinage
-    </a>
+    @include('emails.partials.button', [
+        'url' => env('FRONTEND_URL') . '/search/map',
+        'text' => 'Voir mon voisinage'
+    ])
 </p>
 
 @endsection

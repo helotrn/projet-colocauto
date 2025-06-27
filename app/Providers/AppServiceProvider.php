@@ -34,6 +34,11 @@ class AppServiceProvider extends ServiceProvider
         Blade::directive("duration", function (string $duration_in_minutes) {
              return "<?php echo \Carbon\CarbonInterval::minutes($duration_in_minutes)->cascade()->forHumans(); ?>";
         });
+
+        Blade::directive("color", function (string $name) {
+             $colors = json_decode(file_get_contents(resource_path('app/src/assets/themes/'.config("app.theme").'/blade.json')));
+             return "<?php echo '".$colors->{$name}."'; ?>";
+        });
     }
 
     private function generateClientId(

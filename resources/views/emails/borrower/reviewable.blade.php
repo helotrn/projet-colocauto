@@ -42,22 +42,10 @@
     Le profil peut maintenant être validé.
 </p>
 <p style="text-align: center; margin-bottom: 0">
-    <a
-        href="{{ env('FRONTEND_URL') . '/admin/users/' . $user->id }}#borrower"
-        style="
-            display: inline-block;
-            background-color: #246aea;
-            padding: 8px 16px;
-            border-radius: 5px;
-            color: white;
-            font-weight: bold;
-            font-size: 17px;
-            line-height: 24px;
-            text-decoration: none;
-        "
-        target="_blank"
-        >Voir le profil</a
-    >
+    @include('emails.partials.button', [
+        'url' => env('FRONTEND_URL'). '/admin/users/' . $user->id . '#borrower',
+        'text' => 'Voir le profil'
+    ])
 </p>
 
 @endsection

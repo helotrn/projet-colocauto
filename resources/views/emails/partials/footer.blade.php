@@ -3,7 +3,7 @@
         style="
             background-position: bottom center;
             background-repeat: no-repeat;
-            background-color: #1e4847;
+            background-color: @color(dark-background);
             height: 263.27px;
             background-image: url('{{ env('BACKEND_URL_FROM_BROWSER') }}/mail-footer-bg.png');    
         "

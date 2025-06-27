@@ -14,21 +14,9 @@
 </p>
 
 <p style="text-align: center; margin: 32px auto 0 auto">
-    <a
-        href="{{ env('FRONTEND_URL') . '/admin/users/' . $user->id }}"
-        style="
-            display: inline-block;
-            background-color: #246aea;
-            padding: 8px 16px;
-            border-radius: 5px;
-            color: white;
-            font-weight: bold;
-            font-size: 17px;
-            line-height: 24px;
-            text-decoration: none;
-        "
-        target="_blank"
-        >Voir le profil</a
-    >
+    @include('emails.partials.button', [
+        'url' => env('FRONTEND_URL') . '/admin/users/' . $user->id,
+        'text' => 'Voir le profil'
+    ])
 </p>
 @endsection
