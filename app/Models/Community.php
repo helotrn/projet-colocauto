@@ -42,6 +42,7 @@ class Community extends BaseModel
                 ]
             ]
         ],
+        "is_deleted" => "boolean",
     ];
 
     public static $transformer = CommunityTransformer::class;
@@ -263,6 +264,17 @@ SQL;
         }
 
         return $this->users->count();
+    }
+
+    public function scopeIsDeleted(Builder $query, $value, $negative = false)
+    {
+        if (filter_var($value, FILTER_VALIDATE_BOOLEAN) !== $negative) {
+            return $query
+                ->withTrashed()
+                ->where("{$this->getTable()}.deleted_at", "!=", null);
+        }
+
+        return $query;
     }
 
     public function scopeAccessibleBy(Builder $query, $user)

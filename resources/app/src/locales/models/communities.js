@@ -52,7 +52,9 @@ const i18n = {
       },
       admins: {
         id: "Administrateur·ice"
-      }
+      },
+      deleted_at: "supprimé",
+      is_deleted: "afficher les communautés archivées",
     },
     model_name: "communauté | communautés",
     user_list_empty_text: "Aucun membre à afficher.",

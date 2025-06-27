@@ -55,7 +55,12 @@
             </router-link>
           </template>
           <template v-slot:cell(actions)="row">
-            <admin-list-actions :columns="['edit']" :row="row" :slug="slug" />
+            <admin-list-actions
+              :row="row"
+              :slug="slug"
+              @restore="restoreItemModal(row.item)"
+              @destroy="destroyItemModal(row.item)"
+            />
           </template>
         </b-table>
       </b-col>
