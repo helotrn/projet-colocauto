@@ -1,7 +1,8 @@
 <template>
-  <b-container v-if="user.communities.length > 1">
-    <b-navbar>
-      <b-navbar-nav align="start" v-if="isLoggedIn">
+  <b-container v-if="isLoggedIn && !isAdmin && user.communities.length > 1" class="pt-5">
+    <h3>Vos communautés</h3>
+    <b-tabs>
+      <template #tabs-end>
         <b-nav-item
           v-for="community in user.communities"
           :key="community.id"
@@ -11,8 +12,8 @@
         >
           <span class="nav-link__text">{{ community.name }}</span>
         </b-nav-item>
-      </b-navbar-nav>
-    </b-navbar>
+      </template>
+    </b-tabs>
   </b-container>
 </template>
 
@@ -40,3 +41,14 @@ export default {
   },
 }
 </script>
+
+<style lang="scss" scoped>
+  .tabs::v-deep {
+    .tab-content {
+      display: none;
+    }
+    .nav-tabs {
+      border-radius: 0.625rem 0.625rem 0.625rem 0;
+    }
+  }
+</style>
