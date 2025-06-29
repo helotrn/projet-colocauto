@@ -5,7 +5,7 @@
     variant="primary"
     @click="createLoanForToday"
   >
-    Créer
+    Réserver un véhicule
   </b-button>
   <vue-cal
     ref="vuecal"
@@ -35,6 +35,13 @@
       <span v-else-if="view.id === 'month'">{{ view.startDate.format("MMMM YYYY") }}</span>
       <span v-else-if="view.id === 'week'">{{ view.startDate.format("MMMM YYYY") }}</span>
       <span v-else-if="view.id === 'day'">{{ view.startDate.format("dddd D MMMM (YYYY)") }}</span>
+    </template>
+
+    <template v-slot:arrow-prev>
+      <arrow-icon style="transform:rotate(180deg)" />
+    </template>
+    <template v-slot:arrow-next>
+      <arrow-icon />
     </template>
 
     <template v-slot:time-cell="{ hours, minutes }">
@@ -271,6 +278,8 @@ import UserMixin from "@/mixins/UserMixin";
 import CalendarMixin from "@/mixins/CalendarMixin";
 import LoanStepsSequence from "@/mixins/LoanStepsSequence";
 
+import ArrowIcon from "@/assets/svg/loanable-calendar__cal-arrow-right.svg";
+
 export default {
   name: "Calendar",
   props: {
@@ -309,6 +318,7 @@ export default {
     UserAvatar,
     FormsValidatedInput,
     LoanActionButtons,
+    ArrowIcon,
   },
   mounted(){
     // scroll the calendar to show 8-20 hours
@@ -644,6 +654,16 @@ export default {
   .vuecal__header {
     background: white;
   }
+  .vuecal__title span {
+    font-size: 1.25rem;
+    font-weight: bold;
+  }
+  .vuecal__arrow {
+    fill: $primary;
+    &:hover {
+      fill: $locomotion-dark-green;
+    }
+  }
   .vuecal__menu {
     padding: 16px 0;
     background: white;
@@ -689,6 +709,10 @@ export default {
   .vuecal__event--focus,
   .vuecal__event:focus {
     box-shadow: none;
+  }
+
+  .vuecal__time-column {
+    background: $white;
   }
 
   /* Month view. */
