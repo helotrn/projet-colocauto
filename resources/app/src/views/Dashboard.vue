@@ -197,12 +197,11 @@
             </b-row>
             <b-row>
               <b-col>
-                <b-tabs pills card>
+                <b-tabs card>
                   <b-tab
                     v-for="loanable in carsList"
                     :title="loanable.name"
                     :key="loanable.id"
-                    title-item-class="mr-2"
                     lazy
                   >
                     <b-card-text>
@@ -816,17 +815,28 @@ export default {
       padding-top: 0;
     }
 
-    .nav-pills .nav-link {
-      color: $secondary;
-      background-color: $white;
-      border: solid 1px $white;
-      border-radius: 10px;
+    .nav-tabs {
+      background: $white;
+      border-radius: 0.625rem;
+      .nav-link{
+        line-height: 1.575;
+        padding: 1.25rem;
+        border-style: none none solid none;
+        border-color: $gray-400;
+        border-width: 2px;
+        color: $locomotion-dark-green;
+        &.active {
+          font-size: 1.125rem;
+          line-height: 1.4;
+          font-weight: bold;
+          border-width: 3px;
+          padding-bottom: calc(1.25rem - 1px);
+          border-color: $locomotion-dark-green;
+        }
+      }
     }
-    .nav-pills .nav-link.active,
-    .nav-pills .show > .nav-link {
-      color: $primary;
-      border-color: $primary;
-      font-weight: bold;
+    .tab-content {
+      border-top: solid 1px $gray-400;
     }
   }
 

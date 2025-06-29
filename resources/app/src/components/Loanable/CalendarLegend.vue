@@ -58,6 +58,7 @@ export default {
   &__wrap {
     background: white;
     padding: 10px 16px 1px;
+    border-radius: 0 0 10px 10px;
   }
   &__item {
     display: flex;
