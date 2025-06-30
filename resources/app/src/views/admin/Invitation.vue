@@ -70,6 +70,18 @@ export default {
       await this.$store.dispatch("invitations/destroy", this.item.id);
       this.loadItem();
     },
+    setFromRoute(param) {
+      if( this.$route.query[param] ) {
+        let data = {};
+        data[param] = this.$route.query[param];
+        this.$store.commit('invitations/patchItem', data)
+      }
+    },
+    setAllFromRouteAndReset(){
+      this.setFromRoute('community_id');
+      this.setFromRoute('email');
+      this.$router.replace(this.$route.path);
+    },
   },
   computed: {
     maybeReadonlyFormRules() {
@@ -88,29 +100,18 @@ export default {
   },
   mounted: async function() {
     // set default pre-selected community
-    if( this.$route.query.community_id ) {
-      this.$store.commit('invitations/patchItem', {
-        community_id: this.$route.query.community_id,
-      })
-    }
-    if( this.$route.query.email ) {
-      this.$store.commit('invitations/patchItem', {
-        email: this.$route.query.email,
-      })
-    }
+    this.setFromRoute('community_id');
+    this.setFromRoute('email');
 
     if( this.$route.query.community_id || this.$route.query.email ) {
       // when relation input load data, community_id is reset : set it again
-      const unwatch = this.$watch(() => this.$store.state.invitations.item.community_id, community_id => {
-        if( community_id == undefined ) {
-          this.$store.commit('invitations/patchItem', {
-            community_id: this.$route.query.community_id,
-            email: this.$route.query.email,
-          })
-        }
-        // remove parameter from url
-        this.$router.replace(this.$route.path)
-        unwatch()
+      const unwatchCid = this.$watch(() => this.$store.state.invitations.item.community_id, () => {
+        this.setAllFromRouteAndReset()
+        unwatchCid()
+      })
+      const unwatchEmail = this.$watch(() => this.$store.state.invitations.item.email, () => {
+        this.setAllFromRouteAndReset()
+        unwatchEmail()
       })
     }
   },
