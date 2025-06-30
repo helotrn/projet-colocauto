@@ -1,6 +1,32 @@
 <template>
   <div class="profile-account" v-if="item && routeDataLoaded">
     <div class="form__section">
+      <h2>Informations générales</h2>
+
+      <profile-form
+        :loading="loading"
+        :user="item"
+        :form="form"
+        @reset="reset"
+        :changed="changed"
+        show-reset
+        @submit="submit"
+        v-if="item"
+      >
+        <template>
+          <b-row v-if="hasAddressChanged">
+            <b-col>
+              <b-alert variant="danger" show class="address-change-warning">
+                Si votre changement d'adresse entraine un changement de quartier, vous devrez
+                soumettre une nouvelle preuve de résidence.
+              </b-alert>
+            </b-col>
+          </b-row>
+        </template>
+      </profile-form>
+    </div>
+
+    <div class="form__section">
       <h2>Changer mon mot de passe</h2>
 
       <user-password-form
@@ -83,11 +109,13 @@
         @input="updateNewsletter"
       />
     </div>
+
   </div>
   <layout-loading v-else />
 </template>
 
 <script>
+import ProfileForm from "@/components/Profile/ProfileForm.vue";
 import FormsValidatedInput from "@/components/Forms/ValidatedInput.vue";
 import UserEmailForm from "@/components/User/EmailForm.vue";
 import UserPasswordForm from "@/components/User/PasswordForm.vue";
@@ -100,6 +128,7 @@ export default {
   name: "ProfileAccount",
   mixins: [DataRouteGuards, FormMixin],
   components: {
+    ProfileForm,
     FormsValidatedInput,
     UserEmailForm,
     UserPasswordForm,
@@ -109,6 +138,11 @@ export default {
     id: {
       required: false,
       default: "me",
+    },
+  },
+  computed: {
+    hasAddressChanged() {
+      return this.item.address !== this.initialItem.address;
     },
   },
   methods: {
@@ -127,9 +161,7 @@ export default {
           id: this.item.id,
           accept_conditions: value,
         },
-        params: {
-          fields: "id,name,accept_conditions,gdpr,newsletter",
-        },
+        params: this.$route.meta.params,
       });
     },
     async updateGDPR(value) {
@@ -139,9 +171,7 @@ export default {
           id: this.item.id,
           gdpr: value,
         },
-        params: {
-          fields: "id,name,accept_conditions,gdpr,newsletter",
-        },
+        params: this.$route.meta.params,
       });
     },
     async updateNewsletter(value) {
@@ -151,9 +181,7 @@ export default {
           id: this.item.id,
           newsletter: value,
         },
-        params: {
-          fields: "id,name,accept_conditions,gdpr,newsletter",
-        },
+        params: this.$route.meta.params,
       });
     },
   },
@@ -163,5 +191,8 @@ export default {
 <style lang="scss">
 .profile-account {
   margin-bottom: 3em;
+  .address-change-warning {
+    margin-top: 20px;
+  }
 }
 </style>

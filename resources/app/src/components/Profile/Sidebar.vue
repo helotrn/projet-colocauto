@@ -2,9 +2,6 @@
   <div class="profile-sidebar">
     <ul v-if="user">
       <b-nav-item to="/profile">
-        {{ $t("profile.titles.profile") }}
-      </b-nav-item>
-      <b-nav-item to="/profile/account">
         {{ $t("profile.titles.account") }}
       </b-nav-item>
       <b-nav-item to="/profile/loanables" v-if="user.owner">

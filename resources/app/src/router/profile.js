@@ -1,7 +1,6 @@
 import Profile from "@/views/Profile.vue";
-import ProfileAccount from "@/views/profile/Account.vue";
 import CommunityLoanables from "@/views/community/Loanables.vue";
-import ProfileLocomotion from "@/views/profile/Locomotion.vue";
+import ProfileAccount from "@/views/profile/Account.vue";
 
 export default [
   {
@@ -13,25 +12,13 @@ export default [
     },
     children: [
       {
-        path: "account",
-        component: ProfileAccount,
-        meta: {
-          auth: true,
-          title: "titles.account",
-          slug: "users",
-          params: {
-            fields: "id,name,email,accept_conditions,gdpr,newsletter",
-          },
-        },
-      },
-      {
         path: "colocauto",
         redirect: "/profile"
       },
       {
         path: "",
         name: "profile",
-        component: ProfileLocomotion,
+        component: ProfileAccount,
         meta: {
           auth: true,
           title: "titles.profile",
