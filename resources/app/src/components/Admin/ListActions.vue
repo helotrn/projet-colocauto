@@ -20,7 +20,7 @@
       v-if="hasColumn('destroy') && !row.item.deleted_at"
       size="sm"
       class="mr-1"
-      variant="danger"
+      variant="outline-primary"
       @click="$emit('destroy')"
     >
       {{ $t("archiver") | capitalize }}
@@ -29,7 +29,7 @@
       v-if="hasColumn('restore') && !!row.item.deleted_at"
       size="sm"
       class="mr-1"
-      variant="warning"
+      variant="outline-primary"
       @click="$emit('restore')"
     >
       {{ $t("restaurer") | capitalize }}

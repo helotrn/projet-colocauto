@@ -125,8 +125,8 @@ export default {
           buttonSize: "sm",
           okTitle: "Oui, retirer",
           cancelTitle: "Annuler",
-          okVariant: "danger",
-          cancelVariant: "primary",
+          okVariant: "primary",
+          cancelVariant: "outline-primary",
           footerClass: "p-2 border-top-0",
           centered: true,
         })
@@ -206,8 +206,8 @@ export default {
           buttonSize: "sm",
           okTitle: "Oui, restaurer",
           cancelTitle: "Annuler",
-          okVariant: "warning",
-          cancelVariant: "primary",
+          okVariant: "primary",
+          cancelVariant: "outline-primary",
           footerClass: "p-2 border-top-0",
           centered: true,
         })

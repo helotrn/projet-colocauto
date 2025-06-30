@@ -1,11 +1,11 @@
 <template>
   <div class="admin-filters">
-    <b-button variant="info" v-b-modal.modal-filters data-testid="filters-button">
+    <b-button variant="outline-primary" v-b-modal.modal-filters data-testid="filters-button" class="mb-4">
       Filtres
       <small>({{ $tc("components.admin.filters.applied_filters", appliedFilters.length) }})</small>
     </b-button>
 
-    <b-modal id="modal-filters" class="admin-filters__modal" title="Filtres">
+    <b-modal id="modal-filters" class="admin-filters__modal" title="Filtres" cancel-variant="outline-primary">
       <b-form-group
         v-for="(def, key) in filters"
         :key="key"

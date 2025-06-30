@@ -1,12 +1,13 @@
 <template>
   <div class="community-users-filters">
-    <b-button variant="info" v-b-modal="'community-users-filters__filter-pane'">
+    <b-button variant="outline-primary" v-b-modal="'community-users-filters__filter-pane'">
       {{ $t("components.admin.filters.filters") | capitalize }}
     </b-button>
 
     <b-modal
       id="community-users-filters__filter-pane"
       :title="$t('components.admin.filters.filters') | capitalize"
+      cancel-variant="outline-primary"
     >
       <!-- TODO (#1078) -->
       <b-form-group

@@ -5,7 +5,7 @@
         <h1>{{ $tc("communauté", 2) | capitalize }}</h1>
       </b-col>
       <b-col class="admin__buttons">
-        <b-btn v-if="creatable" :to="`/admin/${slug}/new`">
+        <b-btn v-if="creatable" variant="primary" :to="`/admin/${slug}/new`">
           {{ $t("créer une communauté") | capitalize }}
         </b-btn>
       </b-col>

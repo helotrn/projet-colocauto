@@ -102,7 +102,7 @@
                 v-if="!row.item.deleted_at"
                 size="sm"
                 class="mr-1"
-                variant="danger"
+                variant="outline-primary"
                 @click="destroyItemModal(row.item)"
               >
                 {{ $t("archive") | capitalize }}
@@ -111,7 +111,7 @@
                 v-else
                 size="sm"
                 class="mr-1"
-                variant="warning"
+                variant="outline-primary"
                 @click="restoreItemModal(row.item)"
               >
                 {{ $t("restore") | capitalize }}
@@ -120,11 +120,11 @@
                 v-if="!row.item.deleted_at"
                 :id="'mandate-' + row.item.id"
                 size="sm"
-                variant="warning"
+                class="d-flex align-items-center"
+                variant="outline-primary"
                 v-on:click="mandate(row.item.id)"
               >
-                <i class="bi bi-person-badge"></i>
-                <person-badge-icon />
+                <person-badge-icon class="mr-1" /> Connexion
               </b-button>
               <b-tooltip :target="'mandate-' + row.item.id" triggers="hover">
                 {{ $t("mandate_tool_tip") }}

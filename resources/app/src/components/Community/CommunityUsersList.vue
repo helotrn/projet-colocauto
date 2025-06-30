@@ -92,7 +92,7 @@
           :disabled="busy"
           size="sm"
           class="ml-1 mb-1"
-          variant="warning"
+          variant="outline-primary"
           @click="$emit('action', row.item, 'suspend')"
         >
           {{ $t("communities.fields.user.action_labels.suspend") | capitalize }}
@@ -102,7 +102,7 @@
           :disabled="busy"
           size="sm"
           class="ml-1 mb-1"
-          variant="success"
+          variant="outline-primary"
           @click="$emit('action', row.item, 'unsuspend')"
         >
           {{ $t("communities.fields.user.action_labels.unsuspend") | capitalize }}
@@ -112,7 +112,7 @@
           v-if="canDoActions.find((i) => i.id == row.item.id)['remove']"
           :disabled="busy"
           size="sm"
-          variant="danger"
+          variant="outline-primary"
           class="ml-1 mb-1"
           @click="$emit('action', row.item, 'remove')"
         >

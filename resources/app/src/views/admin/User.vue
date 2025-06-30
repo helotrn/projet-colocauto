@@ -97,7 +97,7 @@
                   v-else-if="!item.borrower.suspended_at"
                   size="sm"
                   class="ml-1"
-                  variant="warning"
+                  variant="primary"
                   :disabled="loading"
                   @click="suspendBorrower(item)"
                 >
@@ -107,7 +107,7 @@
                   v-else
                   size="sm"
                   class="mr-1"
-                  variant="success"
+                  variant="primary"
                   :disabled="loading"
                   @click="unsuspendBorrower(item)"
                 >
@@ -139,7 +139,7 @@
               >
                 <template v-slot:cell(actions)="row">
                   <div class="text-right">
-                    <b-button size="sm" :to="`/admin/loanables/${row.item.id}`">
+                    <b-button size="sm" variant="primary" :to="`/admin/loanables/${row.item.id}`">
                       {{ $t("modifier") | capitalize }}
                     </b-button>
                   </div>
@@ -167,7 +167,7 @@
                     <b-button
                       v-if="!row.item._new"
                       size="sm"
-                      variant="success"
+                      variant="outline-primary"
                       @click="viewUserInCommunity(row.item)"
                     >
                       {{ $t("afficher") | capitalize }} dans la communauté
