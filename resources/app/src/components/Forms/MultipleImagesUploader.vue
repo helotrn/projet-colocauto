@@ -1,51 +1,51 @@
 <template>
   <b-form-group
-    :class="`forms-image-uploader ${validationStateClass}`"
+    :class="`multiple-images-uploader ${validationStateClass}`"
     :label="label"
     :label-for="field"
     :description="description"
   >
-    <div v-if="loading">
-      <img src="/loading.svg" />
-    </div>
-    <div class="mb-3" v-else-if="!value">
-      <b-form-file
-        :value="value"
-        :state="validationState"
-        :id="field"
-        :ref="`${field}imageinput`"
-        :placeholder="placeholder"
-        :name="field"
-        :accept="accept.join(',')"
-        browse-text="Sélectionner"
-        drop-placeholder="Déposer l'image ici..."
-        @change="handleChange"
-      />
-      <div class="invalid-feedback" v-if="errors">
-        {{ errors.message }}
-      </div>
-    </div>
-    <div v-else>
-      <figure class="preview">
-        <img v-if="value.sizes" :src="value.sizes.thumbnail" :style="[this.aspectRatioStyle]" />
-        <img src="/loading.svg" v-else />
-
-        <figcaption>
-          <a :href="value.url" target="_blank">
-            {{ value.original_filename }}
+    <b-row>
+      <b-col lg="3" v-for="(picture, index) in value" :key="picture.id">
+        <figure class="preview">
+          <a v-if="picture.sizes" :href="picture.url" target="_blank" :style="{aspectRatio: previewAspectRatio}">
+            <img :src="picture.sizes.thumbnail" :style="[aspectRatioStyle]" />
           </a>
-        </figcaption>
-      </figure>
-      <b-button variant="outline-primary" @click="removeImage">
-        <small>{{ removeImageText }}</small>
-      </b-button>
-    </div>
+          <img v-else src="/loading.svg" />
+          <b-button variant="link" @click="$emit('delete', index)">
+            {{ removeImageText }} <icons-trash />
+          </b-button>
+        </figure>
+      </b-col>
+      <b-col lg="3">
+        <div v-if="loading">
+          <img src="/loading.svg" />
+        </div>
+        <b-form-file v-else
+          :value="nextPicture"
+          :state="validationState"
+          :id="field"
+          :ref="`${field}imageinput`"
+          :placeholder="placeholder"
+          :name="field"
+          :accept="accept.join(',')"
+          browse-text="Téléverser"
+          drop-placeholder="Déposer l'image ici..."
+          @change="handleChange"
+        />
+        <div class="invalid-feedback" v-if="errors">
+          {{ errors.message }}
+        </div>
+      </b-col>
+    </b-row>
   </b-form-group>
 </template>
 
 <script>
+import IconsTrash from "@/assets/icons/trash.svg";
 export default {
-  name: "FormsImageUploader",
+  name: "MultipleImagesUploader",
+  components: {IconsTrash},
   props: {
     accept: {
       default: () => ["*.png", "*.jpg", "*.jpeg", "image/png", "image/jpg", "image/jpeg"],
@@ -84,9 +84,9 @@ export default {
       default: null,
     },
     value: {
-      type: Object,
+      type: Array,
       require: false,
-      default: null,
+      default: [],
     },
     previewAspectRatio: {
       type: String,
@@ -97,7 +97,8 @@ export default {
   data() {
     return ({
       loading: false,
-      errors: null
+      errors: null,
+      nextPicture: null,
     })
   },
   computed: {
@@ -106,8 +107,9 @@ export default {
         return {};
       }
       return {
-        aspectRatio: this.previewAspectRatio,
         objectFit: "cover",
+        height: "100%",
+        width: "100%",
       };
     },
     validationState() {
@@ -135,16 +137,8 @@ export default {
           break;
       }
     },
-    removeImage() {
-      this.$emit("input", null);
-
-      if (this.$refs[`${this.field}imageinput`]) {
-        this.$refs[`${this.field}imageinput`].reset();
-      }
-    },
     async uploadImage(fieldName, fileList) {
       this.loading = true;
-      let image;
       try {
         const formData = new FormData();
         // remove any disabiguity digits at the end
@@ -160,7 +154,7 @@ export default {
 
         formData.append("field", fieldName);
 
-        image = await this.$store.dispatch("images/upload", formData);
+        const image = await this.$store.dispatch("images/upload", formData);
 
         this.$emit("input", image);
       } catch (e) {
@@ -172,25 +166,23 @@ export default {
       }
 
       this.loading = false;
-      return image;
     },
   },
 };
 </script>
 
 <style lang="scss">
-.forms-image-uploader {
+.multiple-images-uploader {
   width: 100%;
-  min-height: 200px;
+  min-height: 160px;
 
   .custom-file {
-    min-height: 180px;
+    min-height: 160px;
+    height: 100%;
   }
 
   .custom-file-label {
-    overflow: hidden;
-    height: calc(200px - 20px);
-    text-align: center;
+    height: calc(100% - 1.95rem);
 
     border: 1px dashed $light-grey;
 
@@ -205,16 +197,23 @@ export default {
     }
 
     &::after {
-      border-left: 0;
-      border-radius: 0.25rem;
       position: absolute;
-      bottom: 0.5rem;
+      bottom: -1.95rem;
       left: 0;
-      right: 0;
+      right: 19px;
       top: auto;
-      width: 50%;
-      min-width: 200px;
-      margin: 0 auto;
+      background: transparent;
+      text-align: right;
+      border-left: none;
+    }
+    &::before {
+      content: '';
+      position: absolute;
+      height: 19px;
+      width: 19px;
+      bottom: -1.575rem;
+      right: 0;
+      background: url('/upload.svg') no-repeat;
     }
   }
 
@@ -223,7 +222,20 @@ export default {
   }
 }
 
-.preview img {
-  max-width: 100%;
+.preview {
+  margin-bottom: 0;
+  a {
+    display: block;
+    
+  }
+  img {
+    max-width: 100%;
+  }
+  button {
+    width: 100%;
+    text-align: right;
+    color: black;
+    padding-right: 0;
+  }
 }
 </style>
