@@ -661,7 +661,7 @@ export default {
   .vuecal__arrow {
     fill: $primary;
     &:hover {
-      fill: $locomotion-dark-green;
+      fill: $primary-dark;
     }
   }
   .vuecal__menu {

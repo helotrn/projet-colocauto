@@ -824,14 +824,14 @@ export default {
         border-style: none none solid none;
         border-color: $gray-400;
         border-width: 2px;
-        color: $locomotion-dark-green;
+        color: $primary-dark;
         &.active {
           font-size: 1.125rem;
           line-height: 1.4;
           font-weight: bold;
           border-width: 3px;
           padding-bottom: calc(1.25rem - 1px);
-          border-color: $locomotion-dark-green;
+          border-color: $primary-dark;
         }
       }
     }
