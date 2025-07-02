@@ -58,6 +58,7 @@ class InvitationController extends RestController
             $user = User::where('email', $request->get("email"))->first();
             if($user) {
                 $user->invitations()->save($item);
+                $item->refresh();
             }
         } catch (ValidationException $e) {
             return $this->respondWithErrors($e->errors(), $e->getMessage());

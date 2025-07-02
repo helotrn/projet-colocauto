@@ -15,7 +15,7 @@
           <forms-builder :definition="maybeReadonlyFormRules" v-model="item" entity="invitations">
             <template v-slot:user_id="{item}">
               <b-form-group :label="$t('fields.user_id')">
-                <router-link v-if="item.user_id" :to="`/admin/users/${item.user_id}`">{{ item.user.full_name }}</router-link>
+                <router-link v-if="item.user_id && item.user" :to="`/admin/users/${item.user_id}`">{{ item.user.full_name }}</router-link>
                 <p v-else>Aucun utilisateur lié</p>
               </b-form-group>
             </template>
