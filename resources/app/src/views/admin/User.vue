@@ -215,7 +215,7 @@
                   </div>
                 </template>
                 <template v-slot:cell(community.name)="row">
-                  <router-link :to="`/admin/communities/${row.item.community_id}`">
+                  <router-link v-if="row.item.community" :to="`/admin/communities/${row.item.community_id}`">
                     {{row.item.community.name}}
                   </router-link>
                 </template>
