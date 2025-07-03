@@ -461,6 +461,18 @@ class User extends AuthenticatableBaseModel
             ->exists();
     }
 
+    public function isResponsibleOfCommunity(int $communityId)
+    {
+        return $this->communities()
+            ->where("communities.id", $communityId)
+            ->whereHas("users", function ($q) {
+                return $q
+                    ->where("community_user.role", "responsible")
+                    ->where("community_user.user_id", $this->id);
+            })
+            ->exists();
+    }
+
     public function isAdminOfCommunityFor(int $userId)
     {
         if( $this->isCommunityAdmin() ){
@@ -587,33 +599,21 @@ class User extends AuthenticatableBaseModel
 
     public function canCreateCommunity()
     {
-        return $this->isAdmin()
-            || $this->isCommunityAdmin()
-            || $this->communities->count() == 0
-            // Users that are part of a community already managed by an admin cannot create new communities
-            || $this->communities()->whereHas("admins")->doesntExist();
+        return true;
     }
 
     public function canCreateLoanableInCommunity($communityId)
     {
         return $this->isAdmin()
             || ($this->isCommunityAdmin() && $this->isAdminOfCommunity($communityId))
-            // If the community is already managed by an admin, users cannot create loanables
-            || $this->communities()
-                ->where("communities.id", $communityId)
-                ->whereHas("admins")
-                ->doesntExist();
+            || $this->isResponsibleOfCommunity($communityId);
     }
 
     public function canInviteMemberInCommunity($communityId)
     {
         return $this->isAdmin()
             || ($this->isCommunityAdmin() && $this->isAdminOfCommunity($communityId))
-            // If the community is already managed by an admin, users cannot invite new members
-            || $this->communities()
-                ->where("communities.id", $communityId)
-                ->whereHas("admins")
-                ->doesntExist();
+            || $this->isResponsibleOfCommunity($communityId);
     }
 
     public function scopeAccessibleBy(Builder $query, $user)
