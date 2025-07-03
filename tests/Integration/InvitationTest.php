@@ -63,6 +63,27 @@ class InvitationTest extends TestCase
             ->assertJson([
                 "email" => $data['email'],
                 "community_id" => $community->id,
+                "for_community_admin" => false,
+            ]);
+    }
+
+    public function testCreateInvitationsNotForAdmin()
+    {
+        $this->withoutEvents();
+        $community = factory(Community::class)->create();
+        $data = [
+            "email" => $this->faker->email,
+            "community_id" => $community->id,
+            "for_community_admin" => false,
+        ];
+
+        $response = $this->json("POST", "/api/v1/invitations", $data);
+        $response->assertStatus(201)
+            ->assertJsonStructure(static::$getInvitationResponseStructure)
+            ->assertJson([
+                "email" => $data['email'],
+                "community_id" => $community->id,
+                "for_community_admin" => false,
             ]);
     }
 
@@ -79,10 +100,8 @@ class InvitationTest extends TestCase
         ];
 
         $response = $this->json("POST", "/api/v1/invitations", $data);
-        $response->assertStatus(422)->assertJson([
-            "errors" => [
-                "for_community_admin" => ["Le champ for community admin est invalide."],
-            ],
+        $response->assertStatus(403)->assertJson([
+            "message" => "This action is unauthorized.",
         ]);
     }
 

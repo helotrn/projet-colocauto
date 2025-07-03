@@ -9,6 +9,9 @@ class CreateRequest extends BaseRequest
 {
     public function authorize()
     {
+        if( !$this->user()->isAdmin() && $this->for_community_admin) {
+            return false;
+        }
         return true;
     }
 
@@ -26,7 +29,7 @@ class CreateRequest extends BaseRequest
         return [
             "email" => "string|required",
              // force false or null for non admins
-            "for_community_admin" => "nullable|boolean".($this->user()->isAdmin() ? "" : "|in:false"),
+            "for_community_admin" => "boolean",
             "community_id" => [
                 "nullable",
                 "numeric",
