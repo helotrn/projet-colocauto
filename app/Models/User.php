@@ -696,8 +696,8 @@ class User extends AuthenticatableBaseModel
     {
         return [
             'createCommunity' => $this->canCreateCommunity(),
-            'createLoanableIn' => $this->communities->map(fn($c) => $this->canCreateLoanableInCommunity($c->id) ? $c->id : null)->filter(),
-            'inviteMemberIn' => $this->communities->map(fn($c) => $this->canInviteMemberInCommunity($c->id) ? $c->id : null)->filter(),
+            'createLoanableIn' => array_values($this->communities->map(fn($c) => $this->canCreateLoanableInCommunity($c->id) ? $c->id : null)->filter()->toArray()),
+            'inviteMemberIn' => array_values($this->communities->map(fn($c) => $this->canInviteMemberInCommunity($c->id) ? $c->id : null)->filter()->toArray()),
         ];
     }
 
