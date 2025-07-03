@@ -36,6 +36,13 @@ export default [
         meta: {
           auth: true,
           title: "titles.community",
+          params: {
+            fields:
+              "id,name," +
+              "approved_users_count," +
+              "users.*,users.avatar.*," +
+              "users.owner.id,invitations",
+          },
           data: {
             communities: {
               retrieveOne: {

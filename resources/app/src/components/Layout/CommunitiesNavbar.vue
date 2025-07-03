@@ -30,6 +30,10 @@ export default {
     },
     changeCommunity(communityId) {
       this.$store.dispatch("communities/setCurrent", { communityId })
+      this.$store.dispatch("communities/retrieveOne", {
+        id: communityId,
+        params: this.$route.meta.params,
+      })
       this.$store.dispatch("dashboard/loadBalance", { community: {id:communityId} })
       this.$store.dispatch("dashboard/loadMembers", { user: this.user })
     },
