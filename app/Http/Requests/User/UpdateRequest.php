@@ -31,9 +31,11 @@ class UpdateRequest extends BaseRequest
         if ($userId = $this->get("id")) {
             $rules["email"] = ["email", "unique:users,email,$userId"];
         }
-        if( !$this->user()->isAdmin() ) {
+        if( !$this->user()->isAdmin() && !$this->user()->isCommunityAdmin() ) {
             // non admin users cannot promote users
             $rules['role'] .= '|not_in:admin,community_admin'; // Laravel 8 can use 'prohibited' instead;
+        } else if( !$this->user()->isAdmin() ){
+            $rules['role'] .= '|not_in:admin';
         }
 
         return $rules;
