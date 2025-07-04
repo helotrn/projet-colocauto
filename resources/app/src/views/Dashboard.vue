@@ -815,26 +815,6 @@ export default {
       padding-top: 0;
     }
 
-    .nav-tabs {
-      background: $white;
-      border-radius: 0.625rem;
-      .nav-link{
-        line-height: 1.575;
-        padding: 1.25rem;
-        border-style: none none solid none;
-        border-color: $gray-400;
-        border-width: 2px;
-        color: $primary-dark;
-        &.active {
-          font-size: 1.125rem;
-          line-height: 1.4;
-          font-weight: bold;
-          border-width: 3px;
-          padding-bottom: calc(1.25rem - 1px);
-          border-color: $primary-dark;
-        }
-      }
-    }
     .tab-content {
       border-top: solid 1px $gray-400;
     }
