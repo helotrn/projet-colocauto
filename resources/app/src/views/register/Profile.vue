@@ -114,7 +114,9 @@ export default {
         await this.submit(false);
         this.$store.commit("user", this.item);
 
-        if( this.hasCommunity ) {
+        if( this.isAdmin ) {
+            this.$router.push("/admin");
+        } else if( this.hasCommunity ) {
           // it was an invitation, skip the step-by-step registration process
           this.$router.push("/app");
         } else {
