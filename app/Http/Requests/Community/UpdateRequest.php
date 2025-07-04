@@ -14,6 +14,7 @@ class UpdateRequest extends BaseRequest
         $id = $this->route("id");
         return $this->user()->isAdmin() ||
             $this->user()->isAdminOfCommunity($id) ||
+            $this->user()->isResponsibleOfCommunity($id) ||
             ($this->user()->isCommunityAdmin() && Community::accessibleBy($this->user())->find($id));
     }
 

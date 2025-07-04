@@ -260,7 +260,7 @@ export default new RestModule(
       }
     },
     async setCurrent({state, commit}, { communityId }) {
-      commit("setCurrent", communityId);
+      commit("setCurrent", parseInt(communityId));
     },
   },
   {

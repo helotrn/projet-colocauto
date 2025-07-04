@@ -7,6 +7,7 @@
     </div>
 
     <h1 v-if="!user.main_community || isFirstCommunity">Créer votre première communauté</h1>
+    <h1 v-else-if="id == 'new'">Créer une autre communauté</h1>
     <community-form
       :loading="loading"
       :community="item"
@@ -31,7 +32,8 @@ export default {
   name: "CommunityInfo",
   data() {
     return ({
-      isFirstCommunity: false
+      isFirstCommunity: false,
+      isNew: false,
     })
   },
   mixins: [DataRouteGuards, UserMixin, FormMixin],
@@ -44,8 +46,10 @@ export default {
   },
   beforeRouteEnter(to, from, next) {
     next((vm) => {
-      if( vm.hasCommunity ){
-        vm.loadCurrentCommunity();
+      if( vm.id != 'new' && vm.hasCommunity ){
+        if( vm.id == vm.currentCommunity ) {
+          vm.loadCurrentCommunity();
+        }
       } else {
         vm.$store.dispatch(`communities/loadEmpty`);
       }
@@ -53,12 +57,20 @@ export default {
   },
   methods: {
     async afterSubmit() {
+      if( this.isNew ){
+        await this.$store.dispatch("loadUser");
+        this.$store.dispatch("communities/setCurrent", { communityId: this.id })
+        this.isNew = false
+        return;
+      }
+
       // reload user to get the main community
       if(!this.hasCommunity) this.$store.dispatch("loadUser");
 
       await this.$store.dispatch('invitations/loadEmpty');
       this.$store.state.invitations.item.community_id = this.item.id;
       this.$store.state.invitations.item.community = this.item;
+
       await this.$store.dispatch('invitations/retrieve', {community_id: this.item.id});
     },
     loadCurrentCommunity(){
@@ -67,22 +79,31 @@ export default {
         params: this.params,
       });
       // load invitations
-      this.$store.dispatch('invitations/retrieve', {
-        community_id: this.currentCommunity,
-      });
       this.$store.dispatch('invitations/loadEmpty').then(() => {
         this.$store.state.invitations.item.community_id = this.currentCommunity;
         this.$store.state.invitations.item.community = this.currentCommunity;
       })
+      this.$store.dispatch('invitations/retrieve', {
+        community_id: this.currentCommunity,
+      });
     },
   },
   beforeMount(){
     if( !this.hasCommunity ) this.isFirstCommunity = true;
+    if( this.id == 'new' ) this.isNew = true;
   },
   watch: {
-    currentCommunity() {
-      this.loadCurrentCommunity()
-    }
+    currentCommunity(current, oldc) {
+      if( !this.initialLoading ) {
+        this.loadCurrentCommunity()
+      }
+    },
+    id() {
+      if(this.id == 'new') {
+        this.isNew = true
+        this.$store.dispatch(`communities/loadEmpty`);
+      }
+    },
   },
 }
 </script>

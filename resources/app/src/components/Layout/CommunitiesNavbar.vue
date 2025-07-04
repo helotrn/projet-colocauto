@@ -1,17 +1,36 @@
 <template>
-  <b-container v-if="isLoggedIn && !isAdmin && user.communities.length > 1" class="pt-5">
-    <h3>Vos communautés</h3>
+  <b-container v-if="isLoggedIn && !isAdmin" class="pt-5">
+    <b-row no-gutters class="d-flex justify-content-between">
+      <h3>Vos communautés</h3>
+      <b-btn
+        v-if="canCreateCommunity"
+        variant="primary"
+        to="/community/new"
+        class="btn-rounded d-md-none"
+      >
+        <span class="sr-only">Ajouter</span>
+        <plus-icon width="18"/>
+      </b-btn>
+    </b-row>
     <b-tabs>
       <template #tabs-end>
         <b-nav-item
           v-for="community in user.communities"
           :key="community.id"
           :active="isCurrentCommunity(community.id)"
-          :disabled="isCommunityForcedByRoute && !isCurrentCommunity(community.id)"
+          :disabled="(isCommunityForcedByRoute || isNewCommunityRoute) && !isCurrentCommunity(community.id)"
           @click="changeCommunity(community.id)"
         >
           <span class="nav-link__text">{{ community.name }}</span>
         </b-nav-item>
+        <b-btn
+          v-if="canCreateCommunity"
+          variant="outline-primary"
+          to="/community/new"
+          class="d-none d-md-block"
+        >
+          Créer une communauté
+        </b-btn>
       </template>
     </b-tabs>
   </b-container>
@@ -19,10 +38,12 @@
 
 <script>
 import UserMixin from "@/mixins/UserMixin";
+import PlusIcon from "@/assets/icons/plus.svg";
 
 export default {
   name: "CommunitiesNavbar",
   mixins: [UserMixin],
+  components: {PlusIcon},
   methods: {
     isCurrentCommunity(communityId) {
       return this.$store.state.communities.current == communityId
@@ -51,17 +72,52 @@ export default {
     isCommunityForcedByRoute() {
       return ['single-loan', 'community-single-loanable', 'single-expense', 'single-refund'].includes(this.$route.name)
     },
+    isNewCommunityRoute(){
+      return this.$route.name === 'community-info' && this.$store.state.communities.item && !this.$store.state.communities.item.id;
+    },
   },
 }
 </script>
 
 <style lang="scss" scoped>
+  @import "~bootstrap/scss/mixins/breakpoints";
+  .tabs {
+    position: relative;
+    .btn {
+      position: absolute;
+      right: 20px;
+      top: 10px;
+      z-index: 10;
+    }
+  }
   .tabs::v-deep {
     .tab-content {
       display: none;
     }
     .nav-tabs {
       border-radius: 0.625rem 0.625rem 0.625rem 0;
+      flex-wrap: nowrap;
+      overflow: scroll hidden;
+      @include media-breakpoint-up(md) {
+        padding-right: 300px;
+      }
+      .nav-link {
+        text-wrap: nowrap;
+        max-width: 300px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      @include media-breakpoint-up(md) {
+        &:after {
+          content: '';
+          position: absolute;
+          background: linear-gradient(279deg, white 0%, white 80%, transparent);
+          height: 100%;
+          width: 300px;
+          right: 0;
+          z-index: 0;
+        }
+      }
     }
   }
 </style>

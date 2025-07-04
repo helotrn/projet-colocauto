@@ -84,6 +84,9 @@ export default {
         ? this.$store.state.communities.current
         : this.user.main_community?.id;
     },
+    canCreateCommunity() {
+      return this.user.can.createCommunity;
+    },
     canCreateLoanableInCurrentCommunity() {
       return this.user.can.createLoanableIn.includes(this.currentCommunity);
     },
