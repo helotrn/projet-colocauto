@@ -160,6 +160,7 @@ export default {
       let title;
       let content;
 
+      if( newError.response ){
       switch (newError.response.status) {
         case 400:
           content = "Erreur dans la requête.";
@@ -196,6 +197,7 @@ export default {
         variant,
         type: this.slug,
       });
+      }
     },
     item: {
       deep: true,
