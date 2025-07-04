@@ -25,12 +25,12 @@
                       :user="item"
                       :is-admin="isAdminOfCommunity(community)"
                       :community-id="community.id"
-                      @updated="reload"
+                      @updated="loadCurrentCommunity"
                     />
                     <invitation-card
                       v-else
                       :invitation="item"
-                      @updated="reload"
+                      @updated="loadCurrentCommunity"
                     />
                   </b-col>
               </b-row>
@@ -60,6 +60,13 @@ export default {
     UserCard,
     InvitationCard,
   },
+  beforeRouteEnter(to, from, next) {
+    next((vm) => {
+      if( vm.hasCommunity ){
+        vm.loadCurrentCommunity();
+      }
+    });
+  },
   computed: {
     // item is loaded manually in beforeRouteEnter
     skipLoadItem() {
@@ -85,11 +92,6 @@ export default {
     },
   },
   methods: {
-    async reload() {
-      this.reloading = true;
-      await this.loadDataRoutesData(this, this.$route);
-      this.reloading = false;
-    },
     slideUsers(increment) {
       const { scrollLeft } = this.$refs.users;
       this.$refs.users.scroll({
@@ -98,6 +100,17 @@ export default {
         behavior: "smooth",
       });
     },
+    async loadCurrentCommunity(){
+      this.$store.dispatch(`communities/retrieveOne`, {
+        id: this.currentCommunity,
+        params: this.$route.meta.params,
+      });
+    },
+  },
+  watch: {
+    currentCommunity() {
+      this.loadCurrentCommunity()
+    }
   },
 };
 </script>

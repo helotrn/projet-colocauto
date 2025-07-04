@@ -32,10 +32,6 @@ export default {
   name: "ProfileLoans",
   mixins: [Authenticated, DataRouteGuards, ListMixin, UserMixin],
   components: { LoanInfoBox },
-  mounted(){
-    this.contextParams.page = 1;
-    this.contextParams['community.id'] = this.currentCommunity;
-  },
   computed: {
     currentCommunity() {
       return this.$store.state.communities.current
@@ -47,12 +43,16 @@ export default {
     }
   },
   watch:{
-    currentCommunity(){
-      // reload data when community change
-      this.contextParams.page = 1;
-      this.contextParams['community.id'] = this.currentCommunity
-      this.loadListData()
-    }
+    contextParams: {
+      deep: true,
+      handler(newp, oldp) {
+        if( this.contextParams.community_id !=  this.$route.params.id ){
+          this.contextParams.community_id = this.$route.params.id
+          this.contextParams.page = 1
+        }
+        
+      },
+    },
   },
 };
 </script>

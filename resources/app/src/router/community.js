@@ -15,10 +15,10 @@ export default [
     },
     children: [
       {
-        path: "",
+        path: ":id",
         name: "community-info",
         component: CommunityInfo,
-        props: { id: 'new' },
+        props: true,
         meta: {
           auth: true,
           creatable: true,
@@ -31,7 +31,8 @@ export default [
         },
       },
       {
-        path: "members",
+        path: ":id/members",
+        name: "community-members",
         component: CommunityMembers,
         meta: {
           auth: true,
@@ -43,30 +44,11 @@ export default [
               "users.*,users.avatar.*," +
               "users.owner.id,invitations",
           },
-          data: {
-            communities: {
-              retrieveOne: {
-                params: {
-                  fields:
-                    "id,name," +
-                    "approved_users_count," +
-                    "users.*,users.avatar.*," +
-                    "users.owner.id,invitations",
-                },
-                id({ user }) {
-                  if (!user || !user.main_community || !user.main_community.id) {
-                    return 0;
-                  }
-
-                  return user.main_community.id;
-                },
-              },
-            },
-          },
         },
       },
       {
-        path: "loanables",
+        path: ":id/loanables",
+        name: "community-loanables",
         component: CommunityLoanables,
         meta: {
           auth: true,
@@ -82,8 +64,8 @@ export default [
         }
       },
       {
-        path: "loanables/:id",
-        name: "single-loanable",
+        path: ":cid/loanables/:id",
+        name: "community-single-loanable",
         component: CommunityLoanable,
         props: true,
         meta: {
@@ -108,7 +90,8 @@ export default [
         },
       },
       {
-        path: "loans",
+        path: ":id/loans",
+        name: "community-loans",
         component: CommunityLoans,
         meta: {
           auth: true,
@@ -143,6 +126,9 @@ export default [
                   "handover.status",
                   "payment.status",
                 ].join(","),
+                community_id({route}){
+                  return route.params.id
+                },
               },
             },
           },

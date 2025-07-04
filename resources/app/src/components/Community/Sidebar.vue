@@ -1,16 +1,16 @@
 <template>
   <div class="community-sidebar">
     <ul v-if="user">
-      <b-nav-item to="/community">
+      <b-nav-item :to="`/community/${currentCommunity}`">
         Informations
       </b-nav-item>
-      <b-nav-item to="/community/members">
+      <b-nav-item :to="`/community/${currentCommunity}/members`">
         Membres
       </b-nav-item>
-      <b-nav-item to="/community/loanables">
+      <b-nav-item :to="`/community/${currentCommunity}/loanables`">
         Véhicules
       </b-nav-item>
-      <b-nav-item to="/community/loans">
+      <b-nav-item :to="`/community/${currentCommunity}/loans`">
         Historique d'emprunts
       </b-nav-item>
     </ul>

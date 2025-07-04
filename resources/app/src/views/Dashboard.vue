@@ -35,7 +35,7 @@
               <p>Au sein de chaque communauté, vous pouvez partager avec les membres l’usage d’un ou plusieurs véhicules.</p>
               <b-button
                 variant="primary"
-                to="/community/loanables/new"
+                :to="`/community/${currentCommunity}/loanables/new`"
               >
                 Ajouter un véhicule
               </b-button>
@@ -237,13 +237,13 @@
                   <transition-group name="dashboard-list">
                     <b-row no-gutters class="header" key="header">
                       <h3 class="mb-0">{{ totalLoanables }} véhicule{{totalLoanables > 1 ? 's' : ''}}</h3>
-                      <b-btn variant="outline-primary" to="/community/loanables">
+                      <b-btn variant="outline-primary" :to="`/community/${currentCommunity}/loanables`">
                         {{ isResponsibleOfCurrentCommunity ? 'Gérer les véhicules' : 'Voir les véhicules' }}
                       </b-btn>
                       <b-btn
                         v-if="canCreateLoanableInCurrentCommunity"
                         variant="primary"
-                        to="/community/loanables/new"
+                        :to="`/community/${currentCommunity}/loanables/new`"
                         class="btn-rounded"
                       >
                         <span class="sr-only">Ajouter</span>
@@ -280,7 +280,7 @@
                   <transition-group name="dashboard-list">
                     <b-row no-gutters class="header" key="header">
                       <h3 class="mb-0">{{ totalMembers }} membre{{totalMembers > 1 ? 's' : ''}}</h3>
-                      <b-btn variant="outline-primary" to="/community/members">
+                      <b-btn variant="outline-primary" :to="`/community/${currentCommunity}/members`">
                         {{ isResponsibleOfCurrentCommunity ? 'Gérer les membres' : 'Voir les membres' }}
                       </b-btn>
                       <b-btn

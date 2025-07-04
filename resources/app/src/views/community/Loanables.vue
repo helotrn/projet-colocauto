@@ -1,5 +1,5 @@
 <template>
-  <div class="profile-loanables" v-if="routeDataLoaded && !loading && loaded">
+  <div class="profile-loanables" v-if="loaded && !loading">
     <div v-if="user.owner">
 
       <b-row v-if="loanables.length === 0">
@@ -36,7 +36,7 @@
       <b-btn
         v-if="canCreateLoanableInCurrentCommunity"
         variant="outline-primary"
-        to="/community/loanables/new"
+        :to="`/community/${currentCommunity}/loanables/new`"
       >Ajouter un véhicule</b-btn>
     </b-row>
   </div>
@@ -70,6 +70,9 @@ export default {
     };
   },
   computed: {
+    skipLoadItem() {
+      return true;
+    },
     loanables() {
       return this.data.filter(l => l.community?.id == this.currentCommunity)
     }

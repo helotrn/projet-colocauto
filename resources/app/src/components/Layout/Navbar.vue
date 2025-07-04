@@ -132,7 +132,7 @@
             </span>
             <span class="nav-link__text">Espace référent</span>
           </b-dropdown-item>
-          <b-dropdown-item to="/community/loans" v-if="!(isGlobalAdmin || isCommunityAdmin) && hasCompletedRegistration" :disabled="!user.main_community">
+          <b-dropdown-item :to="`/community/${currentCommunity}/loans`" v-if="!(isGlobalAdmin || isCommunityAdmin) && hasCompletedRegistration" :disabled="!user.main_community">
             <span class="nav-link__icon">
               <b-icon icon="list-check" />
             </span>

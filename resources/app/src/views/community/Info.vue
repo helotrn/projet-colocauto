@@ -45,18 +45,7 @@ export default {
   beforeRouteEnter(to, from, next) {
     next((vm) => {
       if( vm.hasCommunity ){
-        vm.$store.dispatch(`communities/retrieveOne`, {
-          id: vm.currentCommunity,
-          params: vm.params,
-        });
-        // load invitations
-        vm.$store.dispatch('invitations/retrieve', {
-          community_id: vm.currentCommunity,
-        });
-        vm.$store.dispatch('invitations/loadEmpty').then(() => {
-          vm.$store.state.invitations.item.community_id = vm.currentCommunity;
-          vm.$store.state.invitations.item.community = vm.currentCommunity;
-        })
+        vm.loadCurrentCommunity();
       } else {
         vm.$store.dispatch(`communities/loadEmpty`);
       }
@@ -72,9 +61,28 @@ export default {
       this.$store.state.invitations.item.community = this.item;
       await this.$store.dispatch('invitations/retrieve', {community_id: this.item.id});
     },
+    loadCurrentCommunity(){
+      this.$store.dispatch(`communities/retrieveOne`, {
+        id: this.currentCommunity,
+        params: this.params,
+      });
+      // load invitations
+      this.$store.dispatch('invitations/retrieve', {
+        community_id: this.currentCommunity,
+      });
+      this.$store.dispatch('invitations/loadEmpty').then(() => {
+        this.$store.state.invitations.item.community_id = this.currentCommunity;
+        this.$store.state.invitations.item.community = this.currentCommunity;
+      })
+    },
   },
   beforeMount(){
     if( !this.hasCommunity ) this.isFirstCommunity = true;
-  }
+  },
+  watch: {
+    currentCommunity() {
+      this.loadCurrentCommunity()
+    }
+  },
 }
 </script>

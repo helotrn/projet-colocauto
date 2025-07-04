@@ -28,19 +28,28 @@ export default {
       return this.$store.state.communities.current == communityId
       || (this.$store.state.communities.current === null && this.user.main_community.id == communityId)
     },
-    changeCommunity(communityId) {
-      this.$store.dispatch("communities/setCurrent", { communityId })
-      this.$store.dispatch("communities/retrieveOne", {
-        id: communityId,
-        params: this.$route.meta.params,
-      })
-      this.$store.dispatch("dashboard/loadBalance", { community: {id:communityId} })
-      this.$store.dispatch("dashboard/loadMembers", { user: this.user })
+    async changeCommunity(communityId) {
+      const matchedPath = this.$route.path.match(/community\/([0-9]*)(\/.*)?/)
+      if( matchedPath ){
+        this.$router.push(this.$route.path.replace(matchedPath[1], communityId))
+        setTimeout(() => this.$store.dispatch("communities/setCurrent", { communityId }), 300);
+      } else {
+        this.$store.dispatch("communities/retrieveOne", {
+          id: communityId,
+          params: this.$route.meta.params,
+        })
+
+        // if dashboard
+        this.$store.dispatch("dashboard/loadBalance", { community: {id:communityId} })
+        this.$store.dispatch("dashboard/loadMembers", { user: this.user })
+
+        this.$store.dispatch("communities/setCurrent", { communityId })
+      }
     },
   },
   computed: {
     isCommunityForcedByRoute() {
-      return ['single-loan', 'single-loanable', 'single-expense', 'single-refund'].includes(this.$route.name)
+      return ['single-loan', 'community-single-loanable', 'single-expense', 'single-refund'].includes(this.$route.name)
     },
   },
 }
