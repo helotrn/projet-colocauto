@@ -1,5 +1,5 @@
 <template>
-  <b-container v-if="isLoggedIn && !isAdmin" class="pt-5">
+  <b-container v-if="isLoggedIn && !isAdmin && !isRegisterRoute" class="pt-5">
     <b-row no-gutters class="d-flex justify-content-between">
       <h3>Vos communautés</h3>
       <b-btn
@@ -74,6 +74,9 @@ export default {
     },
     isNewCommunityRoute(){
       return this.$route.name === 'community-info' && this.$store.state.communities.item && !this.$store.state.communities.item.id;
+    },
+    isRegisterRoute(){
+      return ['register-intro', 'register-profile', 'register-community', 'invitation-to-community', 'register-loanable'].includes(this.$route.name)
     },
   },
 }
