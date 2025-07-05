@@ -83,9 +83,6 @@ class EventServiceProvider extends ServiceProvider
         "App\Events\BorrowerCompletedEvent" => [
             "App\Listeners\SendBorrowerCompletedEmails",
         ],
-        "App\Events\LoanableCreatedEvent" => [
-            "App\Listeners\SendLoanableCreatedEmails",
-        ],
         "App\Events\BorrowerSuspendedEvent" => [
             "App\Listeners\CancelFutureLoans",
             "App\Listeners\SendBorrowerSuspendedEmails",
