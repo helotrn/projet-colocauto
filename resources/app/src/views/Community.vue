@@ -1,11 +1,11 @@
 <template>
   <layout-page name="community" padded>
     <b-row>
-      <b-col md="4" lg="3">
-        <community-sidebar v-if="user.main_community && !isNewCommunityRoute" />
+      <b-col md="4" lg="3" v-if="showSidebar">
+        <community-sidebar  />
       </b-col>
 
-      <b-col md="8" lg="9">
+      <b-col :md="showSidebar ? 8 : 12" :lg="showSidebar ? 9 : 12">
         <router-view />
       </b-col>
     </b-row>
@@ -30,6 +30,9 @@ export default {
     isNewCommunityRoute(){
       return this.$route.name === 'community-info' && this.$store.state.communities.item && !this.$store.state.communities.item.id;
     },
+    showSidebar() {
+      return this.user.main_community && !this.isNewCommunityRoute
+    }
   },
   beforeRouteEnter(to, from, next) {
     next((vm) => {
