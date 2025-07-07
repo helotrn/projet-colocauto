@@ -61,11 +61,15 @@ export default {
         await this.$store.dispatch("loadUser");
         this.$store.dispatch("communities/setCurrent", { communityId: this.id })
         this.isNew = false
+        this.isFirstCommunity = false;
         return;
       }
 
       // reload user to get the main community
-      if(!this.hasCommunity) this.$store.dispatch("loadUser");
+      if(!this.hasCommunity) {
+        await this.$store.dispatch("loadUser");
+        this.isFirstCommunity = false;
+      }
 
       await this.$store.dispatch('invitations/loadEmpty');
       this.$store.state.invitations.item.community_id = this.item.id;
