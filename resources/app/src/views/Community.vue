@@ -38,6 +38,8 @@ export default {
         return vm.$router.replace(`/community/${vm.currentCommunity}`);
       } else if( community_id && community_id != vm.currentCommunity && community_id != 'new' ) {
         vm.$store.dispatch("communities/setCurrent", { communityId: community_id })
+      } else if(!community_id) {
+        return vm.$router.replace('/community/new');
       }
     })
   },
