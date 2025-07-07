@@ -227,7 +227,7 @@
             </b-row>
           </section>
 
-          <loan-modal-box v-model="showModal" :loan="currentLoan" @hidden="refresh"/>
+          <loan-modal-box v-model="showModal" :loan="currentLoan" @hidden="reloadDashboard"/>
 
           <!-- loanables container -->
           <section class="page__section position-relative">
@@ -463,7 +463,7 @@ export default {
     }
   },
   mounted() {
-    this.reloadDashboard();
+    if(this.user) this.reloadDashboard();
   },
   data: () => ({
     defaultView: 'week',
@@ -640,15 +640,12 @@ export default {
       });
       this.showModal = true;
     },
-    refresh() {
-      this.$store.dispatch("dashboard/reload", this.user);
-    },
     changeCommunity(communityId) {
       this.$store.dispatch("communities/setCurrent", { communityId })
       this.$store.dispatch("dashboard/loadBalance", { community: {id:communityId} })
       this.$store.dispatch("dashboard/loadMembers", { user: this.user })
     },
-    reloadDashboard() { 
+    reloadDashboard() {
       this.$store.dispatch("dashboard/reload", this.user);
     },
     reloadUser() {
