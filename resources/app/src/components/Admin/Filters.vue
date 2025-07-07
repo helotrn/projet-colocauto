@@ -96,6 +96,7 @@ export default {
   },
   computed: {
     appliedFilters() {
+      if(!this.filters) return [];
       return Object.keys(this.filters).filter((f) => !!this.params[f]);
     },
   },
