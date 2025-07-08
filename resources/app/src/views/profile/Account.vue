@@ -121,12 +121,13 @@ import UserEmailForm from "@/components/User/EmailForm.vue";
 import UserPasswordForm from "@/components/User/PasswordForm.vue";
 import ConditionsUpdatedToast from "@/views/ConditionsUpdatedToast.vue";
 
+import Authenticated from "@/mixins/Authenticated";
 import DataRouteGuards from "@/mixins/DataRouteGuards";
 import FormMixin from "@/mixins/FormMixin";
 
 export default {
   name: "ProfileAccount",
-  mixins: [DataRouteGuards, FormMixin],
+  mixins: [Authenticated, DataRouteGuards, FormMixin],
   components: {
     ProfileForm,
     FormsValidatedInput,

@@ -23,6 +23,7 @@
 
 <script>
 import DataRouteGuards from "@/mixins/DataRouteGuards";
+import Authenticated from "@/mixins/Authenticated";
 import UserMixin from "@/mixins/UserMixin";
 import FormMixin from "@/mixins/FormMixin";
 import CommunityForm from "@/components/Community/CommunityForm.vue";
@@ -36,7 +37,7 @@ export default {
       isNew: false,
     })
   },
-  mixins: [DataRouteGuards, UserMixin, FormMixin],
+  mixins: [Authenticated, DataRouteGuards, UserMixin, FormMixin],
   components: {SvgDiscussion, CommunityForm},
   computed: {
     // item is loaded manually in beforeRouteEnter
