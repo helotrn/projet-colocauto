@@ -3,6 +3,7 @@
 namespace App\Http\Requests\User;
 
 use App\Http\Requests\BaseRequest;
+use App\Models\Community;
 
 class CreateRequest extends BaseRequest
 {
@@ -21,6 +22,19 @@ class CreateRequest extends BaseRequest
             $rules["email"] = ["email", "unique:users,email,$userId"];
         }
 
+        if ($this->user()->isCommunityAdmin()) {
+            $accessibleCommunityIds = implode(
+                ",",
+                Community::accessibleBy($this->user())
+                    ->pluck("id")
+                    ->toArray()
+            );
+            $rules["communities.*.id"] = [
+                "numeric",
+                "in:$accessibleCommunityIds",
+            ];
+        }
+
         return $rules;
     }
 
@@ -28,6 +42,7 @@ class CreateRequest extends BaseRequest
     {
         return [
             "email.unique" => "Le courriel est déjà pris.",
+            "communities.*.id.in" => "Vous n'avez pas accès à cette communauté.",
         ];
     }
 }

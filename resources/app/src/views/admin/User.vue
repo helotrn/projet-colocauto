@@ -147,7 +147,7 @@
               </b-table>
             </div>
 
-            <div class="form__section" v-if="!!item.id">
+            <div class="form__section">
               <h2>Communautés</h2>
 
               <b-table

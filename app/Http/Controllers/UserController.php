@@ -583,6 +583,7 @@ class UserController extends RestController
                 "accept_conditions" => false,
                 "gdpr" => false,
                 "newsletter" => false,
+                "communities" => [],
             ],
             "form" => [
                 "general" => [
