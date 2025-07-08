@@ -2,7 +2,7 @@
   <div class="wallet-expenses">
     <b-row>
       <b-col class="admin__buttons">
-        <b-btn v-if="creatable" :to="`/wallet/${slug}/new`">
+        <b-btn variant="outline-primary" v-if="creatable" :to="`/wallet/${slug}/new`">
           {{ $t("list.add") | capitalize }}
         </b-btn>
       </b-col>
