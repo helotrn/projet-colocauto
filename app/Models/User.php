@@ -632,10 +632,6 @@ class User extends AuthenticatableBaseModel
                     return $q->whereHas("communities", function ($q) use ($user) {
                         $q->withAdminUser($user);
                     });
-                })
-                // ...or a newly created member that does not have a community yet
-                ->orWhere(function ($q) use ($user) {
-                    return $q->whereDoesntHave("communities")->whereNull('role');
                 });
         }
 
