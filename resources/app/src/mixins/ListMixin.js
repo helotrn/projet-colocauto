@@ -18,6 +18,7 @@ export default {
       return this.$store.state[this.slug];
     },
     contextParams() {
+      if(!this.context) return null;
       return this.context.params;
     },
     creatable() {

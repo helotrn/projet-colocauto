@@ -613,7 +613,7 @@ export default {
       return this.$store.state.loans.item
     },
     waitingInvitations() {
-      if( !Array.isArray(this.user.invitations) ) return [];
+      if( !this.user || !Array.isArray(this.user.invitations) ) return [];
       return this.user.invitations.filter(inv => inv.consumed_at == null);
     }
   },

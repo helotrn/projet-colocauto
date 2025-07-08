@@ -85,13 +85,13 @@ export default {
         : this.user.main_community?.id;
     },
     canCreateCommunity() {
-      return this.user.can.createCommunity;
+      return this.user.can && this.user.can.createCommunity;
     },
     canCreateLoanableInCurrentCommunity() {
-      return this.user.can.createLoanableIn.includes(this.currentCommunity);
+      return this.user.can && this.user.can.createLoanableIn.includes(this.currentCommunity);
     },
     canInviteMemberInCurrentCommunity() {
-      return this.user.can.inviteMemberIn.includes(this.currentCommunity);
+      return this.user.can && this.user.can.inviteMemberIn.includes(this.currentCommunity);
     },
     isResponsibleOfCurrentCommunity() {
       return this.user.communities.find(c => c.id == this.currentCommunity)?.role == 'responsible';

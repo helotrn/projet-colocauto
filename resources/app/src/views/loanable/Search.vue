@@ -208,7 +208,7 @@ export default {
   },
   beforeRouteEnter(to, from, next) {
     next((vm) => {
-      if (vm.user.communities.filter((c) => !!c.approved_at && !c.suspended_at).length === 0) {
+      if (vm.user && vm.user.communities && vm.user.communities.filter((c) => !!c.approved_at && !c.suspended_at).length === 0) {
         vm.$store.commit("addNotification", {
           content:
             "Il faut avoir été accepté dans un quartier pour faire une recherche de véhicule",
