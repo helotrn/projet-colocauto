@@ -13,7 +13,9 @@ export default {
       },
       token: "code (créé automatiquement)",
       consumed_at: "date d'utilisation (rempli automatiquement)",
-      user_id: 'Utilisateur',
+      user: {id: 'Utilisateur'},
+      created_at: 'Envoyée le',
+      consumed_at: 'Consomée le',
     },
     placeholders: {
       email: 'Couriel',

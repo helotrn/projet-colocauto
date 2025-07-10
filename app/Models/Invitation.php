@@ -33,7 +33,7 @@ class Invitation extends BaseModel
         "user.id" => [
             "type" => "relation",
             "query" => [
-                "slug" => "unsers",
+                "slug" => "users",
                 "value" => "id",
                 "text" => "full_name",
                 "params" => [
@@ -41,6 +41,8 @@ class Invitation extends BaseModel
                 ]
             ]
         ],
+        "created_at" => "date",
+        "consumed_at" => "date",
     ];
 
     protected $fillable = ["community_id", "email", "for_community_admin"];
