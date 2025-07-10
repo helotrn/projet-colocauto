@@ -38,11 +38,22 @@ export default {
     var myChart = echarts.init(this.$refs.chart);
     var option;
 
-    await this.$store.dispatch(`${this.type}/retrieve`);
-
     const time = [5,4,3,2,1,0].map(i => this.$dayjs().startOfDay().subtract(i, "week"))
     time[time.length-1] = this.$dayjs().startOfDay().add(1, "day").subtract(1, "minute");
-    let series = ['En attente', 'Utilisée'].map(name => {
+
+    Object.keys(this.$store.state[this.type].params).forEach(param => {
+      if( !['page', 'per_page', 'q', 'order'].includes(param) ){
+        this.$store.commit(`${this.type}/setParam`, { name: param, value: undefined });
+      }
+    })
+    await this.$store.dispatch(`${this.type}/retrieve`, {
+      order: 'created_at',
+      created_at: time[0].format('YYYY-MM-DDTHH:mm:ss[Z]')+'@',
+      per_page: -1,
+    });
+    
+    const labels = ['Expirée', 'Désactivée', 'En attente', 'Utilisée'];
+    let series = labels.map(name => {
       return {
         name,
         type: 'line',
@@ -60,9 +71,15 @@ export default {
           break;
         } else if(this.$dayjs(invitation.created_at).isBefore(time[i]) ) {
           if( invitation.consumed_at ) {
-            series[1].data[i-1]++;
+            if( invitation.status == 'expired' ){
+              series[0].data[i-1]++;
+            } else if( invitation.status == 'canceled' ){
+              series[1].data[i-1]++;
+            } else {
+              series[3].data[i-1]++;
+            }
           } else {
-            series[0].data[i-1]++;
+            series[2].data[i-1]++;
           }
           break;
         }
@@ -82,9 +99,7 @@ export default {
           }
         }
       },
-      legend: {
-        data: ['En attente', /*'Renvoyée',*/ 'Utilisée'/*, 'Désactivée', 'Périmée'*/]
-      },
+      legend: { data: labels, top: 30 },
       toolbox: {
         feature: {
           saveAsImage: {}

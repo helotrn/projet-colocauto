@@ -55,6 +55,8 @@ class InvitationController extends RestController
     {
         try {
             $item = parent::validateAndCreate($request);
+            $item->status = "pending";
+            $item->save();
             $user = User::where('email', $request->get("email"))->first();
             if($user) {
                 $user->invitations()->save($item);
@@ -98,6 +100,7 @@ class InvitationController extends RestController
         }
 
         try {
+            $item->status = "canceled";
             $item->consume();
             $response = $this->respondWithItem($request, $item);
         } catch (ValidationException $e) {
@@ -122,6 +125,7 @@ class InvitationController extends RestController
             return $this->respondWithMessage(__("validation.invitation.community_is_missing"), 400);
         }
 
+        $item->status = "accepted";
         $item->consume();
         $request->user()->invitations()->save($item);
         if( !$item->community->users()->pluck('id')->contains($request->user()->id) ) {

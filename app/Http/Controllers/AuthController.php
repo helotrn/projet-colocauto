@@ -142,6 +142,7 @@ class AuthController extends RestController
                     $borrower->approved_at = new \Carbon\Carbon();
                     $borrower->save();
                 }
+                $invitation->status = "used";
                 $invitation->consume();
             }
 
