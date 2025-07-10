@@ -19,14 +19,7 @@ export default {
     title: {
       type: String,
       required: true,
-    }
-  },
-  mounted(){
-    this.$store.dispatch(`${this.type}/retrieve`, {
-      order: 'created_at',
-      per_page: -1,
-      fields: 'id',
-    });
+    },
   },
   computed: {
     value(){

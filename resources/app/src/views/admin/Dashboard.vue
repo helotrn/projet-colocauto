@@ -18,7 +18,7 @@
         <stat-card type="loans" title="Total des emprunts réalisés 🚗" />
       </b-col>
     </b-row>
-    <stat-chart type="invitations" />
+    <stat-chart type="invitations" title="Invitations par semaine" />
   </div>
 </template>
 
@@ -29,6 +29,51 @@ import StatCard from "@/components/StatCard"
 export default {
   name: "AdminDashboard",
   components: {StatChart, StatCard},
+  methods: {
+    resetParams(slug){
+      Object.keys(this.$store.state[slug].params).forEach(param => {
+        if( !['page', 'per_page', 'q', 'order'].includes(param) ){
+          this.$store.commit(`${slug}/setParam`, { name: param, value: undefined });
+        }
+      })
+    }
+  },
+  mounted(){
+    this.resetParams('invitations');
+    this.$store.dispatch('invitations/retrieve', {
+      order: 'created_at',
+      per_page: -1,
+      created_at: this.$dayjs().startOfDay().subtract(5, "week").format('YYYY-MM-DDTHH:mm:ss[Z]')+'@'
+    });
+
+    this.resetParams('users');
+    this.$store.dispatch('users/retrieve', {
+      order: 'created_at',
+      per_page: -1,
+      fields: 'id',
+    });
+
+    this.resetParams('loanables');
+    this.$store.dispatch('loanables/retrieve', {
+      order: 'created_at',
+      per_page: -1,
+      fields: 'id',
+    });
+
+    this.resetParams('loans');
+    this.$store.dispatch('loans/retrieve', {
+      order: 'created_at',
+      per_page: -1,
+      fields: 'id',
+    });
+
+    this.resetParams('communities');
+    this.$store.dispatch('communities/retrieve', {
+      order: 'created_at',
+      per_page: -1,
+      fields: 'id',
+    });
+  }
 };
 </script>
 
