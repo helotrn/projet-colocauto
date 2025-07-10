@@ -10,7 +10,7 @@ import {
   GridComponent,
   LegendComponent
 } from 'echarts/components';
-import { LineChart } from 'echarts/charts';
+import { LineChart, PieChart } from 'echarts/charts';
 import { UniversalTransition } from 'echarts/features';
 import { CanvasRenderer } from 'echarts/renderers';
 
@@ -21,6 +21,7 @@ echarts.use([
   GridComponent,
   LegendComponent,
   LineChart,
+  PieChart,
   CanvasRenderer,
   UniversalTransition
 ]);
@@ -28,7 +29,6 @@ echarts.use([
 export default {
   name: "StatChart",
   props: {
-    // only invitations type is supported
     type: {
       type: String,
       required: true,
@@ -122,6 +122,50 @@ export default {
           series
         };
 
+      } else if(this.type == 'communities'){
+        let total = this.$store.state.communities.data.reduce((acc, community) => acc + community.approved_users_count , 0)
+        let series = [{
+          name: this.title,
+          type: 'pie',
+          radius: ['40%', '70%'],
+          avoidLabelOverlap: false,
+          label: {
+            show: false,
+            position: 'center'
+          },
+          emphasis: {
+            label: {
+              show: true,
+              fontSize: 40,
+              fontWeight: 'bold'
+            }
+          },
+          labelLine: {
+            show: false
+          },
+          data: this.$store.state.communities.data
+            .filter(community => community.approved_users_count > 1)
+            .map(community => ({
+              value: community.approved_users_count,
+              name: `${community.name} (${Math.round(community.approved_users_count/total*10000)/100}%)`,
+            }))
+        }]
+        option = {
+          title: {
+            text: this.title
+          },
+          tooltip: {
+            trigger: 'item'
+          },
+          legend: {
+            top: '30',
+            orient: 'vertical',
+            left: 'left',
+            // show only groups with more than 2 users in the legend
+            data: series[0].data.filter(d => d.value > 2),
+          },
+          series,
+        };
       }
       option && myChart.setOption(option);
     }

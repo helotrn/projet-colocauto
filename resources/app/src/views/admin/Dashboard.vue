@@ -18,6 +18,7 @@
         <stat-card type="loans" title="Total des emprunts réalisés 🚗" />
       </b-col>
     </b-row>
+    <stat-chart type="communities" title="Nombre de participant.e.s par groupe" />
     <stat-chart type="invitations" title="Invitations par semaine" />
   </div>
 </template>
@@ -69,9 +70,9 @@ export default {
 
     this.resetParams('communities');
     this.$store.dispatch('communities/retrieve', {
-      order: 'created_at',
+      order: '-approved_users_count',
       per_page: -1,
-      fields: 'id',
+      fields: 'id, name, approved_users_count',
     });
   }
 };
