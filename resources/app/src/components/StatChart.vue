@@ -195,7 +195,7 @@ export default {
           for( let i=1; i<time.length; i++ ){
             if( this.$dayjs(loan.departure_at).isBefore(time[i-1]) ) {
               break;
-            } else if(this.$dayjs(loan.created_at).isBefore(time[i]) ) {
+            } else if(this.$dayjs(loan.departure_at).isBefore(time[i]) ) {
               if( loan.status == 'completed' ){
                 series[0].data[i-1]++;
               } else if( loan.status == 'in_process' ){
