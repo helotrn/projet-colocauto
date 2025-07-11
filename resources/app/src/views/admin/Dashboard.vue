@@ -20,6 +20,9 @@
     </b-row>
     <stat-chart type="communities" title="Nombre de participant.e.s par groupe" class="mb-4" />
     <stat-chart type="invitations" title="Invitations par semaine" class="mb-4" />
+
+    <h2>Zoom sur les emprunts 🏁</h2>
+    <stat-chart type="loans" title="Nombre d'emprunt par statuts et par mois" class="mb-4" />
   </div>
 </template>
 
@@ -59,9 +62,9 @@ export default {
 
     this.resetParams('loans');
     this.$store.dispatch('loans/retrieve', {
-      order: 'created_at',
+      order: 'departure_at',
       per_page: -1,
-      fields: 'id',
+      fields: 'id, departure_at, status, takeover.status, community.id, community.name',
     });
 
     this.resetParams('communities');

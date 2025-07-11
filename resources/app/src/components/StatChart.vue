@@ -176,6 +176,78 @@ export default {
           },
           series,
         };
+      } else if( this.type == 'loans' ){
+        const time = [7,6,5,4,3,2,1,0].map(i => this.$dayjs().startOfDay().subtract(i, "month"))
+        time[time.length-1] = this.$dayjs().startOfDay().add(1, "day").subtract(1, "minute");
+
+        const labels = ['Achevé', 'En attente de retour', 'En attente de départ', 'Annulé'];
+        let series = labels.map(name => {
+          return {
+            name,
+            type: 'line',
+            emphasis: {
+              focus: 'series'
+            },
+            data: [0,0,0,0,0,0,0],
+          }
+        })
+        this.$store.state.loans.data.forEach(loan => {
+          for( let i=1; i<time.length; i++ ){
+            if( this.$dayjs(loan.departure_at).isBefore(time[i-1]) ) {
+              break;
+            } else if(this.$dayjs(loan.created_at).isBefore(time[i]) ) {
+              if( loan.status == 'completed' ){
+                series[0].data[i-1]++;
+              } else if( loan.status == 'in_process' ){
+                if( loan.takeover.status == 'completed' ) {
+                  series[1].data[i-1]++;
+                } else {
+                  series[2].data[i-1]++;
+                }
+              } else if( loan.status == 'canceled' ){
+                series[3].data[i-1]++;
+              }
+              break;
+            }
+          }
+        })
+
+        option = {
+          title: {
+            text: this.title
+          },
+          tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+              type: 'cross',
+              label: {
+                backgroundColor: '#6a7985'
+              }
+            }
+          },
+          legend: { data: labels, top: 30 },
+          color: ['#91cc75', '#fac858', '#eda535', '#ee6666'],
+          toolbox: {
+            feature: {
+              saveAsImage: {}
+            }
+          },
+          grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+          },
+          xAxis: [
+            {
+              type: 'category',
+              boundaryGap: false,
+              data: time.slice(1).map(t => t.format('MMMM YYYY'))
+            }
+          ],
+          yAxis: [{type: 'value'}],
+          series
+        };
       }
       option && myChart.setOption(option);
     }
