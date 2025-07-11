@@ -100,6 +100,7 @@ export default {
             }
           },
           legend: { data: labels, top: 30 },
+          color: ['#000','#ee6666', '#fac858', '#91cc75'],
           toolbox: {
             feature: {
               saveAsImage: {}
