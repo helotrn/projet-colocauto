@@ -23,7 +23,7 @@ export default {
   },
   computed: {
     value(){
-      return this.$store.state[this.type].data.length
+      return this.$store.state[this.type].total
     },
     loading(){
       return !this.$store.state[this.type].loaded

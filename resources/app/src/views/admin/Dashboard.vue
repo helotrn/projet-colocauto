@@ -49,15 +49,11 @@ export default {
 
     this.resetParams('users');
     this.$store.dispatch('users/retrieve', {
-      order: 'created_at',
-      per_page: -1,
       fields: 'id',
     });
 
     this.resetParams('loanables');
     this.$store.dispatch('loanables/retrieve', {
-      order: 'created_at',
-      per_page: -1,
       fields: 'id',
     });
 
