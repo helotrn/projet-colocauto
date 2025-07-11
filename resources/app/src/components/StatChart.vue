@@ -124,11 +124,14 @@ export default {
         };
 
       } else if(this.type == 'communities'){
-        let total = this.$store.state.communities.data.reduce((acc, community) => acc + community.approved_users_count , 0)
+        let total = this.$store.state.communities.data
+          .filter(community => community.approved_users_count > 1)
+          .reduce((acc, community) => acc + community.approved_users_count , 0)
         let series = [{
           name: this.title,
           type: 'pie',
           radius: ['40%', '70%'],
+          left: '30%',
           avoidLabelOverlap: false,
           label: {
             show: false,
@@ -138,7 +141,8 @@ export default {
             label: {
               show: true,
               fontSize: 40,
-              fontWeight: 'bold'
+              fontWeight: 'bold',
+              formatter: '{c}'
             }
           },
           labelLine: {
@@ -148,7 +152,7 @@ export default {
             .filter(community => community.approved_users_count > 1)
             .map(community => ({
               value: community.approved_users_count,
-              name: `${community.name} (${Math.round(community.approved_users_count/total*10000)/100}%)`,
+              name: community.name,
             }))
         }]
         option = {
@@ -156,14 +160,19 @@ export default {
             text: this.title
           },
           tooltip: {
-            trigger: 'item'
+            trigger: 'item',
+            formatter: '{a} <br/>{b}: {c} ({d}%)'
           },
           legend: {
             top: '30',
             orient: 'vertical',
             left: 'left',
-            // show only groups with more than 2 users in the legend
-            data: series[0].data.filter(d => d.value > 2),
+            type: 'scroll',
+            formatter: name => {
+              let community = series[0].data.find(d => d.name == name)
+              let percent = Math.round(community.value/total*10000)/100;
+              return `${name} : ${community.value} (${percent}%)`
+            },
           },
           series,
         };

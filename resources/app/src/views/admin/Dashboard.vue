@@ -18,8 +18,8 @@
         <stat-card type="loans" title="Total des emprunts réalisés 🚗" />
       </b-col>
     </b-row>
-    <stat-chart type="communities" title="Nombre de participant.e.s par groupe" />
-    <stat-chart type="invitations" title="Invitations par semaine" />
+    <stat-chart type="communities" title="Nombre de participant.e.s par groupe" class="mb-4" />
+    <stat-chart type="invitations" title="Invitations par semaine" class="mb-4" />
   </div>
 </template>
 
