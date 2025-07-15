@@ -98,7 +98,7 @@
                 </template>
 
               </forms-builder>
-              <b-alert variant="warning" v-if="item.owner && item.community && !ownerIsPartOfCommunity" show>
+              <b-alert variant="warning" v-if="item.owner && item.community && item.community.users && !ownerIsPartOfCommunity" show>
                 Attention {{ item.owner.user.full_name }} n'est pas dans la communauté {{ item.community.name }}. Le véhicule ne sera pas visible.
               </b-alert>
             </div>
