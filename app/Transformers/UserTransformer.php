@@ -68,6 +68,7 @@ class UserTransformer extends Transformer
         // ...or if the user belongs the the same community
         if($user->belongsToTheSameCommunityAs($item->id)) {
             $publicFields[] = "phone";
+            $publicFields[] = "role";
         }
 
         return $this->filterKeys($output, $publicFields);

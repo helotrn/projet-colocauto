@@ -297,7 +297,6 @@
                       <b-col lg="6" v-for="member in members" :key="member.id">
                         <user-card
                           :user="member"
-                          :is-admin="false"
                           :community-id="communityId"
                         />
                       </b-col>
@@ -308,7 +307,7 @@
                           v-if="hasMoreMembers"
                           class="mb-4 py-2"
                           variant="outline-primary"
-                          to="/community"
+                          :to="`/community/${currentCommunity}/members`"
                         >Voir tous les membres</b-button>
                       </b-col>
                     </b-row>

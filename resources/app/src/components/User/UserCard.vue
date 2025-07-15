@@ -19,7 +19,20 @@
           <a v-if="user.phone" :href="`tel:${user.phone}`" class="d-block">{{ user.phone }}</a>
           <a v-if="user.email" :href="`mailto:${user.email}`" class="d-block">{{ user.email }}</a>
         </div>
+        <hr class="my-1"/>
+        <div class="p-3">
+          <strong class="wallet">Portefeuille: <span :class="balance >= 0 ? 'credit' : 'debit'">{{ balance | currency }}</span></strong>
+        </div>
       </b-col>
+    </b-row>
+    <b-row v-if="detailedView && isResponsibleOfCurrentCommunity" no-gutters class="user-card__content">
+      <b-btn
+        v-if="user.role != 'responsible'"
+        variant="outline-primary"
+        size="sm"
+        class="m-3"
+        @click="$emit('set-responsible', user)"
+      >Nommer référent</b-btn>
     </b-row>
   </b-card>
 </template>
@@ -34,18 +47,36 @@ export default {
       required: false,
       default: null,
     },
-    isAdmin: {
-      type: Boolean,
-      required: false,
-      default: false,
-    },
     user: {
       type: Object,
       required: true,
     },
+    detailedView: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
   },
   components: {
     DefaultAvatar: Avatar,
+  },
+  computed: {
+    currentCommunity() {
+      return this.$store.state.communities.current
+        ? this.$store.state.communities.current
+        : this.$store.state.user.main_community?.id;
+    },
+    isResponsibleOfCurrentCommunity() {
+      return this.$store.state.user.communities.find(c => c.id == this.currentCommunity)?.role == 'responsible';
+    },
+    currentCommunityBalance() {
+      return this.$store.state.wallet.balance
+    },
+    balance(){
+      if( this.currentCommunityBalance && Array.isArray(this.currentCommunityBalance.users) ) {
+        return this.currentCommunityBalance.users.find(user => this.user.id == user.id)?.balance
+      }
+    },
   },
   methods: {
     async setCommittee() {
@@ -103,6 +134,15 @@ export default {
         position: absolute;
         top: .5em;
         right: 1em;
+      }
+    }
+
+    .wallet {
+      .credit {
+        color: #34A853;
+      }
+      .debit {
+        color: #EB4335;
       }
     }
   }

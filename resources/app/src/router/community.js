@@ -42,7 +42,8 @@ export default [
               "id,name," +
               "approved_users_count," +
               "users.*,users.avatar.*," +
-              "users.owner.id,invitations",
+              "users.owner.id,invitations," +
+              "users.loanables",
           },
         },
       },

@@ -23,9 +23,10 @@
                     <user-card
                       v-if="item.type == 'user'"
                       :user="item"
-                      :is-admin="isAdminOfCommunity(community)"
+                      detailed-view
                       :community-id="community.id"
                       @updated="loadCurrentCommunity"
+                      @set-responsible="setResponsibleHandler"
                     />
                     <invitation-card
                       v-else
@@ -38,6 +39,25 @@
           </div>
         </b-col>
       </b-row>
+      <b-modal
+        v-model="showResponsibleConfirm"
+        hide-header centered
+        footer-class="justify-content-center mb-4"
+        cancel-title="Annuler"
+        cancel-variant="outline-primary"
+        ok-title="Nommer référent"
+        @ok="submitSetResponsible"
+        @cancel="showResponsibleConfirm = false">
+        <round-warning width="50px" class="mx-auto d-block my-4" />
+        <template v-if="userToPromote">
+          <p style="font-size:20px; text-align:center; font-weight: bold;">
+            Êtes-vous sûr de vouloir nommer {{ userToPromote.full_name }} référent·e pour {{ community.name }} ?
+          </p>
+          <p style="text-align:center">
+            Une fois référent, il aura les mêmes droits que vous sur cette communauté, et il ne sera plus possible de les lui enlever.
+          </p>
+        </template>
+      </b-modal>
     </b-container>
     <layout-loading v-else />
 </template>
@@ -47,6 +67,7 @@ import UserCard from "@/components/User/UserCard.vue";
 import InvitationCard from "@/components/Invitation/InvitationCard.vue";
 
 import Arrow from "@/assets/svg/arrow.svg";
+import RoundWarning from "@/assets/icons/round-warning.svg";
 
 import Authenticated from "@/mixins/Authenticated";
 import DataRouteGuards from "@/mixins/DataRouteGuards";
@@ -55,10 +76,15 @@ import UserMixin from "@/mixins/UserMixin";
 export default {
   name: "CommunityMembers",
   mixins: [Authenticated, DataRouteGuards, UserMixin],
+  data: () => ({
+    showResponsibleConfirm: false,
+    userToPromote: null,
+  }),
   components: {
     "svg-arrow": Arrow,
     UserCard,
     InvitationCard,
+    RoundWarning,
   },
   beforeRouteEnter(to, from, next) {
     next((vm) => {
@@ -105,7 +131,23 @@ export default {
         id: this.currentCommunity,
         params: this.$route.meta.params,
       });
+      this.$store.dispatch('wallet/loadBalance', {
+        community: {id: this.currentCommunity}
+      })
     },
+    setResponsibleHandler(user){
+      this.userToPromote = user
+      this.showResponsibleConfirm = true
+    },
+    async submitSetResponsible() {
+      console.log('do it : submitSetResponsible')
+      await this.$store.dispatch('communities/promoteUser', {
+        id: this.currentCommunity,
+        userId: this.userToPromote.id,
+      })
+      this.showResponsibleConfirm = false
+      this.userToPromote = null
+    }
   },
   watch: {
     currentCommunity() {

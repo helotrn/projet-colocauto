@@ -187,6 +187,33 @@ export default new RestModule(
         throw e;
       }
     },
+    async promoteUser({ commit, rootState, state }, { id, userId }) {
+      const { CancelToken } = Vue.axios;
+      const cancelToken = CancelToken.source();
+
+      try {
+        commit("cancelToken", cancelToken);
+        const { data } = await Vue.axios.put(`/communities/${id}/users/${userId}/promote`, {role: 'responsible'}, {
+          params: {
+            fields: "*,communities.*",
+          },
+          cancelToken: cancelToken.token,
+        });
+        commit("cancelToken", null);
+
+        const userIndex = state.item.users.findIndex((u) => u.id === data.id);
+        const newCommunity = { ...state.item };
+        newCommunity.users[userIndex] = data;
+
+        commit("item", newCommunity);
+      } catch (e) {
+        commit("cancelToken", null);
+        const { request, response } = e;
+        commit("error", { request, response });
+
+        throw e;
+      }
+    },
     async setCommittee({ commit }, { communityId, tagId, userId }) {
       const { CancelToken } = Vue.axios;
       const cancelToken = CancelToken.source();
