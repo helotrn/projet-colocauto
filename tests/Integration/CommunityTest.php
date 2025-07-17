@@ -528,7 +528,7 @@ class CommunityTest extends TestCase
             ->assertJsonStructure(static::$getCommunityResponseStructure);
     }
 
-    public function testUserCannotCreateCommunity()
+    public function testUserCanCreateCommunity()
     {
         $community = factory(Community::class)->create();
         $user = factory(User::class)->create();
@@ -547,7 +547,9 @@ class CommunityTest extends TestCase
         ];
 
         $response = $this->json("POST", "/api/v1/communities/", $data);
-        $response->assertStatus(403);
+        $response
+            ->assertStatus(201)
+            ->assertJsonStructure(static::$getCommunityResponseStructure);
     }
 
     public function testUserWithoutCommunityCanCreateCommunity()
