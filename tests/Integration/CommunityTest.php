@@ -350,6 +350,24 @@ class CommunityTest extends TestCase
         $response->assertStatus(200);
     }
 
+    public function testDeleteCommunitiesByCommunityAdmin()
+    {
+        $community = factory(Community::class)->create();
+        $admin_user = factory(User::class)->create();
+        $admin_user->role = "community_admin";
+        $admin_user->save();
+        $admin_user->administrableCommunities()->attach($community);
+
+        $this->actAs($admin_user);
+
+        $response = $this->json(
+            "DELETE",
+            route("communities.destroy", $community->id)
+        );
+
+        $response->assertStatus(200);
+    }
+
     public function testDeleteCommunitiesByNonAdmin()
     {
         $this->user->role = "";

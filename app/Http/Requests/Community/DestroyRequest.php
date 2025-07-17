@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Community;
 
 use App\Http\Requests\BaseRequest;
+use App\Models\Community;
 
 class DestroyRequest extends BaseRequest
 {
@@ -13,7 +14,7 @@ class DestroyRequest extends BaseRequest
         }
 
         if ($this->user()->isCommunityAdmin()) {
-            if (Community::accessibleBy($this->user())->find($this->route('community_id'))) {
+            if (Community::accessibleBy($this->user())->find($this->route('id'))) {
                 return true;
             }
         }
