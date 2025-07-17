@@ -13,7 +13,7 @@ class CommunityTransformer extends Transformer
         $output = parent::transform($item, $options);
 
         $user = Auth::user();
-        if ($user && $user->isAdmin()) {
+        if ($user && ($user->isAdmin() || $user->isAdminOfCommunity($item->id))) {
             return $output;
         }
 
