@@ -614,7 +614,7 @@ export default {
     },
     waitingInvitations() {
       if( !this.user || !Array.isArray(this.user.invitations) ) return [];
-      return this.user.invitations.filter(inv => inv.consumed_at == null);
+      return this.user.invitations.filter(inv => inv.community && inv.consumed_at == null);
     }
   },
   methods: {
