@@ -8,7 +8,7 @@
         <b-btn
           v-if="canInviteMemberInCurrentCommunity"
           variant="outline-primary"
-          to="/community#email"
+          :to="`/community/${currentCommunity}#email`"
         >Inviter un membre</b-btn>
       </b-row>
       <b-row no-gutters>
