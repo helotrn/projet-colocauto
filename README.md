@@ -1,34 +1,75 @@
-# LocoMotion
+# Coloc'Auto
 
-Application et API de LocoMotion
+**L’application de partage de véhicules au quotidien**  
+site officiel : [colocauto.org](https://colocauto.org)
 
-[![pipeline status](https://gitlab.com/Solon-collectif/locomotion.app/badges/master/pipeline.svg)](https://gitlab.com/Solon-collectif/locomotion.app/-/commits/master)
-[![coverage report](https://gitlab.com/Solon-collectif/locomotion.app/badges/master/coverage.svg)](https://gitlab.com/Solon-collectif/locomotion.app/-/commits/master)
+## Coloc’Auto est une application libre et 100% gratuite pour ses utilisateurs
+
+Elle a été développée par [Mobicoop](https://mobicoop.fr), coopérative de la
+mobilité partagée, avec le soutien financier de l’Ademe et sur la base du logiciel
+[Locomotion](https://info.locomotion.app/) développée par
+[Solon](https://solon-collectif.org/projets/locomotion/) au Québec.
+
+La version disponible sur [app.colocauto.org](https://app.colocauto.org) est
+financée, hébergée et maintenue par Mobicoop.
+
+
+Application et API de Coloc'Auto
+
+[![pipeline status](https://gitlab.com/mobicoop/colocauto/colocauto/badges/master/pipeline.svg)](https://gitlab.com/mobicoop/colocauto/colocauto/-/commits/master)
+[![coverage report](https://gitlab.com/mobicoop/colocauto/colocauto/badges/master/coverage.svg)](https://gitlab.com/mobicoop/colocauto/colocauto/-/commits/master)
 
 ## Contribuer
 
 Consultez le fichier [CONTRIBUTING.md](CONTRIBUTING.md)
 
-## Prérequis
+## Installation
+
+L'application est installable soit directement sur une machine avec PHP/PostgreSQL, soit via docker
+
+### Docker
+
+#### Prérequis
 
 -   docker 20
 -   docker-compose 3.6
 
-## Démarrage
+#### Démarrage
 
 -   `docker-compose up --build`
 
-## Outils
+#### Outils
 
 Le dossier [devtools](devtools) contient des alias pour simplifier le développement dans l'application. Voyez le [README](devtools/README.md) pour les instructions d'utilisation. Le reste des instructions qui suivent font références à ces alias.
 
-## Initialisation de la base de données et de MinIO
+#### Initialisation de la base de données et de MinIO
 
 Une fois que l'application est démarrée,
 dans un autre terminal, faire:
 
 -   `docker-compose exec php php artisan migrate --seed`
 -   ou l'alias `locoseed`
+
+### Serveur classique
+
+#### Prérequis
+
+- PHP 7.4
+- PostgreSQL 16
+- Node 16
+
+#### Démarrage
+Faire pointer le serveur PHP de l'API sur le répertoire `public`.  
+Ajouter un lien symbolique de `public/storage` vers `storage/app/storage`
+
+Renseigner les variables d'environnement dans le fichier resources/app/.env puis
+installer et builder l'application Vue :
+```
+cd resources/app/
+npm install
+npm run build
+```
+Faire pointer le serveur de l'application sur le répertoire `resources/app/build`
 
 ## Variables d'environnement
 
