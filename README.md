@@ -1,7 +1,7 @@
 # Coloc'Auto
 
 **L’application de partage de véhicules au quotidien**  
-site officiel : [colocauto.org](https://colocauto.org)
+site officiel : [www.colocauto.org](https://www.colocauto.org)
 
 ## Coloc’Auto est une application libre et 100% gratuite pour ses utilisateurs
 
