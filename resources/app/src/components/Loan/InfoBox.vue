@@ -1,6 +1,6 @@
 <template>
   <div class="loan-info-box">
-    <b-card class="text-center shadow" :class="{ loading, border: !!variant }" :border-variant="variant" no-body>
+    <b-card class="text-center" :class="{ loading, border: !!variant }" :border-variant="variant" no-body>
       <template #header v-if="!isInCurrentCommunity">
         <div class="loan-info-box__community-name">{{ loan.loanable.community.name }}</div>
       </template>

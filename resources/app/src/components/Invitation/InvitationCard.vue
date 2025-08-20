@@ -94,6 +94,10 @@ export default {
   margin-bottom: 10px;
   position: relative;
 
+  .card-body {
+    padding: 0;
+  }
+
   &__content {
     &__avatar.col {
       border-radius: 15px 0 15px;

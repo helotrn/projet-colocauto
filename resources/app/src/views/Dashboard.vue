@@ -847,7 +847,7 @@ export default {
   width: 67%;
   max-width: 250px;
   flex-shrink: 0;
-  margin-right: 10px;
+  margin-right: 30px;
   scroll-snap-align: start;
   display: flex;
   flex-direction: column;
