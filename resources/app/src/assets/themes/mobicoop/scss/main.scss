@@ -4,7 +4,7 @@
 
 @import "layout";
 @import "../../../scss/typography";
-@import "../../../scss/type";
+@import "type";
 @import "../../../scss/icons";
 
 @import "components/alert";
@@ -19,6 +19,7 @@
 @import "../../../scss/components/table";
 @import "components/badges";
 @import "../../../scss/components/tabs";
+@import "components/select";
 
 @import "../../../scss/pages/home";
 

@@ -2,7 +2,7 @@
   <div class="form__section">
     <template v-if="toggleable">
       <component :is="`h${headerLevel}`" v-b-toggle:toggleable="'collapse_' + id" class="section-toggle">
-        {{ sectionTitle }} <b-icon font-scale="0.75" icon="chevron-down"></b-icon>
+        {{ sectionTitle }} <icons-caret class="b-icon" />
       </component>
       <b-collapse
         :id="'collapse_' + id"
@@ -22,8 +22,10 @@
 </template>
 
 <script>
+import IconsCaret from "@/assets/icons/caret.svg";
 export default {
   name: "FormSection",
+  components: {IconsCaret},
   props: {
     sectionTitle: {
       type: String,
@@ -70,25 +72,31 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1.25rem;
-  margin: -1.25rem;
-  margin-bottom: 0;
+  margin: 0 0 1.25rem 0;
+  border-bottom: solid 1px $locomotion-grey;
+  font-weight: 700;
 
   &.collapsed {
-    margin-bottom: -1.25rem;
+    margin-bottom: 0;
   }
 
   .b-icon {
     transition: 0.3s;
+    transform: rotate(90deg);
+    fill: $black;
   }
 
   &.not-collapsed .b-icon {
-    transform: rotate(180deg);
+    transform: rotate(270deg);
   }
 }
 .form__section {
-  background: $white;
-  padding: 1.25rem;
-  border: solid 1px $locomotion-grey;
+  border-bottom: none;
+  margin-bottom: 0;
+}
+.collapse {
+  background: white;
+  padding: 30px;
+  border-radius: 10px;
 }
 </style>

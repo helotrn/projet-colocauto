@@ -6,9 +6,9 @@
         trigger a submit event for an unknown reason.
       -->
       <b-form :novalidate="true" class="form loanable-form__form" @submit.stop.prevent>
-        <div class="form__section">
+        <div class="form__section main_section">
           <b-row>
-            <b-col lg="12">
+            <b-col lg="6">
               <forms-validated-input
                 name="name"
                 :label="$t('fields.name') | capitalize"
@@ -20,6 +20,8 @@
                 disabled-tooltip="Seul le propriétaire peut changer cela"
                 v-model="loanable.name"
               />
+            </b-col>
+            <b-col lg="6">
               <forms-validated-input
                 v-if="loanable.owner"
                 name="owner"
@@ -28,6 +30,8 @@
                 :disabled="true"
                 v-model="loanable.owner.user.full_name"
               />
+            </b-col>
+            <b-col lg="6">
               <forms-validated-input
                 v-if="loanable.community"
                 name="community"
@@ -390,3 +394,14 @@ export default {
   },
 };
 </script>
+<style scoped lang="scss">
+.main_section {
+  border-bottom: none;
+  padding: 1.25rem;
+  background: white;
+  border-radius: 10px;
+}
+::v-deep label {
+    font-weight: 600;
+}
+</style>
