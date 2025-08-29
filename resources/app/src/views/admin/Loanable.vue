@@ -125,8 +125,13 @@
               </forms-builder>
             </form-section>
 
-            <div class="form__section">
-              <h2 id="reports">État du véhicule</h2>
+            <form-section
+              v-if="item.reports"
+              toggleable
+              class="mt-2"
+              section-title="État du véhicule"
+              :inititally-visible="false"
+            >
               <div v-if="lastReportDate" class="mb-4">
                 <small>Date de dernière modification : {{lastReportDate | datetime}}</small>
               </div>
@@ -144,7 +149,7 @@
                   @update="updateReport"
                 />
               </form-section>
-            </div>
+            </form-section>
 
             <form-section
               v-if="item.owner && item.owner.user"

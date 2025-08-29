@@ -126,8 +126,13 @@
           <span> Sélectionnez un type de véhicule pour poursuivre la configuration. </span>
         </div>
 
-        <div class="form__section" v-if="loanable.reports">
-          <h2>État du véhicule</h2>
+        <form-section
+          v-if="loanable.reports"
+          toggleable
+          class="mt-2"
+          section-title="État du véhicule"
+          :inititally-visible="false"
+        >
           <div v-if="lastReportDate" class="mb-4">
             <small>Date de dernière modification : {{lastReportDate | datetime}}</small>
           </div>
@@ -142,7 +147,7 @@
           >
             <report-form :report="lastReportOfLocation(location.slug)" />
           </form-section>
-        </div>
+        </form-section>
 
         <form-section
           v-if="loanable.id"
