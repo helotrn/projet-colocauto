@@ -15,7 +15,7 @@
       <b-col>
         <validation-observer ref="observer" v-slot="{ passes }">
           <b-form class="form" @submit.prevent="checkInvalidThenSubmit(passes)">
-            <div class="form__section">
+            <div class="form__section main_section">
               <h2>Informations</h2>
 
               <forms-builder :definition="form.general" v-model="item" entity="loanables">
@@ -420,4 +420,27 @@ export default {
 };
 </script>
 
-<style lang="scss"></style>
+<style scoped lang="scss">
+.main_section {
+  border-bottom: none;
+  padding: 1.25rem;
+  background: white;
+  border-radius: 10px;
+}
+::v-deep label {
+  font-weight: 600;
+}
+::v-deep .forms-builder__field {
+  .input-and-button {
+    & > div {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+    }
+    .forms-relation-input {
+      flex-grow: 1;
+      margin-right: 1em;
+    }
+  }
+}
+</style>
