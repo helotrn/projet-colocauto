@@ -21,7 +21,7 @@
                 v-model="loanable.name"
               />
             </b-col>
-            <b-col lg="6">
+            <b-col lg="6" v-if="loanable.owner">
               <forms-validated-input
                 v-if="loanable.owner"
                 name="owner"

@@ -112,3 +112,11 @@ export default {
   },
 }
 </script>
+<style scoped lang="scss">
+::v-deep .form__section .form__section {
+  margin: 0 -30px;
+  .form {
+    margin: 0 -30px;
+  }
+}
+</style>
