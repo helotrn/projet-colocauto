@@ -262,7 +262,13 @@ export default new RestModule(
             ...report,
             loanable_id: state.item.id,
           },
-        );
+        ).then(({ data }) => {
+          const index = state.item.reports.findIndex(r => r.id == data.id)
+          commit("item", {
+            ...state.item,
+            reports: state.item.reports.toSpliced(index, 1, data)
+          });
+        });
       } else {
         await Vue.axios.post(
           `/reports?fields=*,pictures`,
@@ -270,7 +276,12 @@ export default new RestModule(
             ...report,
             loanable_id: state.item.id,
           },
-        );
+        ).then(({ data }) => {
+          commit("item", {
+            ...state.item,
+            reports: [...state.item.reports, data]
+          })
+        });
       }
     },
   }

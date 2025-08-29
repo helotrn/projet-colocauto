@@ -1,12 +1,11 @@
 <template>
-  <b-form class="form" @submit.prevent="submit">
+  <b-form class="form" @submit.prevent>
 
     <forms-validated-input
       type="checkboxes"
       :name="`damage${_uid}`"
       label="Y a t il les dommages suivants : "
-      :value="selectedDamage"
-      @input="checkDamages"
+      v-model="selectedDamage"
       :options="damageList"
       :switches="false"
       :stacked="false"
@@ -16,8 +15,7 @@
       :name="`details${_uid}`"
       label="Détails des dommages : "
       placeholder="Décrivez les dommages présents"
-      :value="report.details"
-      @input="setDetails"
+      v-model="modifiedDetails"
     />
     <label for="report_picture">
       {{ $i18n.t("location.pictures."+report.location) }}
@@ -26,7 +24,7 @@
       :field="`report_picture${_uid}`"
       label=""
       preview-aspect-ratio="1"
-      :value="report.pictures"
+      :value="modifiedPictures"
       @input="setPicture"
       @delete="removePicture"
     />
@@ -58,62 +56,58 @@ export default {
   data() {
     return {
       selectedDamage: [], // Must be an array reference!
+      modifiedDetails: '',
+      modifiedPictures: [],
       damageList: [
         { text: 'rayure', value: 'scratch' },
         { text: 'chocs', value: 'bumps' },
         { text: 'tache', value: 'stain' },
       ],
-      nextPicture: null,
-      changed: false,
+    }
+  },
+  computed: {
+    modifiedReport(){
+      return {
+        details: this.modifiedDetails,
+        pictures: [...this.modifiedPictures],
+        scratch: this.selectedDamage.includes('scratch'),
+        bumps: this.selectedDamage.includes('bumps'),
+        stain: this.selectedDamage.includes('stain'),
+      }
+    },
+    changed() {
+      return this.report.details != this.modifiedReport.details
+        || this.report.pictures.length != this.modifiedPictures.length
+        || this.report.pictures.map(p => p.id).join('-') != this.modifiedPictures.map(p => p.id).join('-')
+        || this.report.scratch != this.modifiedReport.scratch
+        || this.report.bumps != this.modifiedReport.bumps
+        || this.report.stain != this.modifiedReport.stain
     }
   },
   methods: {
     async save() {
-      await this.$store.dispatch("loanables/saveReport", this.report);
+      await this.$store.dispatch("loanables/saveReport", { ...this.report, ...this.modifiedReport});
       this.$store.commit("addNotification", {
         title: "État du véhicule mis à jour",
         content: this.$t(`reports.location.label.${this.report.location}`),
         variant: "success",
         type: "loanable",
       });
-      this.changed = false;
-    },
-    update(report) {
-      let reports = [...this.$store.state.loanables.item.reports]
-      if( this.report.id ){
-        // update existing report
-        reports = reports.map(r => r.id == this.report.id ? ({...r, ...report}) : r)
-      } else {
-        // create a new report
-        reports.push({
-          ...this.report,
-          ...report,
-        })
-      }
-      this.$store.commit("loanables/patchItem", {reports});
-      this.changed = true;
-    },
-    checkDamages(list) {
-      this.update({
-        scratch: list.includes('scratch'),
-        bumps: list.includes('bumps'),
-        stain: list.includes('stain'),
-      })
-    },
-    setDetails(details) {
-      this.update({details})
     },
     setPicture(picture) {
-      this.update({pictures: [...this.report.pictures, picture]})
+      this.modifiedPictures.push(picture)
     },
     removePicture(index) {
-      this.update({pictures: this.report.pictures.toSpliced(index, 1)})
+      this.modifiedPictures.splice(index, 1)
     }
   },
   mounted() {
     this.$store.state.loanables.form.types.car.damages.forEach(type => {
       if( this.report[type] ) this.selectedDamage.push(type)
     })
+    this.modifiedDetails = this.report.details
+    this.modifiedPictures = [...this.report.pictures]
+    
   },
   components: {FormsValidatedInput, MultipleImagesUploader},
   i18n: {
