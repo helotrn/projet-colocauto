@@ -643,7 +643,7 @@ export default {
     changeCommunity(communityId) {
       this.$store.dispatch("communities/setCurrent", { communityId })
       this.$store.dispatch("dashboard/loadBalance", { community: {id:communityId} })
-      this.$store.dispatch("dashboard/loadMembers", { user: this.user })
+      this.$store.dispatch("dashboard/loadMembers", { user: this.user, communityId })
     },
     reloadDashboard() {
       this.$store.dispatch("dashboard/reload", this.user);

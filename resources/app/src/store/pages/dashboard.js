@@ -71,14 +71,14 @@ const actions = {
       throw e;
     }
   },
-  async loadMembers({ commit, rootState }, { user }) {
+  async loadMembers({ commit, rootState }, { user, communityId }) {
     commit("loadMembers");
 
     try {
       const { data: members } = await Vue.axios.get("/users", {
         params: {
           order: "-created_at",
-          "communities.id": rootState.communities.current ?? user.main_community?.id,
+          "communities.id": communityId ?? (rootState.communities.current ?? user.main_community?.id),
           per_page: maxMemberCount,
           fields: "id,full_name,tags,avatar,phone,owner",
         },

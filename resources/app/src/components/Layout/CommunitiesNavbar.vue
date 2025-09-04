@@ -62,7 +62,7 @@ export default {
 
         // if dashboard
         this.$store.dispatch("dashboard/loadBalance", { community: {id:communityId} })
-        this.$store.dispatch("dashboard/loadMembers", { user: this.user })
+        this.$store.dispatch("dashboard/loadMembers", { user: this.user, communityId })
 
         this.$store.dispatch("communities/setCurrent", { communityId })
       }
