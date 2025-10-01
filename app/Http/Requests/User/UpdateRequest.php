@@ -34,6 +34,11 @@ class UpdateRequest extends BaseRequest
         if( !$this->user()->isAdmin() && !$this->user()->isCommunityAdmin() ) {
             // non admin users cannot promote users
             $rules['role'] .= '|not_in:admin,community_admin'; // Laravel 8 can use 'prohibited' instead;
+
+            // non admin should not be able to change its community attributes
+            $rules['communities'] = function ($attribute, $value, $fail) {
+                $fail('The '.$attribute.' is invalid.');
+            };
         } else if( !$this->user()->isAdmin() ){
             $rules['role'] .= '|not_in:admin';
         }

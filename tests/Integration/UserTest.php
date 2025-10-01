@@ -13,6 +13,7 @@ use Illuminate\Testing\Assert;
 use Mockery;
 use Stripe;
 use Tests\TestCase;
+use Carbon\Carbon;
 
 class UserTest extends TestCase
 {
@@ -360,6 +361,35 @@ class UserTest extends TestCase
         $response = $this->json("PUT", "/api/v1/users/$user->id", $data);
 
         $response->assertStatus(200)->assertJson($data);
+    }
+
+    public function testUpdateUsersByItself()
+    {
+        $user = factory(User::class)->create();
+        $data = [
+            "name" => $this->faker->name,
+        ];
+
+        $this->actAs($user);
+        $response = $this->json("PUT", "/api/v1/users/$user->id", $data);
+
+        $response->assertStatus(200)->assertJson($data);
+    }
+
+    public function testUsersCannotUpdateItsCommunityAttributes()
+    {
+        $user = factory(User::class)->create();
+        $community = factory(Community::class)->create();
+        $user->communities()->attach($community, ["approved_at" => new Carbon()]);
+
+        $this->actAs($user);
+        $response = $this->json("PUT", "/api/v1/users/$user->id", [
+            "name" => $this->faker->name,
+            "communities" => []
+        ])->assertStatus(422);
+
+        $user->refresh();
+        $this->assertCount(1, $user->communities);
     }
 
     public function testUpdateUsersWithNonexistentId()
