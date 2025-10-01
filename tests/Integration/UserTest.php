@@ -657,12 +657,7 @@ class UserTest extends TestCase
     {
         $user = factory(User::class)->create();
         $community = factory(Community::class)->create();
-
-        $data = [
-            "communities" => [["id" => $community->id]],
-        ];
-        $response = $this->json("PUT", "/api/v1/users/$user->id", $data);
-        $response->assertStatus(200);
+        $user->communities()->attach($community, ["approved_at" => new Carbon()]);
 
         $this->actAs($user);
         $response = $this->json("PUT", "/api/v1/communities/$community->id/users/$user->id", [
@@ -681,11 +676,10 @@ class UserTest extends TestCase
         $user = factory(User::class)->create();
         $community = factory(Community::class)->create();
 
-        $data = [
-            "communities" => [["id" => $community->id, "role" => "responsible"]],
-        ];
-        $response = $this->json("PUT", "/api/v1/users/$user->id", $data);
-        $response->assertStatus(200);
+        $user->communities()->attach($community, [
+            "approved_at" => new Carbon(),
+            "role" => "responsible"
+        ]);
         $user->refresh();
         $this->assertEquals($user->communities[0]->pivot->role, "responsible");
 
@@ -700,4 +694,50 @@ class UserTest extends TestCase
         $user->refresh();
         $this->assertEquals($user->communities[0]->pivot->role, "responsible");
     }
+
+    public function testCommunityResponsibleCanPromoteOther()
+    {
+        $user = factory(User::class)->create();
+        $responsibleUser = factory(User::class)->create();
+        $community = factory(Community::class)->create();
+
+        $user->communities()->attach($community, [
+            "approved_at" => new Carbon(),
+        ]);
+        $responsibleUser->communities()->attach($community, [
+            "approved_at" => new Carbon(),
+            "role" => "responsible"
+        ]);
+
+        $this->actAs($responsibleUser);
+        $response = $this->json("PUT", "/api/v1/communities/$community->id/users/$user->id/promote", [
+            "role" => "responsible",
+        ]);
+        $response->assertStatus(200);
+        $user->refresh();
+        $this->assertEquals($user->communities[0]->pivot->role, "responsible");
+    }
+
+    public function testUserCannotPromoteOther()
+    {
+        $user = factory(User::class)->create();
+        $otherUser = factory(User::class)->create();
+        $community = factory(Community::class)->create();
+
+        $user->communities()->attach($community, [
+            "approved_at" => new Carbon(),
+        ]);
+        $otherUser->communities()->attach($community, [
+            "approved_at" => new Carbon(),
+        ]);
+
+        $this->actAs($user);
+        $response = $this->json("PUT", "/api/v1/communities/$community->id/users/$otherUser->id/promote", [
+            "role" => "responsible",
+        ]);
+        $response->assertForbidden();
+        $otherUser->refresh();
+        $this->assertNotEquals($otherUser->communities[0]->pivot->role, "responsible");
+    }
+
 }

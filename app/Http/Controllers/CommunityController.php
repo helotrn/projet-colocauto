@@ -10,6 +10,7 @@ use App\Http\Requests\Community\CreateRequest;
 use App\Http\Requests\Community\DestroyRequest;
 use App\Http\Requests\Community\UpdateRequest;
 use App\Http\Requests\Community\UpdateUserRequest;
+use App\Http\Requests\Community\PromoteUserRequest;
 use App\Http\Requests\Community\CommunityUserTagRequest;
 use App\Models\Community;
 use App\Models\User;
@@ -341,6 +342,33 @@ class CommunityController extends RestController
         }
 
         return $this->respondWithItem($request, $user);
+    }
+
+    public function promoteUser(PromoteUserRequest $request, $id, $userId)
+    {
+        $community = $this->repo->find(
+            $request->redirectAuth(Request::class),
+            $id
+        );
+
+        $user = $this->userRepo->find(
+            $request->redirectAuth(Request::class),
+            $userId
+        );
+
+        if ($community->users->where("id", $userId)->isEmpty()) {
+            return $this->respondWithMessage(null, 404);
+        }
+
+        $community->users()->updateExistingPivot($userId, ['role' => 'responsible']);
+
+        return $this->respondWithItem(
+            $request,
+            $community
+                ->users()
+                ->where("users.id", $userId)
+                ->first()
+        );
     }
 
     public function destroyAdmins(Request $request, $communityId, $userId)

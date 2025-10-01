@@ -125,6 +125,10 @@ Route::prefix("v1")->group(function () {
             "communities/{community_id}/users/{user_id}/tags/{tag_id}",
             "CommunityController@destroyCommunityUserTags"
         );
+        Route::put(
+            "communities/{community_id}/users/{user_id}/promote",
+            "CommunityController@promoteUser"
+        );
 
         Route::get(
             "communities/{community_id}/admins",
