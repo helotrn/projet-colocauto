@@ -653,4 +653,51 @@ class UserTest extends TestCase
         }
     }
 
+    public function testCommunityUserCannotPromoteItselfAsResponsible()
+    {
+        $user = factory(User::class)->create();
+        $community = factory(Community::class)->create();
+
+        $data = [
+            "communities" => [["id" => $community->id]],
+        ];
+        $response = $this->json("PUT", "/api/v1/users/$user->id", $data);
+        $response->assertStatus(200);
+
+        $this->actAs($user);
+        $response = $this->json("PUT", "/api/v1/communities/$community->id/users/$user->id", [
+            "communities" => [[
+                "id" => $community->id,
+                "role" => "responsible"
+            ]],
+        ]);
+        $response->assertStatus(403);
+        $user->refresh();
+        $this->assertNotEquals($user->communities[0]->pivot->role, "responsible");
+    }
+
+    public function testCommunityResponsibleCannotDemoteItself()
+    {
+        $user = factory(User::class)->create();
+        $community = factory(Community::class)->create();
+
+        $data = [
+            "communities" => [["id" => $community->id, "role" => "responsible"]],
+        ];
+        $response = $this->json("PUT", "/api/v1/users/$user->id", $data);
+        $response->assertStatus(200);
+        $user->refresh();
+        $this->assertEquals($user->communities[0]->pivot->role, "responsible");
+
+        $this->actAs($user);
+        $response = $this->json("PUT", "/api/v1/communities/$community->id/users/$user->id", [
+            "communities" => [[
+                "id" => $community->id,
+                "role" => null,
+            ]],
+        ]);
+        $response->assertStatus(403);
+        $user->refresh();
+        $this->assertEquals($user->communities[0]->pivot->role, "responsible");
+    }
 }

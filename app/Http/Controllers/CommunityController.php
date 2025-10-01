@@ -9,6 +9,7 @@ use App\Http\Requests\BaseRequest as Request;
 use App\Http\Requests\Community\CreateRequest;
 use App\Http\Requests\Community\DestroyRequest;
 use App\Http\Requests\Community\UpdateRequest;
+use App\Http\Requests\Community\UpdateUserRequest;
 use App\Http\Requests\Community\CommunityUserTagRequest;
 use App\Models\Community;
 use App\Models\User;
@@ -290,7 +291,7 @@ class CommunityController extends RestController
         );
     }
 
-    public function updateUsers(Request $request, $id, $userId)
+    public function updateUsers(UpdateUserRequest $request, $id, $userId)
     {
         $community = $this->repo->find(
             $request->redirectAuth(Request::class),
