@@ -10,7 +10,7 @@ export default new RestModule(
     params: {
       order: "-id",
       page: 1,
-      per_page: 10,
+      per_page: 9,
     },
     exportFields: [
       "id",
