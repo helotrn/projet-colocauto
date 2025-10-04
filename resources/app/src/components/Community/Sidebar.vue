@@ -15,16 +15,25 @@
       </b-nav-item>
     </ul>
 
-    <hr />
+    <info-link-block title="Contactez-nous" to="mailto:soutien@colocauto.org">
+      <svg-waving class="m-2 white-round"/>
+    </info-link-block>
+
   </div>
 </template>
 
 <script>
 import UserMixin from "@/mixins/UserMixin";
+import InfoLinkBlock from "@/components/Dashboard/InfoLinkBlock.vue";
+import Waving from "@/assets/svg/waving.svg";
 
 export default {
   name: "CommunitySidebar",
   mixins: [UserMixin],
+  components: {
+    InfoLinkBlock,
+    "svg-waving": Waving,
+  },
 };
 </script>
 
@@ -36,8 +45,11 @@ export default {
 
   ul {
     list-style: none;
-    padding: 0;
-    margin: 0;
+    padding: 1em;
+    margin: 0 0 1em 0;
+    font-size: 20px;
+    background: white;
+    border-radius: .5em;
 
     .nav-item .nav-link {
       color: $black;
@@ -47,9 +59,11 @@ export default {
         color: $grey;
       }
 
-      &.router-link-exact-active,
+      &.router-link-exact-active {
+        font-weight: bold;
+      }
       &:hover {
-        color: $locomotion-green;
+        text-decoration: underline;
       }
     }
   }
