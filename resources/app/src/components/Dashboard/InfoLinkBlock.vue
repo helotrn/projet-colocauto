@@ -44,6 +44,7 @@ export default {
     svg {
       width: 65px;
       height: 65px;
+      flex-shrink: 0;
     }
   }
 </style>

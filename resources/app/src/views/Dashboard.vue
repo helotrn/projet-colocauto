@@ -327,14 +327,10 @@
                 <h2 class="leading-6 text-center mb-4">Vous êtes référent de cette communauté</h2>
                 <b-btn variant="primary" to="/community" class="w-full">Voir l'espace de gestion</b-btn>
               </b-card>
-              <b-button class="my-4 py-2 w-100" variant="primary" to="/wallet">Voir le portefeuille</b-button>
-              <info-link-block title="Comment sont calculés les coûts ?" to="https://www.colocauto.org/tarification">
-                 <svg-magnifying-glass-euro width="100px" class="p-2" style="flex-shrink: 0"/>
-              </info-link-block>
             </div>
 
             <div class="mb-4 d-none d-md-block" v-if="hasCommunity">
-              <b-card title="Les comptes" title-tag="h2">
+              <b-card title="Les comptes" title-tag="h2" class="mb-4">
                 <div class="dashboard__balance" :class="{ loading: loading && !balanceLoaded }">
                   <transition name="fade">
                     <div v-if="balance && balance.users && balance.users.length > 0">
@@ -343,10 +339,8 @@
                   </transition>
                 </div>
               </b-card>
-              <b-button class="my-4 py-2 w-100" variant="primary" to="/wallet">Voir le portefeuille</b-button>
-              <info-link-block title="Comment sont calculés les coûts ?" to="https://www.colocauto.org/tarification">
-                 <svg-magnifying-glass-euro width="100px" class="p-2" style="flex-shrink: 0"/>
-              </info-link-block>
+              <b-button class="mb-2 py-2 w-100" variant="primary" to="/wallet">Voir le portefeuille</b-button>
+              <b-button class="mb-2 py-2 w-100" variant="outline-primary" to="/wallet/expenses/new">Déclarer une dépense</b-button>
             </div>
 
             <div v-if="false && hasCompletedRegistration">
@@ -364,6 +358,9 @@
             </div>
 
             <h2 class="dashboard--margin-bottom">Ressources</h2>
+            <info-link-block title="Comment sont calculés les coûts ?" to="https://www.colocauto.org/tarification">
+               <svg-magnifying-glass-euro class="m-2" />
+            </info-link-block>
             <info-link-block title="Faire un don" to="https://www.colocauto.org/don">
               <svg-salut-coeur class="m-2"/>
             </info-link-block>
