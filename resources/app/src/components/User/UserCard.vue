@@ -19,7 +19,7 @@
           <a v-if="user.phone" :href="`tel:${user.phone}`" class="d-block">{{ user.phone }}</a>
           <a v-if="user.email" :href="`mailto:${user.email}`" class="d-block">{{ user.email }}</a>
         </div>
-        <hr class="my-1"/>
+        <hr class="my-1 mx-3"/>
         <div class="p-3">
           <strong class="wallet">Portefeuille: <span :class="balance >= 0 ? 'credit' : 'debit'">{{ balance | currency }}</span></strong>
         </div>
@@ -134,6 +134,9 @@ export default {
         position: absolute;
         top: .5em;
         right: 1em;
+      }
+      a {
+        color: $black;
       }
     }
 
