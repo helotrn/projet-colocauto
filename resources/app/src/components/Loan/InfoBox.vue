@@ -338,9 +338,10 @@ export default {
   }
 
   &__image {
-    height: 85px;
+    height: 130px;
     position: relative;
-    width: 85px;
+    width: calc(100% + 2.5rem);
+    margin: -1.25rem -1.25rem auto -1.25rem;
     &__wrapper {
       display: flex;
       flex-direction: column;
@@ -352,9 +353,9 @@ export default {
         background-size: cover;
         background-position: center center;
         background-repeat: no-repeat;
-        border-radius: 100%;
+        border-radius: 10px 10px 0 0;
         height: 100%;
-        width: 85px;
+        width: 100%;
         margin: 0 auto;
       }
     }
@@ -363,6 +364,7 @@ export default {
   &__name {
     flex-grow: 1;
     color: $black;
+    margin: 20px 0 12px;
   }
 
   &__name__user {
@@ -371,7 +373,7 @@ export default {
   }
 
   &__name__loanable {
-    font-size: 18px;
+    font-size: 20px;
     font-weight: bold;
   }
 

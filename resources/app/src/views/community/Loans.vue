@@ -1,12 +1,13 @@
 <template>
   <div class="profile-loans" v-if="loaded">
     <template v-if="currentCommunityLoans.length > 0">
-    <b-row class="profile-loans__loans">
-      <b-col class="profile-loans__loans__loan" :lg="4" v-for="loan in currentCommunityLoans" :key="loan.id">
-        <loan-info-box :loan="loan" :buttons="['view']" :user="user" with-steps />
-      </b-col>
-    </b-row>
-    <div v-if="lastPage > 1">
+      <b-row no-gutters class="profile-loans__count">{{ context.total }} emprunts</b-row>
+      <b-row class="profile-loans__loans">
+        <b-col class="profile-loans__loans__loan" :lg="4" v-for="loan in currentCommunityLoans" :key="loan.id">
+          <loan-info-box :loan="loan" :buttons="['view']" :user="user" with-steps />
+        </b-col>
+      </b-row>
+      <div v-if="lastPage > 1">
           <b-pagination
             align="right"
             v-model="contextParams.page"
@@ -59,4 +60,12 @@ export default {
 };
 </script>
 
-<style lang="scss"></style>
+<style lang="scss">
+.profile-loans__count {
+  font-size: 22px;
+  font-weight: bold;
+  padding: 10px 0;
+  margin-bottom: 1em;
+  border-bottom: solid 1px $gray-400;
+}
+</style>
