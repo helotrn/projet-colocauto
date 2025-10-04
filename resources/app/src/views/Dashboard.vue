@@ -873,11 +873,13 @@ export default {
 /* force scrollbar display on safari chrome */
 ::-webkit-scrollbar {
     -webkit-appearance: none;
-    width: 7px;
+    background-color: $white;
+    width: 10px;
+    border-radius: 30px;
 }
 ::-webkit-scrollbar-thumb {
-    border-radius: 4px;
-    background-color: rgba(0,0,0,.5);
+    border-radius: 30px;
+    background-color: $primary-dark;
     -webkit-box-shadow: 0 0 1px rgba(255,255,255,.5);
 }
 
