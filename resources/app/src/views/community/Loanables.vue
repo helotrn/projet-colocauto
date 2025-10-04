@@ -1,18 +1,18 @@
 <template>
   <div class="profile-loanables" v-if="loaded && !loading">
-    <div v-if="user.owner">
 
-      <b-row v-if="loanables.length === 0">
-        <b-col>Pas de véhicule.</b-col>
-      </b-row>
-      <b-row
-        v-else
-        v-for="loanable in loanables"
-        :key="loanable.id"
-        class="profile-loanables__loanables"
-      >
-        <b-col class="profile-loanables__loanables__loanable">
-          <loanable-info-box :buttons="['remove']" :show_community="true" v-bind="loanable" @disabled="loadListData" />
+    <b-row v-if="loanables.length === 0">
+      <b-col>Pas de véhicule.</b-col>
+    </b-row>
+    <template v-else>
+      <b-row no-gutters class="profile-loanables__count">{{ context.total }} véhicules</b-row>
+      <b-row class="profile-loanables__loanables">
+        <b-col
+          v-for="loanable in loanables"
+          :key="loanable.id"
+          lg="6"
+          class="profile-loanables__loanables__loanable">
+          <loanable-info-box :buttons="['remove']" v-bind="loanable" @disabled="loadListData" />
         </b-col>
       </b-row>
 
@@ -26,12 +26,7 @@
           />
         </b-col>
       </b-row>
-    </div>
-    <div v-else>
-      <b-row>
-        <b-col>Pas de véhicule.</b-col>
-      </b-row>
-    </div>
+    </template>
     <b-row no-gutters :style="{justifyContent: 'end'}">
       <b-btn
         v-if="canCreateLoanableInCurrentCommunity"
@@ -125,7 +120,16 @@ export default {
 </script>
 
 <style lang="scss">
-.profile-loanables__loanables__loanable {
-  margin-bottom: 20px;
+.profile-loanables {
+  &__loanables__loanable {
+    margin-bottom: 20px;
+  }
+  &__count {
+    font-size: 22px;
+    font-weight: bold;
+    padding: 10px 0;
+    margin-bottom: 1em;
+    border-bottom: solid 1px $gray-400;
+  }
 }
 </style>

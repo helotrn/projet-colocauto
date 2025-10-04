@@ -5,16 +5,16 @@
         <b-col class="loanable-info-box__image">
           <div v-if="loanableImage" :style="{ backgroundImage: loanableImage }" />
           <div v-else class="loanable-card__image--default" style="padding-left:1rem">
-            <svg-car v-if="type == 'car'" />
-            <svg-bike v-else-if="type == 'bike'" />
+            <svg-bike v-if="type == 'bike'" />
+            <svg-car v-else />
           </div>
         </b-col>
 
         <b-col class="loanable-info-box__name"
-          ><span>{{ name }}</span>
+          ><h4>{{ name }}</h4>
+           <small class="mb-2" v-if="owner"><strong>Propriétaire:</strong> {{ owner.user.full_name }}</strong></small>
            <small v-if="estimated_cost">{{ estimated_cost.cost_per_km | currency }}/km</small>
            <small v-if="estimated_cost">{{ estimated_cost.cost_per_month | currency }}/mois</small>
-           <small class="mt-3" v-if="owner"><strong>Propriétaire: {{ owner.user.full_name }}</strong></small>
            <span v-if="show_community" class="loanable-info-box__community">
              <svg-community /> {{ community.name }}
           </span>
@@ -168,14 +168,14 @@ export default {
   }
 
   &__image.col {
-    height: 103px;
+    height: 156px;
     flex-grow: 0;
-    flex-basis: 118px;
+    flex-basis: 130px;
     padding-right: 0;
 
     > div {
-      height: 103px;
-      width: 103px;
+      height: 100%;
+      width: 100%;
       background-size: cover;
       background-repeat: no-repeat;
       background-position: center center;
@@ -187,7 +187,7 @@ export default {
     flex-grow: 1;
     color: $black;
     font-size: 18px;
-    strong {
+    strong, h4 {
       font-weight: 600;
     }
   }

@@ -58,6 +58,7 @@ const actions = {
           per_page: maxLoanableCount,
           fields: [
             "name", "owner", "estimated_cost",
+            "type",
             "!events",
             "image.*",
             "community.id",
