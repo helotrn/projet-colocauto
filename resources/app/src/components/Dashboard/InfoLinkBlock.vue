@@ -41,5 +41,9 @@ export default {
 <style scoped lang="scss">
   .card > a {
     font-size: 20px;
+    svg {
+      width: 65px;
+      height: 65px;
+    }
   }
 </style>

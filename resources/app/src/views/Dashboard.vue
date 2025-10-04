@@ -365,13 +365,13 @@
 
             <h2 class="dashboard--margin-bottom">Ressources</h2>
             <info-link-block title="Faire un don" to="https://www.colocauto.org/don">
-              <svg-salut-coeur width="100px" class="p-2"/>
+              <svg-salut-coeur class="m-2"/>
             </info-link-block>
             <info-link-block title="Foire aux questions" to="https://www.colocauto.org/faq">
-              <svg-question width="100px" class="p-2"/>
+              <svg-question class="m-2"/>
             </info-link-block>
             <info-link-block title="Assurance" to="https://www.colocauto.org/assurance">
-              <svg-pen-paper width="100px" class="p-2"/>
+              <svg-pen-paper class="m-2"/>
             </info-link-block>
             <info-link-block title="Contactez-nous" to="mailto:soutien@colocauto.org">
               <svg-waving class="m-2 white-round"/>
