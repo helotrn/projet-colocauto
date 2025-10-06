@@ -177,6 +177,7 @@ class LoanController extends RestController
                 "duration_in_minutes" => 60,
                 "estimated_distance" => 30,
                 "estimated_price" => 0,
+                "estimated_insurance" => 0,
                 "platform_tip" => 0,
                 "message_for_owner" => "",
                 "reason" => "",

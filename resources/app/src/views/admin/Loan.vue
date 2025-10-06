@@ -2,8 +2,7 @@
   <layout-loading v-if="!pageLoaded" />
   <div class="admin-loan-page" v-else>
     <vue-headful :title="fullTitle" />
-
-    <div v-if="item.id">
+    <div v-if="item.id || id=='new' && item.loanable && item.community && item.borrower">
       <loan-header :user="user" :loan="item" />
 
       <loan-action-buttons
@@ -54,7 +53,7 @@
         <b-col>
           <validation-observer ref="observer" v-slot="{ passes, valid }">
             <b-form class="form" @submit.prevent="passes(submitAndReload)">
-              <forms-builder :definition="form" v-model="item" entity="loans" />
+              <forms-builder :definition="shortForm" v-model="item" entity="loans"/>
 
               <div class="form__buttons">
                 <b-button-group>
@@ -119,8 +118,15 @@ export default {
     },
     pageLoaded() {
       // this.id is the route id
-      return this.item && this.item.id == this.id && this.form;
+      return this.item && (this.item.id == this.id || this.id === "new") && this.form;
     },
+    shortForm() {
+      return {
+        community_id: this.form.community_id,
+        borrower_id: this.form.borrower_id,
+        loanable_id:{... this.form.loanable_id, rules: {}},
+      }
+    }
   },
   methods: {
     async resumeLoan() {
