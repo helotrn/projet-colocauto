@@ -151,4 +151,15 @@ class Borrower extends BaseModel
             );
         });
     }
+
+    public function scopeAccessibleBy(Builder $query, $user)
+    {
+        if ($user->isAdmin()) {
+            return $query;
+        }
+
+        return $query->whereHas('user', function ($q) use ($user) {
+            return $q->accessibleBy($user);
+        });
+    }
 }
