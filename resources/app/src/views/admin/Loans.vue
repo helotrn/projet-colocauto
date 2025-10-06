@@ -28,7 +28,7 @@
       </b-col>
     </b-row>
 
-    <b-row>
+    <b-row v-if="loaded">
       <b-col>
         <b-table
           striped
@@ -79,6 +79,7 @@
         </b-table>
       </b-col>
     </b-row>
+    <layout-loading v-else />
 
     <b-row>
       <b-col md="6">
@@ -122,6 +123,10 @@ export default {
     AdminListActions,
     AdminPagination,
     LoanStatus,
+  },
+  beforeMount(){
+    // mark data as not loaded to prevent previously loaded data to appear
+    this.$store.commit('loans/loaded', false)
   },
   data() {
     return {
