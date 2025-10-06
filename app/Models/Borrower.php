@@ -9,6 +9,7 @@ use App\Models\Loan;
 use App\Models\User;
 use App\Casts\TimestampWithTimezoneCast;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Builder;
 
 class Borrower extends BaseModel
 {
@@ -133,5 +134,21 @@ class Borrower extends BaseModel
             "field",
             "saaq"
         );
+    }
+
+    public function scopeSearch(Builder $query, $q)
+    {
+        if (!$q) {
+            return $query;
+        }
+
+        return $query->whereHas('user', function ($q2) use ($q) {
+            $sql = \DB::raw("CONCAT(users.name, ' ', users.last_name)");
+            return $q2->where(
+                \DB::raw("unaccent($sql)"),
+                "ILIKE",
+                \DB::raw("unaccent('%$q%')")
+            );
+        });
     }
 }

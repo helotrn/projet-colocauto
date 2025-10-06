@@ -113,9 +113,34 @@ class BorrowerTest extends TestCase
             );
     }
 
+    public function testFilterBorrowersWithQuery()
+    {
+        $users = factory(User::class, 2)
+            ->states("withBorrower")
+            ->create();
+
+        $data = [
+            "page" => 1,
+            "per_page" => 10,
+            "fields" => "id,user.full_name",
+            "q" => $users[0]['full_name'],
+        ];
+        $response = $this->json("GET", "/api/v1/borrowers/", $data);
+        $response
+            ->assertStatus(200)
+            ->assertJsonStructure(TestCase::$collectionResponseStructure)
+            ->assertJson([
+                "data" => [[
+                    "id" => $users[0]['borrower']['id'],
+                    "user" => ["full_name" => $users[0]['full_name']],
+                ]],
+                "total" => 1,
+            ]);
+    }
+
     public function testApproveBorrowers()
     {
-        $this->markTestSkipped('Borrowers are now automatically approved');
+        $this->markTestSkipped('Borrower are automatically approved at creation');
 
         $meta = [];
         $meta["sent_registration_approved_email"] = true;
@@ -164,7 +189,7 @@ class BorrowerTest extends TestCase
 
     public function testPendingBorrowers()
     {
-        $this->markTestSkipped('Borrowers are now automatically approved');
+        $this->markTestSkipped('Borrower are automatically approved at creation');
 
         // Fake user without registration approved
         $user = $this->user;

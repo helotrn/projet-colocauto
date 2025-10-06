@@ -164,6 +164,29 @@ class UserTest extends TestCase
             ->assertJsonStructure(TestCase::$collectionResponseStructure);
     }
 
+    public function testFilterUsersWithQuery()
+    {
+        $user = factory(User::class)->create();
+
+        $data = [
+            "page" => 1,
+            "per_page" => 10,
+            "fields" => "id,name,last_name,full_name,email",
+            "q" => $user['full_name'],
+        ];
+        $response = $this->json("GET", "/api/v1/users/", $data);
+        $response
+            ->assertStatus(200)
+            ->assertJsonStructure(TestCase::$collectionResponseStructure)
+            ->assertJson([
+                "data" => [[
+                    "id" => $user['id'],
+                    "full_name" => $user['full_name'],
+                ]],
+                "total" => 1,
+            ]);
+    }
+
     public function testFilterUsersByIsDeactivated()
     {
         // Zero integer
