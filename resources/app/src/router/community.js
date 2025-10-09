@@ -59,6 +59,9 @@ export default [
             loanables: {
               retrieve: {
                 fields: "id,name,type,image.*,community.id,community.name,owner,estimated_cost",
+                community_id({route}){
+                  return route.params.id
+                },
               },
             },
           },

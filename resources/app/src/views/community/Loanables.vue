@@ -116,6 +116,18 @@ export default {
       await this.$store.dispatch("loadUser");
     },
   },
+  watch:{
+    contextParams: {
+      deep: true,
+      handler(newp, oldp) {
+        if( this.contextParams.community_id !=  this.$route.params.id ){
+          this.contextParams.community_id = this.$route.params.id
+          this.contextParams.page = 1
+        }
+        
+      },
+    },
+  },
 };
 </script>
 
