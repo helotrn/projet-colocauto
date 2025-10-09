@@ -16,14 +16,32 @@
                 type="text"
                 :placeholder="placeholderOrLabel('name') | capitalize"
                 :description="$t('descriptions.name')"
-                :disabled="loanable.owner && loanable.owner.user.id !== user.id"
+                :disabled="loanable.id && loanable.owner && loanable.owner.user.id !== user.id"
                 disabled-tooltip="Seul le propriétaire peut changer cela"
                 v-model="loanable.name"
               />
             </b-col>
-            <b-col lg="6" v-if="loanable.owner">
+            <b-col lg="6">
+              <forms-relation-input
+                v-if="canCreateLoanableInCurrentCommunity && !loanable.id"
+                id="owner_id"
+                name="owner_id"
+                :query="{
+                  slug: 'users',
+                  value: 'owner.id',
+                  text: 'full_name',
+                  params: {
+                    fields: 'full_name, owner.id',
+                    'communities.id': currentCommunity
+                  },
+                }"
+                placeholder="Propriétaire"
+                :object-value="owner"
+                :value="owner ? owner.id : null"
+                @input="setLoanableOwner"
+              />
               <forms-validated-input
-                v-if="loanable.owner"
+                v-else-if="loanable.owner"
                 name="owner"
                 :label="$t('fields.owner.user.full_name') | capitalize"
                 type="text"
@@ -216,6 +234,7 @@
 <script>
 import FormsBuilder from "@/components/Forms/Builder.vue";
 import FormsValidatedInput from "@/components/Forms/ValidatedInput.vue";
+import FormsRelationInput from "@/components/Forms/RelationInput.vue";
 import LoanableAvailabilityRules from "@/components/Loanable/AvailabilityRules.vue";
 import FormsImageUploader from "@/components/Forms/ImageUploader.vue";
 import LoanableBalance from "@/components/Loanable/Balance.vue";
@@ -235,11 +254,17 @@ export default {
     FormsBuilder,
     FormsImageUploader,
     FormsValidatedInput,
+    FormsRelationInput,
     LoanableAvailabilityRules,
     LoanableBalance,
     CoownersForm,
     FormSection,
     ReportForm,
+  },
+  data() {
+    return {
+      owner: null,
+    }
   },
   props: {
     center: {
@@ -275,6 +300,9 @@ export default {
       type: Object,
       required: true,
     },
+  },
+  mounted(){
+    if(this.loanable.owner) this.owner = this.loanable.owne
   },
   methods: {
     polygonOptions(type) {
@@ -317,6 +345,18 @@ export default {
           invalidItems[0].scrollIntoView({
             behavior: "smooth",
           });
+        }
+      }
+    },
+    async setLoanableOwner(user){
+      if( !user ){
+        this.loanable.owner = null
+        this.loanable.owner_id = null
+      } else {
+        this.loanable.owner = {user_id: user.id, user}
+        if(user.owner && user.owner.id) {
+          this.loanable.owner.id = user.owner.id
+          this.loanable.owner_id = user.owner.id
         }
       }
     },
@@ -400,7 +440,7 @@ export default {
         form[key] = this.form.car[key];
 
         // make car properties readonly for non-owners
-        form[key].disabled = this.loanable.owner && this.loanable.owner.user.id !== this.user.id;
+        form[key].disabled = this.loanable.owner && this.loanable.owner?.user?.id !== this.user.id;
         form[key].disabledTooltip = "Seul le propriétaire peut changer cela";
       }
 
