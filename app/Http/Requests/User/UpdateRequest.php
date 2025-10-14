@@ -37,7 +37,11 @@ class UpdateRequest extends BaseRequest
 
             // non admin should not be able to change its community attributes
             $rules['communities'] = function ($attribute, $value, $fail) {
-                $fail('The '.$attribute.' is invalid.');
+                $user = User::find($this->route("id"));
+                // verify that communities list is the same as the ones in database
+                if($user->communities()->pluck('id')->diff(array_map(fn($c) => $c['id'], $value))->count() > 0) {
+                    $fail('Communautés invalides');
+                }
             };
         } else if( !$this->user()->isAdmin() ){
             $rules['role'] .= '|not_in:admin';
