@@ -8,6 +8,8 @@ class PaymentTest extends ActionTestCase
 {
     public function testCompletePayments()
     {
+        $this->markTestSkipped('Payment is not supported anymore');
+
         $loan = $this->buildLoan("payment");
 
         $executedAtDate = Carbon::now()->format("Y-m-d h:m:s");
@@ -48,6 +50,8 @@ class PaymentTest extends ActionTestCase
 
     public function testCompletePayments_failsIfNotEnoughMoney()
     {
+        $this->markTestSkipped('Payment is not supported anymore');
+
         $this->withoutEvents();
 
         $loan = $this->buildLoan("payment");
@@ -73,6 +77,8 @@ class PaymentTest extends ActionTestCase
 
     public function testCompletePayments_failsIfNotValidated()
     {
+        $this->markTestSkipped('Payment is not supported anymore');
+
         $this->withoutEvents();
 
         $loan = $this->buildLoan("payment");

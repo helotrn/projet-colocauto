@@ -115,6 +115,8 @@ class BorrowerTest extends TestCase
 
     public function testApproveBorrowers()
     {
+        $this->markTestSkipped('Borrowers are now automatically approved');
+
         $meta = [];
         $meta["sent_registration_approved_email"] = true;
 
@@ -162,6 +164,8 @@ class BorrowerTest extends TestCase
 
     public function testPendingBorrowers()
     {
+        $this->markTestSkipped('Borrowers are now automatically approved');
+
         // Fake user without registration approved
         $user = $this->user;
         $borrower = factory(Borrower::class)->create([

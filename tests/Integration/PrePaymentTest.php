@@ -8,6 +8,8 @@ class PrePaymentTest extends ActionTestCase
 {
     public function testCreatePrePaymentsWithActionsFlow()
     {
+        $this->markTestSkipped('Payment is not supported anymore');
+
         $loan = $this->buildLoan("intention");
 
         $intention = $loan->intention;
@@ -36,6 +38,8 @@ class PrePaymentTest extends ActionTestCase
 
     public function testCompletePrePayments()
     {
+        $this->markTestSkipped('Payment is not supported anymore');
+
         $loan = $this->buildLoan("pre_payment");
 
         $executedAtDate = Carbon::now()->format("Y-m-d h:m:s");
@@ -72,6 +76,8 @@ class PrePaymentTest extends ActionTestCase
 
     public function testCancelPrePayments()
     {
+        $this->markTestSkipped('Payment is not supported anymore');
+
         $loan = $this->buildLoan("pre_payment");
 
         $executedAtDate = Carbon::now()->format("Y-m-d h:m:s");

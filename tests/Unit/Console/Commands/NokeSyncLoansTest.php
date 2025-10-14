@@ -13,6 +13,8 @@ class NokeSyncLoansTest extends TestCase
 {
     public function testGetLoansFromPadlockMacQuery()
     {
+        $this->markTestSkipped('Noke management is not supported anymore');
+
         $query = NokeSyncLoansCommand::getLoansFromPadlockMacQuery([
             "mac_address" => "0D:34:F2:3E:0F:2F",
         ]);
@@ -25,6 +27,8 @@ class NokeSyncLoansTest extends TestCase
 
     public function testGetLoansFromPadlockMacTakesCancelationIntoAccount()
     {
+        $this->markTestSkipped('Noke management is not supported anymore');
+
         $bikeWithPadlock = factory(Bike::class)
             ->states("withCommunity", "withPadlock")
             ->create();

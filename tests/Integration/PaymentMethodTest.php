@@ -40,6 +40,8 @@ class PaymentMethodTest extends TestCase
 
     public function testCreateCreditCardPaymentMethods()
     {
+        $this->markTestSkipped('Stripe is not supported anymore');
+
         $data = [
             "name" => $this->faker->name,
             "external_id" => "card_test",
@@ -124,6 +126,8 @@ class PaymentMethodTest extends TestCase
 
     public function testDeleteCreditCardPaymentMethods()
     {
+        $this->markTestSkipped('Stripe is not supported anymore');
+
         $paymentMethod = factory(PaymentMethod::class)->create([
             "user_id" => $this->user->id,
             "external_id" => "card_test",
