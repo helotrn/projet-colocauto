@@ -7,17 +7,14 @@
       <slash-illustration class="my-4"/>
     </div>
     <dl v-else>
-    <template v-for="user in users">
-      <dt :class="user.balance > 0 ? 'credit' : 'debit'">
+    <div v-for="user in users" class="balance" :class="user.balance > 0 ? 'credit' : 'debit'">
+      <dt>
         {{user.full_name}}
       </dt>
-      <dd
-        :class="user.balance > 0 ? 'credit' : 'debit'"
-        :style="`--width:${Math.min(100, Math.abs(user.balance) * 100 / sum)}%`"
-      >
-        {{user.balance | currency }}
+      <dd>
+        <span>{{user.balance | currency }}</span>
       </dd>
-    </template>
+    </div>
     </dl>
   </div>
 </template>
@@ -54,51 +51,45 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  dl {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    column-gap: 10px;
-    row-gap: 10px;
-  }
-  dt.debit {
-    position: relative;
-    left: calc(100% + 10px);
+  dt {
+    font-weight: normal;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   dd {
-    position: relative;
+    align-self: end;
   }
-  dd.debit {
-    left: calc(-100% - 10px);
-    text-align: right;
+  .balance {
+    display: flex;
+    justify-content: space-between;
+    padding: .625em 0;
   }
-  dt.credit {
-    text-align: right;
+  .balance.debit {
+    flex-direction: row-reverse;
   }
-  dt, dd {
-    margin: 10px 0;
-  }
-  dd {
-    padding: 0 10px;
-  }
-  dd:after {
-    content: '';
-    width: var(--width, 20%);
-    height: 100%;
-    opacity: 0.3;
-    height: calc(100% + 20px);
-    opacity: 0.3;
-    display: block;
-    position: absolute;
-    top: -10px;
+  dd span {
+    padding: 5px 10px;
     border-radius: 5px;
+    font-weight: bold;
   }
-  dd.debit:after {
-    background: #EB4335;
-    right: 0;
+  .debit {
+    dd span {
+      background: #FFE6E4;
+      color: #EB4335;
+    }
+    dt {
+      text-align: right;
+      margin-left: 1em;
+    }
   }
-  dd.credit:after {
-    background: #4FB999;
-    left: 0;
+  .credit {
+    dd span {
+      background: #E5F5F0;
+      color: #34A853;
+    }
+    dt {
+      margin-right: 1em;
+    }
   }
   .rounded-green-circle {
     border-radius: 50%;
