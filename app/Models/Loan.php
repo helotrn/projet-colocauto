@@ -1016,7 +1016,7 @@ SQL;
     */
     public function writeExpenses() {
         // a loan should be completed before generating expenses
-        if ($this->status !== "completed") return;
+        if ($this->status !== "completed" || !$this->takeover) return;
 
         // Update loan prices
         $this->final_price = $this->actual_price;
