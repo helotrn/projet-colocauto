@@ -39,7 +39,7 @@ class SendBorrowerCompletedEmails
             );
 
             // Send an email notification to all admins.
-            foreach ($user->main_community->admins() as $admin) {
+            foreach ($user->main_community->admins as $admin) {
                 Mail::to($admin->email, $admin->full_name)->queue(
                     new BorrowerReviewable($user, $user->main_community)
                 );
