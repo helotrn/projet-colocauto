@@ -1381,9 +1381,11 @@ class LoanTest extends TestCase
                 "owner_validated_at" => new Carbon(),
             ]
         );
+        $loan->refresh();
 
         self::assertNotNull($loan->borrower_validated_at);
         self::assertNotNull($loan->owner_validated_at);
+        self::assertNotNull($loan->handover);
 
         $response = $this->json(
             "PUT",
