@@ -112,7 +112,10 @@ class CarTest extends TestCase
         $this->withoutEvents();
         $community = factory(Community::class)->create();
         $user = factory(User::class)->states("withOwner")->create();
-        $user->communities()->attach($community, ["approved_at" => new Carbon()]);
+        $user->communities()->attach($community, [
+            "approved_at" => new Carbon(),
+            "role" => "responsible",
+        ]);
 
         $this->actAs($user);
 
