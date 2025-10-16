@@ -59,11 +59,11 @@ class SendBorrowerCompletedEmailsTest extends TestCase
         $community_admin = factory(User::class)->create();
         $parent_community_admin = factory(User::class)->create();
 
-        $community->users()->attach($community_admin, ["role" => "admin"]);
+        $community->admins()->attach($community_admin);
 
         $parent_community
-            ->users()
-            ->attach($parent_community_admin, ["role" => "admin"]);
+            ->admins()
+            ->attach($parent_community_admin);
 
         // Attach to community
         $community->users()->attach($user);
@@ -118,11 +118,11 @@ class SendBorrowerCompletedEmailsTest extends TestCase
         $community_admin = factory(User::class)->create();
         $parent_community_admin = factory(User::class)->create();
 
-        $community->users()->attach($community_admin, ["role" => "admin"]);
+        $community->admins()->attach($community_admin);
 
         $parent_community
-            ->users()
-            ->attach($parent_community_admin, ["role" => "admin"]);
+            ->admins()
+            ->attach($parent_community_admin);
 
         // Attach to parent community
         $parent_community->users()->attach($user);
