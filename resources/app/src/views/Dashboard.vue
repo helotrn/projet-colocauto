@@ -371,7 +371,7 @@
               <svg-pen-paper class="m-2"/>
             </info-link-block>
             <info-link-block title="Contactez-nous" to="mailto:soutien@colocauto.org">
-              <svg-waving class="m-2 white-round"/>
+              <svg-contact class="m-2"/>
             </info-link-block>
           <!---->
         </b-col>
@@ -406,7 +406,7 @@ import MagnifyingGlass from "@/assets/svg/magnifying-glass.svg";
 import SalutCoeur from "@/assets/svg/salut-coeur.svg";
 import Question from "@/assets/svg/question.svg";
 import PenPaper from "@/assets/svg/pen-paper.svg";
-import Waving from "@/assets/svg/waving.svg";
+import Contact from "@/assets/svg/contact.svg";
 import MagnifyingGlassEuro from "@/assets/svg/magnifying-glass-euro.svg";
 import Discussion from "@/assets/svg/discussion.svg";
 import LoanablesImage from "@/assets/svg/loanables.svg";
@@ -432,7 +432,7 @@ export default {
     "svg-salut-coeur": SalutCoeur,
     "svg-question": Question,
     "svg-pen-paper": PenPaper,
-    "svg-waving": Waving,
+    "svg-contact": Contact,
     "svg-discussion": Discussion,
     "svg-loanables": LoanablesImage,
     PlusIcon,

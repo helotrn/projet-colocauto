@@ -16,7 +16,7 @@
     </ul>
 
     <info-link-block title="Contactez-nous" to="mailto:soutien@colocauto.org">
-      <svg-waving class="m-2 white-round"/>
+      <svg-contact class="m-2"/>
     </info-link-block>
 
   </div>
@@ -25,14 +25,14 @@
 <script>
 import UserMixin from "@/mixins/UserMixin";
 import InfoLinkBlock from "@/components/Dashboard/InfoLinkBlock.vue";
-import Waving from "@/assets/svg/waving.svg";
+import Contact from "@/assets/svg/contact.svg";
 
 export default {
   name: "CommunitySidebar",
   mixins: [UserMixin],
   components: {
     InfoLinkBlock,
-    "svg-waving": Waving,
+    "svg-contact": Contact,
   },
 };
 </script>
