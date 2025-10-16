@@ -76,7 +76,6 @@ class AuthTest extends TestCase
             "invitationToken" => $invitation->token,
         ];
         $response = $this->json("POST", "/api/v1/auth/register", $data);
-        //var_dump($response);
         $response
             ->assertStatus(200)
             ->assertJsonStructure(static::$loginResponseStructure);
@@ -90,9 +89,15 @@ class AuthTest extends TestCase
         ];
         $response = $this->json("POST", "/api/v1/auth/register", $data);
 
-        $response
-            ->assertStatus(422)
-            ->assertJsonStructure(TestCase::$validationErrorStructure);
+        if( config("app.require_invitation") ) {
+            $response
+                ->assertStatus(422)
+                ->assertJsonStructure(TestCase::$validationErrorStructure);
+        } else {
+            $response
+                ->assertStatus(200)
+                ->assertJsonStructure(static::$loginResponseStructure);
+        }
     }
 
     public function testRegisterWithMissingFields()
