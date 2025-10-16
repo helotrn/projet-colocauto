@@ -19,10 +19,12 @@
           <a v-if="user.phone" :href="`tel:${user.phone}`" class="d-block">{{ user.phone }}</a>
           <a v-if="user.email" :href="`mailto:${user.email}`" class="d-block">{{ user.email }}</a>
         </div>
+        <template v-if="balance">
         <hr class="my-1 mx-3"/>
         <div class="p-3">
           <strong class="wallet">Portefeuille: <span :class="balance >= 0 ? 'credit' : 'debit'">{{ balance | currency }}</span></strong>
         </div>
+        </template>
       </b-col>
     </b-row>
     <b-row v-if="detailedView && isResponsibleOfCurrentCommunity" no-gutters class="user-card__content">
