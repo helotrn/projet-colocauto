@@ -23,7 +23,6 @@ class BikeTest extends TestCase
         "bike_type",
         "model",
         "size",
-        "position",
         "location_description",
         "instructions",
         "comments",
