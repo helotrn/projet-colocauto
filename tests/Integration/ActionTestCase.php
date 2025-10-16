@@ -79,16 +79,6 @@ abstract class ActionTestCase extends TestCase
             return $loan->fresh();
         }
 
-        $prePayment = $loan->prePayment;
-        $response = $this->json(
-            "PUT",
-            "/api/v1/loans/$loan->id/actions/$prePayment->id/complete",
-            [
-                "type" => "pre_payment",
-            ]
-        );
-        $response->assertStatus(200);
-
         if ($upTo === "takeover") {
             return $loan->fresh();
         }
