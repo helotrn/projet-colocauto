@@ -25,11 +25,11 @@ class TrailerTest extends TestCase
         "location_description",
         "maximum_charge",
         "dimensions",
-        "position",
     ];
 
     public function testCreateTrailers()
     {
+        $community = factory(Community::class)->create();
         $data = [
             "name" => $this->faker->name,
             "position" => [$this->faker->latitude, $this->faker->longitude],
@@ -42,6 +42,7 @@ class TrailerTest extends TestCase
             ),
             "dimensions" => $this->faker->sentence(2),
             "type" => "trailer",
+            "community_id" => $community->id,
         ];
 
         $response = $this->json("POST", "/api/v1/trailers", $data);
@@ -65,7 +66,12 @@ class TrailerTest extends TestCase
     public function testUpdateTrailers()
     {
         $owner = factory(Owner::class)->create(["user_id" => $this->user->id]);
-        $trailer = factory(Trailer::class)->create(["owner_id" => $owner->id]);
+        $community = factory(Community::class)->create();
+        $trailer = factory(Trailer::class)->create([
+            "owner_id" => $owner->id,
+            "community_id" => $community->id,
+        ]);
+
         $data = [
             "name" => $this->faker->name,
         ];
