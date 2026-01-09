@@ -12,7 +12,7 @@ class DatabaseSeeder extends Seeder
                 $this->call(CommunitiesTableSeeder::class);
                 $this->call(TagsTableSeeder::class);
 
-                $this->call(ImagesTableSeeder::class);
+                //$this->call(ImagesTableSeeder::class);
                 $this->call(FilesTableSeeder::class);
                 $this->call(UsersTableSeeder::class);
                 $this->call(OwnersTableSeeder::class);

@@ -21,8 +21,8 @@ services:
             APP_KEY: base64:QV7VlghMwXOXokIRP1ARpfEuyIF46hfYC/Y/lxFxdVc=
             APP_DEBUG: "true"
             APP_TIMEZONE: ${APP_TIMEZONE}
-            FRONTEND_URL: http://localhost:8080
-            BACKEND_URL_FROM_BROWSER: http://localhost:8000 #this is the url that the browser uses to call us
+            FRONTEND_URL: http://127.0.0.1:8080
+            BACKEND_URL_FROM_BROWSER: http://127.0.0.1:8000 #this is the url that the browser uses to call us
             DB_HOST: postgres
             DB_PORT: 5432
             DB_CONNECTION: pgsql
@@ -38,8 +38,8 @@ services:
             MAIL_USERNAME: ${MAIL_USERNAME}
             MAIL_PASSWORD: ${MAIL_PASSWORD}
             MAIL_ENCRYPTION: ${MAIL_ENCRYPTION}
-            PASSWORD_CLIENT_ID: ${PASSWORD_CLIENT_ID}
-            PASSWORD_CLIENT_SECRET: ${PASSWORD_CLIENT_SECRET}
+            PASSWORD_CLIENT_ID: lctkZe4F5oaV0ZD8
+            PASSWORD_CLIENT_SECRET: PHOAZKQ06HAJ1nsSGtVDsueAJbKCJvcIpj8hlZLG
             FILESYSTEM_DRIVER: s3
             S3_DRIVER: minio
             S3_KEY: locomotion
@@ -76,14 +76,16 @@ services:
         environment:
             BACKEND_URL: http://php:80
             PORT: 80
-            VUE_APP_BACKEND_URL: http://localhost:8000
-            VUE_APP_FRONTEND_URL: localhost:8080
+            VUE_APP_BACKEND_URL: http://127.0.0.1:8000
+            VUE_APP_FRONTEND_URL: http://127.0.0.1:8080
             VUE_APP_GA_MEASUREMENT_ID:
             VUE_APP_GOOGLE_MAPS_API_KEY: ${GOOGLE_API_KEY}
             VUE_APP_STRIPE_KEY: ${STRIPE_KEY}
             VUE_APP_POSTHOG_KEY: ${POSTHOG_KEY}
             VUE_APP_POSTHOG_HOST: ${POSTHOG_HOST}
-            VUE_APP_THEME: ${APP_THEME:-default}
+            VUE_APP_THEME: mobicoop
+            VUE_APP_PASSWORD_CLIENT_ID: lctkZe4F5oaV0ZD8
+            VUE_APP_PASSWORD_CLIENT_SECRET: PHOAZKQ06HAJ1nsSGtVDsueAJbKCJvcIpj8hlZLG
     postgres:
         build:
             context: psql
