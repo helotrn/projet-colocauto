@@ -38,8 +38,8 @@ services:
             MAIL_USERNAME: ${MAIL_USERNAME}
             MAIL_PASSWORD: ${MAIL_PASSWORD}
             MAIL_ENCRYPTION: ${MAIL_ENCRYPTION}
-            PASSWORD_CLIENT_ID: lctkZe4F5oaV0ZD8
-            PASSWORD_CLIENT_SECRET: PHOAZKQ06HAJ1nsSGtVDsueAJbKCJvcIpj8hlZLG
+            PASSWORD_CLIENT_ID: ${PASSWORD_CLIENT_ID}
+            PASSWORD_CLIENT_SECRET: ${PASSWORD_CLIENT_SECRET}
             FILESYSTEM_DRIVER: s3
             S3_DRIVER: minio
             S3_KEY: locomotion
@@ -84,8 +84,7 @@ services:
             VUE_APP_POSTHOG_KEY: ${POSTHOG_KEY}
             VUE_APP_POSTHOG_HOST: ${POSTHOG_HOST}
             VUE_APP_THEME: mobicoop
-            VUE_APP_PASSWORD_CLIENT_ID: lctkZe4F5oaV0ZD8
-            VUE_APP_PASSWORD_CLIENT_SECRET: PHOAZKQ06HAJ1nsSGtVDsueAJbKCJvcIpj8hlZLG
+            
     postgres:
         build:
             context: psql
