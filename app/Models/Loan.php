@@ -58,6 +58,29 @@ class Loan extends BaseModel
     public static function boot()
     {
         parent::boot();
+        
+        // --- DÉBUT AJOUT CODE UNIQUE ---
+        // Se déclenche AUTOMATIQUEMENT avant la création d'une réservation
+        static::creating(function ($loan) {
+            
+            // 1. On charge la relation "community" pour savoir à qui appartient la voiture
+            if (!$loan->relationLoaded('community')) {
+                $loan->load('community');
+            }
+
+            // 2. Liste des communautés qui nécessitent un code
+            $targetCommunities = [
+                "Association Café de la place de Marcelcave",
+                "UniLaSalle",
+                "Unilasalle"
+            ];
+
+            // 3. Vérification : Si la communauté de la réservation est dans la liste
+            if ($loan->community && in_array($loan->community->name, $targetCommunities)) {
+                // 4. Génération du code aléatoire à 4 chiffres (ex: 0492)
+                $loan->unique_access_code = str_pad(mt_rand(0, 9999), 4, '0', STR_PAD_LEFT);
+            }
+        });
 
         // Update loan.status and loan.actual_return_at whenever an action is changed.
         foreach (
