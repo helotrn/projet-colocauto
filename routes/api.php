@@ -270,3 +270,7 @@ Route::prefix("v1")->group(function () {
 
     Route::get("/{any?}", "StaticController@notFound")->where("any", ".*");
 });
+
+// --- AJOUT POUR LE GPS ARDUINO ---
+// Cette route est "publique" mais protégée par le mot de passe secret dans le contrôleur
+Route::post('gps/update', [\App\Http\Controllers\Api\V1\GpsController::class, 'update']);

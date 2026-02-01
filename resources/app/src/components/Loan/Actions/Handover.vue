@@ -24,10 +24,6 @@
         Bloqué
       </span>
       <span v-else>
-        <!--
-          Canceled loans: current step remains in-process.
-          Canceled action means contestation. Give way to canceled-loan status.
-        -->
         <span
           v-if="(action.status === 'in_process' || action.status === 'canceled') && loanIsCanceled"
         >
@@ -79,6 +75,19 @@
               
               <b-row>
                 <b-col lg="6">
+                  <b-alert show variant="info" v-if="item.gps_measured_distance">
+                    <div class="d-flex align-items-center mb-2">
+                      <b-icon icon="broadcast" font-scale="1.5" class="mr-2"></b-icon>
+                      <div>
+                        <strong>Relevé GPS automatique</strong><br/>
+                        Distance mesurée : {{ item.gps_measured_distance }} km
+                      </div>
+                    </div>
+                    <b-form-checkbox v-model="contestGps" size="sm">
+                      Contredire ce relevé (débloquer la saisie manuelle)
+                    </b-form-checkbox>
+                  </b-alert>
+
                   <forms-validated-input
                     id="mileage_end"
                     name="mileage_end"
@@ -86,7 +95,7 @@
                     label="KM au compteur, à l'arrivée"
                     :rules="{ min_value: mileageBeginning }"
                     :placeholder="mileageWasFilledAutomatically ? 'donnée non disponible' : 'KM au compteur'"
-                    :disabled="((lockMileage && !!action.executed_at) || loanIsFinishedSinceMoreThan48h || loanIsCanceled) && !userIsAdmin"
+                    :disabled="((lockMileage && !!action.executed_at) || loanIsFinishedSinceMoreThan48h || loanIsCanceled || (hasGpsData && !contestGps)) && !userIsAdmin"
                     v-model="mileageWasFilledAutomatically ? '' : action.mileage_end"
                   />
                 </b-col>
@@ -119,10 +128,6 @@
                 </b-col>
               </b-row>
 
-              <!--
-                Display rule if actions not completed and not owner and borrower at the
-                same time or if message exists.
-              -->
               <hr
                 v-if="
                   (!action.executed_at &&
@@ -163,7 +168,6 @@
         </div>
 
         <div v-else-if="item.loanable.has_padlock">
-          <!-- Loanable is not a car and has a padlock. -->
           <p>
             Le cadenas du véhicule sera automatiquement dissocié de application NOKE lorsque vous
             aurez complété le retour du véhicule.
@@ -255,7 +259,6 @@
         </div>
 
         <div v-else>
-          <!-- Loanable is not a car and it does not have a padlock. -->
           <b-row v-if="!action.executed_at">
             <b-col>
               <p v-if="userRoles.includes('borrower') && !userRoles.includes('owner')">
@@ -364,10 +367,18 @@ export default {
     if (!this.action.purchases_amount) {
       this.action.purchases_amount = 0;
     }
+    // NOUVEAU : Si on a des données GPS au chargement, on remplit direct
+    if (this.item.gps_measured_distance) {
+       this.updateFromGps();
+    }
   },
   computed: {
     mileageBeginning() {
       return this.item.actions.find((a) => a.type === "takeover").mileage_beginning;
+    },
+    // NOUVEAU
+    hasGpsData() {
+      return this.item.gps_measured_distance != null && this.item.gps_measured_distance > 0;
     },
     startsInTheFuture() {
       return this.$second.isBefore(this.item.departure_at, "minute");
@@ -385,16 +396,33 @@ export default {
         this.action.purchases_amount = 0;
       }
     },
+    // NOUVEAU : Surveiller si le GPS arrive pendant qu'on est sur la page
+    'item.gps_measured_distance': {
+      handler(val) {
+        if (val) this.updateFromGps();
+      }
+    }
   },
   data(){
     return {
       lockMileage: true,
+      contestGps: false, // <-- NOUVEAU
     }
   },
   methods: {
     update() {
       this.updateMileage();
       this.lockMileage = true;
+    },
+    // NOUVEAU : Calculer le kilométrage de fin basé sur le GPS
+    updateFromGps() {
+        if(!this.contestGps && this.item.gps_measured_distance) {
+            // KM Fin = KM Début + Distance GPS
+            // On s'assure que c'est des nombres (parseFloat)
+            const debut = parseFloat(this.mileageBeginning) || 0;
+            const distance = parseFloat(this.item.gps_measured_distance);
+            this.action.mileage_end = debut + distance;
+        }
     }
   },
 
