@@ -8,6 +8,11 @@ class LoanTransformer extends Transformer
     {
         $output = parent::transform($item, $options);
 
+        // --- AJOUT POUR LE GPS ---
+        // On force l'ajout de la distance GPS dans la réponse pour le Frontend
+        $output['gps_measured_distance'] = $item->gps_measured_distance;
+        // -------------------------
+
         if (isset($output["actions"]) && isset($output["extensions"])) {
             foreach ($output["extensions"] as $extension) {
                 for ($i = 0; $i < count($output["actions"]); $i++) {
