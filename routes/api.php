@@ -4,7 +4,21 @@ use App\Http\Controllers\LoanableController;
 use App\Http\Controllers\UserController;
 use Molotov\Utils\RouteHelper;
 
+// 1. DÉBUT DU GROUPE V1
 Route::prefix("v1")->group(function () {
+
+    // =========================================================================
+    // --- ROUTES POUR L'IOT (Arduino GPS & Cadenas) ---
+    // =========================================================================
+    
+    // 1. Route GPS (Fichier dans app/Http/Controllers/Api/V1/GpsController.php)
+    Route::post('gps/update', [\App\Http\Controllers\GpsController::class, 'update']);
+
+    // 2. Route Cadenas (Fichier dans app/Http/Controllers/PadlockController.php)
+    Route::post('padlock/verify', [\App\Http\Controllers\PadlockController::class, 'verify']);
+
+    // =========================================================================
+
     Route::get("/", "StaticController@blank");
     Route::get("/status", "StaticController@status");
     Route::get("/stats", "StaticController@stats");
@@ -270,7 +284,3 @@ Route::prefix("v1")->group(function () {
 
     Route::get("/{any?}", "StaticController@notFound")->where("any", ".*");
 });
-
-// --- AJOUT POUR LE GPS ARDUINO ---
-// Cette route est "publique" mais protégée par le mot de passe secret dans le contrôleur
-Route::post('gps/update', [\App\Http\Controllers\Api\V1\GpsController::class, 'update']);

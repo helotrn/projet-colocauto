@@ -8,8 +8,12 @@ use App\Http\Requests\Padlock\RestoreRequest;
 use App\Http\Requests\Padlock\RetrieveRequest;
 use App\Http\Requests\Padlock\UpdateRequest;
 use App\Http\Requests\BaseRequest as Request;
+use Illuminate\Http\Request as HttpRequest;
 use App\Models\Padlock;
+use App\Models\Loan;
 use App\Repositories\PadlockRepository;
+use Illuminate\Validation\ValidationException;
+use Carbon\Carbon; // Indispensable pour l'heure
 
 class PadlockController extends RestController
 {
@@ -45,8 +49,6 @@ class PadlockController extends RestController
 
     public function retrieve(RetrieveRequest $request, $id)
     {
-        $item = $this->repo->find($request, $id);
-
         try {
             $item = $this->repo->find($request, $id);
             return $this->respondWithItem($request, $item);
@@ -118,5 +120,73 @@ class PadlockController extends RestController
         }
 
         return $template;
+    }
+
+    // -------------------------------------------------------------------------
+    // --- VERIFICATION ARDUINO CORRIGÉE (BONS NOMS DE COLONNES) ---------------
+    // -------------------------------------------------------------------------
+    public function verify(HttpRequest $request)
+    {
+        $request->validate([
+            'access_code' => 'required|string',
+            'car_id'      => 'required|integer',
+        ]);
+
+        $code = $request->input('access_code');
+        $carId = $request->input('car_id');
+
+        // 1. Chercher la réservation
+        $loan = Loan::where('loanable_id', $carId)
+            ->where('unique_access_code', $code)
+            ->whereIn('status', ['accepted', 'ongoing', 'in_process'])
+            ->first();
+
+        if (!$loan) {
+            return response()->json([
+                'authorized' => false,
+                'message' => 'Code introuvable ou réservation non valide.'
+            ], 403);
+        }
+
+        // 2. VÉRIFICATION TEMPORELLE
+        
+        // On force l'heure actuelle sur le fuseau de Paris
+        $now = Carbon::now('Europe/Paris'); 
+        
+        // --- CORRECTION MAJEURE ICI : departure_at et arrival_at ---
+        // On utilise les vrais noms de colonnes de ta base de données
+        $start = Carbon::parse($loan->departure_at)->setTimezone('Europe/Paris');
+        $end   = Carbon::parse($loan->arrival_at)->setTimezone('Europe/Paris');
+
+        // Marge de tolérance de 15 minutes avant le début
+        $startWithBuffer = $start->copy()->subMinutes(15);
+
+        // Debug : On affiche les heures comparées pour être sûr
+        $debugTime = "Serv: " . $now->format('d/m H:i') . " | Resa: " . $start->format('d/m H:i');
+
+        // A. Trop tôt ?
+        if ($now->lessThan($startWithBuffer)) {
+            return response()->json([
+                'authorized' => false,
+                'message' => 'Trop tôt ! Début à ' . $start->format('H:i'),
+                'debug' => $debugTime
+            ], 403);
+        }
+
+        // B. Trop tard ?
+        if ($now->greaterThan($end)) {
+            return response()->json([
+                'authorized' => false,
+                'message' => 'Trop tard ! Finie à ' . $end->format('H:i'),
+                'debug' => $debugTime
+            ], 403);
+        }
+
+        // 3. Tout est bon
+        return response()->json([
+            'authorized' => true,
+            'message' => 'Accès autorisé.',
+            'user' => $loan->user_id
+        ], 200);
     }
 }
